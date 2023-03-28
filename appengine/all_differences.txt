@@ -1,0 +1,752 @@
+
+============================================
+Checking folder ./flexible
+============================================
+
+---- 25 Differences for ./flexible/README.md
+    --- ./flexible/README.md
+    +++ ./flexible_python37_and_earlier/README.md
+    @@ -3,12 +3,9 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/README.md
+    
+     These are samples for using Python on Google App Engine Flexible Environment. These samples are typically referenced from the [docs](https://cloud.google.com/appengine/docs).
+    -
+    -For code samples of Python version 3.7 and earlier, please check
+    -https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible.
+    
+     See our other [Google Cloud Platform github repos](https://github.com/GoogleCloudPlatform) for sample applications and
+     scaffolding for other frameworks and use cases.
+    @@ -31,7 +28,7 @@
+    
+        ```
+        git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+    -   cd python-docs-samples/appengine/flexible
+    +   cd python-docs-samples/appengine/flexible_python37_and_earlier
+        ```
+    
+     4. Follow https://cloud.google.com/python/docs/setup to set up a Python development environment. Then run:
+**** New file ./flexible/.gitignore
+
+============================================
+Checking folder ./flexible/disk
+============================================
+
+~~~~ No changes for ./flexible/disk/requirements.txt
+~~~~ No changes for ./flexible/disk/main.py
+~~~~ No changes for ./flexible/disk/main_test.py
+~~~~ No changes for ./flexible/disk/requirements-test.txt
+~~~~ No changes for ./flexible/disk/app.yaml
+
+============================================
+Checking folder ./flexible/datastore
+============================================
+
+~~~~ No changes for ./flexible/datastore/requirements.txt
+~~~~ No changes for ./flexible/datastore/main.py
+---- 11 Differences for ./flexible/datastore/README.md
+    --- ./flexible/datastore/README.md
+    +++ ./flexible_python37_and_earlier/datastore/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/datastore/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/datastore/README.md
+    
+     This sample demonstrates how to use [Google Cloud Datastore](https://cloud.google.com/datastore/) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    
+~~~~ No changes for ./flexible/datastore/main_test.py
+~~~~ No changes for ./flexible/datastore/requirements-test.txt
+~~~~ No changes for ./flexible/datastore/app.yaml
+
+============================================
+Checking folder ./flexible/numpy
+============================================
+
+~~~~ No changes for ./flexible/numpy/requirements.txt
+~~~~ No changes for ./flexible/numpy/main.py
+~~~~ No changes for ./flexible/numpy/main_test.py
+~~~~ No changes for ./flexible/numpy/requirements-test.txt
+~~~~ No changes for ./flexible/numpy/app.yaml
+
+============================================
+Checking folder ./flexible/django_cloudsql
+============================================
+
+~~~~ No changes for ./flexible/django_cloudsql/requirements.txt
+---- 11 Differences for ./flexible/django_cloudsql/README.md
+    --- ./flexible/django_cloudsql/README.md
+    +++ ./flexible_python37_and_earlier/django_cloudsql/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/django_cloudsql/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/django_cloudsql/README.md
+    
+     This repository is an example of how to run a [Django](https://www.djangoproject.com/)
+     app on Google App Engine Flexible Environment. It uses the
+~~~~ No changes for ./flexible/django_cloudsql/manage.py
+~~~~ No changes for ./flexible/django_cloudsql/requirements-test.txt
+~~~~ No changes for ./flexible/django_cloudsql/app.yaml
+
+============================================
+Checking folder ./flexible/django_cloudsql/polls
+============================================
+
+~~~~ No changes for ./flexible/django_cloudsql/polls/apps.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/__init__.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/urls.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/test_polls.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/models.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/views.py
+~~~~ No changes for ./flexible/django_cloudsql/polls/admin.py
+
+============================================
+Checking folder ./flexible/django_cloudsql/mysite
+============================================
+
+~~~~ No changes for ./flexible/django_cloudsql/mysite/__init__.py
+~~~~ No changes for ./flexible/django_cloudsql/mysite/urls.py
+~~~~ No changes for ./flexible/django_cloudsql/mysite/wsgi.py
+~~~~ No changes for ./flexible/django_cloudsql/mysite/settings.py
+
+============================================
+Checking folder ./flexible/tasks
+============================================
+
+~~~~ No changes for ./flexible/tasks/requirements.txt
+~~~~ No changes for ./flexible/tasks/app.flexible.yaml
+~~~~ No changes for ./flexible/tasks/main.py
+---- 11 Differences for ./flexible/tasks/README.md
+    --- ./flexible/tasks/README.md
+    +++ ./flexible_python37_and_earlier/tasks/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/tasks/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/tasks/README.md
+    
+     Sample command-line programs for interacting with the Cloud Tasks API
+     .
+~~~~ No changes for ./flexible/tasks/main_test.py
+~~~~ No changes for ./flexible/tasks/snippets_test.py
+~~~~ No changes for ./flexible/tasks/snippets.py
+~~~~ No changes for ./flexible/tasks/Dockerfile
+~~~~ No changes for ./flexible/tasks/requirements-test.txt
+---- 26 Differences for ./flexible/tasks/app.yaml
+    --- ./flexible/tasks/app.yaml
+    +++ ./flexible_python37_and_earlier/tasks/app.yaml
+    @@ -1,10 +1,10 @@
+    -# Copyright 2019 Google LLC
+    +# Copyright 2019 Google LLC.
+     #
+     # Licensed under the Apache License, Version 2.0 (the "License");
+     # you may not use this file except in compliance with the License.
+     # You may obtain a copy of the License at
+     #
+    -#      http://www.apache.org/licenses/LICENSE-2.0
+    +#     http://www.apache.org/licenses/LICENSE-2.0
+     #
+     # Unless required by applicable law or agreed to in writing, software
+     # distributed under the License is distributed on an "AS IS" BASIS,
+    @@ -12,9 +12,4 @@
+     # See the License for the specific language governing permissions and
+     # limitations under the License.
+    
+    -runtime: python
+    -env: flex
+    -entrypoint: gunicorn -b :$PORT main:app
+    -
+    -runtime_config:
+    -  operating_system: "ubuntu22"
+    +runtime: python37
+~~~~ No changes for ./flexible/tasks/create_app_engine_queue_task_test.py
+~~~~ No changes for ./flexible/tasks/create_app_engine_queue_task.py
+
+============================================
+Checking folder ./flexible/tasks/templates
+============================================
+
+---- 8 Differences for ./flexible/tasks/templates/index.html
+    --- ./flexible/tasks/templates/index.html
+    +++ ./flexible_python37_and_earlier/tasks/templates/index.html
+    @@ -18,4 +18,4 @@
+         <body>
+             <p>Printed task payload: {{ payload }}</p>
+         </body>
+    -</html>
+    +</html>
+
+============================================
+Checking folder ./flexible/twilio
+============================================
+
+~~~~ No changes for ./flexible/twilio/requirements.txt
+~~~~ No changes for ./flexible/twilio/main.py
+---- 11 Differences for ./flexible/twilio/README.md
+    --- ./flexible/twilio/README.md
+    +++ ./flexible_python37_and_earlier/twilio/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/twilio/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/twilio/README.md
+    
+     This sample demonstrates how to use [Twilio](https://www.twilio.com) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    
+~~~~ No changes for ./flexible/twilio/main_test.py
+~~~~ No changes for ./flexible/twilio/requirements-test.txt
+~~~~ No changes for ./flexible/twilio/app.yaml
+
+============================================
+Checking folder ./flexible/multiple_services
+============================================
+
+---- 37 Differences for ./flexible/multiple_services/README.md
+    --- ./flexible/multiple_services/README.md
+    +++ ./flexible_python37_and_earlier/multiple_services/README.md
+    @@ -3,21 +3,18 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/multiple_services/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/multiple_services/README.md
+    
+     This example demonstrates how to deploy multiple python services to [App Engine flexible environment](https://cloud.google.com/appengine/docs/flexible/)
+    
+     ## To Run Locally
+    
+    -Use [virtualenv](https://virtualenv.pypa.io/en/stable/) to set up each
+    -service's environment and start the each service in a separate terminal.
+    -
+     Open a terminal and start the first service:
+    
+     ```Bash
+     $ cd gateway-service
+    -$ virtualenv -p python3 env
+    -$ source env/bin/activate
+    +$ # follow https://cloud.google.com/python/docs/setup to set up a Python
+    +development environment
+     $ pip install -r requirements.txt
+     $ python main.py
+     ```
+    @@ -26,8 +23,7 @@
+    
+     ```Bash
+     $ cd static-service
+    -$ virtualenv -p python3 env
+    -$ source env/bin/activate
+    +$ # follow https://cloud.google.com/python/docs/setup to set up a Python
+     $ pip install -r requirements.txt
+     $ python main.py
+     ```
+
+============================================
+Checking folder ./flexible/multiple_services/static-service
+============================================
+
+~~~~ No changes for ./flexible/multiple_services/static-service/requirements.txt
+~~~~ No changes for ./flexible/multiple_services/static-service/main.py
+~~~~ No changes for ./flexible/multiple_services/static-service/requirements-test.txt
+~~~~ No changes for ./flexible/multiple_services/static-service/app.yaml
+
+============================================
+Checking folder ./flexible/multiple_services/static-service/static
+============================================
+
+~~~~ No changes for ./flexible/multiple_services/static-service/static/index.js
+~~~~ No changes for ./flexible/multiple_services/static-service/static/index.html
+~~~~ No changes for ./flexible/multiple_services/static-service/static/style.css
+
+============================================
+Checking folder ./flexible/multiple_services/gateway-service
+============================================
+
+~~~~ No changes for ./flexible/multiple_services/gateway-service/requirements.txt
+~~~~ No changes for ./flexible/multiple_services/gateway-service/main.py
+~~~~ No changes for ./flexible/multiple_services/gateway-service/services_config.py
+~~~~ No changes for ./flexible/multiple_services/gateway-service/requirements-test.txt
+~~~~ No changes for ./flexible/multiple_services/gateway-service/app.yaml
+
+============================================
+Checking folder ./flexible/hello_world
+============================================
+
+---- 7 Differences for ./flexible/hello_world/requirements.txt
+    --- ./flexible/hello_world/requirements.txt
+    +++ ./flexible_python37_and_earlier/hello_world/requirements.txt
+    @@ -1,2 +1,3 @@
+    -Flask==2.1.1
+    +Flask==2.1.0; python_version > '3.6'
+    +Flask==2.0.3; python_version < '3.7'
+     gunicorn==20.1.0
+---- 17 Differences for ./flexible/hello_world/main.py
+    --- ./flexible/hello_world/main.py
+    +++ ./flexible_python37_and_earlier/hello_world/main.py
+    @@ -1,4 +1,4 @@
+    -# Copyright 2015 Google LLC
+    +# Copyright 2015 Google LLC.
+     #
+     # Licensed under the Apache License, Version 2.0 (the "License");
+     # you may not use this file except in compliance with the License.
+    @@ -20,7 +20,7 @@
+    
+    
+     @app.route('/')
+    -def hello() -> str:
+    +def hello():
+         """Return a friendly HTTP greeting."""
+         return 'Hello World!'
+    
+---- 17 Differences for ./flexible/hello_world/main_test.py
+    --- ./flexible/hello_world/main_test.py
+    +++ ./flexible_python37_and_earlier/hello_world/main_test.py
+    @@ -1,4 +1,4 @@
+    -# Copyright 2015 Google LLC
+    +# Copyright 2015 Google LLC.
+     #
+     # Licensed under the Apache License, Version 2.0 (the "License");
+     # you may not use this file except in compliance with the License.
+    @@ -15,7 +15,7 @@
+     import main
+    
+    
+    -def test_index() -> str:
+    +def test_index():
+         main.app.testing = True
+         client = main.app.test_client()
+    
+---- 5 Differences for ./flexible/hello_world/requirements-test.txt
+    --- ./flexible/hello_world/requirements-test.txt
+    +++ ./flexible_python37_and_earlier/hello_world/requirements-test.txt
+    @@ -1 +1 @@
+    -pytest==6.2.4
+    +pytest==7.0.1
+---- 14 Differences for ./flexible/hello_world/app.yaml
+    --- ./flexible/hello_world/app.yaml
+    +++ ./flexible_python37_and_earlier/hello_world/app.yaml
+    @@ -17,9 +17,9 @@
+     entrypoint: gunicorn -b :$PORT main:app
+    
+     runtime_config:
+    -  operating_system: ubuntu22
+    +  python_version: 3
+    
+    -# This sample incurs costs to run on the App Engine flexible environment.
+    +# This sample incurs costs to run on the App Engine flexible environment.
+     # The settings below are to reduce costs during testing and are not appropriate
+     # for production use. For more information, see:
+     # https://cloud.google.com/appengine/docs/flexible/python/configuring-your-app-with-app-yaml
+
+============================================
+Checking folder ./flexible/analytics
+============================================
+
+~~~~ No changes for ./flexible/analytics/requirements.txt
+~~~~ No changes for ./flexible/analytics/main.py
+---- 11 Differences for ./flexible/analytics/README.md
+    --- ./flexible/analytics/README.md
+    +++ ./flexible_python37_and_earlier/analytics/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/analytics/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/analytics/README.md
+    
+     This sample demonstrates how to use the [Google Analytics Measurement Protocol](https://developers.google.com/analytics/devguides/collection/protocol/v1/) (or any other SQL server) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    
+~~~~ No changes for ./flexible/analytics/main_test.py
+~~~~ No changes for ./flexible/analytics/requirements-test.txt
+~~~~ No changes for ./flexible/analytics/app.yaml
+
+============================================
+Checking folder ./flexible/storage
+============================================
+
+---- 15 Differences for ./flexible/storage/requirements.txt
+    --- ./flexible/storage/requirements.txt
+    +++ ./flexible_python37_and_earlier/storage/requirements.txt
+    @@ -1,4 +1,8 @@
+    -Flask==2.1.0;
+    -werkzeug==2.1.2;
+    -google-cloud-storage==2.1.0;
+    -gunicorn==20.1.0;
+    +Flask==2.1.0; python_version > '3.6'
+    +Flask==2.0.3; python_version < '3.7'
+    +werkzeug==2.1.2; python_version > '3.6'
+    +werkzeug==2.0.3; python_version < '3.7'
+    +google-cloud-storage==2.0.0; python_version < '3.7'
+    +google-cloud-storage==2.1.0; python_version > '3.6'
+    +gunicorn==20.1.0; python_version > '3.0'
+    +gunicorn==19.10.0; python_version < '3.0'
+---- 74 Differences for ./flexible/storage/main.py
+    --- ./flexible/storage/main.py
+    +++ ./flexible_python37_and_earlier/storage/main.py
+    @@ -1,4 +1,4 @@
+    -# Copyright 2015 Google LLC
+    +# Copyright 2015 Google LLC.
+     #
+     # Licensed under the Apache License, Version 2.0 (the "License");
+     # you may not use this file except in compliance with the License.
+    @@ -23,10 +23,10 @@
+     app = Flask(__name__)
+    
+     # Configure this environment variable via app.yaml
+    -CLOUD_STORAGE_BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+    +CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+    
+    
+    -@app.route("/")
+    +@app.route('/')
+     def index() -> str:
+         return """
+     <form method="POST" action="/upload" enctype="multipart/form-data">
+    @@ -36,13 +36,13 @@
+     """
+    
+    
+    -@app.route("/upload", methods=["POST"])
+    +@app.route('/upload', methods=['POST'])
+     def upload() -> str:
+         """Process the uploaded file and upload it to Google Cloud Storage."""
+    -    uploaded_file = request.files.get("file")
+    +    uploaded_file = request.files.get('file')
+    
+         if not uploaded_file:
+    -        return "No file uploaded.", 400
+    +        return 'No file uploaded.', 400
+    
+         # Create a Cloud Storage client.
+         gcs = storage.Client()
+    @@ -54,7 +54,8 @@
+         blob = bucket.blob(uploaded_file.filename)
+    
+         blob.upload_from_string(
+    -        uploaded_file.read(), content_type=uploaded_file.content_type
+    +        uploaded_file.read(),
+    +        content_type=uploaded_file.content_type
+         )
+    
+         # Make the blob public. This is not necessary if the
+    @@ -68,20 +69,15 @@
+    
+     @app.errorhandler(500)
+     def server_error(e: Union[Exception, int]) -> str:
+    -    logging.exception("An error occurred during a request.")
+    -    return (
+    -        """
+    +    logging.exception('An error occurred during a request.')
+    +    return """
+         An internal error occurred: <pre>{}</pre>
+         See logs for full stacktrace.
+    -    """.format(
+    -            e
+    -        ),
+    -        500,
+    -    )
+    +    """.format(e), 500
+    
+    
+    -if __name__ == "__main__":
+    +if __name__ == '__main__':
+         # This is used when running locally. Gunicorn is used to run the
+         # application on Google App Engine. See entrypoint in app.yaml.
+    -    app.run(host="127.0.0.1", port=8080, debug=True)
+    +    app.run(host='127.0.0.1', port=8080, debug=True)
+     # [END gae_flex_storage_app]
+---- 11 Differences for ./flexible/storage/README.md
+    --- ./flexible/storage/README.md
+    +++ ./flexible_python37_and_earlier/storage/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/storage/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/storage/README.md
+    
+     This sample demonstrates how to use [Google Cloud Storage](https://cloud.google.com/storage/) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    
+---- 56 Differences for ./flexible/storage/main_test.py
+    --- ./flexible/storage/main_test.py
+    +++ ./flexible_python37_and_earlier/storage/main_test.py
+    @@ -1,4 +1,4 @@
+    -# Copyright 2015 Google LLC
+    +# Copyright 2015 Google LLC.
+     #
+     # Licensed under the Apache License, Version 2.0 (the "License");
+     # you may not use this file except in compliance with the License.
+    @@ -12,7 +12,6 @@
+     # See the License for the specific language governing permissions and
+     # limitations under the License.
+    
+    -import io
+     import os
+     import uuid
+    
+    @@ -20,8 +19,8 @@
+     import flask.testing
+     from google.cloud import storage
+     import pytest
+    -
+     import requests
+    +from six import BytesIO
+    
+     import main
+    
+    @@ -33,7 +32,7 @@
+    
+    
+     def test_index(client: flask.testing.FlaskClient) -> None:
+    -    r = client.get("/")
+    +    r = client.get('/')
+         assert r.status_code == 200
+    
+    
+    @@ -51,12 +50,17 @@
+         # Upload a simple file
+         file_content = b"This is some test content."
+    
+    -    r = client.post("/upload", data={"file": (io.BytesIO(file_content), blob_name)})
+    +    r = client.post(
+    +        '/upload',
+    +        data={
+    +            'file': (BytesIO(file_content), blob_name)
+    +        }
+    +    )
+    
+         assert r.status_code == 200
+    
+         # The app should return the public cloud storage URL for the uploaded
+         # file. Download and verify it.
+    -    cloud_storage_url = r.data.decode("utf-8")
+    +    cloud_storage_url = r.data.decode('utf-8')
+         r = requests.get(cloud_storage_url)
+    -    assert r.text.encode("utf-8") == file_content
+    +    assert r.text.encode('utf-8') == file_content
+---- 7 Differences for ./flexible/storage/requirements-test.txt
+    --- ./flexible/storage/requirements-test.txt
+    +++ ./flexible_python37_and_earlier/storage/requirements-test.txt
+    @@ -1,2 +1,3 @@
+     pytest==7.0.1
+    -google-cloud-storage==2.1.0;
+    +google-cloud-storage==2.0.0; python_version < '3.7'
+    +google-cloud-storage==2.1.0; python_version > '3.6'
+---- 14 Differences for ./flexible/storage/app.yaml
+    --- ./flexible/storage/app.yaml
+    +++ ./flexible_python37_and_earlier/storage/app.yaml
+    @@ -17,9 +17,9 @@
+     entrypoint: gunicorn -b :$PORT main:app
+    
+     runtime_config:
+    -  operating_system: "ubuntu22"
+    +  python_version: 3
+    
+     #[START gae_flex_storage_yaml]
+     env_variables:
+    -  CLOUD_STORAGE_BUCKET: [your-bucket-name]
+    +    CLOUD_STORAGE_BUCKET: your-bucket-name
+     #[END gae_flex_storage_yaml]
+
+============================================
+Checking folder ./flexible/extending_runtime
+============================================
+
+~~~~ No changes for ./flexible/extending_runtime/requirements.txt
+~~~~ No changes for ./flexible/extending_runtime/.dockerignore
+~~~~ No changes for ./flexible/extending_runtime/main.py
+~~~~ No changes for ./flexible/extending_runtime/main_test.py
+~~~~ No changes for ./flexible/extending_runtime/Dockerfile
+~~~~ No changes for ./flexible/extending_runtime/requirements-test.txt
+~~~~ No changes for ./flexible/extending_runtime/app.yaml
+
+============================================
+Checking folder ./flexible/hello_world_django
+============================================
+
+~~~~ No changes for ./flexible/hello_world_django/requirements.txt
+---- 21 Differences for ./flexible/hello_world_django/README.md
+    --- ./flexible/hello_world_django/README.md
+    +++ ./flexible_python37_and_earlier/hello_world_django/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/hello_world_django/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/hello_world_django/README.md
+    
+     This is a basic hello world [Django](https://www.djangoproject.com/) example
+     for [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    @@ -24,6 +24,9 @@
+     [`requirements.txt`](requirements.txt).
+    
+     ## How this was created
+    +
+    +To set up Python development environment, please follow
+    +https://cloud.google.com/python/docs/setup.
+    
+     This project was created using standard Django commands:
+    
+~~~~ No changes for ./flexible/hello_world_django/manage.py
+~~~~ No changes for ./flexible/hello_world_django/requirements-test.txt
+~~~~ No changes for ./flexible/hello_world_django/.gitignore
+~~~~ No changes for ./flexible/hello_world_django/app.yaml
+
+============================================
+Checking folder ./flexible/hello_world_django/helloworld
+============================================
+
+~~~~ No changes for ./flexible/hello_world_django/helloworld/__init__.py
+~~~~ No changes for ./flexible/hello_world_django/helloworld/views.py
+
+============================================
+Checking folder ./flexible/hello_world_django/project_name
+============================================
+
+~~~~ No changes for ./flexible/hello_world_django/project_name/__init__.py
+~~~~ No changes for ./flexible/hello_world_django/project_name/urls.py
+~~~~ No changes for ./flexible/hello_world_django/project_name/wsgi.py
+~~~~ No changes for ./flexible/hello_world_django/project_name/settings.py
+
+============================================
+Checking folder ./flexible/websockets
+============================================
+
+~~~~ No changes for ./flexible/websockets/requirements.txt
+~~~~ No changes for ./flexible/websockets/main.py
+~~~~ No changes for ./flexible/websockets/README.md
+~~~~ No changes for ./flexible/websockets/main_test.py
+~~~~ No changes for ./flexible/websockets/requirements-test.txt
+~~~~ No changes for ./flexible/websockets/app.yaml
+
+============================================
+Checking folder ./flexible/websockets/templates
+============================================
+
+~~~~ No changes for ./flexible/websockets/templates/index.html
+
+============================================
+Checking folder ./flexible/static_files
+============================================
+
+~~~~ No changes for ./flexible/static_files/requirements.txt
+~~~~ No changes for ./flexible/static_files/main.py
+---- 11 Differences for ./flexible/static_files/README.md
+    --- ./flexible/static_files/README.md
+    +++ ./flexible_python37_and_earlier/static_files/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/static_files/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/static_files/README.md
+    
+     This demonstrates how to use [Flask](http://flask.pocoo.org/) to serve static files in your application.
+    
+~~~~ No changes for ./flexible/static_files/main_test.py
+~~~~ No changes for ./flexible/static_files/requirements-test.txt
+---- 8 Differences for ./flexible/static_files/app.yaml
+    --- ./flexible/static_files/app.yaml
+    +++ ./flexible_python37_and_earlier/static_files/app.yaml
+    @@ -17,4 +17,4 @@
+     entrypoint: gunicorn -b :$PORT main:app
+    
+     runtime_config:
+    -  operating_system: "ubuntu22"
+    +  python_version: 3
+
+============================================
+Checking folder ./flexible/static_files/templates
+============================================
+
+~~~~ No changes for ./flexible/static_files/templates/index.html
+
+============================================
+Checking folder ./flexible/static_files/static
+============================================
+
+~~~~ No changes for ./flexible/static_files/static/main.css
+
+============================================
+Checking folder ./flexible/metadata
+============================================
+
+~~~~ No changes for ./flexible/metadata/requirements.txt
+~~~~ No changes for ./flexible/metadata/main.py
+~~~~ No changes for ./flexible/metadata/requirements-test.txt
+~~~~ No changes for ./flexible/metadata/app.yaml
+
+============================================
+Checking folder ./flexible/pubsub
+============================================
+
+~~~~ No changes for ./flexible/pubsub/requirements.txt
+~~~~ No changes for ./flexible/pubsub/main.py
+---- 11 Differences for ./flexible/pubsub/README.md
+    --- ./flexible/pubsub/README.md
+    +++ ./flexible_python37_and_earlier/pubsub/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/pubsub/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/pubsub/README.md
+    
+     This demonstrates how to send and receive messages using [Google Cloud Pub/Sub](https://cloud.google.com/pubsub) on [Google App Engine Flexible Environment](https://cloud.google.com/appengine).
+    
+~~~~ No changes for ./flexible/pubsub/main_test.py
+~~~~ No changes for ./flexible/pubsub/requirements-test.txt
+---- 11 Differences for ./flexible/pubsub/app.yaml
+    --- ./flexible/pubsub/app.yaml
+    +++ ./flexible_python37_and_earlier/pubsub/app.yaml
+    @@ -17,7 +17,7 @@
+     entrypoint: gunicorn -b :$PORT main:app
+    
+     runtime_config:
+    -  operating_system: "ubuntu22"
+    +  python_version: 3
+    
+     # [START gae_flex_pubsub_env]
+     env_variables:
+~~~~ No changes for ./flexible/pubsub/sample_message.json
+
+============================================
+Checking folder ./flexible/pubsub/templates
+============================================
+
+~~~~ No changes for ./flexible/pubsub/templates/index.html
+
+============================================
+Checking folder ./flexible/scipy
+============================================
+
+~~~~ No changes for ./flexible/scipy/requirements.txt
+~~~~ No changes for ./flexible/scipy/main.py
+---- 11 Differences for ./flexible/scipy/README.md
+    --- ./flexible/scipy/README.md
+    +++ ./flexible_python37_and_earlier/scipy/README.md
+    @@ -3,7 +3,7 @@
+     [![Open in Cloud Shell][shell_img]][shell_link]
+    
+     [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
+    -[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible/scipy/README.md
+    +[shell_link]: https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=appengine/flexible_python37_and_earlier/scipy/README.md
+    
+     This sample demonstrates how to use SciPy to resize an image on App Engine Flexible.
+    
+~~~~ No changes for ./flexible/scipy/main_test.py
+~~~~ No changes for ./flexible/scipy/requirements-test.txt
+~~~~ No changes for ./flexible/scipy/.gitignore
+~~~~ No changes for ./flexible/scipy/app.yaml
+
+============================================
+Checking folder ./flexible/scipy/assets
+============================================
+
