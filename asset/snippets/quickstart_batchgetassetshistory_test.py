@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import os
 import uuid
 
-from google.api_core.retry import Retry
 from google.api_core.exceptions import InvalidArgument
 from google.cloud import storage
 import pytest
@@ -52,7 +52,7 @@ def test_batch_get_assets_history(asset_bucket, capsys):
         bucket_asset_name,
     ]
 
-    @Retry(on_error=InvalidArgument, timeout=60)
+    @backoff.on_exception(backoff.expo, (AssertionError, InvalidArgument))
     def eventually_consistent_test():
         quickstart_batchgetassetshistory.batch_get_assets_history(PROJECT, asset_names)
         out, _ = capsys.readouterr()
