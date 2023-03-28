@@ -23,7 +23,7 @@ import custom_roles
 
 GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-CUSTOM_ROLE_NAME = "pythonTestCustomRole"
+CUSTOM_ROLE_NAME = "pythonTestCustomRole" + str(uuid.uuid1().int)
 CUSTOM_ROLE_TITLE = "Python Test Custom Role"
 CUSTOM_ROLE_DESCRIPTION = "This is a python test custom role"
 CUSTOM_ROLE_PERMISSIONS = ["iam.roles.get"]
