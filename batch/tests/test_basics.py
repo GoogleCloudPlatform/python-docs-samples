@@ -32,7 +32,7 @@ from ..logs.read_job_logs import print_job_logs
 PROJECT = google.auth.default()[1]
 REGION = 'europe-north1'
 
-TIMEOUT = 600  # 10 minutes
+TIMEOUT = 900  # 15 minutes
 
 WAIT_STATES = {
     batch_v1.JobStatus.State.STATE_UNSPECIFIED,
@@ -55,7 +55,7 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(PROJECT, REGION, test_job.name.rsplit('/', maxsplit=1)[1])
-            time.sleep(5)
+            time.sleep(30)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 

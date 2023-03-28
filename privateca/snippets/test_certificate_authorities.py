@@ -41,10 +41,9 @@ def generate_name() -> str:
 
 
 # We are hitting 5 CAs per minute limit which can't be changed
-# We set the backoff function to use 4 as base - this way the 3rd try
-# should wait for 64 seconds and avoid per minute quota
+# This will wait 30, 60, 120, 240 seconds on successive tries
 def backoff_expo_wrapper():
-    return backoff.expo(base=4)
+    return backoff.expo(factor=30, base=2)
 
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
