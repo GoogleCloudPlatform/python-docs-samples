@@ -1,2 +1,2 @@
-PyMySQL==0.10.1; python_version < '3.0'  # needs to stay under 1.0.0 for Python 2 support
+PyMySQL==1.0.3; python_version < '3.0'  # needs to stay under 1.0.0 for Python 2 support
 Django==1.11.29; python_version < '3.0'  # needs to stay under 2.0.0 for Python 2 support
