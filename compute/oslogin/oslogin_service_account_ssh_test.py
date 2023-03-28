@@ -212,15 +212,15 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     oslogin_client = oslogin_v1.OsLoginServiceClient(credentials=oslogin_service_account['credentials'])
     # Letting everything settle down...
     time.sleep(60)
-
-    with _create_firewall():
-        main('uname -a', PROJECT, account=account,
-             hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
-             oslogin=oslogin_client)
-
-    out, _ = capsys.readouterr()
-    assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
+    
     try:
+        with _create_firewall():
+            main('uname -a', PROJECT, account=account,
+                 hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+                 oslogin=oslogin_client)
+
+        out, _ = capsys.readouterr()
+        assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
         assert assert_value in out
     except (AssertionError, subprocess.TimeoutExpired) as err:
         fw_client = compute_v1.FirewallsClient()

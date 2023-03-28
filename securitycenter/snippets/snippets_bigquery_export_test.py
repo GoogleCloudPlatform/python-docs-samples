@@ -21,6 +21,8 @@ import re
 import uuid
 
 from _pytest.capture import CaptureFixture
+import backoff
+from google.api_core.exceptions import ServiceUnavailable
 import pytest
 
 import snippets_bigquery_export
@@ -48,6 +50,7 @@ def bigquery_export_id():
     delete_bigquery_dataset(BIGQUERY_DATASET_ID)
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def create_bigquery_dataset(dataset_id: str):
     from google.cloud import bigquery
 
@@ -60,6 +63,7 @@ def create_bigquery_dataset(dataset_id: str):
     print("Dataset {} created.".format(dataset.dataset_id))
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def delete_bigquery_dataset(dataset_id: str):
     from google.cloud import bigquery
 
@@ -68,6 +72,7 @@ def delete_bigquery_dataset(dataset_id: str):
     print("Dataset {} deleted.".format(dataset_id))
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def test_get_bigquery_export(capsys: CaptureFixture, bigquery_export_id: str):
     snippets_bigquery_export.get_bigquery_export(
         f"projects/{PROJECT_ID}", bigquery_export_id
@@ -80,6 +85,7 @@ def test_get_bigquery_export(capsys: CaptureFixture, bigquery_export_id: str):
     assert re.search(f"bigQueryExports/{bigquery_export_id}", out)
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def test_list_bigquery_exports(capsys: CaptureFixture, bigquery_export_id: str):
     snippets_bigquery_export.list_bigquery_exports(f"projects/{PROJECT_ID}")
     out, _ = capsys.readouterr()
@@ -87,6 +93,7 @@ def test_list_bigquery_exports(capsys: CaptureFixture, bigquery_export_id: str):
     assert re.search(bigquery_export_id, out)
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def test_update_bigquery_exports(capsys: CaptureFixture, bigquery_export_id: str):
     export_filter = 'severity="MEDIUM"'
     snippets_bigquery_export.update_bigquery_export(
