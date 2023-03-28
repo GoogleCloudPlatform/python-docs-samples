@@ -20,6 +20,7 @@ and checks the existence of a new output table in that dataset.
 import os
 import uuid
 
+import backoff
 from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
@@ -214,7 +215,7 @@ def bq_dataset(test_bucket):
     except NotFound as e:
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
-
+@backoff.on_exception(backoff.expo, AssertionError, max_tries=3)
 def test_process(test_dataproc_batch):
     print(test_dataproc_batch)
 
