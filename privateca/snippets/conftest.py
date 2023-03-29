@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
 import uuid
 
 import backoff
@@ -29,7 +30,7 @@ from delete_certificate_authority import delete_certificate_authority
 from delete_certificate_template import delete_certificate_template
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
+LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000
