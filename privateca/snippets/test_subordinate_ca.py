@@ -51,7 +51,7 @@ def backoff_expo_wrapper():
         yield exp * (1 + random.random())
 
 
-@backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=4)
+@backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
 def test_subordinate_certificate_authority(
     certificate_authority, capsys: typing.Any
 ) -> None:
