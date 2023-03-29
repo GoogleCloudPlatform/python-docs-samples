@@ -15,7 +15,6 @@ import os
 
 import backoff
 
-from google.api_core import exceptions
 from google.api_core.retry import Retry
 
 
@@ -29,19 +28,7 @@ import snippets
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-_RETRIABLE_TYPES = [
-   exceptions.TooManyRequests,  # 429
-   exceptions.InternalServerError,  # 500
-   exceptions.BadGateway,  # 502
-   exceptions.ServiceUnavailable,  # 503
-]
-
-
-def is_retryable(exc):
-    return isinstance(exc, _RETRIABLE_TYPES)
-
-
-retry_policy = Retry(predicate=is_retryable)
+retry_policy = Retry()
 
 
 class CleanupClient(datastore.Client):
