@@ -18,13 +18,13 @@ import uuid
 
 import google.auth
 
+from conftest import LOCATION
 from create_certificate_template import create_certificate_template
 from delete_certificate_template import delete_certificate_template
 from list_certificate_templates import list_certificate_templates
 from update_certificate_template import update_certificate_template
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000

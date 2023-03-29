@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import random
 import uuid
 
+import backoff
 from google.api_core.exceptions import FailedPrecondition
+from google.api_core.exceptions import ServiceUnavailable
 import google.auth
 from google.cloud.security import privateca_v1
 import pytest
@@ -27,7 +30,7 @@ from delete_certificate_authority import delete_certificate_authority
 from delete_certificate_template import delete_certificate_template
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
+LOCATION = random.choice(("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4"))
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000
@@ -71,6 +74,7 @@ def delete_capool() -> None:
             continue
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
 def delete_stale_resources() -> None:
     delete_capool()
 
