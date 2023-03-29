@@ -22,6 +22,7 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
+    # 3.11 is currently unsupported
     "ignored_versions": ["2.7", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
