@@ -48,6 +48,7 @@ def backoff_expo_wrapper():
     for exp in backoff.expo(base=4):
         if exp is None:
             yield None
+            continue
         yield exp * (1 + random.random())
 
 
