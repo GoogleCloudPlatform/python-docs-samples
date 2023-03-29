@@ -58,8 +58,8 @@
     <link href="../static/styles/global.css" rel="stylesheet" />
     <script type="module" src="../static/scripts/component.js"></script>
     <script type="text/javascript" src="../static/scripts/global.js"></script>
-    <!-- ATTENTION: reCAPTCHA Example (Part 1) Starts -->
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/1) Starts -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
       grecaptcha.enterprise.ready(async () => {
@@ -69,15 +69,10 @@
             action: "home",
           }
         );
-        // SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment
-        const score = await createAssessment({
-          action: "home",
-          token,
-        });
-        useAssessment(score);
+        await homepage({token});
       });
     </script>
-    <!-- ATTENTION: reCAPTCHA Example (Part 1) Ends -->
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/1) Ends -->
   </head>
   <body>
     <recaptcha-demo step="home"></recaptcha-demo>
