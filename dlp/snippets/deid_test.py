@@ -291,6 +291,37 @@ def test_deidentify_with_replace_infotype(capsys):
     assert "My favorite site is [URL]" in out
 
 
+def test_deidentify_with_simple_word_list(capsys):
+    word_list = ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"]
+    deid.deidentify_with_simple_word_list(
+        GCLOUD_PROJECT,
+        "My Room is rm-green",
+        "CUSTOM_ROOM_ID",
+        word_list
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "rm-green" not in out
+    assert "My Room is [CUSTOM_ROOM_ID]" in out
+
+
+def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
+    content_str = "My Room is rm-red"
+    word_list = ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"]
+    deid.deidentify_with_simple_word_list(
+        GCLOUD_PROJECT,
+        content_str,
+        "CUSTOM_ROOM_ID",
+        word_list
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "[CUSTOM_ROOM_ID]" not in out
+    assert content_str in out
+
+
 def test_deidentify_with_exception_list(capsys):
     content_str = "jack@example.org accessed record of user: gary@example.org"
     exception_list = ["jack@example.org", "jill@example.org"]
