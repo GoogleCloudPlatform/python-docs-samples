@@ -44,22 +44,23 @@ def fetch_acl(
     # Fetch document acl if document id is specified
     # else fetch acl on project level
     if document_id:
-        # The full resource name of the document, e.g.:
-        # projects/{project_number}/locations/{location}/documents/{document_id}
-        resource = client.document_path(project_number, location, document_id)
+        request = contentwarehouse.FetchAclRequest(
+            # The full resource name of the document, e.g.:
+            # projects/{project_number}/locations/{location}/documents/{document_id}
+            resource=client.document_path(project_number, location, document_id),
+            request_metadata=contentwarehouse.RequestMetadata(
+                user_info=contentwarehouse.UserInfo(id=user_id)
+            ),
+        )
     else:
-        # The full resource name of the project, e.g.:
-        # projects/{project_number}
-        resource = client.common_project_path(project_number)
+        request = contentwarehouse.FetchAclRequest(
+            # The full resource name of the project, e.g.:
+            # projects/{project_number}
+            resource=client.common_project_path(project_number),
+            project_owner=True,
+        )
 
-    # Define request
-    request = contentwarehouse.FetchAclRequest(
-        resource=resource,
-        request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id)
-        ),
-    )
-
+    # Make Request
     response = client.fetch_acl(request)
     print(response)
 

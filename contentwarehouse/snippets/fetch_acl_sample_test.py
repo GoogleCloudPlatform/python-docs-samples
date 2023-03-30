@@ -15,6 +15,7 @@
 
 import os
 
+from google.api_core.exceptions import PermissionDenied
 from contentwarehouse.snippets import fetch_acl_sample
 from contentwarehouse.snippets import test_utilities
 import pytest
@@ -25,15 +26,24 @@ document_id = "2bq3m8uih3j78"
 user_id = "user:xxxx@example.com"
 
 
-@pytest.mark.parametrize("document_id", [document_id])
-def test_fetch_acl(capsys: pytest.CaptureFixture, document_id: str) -> None:
+def test_fetch_project_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     fetch_acl_sample.fetch_acl(
-        project_number=project_number,
-        location=location,
-        user_id=user_id,
-        document_id=document_id,
+        project_number=project_number, location=location, user_id=user_id
     )
     out, _ = capsys.readouterr()
 
     assert "policy" in out
+
+
+def test_fetch_document_acl(capsys: pytest.CaptureFixture) -> None:
+    project_number = test_utilities.get_project_number(project_id)
+    # Project can only support Document or Project ACLs
+    with pytest.raises(PermissionDenied):
+        fetch_acl_sample.fetch_acl(
+            project_number=project_number,
+            location=location,
+            user_id=user_id,
+            document_id=document_id,
+        )
+        out, _ = capsys.readouterr()
