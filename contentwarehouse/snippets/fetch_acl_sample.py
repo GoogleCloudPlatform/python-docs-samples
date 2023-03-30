@@ -26,10 +26,7 @@ from google.cloud import contentwarehouse
 
 
 def fetch_acl(
-    project_number: str,
-    location: str,
-    user_id: str,
-    document_id: str = ''
+    project_number: str, location: str, user_id: str, document_id: str = ""
 ) -> None:
     """Function to fetch access control policies
     on project or document level.
@@ -60,7 +57,7 @@ def fetch_acl(
         resource=resource,
         request_metadata=contentwarehouse.RequestMetadata(
             user_info=contentwarehouse.UserInfo(id=user_id)
-        )
+        ),
     )
 
     response = client.fetch_acl(request)
