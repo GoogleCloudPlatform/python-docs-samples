@@ -22,7 +22,7 @@ import pytest
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 document_id = "2bq3m8uih3j78"
-user_id = "user:dmoonat@google.com"
+user_id = "user:xxxx@example.com"
 
 @pytest.mark.parametrize('document_id', [document_id, ""])
 def test_fetch_acl(capsys: pytest.CaptureFixture,
