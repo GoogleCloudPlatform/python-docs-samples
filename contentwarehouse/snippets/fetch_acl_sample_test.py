@@ -15,9 +15,11 @@
 
 import os
 
-from google.api_core.exceptions import PermissionDenied
 from contentwarehouse.snippets import fetch_acl_sample
 from contentwarehouse.snippets import test_utilities
+
+from google.api_core.exceptions import PermissionDenied
+
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
