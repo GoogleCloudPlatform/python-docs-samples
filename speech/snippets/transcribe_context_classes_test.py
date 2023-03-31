@@ -14,7 +14,10 @@
 
 import transcribe_context_classes
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_transcribe_context_classes(capsys):
     transcribe_context_classes.transcribe_context_classes(
         "gs://cloud-samples-data/speech/commercial_mono.wav"

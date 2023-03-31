@@ -14,7 +14,10 @@
 
 import speech_quickstart_beta
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_quickstart_beta():
     response = speech_quickstart_beta.sample_recognize(
         "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"

@@ -17,9 +17,12 @@ import re
 
 import transcribe
 
+from google.api_core.retry import Retry
+
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_file(capsys):
     transcribe.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
     out, err = capsys.readouterr()
@@ -27,6 +30,7 @@ def test_transcribe_file(capsys):
     assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)
 
 
+@Retry()
 def test_transcribe_gcs(capsys):
     transcribe.transcribe_gcs("gs://python-docs-samples-tests/speech/audio.flac")
     out, err = capsys.readouterr()

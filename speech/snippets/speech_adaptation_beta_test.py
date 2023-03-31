@@ -14,7 +14,10 @@
 
 import speech_adaptation_beta
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_adaptation_beta():
     response = speech_adaptation_beta.sample_recognize(
         "gs://cloud-samples-data/speech/brooklyn_bridge.mp3", "Brooklyn Bridge"

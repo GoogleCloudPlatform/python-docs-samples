@@ -24,10 +24,12 @@ from beta_snippets import (
     transcribe_file_with_spoken_punctuation_end_emojis,
     transcribe_file_with_word_level_confidence,
 )
+from google.api_core.retry import Retry
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_file_with_enhanced_model(capsys):
     transcribe_file_with_enhanced_model()
     out, _ = capsys.readouterr()
@@ -35,6 +37,7 @@ def test_transcribe_file_with_enhanced_model(capsys):
     assert "Chrome" in out
 
 
+@Retry()
 def test_transcribe_file_with_metadata(capsys):
     transcribe_file_with_metadata()
     out, _ = capsys.readouterr()
@@ -42,6 +45,7 @@ def test_transcribe_file_with_metadata(capsys):
     assert "Chrome" in out
 
 
+@Retry()
 def test_transcribe_file_with_auto_punctuation(capsys):
     transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
@@ -49,6 +53,7 @@ def test_transcribe_file_with_auto_punctuation(capsys):
     assert "First alternative of result " in out
 
 
+@Retry()
 def test_transcribe_diarization(capsys):
     transcribe_file_with_diarization()
     out, err = capsys.readouterr()
@@ -57,6 +62,7 @@ def test_transcribe_diarization(capsys):
     assert "speaker_tag:" in out
 
 
+@Retry()
 def test_transcribe_multichannel_file(capsys):
     transcribe_file_with_multichannel()
     out, err = capsys.readouterr()
@@ -64,6 +70,7 @@ def test_transcribe_multichannel_file(capsys):
     assert "OK Google stream stranger things from Netflix to my TV" in out
 
 
+@Retry()
 def test_transcribe_multilanguage_file(capsys):
     transcribe_file_with_multilanguage()
     out, err = capsys.readouterr()
@@ -72,6 +79,7 @@ def test_transcribe_multilanguage_file(capsys):
     assert "Transcript" in out
 
 
+@Retry()
 def test_transcribe_word_level_confidence(capsys):
     transcribe_file_with_word_level_confidence()
     out, err = capsys.readouterr()
@@ -79,6 +87,7 @@ def test_transcribe_word_level_confidence(capsys):
     assert "OK Google stream stranger things from Netflix to my TV" in out
 
 
+@Retry()
 def test_transcribe_file_with_spoken_punctuation_end_emojis(capsys):
     transcribe_file_with_spoken_punctuation_end_emojis()
     out, err = capsys.readouterr()

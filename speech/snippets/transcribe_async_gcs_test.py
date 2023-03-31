@@ -17,9 +17,12 @@ import re
 
 import transcribe_async_gcs
 
+from google.api_core.retry import Retry
+
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_gcs(capsys):
     gcs_path = "gs://python-docs-samples-tests/speech/audio.flac"
     transcribe_async_gcs.transcribe_gcs(gcs_path)

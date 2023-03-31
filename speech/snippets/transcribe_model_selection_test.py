@@ -17,9 +17,12 @@ import re
 
 import transcribe_model_selection
 
+from google.api_core.retry import Retry
+
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_model_selection_file(capsys):
     transcribe_model_selection.transcribe_model_selection(
         os.path.join(RESOURCES, "Google_Gnome.wav"), "video"
@@ -29,6 +32,7 @@ def test_transcribe_model_selection_file(capsys):
     assert re.search(r"the weather outside is sunny", out, re.DOTALL | re.I)
 
 
+@Retry()
 def test_transcribe_model_selection_gcs(capsys):
     transcribe_model_selection.transcribe_model_selection_gcs(
         "gs://cloud-samples-tests/speech/Google_Gnome.wav", "video"

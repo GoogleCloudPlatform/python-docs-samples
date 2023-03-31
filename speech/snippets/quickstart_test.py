@@ -15,7 +15,10 @@
 
 import quickstart
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
