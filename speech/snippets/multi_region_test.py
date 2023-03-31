@@ -13,9 +13,10 @@
 # limitations under the License.
 
 
+from google.api_core.retry import Retry
+
 import multi_region
 
-from google.api_core.retry import Retry
 
 @Retry()
 def test_multi_region(capsys):

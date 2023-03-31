@@ -14,9 +14,9 @@
 
 import uuid
 
+from google.api_core.retry import Retry
 import google.auth
 
-from google.api_core.retry import Retry
 from google.cloud import speech_v1p1beta1 as speech
 
 import pytest

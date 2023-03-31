@@ -14,6 +14,8 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 from beta_snippets import (
     transcribe_file_with_auto_punctuation,
     transcribe_file_with_diarization,
@@ -24,7 +26,6 @@ from beta_snippets import (
     transcribe_file_with_spoken_punctuation_end_emojis,
     transcribe_file_with_word_level_confidence,
 )
-from google.api_core.retry import Retry
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 

@@ -14,9 +14,9 @@
 
 import os
 
-import transcribe_auto_punctuation
-
 from google.api_core.retry import Retry
+
+import transcribe_auto_punctuation
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 

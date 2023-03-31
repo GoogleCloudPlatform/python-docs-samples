@@ -13,9 +13,9 @@
 # limitations under the License.
 
 
-import quickstart
-
 from google.api_core.retry import Retry
+
+import quickstart
 
 
 @Retry()

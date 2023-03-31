@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import speech_quickstart_beta
-
 from google.api_core.retry import Retry
+
+import speech_quickstart_beta
 
 
 @Retry()

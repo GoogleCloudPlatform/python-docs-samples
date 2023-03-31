@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import transcribe_context_classes
-
 from google.api_core.retry import Retry
+
+import transcribe_context_classes
 
 
 @Retry()

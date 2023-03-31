@@ -14,9 +14,9 @@
 
 import re
 
-import profanity_filter
-
 from google.api_core.retry import Retry
+
+import profanity_filter
 
 
 @Retry()

@@ -42,6 +42,7 @@ def delete_custom_class(name):
     request = cloud_speech.DeleteCustomClassRequest(name=name)
     client.delete_custom_class(request=request)
 
+
 @Retry()
 def test_adaptation_v2_custom_class_reference(capsys):
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")

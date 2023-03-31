@@ -15,9 +15,9 @@
 import os
 import re
 
-import transcribe_model_selection
-
 from google.api_core.retry import Retry
+
+import transcribe_model_selection
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
