@@ -23,6 +23,7 @@
 import sys
 from typing import Any
 
+from google.api_core.exceptions import BadRequest
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
 
@@ -89,6 +90,11 @@ def create_disk_from_kms_encrypted_disk(
 
     The encryption key must be the same for the source disk and the new disk.
 
+    To run this method, the service-<project_id>@compute-system.iam.gserviceaccount.com
+    service account needs to have the cloudkms.cryptoKeyEncrypterDecrypter role,
+    as described in documentation:
+    https://cloud.google.com/compute/docs/disks/customer-managed-encryption#before_you_begin
+
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
         zone: name of the zone in which you want to create the disk.
@@ -116,7 +122,17 @@ def create_disk_from_kms_encrypted_disk(
     disk.name = disk_name
     disk.disk_encryption_key = compute_v1.CustomerEncryptionKey()
     disk.disk_encryption_key.kms_key_name = kms_key_name
-    operation = disk_client.insert(project=project_id, zone=zone, disk_resource=disk)
+    try:
+        operation = disk_client.insert(
+            project=project_id, zone=zone, disk_resource=disk
+        )
+    except BadRequest as err:
+        if "Permission 'cloudkms.cryptoKeyVersions.useToEncrypt' denied" in err.message:
+            print(
+                f"Please provide the cloudkms.cryptoKeyEncrypterDecrypter role to"
+                f"service-{project_id}@compute-system.iam.gserviceaccount.com"
+            )
+        raise err
 
     wait_for_extended_operation(operation, "disk creation")
 
