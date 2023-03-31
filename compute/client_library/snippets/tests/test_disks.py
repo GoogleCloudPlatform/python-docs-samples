@@ -208,6 +208,7 @@ def test_disk_create_delete(autodelete_disk_name):
 def test_create_and_clone_encrypted_disk(autodelete_disk_name, kms_key, autodelete_disk_name2):
     # The service account service-{PROJECT_ID}@compute-system.iam.gserviceaccount.com needs to have the
     # cloudkms.cryptoKeyVersions.useToEncrypt permission to execute this test.
+    # Best way is to give this account the cloudkms.cryptoKeyEncrypterDecrypter role.
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
     debian_image = get_image_from_family('debian-cloud', 'debian-11')
 
