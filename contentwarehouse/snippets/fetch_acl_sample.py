@@ -22,20 +22,19 @@ from google.cloud import contentwarehouse
 # project_number = 'YOUR_PROJECT_NUMBER'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 # document_id = 'YOUR_DOCUMENT_ID'
-# user_id = 'user:YOUR_SERVICE_ACCOUNT' # Format is "user:xxxx@example.com"
+# user_id = 'user:YOUR_SERVICE_ACCOUNT_ID' # Format is "user:xxxx@example.com"
 
 
 def fetch_acl(
     project_number: str, location: str, user_id: str, document_id: str = ""
 ) -> None:
-    """Function to fetch access control policies
-    on project or document level.
+    """Fetches access control policies on project or document level.
 
     Args:
-        project_number: GCP project number.
-        location: GCP project location.
-        user_id: Service account.
-        document_id: Document id.
+        project_number: Google Cloud project number.
+        location: Google Cloud project location.
+        user_id: user:YOUR_SERVICE_ACCOUNT_ID.
+        document_id: Record id in Document AI Warehouse.
     """
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
