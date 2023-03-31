@@ -14,11 +14,14 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import transcribe_auto_punctuation
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_file_with_auto_punctuation(capsys):
     transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
         "resources/commercial_mono.wav"
