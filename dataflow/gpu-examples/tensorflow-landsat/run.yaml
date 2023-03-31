@@ -47,7 +47,7 @@ steps:
   - --temp_location=$_TEMP_LOCATION
   - --worker_machine_type=custom-1-13312-ext
   - --sdk_container_image=gcr.io/$PROJECT_ID/$_IMAGE
-  - --experiment=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
+  - --dataflow_service_option=worker_accelerator=type:$_GPU_TYPE;count:$_GPU_COUNT;install-nvidia-driver
   - --experiment=use_runner_v2
   - --experiment=no_use_multiple_sdk_containers
   - --disk_size_gb=50
