@@ -14,12 +14,21 @@
 import os
 
 import backoff
+
+from google.api_core.retry import Retry
+
+
 from google.cloud import datastore
+
 import pytest
 
 import snippets
 
+
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+
+retry_policy = Retry()
 
 
 class CleanupClient(datastore.Client):
@@ -29,11 +38,13 @@ class CleanupClient(datastore.Client):
         self.keys_to_delete = []
 
     def cleanup(self):
-        with self.batch():
-            self.delete_multi(
-                list(set([x.key for x in self.entities_to_delete if x]))
-                + list(set(self.keys_to_delete))
-            )
+        batch = self.batch()
+        batch.begin()
+        self.delete_multi(
+            list(set([x.key for x in self.entities_to_delete if x]))
+            + list(set(self.keys_to_delete))
+        )
+        batch.commit(retry=retry_policy)
 
 
 @pytest.fixture
