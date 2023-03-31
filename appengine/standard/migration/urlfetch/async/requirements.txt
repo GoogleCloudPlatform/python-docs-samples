@@ -1,5 +1,5 @@
 Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
-requests==2.28.2
+requests==2.27.1
 requests-futures==1.0.0
 requests-toolbelt==0.10.0
