@@ -1,5 +1,5 @@
 # Newer versions of rsa module are incompatible with Python 2.7
-rsa==4.9; python_version < '3'
+rsa==4.7.1; python_version < '3'
 googleapis_common_protos
 google-cloud-ndb
 Flask==1.1.4; python_version < '3.0'

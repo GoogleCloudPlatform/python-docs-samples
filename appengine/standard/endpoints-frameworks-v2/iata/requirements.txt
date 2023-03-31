@@ -1,4 +1,4 @@
 google-endpoints==4.8.0
 google-endpoints-api-management==1.11.1
 rsa==4.9; python_version > "3.0"
-rsa==4.9; python_version < "3.0"
+rsa==4.7.1; python_version < "3.0"
