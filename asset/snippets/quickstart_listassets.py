@@ -43,8 +43,13 @@ def list_assets(project_id, asset_types, page_size, content_type):
         }
     )
 
+    # DEBUGGING - remove before merging. See if timeouts are because there are so many assets being listed
+    count = 0   # DEBUGGING
     for asset in response:
         print(asset)
+        count += 1    # DEBUGGING
+        if count > 3 * page_size:   # DEBUGGING
+            break    # DEBUGGING - three pages is plenty for a test
     # [END asset_quickstart_list_assets]
 
 
