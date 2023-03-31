@@ -961,13 +961,7 @@ def deidentify_with_simple_word_list(project, input_str, info_type, word_list):
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
 
-    # Construct a list of infoTypes for DLP to locate in `input_str`. See
-    # https://cloud.google.com/dlp/docs/concepts-infotypes for more information
-    # about supported infoTypes.
-    # info_type = {"name": info_type}
-    # wordlist = {"words": wordlist}
-
-    # Construct a custom regex detector for names
+    # Prepare custom_info_types by parsing word lists
     word_list = {"words": word_list}
     custom_info_types = [
         {
@@ -987,7 +981,8 @@ def deidentify_with_simple_word_list(project, input_str, info_type, word_list):
         "info_type_transformations": {
             "transformations": [
                 {
-                    "primitive_transformation": {"replace_with_info_type_config": {}}}
+                    "primitive_transformation": {"replace_with_info_type_config": {}}
+                }
             ]
         }
     }
