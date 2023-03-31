@@ -1,2 +1,2 @@
-google-cloud-error-reporting==1.6.0
+google-cloud-error-reporting==1.9.1
 functions-framework==3.2.0
