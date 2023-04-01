@@ -18,7 +18,7 @@
 import argparse
 
 
-def list_assets(project_id, asset_types, page_size, content_type):
+def list_assets(project_id, asset_types, page_size, content_type, max_results=0):
     # [START asset_quickstart_list_assets]
     from google.cloud import asset_v1
 
@@ -28,6 +28,7 @@ def list_assets(project_id, asset_types, page_size, content_type):
     # TODO page_size = 'Num of assets in one page, which must be between 1 and
     # 1000 (both inclusively)'
     # TODO content_type ="Content type to list"
+    # max_results - total number of assets to return. max_results=0 returns all
 
     project_resource = "projects/{}".format(project_id)
     client = asset_v1.AssetServiceClient()
@@ -43,13 +44,12 @@ def list_assets(project_id, asset_types, page_size, content_type):
         }
     )
 
-    # DEBUGGING - remove before merging. See if timeouts are because there are so many assets being listed
-    count = 0   # DEBUGGING
+    count = 0
     for asset in response:
         print(asset)
-        count += 1    # DEBUGGING
-        if count > 3 * page_size:   # DEBUGGING
-            break    # DEBUGGING - three pages is plenty for a test
+        count += 1
+        if max_results > 0 and count >= max_results:
+            break
     # [END asset_quickstart_list_assets]
 
 
@@ -74,4 +74,6 @@ if __name__ == "__main__":
 
     asset_type_list = args.asset_types.split(",")
 
-    list_assets(args.project_id, asset_type_list, int(args.page_size), args.content_type)
+    list_assets(
+        args.project_id, asset_type_list, int(args.page_size), args.content_type
+    )
