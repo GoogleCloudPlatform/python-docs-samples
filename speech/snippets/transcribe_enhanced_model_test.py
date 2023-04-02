@@ -14,11 +14,14 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import transcribe_enhanced_model
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_file_with_enhanced_model(capsys):
     transcribe_enhanced_model.transcribe_file_with_enhanced_model(
         "resources/commercial_mono.wav"
