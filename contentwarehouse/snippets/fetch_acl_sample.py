@@ -33,7 +33,7 @@ def fetch_acl(
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
-        user_id: user: YOUR_SERVICE_ACCOUNT_ID.
+        user_id: user:YOUR_SERVICE_ACCOUNT_ID.
         document_id: Record id in Document AI Warehouse.
     """
     # Create a client
