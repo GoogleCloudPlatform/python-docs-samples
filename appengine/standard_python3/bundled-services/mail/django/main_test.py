@@ -80,7 +80,7 @@ def version():
     gcloud_cli(f"app versions delete {version_id}")
 
 
-@backoff.on_exception(backoff.expo(base=5), Exception, max_tries=3)
+@backoff.on_exception(backoff.expo, Exception, max_tries=3, base=5)
 def test_send_receive(version):
     project_id, version_id = version
     version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
