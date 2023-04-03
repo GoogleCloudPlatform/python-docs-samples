@@ -942,7 +942,8 @@ def deidentify_with_simple_word_list(
     project,
     input_str,
     info_type,
-    word_list):
+    word_list
+):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
       string by matching against custom word list.
 
