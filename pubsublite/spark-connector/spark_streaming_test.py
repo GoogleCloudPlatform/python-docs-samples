@@ -184,7 +184,7 @@ def test_spark_streaming_to_pubsublite(
         "pyspark_job": {
             "main_python_file_uri": pyfile("spark_streaming_to_pubsublite_example.py"),
             "jar_file_uris": [
-                "gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar"
+                "gs://pubsublite-spark/pubsublite-spark-sql-streaming-1.0.0-with-dependencies.jar"
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},
