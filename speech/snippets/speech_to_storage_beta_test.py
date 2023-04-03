@@ -14,6 +14,7 @@
 
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import speech_v1p1beta1 as speech
 from google.cloud import storage
 import pytest
@@ -37,6 +38,7 @@ sample_rate_hertz = 8000
 language_code = "en-US"
 
 
+@Retry()
 def test_export_transcript_to_storage_beta(bucket, capsys):
     results = speech_to_storage_beta.export_transcript_to_storage_beta(
         INPUT_STORAGE_URI,

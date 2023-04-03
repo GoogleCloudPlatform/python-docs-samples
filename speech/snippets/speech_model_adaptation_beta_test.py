@@ -14,6 +14,7 @@
 
 import uuid
 
+from google.api_core.retry import Retry
 import google.auth
 
 from google.cloud import speech_v1p1beta1 as speech
@@ -29,6 +30,7 @@ LOCATION = "global"
 client = speech.AdaptationClient()
 
 
+@Retry()
 def test_model_adaptation_beta(custom_class_id, phrase_set_id, capsys):
     class_id = custom_class_id
     phrase_id = phrase_set_id
