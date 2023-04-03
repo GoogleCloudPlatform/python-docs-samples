@@ -938,7 +938,11 @@ def deidentify_with_replace_infotype(project, item, info_types):
 
 
 # [START dlp_deidentify_simple_word_list]
-def deidentify_with_simple_word_list(project, input_str, info_type, word_list):
+def deidentify_with_simple_word_list(
+        project,
+        input_str,
+        info_type,
+        word_list):
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
       string by matching against custom word list.
 
@@ -987,6 +991,7 @@ def deidentify_with_simple_word_list(project, input_str, info_type, word_list):
         }
     }
 
+    # Construct the `item`.
     item = {"value": input_str}
 
     # Call the API
@@ -999,7 +1004,7 @@ def deidentify_with_simple_word_list(project, input_str, info_type, word_list):
         }
     )
 
-    print("Deidentified Content: {}".format(response.item.value))
+    print("De-identified Content: {}".format(response.item.value))
 
 
 # [END dlp_deidentify_simple_word_list]
@@ -1347,6 +1352,7 @@ if __name__ == "__main__":
         "word_list",
         help="The list of strings to match against.",
     )
+
     deid_exception_list_parser = subparsers.add_parser(
         "deid_exception_list",
         help="De-identify sensitive data in a string , ignore matches against a custom word list"
