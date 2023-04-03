@@ -83,6 +83,7 @@ def test_datalab_query_magic(ipython_interactive):
     df = results.to_dataframe()
     assert len(df) == 100
 
+
 @pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_client_library_query_magic(ipython_interactive):
     import pandas
