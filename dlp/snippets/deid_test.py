@@ -301,4 +301,3 @@ def test_deindentify_with_exception_list(capsys):
     assert "jack@example.org" in out
     assert "user: [EMAIL_ADDRESS]" in out
     assert "gary@example.org" not in out
-
