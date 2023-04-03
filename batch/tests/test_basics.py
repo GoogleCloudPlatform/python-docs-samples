@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import logging
 import time
 from typing import Callable
 import uuid
@@ -50,11 +51,13 @@ def job_name():
 
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
     start_time = time.time()
+    logging.info(f'_test_body START: {int(start_time)}')
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(PROJECT, REGION, test_job.name.rsplit('/', maxsplit=1)[1])
+            logging.info(f'_test_body WHILE: test_job, {test_job.task_groups[0].name} {test_job.uid} (ELAPSED: {time.time() - start_time})')
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
