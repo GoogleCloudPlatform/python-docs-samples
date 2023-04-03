@@ -937,6 +937,93 @@ def deidentify_with_replace_infotype(project, item, info_types):
 # [END dlp_deidentify_replace_infotype]
 
 
+# [START dlp_deidentify_exception_list]
+def deindentify_with_exception_list(
+    project,
+    content_string,
+    info_types,
+    exception_list
+):
+    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+      string by ignore matches against custom list.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        content_string: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        exception_list: The list of strings to ignore matches on.
+
+    Returns:
+          None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Construct a list of infoTypes for DLP to locate in `content_string`. See
+    # https://cloud.google.com/dlp/docs/concepts-infotypes for more information
+    # about supported infoTypes.
+
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct a rule set that will only match on info_type
+    # if the matched text is not in the exception list.
+    rule_set = [
+        {
+            "info_types": info_types,
+            "rules": [
+                {
+                    "exclusion_rule": {
+                        "dictionary": {"word_list": {"words": exception_list}},
+                        "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_FULL_MATCH,
+                    }
+                }
+            ],
+        }
+    ]
+
+    # Construct the configuration dictionary
+    inspect_config = {
+        "info_types": info_types,
+        "rule_set": rule_set,
+        "include_quote": True,
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {"primitive_transformation": {"replace_with_info_type_config": {}}}
+            ]
+        }
+    }
+
+    # Construct the `item`.
+    item = {"value": content_string}
+
+    # Call the API
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+
+# [END dlp_deidentify_exception_list]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -1172,6 +1259,30 @@ if __name__ == "__main__":
         "Example: 'My credit card is 4242 4242 4242 4242'",
     )
 
+    deid_exception_list_parser = subparsers.add_parser(
+        "deid_exception_list",
+        help="Deidentify sensitive data in a string , ignore matches against a custom word list"
+    )
+    deid_exception_list_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    deid_exception_list_parser.add_argument(
+        "content_string",
+        help="The string to deidentify.",
+    )
+    deid_exception_list_parser.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+    )
+    deid_exception_list_parser.add_argument(
+        "exception_list",
+        help="The list of strings to ignore matches against.",
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -1225,4 +1336,11 @@ if __name__ == "__main__":
             args.project,
             item=args.item,
             info_types=args.info_types,
+        )
+    elif args.content == "deid_exception_list":
+        deindentify_with_exception_list(
+            args.project,
+            args.content_string,
+            args.info_types,
+            args.exception_list,
         )
