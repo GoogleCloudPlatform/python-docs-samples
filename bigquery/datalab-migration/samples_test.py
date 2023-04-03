@@ -273,6 +273,7 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     assert table.num_rows == 50
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_dataframe(to_delete):
     """ Wrap test with retries to handle transient errors """
     @Retry()
