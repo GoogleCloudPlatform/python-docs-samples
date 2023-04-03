@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from datetime import date
 import time
 import typing
 import uuid
@@ -37,6 +38,10 @@ def temp_bucket():
     bucket.delete(force=True)
 
 
+@pytest.mark.skipif(
+    date.today() < date(2023, 6, 1),
+    reason="race conditions to be addressed by that date",
+)
 @flaky(max_runs=3)
 def test_set_usage_export_bucket_default(
     capsys: typing.Any, temp_bucket: storage.Bucket

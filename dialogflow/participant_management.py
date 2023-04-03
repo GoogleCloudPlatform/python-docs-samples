@@ -161,6 +161,7 @@ def analyze_content_audio_stream(
         language_code="en-US",
         sample_rate_hertz=sample_rate_hertz,
         model="phone_call",
+        single_utterance=True,
         # Make sure your project is Dialogflow ES ENTERPRISE_TIER in order to "USE_ENHANCED" model.
         model_variant="USE_ENHANCED",
     )
