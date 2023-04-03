@@ -84,6 +84,7 @@ def test_datalab_query_magic(ipython_interactive):
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_client_library_query_magic(ipython_interactive):
     import pandas
 
@@ -106,6 +107,7 @@ def test_client_library_query_magic(ipython_interactive):
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_query_magic_results_variable(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -155,6 +157,7 @@ def test_client_library_query_magic_results_variable(ipython_interactive):
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_list_tables_magic(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -170,6 +173,7 @@ def test_datalab_list_tables_magic(ipython_interactive):
     assert "shakespeare" in html_element.data
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_query():
     # [START bigquery_migration_datalab_query]
     import google.datalab.bigquery as bq
@@ -201,6 +205,7 @@ def test_client_library_query():
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_gcs_csv(to_delete):
     # [START bigquery_migration_datalab_load_table_from_gcs_csv]
     import google.datalab.bigquery as bq
@@ -269,6 +274,7 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     assert table.num_rows == 50
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_dataframe(to_delete):
     """ Wrap test with retries to handle transient errors """
     @Retry()
