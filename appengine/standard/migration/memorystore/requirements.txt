@@ -1,4 +1,4 @@
-redis==4.1.1; python_version > '3.0'
-redis==3.5.3; python_version < '3.0'
+redis==4.4.4; python_version > '3.0'
+redis<4; python_version < '3.0'
 Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
