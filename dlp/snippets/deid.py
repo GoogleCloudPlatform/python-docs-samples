@@ -944,7 +944,7 @@ def deidentify_with_simple_word_list(
     info_type,
     word_list
 ):
-    """Uses the Data Loss Prevention API to deidentify sensitive data in a
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.
 
     Args:
@@ -963,9 +963,6 @@ def deidentify_with_simple_word_list(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
-
     # Prepare custom_info_types by parsing word lists
     word_list = {"words": word_list}
     custom_info_types = [
@@ -978,7 +975,6 @@ def deidentify_with_simple_word_list(
     # Construct the configuration dictionary
     inspect_config = {
         "custom_info_types": custom_info_types,
-        "include_quote": True,
     }
 
     # Construct deidentify configuration dictionary
@@ -994,6 +990,9 @@ def deidentify_with_simple_word_list(
 
     # Construct the `item`.
     item = {"value": input_str}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
 
     # Call the API
     response = dlp.deidentify_content(
@@ -1734,7 +1733,7 @@ if __name__ == "__main__":
     deid_word_list_parser.add_argument(
         "info_type",
         help="String representing info type to look for. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
     )
     deid_word_list_parser.add_argument(
         "word_list",
