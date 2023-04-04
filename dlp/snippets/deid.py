@@ -938,14 +938,14 @@ def deidentify_with_replace_infotype(project, item, info_types):
 
 
 # [START dlp_deidentify_exception_list]
-def deindentify_with_exception_list(
+def deidentify_with_exception_list(
     project,
     content_string,
     info_types,
     exception_list
 ):
-    """Uses the Data Loss Prevention API to deidentify sensitive data in a
-      string by ignore matches against custom list.
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+      string but ignore matches against custom list.
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -962,9 +962,6 @@ def deindentify_with_exception_list(
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
 
     # Construct a list of infoTypes for DLP to locate in `content_string`. See
     # https://cloud.google.com/dlp/docs/concepts-infotypes for more information
@@ -992,7 +989,6 @@ def deindentify_with_exception_list(
     inspect_config = {
         "info_types": info_types,
         "rule_set": rule_set,
-        "include_quote": True,
     }
 
     # Construct deidentify configuration dictionary
@@ -1006,6 +1002,9 @@ def deindentify_with_exception_list(
 
     # Construct the `item`.
     item = {"value": content_string}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
 
     # Call the API
     response = dlp.deidentify_content(
@@ -1261,7 +1260,7 @@ if __name__ == "__main__":
 
     deid_exception_list_parser = subparsers.add_parser(
         "deid_exception_list",
-        help="Deidentify sensitive data in a string , ignore matches against a custom word list"
+        help="De-identify sensitive data in a string , ignore matches against a custom word list"
     )
     deid_exception_list_parser.add_argument(
         "project",
@@ -1269,14 +1268,14 @@ if __name__ == "__main__":
     )
     deid_exception_list_parser.add_argument(
         "content_string",
-        help="The string to deidentify.",
+        help="The string to de-identify.",
     )
     deid_exception_list_parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
     )
     deid_exception_list_parser.add_argument(
         "exception_list",
@@ -1338,7 +1337,7 @@ if __name__ == "__main__":
             info_types=args.info_types,
         )
     elif args.content == "deid_exception_list":
-        deindentify_with_exception_list(
+        deidentify_with_exception_list(
             args.project,
             args.content_string,
             args.info_types,
