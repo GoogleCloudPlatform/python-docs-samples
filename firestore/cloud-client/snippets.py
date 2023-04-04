@@ -1021,4 +1021,4 @@ def regional_endpoint():
     count_query = db.collection(u'cities').limit(2).get()
     for r in count_query:
         print(r)
-    # [END firestore_create_and_build_bundle]
+    # [END firestore_regional_endpoint]
