@@ -16,8 +16,8 @@ import datetime
 import threading
 from time import sleep
 
-from google.cloud import firestore
 from google.api_core.client_options import ClientOptions
+from google.cloud import firestore
 
 
 def quickstart_new_instance():
@@ -1010,6 +1010,7 @@ def create_and_build_bundle():
     # [END firestore_create_and_build_bundle]
 
     return bundle, bundle_buffer
+
 
 def regional_endpoint():
     # [START firestore_regional_endpoint]

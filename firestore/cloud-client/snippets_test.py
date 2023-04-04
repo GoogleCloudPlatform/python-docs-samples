@@ -331,5 +331,6 @@ def test_create_and_build_bundle():
     bundle, buffer = snippets.create_and_build_bundle()
     assert "latest-stories-query" in bundle.named_queries
 
+
 def test_regional_endpoint():
     snippets.regional_endpoint()
