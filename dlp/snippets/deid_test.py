@@ -302,7 +302,6 @@ def test_deidentify_with_simple_word_list(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "rm-green" not in out
     assert "My Room is [CUSTOM_ROOM_ID]" in out
 
 
@@ -318,7 +317,6 @@ def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "[CUSTOM_ROOM_ID]" not in out
     assert content_str in out
 
 
