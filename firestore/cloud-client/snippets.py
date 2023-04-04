@@ -1021,3 +1021,4 @@ def regional_endpoint():
     for r in count_query:
         print(r)
     # [END firestore_create_and_build_bundle]
+
