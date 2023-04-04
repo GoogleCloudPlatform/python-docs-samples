@@ -17,6 +17,7 @@ import threading
 from time import sleep
 
 from google.cloud import firestore
+from google.api_core.client_options import ClientOptions
 
 
 def quickstart_new_instance():
@@ -1009,3 +1010,14 @@ def create_and_build_bundle():
     # [END firestore_create_and_build_bundle]
 
     return bundle, bundle_buffer
+
+def regional_endpoint():
+    # [START firestore_regional_endpoint]
+    ENDPOINT = "nam5-firestore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    db = firestore.Client(client_options=client_options)
+
+    count_query = db.collection(u'cities').limit(2).get()
+    for r in count_query:
+        print(r)
+    # [END firestore_create_and_build_bundle]
