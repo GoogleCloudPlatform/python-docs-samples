@@ -15,10 +15,7 @@
 /.kokoro/                              @GoogleCloudPlatform/python-samples-owners
 /*                                     @GoogleCloudPlatform/python-samples-owners
 
-/appengine/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard_python3/spanner/*        @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
+
 /asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
 /auth/**/*                             @arithmetic1728 @GoogleCloudPlatform/python-samples-reviewers
 /automl/**/*                           @GoogleCloudPlatform/ml-apis @GoogleCloudPlatform/python-samples-reviewers
@@ -31,7 +28,6 @@
 /cloudbuild/**/*                       @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 /cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers
 /composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /compute/**/*                          @m-strzelczyk @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
@@ -47,13 +43,10 @@
 /dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai  @GoogleCloudPlatform/python-samples-reviewers
-/endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
 /enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /eventarc/**/*                         @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /error_reporting/**/*                  @GoogleCloudPlatform/python-samples-reviewers
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/functions/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
-/functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @noerog @GoogleCloudPlatform/python-samples-reviewers
 /iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
 /iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
@@ -98,3 +91,11 @@
 
 # Self-service
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
+/appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/standard/django/**/*        @glasnt @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/flexible/django_cloudsql/**/*     @glasnt @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/standard_python3/spanner/*        @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
+/codelabs/**/*                         @GoogleCloudPlatform/python-samples-reviewers
+/endpoints/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+/functions/**/*                        @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
+/functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers
