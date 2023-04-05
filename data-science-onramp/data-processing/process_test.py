@@ -161,6 +161,7 @@ def get_blob_from_path(path):
     return bucket.blob(output_location)
 
 
+# retry on InvalidArgument subnetwork not ready error
 @retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_process():
     """Tests process.py by submitting it to a Dataproc cluster"""

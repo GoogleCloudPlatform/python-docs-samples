@@ -155,6 +155,7 @@ def assert_table_success_message(table_name, out):
     ), f"Table {table_name} sucess message not printed in job logs"
 
 
+# retry on InvalidArgument subnetwork not ready error
 @retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_setup():
     """Test setup.py by submitting it to a dataproc cluster
