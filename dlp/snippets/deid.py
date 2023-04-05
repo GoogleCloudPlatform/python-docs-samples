@@ -1069,6 +1069,7 @@ def deidentify_table_condition_masking(
         ]
     }
     """
+
     # Import the client library
     import google.cloud.dlp
 
