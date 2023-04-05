@@ -1,5 +1,9 @@
 # Cloud IoT Core Python Samples
 
+## DEPRECATION NOTICE
+
+Please see the [release notes](https://cloud.google.com/iot/docs/release-notes) for information on the upcoming deprecation of IoT Core
+
 [![Open in Cloud Shell][shell_img]][shell_link]
 
 [shell_img]: http://gstatic.com/cloudssh/images/open-btn.png
