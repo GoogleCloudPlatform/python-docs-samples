@@ -1042,8 +1042,8 @@ def deidentify_table_condition_masking(
         deid_content_list: A list of fields in table to de-identify.
         condition_field: A table Field within the record this condition is evaluated against.
         condition_operator: Operator used to compare the field or infoType to the value. One of:
-        RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS,
-        LESS_THAN_OR_EQUALS, EXISTS.
+            RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS,
+            LESS_THAN_OR_EQUALS, EXISTS.
         condition_value: Value to compare against. [Mandatory, except for ``EXISTS`` tests.].
         masking_character: The character to mask matching sensitive data with.
 
