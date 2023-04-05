@@ -17,7 +17,8 @@ import os
 import re
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core import retry
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -160,6 +161,7 @@ def get_blob_from_path(path):
     return bucket.blob(output_location)
 
 
+@retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_process():
     """Tests process.py by submitting it to a Dataproc cluster"""
     # Submit job to Dataproc cluster

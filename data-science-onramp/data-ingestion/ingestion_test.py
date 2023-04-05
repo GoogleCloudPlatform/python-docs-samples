@@ -20,7 +20,8 @@ import os
 import re
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core import retry
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -154,6 +155,7 @@ def assert_table_success_message(table_name, out):
     ), f"Table {table_name} sucess message not printed in job logs"
 
 
+@retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_setup():
     """Test setup.py by submitting it to a dataproc cluster
     Check table upload success message as well as data in the table itself"""
