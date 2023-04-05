@@ -17,6 +17,7 @@ import datetime
 from pprint import pprint
 
 import google.cloud.exceptions
+from google.api_core.client_options import ClientOptions
 from google.cloud import datastore  # noqa: I100
 
 
@@ -881,6 +882,21 @@ def property_by_kind_run_query(client):
     # [END datastore_property_by_kind_run_query]
 
     return representations_by_property
+
+
+def regional_endpoint():
+    # [START datastore_regional_endpoints]
+    ENDPOINT = "https://datastore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    client = datastore.Client(client_options=client_options)
+    # [End datastore_regional_endpoints]
+ 
+    query = client.query(kind="Task")
+    results = list(query.fetch())
+    for r in results:
+        print(r)
+ 
+    return client
 
 
 def eventual_consistent_query(client):

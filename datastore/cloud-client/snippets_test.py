@@ -301,3 +301,8 @@ class TestDatastoreSnippets:
     @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_index_merge_queries(self, client):
         snippets.index_merge_queries(client)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_regional_endpoint(self, client):
+        client = snippets.regional_endpoint()
+        assert client is not None
