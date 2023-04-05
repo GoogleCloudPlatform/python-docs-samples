@@ -158,7 +158,9 @@ def analyze_content_audio_stream(
                 if not chunk:
                     break
                 # The later requests contains audio data.
-                yield dialogflow.StreamingAnalyzeContentRequest(input_audio=chunk)
+                yield dialogflow.StreamingAnalyzeContentRequest(
+                    participant=participant_path, input_audio=chunk
+                )
 
     audio_config = dialogflow.InputAudioConfig(
         audio_encoding=audio_encoding,
