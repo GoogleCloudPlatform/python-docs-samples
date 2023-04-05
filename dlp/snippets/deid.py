@@ -1034,7 +1034,7 @@ def deidentify_table_condition_masking(
     masking_character=None
 ):
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
-      table by masking sensitive data based on a condition.
+      table by masking them based on a condition.
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
