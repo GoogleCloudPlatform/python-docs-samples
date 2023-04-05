@@ -330,4 +330,4 @@ def test_deidentify_table_condition_replace_with_info_types(capsys):
     assert "string_value: \"Jane Austen\"" in out
     assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
     assert "[PERSON_NAME] loved cats." in out
-    assert "There are 14 kisses in Jane Austen's novels." in out
+    assert "There are 14 kisses in Jane Austen\\\'s novels." in out
