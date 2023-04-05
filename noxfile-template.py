@@ -206,7 +206,6 @@ def _session_tests(
         else:
             session.install("-r", "requirements.txt")
 
-
     if os.path.exists("requirements-test.txt"):
         with open("requirements-test.txt") as rtfile:
             packages += rtfile.read()
@@ -216,7 +215,6 @@ def _session_tests(
             )
         else:
             session.install("-r", "requirements-test.txt")
-
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
