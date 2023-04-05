@@ -34,6 +34,9 @@ def create_participant(project_id, conversation_id, role):
     conversation_path = dialogflow.ConversationsClient.conversation_path(
         project_id, conversation_id
     )
+
+    assert 'python-docs-samples-tests-310' in conversation_path
+
     if role in ROLES:
         response = client.create_participant(
             parent=conversation_path, participant={"role": role}, timeout=600
