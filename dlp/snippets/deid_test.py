@@ -289,3 +289,19 @@ def test_deidentify_with_replace_infotype(capsys):
 
     assert url_to_redact not in out
     assert "My favorite site is [URL]" in out
+
+
+def test_deidentify_with_exception_list(capsys):
+    content_str = "jack@example.org accessed record of user: gary@example.org"
+    exception_list = ["jack@example.org", "jill@example.org"]
+    deid.deidentify_with_exception_list(
+        GCLOUD_PROJECT,
+        content_str,
+        ["EMAIL_ADDRESS"],
+        exception_list
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "gary@example.org" not in out
+    assert "jack@example.org accessed record of user: [EMAIL_ADDRESS]" in out
