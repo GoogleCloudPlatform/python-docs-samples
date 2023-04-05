@@ -35,8 +35,6 @@ def create_participant(project_id, conversation_id, role):
         project_id, conversation_id
     )
 
-    assert 'python-docs-samples-tests-310' in conversation_path
-
     if role in ROLES:
         response = client.create_participant(
             parent=conversation_path, participant={"role": role}, timeout=600
@@ -135,6 +133,9 @@ def analyze_content_audio_stream(
     participant_path = client.participant_path(
         project_id, conversation_id, participant_id
     )
+
+    assert 'python-docs-samples-tests-310' in participant_path
+
     # Note: hard coding audio_encoding and sample_rate_hertz for simplicity.
     audio_encoding = dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16
     sample_rate_hertz = 16000
