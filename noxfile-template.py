@@ -197,22 +197,26 @@ def _session_tests(
     """Runs py.test for a particular project."""
     concurrent_args = []
     if os.path.exists("requirements.txt"):
-        if os.path.exists("constraints.txt"):
-            session.install("-r", "requirements.txt", "-c", "constraints.txt")
-        else:
-            session.install("-r", "requirements.txt")
         with open("requirements.txt") as rfile:
             packages = rfile.read()
+        if os.path.exists("constraints.txt"):
+            session.install("-r", "requirements.txt", "-c", "constraints.txt")
+        elif "pyspark" in packages:
+            session.install("-r", "requirements.txt", "--use-pep517")
+        else:
+            session.install("-r", "requirements.txt")
+
 
     if os.path.exists("requirements-test.txt"):
+        with open("requirements-test.txt") as rtfile:
+            packages += rtfile.read()
         if os.path.exists("constraints-test.txt"):
             session.install(
                 "-r", "requirements-test.txt", "-c", "constraints-test.txt"
             )
         else:
             session.install("-r", "requirements-test.txt")
-        with open("requirements-test.txt") as rtfile:
-            packages += rtfile.read()
+
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
@@ -224,8 +228,6 @@ def _session_tests(
         concurrent_args.extend(['--workers', 'auto', '--tests-per-worker', 'auto'])
     elif "pytest-xdist" in packages:
         concurrent_args.extend(['-n', 'auto'])
-    elif "pyspark" in packages:
-        concurrent_args.extend(['--use-pep517'])
 
     session.run(
         "pytest",
