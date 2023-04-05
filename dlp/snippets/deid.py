@@ -1122,6 +1122,92 @@ def deidentify_table_replace_with_info_types(
 # [END dlp_deidentify_table_infotypes]
 
 
+# [START dlp_deidentify_exception_list]
+def deidentify_with_exception_list(
+    project,
+    content_string,
+    info_types,
+    exception_list
+):
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+      string but ignore matches against custom list.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        content_string: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        exception_list: The list of strings to ignore matches on.
+
+    Returns:
+          None; the response from the API is printed to the terminal.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct a list of infoTypes for DLP to locate in `content_string`. See
+    # https://cloud.google.com/dlp/docs/concepts-infotypes for more information
+    # about supported infoTypes.
+
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct a rule set that will only match on info_type
+    # if the matched text is not in the exception list.
+    rule_set = [
+        {
+            "info_types": info_types,
+            "rules": [
+                {
+                    "exclusion_rule": {
+                        "dictionary": {"word_list": {"words": exception_list}},
+                        "matching_type": google.cloud.dlp_v2.MatchingType.MATCHING_TYPE_FULL_MATCH,
+                    }
+                }
+            ],
+        }
+    ]
+
+    # Construct the configuration dictionary
+    inspect_config = {
+        "info_types": info_types,
+        "rule_set": rule_set,
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {"primitive_transformation": {"replace_with_info_type_config": {}}}
+            ]
+        }
+    }
+
+    # Construct the `item`.
+    item = {"value": content_string}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    print(response.item.value)
+
+
+# [END dlp_deidentify_exception_list]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
