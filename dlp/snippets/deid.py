@@ -1208,6 +1208,105 @@ def deidentify_with_exception_list(
 # [END dlp_deidentify_exception_list]
 
 
+# [START dlp_deidentify_table_infotypes]
+def deidentify_table_replace_with_info_types(
+    project,
+    table_data,
+    info_types,
+    deid_content_list
+):
+    """ Uses the Data Loss Prevention API to de-identify sensitive data in a
+      table by replacing them with info type.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Json string representing table data.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        deid_content_list: A list of fields in table to de-identify
+
+    Returns:
+        De-identified table is returned;
+        the response from the API is also printed to the terminal.
+
+    Example:
+    table_data = {
+        "header":[
+            "email",
+            "phone number"
+        ],
+        "rows":[
+            [
+                "robertfrost@xyz.com",
+                "4232342345"
+            ],
+            [
+                "johndoe@pqr.com",
+                "4253458383"
+            ]
+        ]
+    }
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+    item = {"table": table}
+
+    # Specify fields to be de-identified
+    deid_content_list = [{"name": _i} for _i in deid_content_list]
+
+    # Construct inspect configuration dictionary
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "info_type_transformations": {
+                        "transformations": [
+                            {
+                                "primitive_transformation": {"replace_with_info_type_config": {}}
+                            }
+                        ]
+                    },
+                    "fields": deid_content_list,
+                }
+            ]
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item,
+            "inspect_config": inspect_config
+        })
+
+    print("Table after de-identification: {}".format(response.item.table))
+
+    return response.item.table
+
+
+# [END dlp_deidentify_table_infotypes]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
