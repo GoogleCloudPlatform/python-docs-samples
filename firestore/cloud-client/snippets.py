@@ -1017,8 +1017,8 @@ def regional_endpoint():
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     db = firestore.Client(client_options=client_options)
 
-    count_query = db.collection(u'cities').limit(2).get()
-    for r in count_query:
+    cities_query = db.collection(u'cities').limit(2).get()
+    for r in cities_query:
         print(r)
     # [END firestore_regional_endpoint]
 
