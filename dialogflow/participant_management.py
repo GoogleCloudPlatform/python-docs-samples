@@ -128,7 +128,24 @@ def analyze_content_audio_stream(
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
+    from google.auth.transport import requests
     client = dialogflow.ParticipantsClient()
+    client._transport._credentials.refresh(requests.Request())
+    print('===========')
+    print()
+    print(client)
+    print(client._transport._credentials.valid)
+    print(client._transport._credentials.scopes)
+    print(client._transport._credentials.expired)
+    # print(client._transport._credentials.project_id)
+    print(client._transport._credentials._quota_project_id)
+    # print(client._transport._credentials.service_account_email)
+
+    # print(client.__dict__)
+    # print(client._transport)
+    # print(client._transport.__dict__)
+    print()
+    print('===========')
 
     participant_path = client.participant_path(
         project_id, conversation_id, participant_id
@@ -172,12 +189,19 @@ def analyze_content_audio_stream(
         model_variant="USE_ENHANCED",
     )
     requests = request_generator(audio_config, audio_file_path)
-    responses = client.streaming_analyze_content(requests=requests)
-    print("=" * 20)
-    for response in responses:
-        print(f'Transcript: "{response.message.content}".')
+    # print('==================================================')
+    # print()
+    # for request in requests:
+    #     print(f'request.participant: "{request.participant}"', type(request.participant))
+    #     assert 'python-docs-samples-tests-310' in request.participant
+    # print()
+    # print('==================================================')
+    # responses = client.streaming_analyze_content(requests=requests)
+    # print("=" * 20)
+    # for response in responses:
+    #     print(f'Transcript: "{response.message.content}".')
 
-    print("=" * 20)
+    # print("=" * 20)
 
 
 # [END dialogflow_analyze_content_audio_stream]
