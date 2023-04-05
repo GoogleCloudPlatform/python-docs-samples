@@ -224,6 +224,8 @@ def _session_tests(
         concurrent_args.extend(['--workers', 'auto', '--tests-per-worker', 'auto'])
     elif "pytest-xdist" in packages:
         concurrent_args.extend(['-n', 'auto'])
+    elif "pyspark" in packages:
+        concurrent_args.extend(['--use-pep517'])
 
     session.run(
         "pytest",
