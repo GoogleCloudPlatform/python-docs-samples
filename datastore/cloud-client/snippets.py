@@ -889,12 +889,12 @@ def regional_endpoint():
     ENDPOINT = "https://datastore.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
-    # [End datastore_regional_endpoints]
  
     query = client.query(kind="Task")
     results = list(query.fetch())
     for r in results:
         print(r)
+    # [End datastore_regional_endpoints]
  
     return client
 
