@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # [START dialogflow_set_agent_sample]
-
-from google.cloud.dialogflow_v2 import Agent, AgentsClient
+from google.cloud.dialogflow_v2 import Agent, AgentsClient, SetAgentRequest
+import google.protobuf.field_mask_pb2
 
 
 def set_agent(project_id, display_name):
@@ -30,9 +30,13 @@ def set_agent(project_id, display_name):
         time_zone="America/Los_Angeles",
     )
 
-    response = agents_client.set_agent(request={"agent": agent})
+    update_mask = google.protobuf.field_mask_pb2.FieldMask()
+    update_mask.FromJsonString('displayName,defaultLanguageCode,timeZone')
 
-    return response
+    request = SetAgentRequest(
+        agent=agent,
+        update_mask=update_mask,
+    )
 
-
+    return agents_client.set_agent(request=request)
 # [END dialogflow_set_agent_sample]
