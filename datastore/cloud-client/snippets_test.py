@@ -306,3 +306,4 @@ class TestDatastoreSnippets:
     def test_regional_endpoint(self, client):
         client = snippets.regional_endpoint()
         assert client is not None
+ 

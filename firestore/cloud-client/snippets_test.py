@@ -333,4 +333,3 @@ def test_create_and_build_bundle():
 
 def test_regional_endpoint():
     snippets.regional_endpoint()
-    

@@ -894,7 +894,7 @@ def regional_endpoint():
     results = list(query.fetch())
     for r in results:
         print(r)
-    # [End datastore_regional_endpoints]
+    # [END datastore_regional_endpoints]
  
     return client
 
