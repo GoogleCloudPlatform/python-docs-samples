@@ -1,4 +1,4 @@
-google-cloud-bigquery==3.6.0
-google-cloud-pubsub==2.15.0
+google-cloud-bigquery==3.9.0
+google-cloud-pubsub==2.15.2
 pytest==7.2.2
 mock==5.0.1
