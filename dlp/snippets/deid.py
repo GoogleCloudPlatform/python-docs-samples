@@ -1401,7 +1401,7 @@ if __name__ == "__main__":
     table_replace_with_infotype_parser = subparsers.add_parser(
         "table_replace_with_infotype",
         help="De-identify sensitive data in a table by replacing it with the "
-             "info type of the data.",
+        "info type of the data.",
     )
     table_replace_with_infotype_parser.add_argument(
         "project",
