@@ -1232,21 +1232,34 @@ def deidentify_table_replace_with_info_types(
     Example:
     table_data = {
         "header":[
+            "name"
             "email",
             "phone number"
         ],
         "rows":[
             [
+                "Robert Frost",
                 "robertfrost@xyz.com",
                 "4232342345"
             ],
             [
+                "John Doe",
                 "johndoe@pqr.com",
                 "4253458383"
             ]
         ]
     }
+
+    >> $ python deid.py table_replace_with_infotype \
+        '{"header": ["name", "email", "phone number"],
+        "rows": [["Robert Frost", "robertfrost@xyz.com", "4232342345"],
+        ["John Doe", "johndoe@pqr.com", "4253458383"]]}' \
+        ["PERSON_NAME"] ["name"]
+        >> '{"header": ["name", "email", "phone number"],
+            "rows": [["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
+            ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]]}'
     """
+
     # Import the client library
     import google.cloud.dlp
 
@@ -1261,6 +1274,8 @@ def deidentify_table_replace_with_info_types(
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
+
+    # Construct item
     item = {"table": table}
 
     # Specify fields to be de-identified
@@ -1299,8 +1314,10 @@ def deidentify_table_replace_with_info_types(
             "inspect_config": inspect_config
         })
 
+    # Print the result
     print("Table after de-identification: {}".format(response.item.table))
 
+    # Return the response
     return response.item.table
 
 
