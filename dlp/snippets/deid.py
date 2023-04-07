@@ -1055,19 +1055,34 @@ def deidentify_table_condition_masking(
     table_data = {
         "header":[
             "email",
-            "phone number"
+            "phone number",
+            "age",
+            "happiness_score"
         ],
         "rows":[
             [
                 "robertfrost@xyz.com",
-                "4232342345"
+                "4232342345",
+                "35",
+                "21"
             ],
             [
                 "johndoe@pqr.com",
-                "4253458383"
+                "4253458383",
+                "64",
+                "34"
             ]
         ]
     }
+
+    >> $ python deid.py deid_table_condition_mask \
+    '{"header": ["email", "phone number", "age", "happiness_score"],
+    "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
+    ["johndoe@pqr.com", "4253458383", "64", "34"]]}' \
+    ["happiness_score"] "age" "GREATER_THAN" 50
+    >> '{"header": ["email", "phone number", "age", "happiness_score"],
+        "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
+        ["johndoe@pqr.com", "4253458383", "64", "**"]]}'
     """
 
     # Import the client library
@@ -1084,6 +1099,8 @@ def deidentify_table_condition_masking(
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
+
+    # Construct the `item`
     item = {"table": table}
 
     # Specify fields to be de-identified
@@ -1130,8 +1147,10 @@ def deidentify_table_condition_masking(
             "item": item
         })
 
+    # Print the result
     print("Table after de-identification: {}".format(response.item.table))
 
+    # Return the response
     return response.item.table
 
 # [END dlp_deidentify_table_condition_masking]
