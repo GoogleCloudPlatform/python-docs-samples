@@ -39,6 +39,14 @@ CSV_FILE = os.path.join(os.path.dirname(__file__), "resources/dates.csv")
 DATE_SHIFTED_AMOUNT = 30
 DATE_FIELDS = ["birth_date", "register_date"]
 CSV_CONTEXT_FIELD = "name"
+TABULAR_DATA = {
+    "header": ["age", "patient", "happiness_score"],
+    "rows": [
+        ["101", "Charles Dickens", "95"],
+        ["22", "Jane Austen", "21"],
+        ["90", "Mark Twain", "75"]
+    ]
+}
 
 
 @pytest.fixture(scope="module")
@@ -305,3 +313,34 @@ def test_deidentify_with_exception_list(capsys):
 
     assert "gary@example.org" not in out
     assert "jack@example.org accessed record of user: [EMAIL_ADDRESS]" in out
+
+
+def test_deidentify_table_condition_masking(capsys):
+    deid_list = ["happiness_score"]
+    deid.deidentify_table_condition_masking(
+        GCLOUD_PROJECT,
+        TABULAR_DATA,
+        deid_list,
+        condition_field="age",
+        condition_operator="GREATER_THAN",
+        condition_value=89,
+    )
+    out, _ = capsys.readouterr()
+    assert "string_value: \"**\"" in out
+    assert "string_value: \"21\"" in out
+
+
+def test_deidentify_table_condition_masking_with_masking_character_specified(capsys):
+    deid_list = ["happiness_score"]
+    deid.deidentify_table_condition_masking(
+        GCLOUD_PROJECT,
+        TABULAR_DATA,
+        deid_list,
+        condition_field="age",
+        condition_operator="GREATER_THAN",
+        condition_value=89,
+        masking_character="#"
+    )
+    out, _ = capsys.readouterr()
+    assert "string_value: \"##\"" in out
+    assert "string_value: \"21\"" in out
