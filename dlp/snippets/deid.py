@@ -1057,18 +1057,30 @@ def deidentify_table_condition_replace_with_info_types(
        "header":[
            "email",
            "phone number"
+           "age"
        ],
        "rows":[
            [
                "robertfrost@xyz.com",
                "4232342345"
+               "45"
            ],
            [
                "johndoe@pqr.com",
                "4253458383"
+               "63"
            ]
        ]
     }
+
+    >> $ python deid.py deid_table_condition_replace \
+    '{"header": ["email", "phone number", "age"],
+    "rows": [["robertfrost@xyz.com", "4232342345", "45"],
+    ["johndoe@pqr.com", "4253458383", "63"]]}' ["email"] \
+    ["EMAIL_ADDRESS"] "age" "GREATER_THAN" 50
+    >> '{"header": ["email", "phone number", "age"],
+        "rows": [["robertfrost@xyz.com", "4232342345", "45"],
+        ["[EMAIL_ADDRESS]", "4253458383", "63"]]}'
     """
 
     # Import the client library
@@ -1085,6 +1097,8 @@ def deidentify_table_condition_replace_with_info_types(
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
+
+    # Construct the item
     item = {"table": table}
 
     # Specify fields to be de-identified
