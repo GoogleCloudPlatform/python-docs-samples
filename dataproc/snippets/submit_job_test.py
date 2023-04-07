@@ -36,42 +36,46 @@ CLUSTER = {
 }
 
 
-# Retry on InvalidArgument subnetwork not ready error
-@pytest.fixture(scope="module")
-@backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+
+@pytest.fixture(autouse=True)
 def setup_teardown():
-    try:
-        cluster_client = dataproc.ClusterControllerClient(
-            client_options={
-                "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
-            }
-        )
-
-        # Create the cluster.
-        operation = cluster_client.create_cluster(
-            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
-        )
-        operation.result()
-
-        yield
-
-    finally:
+    # Retry on InvalidArgument subnetwork not ready error
+    @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+    def eventually_consistent_operation():
         try:
-            operation = cluster_client.delete_cluster(
-                request={
-                    "project_id": PROJECT_ID,
-                    "region": REGION,
-                    "cluster_name": CLUSTER_NAME,
+            cluster_client = dataproc.ClusterControllerClient(
+                client_options={
+                    "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
                 }
             )
-            operation.result()
 
-        except NotFound:
-            print("Cluster already deleted")
+            # Create the cluster.
+            operation = cluster_client.create_cluster(
+                request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+            )
+            print("hi")
+            operation.result()
+            print("yes")
+            yield
+
+        finally:
+            try:
+                operation = cluster_client.delete_cluster(
+                    request={
+                        "project_id": PROJECT_ID,
+                        "region": REGION,
+                        "cluster_name": CLUSTER_NAME,
+                    }
+                )
+                operation.result()
+
+            except NotFound:
+                print("Cluster already deleted")
+    eventually_consistent_operation()
 
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_submit_job(capsys, setup_teardown):
+def test_submit_job(capsys):
     submit_job.submit_job(PROJECT_ID, REGION, CLUSTER_NAME)
     out, _ = capsys.readouterr()
 

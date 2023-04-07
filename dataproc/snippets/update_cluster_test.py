@@ -49,34 +49,36 @@ def cluster_client():
     return cluster_client
 
 
-# InvalidArgument is thrown when the subnetwork is not ready
-@pytest.fixture(scope="module")
-@backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+@pytest.fixture(autouse=True)
 def setup_teardown(cluster_client):
-    try:
-        # Create the cluster.
-        operation = cluster_client.create_cluster(
-            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
-        )
-        operation.result()
-
-        yield
-    finally:
+    # InvalidArgument is thrown when the subnetwork is not ready
+    @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+    def eventually_consistent_operation():
         try:
-            operation = cluster_client.delete_cluster(
-                request={
-                    "project_id": PROJECT_ID,
-                    "region": REGION,
-                    "cluster_name": CLUSTER_NAME,
-                }
+            # Create the cluster.
+            operation = cluster_client.create_cluster(
+                request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
             )
             operation.result()
-        except NotFound:
-            print("Cluster already deleted")
+
+            yield
+        finally:
+            try:
+                operation = cluster_client.delete_cluster(
+                    request={
+                        "project_id": PROJECT_ID,
+                        "region": REGION,
+                        "cluster_name": CLUSTER_NAME,
+                    }
+                )
+                operation.result()
+            except NotFound:
+                print("Cluster already deleted")
+    eventually_consistent_operation()
 
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_update_cluster(capsys, cluster_client: ClusterControllerClient, setup_teardown):
+def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
     # Wrapper function for client library function
     update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
     new_num_cluster = cluster_client.get_cluster(
