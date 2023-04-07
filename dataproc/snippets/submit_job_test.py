@@ -36,7 +36,6 @@ CLUSTER = {
 }
 
 
-
 @pytest.fixture(autouse=True)
 def setup_teardown():
     # Retry on InvalidArgument subnetwork not ready error
