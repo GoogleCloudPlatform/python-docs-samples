@@ -16,8 +16,8 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable, InvalidArgument)
+from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
+                                        ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
