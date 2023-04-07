@@ -1054,19 +1054,31 @@ def deidentify_table_bucketing(
     table_data = {
        "header":[
            "email",
-           "phone number"
+           "phone number",
+           "age"
        ],
        "rows":[
            [
                "robertfrost@xyz.com",
                "4232342345"
+               "35"
            ],
            [
                "johndoe@pqr.com",
                "4253458383"
+               "68"
            ]
        ]
     }
+
+    >> $ python deid.py deid_table_bucketing \
+        '{"header": ["email", "phone number", "age"],
+        "rows": [["robertfrost@xyz.com", "4232342345", "35"],
+        ["johndoe@pqr.com", "4253458383", "68"]]}' \
+        ["age"] 10 0 100
+        >>  '{"header": ["email", "phone number", "age"],
+            "rows": [["robertfrost@xyz.com", "4232342345", "30:40"],
+            ["johndoe@pqr.com", "4253458383", "60:70"]]}'
     """
 
     # Import the client library
