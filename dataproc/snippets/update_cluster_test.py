@@ -20,7 +20,7 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable)
+                                        ServiceUnavailable, InvalidArgument)
 from google.cloud.dataproc_v1.services.cluster_controller.client import \
     ClusterControllerClient
 import pytest
@@ -49,7 +49,9 @@ def cluster_client():
     return cluster_client
 
 
+# InvalidArgument is thrown when the subnetwork is not ready
 @pytest.fixture(autouse=True)
+@backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
 def setup_teardown(cluster_client):
     try:
         # Create the cluster.

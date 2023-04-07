@@ -17,7 +17,7 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable)
+                                        ServiceUnavailable, InvalidArgument)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
@@ -36,7 +36,9 @@ CLUSTER = {
 }
 
 
+# Retry on InvalidArgument subnetwork not ready error
 @pytest.fixture(autouse=True)
+@backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
 def setup_teardown():
     try:
         cluster_client = dataproc.ClusterControllerClient(
