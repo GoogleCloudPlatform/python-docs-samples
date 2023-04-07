@@ -37,7 +37,7 @@ CLUSTER = {
 
 
 # Retry on InvalidArgument subnetwork not ready error
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="module")
 @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
 def setup_teardown():
     try:
@@ -71,7 +71,7 @@ def setup_teardown():
 
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_submit_job(capsys):
+def test_submit_job(capsys, setup_teardown):
     submit_job.submit_job(PROJECT_ID, REGION, CLUSTER_NAME)
     out, _ = capsys.readouterr()
 

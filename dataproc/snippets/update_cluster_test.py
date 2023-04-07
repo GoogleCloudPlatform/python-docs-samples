@@ -50,7 +50,7 @@ def cluster_client():
 
 
 # InvalidArgument is thrown when the subnetwork is not ready
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="module")
 @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
 def setup_teardown(cluster_client):
     try:
@@ -76,7 +76,7 @@ def setup_teardown(cluster_client):
 
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
+def test_update_cluster(capsys, cluster_client: ClusterControllerClient, setup_teardown):
     # Wrapper function for client library function
     update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
     new_num_cluster = cluster_client.get_cluster(
