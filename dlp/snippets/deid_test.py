@@ -39,7 +39,7 @@ CSV_FILE = os.path.join(os.path.dirname(__file__), "resources/dates.csv")
 DATE_SHIFTED_AMOUNT = 30
 DATE_FIELDS = ["birth_date", "register_date"]
 CSV_CONTEXT_FIELD = "name"
-TABULAR_DATA = {
+TABLE_DATA = {
     "header": ["age", "patient", "happiness_score"],
     "rows": [
         ["101", "Charles Dickens", "95"],
@@ -319,7 +319,7 @@ def test_deidentify_table_condition_masking(capsys):
     deid_list = ["happiness_score"]
     deid.deidentify_table_condition_masking(
         GCLOUD_PROJECT,
-        TABULAR_DATA,
+        TABLE_DATA,
         deid_list,
         condition_field="age",
         condition_operator="GREATER_THAN",
@@ -334,7 +334,7 @@ def test_deidentify_table_condition_masking_with_masking_character_specified(cap
     deid_list = ["happiness_score"]
     deid.deidentify_table_condition_masking(
         GCLOUD_PROJECT,
-        TABULAR_DATA,
+        TABLE_DATA,
         deid_list,
         condition_field="age",
         condition_operator="GREATER_THAN",
