@@ -4,4 +4,4 @@ google-auth==2.6.2
 google-cloud==0.34.0
 google-cloud-storage==2.0.0; python_version < '3.7'
 google-cloud-storage==2.1.0; python_version > '3.6'
-requests==2.27.1
+requests==2.28.2

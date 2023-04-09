@@ -84,9 +84,15 @@ Get the connector's uber jar from this [public Cloud Storage location]. Alternat
    > by running `deactivate`.
 
 1. Install the required packages.
+
     ```bash
-    python -m pip install -U -r requirements.txt
+    python -m pip install -U -r requirements.txt --use-pep517
     ```
+
+    `--use-pep517` is needed for `pip≥23.1`
+   ([`setup.py` install deprecation](https://github.com/pypa/pip/issues/8559))
+   unless you choose to build the Spark JARs and install the source distribution
+   ([Spark documentation](https://spark.apache.org/docs/latest/building-spark.html#pyspark-pip-installable)).
 
 ## Creating a Spark cluster on Dataproc
 
