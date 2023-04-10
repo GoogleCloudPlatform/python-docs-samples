@@ -351,7 +351,7 @@ if __name__ == "__main__":
         'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
     )
     listed_info_types_parser.add_argument(
-        "min_likelihood",
+        "--min_likelihood",
         help="A string representing the minimum likelihood threshold"
         "that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED', "
         "'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.",
