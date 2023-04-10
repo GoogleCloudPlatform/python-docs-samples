@@ -368,6 +368,11 @@ if __name__ == "__main__":
         "all_info_types",
         help="Redact all infoTypes from an image."
     )
+    all_info_types_parser.add_argument(
+        "--mime_type",
+        help="The MIME type of the file. If not specified, the type is "
+        "inferred via the Python standard library's mimetypes module.",
+    )
 
     args = parser.parse_args()
 
