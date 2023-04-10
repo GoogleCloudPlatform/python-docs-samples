@@ -73,10 +73,11 @@ def test_edit_role(custom_role, capsys):
     custom_roles.edit_role(
         custom_role,
         GCLOUD_PROJECT,
-        CUSTOM_ROLE_TITLE,
+        "Python Test Custom Role",
+        "This is a python test custom role",
         "Updated",
-        CUSTOM_ROLE_PERMISSIONS,
-        CUSTOM_ROLE_STAGE,
+        ["iam.roles.get"],
+        "GA",
     )
     out, _ = capsys.readouterr()
     assert "Updated role:" in out
