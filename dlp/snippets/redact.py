@@ -366,7 +366,8 @@ if __name__ == "__main__":
 
     all_info_types_parser = subparsers.add_parser(
         "all_info_types",
-        help="Redact all infoTypes from an image."
+        help="Redact all infoTypes from an image.",
+        parents=[common_args_parser],
     )
     all_info_types_parser.add_argument(
         "--mime_type",
