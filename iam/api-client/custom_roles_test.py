@@ -14,8 +14,6 @@
 
 import os
 import uuid
-
-import googleapiclient.errors
 import pytest
 
 import custom_roles
