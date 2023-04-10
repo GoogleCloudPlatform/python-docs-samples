@@ -468,5 +468,6 @@ def test_deidentify_table_suppress_row(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "string_value: \"Jane Austen\"" in out
     assert "string_value: \"Charles Dickens\"" not in out
+    assert "string_value: \"Jane Austen\"" in out
+    assert "string_value: \"Mark Twain\"" not in out
