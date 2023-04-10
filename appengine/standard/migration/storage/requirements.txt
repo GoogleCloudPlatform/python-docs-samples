@@ -1,4 +1,4 @@
-google-cloud-storage==2.8.0; python_version < '3.7'
+google-cloud-storage==1.44.0; python_version < '3.7'
 google-cloud-storage==2.8.0; python_version > '3.6'
 Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
