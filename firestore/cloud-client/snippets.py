@@ -1011,6 +1011,7 @@ def create_and_build_bundle():
 
     return bundle, bundle_buffer
 
+
 def regional_endpoint():
     # [START firestore_regional_endpoint]
     ENDPOINT = "nam5-firestore.googleapis.com"
@@ -1021,4 +1022,3 @@ def regional_endpoint():
     for r in cities_query:
         print(r)
     # [END firestore_regional_endpoint]
-
