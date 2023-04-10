@@ -374,6 +374,11 @@ if __name__ == "__main__":
         help="The MIME type of the file. If not specified, the type is "
         "inferred via the Python standard library's mimetypes module.",
     )
+    all_info_types_parser.add_argument(
+        "--mime_type",
+        help="The MIME type of the file. If not specified, the type is "
+        "inferred via the Python standard library's mimetypes module.",
+    )
 
     args = parser.parse_args()
 
