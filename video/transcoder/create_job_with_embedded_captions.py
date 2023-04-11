@@ -38,7 +38,7 @@ def create_job_with_embedded_captions(
     input_captions_uri,
     output_uri,
 ):
-    """Creates a job based on an ad-hoc job configuration that embeds captions in the output video.
+    """Creates a job based on an ad-hoc job configuration that embeds closed captions in the output video.
 
     Args:
         project_id (str): The GCP project ID.
@@ -87,7 +87,8 @@ def create_job_with_embedded_captions(
             transcoder_v1.types.ElementaryStream(
                 key="audio-stream0",
                 audio_stream=transcoder_v1.types.AudioStream(
-                    codec="aac", bitrate_bps=64000
+                    codec="aac",
+                    bitrate_bps=64000,
                 ),
             ),
             transcoder_v1.types.ElementaryStream(
@@ -101,15 +102,12 @@ def create_job_with_embedded_captions(
                             input_track=0,
                         ),
                     ],
+                    language_code="en-US",
+                    display_name="English",
                 ),
             ),
         ],
         mux_streams=[
-            transcoder_v1.types.MuxStream(
-                key="sd",
-                container="mp4",
-                elementary_streams=["video-stream0", "audio-stream0"],
-            ),
             transcoder_v1.types.MuxStream(
                 key="sd-hls",
                 container="ts",

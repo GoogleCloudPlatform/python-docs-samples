@@ -49,13 +49,17 @@ test_video_file_name = "ChromeCast.mp4"
 test_overlay_image_file_name = "overlay.jpg"
 test_concat1_file_name = "ForBiggerEscapes.mp4"
 test_concat2_file_name = "ForBiggerJoyrides.mp4"
-test_captions_file_name = "caption.srt"
+test_captions_file_name = "captions.srt"
+test_subtitles1_file_name = "subtitles-en.srt"
+test_subtitles2_file_name = "subtitles-es.srt"
 
 input_uri = f"gs://{input_bucket_name}{test_video_file_name}"
 overlay_image_uri = f"gs://{input_bucket_name}{test_overlay_image_file_name}"
 concat1_uri = f"gs://{input_bucket_name}{test_concat1_file_name}"
 concat2_uri = f"gs://{input_bucket_name}{test_concat2_file_name}"
 captions_uri = f"gs://{input_bucket_name}{test_captions_file_name}"
+subtitles1_uri = f"gs://{input_bucket_name}{test_subtitles1_file_name}"
+subtitles2_uri = f"gs://{input_bucket_name}{test_subtitles2_file_name}"
 output_uri_for_preset = f"gs://{output_bucket_name}/test-output-preset/"
 output_uri_for_template = f"gs://{output_bucket_name}/test-output-template/"
 output_uri_for_adhoc = f"gs://{output_bucket_name}/test-output-adhoc/"
@@ -452,7 +456,8 @@ def test_create_job_with_standalone_captions(capsys, test_bucket):
         project_id,
         location,
         input_uri,
-        captions_uri,
+        subtitles1_uri,
+        subtitles2_uri,
         output_uri_for_standalone_captions,
     )
     out, _ = capsys.readouterr()
