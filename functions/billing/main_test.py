@@ -14,7 +14,7 @@
 import base64
 import json
 
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import main
 
