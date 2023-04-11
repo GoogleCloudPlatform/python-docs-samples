@@ -14,11 +14,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Transcoder sample for creating a job that can use captions from a standalone file.
+"""Google Cloud Transcoder sample for creating a job that can use subtitles from a standalone file.
 
 Example usage:
     python create_job_with_standalone_captions.py --project_id <project-id> --location <location> \
-      --input_video_uri <uri> --input_captions_uri <uri> --output_uri <uri>
+      --input_video_uri <uri> --input_subtitles1_uri <uri> --input_subtitles2_uri <uri> --output_uri <uri>
 """
 
 # [START transcoder_create_job_with_standalone_captions]
@@ -36,17 +36,20 @@ def create_job_with_standalone_captions(
     project_id,
     location,
     input_video_uri,
-    input_captions_uri,
+    input_subtitles1_uri,
+    input_subtitles2_uri,
     output_uri,
 ):
-    """Creates a job based on an ad-hoc job configuration that can use captions from a standalone file.
+    """Creates a job based on an ad-hoc job configuration that can use subtitles from a standalone file.
 
     Args:
         project_id (str): The GCP project ID.
         location (str): The location to start the job in.
         input_video_uri (str): Uri of the input video in the Cloud Storage
           bucket.
-        input_captions_uri (str): Uri of the input captions file in the Cloud
+        input_subtitles1_uri (str): Uri of an input subtitles file in the Cloud
+          Storage bucket.
+        input_subtitles2_uri (str): Uri of an input subtitles file in the Cloud
           Storage bucket.
         output_uri (str): Uri of the video output folder in the Cloud Storage
           bucket."""
@@ -63,14 +66,18 @@ def create_job_with_standalone_captions(
                 uri=input_video_uri,
             ),
             transcoder_v1.types.Input(
-                key="caption-input0",
-                uri=input_captions_uri,
+                key="subtitle-input-en",
+                uri=input_subtitles1_uri,
+            ),
+            transcoder_v1.types.Input(
+                key="subtitle-input-es",
+                uri=input_subtitles2_uri,
             ),
         ],
         edit_list=[
             transcoder_v1.types.EditAtom(
                 key="atom0",
-                inputs=["input0", "caption-input0"],
+                inputs=["input0", "subtitle-input-en", "subtitle-input-es"],
             ),
         ],
         elementary_streams=[
@@ -88,18 +95,34 @@ def create_job_with_standalone_captions(
             transcoder_v1.types.ElementaryStream(
                 key="audio-stream0",
                 audio_stream=transcoder_v1.types.AudioStream(
-                    codec="aac", bitrate_bps=64000
+                    codec="aac",
+                    bitrate_bps=64000,
                 ),
             ),
             transcoder_v1.types.ElementaryStream(
-                key="vtt-stream0",
+                key="vtt-stream-en",
                 text_stream=transcoder_v1.types.TextStream(
                     codec="webvtt",
+                    language_code="en-US",
+                    display_name="English",
                     mapping_=[
                         transcoder_v1.types.TextStream.TextMapping(
                             atom_key="atom0",
-                            input_key="caption-input0",
-                            input_track=0,
+                            input_key="subtitle-input-en",
+                        ),
+                    ],
+                ),
+            ),
+            transcoder_v1.types.ElementaryStream(
+                key="vtt-stream-es",
+                text_stream=transcoder_v1.types.TextStream(
+                    codec="webvtt",
+                    language_code="es-ES",
+                    display_name="Spanish",
+                    mapping_=[
+                        transcoder_v1.types.TextStream.TextMapping(
+                            atom_key="atom0",
+                            input_key="subtitle-input-es",
                         ),
                     ],
                 ),
@@ -117,9 +140,20 @@ def create_job_with_standalone_captions(
                 elementary_streams=["audio-stream0"],
             ),
             transcoder_v1.types.MuxStream(
-                key="text-vtt",
+                key="text-vtt-en",
                 container="vtt",
-                elementary_streams=["vtt-stream0"],
+                elementary_streams=["vtt-stream-en"],
+                segment_settings=transcoder_v1.types.SegmentSettings(
+                    segment_duration=duration.Duration(
+                        seconds=6,
+                    ),
+                    individual_segments=True,
+                ),
+            ),
+            transcoder_v1.types.MuxStream(
+                key="text-vtt-es",
+                container="vtt",
+                elementary_streams=["vtt-stream-es"],
                 segment_settings=transcoder_v1.types.SegmentSettings(
                     segment_duration=duration.Duration(
                         seconds=6,
@@ -132,7 +166,12 @@ def create_job_with_standalone_captions(
             transcoder_v1.types.Manifest(
                 file_name="manifest.m3u8",
                 type_="HLS",
-                mux_streams=["sd-hls-fmp4", "audio-hls-fmp4", "text-vtt"],
+                mux_streams=[
+                    "sd-hls-fmp4",
+                    "audio-hls-fmp4",
+                    "text-vtt-en",
+                    "text-vtt-es",
+                ],
             ),
         ],
     )
@@ -157,8 +196,13 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--input_captions_uri",
-        help="Uri of the input captions file in the Cloud Storage bucket.",
+        "--input_subtitles1_uri",
+        help="Uri of an input subtitles file in the Cloud Storage bucket.",
+        required=True,
+    )
+    parser.add_argument(
+        "--input_subtitles2_uri",
+        help="Uri of an input subtitles file in the Cloud Storage bucket.",
         required=True,
     )
     parser.add_argument(
@@ -172,6 +216,7 @@ if __name__ == "__main__":
         args.project_id,
         args.location,
         args.input_video_uri,
-        args.input_captions_uri,
+        args.input_subtitles1_uri,
+        args.input_subtitles2_uri,
         args.output_uri,
     )
