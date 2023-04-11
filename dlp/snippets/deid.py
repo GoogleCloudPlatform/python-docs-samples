@@ -1130,7 +1130,7 @@ def deidentify_table_replace_with_info_types(
         })
 
     # Print the result
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
     # Return the response
     return response.item.table
