@@ -2,5 +2,5 @@ Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
 google-cloud-datastore==2.7.1; python_version >= "3.0"
 google-cloud-datastore==1.15.5; python_version < "3.0"
-google-cloud-tasks==2.7.1 ; python_version >= "3.0"
+google-cloud-tasks==2.13.1 ; python_version >= "3.0"
 google-cloud-tasks==1.5.2 ; python_version < "3.0"
