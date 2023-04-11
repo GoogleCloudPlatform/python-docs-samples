@@ -33,8 +33,8 @@ TEST_CONFIG_OVERRIDE = {
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
-    'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
-    # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
+    # 'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
+    'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
 
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
