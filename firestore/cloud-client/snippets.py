@@ -16,8 +16,8 @@ import datetime
 import threading
 from time import sleep
 
-from google.cloud import firestore
 from google.api_core.client_options import ClientOptions
+from google.cloud import firestore
 
 
 def quickstart_new_instance():
