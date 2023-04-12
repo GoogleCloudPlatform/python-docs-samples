@@ -1,4 +1,4 @@
 pytest==7.2.0
 google-cloud-compute==1.6.1
 google-cloud-resource-manager==1.6.3
-google-cloud-storage==2.5.0
+google-cloud-storage==2.8.0
