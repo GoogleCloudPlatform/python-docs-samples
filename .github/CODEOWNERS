@@ -62,6 +62,7 @@
 /language/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /logging/**/*                          @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
 /media_cdn/**/*                        @justin-mp @msampathkumar @GoogleCloudPlatform/python-samples-reviewers
+/media-translation/**/*                @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
 /ml_engine/**/*                        @ivanmkc @GoogleCloudPlatform/python-samples-reviewers
 /monitoring/**/*                       @GoogleCloudPlatform/dee-observability @GoogleCloudPlatform/python-samples-reviewers
