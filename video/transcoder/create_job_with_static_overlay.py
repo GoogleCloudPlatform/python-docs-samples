@@ -40,7 +40,7 @@ def create_job_with_static_overlay(
         project_id: The GCP project ID.
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
-        overlay_image_uri: Uri of the JPEG image for the overlay in the Cloud Storage bucket. Must be a JPEG.
+        overlay_image_uri: Uri of the image for the overlay in the Cloud Storage bucket.
         output_uri: Uri of the video output folder in the Cloud Storage bucket."""
 
     client = TranscoderServiceClient()
@@ -131,7 +131,7 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--overlay_image_uri",
-        help="Uri of the overlay JPEG image in the Cloud Storage bucket. Must be a JPEG.",
+        help="Uri of the overlay image in the Cloud Storage bucket.",
         required=True,
     )
     parser.add_argument(
