@@ -934,15 +934,12 @@ def inspect_bigquery(
 def inspect_image_file_all_infotypes(
     project,
     filename,
-    mime_type=None,
     include_quote=True,
 ):
     """Uses the Data Loss Prevention API to analyze strings for protected data in image file.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         filename: The path to the file to inspect.
-        mime_type: The MIME type of the file. If not specified, the type is
-            inferred via the Python standard library's mimetypes module.
         include_quote: Boolean for whether to display a quote of the detected
             information in the results.
 
@@ -950,33 +947,15 @@ def inspect_image_file_all_infotypes(
         None; the response from the API is printed to the terminal.
     """
 
-    import mimetypes
-
     # Import the client library
     import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # If mime_type is not specified, guess it from the filename.
-    if mime_type is None:
-        mime_guess = mimetypes.MimeTypes().guess_type(filename)
-        mime_type = mime_guess[0] or "application/octet-stream"
-
-    # Select the content type index from the list of supported types.
-    supported_content_types = {
-        None: 0,  # "Unspecified"
-        "image/jpeg": 1,
-        "image/bmp": 2,
-        "image/png": 3,
-        "image/svg": 4,
-        "text/plain": 5,
-    }
-    content_type_index = supported_content_types.get(mime_type, 0)
-
-    # Construct the byte_item, containing the file's byte data.
+    # Construct the byte_item, containing the image file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type_": content_type_index, "data": f.read()}
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
@@ -1444,12 +1423,6 @@ if __name__ == "__main__":
         help="The path to the file to inspect."
     )
     parser_image_file.add_argument(
-        "--mime_type",
-        help="The MIME type of the file. If not specified, the type is "
-        "inferred via the Python standard library's mimetypes module.",
-        default=None,
-    )
-    parser_image_file.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
         "information in the results.",
@@ -1541,6 +1514,5 @@ if __name__ == "__main__":
         inspect_image_file_all_infotypes(
             args.project,
             args.filename,
-            mime_type=args.mime_type,
             include_quote=args.include_quote,
         )

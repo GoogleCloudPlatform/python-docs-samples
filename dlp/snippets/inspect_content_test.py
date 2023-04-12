@@ -19,12 +19,12 @@ import uuid
 import backoff
 import google.api_core.exceptions
 from google.api_core.exceptions import ServiceUnavailable
-import google.cloud.bigquery
-import google.cloud.datastore
+# import google.cloud.bigquery
+# import google.cloud.datastore
 import google.cloud.dlp_v2
-import google.cloud.exceptions
-import google.cloud.pubsub
-import google.cloud.storage
+# import google.cloud.exceptions
+# import google.cloud.pubsub
+# import google.cloud.storage
 import pytest
 
 import inspect_content
