@@ -74,6 +74,7 @@
 /recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /recaptcha_enterprise/demosite/*       @Sita04 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
+/scheduler/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
