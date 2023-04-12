@@ -16,8 +16,8 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
-import google.cloud.exceptions
 from google.api_core.client_options import ClientOptions
+import google.cloud.exceptions
 from google.cloud import datastore  # noqa: I100
 
 
@@ -889,13 +889,13 @@ def regional_endpoint():
     ENDPOINT = "https://datastore.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
- 
+
     query = client.query(kind="Task")
     results = list(query.fetch())
     for r in results:
         print(r)
     # [END datastore_regional_endpoints]
- 
+
     return client
 
 
