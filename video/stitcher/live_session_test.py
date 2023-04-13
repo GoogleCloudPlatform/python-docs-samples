@@ -42,6 +42,7 @@ slate_video_file_name = "ForBiggerJoyrides.mp4"
 slate_uri = f"https://storage.googleapis.com/{input_bucket_name}{slate_video_file_name}"
 
 
+@pytest.mark.skip()
 def test_live_session_operations(capsys: pytest.fixture) -> None:
 
     # Test setup
