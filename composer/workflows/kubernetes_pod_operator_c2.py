@@ -142,11 +142,13 @@ with models.DAG(
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
         secrets=[secret_env, secret_volume],
+        cmds=["echo"],
+
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
         env_vars={
             "EXAMPLE_VAR": "/example/value",
-            "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json ",
+            "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json",
         },
         # Specifies path to kubernetes config. If no config is specified will
         # default to '~/.kube/config'. The config_file is templated.

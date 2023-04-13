@@ -16,7 +16,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import ServiceUnavailable
+from google.api_core.exceptions import InvalidArgument, ServiceUnavailable
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
@@ -81,6 +81,7 @@ def cluster():
             )
 
 
+@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
 def test_quickstart(capsys):
     quickstart.quickstart(PROJECT_ID, REGION, CLUSTER_NAME, JOB_FILE_PATH)
     out, _ = capsys.readouterr()
