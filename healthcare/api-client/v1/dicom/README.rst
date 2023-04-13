@@ -139,15 +139,15 @@ To run this sample:
                             are published on
       --uri_prefix URI_PREFIX
                             URI for a Google Cloud Storage directory to which
-                            result filesshould be written (e.g., "bucket-
+                            result files should be written (e.g., "bucket-
                             id/path/to/destination/dir").
       --content_uri CONTENT_URI
                             URI for a Google Cloud Storage directory from which
-                            filesshould be imported (e.g., "bucket-
+                            files should be imported (e.g., "bucket-
                             id/path/to/destination/dir").
       --export_format {FORMAT_UNSPECIFIED,DICOM,JSON_BIGQUERY_IMPORT}
                             Specifies the output format. If the format is
-                            unspecified, thedefault functionality is to export to
+                            unspecified, the default functionality is to export to
                             DICOM.
       --member MEMBER       Member to add to IAM policy (e.g.
                             "domain:example.com")
