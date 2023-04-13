@@ -1,5 +1,5 @@
 google-cloud-pubsub==2.13.10
-google-cloud-containeranalysis==2.10.0
+google-cloud-containeranalysis==2.12.1
 grafeas==1.8.1
 pytest==7.2.0
 flaky==3.7.0
