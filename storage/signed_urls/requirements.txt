@@ -1,4 +1,4 @@
-google-cloud-storage==2.8.0; python_version < '3.7'
+google-cloud-storage==2.0.0; python_version < '3.7'
 google-cloud-storage==2.8.0; python_version > '3.6'
-google-auth==2.6.2
+google-auth==2.17.2
 six==1.16.0
