@@ -886,7 +886,7 @@ def property_by_kind_run_query(client):
 
 def regional_endpoint():
     # [START datastore_regional_endpoints]
-    ENDPOINT = "https://datastore.googleapis.com"
+    ENDPOINT = "https://nam5.datastore.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
 
