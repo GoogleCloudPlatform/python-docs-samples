@@ -1,2 +1,2 @@
 pytest==7.0.1
-google-cloud-logging==3.2.2
+google-cloud-logging==3.5.0
