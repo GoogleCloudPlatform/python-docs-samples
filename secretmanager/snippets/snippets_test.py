@@ -71,7 +71,7 @@ def secret_id(client, project_id):
     secret_path = client.secret_path(project_id, secret_id)
     print("deleting secret {}".format(secret_id))
     try:
-        time.sleep(15)
+        time.sleep(5)
         client.delete_secret(request={"name": secret_path})
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
@@ -84,7 +84,7 @@ def secret(client, project_id, secret_id):
     print("creating secret {}".format(secret_id))
 
     parent = f"projects/{project_id}"
-    time.sleep(15)
+    time.sleep(5)
     secret = client.create_secret(
         request={
             "parent": parent,
@@ -103,7 +103,7 @@ def secret_version(client, secret):
     print("adding secret version to {}".format(secret_id))
     parent = client.secret_path(project_id, secret_id)
     payload = "hello world!".encode("UTF-8")
-    time.sleep(15)
+    time.sleep(5)
     version = client.add_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
     )
