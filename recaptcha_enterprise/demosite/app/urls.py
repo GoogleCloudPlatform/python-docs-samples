@@ -265,4 +265,3 @@ def on_comment_submit() -> Response:
         )
     except ValueError or Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
-
