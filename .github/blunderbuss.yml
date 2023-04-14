@@ -213,6 +213,7 @@ assign_prs_by:
   - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: retail'
+  - 'api: mediatranslation'
   to: 
   - GoogleCloudPlatform/dee-data-ai
 - labels:
