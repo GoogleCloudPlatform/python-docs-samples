@@ -277,6 +277,52 @@ def redact_image_listed_info_types(
 # [END dlp_redact_image_listed_infotypes]
 
 
+# [START dlp_redact_image_all_infotypes]
+def redact_image_all_info_types(
+    project,
+    filename,
+    output_filename,
+):
+    """Uses the Data Loss Prevention API to redact protected data in an image.
+       Args:
+           project: The Google Cloud project id to use as a parent resource.
+           filename: The path to the file to inspect.
+           output_filename: The path to which the redacted image will be written.
+               A full list of info type categories can be fetched from the API.
+       Returns:
+           None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the byte_item, containing the file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.redact_image(
+        request={
+            "parent": parent,
+            "byte_item": byte_item,
+        }
+    )
+
+    # Write out the results.
+    with open(output_filename, mode="wb") as f:
+        f.write(response.redacted_image)
+    print(f"Wrote {len(response.redacted_image)} to {output_filename}")
+
+
+# [END dlp_redact_image_all_infotypes]
+
+
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -364,6 +410,12 @@ if __name__ == "__main__":
         default=None,
     )
 
+    all_info_types_parser = subparsers.add_parser(
+        "all_info_types",
+        help="Redact all infoTypes from an image.",
+        parents=[common_args_parser],
+    )
+
     args = parser.parse_args()
 
     if args.content == "info_types":
@@ -389,4 +441,10 @@ if __name__ == "__main__":
             args.info_types,
             min_likelihood=args.min_likelihood,
             mime_type=args.mime_type,
+        )
+    elif args.content == "all_info_types":
+        redact_image_all_info_types(
+            args.project,
+            args.filename,
+            args.output_filename,
         )
