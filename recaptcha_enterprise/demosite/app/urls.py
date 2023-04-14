@@ -46,13 +46,12 @@ def on_homepage_load() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["home"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -92,13 +91,12 @@ def on_signup() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["signup"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -140,13 +138,12 @@ def on_login() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["login"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -188,13 +185,12 @@ def on_store_checkout() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["store"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -235,13 +231,12 @@ def on_comment_submit() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["comment"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.

@@ -19,34 +19,35 @@
     <meta charset="UTF-8" />
     <title>Sign up: reCAPTCHA Demo</title>
     <!-- ATTENTION: reCAPTCHA Example (Client Part 1 of 2) Starts -->
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#html-button -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
       async function handleToken(token) {
         await doSignup({ token });
       }
     </script>
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
     <script type="text/javascript">
       async function doSignup({ email = "", passwords = [], token }) {
-        // SEE: Include the token for server-side assessment
-        // SEE: Include the user input values from your form for your backend
-        // SEE: Always use HTTPS to encrypt plain text credentials!
+        // Include the token for server-side assessment.
+        // Include the user input values from your form to pass to the backend.
+        // Always use HTTPS to encrypt plain text credentials!
         const body = {
           email,
           passwords,
           token,
         };
-        // SEE: Fetch from your backend; assessments are server-side
-        // SEE: Refer to the backend demo code for more information
-        // SEE: If using a library or framework, can fetch its way
+        // Code for fetching the assessment from server-side goes here.
+        // Refer to demo app backend code for more information.
+        // If you already use a library or framework for event handlers, check if this
+        // call can be accommodated the usual way.
         const score = await fetchServerResponse({
           body,
           url: "on_signup",
         });
-        // SEE: Use the assessment included in the response
-        // SEE: Using an assessment in client-side code is optional
-        // SEE: It's the most secure to handle things server-side
+        // In this demo, the assessment score is displayed in the client.
+        // But generally, you should avoid using the assessment response in the
+        // client and handle it on the server-side.
         useAssessmentInClient(score);
       }
     </script>

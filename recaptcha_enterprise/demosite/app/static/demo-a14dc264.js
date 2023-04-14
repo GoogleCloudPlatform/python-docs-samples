@@ -1,17 +1,17 @@
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
+// Copyright 2023 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
 
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
 /* global Reflect, Promise */
 
 var extendStatics = function(d, b) {
@@ -1232,7 +1232,7 @@ function tsDecorator(prototype, name, descriptor) {
  * @category Decorator
  * @ExportDecoratedItems
  */
-function ariaProperty(protoOrDescriptor, name, 
+function ariaProperty(protoOrDescriptor, name,
 // tslint:disable-next-line:no-any any is required as a return type from decorators
 descriptor) {
     if (name !== undefined) {
@@ -3902,7 +3902,7 @@ class RecaptchaDemo extends s {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Comment form</h3></legend>
-          <p>Click the "send comment" button to see if you can post or not.</p>
+          <p>Click the "post comment" button to see if you can post or not.</p>
           <div class="fields">
             <label>
               <span>Comment</span>
@@ -4048,7 +4048,6 @@ class RecaptchaDemo extends s {
       "tokenProperties": {
         "action": "${ACTIONS[this.step]}",
         ...
-        "invalidReason": null,
         "valid": true
       },
     }`
@@ -4065,7 +4064,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent spam</h5>
             <p>
-              Add reCAPTCHA to login actions and prevent bot-generated comments.
+              Add reCAPTCHA to comment/ feedback forms and prevent bot-generated comments.
             </p>
 
             <a
@@ -4114,7 +4113,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent malicious log in</h5>
             <p>
-              Add reCAPTCHA to user actions like logging in to prevent malcious
+              Add reCAPTCHA to user actions like logging in to prevent malicious
               activity on user accounts.
             </p>
             <a
@@ -4135,15 +4134,15 @@ class RecaptchaDemo extends s {
     const percentage = score && Number(score) * 100;
     let card = null;
     switch (this.verdict) {
-      case "human":
+      case "Not Bad":
         card = x`
           <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
           <img alt="Not Bad" src="${human}" />
         `;
         break;
-      case "bot":
+      case "Bad":
         card = x`
-          <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
+          <p>reCAPTCHA is ${percentage || "???"}% confident you're bad.</p>
           <img alt="Bad" src="${badbad}" />
         `;
         break;

@@ -19,10 +19,9 @@
     <meta charset="UTF-8" />
     <title>Store: reCAPTCHA Demo</title>
     <!-- ATTENTION: reCAPTCHA Example (Client Part 1 of 2) Starts -->
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
-      // SEE: If using a library or framework, can use event handlers its way
       function handleClick(event) {
         event.preventDefault();
         grecaptcha.enterprise.ready(async () => {
@@ -36,28 +35,29 @@
         });
       }
     </script>
-    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
     <script type="text/javascript">
-      async function doCheckout({ cardNumber = "", items: [], token }) {
-        // SEE: Include the token for server-side assessment
-        // SEE: Include the user input values from your form for your backend
-        // SEE: Always use HTTPS to encrypt plain text credit card numbers!
-        // SEE: Always follow PCI (Payment Card Industry) data security standards!
+      async function doCheckout({ cardNumber = "", items = [], token }) {
+        // Include the token for server-side assessment.
+        // Include the user input values from your form to pass to the backend.
+        // Always use HTTPS to encrypt plain text credit card numbers!
+        // Always follow PCI (Payment Card Industry) data security standards!
         const body = {
           cardNumber,
           items,
           token,
         };
-        // SEE: Fetch from your backend; assessments are server-side
-        // SEE: Refer to the backend demo code for more information
-        // SEE: If using a library or framework, can fetch its way
+        // Code for fetching the assessment from server-side goes here.
+        // Refer to demo app backend code for more information.
+        // If you already use a library or framework for event handlers, check if this
+        // call can be accommodated the usual way.
         const score = await fetchServerResponse({
           body,
           url: "on_store_checkout",
         });
-        // SEE: Use the assessment included in the response
-        // SEE: Using an assessment in client-side code is optional
-        // SEE: It's the most secure to handle things server-side
+        // In this demo, the assessment score is displayed in the client.
+        // But generally, you should avoid using the assessment response in the
+        // client and handle it on the server-side.
         useAssessmentInClient(score);
       }
     </script>
