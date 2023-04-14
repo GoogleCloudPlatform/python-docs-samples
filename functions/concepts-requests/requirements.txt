@@ -1,2 +1,2 @@
-functions-framework==3.2.1
+functions-framework==3.3.0
 requests==2.28.2

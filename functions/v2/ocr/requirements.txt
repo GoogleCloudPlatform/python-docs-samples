@@ -1,4 +1,4 @@
-functions-framework==3.2.1
+functions-framework==3.3.0
 google-cloud-pubsub==2.13.11
 google-cloud-storage==2.8.0
 google-cloud-translate==3.8.4
