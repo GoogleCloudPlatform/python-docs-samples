@@ -16,6 +16,7 @@ import datetime
 import threading
 from time import sleep
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import firestore
 
 
@@ -1009,3 +1010,15 @@ def create_and_build_bundle():
     # [END firestore_create_and_build_bundle]
 
     return bundle, bundle_buffer
+
+
+def regional_endpoint():
+    # [START firestore_regional_endpoint]
+    ENDPOINT = "nam5-firestore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    db = firestore.Client(client_options=client_options)
+
+    cities_query = db.collection(u'cities').limit(2).get()
+    for r in cities_query:
+        print(r)
+    # [END firestore_regional_endpoint]
