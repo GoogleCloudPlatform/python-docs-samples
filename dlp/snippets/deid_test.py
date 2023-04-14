@@ -292,12 +292,11 @@ def test_deidentify_with_replace_infotype(capsys):
 
 
 def test_deidentify_with_simple_word_list(capsys):
-    word_list = ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"]
     deid.deidentify_with_simple_word_list(
         GCLOUD_PROJECT,
         "My Room is rm-green",
         "CUSTOM_ROOM_ID",
-        word_list
+        ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
     )
 
     out, _ = capsys.readouterr()
@@ -306,18 +305,16 @@ def test_deidentify_with_simple_word_list(capsys):
 
 
 def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
-    content_str = "My Room is rm-red"
-    word_list = ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"]
     deid.deidentify_with_simple_word_list(
         GCLOUD_PROJECT,
-        content_str,
+        "My Room is rm-red",
         "CUSTOM_ROOM_ID",
-        word_list
+        ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
     )
 
     out, _ = capsys.readouterr()
 
-    assert content_str in out
+    assert "My Room is rm-red" in out
 
 
 def test_deidentify_with_exception_list(capsys):

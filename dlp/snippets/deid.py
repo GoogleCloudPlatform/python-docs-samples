@@ -941,8 +941,8 @@ def deidentify_with_replace_infotype(project, item, info_types):
 def deidentify_with_simple_word_list(
     project,
     input_str,
-    info_type,
-    word_list
+    custom_info_type_name,
+    word_list,
 ):
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.
@@ -950,13 +950,13 @@ def deidentify_with_simple_word_list(
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
-        info_type: A string representing info type to look for.
-            A full list of info type categories can be fetched from the API.
+        custom_info_type_name:The name of the custom info type to use.
         word_list: The list of strings to match against.
 
     Returns:
           None; the response from the API is printed to the terminal.
     """
+
     # Import the client library
     import google.cloud.dlp
 
@@ -967,7 +967,7 @@ def deidentify_with_simple_word_list(
     word_list = {"words": word_list}
     custom_info_types = [
         {
-            "info_type": {"name": info_type},
+            "info_type": {"name": custom_info_type_name},
             "dictionary": {"word_list": word_list}
         }
     ]
@@ -1004,7 +1004,7 @@ def deidentify_with_simple_word_list(
         }
     )
 
-    print("De-identified Content: {}".format(response.item.value))
+    print(f"De-identified Content: {response.item.value}")
 
 
 # [END dlp_deidentify_simple_word_list]
@@ -1344,9 +1344,8 @@ if __name__ == "__main__":
         help="The string to deidentify.",
     )
     deid_word_list_parser.add_argument(
-        "info_type",
-        help="String representing info type to look for. Examples "
-        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+        "custom_info_type_name",
+        help="The name of the custom info type to use.",
     )
     deid_word_list_parser.add_argument(
         "word_list",
@@ -1435,7 +1434,7 @@ if __name__ == "__main__":
         deidentify_with_simple_word_list(
             args.project,
             args.input_str,
-            args.info_type,
+            args.custom_info_type_name,
             args.word_list,
         )
     elif args.content == "deid_exception_list":
