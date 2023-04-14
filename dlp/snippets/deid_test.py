@@ -308,17 +308,21 @@ def test_deidentify_with_exception_list(capsys):
 
 
 def test_deidentify_table_replace_with_info_types(capsys):
-    table_data = {"header": ["age", "patient", "happiness_score", "factoid"],
-                  "rows": [
-                      ["101", "Charles Dickens", "95", "Charles Dickens name was a curse invented by Shakespeare."],
-                      ["22", "Jane Austen", "21", "There are 14 kisses in Jane Austen's novels."],
-                      ["90", "Mark Twain", "75", "Mark Twain loved cats."]]}
+    table_data = {
+        "header": ["age", "patient", "happiness_score", "factoid"],
+        "rows": [
+            ["101", "Charles Dickens", "95", "Charles Dickens name was a curse invented by Shakespeare."],
+            ["22", "Jane Austen", "21", "There are 14 kisses in Jane Austen's novels."],
+            ["90", "Mark Twain", "75", "Mark Twain loved cats."],
+        ],
+    }
 
     deid.deidentify_table_replace_with_info_types(
         GCLOUD_PROJECT,
         table_data,
         ["PERSON_NAME"],
-        ["patient", "factoid"])
+        ["patient", "factoid"],
+    )
 
     out, _ = capsys.readouterr()
 

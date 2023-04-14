@@ -1041,38 +1041,17 @@ def deidentify_table_replace_with_info_types(
         deid_content_list: A list of fields in table to de-identify
 
     Returns:
-        De-identified table is returned;
-        the response from the API is also printed to the terminal.
+        None; the response from the API is printed to the terminal.
 
     Example:
-    table_data = {
-        "header":[
-            "name"
-            "email",
-            "phone number"
-        ],
-        "rows":[
-            [
-                "Robert Frost",
-                "robertfrost@xyz.com",
-                "4232342345"
-            ],
-            [
-                "John Doe",
-                "johndoe@pqr.com",
-                "4253458383"
-            ]
-        ]
-    }
-
     >> $ python deid.py table_replace_with_infotype \
-        '{"header": ["name", "email", "phone number"],
-        "rows": [["Robert Frost", "robertfrost@xyz.com", "4232342345"],
-        ["John Doe", "johndoe@pqr.com", "4253458383"]]}' \
-        ["PERSON_NAME"] ["name"]
-        >> '{"header": ["name", "email", "phone number"],
-            "rows": [["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
-            ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]]}'
+    '{"header": ["name", "email", "phone number"],
+    "rows": [["Robert Frost", "robertfrost@xyz.com", "4232342345"],
+    ["John Doe", "johndoe@pqr.com", "4253458383"]]}' \
+    ["PERSON_NAME"] ["name"]
+    >> '{"header": ["name", "email", "phone number"],
+        "rows": [["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
+        ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]]}'
     """
 
     # Import the client library
@@ -1131,9 +1110,6 @@ def deidentify_table_replace_with_info_types(
 
     # Print the result
     print(f"Table after de-identification: {response.item.table}")
-
-    # Return the response
-    return response.item.table
 
 
 # [END dlp_deidentify_table_infotypes]
