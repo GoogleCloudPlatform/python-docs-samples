@@ -301,7 +301,7 @@ def redact_image_all_info_types(
 
     # Construct the byte_item, containing the file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type_": 'IMAGE', "data": f.read()}
+        byte_item = {"type_": google.cloud.dlp_v2.FileType.IMAGE, "data": f.read()}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
