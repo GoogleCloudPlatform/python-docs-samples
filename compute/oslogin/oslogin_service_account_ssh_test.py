@@ -212,7 +212,7 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     oslogin_client = oslogin_v1.OsLoginServiceClient(credentials=oslogin_service_account['credentials'])
     # Letting everything settle down...
     time.sleep(60)
-    
+
     try:
         with _create_firewall():
             main('uname -a', PROJECT, account=account,
