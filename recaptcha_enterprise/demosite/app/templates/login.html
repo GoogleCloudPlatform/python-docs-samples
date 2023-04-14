@@ -17,51 +17,12 @@
 <html lang="en-us">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <link rel="icon" href="../static/images/icons/favicon.ico" sizes="any" />
-    <link
-      rel="icon"
-      href="../static/images/icons/favicon.svg"
-      type="image/svg+xml"
-    />
-    <link rel="manifest" href="../static/manifest.webmanifest" />
-    <meta name="msapplication-config" content="../static/browserconfig.xml" />
-    <link
-      rel="shortcut icon"
-      sizes="196x196"
-      href="../static/images/icons/favicon-196px.png"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="../static/images/icons/favicon-120px.png"
-      sizes="120x120"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="../static/images/icons/favicon-152px.png"
-      sizes="152x152"
-    />
-    <link
-      rel="apple-touch-icon"
-      href="../static/images/icons/favicon-180px.png"
-      sizes="180x180"
-    />
     <title>Log in: reCAPTCHA Demo</title>
-    <link
-      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
-      rel="stylesheet"
-    />
-    <link href="../static/styles/global.css" rel="stylesheet" />
-    <script type="module" src="../static/scripts/component.js"></script>
-    <script type="text/javascript" src="../static/scripts/global.js"></script>
-    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/2) Starts -->
-    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1 of 2) Starts -->
+    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#user-action -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
+      // SEE: If using a library or framework, can use event handlers its way
       function handleClick(event) {
         event.preventDefault();
         grecaptcha.enterprise.ready(async () => {
@@ -71,17 +32,86 @@
               action: "log_in",
             }
           );
-          await login({token});
+          await doLogin({ token });
         });
       }
     </script>
-    <!-- ATTENTION: reCAPTCHA Example (Client Part 1/2) Ends -->
+    <!-- SEE: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
+    <script type="text/javascript">
+      async function doLogin({ password = "", token, username = "" }) {
+        // SEE: Include the token for server-side assessment
+        // SEE: Include the user input values from your form for your backend
+        // SEE: Always use HTTPS to encrypt plain text credentials!
+        const body = {
+          password,
+          token,
+          username,
+        };
+        // SEE: Fetch from your backend; assessments are server-side
+        // SEE: Refer to the backend demo code for more information
+        // SEE: If using a library or framework, can fetch its way
+        const score = await fetchServerResponse({
+          body,
+          url: "on_login",
+        });
+        // SEE: Use the assessment included in the response
+        // SEE: Using an assessment in client-side code is optional
+        // SEE: It's the most secure to handle things server-side
+        useAssessmentInClient(score);
+      }
+    </script>
+    <!-- ATTENTION: reCAPTCHA Example (Client Part 1 of 2) Ends -->
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta
+      name="description"
+      content="Explore the different ways of using reCAPTCHA Enterprise to protect web sites and applications."
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Press+Start+2P"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Material+Icons&display=block"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="../static/favicon-e9e3fe3130a875eb.ico"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="../static/favicon-16x16-e9e3fe3130a875eb.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="../static/favicon-32x32-e9e3fe3130a875eb.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href="../static/favicon-48x48-e9e3fe3130a875eb.png"
+    />
+    <link href="../static/global-15fca5ccf020c02b.css" rel="stylesheet" />
+    <link href="../static/demo-81d99a00.css" rel="stylesheet" />
+    <script src="../static/demo-a14dc264.js" type="module"></script>
+    <script
+      async
+      defer
+      src="../static/global-415f8f0291f2f30a.js"
+      type="text/javascript"
+    ></script>
   </head>
   <body>
     <recaptcha-demo step="login">
-      <!-- ATTENTION: reCAPTCHA Example (Client Part 2/2) Starts -->
+      <!-- ATTENTION: reCAPTCHA Example (Client Part 2 of 2) Starts -->
       <button onclick="handleClick(event)">Log in</button>
-      <!-- ATTENTION: reCAPTCHA Example (Client Part 2/2) Ends -->
+      <!-- ATTENTION: reCAPTCHA Example (Client Part 2 of 2) Ends -->
     </recaptcha-demo>
   </body>
 </html>
