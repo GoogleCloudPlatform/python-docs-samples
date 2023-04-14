@@ -104,8 +104,8 @@ def on_signup() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Write new username and password to users database.
-            # username = credentials["username"]
-            # password = credentials["password"]
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -151,8 +151,8 @@ def on_login() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if the login credentials exist and match.
-            # username = credentials["username"]
-            # password = credentials["password"]
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -198,7 +198,7 @@ def on_store_checkout() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if the cart contains items and proceed to checkout and payment.
-            # items = credentials["items"]
+            # items = json_data["items"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -244,7 +244,7 @@ def on_comment_submit() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if comment has safe language and proceed to store in database.
-            # comment = credentials["comment"]
+            # comment = json_data["comment"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
