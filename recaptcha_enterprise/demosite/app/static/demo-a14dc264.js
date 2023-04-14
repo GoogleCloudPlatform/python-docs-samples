@@ -4142,7 +4142,7 @@ class RecaptchaDemo extends s {
         break;
       case "Bad":
         card = x`
-          <p>reCAPTCHA is ${percentage || "???"}% confident you're bad.</p>
+          <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
           <img alt="Bad" src="${badbad}" />
         `;
         break;

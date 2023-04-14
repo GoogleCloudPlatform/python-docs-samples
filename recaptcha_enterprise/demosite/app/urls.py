@@ -266,7 +266,3 @@ def on_comment_submit() -> Response:
     except ValueError or Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
 
-
-# Return game template.
-def game() -> str:
-    return render_template(template_name_or_list="game.html", context=context)
