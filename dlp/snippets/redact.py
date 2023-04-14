@@ -277,7 +277,6 @@ def redact_image_listed_info_types(
 # [END dlp_redact_image_listed_infotypes]
 
 
-
 # [START dlp_redact_image_all_infotypes]
 def redact_image_all_info_types(
     project,
