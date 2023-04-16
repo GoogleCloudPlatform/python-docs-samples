@@ -182,6 +182,10 @@ assign_issues_by:
   - 'api: dlp'
   to:
   - GoogleCloudPlatform/googleapis-dlp
+- labels:
+  - 'api: functions'
+  to:
+  - GoogleCloudPlatform/functions-framework-google
 
 assign_prs_by:
 - labels:
@@ -209,12 +213,18 @@ assign_prs_by:
   - 'api: enterpriseknowledgegraph'
   - 'api: documentai'
   - 'api: retail'
+  - 'api: mediatranslation'
   to: 
   - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: dlp'
   to:
   - GoogleCloudPlatform/googleapis-dlp
+- labels:
+  - 'api: functions'
+  to:
+  - GoogleCloudPlatform/functions-framework-google
+  
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 

@@ -1,2 +1,2 @@
-functions-framework==3.2.1
+functions-framework==3.3.0
 python-dateutil==2.8.2

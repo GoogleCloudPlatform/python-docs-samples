@@ -108,8 +108,8 @@ To run this sample:
 
     positional arguments:
       project_id            Your Project ID.
-      location              Region of the Cloud Composer environent.
-      composer_environment  Name of the Cloud Composer environent.
+      location              Region of the Cloud Composer environment.
+      composer_environment  Name of the Cloud Composer environment.
 
     optional arguments:
       -h, --help            show this help message and exit
