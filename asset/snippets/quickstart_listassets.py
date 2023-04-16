@@ -18,24 +18,16 @@
 import argparse
 
 
-def list_assets(project_id, asset_types, page_size, content_type):
+def list_assets(parent_resource, asset_types, page_size, content_type):
     # [START asset_quickstart_list_assets]
     from google.cloud import asset_v1
 
-    # TODO project_id = 'Your Google Cloud Project ID'
-    # TODO asset_types = 'Your asset type list, e.g.,
-    # ["storage.googleapis.com/Bucket","bigquery.googleapis.com/Table"]'
-    # TODO page_size = 'Num of assets in one page, which must be between 1 and
-    # 1000 (both inclusively)'
-    # TODO content_type ="Content type to list"
-
-    project_resource = "projects/{}".format(project_id)
     client = asset_v1.AssetServiceClient()
 
     # Call ListAssets v1 to list assets.
     response = client.list_assets(
         request={
-            "parent": project_resource,
+            "parent": parent_resource,
             "read_time": None,
             "asset_types": asset_types,
             "content_type": content_type,
@@ -52,7 +44,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("project_id", help="Your Google Cloud project ID")
+    parser.add_argument("parent_resource", help="Parent resource. Either projects/<project id> or folders/<folder id> or organizations/<organization id>")
     parser.add_argument(
         "asset_types",
         help="The types of the assets to list, comma delimited, e.g., "
@@ -63,10 +55,10 @@ if __name__ == "__main__":
         help="Num of assets in one page, which must be between 1 and 1000 "
         "(both inclusively)",
     )
-    parser.add_argument("content_type", help="Content type to list")
+    parser.add_argument("content_type", help="Content type to list, e.g. RESOURCE see more options https://cloud.google.com/asset-inventory/docs/reference/rest/v1/feeds#ContentType")
 
     args = parser.parse_args()
 
     asset_type_list = args.asset_types.split(",")
 
-    list_assets(args.project_id, asset_type_list, int(args.page_size), args.content_type)
+    list_assets(args.parent_resource, asset_type_list, int(args.page_size), args.content_type)
