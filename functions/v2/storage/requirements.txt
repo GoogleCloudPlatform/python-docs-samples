@@ -1,1 +1,1 @@
-functions-framework==3.2.0
+functions-framework==3.3.0
