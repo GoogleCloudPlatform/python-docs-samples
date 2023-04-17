@@ -4,7 +4,7 @@ apache-airflow==2.4.3
 apache-airflow-providers-apache-beam==4.0.0
 apache-airflow-providers-cncf-kubernetes==4.4.0
 apache-airflow-providers-google==8.4.0
-scipy==1.10.1; python_version > '3.0'
+scipy==1.8.1; python_version > '3.0'
 apache-airflow-providers-amazon==6.0.0
 apache-airflow-providers-microsoft-azure==4.3.0
 google-cloud-dataform==0.2.0 # used in Dataform operators
