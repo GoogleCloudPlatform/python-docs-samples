@@ -1,2 +1,2 @@
-google-cloud-optimization==1.3.0
-google-cloud-storage==2.5.0
+google-cloud-optimization==1.4.1
+google-cloud-storage==2.8.0
