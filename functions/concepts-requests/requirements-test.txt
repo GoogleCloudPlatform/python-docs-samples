@@ -1,5 +1,5 @@
 flask==2.1.0
 pytest==7.0.1
 requests==2.28.2
-responses==0.17.0; python_version < '3.7'
-responses==0.20.0; python_version > '3.6'
+responses==0.23.1; python_version < '3.7'
+responses==0.23.1; python_version > '3.6'
