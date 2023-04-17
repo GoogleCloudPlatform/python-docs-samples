@@ -40,7 +40,7 @@ SERVICE_ACCOUNT_FILE = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 def api_key():
     suffix = uuid.uuid4().hex
     api_key = create_api_key.create_api_key(PROJECT, suffix)
-    sleep(300)
+    sleep(5)
     yield api_key
     delete_api_key.delete_api_key(PROJECT, get_key_id(api_key.name))
 
