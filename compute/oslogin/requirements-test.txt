@@ -1,6 +1,6 @@
 backoff==1.11.1; python_version < "3.7"
 backoff==2.2.1; python_version >= "3.7"
 pytest==7.2.2
-mock==5.0.1
+mock==5.0.2
 google-cloud-iam==2.12.0
 google-api-python-client==2.83.0
