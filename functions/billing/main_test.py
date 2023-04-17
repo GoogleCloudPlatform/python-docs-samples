@@ -1,4 +1,5 @@
-# Copyright 2018, Google, LLC.
+# Copyright 2023 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,7 +15,7 @@
 import base64
 import json
 
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import main
 

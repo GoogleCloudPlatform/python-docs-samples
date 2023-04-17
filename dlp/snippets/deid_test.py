@@ -315,6 +315,27 @@ def test_deidentify_with_exception_list(capsys):
     assert "jack@example.org accessed record of user: [EMAIL_ADDRESS]" in out
 
 
+def test_deidentify_table_bucketing(capsys):
+    deid_list = ["happiness_score"]
+    bucket_size = 10
+    lower_bound = 0
+    upper_bound = 100
+
+    deid.deidentify_table_bucketing(
+        GCLOUD_PROJECT,
+        TABLE_DATA,
+        deid_list,
+        bucket_size,
+        lower_bound,
+        upper_bound,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "string_value: \"90:100\"" in out
+    assert "string_value: \"20:30\"" in out
+    assert "string_value: \"70:80\"" in out
+
+
 def test_deidentify_table_condition_masking(capsys):
     deid_list = ["happiness_score"]
     deid.deidentify_table_condition_masking(

@@ -1023,6 +1023,125 @@ def deidentify_with_exception_list(
 # [END dlp_deidentify_exception_list]
 
 
+# [START dlp_deidentify_table_bucketing]
+def deidentify_table_bucketing(
+    project,
+    table_data,
+    deid_content_list,
+    bucket_size,
+    bucketing_lower_bound,
+    bucketing_upper_bound
+):
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+    table by replacing them with fixed size bucket ranges.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Json string representing table data.
+        deid_content_list: A list of fields in table to de-identify.
+        bucket_size: Size of each bucket for fixed sized bucketing
+            (except for minimum and maximum buckets). So if ``bucketing_lower_bound`` = 10,
+            ``bucketing_upper_bound`` = 89, and ``bucket_size`` = 10, then the
+            following buckets would be used: -10, 10-20, 20-30, 30-40,
+            40-50, 50-60, 60-70, 70-80, 80-89, 89+.
+       bucketing_lower_bound: Lower bound value of buckets.
+       bucketing_upper_bound:  Upper bound value of buckets.
+
+    Returns:
+       De-identified table is returned;
+       the response from the API is also printed to the terminal.
+
+    Example:
+    table_data = {
+       "header":[
+           "email",
+           "phone number",
+           "age"
+       ],
+       "rows":[
+           [
+               "robertfrost@xyz.com",
+               "4232342345"
+               "35"
+           ],
+           [
+               "johndoe@pqr.com",
+               "4253458383"
+               "68"
+           ]
+       ]
+    }
+
+    >> $ python deid.py deid_table_bucketing \
+        '{"header": ["email", "phone number", "age"],
+        "rows": [["robertfrost@xyz.com", "4232342345", "35"],
+        ["johndoe@pqr.com", "4253458383", "68"]]}' \
+        ["age"] 10 0 100
+        >>  '{"header": ["email", "phone number", "age"],
+            "rows": [["robertfrost@xyz.com", "4232342345", "30:40"],
+            ["johndoe@pqr.com", "4253458383", "60:70"]]}'
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item`.
+    item = {"table": table}
+
+    # Construct fixed sized bucketing configuration
+    fixed_size_bucketing_config = {
+        "bucket_size": bucket_size,
+        "lower_bound": {"integer_value": bucketing_lower_bound},
+        "upper_bound": {"integer_value": bucketing_upper_bound}
+    }
+
+    # Specify fields to be de-identified
+    deid_content_list = [{"name": _i} for _i in deid_content_list]
+
+    # Construct Deidentify Config
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "fields": deid_content_list,
+                    "primitive_transformation": {
+                        "fixed_size_bucketing_config": fixed_size_bucketing_config
+                    }
+                }
+            ]
+        }
+    }
+
+    # Call the API.
+    response = dlp.deidentify_content(request={
+        "parent": parent,
+        "deidentify_config": deidentify_config,
+        "item": item
+    })
+
+    # Print the results.
+    print("Table after de-identification: {}".format(response.item.table))
+
+    # Return the response.
+    return response.item.table
+
+# [END dlp_deidentify_table_bucketing]
+
+
 # [START dlp_deidentify_table_condition_masking]
 def deidentify_table_condition_masking(
     project,
@@ -1415,6 +1534,36 @@ if __name__ == "__main__":
         help="The list of strings to ignore matches against.",
     )
 
+    table_bucketing_parser = subparsers.add_parser(
+        "deid_table_bucketing",
+        help="De-identify sensitive data in a table by replacing "
+             "them with fixed size bucket ranges.",
+    )
+    table_bucketing_parser.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    table_bucketing_parser.add_argument(
+        "--table_data",
+        help="Json string representing table data",
+    )
+    table_bucketing_parser.add_argument(
+        "--deid_content_list",
+        help="A list of fields in table to de-identify."
+    )
+    table_bucketing_parser.add_argument(
+        "--bucket_size",
+        help="Size of each bucket for fixed sized bucketing.",
+    )
+    table_bucketing_parser.add_argument(
+        "--bucketing_lower_bound",
+        help="Lower bound value of buckets.",
+    )
+    table_bucketing_parser.add_argument(
+        "--bucketing_upper_bound",
+        help="Upper bound value of buckets.",
+    )
+
     table_condition_mask_parser = subparsers.add_parser(
         "deid_table_condition_mask",
         help="De-identify sensitive data in a table by masking"
@@ -1514,6 +1663,15 @@ if __name__ == "__main__":
             args.content_string,
             args.info_types,
             args.exception_list,
+        )
+    elif args.content == "deid_table_bucketing":
+        deidentify_table_bucketing(
+            args.project,
+            args.table_data,
+            args.deid_content_list,
+            args.bucket_size,
+            args.bucketing_lower_bound,
+            args.bucketing_upper_bound,
         )
     elif args.content == "deid_table_condition_mask":
         deidentify_table_condition_masking(
