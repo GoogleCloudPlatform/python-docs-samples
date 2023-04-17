@@ -39,6 +39,10 @@ CSV_FILE = os.path.join(os.path.dirname(__file__), "resources/dates.csv")
 DATE_SHIFTED_AMOUNT = 30
 DATE_FIELDS = ["birth_date", "register_date"]
 CSV_CONTEXT_FIELD = "name"
+TABLE_DATA = {"header": ["age", "patient", "happiness_score"],
+              "rows": [["101", "Charles Dickens", "95"],
+                       ["22", "Jane Austen", "21"],
+                       ["90", "Mark Twain", "75"]]}
 
 
 @pytest.fixture(scope="module")
@@ -305,6 +309,27 @@ def test_deidentify_with_exception_list(capsys):
 
     assert "gary@example.org" not in out
     assert "jack@example.org accessed record of user: [EMAIL_ADDRESS]" in out
+
+
+def test_deidentify_table_bucketing(capsys):
+    deid_list = ["happiness_score"]
+    bucket_size = 10
+    lower_bound = 0
+    upper_bound = 100
+
+    deid.deidentify_table_bucketing(
+        GCLOUD_PROJECT,
+        TABLE_DATA,
+        deid_list,
+        bucket_size,
+        lower_bound,
+        upper_bound,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "string_value: \"90:100\"" in out
+    assert "string_value: \"20:30\"" in out
+    assert "string_value: \"70:80\"" in out
 
 
 def test_deidentify_table_condition_replace_with_info_types(capsys):
