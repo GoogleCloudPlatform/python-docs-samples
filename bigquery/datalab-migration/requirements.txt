@@ -4,5 +4,5 @@ google-cloud-bigquery[pandas,pyarrow]==3.5.0
 # The last version of google-cloud-bigquery-storage that supports google-api-core 1.x is 2.13.2
 google-cloud-bigquery-storage==2.19.1
 datalab==1.2.1
-ipython==8.0.1
+ipython==8.12.0
 pyarrow==7.0.0
