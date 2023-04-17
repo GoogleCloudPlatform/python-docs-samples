@@ -1,2 +1,2 @@
 apache-beam[gcp]==2.39.0
-tensorflow==2.9.3
+tensorflow==2.12.0
