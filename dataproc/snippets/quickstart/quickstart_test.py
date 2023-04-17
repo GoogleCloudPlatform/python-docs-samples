@@ -67,7 +67,6 @@ def staging_bucket_name():
     try:
         yield bucket_name
     finally:
-        delete_bucket(bucket)
         delete_blob(blob)
         delete_bucket(bucket)
 
