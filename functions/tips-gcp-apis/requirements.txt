@@ -1,2 +1,2 @@
 google-cloud-pubsub==2.9.0
-functions-framework==3.2.1
+functions-framework==3.3.0

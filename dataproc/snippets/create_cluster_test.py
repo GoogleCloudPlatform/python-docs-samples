@@ -16,7 +16,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
+from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
@@ -50,7 +50,8 @@ def teardown():
         print("Cluster already deleted")
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
+# InvalidArgument is thrown when the subnetwork is not ready
+@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, InvalidArgument), max_tries=5)
 def test_cluster_create(capsys):
     # Wrapper function for client library function
     create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)

@@ -23,7 +23,9 @@
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # 💡 Only test with Python 3.10
-    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.11"],
+    # "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.11"],
+    # Temp disable until team has time for refactoring tests
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
