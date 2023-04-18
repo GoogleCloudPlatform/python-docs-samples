@@ -15,7 +15,7 @@
 # [START cloudrun_fuse_dockerfile]
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.10-buster
+FROM python:3.11-buster
 
 # Install system dependencies
 RUN set -e; \

@@ -88,8 +88,6 @@
 
 # Self-service
 /appengine/**/*                           @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/flexible/django_cloudsql/**/*  @glasnt @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
-/appengine/standard/django/**/*           @glasnt @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                                 @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/**/*                           @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers

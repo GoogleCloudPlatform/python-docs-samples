@@ -1,4 +1,4 @@
 google-cloud-vision==3.4.1
 google-cloud-storage==2.8.0; python_version < '3.7'
 google-cloud-storage==2.8.0; python_version > '3.6'
-Wand==0.6.8
+Wand==0.6.11
