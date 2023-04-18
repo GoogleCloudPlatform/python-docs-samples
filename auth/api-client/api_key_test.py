@@ -49,10 +49,13 @@ def get_key_id(api_key_name: str):
 
 
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
-    for attempt in range(5):
+    out = "Failed to authenticate after 5 tries"
+    for _ in range(5):
         try:
-            authenticate_with_api_key.authenticate_with_api_key(PROJECT, api_key.key_string)
-            out, err = capsys.readouterr()
+            authenticate_with_api_key.authenticate_with_api_key(
+                PROJECT, api_key.key_string
+            )
+            out, _ = capsys.readouterr()
             break
         except Exception:
             sleep(10)
@@ -62,35 +65,35 @@ def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
 
 def test_lookup_api_key(api_key: Key, capsys: CaptureFixture):
     lookup_api_key.lookup_api_key(api_key.key_string)
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully retrieved the API key name: {api_key.name}", out)
 
 
 def test_restrict_api_key_android(api_key: Key, capsys: CaptureFixture):
     restrict_api_key_android.restrict_api_key_android(PROJECT, get_key_id(api_key.name))
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_api(api_key: Key, capsys: CaptureFixture):
     restrict_api_key_api.restrict_api_key_api(PROJECT, get_key_id(api_key.name))
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_http(api_key: Key, capsys: CaptureFixture):
     restrict_api_key_http.restrict_api_key_http(PROJECT, get_key_id(api_key.name))
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_ios(api_key: Key, capsys: CaptureFixture):
     restrict_api_key_ios.restrict_api_key_ios(PROJECT, get_key_id(api_key.name))
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
 
 
 def test_restrict_api_key_server(api_key: Key, capsys: CaptureFixture):
     restrict_api_key_server.restrict_api_key_server(PROJECT, get_key_id(api_key.name))
-    out, err = capsys.readouterr()
+    out, _ = capsys.readouterr()
     assert re.search(f"Successfully updated the API key: {api_key.name}", out)
