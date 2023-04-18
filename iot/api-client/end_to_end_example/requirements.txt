@@ -1,7 +1,7 @@
 cryptography==40.0.0
-google-api-python-client==2.47.0
+google-api-python-client==2.85.0
 google-auth-httplib2==0.1.0
-google-auth==2.6.2
-google-cloud-pubsub==2.9.0
+google-auth==2.17.2
+google-cloud-pubsub==2.16.0
 paho-mqtt==1.6.1
 pyjwt==2.6.0

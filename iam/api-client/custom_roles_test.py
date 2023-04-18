@@ -73,7 +73,6 @@ def test_edit_role(custom_role, capsys):
         custom_role,
         GCLOUD_PROJECT,
         "Python Test Custom Role",
-        "This is a python test custom role",
         "Updated",
         ["iam.roles.get"],
         "GA",

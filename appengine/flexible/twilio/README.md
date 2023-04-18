@@ -28,7 +28,7 @@ Refer to the [top-level README](../README.md) for instructions on running and de
 You can run the application locally to test the callbacks and SMS sending. You
 will need to set environment variables before starting your application:
 
-    $ export TWILIO_ACCOUNT_SID=[your-twilio-accoun-sid]
+    $ export TWILIO_ACCOUNT_SID=[your-twilio-account-sid]
     $ export TWILIO_AUTH_TOKEN=[your-twilio-auth-token]
     $ export TWILIO_NUMBER=[your-twilio-number]
     $ python main.py
