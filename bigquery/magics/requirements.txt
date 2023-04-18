@@ -1,7 +1,7 @@
 db-dtypes==1.1.1
 google-cloud-bigquery-storage==2.19.1
 google-auth-oauthlib==1.0.0
-grpcio==1.53.0
+grpcio==1.54.0
 ipywidgets==8.0.6
 ipython===7.31.1; python_version == '3.7'
 ipython===8.0.1; python_version == '3.8'
