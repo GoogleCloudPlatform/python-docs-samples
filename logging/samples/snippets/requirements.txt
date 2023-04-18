@@ -1,4 +1,4 @@
 google-cloud-logging==3.5.0
 google-cloud-bigquery==3.9.0
 google-cloud-storage==2.8.0
-google-cloud-pubsub==2.15.2
+google-cloud-pubsub==2.16.0
