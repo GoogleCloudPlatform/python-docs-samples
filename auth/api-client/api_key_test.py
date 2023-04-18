@@ -60,7 +60,6 @@ def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
     assert re.search("Successfully authenticated using the API key", out)
 
 
-
 def test_lookup_api_key(api_key: Key, capsys: CaptureFixture):
     lookup_api_key.lookup_api_key(api_key.key_string)
     out, err = capsys.readouterr()
