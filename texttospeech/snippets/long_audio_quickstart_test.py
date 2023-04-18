@@ -20,8 +20,20 @@ from long_audio_quickstart import synthesize_long_audio
 import uuid
 import google.auth
 from google.cloud import storage
+import pytest
 
-def test_synthesize_long_audio(capsys):
+@pytest.fixture(scope="module")
+def test_bucket():
+    """Yields a bucket that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = "bucket-storage-s3-test-{}".format(uuid.uuid4())
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    yield bucket
+    bucket.delete(force=True)
+
+def test_synthesize_long_audio(capsys, test_bucket):
     PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
     parent = "projects/" + PROJECT_NUMBER + "/locations/us-central1"
 
@@ -29,9 +41,6 @@ def test_synthesize_long_audio(capsys):
     client = storage.Client()
     client.create_bucket(bucket_name, location="us-central1")
     file_name = "fake_file.wav"
-    output_gcs_uri = "gs://" bucket_name + "/" + file_name
+    output_gcs_uri = "gs://" test_bucket.name + "/" + file_name
 
     assert synthesize_long_audio("some text to synthesize", "en-US", "en-US-Standard-A", parent, output_gcs_uri)
-
-    bucket = client.get_bucket(bucket_name)
-    bucket.delete(force=True)
