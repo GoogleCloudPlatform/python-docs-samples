@@ -1,5 +1,5 @@
 # pin pytest to 4.6.11 for Python2.
 pytest==4.6.11; python_version < '3.0'
-google-api-python-client==2.86.0; python_version < '3.0'
+google-api-python-client==1.12.11; python_version < '3.0'
 mock===3.0.5; python_version < '3.0'
 WebTest==2.0.35; python_version < '3.0'
