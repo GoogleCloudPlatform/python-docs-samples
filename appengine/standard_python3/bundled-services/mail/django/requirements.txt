@@ -1,4 +1,4 @@
 Django==3.2.8
-django-environ==0.9.0
+django-environ==0.10.0
 google-cloud-logging==3.5.0
 appengine-python-standard>=0.2.3
