@@ -1,2 +1,2 @@
 apache-beam[gcp]==2.35.0
-torch==1.12.1
+torch==1.13.1
