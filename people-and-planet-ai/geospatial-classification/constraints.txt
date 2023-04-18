@@ -1,2 +1,2 @@
-google-auth==2.17.2
+google-auth==2.17.3
 google-cloud-bigquery==2.34.4

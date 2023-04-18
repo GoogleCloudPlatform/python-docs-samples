@@ -2,6 +2,6 @@ Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
 requests==2.27.1
 requests-toolbelt==0.10.0
-google-auth==2.17.2; python_version < '3.0'
-google-auth==2.17.2; python_version > '3.0'
+google-auth==2.17.3; python_version < '3.0'
+google-auth==2.17.3; python_version > '3.0'
 functools32==3.2.3.post2; python_version < "3"
