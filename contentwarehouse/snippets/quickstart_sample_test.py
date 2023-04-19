@@ -35,3 +35,4 @@ def test_quickstart(capsys: pytest.CaptureFixture) -> None:
 
     assert "Rule Engine Output" in out
     assert "Document Created" in out
+    
