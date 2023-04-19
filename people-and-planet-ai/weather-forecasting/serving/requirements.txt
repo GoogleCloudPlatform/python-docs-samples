@@ -1,6 +1,5 @@
 Flask==2.2.2
 gunicorn==20.1.0
-torch==2.0.0
 
 # Local packages.
 ./weather-data
