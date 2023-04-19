@@ -81,8 +81,11 @@ def quickstart(project_number: str, location: str,  user_id: str) -> None:
 
     # Define Request
     create_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=document, request_metadata=contentwarehouse.RequestMetadata(
-            user_info=contentwarehouse.UserInfo(id=user_id))
+        parent=parent,
+        document=document,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        )
     )
 
     # Create a Document for the given schema
