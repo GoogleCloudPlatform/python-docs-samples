@@ -1432,13 +1432,21 @@ def deidentify_table_replace_with_info_types(
 
     Example:
     >> $ python deid.py table_replace_with_infotype \
-    '{"header": ["name", "email", "phone number"],
-    "rows": [["Robert Frost", "robertfrost@xyz.com", "4232342345"],
-    ["John Doe", "johndoe@pqr.com", "4253458383"]]}' \
+    '{
+        "header": ["name", "email", "phone number"],
+        "rows": [
+            ["Robert Frost", "robertfrost@xyz.com", "4232342345"],
+            ["John Doe", "johndoe@pqr.com", "4253458383"]
+        ]
+    }' \
     ["PERSON_NAME"] ["name"]
-    >> '{"header": ["name", "email", "phone number"],
-        "rows": [["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
-        ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]]}'
+    >> '{
+            "header": ["name", "email", "phone number"],
+            "rows": [
+                ["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
+                ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]
+            ]
+        }'
     """
 
     # Import the client library
