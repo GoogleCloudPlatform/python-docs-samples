@@ -26,7 +26,7 @@ def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-storage-s3-test-{}".format(uuid.uuid4())
+        bucket_name = f"tts-long-audio-test-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
