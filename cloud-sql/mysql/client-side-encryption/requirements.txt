@@ -1,3 +1,3 @@
-SQLAlchemy==2.0.4
-PyMySQL==1.0.2
+SQLAlchemy==2.0.9
+PyMySQL==1.0.3
 tink==1.6.1

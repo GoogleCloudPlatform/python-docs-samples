@@ -58,3 +58,32 @@ def test_redact_image_all_text(tempdir, capsys):
 
     out, _ = capsys.readouterr()
     assert output_filepath in out
+
+
+def test_redact_image_listed_info_types(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+    output_filepath = os.path.join(tempdir, "redacted.png")
+
+    redact.redact_image_listed_info_types(
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+        ["PHONE_NUMBER", "EMAIL_ADDRESS"],
+    )
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out
+
+
+def test_redact_image_all_info_types(tempdir, capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+    output_filepath = os.path.join(tempdir, "redacted.png")
+
+    redact.redact_image_all_info_types(
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+    )
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out

@@ -15,11 +15,14 @@
 import os
 import re
 
+from google.api_core.retry import Retry
+
 import transcribe_async_file
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe(capsys):
     transcribe_async_file.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
     out, err = capsys.readouterr()
