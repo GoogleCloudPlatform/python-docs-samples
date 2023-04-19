@@ -942,7 +942,7 @@ def deidentify_with_simple_word_list(
     project: str,
     input_str: str,
     custom_info_type_name: str,
-    word_list: list,
+    word_list: list[str],
 ) -> None:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.
@@ -950,7 +950,7 @@ def deidentify_with_simple_word_list(
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
-        custom_info_type_name:The name of the custom info type to use.
+        custom_info_type_name: The name of the custom info type to use.
         word_list: The list of strings to match against.
     """
 
