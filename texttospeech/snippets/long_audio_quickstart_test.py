@@ -33,6 +33,6 @@ def test_bucket():
 def test_synthesize_long_audio(capsys, test_bucket):
     file_name = "fake_file.wav"
     output_gcs_uri = "gs://" test_bucket.name + "/" + file_name
-    synthesize_long_audio(PROJECT_NUMBER, "us-central1", output_gcs_uri)
+    synthesize_long_audio(str(PROJECT_NUMBER), "us-central1", output_gcs_uri)
     out, _ = capsys.readouterr()
     assert "Finished processing, check your GCS bucket to find your audio file!" in out
