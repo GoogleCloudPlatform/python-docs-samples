@@ -1,1 +1,1 @@
-google-cloud-language==2.6.1
+google-cloud-language==2.9.1
