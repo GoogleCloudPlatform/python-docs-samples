@@ -1,4 +1,3 @@
-@@ -0,0 +1,36 @@
 #!/usr/bin/env python
 # Copyright 2023 Google LLC
 #
