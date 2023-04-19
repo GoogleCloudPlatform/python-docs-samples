@@ -24,7 +24,7 @@ from google.cloud import contentwarehouse
 # user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
 
-def quickstart(project_number: str, location: str,  user_id: str) -> None:
+def quickstart(project_number: str, location: str, user_id: str) -> None:
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
@@ -85,7 +85,7 @@ def quickstart(project_number: str, location: str,  user_id: str) -> None:
         document=document,
         request_metadata=contentwarehouse.RequestMetadata(
             user_info=contentwarehouse.UserInfo(id=user_id)
-        )
+        ),
     )
 
     # Create a Document for the given schema
