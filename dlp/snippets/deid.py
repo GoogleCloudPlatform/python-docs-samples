@@ -939,11 +939,11 @@ def deidentify_with_replace_infotype(project, item, info_types):
 
 # [START dlp_deidentify_simple_word_list]
 def deidentify_with_simple_word_list(
-    project,
-    input_str,
-    custom_info_type_name,
-    word_list,
-):
+    project: str,
+    input_str: str,
+    custom_info_type_name: str,
+    word_list: list,
+) -> None:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.
 
@@ -952,9 +952,6 @@ def deidentify_with_simple_word_list(
         input_str: The string to deidentify (will be treated as text).
         custom_info_type_name:The name of the custom info type to use.
         word_list: The list of strings to match against.
-
-    Returns:
-          None; the response from the API is printed to the terminal.
     """
 
     # Import the client library
