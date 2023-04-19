@@ -21,6 +21,7 @@ import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
+user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
 
 
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:
@@ -28,6 +29,7 @@ def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     quickstart_sample.quickstart(
         project_number=project_number,
         location=location,
+        user_id=user_id,
     )
     out, _ = capsys.readouterr()
 
