@@ -27,6 +27,12 @@ def synthesize_long_audio(text, language_code, voice_name, parent, output_gcs_ur
   'projects/{PROJECT_NUMBER}/locations/{LOCATION}', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
   
   """
+  # TODO(developer): Uncomment and set the following variables
+  # text = "YOUR_INPUT_TEXT"
+  # language_code = "YOUR_LANGUAGE_CODE"
+  # voice_name = "YOUR_VOICE_NAME"
+  # parent = "YOUR_PARENT_STRING"
+  # output_gcs_uri = "YOUR_OUTPUT_GCS_URI"
 
   client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
@@ -52,17 +58,3 @@ def synthesize_long_audio(text, language_code, voice_name, parent, output_gcs_ur
     return False
   print("Your operation is complete; check your GCS bucket to find your audio file!"
   return True
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("-t", "--text", help="The text from which to synthesize speech.")
-    parser.add_argument("-l", "--language_code", help="The language code.")
-    parser.add_argument("-v", "--voice_name", help="The voice name.")
-    parser.add_argument("-p", "--parent", help="The parent string, formatted as `projects/{YOUR_PROJECT_NUMBER}/locations/{YOUR_LOCATION}`.")
-    parser.add_argument("-g", "--output_gcs_uri", help="The output audio file location, formatted as `gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav`.")
-
-    args = parser.parse_args()
-
-    synthesize_text_file(args.t, args.l, args.v, args.p, args.g)
