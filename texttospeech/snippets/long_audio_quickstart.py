@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,49 +11,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# All Rights Reserved.
 
 from google.cloud import texttospeech
 import time
-import argparse
 
-def synthesize_long_audio(text, language_code, voice_name, parent, output_gcs_uri):
+def synthesize_long_audio(project_id, location, output_gcs_uri):
   """
   Synthesizes long input, writing the resulting audio to `output_gcs_uri`.
   
-  Example usage: synthesize_long_audio('Some input text to synthesize', 'en-US', 'en-US-Standard-A', 
-  'projects/{PROJECT_NUMBER}/locations/{LOCATION}', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
+  Example usage: synthesize_long_audio('12345', 'us-central1', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
   
   """
   # TODO(developer): Uncomment and set the following variables
-  # text = "YOUR_INPUT_TEXT"
-  # language_code = "YOUR_LANGUAGE_CODE"
-  # voice_name = "YOUR_VOICE_NAME"
-  # parent = "YOUR_PARENT_STRING"
-  # output_gcs_uri = "YOUR_OUTPUT_GCS_URI"
+  # parent = 'YOUR_PROJECT_ID'
+  # location = 'YOUR_LOCATION'
+  # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
 
   client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
-  input = texttospeech.SynthesisInput()
-
-  input.text = input_text
+  input = texttospeech.SynthesisInput(text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
 
   audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
 
-  voice = texttospeech.VoiceSelectionParams(language_code=language_code, name=voice_name)
+  voice = texttospeech.VoiceSelectionParams(language_code="en-US", name="en-US-Standard-A")
+  
+  parent = 'projects/' + project_id + '/locations/' + location
 
   request = texttospeech.SynthesizeLongAudioRequest(parent=parent, input=input, audio_config=audio_config, voice=voice, output_gcs_uri=output_gcs_uri)
 
   operation = client.synthesize_long_audio(request=request)
-
-  attempts = 0
-  while (!operation.done and attempts < 30):
-    print("Operation is still not done. Sleeping for 5 seconds and then trying again...")
-    time.sleep(5)
-    attempts += 1
-  if attempts == 30:
-    print("It's taking a while for your operation to complete. If the input was very large, this may be okay. If not, it likely means there was a failure.")
-    return False
-  print("Your operation is complete; check your GCS bucket to find your audio file!"
-  return True
+  
+  result = operation.result(timeout=120)
+  print("\nFinished processing, check your GCS bucket to find your audio file!")
