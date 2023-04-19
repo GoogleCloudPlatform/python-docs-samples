@@ -15,7 +15,7 @@
 # [START cloudrun_fs_dockerfile]
 # Use the official lightweight Python image.
 # https://hub.docker.com/_/python
-FROM python:3.10-slim
+FROM python:3.11-slim
 
 # Install system dependencies
 RUN apt-get update -y && apt-get install -y \

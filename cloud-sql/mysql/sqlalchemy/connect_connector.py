@@ -33,7 +33,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     # keep secrets safe.
 
     instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]  # e.g. 'project:region:instance'
-    db_user = os.environ.get("DB_USER", "")  # e.g. 'my-db-user'
+    db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
     db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
