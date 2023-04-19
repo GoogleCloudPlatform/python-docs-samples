@@ -21,9 +21,10 @@ from google.cloud import contentwarehouse
 # TODO(developer): Uncomment these variables before running the sample.
 # project_number = 'YOUR_PROJECT_NUMBER'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
 
-def quickstart(project_number: str, location: str) -> None:
+def quickstart(project_number: str, location: str, user_id: str) -> None:
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
 
@@ -80,7 +81,11 @@ def quickstart(project_number: str, location: str) -> None:
 
     # Define Request
     create_document_request = contentwarehouse.CreateDocumentRequest(
-        parent=parent, document=document
+        parent=parent,
+        document=document,
+        request_metadata=contentwarehouse.RequestMetadata(
+            user_info=contentwarehouse.UserInfo(id=user_id)
+        ),
     )
 
     # Create a Document for the given schema
