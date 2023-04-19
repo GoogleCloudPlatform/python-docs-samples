@@ -1,3 +1,3 @@
-google-api-python-client==2.80.0
-grpcio==1.51.3
-google-cloud-video-stitcher==0.6.1
+google-api-python-client==2.86.0
+grpcio==1.54.0
+google-cloud-video-stitcher==0.7.0
