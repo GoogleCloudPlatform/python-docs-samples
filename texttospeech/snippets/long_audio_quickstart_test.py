@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,14 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-# All Rights Reserved.
 
 from long_audio_quickstart import synthesize_long_audio
 import uuid
-import google.auth
 from google.cloud import storage
 import pytest
+
+PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 
 @pytest.fixture(scope="module")
 def test_bucket():
@@ -33,10 +31,8 @@ def test_bucket():
     bucket.delete(force=True)
 
 def test_synthesize_long_audio(capsys, test_bucket):
-    PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
-    parent = "projects/" + PROJECT_NUMBER + "/locations/us-central1"
-
     file_name = "fake_file.wav"
     output_gcs_uri = "gs://" test_bucket.name + "/" + file_name
-
-    assert synthesize_long_audio("some text to synthesize", "en-US", "en-US-Standard-A", parent, output_gcs_uri)
+    synthesize_long_audio(PROJECT_NUMBER, "us-central1", output_gcs_uri)
+    out, _ = capsys.readouterr()
+    assert "Finished processing, check your GCS bucket to find your audio file!" in out
