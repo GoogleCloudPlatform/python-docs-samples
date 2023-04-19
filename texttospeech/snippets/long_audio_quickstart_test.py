@@ -36,9 +36,6 @@ def test_synthesize_long_audio(capsys, test_bucket):
     PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
     parent = "projects/" + PROJECT_NUMBER + "/locations/us-central1"
 
-    bucket_name = f"test-bucket-{uuid.uuid4().hex[:8]}"
-    client = storage.Client()
-    client.create_bucket(bucket_name, location="us-central1")
     file_name = "fake_file.wav"
     output_gcs_uri = "gs://" test_bucket.name + "/" + file_name
 
