@@ -19,10 +19,16 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
-                                        ServiceUnavailable)
-from google.cloud.dataproc_v1.services.cluster_controller.client import \
-    ClusterControllerClient
+from google.api_core.exceptions import (
+    Cancelled,
+    InternalServerError,
+    InvalidArgument,
+    NotFound,
+    ServiceUnavailable,
+)
+from google.cloud.dataproc_v1.services.cluster_controller.client import (
+    ClusterControllerClient,
+)
 import pytest
 
 import update_cluster
@@ -72,6 +78,7 @@ def setup_teardown(cluster_client):
             operation.result()
         except NotFound:
             print("Cluster already deleted")
+
     try:
         setup()
         yield
@@ -79,7 +86,9 @@ def setup_teardown(cluster_client):
         teardown()
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
+)
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
     # Wrapper function for client library function
     update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)

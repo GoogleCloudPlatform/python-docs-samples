@@ -44,8 +44,8 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         "project_id": project_id,
         "cluster_name": cluster_name,
         "config": {
-            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2"},
-            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
         },
     }
 
