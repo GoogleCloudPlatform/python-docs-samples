@@ -1,7 +1,7 @@
-azure-storage-blob==12.15.0
-backoff==1.11.1; python_version < "3.7"
-backoff==2.0.0; python_version >= "3.7"
-boto3==1.26.103
+azure-storage-blob==12.16.0
+backoff==2.2.1; python_version < "3.7"
+backoff==2.2.1; python_version >= "3.7"
+boto3==1.26.114
 google-cloud-storage==2.8.0; python_version < '3.7'
 google-cloud-storage==2.8.0; python_version > '3.6'
 google-cloud-secret-manager==2.16.1
