@@ -14,6 +14,8 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 from transcribe_multichannel import (
     transcribe_file_with_multichannel,
     transcribe_gcs_with_multichannel,
@@ -22,6 +24,7 @@ from transcribe_multichannel import (
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_multichannel_file(capsys):
     transcribe_file_with_multichannel(os.path.join(RESOURCES, "multi.wav"))
     out, err = capsys.readouterr()
@@ -29,6 +32,7 @@ def test_transcribe_multichannel_file(capsys):
     assert "how are you doing" in out
 
 
+@Retry()
 def test_transcribe_multichannel_gcs(capsys):
     transcribe_gcs_with_multichannel("gs://cloud-samples-data/speech/multi.wav")
     out, err = capsys.readouterr()

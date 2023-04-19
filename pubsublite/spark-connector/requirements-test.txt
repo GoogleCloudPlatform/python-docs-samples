@@ -1,4 +1,4 @@
-google-cloud-dataproc==5.0.0
-google-cloud-pubsublite==1.4.3
+google-cloud-dataproc==5.4.1
+google-cloud-pubsublite==1.8.1
 pytest==7.0.1
-google-cloud-storage==2.1.0
+google-cloud-storage==2.8.0

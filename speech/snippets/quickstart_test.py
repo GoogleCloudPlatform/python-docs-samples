@@ -13,9 +13,12 @@
 # limitations under the License.
 
 
+from google.api_core.retry import Retry
+
 import quickstart
 
 
+@Retry()
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
