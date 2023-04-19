@@ -1,4 +1,4 @@
-grpcio==1.47.0
+grpcio==1.54.0
 google-cloud-bigquery[pandas,pyarrow]==3.5.0
 # datalab has outdated dependencies that require google-api-core < 2
 # The last version of google-cloud-bigquery-storage that supports google-api-core 1.x is 2.13.2
