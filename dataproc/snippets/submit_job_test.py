@@ -16,7 +16,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
+from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
@@ -38,22 +38,22 @@ CLUSTER = {
 
 @pytest.fixture(autouse=True)
 def setup_teardown():
-    try:
-        cluster_client = dataproc.ClusterControllerClient(
-            client_options={
-                "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
-            }
-        )
+    cluster_client = dataproc.ClusterControllerClient(
+        client_options={
+            "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
+        }
+    )
 
+    # Retry on InvalidArgument subnetwork not ready error
+    @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+    def setup():
         # Create the cluster.
         operation = cluster_client.create_cluster(
             request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
         )
         operation.result()
 
-        yield
-
-    finally:
+    def teardown():
         try:
             operation = cluster_client.delete_cluster(
                 request={
@@ -66,6 +66,11 @@ def setup_teardown():
 
         except NotFound:
             print("Cluster already deleted")
+    try:
+        setup()
+        yield
+    finally:
+        teardown()
 
 
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)

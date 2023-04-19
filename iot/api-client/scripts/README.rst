@@ -78,7 +78,7 @@ To run this sample:
 
     usage: iam.py [-h] topic_name
 
-    This application demonstrates how programatically grant access to the
+    This application demonstrates how programmatically grant access to the
     Cloud IoT Core service account on a given PubSub topic.
 
     For more information, see https://cloud.google.com/iot.

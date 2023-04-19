@@ -15,6 +15,7 @@
 # Environment variables for system tests.
 export GOOGLE_CLOUD_PROJECT=your-project-id
 export GCP_PROJECT=$GOOGLE_CLOUD_PROJECT
+export GOOGLE_CLOUD_PROJECT_NUMBER=
 export FIRESTORE_PROJECT=
 
 export CLOUD_STORAGE_BUCKET=$GOOGLE_CLOUD_PROJECT
