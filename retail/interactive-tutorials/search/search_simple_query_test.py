@@ -18,6 +18,7 @@ import re
 import subprocess
 
 from google.api_core.retry import Retry
+
 from search_simple_query import search
 
 

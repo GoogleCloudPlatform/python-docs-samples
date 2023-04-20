@@ -16,6 +16,7 @@ import re
 import subprocess
 
 from google.api_core.retry import Retry
+
 from setup_events.setup_cleanup import (
     create_bq_dataset,
     create_bq_table,
