@@ -304,7 +304,7 @@ def test_deidentify_with_simple_word_list(capsys):
         GCLOUD_PROJECT,
         "Patient was seen in RM-YELLOW then transferred to rm green.",
         "CUSTOM_ROOM_ID",
-        ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
+        ["RM-GREEN", "RM-YELLOW", "RM-ORANGE"],
     )
 
     out, _ = capsys.readouterr()
@@ -317,7 +317,7 @@ def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
         GCLOUD_PROJECT,
         "Patient was seen in RM-RED then transferred to rm green",
         "CUSTOM_ROOM_ID",
-        ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
+        ["RM-GREEN", "RM-YELLOW", "RM-ORANGE"],
     )
 
     out, _ = capsys.readouterr()
