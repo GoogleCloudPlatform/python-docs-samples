@@ -942,7 +942,7 @@ def inspect_bigquery_table_with_sampling(
     info_types: List[str] = None,
     min_likelihood: str = None,
     max_findings: str = None,
-    timeout=300,
+    timeout: int =300,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze BigQuery data by limiting
     the amount of data to be scanned.
