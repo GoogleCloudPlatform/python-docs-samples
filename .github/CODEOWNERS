@@ -89,6 +89,7 @@
 # Self-service
 /appengine/**/*                           @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*     @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
+/codelabs/**/*                            @PicardParis @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                                 @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/**/*                           @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                      @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers
