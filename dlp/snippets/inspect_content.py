@@ -16,6 +16,7 @@
 local file or a file on Google Cloud Storage."""
 
 from __future__ import print_function
+from typing import List
 
 import argparse
 import json
@@ -930,6 +931,155 @@ def inspect_bigquery(
 # [END dlp_inspect_bigquery]
 
 
+# [START dlp_inspect_gcs_with_sampling]
+def inspect_gcs_with_sampling(
+    project: str,
+    bucket: str,
+    topic_id: str,
+    subscription_id: str,
+    info_types: List[str] = None,
+    file_types: List[str] = None,
+    min_likelihood: str = None,
+    max_findings: int = None,
+    timeout: int = 300,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze files in GCS by
+    limiting the amount of data to be scanned.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        bucket: The name of the GCS bucket containing the file, as a string.
+        topic_id: The id of the Cloud Pub/Sub topic to which the API will
+            broadcast job completion. The topic must already exist.
+        subscription_id: The id of the Cloud Pub/Sub subscription to listen on
+            while waiting for job completion. The subscription must already
+            exist and be subscribed to the topic.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        file_types: Type of files in gcs bucket where the inspection would happen.
+        min_likelihood: A string representing the minimum likelihood threshold
+            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
+            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+        timeout: The number of seconds to wait for a response from the API.
+    """
+
+    # This sample also uses threading.Event() to wait for the job to finish.
+    import threading
+
+    # Import the client library.
+    import google.cloud.dlp
+
+    # This sample additionally uses Cloud Pub/Sub to receive results from
+    # potentially long-running operations.
+    import google.cloud.pubsub
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    if not info_types:
+        info_types = ["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"]
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Specify how the content should be inspected. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        "info_types": info_types,
+        "exclude_info_types": True,
+        "include_quote": True,
+        "min_likelihood": min_likelihood,
+        "limits": {"max_findings_per_request": max_findings},
+    }
+
+    # Setting default file types as CSV files
+    if not file_types:
+        file_types = ['CSV']
+
+    # Construct a cloud_storage_options dictionary with the bucket's URL.
+    url = "gs://{}/*".format(bucket)
+    storage_config = {
+        "cloud_storage_options": {
+            "file_set": {"url": url},
+            "bytes_limit_per_file": 200,
+            "file_types": file_types,
+            "files_limit_percent": 90,
+            "sample_method": 'RANDOM_START',
+        }
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    topic = google.cloud.pubsub.PublisherClient.topic_path(project, topic_id)
+    actions = [{"pub_sub": {"topic": topic}}]
+
+    # Construct the inspect_job, which defines the entire inspect content task.
+    inspect_job = {
+        "inspect_config": inspect_config,
+        "storage_config": storage_config,
+        "actions": actions,
+    }
+
+    # Convert the project id into full resource ids.
+    parent = f"projects/{project}/locations/global"
+
+    # Call the API
+    operation = dlp.create_dlp_job(
+        request={"parent": parent, "inspect_job": inspect_job}
+    )
+    print("Inspection operation started: {}".format(operation.name))
+
+    # Create a Pub/Sub client and find the subscription. The subscription is
+    # expected to already be listening to the topic.
+    subscriber = google.cloud.pubsub.SubscriberClient()
+    subscription_path = subscriber.subscription_path(project, subscription_id)
+
+    # Set up a callback to acknowledge a message. This closes around an event
+    # so that it can signal that it is done and the main thread can continue.
+    job_done = threading.Event()
+
+    def callback(message):
+        try:
+            if message.attributes["DlpJobName"] == operation.name:
+                # This is the message we're looking for, so acknowledge it.
+                message.ack()
+
+                # Now that the job is done, fetch the results and print them.
+                job = dlp.get_dlp_job(request={"name": operation.name})
+                print(f"Job name: {job.name}")
+                if job.inspect_details.result.info_type_stats:
+                    print("Findings:")
+                    for finding in job.inspect_details.result.info_type_stats:
+                        print(
+                            "Info type: {}; Count: {}".format(
+                                finding.info_type.name, finding.count
+                            )
+                        )
+                else:
+                    print("No findings.")
+
+                # Signal to the main thread that we can exit.
+                job_done.set()
+            else:
+                # This is not the message we're looking for.
+                message.drop()
+        except Exception as e:
+            # Because this is executing in a thread, an exception won't be
+            # noted unless we print it manually.
+            print(e)
+            raise
+
+    # Register the callback and wait on the event.
+    subscriber.subscribe(subscription_path, callback=callback)
+    finished = job_done.wait(timeout=timeout)
+    if not finished:
+        print(
+            "No event received before the timeout. Please verify that the "
+            "subscription provided is subscribed to the topic provided."
+        )
+
+# [END dlp_inspect_gcs_with_sampling]
+
+
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -1356,6 +1506,73 @@ if __name__ == "__main__":
         default=300,
     )
 
+    parser_gcs_with_sampling = subparsers.add_parser(
+        "gcs_with_sampling",
+        help="Inspect files on Google Cloud Storage by limiting the "
+        "amount of data to be scanned.",
+    )
+    parser_gcs_with_sampling.add_argument(
+        "bucket",
+        help="The name of the GCS bucket containing the files to inspect.",
+    )
+    parser_gcs_with_sampling.add_argument(
+        "topic_id",
+        help="The id of the Cloud Pub/Sub topic to use to report that the job "
+        'is complete, e.g. "dlp-sample-topic".',
+    )
+    parser_gcs_with_sampling.add_argument(
+        "subscription_id",
+        help="The id of the Cloud Pub/Sub subscription to monitor for job "
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        "already be subscribed to the topic. See the test files or the Cloud "
+        "Pub/Sub sample files for examples on how to create the subscription.",
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
+        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--file_types",
+        help="List of extensions of the files in the bucket to inspect, "
+        "e.g. ['CSV']",
+        default=['CSV'],
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--min_likelihood",
+        choices=[
+            "LIKELIHOOD_UNSPECIFIED",
+            "VERY_UNLIKELY",
+            "UNLIKELY",
+            "POSSIBLE",
+            "LIKELY",
+            "VERY_LIKELY",
+        ],
+        help="A string representing the minimum likelihood threshold that "
+        "constitutes a match.",
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
+    parser_gcs_with_sampling.add_argument(
+        "--timeout",
+        type=int,
+        help="The maximum number of seconds to wait for a response from the "
+        "API. The default is 300 seconds.",
+        default=300,
+    )
+
     args = parser.parse_args()
 
     if args.content == "string":
@@ -1432,6 +1649,18 @@ if __name__ == "__main__":
             args.info_types,
             custom_dictionaries=args.custom_dictionaries,
             custom_regexes=args.custom_regexes,
+            min_likelihood=args.min_likelihood,
+            max_findings=args.max_findings,
+            timeout=args.timeout,
+        )
+    elif args.content == "gcs_with_sampling":
+        inspect_gcs_with_sampling(
+            args.project,
+            args.bucket,
+            args.topic_id,
+            args.subscription_id,
+            info_types=args.info_types,
+            file_types=args.file_types,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             timeout=args.timeout,
