@@ -1,17 +1,17 @@
-// Copyright 2023 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     https://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
 
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
 /* global Reflect, Promise */
 
 var extendStatics = function(d, b) {
@@ -1232,7 +1232,7 @@ function tsDecorator(prototype, name, descriptor) {
  * @category Decorator
  * @ExportDecoratedItems
  */
-function ariaProperty(protoOrDescriptor, name,
+function ariaProperty(protoOrDescriptor, name, 
 // tslint:disable-next-line:no-any any is required as a return type from decorators
 descriptor) {
     if (name !== undefined) {
@@ -1679,6 +1679,7 @@ var demoCSS = i$3`
     min-height: 100vh;
     max-width: 100%;
     width: 100%;
+    background-color: hsl(var(--drawer-surface));
   }
   #demo {
     color: var(--highlight-text);
@@ -1937,6 +1938,7 @@ var demoCSS = i$3`
   }
   .sitemapClosed #sitemap {
     transform: translateY(100%);
+    pointer-events: none;
   }
   .sitemapClosed #sitemap .fade {
     opacity: 0;
@@ -2330,15 +2332,29 @@ var demoCSS = i$3`
       transform: scale(1.14) translate(-2%, 0);
     }
   }
+   @keyframes drawerBump {
+    70% { transform:translateX(0%); }
+    80% { transform:translateX(17%); }
+    90% { transform:translateX(0%); }
+    95% { transform:translateX(8%); }
+    97% { transform:translateX(0%); }
+    99% { transform:translateX(3%); }
+    100% { transform:translateX(0); }
+  }
   #score {
     animation: var(--full-lapse) ease-out 0s 2 alternate both running scoreBump;
     transform-origin: left center;
   }
-  .unscored #score {
+  .unscored #score, .draweropen.scored:not(.drawerClosed) {
     animation-play-state: paused;
   }
-  .scored #score {
+
+  .scored #score, .drawerClosed.scored #drawer,  .drawerClosed.scored:not(.drawerOpen)  {
     animation-play-state: running;
+  }
+
+ #drawer {
+    animation:  .5s ease-out 0s 2 alternate both paused drawerBump;
   }
   #guide .response,
   #verdict p,
@@ -2447,6 +2463,10 @@ var demoCSS = i$3`
   .button:focus,
   ::slotted(button:focus)::after,
   .button:focus::after,
+  ::slotted(button:focus-visible),
+  .button:focus-visible,
+  ::slotted(button:focus-visible)::after,
+  .button:focus-visible::after,
   ::slotted(button:hover),
   .button:hover,
   ::slotted(button:hover)::after,
@@ -3571,7 +3591,7 @@ function initializeGame() {
     totalscore = 0;
     clearBricks();
   }
-  function goodbye(){
+  function goodbye() {
     const baseurl = window.location.href.split("#")[0];
     window.location = baseurl;
   }
@@ -3723,10 +3743,19 @@ class RecaptchaDemo extends s {
     this._score = value;
     this.requestUpdate("score", oldValue);
     const buttonElement = document.querySelector("recaptcha-demo > button");
-    if (buttonElement && this._score && this.step !== "comment") {
-      window.setTimeout(() => {
-        buttonElement.innerText = "Go to next demo";
-      }, 100);
+    if (buttonElement && this._score) {
+      // TODO: redesign per https://b.corp.google.com/issues/278563766
+      let updateButton = () => {};
+      if (this.step === "comment") {
+        updateButton = () => {
+          buttonElement.innerText = "Play the game!";
+        };
+      } else {
+        updateButton = () => {
+          buttonElement.innerText = "Go to next demo";
+        };
+      }
+      window.setTimeout(updateButton, 100);
     }
   }
 
@@ -3791,7 +3820,7 @@ class RecaptchaDemo extends s {
       return;
     }
     this.animating = true;
-    window.location.assign(`${window.location.origin}\\${nextStep}`);
+    window.location.assign(`${window.location.origin}/${nextStep}`);
     // Don't need to assign this.step because of full page redirect
     return;
   }
@@ -3882,7 +3911,7 @@ class RecaptchaDemo extends s {
         ${this[GUIDES[this.step]]}
         <p class="disclaimer">
           Response is shown here for convenience. We recommend using a backend
-          to abstract scores and reCAPTCHA responses for security reasons.
+          to hide scores and reCAPTCHA responses for security reasons.
         </p>
       </aside>
     `;
@@ -3902,7 +3931,7 @@ class RecaptchaDemo extends s {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Comment form</h3></legend>
-          <p>Click the "post comment" button to see if you can post or not.</p>
+          <p>Click the "send comment" button to see if you can post or not.</p>
           <div class="fields">
             <label>
               <span>Comment</span>
@@ -4048,6 +4077,7 @@ class RecaptchaDemo extends s {
       "tokenProperties": {
         "action": "${ACTIONS[this.step]}",
         ...
+        "invalidReason": null,
         "valid": true
       },
     }`
@@ -4064,7 +4094,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent spam</h5>
             <p>
-              Add reCAPTCHA to comment/ feedback forms and prevent bot-generated comments.
+              Add reCAPTCHA to login actions and prevent bot-generated comments.
             </p>
 
             <a
@@ -4113,7 +4143,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent malicious log in</h5>
             <p>
-              Add reCAPTCHA to user actions like logging in to prevent malicious
+              Add reCAPTCHA to user actions like logging in to prevent malcious
               activity on user accounts.
             </p>
             <a
@@ -4349,18 +4379,31 @@ class RecaptchaDemo extends s {
   }
 
   get SITEMAP() {
+    const tabindex = this.sitemapOpen ? "0" : "-1";
     return x`
       <nav id="sitemap">
         <div class="fade">
           <ul class="unstyled links">
-            <li class="home"><a href="/">Home</a></li>
-            <li class="comments"><a href="/comment">Comments</a></li>
-            <li class="game">
-              <a @click=${this.goToGame} href="#game">The game</a>
+            <li class="home">
+              <a href="/" tabindex=${tabindex}>Home</a>
             </li>
-            <li class="login"><a href="/login">Log in</a></li>
-            <li class="signup"><a href="/signup">Sign up</a></li>
-            <li class="store"><a href="/store">Store</a></li>
+            <li class="comments">
+              <a href="/comment" tabindex=${tabindex}>Comments</a>
+            </li>
+            <li class="game">
+              <a @click=${this.goToGame} href="#game" tabindex=${tabindex}
+                >The game</a
+              >
+            </li>
+            <li class="login">
+              <a href="/login" tabindex=${tabindex}>Log in</a>
+            </li>
+            <li class="signup">
+              <a href="/signup" tabindex=${tabindex}>Sign up</a>
+            </li>
+            <li class="store">
+              <a href="/store" tabindex=${tabindex}>Store</a>
+            </li>
           </ul>
           <section>
             <h3 class="h1">About</h3>
