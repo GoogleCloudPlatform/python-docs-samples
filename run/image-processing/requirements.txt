@@ -5,4 +5,4 @@ pytest==7.0.1; python_version < "3.0"
 gunicorn==20.1.0
 google-cloud-vision==3.4.1
 google-cloud-storage==2.8.0
-Wand==0.6.8
+Wand==0.6.11

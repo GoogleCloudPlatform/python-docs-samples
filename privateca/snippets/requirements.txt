@@ -1,2 +1,2 @@
-google-cloud-private-ca==1.7.0
+google-cloud-private-ca==1.8.0
 google-cloud-monitoring==2.14.2
