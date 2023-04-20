@@ -302,27 +302,27 @@ def test_deidentify_with_replace_infotype(capsys):
 def test_deidentify_with_simple_word_list(capsys):
     deid.deidentify_with_simple_word_list(
         GCLOUD_PROJECT,
-        "My Room is rm-green",
+        "Patient was seen in RM-YELLOW then transferred to rm green.",
         "CUSTOM_ROOM_ID",
         ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
     )
 
     out, _ = capsys.readouterr()
 
-    assert "My Room is [CUSTOM_ROOM_ID]" in out
+    assert "Patient was seen in [CUSTOM_ROOM_ID] then transferred to [CUSTOM_ROOM_ID]" in out
 
 
 def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
     deid.deidentify_with_simple_word_list(
         GCLOUD_PROJECT,
-        "My Room is rm-red",
+        "Patient was seen in RM-RED then transferred to rm green",
         "CUSTOM_ROOM_ID",
         ["RM-GREEN", "RM-YELLOW", "RM_ORANGE"],
     )
 
     out, _ = capsys.readouterr()
 
-    assert "My Room is rm-red" in out
+    assert "Patient was seen in RM-RED then transferred to [CUSTOM_ROOM_ID]" in out
 
 
 def test_deidentify_with_exception_list(capsys):
