@@ -16,7 +16,6 @@
 # Starts a user event rejoin operation using Retail API.
 #
 import google.auth
-from google.api_core.retry import Retry
 from google.cloud.retail import RejoinUserEventsRequest, UserEventServiceClient
 
 from setup_events.setup_cleanup import purge_user_event, write_user_event

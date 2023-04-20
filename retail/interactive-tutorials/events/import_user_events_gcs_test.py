@@ -15,10 +15,10 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from setup_events.setup_cleanup import create_bucket, delete_bucket, upload_blob
 from setup_events.update_user_events_json import update_events_timestamp
-
-from google.api_core.retry import Retry
 
 
 @Retry()
