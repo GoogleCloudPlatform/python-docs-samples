@@ -46,13 +46,12 @@ def on_homepage_load() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["home"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -92,13 +91,12 @@ def on_signup() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["signup"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -106,8 +104,8 @@ def on_signup() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Write new username and password to users database.
-            # username = credentials["username"]
-            # password = credentials["password"]
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -140,13 +138,12 @@ def on_login() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["login"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -154,8 +151,8 @@ def on_login() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if the login credentials exist and match.
-            # username = credentials["username"]
-            # password = credentials["password"]
+            # username = json_data["username"]
+            # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -188,13 +185,12 @@ def on_store_checkout() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["store"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -202,7 +198,7 @@ def on_store_checkout() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if the cart contains items and proceed to checkout and payment.
-            # items = credentials["items"]
+            # items = json_data["items"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -235,13 +231,12 @@ def on_comment_submit() -> Response:
     try:
         recaptcha_action = config["recaptcha_actions"]["comment"]
         json_data = json.loads(request.data)
-        credentials = json_data["recaptcha_cred"]
 
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
         assessment_response = create_assessment(
             context.get("project_id"),
             context.get("site_key"),
-            credentials["token"],
+            json_data["token"],
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -249,7 +244,7 @@ def on_comment_submit() -> Response:
                 assessment_response.risk_analysis.score > SAMPLE_THRESHOLD_SCORE and \
                 assessment_response.token_properties.action == recaptcha_action:
             # Check if comment has safe language and proceed to store in database.
-            # comment = credentials["comment"]
+            # comment = json_data["comment"]
             # Business logic.
             # Classify the action as not bad.
             verdict = "Not Bad"
@@ -270,8 +265,3 @@ def on_comment_submit() -> Response:
         )
     except ValueError or Exception as e:
         return jsonify({"data": {"error_msg": str(e.__dict__)}})
-
-
-# Return game template.
-def game() -> str:
-    return render_template(template_name_or_list="game.html", context=context)
