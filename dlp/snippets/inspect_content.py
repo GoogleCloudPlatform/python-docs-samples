@@ -16,11 +16,12 @@
 local file or a file on Google Cloud Storage."""
 
 from __future__ import print_function
-from typing import List
 
 import argparse
 import json
 import os
+
+from typing import List
 
 
 # [START dlp_inspect_string_basic]
