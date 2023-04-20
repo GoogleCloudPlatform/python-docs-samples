@@ -15,7 +15,10 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_set_inventory():
     output = str(subprocess.check_output("python set_inventory.py", shell=True))
     print(output)
