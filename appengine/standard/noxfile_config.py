@@ -20,6 +20,9 @@
 # The source of truth:
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
 
+import time
+
+
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     "ignored_versions": ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"],
@@ -50,6 +53,7 @@ def retry_installs(func):
                 return result
             except Exception as e:
                 print(f"Attempt #{attempt} failed to install {*args}, {**kwargs}")
+                time.sleep(5)
         raise e
         
     return wrap_in_retries
