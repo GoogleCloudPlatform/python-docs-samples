@@ -24,7 +24,7 @@ import pytest
 import create_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
+REGION = "northamerica-northeast1"
 CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
 
 
