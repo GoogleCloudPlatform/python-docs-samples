@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+###
+# Updates should be made to both assign_issues_by & assign_prs_by sections
+###
 assign_issues_by:
   # DEE teams
   - labels:
@@ -92,6 +95,10 @@ assign_issues_by:
       - "api: pubsublite"
     to:
       - GoogleCloudPlatform/api-pubsub-and-pubsublite
+  - labels:
+      - "api: composer"
+    to:
+      - GoogleCloudPlatform/cloud-dpes-composer
 
   # AppEco individuals
   - labels:
@@ -99,23 +106,156 @@ assign_issues_by:
     to:
       - shollyman
   - labels:
-      - "api: composer"
+      - "api: datascienceonramp"
     to:
       - leahecole
-      - rachael-ds
-      - rafalbiegacz
+      - bradmiro
+
+  # Self-service teams
+  - labels:
+      - "api: contentwarehouse"
+      - "api: documentai"
+    to:
+      - GoogleCloudPlatform/document-ai-samples-contributors
+  - labels:
+      - "api: dlp"
+    to:
+      - GoogleCloudPlatform/googleapis-dlp
+  - labels:
+      - "api: functions"
+    to:
+      - GoogleCloudPlatform/functions-framework-google
+  - labels:
+      - "api: billingbudgets"
+      - "api: cloudbilling"
+    to:
+      - GoogleCloudPlatform/billing-samples-maintainers
+  - labels:
+      - "api: healthcare"
+    to:
+      - GoogleCloudPlatform/healthcare-life-sciences
+  - labels:
+      - "api: iot"
+      - "api: cloudiot"
+    to:
+      - GoogleCloudPlatform/api-iot
+  - labels:
+      - "api: retail"
+    to:
+      - GoogleCloudPlatform/cloud-retail-team
+
+  # Self-service individuals
+  - labels:
+      - "api: auth"
+    to:
+      - arithmetic1728
+
+
+###
+# Updates should be made to both assign_issues_by & assign_prs_by sections
+###
+assign_prs_by:
+  # DEE teams
+  - labels:
+      - "api: appengine"
+      - "api: cloudbuild"
+      - "api: cloudscheduler"
+      - "api: cloudtasks"
+      - "api: containeranalysis"
+      - "api: eventarc"
+      - "api: functions"
+      - "api: run"
+      - "api: workflows"
+    to:
+      - GoogleCloudPlatform/torus-dpe
+  - labels:
+      - "api: asset"
+      - "api: batch"
+      - "api: compute"
+      - "api: cloudkms"
+      - "api: iam"
+      - "api: kms"
+      - "api: privateca"
+      - "api: recaptchaenterprise"
+      - "api: secretmanager"
+      - "api: securitycenter"
+    to:
+      - GoogleCloudPlatform/dee-infra
+  - labels:
+      - "api: clouderrorreporting"
+      - "api: cloudtrace"
+      - "api: container"
+      - "api: logging"
+      - "api: monitoring"
+      - "api: trace"
+    to:
+      - GoogleCloudPlatform/dee-platform-ops
+  - labels:
+      - "api: datacatalog"
+      - 'api: dataflow'
+      - "api: datalabeling"
+      - "api: dataproc"
+      - "api: dialogflow"
+      - "api: enterpriseknowledgegraph"
+      - "api: language"
+      - "api: ml"
+      - "api: notebooks"
+      - "api: optimization"
+      - "api: people-and-planet-ai"
+      - "api: speech"
+      - "api: talent"
+      - "api: texttospeech"
+      - "api: translate"
+      - "api: vision"
+    to:
+      - GoogleCloudPlatform/dee-data-ai
+
+  # AppEco teams
+  - labels:
+      - "api: cloudsql"
+    to:
+      - GoogleCloudPlatform/infra-db-dpes
+  - labels:
+      - "api: bigtable"
+      - "api: datastore"
+      - "api: firestore"
+    to:
+      - GoogleCloudPlatform/cloud-native-db-dpes
+  - labels:
+      - "api: spanner"
+    to:
+      - GoogleCloudPlatform/api-spanner-python
+  - labels:
+      - "api: storage"
+    to:
+      - GoogleCloudPlatform/cloud-storage-dpes
+  - labels:
+      - "api: pubsub"
+      - "api: pubsublite"
+    to:
+      - GoogleCloudPlatform/api-pubsub-and-pubsublite
+  - labels:
+      - "api: composer"
+    to:
+      - GoogleCloudPlatform/cloud-dpes-composer
+
+  # AppEco individuals
+  - labels:
+      - "api: bigquery"
+    to:
+      - shollyman
   - labels:
       - "api: datascienceonramp"
     to:
       - leahecole
       - bradmiro
+
+  # Self-service teams
   - labels:
       - "api: contentwarehouse"
       - "api: documentai"
     to:
-      - holtskinner
-
-  # Self-service teams
+      - GoogleCloudPlatform/document-ai-samples-contributors
   - labels:
       - "api: dlp"
     to:
@@ -154,4 +294,8 @@ assign_issues:
 
 assign_prs:
   - GoogleCloudPlatform/python-samples-owners
-  
+
+###
+# Updates should be made to both assign_issues_by & assign_prs_by sections
+###
+
