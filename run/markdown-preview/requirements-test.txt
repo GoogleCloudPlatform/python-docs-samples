@@ -1,4 +1,4 @@
 backoff==2.2.1
-pytest==7.0.1
+pytest==7.3.1
 google-auth==2.17.3
 google-api-python-client==2.86.0
