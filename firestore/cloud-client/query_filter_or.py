@@ -17,22 +17,23 @@ from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or
 from google.cloud.firestore_v1.types import query, StructuredQuery
 
-def query_or_composite_filter(project_id : str) -> None:
-    
+
+def query_or_composite_filter(project_id: str) -> None:
     # Instantiate the Firestore client
     client = firestore.Client(project=project_id)
     col_ref = client.collection("users")
 
-    filter_1 = FieldFilter('birthYear', '==', 1906)
-    filter_2 = FieldFilter('birthYear', '==', 1912)
-    
+    filter_1 = FieldFilter("birthYear", "==", 1906)
+    filter_2 = FieldFilter("birthYear", "==", 1912)
+
     # Create the union filter of the two filters (queries)
     or_filter = Or(filters=[filter_1, filter_2])
-    
+
     # Execute the query
     docs = col_ref.where(filter=or_filter).stream()
 
     for doc in docs:
         print(doc)
+
 
 # [END firestore_query_composite_filter_or]
