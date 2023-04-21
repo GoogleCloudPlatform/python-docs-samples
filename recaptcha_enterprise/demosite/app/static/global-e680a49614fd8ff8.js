@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// This code is internal to the demo
-// It fetches responses from the demo endpoints
+// This code is internal to the demo.
+// It fetches responses from the demo endpoints.
 function fetchServerResponse({ body, url }) {
   const serializedBody = JSON.stringify({
     ...body,
@@ -38,8 +38,8 @@ function fetchServerResponse({ body, url }) {
     });
 }
 
-// This code is internal to the demo
-// It passes the score to the demo to display it
+// This code is internal to the demo.
+// It passes the score to the demo to display it.
 function useAssessmentInClient(score) {
   if (score?.data?.score && score?.data?.verdict) {
     const demoElement = document.querySelector("recaptcha-demo");

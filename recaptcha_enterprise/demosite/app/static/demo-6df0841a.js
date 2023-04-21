@@ -1,3 +1,18 @@
+// Copyright 2023 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     https://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
 
@@ -3744,7 +3759,7 @@ class RecaptchaDemo extends s {
     this.requestUpdate("score", oldValue);
     const buttonElement = document.querySelector("recaptcha-demo > button");
     if (buttonElement && this._score) {
-      // TODO: redesign per https://b.corp.google.com/issues/278563766
+      // TODO: redesign per b/278563766
       let updateButton = () => {};
       if (this.step === "comment") {
         updateButton = () => {
@@ -3931,7 +3946,7 @@ class RecaptchaDemo extends s {
       <form id="example">
         <fieldset>
           <legend><h3 class="h3">Comment form</h3></legend>
-          <p>Click the "send comment" button to see if you can post or not.</p>
+          <p>Click the "post comment" button to see if you can post or not.</p>
           <div class="fields">
             <label>
               <span>Comment</span>
@@ -4077,7 +4092,6 @@ class RecaptchaDemo extends s {
       "tokenProperties": {
         "action": "${ACTIONS[this.step]}",
         ...
-        "invalidReason": null,
         "valid": true
       },
     }`
@@ -4094,7 +4108,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent spam</h5>
             <p>
-              Add reCAPTCHA to login actions and prevent bot-generated comments.
+              Add reCAPTCHA to comment/ feedback forms and prevent bot-generated comments.
             </p>
 
             <a
@@ -4143,7 +4157,7 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Prevent malicious log in</h5>
             <p>
-              Add reCAPTCHA to user actions like logging in to prevent malcious
+              Add reCAPTCHA to user actions like logging in to prevent malicious
               activity on user accounts.
             </p>
             <a

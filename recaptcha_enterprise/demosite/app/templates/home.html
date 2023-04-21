@@ -19,7 +19,7 @@
     <meta charset="UTF-8" />
     <title>Home: reCAPTCHA Demo</title>
     <!-- ATTENTION: reCAPTCHA Example (Client Part 1 of 2) Starts -->
-    <!-- https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load -->
     <script src="https://www.google.com/recaptcha/enterprise.js?render={{context.site_key}}"></script>
     <script type="text/javascript">
       grecaptcha.enterprise.ready(async () => {
@@ -32,23 +32,24 @@
         await viewHomepage({ token });
       });
     </script>
-    <!-- https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
+    <!-- See: https://cloud.google.com/recaptcha-enterprise/docs/create-assessment -->
     <script type="text/javascript">
       async function viewHomepage({ token }) {
-        // Include the token for server-side assessment
+        // Include the token for server-side assessment.
         const body = {
           token,
         };
-        // Fetch from your backend; assessments must be server-side!
-        // Refer to the backend demo code for more information
-        // If using a library or framework, can fetch your usual way
+        // Code for fetching the assessment from server-side goes here.
+        // Refer to demo app backend code for more information.
+        // If you already use a library or framework for event handlers, you 
+        // can handle events your usual way.
         const score = await fetchServerResponse({
           body,
           url: "on_homepage_load",
         });
-        // DON'T include an assessment your real response
-        // This demo uses a score in client-side code only to illustrate
-        // It's the most secure to handle things server-side!
+        // In this demo, the assessment score is displayed in the client.
+        // But, you should AVOID using the assessment response in the
+        // client and handle it on the server-side.
         useAssessmentInClient(score);
       }
     </script>
