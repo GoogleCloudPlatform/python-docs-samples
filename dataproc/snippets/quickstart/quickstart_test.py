@@ -25,7 +25,7 @@ import quickstart
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
+REGION = "us-central2"
 
 JOB_FILE_NAME = "sum.py"
 SORT_CODE = (
