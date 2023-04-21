@@ -114,7 +114,8 @@ def certificate_authority(ca_pool):
 
     yield ca_pool, CA_NAME
 
-    delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
+    # CA Pool cleanup will remove the certificate.
+    # delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
 
 
 @pytest.fixture

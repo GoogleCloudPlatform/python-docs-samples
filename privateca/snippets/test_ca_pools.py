@@ -35,7 +35,7 @@ def generate_name() -> str:
     return "test-" + uuid.uuid4().hex[:10]
 
 
-def test_create_ca_pool(ca_pool, capsys: typing.Any, ca_pool_autodelete_name) -> None:
+def test_create_ca_pool(capsys: typing.Any, ca_pool_autodelete_name) -> None:
 
     create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name)
 
