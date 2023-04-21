@@ -14,7 +14,7 @@
 
 """App Engine app to serve as an endpoint for Cloud Scheduler samples."""
 
-# [START cloud_scheduler_app]
+# [START cloudscheduler_app]
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -29,7 +29,7 @@ def example_task_handler():
     return "Printed job payload: {}".format(payload)
 
 
-# [END cloud_scheduler_app]
+# [END cloudscheduler_app]
 
 
 @app.route("/")
