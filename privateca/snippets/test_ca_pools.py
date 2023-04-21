@@ -17,6 +17,7 @@ import typing
 import uuid
 
 import google.auth
+import pytest
 
 from conftest import delete_stale_resources, LOCATION
 
@@ -34,37 +35,29 @@ def generate_name() -> str:
     return "test-" + uuid.uuid4().hex[:10]
 
 
-def test_create_ca_pool(ca_pool, capsys: typing.Any) -> None:
-    CA_POOL_NAME = generate_name()
+def test_create_ca_pool(ca_pool, capsys: typing.Any, ca_pool_autodelete_name) -> None:
 
-    create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
+    create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name)
 
     out, _ = capsys.readouterr()
 
     assert re.search(
-        f'Operation result: name: "projects/{PROJECT}/locations/{LOCATION}/caPools/{CA_POOL_NAME}"',
+        f'Operation result: name: "projects/{PROJECT}/locations/{LOCATION}/caPools/{ca_pool_autodelete_name}"',
         out,
     )
 
-    delete_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
 
+def test_list_ca_pools(capsys: typing.Any, ca_pool_autodelete_name, ca_pool_autodelete_name2) -> None:
 
-def test_list_ca_pools(capsys: typing.Any) -> None:
-    CA_POOL_NAME_1 = generate_name()
-    CA_POOL_NAME_2 = generate_name()
-
-    create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME_1)
-    create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME_2)
+    create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name)
+    create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name2)
     list_ca_pools(PROJECT, LOCATION)
 
     out, _ = capsys.readouterr()
 
     assert "Available CA pools:" in out
-    assert f"{CA_POOL_NAME_1}\n" in out
-    assert f"{CA_POOL_NAME_2}\n" in out
-
-    delete_ca_pool(PROJECT, LOCATION, CA_POOL_NAME_1)
-    delete_ca_pool(PROJECT, LOCATION, CA_POOL_NAME_2)
+    assert f"{ca_pool_autodelete_name}\n" in out
+    assert f"{ca_pool_autodelete_name2}\n" in out
 
 
 def test_delete_ca_pool(capsys: typing.Any) -> None:
