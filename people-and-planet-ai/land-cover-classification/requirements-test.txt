@@ -2,6 +2,6 @@
 apache-beam[interactive]==2.46.0
 importnb==2023.1.7
 ipykernel==6.22.0
-nbclient==0.7.2
+nbclient==0.7.3
 pytest-xdist==3.2.1
 pytest==7.2.2
