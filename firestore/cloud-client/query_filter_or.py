@@ -15,7 +15,6 @@
 # [START firestore_query_filter_or]
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or
-from google.cloud.firestore_v1.types import query, StructuredQuery
 
 
 def query_or_composite_filter(project_id: str) -> None:
