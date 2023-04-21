@@ -28,6 +28,8 @@ assign_issues_by:
       - GoogleCloudPlatform/torus-dpe
   - labels:
       - "api: asset"
+      - "api: batch"
+      - "api: compute"
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
@@ -48,13 +50,16 @@ assign_issues_by:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
       - "api: datacatalog"
+      - 'api: dataflow'
       - "api: datalabeling"
+      - "api: dataproc"
       - "api: dialogflow"
       - "api: enterpriseknowledgegraph"
       - "api: language"
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
+      - "api: people-and-planet-ai"
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
@@ -62,24 +67,6 @@ assign_issues_by:
       - "api: vision"
     to:
       - GoogleCloudPlatform/dee-data-ai
-
-  # DEE individuals
-  - labels:
-      - "api: batch"
-      - "api: compute"
-    to:
-      - m-strzelczyk
-  - labels:
-      - "api: dataflow"
-      - "api: people-and-planet-ai"
-    to:
-      - davidcavazos
-  - labels:
-      - "api: dataproc"
-      - "api: pubsub"
-      - "api: pubsublite"
-    to:
-      - anguillanneuf
 
   # AppEco teams
   - labels:
@@ -100,6 +87,11 @@ assign_issues_by:
       - "api: storage"
     to:
       - GoogleCloudPlatform/cloud-storage-dpes
+  - labels:
+      - "api: pubsub"
+      - "api: pubsublite"
+    to:
+      - GoogleCloudPlatform/api-pubsub-and-pubsublite
 
   # AppEco individuals
   - labels:
