@@ -32,7 +32,7 @@ def query_or_composite_filter(project_id: str) -> None:
     docs = col_ref.where(filter=or_filter).stream()
 
     for doc in docs:
-        print(doc)
+        print(f"ID: {doc.id}")
 
 
 # [END firestore_query_composite_filter_or]
