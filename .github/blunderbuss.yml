@@ -103,10 +103,6 @@ assign_issues_by:
   to:
   - ivanmkc
 - labels:
-  - 'api: notebooks'
-  to:
-  - alixhami
-- labels:
   - 'api: optimization'
   to:
   - GoogleCloudPlatform/dee-data-ai
