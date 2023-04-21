@@ -299,6 +299,32 @@ def test_deidentify_with_replace_infotype(capsys):
     assert "My favorite site is [URL]" in out
 
 
+def test_deidentify_with_simple_word_list(capsys):
+    deid.deidentify_with_simple_word_list(
+        GCLOUD_PROJECT,
+        "Patient was seen in RM-YELLOW then transferred to rm green.",
+        "CUSTOM_ROOM_ID",
+        ["RM-GREEN", "RM-YELLOW", "RM-ORANGE"],
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Patient was seen in [CUSTOM_ROOM_ID] then transferred to [CUSTOM_ROOM_ID]" in out
+
+
+def test_deidentify_with_simple_word_list_ignores_insensitive_data(capsys):
+    deid.deidentify_with_simple_word_list(
+        GCLOUD_PROJECT,
+        "Patient was seen in RM-RED then transferred to rm green",
+        "CUSTOM_ROOM_ID",
+        ["RM-GREEN", "RM-YELLOW", "RM-ORANGE"],
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Patient was seen in RM-RED then transferred to [CUSTOM_ROOM_ID]" in out
+
+
 def test_deidentify_with_exception_list(capsys):
     content_str = "jack@example.org accessed record of user: gary@example.org"
     exception_list = ["jack@example.org", "jill@example.org"]
@@ -391,3 +417,28 @@ def test_deidentify_table_condition_masking_with_masking_character_specified(cap
     out, _ = capsys.readouterr()
     assert "string_value: \"##\"" in out
     assert "string_value: \"21\"" in out
+
+
+def test_deidentify_table_replace_with_info_types(capsys):
+    table_data = {
+        "header": ["age", "patient", "happiness_score", "factoid"],
+        "rows": [
+            ["101", "Charles Dickens", "95", "Charles Dickens name was a curse invented by Shakespeare."],
+            ["22", "Jane Austen", "21", "There are 14 kisses in Jane Austen's novels."],
+            ["90", "Mark Twain", "75", "Mark Twain loved cats."],
+        ],
+    }
+
+    deid.deidentify_table_replace_with_info_types(
+        GCLOUD_PROJECT,
+        table_data,
+        ["PERSON_NAME"],
+        ["patient", "factoid"],
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "string_value: \"[PERSON_NAME]\"" in out
+    assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
+    assert "There are 14 kisses in [PERSON_NAME] novels." in out
+    assert "[PERSON_NAME] loved cats." in out
