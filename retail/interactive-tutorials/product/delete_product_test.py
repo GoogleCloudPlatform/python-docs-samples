@@ -15,7 +15,10 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_delete_product():
     output = str(subprocess.check_output("python delete_product.py", shell=True))
 
