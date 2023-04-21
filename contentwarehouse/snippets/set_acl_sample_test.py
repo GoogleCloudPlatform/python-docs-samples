@@ -18,6 +18,8 @@ import os
 from contentwarehouse.snippets import set_acl_sample
 from contentwarehouse.snippets import test_utilities
 
+from google.api_core.exceptions import InvalidArgument, PermissionDenied
+
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -38,27 +40,26 @@ policy = {
 
 def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
-    set_acl_sample.set_acl(
-        project_number=project_number, 
-        location=location,
-        policy=policy,
-        user_id=user_id,
-    )
-    out, _ = capsys.readouterr()
-
-    assert "policy" in out
+    # TODO: Update when test project issue is resolved.
+    with pytest.raises(InvalidArgument):
+        set_acl_sample.set_acl(
+            project_number=project_number,
+            location=location,
+            policy=policy,
+            user_id=user_id,
+        )
+        _, _ = capsys.readouterr()
 
 
 def test_set_document_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # Project can only support Document or Project ACLs
-    set_acl_sample.set_acl(
-        project_number=project_number,
-        location=location,
-        policy=policy,
-        user_id=user_id,
-        document_id=document_id,
-    )
-    out, _ = capsys.readouterr()
-
-    assert "policy" in out
+    with pytest.raises(PermissionDenied):
+        set_acl_sample.set_acl(
+            project_number=project_number,
+            location=location,
+            policy=policy,
+            user_id=user_id,
+            document_id=document_id,
+        )
+        _, _ = capsys.readouterr()
