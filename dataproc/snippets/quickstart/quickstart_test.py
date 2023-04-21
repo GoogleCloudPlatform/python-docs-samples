@@ -14,9 +14,11 @@
 
 import os
 import uuid
+import time
 
 import backoff
-from google.api_core.exceptions import InvalidArgument, ServiceUnavailable
+from google.api_core.exceptions import InvalidArgument, ServiceUnavailable, Conflict
+from google.cloud import compute_v1
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 import pytest
@@ -26,6 +28,7 @@ import quickstart
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
+SUBNET = "quickstart-test-subnet"
 
 JOB_FILE_NAME = "sum.py"
 SORT_CODE = (
@@ -59,6 +62,24 @@ def create_bucket(bucket_name):
     return storage_client.create_bucket(bucket_name)
 
 
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
+def create_subnet():
+    instance_client = compute_v1.SubnetworksClient()
+    try:
+        instance_client.insert(
+            project=PROJECT_ID,
+            region=REGION,
+            subnetwork_resource=compute_v1.Subnetwork(
+                name=SUBNET,
+                network="global/networks/default",
+                ip_cidr_range="172.16.0.0/12",
+            )
+        )
+        time.sleep(10)
+    except Conflict:
+        pass
+
+
 @pytest.fixture(scope="module")
 def staging_bucket_name():
     bucket_name = "py-dataproc-qs-bucket-{}".format(str(uuid.uuid4()))
@@ -69,6 +90,13 @@ def staging_bucket_name():
     finally:
         delete_blob(blob)
         delete_bucket(bucket)
+
+
+
+@pytest.fixture(scope="module")
+def subnetwork_uri():
+    create_subnet()
+    return f"projects/{PROJECT_ID}/regions/{REGION}/subnetworks/{SUBNET}"
 
 
 @backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
@@ -94,14 +122,15 @@ def verify_cluster_teardown(cluster_name):
 
 
 @backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
-def test_quickstart(capsys, staging_bucket_name):
+def test_quickstart(capsys, staging_bucket_name, subnetwork_uri):
     cluster_name = "py-qs-test-{}".format(str(uuid.uuid4()))
     try:
         quickstart.quickstart(
             PROJECT_ID,
             REGION,
             cluster_name,
-            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME)
+            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME),
+            subnetwork_uri,
         )
         out, _ = capsys.readouterr()
 

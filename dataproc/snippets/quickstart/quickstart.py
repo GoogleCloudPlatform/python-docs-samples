@@ -33,7 +33,7 @@ from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 
 
-def quickstart(project_id, region, cluster_name, job_file_path):
+def quickstart(project_id, region, cluster_name, job_file_path, subnetwork_uri):
     # Create the cluster client.
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(region)}
@@ -46,6 +46,7 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         "config": {
             "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
             "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+            "gce_cluster_config": {"subnetwork_uri": subnetwork_uri},
         },
     }
 
