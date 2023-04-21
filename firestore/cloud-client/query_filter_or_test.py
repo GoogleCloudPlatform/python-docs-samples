@@ -14,3 +14,35 @@
 
 import pytest
 
+from google.cloud import firestore
+from query_filter_or import query_or_composite_filter
+
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+@pytest.fixture
+def setup(autouse=True):
+    client = firestore.Client(project=PROJECT_ID)
+    cr = client.collection("knownUsers")
+    td = [
+        { "shortName": "aturing", "birthYear": 1912},
+        { "shortName": "cbabbage", "birthYear": 1791},
+        { "shortName": "ghopper", "birthYear": 1906},
+        { "shortName": "alovelace", "birthYear": 1815}
+    ]
+
+    for d in td:
+        cr.documents(d["shortName"]).set({ "birthYear": d["birthYear"] })
+    
+    yield
+
+    for d in td:
+        cr.documents(d["shortName"]).delete()
+
+
+
+def test_query_or_composite_filter(capsys):
+    query_or_composite_filter(PROJECT_ID)
+    
+    out, _ = capsys.readouterr()
+    assert "aturing" in out

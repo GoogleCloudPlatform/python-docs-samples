@@ -17,16 +17,11 @@ from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or
 from google.cloud.firestore_v1.types import query, StructuredQuery
 
-def query_or_composite_filter(project_id : str,
-                              collection_name: str,
-                              field_1_name: str,
-                              field_1_value: str,
-                              field_2_name: str,
-                              field_2_value: str) -> None:
+def query_or_composite_filter(project_id : str) -> None:
     
     # Instantiate the Firestore client
     client = firestore.Client(project=project_id)
-    col_ref = client.collection(collection_name)
+    col_ref = client.collection("users")
 
     filter_1 = FieldFilter('birthYear', '==', 1906)
     filter_2 = FieldFilter('birthYear', '==', 1912)
