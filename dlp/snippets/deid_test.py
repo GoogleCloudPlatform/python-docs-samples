@@ -442,3 +442,15 @@ def test_deidentify_table_replace_with_info_types(capsys):
     assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
     assert "There are 14 kisses in [PERSON_NAME] novels." in out
     assert "[PERSON_NAME] loved cats." in out
+
+
+def test_deindentify_with_dictionary_replacement(capsys):
+    deid.deindentify_with_dictionary_replacement(
+        GCLOUD_PROJECT,
+        "My name is Alicia Abernathy, and my email address is aabernathy@example.com.",
+        ["EMAIL_ADDRESS"],
+        ["izumi@example.com", "alex@example.com", "tal@example.com"],
+    )
+    out, _ = capsys.readouterr()
+    assert "aabernathy@example.com" not in out
+    assert "izumi@example.com" in out or "alex@example.com" in out or "tal@example.com" in out
