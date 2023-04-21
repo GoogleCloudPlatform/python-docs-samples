@@ -36,6 +36,7 @@
 /recaptcha_enterprise/demosite/*       @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/webrisk/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 
 # DEE Platform Ops (DEEPO)
 /container/**/*                        @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
@@ -48,9 +49,7 @@
 /trace/**/*                            @ymotongpoo @GoogleCloudPlatform/dee-platform-ops @GoogleCloudPlatform/python-samples-reviewers
 
 # DEE Data & AI
-/automl/**/*                           @GoogleCloudPlatform/ml-apis @GoogleCloudPlatform/python-samples-reviewers
-/bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
-/bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
+/automl/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /contentwarehouse/**/*                 @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dataflow/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /datalabeling/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
@@ -63,6 +62,7 @@
 /language/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /media-translation/**/*                @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /ml_engine/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/notebooks/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /people-and-planet-ai/**/*             @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
@@ -83,18 +83,21 @@
 # Self-service
 # ---* Shared with DEE Teams
 /functions/**/*                        @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/composer/**/*                         @leahecole @rachael-ds @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
+/composer/**/*                         @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
+/pubsub/**/*                           @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
+/pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 # ---* Fully Eng Owned
 /appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*  @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
+/bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
+/bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
+/data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @GoogleCloudPlatform/healthcare-life-sciences @GoogleCloudPlatform/python-samples-reviewers
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
 /iot/**/*                              @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
-/pubsub/**/*                           @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
-/pubsublite/**/*                       @anguillanneuf @hongalex @GoogleCloudPlatform/python-samples-reviewers
 
 # Does not have owner
 /asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
@@ -107,8 +110,7 @@
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
 
-# BEGIN - To clarify
+# BEGIN - pending clarification
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
-/notebooks/**/*                        @alixhami @GoogleCloudPlatform/python-samples-reviewers
 /opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers
-# END - To clarify
+# END - pending clarification
