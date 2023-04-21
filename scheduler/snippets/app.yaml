@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloud_scheduler_python_yaml]
+# [START cloudscheduler_python_yaml]
 runtime: python37
 service: my-service
-# [END cloud_scheduler_python_yaml]
+# [END cloudscheduler_python_yaml]

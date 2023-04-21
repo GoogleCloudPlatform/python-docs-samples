@@ -15,7 +15,7 @@
 
 def create_scheduler_job(project_id, location_id, service_id):
     """Create a job with an App Engine target via the Cloud Scheduler API"""
-    # [START cloud_scheduler_create_job]
+    # [START cloudscheduler_create_job]
     from google.cloud import scheduler
 
     # Create a client.
@@ -45,13 +45,13 @@ def create_scheduler_job(project_id, location_id, service_id):
     response = client.create_job(request={"parent": parent, "job": job})
 
     print("Created job: {}".format(response.name))
-    # [END cloud_scheduler_create_job]
+    # [END cloudscheduler_create_job]
     return response
 
 
 def delete_scheduler_job(project_id, location_id, job_id):
     """Delete a job via the Cloud Scheduler API"""
-    # [START cloud_scheduler_delete_job]
+    # [START cloudscheduler_delete_job]
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import scheduler
 
@@ -72,4 +72,4 @@ def delete_scheduler_job(project_id, location_id, job_id):
         print("Job deleted.")
     except GoogleAPICallError as e:
         print("Error: %s" % e)
-    # [END cloud_scheduler_delete_job]
+    # [END cloudscheduler_delete_job]
