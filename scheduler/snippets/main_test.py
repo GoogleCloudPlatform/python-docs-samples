@@ -1,4 +1,4 @@
-# Copyright 2017 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,23 +14,33 @@
 
 import pytest
 
-import web_detect
 
-ASSET_BUCKET = "cloud-samples-data"
+@pytest.fixture
+def app():
+    import main
+
+    main.app.testing = True
+    return main.app.test_client()
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_file(capsys):
-    file_name = ('../detect/resources/landmark.jpg')
-    web_detect.report(web_detect.annotate(file_name))
+def test_index(app):
+    r = app.get("/")
+    assert r.status_code == 200
+
+
+def test_log_payload(capsys, app):
+    payload = "test_payload"
+
+    r = app.post("/log_payload", data=payload)
+    assert r.status_code == 200
+
     out, _ = capsys.readouterr()
-    assert 'description' in out.lower()
+    assert payload in out
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
-                 ASSET_BUCKET))
-    web_detect.report(web_detect.annotate(file_name))
+def test_empty_payload(capsys, app):
+    r = app.post("/log_payload")
+    assert r.status_code == 200
+
     out, _ = capsys.readouterr()
-    assert 'description:' in out.lower()
+    assert "empty payload" in out

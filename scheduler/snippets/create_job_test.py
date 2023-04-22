@@ -1,4 +1,4 @@
-# Copyright 2017 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,25 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
+import os
 
-import web_detect
+import create_job
 
-ASSET_BUCKET = "cloud-samples-data"
+TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+TEST_LOCATION = os.getenv("LOCATION_ID", "us-central1")
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_file(capsys):
-    file_name = ('../detect/resources/landmark.jpg')
-    web_detect.report(web_detect.annotate(file_name))
+def test_create_job(capsys):
+    create_result = create_job.create_scheduler_job(
+        TEST_PROJECT_ID, TEST_LOCATION, "my-service"
+    )
     out, _ = capsys.readouterr()
-    assert 'description' in out.lower()
+    assert "Created job:" in out
 
+    job_name = create_result.name.split("/")[-1]
+    create_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
-                 ASSET_BUCKET))
-    web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'description:' in out.lower()
+    assert "Job deleted." in out
