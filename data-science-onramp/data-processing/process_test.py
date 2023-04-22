@@ -41,7 +41,7 @@ CSV_FILE = "testing_data/raw_data.csv"
 
 # Dataproc constants
 DATAPROC_CLUSTER = f"process-test-{TEST_ID}"
-CLUSTER_REGION = "us-central1"
+CLUSTER_REGION = "us-west1"
 CLUSTER_IMAGE = "2.0-debian10"
 CLUSTER_CONFIG = {  # Dataproc cluster configuration
     "project_id": PROJECT_ID,
