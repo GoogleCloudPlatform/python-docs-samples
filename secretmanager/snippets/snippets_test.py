@@ -64,12 +64,12 @@ def iam_user():
 
 @pytest.fixture()
 def secret_id(client, project_id):
-    secret_id = "python-secret-{}".format(uuid.uuid4())
+    secret_id = f"python-secret-{uuid.uuid4()}"
 
     yield secret_id
 
     secret_path = client.secret_path(project_id, secret_id)
-    print("deleting secret {}".format(secret_id))
+    print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
         client.delete_secret(request={"name": secret_path})
@@ -81,7 +81,7 @@ def secret_id(client, project_id):
 
 @pytest.fixture()
 def secret(client, project_id, secret_id):
-    print("creating secret {}".format(secret_id))
+    print(f"creating secret {secret_id}")
 
     parent = f"projects/{project_id}"
     time.sleep(5)
@@ -100,9 +100,9 @@ def secret(client, project_id, secret_id):
 def secret_version(client, secret):
     project_id, secret_id, _ = secret
 
-    print("adding secret version to {}".format(secret_id))
+    print(f"adding secret version to {secret_id}")
     parent = client.secret_path(project_id, secret_id)
-    payload = "hello world!".encode("UTF-8")
+    payload = b"hello world!"
     time.sleep(5)
     version = client.add_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
@@ -160,7 +160,7 @@ def test_delete_secret(client, secret):
     project_id, secret_id, _ = secret
     delete_secret(project_id, secret_id)
     with pytest.raises(exceptions.NotFound):
-        print("{}".format(client))
+        print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
         client.access_secret_version(request={"name": name})
 
@@ -169,7 +169,7 @@ def test_delete_secret_with_etag(client, secret):
     project_id, secret_id, etag = secret
     delete_secret_with_etag(project_id, secret_id, etag)
     with pytest.raises(exceptions.NotFound):
-        print("{}".format(client))
+        print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
         client.access_secret_version(request={"name": name})
 
@@ -240,8 +240,8 @@ def test_list_secret_versions(capsys, secret_version, another_secret_version):
 
     out, _ = capsys.readouterr()
     assert secret_id in out
-    assert "Found secret version: {}".format(version_1.name) in out
-    assert "Found secret version: {}".format(version_2.name) in out
+    assert f"Found secret version: {version_1.name}" in out
+    assert f"Found secret version: {version_2.name}" in out
 
 
 def test_list_secret_versions_with_filter(
@@ -256,8 +256,8 @@ def test_list_secret_versions_with_filter(
 
     out, _ = capsys.readouterr()
     assert secret_id in out
-    assert "Found secret version: {}".format(enabled.name) in out
-    assert "Found secret version: {}".format(disabled.name) not in out
+    assert f"Found secret version: {enabled.name}" in out
+    assert f"Found secret version: {disabled.name}" not in out
 
 
 def test_list_secrets(capsys, secret):
@@ -266,7 +266,7 @@ def test_list_secrets(capsys, secret):
     list_secrets(project_id)
 
     out, _ = capsys.readouterr()
-    assert "Found secret: {}".format(secret.name) in out
+    assert f"Found secret: {secret.name}" in out
 
 
 def test_list_secrets_with_filter(capsys, secret):
@@ -275,14 +275,14 @@ def test_list_secrets_with_filter(capsys, secret):
     list_secrets_with_filter(project_id, "labels.secretmanager:rocks")
 
     out, _ = capsys.readouterr()
-    assert "Found secret: {}".format(unlabeled.name) not in out
+    assert f"Found secret: {unlabeled.name}" not in out
 
     labeled = update_secret(project_id, secret_id)
     assert labeled.labels["secretmanager"] == "rocks"
     list_secrets_with_filter(project_id, "labels.secretmanager:rocks")
 
     out, _ = capsys.readouterr()
-    assert "Found secret: {}".format(labeled.name) in out
+    assert f"Found secret: {labeled.name}" in out
 
 
 def test_update_secret(secret):

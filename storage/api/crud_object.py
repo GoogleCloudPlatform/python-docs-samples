@@ -109,7 +109,7 @@ def get_object(bucket, filename, out_file):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print("Download {}%.".format(int(status.progress() * 100)))
+        print(f"Download {int(status.progress() * 100)}%.")
 
     return out_file
 

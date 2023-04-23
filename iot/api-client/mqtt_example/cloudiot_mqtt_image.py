@@ -41,11 +41,11 @@ def transmit_image(
 ):
     """Send an inage to a device registry"""
 
-    with io.open(image_path, "rb") as image_file:
+    with open(image_path, "rb") as image_file:
         image_data = base64.b64encode(image_file.read()).decode("utf-8")
 
     sub_topic = "events"
-    mqtt_topic = "/devices/{}/{}".format(device_id, sub_topic)
+    mqtt_topic = f"/devices/{device_id}/{sub_topic}"
 
     client = cloudiot_mqtt_example.get_client(
         project_id,
@@ -84,10 +84,10 @@ def receive_image(project_id, subscription_path, prefix, extension, timeout):
         global count
         try:
             count = count + 1
-            print("Received image {}:".format(count))
+            print(f"Received image {count}:")
             image_data = base64.b64decode(message.data)
 
-            with io.open(file_pattern.format(prefix, count, extension), "wb") as f:
+            with open(file_pattern.format(prefix, count, extension), "wb") as f:
                 f.write(image_data)
                 message.ack()
                 # Signal to the main thread that we can exit.
@@ -98,7 +98,7 @@ def receive_image(project_id, subscription_path, prefix, extension, timeout):
 
     subscriber.subscribe(subscription_path, callback=callback)
 
-    print("Listening for messages on {}".format(subscription_path))
+    print(f"Listening for messages on {subscription_path}")
     finished = job_done.wait(timeout=timeout)
     if not finished:
         print("No event received before the timeout.")

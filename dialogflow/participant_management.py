@@ -40,8 +40,8 @@ def create_participant(project_id, conversation_id, role):
             parent=conversation_path, participant={"role": role}, timeout=600
         )
         print("Participant Created.")
-        print("Role: {}".format(response.role))
-        print("Name: {}".format(response.name))
+        print(f"Role: {response.role}")
+        print(f"Name: {response.name}")
 
         return response
 
@@ -68,43 +68,43 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
         participant=participant_path, text_input=text_input
     )
     print("AnalyzeContent Response:")
-    print("Reply Text: {}".format(response.reply_text))
+    print(f"Reply Text: {response.reply_text}")
 
     for suggestion_result in response.human_agent_suggestion_results:
         if suggestion_result.error is not None:
-            print("Error: {}".format(suggestion_result.error.message))
+            print(f"Error: {suggestion_result.error.message}")
         if suggestion_result.suggest_articles_response:
             for answer in suggestion_result.suggest_articles_response.article_answers:
-                print("Article Suggestion Answer: {}".format(answer.title))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Article Suggestion Answer: {answer.title}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_faq_answers_response:
             for answer in suggestion_result.suggest_faq_answers_response.faq_answers:
-                print("Faq Answer: {}".format(answer.answer))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Faq Answer: {answer.answer}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_smart_replies_response:
             for (
                 answer
             ) in suggestion_result.suggest_smart_replies_response.smart_reply_answers:
-                print("Smart Reply: {}".format(answer.reply))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Smart Reply: {answer.reply}")
+                print(f"Answer Record: {answer.answer_record}")
 
     for suggestion_result in response.end_user_suggestion_results:
         if suggestion_result.error:
-            print("Error: {}".format(suggestion_result.error.message))
+            print(f"Error: {suggestion_result.error.message}")
         if suggestion_result.suggest_articles_response:
             for answer in suggestion_result.suggest_articles_response.article_answers:
-                print("Article Suggestion Answer: {}".format(answer.title))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Article Suggestion Answer: {answer.title}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_faq_answers_response:
             for answer in suggestion_result.suggest_faq_answers_response.faq_answers:
-                print("Faq Answer: {}".format(answer.answer))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Faq Answer: {answer.answer}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_smart_replies_response:
             for (
                 answer
             ) in suggestion_result.suggest_smart_replies_response.smart_reply_answers:
-                print("Smart Reply: {}".format(answer.reply))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Smart Reply: {answer.reply}")
+                print(f"Answer Record: {answer.answer_record}")
 
     return response
 

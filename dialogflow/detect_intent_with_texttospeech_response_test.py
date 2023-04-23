@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
 
 import os
 import uuid
@@ -22,7 +21,7 @@ from detect_intent_with_texttospeech_response import (
 )
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-SESSION_ID = "test_{}".format(uuid.uuid4())
+SESSION_ID = f"test_{uuid.uuid4()}"
 TEXTS = ["hello"]
 
 

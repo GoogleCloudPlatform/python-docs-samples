@@ -38,7 +38,7 @@ def test_analyze_content_text(capsys):
     knowledge_base_management.get_knowledge_base(PROJECT_ID, knowledge_base_id)
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(KNOWLEDGE_BASE_DISPLAY_NAME) in out
+    assert f"Display Name: {KNOWLEDGE_BASE_DISPLAY_NAME}" in out
 
     # Create documents. Note that you should get read permission of bucket gs://cloud-samples-data/dialogflow/participant_test.html
     # via Pantheon for service account (google application credential account) from here:
@@ -58,7 +58,7 @@ def test_analyze_content_text(capsys):
     document_management.get_document(PROJECT_ID, knowledge_base_id, document_id)
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(DOCUMENT_DISPLAY_NAME) in out
+    assert f"Display Name: {DOCUMENT_DISPLAY_NAME}" in out
 
     # Create conversation profile.
     conversation_profile_management.create_conversation_profile_article_faq(
@@ -68,7 +68,7 @@ def test_analyze_content_text(capsys):
     )
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" in out
     conversation_profile_id = out.split("conversationProfiles/")[1].rstrip()
 
     # Create conversation.

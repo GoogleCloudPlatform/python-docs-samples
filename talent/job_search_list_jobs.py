@@ -27,11 +27,11 @@ def list_jobs(project_id, tenant_id, filter_):
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # filter_ = 'companyName=projects/my-project/companies/company-id'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(filter_, six.binary_type):
+    if isinstance(filter_, bytes):
         filter_ = filter_.decode("utf-8")
     parent = f"projects/{project_id}/tenants/{tenant_id}"
 

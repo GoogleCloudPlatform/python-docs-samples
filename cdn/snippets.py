@@ -52,7 +52,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    url_pattern = u'{url}{separator}Expires={expires}&KeyName={key_name}'
+    url_pattern = '{url}{separator}Expires={expires}&KeyName={key_name}'
 
     url_to_sign = url_pattern.format(
             url=stripped_url,
@@ -64,7 +64,7 @@ def sign_url(url, key_name, base64_key, expiration_time):
         decoded_key, url_to_sign.encode('utf-8'), hashlib.sha1).digest()
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
-    signed_url = u'{url}&Signature={signature}'.format(
+    signed_url = '{url}&Signature={signature}'.format(
             url=url_to_sign, signature=signature)
 
     print(signed_url)
@@ -96,7 +96,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    policy_pattern = u'URLPrefix={encoded_url_prefix}&Expires={expires}&KeyName={key_name}'
+    policy_pattern = 'URLPrefix={encoded_url_prefix}&Expires={expires}&KeyName={key_name}'
     policy = policy_pattern.format(
             encoded_url_prefix=encoded_url_prefix,
             expires=expiration_timestamp,
@@ -106,7 +106,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
             decoded_key, policy.encode('utf-8'), hashlib.sha1).digest()
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
-    signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
+    signed_url = '{url}{separator}{policy}&Signature={signature}'.format(
             url=stripped_url,
             separator='&' if query_params else '?',
             policy=policy,
@@ -135,7 +135,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    policy_pattern = u'URLPrefix={encoded_url_prefix}:Expires={expires}:KeyName={key_name}'
+    policy_pattern = 'URLPrefix={encoded_url_prefix}:Expires={expires}:KeyName={key_name}'
     policy = policy_pattern.format(
             encoded_url_prefix=encoded_url_prefix,
             expires=expiration_timestamp,
@@ -145,7 +145,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
             decoded_key, policy.encode('utf-8'), hashlib.sha1).digest()
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
-    signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
+    signed_policy = 'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
     print(signed_policy)
 # [END cloudcdn_sign_cookie]

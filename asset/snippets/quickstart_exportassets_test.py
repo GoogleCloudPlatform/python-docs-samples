@@ -25,8 +25,8 @@ import pytest
 import quickstart_exportassets
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-BUCKET = "assets-{}".format(uuid.uuid4().hex)
-DATASET = "assets_{}".format(int(uuid.uuid4()))
+BUCKET = f"assets-{uuid.uuid4().hex}"
+DATASET = f"assets_{int(uuid.uuid4())}"
 
 
 @pytest.fixture(scope="module")
@@ -48,13 +48,13 @@ def asset_bucket(storage_client):
     try:
         bucket.delete(force=True)
     except Exception as e:
-        print("Failed to delete bucket{}".format(BUCKET))
+        print(f"Failed to delete bucket{BUCKET}")
         raise e
 
 
 @pytest.fixture(scope='module')
 def dataset(bigquery_client):
-    dataset_id = "{}.{}".format(PROJECT, DATASET)
+    dataset_id = f"{PROJECT}.{DATASET}"
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
     dataset = bigquery_client.create_dataset(dataset)
@@ -66,13 +66,13 @@ def dataset(bigquery_client):
 
 
 def test_export_assets(asset_bucket, dataset, capsys):
-    dump_file_path = "gs://{}/assets-dump.txt".format(asset_bucket)
+    dump_file_path = f"gs://{asset_bucket}/assets-dump.txt"
     quickstart_exportassets.export_assets(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
     assert dump_file_path in out
 
     content_type = asset_v1.ContentType.RESOURCE
-    dataset_id = "projects/{}/datasets/{}".format(PROJECT, dataset)
+    dataset_id = f"projects/{PROJECT}/datasets/{dataset}"
     quickstart_exportassets.export_assets_bigquery(
         PROJECT, dataset_id, "assettable", content_type)
     out, _ = capsys.readouterr()

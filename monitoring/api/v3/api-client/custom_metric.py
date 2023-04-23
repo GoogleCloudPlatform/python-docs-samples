@@ -85,7 +85,7 @@ def get_custom_metric(client, project_id, custom_metric_type):
     """Retrieve the custom metric we created"""
     request = client.projects().metricDescriptors().list(
         name=project_id,
-        filter='metric.type=starts_with("{}")'.format(custom_metric_type))
+        filter=f'metric.type=starts_with("{custom_metric_type}")')
     response = request.execute()
     print('ListCustomMetrics response:')
     pprint.pprint(response)
@@ -99,7 +99,7 @@ def get_custom_data_point():
     """Dummy method to return a mock measurement for demonstration purposes.
     Returns a random number between 0 and 10"""
     length = random.randint(0, 10)
-    print("reporting timeseries value {}".format(str(length)))
+    print(f"reporting timeseries value {str(length)}")
     return length
 
 
@@ -152,7 +152,7 @@ def read_timeseries(client, project_resource, custom_metric_type):
     """
     request = client.projects().timeSeries().list(
         name=project_resource,
-        filter='metric.type="{0}"'.format(custom_metric_type),
+        filter=f'metric.type="{custom_metric_type}"',
         pageSize=3,
         interval_startTime=get_start_time(),
         interval_endTime=get_now(),
@@ -165,11 +165,11 @@ def main(project_id):
     # This is the namespace for all custom metrics
     CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"
     # This is our specific metric name
-    CUSTOM_METRIC_TYPE = "{}/custom_measurement".format(CUSTOM_METRIC_DOMAIN)
+    CUSTOM_METRIC_TYPE = f"{CUSTOM_METRIC_DOMAIN}/custom_measurement"
     INSTANCE_ID = "test_instance"
     METRIC_KIND = "GAUGE"
 
-    project_resource = "projects/{0}".format(project_id)
+    project_resource = f"projects/{project_id}"
     client = googleapiclient.discovery.build('monitoring', 'v3')
     create_custom_metric(client, project_resource,
                          CUSTOM_METRIC_TYPE, METRIC_KIND)
@@ -187,7 +187,7 @@ def main(project_id):
     # write
     time.sleep(3)
     timeseries = read_timeseries(client, project_resource, CUSTOM_METRIC_TYPE)
-    print('read_timeseries response:\n{}'.format(pprint.pformat(timeseries)))
+    print(f'read_timeseries response:\n{pprint.pformat(timeseries)}')
 
 
 if __name__ == '__main__':

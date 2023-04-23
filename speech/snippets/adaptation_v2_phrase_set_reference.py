@@ -39,7 +39,7 @@ def adaptation_v2_phrase_set_reference(
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # Create a persistent PhraseSet to reference in a recognition request
@@ -72,7 +72,7 @@ def adaptation_v2_phrase_set_reference(
     response = client.recognize(request=request)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
 

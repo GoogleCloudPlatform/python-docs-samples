@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2018 Google LLC
 #
@@ -34,7 +33,7 @@ def sample_analyze_sentiment(content):
 
     # content = 'Your text to analyze, e.g. Hello, world!'
 
-    if isinstance(content, six.binary_type):
+    if isinstance(content, bytes):
         content = content.decode("utf-8")
 
     type_ = language_v1.Document.Type.PLAIN_TEXT
@@ -42,8 +41,8 @@ def sample_analyze_sentiment(content):
 
     response = client.analyze_sentiment(request={"document": document})
     sentiment = response.document_sentiment
-    print("Score: {}".format(sentiment.score))
-    print("Magnitude: {}".format(sentiment.magnitude))
+    print(f"Score: {sentiment.score}")
+    print(f"Magnitude: {sentiment.magnitude}")
 
 
 # [END language_sentiment_text]

@@ -51,7 +51,7 @@ def main(bucket, destination, sources):
             name=filename,
             bucket=bucket)
         resp = req.execute()
-        print('> Uploaded source file {}'.format(filename))
+        print(f'> Uploaded source file {filename}')
         print(json.dumps(resp, indent=2))
 
     # Construct a request to compose the source files into the destination.
@@ -69,7 +69,7 @@ def main(bucket, destination, sources):
 
     resp = req.execute()
 
-    print('> Composed files into {}'.format(destination))
+    print(f'> Composed files into {destination}')
     print(json.dumps(resp, indent=2))
 
     # Download and print the composed object.

@@ -14,7 +14,6 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
-from __future__ import print_function
 
 import argparse
 
@@ -80,7 +79,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Iterate over results.
     for job in response:
-        print("Job: %s; status: %s" % (job.name, job.state.name))
+        print("Job: {}; status: {}".format(job.name, job.state.name))
 
 
 # [END dlp_list_jobs]

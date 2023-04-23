@@ -45,7 +45,7 @@ def detect_intent_audio(project_id, session_id, audio_file_path, language_code):
     sample_rate_hertz = 16000
 
     session = session_client.session_path(project_id, session_id)
-    print("Session path: {}\n".format(session))
+    print(f"Session path: {session}\n")
 
     with open(audio_file_path, "rb") as audio_file:
         input_audio = audio_file.read()
@@ -65,14 +65,14 @@ def detect_intent_audio(project_id, session_id, audio_file_path, language_code):
     response = session_client.detect_intent(request=request)
 
     print("=" * 20)
-    print("Query text: {}".format(response.query_result.query_text))
+    print(f"Query text: {response.query_result.query_text}")
     print(
         "Detected intent: {} (confidence: {})\n".format(
             response.query_result.intent.display_name,
             response.query_result.intent_detection_confidence,
         )
     )
-    print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+    print(f"Fulfillment text: {response.query_result.fulfillment_text}\n")
 
 
 # [END dialogflow_detect_intent_audio]

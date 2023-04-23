@@ -80,5 +80,5 @@ def create_fileset_entry(client, entry_group_name, entry_id):
     entry = client.create_entry(
         request={"parent": entry_group_name, "entry_id": entry_id, "entry": entry}
     )
-    print("Created entry {}".format(entry.name))
+    print(f"Created entry {entry.name}")
     # [END data_catalog_create_fileset_v1beta1]

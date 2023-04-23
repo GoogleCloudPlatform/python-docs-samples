@@ -27,7 +27,7 @@ def simulate_error():
 
     def report(ex):
         data = {}
-        data['message'] = '{0}'.format(ex)
+        data['message'] = f'{ex}'
         data['serviceContext'] = {'service': 'myapp'}
         # ... add more metadata
         fluent.event.Event('errors', data)

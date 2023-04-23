@@ -45,7 +45,7 @@ def detect_faces(path):
 
     # [START vision_python_migration_face_detection]
     # [START vision_python_migration_image_file]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -60,11 +60,11 @@ def detect_faces(path):
     print('Faces:')
 
     for face in faces:
-        print('anger: {}'.format(likelihood_name[face.anger_likelihood]))
-        print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
-        print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
+        print(f'anger: {likelihood_name[face.anger_likelihood]}')
+        print(f'joy: {likelihood_name[face.joy_likelihood]}')
+        print(f'surprise: {likelihood_name[face.surprise_likelihood]}')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
@@ -97,11 +97,11 @@ def detect_faces_uri(uri):
     print('Faces:')
 
     for face in faces:
-        print('anger: {}'.format(likelihood_name[face.anger_likelihood]))
-        print('joy: {}'.format(likelihood_name[face.joy_likelihood]))
-        print('surprise: {}'.format(likelihood_name[face.surprise_likelihood]))
+        print(f'anger: {likelihood_name[face.anger_likelihood]}')
+        print(f'joy: {likelihood_name[face.joy_likelihood]}')
+        print(f'surprise: {likelihood_name[face.surprise_likelihood]}')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in face.bounding_poly.vertices])
 
         print('face bounds: {}'.format(','.join(vertices)))
@@ -122,7 +122,7 @@ def detect_labels(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_label_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -175,7 +175,7 @@ def detect_landmarks(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_landmark_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -188,8 +188,8 @@ def detect_landmarks(path):
         print(landmark.description)
         for location in landmark.locations:
             lat_lng = location.lat_lng
-            print('Latitude {}'.format(lat_lng.latitude))
-            print('Longitude {}'.format(lat_lng.longitude))
+            print(f'Latitude {lat_lng.latitude}')
+            print(f'Longitude {lat_lng.longitude}')
 
     if response.error.message:
         raise Exception(
@@ -232,7 +232,7 @@ def detect_logos(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_logo_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -285,7 +285,7 @@ def detect_safe_search(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_safe_search_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -298,11 +298,11 @@ def detect_safe_search(path):
                        'LIKELY', 'VERY_LIKELY')
     print('Safe search:')
 
-    print('adult: {}'.format(likelihood_name[safe.adult]))
-    print('medical: {}'.format(likelihood_name[safe.medical]))
-    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
-    print('violence: {}'.format(likelihood_name[safe.violence]))
-    print('racy: {}'.format(likelihood_name[safe.racy]))
+    print(f'adult: {likelihood_name[safe.adult]}')
+    print(f'medical: {likelihood_name[safe.medical]}')
+    print(f'spoofed: {likelihood_name[safe.spoof]}')
+    print(f'violence: {likelihood_name[safe.violence]}')
+    print(f'racy: {likelihood_name[safe.racy]}')
 
     if response.error.message:
         raise Exception(
@@ -330,11 +330,11 @@ def detect_safe_search_uri(uri):
                        'LIKELY', 'VERY_LIKELY')
     print('Safe search:')
 
-    print('adult: {}'.format(likelihood_name[safe.adult]))
-    print('medical: {}'.format(likelihood_name[safe.medical]))
-    print('spoofed: {}'.format(likelihood_name[safe.spoof]))
-    print('violence: {}'.format(likelihood_name[safe.violence]))
-    print('racy: {}'.format(likelihood_name[safe.racy]))
+    print(f'adult: {likelihood_name[safe.adult]}')
+    print(f'medical: {likelihood_name[safe.medical]}')
+    print(f'spoofed: {likelihood_name[safe.spoof]}')
+    print(f'violence: {likelihood_name[safe.violence]}')
+    print(f'racy: {likelihood_name[safe.racy]}')
 
     if response.error.message:
         raise Exception(
@@ -352,7 +352,7 @@ def detect_text(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_text_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -362,9 +362,9 @@ def detect_text(path):
     print('Texts:')
 
     for text in texts:
-        print('\n"{}"'.format(text.description))
+        print(f'\n"{text.description}"')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
@@ -392,9 +392,9 @@ def detect_text_uri(uri):
     print('Texts:')
 
     for text in texts:
-        print('\n"{}"'.format(text.description))
+        print(f'\n"{text.description}"')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in text.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
@@ -415,7 +415,7 @@ def detect_properties(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_image_properties]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -425,11 +425,11 @@ def detect_properties(path):
     print('Properties:')
 
     for color in props.dominant_colors.colors:
-        print('fraction: {}'.format(color.pixel_fraction))
-        print('\tr: {}'.format(color.color.red))
-        print('\tg: {}'.format(color.color.green))
-        print('\tb: {}'.format(color.color.blue))
-        print('\ta: {}'.format(color.color.alpha))
+        print(f'fraction: {color.pixel_fraction}')
+        print(f'\tr: {color.color.red}')
+        print(f'\tg: {color.color.green}')
+        print(f'\tb: {color.color.blue}')
+        print(f'\ta: {color.color.alpha}')
 
     if response.error.message:
         raise Exception(
@@ -454,11 +454,11 @@ def detect_properties_uri(uri):
     print('Properties:')
 
     for color in props.dominant_colors.colors:
-        print('frac: {}'.format(color.pixel_fraction))
-        print('\tr: {}'.format(color.color.red))
-        print('\tg: {}'.format(color.color.green))
-        print('\tb: {}'.format(color.color.blue))
-        print('\ta: {}'.format(color.color.alpha))
+        print(f'frac: {color.pixel_fraction}')
+        print(f'\tr: {color.color.red}')
+        print(f'\tg: {color.color.green}')
+        print(f'\tb: {color.color.blue}')
+        print(f'\ta: {color.color.alpha}')
 
     if response.error.message:
         raise Exception(
@@ -476,7 +476,7 @@ def detect_web(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_web_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -486,43 +486,43 @@ def detect_web(path):
 
     if annotations.best_guess_labels:
         for label in annotations.best_guess_labels:
-            print('\nBest guess label: {}'.format(label.label))
+            print(f'\nBest guess label: {label.label}')
 
     if annotations.pages_with_matching_images:
         print('\n{} Pages with matching images found:'.format(
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('\n\tPage url   : {}'.format(page.url))
+            print(f'\n\tPage url   : {page.url}')
 
             if page.full_matching_images:
                 print('\t{} Full Matches found: '.format(
                        len(page.full_matching_images)))
 
                 for image in page.full_matching_images:
-                    print('\t\tImage url  : {}'.format(image.url))
+                    print(f'\t\tImage url  : {image.url}')
 
             if page.partial_matching_images:
                 print('\t{} Partial Matches found: '.format(
                        len(page.partial_matching_images)))
 
                 for image in page.partial_matching_images:
-                    print('\t\tImage url  : {}'.format(image.url))
+                    print(f'\t\tImage url  : {image.url}')
 
     if annotations.web_entities:
         print('\n{} Web entities found: '.format(
             len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
-            print('\n\tScore      : {}'.format(entity.score))
-            print(u'\tDescription: {}'.format(entity.description))
+            print(f'\n\tScore      : {entity.score}')
+            print(f'\tDescription: {entity.description}')
 
     if annotations.visually_similar_images:
         print('\n{} visually similar images found:\n'.format(
             len(annotations.visually_similar_images)))
 
         for image in annotations.visually_similar_images:
-            print('\tImage url    : {}'.format(image.url))
+            print(f'\tImage url    : {image.url}')
 
     if response.error.message:
         raise Exception(
@@ -546,43 +546,43 @@ def detect_web_uri(uri):
 
     if annotations.best_guess_labels:
         for label in annotations.best_guess_labels:
-            print('\nBest guess label: {}'.format(label.label))
+            print(f'\nBest guess label: {label.label}')
 
     if annotations.pages_with_matching_images:
         print('\n{} Pages with matching images found:'.format(
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('\n\tPage url   : {}'.format(page.url))
+            print(f'\n\tPage url   : {page.url}')
 
             if page.full_matching_images:
                 print('\t{} Full Matches found: '.format(
                        len(page.full_matching_images)))
 
                 for image in page.full_matching_images:
-                    print('\t\tImage url  : {}'.format(image.url))
+                    print(f'\t\tImage url  : {image.url}')
 
             if page.partial_matching_images:
                 print('\t{} Partial Matches found: '.format(
                        len(page.partial_matching_images)))
 
                 for image in page.partial_matching_images:
-                    print('\t\tImage url  : {}'.format(image.url))
+                    print(f'\t\tImage url  : {image.url}')
 
     if annotations.web_entities:
         print('\n{} Web entities found: '.format(
             len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
-            print('\n\tScore      : {}'.format(entity.score))
-            print(u'\tDescription: {}'.format(entity.description))
+            print(f'\n\tScore      : {entity.score}')
+            print(f'\tDescription: {entity.description}')
 
     if annotations.visually_similar_images:
         print('\n{} visually similar images found:\n'.format(
             len(annotations.visually_similar_images)))
 
         for image in annotations.visually_similar_images:
-            print('\tImage url    : {}'.format(image.url))
+            print(f'\tImage url    : {image.url}')
 
     if response.error.message:
         raise Exception(
@@ -600,7 +600,7 @@ def web_entities_include_geo_results(path):
     import io
     client = vision.ImageAnnotatorClient()
 
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -613,8 +613,8 @@ def web_entities_include_geo_results(path):
     response = client.web_detection(image=image, image_context=image_context)
 
     for entity in response.web_detection.web_entities:
-        print('\n\tScore      : {}'.format(entity.score))
-        print(u'\tDescription: {}'.format(entity.description))
+        print(f'\n\tScore      : {entity.score}')
+        print(f'\tDescription: {entity.description}')
 
     if response.error.message:
         raise Exception(
@@ -643,8 +643,8 @@ def web_entities_include_geo_results_uri(uri):
     response = client.web_detection(image=image, image_context=image_context)
 
     for entity in response.web_detection.web_entities:
-        print('\n\tScore      : {}'.format(entity.score))
-        print(u'\tDescription: {}'.format(entity.description))
+        print(f'\n\tScore      : {entity.score}')
+        print(f'\tDescription: {entity.description}')
 
     if response.error.message:
         raise Exception(
@@ -662,7 +662,7 @@ def detect_crop_hints(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_crop_hints]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
     image = vision.Image(content=content)
 
@@ -674,9 +674,9 @@ def detect_crop_hints(path):
     hints = response.crop_hints_annotation.crop_hints
 
     for n, hint in enumerate(hints):
-        print('\nCrop Hint: {}'.format(n))
+        print(f'\nCrop Hint: {n}')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
@@ -706,9 +706,9 @@ def detect_crop_hints_uri(uri):
     hints = response.crop_hints_annotation.crop_hints
 
     for n, hint in enumerate(hints):
-        print('\nCrop Hint: {}'.format(n))
+        print(f'\nCrop Hint: {n}')
 
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
+        vertices = ([f'({vertex.x},{vertex.y})'
                     for vertex in hint.bounding_poly.vertices])
 
         print('bounds: {}'.format(','.join(vertices)))
@@ -729,7 +729,7 @@ def detect_document(path):
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_document_text_detection]
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -738,7 +738,7 @@ def detect_document(path):
 
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            print('\nBlock confidence: {}\n'.format(block.confidence))
+            print(f'\nBlock confidence: {block.confidence}\n')
 
             for paragraph in block.paragraphs:
                 print('Paragraph confidence: {}'.format(
@@ -777,7 +777,7 @@ def detect_document_uri(uri):
 
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            print('\nBlock confidence: {}\n'.format(block.confidence))
+            print(f'\nBlock confidence: {block.confidence}\n')
 
             for paragraph in block.paragraphs:
                 print('Paragraph confidence: {}'.format(
@@ -894,12 +894,12 @@ def localize_objects(path):
     objects = client.object_localization(
         image=image).localized_object_annotations
 
-    print('Number of objects found: {}'.format(len(objects)))
+    print(f'Number of objects found: {len(objects)}')
     for object_ in objects:
-        print('\n{} (confidence: {})'.format(object_.name, object_.score))
+        print(f'\n{object_.name} (confidence: {object_.score})')
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
-            print(' - ({}, {})'.format(vertex.x, vertex.y))
+            print(f' - ({vertex.x}, {vertex.y})')
 # [END vision_localize_objects]
 
 
@@ -919,12 +919,12 @@ def localize_objects_uri(uri):
     objects = client.object_localization(
         image=image).localized_object_annotations
 
-    print('Number of objects found: {}'.format(len(objects)))
+    print(f'Number of objects found: {len(objects)}')
     for object_ in objects:
-        print('\n{} (confidence: {})'.format(object_.name, object_.score))
+        print(f'\n{object_.name} (confidence: {object_.score})')
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
-            print(' - ({}, {})'.format(vertex.x, vertex.y))
+            print(f' - ({vertex.x}, {vertex.y})')
 # [END vision_localize_objects_gcs]
 
 

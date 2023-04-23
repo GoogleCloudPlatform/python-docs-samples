@@ -33,7 +33,7 @@ def test_create_disk():
     google_public_key = generate_wrapped_rsa_key.get_google_public_cert_key()
     wrapped_rsa_key = generate_wrapped_rsa_key.wrap_rsa_key(
         google_public_key, key_bytes)
-    disk_name = 'new-encrypted-disk-{}'.format(uuid.uuid4().hex)
+    disk_name = f'new-encrypted-disk-{uuid.uuid4().hex}'
 
     try:
         # Create the disk, if the encryption key is invalid, this will raise.

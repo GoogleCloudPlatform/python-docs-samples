@@ -42,19 +42,19 @@ def list_intents(project_id):
 
     for intent in intents:
         print("=" * 20)
-        print("Intent name: {}".format(intent.name))
-        print("Intent display_name: {}".format(intent.display_name))
-        print("Action: {}\n".format(intent.action))
-        print("Root followup intent: {}".format(intent.root_followup_intent_name))
-        print("Parent followup intent: {}\n".format(intent.parent_followup_intent_name))
+        print(f"Intent name: {intent.name}")
+        print(f"Intent display_name: {intent.display_name}")
+        print(f"Action: {intent.action}\n")
+        print(f"Root followup intent: {intent.root_followup_intent_name}")
+        print(f"Parent followup intent: {intent.parent_followup_intent_name}\n")
 
         print("Input contexts:")
         for input_context_name in intent.input_context_names:
-            print("\tName: {}".format(input_context_name))
+            print(f"\tName: {input_context_name}")
 
         print("Output contexts:")
         for output_context in intent.output_contexts:
-            print("\tName: {}".format(output_context.name))
+            print(f"\tName: {output_context.name}")
 
 
 # [END dialogflow_list_intents]
@@ -86,7 +86,7 @@ def create_intent(project_id, display_name, training_phrases_parts, message_text
         request={"parent": parent, "intent": intent}
     )
 
-    print("Intent created: {}".format(response))
+    print(f"Intent created: {response}")
 
 
 # [END dialogflow_create_intent]

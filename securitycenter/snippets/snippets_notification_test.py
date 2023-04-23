@@ -50,7 +50,7 @@ def cleanup_notification_config(notification_config_id):
 def new_notification_config_for_update():
     client = securitycenter.SecurityCenterClient()
 
-    org_name = "organizations/{org_id}".format(org_id=ORG_ID)
+    org_name = f"organizations/{ORG_ID}"
 
     created_notification_config = client.create_notification_config(
         request={
@@ -71,7 +71,7 @@ def new_notification_config_for_update():
 def new_notification_config_for_get():
     client = securitycenter.SecurityCenterClient()
 
-    org_name = "organizations/{org_id}".format(org_id=ORG_ID)
+    org_name = f"organizations/{ORG_ID}"
 
     created_notification_config = client.create_notification_config(
         request={
@@ -92,7 +92,7 @@ def new_notification_config_for_get():
 def deleted_notification_config():
     client = securitycenter.SecurityCenterClient()
 
-    org_name = "organizations/{org_id}".format(org_id=ORG_ID)
+    org_name = f"organizations/{ORG_ID}"
 
     created_notification_config = client.create_notification_config(
         request={

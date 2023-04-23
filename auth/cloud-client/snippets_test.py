@@ -15,7 +15,7 @@
 import os
 
 import google.auth
-import mock
+from unittest import mock
 
 import snippets
 

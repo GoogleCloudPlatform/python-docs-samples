@@ -26,9 +26,9 @@ def create_tenant(project_id, external_id):
     # project_id = 'Your Google Cloud Project ID'
     # external_id = 'Your Unique Identifier for Tenant'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(external_id, six.binary_type):
+    if isinstance(external_id, bytes):
         external_id = external_id.decode("utf-8")
     parent = f"projects/{project_id}"
     tenant = talent.Tenant(external_id=external_id)

@@ -44,7 +44,7 @@ def create_metric_descriptor(project_id):
     descriptor = client.create_metric_descriptor(
         name=project_name, metric_descriptor=descriptor
     )
-    print("Created {}.".format(descriptor.name))
+    print(f"Created {descriptor.name}.")
     # [END monitoring_create_metric]
 
 
@@ -54,7 +54,7 @@ def delete_metric_descriptor(descriptor_name):
 
     client = monitoring_v3.MetricServiceClient()
     client.delete_metric_descriptor(name=descriptor_name)
-    print("Deleted metric descriptor {}.".format(descriptor_name))
+    print(f"Deleted metric descriptor {descriptor_name}.")
     # [END monitoring_delete_metric]
 
 

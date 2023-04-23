@@ -14,7 +14,6 @@
 
 """Tests for detect_intent_texts."""
 
-from __future__ import absolute_import
 
 import os
 

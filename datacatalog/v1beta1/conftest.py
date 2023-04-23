@@ -73,7 +73,7 @@ def random_entry_name(client, entry_group_name):
     random_entry_id = "example_entry_{}_{}".format(
         now.strftime("%Y%m%d%H%M%S"), uuid.uuid4().hex[:8]
     )
-    random_entry_name = "{}/entries/{}".format(entry_group_name, random_entry_id)
+    random_entry_name = f"{entry_group_name}/entries/{random_entry_id}"
     yield random_entry_name
     client.delete_entry(request={"name": random_entry_name})
 

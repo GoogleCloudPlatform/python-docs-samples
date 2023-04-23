@@ -27,11 +27,11 @@ def get_job(project_id, tenant_id, job_id):
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # job_id = 'Job ID'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(job_id, six.binary_type):
+    if isinstance(job_id, bytes):
         job_id = job_id.decode("utf-8")
     name = client.job_path(project_id, tenant_id, job_id)
 

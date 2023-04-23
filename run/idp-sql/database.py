@@ -33,9 +33,9 @@ db = None
 def init_connection_engine() -> sqlalchemy.engine.base.Engine:
     if os.getenv("TRAMPOLINE_CI", None):
         logger.info("Using NullPool for testing")
-        db_config: Dict[str, Any] = {"poolclass": NullPool}
+        db_config: dict[str, Any] = {"poolclass": NullPool}
     else:
-        db_config: Dict[str, Any] = {
+        db_config: dict[str, Any] = {
             # Pool size is the maximum number of permanent connections to keep.
             "pool_size": 5,
             # Temporarily exceeds the set pool_size if no connections are available.
@@ -61,7 +61,7 @@ def init_connection_engine() -> sqlalchemy.engine.base.Engine:
 
 
 def init_tcp_connection_engine(
-    db_config: Dict[str, Type[NullPool]]
+    db_config: dict[str, type[NullPool]]
 ) -> sqlalchemy.engine.base.Engine:
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
@@ -94,7 +94,7 @@ def init_tcp_connection_engine(
 
 # [START cloudrun_user_auth_sql_connect]
 def init_unix_connection_engine(
-    db_config: Dict[str, int]
+    db_config: dict[str, int]
 ) -> sqlalchemy.engine.base.Engine:
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
@@ -147,7 +147,7 @@ def create_tables() -> None:
         ))
 
 
-def get_index_context() -> Dict[str, Any]:
+def get_index_context() -> dict[str, Any]:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results

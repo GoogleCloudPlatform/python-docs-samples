@@ -31,7 +31,7 @@ import sys
 from google.oauth2 import service_account
 # pip install six
 import six
-from six.moves.urllib.parse import quote
+from urllib.parse import quote
 
 
 def generate_signed_url(service_account_file, bucket_name, object_name,
@@ -43,7 +43,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
         sys.exit(1)
 
     escaped_object_name = quote(six.ensure_binary(object_name), safe=b'/~')
-    canonical_uri = '/{}'.format(escaped_object_name)
+    canonical_uri = f'/{escaped_object_name}'
 
     datetime_now = datetime.datetime.now(tz=datetime.timezone.utc)
     request_timestamp = datetime_now.strftime('%Y%m%dT%H%M%SZ')
@@ -52,12 +52,12 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     google_credentials = service_account.Credentials.from_service_account_file(
         service_account_file)
     client_email = google_credentials.service_account_email
-    credential_scope = '{}/auto/storage/goog4_request'.format(datestamp)
-    credential = '{}/{}'.format(client_email, credential_scope)
+    credential_scope = f'{datestamp}/auto/storage/goog4_request'
+    credential = f'{client_email}/{credential_scope}'
 
     if headers is None:
         headers = dict()
-    host = '{}.storage.googleapis.com'.format(bucket_name)
+    host = f'{bucket_name}.storage.googleapis.com'
     headers['host'] = host
 
     canonical_headers = ''
@@ -65,12 +65,12 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     for k, v in ordered_headers.items():
         lower_k = str(k).lower()
         strip_v = str(v).lower()
-        canonical_headers += '{}:{}\n'.format(lower_k, strip_v)
+        canonical_headers += f'{lower_k}:{strip_v}\n'
 
     signed_headers = ''
     for k, _ in ordered_headers.items():
         lower_k = str(k).lower()
-        signed_headers += '{};'.format(lower_k)
+        signed_headers += f'{lower_k};'
     signed_headers = signed_headers[:-1]  # remove trailing ';'
 
     if query_parameters is None:
@@ -89,7 +89,7 @@ def generate_signed_url(service_account_file, bucket_name, object_name,
     for k, v in ordered_query_parameters.items():
         encoded_k = quote(str(k), safe='')
         encoded_v = quote(str(v), safe='')
-        canonical_query_string += '{}={}&'.format(encoded_k, encoded_v)
+        canonical_query_string += f'{encoded_k}={encoded_v}&'
     canonical_query_string = canonical_query_string[:-1]  # remove trailing '&'
 
     canonical_request = '\n'.join([http_method,

@@ -34,7 +34,7 @@ def run_quickstart():
     file_name = os.path.abspath('resources/wakeupcat.jpg')
 
     # Loads the image into memory
-    with io.open(file_name, 'rb') as image_file:
+    with open(file_name, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)

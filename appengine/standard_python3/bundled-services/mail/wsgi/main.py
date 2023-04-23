@@ -35,7 +35,7 @@ def HelloReceiver(environ, start_response):
 
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
-    return ["success".encode("utf-8")]
+    return [b"success"]
 
 
 # [END gae_mail_handler_receive_wsgi]
@@ -55,7 +55,7 @@ def BounceReceiver(environ, start_response):
     # Return suitable response
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
-    return ["success".encode("utf-8")]
+    return [b"success"]
 
 
 # [END gae_mail_handler_bounce_wsgi]
@@ -104,13 +104,13 @@ def HomePage(environ, start_response):
         except Exception as e:
             print(f"Sending mail to {address} failed with exception {e}.")
             start_response("500 SERVER ERROR")
-            return [f"Exception {e} when sending mail to {address}.".encode("utf-8")]
+            return [f"Exception {e} when sending mail to {address}.".encode()]
 
         print(f"Successfully sent mail to {address}.")
 
         response = http.HTTPStatus.CREATED
         start_response(f"{response.value} {response.phrase}", [])
-        return [f"Successfully sent mail to {address}.".encode("utf-8")]
+        return [f"Successfully sent mail to {address}.".encode()]
 
 
 routes = {
@@ -128,7 +128,7 @@ class WSGIApplication:
             if match is not None:
                 return callable(environ, start_response)
         start_response("404 Not Found", [("Content-Type", "text/plain")])
-        return ["Not found".encode("utf-8")]
+        return [b"Not found"]
 
 
 app = wrap_wsgi_app(WSGIApplication())

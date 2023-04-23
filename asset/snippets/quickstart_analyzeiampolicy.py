@@ -25,7 +25,7 @@ def analyze_iam_policy(project_id):
     # TODO project_id = 'Your Google Cloud Project ID'
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
 
     # Build analysis query
     analysis_query = asset_v1.IamPolicyAnalysisQuery()

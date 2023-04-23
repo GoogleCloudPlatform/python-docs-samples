@@ -18,7 +18,7 @@ import base64
 import json
 import uuid
 
-import mock
+from unittest import mock
 import pytest
 
 import main

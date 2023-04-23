@@ -25,7 +25,7 @@ def create_source(organization_id):
     client = securitycenter.SecurityCenterClient()
     # organization_id is the numeric ID of the organization. e.g.:
     # organization_id = "111122222444"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     created = client.create_source(
         request={
@@ -36,7 +36,7 @@ def create_source(organization_id):
             },
         }
     )
-    print("Created Source: {}".format(created.name))
+    print(f"Created Source: {created.name}")
     # [END securitycenter_create_source]
 
 
@@ -55,7 +55,7 @@ def get_source(source_name):
     # source_name = "organizations/111122222444/sources/1234"
     source = client.get_source(request={"name": source_name})
 
-    print("Source: {}".format(source))
+    print(f"Source: {source}")
     # [END securitycenter_get_source]
     return source
 
@@ -83,7 +83,7 @@ def update_source(source_name):
             "update_mask": field_mask,
         }
     )
-    print("Updated Source: {}".format(updated))
+    print(f"Updated Source: {updated}")
     # [END securitycenter_update_source]
     return updated
 
@@ -105,14 +105,14 @@ def add_user_to_source(source_name):
     # source_name = "organizations/111122222444/sources/1234"
     # Get the old policy so we can do an incremental update.
     old_policy = client.get_iam_policy(request={"resource": source_name})
-    print("Old Policy: {}".format(old_policy))
+    print(f"Old Policy: {old_policy}")
 
     # Setup a new IAM binding.
     binding = policy_pb2.Binding()
     binding.role = "roles/securitycenter.findingsEditor"
     # user_email is an e-mail address known to Cloud IAM (e.g. a gmail address).
     # user_mail = user@somedomain.com
-    binding.members.append("user:{}".format(user_email))
+    binding.members.append(f"user:{user_email}")
 
     # Setting the e-tag avoids over-write existing policy
     updated = client.set_iam_policy(
@@ -122,7 +122,7 @@ def add_user_to_source(source_name):
         }
     )
 
-    print("Updated Policy: {}".format(updated))
+    print(f"Updated Policy: {updated}")
 
     # [END securitycenter_set_source_iam]
     return binding, updated
@@ -138,7 +138,7 @@ def list_source(organization_id):
     client = securitycenter.SecurityCenterClient()
     # organization_id is the numeric ID of the organization. e.g.:
     # organization_id = "111122222444"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     # Call the API and print out each existing source.
     for i, source in enumerate(client.list_sources(request={"parent": org_name})):
@@ -265,7 +265,7 @@ def update_finding(source_name):
     # source_name = "organizations/{organization_id}/sources/{source_id}"
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
-    finding_name = "{}/findings/samplefindingid2".format(source_name)
+    finding_name = f"{source_name}/findings/samplefindingid2"
     finding = Finding(
         name=finding_name,
         source_properties={"s_value": "new_string"},
@@ -299,7 +299,7 @@ def update_finding_state(source_name):
     # source_name = "organizations/{organization_id}/sources/{source_id}"
     # e.g.:
     # source_name = "organizations/111122222444/sources/1234"
-    finding_name = "{}/findings/samplefindingid2".format(source_name)
+    finding_name = f"{source_name}/findings/samplefindingid2"
 
     # Call the API to change the finding state to inactive as of now.
     new_finding = client.set_finding_state(
@@ -352,7 +352,7 @@ def trouble_shoot(source_name):
         }
     )
     print(
-        "Permision to update state? {}".format(len(permission_response.permissions) > 0)
+        f"Permision to update state? {len(permission_response.permissions) > 0}"
     )
     # [END securitycenter_test_iam]
     return permission_response
@@ -368,10 +368,10 @@ def list_all_findings(organization_id):
 
     # organization_id is the numeric ID of the organization. e.g.:
     # organization_id = "111122222444"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
-    all_sources = "{org_name}/sources/-".format(org_name=org_name)
+    all_sources = f"{org_name}/sources/-"
     finding_result_iterator = client.list_findings(request={"parent": all_sources})
     for i, finding_result in enumerate(finding_result_iterator):
         print(
@@ -463,7 +463,7 @@ def get_iam_policy(source_name):
     # source_name = "organizations/111122222444/sources/1234"
     # Get the old policy so we can do an incremental update.
     policy = client.get_iam_policy(request={"resource": source_name})
-    print("Policy: {}".format(policy))
+    print(f"Policy: {policy}")
     # [END securitycenter_get_source_iam]
 
 
@@ -478,10 +478,10 @@ def group_all_findings(organization_id):
 
     # organization_id is the numeric ID of the organization. e.g.:
     # organization_id = "111122222444"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
-    all_sources = "{org_name}/sources/-".format(org_name=org_name)
+    all_sources = f"{org_name}/sources/-"
     group_result_iterator = client.group_findings(
         request={"parent": all_sources, "group_by": "category"}
     )

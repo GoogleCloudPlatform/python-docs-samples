@@ -39,7 +39,7 @@ def transcribe_streaming_voice_activity_events(project_id, recognizer_id, audio_
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
@@ -68,8 +68,7 @@ def transcribe_streaming_voice_activity_events(project_id, recognizer_id, audio_
 
     def requests(config, audio):
         yield config
-        for message in audio:
-            yield message
+        yield from audio
 
     # Transcribes the audio into text
     responses_iterator = client.streaming_recognize(
@@ -89,7 +88,7 @@ def transcribe_streaming_voice_activity_events(project_id, recognizer_id, audio_
         ):
             print("Speech ended.")
         for result in response.results:
-            print("Transcript: {}".format(result.alternatives[0].transcript))
+            print(f"Transcript: {result.alternatives[0].transcript}")
 
     return responses
 

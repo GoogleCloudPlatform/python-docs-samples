@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 
 import argparse
 import os
@@ -55,7 +54,7 @@ def create_uptime_check_config_post(project_name, host_name=None, display_name=N
     config.http_check = {
         "request_method": monitoring_v3.UptimeCheckConfig.HttpCheck.RequestMethod.POST,
         "content_type": monitoring_v3.UptimeCheckConfig.HttpCheck.ContentType.URL_ENCODED,
-        "body": "foo=bar".encode("utf-8"),
+        "body": b"foo=bar",
         "path": "/",
         "port": 80
     }

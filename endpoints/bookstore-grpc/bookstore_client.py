@@ -31,9 +31,9 @@ def run(host, port, api_key, auth_token, timeout, use_tls, servername_override, 
         if servername_override:
             channel_opts += ((
                         'grpc.ssl_target_name_override', servername_override,),)
-        channel = grpc.secure_channel('{}:{}'.format(host, port), creds, channel_opts)
+        channel = grpc.secure_channel(f'{host}:{port}', creds, channel_opts)
     else:
-        channel = grpc.insecure_channel('{}:{}'.format(host, port))
+        channel = grpc.insecure_channel(f'{host}:{port}')
 
     stub = bookstore_pb2_grpc.BookstoreStub(channel)
     metadata = []
@@ -42,7 +42,7 @@ def run(host, port, api_key, auth_token, timeout, use_tls, servername_override, 
     if auth_token:
         metadata.append(('authorization', 'Bearer ' + auth_token))
     shelves = stub.ListShelves(empty_pb2.Empty(), timeout, metadata=metadata)
-    print('ListShelves: {}'.format(shelves))
+    print(f'ListShelves: {shelves}')
 
 
 if __name__ == '__main__':

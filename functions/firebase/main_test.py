@@ -17,12 +17,12 @@ from datetime import datetime
 import json
 import uuid
 
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import main
 
 
-class Context(object):
+class Context:
     pass
 
 
@@ -89,7 +89,7 @@ def test_make_upper_case(firestore_mock, capsys):
 
     user_id = str(uuid.uuid4())
     date_string = datetime.now().isoformat()
-    email_string = '%s@%s.com' % (uuid.uuid4(), uuid.uuid4())
+    email_string = '{}@{}.com'.format(uuid.uuid4(), uuid.uuid4())
 
     data = {
         'uid': user_id,
@@ -126,7 +126,7 @@ def test_make_upper_case_ignores_already_uppercased(firestore_mock, capsys):
 
     user_id = str(uuid.uuid4())
     date_string = datetime.now().isoformat()
-    email_string = '%s@%s.com' % (uuid.uuid4(), uuid.uuid4())
+    email_string = '{}@{}.com'.format(uuid.uuid4(), uuid.uuid4())
 
     data = {
         'uid': user_id,

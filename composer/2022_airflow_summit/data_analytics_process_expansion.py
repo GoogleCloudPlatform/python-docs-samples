@@ -143,7 +143,7 @@ if __name__ == "__main__":
 
     # Calculate the distance-weighted precipitation amount
     phx_annual_prcp_df = (
-        annual_df.where((annual_df.ELEMENT == "PRCP"))
+        annual_df.where(annual_df.ELEMENT == "PRCP")
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
         .agg(functions.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")
@@ -152,7 +152,7 @@ if __name__ == "__main__":
 
     # Calculate the distance-weighted snowfall amount
     phx_annual_snow_df = (
-        annual_df.where((annual_df.ELEMENT == "SNOW"))
+        annual_df.where(annual_df.ELEMENT == "SNOW")
         .groupBy("ID", "LATITUDE", "LONGITUDE", "YEAR")
         .agg(functions.sum("VALUE").alias("ANNUAL_AMOUNT"))
         .groupBy("YEAR")

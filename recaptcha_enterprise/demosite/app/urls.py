@@ -72,7 +72,7 @@ def on_homepage_load() -> Response:
         return jsonify(
             {
                 "data": {
-                    "score": "{:.1f}".format(assessment_response.risk_analysis.score),
+                    "score": f"{assessment_response.risk_analysis.score:.1f}",
                     "verdict": verdict,
                 }
             }
@@ -119,7 +119,7 @@ def on_signup() -> Response:
         return jsonify(
             {
                 "data": {
-                    "score": "{:.1f}".format(assessment_response.risk_analysis.score),
+                    "score": f"{assessment_response.risk_analysis.score:.1f}",
                     "verdict": verdict,
                 }
             }
@@ -166,7 +166,7 @@ def on_login() -> Response:
         return jsonify(
             {
                 "data": {
-                    "score": "{:.1f}".format(assessment_response.risk_analysis.score),
+                    "score": f"{assessment_response.risk_analysis.score:.1f}",
                     "verdict": verdict,
                 }
             }
@@ -212,7 +212,7 @@ def on_store_checkout() -> Response:
         return jsonify(
             {
                 "data": {
-                    "score": "{:.1f}".format(assessment_response.risk_analysis.score),
+                    "score": f"{assessment_response.risk_analysis.score:.1f}",
                     "verdict": verdict,
                 }
             }
@@ -258,7 +258,7 @@ def on_comment_submit() -> Response:
         return jsonify(
             {
                 "data": {
-                    "score": "{:.1f}".format(assessment_response.risk_analysis.score),
+                    "score": f"{assessment_response.risk_analysis.score:.1f}",
                     "verdict": verdict,
                 }
             }

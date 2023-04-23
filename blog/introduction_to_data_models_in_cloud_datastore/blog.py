@@ -27,7 +27,7 @@ def path_to_key(datastore, path):
         /parent.ext/file.ext -> key(ext, parent, ext, file)
     """
     key_parts = []
-    path_parts = path.strip(u'/').split(u'/')
+    path_parts = path.strip('/').split('/')
     for n, x in enumerate(path_parts):
         name, ext = x.rsplit('.', 1)
         key_parts.extend([ext, name])
@@ -36,7 +36,7 @@ def path_to_key(datastore, path):
 
 
 def create_user(ds, username, profile):
-    key = path_to_key(ds, '{0}.user'.format(username))
+    key = path_to_key(ds, f'{username}.user')
     entity = datastore.Entity(key)
     entity.update(profile)
     ds.put(entity)
@@ -44,7 +44,7 @@ def create_user(ds, username, profile):
 
 def create_post(ds, username, post_content):
     now = datetime.datetime.now(tz=datetime.timezone.utc)
-    key = path_to_key(ds, '{0}.user/{1}.post'.format(username, now))
+    key = path_to_key(ds, f'{username}.user/{now}.post')
     entity = datastore.Entity(key)
 
     entity.update({
@@ -58,7 +58,7 @@ def create_post(ds, username, post_content):
 
 def repost(ds, username, original):
     now = datetime.datetime.now(tz=datetime.timezone.utc)
-    new_key = path_to_key(ds, '{0}.user/{1}.post'.format(username, now))
+    new_key = path_to_key(ds, f'{username}.user/{now}.post')
     new = datastore.Entity(new_key)
 
     new.update(original)
@@ -67,7 +67,7 @@ def repost(ds, username, original):
 
 
 def list_posts_by_user(ds, username):
-    user_key = path_to_key(ds, '{0}.user'.format(username))
+    user_key = path_to_key(ds, f'{username}.user')
     return ds.query(kind='post', ancestor=user_key).fetch()
 
 
@@ -86,8 +86,8 @@ def main(project_id):
 
     print("Creating posts...")
     for n in range(1, 10):
-        create_post(ds, 'tonystark', "Tony's post #{0}".format(n))
-        create_post(ds, 'peterparker', "Peter's post #{0}".format(n))
+        create_post(ds, 'tonystark', f"Tony's post #{n}")
+        create_post(ds, 'peterparker', f"Peter's post #{n}")
 
     print("Re-posting tony's post as peter...")
 
@@ -100,15 +100,15 @@ def main(project_id):
 
     print('Posts by tonystark:')
     for post in list_posts_by_user(ds, 'tonystark'):
-        print("> {0} on {1}".format(post['content'], post['created']))
+        print("> {} on {}".format(post['content'], post['created']))
 
     print('Posts by peterparker:')
     for post in list_posts_by_user(ds, 'peterparker'):
-        print("> {0} on {1}".format(post['content'], post['created']))
+        print("> {} on {}".format(post['content'], post['created']))
 
     print('Posts by everyone:')
     for post in list_all_posts(ds):
-        print("> {0} on {1}".format(post['content'], post['created']))
+        print("> {} on {}".format(post['content'], post['created']))
 
     print('Cleaning up...')
     ds.delete_multi([

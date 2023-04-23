@@ -57,16 +57,16 @@ def list_documents(project_id, knowledge_base_id):
         project_id, knowledge_base_id
     )
 
-    print("Documents for Knowledge Id: {}".format(knowledge_base_id))
+    print(f"Documents for Knowledge Id: {knowledge_base_id}")
     response = client.list_documents(parent=knowledge_base_path)
     for document in response:
-        print(" - Display Name: {}".format(document.display_name))
-        print(" - Knowledge ID: {}".format(document.name))
-        print(" - MIME Type: {}".format(document.mime_type))
+        print(f" - Display Name: {document.display_name}")
+        print(f" - Knowledge ID: {document.name}")
+        print(f" - MIME Type: {document.mime_type}")
         print(" - Knowledge Types:")
         for knowledge_type in document.knowledge_types:
-            print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
-        print(" - Source: {}\n".format(document.content_uri))
+            print(f"    - {KNOWLEDGE_TYPES[knowledge_type]}")
+        print(f" - Source: {document.content_uri}\n")
     return response
 
 
@@ -108,13 +108,13 @@ def create_document(
     print("Waiting for results...")
     document = response.result(timeout=120)
     print("Created Document:")
-    print(" - Display Name: {}".format(document.display_name))
-    print(" - Knowledge ID: {}".format(document.name))
-    print(" - MIME Type: {}".format(document.mime_type))
+    print(f" - Display Name: {document.display_name}")
+    print(f" - Knowledge ID: {document.name}")
+    print(f" - MIME Type: {document.mime_type}")
     print(" - Knowledge Types:")
     for knowledge_type in document.knowledge_types:
-        print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
-    print(" - Source: {}\n".format(document.content_uri))
+        print(f"    - {KNOWLEDGE_TYPES[knowledge_type]}")
+    print(f" - Source: {document.content_uri}\n")
 
 
 # [END dialogflow_create_document]
@@ -135,13 +135,13 @@ def get_document(project_id, knowledge_base_id, document_id):
 
     response = client.get_document(name=document_path)
     print("Got Document:")
-    print(" - Display Name: {}".format(response.display_name))
-    print(" - Knowledge ID: {}".format(response.name))
-    print(" - MIME Type: {}".format(response.mime_type))
+    print(f" - Display Name: {response.display_name}")
+    print(f" - Knowledge ID: {response.name}")
+    print(f" - MIME Type: {response.mime_type}")
     print(" - Knowledge Types:")
     for knowledge_type in response.knowledge_types:
-        print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
-    print(" - Source: {}\n".format(response.content_uri))
+        print(f"    - {KNOWLEDGE_TYPES[knowledge_type]}")
+    print(f" - Source: {response.content_uri}\n")
     return response
 
 
@@ -162,9 +162,9 @@ def delete_document(project_id, knowledge_base_id, document_id):
     document_path = client.document_path(project_id, knowledge_base_id, document_id)
 
     response = client.delete_document(name=document_path)
-    print("operation running:\n {}".format(response.operation))
+    print(f"operation running:\n {response.operation}")
     print("Waiting for results...")
-    print("Done.\n {}".format(response.result()))
+    print(f"Done.\n {response.result()}")
 
 
 # [END dialogflow_delete_document]]
@@ -194,7 +194,7 @@ if __name__ == "__main__":
         "--display-name",
         help="A name of the Document, mainly used for display purpose, "
         "can not be used to identify the Document.",
-        default=str(""),
+        default="",
     )
     create_parser.add_argument(
         "--mime-type",

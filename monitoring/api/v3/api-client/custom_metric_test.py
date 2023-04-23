@@ -41,7 +41,7 @@ from custom_metric import write_timeseries_value
 
 
 PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-PROJECT_RESOURCE = "projects/{}".format(PROJECT)
+PROJECT_RESOURCE = f"projects/{PROJECT}"
 
 """ Custom metric domain for all custom metrics"""
 CUSTOM_METRIC_DOMAIN = "custom.googleapis.com"

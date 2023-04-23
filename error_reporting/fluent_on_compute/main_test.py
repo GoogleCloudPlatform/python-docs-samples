@@ -15,7 +15,7 @@
 #
 # All rights reserved.
 
-import mock
+from unittest import mock
 
 import main
 

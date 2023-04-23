@@ -44,7 +44,7 @@ def detect_intent_stream(project_id, session_id, audio_file_path, language_code)
     sample_rate_hertz = 16000
 
     session_path = session_client.session_path(project_id, session_id)
-    print("Session path: {}\n".format(session_path))
+    print(f"Session path: {session_path}\n")
 
     def request_generator(audio_config, audio_file_path):
         query_input = dialogflow.QueryInput(audio_config=audio_config)
@@ -87,13 +87,13 @@ def detect_intent_stream(project_id, session_id, audio_file_path, language_code)
     query_result = response.query_result
 
     print("=" * 20)
-    print("Query text: {}".format(query_result.query_text))
+    print(f"Query text: {query_result.query_text}")
     print(
         "Detected intent: {} (confidence: {})\n".format(
             query_result.intent.display_name, query_result.intent_detection_confidence
         )
     )
-    print("Fulfillment text: {}\n".format(query_result.fulfillment_text))
+    print(f"Fulfillment text: {query_result.fulfillment_text}\n")
 
 
 # [END dialogflow_detect_intent_streaming]

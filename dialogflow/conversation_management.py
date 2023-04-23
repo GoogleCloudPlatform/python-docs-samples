@@ -39,9 +39,9 @@ def create_conversation(project_id, conversation_profile_id):
         parent=project_path, conversation=conversation
     )
 
-    print("Life Cycle State: {}".format(response.lifecycle_state))
-    print("Conversation Profile Name: {}".format(response.conversation_profile))
-    print("Name: {}".format(response.name))
+    print(f"Life Cycle State: {response.lifecycle_state}")
+    print(f"Conversation Profile Name: {response.conversation_profile}")
+    print(f"Name: {response.name}")
     return response
 
 
@@ -61,9 +61,9 @@ def get_conversation(project_id, conversation_id):
 
     response = client.get_conversation(name=conversation_path)
 
-    print("Life Cycle State: {}".format(response.lifecycle_state))
-    print("Conversation Profile Name: {}".format(response.conversation_profile))
-    print("Name: {}".format(response.name))
+    print(f"Life Cycle State: {response.lifecycle_state}")
+    print(f"Conversation Profile Name: {response.conversation_profile}")
+    print(f"Name: {response.name}")
     return response
 
 
@@ -82,9 +82,9 @@ def complete_conversation(project_id, conversation_id):
     conversation_path = client.conversation_path(project_id, conversation_id)
     conversation = client.complete_conversation(name=conversation_path)
     print("Completed Conversation.")
-    print("Life Cycle State: {}".format(conversation.lifecycle_state))
-    print("Conversation Profile Name: {}".format(conversation.conversation_profile))
-    print("Name: {}".format(conversation.name))
+    print(f"Life Cycle State: {conversation.lifecycle_state}")
+    print(f"Conversation Profile Name: {conversation.conversation_profile}")
+    print(f"Name: {conversation.name}")
     return conversation
 
 

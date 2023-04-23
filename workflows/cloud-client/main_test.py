@@ -27,7 +27,7 @@ def test_workflow_execution():
     assert PROJECT != ""
 
     if not workflow_exists():
-        workflow_file = open("myFirstWorkflow.workflows.yaml", "r").read()
+        workflow_file = open("myFirstWorkflow.workflows.yaml").read()
 
         workflows_client = workflows_v1beta.WorkflowsClient()
         workflows_client.create_workflow(request={

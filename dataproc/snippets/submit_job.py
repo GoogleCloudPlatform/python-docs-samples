@@ -36,7 +36,7 @@ from google.cloud import storage
 def submit_job(project_id, region, cluster_name):
     # Create the job client.
     job_client = dataproc.JobControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(region)}
+        client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
 
     # Create the job config. 'main_jar_file_uri' can also be a

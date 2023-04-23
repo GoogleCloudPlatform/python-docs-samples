@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
 
 import os
 
@@ -28,7 +27,7 @@ def test_create_conversation_profile(capsys):
     conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" not in out
 
     # Create a conversation profile.
     conversation_profile_management.create_conversation_profile_article_faq(
@@ -37,7 +36,7 @@ def test_create_conversation_profile(capsys):
         article_suggestion_knowledge_base_id="abc",
     )
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" in out
 
     conversation_profile_id = out.split("conversationProfiles/")[1].rstrip()
 
@@ -45,7 +44,7 @@ def test_create_conversation_profile(capsys):
     conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" in out
 
     # Get the conversation profile.
     conversation_profile_management.get_conversation_profile(
@@ -53,7 +52,7 @@ def test_create_conversation_profile(capsys):
     )
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" in out
 
     # Delete the conversation profile.
     conversation_profile_management.delete_conversation_profile(
@@ -64,4 +63,4 @@ def test_create_conversation_profile(capsys):
     conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
     out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out
+    assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" not in out

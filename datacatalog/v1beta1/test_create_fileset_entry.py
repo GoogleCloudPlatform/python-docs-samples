@@ -27,4 +27,4 @@ def test_create_fileset_entry(capsys, client, random_entry_name):
 
     create_fileset_entry.create_fileset_entry(client, entry_group_name, entry_id)
     out, err = capsys.readouterr()
-    assert "Created entry {}".format(random_entry_name) in out
+    assert f"Created entry {random_entry_name}" in out

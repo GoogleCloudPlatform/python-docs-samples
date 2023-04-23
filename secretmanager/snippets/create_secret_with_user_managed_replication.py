@@ -50,7 +50,7 @@ def create_ummr_secret(project_id, secret_id, locations):
     )
 
     # Print the new secret name.
-    print("Created secret: {}".format(response.name))
+    print(f"Created secret: {response.name}")
 
     return response
 

@@ -32,7 +32,7 @@ def synthesize_text_file(text_file):
 
     client = texttospeech.TextToSpeechClient()
 
-    with open(text_file, "r") as f:
+    with open(text_file) as f:
         text = f.read()
         input_text = texttospeech.SynthesisInput(text=text)
 
@@ -70,7 +70,7 @@ def synthesize_ssml_file(ssml_file):
 
     client = texttospeech.TextToSpeechClient()
 
-    with open(ssml_file, "r") as f:
+    with open(ssml_file) as f:
         ssml = f.read()
         input_text = texttospeech.SynthesisInput(ssml=ssml)
 

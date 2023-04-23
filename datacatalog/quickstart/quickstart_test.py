@@ -30,6 +30,6 @@ def test_quickstart(
     )
     quickstart.quickstart(override_values)
     out, err = capsys.readouterr()
-    assert "Created template: {}".format(tag_template_name) in out
+    assert f"Created template: {tag_template_name}" in out
     assert "Created tag:" in out
     client.delete_tag_template(name=tag_template_name, force=True)

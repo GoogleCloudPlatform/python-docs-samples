@@ -37,7 +37,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
@@ -60,8 +60,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
 
     def requests(config, audio):
         yield config
-        for message in audio:
-            yield message
+        yield from audio
 
     # Transcribes the audio into text
     responses_iterator = client.streaming_recognize(
@@ -71,7 +70,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
     for response in responses_iterator:
         responses.append(response)
         for result in response.results:
-            print("Transcript: {}".format(result.alternatives[0].transcript))
+            print(f"Transcript: {result.alternatives[0].transcript}")
 
     return responses
 

@@ -13,7 +13,7 @@
 
 import os
 
-import mock
+from unittest import mock
 
 import access_token
 

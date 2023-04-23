@@ -152,7 +152,7 @@ def run_tensorflow(
     patch_size: int = PATCH_SIZE,
     max_requests: int = MAX_REQUESTS,
     polygons: list[list[tuple[float, float]]] = WORLD_POLYGONS,
-    beam_args: Optional[List[str]] = None,
+    beam_args: list[str] | None = None,
 ) -> None:
     """Runs an Apache Beam pipeline to create a dataset.
 

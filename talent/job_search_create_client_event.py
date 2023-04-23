@@ -38,13 +38,13 @@ def create_client_event(project_id, tenant_id, request_id, event_id):
     # request_id = '[request_id from ResponseMetadata]'
     # event_id = '[Set this to a unique identifier]'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(request_id, six.binary_type):
+    if isinstance(request_id, bytes):
         request_id = request_id.decode("utf-8")
-    if isinstance(event_id, six.binary_type):
+    if isinstance(event_id, bytes):
         event_id = event_id.decode("utf-8")
     parent = f"projects/{project_id}/tenants/{tenant_id}"
 

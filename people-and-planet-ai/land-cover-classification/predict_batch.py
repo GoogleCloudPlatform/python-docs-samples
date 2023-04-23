@@ -88,7 +88,7 @@ def run_tensorflow(
     predictions_path: str,
     patch_size: int = PATCH_SIZE,
     max_requests: int = MAX_REQUESTS,
-    beam_args: Optional[List[str]] = None,
+    beam_args: list[str] | None = None,
 ) -> None:
     """Runs an Apache Beam pipeline to do batch predictions.
 
@@ -114,7 +114,7 @@ def run_tensorflow(
             self,
             batch: Sequence[np.ndarray],
             model: tf.keras.Model,
-            inference_args: Optional[dict] = None,
+            inference_args: dict | None = None,
         ) -> Iterable[np.ndarray]:
             probabilities = model.predict(np.stack(batch))
             predictions = probabilities.argmax(axis=-1).astype(np.uint8)

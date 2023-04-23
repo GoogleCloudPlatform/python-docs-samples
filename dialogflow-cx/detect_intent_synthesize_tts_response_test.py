@@ -14,7 +14,6 @@
 
 """Tests for detect_intent_with_sentiment_analysis.py"""
 
-from __future__ import absolute_import
 
 import os
 

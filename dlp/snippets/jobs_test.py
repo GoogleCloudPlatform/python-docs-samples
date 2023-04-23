@@ -24,7 +24,7 @@ TEST_COLUMN_NAME = "zip_code"
 TEST_TABLE_PROJECT_ID = "bigquery-public-data"
 TEST_DATASET_ID = "san_francisco"
 TEST_TABLE_ID = "bikeshare_trips"
-test_job_id = "test-job-{}".format(uuid.uuid4())
+test_job_id = f"test-job-{uuid.uuid4()}"
 
 
 @pytest.fixture(scope="module")

@@ -58,9 +58,9 @@ def predict(
     print("Prediction results:")
     for result in response.payload:
         print(
-            "Predicted class name: {}".format(result.tables.value)
+            f"Predicted class name: {result.tables.value}"
         )
-        print("Predicted class score: {}".format(result.tables.score))
+        print(f"Predicted class score: {result.tables.score}")
 
         if feature_importance:
             # get features of top importance
@@ -166,7 +166,7 @@ def batch_predict(
     # or block the thread polling for the operation's results:
     response.result()
 
-    print("Batch prediction complete.\n{}".format(response.metadata))
+    print(f"Batch prediction complete.\n{response.metadata}")
 
     # [END automl_tables_batch_predict]
 

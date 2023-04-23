@@ -34,6 +34,6 @@ def get_transfer_job_with_retries(project_id, job_name, retries):
     print(
         "Fetched transfer job: "
         + transferJob.get("name")
-        + " using {} retries".format(retries)
+        + f" using {retries} retries"
     )
 # [END storagetransfer_create_retry_handler_apiary]

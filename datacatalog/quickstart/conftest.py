@@ -64,7 +64,7 @@ def dataset_id(bigquery_client):
 @pytest.fixture
 def table_id(bigquery_client, project_id, dataset_id):
     table_id = f"python_data_catalog_sample_{temp_suffix()}"
-    table = bigquery.Table("{}.{}.{}".format(project_id, dataset_id, table_id))
+    table = bigquery.Table(f"{project_id}.{dataset_id}.{table_id}")
     table = bigquery_client.create_table(table)
     yield table.table_id
     bigquery_client.delete_table(table, not_found_ok=True)

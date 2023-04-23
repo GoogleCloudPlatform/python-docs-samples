@@ -53,12 +53,12 @@ def localize_objects(path):
     objects = client.object_localization(
         image=image).localized_object_annotations
 
-    print('Number of objects found: {}'.format(len(objects)))
+    print(f'Number of objects found: {len(objects)}')
     for object_ in objects:
-        print('\n{} (confidence: {})'.format(object_.name, object_.score))
+        print(f'\n{object_.name} (confidence: {object_.score})')
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
-            print(' - ({}, {})'.format(vertex.x, vertex.y))
+            print(f' - ({vertex.x}, {vertex.y})')
 # [END vision_localize_objects_beta]
 
 
@@ -78,12 +78,12 @@ def localize_objects_uri(uri):
     objects = client.object_localization(
         image=image).localized_object_annotations
 
-    print('Number of objects found: {}'.format(len(objects)))
+    print(f'Number of objects found: {len(objects)}')
     for object_ in objects:
-        print('\n{} (confidence: {})'.format(object_.name, object_.score))
+        print(f'\n{object_.name} (confidence: {object_.score})')
         print('Normalized bounding polygon vertices: ')
         for vertex in object_.bounding_poly.normalized_vertices:
-            print(' - ({}, {})'.format(vertex.x, vertex.y))
+            print(f' - ({vertex.x}, {vertex.y})')
 # [END vision_localize_objects_gcs_beta]
 
 
@@ -97,7 +97,7 @@ def detect_handwritten_ocr(path):
     from google.cloud import vision_v1p3beta1 as vision
     client = vision.ImageAnnotatorClient()
 
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -111,10 +111,10 @@ def detect_handwritten_ocr(path):
     response = client.document_text_detection(image=image,
                                               image_context=image_context)
 
-    print('Full Text: {}'.format(response.full_text_annotation.text))
+    print(f'Full Text: {response.full_text_annotation.text}')
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            print('\nBlock confidence: {}\n'.format(block.confidence))
+            print(f'\nBlock confidence: {block.confidence}\n')
 
             for paragraph in block.paragraphs:
                 print('Paragraph confidence: {}'.format(
@@ -161,10 +161,10 @@ def detect_handwritten_ocr_uri(uri):
     response = client.document_text_detection(image=image,
                                               image_context=image_context)
 
-    print('Full Text: {}'.format(response.full_text_annotation.text))
+    print(f'Full Text: {response.full_text_annotation.text}')
     for page in response.full_text_annotation.pages:
         for block in page.blocks:
-            print('\nBlock confidence: {}\n'.format(block.confidence))
+            print(f'\nBlock confidence: {block.confidence}\n')
 
             for paragraph in block.paragraphs:
                 print('Paragraph confidence: {}'.format(
@@ -226,16 +226,16 @@ def detect_batch_annotate_files(path):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print(u'\nBlock confidence: {}\n'.format(block.confidence))
+                print(f'\nBlock confidence: {block.confidence}\n')
                 for par in block.paragraphs:
-                    print(u'\tParagraph confidence: {}'.format(par.confidence))
+                    print(f'\tParagraph confidence: {par.confidence}')
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print(u'\t\tWord text: {} (confidence: {})'.format(
+                        print('\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_beta]
 
@@ -274,16 +274,16 @@ def detect_batch_annotate_files_uri(gcs_uri):
     for image_response in response.responses[0].responses:
         for page in image_response.full_text_annotation.pages:
             for block in page.blocks:
-                print(u'\nBlock confidence: {}\n'.format(block.confidence))
+                print(f'\nBlock confidence: {block.confidence}\n')
                 for par in block.paragraphs:
-                    print(u'\tParagraph confidence: {}'.format(par.confidence))
+                    print(f'\tParagraph confidence: {par.confidence}')
                     for word in par.words:
                         symbol_texts = [symbol.text for symbol in word.symbols]
                         word_text = ''.join(symbol_texts)
-                        print(u'\t\tWord text: {} (confidence: {})'.format(
+                        print('\t\tWord text: {} (confidence: {})'.format(
                             word_text, word.confidence))
                         for symbol in word.symbols:
-                            print(u'\t\t\tSymbol: {} (confidence: {})'.format(
+                            print('\t\t\tSymbol: {} (confidence: {})'.format(
                                 symbol.text, symbol.confidence))
 # [END vision_batch_annotate_files_gcs_beta]
 
@@ -350,7 +350,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     response = vision.BatchAnnotateImagesResponse.from_json(json_string)
 
     # Prints the actual response for the first annotate image request.
-    print(u'The annotation response for the first request: {}'.format(
+    print('The annotation response for the first request: {}'.format(
         response.responses[0]))
 # [END vision_async_batch_annotate_images_beta]
 

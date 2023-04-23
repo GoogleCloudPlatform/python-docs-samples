@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import absolute_import
 
 import os
 import uuid
@@ -20,8 +19,8 @@ import uuid
 from detect_intent_stream import detect_intent_stream
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-SESSION_ID = "test_{}".format(uuid.uuid4())
-AUDIO_FILE_PATH = "{0}/resources/book_a_room.wav".format(
+SESSION_ID = f"test_{uuid.uuid4()}"
+AUDIO_FILE_PATH = "{}/resources/book_a_room.wav".format(
     os.path.realpath(os.path.dirname(__file__)),
 )
 

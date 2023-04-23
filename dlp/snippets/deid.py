@@ -14,7 +14,6 @@
 
 """Uses of the Data Loss Prevention API for deidentifying sensitive data."""
 
-from __future__ import print_function
 
 import argparse
 from typing import List
@@ -786,7 +785,7 @@ def deidentify_with_date_shift(
     from datetime import datetime
 
     f = []
-    with open(input_csv_file, "r") as csvfile:
+    with open(input_csv_file) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
             f.append(row)
@@ -859,7 +858,7 @@ def deidentify_with_date_shift(
         return header.name
 
     def write_data(data):
-        return data.string_value or "%s/%s/%s" % (
+        return data.string_value or "{}/{}/{}".format(
             data.date_value.month,
             data.date_value.day,
             data.date_value.year,
@@ -881,7 +880,7 @@ def deidentify_with_date_shift(
         for row in response.item.table.rows:
             write_file.writerow(map(write_data, row.values))
     # Print status
-    print("Successfully saved date-shift output to {}".format(output_csv_file))
+    print(f"Successfully saved date-shift output to {output_csv_file}")
 
 
 # [END dlp_deidentify_date_shift]
@@ -1205,7 +1204,7 @@ def deidentify_table_bucketing(
     })
 
     # Print the results.
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
     # Return the response.
     return response.item.table
@@ -1341,7 +1340,7 @@ def deidentify_table_condition_replace_with_info_types(
             "inspect_config": inspect_config
         })
 
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
     return response.item.table
 
@@ -1473,7 +1472,7 @@ def deidentify_table_condition_masking(
         })
 
     # Print the result
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
     # Return the response
     return response.item.table

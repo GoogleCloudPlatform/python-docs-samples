@@ -138,7 +138,7 @@ def sign_token(
         header_pairs = []
         for each in headers:
             header_names.append(each["name"])
-            header_pairs.append("%s=%s" % (each["name"], each["value"]))
+            header_pairs.append("{}={}".format(each["name"], each["value"]))
         tokens.append(f"Headers={','.join(header_names)}")
         to_sign.append(f"Headers={','.join(header_pairs)}")
 

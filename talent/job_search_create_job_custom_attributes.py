@@ -29,11 +29,11 @@ def create_job(project_id, tenant_id, company_id, requisition_id):
     # requisition_id = 'Job requisition ID, aka Posting ID. Unique per job.'
     # language_code = 'en-US'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(company_id, six.binary_type):
+    if isinstance(company_id, bytes):
         company_id = company_id.decode("utf-8")
 
     # Custom attribute can be string or numeric value,

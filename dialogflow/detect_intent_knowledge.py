@@ -46,7 +46,7 @@ def detect_intent_knowledge(
     session_client = dialogflow.SessionsClient()
 
     session_path = session_client.session_path(project_id, session_id)
-    print("Session path: {}\n".format(session_path))
+    print(f"Session path: {session_path}\n")
 
     for text in texts:
         text_input = dialogflow.TextInput(text=text, language_code=language_code)
@@ -67,19 +67,19 @@ def detect_intent_knowledge(
         response = session_client.detect_intent(request=request)
 
         print("=" * 20)
-        print("Query text: {}".format(response.query_result.query_text))
+        print(f"Query text: {response.query_result.query_text}")
         print(
             "Detected intent: {} (confidence: {})\n".format(
                 response.query_result.intent.display_name,
                 response.query_result.intent_detection_confidence,
             )
         )
-        print("Fulfillment text: {}\n".format(response.query_result.fulfillment_text))
+        print(f"Fulfillment text: {response.query_result.fulfillment_text}\n")
         print("Knowledge results:")
         knowledge_answers = response.query_result.knowledge_answers
         for answers in knowledge_answers.answers:
-            print(" - Answer: {}".format(answers.answer))
-            print(" - Confidence: {}".format(answers.match_confidence))
+            print(f" - Answer: {answers.answer}")
+            print(f" - Confidence: {answers.match_confidence}")
 
 
 # [END dialogflow_detect_intent_knowledge]

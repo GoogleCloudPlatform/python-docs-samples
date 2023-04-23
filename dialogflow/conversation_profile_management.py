@@ -29,8 +29,8 @@ def list_conversation_profiles(project_id):
     project_path = client.common_project_path(project_id)
     response = client.list_conversation_profiles(parent=project_path)
     for conversation_profile in response:
-        print("Display Name: {}".format(conversation_profile.display_name))
-        print("Name: {}".format(conversation_profile.name))
+        print(f"Display Name: {conversation_profile.display_name}")
+        print(f"Name: {conversation_profile.name}")
     return response
 
 
@@ -106,9 +106,9 @@ def create_conversation_profile_article_faq(
     )
 
     print("Conversation Profile created:")
-    print("Display Name: {}".format(response.display_name))
+    print(f"Display Name: {response.display_name}")
     # Put Name is the last to make it easier to retrieve.
-    print("Name: {}".format(response.name))
+    print(f"Name: {response.name}")
     return response
 
 
@@ -158,9 +158,9 @@ def create_conversation_profile_smart_reply(
     )
 
     print("Conversation Profile created:")
-    print("Display Name: {}".format(response.display_name))
+    print(f"Display Name: {response.display_name}")
     # Put Name is the last to make it easier to retrieve.
-    print("Name: {}".format(response.name))
+    print(f"Name: {response.name}")
     return response
 
 
@@ -182,8 +182,8 @@ def get_conversation_profile(project_id, conversation_profile_id):
     response = client.get_conversation_profile(name=conversation_profile_path)
 
     print("Got conversation profile:")
-    print("Display Name: {}".format(response.display_name))
-    print("Name: {}".format(response.name))
+    print(f"Display Name: {response.display_name}")
+    print(f"Name: {response.name}")
     return response
 
 

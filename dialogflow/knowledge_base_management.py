@@ -50,8 +50,8 @@ def create_knowledge_base(project_id, display_name):
     )
 
     print("Knowledge Base created:\n")
-    print("Display Name: {}\n".format(response.display_name))
-    print("Name: {}\n".format(response.name))
+    print(f"Display Name: {response.display_name}\n")
+    print(f"Name: {response.name}\n")
 
 
 # [END dialogflow_create_knowledge_base]
@@ -72,8 +72,8 @@ def get_knowledge_base(project_id, knowledge_base_id):
     response = client.get_knowledge_base(name=knowledge_base_path)
 
     print("Got Knowledge Base:")
-    print(" - Display Name: {}".format(response.display_name))
-    print(" - Name: {}".format(response.name))
+    print(f" - Display Name: {response.display_name}")
+    print(f" - Name: {response.name}")
     return response
 
 
@@ -117,7 +117,7 @@ if __name__ == "__main__":
         "--display-name",
         help="A name of the Knowledge base, used for display purpose, "
         "can not be used to identify the Knowledge base.",
-        default=str(""),
+        default="",
     )
 
     get_parser = subparsers.add_parser("get", help="Get a Knowledge base by its id.")

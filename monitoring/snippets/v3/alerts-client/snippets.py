@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 
 import argparse
 import json
@@ -158,14 +157,14 @@ def delete_notification_channels(project_name, channel_ids, force=None):
 
     channel_client = monitoring_v3.NotificationChannelServiceClient()
     for channel_id in channel_ids:
-        channel_name = "{}/notificationChannels/{}".format(project_name, channel_id)
+        channel_name = f"{project_name}/notificationChannels/{channel_id}"
         try:
             channel_client.delete_notification_channel(name=channel_name, force=force)
-            print("Channel {} deleted".format(channel_name))
+            print(f"Channel {channel_name} deleted")
         except ValueError:
             print("The parameters are invalid")
         except Exception as e:
-            print("API call failed: {}".format(e))
+            print(f"API call failed: {e}")
 
 
 # [END monitoring_alert_delete_channel]
@@ -189,7 +188,7 @@ def backup(project_name, backup_filename):
         "policies": list(alert_client.list_alert_policies(name=project_name)),
         "channels": list(channel_client.list_notification_channels(name=project_name)),
     }
-    json.dump(record, open(backup_filename, "wt"), cls=ProtoEncoder, indent=2)
+    json.dump(record, open(backup_filename, "w"), cls=ProtoEncoder, indent=2)
     print(
         "Backed up alert policies and notification channels to {}.".format(
             backup_filename
@@ -204,7 +203,7 @@ class ProtoEncoder(json.JSONEncoder):
         if type(obj) in (monitoring_v3.AlertPolicy, monitoring_v3.NotificationChannel):
             text = proto.Message.to_json(obj)
             return json.loads(text)
-        return super(ProtoEncoder, self).default(obj)
+        return super().default(obj)
 
 
 # [END monitoring_alert_backup_policies]
@@ -229,7 +228,7 @@ def restore(project_name, backup_filename):
             backup_filename
         )
     )
-    record = json.load(open(backup_filename, "rt"))
+    record = json.load(open(backup_filename))
     is_same_project = project_name == record["project_name"]
     # Convert dicts to AlertPolicies.
     policies_json = [json.dumps(policy) for policy in record["policies"]]

@@ -42,7 +42,7 @@ def client():
 
 @pytest.mark.flaky
 def test_list_monitored_resources(client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
+    PROJECT_RESOURCE = f"projects/{PROJECT}"
     list_resources.list_monitored_resource_descriptors(
         client, PROJECT_RESOURCE)
     stdout, _ = capsys.readouterr()
@@ -53,20 +53,20 @@ def test_list_monitored_resources(client, capsys):
 
 @pytest.mark.flaky
 def test_list_metrics(client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
+    PROJECT_RESOURCE = f"projects/{PROJECT}"
     list_resources.list_metric_descriptors(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
     regex = re.compile(
-        u'Delta', re.I)
+        'Delta', re.I)
     assert regex.search(stdout) is not None
 
 
 @pytest.mark.flaky
 def test_list_timeseries(client, capsys):
-    PROJECT_RESOURCE = "projects/{}".format(PROJECT)
+    PROJECT_RESOURCE = f"projects/{PROJECT}"
     list_resources.list_timeseries(
         client, PROJECT_RESOURCE, METRIC)
     stdout, _ = capsys.readouterr()
-    regex = re.compile(u'list_timeseries response:\n', re.I)
+    regex = re.compile('list_timeseries response:\n', re.I)
     assert regex.search(stdout) is not None

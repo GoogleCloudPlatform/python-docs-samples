@@ -46,7 +46,7 @@ def check_latest_transfer_operation(project_id, job_name):
         print(
             "The latest operation for job"
             + job_name
-            + " is: {}".format(json.dumps(result, indent=4, sort_keys=True))
+            + f" is: {json.dumps(result, indent=4, sort_keys=True)}"
         )
 
     else:

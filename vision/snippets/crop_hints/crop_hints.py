@@ -35,7 +35,7 @@ def get_crop_hint(path):
     """Detect crop hints on a single image and return the first result."""
     client = vision.ImageAnnotatorClient()
 
-    with io.open(path, 'rb') as image_file:
+    with open(path, 'rb') as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)

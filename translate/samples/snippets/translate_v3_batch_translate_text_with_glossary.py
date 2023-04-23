@@ -68,8 +68,8 @@ def batch_translate_text_with_glossary(
     print("Waiting for operation to complete...")
     response = operation.result(timeout)
 
-    print("Total Characters: {}".format(response.total_characters))
-    print("Translated Characters: {}".format(response.translated_characters))
+    print(f"Total Characters: {response.total_characters}")
+    print(f"Translated Characters: {response.translated_characters}")
 
 
 # [END translate_v3_batch_translate_text_with_glossary]

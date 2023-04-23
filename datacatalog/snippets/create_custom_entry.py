@@ -52,7 +52,7 @@ def create_custom_entry(override_values):
         entry_group=entry_group_obj,
     )
     entry_group_name = entry_group.name
-    print("Created entry group: {}".format(entry_group_name))
+    print(f"Created entry group: {entry_group_name}")
 
     # Create an Entry.
     entry = datacatalog_v1.types.Entry()
@@ -84,5 +84,5 @@ def create_custom_entry(override_values):
     entry = datacatalog.create_entry(
         parent=entry_group_name, entry_id=entry_id, entry=entry
     )
-    print("Created entry: {}".format(entry.name))
+    print(f"Created entry: {entry.name}")
     # [END data_catalog_create_custom_entry]

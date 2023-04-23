@@ -14,7 +14,7 @@
 
 import json
 
-import mock
+from unittest import mock
 import requests
 
 import detect_legacy_usage

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 
 from datetime import datetime
 import random
@@ -157,19 +156,19 @@ def test_enable_alert_policies(capsys, pochan):
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, True, "name='{}'".format(pochan.alert_policy.name))
+    snippets.enable_alert_policies(pochan.project_name, True, f"name='{pochan.alert_policy.name}'")
     out, _ = capsys.readouterr()
     assert (
-        "Enabled {0}".format(pochan.project_name) in out
-        or "{} is already enabled".format(pochan.alert_policy.name) in out
+        f"Enabled {pochan.project_name}" in out
+        or f"{pochan.alert_policy.name} is already enabled" in out
     )
 
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, False, "name='{}'".format(pochan.alert_policy.name))
+    snippets.enable_alert_policies(pochan.project_name, False, f"name='{pochan.alert_policy.name}'")
     out, _ = capsys.readouterr()
     assert (
-        "Disabled {}".format(pochan.project_name) in out
-        or "{} is already disabled".format(pochan.alert_policy.name) in out
+        f"Disabled {pochan.project_name}" in out
+        or f"{pochan.alert_policy.name} is already disabled" in out
     )
 
 
@@ -188,7 +187,7 @@ def test_replace_channels(capsys, pochan):
         pochan.project_name, alert_policy_id, [notification_channel_id]
     )
     out, _ = capsys.readouterr()
-    assert "Updated {0}".format(pochan.alert_policy.name) in out
+    assert f"Updated {pochan.alert_policy.name}" in out
 
 
 @pytest.mark.flaky(rerun_filter=delay_on_aborted, max_runs=5)
@@ -206,9 +205,9 @@ def test_backup_and_restore(capsys, pochan):
     time.sleep(2)
     snippets.restore(pochan.project_name, "backup.json")
     out, _ = capsys.readouterr()
-    assert "Updated {0}".format(pochan.alert_policy.name) in out
+    assert f"Updated {pochan.alert_policy.name}" in out
     assert (
-        "Updating channel {0}".format(pochan.notification_channel.display_name) in out
+        f"Updating channel {pochan.notification_channel.display_name}" in out
     )
 
 
@@ -226,5 +225,5 @@ def test_delete_channels(capsys, pochan):
         pochan.project_name, [notification_channel_id], force=True
     )
     out, _ = capsys.readouterr()
-    assert "{0} deleted".format(notification_channel_id) in out
+    assert f"{notification_channel_id} deleted" in out
     pochan.notification_channel.name = ""  # So teardown is not tried

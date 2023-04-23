@@ -13,21 +13,21 @@
 # limitations under the License.
 
 import flask
-import mock
+from unittest import mock
 
 import main
 
 
-class Response(object):
-    def __init__(self, text=u''):
+class Response:
+    def __init__(self, text=''):
         self.text = text
 
 
 @mock.patch("main.requests")
 def test_functions_bearer_token_should_run(requestsMock):
     requestsMock.get.side_effect = [
-        Response(u'some-token'),
-        Response(u'function-done')
+        Response('some-token'),
+        Response('function-done')
     ]
 
     res = main.calling_function(flask.request)
