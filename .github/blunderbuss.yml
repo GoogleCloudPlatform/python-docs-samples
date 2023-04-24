@@ -15,15 +15,24 @@
 assign_issues_by:
 - labels:
   - 'api: appengine'
+  - 'api: cloudbuild'
+  - 'api: cloudscheduler'
+  - 'api: cloudtasks'
+  - 'api: containeranalysis'
   - 'api: eventarc'
   - 'api: functions'
   - 'api: run'
+  - 'api: workflows'
   to:
-  - GoogleCloudPlatform/aap-dpes
+  - GoogleCloudPlatform/torus-dpe
 - labels:
   - 'api: auth'
   to:
   - arithmetic1728
+- labels:
+  - 'api: batch'
+  to:
+  - m-strzelczyk
 - labels:
   - 'api: bigquery'
   to:
@@ -48,6 +57,10 @@ assign_issues_by:
   to:
   - m-strzelczyk
 - labels:
+  - 'api: container'
+  to:
+  - GoogleCloudPlatform/dee-platform-ops
+- labels:
   - 'api: datascienceonramp'
   to:
   - leahecole
@@ -66,10 +79,25 @@ assign_issues_by:
   to:
   - noerog
 - labels:
+  - 'api: iam'
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
   - 'api: iot'
   - 'api: cloudiot'
   to:
   - GoogleCloudPlatform/api-iot
+- labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
+  - 'api: language'
+  - 'api: texttospeech'
+  - 'api: retail'
+  - 'api: dialogflow'
+  - 'api: speech'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
 - labels:
   - 'api: ml'
   to:
@@ -79,10 +107,22 @@ assign_issues_by:
   to:
   - alixhami
 - labels:
+  - 'api: optimization'
+  to:
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
+  - 'api: people-and-planet-ai'
+  to:
+  - davidcavazos
+- labels:
   - 'api: pubsub'
   - 'api: pubsublite'
   to:
   - anguillanneuf
+- labels:
+  - 'api: securitycenter'
+  to:
+  - GoogleCloudPlatform/dee-infra
 - labels:
   - 'api: spanner'
   to:
@@ -100,6 +140,52 @@ assign_issues_by:
   - 'api: translate'
   to:
   - nicain
+- labels:
+  - 'api: datalabeling'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+  - ivanmkc
+- labels:
+  - 'api: logging'
+  - 'api: monitoring'
+  - 'api: trace'
+  to:
+  - GoogleCloudPlatform/dee-observability
+- labels:
+  - 'api: kms'
+  - 'api: cloudkms'
+  - 'api: secretmanager'
+  - 'api: privateca'
+  - 'api: recaptchaenterprise'  
+  to:
+  - GoogleCloudPlatform/dee-infra
+- labels:
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/ml-apis
+- labels:
+  - 'api: bigtable'
+  - 'api: datastore'
+  - 'api: firestore'
+  to:
+  - GoogleCloudPlatform/cloud-native-db-dpes
+- labels:
+  - 'api: asset'
+  - 'api: datacatalog'
+  - 'api: dataproc'
+  - 'api: clouderrorreporting'
+  - 'api: talent'
+  - 'api: vision'
+  to:
+  - GoogleCloudPlatform/python-samples-reviewers
+- labels:
+  - 'api: dlp'
+  to:
+  - GoogleCloudPlatform/googleapis-dlp
+- labels:
+  - 'api: functions'
+  to:
+  - GoogleCloudPlatform/functions-framework-google
 
 assign_prs_by:
 - labels:
@@ -117,8 +203,28 @@ assign_prs_by:
   - 'api: iot'
   to:
   - GoogleCloudPlatform/api-iot
-
-
+- labels:
+  - 'api: cloudsql'
+  - 'api: cloudtasks'
+  to:
+  - GoogleCloudPlatform/infra-db-dpes
+- labels:
+  - 'api: contentwarehouse'
+  - 'api: enterpriseknowledgegraph'
+  - 'api: documentai'
+  - 'api: retail'
+  - 'api: mediatranslation'
+  to: 
+  - GoogleCloudPlatform/dee-data-ai
+- labels:
+  - 'api: dlp'
+  to:
+  - GoogleCloudPlatform/googleapis-dlp
+- labels:
+  - 'api: functions'
+  to:
+  - GoogleCloudPlatform/functions-framework-google
+  
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 

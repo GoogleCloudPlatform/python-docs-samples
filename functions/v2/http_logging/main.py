@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START functions_structured_logging]
+import logging
+
 import functions_framework
 from google.cloud.logging import Client
 
@@ -27,8 +29,6 @@ def structured_logging(request):
     # https://googleapis.dev/python/logging/latest/handlers-structured-log.html
     cloud_logging_client.setup_logging()
 
-    # Import Python Standard Library
-    import logging
     # Construct log message and additional metadata
     # https://cloud.google.com/run/docs/logging#using-json
     msg = "Hello, world!"

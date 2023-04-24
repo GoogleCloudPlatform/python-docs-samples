@@ -8,7 +8,7 @@
   "pip_requirements": {
     "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
   },
-  "ignorePaths" : ["composer/workflows/constraints.txt", "composer/blog/gcp-tech-blog/data-orchestration-with-composer/constraints.txt", "composer/airflow_1_samples/requirements.txt", "composer/cicd_sample/constraints.txt"],
+  "ignorePaths" : ["composer/**/constraints.txt", "composer/blog/**/constraints.txt", "composer/airflow_1_samples/requirements.txt"],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],

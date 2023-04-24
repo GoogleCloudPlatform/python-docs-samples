@@ -31,7 +31,8 @@ _tmpdir = tempfile.TemporaryDirectory()
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # Skipping for Python 3.9 due to numpy compilation failure.
-    "ignored_versions": ["2.7", "3.9", "3.10"],
+    # Skipping 3.6 and 3.7, they are more out of date
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.9", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
@@ -43,5 +44,6 @@ TEST_CONFIG_OVERRIDE = {
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
+    "pip_version_override": "20.2.4",
     "envs": {"AIRFLOW_HOME": _tmpdir.name},
 }

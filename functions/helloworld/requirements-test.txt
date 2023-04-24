@@ -1,4 +1,4 @@
-functions-framework==3.0.0	
-mock==4.0.3	
-pytest==7.0.1	
+functions-framework==3.3.0
+mock==5.0.2
+pytest==7.0.1
 uuid==1.30

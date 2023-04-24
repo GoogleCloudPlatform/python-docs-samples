@@ -1,0 +1,3 @@
+pytest==7.2.0
+mock==5.0.2
+google-cloud-resource-manager==1.10.0

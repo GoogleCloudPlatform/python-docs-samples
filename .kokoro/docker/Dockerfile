@@ -31,41 +31,41 @@ ENV LANG C.UTF-8
 # Install dependencies.
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    apt-transport-https \
-    build-essential \
-    ca-certificates \
-    curl \
-    dirmngr \
-    git \
-    gcc \
-    gpg-agent \
-    graphviz \
-    libbz2-dev \
-    libdb5.3-dev \
-    libexpat1-dev \
-    libffi-dev \
-    liblzma-dev \
-    libmagickwand-dev \
-    libmemcached-dev \
-    libpython3-dev \
-    libreadline-dev \
-    libsnappy-dev \
-    libssl-dev \
-    libsqlite3-dev \
-    portaudio19-dev \
-    pkg-config \
-    redis-server \
-    software-properties-common \
-    ssh \
-    sudo \
-    systemd \
-    tcl \
-    tcl-dev \
-    tk \
-    tk-dev \
-    uuid-dev \
-    wget \
-    zlib1g-dev \
+  apt-transport-https \
+  build-essential \
+  ca-certificates \
+  curl \
+  dirmngr \
+  git \
+  gcc \
+  gpg-agent \
+  graphviz \
+  libbz2-dev \
+  libdb5.3-dev \
+  libexpat1-dev \
+  libffi-dev \
+  liblzma-dev \
+  libmagickwand-dev \
+  libmemcached-dev \
+  libpython3-dev \
+  libreadline-dev \
+  libsnappy-dev \
+  libssl-dev \
+  libsqlite3-dev \
+  portaudio19-dev \
+  pkg-config \
+  redis-server \
+  software-properties-common \
+  ssh \
+  sudo \
+  systemd \
+  tcl \
+  tcl-dev \
+  tk \
+  tk-dev \
+  uuid-dev \
+  wget \
+  zlib1g-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -75,13 +75,13 @@ RUN apt-get update \
 RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 
 RUN add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
+  "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+  $(lsb_release -cs) \
+  stable"
 
 RUN apt-get update \
   && apt-get install -y --no-install-recommends \
-    docker-ce \
+  docker-ce \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -104,8 +104,8 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list \
   && apt-get update \
   && ACCEPT_EULA=Y apt-get install -y --no-install-recommends \
-    msodbcsql17 \
-    unixodbc-dev \
+  msodbcsql17 \
+  unixodbc-dev \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -114,60 +114,71 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
 COPY fetch_gpg_keys.sh /tmp
 # Install the desired versions of Python.
 RUN set -ex \
-    && export GNUPGHOME="$(mktemp -d)" \
-    && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
-    && /tmp/fetch_gpg_keys.sh \
-    && for PYTHON_VERSION in 2.7.18 3.6.15 3.7.12 3.8.12 3.9.7 3.10.0; do \
-        wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-        && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-        && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
-        && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
-        && mkdir -p /usr/src/python-${PYTHON_VERSION} \
-        && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-        && rm python-${PYTHON_VERSION}.tar.xz \
-        && cd /usr/src/python-${PYTHON_VERSION} \
-        && ./configure \
-            --enable-shared \
-            # This works only on Python 2.7 and throws a warning on every other
-            # version, but seems otherwise harmless.
-            --enable-unicode=ucs4 \
-            --with-system-ffi \
-            --without-ensurepip \
-        && make -j$(nproc) \
-        && make install \
-        && ldconfig \
+  && export GNUPGHOME="$(mktemp -d)" \
+  && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
+  && /tmp/fetch_gpg_keys.sh \
+  && for PYTHON_VERSION in 2.7.18 3.7.16 3.8.16 3.9.16 3.10.9 3.11.1; do \
+  wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
+  && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
+  && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
+  && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
+  && mkdir -p /usr/src/python-${PYTHON_VERSION} \
+  && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
+  && rm python-${PYTHON_VERSION}.tar.xz \
+  && cd /usr/src/python-${PYTHON_VERSION} \
+  && ./configure \
+  --enable-shared \
+  # This works only on Python 2.7 and throws a warning on every other
+  # version, but seems otherwise harmless.
+  --enable-unicode=ucs4 \
+  --with-system-ffi \
+  --without-ensurepip \
+  && make -j$(nproc) \
+  && make install \
+  && ldconfig \
   ; done \
   && rm -rf "${GNUPGHOME}" \
   && rm -rf /usr/src/python* \
   && rm -rf ~/.cache/
 
 
-# Install pip on Python 3.6 only.
+# Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
-    && python3.6 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
+  && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
-  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.6/site-packages")
+  # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.10/site-packages")
   # https://github.com/docker-library/python/pull/143#issuecomment-241032683
-    && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
+  && pip3 install --no-cache-dir --upgrade --force-reinstall "pip==$PYTHON_PIP_VERSION" \
   # then we use "pip list" to ensure we don't have more than one pip version installed
   # https://github.com/docker-library/python/pull/100
-    && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
+  && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
-# Ensure Pip for python3
-RUN python3 /tmp/get-pip.py
+# Ensure Pip for all python3 versions
+RUN python3.11 /tmp/get-pip.py
+RUN python3.9 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip.py
 RUN rm /tmp/get-pip.py
+
+# Test Pip
+RUN python3 -m pip
+RUN python3.7 -m pip
+RUN python3.8 -m pip
+RUN python3.9 -m pip
+RUN python3.10 -m pip
+RUN python3.11 -m pip
 
 # Install "virtualenv", since the vast majority of users of this image
 # will want it.
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 360.0.0
+ENV CLOUD_SDK_VERSION 389.0.0
 # Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.6
+ENV CLOUDSDK_PYTHON python3.10
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
@@ -191,4 +202,21 @@ RUN useradd -d /h -u ${UID} ${USERNAME}
 # Allow nopasswd sudo
 RUN echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-CMD ["python3.6"]
+# Install Chrome.
+RUN curl https://dl-ssl.google.com/linux/linux_signing_key.pub -o /tmp/google.pub \
+  && cat /tmp/google.pub | apt-key add -; rm /tmp/google.pub \
+  && echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' > /etc/apt/sources.list.d/google.list \
+  && mkdir -p /usr/share/desktop-directories \
+  && apt-get -y update && apt-get install -y google-chrome-stable
+
+# Disable the SUID sandbox so that Chrome can launch without being in a privileged container.
+RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /opt/google/chrome/google-chrome \
+  && echo "#!/bin/bash\nexec /opt/google/chrome/google-chrome.real --no-sandbox --disable-setuid-sandbox \"\$@\"" > /opt/google/chrome/google-chrome \
+  && chmod 755 /opt/google/chrome/google-chrome
+
+# Install Chrome Driver.
+RUN mkdir -p /opt/selenium \
+  && curl http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
+  && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver;
+
+CMD ["python3"]

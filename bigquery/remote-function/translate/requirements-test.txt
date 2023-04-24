@@ -1,0 +1,4 @@
+Flask==2.2.2
+functions-framework==3.3.0
+google-cloud-translate==3.11.1
+pytest==7.2.1

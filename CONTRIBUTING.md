@@ -9,7 +9,7 @@ please open an issue for discussion first.
 
 1. Submit an issue describing your proposed change to this repository.
 2. A repo owner will respond to your issue promptly. If you don't see a response within
-   a few days, please ping the owner assignd to your issue.
+   a few days, please ping the owner assigned to your issue.
 3. If your proposed change is accepted, and you haven't already done so, sign a
    Contributor License Agreement (see details above).
 4. Fork this repo, develop and test your code changes. Tests are required for all
@@ -45,4 +45,4 @@ See [AUTHORING_GUIDE.md](AUTHORING_GUIDE.md).
 
 ## Code Reviews
 
-After meeting the above criteria, your code will need to be approved by two reviewers before it can be merged into main. One will be a [CODEOWNER](.github/CODEOWNERS) for the product you are contributing to, and the other will be a repo owner, there to double check for anything that might be detrimental to the overall repo health (things that could cause future tech debt, test flakiness, etc.). Both will automatically be assigned. Some product areas have mulitple folks who can act as the CODEOWNER, and you may be working more closely with a teammate who isn't the automatically assigned reviewer. In that case, it is perfectly fine to manually assign the teammate more familiar with this work as your CODEOWNER reviewer. If you do not hear from your repo owner reviewer within a day (and you know they are not OOO), send them a friendly ping so that you can better understand the review cadence for your PR. All the repo owners are juggling reviews alongside other work, and their velocities can vary, but they are happy to hear from you. If you see that your repo owner reviewer is OOO, you can use the "blunderbuss: assign" label to assign a new reviewer. 
+After meeting the above criteria, your code will need to be approved by two reviewers before it can be merged into main. One will be a [CODEOWNER](.github/CODEOWNERS) for the product you are contributing to, and the other will be a repo owner, there to double check for anything that might be detrimental to the overall repo health (things that could cause future tech debt, test flakiness, etc.). Both will automatically be assigned. Some product areas have multiple folks who can act as the CODEOWNER, and you may be working more closely with a teammate who isn't the automatically assigned reviewer. In that case, it is perfectly fine to manually assign the teammate more familiar with this work as your CODEOWNER reviewer. If you do not hear from your repo owner reviewer within a day (and you know they are not OOO), send them a friendly ping so that you can better understand the review cadence for your PR. All the repo owners are juggling reviews alongside other work, and their velocities can vary, but they are happy to hear from you. If you see that your repo owner reviewer is OOO, you can use the "blunderbuss: assign" label to assign a new reviewer. 

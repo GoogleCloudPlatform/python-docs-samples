@@ -1,0 +1,17 @@
+# Used to generate README.rst
+
+product:
+  name: Google Cloud Media CDN
+  short_name: Cloud Media CDN
+  url: https://cloud.google.com/media-cdn/docs
+  description: >
+    'Google Cloud Media CDN'_ Media CDN is a global edge network for streaming media, backed by
+    Google's global network of edge caches in thousands of locations.
+
+
+samples:
+  - name: Snippets
+    file: snippets.py
+    show_help: true
+
+folder: media-cdn

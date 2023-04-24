@@ -1,5 +1,5 @@
-backoff==1.11.1; python_version < "3.7"
-backoff==2.0.0; python_version >= "3.7"
+backoff==2.2.1; python_version < "3.7"
+backoff==2.2.1; python_version >= "3.7"
 pytest==7.0.1
-google-cloud-storage==2.0.0; python_version < '3.7'
-google-cloud-storage==2.1.0; python_version > '3.6'
+google-cloud-storage==2.8.0; python_version < '3.7'
+google-cloud-storage==2.8.0; python_version > '3.6'

@@ -1,0 +1,5 @@
+Django==3.2.18; python_version<"3.8"
+Django==4.1.7; python_version>"3.7"
+django-environ==0.10.0
+google-cloud-logging==3.5.0
+appengine-python-standard>=0.2.3

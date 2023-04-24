@@ -41,7 +41,7 @@ gsutil cp app.tar gs://"$GCS_BUCKET_NAME"/gce/
 
 # Create an instance
 gcloud compute instances create my-instance \
-    --image-family=debian-9 \
+    --image-family=debian-11 \
     --image-project=debian-cloud \
     --machine-type=g1-small \
     --scopes cloud-platform \

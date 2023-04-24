@@ -1,2 +1,3 @@
-requests_toolbelt==0.9.1
-google-auth==2.6.2
+requests-toolbelt==0.10.1
+google-auth==2.17.3
+google-cloud-pubsub==2.16.0

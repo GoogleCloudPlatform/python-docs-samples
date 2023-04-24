@@ -1,2 +1,3 @@
-google-cloud-aiplatform==1.12.1
-google-cloud-storage==1.44.0
+google-cloud-aiplatform==1.24.0; python_version>'3.7'
+google-cloud-aiplatform==1.20.0; python_version=='3.7'
+google-cloud-storage==2.8.0

@@ -32,27 +32,31 @@ import datetime
 
 # [START composer_notify_failure]
 from airflow import models
+
 # [END composer_notify_failure]
 # [START composer_bash_bq]
 from airflow.operators import bash
+
 # [END composer_bash_bq]
 # [START composer_email]
 from airflow.operators import email
+
 # [END composer_email]
 # [START composer_bigquery]
 from airflow.providers.google.cloud.operators import bigquery
 from airflow.providers.google.cloud.transfers import bigquery_to_gcs
+
 # [END composer_bigquery]
 from airflow.utils import trigger_rule
 
 
-bq_dataset_name = 'airflow_bq_notify_dataset_{{ ds_nodash }}'
-bq_recent_questions_table_id = 'recent_questions'
-bq_most_popular_table_id = 'most_popular'
-gcs_bucket = models.Variable.get('gcs_bucket')
-output_file = f'{gcs_bucket}/recent_questions.csv'
-location = 'US'
-project_id = models.Variable.get('gcp_project')
+bq_dataset_name = "airflow_bq_notify_dataset_{{ ds_nodash }}"
+bq_recent_questions_table_id = "recent_questions"
+bq_most_popular_table_id = "most_popular"
+gcs_bucket = "{{var.value.gcs_bucket}}"
+output_file = f"{gcs_bucket}/recent_questions.csv"
+location = "US"
+project_id = "{{var.value.gcp_project}}"
 
 # Data from the month of January 2018
 # You may change the query dates to get data from a different time range. You
@@ -60,8 +64,8 @@ project_id = models.Variable.get('gcp_project')
 # macros can be useful for this. For example, {{ macros.ds_add(ds, -7) }}
 # corresponds to a date one week (7 days) before the DAG was run.
 # https://airflow.apache.org/code.html?highlight=execution_date#airflow.macros.ds_add
-max_query_date = '2018-02-01'
-min_query_date = '2018-01-01'
+max_query_date = "2018-02-01"
+min_query_date = "2018-01-01"
 
 RECENT_QUESTIONS_QUERY = f"""
         SELECT owner_display_name, title, view_count
@@ -80,34 +84,36 @@ MOST_POPULAR_QUERY = f"""
         """
 
 yesterday = datetime.datetime.combine(
-    datetime.datetime.today() - datetime.timedelta(1),
-    datetime.datetime.min.time())
+    datetime.datetime.today() - datetime.timedelta(1), datetime.datetime.min.time()
+)
 
 # [START composer_notify_failure]
 default_dag_args = {
-    'start_date': yesterday,
+    "start_date": yesterday,
     # Email whenever an Operator in the DAG fails.
-    'email': models.Variable.get('email'),
-    'email_on_failure': True,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
-    'project_id': project_id
+    "email": "{{var.value.email}}",
+    "email_on_failure": True,
+    "email_on_retry": False,
+    "retries": 1,
+    "retry_delay": datetime.timedelta(minutes=5),
+    "project_id": project_id,
 }
 
 with models.DAG(
-        'composer_sample_bq_notify',
-        schedule_interval=datetime.timedelta(weeks=4),
-        default_args=default_dag_args) as dag:
+    "composer_sample_bq_notify",
+    schedule_interval=datetime.timedelta(weeks=4),
+    default_args=default_dag_args,
+) as dag:
     # [END composer_notify_failure]
 
     # [START composer_bash_bq]
     # Create BigQuery output dataset.
     make_bq_dataset = bash.BashOperator(
-        task_id='make_bq_dataset',
+        task_id="make_bq_dataset",
         # Executing 'bq' command requires Google Cloud SDK which comes
         # preinstalled in Cloud Composer.
-        bash_command=f'bq ls {bq_dataset_name} || bq mk {bq_dataset_name}')
+        bash_command=f"bq ls {bq_dataset_name} || bq mk {bq_dataset_name}",
+    )
     # [END composer_bash_bq]
 
     # [START composer_bigquery]
@@ -118,10 +124,10 @@ with models.DAG(
                 "query": RECENT_QUESTIONS_QUERY,
                 "useLegacySql": False,
                 "destinationTable": {
-                        "projectId": project_id,
-                        "datasetId": bq_dataset_name,
-                        "tableId": bq_recent_questions_table_id
-                    }
+                    "projectId": project_id,
+                    "datasetId": bq_dataset_name,
+                    "tableId": bq_recent_questions_table_id,
+                },
             }
         },
         location=location,
@@ -130,10 +136,11 @@ with models.DAG(
 
     # Export query result to Cloud Storage.
     export_questions_to_gcs = bigquery_to_gcs.BigQueryToGCSOperator(
-        task_id='export_recent_questions_to_gcs',
+        task_id="export_recent_questions_to_gcs",
         source_project_dataset_table=f"{project_id}.{bq_dataset_name}.{bq_recent_questions_table_id}",
         destination_cloud_storage_uris=[output_file],
-        export_format='CSV')
+        export_format="CSV",
+    )
 
     # Perform most popular question query.
     bq_most_popular_query = bigquery.BigQueryInsertJobOperator(
@@ -145,8 +152,8 @@ with models.DAG(
                 "destinationTable": {
                     "projectId": project_id,
                     "datasetId": bq_dataset_name,
-                    "tableId": bq_most_popular_table_id
-                }
+                    "tableId": bq_most_popular_table_id,
+                },
             }
         },
         location=location,
@@ -158,18 +165,19 @@ with models.DAG(
     # the data in Cloud Storage and pass the path to the data if necessary.
     # https://airflow.apache.org/concepts.html#xcoms
     bq_read_most_popular = bigquery.BigQueryGetDataOperator(
-        task_id='bq_read_most_popular',
+        task_id="bq_read_most_popular",
         dataset_id=bq_dataset_name,
-        table_id=bq_most_popular_table_id)
+        table_id=bq_most_popular_table_id,
+    )
 
     # [START composer_email]
     # Send email confirmation (you will need to set up the email operator
     # See https://cloud.google.com/composer/docs/how-to/managing/creating#notification
     # for more info on configuring the email operator in Cloud Composer)
     email_summary = email.EmailOperator(
-        task_id='email_summary',
-        to=models.Variable.get('email'),
-        subject='Sample BigQuery notify data ready',
+        task_id="email_summary",
+        to="{{var.value.email}}",
+        subject="Sample BigQuery notify data ready",
         html_content="""
         Analyzed Stack Overflow posts data from {min_date} 12AM to {max_date}
         12AM. The most popular question was '{question_title}' with
@@ -179,22 +187,25 @@ with models.DAG(
             min_date=min_query_date,
             max_date=max_query_date,
             question_title=(
-                '{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', '
-                'key=\'return_value\')[0][0] }}'
+                "{{ ti.xcom_pull(task_ids='bq_read_most_popular', "
+                "key='return_value')[0][0] }}"
             ),
             view_count=(
-                '{{ ti.xcom_pull(task_ids=\'bq_read_most_popular\', '
-                'key=\'return_value\')[0][1] }}'
+                "{{ ti.xcom_pull(task_ids='bq_read_most_popular', "
+                "key='return_value')[0][1] }}"
             ),
-            export_location=output_file))
+            export_location=output_file,
+        ),
+    )
     # [END composer_email]
 
     # Delete BigQuery dataset
     # Delete the bq table
     delete_bq_dataset = bash.BashOperator(
-        task_id='delete_bq_dataset',
-        bash_command='bq rm -r -f %s' % bq_dataset_name,
-        trigger_rule=trigger_rule.TriggerRule.ALL_DONE)
+        task_id="delete_bq_dataset",
+        bash_command="bq rm -r -f %s" % bq_dataset_name,
+        trigger_rule=trigger_rule.TriggerRule.ALL_DONE,
+    )
 
     # Define DAG dependencies.
     (

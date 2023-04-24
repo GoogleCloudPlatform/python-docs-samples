@@ -16,17 +16,20 @@ import datetime
 import threading
 from time import sleep
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import firestore
 
 
 def quickstart_new_instance():
     # [START firestore_setup_client_create]
+    # [START firestore_setup_client_create_with_project_id]
     from google.cloud import firestore
 
     # The `project` parameter is optional and represents which project the client
     # will act on behalf of. If not supplied, the client falls back to the default
     # project inferred from the environment.
     db = firestore.Client(project='my-project-id')
+    # [END firestore_setup_client_create_with_project_id]
     # [END firestore_setup_client_create]
 
     return db
@@ -60,13 +63,11 @@ def quickstart_add_data_two():
 def quickstart_get_collection():
     db = firestore.Client()
     # [START firestore_setup_dataset_read]
-    # [START quickstart_get_collection]
     users_ref = db.collection(u'users')
     docs = users_ref.stream()
 
     for doc in docs:
         print(f'{doc.id} => {doc.to_dict()}')
-    # [END quickstart_get_collection]
     # [END firestore_setup_dataset_read]
 
 
@@ -104,7 +105,6 @@ def add_data_types():
     # [END firestore_data_set_from_map_nested]
 
 
-# [START custom_class_def]
 # [START firestore_data_custom_type_definition]
 class City(object):
     def __init__(self, name, state, country, capital=False, population=0,
@@ -154,7 +154,7 @@ class City(object):
         # [END_EXCLUDE]
 
     def __repr__(self):
-        return(
+        return (
             f'City(\
                 name={self.name}, \
                 country={self.country}, \
@@ -164,12 +164,10 @@ class City(object):
             )'
         )
 # [END firestore_data_custom_type_definition]
-# [END custom_class_def]
 
 
 def add_example_data():
     db = firestore.Client()
-    # [START add_example_data]
     # [START firestore_data_get_dataset]
     cities_ref = db.collection(u'cities')
     cities_ref.document(u'BJ').set(
@@ -187,7 +185,6 @@ def add_example_data():
         City(u'Tokyo', None, u'Japan', True, 9000000,
              [u'kanto', u'honshu']).to_dict())
     # [END firestore_data_get_dataset]
-    # [END add_example_data]
 
 
 def add_custom_class_with_id():
@@ -209,8 +206,12 @@ def add_data_with_id():
 def add_custom_class_generated_id():
     db = firestore.Client()
     # [START firestore_data_set_id_random_collection]
-    city = City(name=u'Tokyo', state=None, country=u'Japan')
-    db.collection(u'cities').add(city.to_dict())
+    city = {
+        u'name': u'Tokyo',
+        u'country': u'Japan'
+    }
+    update_time, city_ref = db.collection(u'cities').add(city)
+    print(f'Added document with id {city_ref.id}')
     # [END firestore_data_set_id_random_collection]
 
 
@@ -855,12 +856,12 @@ def delete_full_collection():
 
     # [START firestore_data_delete_collection]
     def delete_collection(coll_ref, batch_size):
-        docs = coll_ref.limit(batch_size).stream()
+        docs = coll_ref.list_documents(page_size=batch_size)
         deleted = 0
 
         for doc in docs:
-            print(f'Deleting doc {doc.id} => {doc.to_dict()}')
-            doc.reference.delete()
+            print(f'Deleting doc {doc.id} => {doc.get().to_dict()}')
+            doc.delete()
             deleted = deleted + 1
 
         if deleted >= batch_size:
@@ -1009,3 +1010,15 @@ def create_and_build_bundle():
     # [END firestore_create_and_build_bundle]
 
     return bundle, bundle_buffer
+
+
+def regional_endpoint():
+    # [START firestore_regional_endpoint]
+    ENDPOINT = "nam5-firestore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    db = firestore.Client(client_options=client_options)
+
+    cities_query = db.collection(u'cities').limit(2).get()
+    for r in cities_query:
+        print(r)
+    # [END firestore_regional_endpoint]

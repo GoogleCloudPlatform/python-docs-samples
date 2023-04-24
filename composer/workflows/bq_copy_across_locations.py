@@ -56,35 +56,32 @@ from airflow.providers.google.cloud.transfers import gcs_to_gcs
 yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
 
 default_args = {
-    'owner': 'airflow',
-    'start_date': yesterday,
-    'depends_on_past': False,
-    'email': [''],
-    'email_on_failure': False,
-    'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': datetime.timedelta(minutes=5),
+    "owner": "airflow",
+    "start_date": yesterday,
+    "depends_on_past": False,
+    "email": [""],
+    "email_on_failure": False,
+    "email_on_retry": False,
+    "retries": 1,
+    "retry_delay": datetime.timedelta(minutes=5),
 }
 
 # --------------------------------------------------------------------------------
 # Set variables
 # --------------------------------------------------------------------------------
 
-# 'table_list_file_path': This variable will contain the location of the main
-# file.
-table_list_file_path = models.Variable.get('table_list_file_path')
 
 # Source Bucket
-source_bucket = models.Variable.get('gcs_source_bucket')
+source_bucket = "{{var.value.gcs_source_bucket}}"
 
 # Destination Bucket
-dest_bucket = models.Variable.get('gcs_dest_bucket')
+dest_bucket = "{{var.value.gcs_dest_bucket}}"
 
 # --------------------------------------------------------------------------------
 # Set GCP logging
 # --------------------------------------------------------------------------------
 
-logger = logging.getLogger('bq_copy_us_to_eu_01')
+logger = logging.getLogger("bq_copy_us_to_eu_01")
 
 # --------------------------------------------------------------------------------
 # Functions
@@ -101,22 +98,18 @@ def read_table_list(table_list_file):
     target tables.
     """
     table_list = []
-    logger.info('Reading table_list_file from : %s' % str(table_list_file))
+    logger.info("Reading table_list_file from : %s" % str(table_list_file))
     try:
-        with io.open(table_list_file, 'rt', encoding='utf-8') as csv_file:
+        with io.open(table_list_file, "rt", encoding="utf-8") as csv_file:
             csv_reader = csv.reader(csv_file)
             next(csv_reader)  # skip the headers
             for row in csv_reader:
                 logger.info(row)
-                table_tuple = {
-                    'table_source': row[0],
-                    'table_dest': row[1]
-                }
+                table_tuple = {"table_source": row[0], "table_dest": row[1]}
                 table_list.append(table_tuple)
             return table_list
     except IOError as e:
-        logger.error('Error opening table_list_file %s: ' % str(
-            table_list_file), e)
+        logger.error("Error opening table_list_file %s: " % str(table_list_file), e)
 
 
 # --------------------------------------------------------------------------------
@@ -127,57 +120,58 @@ def read_table_list(table_list_file):
 # Any task you create within the context manager is automatically added to the
 # DAG object.
 with models.DAG(
-        'composer_sample_bq_copy_across_locations',
-        default_args=default_args,
-        schedule_interval=None) as dag:
-    start = dummy.DummyOperator(
-        task_id='start',
-        trigger_rule='all_success'
-    )
+    "composer_sample_bq_copy_across_locations",
+    default_args=default_args,
+    schedule_interval=None,
+) as dag:
+    start = dummy.DummyOperator(task_id="start", trigger_rule="all_success")
 
-    end = dummy.DummyOperator(
-        task_id='end',
-        trigger_rule='all_success'
-    )
+    end = dummy.DummyOperator(task_id="end", trigger_rule="all_success")
 
+    # 'table_list_file_path': This variable will contain the location of the main
+    # file. This is not part of an operator and cannot be templated, so it is included
+    # inside of the DAG instead of with the templated variables above
+    # to ensure the call to the DB only happens during DAG execution
+    table_list_file_path = models.Variable.get("table_list_file_path")
     # Get the table list from main file
     all_records = read_table_list(table_list_file_path)
 
     # Loop over each record in the 'all_records' python list to build up
     # Airflow tasks
     for record in all_records:
-        logger.info('Generating tasks to transfer table: {}'.format(record))
+        logger.info("Generating tasks to transfer table: {}".format(record))
 
-        table_source = record['table_source']
-        table_dest = record['table_dest']
+        table_source = record["table_source"]
+        table_dest = record["table_dest"]
 
         BQ_to_GCS = bigquery_to_gcs.BigQueryToGCSOperator(
             # Replace ":" with valid character for Airflow task
-            task_id='{}_BQ_to_GCS'.format(table_source.replace(":", "_")),
+            task_id="{}_BQ_to_GCS".format(table_source.replace(":", "_")),
             source_project_dataset_table=table_source,
-            destination_cloud_storage_uris=['{}-*.avro'.format(
-                'gs://' + source_bucket + '/' + table_source)],
-            export_format='AVRO'
+            destination_cloud_storage_uris=[
+                "{}-*.avro".format("gs://" + source_bucket + "/" + table_source)
+            ],
+            export_format="AVRO",
         )
 
         GCS_to_GCS = gcs_to_gcs.GCSToGCSOperator(
             # Replace ":" with valid character for Airflow task
-            task_id='{}_GCS_to_GCS'.format(table_source.replace(":", "_")),
+            task_id="{}_GCS_to_GCS".format(table_source.replace(":", "_")),
             source_bucket=source_bucket,
-            source_object='{}-*.avro'.format(table_source),
+            source_object="{}-*.avro".format(table_source),
             destination_bucket=dest_bucket,
             # destination_object='{}-*.avro'.format(table_dest)
         )
 
         GCS_to_BQ = gcs_to_bigquery.GCSToBigQueryOperator(
             # Replace ":" with valid character for Airflow task
-            task_id='{}_GCS_to_BQ'.format(table_dest.replace(":", "_")),
+            task_id="{}_GCS_to_BQ".format(table_dest.replace(":", "_")),
             bucket=dest_bucket,
-            source_objects=['{}-*.avro'.format(table_source)],
+            source_objects=["{}-*.avro".format(table_source)],
             destination_project_dataset_table=table_dest,
-            source_format='AVRO',
-            write_disposition='WRITE_TRUNCATE',
-            autodetect=True
+            source_format="AVRO",
+            write_disposition="WRITE_TRUNCATE",
+            autodetect=True,
         )
 
         start >> BQ_to_GCS >> GCS_to_GCS >> GCS_to_BQ >> end

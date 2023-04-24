@@ -1,0 +1,4 @@
+../../serving/weather-data
+../../serving/weather-model
+plotly==5.14.1
+torch==1.13.1

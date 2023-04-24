@@ -28,7 +28,7 @@ COMPOSER2_ENVIRONMENT = os.environ['COMPOSER2_ENVIRONMENT']
 def test_get_client_id(capsys):
     get_client_id(PROJECT, COMPOSER_LOCATION, COMPOSER_ENVIRONMENT)
     out, _ = capsys.readouterr()
-    assert '.apps.googleusercontent.com' in out
+    assert out.endswith('.apps.googleusercontent.com\n') is True
 
 
 def test_get_client_id_composer_2(capsys):

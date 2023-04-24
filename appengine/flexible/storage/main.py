@@ -1,4 +1,4 @@
-# Copyright 2015 Google Inc. All Rights Reserved.
+# Copyright 2015 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -23,10 +23,10 @@ from google.cloud import storage
 app = Flask(__name__)
 
 # Configure this environment variable via app.yaml
-CLOUD_STORAGE_BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
+CLOUD_STORAGE_BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
 
-@app.route('/')
+@app.route("/")
 def index() -> str:
     return """
 <form method="POST" action="/upload" enctype="multipart/form-data">
@@ -36,13 +36,13 @@ def index() -> str:
 """
 
 
-@app.route('/upload', methods=['POST'])
+@app.route("/upload", methods=["POST"])
 def upload() -> str:
     """Process the uploaded file and upload it to Google Cloud Storage."""
-    uploaded_file = request.files.get('file')
+    uploaded_file = request.files.get("file")
 
     if not uploaded_file:
-        return 'No file uploaded.', 400
+        return "No file uploaded.", 400
 
     # Create a Cloud Storage client.
     gcs = storage.Client()
@@ -54,8 +54,7 @@ def upload() -> str:
     blob = bucket.blob(uploaded_file.filename)
 
     blob.upload_from_string(
-        uploaded_file.read(),
-        content_type=uploaded_file.content_type
+        uploaded_file.read(), content_type=uploaded_file.content_type
     )
 
     # Make the blob public. This is not necessary if the
@@ -69,15 +68,20 @@ def upload() -> str:
 
 @app.errorhandler(500)
 def server_error(e: Union[Exception, int]) -> str:
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 # [END gae_flex_storage_app]

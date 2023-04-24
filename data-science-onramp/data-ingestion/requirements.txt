@@ -1,7 +1,7 @@
 #grpcio==1.29.0
 #google-auth==1.16.0
 #google-auth-httplib2==0.0.3
-google-cloud-storage==2.0.0; python_version < '3.7'
-google-cloud-storage==2.1.0; python_version > '3.6'
-google-cloud-dataproc==4.0.2
-google-cloud-bigquery==2.33.0
+google-cloud-storage==2.8.0; python_version < '3.7'
+google-cloud-storage==2.8.0; python_version > '3.6'
+google-cloud-dataproc==5.4.1
+google-cloud-bigquery==3.10.0

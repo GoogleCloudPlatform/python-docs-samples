@@ -12,17 +12,17 @@
 steps:
   - id: "Deploy to Cloud Run"
     name: "gcr.io/cloud-builders/gcloud:latest"
-    entrypoint: /bin/bash
     args:
-      - "-c"
-      - |
-        ./retry.sh "gcloud alpha run deploy ${_SERVICE_NAME} \
-          --source . \
-          --execution-environment gen2 \
-          --vpc-connector ${_CONNECTOR} \
-          --update-env-vars FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE} \
-          --region ${_DEPLOY_REGION} \
-          --no-allow-unauthenticated"
+      - beta
+      - run
+      - deploy
+      - ${_SERVICE_NAME}
+      - --source=.
+      - --execution-environment=gen2
+      - --vpc-connector=${_CONNECTOR}
+      - --update-env-vars=FILESTORE_IP_ADDRESS=${_FILESTORE_IP_ADDRESS},FILE_SHARE_NAME=${_FILESHARE}
+      - --region=${_DEPLOY_REGION}
+      - --no-allow-unauthenticated
 
 substitutions:
   _SERVICE_NAME: filesystem

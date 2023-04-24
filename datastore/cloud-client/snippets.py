@@ -16,6 +16,7 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
+from google.api_core.client_options import ClientOptions
 import google.cloud.exceptions
 from google.cloud import datastore  # noqa: I100
 
@@ -213,7 +214,7 @@ def entity_with_parent(client):
 def properties(client):
     # [START datastore_properties]
     key = client.key("Task")
-    task = datastore.Entity(key, exclude_from_indexes=["description"])
+    task = datastore.Entity(key, exclude_from_indexes=("description",))
     task.update(
         {
             "category": "Personal",
@@ -224,6 +225,7 @@ def properties(client):
             "percent_complete": 10.5,
         }
     )
+    client.put(task)
     # [END datastore_properties]
 
     return task
@@ -882,6 +884,21 @@ def property_by_kind_run_query(client):
     return representations_by_property
 
 
+def regional_endpoint():
+    # [START datastore_regional_endpoints]
+    ENDPOINT = "https://datastore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    client = datastore.Client(client_options=client_options)
+
+    query = client.query(kind="Task")
+    results = list(query.fetch())
+    for r in results:
+        print(r)
+    # [END datastore_regional_endpoints]
+
+    return client
+
+
 def eventual_consistent_query(client):
     # [START datastore_eventual_consistent_query]
     query = client.query(kind="Task")
@@ -991,8 +1008,8 @@ def index_merge_queries(client):
 def main(project_id):
     client = datastore.Client(project_id)
 
-    for name, function in globals().iteritems():
-        if name in ("main", "defaultdict") or not callable(function):
+    for name, function in globals().items():
+        if name in ("main", "_preamble", "defaultdict") or not callable(function):
             continue
 
         print(name)

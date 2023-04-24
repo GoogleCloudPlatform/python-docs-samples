@@ -27,7 +27,7 @@ def test_service_accounts(capsys):
     try:
         acct = service_accounts.create_service_account(
             project_id, name, 'Py Test Account')
-        assert('uniqueId' in acct)
+        assert 'uniqueId' in acct
 
         unique_id = acct['uniqueId']
         service_accounts.list_service_accounts(project_id)

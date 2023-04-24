@@ -30,7 +30,7 @@ import hmac
 from six.moves import urllib
 
 
-# [START sign_url]
+# [START cloudcdn_sign_url]
 def sign_url(url, key_name, base64_key, expiration_time):
     """Gets the Signed URL string for the specified URL and configuration.
 
@@ -68,8 +68,10 @@ def sign_url(url, key_name, base64_key, expiration_time):
             url=url_to_sign, signature=signature)
 
     print(signed_url)
+# [END cloudcdn_sign_url]
 
 
+# [START cloudcdn_sign_url_prefix]
 def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
@@ -111,10 +113,10 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
             signature=signature)
 
     print(signed_url)
-# [END sign_url]
+# [END cloudcdn_sign_url_prefix]
 
 
-# [START cdn_sign_cookie]
+# [START cloudcdn_sign_cookie]
 def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     """Gets the Signed cookie value for the specified URL prefix and configuration.
 
@@ -146,7 +148,7 @@ def sign_cookie(url_prefix, key_name, base64_key, expiration_time):
     signed_policy = u'Cloud-CDN-Cookie={policy}:Signature={signature}'.format(
             policy=policy, signature=signature)
     print(signed_policy)
-# [END cdn_sign_cookie]
+# [END cloudcdn_sign_cookie]
 
 
 if __name__ == '__main__':
@@ -204,7 +206,7 @@ if __name__ == '__main__':
     sign_cookie_parser.add_argument(
             'expiration_time',
             type=lambda d: datetime.datetime.utcfromtimestamp(float(d)),
-            help='Expiration time expessed as seconds since the epoch.')
+            help='Expiration time expressed as seconds since the epoch.')
 
     args = parser.parse_args()
 

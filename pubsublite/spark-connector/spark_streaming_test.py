@@ -124,15 +124,19 @@ def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
         "project_id": PROJECT_ID,
         "cluster_name": CLUSTER_ID,
         "config": {
-            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2"},
-            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
             "config_bucket": BUCKET,
             "temp_bucket": BUCKET,
-            "software_config": {"image_version": "1.5-debian10"},
+            "software_config": {"image_version": "2.0-debian10"},
             "gce_cluster_config": {
                 "service_account_scopes": [
                     "https://www.googleapis.com/auth/cloud-platform",
                 ],
+            },
+            "lifecycle_config": {
+                # Schedule cluster deletion after 2 hours of inactivity.
+                "idle_delete_ttl": {"seconds": 3600},
             },
         },
     }
@@ -180,7 +184,7 @@ def test_spark_streaming_to_pubsublite(
         "pyspark_job": {
             "main_python_file_uri": pyfile("spark_streaming_to_pubsublite_example.py"),
             "jar_file_uris": [
-                "gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar"
+                "gs://pubsublite-spark/pubsublite-spark-sql-streaming-1.0.0-with-dependencies.jar"
             ],
             "properties": {"spark.master": "yarn"},
             "logging_config": {"driver_log_levels": {"root": LoggingConfig.Level.INFO}},

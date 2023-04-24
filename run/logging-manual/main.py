@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_manual_logging]
 import json
 import os
 
-# [END cloudrun_manual_logging]
 
 from flask import Flask, request
 

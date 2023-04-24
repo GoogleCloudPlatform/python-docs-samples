@@ -14,7 +14,7 @@
 
 # [START cloudrun_deployment_preview_dockerfile]
 # Start from a Python base container
-FROM python:3.9-slim
+FROM python:3.11-slim
 
 # Copy local code into the container image
 ENV APP_HOME /app

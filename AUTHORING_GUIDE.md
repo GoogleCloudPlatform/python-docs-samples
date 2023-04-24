@@ -1,5 +1,12 @@
 # Python Sample Authoring Guide
 
+The [Google Cloud Samples Style Guide][style-guide] is considered the primary
+guidelines for all Google Cloud samples. This section details some additional,
+Python-specific rules that will be merged into the Samples Style Guide in the 
+near future. 
+
+[style-guide]: https://googlecloudplatform.github.io/samples-style-guide/
+
 We're happy you want to write a Python sample! Like a lot of Pythonistas,
 we're opinionated and fussy. This guide is a reference for the format and
 style expected of samples contributed to the
@@ -770,6 +777,7 @@ cp noxfile-template.py PATH/TO/YOUR/PROJECT/noxfile.py
 cd PATH/TO/YOUR/PROJECT/
 ```
 
+ℹ️ **Note:** Nox only detects tests in the `tests` directory where the `noxfile_config.py` file is or [for any files named `*_test.py` or `test_*.py`](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/6c4c8de274496300e3285168a012f8b6203b5122/noxfile-template.py#L182-L187) in the same directory as the config file.
 
 To use nox, install it globally with `pip`:
 

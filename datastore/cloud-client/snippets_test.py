@@ -14,12 +14,21 @@
 import os
 
 import backoff
+
+from google.api_core.retry import Retry
+
+
 from google.cloud import datastore
+
 import pytest
 
 import snippets
 
+
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+
+retry_policy = Retry()
 
 
 class CleanupClient(datastore.Client):
@@ -29,14 +38,16 @@ class CleanupClient(datastore.Client):
         self.keys_to_delete = []
 
     def cleanup(self):
-        with self.batch():
-            self.delete_multi(
-                list(set([x.key for x in self.entities_to_delete if x]))
-                + list(set(self.keys_to_delete))
-            )
+        batch = self.batch()
+        batch.begin()
+        self.delete_multi(
+            list(set([x.key for x in self.entities_to_delete if x]))
+            + list(set(self.keys_to_delete))
+        )
+        batch.commit(retry=retry_policy)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def client():
     client = CleanupClient(PROJECT)
     yield client
@@ -290,3 +301,8 @@ class TestDatastoreSnippets:
     @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
     def test_index_merge_queries(self, client):
         snippets.index_merge_queries(client)
+
+    @backoff.on_exception(backoff.expo, AssertionError, max_time=240)
+    def test_regional_endpoint(self, client):
+        client = snippets.regional_endpoint()
+        assert client is not None

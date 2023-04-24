@@ -19,7 +19,7 @@ steps:
     args:
       - "-c"
       - |
-        WAIT=30 ./retry.sh "gcloud sql databases create ${_DB_NAME} \
+        WAIT=120 ./retry.sh "gcloud sql databases create ${_DB_NAME} \
           --instance ${_DB_INSTANCE} \
           --project ${PROJECT_ID}"
 
@@ -30,7 +30,7 @@ steps:
       - "-c"
       - |
         echo -n "${_DB_PASS}" > db_password
-        ./retry.sh "gcloud sql users create ${_DB_USER} \
+        WAIT=120 ./retry.sh "gcloud sql users create ${_DB_USER} \
           --password $(cat db_password) \
           --instance ${_DB_INSTANCE} \
           --project ${PROJECT_ID}"

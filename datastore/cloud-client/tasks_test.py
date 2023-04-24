@@ -23,7 +23,7 @@ import tasks
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def client():
     # We use namespace for isolating builds.
     namespace = uuid.uuid4().hex
