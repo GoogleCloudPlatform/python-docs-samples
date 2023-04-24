@@ -27,11 +27,12 @@ from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2
 import pytest
 
 
-SUFFIX = uuid.uuid4().hex[0:6]
+SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 CLOUD_RUN_SERVICE = f"pubsub-test-{SUFFIX}"
 TOPIC = f"pubsub-test_{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/pubsub-test-{SUFFIX}"
+
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def build_container_image(image_name, project):
@@ -211,7 +212,7 @@ def pubsub_topic(service_url):
     try:
         topic = create_topic(PROJECT, TOPIC)
         create_subscription(topic, service_url)
-        yield topic 
+        yield topic
     finally:
         delete_topic(PROJECT, TOPIC)
         delete_subscription(topic)
