@@ -26,12 +26,12 @@ import collections
 import datetime
 import hashlib
 import sys
+from urllib.parse import quote
 
 # pip install google-auth
 from google.oauth2 import service_account
 # pip install six
 import six
-from urllib.parse import quote
 
 
 def generate_signed_url(service_account_file, bucket_name, object_name,

@@ -24,7 +24,6 @@ import argparse
 # [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
-    import io
     from google.cloud import speech
 
     client = speech.SpeechClient()

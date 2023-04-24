@@ -27,7 +27,6 @@ import argparse
 def transcribe_file(speech_file):
     """Transcribe the given audio file."""
     from google.cloud import speech
-    import io
 
     client = speech.SpeechClient()
 

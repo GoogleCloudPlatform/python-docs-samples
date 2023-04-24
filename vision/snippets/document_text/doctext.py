@@ -23,7 +23,6 @@ Example:
 # [START vision_document_text_tutorial_imports]
 import argparse
 from enum import Enum
-import io
 
 from google.cloud import vision
 from PIL import Image, ImageDraw

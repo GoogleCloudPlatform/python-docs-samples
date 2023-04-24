@@ -15,7 +15,6 @@
 # [START job_search_batch_create_jobs]
 
 from google.cloud import talent
-import six
 
 
 def batch_create_jobs(

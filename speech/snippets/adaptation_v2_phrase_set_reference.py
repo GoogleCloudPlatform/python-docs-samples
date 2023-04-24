@@ -14,8 +14,6 @@
 
 
 # [START speech_adaptation_v2_phrase_set_reference]
-import io
-
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 

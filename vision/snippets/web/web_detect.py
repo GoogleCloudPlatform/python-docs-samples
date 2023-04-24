@@ -24,7 +24,6 @@ Example usage:
 # [START vision_web_detection_tutorial]
 # [START vision_web_detection_tutorial_imports]
 import argparse
-import io
 
 from google.cloud import vision
 # [END vision_web_detection_tutorial_imports]

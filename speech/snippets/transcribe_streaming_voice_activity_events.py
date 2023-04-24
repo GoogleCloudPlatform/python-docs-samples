@@ -16,8 +16,6 @@
 import argparse
 
 # [START speech_transcribe_streaming_voice_activity_events]
-import io
-
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 

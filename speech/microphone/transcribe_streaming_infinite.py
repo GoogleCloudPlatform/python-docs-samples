@@ -28,11 +28,11 @@ Example usage:
 
 import re
 import sys
+import queue
 import time
 
 from google.cloud import speech
 import pyaudio
-import queue
 
 # Audio recording parameters
 STREAMING_LIMIT = 240000  # 4 minutes

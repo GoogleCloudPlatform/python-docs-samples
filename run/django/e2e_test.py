@@ -15,9 +15,9 @@
 # This test creates a Cloud SQL instance, a Cloud Storage bucket, associated
 # secrets, and deploys a Django service
 
+from collections.abc import Iterator
 import os
 import subprocess
-from collections.abc import Iterator
 import uuid
 
 import backoff

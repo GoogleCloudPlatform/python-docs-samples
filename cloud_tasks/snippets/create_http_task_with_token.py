@@ -15,7 +15,6 @@
 # limitations under the License.
 
 
-
 def create_http_task(
     project,
     queue,

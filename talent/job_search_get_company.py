@@ -15,7 +15,6 @@
 # [START job_search_get_company]
 
 from google.cloud import talent
-import six
 
 
 def get_company(project_id, tenant_id, company_id):

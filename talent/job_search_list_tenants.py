@@ -15,7 +15,6 @@
 # [START job_search_list_tenants]
 
 from google.cloud import talent
-import six
 
 
 def list_tenants(project_id):

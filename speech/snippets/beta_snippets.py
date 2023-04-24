@@ -27,7 +27,6 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 def transcribe_file_with_enhanced_model():

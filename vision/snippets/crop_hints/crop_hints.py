@@ -23,7 +23,6 @@ Examples:
 # [START vision_crop_hints_tutorial]
 # [START vision_crop_hints_tutorial_imports]
 import argparse
-import io
 
 from google.cloud import vision
 from PIL import Image, ImageDraw

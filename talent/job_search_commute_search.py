@@ -15,7 +15,6 @@
 # [START job_search_commute_search]
 
 from google.cloud import talent
-import six
 
 
 def search_jobs(project_id, tenant_id):

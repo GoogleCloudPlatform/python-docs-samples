@@ -26,12 +26,12 @@ Example usage:
 # [START speech_transcribe_streaming_mic]
 
 import re
+import queue
 import sys
 
 from google.cloud import speech
 
 import pyaudio
-import queue
 
 # Audio recording parameters
 RATE = 16000

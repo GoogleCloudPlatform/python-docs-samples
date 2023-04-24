@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import os
-import uuid
 from unittest import mock
+import uuid
 
 from apache_beam.io.gcp.gcsio import GcsIO
 from apache_beam.testing.test_pipeline import TestPipeline

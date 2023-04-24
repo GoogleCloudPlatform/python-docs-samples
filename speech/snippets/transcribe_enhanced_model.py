@@ -25,8 +25,6 @@ import argparse
 def transcribe_file_with_enhanced_model(path):
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_enhanced_model]
-    import io
-
     from google.cloud import speech
 
     client = speech.SpeechClient()
