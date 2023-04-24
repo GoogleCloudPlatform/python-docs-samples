@@ -26,9 +26,9 @@ Example usage:
 
 # [START speech_transcribe_infinite_streaming]
 
+import queue
 import re
 import sys
-import queue
 import time
 
 from google.cloud import speech
