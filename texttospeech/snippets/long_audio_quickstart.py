@@ -53,10 +53,10 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
   curr_time = 0
   interval = 10
   while not operation.done() and curr_time < deadline:
-    time.sleep(interval)
-    curr_time += interval
+      time.sleep(interval)
+      curr_time += interval
 
   if operation.done():
-    print("\nFinished processing, check your GCS bucket to find your audio file!")
+      print("\nFinished processing, check your GCS bucket to find your audio file!")
   else:
-    print("\nOperation timed out, likely due to an error. If you do not believe this is due to an error, consider increasing the deadline for your operation.")
+      print("\nOperation timed out, likely due to an error. If you do not believe this is due to an error, consider increasing the deadline for your operation.")
