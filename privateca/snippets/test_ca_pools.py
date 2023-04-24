@@ -17,7 +17,6 @@ import typing
 import uuid
 
 import google.auth
-import pytest
 
 from conftest import delete_stale_resources, LOCATION
 
