@@ -19,6 +19,7 @@ import web_detect
 ASSET_BUCKET = "cloud-samples-data"
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_file(capsys):
     file_name = ('../detect/resources/landmark.jpg')
     web_detect.report(web_detect.annotate(file_name))

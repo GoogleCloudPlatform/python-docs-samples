@@ -21,6 +21,7 @@
 /eventarc/**/*                         @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /run/**/*                              @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
 /endpoints/**/*                        @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
+/scheduler/**/*                        @GoogleCloudPlatform/torus-dpe  @GoogleCloudPlatform/python-samples-reviewers
 
 # DEE Infrastructure
 /auth/**/*                             @GoogleCloudPlatform/googleapis-auth @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
