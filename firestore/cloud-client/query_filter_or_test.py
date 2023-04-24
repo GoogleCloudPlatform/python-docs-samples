@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud.firestore_v1.bulk_writer import BulkWriter
 from google.cloud.firestore_v1.client import Client
 
 import pytest
@@ -41,15 +40,16 @@ def setup(scope="function", autouse=True):
         bw.create(cr.document(d['shortName']), {u'birthYear': d['birthYear']})
 
     bw.close()
- 
+
     yield
 
     # Need new BulkWriter instance for deletes
     bw = client.bulk_writer()
     for d in td:
         bw.delete(cr.documents(d['shortName']))
-    
+
     bw.close()
+
 
 def test_query_or_composite_filter(capsys):
     query_or_composite_filter(PROJECT_ID)
