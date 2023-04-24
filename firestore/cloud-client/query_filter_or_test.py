@@ -14,7 +14,7 @@
 
 import os
 
-from google.cloud.firestore_v1.client import Client
+from google.cloud import firestore
 
 import pytest
 
@@ -26,9 +26,16 @@ PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
 
 @pytest.fixture
 def setup(scope="function", autouse=True):
-    client = Client(project=PROJECT_ID)
+    client = firestore.Client(project=PROJECT_ID)
     cr = client.collection('users')
-    bw = client.bulk_writer()
+    transaction_create = client.transaction()
+
+    @firestore.transactional
+    def create_in_transaction(transaction, data_list):
+        for d in data_list:
+            transaction.create(cr.document(d['shortName']),
+                               {u'birthYear': d['birthYear']})
+
     td = [
         {u'shortName': 'aturing', u'birthYear': 1912},
         {u'shortName': 'cbabbage', u'birthYear': 1791},
@@ -36,19 +43,19 @@ def setup(scope="function", autouse=True):
         {u'shortName': 'alovelace', u'birthYear': 1815},
     ]
 
-    for d in td:
-        bw.create(cr.document(d['shortName']), {u'birthYear': d['birthYear']})
-
-    bw.close()
+    create_in_transaction(transaction_create, td)
 
     yield
 
-    # Need new BulkWriter instance for deletes
-    bw = client.bulk_writer()
-    for d in td:
-        bw.delete(cr.documents(d['shortName']))
+    transaction_delete = client.transaction()
 
-    bw.close()
+    @firestore.transactional
+    def delete_in_transaction(transaction, data_list):
+        for d in data_list:
+            ref = cr.document(d['shortName']).get(transaction=transaction)
+            transaction.delete(ref)
+
+    delete_in_transaction(transaction_delete, td)
 
 
 def test_query_or_composite_filter(capsys):
