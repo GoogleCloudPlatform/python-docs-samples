@@ -22,7 +22,7 @@ import pytest
 import requests
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+@backoff.on_exception(backoff.expo, Exception, max_tries=5)
 def gcloud_cli(command):
     """
     Runs the gcloud CLI with given options, parses the json formatted output
@@ -73,7 +73,10 @@ def version():
         r = requests.get(url)
         r.raise_for_status()
 
-    wait_for_app(f"https://{version_hostname}/")
+    try:
+        wait_for_app(f"https://{version_hostname}/")
+    except Exception as e:
+        assert e is None
 
     yield project_id, version_id
 
