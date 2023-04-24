@@ -35,5 +35,4 @@ def query_or_composite_filter(project_id: str) -> None:
     for doc in docs:
         print(f"ID: {doc.id}")
 
-
-# [END firestore_query_composite_filter_or]
+# [END firestore_query_filter_or]
