@@ -29,7 +29,8 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
 
   client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
-  input = texttospeech.SynthesisInput(text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
+  input = texttospeech.SynthesisInput(
+      text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
 
   audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
 
