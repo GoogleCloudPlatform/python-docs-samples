@@ -15,7 +15,6 @@
 
 # [START translate_hybrid_imports]
 import html
-import io
 import os
 
 # Imports the Google Cloud client libraries

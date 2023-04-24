@@ -14,7 +14,7 @@
 
 
 from functools import wraps
-from typing import Callable, Dict, TypeVar
+from typing import Callable, TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401

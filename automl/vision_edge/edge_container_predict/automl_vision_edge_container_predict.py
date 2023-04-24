@@ -26,7 +26,6 @@ import argparse
 # [START automl_vision_edge_container_predict]
 import base64
 import cv2
-import io
 import json
 
 import requests

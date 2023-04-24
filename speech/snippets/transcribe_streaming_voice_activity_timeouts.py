@@ -16,7 +16,6 @@
 import argparse
 
 # [START speech_transcribe_streaming_voice_activity_timeouts]
-import io
 from time import sleep
 
 from google.cloud.speech_v2 import SpeechClient

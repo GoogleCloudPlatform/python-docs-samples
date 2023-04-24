@@ -110,7 +110,6 @@ def translate_text(target, text):
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
-    import six
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()

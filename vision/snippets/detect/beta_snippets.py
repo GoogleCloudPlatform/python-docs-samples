@@ -33,7 +33,6 @@ https://cloud.google.com/vision/docs.
 """
 
 import argparse
-import io
 
 
 # [START vision_localize_objects_beta]

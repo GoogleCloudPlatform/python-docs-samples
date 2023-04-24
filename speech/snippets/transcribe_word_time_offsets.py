@@ -21,7 +21,6 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 def transcribe_file_with_word_time_offsets(speech_file):

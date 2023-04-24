@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_batch_update_jobs]
-
 from google.cloud import talent
-import six
 
 
 def batch_update_jobs(

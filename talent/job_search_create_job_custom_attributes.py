@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_create_job_custom_attributes]
-
 from google.cloud import talent
-import six
 
 
 def create_job(project_id, tenant_id, company_id, requisition_id):

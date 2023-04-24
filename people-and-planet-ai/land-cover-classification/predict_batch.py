@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 import csv
-from typing import List, NamedTuple, Optional
+from typing import NamedTuple
 
 import apache_beam as beam
 from apache_beam.io.filesystems import FileSystems

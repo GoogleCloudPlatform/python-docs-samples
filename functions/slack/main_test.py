@@ -14,9 +14,9 @@
 import json
 import os
 import time
+from unittest import mock
 
 import googleapiclient.discovery
-from unittest import mock
 import pytest
 from slack.signature import SignatureVerifier
 

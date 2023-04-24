@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_autocomplete_job_title]
-
 from google.cloud import talent_v4beta1
-import six
 
 
 def complete_query(project_id, tenant_id, query):

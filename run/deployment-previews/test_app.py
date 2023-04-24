@@ -13,10 +13,10 @@
 # limitations under the License.
 
 import os
-from typing import List, NoReturn, TypeVar
+from typing import NoReturn, TypeVar
+from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from unittest.mock import MagicMock, patch
 import pytest
 
 from check_status import cli

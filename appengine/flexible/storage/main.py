@@ -15,7 +15,6 @@
 # [START gae_flex_storage_app]
 import logging
 import os
-from typing import Union
 
 from flask import Flask, request
 from google.cloud import storage

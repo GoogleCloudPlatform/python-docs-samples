@@ -15,10 +15,9 @@
 import base64
 import concurrent.futures
 import json
-
-from cloudevents.http import CloudEvent
 from unittest import mock
 
+from cloudevents.http import CloudEvent
 
 import main
 

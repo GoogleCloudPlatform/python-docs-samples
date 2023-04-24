@@ -13,9 +13,9 @@
 # limitations under the License.
 
 from collections import UserDict
+from unittest.mock import MagicMock, patch
 import uuid
 
-from unittest.mock import MagicMock, patch
 
 import main
 

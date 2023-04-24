@@ -15,7 +15,6 @@
 import argparse
 import base64
 import binascii
-import io
 import os
 import sys
 import threading

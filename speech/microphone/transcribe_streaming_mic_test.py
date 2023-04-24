@@ -16,8 +16,8 @@ import os
 import re
 import threading
 import time
-
 from unittest import mock
+
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 

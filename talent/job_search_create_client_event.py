@@ -13,10 +13,8 @@
 # limitations under the License.
 
 # [START job_search_create_client_event]
-
 from google.cloud import talent
 from google.cloud.talent import enums
-import six
 
 
 def create_client_event(project_id, tenant_id, request_id, event_id):

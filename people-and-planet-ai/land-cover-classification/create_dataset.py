@@ -26,7 +26,6 @@ The land cover labels for the training dataset come from the ESA WorldCover.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions

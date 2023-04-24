@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_get_job]
-
 from google.cloud import talent
-import six
 
 
 def get_job(project_id, tenant_id, job_id):

@@ -14,10 +14,10 @@
 #
 
 import os
+from unittest import mock
 
 from documentai.snippets import get_evaluation_sample
 
-from unittest import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

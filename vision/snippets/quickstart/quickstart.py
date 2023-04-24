@@ -17,7 +17,6 @@
 
 def run_quickstart():
     # [START vision_quickstart]
-    import io
     import os
 
     # Imports the Google Cloud client library

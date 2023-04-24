@@ -14,7 +14,7 @@
 
 import datetime
 import os
-from typing import Any, Dict, Type
+from typing import Any
 
 import sqlalchemy
 from sqlalchemy.orm import close_all_sessions

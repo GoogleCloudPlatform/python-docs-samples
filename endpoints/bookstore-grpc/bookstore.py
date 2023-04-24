@@ -14,8 +14,6 @@
 
 import threading
 
-import six
-
 
 class ShelfInfo:
     """The contents of a single shelf."""

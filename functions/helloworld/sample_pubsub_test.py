@@ -14,7 +14,6 @@
 
 # [START functions_pubsub_unit_test]
 import base64
-
 from unittest import mock
 
 import main

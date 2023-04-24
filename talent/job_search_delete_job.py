@@ -15,7 +15,6 @@
 # [START job_search_delete_job]
 
 from google.cloud import talent
-import six
 
 
 def delete_job(project_id, tenant_id, job_id):

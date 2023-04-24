@@ -14,7 +14,6 @@
 
 import json
 import os
-from typing import Dict
 
 from middleware import logger
 

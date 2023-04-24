@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_list_companies]
-
 from google.cloud import talent
-import six
 
 
 def list_companies(project_id, tenant_id):

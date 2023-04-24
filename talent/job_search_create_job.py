@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_create_job]
-
 from google.cloud import talent
-import six
 
 
 def create_job(

@@ -36,7 +36,6 @@ bucket.
 
 import csv
 import datetime
-import io
 import logging
 
 from airflow import models

@@ -13,9 +13,7 @@
 # limitations under the License.
 
 # [START job_search_delete_company]
-
 from google.cloud import talent
-import six
 
 
 def delete_company(project_id, tenant_id, company_id):

@@ -22,13 +22,11 @@ https://cloud.google.com/natural-language/docs/classify-text-tutorial.
 
 # [START language_classify_text_tutorial_imports]
 import argparse
-import io
 import json
 import os
 
 from google.cloud import language_v1
 import numpy
-import six
 
 # [END language_classify_text_tutorial_imports]
 

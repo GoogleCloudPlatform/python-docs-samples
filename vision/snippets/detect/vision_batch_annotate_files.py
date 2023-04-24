@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START vision_batch_annotate_files]
-
-import io
-
 from google.cloud import vision_v1
 
 

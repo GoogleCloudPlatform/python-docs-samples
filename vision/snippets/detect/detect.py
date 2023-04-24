@@ -40,7 +40,6 @@ import argparse
 def detect_faces(path):
     """Detects faces in an image."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_face_detection]
@@ -118,7 +117,6 @@ def detect_faces_uri(uri):
 def detect_labels(path):
     """Detects labels in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_label_detection]
@@ -171,7 +169,6 @@ def detect_labels_uri(uri):
 def detect_landmarks(path):
     """Detects landmarks in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_landmark_detection]
@@ -228,7 +225,6 @@ def detect_landmarks_uri(uri):
 def detect_logos(path):
     """Detects logos in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_logo_detection]
@@ -281,7 +277,6 @@ def detect_logos_uri(uri):
 def detect_safe_search(path):
     """Detects unsafe features in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_safe_search_detection]
@@ -348,7 +343,6 @@ def detect_safe_search_uri(uri):
 def detect_text(path):
     """Detects text in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_text_detection]
@@ -411,7 +405,6 @@ def detect_text_uri(uri):
 def detect_properties(path):
     """Detects image properties in the file."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_image_properties]
@@ -472,7 +465,6 @@ def detect_properties_uri(uri):
 def detect_web(path):
     """Detects web annotations given an image."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_web_detection]
@@ -597,7 +589,6 @@ def web_entities_include_geo_results(path):
     """Detects web annotations given an image, using the geotag metadata
     in the image to detect web entities."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     with open(path, 'rb') as image_file:
@@ -658,7 +649,6 @@ def web_entities_include_geo_results_uri(uri):
 def detect_crop_hints(path):
     """Detects crop hints in an image."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_crop_hints]
@@ -725,7 +715,6 @@ def detect_crop_hints_uri(uri):
 def detect_document(path):
     """Detects document features in an image."""
     from google.cloud import vision
-    import io
     client = vision.ImageAnnotatorClient()
 
     # [START vision_python_migration_document_text_detection]
