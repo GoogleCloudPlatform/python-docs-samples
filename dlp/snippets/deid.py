@@ -19,6 +19,7 @@ from __future__ import annotations
 import argparse
 
 from typing import List
+from typing import Dict
 
 
 # [START dlp_deidentify_masking]
@@ -1691,12 +1692,12 @@ def deindentify_with_dictionary_replacement(
 
 # [START dlp_deidentify_table_row_suppress]
 def deidentify_table_suppress_row(
-    project,
-    table_data,
-    condition_field,
-    condition_operator,
-    condition_value
-):
+    project: str,
+    table_data: Dict[str, List[str]],
+    condition_field: str,
+    condition_operator: str,
+    condition_value: int,
+) -> None:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by suppressing entire row/s based on a condition.
 
@@ -1709,30 +1710,7 @@ def deidentify_table_suppress_row(
             LESS_THAN_OR_EQUALS, EXISTS.
         condition_value: Value to compare against. [Mandatory, except for ``EXISTS`` tests.].
 
-    Returns:
-        De-identified table is returned;
-        the response from the API is also printed to the terminal.
-
     Example:
-    table_data = {
-        "header":[
-            "email",
-            "phone number",
-            "age"
-        ],
-        "rows":[
-            [
-                "robertfrost@xyz.com",
-                "4232342345",
-                "35"
-            ],
-            [
-                "johndoe@pqr.com",
-                "4253458383",
-                "64"
-            ]
-        ]
-    }
 
     >> $ python deid.py deid_table_row_suppress \
     '{"header": ["email", "phone number", "age"],
@@ -1798,9 +1776,6 @@ def deidentify_table_suppress_row(
 
     # Print the result.
     print("Table after de-identification: {}".format(response.item.table))
-
-    # Return the response.
-    return response.item.table
 
 
 # [END dlp_deidentify_table_row_suppress]
