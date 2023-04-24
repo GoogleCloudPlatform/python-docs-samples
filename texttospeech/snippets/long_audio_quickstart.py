@@ -38,7 +38,13 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
   
   parent = f"projects/{project_id}/locations/{location}"
 
-  request = texttospeech.SynthesizeLongAudioRequest(parent=parent, input=input, audio_config=audio_config, voice=voice, output_gcs_uri=output_gcs_uri)
+  request = texttospeech.SynthesizeLongAudioRequest(
+      parent=parent,
+      input=input,
+      audio_config=audio_config,
+      voice=voice,
+      output_gcs_uri=output_gcs_uri,
+  )
 
   operation = client.synthesize_long_audio(request=request)
   
