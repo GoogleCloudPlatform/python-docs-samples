@@ -20,11 +20,10 @@ import subprocess
 import time
 import uuid
 
+import backoff
 from google.api_core.exceptions import NotFound
 from google.cloud import pubsub_v1
 from google.cloud.logging_v2.services.logging_service_v2 import LoggingServiceV2Client
-
-
 import pytest
 
 
@@ -34,115 +33,137 @@ CLOUD_RUN_SERVICE = f"pubsub-test-{SUFFIX}"
 TOPIC = f"pubsub-test_{SUFFIX}"
 IMAGE_NAME = f"gcr.io/{PROJECT}/pubsub-test-{SUFFIX}"
 
-
-@pytest.fixture
-def container_image():
-    # Build container image for Cloud Run deployment
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def build_container_image(image_name, project):
+    """Build container image for Cloud Run deployment."""
     subprocess.check_call(
         [
             "gcloud",
             "builds",
             "submit",
             "--tag",
-            IMAGE_NAME,
+            image_name,
             "--project",
-            PROJECT,
+            project,
             "--quiet",
         ]
     )
-    yield IMAGE_NAME
 
-    # Delete container image
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def delete_container_image(image_name, project):
+    """Delete container image."""
     subprocess.check_call(
         [
             "gcloud",
             "container",
             "images",
             "delete",
-            IMAGE_NAME,
+            image_name,
             "--quiet",
             "--project",
-            PROJECT,
+            project,
         ]
     )
 
 
-@pytest.fixture
-def deployed_service(container_image):
-    # Deploy image to Cloud Run
+@pytest.fixture(scope='module')
+def container_image():
+    try:
+        build_container_image(IMAGE_NAME, PROJECT)
+        yield IMAGE_NAME
+    finally:
+        delete_container_image(IMAGE_NAME, PROJECT)
 
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def deploy_image(cloud_run_service, container_image, project):
+    """Deploy image to Cloud Run."""
     subprocess.check_call(
         [
             "gcloud",
             "run",
             "deploy",
-            CLOUD_RUN_SERVICE,
+            cloud_run_service,
             "--image",
             container_image,
             "--region=us-central1",
             "--project",
-            PROJECT,
+            project,
             "--platform=managed",
             "--no-allow-unauthenticated",
         ]
     )
 
-    yield CLOUD_RUN_SERVICE
 
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def delete_service(cloud_run_service, project):
     subprocess.check_call(
         [
             "gcloud",
             "run",
             "services",
             "delete",
-            CLOUD_RUN_SERVICE,
+            cloud_run_service,
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
             "--async",
             "--project",
-            PROJECT,
+            project,
         ]
     )
 
 
-@pytest.fixture
-def service_url(deployed_service):
-    # Get the URL for the cloud run service
-    service_url = subprocess.run(
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def get_service_url(cloud_run_service, project):
+    return subprocess.run(
         [
             "gcloud",
             "run",
             "--project",
-            PROJECT,
+            project,
             "services",
             "describe",
-            CLOUD_RUN_SERVICE,
+            cloud_run_service,
             "--platform=managed",
             "--region=us-central1",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
-
-    yield service_url.decode()
+    ).stdout.strip().decode()
 
 
-@pytest.fixture()
-def pubsub_topic():
+@pytest.fixture(scope='module')
+def service_url(container_image):
+    try:
+        deploy_image(CLOUD_RUN_SERVICE, container_image, PROJECT)
+        yield get_service_url(CLOUD_RUN_SERVICE, PROJECT)
+    finally:
+        delete_service(CLOUD_RUN_SERVICE, PROJECT)
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def create_topic(project, topic):
     publisher = pubsub_v1.PublisherClient()
-    topic_path = publisher.topic_path(PROJECT, TOPIC)
+    topic_path = publisher.topic_path(project, topic)
     publisher.create_topic(request={"name": topic_path})
-    yield TOPIC
+    return TOPIC
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def delete_topic(project, topic):
+    publisher = pubsub_v1.PublisherClient()
+    topic_path = publisher.topic_path(project, topic)
     try:
         publisher.delete_topic(request={"topic": topic_path})
     except NotFound:
         print("Topic not found, it was either never created or was already deleted.")
 
 
-@pytest.fixture(autouse=True)
-def pubsub_subscription(pubsub_topic, service_url):
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def create_subscription(pubsub_topic, service_url):
     # Create pubsub push subscription to Cloud Run Service
     # Attach service account with Cloud Run Invoker role
     # See tutorial for details on setting up service-account:
@@ -168,9 +189,13 @@ def pubsub_subscription(pubsub_topic, service_url):
                 "push_config": push_config,
             }
         )
-    yield
-    subscriber = pubsub_v1.SubscriberClient()
 
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def delete_subscription(pubsub_topic):
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_id = f"{pubsub_topic}_sub"
+    subscription_path = subscriber.subscription_path(PROJECT, subscription_id)
     # delete subscription
     with subscriber:
         try:
@@ -179,6 +204,17 @@ def pubsub_subscription(pubsub_topic, service_url):
             print(
                 "Unable to delete - subscription either never created or already deleted."
             )
+
+
+@pytest.fixture(scope='module')
+def pubsub_topic(service_url):
+    try:
+        topic = create_topic(PROJECT, TOPIC)
+        create_subscription(topic, service_url)
+        yield topic 
+    finally:
+        delete_topic(PROJECT, TOPIC)
+        delete_subscription(topic)
 
 
 def test_end_to_end(pubsub_topic):
