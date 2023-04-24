@@ -52,7 +52,7 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
   deadline = 300
   curr_time = 0
   interval = 10
-  while !operation.done() and curr_time < deadline:
+  while not operation.done() and curr_time < deadline:
     time.sleep(interval)
     curr_time += interval
 
