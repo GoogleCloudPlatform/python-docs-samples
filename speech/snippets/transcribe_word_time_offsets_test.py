@@ -15,11 +15,14 @@
 import os
 import re
 
+from google.api_core.retry import Retry
+
 import transcribe_word_time_offsets
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
+@Retry()
 def test_transcribe_file_with_word_time_offsets(capsys):
     transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
         os.path.join(RESOURCES, "audio.raw")
@@ -33,6 +36,7 @@ def test_transcribe_file_with_word_time_offsets(capsys):
     assert time > 0
 
 
+@Retry()
 def test_transcribe_gcs_with_word_time_offsets(capsys):
     transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
         "gs://python-docs-samples-tests/speech/audio.flac"

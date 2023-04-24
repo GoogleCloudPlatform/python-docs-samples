@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.api_core.retry import Retry
+
 import transcribe_context_classes
 
 
+@Retry()
 def test_transcribe_context_classes(capsys):
     transcribe_context_classes.transcribe_context_classes(
         "gs://cloud-samples-data/speech/commercial_mono.wav"

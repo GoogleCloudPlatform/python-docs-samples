@@ -19,10 +19,16 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable)
-from google.cloud.dataproc_v1.services.cluster_controller.client import \
-    ClusterControllerClient
+from google.api_core.exceptions import (
+    Cancelled,
+    InternalServerError,
+    InvalidArgument,
+    NotFound,
+    ServiceUnavailable,
+)
+from google.cloud.dataproc_v1.services.cluster_controller.client import (
+    ClusterControllerClient,
+)
 import pytest
 
 import update_cluster
@@ -35,8 +41,8 @@ CLUSTER = {
     "project_id": PROJECT_ID,
     "cluster_name": CLUSTER_NAME,
     "config": {
-        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2"},
-        "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
+        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+        "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
     },
 }
 
@@ -51,15 +57,16 @@ def cluster_client():
 
 @pytest.fixture(autouse=True)
 def setup_teardown(cluster_client):
-    try:
+    # InvalidArgument is thrown when the subnetwork is not ready
+    @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
+    def setup():
         # Create the cluster.
         operation = cluster_client.create_cluster(
             request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
         )
         operation.result()
 
-        yield
-    finally:
+    def teardown():
         try:
             operation = cluster_client.delete_cluster(
                 request={
@@ -72,8 +79,16 @@ def setup_teardown(cluster_client):
         except NotFound:
             print("Cluster already deleted")
 
+    try:
+        setup()
+        yield
+    finally:
+        teardown()
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
+)
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
     # Wrapper function for client library function
     update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)

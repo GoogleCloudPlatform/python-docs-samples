@@ -14,9 +14,12 @@
 
 import re
 
+from google.api_core.retry import Retry
+
 import profanity_filter
 
 
+@Retry()
 def test_profanity_filter(capsys):
     profanity_filter.sync_recognize_with_profanity_filter_gcs(
         "gs://cloud-samples-tests/speech/brooklyn.flac"

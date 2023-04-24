@@ -16,6 +16,7 @@ import os
 import re
 from uuid import uuid4
 
+from google.api_core.retry import Retry
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
@@ -36,6 +37,7 @@ def delete_phrase_set(name):
     client.delete_phrase_set(request=request)
 
 
+@Retry()
 def test_adaptation_v2_phrase_set_reference(capsys):
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 

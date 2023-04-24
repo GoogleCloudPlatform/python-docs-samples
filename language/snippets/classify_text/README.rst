@@ -9,7 +9,7 @@ Google Cloud Natural Language API Python Samples
 
 This directory contains samples for Google Cloud Natural Language API. The `Google Cloud Natural Language API`_ provides natural language understanding technologies to developers.
 
-This tutorial demostrates how to use the `classify_text` method to classify content category of text files, and use the result to compare texts by their similarity to each other.  See the `tutorial page`_ for details about this sample.
+This tutorial demonstrates how to use the `classify_text` method to classify content category of text files, and use the result to compare texts by their similarity to each other.  See the `tutorial page`_ for details about this sample.
 
 .. _tutorial page: https://cloud.google.com/natural-language/docs/classify-text-tutorial
 
