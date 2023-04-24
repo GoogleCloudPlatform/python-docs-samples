@@ -68,12 +68,15 @@ def version():
     version_hostname = f"{version_id}-dot-{project_id}.appspot.com"
 
     # Wait for app to initialize
-    @backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=3)
+    @backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=5)
     def wait_for_app(url):
         r = requests.get(url)
         r.raise_for_status()
 
-    wait_for_app(f"https://{version_hostname}/")
+    try:
+        wait_for_app(f"https://{version_hostname}/")
+    except Exception as e:
+        assert e is None
 
     yield project_id, version_id
 
