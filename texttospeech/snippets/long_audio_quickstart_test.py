@@ -16,6 +16,7 @@ from long_audio_quickstart import synthesize_long_audio
 import uuid
 from google.cloud import storage
 import pytest
+import os
 
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 
