@@ -33,7 +33,7 @@ def delete_recognizer(name):
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_transcribe_streaming_voice_activity_timeouts(capsys):
+def test_transcribe_silence_padding_timeouts(capsys):
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
