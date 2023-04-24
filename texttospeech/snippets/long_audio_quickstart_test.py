@@ -12,11 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from long_audio_quickstart import synthesize_long_audio
-import uuid
-from google.cloud import storage
-import pytest
 import os
+import pytest
+import uuid
+
+from google.cloud import storage
+
+from long_audio_quickstart import synthesize_long_audio
+
 
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 
@@ -30,6 +33,7 @@ def test_bucket():
     bucket.create()
     yield bucket
     bucket.delete(force=True)
+
 
 def test_synthesize_long_audio(capsys, test_bucket):
     file_name = "fake_file.wav"
