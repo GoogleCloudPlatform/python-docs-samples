@@ -75,6 +75,8 @@ def version():
 
     try:
         wait_for_app(f"https://{version_hostname}/")
+    except Exception as e:
+        assert e is None
 
     yield project_id, version_id
 
