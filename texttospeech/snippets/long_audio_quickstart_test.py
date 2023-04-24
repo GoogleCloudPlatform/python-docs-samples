@@ -13,15 +13,16 @@
 # limitations under the License.
 
 import os
-import pytest
 import uuid
 
 from google.cloud import storage
+import pytest
 
 from long_audio_quickstart import synthesize_long_audio
 
 
 PROJECT_NUMBER = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
+
 
 @pytest.fixture(scope="module")
 def test_bucket():
