@@ -41,5 +41,6 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
 
   operation = client.synthesize_long_audio(request=request)
   
-  result = operation.result(timeout=120)
+  # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
+  result = operation.result(timeout=300)
   print("\nFinished processing, check your GCS bucket to find your audio file!")
