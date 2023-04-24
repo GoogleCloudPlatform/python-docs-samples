@@ -16,47 +16,47 @@ from google.cloud import texttospeech
 import time
 
 def synthesize_long_audio(project_id, location, output_gcs_uri):
-  """
-  Synthesizes long input, writing the resulting audio to `output_gcs_uri`.
-  
-  Example usage: synthesize_long_audio('12345', 'us-central1', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
-  
-  """
-  # TODO(developer): Uncomment and set the following variables
-  # parent = 'YOUR_PROJECT_ID'
-  # location = 'YOUR_LOCATION'
-  # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
+    """
+    Synthesizes long input, writing the resulting audio to `output_gcs_uri`.
 
-  client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
+    Example usage: synthesize_long_audio('12345', 'us-central1', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
 
-  input = texttospeech.SynthesisInput(
-      text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
+    """
+    # TODO(developer): Uncomment and set the following variables
+    # parent = 'YOUR_PROJECT_ID'
+    # location = 'YOUR_LOCATION'
+    # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
 
-  audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
+    client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
-  voice = texttospeech.VoiceSelectionParams(language_code="en-US", name="en-US-Standard-A")
-  
-  parent = f"projects/{project_id}/locations/{location}"
+    input = texttospeech.SynthesisInput(
+        text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
 
-  request = texttospeech.SynthesizeLongAudioRequest(
-      parent=parent,
-      input=input,
-      audio_config=audio_config,
-      voice=voice,
-      output_gcs_uri=output_gcs_uri,
-  )
+    audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
 
-  operation = client.synthesize_long_audio(request=request)
-  # Set a deadline for your LRO to finish. 300 seconds is reasonable, but can be adjusted depending on the length of the input.
-  # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
-  deadline = 300
-  curr_time = 0
-  interval = 10
-  while not operation.done() and curr_time < deadline:
-      time.sleep(interval)
-      curr_time += interval
+    voice = texttospeech.VoiceSelectionParams(language_code="en-US", name="en-US-Standard-A")
 
-  if operation.done():
-      print("\nFinished processing, check your GCS bucket to find your audio file!")
-  else:
-      print("\nOperation timed out, likely due to an error. If you do not believe this is due to an error, consider increasing the deadline for your operation.")
+    parent = f"projects/{project_id}/locations/{location}"
+
+    request = texttospeech.SynthesizeLongAudioRequest(
+        parent=parent,
+        input=input,
+        audio_config=audio_config,
+        voice=voice,
+        output_gcs_uri=output_gcs_uri,
+    )
+
+    operation = client.synthesize_long_audio(request=request)
+    # Set a deadline for your LRO to finish. 300 seconds is reasonable, but can be adjusted depending on the length of the input.
+    # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
+    deadline = 300
+    curr_time = 0
+    interval = 10
+    while not operation.done() and curr_time < deadline:
+        time.sleep(interval)
+        curr_time += interval
+
+    if operation.done():
+        print("\nFinished processing, check your GCS bucket to find your audio file!")
+    else:
+        print("\nOperation timed out, likely due to an error. If you do not believe this is due to an error, consider increasing the deadline for your operation.")
