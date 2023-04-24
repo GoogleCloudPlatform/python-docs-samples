@@ -2218,7 +2218,7 @@ if __name__ == "__main__":
     table_row_suppress_parser = subparsers.add_parser(
         "deid_table_row_suppress",
         help="De-identify sensitive data in a table by suppressing "
-             "entire row/s based on a condition.",
+        "entire row/s based on a condition.",
     )
     table_row_suppress_parser.add_argument(
         "project",
@@ -2231,14 +2231,14 @@ if __name__ == "__main__":
     table_row_suppress_parser.add_argument(
         "--condition_field",
         help="A table Field within the record this condition is evaluated "
-             "against.",
+        "against.",
     )
     table_row_suppress_parser.add_argument(
         "--condition_operator",
         help="Operator used to compare the field or infoType to the value. "
-             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
-             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
-             "EXISTS.",
+        "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+        "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+        "EXISTS.",
     )
     table_row_suppress_parser.add_argument(
         "--condition_value",
