@@ -30,6 +30,7 @@ from create_certificate_template import create_certificate_template
 from delete_certificate_authority import delete_certificate_authority
 from delete_certificate_template import delete_certificate_template
 from disable_certificate_authority import disable_certificate_authority
+from enable_certificate_authority import enable_certificate_authority
 
 PROJECT = google.auth.default()[1]
 LOCATIONS = ("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4", "europe-west1")
@@ -126,6 +127,7 @@ def deleted_certificate_authority(ca_pool):
         PROJECT, LOCATION, ca_pool, CA_NAME, COMMON_NAME, ORGANIZATION, CA_DURATION
     )
 
+    enable_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
     disable_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
     delete_certificate_authority(PROJECT, LOCATION, ca_pool, CA_NAME)
 
