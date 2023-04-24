@@ -36,7 +36,7 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
 
   voice = texttospeech.VoiceSelectionParams(language_code="en-US", name="en-US-Standard-A")
   
-  parent = f'projects/{project_id}/locations/{location}'
+  parent = f"projects/{project_id}/locations/{location}"
 
   request = texttospeech.SynthesizeLongAudioRequest(parent=parent, input=input, audio_config=audio_config, voice=voice, output_gcs_uri=output_gcs_uri)
 
