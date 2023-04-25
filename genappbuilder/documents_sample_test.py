@@ -15,7 +15,8 @@
 
 import os
 
-import documents_sample
+from genappbuilder import import_documents_sample
+from genappbuilder import list_documents_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
@@ -28,7 +29,7 @@ bigquery_table = "import_documents_test"
 
 
 def test_import_documents_gcs(capsys):
-    documents_sample.import_documents_sample(
+    import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
@@ -41,7 +42,7 @@ def test_import_documents_gcs(capsys):
 
 
 def test_import_documents_bigquery(capsys):
-    documents_sample.import_documents_sample(
+    import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
@@ -55,7 +56,7 @@ def test_import_documents_bigquery(capsys):
 
 
 def test_list_documents(capsys):
-    documents_sample.list_documents_sample(
+    list_documents_sample.list_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,

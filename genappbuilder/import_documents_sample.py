@@ -16,14 +16,12 @@
 # [START genappbuilder_import_documents]
 from typing import Optional
 
-# [START genappbuilder_list_documents]
 from google.cloud import discoveryengine_v1beta as genappbuilder
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_LOCATION" # Values: "global"
 # search_engine_id = "YOUR_SEARCH_ENGINE_ID"
-# [END genappbuilder_list_documents]
 
 # Must specify either `gcs_uri` or (`bigquery_dataset` and `bigquery_table`)
 # Format: `gs://bucket/directory/object.json` or `gs://bucket/directory/*.json`
@@ -90,25 +88,3 @@ def import_documents_sample(
 
 
 # [END genappbuilder_import_documents]
-# [START genappbuilder_list_documents]
-def list_documents_sample(project_id: str, location: str, search_engine_id: str):
-    # Create a client
-    client = genappbuilder.DocumentServiceClient()
-
-    # The full resource name of the search engine branch.
-    # e.g. projects/{project}/locations/{location}/dataStores/{data_store}/branches/{branch}
-    parent = client.branch_path(
-        project=project_id,
-        location=location,
-        data_store=search_engine_id,
-        branch="default_branch",
-    )
-
-    response = client.list_documents(parent=parent)
-
-    print(f"Documents in {search_engine_id}:")
-    for result in response:
-        print(result)
-
-
-# [END genappbuilder_list_documents]
