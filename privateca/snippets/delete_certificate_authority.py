@@ -39,12 +39,13 @@ def delete_certificate_authority(
 
     # Check if the CA is enabled.
     ca_state = caServiceClient.get_certificate_authority(name=ca_path).state
-    print(ca_state)
-    if ca_state == privateca_v1.CertificateAuthority.State.ENABLED:
+    if ca_state != privateca_v1.CertificateAuthority.State.DISABLED:
         print(
             "Please disable the Certificate Authority before deletion ! Current state:",
             ca_state,
         )
+        raise RuntimeError(f"You can only delete disabled Certificate Authorities. "
+                           f"{ca_name} is not disabled!")
 
     # Create the DeleteCertificateAuthorityRequest.
     # Setting the ignore_active_certificates to True will delete the CA
