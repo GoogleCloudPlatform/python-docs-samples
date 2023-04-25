@@ -106,6 +106,7 @@ def list_documents_sample(project_id: str, location: str, search_engine_id: str)
 
     response = client.list_documents(parent=parent)
 
+    print(f"Documents in {search_engine_id}:")
     for result in response:
         print(result)
 

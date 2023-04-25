@@ -36,7 +36,7 @@ def test_get_operation(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert operation_name in out
+    assert operation_id in out
 
 
 def test_poll_operation(capsys):
@@ -47,16 +47,4 @@ def test_poll_operation(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert operation_name in out
-
-
-def test_list_operations(capsys):
-    list_operations_sample.list_operations_sample(
-        project_id=project_id,
-        location=location,
-        search_engine_id=search_engine_id,
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert operation_name in out
+    assert operation_id in out

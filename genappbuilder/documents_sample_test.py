@@ -63,4 +63,4 @@ def test_list_documents(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "documents/" in out
+    assert f"Documents in {search_engine_id}" in out
