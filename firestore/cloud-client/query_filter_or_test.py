@@ -44,6 +44,7 @@ def setup(scope="function", autouse=True):
     ]
 
     create_in_transaction(transaction_create, td)
+    transaction_create.commit()
 
     yield
 
@@ -56,6 +57,7 @@ def setup(scope="function", autouse=True):
             transaction.delete(ref)
 
     delete_in_transaction(transaction_delete, td)
+    transaction_delete.commit()
 
 
 def test_query_or_composite_filter(capsys):
