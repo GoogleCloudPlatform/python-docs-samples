@@ -58,6 +58,7 @@ from generate_random_bytes import generate_random_bytes
 from get_key_labels import get_key_labels
 from get_key_version_attestation import get_key_version_attestation
 from get_public_key import get_public_key
+from get_public_key_jwk import get_public_key_jwk
 from iam_add_member import iam_add_member
 from iam_get_policy import iam_get_policy
 from iam_remove_member import iam_remove_member
@@ -401,6 +402,11 @@ def test_get_key_version_attestation(project_id, location_id, key_ring_id, hsm_k
 def test_get_public_key(project_id, location_id, key_ring_id, asymmetric_decrypt_key_id):
     public_key = get_public_key(project_id, location_id, key_ring_id, asymmetric_decrypt_key_id, '1')
     assert public_key.pem
+
+
+def test_get_public_key_jwk(project_id, location_id, key_ring_id, asymmetric_decrypt_key_id):
+    public_key = get_public_key_jwk(project_id, location_id, key_ring_id, asymmetric_decrypt_key_id, '1')
+    assert "kty" in public_key
 
 
 def test_iam_add_member(project_id, location_id, key_ring_id, symmetric_key_id):
