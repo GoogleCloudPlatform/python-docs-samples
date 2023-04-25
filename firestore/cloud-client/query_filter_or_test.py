@@ -26,28 +26,27 @@ PROJECT_ID = os.environ['FIRESTORE_PROJECT']
 
 @pytest.fixture(scope="module")
 def resources():
+    data = {
+            u'aturing': {u'birthYear': 1912},
+            u'cbabbage': {u'birthYear': 1791},
+            u'ghopper': {u'birthYear': 1906},
+            u'alovelace': {u'birthYear': 1815},
+    }
     try:
         client = firestore.Client(project=PROJECT_ID)
         cr = client.collection('users')
 
-        td = {
-            u'aturing', {u'birthYear': 1912},
-            u'cbabbage', {u'birthYear': 1791},
-            u'ghopper', {u'birthYear': 1906},
-            u'alovelace', {u'birthYear': 1815},
-        }
-
-        for k, v in td.items():
+        for k, v in data.items():
             cr.document(k).set(v)
 
         yield
 
     finally:
-        for k, v in td.items():
+        for k, v in data.items():
             cr.document(k).delete()
 
 
-def test_query_or_composite_filter(capsys):
+def test_query_or_composite_filter(capsys, resources):
     query_or_composite_filter(PROJECT_ID)
 
     out, _ = capsys.readouterr()
