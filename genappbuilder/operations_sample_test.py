@@ -15,12 +15,11 @@
 
 import os
 
-import get_operation_sample
-import list_operations_sample
-import poll_operation_sample
+from genappbuilder import get_operation_sample
+from genappbuilder import list_operations_sample
+from genappbuilder import poll_operation_sample
 
 from google.api_core.exceptions import NotFound
-
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
