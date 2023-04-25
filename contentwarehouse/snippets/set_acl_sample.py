@@ -40,7 +40,7 @@ def set_acl(
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
-        policy: ACL policy to set, in JSON format 
+        policy: ACL policy to set, in JSON format.
         user_id: user:YOUR_SERVICE_ACCOUNT_ID.
         document_id: Record id in Document AI Warehouse.
     """

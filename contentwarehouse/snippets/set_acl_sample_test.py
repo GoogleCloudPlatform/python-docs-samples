@@ -18,7 +18,7 @@ import os
 from contentwarehouse.snippets import set_acl_sample
 from contentwarehouse.snippets import test_utilities
 
-from google.api_core.exceptions import InvalidArgument, PermissionDenied
+from google.api_core.exceptions import InvalidArgument
 
 import pytest
 
@@ -30,10 +30,9 @@ policy = {
     "bindings":
     [
         {
-        "role": "roles/contentwarehouse.documentAdmin",
-        "members": ["xxxx@example.com"]
+            "role": "roles/contentwarehouse.documentAdmin",
+            "members": ["xxxx@example.com"]
         }
-
     ]
 }
 
@@ -54,7 +53,7 @@ def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
 def test_set_document_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # Project can only support Document or Project ACLs
-    with pytest.raises(PermissionDenied):
+    with pytest.raises(InvalidArgument):
         set_acl_sample.set_acl(
             project_number=project_number,
             location=location,
