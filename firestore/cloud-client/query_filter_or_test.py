@@ -24,40 +24,27 @@ os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
 PROJECT_ID = os.environ['FIRESTORE_PROJECT']
 
 
-@pytest.fixture
-def setup(scope="function", autouse=True):
-    client = firestore.Client(project=PROJECT_ID)
-    cr = client.collection('users')
-    transaction_create = client.transaction()
+@pytest.fixture(scope="module")
+def resources():
+    try:
+        client = firestore.Client(project=PROJECT_ID)
+        cr = client.collection('users')
 
-    @firestore.transactional
-    def create_in_transaction(transaction, data_list):
-        for d in data_list:
-            transaction.create(cr.document(d['shortName']),
-                               {u'birthYear': d['birthYear']})
+        td = {
+            u'aturing', {u'birthYear': 1912},
+            u'cbabbage', {u'birthYear': 1791},
+            u'ghopper', {u'birthYear': 1906},
+            u'alovelace', {u'birthYear': 1815},
+        }
 
-    td = [
-        {u'shortName': 'aturing', u'birthYear': 1912},
-        {u'shortName': 'cbabbage', u'birthYear': 1791},
-        {u'shortName': 'ghopper', u'birthYear': 1906},
-        {u'shortName': 'alovelace', u'birthYear': 1815},
-    ]
+        for k, v in td.items():
+            cr.document(k).set(v)
 
-    create_in_transaction(transaction_create, td)
-    transaction_create.commit()
+        yield
 
-    yield
-
-    transaction_delete = client.transaction()
-
-    @firestore.transactional
-    def delete_in_transaction(transaction, data_list):
-        for d in data_list:
-            ref = cr.document(d['shortName']).get(transaction=transaction)
-            transaction.delete(ref)
-
-    delete_in_transaction(transaction_delete, td)
-    transaction_delete.commit()
+    finally:
+        for k, v in td.items():
+            cr.document(k).delete()
 
 
 def test_query_or_composite_filter(capsys):
