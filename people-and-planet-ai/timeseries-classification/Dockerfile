@@ -27,10 +27,9 @@ COPY constraints.txt ./
 
 # Install Python 3 and other required dependencies.
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends curl g++ python3.8-dev python3-distutils \
+    && apt-get install -y --no-install-recommends curl g++ python3.8-dev python3-distutils python3-pip \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.8 10 \
-    && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements and check that there are no conflicts.
     # Since the image already has all the dependencies installed,
     # there's no need to run with the --requirements_file option.
