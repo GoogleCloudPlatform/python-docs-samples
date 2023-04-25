@@ -124,8 +124,8 @@ def dataproc_cluster() -> Generator[dataproc_v1.Cluster, None, None]:
         "project_id": PROJECT_ID,
         "cluster_name": CLUSTER_ID,
         "config": {
-            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2"},
-            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2"},
+            "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+            "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
             "config_bucket": BUCKET,
             "temp_bucket": BUCKET,
             "software_config": {"image_version": "2.0-debian10"},
