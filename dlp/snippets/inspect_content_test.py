@@ -515,7 +515,7 @@ def test_inspect_gcs_with_sampling(bucket, topic_id, subscription_id, capsys):
             subscription_id,
             ["EMAIL_ADDRESS", "PHONE_NUMBER"],
             ["TEXT_FILE"],
-            timeout=300,
+            timeout=TIMEOUT,
         )
 
         out, _ = capsys.readouterr()
