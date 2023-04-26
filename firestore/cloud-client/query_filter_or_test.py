@@ -16,6 +16,7 @@ import os
 
 from google.cloud import firestore
 
+import backoff
 import pytest
 
 from query_filter_or import query_or_composite_filter
@@ -25,29 +26,45 @@ PROJECT_ID = os.environ['FIRESTORE_PROJECT']
 
 
 @pytest.fixture(scope="module")
-def resources():
-    data = {
+def data():
+    return {
             u'aturing': {u'birthYear': 1912},
             u'cbabbage': {u'birthYear': 1791},
             u'ghopper': {u'birthYear': 1906},
             u'alovelace': {u'birthYear': 1815},
     }
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def create_document(key, val, collection):
+    collection.document(key).set(val)
+
+
+def create_document_collection(data, collection):
+    for key, val in data.items():
+        create_document(key, val, collection)
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def delete_document(key, collection):
+    collection.document(key).delete()
+
+
+def delete_document_collection(data, collection):
+    for key in data:
+        delete_document(key, collection)
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def test_query_or_composite_filter(capsys, data):
+    client = firestore.Client(project=PROJECT_ID)
+    collection = client.collection('users')
+
     try:
-        client = firestore.Client(project=PROJECT_ID)
-        cr = client.collection('users')
-
-        for k, v in data.items():
-            cr.document(k).set(v)
-
-        yield
-
+        create_document_collection(data, collection)
+        query_or_composite_filter(PROJECT_ID)
     finally:
-        for k, v in data.items():
-            cr.document(k).delete()
-
-
-def test_query_or_composite_filter(capsys, resources):
-    query_or_composite_filter(PROJECT_ID)
+        delete_document_collection(data, collection)
 
     out, _ = capsys.readouterr()
     assert 'aturing' in out
