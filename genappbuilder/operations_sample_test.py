@@ -16,6 +16,7 @@
 import os
 
 from genappbuilder import get_operation_sample
+from genappbuilder import list_operations_sample
 from genappbuilder import poll_operation_sample
 
 from google.api_core.exceptions import NotFound
@@ -32,6 +33,18 @@ def test_get_operation(capsys):
         get_operation_sample.get_operation_sample(operation_name=operation_name)
     except NotFound as e:
         print(e.message)
+
+    out, _ = capsys.readouterr()
+
+    assert operation_id in out
+
+
+def test_list_operations(capsys):
+    list_operations_sample.list_operations_sample(
+        project_id=project_id,
+        location=location,
+        search_engine_id=search_engine_id,
+    )
 
     out, _ = capsys.readouterr()
 
