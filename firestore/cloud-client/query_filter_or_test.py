@@ -14,9 +14,8 @@
 
 import os
 
-from google.cloud import firestore
-
 import backoff
+from google.cloud import firestore
 import pytest
 
 from query_filter_or import query_or_composite_filter
