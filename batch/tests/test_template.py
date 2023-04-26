@@ -14,7 +14,7 @@
 
 import uuid
 
-import flaky
+from flaky import flaky
 
 import google.auth
 from google.cloud import batch_v1
