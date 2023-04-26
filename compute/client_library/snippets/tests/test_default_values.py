@@ -32,8 +32,22 @@ TEST_PREFIX = "some-prefix"
 @pytest.fixture
 def temp_bucket():
     storage_client = storage.Client()
+
+    # Get exclusive lock for testing. Lock bucket name is
+    # COMPUTE_CLIENT_LIBRARY_SNIPPETS_LOCK_BUCKET.
+
+    lock_name = "COMPUTE_CLIENT_LIBRARY_SNIPPETS_LOCK_BUCKET"
+    for _ in range(10):
+        try:
+            lock_bucket = storage_client.create_bucket(lock_name)
+            break
+        except google.cloud.exceptions.Conflict:
+            time.sleep(30)
+    
     bucket = storage_client.create_bucket(BUCKET_NAME)
     yield bucket
+
+    lock_bucket.delete(force=True)
     bucket.delete(force=True)
 
 
