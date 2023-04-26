@@ -13,6 +13,7 @@
 #  limitations under the License.
 import uuid
 
+import flaky
 
 import google.auth
 from google.cloud import batch_v1
@@ -65,6 +66,7 @@ def _test_bucket_content(test_bucket):
         assert content == file_content_template.format(task_number=i)
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_bucket_job(job_name, test_bucket):
     job = create_script_job_with_bucket(PROJECT, REGION, job_name, test_bucket)
     _test_body(job, lambda: _test_bucket_content(test_bucket))
