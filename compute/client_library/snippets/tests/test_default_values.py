@@ -36,7 +36,7 @@ def temp_bucket():
     # Get exclusive lock for testing. Lock bucket name is
     # COMPUTE_CLIENT_LIBRARY_SNIPPETS_LOCK_BUCKET.
 
-    lock_name = "COMPUTE_CLIENT_LIBRARY_SNIPPETS_LOCK_BUCKET"
+    lock_name = "COMPUTE_SNIPPETS_LOCK"
     for _ in range(10):
         try:
             lock_bucket = storage_client.create_bucket(lock_name)
