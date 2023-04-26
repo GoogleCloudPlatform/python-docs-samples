@@ -22,7 +22,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_create_count_query(capsys):
-    assert PROJECT_ID="nothin'"
+    assert PROJECT_ID=="nothin'"
     create_count_query(project_id=PROJECT_ID)
     out, _ = capsys.readouterr()
 
