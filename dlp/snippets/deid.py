@@ -1605,16 +1605,15 @@ def deindentify_with_dictionary_replacement(
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Construct inspect configuration dictionary
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    # Construct list of info types
+    info_types = [{"name": info_type} for info_type in info_types]
 
     # Construct deidentify configuration dictionary
     deidentify_config = {
         "info_type_transformations": {
             "transformations": [
                 {
+                    "info_types": info_types,
                     "primitive_transformation": {
                         "replace_dictionary_config": {
                             "word_list": {"words": word_list}
@@ -1636,7 +1635,6 @@ def deindentify_with_dictionary_replacement(
         request={
             "parent": parent,
             "deidentify_config": deidentify_config,
-            "inspect_config": inspect_config,
             "item": item,
         }
     )
