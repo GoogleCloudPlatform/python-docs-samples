@@ -18,14 +18,28 @@ import urls
 
 app = Flask(__name__)
 
+# Template URL rules.
 app.add_url_rule(rule="/", methods=["GET"], view_func=urls.home)
 app.add_url_rule(rule="/store", methods=["GET"], view_func=urls.store)
 app.add_url_rule(rule="/login", methods=["GET"], view_func=urls.login)
 app.add_url_rule(rule="/comment", methods=["GET"], view_func=urls.comment)
 app.add_url_rule(rule="/signup", methods=["GET"], view_func=urls.signup)
-app.add_url_rule(rule="/game", methods=["GET"], view_func=urls.game)
+
+# Submit action URL rules.
 app.add_url_rule(
-    rule="/create_assessment", methods=["POST"], view_func=urls.create_assessment
+    rule="/on_homepage_load", methods=["POST"], view_func=urls.on_homepage_load
+)
+app.add_url_rule(
+    rule="/on_login", methods=["POST"], view_func=urls.on_login
+)
+app.add_url_rule(
+    rule="/on_signup", methods=["POST"], view_func=urls.on_signup
+)
+app.add_url_rule(
+    rule="/on_store_checkout", methods=["POST"], view_func=urls.on_store_checkout
+)
+app.add_url_rule(
+    rule="/on_comment_submit", methods=["POST"], view_func=urls.on_comment_submit
 )
 
 if __name__ == "__main__":

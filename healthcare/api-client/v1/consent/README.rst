@@ -155,7 +155,7 @@ To run this sample:
                             store.
       --export_format {FORMAT_UNSPECIFIED,consent,JSON_BIGQUERY_IMPORT}
                             Specifies the output format. If the format is
-                            unspecified, thedefault functionality is to export to
+                            unspecified, the default functionality is to export to
                             consent.
       --member MEMBER       Member to add to IAM policy (e.g.
                             "domain:example.com")

@@ -6,9 +6,9 @@
   "rebaseWhen": "never",
   "masterIssue": true,
   "pip_requirements": {
-    "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt"]
+    "fileMatch": ["requirements-test.txt", "requirements-composer.txt", "constraints.txt", "constraints-test.txt", "pyproject.toml"]
   },
-  "ignorePaths" : ["composer/**/constraints.txt", "composer/blog/**/constraints.txt", "composer/airflow_1_samples/requirements.txt"],
+  "ignorePaths" : ["composer/**/constraints.txt", "composer/blog/**/constraints.txt", "composer/airflow_1_samples/requirements.txt", "appengine/standard"],
   "packageRules": [
     {
       "packagePatterns": ["pytest"],
