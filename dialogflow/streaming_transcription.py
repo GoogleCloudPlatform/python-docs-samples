@@ -64,6 +64,7 @@ class ResumableMicrophoneStream:
         self._num_channels = 1
         self._buff = queue.Queue()
         self.closed = True
+        self.is_final = False
         # Count the number of times the stream analyze content restarts.
         self.restart_counter = 0
         self.last_start_time = 0
@@ -110,49 +111,53 @@ class ResumableMicrophoneStream:
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
-        # Handle restart.
-        if not self.closed:
-            total_processed_time = self.last_start_time + self.is_final_offset
-            processed_bytes_length = int(
-                total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
-            self.last_start_time = total_processed_time
-            # Send out bytes stored in self.audio_input_chunks that is after the
-            # processed_bytes_length.
-            if (processed_bytes_length != 0):
-                audio_bytes = b''.join(self.audio_input_chunks)
-                # Lookback for unprocessed audio data.
-                need_to_process_length = min(
-                    int(len(audio_bytes) - processed_bytes_length),
-                    int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8))
-                # Note that you need to explicitly use `int` type for substring.
-                need_to_process_bytes = audio_bytes[(-1)
-                                                    * need_to_process_length:]
-                yield need_to_process_bytes
+        while True and not self.closed:
+            if self.is_final:
+                # Handle restart.
+                print("restart generator")
+                # Flip the bit of is_final so it can continue stream.
+                self.is_final = False
+                total_processed_time = self.last_start_time + self.is_final_offset
+                processed_bytes_length = int(
+                    total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
+                self.last_start_time = total_processed_time
+                # Send out bytes stored in self.audio_input_chunks that is after the
+                # processed_bytes_length.
+                if (processed_bytes_length != 0):
+                    audio_bytes = b''.join(self.audio_input_chunks)
+                    # Lookback for unprocessed audio data.
+                    need_to_process_length = min(
+                        int(len(audio_bytes) - processed_bytes_length),
+                        int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8))
+                    # Note that you need to explicitly use `int` type for substring.
+                    need_to_process_bytes = audio_bytes[(-1)
+                                                        * need_to_process_length:]
+                    yield need_to_process_bytes
 
-        while not self.closed:
-            data = []
-            # Use a blocking get() to ensure there's at least one chunk of
-            # data, and stop iteration if the chunk is None, indicating the
-            # end of the audio stream.
-            chunk = self._buff.get()
+            while not self.is_final:
+                data = []
+                # Use a blocking get() to ensure there's at least one chunk of
+                # data, and stop iteration if the chunk is None, indicating the
+                # end of the audio stream.
+                chunk = self._buff.get()
 
-            if chunk is None:
-                return
-            data.append(chunk)
-            # Now try to the rest of chunks if there are any left in the _buff.
-            while True:
-                try:
-                    chunk = self._buff.get(block=False)
+                if chunk is None:
+                    return
+                data.append(chunk)
+                # Now try to the rest of chunks if there are any left in the _buff.
+                while True:
+                    try:
+                        chunk = self._buff.get(block=False)
 
-                    if chunk is None:
-                        return
-                    data.append(chunk)
+                        if chunk is None:
+                            return
+                        data.append(chunk)
 
-                except queue.Empty:
-                    break
-            self.audio_input_chunks.extend(data)
-            if data:
-                yield b''.join(data)
+                    except queue.Empty:
+                        break
+                self.audio_input_chunks.extend(data)
+                if data:
+                    yield b''.join(data)
 
 
 def main():
@@ -192,25 +197,28 @@ def main():
                         language_code='en-US',
                         single_utterance=False)
 
-                    # Now, put the transcription responses to user.
+                    # Now, print the final transcription responses to user.
                     for response in responses:
-                        # if response.human_agent_suggestion_results:
-                        #     print(response)
                         if response.recognition_result.is_final:
-                            print(response.recognition_result)
+                            print(response)
                             # offset return from recognition_result is relative
                             # to the beginning of audio stream.
                             offset = response.recognition_result.speech_end_offset
                             stream.is_final_offset = int(
-                                offset.seconds * 1000 + offset.microseconds * 1000000)
+                                offset.seconds * 1000 + offset.microseconds / 1000)
                             transcript = response.recognition_result.transcript
-                            # Exit recognition if any of the transcribed phrases could be
+                            stream.is_final = True
+                            # Half-close the stream with gRPC.
+                            print("Halfclose stream as is_final is received.")
+                            responses.cancel()
+                            # Exit recognition if any of the transcribed phrase could be
                             # one of our keywords.
                             if re.search(r'\b(exit|quit)\b', transcript, re.I):
                                 sys.stdout.write(YELLOW)
                                 sys.stdout.write('Exiting...\n')
                                 terminate = True
-                                break
+                                stream.closed
+                            break
                 except DeadlineExceeded:
                     print('Deadline Exceeded, restarting.')
 
