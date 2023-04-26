@@ -43,7 +43,7 @@ def temp_bucket():
             break
         except google.cloud.exceptions.Conflict:
             time.sleep(30)
-    
+
     bucket = storage_client.create_bucket(BUCKET_NAME)
     yield bucket
 
