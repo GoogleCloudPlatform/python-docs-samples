@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,22 +19,31 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_mfa_assessment(
-    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str, hashed_account_id: str,
-        email: str, phone_number: str
+        project_id: str,
+        recaptcha_site_key: str,
+        token: str,
+        recaptcha_action: str,
+        hashed_account_id: str,
+        email: str,
+        phone_number: str,
 ) -> None:
-    """  Creates an assessment to obtain Multi-Factor Authentication result.
-         If the result is unspecified, sends the request token to the caller to initiate MFA challenge.
+    """Creates an assessment to obtain Multi-Factor Authentication result.
+
+    If the result is unspecified, sends the request token to the caller to initiate MFA challenge.
+
     Args:
         project_id: GCloud Project ID
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
         token: The token obtained from the client on passing the recaptchaSiteKey.
-               To get the token, integrate the recaptchaSiteKey with frontend. See,
-               https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#frontend_integration_score
+            To get the token, integrate the recaptchaSiteKey with frontend. See,
+            https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#frontend_integration_score
         recaptcha_action: The action name corresponding to the token.
         hashed_account_id: Create hashedAccountId from user identifier.
-                           It's a one-way hash of the user identifier: HMAC SHA 256 + salt
+            It's a one-way hash of the user identifier: HMAC SHA 256 + salt
         email: Email id of the user to trigger the MFA challenge.
-        phone_number: Phone number of the user to trigger the MFA challenge.
+        phone_number: Phone number of the user to trigger the MFA challenge. Phone number must be valid
+            and formatted according to the E.164 recommendation.
+            See: https://www.itu.int/rec/T-REC-E.164/en
     """
 
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
@@ -97,4 +106,5 @@ def verify_response_integrity(response: Assessment, recaptcha_action: str) -> bo
             "not match the action you are expecting to score"
         )
         return False
+    return True
 # [END recaptcha_enterprise_mfa_assessment]

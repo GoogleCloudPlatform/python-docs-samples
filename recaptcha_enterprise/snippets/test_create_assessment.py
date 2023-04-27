@@ -14,10 +14,12 @@
 # limitations under the License.
 #
 # All Rights Reserved.
-
+import hashlib
+import hmac
 import multiprocessing
 import os
 import re
+import secrets
 import time
 import typing
 
@@ -37,6 +39,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from annotate_assessment import annotate_assessment
 from create_assessment import create_assessment
+from create_mfa_assessment import create_mfa_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
 
@@ -109,6 +112,25 @@ def test_assessment(
     assert re.search("Annotated response sent successfully !", out)
 
 
+@pytest.mark.usefixtures("live_server")
+def test_mfa_assessment(
+        capsys: CaptureFixture, recaptcha_site_key: str, browser: WebDriver
+) -> None:
+    # Get token.
+    token, action = get_token(recaptcha_site_key, browser)
+    # Create assessment.
+    create_mfa_assessment(
+        project_id=GOOGLE_CLOUD_PROJECT,
+        recaptcha_site_key=recaptcha_site_key,
+        token=token,
+        recaptcha_action=action,
+        hashed_account_id=get_hashed_account_id(),
+        email="abc@example.com",
+        phone_number="+12345678901")
+    out, _ = capsys.readouterr()
+    assert re.search("Result unspecified. Trigger MFA challenge in the client by passing the request token.", out)
+
+
 def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
     browser.get(url_for("assess", site_key=recaptcha_site_key, _external=True))
     time.sleep(5)
@@ -137,3 +159,21 @@ def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment
 
 def set_score(browser: WebDriver, score: str) -> None:
     browser.find_element(By.CSS_SELECTOR, "#assessment").send_keys(score)
+
+
+def get_hashed_account_id() -> str:
+    account_id = "alicebob"
+    key = "your_secret_key"
+
+    salt = secrets.token_hex(16)
+    salted_account_id = salt + account_id
+
+    # Encode the key and salted message as bytes
+    key_bytes = bytes(key, 'utf-8')
+    salted_message_bytes = bytes(salted_account_id, 'utf-8')
+
+    # Create an HMAC SHA-256 hash of the salted message using the key
+    hashed = hmac.new(key_bytes, salted_message_bytes, hashlib.sha256)
+
+    # Get the hex-encoded digest of the hash
+    return hashed.hexdigest()
