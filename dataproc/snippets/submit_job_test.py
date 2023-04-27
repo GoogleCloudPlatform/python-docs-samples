@@ -36,7 +36,7 @@ def cluster_client():
     )
 
 
-@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
+@backoff.on_exception(backoff.expo, (ServiceUnavailable, InvalidArgument), max_tries=5)
 def setup_cluster(cluster_client, curr_cluster_name):
 
     CLUSTER = {
