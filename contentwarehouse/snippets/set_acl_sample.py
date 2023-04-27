@@ -16,7 +16,7 @@
 
 # [START contentwarehouse_set_acl]
 
-from typing import Dict
+from typing import Dict, List, Any
 
 from google.cloud import contentwarehouse
 
@@ -31,7 +31,7 @@ from google.cloud import contentwarehouse
 def set_acl(
     project_number: str,
     location: str,
-    policy: Dict[str,list[Dict]],
+    policy: Dict[str, List[Dict[str, Any]]],
     user_id: str,
     document_id: str = ''
 ) -> None:
