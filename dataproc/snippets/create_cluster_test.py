@@ -60,7 +60,7 @@ def test_cluster_create(capsys):
     except AlreadyExists:
         request = dataproc.GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME)
         response = cluster_client.get_cluster(request=request)
-        assert response.status.state == dataproc.ClusterStatus.State.RUNNING # verify the cluster is in the RUNNING state
+        assert response.status.state == dataproc.ClusterStatus.State.RUNNING  # verify the cluster is in the RUNNING state
         out, _ = capsys.readouterr()
         assert CLUSTER_NAME in out
     finally:
