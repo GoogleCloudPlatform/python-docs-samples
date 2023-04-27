@@ -1,2 +1,2 @@
-apache-beam[gcp]==2.39.0
-tensorflow==2.12.0
+apache-beam[gcp]==2.46.0
+tensorflow==2.12.0  # Check TensorFlow/CUDA compatibility with Dockerfile: https://www.tensorflow.org/install/source#gpu
