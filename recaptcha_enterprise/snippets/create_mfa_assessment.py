@@ -60,7 +60,7 @@ def create_mfa_assessment(
     endpoint_verification_info.phone_number = phone_number
 
     account_verification_info = recaptchaenterprise_v1.AccountVerificationInfo()
-    account_verification_info.endpoints = endpoint_verification_info
+    account_verification_info.endpoints = [endpoint_verification_info]
 
     assessment = recaptchaenterprise_v1.Assessment()
     assessment.event = event
