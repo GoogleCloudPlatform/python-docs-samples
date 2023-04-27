@@ -36,7 +36,7 @@ import update_cluster
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 CLUSTER_NAME = f"py-cc-test-{str(uuid.uuid4())}"
-NEW_NUM_INSTANCES = 5
+NEW_NUM_INSTANCES = 3
 CLUSTER = {
     "project_id": PROJECT_ID,
     "cluster_name": CLUSTER_NAME,
@@ -47,7 +47,7 @@ CLUSTER = {
 }
 
 
-@pytest.fixture
+@pytest.fixture(scope='module')
 def cluster_client():
     cluster_client = ClusterControllerClient(
         client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
@@ -55,46 +55,45 @@ def cluster_client():
     return cluster_client
 
 
-@pytest.fixture(autouse=True)
-def setup_teardown(cluster_client):
-    # InvalidArgument is thrown when the subnetwork is not ready
-    @backoff.on_exception(backoff.expo, (InvalidArgument), max_tries=3)
-    def setup():
-        # Create the cluster.
-        operation = cluster_client.create_cluster(
-            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+@backoff.on_exception(backoff.expo, (ServiceUnavailable, InvalidArgument), max_tries=5)
+def setup_cluster(cluster_client):
+    # Create the cluster.
+    operation = cluster_client.create_cluster(
+        request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+    )
+    operation.result()
+
+
+@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
+def teardown_cluster(cluster_client):
+    try:
+        operation = cluster_client.delete_cluster(
+            request={
+                "project_id": PROJECT_ID,
+                "region": REGION,
+                "cluster_name": CLUSTER_NAME,
+            }
         )
         operation.result()
-
-    def teardown():
-        try:
-            operation = cluster_client.delete_cluster(
-                request={
-                    "project_id": PROJECT_ID,
-                    "region": REGION,
-                    "cluster_name": CLUSTER_NAME,
-                }
-            )
-            operation.result()
-        except NotFound:
-            print("Cluster already deleted")
-
-    try:
-        setup()
-        yield
-    finally:
-        teardown()
+    except NotFound:
+        print("Cluster already deleted")
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
 )
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
-    # Wrapper function for client library function
-    update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
-    new_num_cluster = cluster_client.get_cluster(
-        project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
-    )
+
+    try:
+        setup_cluster(cluster_client)
+        # Wrapper function for client library function
+        update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
+        new_num_cluster = cluster_client.get_cluster(
+            project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
+        )
+
+    finally:
+        teardown_cluster(cluster_client)
 
     out, _ = capsys.readouterr()
     assert CLUSTER_NAME in out
