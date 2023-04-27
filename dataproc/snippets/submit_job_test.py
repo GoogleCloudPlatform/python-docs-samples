@@ -16,13 +16,8 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (
-    AlreadyExists,
-    InternalServerError,
-    InvalidArgument,
-    NotFound,
-    ServiceUnavailable
-)
+from google.api_core.exceptions import (AlreadyExists, InternalServerError, InvalidArgument, NotFound,
+                                        ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
@@ -90,7 +85,8 @@ def cluster_name(cluster_client):
         teardown_cluster(cluster_client, curr_cluster_name)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
+# InvalidArgument is thrown when the subnetwork is not ready
+@backoff.on_exception(backoff.expo, (InvalidArgument, InternalServerError, ServiceUnavailable), max_tries=5)
 def test_submit_job(capsys, cluster_name):
     submit_job.submit_job(PROJECT_ID, REGION, cluster_name)
     out, _ = capsys.readouterr()
