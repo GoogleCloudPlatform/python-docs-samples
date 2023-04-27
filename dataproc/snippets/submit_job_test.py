@@ -16,8 +16,13 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (AlreadyExists, InternalServerError, NotFound,
-                                        ServiceUnavailable)
+from google.api_core.exceptions import (
+    AlreadyExists,
+    InternalServerError,
+    InvalidArgument,
+    NotFound,
+    ServiceUnavailable
+)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
 
@@ -36,7 +41,7 @@ def cluster_client():
     )
 
 
-@backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
+@backoff.on_exception(backoff.expo, (ServiceUnavailable, InvalidArgument), max_tries=5)
 def setup_cluster(cluster_client, curr_cluster_name):
 
     CLUSTER = {
