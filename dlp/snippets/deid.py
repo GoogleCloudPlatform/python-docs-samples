@@ -1635,6 +1635,7 @@ def deindentify_with_dictionary_replacement(
         request={
             "parent": parent,
             "deidentify_config": deidentify_config,
+            "inspect_config": {"info_types": info_types},
             "item": item,
         }
     )
