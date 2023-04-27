@@ -209,16 +209,15 @@ def streaming_analyze_content_audio(participant_name,
         """Generates requests for streaming.
         """
         audio_generator = stream.generator()
-        while not stream.closed:
-            print("Yield config to streaming analyze content.")
+        print("Yield config to streaming analyze content.")
+        yield dialogflow_beta.types.participant.StreamingAnalyzeContentRequest(
+            participant=participant_name,
+            audio_config=audio_config)
+        print("Yield audios to streaming analyze content.")
+        for content in audio_generator:
+            # print('Yield audio to streaming analyze content')
             yield dialogflow_beta.types.participant.StreamingAnalyzeContentRequest(
-                participant=participant_name,
-                audio_config=audio_config)
-            print("Yield audios to streaming analyze content.")
-            for content in audio_generator:
-                # print('Yield audio to streaming analyze content')
-                yield dialogflow_beta.types.participant.StreamingAnalyzeContentRequest(
-                    input_audio=content)
+                input_audio=content)
 
     return client.streaming_analyze_content(gen_requests(
         participant_name, audio_config, stream),

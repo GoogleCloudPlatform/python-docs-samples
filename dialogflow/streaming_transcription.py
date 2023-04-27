@@ -63,8 +63,8 @@ class ResumableMicrophoneStream:
         self.chunk_size = chunk_size
         self._num_channels = 1
         self._buff = queue.Queue()
-        self.closed = True
         self.is_final = False
+        self.closed = True
         # Count the number of times the stream analyze content restarts.
         self.restart_counter = 0
         self.last_start_time = 0
@@ -111,30 +111,29 @@ class ResumableMicrophoneStream:
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
-        while True and not self.closed:
-            if self.is_final:
-                # Handle restart.
-                print("restart generator")
-                # Flip the bit of is_final so it can continue stream.
-                self.is_final = False
-                total_processed_time = self.last_start_time + self.is_final_offset
-                processed_bytes_length = int(
-                    total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
-                self.last_start_time = total_processed_time
-                # Send out bytes stored in self.audio_input_chunks that is after the
-                # processed_bytes_length.
-                if (processed_bytes_length != 0):
-                    audio_bytes = b''.join(self.audio_input_chunks)
-                    # Lookback for unprocessed audio data.
-                    need_to_process_length = min(
-                        int(len(audio_bytes) - processed_bytes_length),
-                        int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8))
-                    # Note that you need to explicitly use `int` type for substring.
-                    need_to_process_bytes = audio_bytes[(-1)
-                                                        * need_to_process_length:]
-                    yield need_to_process_bytes
+        try:
+            # Handle restart.
+            print("restart generator")
+            # Flip the bit of is_final so it can continue stream.
+            self.is_final = False
+            total_processed_time = self.last_start_time + self.is_final_offset
+            processed_bytes_length = int(
+                total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
+            self.last_start_time = total_processed_time
+            # Send out bytes stored in self.audio_input_chunks that is after the
+            # processed_bytes_length.
+            if (processed_bytes_length != 0):
+                audio_bytes = b''.join(self.audio_input_chunks)
+                # Lookback for unprocessed audio data.
+                need_to_process_length = min(
+                    int(len(audio_bytes) - processed_bytes_length),
+                    int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8))
+                # Note that you need to explicitly use `int` type for substring.
+                need_to_process_bytes = audio_bytes[(-1)
+                                                    * need_to_process_length:]
+                yield need_to_process_bytes
 
-            while not self.is_final:
+            while not self.closed and not self.is_final:
                 data = []
                 # Use a blocking get() to ensure there's at least one chunk of
                 # data, and stop iteration if the chunk is None, indicating the
@@ -158,6 +157,8 @@ class ResumableMicrophoneStream:
                 self.audio_input_chunks.extend(data)
                 if data:
                     yield b''.join(data)
+        finally:
+            print("Stop generator")
 
 
 def main():
@@ -180,7 +181,6 @@ def main():
     sys.stdout.write('=====================================================\n')
 
     with mic_manager as stream:
-
         while not stream.closed:
             terminate = False
             while not terminate:
@@ -199,6 +199,8 @@ def main():
 
                     # Now, print the final transcription responses to user.
                     for response in responses:
+                        if response.message:
+                            print(response)
                         if response.recognition_result.is_final:
                             print(response)
                             # offset return from recognition_result is relative
@@ -207,18 +209,16 @@ def main():
                             stream.is_final_offset = int(
                                 offset.seconds * 1000 + offset.microseconds / 1000)
                             transcript = response.recognition_result.transcript
+                            # Half-close the stream with gRPC (in Python just stop yielding requests)
                             stream.is_final = True
-                            # Half-close the stream with gRPC.
-                            print("Halfclose stream as is_final is received.")
-                            responses.cancel()
                             # Exit recognition if any of the transcribed phrase could be
                             # one of our keywords.
                             if re.search(r'\b(exit|quit)\b', transcript, re.I):
                                 sys.stdout.write(YELLOW)
                                 sys.stdout.write('Exiting...\n')
                                 terminate = True
-                                stream.closed
-                            break
+                                stream.closed = True
+                                break
                 except DeadlineExceeded:
                     print('Deadline Exceeded, restarting.')
 
