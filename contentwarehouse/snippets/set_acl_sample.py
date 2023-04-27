@@ -31,7 +31,7 @@ from google.cloud import contentwarehouse
 def set_acl(
     project_number: str,
     location: str,
-    policy: Dict,
+    policy: Dict[str,list[Dict]],
     user_id: str,
     document_id: str = ''
 ) -> None:
@@ -72,7 +72,7 @@ def set_acl(
     # Make the request
     response = client.set_acl(request=request)
 
-    # Handle the response
+    # Print response
     print(response)
 
 

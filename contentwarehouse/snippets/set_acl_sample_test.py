@@ -39,7 +39,8 @@ policy = {
 
 def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
-    # TODO: Update when test project issue is resolved.
+    # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/9821)
+    # Update when test project issue is resolved.
     with pytest.raises(InvalidArgument):
         set_acl_sample.set_acl(
             project_number=project_number,
@@ -47,12 +48,14 @@ def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
             policy=policy,
             user_id=user_id,
         )
-        _, _ = capsys.readouterr()
+        # Print error information
+        capsys.readouterr()
 
 
 def test_set_document_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
-    # Project can only support Document or Project ACLs
+    # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/9821)
+    # Update when test project issue is resolved.
     with pytest.raises(InvalidArgument):
         set_acl_sample.set_acl(
             project_number=project_number,
@@ -61,4 +64,5 @@ def test_set_document_acl(capsys: pytest.CaptureFixture) -> None:
             user_id=user_id,
             document_id=document_id,
         )
-        _, _ = capsys.readouterr()
+        # Print error information
+        capsys.readouterr()
