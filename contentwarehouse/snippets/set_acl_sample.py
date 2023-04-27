@@ -16,7 +16,7 @@
 
 # [START contentwarehouse_set_acl]
 
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from google.cloud import contentwarehouse
 
