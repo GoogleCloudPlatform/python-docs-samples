@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import random
 import re
 import typing
 import uuid
@@ -19,6 +19,7 @@ import uuid
 import backoff
 import google.auth
 
+from conftest import LOCATION
 from create_ca_pool import create_ca_pool
 from create_certificate_authority import create_certificate_authority
 from delete_ca_pool import delete_ca_pool
@@ -30,7 +31,6 @@ from undelete_certificate_authority import undelete_certificate_authority
 from update_certificate_authority import update_ca_label
 
 PROJECT = google.auth.default()[1]
-LOCATION = "us-central1"
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000
@@ -43,8 +43,15 @@ def generate_name() -> str:
 # We are hitting 5 CAs per minute limit which can't be changed
 # We set the backoff function to use 4 as base - this way the 3rd try
 # should wait for 64 seconds and avoid per minute quota
+# Adding some random amount of time to the backoff timer, so that we
+# don't try to call the API at the same time in different tests running
+# simultaneously.
 def backoff_expo_wrapper():
-    return backoff.expo(base=4)
+    for exp in backoff.expo(base=4):
+        if exp is None:
+            yield None
+            continue
+        yield exp * (1 + random.random())
 
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)

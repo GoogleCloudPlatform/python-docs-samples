@@ -2,7 +2,7 @@ Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
 pyjwt==1.7.1; python_version < '3.0'
 flask-cors==3.0.10
-google-auth==2.6.2; python_version < '3.0'
-google-auth==2.6.2; python_version > '3.0'
+google-auth==2.17.2; python_version < '3.0'
+google-auth==2.17.2; python_version > '3.0'
 requests==2.27.1
 requests-toolbelt==0.10.0
