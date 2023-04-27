@@ -20,6 +20,7 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import (
+    AlreadyExists,
     Cancelled,
     InternalServerError,
     InvalidArgument,
@@ -56,7 +57,7 @@ def cluster_client():
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable, InvalidArgument), max_tries=5)
-def setup_cluster(cluster_client):
+def setup(cluster_client):
     # Create the cluster.
     operation = cluster_client.create_cluster(
         request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
@@ -75,8 +76,28 @@ def teardown_cluster(cluster_client):
             }
         )
         operation.result()
-    except NotFound:
-        print("Cluster already deleted")
+
+    def teardown():
+        try:
+            operation = cluster_client.delete_cluster(
+                request={
+                    "project_id": PROJECT_ID,
+                    "region": REGION,
+                    "cluster_name": CLUSTER_NAME,
+                }
+            )
+            operation.result()
+        except NotFound:
+            print("Cluster already deleted")
+
+    try:
+        setup()
+        yield
+    except AlreadyExists:
+        print("Cluster exists, utilizing existing cluster")
+        yield
+    finally:
+        teardown()
 
 
 @backoff.on_exception(
