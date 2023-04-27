@@ -27,7 +27,7 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         curl g++ python3.10-dev python3-pip python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python2.10 10 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
     # Install the pipeline requirements.
     && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
