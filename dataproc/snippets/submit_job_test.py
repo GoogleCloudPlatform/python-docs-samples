@@ -16,7 +16,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
+from google.api_core.exceptions import (AlreadyExists, InternalServerError, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 import pytest
@@ -77,6 +77,9 @@ def cluster_name(cluster_client):
 
     try:
         setup_cluster(cluster_client, curr_cluster_name)
+        yield curr_cluster_name
+    except AlreadyExists:  # 409 can happen when we backoff on service errors during submission
+        print("Already exists, skipping cluster creation")
         yield curr_cluster_name
     finally:
         teardown_cluster(cluster_client, curr_cluster_name)
