@@ -34,14 +34,8 @@ cluster_client = dataproc.ClusterControllerClient(
 
 @backoff.on_exception(backoff.expo, (Exception), max_tries=5)
 def teardown():
-<<<<<<< HEAD
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
-    )
-=======
     yield
 
->>>>>>> ceedc468a (add more error handling)
     # Client library function
     try:
         operation = cluster_client.delete_cluster(
