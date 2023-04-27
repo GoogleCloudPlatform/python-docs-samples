@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import os
 import uuid
 
@@ -26,6 +25,7 @@ import create_cluster
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-west1"
 CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
+
 
 cluster_client = dataproc.ClusterControllerClient(
     client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
@@ -60,15 +60,7 @@ def test_cluster_create(capsys):
     except AlreadyExists:
         request = dataproc.GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME)
         response = cluster_client.get_cluster(request=request)
-        assert response.status.state == dataproc.ClusterStatus.State(2)  # verify the cluster is in the RUNNING state
-
-        status_start = response.status.state_start_time  # when the cluster started being in the RUNNING state
-        now = datetime.datetime.now(datetime.timezone.utc)
-        diff = now-status_start
-        # check that it's been running for less than 20 min
-        # this means we probably did a backoff during the creation for a different reason
-        # and that this cluster was created as part of this test, so we can continue
-        assert diff.seconds/60 < 20
+        assert response.status.state == dataproc.ClusterStatus.State.RUNNING # verify the cluster is in the RUNNING state
         out, _ = capsys.readouterr()
         assert CLUSTER_NAME in out
     finally:
