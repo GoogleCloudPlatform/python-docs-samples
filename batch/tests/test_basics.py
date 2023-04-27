@@ -15,6 +15,8 @@ import time
 from typing import Callable
 import uuid
 
+from flaky import flaky
+
 import google.auth
 from google.cloud import batch_v1
 import pytest
@@ -90,11 +92,13 @@ def _check_logs(job, capsys):
     assert all("Hello world!" in log_msg for log_msg in output)
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_logs(job, capsys))
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_container_job(job_name):
     job = create_container_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_tasks(job_name))

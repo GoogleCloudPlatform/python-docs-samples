@@ -17,6 +17,7 @@
 from __future__ import print_function
 
 import argparse
+from typing import List
 
 
 # [START dlp_deidentify_masking]
@@ -937,6 +938,76 @@ def deidentify_with_replace_infotype(project, item, info_types):
 # [END dlp_deidentify_replace_infotype]
 
 
+# [START dlp_deidentify_simple_word_list]
+def deidentify_with_simple_word_list(
+    project: str,
+    input_str: str,
+    custom_info_type_name: str,
+    word_list: List[str],
+) -> None:
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+      string by matching against custom word list.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        custom_info_type_name: The name of the custom info type to use.
+        word_list: The list of strings to match against.
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare custom_info_types by parsing word lists
+    word_list = {"words": word_list}
+    custom_info_types = [
+        {
+            "info_type": {"name": custom_info_type_name},
+            "dictionary": {"word_list": word_list}
+        }
+    ]
+
+    # Construct the configuration dictionary
+    inspect_config = {
+        "custom_info_types": custom_info_types,
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {"replace_with_info_type_config": {}}
+                }
+            ]
+        }
+    }
+
+    # Construct the `item`.
+    item = {"value": input_str}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    print(f"De-identified Content: {response.item.value}")
+
+
+# [END dlp_deidentify_simple_word_list]
+
+
 # [START dlp_deidentify_exception_list]
 def deidentify_with_exception_list(
     project,
@@ -1745,6 +1816,27 @@ if __name__ == "__main__":
         "Example: 'My credit card is 4242 4242 4242 4242'",
     )
 
+    deid_word_list_parser = subparsers.add_parser(
+        "deid_simple_word_list",
+        help="Deidentify sensitive data in a string against a custom simple word list"
+    )
+    deid_word_list_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    deid_word_list_parser.add_argument(
+        "input_str",
+        help="The string to deidentify.",
+    )
+    deid_word_list_parser.add_argument(
+        "custom_info_type_name",
+        help="The name of the custom info type to use.",
+    )
+    deid_word_list_parser.add_argument(
+        "word_list",
+        help="The list of strings to match against.",
+    )
+
     deid_exception_list_parser = subparsers.add_parser(
         "deid_exception_list",
         help="De-identify sensitive data in a string , ignore matches against a custom word list"
@@ -1957,6 +2049,13 @@ if __name__ == "__main__":
             args.project,
             item=args.item,
             info_types=args.info_types,
+        )
+    elif args.content == "deid_simple_word_list":
+        deidentify_with_simple_word_list(
+            args.project,
+            args.input_str,
+            args.custom_info_type_name,
+            args.word_list,
         )
     elif args.content == "deid_exception_list":
         deidentify_with_exception_list(
