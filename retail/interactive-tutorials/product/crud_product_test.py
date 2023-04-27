@@ -15,7 +15,10 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_add_fulfillment():
     output = str(subprocess.check_output("python crud_product.py", shell=True))
 

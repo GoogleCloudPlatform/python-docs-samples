@@ -17,9 +17,12 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from search_simple_query import search
 
 
+@Retry()
 def test_search_simple_query_pass():
     output = str(subprocess.check_output("python search_simple_query.py", shell=True))
 
