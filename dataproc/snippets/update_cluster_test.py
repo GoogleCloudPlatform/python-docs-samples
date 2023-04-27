@@ -57,12 +57,15 @@ def cluster_client():
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable, InvalidArgument), max_tries=5)
-def setup(cluster_client):
-    # Create the cluster.
-    operation = cluster_client.create_cluster(
-        request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
-    )
-    operation.result()
+def setup_cluster(cluster_client):
+    try:
+        # Create the cluster.
+        operation = cluster_client.create_cluster(
+            request={"project_id": PROJECT_ID, "region": REGION, "cluster": CLUSTER}
+        )
+        operation.result()
+    except AlreadyExists:
+        print("Cluster already exists, utilize existing cluster")
 
 
 @backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=5)
@@ -76,28 +79,8 @@ def teardown_cluster(cluster_client):
             }
         )
         operation.result()
-
-    def teardown():
-        try:
-            operation = cluster_client.delete_cluster(
-                request={
-                    "project_id": PROJECT_ID,
-                    "region": REGION,
-                    "cluster_name": CLUSTER_NAME,
-                }
-            )
-            operation.result()
-        except NotFound:
-            print("Cluster already deleted")
-
-    try:
-        setup()
-        yield
-    except AlreadyExists:
-        print("Cluster exists, utilizing existing cluster")
-        yield
-    finally:
-        teardown()
+    except NotFound:
+        print("Cluster already deleted")
 
 
 @backoff.on_exception(
