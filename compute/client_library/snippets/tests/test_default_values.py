@@ -33,10 +33,9 @@ TEST_PREFIX = "some-prefix"
 def temp_bucket():
     storage_client = storage.Client()
 
-    # Get exclusive lock for testing. Lock bucket name is
-    # COMPUTE_CLIENT_LIBRARY_SNIPPETS_LOCK_BUCKET.
+    # Get exclusive lock for testing. Lock bucket name is compute-snippets-lock.
 
-    lock_name = "COMPUTE_SNIPPETS_LOCK"
+    lock_name = "compute-snippets-lock"
     for _ in range(10):
         try:
             lock_bucket = storage_client.create_bucket(lock_name)
