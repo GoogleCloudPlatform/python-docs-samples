@@ -16,6 +16,7 @@ import os
 
 from google.cloud import workflows_v1
 from google.cloud.workflows.executions_v1.types import executions
+
 import main
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -51,7 +52,8 @@ def workflow_exists():
     """
     try:
         workflows_client = workflows_v1.WorkflowsClient()
-        workflow_name = workflows_client.workflow_path(PROJECT, LOCATION, WORKFLOW_ID)
+        workflow_name = workflows_client.workflow_path(
+            PROJECT, LOCATION, WORKFLOW_ID)
         workflows_client.get_workflow(request={"name": workflow_name})
         return True
     except Exception as e:

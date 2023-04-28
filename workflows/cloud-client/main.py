@@ -50,14 +50,16 @@ def execute_workflow(
     backoff_delay = 1  # Start wait with delay of 1 second
     print('Poll every second for result...')
     while (not execution_finished):
-        execution = execution_client.get_execution(request={"name": response.name})
+        execution = execution_client.get_execution(
+            request={"name": response.name})
         execution_finished = execution.state != executions.Execution.State.ACTIVE
 
         # If we haven't seen the result yet, wait a second.
         if not execution_finished:
             print('- Waiting for results...')
             time.sleep(backoff_delay)
-            backoff_delay *= 2  # Double the delay to provide exponential backoff.
+            # Double the delay to provide exponential backoff.
+            backoff_delay *= 2
         else:
             print(f'Execution finished with state: {execution.state.name}')
             print(f'Execution results: {execution.result}')
