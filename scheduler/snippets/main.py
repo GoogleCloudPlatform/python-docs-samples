@@ -25,8 +25,8 @@ app = Flask(__name__)
 def example_task_handler():
     """Log the job payload."""
     payload = request.get_data(as_text=True) or "(empty payload)"
-    print("Received job with payload: {}".format(payload))
-    return "Printed job payload: {}".format(payload)
+    print(f"Received job with payload: {payload}")
+    return f"Printed job payload: {payload}"
 
 
 # [END cloudscheduler_app]

@@ -17,7 +17,7 @@
 import os
 import re
 import sys
-from typing import Callable, List
+from typing import Callable
 
 import click
 import github
@@ -62,7 +62,7 @@ _github_options = [
 ]
 
 
-def add_options(options: List[dict]) -> Callable:
+def add_options(options: list[dict]) -> Callable:
     def _add_options(func: Callable) -> Callable:
         for option in reversed(options):
             func = option(func)
@@ -117,7 +117,7 @@ def get_revision_url(service_obj: dict, tag: str) -> str:
     )
 
 
-def get_revision_tags(service: dict) -> List[str]:
+def get_revision_tags(service: dict) -> list[str]:
     """Get all tags associated to a service"""
     revs = []
 
@@ -130,7 +130,6 @@ def get_revision_tags(service: dict) -> List[str]:
 @click.group()
 def cli() -> None:
     """Tool for setting GitHub Status Checks to Cloud Run Revision URLs"""
-    pass
 
 
 @cli.command()
@@ -230,11 +229,9 @@ def set(
     if dry_run:
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
-            (
                 f"Status would have been created on {repo_name}, "
                 f"commit {commit.sha[:7]}, linking to {revision_url} "
                 f"on service {service_obj['metadata']['name']}"
-            )
         )
         return
     # [END_EXCLUDE]
