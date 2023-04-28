@@ -22,9 +22,9 @@ def execute_workflow(
     # [START workflows_api_quickstart]
     import time
 
-    from google.cloud import workflows_v1beta
-    from google.cloud.workflows import executions_v1beta
-    from google.cloud.workflows.executions_v1beta.types import executions
+    from google.cloud import workflows_v1
+    from google.cloud.workflows import executions_v1
+    from google.cloud.workflows.executions_v1.types import executions
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
@@ -35,8 +35,8 @@ def execute_workflow(
         raise Exception('GOOGLE_CLOUD_PROJECT env var is required.')
 
     # Set up API clients.
-    execution_client = executions_v1beta.ExecutionsClient()
-    workflows_client = workflows_v1beta.WorkflowsClient()
+    execution_client = executions_v1.ExecutionsClient()
+    workflows_client = workflows_v1.WorkflowsClient()
 
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project, location, workflow)
@@ -60,8 +60,8 @@ def execute_workflow(
             backoff_delay *= 2  # Double the delay to provide exponential backoff.
         else:
             print(f'Execution finished with state: {execution.state.name}')
-            print(execution.result)
-            return execution.result
+            print(f'Execution results: {execution.result}')
+            return execution
     # [END workflows_api_quickstart]
 
 
