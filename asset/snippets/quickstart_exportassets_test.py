@@ -66,8 +66,13 @@ def dataset(bigquery_client):
 
 
 def test_export_assets(asset_bucket, dataset, capsys):
+    content_type = asset_v1.ContentType.IAM_POLICY
     dump_file_path = "gs://{}/assets-dump.txt".format(asset_bucket)
-    quickstart_exportassets.export_assets(PROJECT, dump_file_path)
+    quickstart_exportassets.export_assets(
+        PROJECT,
+        dump_file_path,
+        content_type=content_type
+    )
     out, _ = capsys.readouterr()
     assert dump_file_path in out
 
