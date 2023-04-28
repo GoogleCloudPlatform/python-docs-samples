@@ -42,7 +42,7 @@ def test_workflow_execution():
         })
 
     result = main.execute_workflow(PROJECT)
-    assert result.state == executions.Execution.State.SUCCESS
+    assert result.state == executions.Execution.State.SUCCEEDED
     assert len(result.result) > 0
 
 
