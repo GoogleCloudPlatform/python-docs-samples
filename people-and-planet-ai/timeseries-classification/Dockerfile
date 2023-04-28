@@ -15,7 +15,7 @@
 # NVIDIA CUDA container: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda
 # Supported NVIDIA images: https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md
 # TensorFlow/CUDA compatibility: https://www.tensorflow.org/install/source#gpu
-FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
 
 WORKDIR /pipeline
 
