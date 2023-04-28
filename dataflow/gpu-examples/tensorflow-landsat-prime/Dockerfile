@@ -25,7 +25,7 @@ COPY *.py ./
 RUN apt-get update \
     # Install Python and other system dependencies.
     && apt-get install -y --no-install-recommends \
-        curl g++ python3.10-dev python3-pip python3-distutils \
+        curl g++ python3.10-dev python3.10-venv python3-pip python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
     # Install the pipeline requirements.
