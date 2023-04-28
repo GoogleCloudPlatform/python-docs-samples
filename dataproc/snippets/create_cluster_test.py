@@ -19,19 +19,16 @@ import backoff
 from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
-import pytest
 
 import create_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
+REGION = "us-west1"
 CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
 
 
-@pytest.fixture(autouse=True)
+@backoff.on_exception(backoff.expo, (Exception), max_tries=5)
 def teardown():
-    yield
-
     cluster_client = dataproc.ClusterControllerClient(
         client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
     )
@@ -54,7 +51,10 @@ def teardown():
 @backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, InvalidArgument), max_tries=5)
 def test_cluster_create(capsys):
     # Wrapper function for client library function
-    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    try:
+        create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    finally:
+        teardown()
 
     out, _ = capsys.readouterr()
     assert CLUSTER_NAME in out
