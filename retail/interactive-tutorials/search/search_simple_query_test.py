@@ -44,5 +44,5 @@ def test_search_simple_query_response():
         if re.search(query_phrase, product_title, flags=re.IGNORECASE) is not None:
             assert f"{query_phrase} was found in {product_title}"
             return
-        
+
     assert f"{query_phrase} was not Found" is None
