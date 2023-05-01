@@ -54,4 +54,4 @@ def search(query_phrase):
     return search_response
 
 
-search()
+search("Hoodie")    # For example
