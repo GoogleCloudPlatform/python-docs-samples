@@ -33,7 +33,7 @@ def list_operations_sample(
     location: str,
     search_engine_id: str,
     operations_filter: Optional[str] = None,
-):
+) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()
 

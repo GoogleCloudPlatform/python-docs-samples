@@ -23,7 +23,7 @@ import google.longrunning.operations_pb2 as operations
 # operation_name = "YOUR_OPERATION_NAME"
 
 
-def get_operation_sample(operation_name: str):
+def get_operation_sample(operation_name: str) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()
 

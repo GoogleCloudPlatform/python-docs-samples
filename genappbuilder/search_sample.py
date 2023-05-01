@@ -31,7 +31,7 @@ def search_sample(
     search_engine_id: str,
     serving_config_id: str,
     search_query: str,
-):
+) -> None:
     # Create a client
     client = genappbuilder.SearchServiceClient()
 

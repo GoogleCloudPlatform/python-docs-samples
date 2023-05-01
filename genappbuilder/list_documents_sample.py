@@ -21,7 +21,11 @@ from google.cloud import discoveryengine_v1beta as genappbuilder
 # search_engine_id = "YOUR_SEARCH_ENGINE_ID"
 
 
-def list_documents_sample(project_id: str, location: str, search_engine_id: str):
+def list_documents_sample(
+    project_id: str,
+    location: str,
+    search_engine_id: str
+) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()
 

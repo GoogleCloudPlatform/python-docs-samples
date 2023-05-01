@@ -37,7 +37,7 @@ def import_documents_sample(
     gcs_uri: Optional[str] = None,
     bigquery_dataset: Optional[str] = None,
     bigquery_table: Optional[str] = None,
-):
+) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()
 
