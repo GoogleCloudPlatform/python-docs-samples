@@ -42,10 +42,7 @@ def get_search_request(query: str):
 
 
 # call the Retail Search:
-def search():
-    # TRY DIFFERENT QUERY PHRASES HERE:
-    query_phrase = "Hoodie"
-
+def search(query_phrase):
     search_request = get_search_request(query_phrase)
     search_response = SearchServiceClient().search(search_request)
 

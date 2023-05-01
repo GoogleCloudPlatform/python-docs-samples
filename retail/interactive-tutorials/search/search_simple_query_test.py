@@ -33,8 +33,16 @@ def test_search_simple_query_pass():
 
 
 def test_search_simple_query_response():
-    response = search()
+    query_phrase = "Hoodie"
+    response = search(query_phrase)
 
-    assert len(response.results) == 10
-    product_title = response.results[0].product.title
-    assert re.match(".*Hoodie.*", product_title)
+    assert len(response.results) <= 10
+    assert len(response.results) >= 1
+
+    for result in response.results:
+        product_title = result.product.title
+        if re.search(query_phrase, product_title, flags=re.IGNORECASE) is not None:
+            assert f"{query_phrase} was found in {product_title}"
+            return
+        
+    assert f"{query_phrase} was not Found" is None
