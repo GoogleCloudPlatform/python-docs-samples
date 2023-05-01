@@ -25,9 +25,9 @@ COPY *.py ./
 RUN apt-get update \
     # Install Python and other system dependencies.
     && apt-get install -y --no-install-recommends \
-        curl g++ python3.9-dev python3.9-venv python3-distutils \
+        curl g++ python3.10-dev python3.10-venv python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 10 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements.
     && pip install --no-cache-dir -r requirements.txt \
