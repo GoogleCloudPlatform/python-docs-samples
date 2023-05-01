@@ -199,15 +199,14 @@ Review other [Python on Cloud Run samples](../../../run/).
 To deploy the service to [Cloud Functions](https://cloud.google.com/functions/docs) run the following command:
 
 ```sh
-gcloud functions deploy votes --runtime python39 --trigger-http --allow-unauthenticated \
+gcloud functions deploy votes --gen2 --runtime python310 --trigger-http \
+--allow-unauthenticated \
+--entry-point votes \
+--region <INSTANCE-REGION> \
 --set-env-vars INSTANCE_CONNECTION_NAME=<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME> \
 --set-env-vars DB_USER=$DB_USER \
 --set-env-vars DB_PASS=$DB_PASS \
 --set-env-vars DB_NAME=$DB_NAME
 ```
 
-Take note of the URL output at the end of the deployment process or run the following to view your function:
-
-```sh
-gcloud app browse
-```
+Take note of the URL output at the end of the deployment process to view your function!
