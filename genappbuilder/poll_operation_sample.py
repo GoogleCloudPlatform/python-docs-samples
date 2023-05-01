@@ -25,19 +25,19 @@ from google.longrunning import operations_pb2
 # operation_name = "YOUR_OPERATION_NAME"
 
 
-def poll_operation_sample(operation_name: str):
+def poll_operation_sample(operation_name: str, limit: int = 10):
     # Create a client
     client = genappbuilder.DocumentServiceClient()
 
     # Make GetOperation request
     request = operations_pb2.GetOperationRequest(name=operation_name)
 
-    while True:
+    for _ in range(limit):
         operation = client.get_operation(request=request)
         # Print the Operation Information
         print(operation)
 
-        # Stop Polling when Operation is no longer running
+        # Stop polling when Operation is no longer running
         if operation.done:
             break
 
