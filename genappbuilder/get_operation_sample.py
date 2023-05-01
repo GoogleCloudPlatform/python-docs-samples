@@ -16,7 +16,7 @@
 # [START genappbuilder_get_operation]
 from google.cloud import discoveryengine_v1beta as genappbuilder
 
-import google.longrunning.operations_pb2 as operations
+from google.longrunning import operations_pb2
 
 # TODO(developer): Uncomment these variables before running the sample.
 # Example: `projects/{project}/locations/{location}/collections/{default_collection}/dataStores/{search_engine_id}/branches/{0}/operations/{operation_id}`
@@ -28,7 +28,7 @@ def get_operation_sample(operation_name: str) -> None:
     client = genappbuilder.DocumentServiceClient()
 
     # Make GetOperation request
-    request = operations.GetOperationRequest(name=operation_name)
+    request = operations_pb2.GetOperationRequest(name=operation_name)
     operation = client.get_operation(request=request)
 
     # Print the Operation Information

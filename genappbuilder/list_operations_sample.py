@@ -17,7 +17,7 @@ from typing import Optional
 
 from google.cloud import discoveryengine_v1beta as genappbuilder
 
-import google.longrunning.operations_pb2 as operations
+from google.longrunning import operations_pb2
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -41,7 +41,7 @@ def list_operations_sample(
     name = f"projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{search_engine_id}"
 
     # Make ListOperations request
-    request = operations.ListOperationsRequest(
+    request = operations_pb2.ListOperationsRequest(
         name=name,
         filter=operations_filter,
     )
