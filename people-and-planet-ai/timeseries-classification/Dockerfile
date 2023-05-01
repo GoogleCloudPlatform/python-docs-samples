@@ -33,6 +33,8 @@ RUN apt-get update \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
+ENV LD_LIBRARY_PATH /usr/local/cuda/lib64:$LD_LIBRARY_PATH
+
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
 COPY --from=apache/beam_python3.10_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
