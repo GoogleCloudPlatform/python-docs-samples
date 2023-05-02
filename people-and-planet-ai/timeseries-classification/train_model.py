@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-
 from google.cloud import aiplatform
 
 
@@ -28,6 +26,7 @@ def run(
     machine_type: str,
     gpu_type: str,
     gpu_count: str,
+    sync: bool = True,
 ) -> None:
     bucket = training_dir.removeprefix('gs://').split('/')[0]
 
@@ -49,4 +48,5 @@ def run(
             f"--train-epochs={train_epochs}",
             f"--batch-size={batch_size}",
         ],
+        sync=sync,
     )

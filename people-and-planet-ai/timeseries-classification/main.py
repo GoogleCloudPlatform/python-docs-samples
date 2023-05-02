@@ -108,6 +108,7 @@ def run_train_model() -> dict:
             "machine_type": args.get("machine_type", DEFAULT_MACHINE_TYPE),
             "gpu_type": args.get("gpu_type", DEFAULT_GPU_TYPE),
             "gpu_count": args.get("gpu_count", DEFAULT_GPU_COUNT),
+            "sync": args.get("sync", "false").lower() == "true",
         }
         train_model.run(**params)
 
