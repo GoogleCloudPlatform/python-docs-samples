@@ -213,7 +213,7 @@ def hello_error_2(request):
     import logging
     import sys
     print(RuntimeError('I failed you (print to stdout)'))
-    logging.warn(RuntimeError('I failed you (logging.warn)'))
+    logging.warning(RuntimeError('I failed you (logging.warning)'))
     logging.error(RuntimeError('I failed you (logging.error)'))
     sys.stderr.write('I failed you (sys.stderr.write)\n')
 
