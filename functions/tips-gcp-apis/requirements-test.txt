@@ -1,2 +1,2 @@
-flask==2.1.0
+flask==2.3.2
 pytest==7.0.1
