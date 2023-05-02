@@ -95,8 +95,8 @@ def on_homepage_load() -> Response:
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": {"label": label,
-                                "reason": reason},
+                    "label": label,
+                    "reason": reason,
                 }
             }
         )
@@ -153,8 +153,8 @@ def on_signup() -> Response:
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": {"label": label,
-                                "reason": reason},
+                    "label": label,
+                    "reason": reason,
                 }
             }
         )
@@ -211,8 +211,8 @@ def on_login() -> Response:
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": {"label": label,
-                                "reason": reason},
+                    "label": label,
+                    "reason": reason,
                 }
             }
         )
@@ -268,8 +268,8 @@ def on_store_checkout() -> Response:
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": {"label": label,
-                                "reason": reason},
+                    "label": label,
+                    "reason": reason,
                 }
             }
         )
@@ -325,8 +325,8 @@ def on_comment_submit() -> Response:
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": {"label": label,
-                                "reason": reason},
+                    "label": label,
+                    "reason": reason,
                 }
             }
         )
