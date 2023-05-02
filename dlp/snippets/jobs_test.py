@@ -141,3 +141,10 @@ def test_create_dlp_job(bucket, capsys):
 
     job_name = f"i-{test_job_id}"
     jobs.delete_dlp_job(GCLOUD_PROJECT, job_name)
+
+
+def test_get_dlp_job(test_job_name, capsys):
+    jobs.get_dlp_job(GCLOUD_PROJECT, test_job_name)
+
+    out, _ = capsys.readouterr()
+    assert test_job_name in out
