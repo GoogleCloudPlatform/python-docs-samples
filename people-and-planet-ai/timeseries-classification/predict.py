@@ -16,7 +16,6 @@ from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
-import tensorflow as tf
 from tensorflow import keras
 
 import data_utils
@@ -41,9 +40,6 @@ def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
 
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
-    # Get the latest model.
-    model_path = tf.io.gfile.glob(model_dir)[-1]
-
     # Cache the model so it only has to be loaded once per runtime.
     global model
     if model is None:
