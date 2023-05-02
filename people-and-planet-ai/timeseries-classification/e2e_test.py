@@ -153,6 +153,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=1G",
+            "--timeout=30m",
             f"--set-env-vars=PROJECT={PROJECT}",
             f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
             f"--set-env-vars=REGION={REGION}",
@@ -260,11 +261,12 @@ def create_datasets(
 
 @pytest.fixture(scope="session")
 def train_model(service_url: str, access_token: str, create_datasets: str) -> None:
+    logging.info(f"Training model")
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
         json={"train_epochs": 10, "batch_size": 8, "sync": True},
-    ).json()
+    )
     logging.info(f"train_model response: {response}")
 
 

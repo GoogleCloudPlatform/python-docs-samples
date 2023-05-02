@@ -26,7 +26,7 @@ def run(
     machine_type: str,
     gpu_type: str,
     gpu_count: str,
-    sync: bool = True,
+    sync: bool,
 ) -> None:
     bucket = training_dir.removeprefix('gs://').split('/')[0]
 
