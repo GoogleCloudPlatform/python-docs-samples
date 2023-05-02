@@ -261,7 +261,7 @@ def create_datasets(
 
 @pytest.fixture(scope="session")
 def train_model(service_url: str, access_token: str, create_datasets: str) -> None:
-    logging.info(f"Training model")
+    logging.info("Training model")
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
