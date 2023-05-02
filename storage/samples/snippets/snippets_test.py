@@ -72,7 +72,10 @@ import storage_set_autoclass
 import storage_set_bucket_default_kms_key
 import storage_set_client_endpoint
 import storage_set_metadata
-import storage_transfer_manager
+import storage_transfer_manager_download_all_blobs
+import storage_transfer_manager_download_chunks_concurrently
+import storage_transfer_manager_upload_directory
+import storage_transfer_manager_upload_many_blobs
 import storage_upload_file
 import storage_upload_from_memory
 import storage_upload_from_stream
@@ -686,7 +689,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
             with open(os.path.join(uploads, name), "w") as f:
                 f.write(name)
 
-        storage_transfer_manager.upload_many_blobs_with_transfer_manager(
+        storage_transfer_manager_upload_many_blobs.upload_many_blobs_with_transfer_manager(
             test_bucket.name,
             BLOB_NAMES,
             source_directory="{}/".format(uploads),
@@ -699,7 +702,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
 
     with tempfile.TemporaryDirectory() as downloads:
         # Download the files.
-        storage_transfer_manager.download_all_blobs_with_transfer_manager(
+        storage_transfer_manager_download_all_blobs.download_all_blobs_with_transfer_manager(
             test_bucket.name,
             destination_directory=os.path.join(downloads, ""),
             threads=2,
@@ -729,7 +732,7 @@ def test_transfer_manager_directory_upload(test_bucket, capsys):
             with open(os.path.join(uploads, name), "w") as f:
                 f.write(name)
 
-        storage_transfer_manager.upload_directory_with_transfer_manager(
+        storage_transfer_manager_upload_directory.upload_directory_with_transfer_manager(
             test_bucket.name, source_directory="{}/".format(uploads)
         )
         out, _ = capsys.readouterr()
@@ -737,3 +740,26 @@ def test_transfer_manager_directory_upload(test_bucket, capsys):
         assert "Found {}".format(len(BLOB_NAMES)) in out
         for name in BLOB_NAMES:
             assert "Uploaded {}".format(name) in out
+
+
+def test_transfer_manager_download_chunks_concurrently(test_bucket, capsys):
+    BLOB_NAME = "test_file.txt"
+
+    with tempfile.NamedTemporaryFile() as file:
+        file.write(b"test")
+
+        storage_upload_file.upload_blob(
+            test_bucket.name, file.name, BLOB_NAME
+        )
+
+    with tempfile.TemporaryDirectory() as downloads:
+        # Download the file.
+        storage_transfer_manager_download_chunks_concurrently.download_chunks_concurrently(
+            test_bucket.name,
+            BLOB_NAME,
+            os.path.join(downloads, BLOB_NAME),
+            processes=8,
+        )
+        out, _ = capsys.readouterr()
+
+        assert "Downloaded {} to {}".format(BLOB_NAME, os.path.join(downloads, BLOB_NAME)) in out
