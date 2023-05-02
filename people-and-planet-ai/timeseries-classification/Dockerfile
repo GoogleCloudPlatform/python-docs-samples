@@ -24,7 +24,7 @@ COPY *.py ./
 
 RUN apt-get update \
     # Install Python and other system dependencies.
-    && apt-get install -y --no-install-recommends \
+    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-recommends \
         curl g++ python3.9-dev python3.9-venv python3-distutils cuda-toolkit \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 10 \
