@@ -1059,7 +1059,7 @@ def inspect_bigquery_table_with_sampling(
             "table_reference": table_reference,
             "rows_limit": 1000,
             "sample_method": 'RANDOM_START',
-            "identifying_fields": [{"name": "name"}]
+            "identifying_fields": [{"name": "Name"}]
         }
     }
 

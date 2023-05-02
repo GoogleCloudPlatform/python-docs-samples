@@ -517,7 +517,6 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
         delete_dlp_job(out)
 
 
-@pytest.mark.skip(reason="Table not found error. Should be inspected.")
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_bigquery_with_sampling(bigquery_project, topic_id, subscription_id, capsys):
     out = ""
@@ -530,7 +529,7 @@ def test_inspect_bigquery_with_sampling(bigquery_project, topic_id, subscription
             topic_id,
             subscription_id,
             ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
-            timeout=300,
+            timeout=TIMEOUT,
         )
 
         out, _ = capsys.readouterr()
