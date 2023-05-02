@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
 import os
 import tempfile
 
+from google.api_core.exceptions import GoogleAPIError
 from google.cloud import storage
 import pytest
 
@@ -31,18 +33,21 @@ BUCKET = os.environ["REQUESTER_PAYS_TEST_BUCKET"]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_enable_requester_pays(capsys):
     storage_enable_requester_pays.enable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
     assert f"Requester Pays has been enabled for {BUCKET}" in out
 
 
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_disable_requester_pays(capsys):
     storage_disable_requester_pays.disable_requester_pays(BUCKET)
     out, _ = capsys.readouterr()
     assert f"Requester Pays has been disabled for {BUCKET}" in out
 
 
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_get_requester_pays_status(capsys):
     storage_get_requester_pays_status.get_requester_pays_status(BUCKET)
     out, _ = capsys.readouterr()
@@ -58,6 +63,7 @@ def test_blob():
     return blob
 
 
+@backoff.on_exception(backoff.expo, GoogleAPIError, max_time=60)
 def test_download_file_requester_pays(test_blob, capsys):
     with tempfile.NamedTemporaryFile() as dest_file:
         storage_download_file_requester_pays.download_file_requester_pays(
