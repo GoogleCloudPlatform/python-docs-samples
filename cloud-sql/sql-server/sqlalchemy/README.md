@@ -8,7 +8,7 @@ This demo application can be used to connect to Cloud SQL in two different ways:
 
 Using the Cloud SQL Python Connector library is recommended over the Cloud SQL Auth
 Proxy as it provides all the same functionality and features but as a native
-Python package, [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
+Python package. See [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
 
 ## Before you begin
 
@@ -40,7 +40,7 @@ Note: The `INSTANCE_CONNECTION_NAME` for your instance can be found on the
 the following command:
 
 ```sh
-gcloud sql instances describe <INSTANCE_NAME>
+gcloud sql instances describe <INSTANCE_NAME> --format='value(connectionName)'
 ```
 
 #### Linux / Mac OS

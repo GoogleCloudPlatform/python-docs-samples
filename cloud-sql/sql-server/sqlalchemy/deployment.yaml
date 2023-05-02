@@ -66,10 +66,10 @@ spec:
         # It is recommended to use a specific version for production environments.
         # See: https://github.com/GoogleCloudPlatform/cloudsql-proxy 
         image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
-        command:
+        args:
           # If connecting from a VPC-native GKE cluster, you can use the
           # following flag to have the proxy connect over private IP
-          # - "-ip_address_types=PRIVATE"
+          # - "--private-ip"
 
           # tcp should be set to the port the proxy should listen on
           # and should match the DB_PORT value set above.

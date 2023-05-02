@@ -8,7 +8,7 @@ This demo application can be used to connect to Cloud SQL in two different ways:
 
 Using the Cloud SQL Python Connector library is recommended over the Cloud SQL Auth
 Proxy as it provides all the same functionality and features but as a native
-Python package, [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
+Python package. See [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
 
 ## Before you begin
 
@@ -40,7 +40,7 @@ Note: The `INSTANCE_CONNECTION_NAME` for your instance can be found on the
 the following command:
 
 ```sh
-gcloud sql instances describe <INSTANCE_NAME>
+gcloud sql instances describe <INSTANCE_NAME> --format='value(connectionName)'
 ```
 
 #### Linux / Mac OS
@@ -260,7 +260,7 @@ help keep secrets safe.
 Then use this command to launch the proxy in the background:
 
 ```bash
-./cloudsql-proxy <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+./cloud-sql-proxy <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
 ```
 
 ##### Windows/PowerShell
@@ -303,7 +303,7 @@ Use these terminal commands to initialize other environment variables as well:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS='/path/to/service/account/key.json'
-export INSTANCE_UNIX_SOCKET='./cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
+export INSTANCE_UNIX_SOCKET='/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
 export DB_USER='<YOUR_DB_USER_NAME>'
 export DB_PASS='<YOUR_DB_PASSWORD>'
 export DB_NAME='<YOUR_DB_NAME>'
@@ -316,7 +316,7 @@ help keep secrets safe.
 Then use this command to launch the proxy in the background:
 
 ```bash
-./cloud-sql-proxy --unix-socket=./cloudsql <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+./cloud-sql-proxy --unix-socket /cloudsql <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
 ```
 
 #### Testing the application

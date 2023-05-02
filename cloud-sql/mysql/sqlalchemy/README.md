@@ -1,4 +1,4 @@
-# Connecting to Cloud SQL - Postgres
+# Connecting to Cloud SQL - mysql
 
 This demo application can be used to connect to Cloud SQL in two different ways:
 
@@ -8,7 +8,7 @@ This demo application can be used to connect to Cloud SQL in two different ways:
 
 Using the Cloud SQL Python Connector library is recommended over the Cloud SQL Auth
 Proxy as it provides all the same functionality and features but as a native
-Python package, [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
+Python package. See [cloud-sql-python-connector package](https://pypi.org/project/cloud-sql-python-connector/).
 
 ## Before you begin
 
@@ -16,15 +16,15 @@ Python package, [cloud-sql-python-connector package](https://pypi.org/project/cl
 [create a project](https://cloud.google.com/resource-manager/docs/creating-managing-projects#creating_a_project).
 
 1. Create a 2nd Gen Cloud SQL Instance by following these
-[instructions](https://cloud.google.com/sql/docs/postgres/create-instance). Note the connection
+[instructions](https://cloud.google.com/sql/docs/mysql/create-instance). Note the connection
 string, database user, and database password that you create.
 
 1. Create a database for your application by following these
-[instructions](https://cloud.google.com/sql/docs/postgres/create-manage-databases). Note the database
+[instructions](https://cloud.google.com/sql/docs/mysql/create-manage-databases). Note the database
 name.
 
 1. Create a service account with the 'Cloud SQL Client' permissions by following these
-[instructions](https://cloud.google.com/sql/docs/postgres/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
+[instructions](https://cloud.google.com/sql/docs/mysql/connect-external-app#4_if_required_by_your_authentication_method_create_a_service_account).
 Download a JSON key to use to authenticate your connection.
 
 ## Cloud SQL Python Connector Usage
@@ -40,7 +40,7 @@ Note: The `INSTANCE_CONNECTION_NAME` for your instance can be found on the
 the following command:
 
 ```sh
-gcloud sql instances describe <INSTANCE_NAME>
+gcloud sql instances describe <INSTANCE_NAME> --format='value(connectionName)'
 ```
 
 #### Linux / Mac OS
@@ -162,7 +162,7 @@ gcloud app deploy app.flexible.yaml
 
 ### Deploy to Cloud Run
 
-See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/mysql/connect-run)
 for more details on connecting a Cloud Run service to Cloud SQL.
 
 Note: If you want to connect to Cloud SQL over Private IP, add the additional
@@ -229,7 +229,7 @@ Take note of the URL output at the end of the deployment process to view your fu
 ### Running locally
 
 To run this application locally, download and install the `cloud-sql-proxy` by
-following the instructions [here](https://cloud.google.com/sql/docs/postgres/sql-proxy#install).
+following the instructions [here](https://cloud.google.com/sql/docs/mysql/sql-proxy#install).
 
 Instructions are provided below for using the proxy with a TCP connection or a Unix Domain Socket.
 On Linux or Mac OS you can use either option, but on Windows the proxy currently requires a TCP
@@ -260,7 +260,7 @@ help keep secrets safe.
 Then use this command to launch the proxy in the background:
 
 ```bash
-./cloudsql-proxy <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+./cloud-sql-proxy <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
 ```
 
 ##### Windows/PowerShell
@@ -303,7 +303,7 @@ Use these terminal commands to initialize other environment variables as well:
 
 ```bash
 export GOOGLE_APPLICATION_CREDENTIALS='/path/to/service/account/key.json'
-export INSTANCE_UNIX_SOCKET='./cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
+export INSTANCE_UNIX_SOCKET='/cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>'
 export DB_USER='<YOUR_DB_USER_NAME>'
 export DB_PASS='<YOUR_DB_PASSWORD>'
 export DB_NAME='<YOUR_DB_NAME>'
@@ -316,7 +316,7 @@ help keep secrets safe.
 Then use this command to launch the proxy in the background:
 
 ```bash
-./cloud-sql-proxy --unix-socket=./cloudsql <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
+./cloud-sql-proxy --unix-socket /cloudsql <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME> &
 ```
 
 #### Testing the application
@@ -401,7 +401,7 @@ gcloud app deploy app.flexible.yaml
 
 ### Deploy to Cloud Run
 
-See the [Cloud Run documentation](https://cloud.google.com/sql/docs/postgres/connect-run)
+See the [Cloud Run documentation](https://cloud.google.com/sql/docs/mysql/connect-run)
 for more details on connecting a Cloud Run service to Cloud SQL.
 
 ```sh
