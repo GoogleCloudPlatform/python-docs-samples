@@ -46,6 +46,7 @@ def run(
             f"--train-data-dir={train_data_dir}",
             f"--eval-data-dir={eval_data_dir}",
             f"--train-epochs={train_epochs}",
+            f"--model-dir={training_dir}/model",
             f"--batch-size={batch_size}",
         ],
         sync=sync,
