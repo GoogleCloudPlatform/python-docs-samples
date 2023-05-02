@@ -19,7 +19,6 @@ import subprocess
 import time
 import uuid
 
-from google.cloud import aiplatform
 from google.cloud import storage
 from googleapiclient.discovery import build
 import numpy as np
@@ -154,6 +153,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=1G",
+            "--timeout=30m",
             f"--set-env-vars=PROJECT={PROJECT}",
             f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
             f"--set-env-vars=REGION={REGION}",
@@ -260,42 +260,17 @@ def create_datasets(
 
 
 @pytest.fixture(scope="session")
-def train_model(service_url: str, access_token: str, create_datasets: str) -> str:
+def train_model(service_url: str, access_token: str, create_datasets: str) -> None:
+    logging.info("Training model")
     response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
-        json={"train_epochs": 10, "batch_size": 8},
-    ).json()
+        json={"train_epochs": 10, "batch_size": 8, "sync": True},
+    )
     logging.info(f"train_model response: {response}")
 
-    job_id = response["job_id"]
-    job_url = response["job_url"]
-    logging.info(f"train_model job_id: {job_id}")
-    logging.info(f"train_model job_url: {job_url}")
 
-    # Wait until the model training job finishes.
-    ai_client = aiplatform.gapic.JobServiceClient(
-        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
-    )
-
-    status = None
-    logging.info("Waiting for model to train.")
-    for _ in range(0, TIMEOUT_SEC, POLL_INTERVAL_SEC):
-        # https://googleapis.dev/python/aiplatform/latest/aiplatform_v1/job_service.html
-        job = ai_client.get_custom_job(
-            name=f"projects/{PROJECT}/locations/{REGION}/customJobs/{job_id}"
-        )
-        status = job.state.name
-        if status in VERTEX_AI_FINISHED_STATE:
-            break
-        time.sleep(POLL_INTERVAL_SEC)
-
-    logging.info(f"Model job finished with status {status}")
-    assert status == VERTEX_AI_SUCCESS_STATE, f"job_url: {job_url}"
-    yield job_id
-
-
-def test_predict(service_url: str, access_token: str, train_model: str) -> None:
+def test_predict(service_url: str, access_token: str, train_model: None) -> None:
     with open("test_data/56980685061237.npz", "rb") as f:
         input_data = pd.DataFrame(np.load(f)["x"])
 

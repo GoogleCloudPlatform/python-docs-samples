@@ -79,7 +79,8 @@ class Utils:
         yield bucket.name
 
         # Print all the objects in the bucket before deleting for debugging.
-        logging.info(f"Deleting bucket {bucket.name} with the following contents:")
+        logging.info(
+            f"Deleting bucket {bucket.name} with the following contents:")
         total_files = 0
         total_size = 0
         for blob in bucket.list_blobs():
@@ -159,7 +160,8 @@ class Utils:
         from google.cloud import pubsub
 
         publisher_client = pubsub.PublisherClient()
-        topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
+        topic_path = publisher_client.topic_path(
+            project, Utils.hyphen_name(name))
         topic = publisher_client.create_topic(request={"name": topic_path})
 
         logging.info(f"Created pubsub_topic: {topic.name}")
@@ -169,7 +171,8 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
+        cmd = ["gcloud", "pubsub", "--project",
+               project, "topics", "delete", topic.name]
         logging.info(f"{cmd}")
         subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_topic: {topic.name}")
@@ -224,7 +227,8 @@ class Utils:
             publisher_client = pubsub.PublisherClient()
             for i in itertools.count():
                 msg = new_msg(i)
-                publisher_client.publish(topic_path, msg.encode("utf-8")).result()
+                publisher_client.publish(
+                    topic_path, msg.encode("utf-8")).result()
                 time.sleep(sleep_sec)
 
         # Start a subprocess in the background to do the publishing.
@@ -281,7 +285,8 @@ class Utils:
                     ]
                     logging.info(f"{cmd}")
                     subprocess.check_call(cmd)
-                    logging.info(f"Cloud build finished successfully: {config}")
+                    logging.info(
+                        f"Cloud build finished successfully: {config}")
                     yield f.read()
             except Exception as e:
                 logging.exception(e)
@@ -299,7 +304,8 @@ class Utils:
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(
+                f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
@@ -317,7 +323,8 @@ class Utils:
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(
+                f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
     def dataflow_job_url(
@@ -424,6 +431,8 @@ class Utils:
             return False
 
         Utils.wait_until(job_is_done, timeout_sec, poll_interval_sec)
+        assert job_is_done(), (f"Dataflow job is not done after {timeout_sec} seconds\n"
+                               + Utils.dataflow_job_url(job_id, project, region))
 
     @staticmethod
     def dataflow_jobs_cancel(
