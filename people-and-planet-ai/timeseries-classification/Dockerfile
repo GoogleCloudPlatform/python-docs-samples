@@ -15,25 +15,18 @@
 # NVIDIA CUDA container: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda
 # Supported NVIDIA images: https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md
 # TensorFlow/CUDA compatibility: https://www.tensorflow.org/install/source#gpu
-FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu20.04
+FROM python:3.10-slim
 
 WORKDIR /pipeline
 
 COPY requirements.txt .
 COPY *.py ./
 
-RUN apt-get update \
-    # Install Python and other system dependencies.
-    && DEBIAN_FRONTEND=noninteractive TZ=Etc/UTC apt-get install -y --no-install-recommends \
-        curl g++ python3.9-dev python3.9-venv python3-distutils cuda-toolkit \
-    && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.9 10 \
-    && curl https://bootstrap.pypa.io/get-pip.py | python \
-    # Install the pipeline requirements.
+RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
-COPY --from=apache/beam_python3.9_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.10_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]

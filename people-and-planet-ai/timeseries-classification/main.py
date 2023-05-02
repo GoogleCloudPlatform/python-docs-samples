@@ -100,7 +100,6 @@ def run_train_model() -> dict:
         params = {
             "project": args.get("project", PROJECT),
             "region": args.get("region", REGION),
-            "container_image": args.get("container_image", CONTAINER_IMAGE),
             "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
             "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
             "training_dir": args.get("training_dir", TRAINING_DIR),
@@ -110,12 +109,10 @@ def run_train_model() -> dict:
             "gpu_type": args.get("gpu_type", DEFAULT_GPU_TYPE),
             "gpu_count": args.get("gpu_count", DEFAULT_GPU_COUNT),
         }
-        job_id = train_model.run(**params)
+        train_model.run(**params)
 
         return {
             "method": "train-model",
-            "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{REGION}/training/{job_id}/cpu?project={PROJECT}",
             "params": params,
         }
     except Exception as e:
@@ -148,6 +145,4 @@ def run_predict() -> dict:
 
 
 if __name__ == "__main__":
-    import os
-
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
