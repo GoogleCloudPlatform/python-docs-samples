@@ -15,7 +15,7 @@
 
 import os
 
-from genappbuilder import search_sample
+from discoveryengine import search_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
