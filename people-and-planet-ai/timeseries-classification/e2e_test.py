@@ -19,7 +19,6 @@ import subprocess
 import time
 import uuid
 
-from google.cloud import aiplatform
 from google.cloud import storage
 from googleapiclient.discovery import build
 import numpy as np
