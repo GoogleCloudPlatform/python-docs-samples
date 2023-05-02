@@ -44,6 +44,7 @@ function useAssessmentInClient(score) {
   if (score?.data?.score && score?.data?.verdict) {
     const demoElement = document.querySelector("recaptcha-demo");
     demoElement.setAttribute("score", score?.data?.score);
-    demoElement.setAttribute("verdict", score?.data?.verdict);
+    demoElement.setAttribute("verdict", score?.data?.verdict?.label);
+    demoElement.setAttribute("reason", score?.data?.verdict?.reason);
   }
 }

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import configparser
+import enum
 import json
 import os
 
@@ -36,6 +37,17 @@ config.read("config.ini")
 assert "recaptcha_actions" in config
 
 
+class Error(enum.Enum):
+    INVALID_TOKEN = "Invalid token"
+    ACTION_MISMATCH = "Action mismatch"
+    SCORE_LESS_THAN_THRESHOLD = "Returned score less than threshold set"
+
+
+class Label(enum.Enum):
+    NOT_BAD = "Not Bad"
+    BAD = "Bad"
+
+
 # Return homepage template.
 def home() -> str:
     return render_template(template_name_or_list="home.html", context=context)
@@ -44,6 +56,7 @@ def home() -> str:
 # On homepage load, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_homepage_load() -> Response:
     try:
+        reason = ""
         recaptcha_action = config["recaptcha_actions"]["home"]
         json_data = json.loads(request.data)
 
@@ -61,19 +74,29 @@ def on_homepage_load() -> Response:
             # Load the home page.
             # Business logic.
             # Classify the action as not bad.
-            verdict = "Not Bad"
+            label = Label.NOT_BAD.value
         else:
             # If any of the above condition fails, trigger email/ phone verification flow.
             # Classify the action as bad.
-            verdict = "Bad"
+            label = Label.BAD.value
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
-        # Return the risk score.
+            # Below code is only used to send response to the client for demo purposes.
+            # DO NOT send scores or other assessment response to the client.
+            if not assessment_response.token_properties.valid:
+                reason = Error.INVALID_TOKEN.value
+            elif assessment_response.token_properties.action != recaptcha_action:
+                reason = Error.ACTION_MISMATCH.value
+            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+                reason = Error.SCORE_LESS_THAN_THRESHOLD.value
+
+        # Return the response.
         return jsonify(
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": verdict,
+                    "verdict": {"label": label,
+                                "reason": reason},
                 }
             }
         )
@@ -89,6 +112,7 @@ def signup() -> str:
 # On signup button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_signup() -> Response:
     try:
+        reason = ""
         recaptcha_action = config["recaptcha_actions"]["signup"]
         json_data = json.loads(request.data)
 
@@ -108,19 +132,29 @@ def on_signup() -> Response:
             # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
-            verdict = "Not Bad"
+            label = Label.NOT_BAD.value
         else:
             # If any of the above condition fails, trigger email/ phone verification flow.
             # Classify the action as bad.
-            verdict = "Bad"
+            label = Label.BAD.value
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
-        # Return the risk score.
+            # Below code is only used to send response to the client for demo purposes.
+            # DO NOT send scores or other assessment response to the client.
+            if not assessment_response.token_properties.valid:
+                reason = Error.INVALID_TOKEN.value
+            elif assessment_response.token_properties.action != recaptcha_action:
+                reason = Error.ACTION_MISMATCH.value
+            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+                reason = Error.SCORE_LESS_THAN_THRESHOLD.value
+
+        # Return the response.
         return jsonify(
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": verdict,
+                    "verdict": {"label": label,
+                                "reason": reason},
                 }
             }
         )
@@ -136,6 +170,7 @@ def login() -> str:
 # On login button click, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_login() -> Response:
     try:
+        reason = ""
         recaptcha_action = config["recaptcha_actions"]["login"]
         json_data = json.loads(request.data)
 
@@ -155,19 +190,29 @@ def on_login() -> Response:
             # password = json_data["password"]
             # Business logic.
             # Classify the action as not bad.
-            verdict = "Not Bad"
+            label = Label.NOT_BAD.value
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
             # Classify the action as bad.
-            verdict = "Bad"
+            label = Label.BAD.value
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
-        # Return the risk score.
+            # Below code is only used to send response to the client for demo purposes.
+            # DO NOT send scores or other assessment response to the client.
+            if not assessment_response.token_properties.valid:
+                reason = Error.INVALID_TOKEN.value
+            elif assessment_response.token_properties.action != recaptcha_action:
+                reason = Error.ACTION_MISMATCH.value
+            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+                reason = Error.SCORE_LESS_THAN_THRESHOLD.value
+
+        # Return the response.
         return jsonify(
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": verdict,
+                    "verdict": {"label": label,
+                                "reason": reason},
                 }
             }
         )
@@ -183,6 +228,7 @@ def store() -> str:
 # On checkout button click in store page, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_store_checkout() -> Response:
     try:
+        reason = ""
         recaptcha_action = config["recaptcha_actions"]["store"]
         json_data = json.loads(request.data)
 
@@ -201,19 +247,29 @@ def on_store_checkout() -> Response:
             # items = json_data["items"]
             # Business logic.
             # Classify the action as not bad.
-            verdict = "Not Bad"
+            label = Label.NOT_BAD.value
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
             # Classify the action as bad.
-            verdict = "Bad"
+            label = Label.BAD.value
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
-        # Return the risk score.
+            # Below code is only used to send response to the client for demo purposes.
+            # DO NOT send scores or other assessment response to the client.
+            if not assessment_response.token_properties.valid:
+                reason = Error.INVALID_TOKEN.value
+            elif assessment_response.token_properties.action != recaptcha_action:
+                reason = Error.ACTION_MISMATCH.value
+            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+                reason = Error.SCORE_LESS_THAN_THRESHOLD.value
+
+        # Return the response.
         return jsonify(
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": verdict,
+                    "verdict": {"label": label,
+                                "reason": reason},
                 }
             }
         )
@@ -229,6 +285,7 @@ def comment() -> str:
 # On comment submit, execute reCAPTCHA Enterprise assessment and take action according to the score.
 def on_comment_submit() -> Response:
     try:
+        reason = ""
         recaptcha_action = config["recaptcha_actions"]["comment"]
         json_data = json.loads(request.data)
 
@@ -247,19 +304,29 @@ def on_comment_submit() -> Response:
             # comment = json_data["comment"]
             # Business logic.
             # Classify the action as not bad.
-            verdict = "Not Bad"
+            label = Label.NOT_BAD.value
         else:
             # If any of the above condition fails, trigger email/phone verification flow.
             # Classify the action as bad.
-            verdict = "Bad"
+            label = Label.BAD.value
         # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
 
-        # Return the risk score.
+            # Below code is only used to send response to the client for demo purposes.
+            # DO NOT send scores or other assessment response to the client.
+            if not assessment_response.token_properties.valid:
+                reason = Error.INVALID_TOKEN.value
+            elif assessment_response.token_properties.action != recaptcha_action:
+                reason = Error.ACTION_MISMATCH.value
+            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+                reason = Error.SCORE_LESS_THAN_THRESHOLD.value
+
+        # Return the response.
         return jsonify(
             {
                 "data": {
                     "score": "{:.1f}".format(assessment_response.risk_analysis.score),
-                    "verdict": verdict,
+                    "verdict": {"label": label,
+                                "reason": reason},
                 }
             }
         )
