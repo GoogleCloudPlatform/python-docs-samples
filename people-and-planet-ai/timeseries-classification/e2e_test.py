@@ -114,7 +114,7 @@ def container_image() -> str:
             f"--tag={container_image}",
             f"--project={PROJECT}",
             "--machine-type=e2-highcpu-8",
-            "--timeout=15m",
+            "--timeout=30m",
             "--quiet",
         ]
     )
@@ -275,7 +275,8 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> st
 
     # Wait until the model training job finishes.
     ai_client = aiplatform.gapic.JobServiceClient(
-        client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
+        client_options={
+            "api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
 
     status = None
