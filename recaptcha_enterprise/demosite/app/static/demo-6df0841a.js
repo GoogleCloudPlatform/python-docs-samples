@@ -4186,18 +4186,18 @@ class RecaptchaDemo extends s {
           <img alt="Not Bad" src="${human}" />
         `;
         break;
-        case "Bad":
-          if (this.reason) {
-            card = x`
-              <p>Suspicious request. Reason: "${this.reason}".</p>
-              <img alt="Bad" src="${badbad}" />
-            `;
-          } else {
-            card = x`
-              <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
-              <img alt="Bad" src="${badbad}" />
-            `;
-          }
+      case "Bad":
+        if (this.reason) {
+          card = x`
+            <p>Suspicious request. Reason: "${this.reason}".</p>
+            <img alt="Bad" src="${badbad}" />
+          `;
+        } else {
+          card = x`
+            <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
+            <img alt="Bad" src="${badbad}" />
+          `;
+        }
         break;
       default:
         card = x`
