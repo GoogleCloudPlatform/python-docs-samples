@@ -315,6 +315,19 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
+def test_inspect_image_file_all_infotypes(capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+
+    inspect_content.inspect_image_file_all_infotypes(
+        GCLOUD_PROJECT,
+        test_filepath
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Info type: EMAIL_ADDRESS" in out
+
+
 def delete_dlp_job(out):
     for line in str(out).split("\n"):
         if "Job name" in line:
