@@ -322,6 +322,91 @@ def redact_image_all_info_types(
 # [END dlp_redact_image_all_infotypes]
 
 
+# [START dlp_redact_image_colored_infotypes]
+def redact_image_with_colored_info_types(
+    project: str,
+    filename: str,
+    output_filename: str,
+) -> None:
+    """Uses the Data Loss Prevention API to redact protected data in an image by
+    color coding the info types.
+       Args:
+           project: The Google Cloud project id to use as a parent resource.
+           filename: The path to the file to inspect.
+           output_filename: The path to which the redacted image will be written.
+               A full list of info type categories can be fetched from the API.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare image_redaction_configs, a list of dictionaries. Each dictionary
+    # contains an info_type and the color used for the replacement.
+
+    ssn_redaction_config = {
+        "info_type": {"name": 'US_SOCIAL_SECURITY_NUMBER'},
+        "redaction_color": {
+            "red": 0.3,
+            "green": 0.1,
+            "blue": 0.6,
+        }
+    }
+
+    email_redaction_config = {
+        "info_type": {"name": 'EMAIL_ADDRESS'},
+        "redaction_color": {
+            "red": 0.5,
+            "green": 0.5,
+            "blue": 1.0,
+        }
+    }
+
+    phone_redaction_config = {
+        "info_type": {"name": 'PHONE_NUMBER'},
+        "redaction_color": {
+            "red": 1.0,
+            "green": 0.0,
+            "blue": 0.6,
+        }
+    }
+
+    image_redaction_configs = [ssn_redaction_config, email_redaction_config, phone_redaction_config]
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        "info_types": [_i["info_type"] for _i in image_redaction_configs]
+    }
+
+    # Construct the byte_item, containing the file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.redact_image(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "image_redaction_configs": image_redaction_configs,
+            "byte_item": byte_item,
+        }
+    )
+
+    # Write out the results.
+    with open(output_filename, mode="wb") as f:
+        f.write(response.redacted_image)
+
+    byte_count = len(response.redacted_image)
+    print(f"Wrote {byte_count} to {output_filename}")
+
+# [END dlp_redact_image_colored_infotypes]
+
+
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -384,7 +469,7 @@ if __name__ == "__main__":
     )
 
     listed_info_types_parser = subparsers.add_parser(
-        "lister_info_types",
+        "listed_info_types",
         help="Redact specific infoTypes from an image.",
         parents=[common_args_parser],
     )
@@ -415,6 +500,12 @@ if __name__ == "__main__":
         parents=[common_args_parser],
     )
 
+    colored_info_types_parser = subparsers.add_parser(
+        "colored_info_types",
+        help="Redact protected data in an image by color coding the info types.",
+        parents=[common_args_parser],
+    )
+
     args = parser.parse_args()
 
     if args.content == "info_types":
@@ -432,7 +523,7 @@ if __name__ == "__main__":
             args.filename,
             args.output_filename,
         )
-    elif args.content == "lister_info_types":
+    elif args.content == "listed_info_types":
         redact_image_listed_info_types(
             args.project,
             args.filename,
@@ -443,6 +534,12 @@ if __name__ == "__main__":
         )
     elif args.content == "all_info_types":
         redact_image_all_info_types(
+            args.project,
+            args.filename,
+            args.output_filename,
+        )
+    elif args.content == "colored_info_types":
+        redact_image_with_colored_info_types(
             args.project,
             args.filename,
             args.output_filename,
