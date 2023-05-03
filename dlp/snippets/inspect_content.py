@@ -20,6 +20,8 @@ import argparse
 import json
 import os
 
+from typing import List
+
 
 # [START dlp_inspect_string_basic]
 def inspect_string_basic(
@@ -982,6 +984,67 @@ def inspect_image_file_all_infotypes(
 # [END dlp_inspect_image_all_infotypes]
 
 
+# [START dlp_inspect_image_listed_infotypes]
+def inspect_image_file_listed_infotypes(
+    project: str,
+    filename: str,
+    info_types: List[str],
+    include_quote=True,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze strings for protected data
+    in image file for given info types.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        info_types:
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": include_quote,
+    }
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Quote: {}".format(finding.quote))
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+# [END dlp_inspect_image_listed_infotypes]
+
+
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -1428,6 +1491,33 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_image_infotypes = subparsers.add_parser(
+        "image_listed_infotypes",
+        help="Inspect a local file with listed info types."
+    )
+    parser_image_infotypes.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_infotypes.add_argument(
+        "filename",
+        help="The path to the file to inspect."
+    )
+    parser_image_infotypes.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+    )
+    parser_image_infotypes.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+             "information in the results.",
+        default=True,
+    )
+
     args = parser.parse_args()
 
     if args.content == "string":
@@ -1508,10 +1598,16 @@ if __name__ == "__main__":
             max_findings=args.max_findings,
             timeout=args.timeout,
         )
-
     elif args.content == "image_all_infotypes":
         inspect_image_file_all_infotypes(
             args.project,
             args.filename,
+            include_quote=args.include_quote,
+        )
+    elif args.content == "image_listed_infotypes":
+        inspect_image_file_listed_infotypes(
+            args.project,
+            args.filename,
+            args.info_types,
             include_quote=args.include_quote,
         )
