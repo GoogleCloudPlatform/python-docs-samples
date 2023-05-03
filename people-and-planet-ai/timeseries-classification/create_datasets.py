@@ -41,7 +41,12 @@ def run(
         ]
     ).sort_values(by="start_time")
 
-    beam_options = PipelineOptions(flags=[], **beam_args)
+    beam_options = PipelineOptions(
+        flags=[],
+        save_main_session=True,
+        requirements_file="requirements.txt",
+        **beam_args,
+    )
     pipeline = beam.Pipeline(options=beam_options)
 
     training_data, evaluation_data = (
