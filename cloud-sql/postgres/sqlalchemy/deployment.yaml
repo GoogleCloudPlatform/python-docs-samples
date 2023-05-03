@@ -61,18 +61,17 @@ spec:
         # This uses the latest version of the Cloud SQL proxy
         # It is recommended to use a specific version for production environments.
         # See: https://github.com/GoogleCloudPlatform/cloudsql-proxy 
-        image: gcr.io/cloudsql-docker/gce-proxy:latest
-        command:
-          - "/cloud_sql_proxy"
-
+        image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
+        args:
           # If connecting from a VPC-native GKE cluster, you can use the
           # following flag to have the proxy connect over private IP
-          # - "-ip_address_types=PRIVATE"
+          # - "--private-ip"
 
           # tcp should be set to the port the proxy should listen on
           # and should match the DB_PORT value set above.
           # Defaults: MySQL: 3306, Postgres: 5432, SQLServer: 1433
-          - "-instances=<INSTANCE_CONNECTION_NAME>=tcp:5432"
+          - "--port=5432"
+          - "<INSTANCE_CONNECTION_NAME>"
         securityContext:
           # The default Cloud SQL proxy image runs as the
           # "nonroot" user and group (uid: 65532) by default.

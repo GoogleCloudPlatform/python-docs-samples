@@ -21,10 +21,10 @@ entrypoint: gunicorn -b :$PORT app:app
 # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
 # keep secrets safe.
 env_variables:
-  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  INSTANCE_UNIX_SOCKET: /cloudsql/<PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
   DB_USER: <YOUR_DB_USER_NAME>
   DB_PASS: <YOUR_DB_PASSWORD>
   DB_NAME: <YOUR_DB_NAME>
 
 beta_settings:
-  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  cloud_sql_instances: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
