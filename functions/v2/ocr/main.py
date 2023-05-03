@@ -137,7 +137,7 @@ def translate_text(cloud_event):
 
     # Extract the message body, expected to be a JSON representation of a
     # dictionary, and extract the fields from that dictionary.
-    data = cloud_event.data["message"]
+    data = cloud_event.data["message"]["data"]
     try:
         message_data = base64.b64decode(data)
         message = json.loads(message_data)
@@ -185,7 +185,7 @@ def save_result(cloud_event):
 
     # Extract the message body, expected to be a JSON representation of a
     # dictionary, and extract the fields from that dictionary.
-    data = cloud_event.data["message"]
+    data = cloud_event.data["message"]["data"]
     try:
         message_data = base64.b64decode(data)
         message = json.loads(message_data)
