@@ -6,5 +6,5 @@ apache-airflow-providers-cncf-kubernetes==5.1.1
 apache-airflow-providers-google==8.8.0
 scipy==1.8.1; python_version > '3.0'
 apache-airflow-providers-amazon==7.1.0
-apache-airflow-providers-microsoft-azure==5.1.0
+apache-airflow-providers-microsoft-azure==5.3.1
 google-cloud-dataform==0.2.0 # used in Dataform operators
