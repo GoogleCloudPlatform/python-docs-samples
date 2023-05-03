@@ -5,3 +5,4 @@ pyopenssl==23.1.1
 SQLAlchemy==2.0.12
 cloud-sql-python-connector==1.2.2
 sqlalchemy-pytds==0.3.5
+functions-framework==3.3.0
