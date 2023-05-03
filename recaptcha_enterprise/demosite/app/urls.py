@@ -87,7 +87,7 @@ def on_homepage_load() -> Response:
                 reason = Error.INVALID_TOKEN.value
             elif assessment_response.token_properties.action != recaptcha_action:
                 reason = Error.ACTION_MISMATCH.value
-            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+            elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
                 reason = Error.SCORE_LESS_THAN_THRESHOLD.value
 
         # Return the response.
@@ -145,7 +145,7 @@ def on_signup() -> Response:
                 reason = Error.INVALID_TOKEN.value
             elif assessment_response.token_properties.action != recaptcha_action:
                 reason = Error.ACTION_MISMATCH.value
-            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+            elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
                 reason = Error.SCORE_LESS_THAN_THRESHOLD.value
 
         # Return the response.
@@ -203,7 +203,7 @@ def on_login() -> Response:
                 reason = Error.INVALID_TOKEN.value
             elif assessment_response.token_properties.action != recaptcha_action:
                 reason = Error.ACTION_MISMATCH.value
-            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+            elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
                 reason = Error.SCORE_LESS_THAN_THRESHOLD.value
 
         # Return the response.
@@ -260,7 +260,7 @@ def on_store_checkout() -> Response:
                 reason = Error.INVALID_TOKEN.value
             elif assessment_response.token_properties.action != recaptcha_action:
                 reason = Error.ACTION_MISMATCH.value
-            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+            elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
                 reason = Error.SCORE_LESS_THAN_THRESHOLD.value
 
         # Return the response.
@@ -317,7 +317,7 @@ def on_comment_submit() -> Response:
                 reason = Error.INVALID_TOKEN.value
             elif assessment_response.token_properties.action != recaptcha_action:
                 reason = Error.ACTION_MISMATCH.value
-            elif assessment_response.risk_analysis.score < SAMPLE_THRESHOLD_SCORE:
+            elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
                 reason = Error.SCORE_LESS_THAN_THRESHOLD.value
 
         # Return the response.

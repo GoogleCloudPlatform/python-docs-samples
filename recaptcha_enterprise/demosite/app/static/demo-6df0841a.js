@@ -2247,7 +2247,7 @@ var demoCSS = i$3`
     margin-bottom: var(--size-huge);
   }
   #guide .text,
-  #guide #verdict + .scoreExample {
+  #guide #label + .scoreExample {
     margin-bottom: var(--size-xhuge);
   }
   #guide p,
@@ -2372,7 +2372,7 @@ var demoCSS = i$3`
     animation:  .5s ease-out 0s 2 alternate both paused drawerBump;
   }
   #guide .response,
-  #verdict p,
+  #label p,
   .scoreExample {
     transition: max-height var(--full-lapse) ease-out var(--half-lapse),
       opacity var(--full-lapse) ease-out var(--half-lapse);
@@ -2383,7 +2383,7 @@ var demoCSS = i$3`
     opacity: 0;
   }
   .scored #guide .response,
-  .scored #verdict p,
+  .scored #label p,
   .scored .scoreExample {
     opacity: 1;
   }
@@ -3700,7 +3700,7 @@ class RecaptchaDemo extends s {
     step: { type: String },
     /* Result */
     score: { type: String },
-    verdict: { type: String },
+    label: { type: String },
     reason: { type: String },
   };
 
@@ -3715,7 +3715,7 @@ class RecaptchaDemo extends s {
     /* Result */
     this._score = undefined;
     this.score = this._score;
-    this.verdict = undefined;
+    this.label = undefined;
     this.reason = undefined;
     /* Other */
     this.cleanupGame = () => {};
@@ -3852,7 +3852,7 @@ class RecaptchaDemo extends s {
   }
 
   handleSubmit() {
-    if (this.score && this.verdict) {
+    if (this.score && this.label) {
       this.goToNextStep();
       return;
     }
@@ -4179,7 +4179,7 @@ class RecaptchaDemo extends s {
     const score = this.score && this.score.slice(0, 3);
     const percentage = score && Number(score) * 100;
     let card = null;
-    switch (this.verdict) {
+    switch (this.label) {
       case "Not Bad":
         card = x`
           <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
@@ -4187,17 +4187,10 @@ class RecaptchaDemo extends s {
         `;
         break;
       case "Bad":
-        if (this.reason) {
-          card = x`
-            <p>Suspicious request. Reason: "${this.reason}".</p>
-            <img alt="Bad" src="${badbad}" />
-          `;
-        } else {
-          card = x`
-            <p>reCAPTCHA is ${percentage || "???"}% confident you're not bad.</p>
-            <img alt="Bad" src="${badbad}" />
-          `;
-        }
+        card = x`
+          <p>Suspicious request. Reason: "${this.reason}".</p>
+          <img alt="Bad" src="${badbad}" />
+        `;
         break;
       default:
         card = x`
@@ -4209,7 +4202,7 @@ class RecaptchaDemo extends s {
         `;
     }
     return x`
-      <div id="verdict">
+      <div id="label">
         <div id="score">
           <div class="score">${score || "–"}</div>
           ${card}
@@ -4457,10 +4450,10 @@ class RecaptchaDemo extends s {
           animating: this.animating,
           drawerOpen: this.step !== "game" && this.drawerOpen,
           drawerClosed: this.step === "game" || !this.drawerOpen,
-          scored: this.score && this.verdict,
+          scored: this.score && this.label,
           sitemapOpen: this.sitemapOpen,
           sitemapClosed: !this.sitemapOpen,
-          unscored: !this.score || !this.verdict,
+          unscored: !this.score || !this.label,
         })}"
         id="demo"
       >
