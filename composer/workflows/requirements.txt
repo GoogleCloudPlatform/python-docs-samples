@@ -2,7 +2,7 @@
 # see https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
 apache-airflow==2.5.1
 apache-airflow-providers-apache-beam==4.1.1
-apache-airflow-providers-cncf-kubernetes==5.1.1
+apache-airflow-providers-cncf-kubernetes==5.3.0
 apache-airflow-providers-google==8.8.0
 scipy==1.8.1; python_version > '3.0'
 apache-airflow-providers-amazon==7.1.0
