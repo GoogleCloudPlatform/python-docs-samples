@@ -292,17 +292,17 @@ def check_for_bad_action(assessment_response: Assessment, recaptcha_action: str)
     reason = ""
     label = Label.NOT_BAD.value
 
-    # Check if the token obtained from client is valid.
+    # Classify the action as BAD if the token obtained from client is not valid.
     if not assessment_response.token_properties.valid:
         reason = Error.INVALID_TOKEN.value
         label = Label.BAD.value
 
-    # Check if the returned recaptcha action matches the expected.
+    # Classify the action as BAD if the returned recaptcha action doesn't match the expected.
     elif assessment_response.token_properties.action != recaptcha_action:
         reason = Error.ACTION_MISMATCH.value
         label = Label.BAD.value
 
-    # Check if the returned score is greater less than or equal to the threshold set.
+    # Classify the action as BAD if the returned score is less than or equal to the threshold set.
     elif assessment_response.risk_analysis.score <= SAMPLE_THRESHOLD_SCORE:
         reason = Error.SCORE_LESS_THAN_THRESHOLD.value
         label = Label.BAD.value
