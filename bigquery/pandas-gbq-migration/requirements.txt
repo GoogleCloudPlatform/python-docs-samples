@@ -9,4 +9,4 @@ pandas-gbq==0.14.1; python_version < '3.7'
 grpcio==1.54.0
 pyarrow==12.0.0; python_version > '3.6'
 # pyarrow==6.0.1 is the latest compatible version for pandas-gbq 0.14.1
-pyarrow==12.0.0; python_version < '3.7'
+pyarrow==6.0.1; python_version < '3.7'
