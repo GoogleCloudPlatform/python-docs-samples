@@ -23,6 +23,7 @@ import os
 
 from typing import List
 
+
 # [START dlp_inspect_string_basic]
 def inspect_string_basic(
     project,
