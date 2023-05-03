@@ -74,7 +74,7 @@ def download_output(project, cluster_id, output_bucket, job_id):
     output_blob = "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
         cluster_id, job_id
     )
-    return bucket.blob(output_blob).download_as_string()
+    return bucket.blob(output_blob).download_as_bytes().decode("utf-8")
 
 
 # [START dataproc_create_cluster]
@@ -132,7 +132,7 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
         storage.Client()
         .get_bucket(matches.group(1))
         .blob(f"{matches.group(2)}.000000000")
-        .download_as_string()
+        .download_as_bytes().decode("utf-8")
     )
 
     print(f"Job finished successfully: {output}\r\n")
