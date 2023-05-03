@@ -1,5 +1,5 @@
 Django==4.0.7; python_version >= '3.8'
-Django==3.2.18; python_version < '3.8'
+Django==3.2.19; python_version < '3.8'
 # Uncomment the mysqlclient requirement if you are using MySQL rather than
 # PostgreSQL. You must also have a MySQL client installed in that case.
 #mysqlclient==1.4.1
