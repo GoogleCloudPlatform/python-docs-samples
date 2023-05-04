@@ -18,7 +18,7 @@ from vertex_ai.preview.language_models import TextEmbeddingModel
 
 def text_embedding():
   """Text embedding with a Large Language Model."""
-  model = TextEmbeddingModel.from_pretrained("google/embedding-gecko@001")
+  model = TextEmbeddingModel.from_pretrained("textembedding-gecko@001")
   embeddings = model.get_embeddings(["What is life?"])
   for embedding in embeddings:
       vector = embedding.values
