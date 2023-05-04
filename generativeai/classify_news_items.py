@@ -18,7 +18,7 @@ from vertex_ai.preview.language_models import TextGenerationModel
 
 def classify_news_items(temperature=0):
     """Text Classification Example with a Large Language Model"""
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
       '''What is the topic for a given news headline?
 - business
