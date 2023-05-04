@@ -14,7 +14,7 @@
 
 import pytest
 
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
+from vertex_ai.preview.language_models import TextGenerationModel
 
 import summarization
 

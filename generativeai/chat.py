@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START generativeai_sdk_chat]
-from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputOutputTextPair
+from vertex_ai.preview.language_models import ChatModel, InputOutputTextPair
 
 
 def science_tutoring(temperature=.2):

@@ -16,7 +16,7 @@
 from typing import Union
 import pandas as pd
 
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel, TextEmbeddingModel
+from vertex_ai.preview.language_models import TextGenerationModel, TextEmbeddingModel
 from google.cloud import aiplatform
 
 
@@ -47,7 +47,7 @@ def tuning(
     train_steps: Number of training steps to use when tuning the model.
   """
   aiplatform.init(project=project_id, location=location)
-  model = TextGenerationModel.from_pretrained("google/text-bison-001")
+  model = TextGenerationModel.from_pretrained("google/text-bison@001")
 
   model.tune_model(
     training_data=training_data,

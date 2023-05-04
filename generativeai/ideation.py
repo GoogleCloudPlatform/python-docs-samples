@@ -13,12 +13,12 @@
 # limitations under the License.
 
 # [START generativeai_sdk_ideation]
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
+from vertex_ai.preview.language_models import TextGenerationModel
 
 
 def interview(temperature=.2):
     """Ideation example with a Large Language Model"""
-    model = TextGenerationModel.from_pretrained("google/text-bison-001")
+    model = TextGenerationModel.from_pretrained("google/text-bison@001")
     response = model.predict(
         'Give me ten interview questions for the role of program manager.',
         temperature=temperature,

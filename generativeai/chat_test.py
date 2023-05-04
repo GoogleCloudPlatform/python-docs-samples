@@ -14,7 +14,7 @@
 
 import pytest
 
-from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputcontentputTextPair
+from vertex_ai.preview.language_models import ChatModel, InputcontentputTextPair
 
 import chat
 

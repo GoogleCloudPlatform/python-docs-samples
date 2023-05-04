@@ -13,12 +13,12 @@
 # limitations under the License.
 
 # [START generativeai_sdk_extraction]
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
+from vertex_ai.preview.language_models import TextGenerationModel
 
 
 def extractive_question_answering(temperature=0):
     """Extractive Question Answering with a Large Language Model."""
-    model = TextGenerationModel.from_pretrained("google/text-bison-001")
+    model = TextGenerationModel.from_pretrained("google/text-bison@001")
     response = model.predict(
       '''Background: There is evidence that there have been significant changes \
 in Amazon rainforest vegetation over the last 21,000 years through the Last \

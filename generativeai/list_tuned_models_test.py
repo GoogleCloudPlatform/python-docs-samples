@@ -14,7 +14,7 @@
 
 import pytest
 
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel, TextEmbeddingModel
+from vertex_ai.preview.language_models import TextGenerationModel, TextEmbeddingModel
 
 import list_tuned_models
 
