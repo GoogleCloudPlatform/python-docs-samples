@@ -18,7 +18,7 @@ from vertex_ai.preview.language_models import TextGenerationModel
 
 def sentiment_analysis(temperature=0):
     """Sentiment analysis example with a Large Language Model."""
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
       '''I had to compare two versions of Hamlet for my Shakespeare class and \
 unfortunately I picked this version. Everything from the acting (the actors \

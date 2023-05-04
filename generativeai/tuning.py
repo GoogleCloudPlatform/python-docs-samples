@@ -47,7 +47,7 @@ def tuning(
     train_steps: Number of training steps to use when tuning the model.
   """
   aiplatform.init(project=project_id, location=location)
-  model = TextGenerationModel.from_pretrained("google/text-bison@001")
+  model = TextGenerationModel.from_pretrained("text-bison@001")
 
   model.tune_model(
     training_data=training_data,

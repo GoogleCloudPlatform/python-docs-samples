@@ -23,7 +23,7 @@ from google.cloud import aiplatform
 def list_tuned_models(project_id, location):
     """List tuned models."""
     aiplatform.init(project=project_id, location=location)
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@001")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
 # [END generativeai_sdk_list_tuned_models]
