@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START generativeai_sdk_extraction]
-from vertex_ai.preview.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel
 
 
 def extractive_question_answering(temperature=0):

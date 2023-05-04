@@ -16,13 +16,13 @@
 from typing import Union
 import pandas as pd
 
-from vertex_ai.preview.language_models import TextGenerationModel, TextEmbeddingModel
-from google.cloud import aiplatform
+from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
+from google.cloud import vertexai
 
 
 def list_tuned_models(project_id, location):
     """List tuned models."""
-    aiplatform.init(project=project_id, location=location)
+    vertexai.init(project=project_id, location=location)
     model = TextGenerationModel.from_pretrained("text-bison@001")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)

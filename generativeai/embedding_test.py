@@ -15,7 +15,7 @@
 import pytest
 import numpy as np
 
-from vertex_ai.preview.language_models import TextEmbeddingModel
+from vertexai.preview.language_models import TextEmbeddingModel
 
 import embedding
 

@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START generativeai_sdk_embedding]
-from vertex_ai.preview.language_models import TextEmbeddingModel
+from vertexai.preview.language_models import TextEmbeddingModel
 
 
 def text_embedding():

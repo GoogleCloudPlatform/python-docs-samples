@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START generativeai_sdk_summarization]
-from vertex_ai.preview.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel
 
 
 def text_summarization(temperature=.2):
