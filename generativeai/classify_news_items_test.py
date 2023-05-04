@@ -14,7 +14,7 @@
 
 import pytest
 
-from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputOutputTextPair
+from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
 
 import classify_news_items
 
@@ -22,4 +22,3 @@ import classify_news_items
 def test_classify_news_items():
     content = classify_news_items.classify_news_items(temperature=0).text
     assert content == 'business'
-    print(f'Response from Model: {content}')

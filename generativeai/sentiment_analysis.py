@@ -15,6 +15,7 @@
 # [START generativeai_sdk_sentiment_analysis]
 from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
 
+
 def sentiment_analysis(temperature=0):
     """Sentiment analysis example with a Large Language Model."""
     model = TextGenerationModel.from_pretrained("google/text-bison-001")

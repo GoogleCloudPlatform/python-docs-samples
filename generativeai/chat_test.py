@@ -8,25 +8,24 @@
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# WITHcontent WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
 import pytest
 
-from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputOutputTextPair
+from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputcontentputTextPair
 
 import chat
 
 
-def test_science_tutoring(capsys):
-    chat.science_tutoring(temperature=0)
-    out, _ = capsys.readouterr()
-    assert "Mercury" in out
-    assert "Venus" in out
-    assert "Earth" in out
-    assert "Mars" in out
-    assert "Jupiter" in out
-    assert "Saturn" in out
-    assert "Uranus" in out
-    assert "Neptune" in out
+def test_science_tutoring():
+    content = chat.science_tutoring(temperature=0)
+    assert "Mercury" in content
+    assert "Venus" in content
+    assert "Earth" in content
+    assert "Mars" in content
+    assert "Jupiter" in content
+    assert "Saturn" in content
+    assert "Uranus" in content
+    assert "Neptune" in content

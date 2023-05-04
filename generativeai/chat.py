@@ -12,13 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START generativeai_sdk_chat]
+from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputOutputTextPair
+
+
 def science_tutoring(temperature=.2):
-    # [START generativeai_sdk_chat]
-    from google.cloud.aiplatform.private_preview.language_models import ChatModel, InputOutputTextPair
 
     chat_model = ChatModel.from_pretrained("google/chat-bison-001")
     parameters = {
-    "temperature": 0.2,
+    "temperature": temperature,
     "max_output_tokens": 256,
     "top_p": 0.95,
     "top_k": 40,
@@ -34,11 +36,11 @@ def science_tutoring(temperature=.2):
         ]
     )
 
-    print(chat.send_message("How many planets are there in the solar system?", **parameters))
-    print(chat.send_message("When I learned about the planets in school, there were nine. When did that change?", **parameters))
-    print(chat.send_message("Does Pluto have any moons? What about other dwarf planets?", **parameters))
-    print(chat.send_message("Who chose all of these cool names?!", **parameters))
-    # [END generativeai_sdk_chat]
+    response = chat.send_message("How many planets are there in the solar system?", **parameters)
+    print(f"Response from Model: {response.text}")
+# [END generativeai_sdk_chat]
+
+    return response
 
 
 if __name__ == "__main__":

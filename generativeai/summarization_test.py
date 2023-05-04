@@ -18,10 +18,9 @@ from google.cloud.aiplatform.private_preview.language_models import TextGenerati
 
 import summarization
 
-
 expected_response = '''The efficient-market hypothesis (EMH) is a hypothesis in financial economics that states that asset prices reflect all available information. A direct implication is that it is impossible to "beat the market" consistently on a risk-adjusted basis since market prices should only react to new information.'''
+
 
 def test_text_summarization():
     content = summarization.text_summarization(temperature=0).text
     assert content == expected_response
-    print(f'Response from Model: {content}')

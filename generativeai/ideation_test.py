@@ -18,7 +18,6 @@ from google.cloud.aiplatform.private_preview.language_models import TextGenerati
 
 import ideation
 
-
 interview_expected_response = '''1. Tell me about a time when you successfully managed a complex project. What were the challenges you faced, and how did you overcome them?
 2. What is your approach to planning and prioritizing tasks?
 3. How do you communicate with and collaborate with stakeholders?
@@ -32,7 +31,7 @@ interview_expected_response = '''1. Tell me about a time when you successfully m
 
 These questions are designed to assess your skills and experience in project management, as well as your fit for the role and company. Be prepared to answer them thoughtfully and honestly, and to provide specific examples from your past experience.'''
 
+
 def test_interview():
     content = ideation.interview(temperature=0).text
     assert content == interview_expected_response
-    print(f'Response from Model: {content}')

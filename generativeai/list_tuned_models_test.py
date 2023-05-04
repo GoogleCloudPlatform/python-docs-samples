@@ -21,6 +21,7 @@ import list_tuned_models
 _PROJECT_ID = "YOUR_PROJECT_ID"
 _LOCATION = "us-central1"
 
+
 def test_list_tuned_models():
     tuned_model_names = list_tuned_models.list_tuned_models(_PROJECT_ID, _LOCATION)
     assert len(tuned_model_names) > 0

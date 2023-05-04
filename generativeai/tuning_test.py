@@ -18,12 +18,11 @@ from google.cloud.aiplatform.private_preview.language_models import TextEmbeddin
 
 import tuning
 
-
 _TRAINING_DATASET = "gs://..."
 _PROJECT_ID = "YOUR_PROJECT_ID"
 _LOCATION = "us-south1"
 
-def test_tuning(capsys):
-    tuning.tuning(_TRAINING_DATASET, _PROJECT_ID, _LOCATION)
-    out, _ = capsys.readouterr()
-    assert "VR" in out
+
+def test_tuning():
+    content = tuning.tuning(_TRAINING_DATASET, _PROJECT_ID, _LOCATION)
+    assert "VR" in content

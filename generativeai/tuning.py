@@ -13,11 +13,11 @@
 # limitations under the License.
 
 # [START generativeai_sdk_tuning]
-from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel, TextEmbeddingModel
-from google.cloud import aiplatform
-
 from typing import Union
 import pandas as pd
+
+from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel, TextEmbeddingModel
+from google.cloud import aiplatform
 
 
 def tuning(
@@ -58,10 +58,11 @@ def tuning(
   )
 
   # Test the tuned model:
-  print(
-      model.predict("Tell me some ideas combining VR and fitness:")
-  )
+  response = model.predict("Tell me some ideas combining VR and fitness:")
+  print(f"Response from Model: {response.text}")
 # [END generativeai_sdk_tune_model]
+
+  return response
 
 
 if __name__ == "__main__":

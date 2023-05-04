@@ -23,4 +23,3 @@ import embedding
 def test_text_embedding():
     content = embedding.text_embedding()
     assert content == 768
-    print(f'Response from Model: {content}')

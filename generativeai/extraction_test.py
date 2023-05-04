@@ -18,7 +18,7 @@ from google.cloud.aiplatform.private_preview.language_models import TextGenerati
 
 import extraction
 
+
 def test_extractive_question_answering():
     content = extraction.extractive_question_answering(temperature=0).text
     assert content == 'Reduced moist tropical vegetation cover.'
-    print(f'Response from Model: {content}')

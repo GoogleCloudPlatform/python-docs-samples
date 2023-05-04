@@ -13,8 +13,8 @@
 # limitations under the License.
 
 # [START generativeai_sdk_embedding]
-
 from google.cloud.aiplatform.private_preview.language_models import TextEmbeddingModel
+
 
 def text_embedding():
   """Text embedding with a Large Language Model."""
@@ -23,7 +23,7 @@ def text_embedding():
   for embedding in embeddings:
       vector = embedding.values
       print(f'Length of Embedding Vector: {len(vector)}')
-# [END MOCK_TAG]
+# [END generativeai_sdk_embedding]
   return vector
 
 

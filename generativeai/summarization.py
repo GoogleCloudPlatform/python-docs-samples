@@ -15,6 +15,7 @@
 # [START generativeai_sdk_summarization]
 from google.cloud.aiplatform.private_preview.language_models import TextGenerationModel
 
+
 def text_summarization(temperature=.2):
     """Summarization Example with a Large Language Model"""
     model = TextGenerationModel.from_pretrained("google/text-bison-001")
