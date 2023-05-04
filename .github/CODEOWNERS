@@ -85,7 +85,6 @@
 # Self-service
 # ---* Shared with DEE Teams
 /functions/**/*                        @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/codelabs/**/*                         @GoogleCloudPlatform/codelabs-contributors @GoogleCloudPlatform/python-samples-reviewers
 /composer/**/*                         @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /pubsub/**/*                           @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
