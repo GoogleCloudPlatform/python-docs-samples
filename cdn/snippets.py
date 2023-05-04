@@ -104,6 +104,7 @@ def sign_url_prefix(url, url_prefix, key_name, base64_key, expiration_time):
 
     digest = hmac.new(
             decoded_key, policy.encode('utf-8'), hashlib.sha1).digest()
+
     signature = base64.urlsafe_b64encode(digest).decode('utf-8')
 
     signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
