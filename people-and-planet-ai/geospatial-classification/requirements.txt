@@ -1,4 +1,4 @@
-earthengine-api==0.1.351
+earthengine-api==0.1.352
 folium==0.14.0
 google-cloud-aiplatform==1.24.1
 pandas==2.0.1
