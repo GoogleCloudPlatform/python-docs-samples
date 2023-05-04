@@ -25,12 +25,10 @@ def download_chunks_concurrently(bucket_name, blob_name, filename, processes=8):
     # The destination filename or path
     # filename = ""
 
-    # The maximum number of worker processes that should be used to handle the
-    # workload of downloading the blob concurrently. PROCESS worker type uses more
-    # system resources (both memory and CPU) and can result in faster operations
-    # when working with large files. The optimal number of workers depends heavily
-    # on the specific use case. Refer to the docstring of the underlining method
-    # for more details.
+    # The maximum number of processes to use for the operation. The performance
+    # impact of this value depends on the use case, but smaller files usually
+    # benefit from a higher number of processes. Each additional process occupies
+    # some CPU and memory resources until finished.
     # processes=8
 
     from google.cloud.storage import Client, transfer_manager

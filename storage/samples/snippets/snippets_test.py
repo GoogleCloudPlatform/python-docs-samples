@@ -693,7 +693,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
             test_bucket.name,
             BLOB_NAMES,
             source_directory="{}/".format(uploads),
-            threads=2,
+            processes=8,
         )
         out, _ = capsys.readouterr()
 
@@ -705,7 +705,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
         storage_transfer_manager_download_all_blobs.download_all_blobs_with_transfer_manager(
             test_bucket.name,
             destination_directory=os.path.join(downloads, ""),
-            threads=2,
+            processes=8,
         )
         out, _ = capsys.readouterr()
 
