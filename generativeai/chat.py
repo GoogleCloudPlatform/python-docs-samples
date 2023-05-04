@@ -18,7 +18,7 @@ from vertex_ai.preview.language_models import ChatModel, InputOutputTextPair
 
 def science_tutoring(temperature=.2):
 
-    chat_model = ChatModel.from_pretrained("google/chat-bison-001")
+    chat_model = ChatModel.from_pretrained("chat-bison@001")
     parameters = {
     "temperature": temperature,
     "max_output_tokens": 256,
