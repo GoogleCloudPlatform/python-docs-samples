@@ -13,11 +13,10 @@
 # limitations under the License.
 
 # [START generativeai_sdk_list_tuned_models]
-from typing import Union
-import pandas as pd
 
+import vertexai
 from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
-from google.cloud import vertexai
+
 
 
 def list_tuned_models(project_id, location):
