@@ -15,8 +15,8 @@
 
 import os
 
-from genappbuilder import import_documents_sample
-from genappbuilder import list_documents_sample
+from discoveryengine import import_documents_sample
+from discoveryengine import list_documents_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
