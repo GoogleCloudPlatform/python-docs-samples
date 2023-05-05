@@ -18,6 +18,7 @@
 import json
 import os
 import subprocess
+from datetime import date
 
 import uuid
 
@@ -196,6 +197,13 @@ def jwt_token() -> str:
 
 
 def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
+
+    if date.today() > date(2023, 6, 5):
+        raise Exception(
+            'REMINDER: Remove urllib3<2.0.0, and this exception code, if no longer needed (otherwise bump the date later).'
+            'Context: https://github.com/GoogleCloudPlatform/python-docs-samples/pull/9903'
+        )
+
     token = jwt_token
     service_url = deployed_service
 
