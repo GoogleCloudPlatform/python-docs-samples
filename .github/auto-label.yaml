@@ -83,6 +83,7 @@ path:
         trace: "cloudtrace"
         translate: "translate"
         vision: "vision"
+        vmwareengine: "vmwareengine"
         webrisk: "webrisk"
         workflows: "workflows"
     - labelprefix: "asset: "

@@ -13,15 +13,17 @@
 # limitations under the License.
 
 
-import pytest
-
-import google.auth
-
-from list_locations import list_locations
-
-PROJECT = google.auth.default()[1]
+from google.cloud import vmwareengine_v1
+from google.longrunning.operations_pb2 import GetOperationRequest
+from google.api_core.operation import Operation
 
 
-def test_locations_list(capsys):
-    list_locations(PROJECT)
-    assert 'asia-northeast1' in capsys.readouterr().out
+def get_operation_by_name(operation_name: str) -> Operation:
+    client = vmwareengine_v1.VmwareEngineClient()
+    request = GetOperationRequest()
+    request.name = operation_name
+    return client.get_operation(request)
+
+
+def get_operation(project_id: str, region: str, operation_id: str) -> Operation:
+    return get_operation_by_name(f"projects/{project_id}/locations/{region}/operations/{operation_id}")

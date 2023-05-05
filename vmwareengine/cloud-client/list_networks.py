@@ -11,17 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from typing import Iterable
+
+from google.cloud import vmwareengine_v1
 
 
-import pytest
+def list_networks(project_id: str, region: str) -> Iterable[vmwareengine_v1.VmwareEngineNetwork]:
+    client = vmwareengine_v1.VmwareEngineClient()
 
-import google.auth
-
-from list_locations import list_locations
-
-PROJECT = google.auth.default()[1]
-
-
-def test_locations_list(capsys):
-    list_locations(PROJECT)
-    assert 'asia-northeast1' in capsys.readouterr().out
+    return client.list_vmware_engine_networks(parent=f'projects/{project_id}/locations/{region}')

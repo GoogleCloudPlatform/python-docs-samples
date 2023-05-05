@@ -13,15 +13,12 @@
 # limitations under the License.
 
 
-import pytest
-
-import google.auth
-
-from list_locations import list_locations
-
-PROJECT = google.auth.default()[1]
+from google.cloud import vmwareengine_v1
 
 
-def test_locations_list(capsys):
-    list_locations(PROJECT)
-    assert 'asia-northeast1' in capsys.readouterr().out
+def delete_legacy_network(project_id: str, region: str) -> None:
+    client = vmwareengine_v1.VmwareEngineClient()
+    client.delete_vmware_engine_network(name=f"projects/{project_id}/"
+                                             f"locations/{region}/"
+                                             f"vmwareEngineNetworks/{region}-default").result(timeout=300)
+    return
