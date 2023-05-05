@@ -16,8 +16,8 @@
 from typing import Union
 import pandas as pd
 
+import vertexai
 from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
-from google.cloud import vertexai
 
 
 def tuning(
@@ -53,8 +53,8 @@ def tuning(
     training_data=training_data,
     # Optional:
     train_steps=1,
-    tuning_job_location="us-south1",
-    tuned_model_location="us-south1",
+    tuning_job_location="europe-west4",
+    tuned_model_location="us-central1",
   )
 
   # Test the tuned model:
