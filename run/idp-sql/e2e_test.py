@@ -173,7 +173,6 @@ def deployed_service() -> str:
     )
 
 
-@pytest.fixture
 def jwt_token() -> str:
     custom_token = auth.create_custom_token("a-user-id").decode("UTF-8")
     adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -195,8 +194,7 @@ def jwt_token() -> str:
     # no cleanup required
 
 
-def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
-    token = jwt_token
+def test_end_to_end(deployed_service: str) -> None:
     service_url = deployed_service
 
     adapter = HTTPAdapter(max_retries=retry_strategy)
@@ -209,6 +207,7 @@ def test_end_to_end(jwt_token: str, deployed_service: str) -> None:
     assert response.status_code == 200
 
     # Can make post with token
+    token = jwt_token()
     response = client.post(
         service_url, data={"team": "DOGS"}, headers={"Authorization": f"Bearer {token}"}
     )
