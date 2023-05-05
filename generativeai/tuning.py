@@ -60,7 +60,7 @@ def tuning(
   # Test the tuned model:
   response = model.predict("Tell me some ideas combining VR and fitness:")
   print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_tune_model]
+# [END generativeai_sdk_tuning]
 
   return response
 
