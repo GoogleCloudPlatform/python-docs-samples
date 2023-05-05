@@ -1,5 +1,5 @@
 functions-framework==3.3.0
-google-events==0.4.0
+google-events==0.6.0
 google-api-core==2.11.0
 protobuf==4.22.1
 google-cloud-firestore==2.11.1
