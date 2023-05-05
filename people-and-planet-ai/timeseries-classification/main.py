@@ -64,12 +64,9 @@ def run_create_datasets() -> dict:
         runner_params = {
             "runner": "DataflowRunner",
             "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "save_main_session": args.get("save_main_session", True),
-            "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
             "project": args.get("project", PROJECT),
             "region": args.get("region", REGION),
             "temp_location": args.get("temp_location", TEMP_DIR),
-            "experiments": ["use_runner_v2"],
         }
         params = {
             "raw_data_dir": args.get("raw_data_dir", RAW_DATA_DIR),
@@ -100,7 +97,6 @@ def run_train_model() -> dict:
         params = {
             "project": args.get("project", PROJECT),
             "region": args.get("region", REGION),
-            "container_image": args.get("container_image", CONTAINER_IMAGE),
             "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
             "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
             "training_dir": args.get("training_dir", TRAINING_DIR),
@@ -109,13 +105,12 @@ def run_train_model() -> dict:
             "machine_type": args.get("machine_type", DEFAULT_MACHINE_TYPE),
             "gpu_type": args.get("gpu_type", DEFAULT_GPU_TYPE),
             "gpu_count": args.get("gpu_count", DEFAULT_GPU_COUNT),
+            "sync": args.get("sync", False),
         }
-        job_id = train_model.run(**params)
+        train_model.run(**params)
 
         return {
             "method": "train-model",
-            "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{REGION}/training/{job_id}/cpu?project={PROJECT}",
             "params": params,
         }
     except Exception as e:
@@ -148,6 +143,4 @@ def run_predict() -> dict:
 
 
 if __name__ == "__main__":
-    import os
-
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

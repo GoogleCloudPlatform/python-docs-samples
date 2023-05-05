@@ -36,7 +36,7 @@ def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
     }
 
     predictions = model.predict(inputs_batch)
-    return data[trainer.PADDING :].assign(is_fishing=predictions["is_fishing"][0])
+    return data[trainer.PADDING:].assign(is_fishing=predictions["is_fishing"][0])
 
 
 def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:

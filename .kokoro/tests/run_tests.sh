@@ -87,6 +87,9 @@ cd "${PROJECT_ROOT}"
 # add user's pip binary path to PATH
 export PATH="${HOME}/.local/bin:${PATH}"
 
+# upgrade pip when needed
+pip install --upgrade pip
+
 # install nox for testing
 pip install --user -q nox
 
