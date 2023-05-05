@@ -14,7 +14,7 @@
 
 import pytest
 
-from vertex_ai.preview.language_models import TextEmbeddingModel
+from vertexai.preview.language_models import TextEmbeddingModel
 
 import tuning
 

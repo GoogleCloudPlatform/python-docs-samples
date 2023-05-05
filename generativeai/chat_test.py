@@ -14,7 +14,7 @@
 
 import pytest
 
-from vertex_ai.preview.language_models import ChatModel, InputcontentputTextPair
+from vertexai.preview.language_models import ChatModel, InputcontentputTextPair
 
 import chat
 

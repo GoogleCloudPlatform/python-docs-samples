@@ -13,12 +13,12 @@
 # limitations under the License.
 
 # [START generativeai_sdk_summarization]
-from vertex_ai.preview.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel
 
 
 def text_summarization(temperature=.2):
     """Summarization Example with a Large Language Model"""
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
         '''Provide a summary with about two sentences for the following article:
 The efficient-market hypothesis (EMH) is a hypothesis in financial \

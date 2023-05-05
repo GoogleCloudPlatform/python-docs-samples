@@ -16,8 +16,8 @@
 from typing import Union
 import pandas as pd
 
-from vertex_ai.preview.language_models import TextGenerationModel, TextEmbeddingModel
-from google.cloud import aiplatform
+from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
+from google.cloud import vertexai
 
 
 def tuning(
@@ -41,13 +41,13 @@ def tuning(
   with rows for each training example.
 
   Args:
-    project_id: GCP Project ID, used to initialize aiplatform
-    location: GCP Region, used to initialize aiplatform
+    project_id: GCP Project ID, used to initialize vertexai
+    location: GCP Region, used to initialize vertexai
     training_data: GCS URI of training file or pandas dataframe of training data
     train_steps: Number of training steps to use when tuning the model.
   """
-  aiplatform.init(project=project_id, location=location)
-  model = TextGenerationModel.from_pretrained("google/text-bison@001")
+  vertexai.init(project=project_id, location=location)
+  model = TextGenerationModel.from_pretrained("text-bison@001")
 
   model.tune_model(
     training_data=training_data,

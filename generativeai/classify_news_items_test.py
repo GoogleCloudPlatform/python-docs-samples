@@ -14,7 +14,7 @@
 
 import pytest
 
-from vertex_ai.preview.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel
 
 import classify_news_items
 
