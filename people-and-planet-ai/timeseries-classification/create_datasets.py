@@ -93,21 +93,17 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    # parser.add_argument("--raw-data-dir", required=True)
-    # parser.add_argument("--raw-labels-dir", required=True)
-    # parser.add_argument("--train-data-dir", required=True)
-    # parser.add_argument("--eval-data-dir", required=True)
+    parser.add_argument("--raw-data-dir", required=True)
+    parser.add_argument("--raw-labels-dir", required=True)
+    parser.add_argument("--train-data-dir", required=True)
+    parser.add_argument("--eval-data-dir", required=True)
     args, beam_args = parser.parse_known_args()
 
     job_id = run(
-        # raw_data_dir=args.raw_data_dir,
-        # raw_labels_dir=args.raw_labels_dir,
-        # train_data_dir=args.train_data_dir,
-        # eval_data_dir=args.eval_data_dir,
-        raw_data_dir="test_data",
-        raw_labels_dir="test_data",
-        train_data_dir="data",
-        eval_data_dir="data",
+        raw_data_dir=args.raw_data_dir,
+        raw_labels_dir=args.raw_labels_dir,
+        train_data_dir=args.train_data_dir,
+        eval_data_dir=args.eval_data_dir,
         train_eval_split=[80, 20],
         beam_args=beam_args,
     )
