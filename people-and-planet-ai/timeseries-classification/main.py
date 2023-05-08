@@ -75,6 +75,7 @@ def run_create_datasets() -> dict:
             f"--project={args.get('project', PROJECT)}",
             f"--region={args.get('region', REGION)}",
             f"--temp_location={args.get('temp_location', TEMP_DIR)}",
+            f"--sdk_container_image={CONTAINER_IMAGE}",
         ]
         result = subprocess.run(cmd, check=True, capture_output=True)
         output = result.stdout.decode("utf-8")

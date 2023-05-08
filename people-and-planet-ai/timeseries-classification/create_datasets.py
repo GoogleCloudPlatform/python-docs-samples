@@ -40,11 +40,7 @@ def run(
         ]
     ).sort_values(by="start_time")
 
-    beam_options = PipelineOptions(
-        beam_args,
-        save_main_session=True,
-        requirements_file="requirements.txt",
-    )
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
     pipeline = beam.Pipeline(options=beam_options)
 
     training_data, evaluation_data = (
