@@ -329,12 +329,11 @@ def redact_image_with_colored_info_types(
     output_filename: str,
 ) -> None:
     """Uses the Data Loss Prevention API to redact protected data in an image by
-    color coding the info types.
+    color coding the infoTypes.
        Args:
            project: The Google Cloud project id to use as a parent resource.
-           filename: The path to the file to inspect.
+           filename: The path of the image file to inspect.
            output_filename: The path to which the redacted image will be written.
-               A full list of info type categories can be fetched from the API.
     """
     # Import the client library
     import google.cloud.dlp
@@ -343,7 +342,7 @@ def redact_image_with_colored_info_types(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare image_redaction_configs, a list of dictionaries. Each dictionary
-    # contains an info_type and the color used for the replacement.
+    # contains an infoType and the color used for the replacement.
 
     ssn_redaction_config = {
         "info_type": {"name": 'US_SOCIAL_SECURITY_NUMBER'},
@@ -374,8 +373,7 @@ def redact_image_with_colored_info_types(
 
     image_redaction_configs = [ssn_redaction_config, email_redaction_config, phone_redaction_config]
 
-    # Construct the configuration dictionary. Keys which are None may
-    # optionally be omitted entirely.
+    # Construct the configuration dictionary.
     inspect_config = {
         "info_types": [_i["info_type"] for _i in image_redaction_configs]
     }
