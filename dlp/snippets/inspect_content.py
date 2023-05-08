@@ -1598,7 +1598,7 @@ if __name__ == "__main__":
     parser_bigquery_with_sampling.add_argument(
         "--info_types",
         nargs="+",
-        help="Strings representing info types to look for. A full list of "
+        help="Strings representing infoTypes to look for. A full list of "
         "info categories and types is available from the API. Examples "
         'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
         "If unspecified, the three above examples will be used.",
