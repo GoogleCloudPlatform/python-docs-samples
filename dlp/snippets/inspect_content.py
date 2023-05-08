@@ -991,14 +991,15 @@ def inspect_image_file_listed_infotypes(
     info_types: List[str],
     include_quote=True,
 ) -> None:
-    """Uses the Data Loss Prevention API to analyze strings for protected data
-    in image file for given info types.
+    """Uses the Data Loss Prevention API to analyze strings in an image for
+    data matching the given infoTypes.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        filename: The path to the file to inspect.
-        info_types:
-        include_quote: Boolean for whether to display a quote of the detected
-            information in the results.
+        filename: The path of the image file to inspect.
+        info_types:  A list of strings representing infoTypes to look for.
+            A full list of info type categories can be fetched from the API.
+        include_quote: Boolean for whether to display a matching snippet of
+            the detected information in the results.
     """
     # Import the client library
     import google.cloud.dlp
@@ -1007,11 +1008,10 @@ def inspect_image_file_listed_infotypes(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
-    # dictionaries (protos are also accepted).
+    # dictionaries.
     info_types = [{"name": info_type} for info_type in info_types]
 
-    # Construct the configuration dictionary. Keys which are None may
-    # optionally be omitted entirely.
+    # Construct the configuration dictionary.
     inspect_config = {
         "info_types": info_types,
         "include_quote": include_quote,
@@ -1036,9 +1036,10 @@ def inspect_image_file_listed_infotypes(
     # Print out the results.
     if response.result.findings:
         for finding in response.result.findings:
-            print("Quote: {}".format(finding.quote))
             print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            if include_quote:
+                print("Quote: {}".format(finding.quote))
+            print("Likelihood: {} \n".format(finding.likelihood))
     else:
         print("No findings.")
 
