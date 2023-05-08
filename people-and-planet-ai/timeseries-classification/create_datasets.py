@@ -81,7 +81,7 @@ def run(
     try:
         return result._job.id
     except Exception:
-        return beam_args.get("job_name", "local_job")
+        return "local_job"
 
 
 if __name__ == "__main__":
