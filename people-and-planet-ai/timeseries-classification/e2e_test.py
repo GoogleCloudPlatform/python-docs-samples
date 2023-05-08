@@ -217,7 +217,6 @@ def access_token() -> str:
 def create_datasets(
     service_url: str, access_token: str, raw_data_dir: str, raw_labels_dir: str
 ) -> str:
-
     response = requests.post(
         f"{service_url}/create-datasets",
         headers={"Authorization": f"Bearer {access_token}"},
@@ -278,10 +277,10 @@ def test_predict(service_url: str, access_token: str, train_model: None) -> None
         url=f"{service_url}/predict",
         headers={"Authorization": f"Bearer {access_token}"},
         json={"inputs": input_data.to_dict("list")},
-    ).json()
+    )
     logging.info(f"predict response: {response}")
 
-    predictions = pd.DataFrame(response["predictions"])
+    predictions = pd.DataFrame(response.json()["predictions"])
 
     # Check that we get non-empty predictions.
     assert "is_fishing" in predictions
