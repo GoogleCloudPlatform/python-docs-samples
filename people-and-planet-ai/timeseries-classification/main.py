@@ -78,10 +78,22 @@ def run_create_datasets() -> dict:
         ]
         result = subprocess.run(cmd, check=True, capture_output=True)
         output = result.stdout.decode("utf-8")
+
+        m = re.search(r"^job_id: (.*)$", output)
+        if m:
+            job_id = m.group(1)
+            job_url = (
+                f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
+            )
+        else:
+            job_id = ""
+            job_url = ""
+
         return {
             "method": "create-datasets",
             "job_name": job_name,
-            "job_id": m.group(1) if (m := re.search(r"^job_id: (.*)$", output)) else "",
+            "job_id": job_id,
+            "job_url": job_url,
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
