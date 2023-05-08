@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
 from dataclasses import dataclass
-from google.api_core.exceptions import NotFound
+from datetime import datetime
 import itertools
 import json
 import logging
@@ -41,6 +41,87 @@ UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
 PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
 
 
+def run_cmd(*cmd: str) -> subprocess.CompletedProcess:
+    try:
+        print(f">> {cmd}")
+        start = datetime.now()
+        p = subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        print(p.stderr.decode("utf-8"))
+        print(p.stdout.decode("utf-8"))
+        elapsed = (datetime.now() - start).seconds
+        minutes = int(elapsed / 60)
+        seconds = elapsed - minutes * 60
+        print(f"Command `{cmd[0]}` finished in {minutes}m {seconds}s")
+        return p
+    except subprocess.CalledProcessError as e:
+        # Include the error message from the failed command.
+        print(e.stderr.decode("utf-8"))
+        print(e.stdout.decode("utf-8"))
+        raise RuntimeError(f"{e}\n\n{e.stderr.decode('utf-8')}") from e
+
+
+@pytest.fixture(scope="session")
+def project() -> str:
+    # This is set by the testing infrastructure.
+    project = os.environ["GOOGLE_CLOUD_PROJECT"]
+    run_cmd("gcloud", "config", "set", "project", project)
+
+    # Since everything requires the project, let's confiugre and show some
+    # debugging information here.
+    run_cmd("gcloud", "version")
+    run_cmd("gcloud", "config", "list")
+    return project
+
+
+@pytest.fixture(scope="session")
+def location() -> str:
+    # Override for local testing.
+    return os.environ.get("GOOGLE_CLOUD_LOCATION", "us-central1")
+
+
+@pytest.fixture(scope="session")
+def unique_id() -> str:
+    id = uuid.uuid4().hex[0:6]
+    print(f"Test unique identifier: {id}")
+    return id
+
+
+@pytest.fixture(scope="session")
+def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
+    # Override for local testing.
+    if "GOOGLE_CLOUD_BUCKET" in os.environ:
+        bucket_name = os.environ["GOOGLE_CLOUD_BUCKET"]
+        print(f"bucket_name: {bucket_name} (from GOOGLE_CLOUD_BUCKET)")
+        yield bucket_name
+        return
+
+    from google.cloud import storage
+
+    storage_client = storage.Client()
+    bucket_name = f"{test_name.replace('/', '-')}-{unique_id}"
+    bucket = storage_client.create_bucket(bucket_name, location=location)
+
+    print(f"bucket_name: {bucket_name}")
+    yield bucket_name
+
+    # Try to remove all files before deleting the bucket.
+    # Deleting a bucket with too many files results in an error.
+    try:
+        run_cmd("gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*")
+    except RuntimeError:
+        # If no files were found and it fails, ignore the error.
+        pass
+
+    # Delete the bucket.
+    bucket.delete(force=True)
+
+
+# For backwards compatibility only, prefer fixture-style.
 @dataclass
 class Utils:
     uuid: str = UUID
@@ -70,6 +151,11 @@ class Utils:
 
     @staticmethod
     def storage_bucket(name: str) -> str:
+        if bucket_name := os.environ.get("GOOGLE_CLOUD_BUCKET"):
+            logging.warning(f"Using bucket from GOOGLE_CLOUD_BUCKET: {bucket_name}")
+            yield bucket_name
+            return  # don't delete
+
         from google.cloud import storage
 
         storage_client = storage.Client()
@@ -97,6 +183,7 @@ class Utils:
         project: str = PROJECT,
         location: str = REGION,
     ) -> str:
+        from google.api_core.exceptions import NotFound
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
@@ -122,10 +209,9 @@ class Utils:
         dataset_name: str, table_name: str, project: str = PROJECT, **kwargs
     ) -> str:
         from google.cloud import bigquery
+
         bigquery_client = bigquery.Client()
-        table = bigquery.Table(
-            f"{project}.{dataset_name}.{table_name}", **kwargs
-        )
+        table = bigquery.Table(f"{project}.{dataset_name}.{table_name}", **kwargs)
         result = bigquery_client.create_table(table)
         logging.info(f"Created bigquery_table: {result.full_table_id}")
         yield result.table_id
