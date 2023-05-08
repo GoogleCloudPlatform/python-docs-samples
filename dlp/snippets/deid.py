@@ -1595,7 +1595,7 @@ def deindentify_with_dictionary_replacement(
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
-        info_types: A list of strings representing info types to look for.
+        info_types: A list of strings representing infoTypes to look for.
         word_list: List of words or phrases to search for in the data.
     """
 
@@ -2074,7 +2074,7 @@ if __name__ == "__main__":
     replace_from_dictionary_parser.add_argument(
         "--info_types",
         action="append",
-        help="Strings representing info types to look for. A full list of "
+        help="Strings representing infoTypes to look for. A full list of "
         "info categories and types is available from the API. Examples "
         'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
