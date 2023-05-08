@@ -1007,7 +1007,7 @@ def inspect_gcs_with_sampling(
         subscription_id: The id of the Cloud Pub/Sub subscription to listen on
             while waiting for job completion. The subscription must already
             exist and be subscribed to the topic.
-        info_types: A list of strings representing info types to look for.
+        info_types: A list of strings representing infoTypes to look for.
             A full list of info type categories can be fetched from the API.
         file_types: Type of files in gcs bucket where the inspection would happen.
         min_likelihood: A string representing the minimum likelihood threshold
@@ -1031,7 +1031,7 @@ def inspect_gcs_with_sampling(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Prepare info_types by converting the list of strings into a list of
-    # dictionaries (protos are also accepted).
+    # dictionaries.
     if not info_types:
         info_types = ["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"]
     info_types = [{"name": info_type} for info_type in info_types]
@@ -1609,7 +1609,7 @@ if __name__ == "__main__":
     parser_gcs_with_sampling.add_argument(
         "--info_types",
         action="append",
-        help="Strings representing info types to look for. A full list of "
+        help="Strings representing infoTypes to look for. A full list of "
         "info categories and types is available from the API. Examples "
         'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
         "If unspecified, the three above examples will be used.",
