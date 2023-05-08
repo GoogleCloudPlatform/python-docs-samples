@@ -57,6 +57,7 @@
 /dataproc/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/discoveryengine/**/*                  @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /jobs/**/*                             @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
@@ -84,7 +85,6 @@
 # Self-service
 # ---* Shared with DEE Teams
 /functions/**/*                        @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
-/codelabs/**/*                         @GoogleCloudPlatform/codelabs-contributors @GoogleCloudPlatform/python-samples-reviewers
 /composer/**/*                         @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /pubsub/**/*                           @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
