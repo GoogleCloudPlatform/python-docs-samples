@@ -25,15 +25,15 @@ COPY *.py ./
 RUN apt-get update \
     # Install Python and other system dependencies.
     && apt-get install -y --no-install-recommends \
-        curl g++ python3.11-dev python3-pip python3-distutils \
+        curl g++ python3.10-dev python3.10-venv python3-distutils \
     && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3.11 10 \
+    && update-alternatives --install /usr/bin/python python /usr/bin/python3.10 10 \
+    && curl https://bootstrap.pypa.io/get-pip.py | python \
     # Install the pipeline requirements.
-    && pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
-COPY --from=apache/beam_python3.11_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.10_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]

@@ -16,7 +16,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, InvalidArgument, NotFound,
+from google.api_core.exceptions import (AlreadyExists, InternalServerError, InvalidArgument, NotFound,
                                         ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
 
@@ -27,11 +27,13 @@ REGION = "us-west1"
 CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
 
 
+cluster_client = dataproc.ClusterControllerClient(
+    client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
+)
+
+
 @backoff.on_exception(backoff.expo, (Exception), max_tries=5)
 def teardown():
-    cluster_client = dataproc.ClusterControllerClient(
-        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
-    )
     # Client library function
     try:
         operation = cluster_client.delete_cluster(
@@ -53,8 +55,13 @@ def test_cluster_create(capsys):
     # Wrapper function for client library function
     try:
         create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+        out, _ = capsys.readouterr()
+        assert CLUSTER_NAME in out
+    except AlreadyExists:
+        request = dataproc.GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME)
+        response = cluster_client.get_cluster(request=request)
+        assert response.status.state == dataproc.ClusterStatus.State.RUNNING  # verify the cluster is in the RUNNING state
+        out, _ = capsys.readouterr()
+        assert CLUSTER_NAME in out
     finally:
         teardown()
-
-    out, _ = capsys.readouterr()
-    assert CLUSTER_NAME in out

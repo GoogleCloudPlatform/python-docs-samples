@@ -11,20 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
 
-import flask
+import os
 
-import main
+from discoveryengine import search_sample
 
-app = flask.Flask(__name__)
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+location = "global"
+search_engine_id = "test-search-engine"
+serving_config_id = "default_config"
+search_query = "Google"
 
 
-@app.get("/")
-def index():
-    return main.python_powered(flask.request)
+def test_search(capsys):
+    search_sample.search_sample(
+        project_id=project_id,
+        location=location,
+        search_engine_id=search_engine_id,
+        serving_config_id=serving_config_id,
+        search_query=search_query,
+    )
 
+    out, _ = capsys.readouterr()
 
-if __name__ == "__main__":
-    # Local development only
-    # Run "python web_app.py" and open http://localhost:8080
-    app.run(host="localhost", port=8080, debug=True)
+    assert search_query in out

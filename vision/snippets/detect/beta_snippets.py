@@ -346,7 +346,7 @@ def async_batch_annotate_images_uri(input_image_uri, output_uri):
     # annotations for the first two annotate image requests.
     output = blob_list[0]
 
-    json_string = output.download_as_string()
+    json_string = output.download_as_bytes().decode("utf-8")
     response = vision.BatchAnnotateImagesResponse.from_json(json_string)
 
     # Prints the actual response for the first annotate image request.
