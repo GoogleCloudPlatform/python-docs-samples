@@ -82,8 +82,8 @@ def test_e2e_local() -> None:
         cmd = [
             "python",
             "create_datasets.py",
-            f"--raw-data-dir=test_data",
-            f"--raw-labels-dir=test_data",
+            "--raw-data-dir=test_data",
+            "--raw-labels-dir=test_data",
             f"--train-data-dir={train_data_dir}",
             f"--eval-data-dir={eval_data_dir}",
         ]
