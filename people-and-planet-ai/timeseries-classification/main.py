@@ -16,6 +16,8 @@
 
 from datetime import datetime
 import os
+import re
+import subprocess
 
 import flask
 import numpy as np
@@ -57,32 +59,29 @@ def run_root() -> dict:
 
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets() -> dict:
-    import create_datasets
-
     try:
         args = flask.request.get_json() or {}
-        runner_params = {
-            "runner": "DataflowRunner",
-            "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "project": args.get("project", PROJECT),
-            "region": args.get("region", REGION),
-            "temp_location": args.get("temp_location", TEMP_DIR),
-        }
-        params = {
-            "raw_data_dir": args.get("raw_data_dir", RAW_DATA_DIR),
-            "raw_labels_dir": args.get("raw_labels_dir", RAW_LABELS_DIR),
-            "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
-            "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
-            "train_eval_split": args.get("train_eval_split", DEFAULT_TRAIN_EVAL_SPLIT),
-            **runner_params,
-        }
-        job_id = create_datasets.run(**params)
-
+        job_name = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        cmd = [
+            "python",
+            "create_datasets.py",
+            f"--raw-data-dir={args.get('raw_data_dir', RAW_DATA_DIR)}",
+            f"--raw-labels-dir={args.get('raw_labels_dir', RAW_LABELS_DIR)}",
+            f"--train-data-dir={args.get('train_data_dir', TRAIN_DATA_DIR)}",
+            f"--eval-data-dir={args.get('eval_data_dir', EVAL_DATA_DIR)}",
+            f"--train-eval-split={args.get('train_eval_split', DEFAULT_TRAIN_EVAL_SPLIT)}",
+            "--runner=DataflowRunner",
+            f"--job_name={job_name}",
+            f"--project={args.get('project', PROJECT)}",
+            f"--region={args.get('region', REGION)}",
+            f"--temp_location={args.get('temp_location', TEMP_DIR)}",
+        ]
+        result = subprocess.run(cmd, check=True, capture_output=True)
+        output = result.stdout.decode("utf-8")
         return {
             "method": "create-datasets",
-            "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
-            "params": params,
+            "job_name": job_name,
+            "job_id": m.group(1) if (m := re.search(r"^job_id: (.*)$", output)) else "",
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
