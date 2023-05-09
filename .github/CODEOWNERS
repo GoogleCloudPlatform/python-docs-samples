@@ -105,7 +105,6 @@
 # Does not have owner
 /asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
 /blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers
-/cloud-media-livestream/**/*           @GoogleCloudPlatform/python-samples-reviewers
 /iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
 /iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers
 /kubernetes_engine/**/*                @GoogleCloudPlatform/python-samples-reviewers
