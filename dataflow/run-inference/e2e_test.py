@@ -71,6 +71,7 @@ def test_pipeline_local(state_dict_path: str) -> None:
     conftest.run_cmd(
         "python",
         "main.py",
+        "local",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={state_dict_path}",
     )
@@ -86,6 +87,7 @@ def test_pipeline_dataflow(
     conftest.run_cmd(
         "python",
         "main.py",
+        "vertex",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={state_dict_path}",
         "--runner=DataflowRunner",

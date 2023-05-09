@@ -61,34 +61,25 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model-name", required=True)
-    parser.add_argument("--state-dict-path", required=True)
-    parser.add_argument("--job-name", type=str)
-    args, vertex_job_args = parser.parse_known_args()
+    subparsers = parser.add_subparsers(required=True)
 
-    model_name = args.model_name
-    state_dict_path = args.state_dict_path
-    job_name = args.job_name
+    parser_local = subparsers.add_parser("local")
+    parser_local.add_argument("--model-name", required=True)
+    parser_local.add_argument("--state-dict-path", required=True)
+    parser_local.set_defaults(run=run_local)
 
-    if job_name:
-        parser = argparse.ArgumentParser()
-        parser.add_argument("--project", required=True)
-        parser.add_argument("--bucket", required=True)
-        parser.add_argument("--location", default="us-central1")
-        parser.add_argument("--machine-type", default="e2-highmem-2")
-        parser.add_argument("--disk-size-gb", type=int, default=100)
-        args, job_args = parser.parse_known_args()
+    parser_vertex = subparsers.add_parser("vertex")
+    parser_vertex.add_argument("--model-name", required=True)
+    parser_vertex.add_argument("--state-dict-path", required=True)
+    parser_vertex.add_argument("--job-name", required=True)
+    parser_vertex.add_argument("--project", required=True)
+    parser_vertex.add_argument("--bucket", required=True)
+    parser_vertex.add_argument("--location", default="us-central1")
+    parser_vertex.add_argument("--machine-type", default="e2-highmem-2")
+    parser_vertex.add_argument("--disk-size-gb", type=int, default=100)
+    parser_vertex.set_defaults(run=run_vertex_job)
 
-        run_vertex_job(
-            model_name=model_name,
-            state_dict_path=state_dict_path,
-            job_name=job_name,
-            project=args.project,
-            bucket=args.bucket,
-            location=args.location,
-            machine_type=args.machine_type,
-            disk_size_gb=args.disk_size_gb,
-        )
-
-    else:
-        run_local(model_name, state_dict_path)
+    args = parser.parse_args()
+    kwargs = args.__dict__.copy()
+    kwargs.pop("run")
+    args.run(**kwargs)
