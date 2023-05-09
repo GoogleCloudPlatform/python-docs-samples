@@ -1,4 +1,4 @@
 # be sure to update the constraints file to match
 # see https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
-apache-airflow[gcp]==2.5.2
+apache-airflow[gcp]==2.6.0
 apache-airflow-backport-providers-google==2021.3.3
