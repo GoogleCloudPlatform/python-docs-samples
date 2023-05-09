@@ -25,26 +25,29 @@ import pytest
 PROJECT_ID = "my-project"
 MEDIA_ID = "some-media-id"
 
+
 @pytest.fixture()
 def app():
     app = flask.Flask(__name__)
     os.environ["PROJECT"] = PROJECT_ID
     yield app
 
+
 @pytest.fixture()
 def mock(mocker):
-  mock = mocker.patch("main.secretmanager.SecretManagerServiceClient")
-  yield mock
+    mock = mocker.patch("main.secretmanager.SecretManagerServiceClient")
+    yield mock
+
 
 class TestMain:
     @pytest.fixture(autouse=True)
     def _get_app(self, app):
         self.app = app
-        
+
     @pytest.fixture(autouse=True)
     def _mock(self, mock):
         self.secret_manager_mock = mock
-        
+
     def test_should_create_secret_and_version(self, mocker):
         key_id = uuid.uuid4()
         secret_name = "the-secret-name"
