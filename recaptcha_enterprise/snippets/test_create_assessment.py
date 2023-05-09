@@ -39,7 +39,7 @@ from create_assessment import create_assessment
 from create_mfa_assessment import create_mfa_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
-from util import _get_hashed_account_id
+from util import get_hashed_account_id
 
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 DOMAIN_NAME = "localhost"
@@ -124,7 +124,7 @@ def test_mfa_assessment(
         recaptcha_site_key=recaptcha_site_key,
         token=token,
         recaptcha_action=action,
-        hashed_account_id=_get_hashed_account_id(account_id, key),
+        hashed_account_id=get_hashed_account_id(account_id, key),
         email="abc@example.com",
         phone_number="+12345678901")
     out, _ = capsys.readouterr()
