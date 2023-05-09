@@ -291,5 +291,5 @@ pip install -r requirements.txt
 Execute the tests:
 
 ```shell
-python3 -m unittest discover -p '*_test.py'
+pytest -k _test.py -v
 ```

@@ -8,3 +8,5 @@ pyOpenSSL==20.0.1
 requests==2.27.1
 signxml==2.9.0
 pytest==7.3.1
+pytest-mock==3.10.0
+app

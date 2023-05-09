@@ -15,29 +15,33 @@
 """Tests for the main key publisher module."""
 
 import os
-import unittest
-from unittest import mock
 import uuid
 
 import flask
 import google.api_core.exceptions
 import main
+import pytest
 
 PROJECT_ID = "my-project"
 MEDIA_ID = "some-media-id"
 
+@pytest.fixture()
+def app():
+    app = flask.Flask(__name__)
+    os.environ["PROJECT"] = PROJECT_ID
+    yield app
 
-@mock.patch("main.secretmanager.SecretManagerServiceClient")
-class MainTest(unittest.TestCase):
-    def setUp(self):
-        super().setUp()
-        # Create a fake "app" for generating test request contexts.
-        self.app = flask.Flask(__name__)
-        os.environ["PROJECT"] = PROJECT_ID
-
-    def test_should_create_secret_and_version(self, secret_manager_mock):
+class TestMain:
+    @pytest.fixture(autouse=True)
+    def _get_app(self, app):
+        self.app = app
+        
+    def test_should_create_secret_and_version(self, mocker):
         key_id = uuid.uuid4()
         secret_name = "the-secret-name"
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         secret_manager_mock.return_value.create_secret.return_value.name = secret_name
         with self.app.test_request_context(
             method="POST",
@@ -48,7 +52,7 @@ class MainTest(unittest.TestCase):
             },
         ):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 200)
+            assert resp.status_code == 200
         secret_manager_mock.return_value.create_secret.assert_called_once_with(
             request={
                 "parent": f"projects/{PROJECT_ID}",
@@ -57,10 +61,13 @@ class MainTest(unittest.TestCase):
             }
         )
         secret_manager_mock.return_value.add_secret_version.assert_called_once_with(
-            request={"parent": secret_name, "payload": {"data": mock.ANY}}
+            request={"parent": secret_name, "payload": {"data": mocker.ANY}}
         )
 
-    def test_should_create_version_for_existing_secret(self, secret_manager_mock):
+    def test_should_create_version_for_existing_secret(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         key_id = uuid.uuid4()
         secret_manager_mock.return_value.create_secret.side_effect = (
             google.api_core.exceptions.AlreadyExists("secret already exists")
@@ -74,7 +81,7 @@ class MainTest(unittest.TestCase):
             },
         ):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 200)
+            assert resp.status_code == 200
         secret_manager_mock.return_value.create_secret.assert_called_once_with(
             request={
                 "parent": f"projects/{PROJECT_ID}",
@@ -85,11 +92,14 @@ class MainTest(unittest.TestCase):
         secret_manager_mock.return_value.add_secret_version.assert_called_once_with(
             request={
                 "parent": f"projects/{PROJECT_ID}/secrets/{MEDIA_ID}",
-                "payload": {"data": mock.ANY},
+                "payload": {"data": mocker.ANY},
             }
         )
 
-    def test_should_fail_when_create_secret_fails(self, secret_manager_mock):
+    def test_should_fail_when_create_secret_fails(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         key_id = uuid.uuid4()
         secret_manager_mock.return_value.create_secret.side_effect = (
             google.api_core.exceptions.InternalServerError(
@@ -105,7 +115,7 @@ class MainTest(unittest.TestCase):
             },
         ):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 500)
+            assert resp.status_code == 500
         secret_manager_mock.return_value.create_secret.assert_called_once_with(
             request={
                 "parent": f"projects/{PROJECT_ID}",
@@ -115,52 +125,62 @@ class MainTest(unittest.TestCase):
         )
         secret_manager_mock.return_value.add_secret_version.assert_not_called()
 
-    def test_should_fail_on_get(self, secret_manager_mock):
+    def test_should_fail_on_get(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         with self.app.test_request_context(method="GET"):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn(
-                "Only POST requests are supported", resp.get_json()["message"]
-            )
+            assert resp.status_code == 400
+            assert "Only POST requests are supported" in resp.get_json()["message"]
 
-    def test_should_fail_on_missing_request_body(self, secret_manager_mock):
+    def test_should_fail_on_missing_request_body(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         with self.app.test_request_context(method="POST"):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn("no request body was provided", resp.get_json()["message"])
+            assert resp.status_code == 400
+            assert "no request body was provided" in resp.get_json()["message"]
 
-    def test_should_fail_on_missing_mediaid(self, secret_manager_mock):
+    def test_should_fail_on_missing_mediaid(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         with self.app.test_request_context(method="POST", json={"name": "test"}):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn(
-                '"mediaId" field must be specified', resp.get_json()["message"]
-            )
+            assert resp.status_code == 400
+            assert '"mediaId" field must be specified' in resp.get_json()["message"]
 
-    def test_should_fail_on_missing_provider(self, secret_manager_mock):
+    def test_should_fail_on_missing_provider(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         with self.app.test_request_context(method="POST", json={"mediaId": "mid"}):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn(
-                '"provider" field must be specified', resp.get_json()["message"]
-            )
+            assert resp.status_code == 400
+            assert '"provider" field must be specified' in resp.get_json()["message"]
 
-    def test_should_fail_on_missing_keyid(self, secret_manager_mock):
+    def test_should_fail_on_missing_keyid(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         with self.app.test_request_context(
             method="POST", json={"mediaId": "mid", "provider": "FakeProvider"}
         ):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn(
-                "at least one key ID must be specified", resp.get_json()["message"]
-            )
+            assert resp.status_code == 400
+            assert "at least one key ID must be specified" in resp.get_json()["message"]
 
-    def test_should_fail_on_missing_envvar(self, secret_manager_mock):
+    def test_should_fail_on_missing_envvar(self, mocker):
+        secret_manager_mock = mocker.patch(
+            "main.secretmanager.SecretManagerServiceClient"
+        )
         del secret_manager_mock
         del os.environ["PROJECT"]
         key_id = uuid.uuid4()
@@ -173,12 +193,8 @@ class MainTest(unittest.TestCase):
             },
         ):
             resp = flask.make_response(main.keys(flask.request))
-            self.assertEqual(resp.status_code, 400)
-            self.assertIn(
-                'environment variable "PROJECT" must be set',
-                resp.get_json()["message"],
+            assert resp.status_code == 400
+            assert (
+                'environment variable "PROJECT" must be set'
+                in resp.get_json()["message"]
             )
-
-
-if __name__ == "__main__":
-    unittest.main()
