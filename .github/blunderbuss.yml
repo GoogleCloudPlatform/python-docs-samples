@@ -52,6 +52,7 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: cloudmedialivestream"
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -191,6 +192,7 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: cloudmedialivestream"
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
