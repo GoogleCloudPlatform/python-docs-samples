@@ -206,7 +206,7 @@ def get_dlp_job(
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     # Convert the project id and job name into a full resource id.
-    job_name = f"projects/{project}/dlpJobs/{job_name}"
+    job_name = f"projects/{project}/locations/global/dlpJobs/{job_name}"
 
     # Call the API
     response = dlp.get_dlp_job(request={
