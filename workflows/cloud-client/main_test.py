@@ -14,7 +14,8 @@
 
 import os
 
-from google.cloud import workflows_v1beta
+from google.cloud import workflows_v1
+from google.cloud.workflows.executions_v1.types import executions
 
 import main
 
@@ -29,7 +30,7 @@ def test_workflow_execution():
     if not workflow_exists():
         workflow_file = open("myFirstWorkflow.workflows.yaml", "r").read()
 
-        workflows_client = workflows_v1beta.WorkflowsClient()
+        workflows_client = workflows_v1.WorkflowsClient()
         workflows_client.create_workflow(request={
             # Manually construct the location
             # https://github.com/googleapis/python-workflows/issues/21
@@ -42,15 +43,17 @@ def test_workflow_execution():
         })
 
     result = main.execute_workflow(PROJECT)
-    assert len(result) > 0
+    assert result.state == executions.Execution.State.SUCCEEDED
+    assert len(result.result) > 0
 
 
 def workflow_exists():
     """Returns True if the workflow exists in this project
     """
     try:
-        workflows_client = workflows_v1beta.WorkflowsClient()
-        workflow_name = workflows_client.workflow_path(PROJECT, LOCATION, WORKFLOW_ID)
+        workflows_client = workflows_v1.WorkflowsClient()
+        workflow_name = workflows_client.workflow_path(
+            PROJECT, LOCATION, WORKFLOW_ID)
         workflows_client.get_workflow(request={"name": workflow_name})
         return True
     except Exception as e:
