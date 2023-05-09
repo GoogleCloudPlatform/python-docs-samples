@@ -21,6 +21,7 @@ import argparse
 from typing import List
 from typing import Dict
 from typing import List
+from typing import Union
 
 
 # [START dlp_deidentify_masking]
@@ -1694,7 +1695,7 @@ def deindentify_with_dictionary_replacement(
 # [START dlp_deidentify_table_row_suppress]
 def deidentify_table_suppress_row(
     project: str,
-    table_data: Dict[str, List[str]],
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     condition_field: str,
     condition_operator: str,
     condition_value: int,
@@ -1704,8 +1705,8 @@ def deidentify_table_suppress_row(
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Json string representing table data.
-        condition_field: A table Field within the record this condition is evaluated against.
+        table_data: Dictionary representing table data.
+        condition_field: A table field within the record this condition is evaluated against.
         condition_operator: Operator used to compare the field or infoType to the value. One of:
             RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS,
             LESS_THAN_OR_EQUALS, EXISTS.
@@ -1737,7 +1738,7 @@ def deidentify_table_suppress_row(
 
     table = {"headers": headers, "rows": rows}
 
-    # Construct the `item`.
+    # Construct the `item` containing the table data.
     item = {"table": table}
 
     # Construct condition list.
