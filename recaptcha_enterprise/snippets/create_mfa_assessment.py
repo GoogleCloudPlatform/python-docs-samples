@@ -49,29 +49,34 @@ def create_mfa_assessment(
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
 
     # Set the properties of the event to be tracked.
-    event = recaptchaenterprise_v1.Event()
-    event.site_key = recaptcha_site_key
-    event.token = token
-    event.hashed_account_id = hashed_account_id
+    event = recaptchaenterprise_v1.Event(
+        site_key=recaptcha_site_key,
+        token=token,
+        hashed_account_id=hashed_account_id
+    )
 
     # Set the email address and the phone number to trigger/ verify the MFA challenge.
-    endpoint_verification_info = recaptchaenterprise_v1.EndpointVerificationInfo()
-    endpoint_verification_info.email_address = email
-    endpoint_verification_info.phone_number = phone_number
+    endpoint_verification_info = recaptchaenterprise_v1.EndpointVerificationInfo(
+        email_address=email,
+        phone_number=phone_number
+    )
 
-    account_verification_info = recaptchaenterprise_v1.AccountVerificationInfo()
-    account_verification_info.endpoints = [endpoint_verification_info]
+    account_verification_info = recaptchaenterprise_v1.AccountVerificationInfo(
+        endpoints=[endpoint_verification_info]
+    )
 
-    assessment = recaptchaenterprise_v1.Assessment()
-    assessment.event = event
-    assessment.account_verification = account_verification_info
+    assessment = recaptchaenterprise_v1.Assessment(
+        event=event,
+        account_verification=account_verification_info
+    )
 
     project_name = f"projects/{project_id}"
 
     # Build the assessment request.
-    request = recaptchaenterprise_v1.CreateAssessmentRequest()
-    request.assessment = assessment
-    request.parent = project_name
+    request = recaptchaenterprise_v1.CreateAssessmentRequest(
+        assessment=assessment,
+        parent=project_name
+    )
 
     # Check integrity of the response.
     response = client.create_assessment(request)

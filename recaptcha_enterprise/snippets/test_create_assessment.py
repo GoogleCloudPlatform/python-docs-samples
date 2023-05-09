@@ -14,12 +14,9 @@
 # limitations under the License.
 #
 # All Rights Reserved.
-import hashlib
-import hmac
 import multiprocessing
 import os
 import re
-import secrets
 import time
 import typing
 
@@ -42,6 +39,7 @@ from create_assessment import create_assessment
 from create_mfa_assessment import create_mfa_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
+from util import _get_hashed_account_id
 
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 DOMAIN_NAME = "localhost"
@@ -119,12 +117,14 @@ def test_mfa_assessment(
     # Get token.
     token, action = get_token(recaptcha_site_key, browser)
     # Create assessment.
+    account_id = "alicebob"
+    key = "your_secret_key"
     create_mfa_assessment(
         project_id=GOOGLE_CLOUD_PROJECT,
         recaptcha_site_key=recaptcha_site_key,
         token=token,
         recaptcha_action=action,
-        hashed_account_id=get_hashed_account_id(),
+        hashed_account_id=_get_hashed_account_id(account_id, key),
         email="abc@example.com",
         phone_number="+12345678901")
     out, _ = capsys.readouterr()
@@ -159,21 +159,3 @@ def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment
 
 def set_score(browser: WebDriver, score: str) -> None:
     browser.find_element(By.CSS_SELECTOR, "#assessment").send_keys(score)
-
-
-def get_hashed_account_id() -> str:
-    account_id = "alicebob"
-    key = "your_secret_key"
-
-    salt = secrets.token_hex(16)
-    salted_account_id = salt + account_id
-
-    # Encode the key and salted message as bytes
-    key_bytes = bytes(key, 'utf-8')
-    salted_message_bytes = bytes(salted_account_id, 'utf-8')
-
-    # Create an HMAC SHA-256 hash of the salted message using the key
-    hashed = hmac.new(key_bytes, salted_message_bytes, hashlib.sha256)
-
-    # Get the hex-encoded digest of the hash
-    return hashed.hexdigest()
