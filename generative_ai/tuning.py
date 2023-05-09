@@ -14,10 +14,11 @@
 
 # [START aiplatform_sdk_tuning]
 from typing import Union
+
 import pandas as pd
 
 import vertexai
-from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
+from vertexai.preview.language_models import TextGenerationModel
 
 
 def tuning(
@@ -26,43 +27,43 @@ def tuning(
     training_data: Union[pd.DataFrame, str],
     train_steps: int = 10,
 ):
-  """Tune a new model, based on a prompt-response data.
+    """Tune a new model, based on a prompt-response data.
 
-  "training_data" can be either the GCS URI of a file formatted in JSONL format
-  (for example: training_data=f'gs://{bucket}/{filename}.jsonl'), or a pandas
-  DataFrame. Each training example should be JSONL record with two keys, for
-  example:
-    {
-      "input_text": <input prompt>,
-      "output_text": <associated output>
-    },
-  or the pandas DataFame should contain two columns:
-    ['input_text', 'output_text']
-  with rows for each training example.
+    "training_data" can be either the GCS URI of a file formatted in JSONL format
+    (for example: training_data=f'gs://{bucket}/{filename}.jsonl'), or a pandas
+    DataFrame. Each training example should be JSONL record with two keys, for
+    example:
+      {
+        "input_text": <input prompt>,
+        "output_text": <associated output>
+      },
+    or the pandas DataFame should contain two columns:
+      ['input_text', 'output_text']
+    with rows for each training example.
 
-  Args:
-    project_id: GCP Project ID, used to initialize vertexai
-    location: GCP Region, used to initialize vertexai
-    training_data: GCS URI of training file or pandas dataframe of training data
-    train_steps: Number of training steps to use when tuning the model.
-  """
-  vertexai.init(project=project_id, location=location)
-  model = TextGenerationModel.from_pretrained("text-bison@001")
+    Args:
+      project_id: GCP Project ID, used to initialize vertexai
+      location: GCP Region, used to initialize vertexai
+      training_data: GCS URI of training file or pandas dataframe of training data
+      train_steps: Number of training steps to use when tuning the model.
+    """
+    vertexai.init(project=project_id, location=location)
+    model = TextGenerationModel.from_pretrained("text-bison@001")
 
-  model.tune_model(
-    training_data=training_data,
-    # Optional:
-    train_steps=1,
-    tuning_job_location="europe-west4",
-    tuned_model_location="us-central1",
-  )
+    model.tune_model(
+      training_data=training_data,
+      # Optional:
+      train_steps=train_steps,
+      tuning_job_location="europe-west4",
+      tuned_model_location="us-central1",
+    )
 
-  # Test the tuned model:
-  response = model.predict("Tell me some ideas combining VR and fitness:")
-  print(f"Response from Model: {response.text}")
+    # Test the tuned model:
+    response = model.predict("Tell me some ideas combining VR and fitness:")
+    print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_tuning]
 
-  return response
+    return response
 
 
 if __name__ == "__main__":

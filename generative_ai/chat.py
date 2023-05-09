@@ -20,10 +20,10 @@ def science_tutoring(temperature=.2):
 
     chat_model = ChatModel.from_pretrained("chat-bison@001")
     parameters = {
-    "temperature": temperature,
-    "max_output_tokens": 256,
-    "top_p": 0.95,
-    "top_k": 40,
+        "temperature": temperature,
+        "max_output_tokens": 256,
+        "top_p": 0.95,
+        "top_k": 40,
     }
 
     chat = chat_model.start_chat(

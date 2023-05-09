@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-from vertexai.preview.language_models import TextGenerationModel
-
 import classify_news_items
 
 

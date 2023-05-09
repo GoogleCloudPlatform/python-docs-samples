@@ -12,13 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
+import os
 
 import list_tuned_models
 
-_PROJECT_ID = "YOUR_PROJECT_ID"
+
+_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 _LOCATION = "us-central1"
 
 
@@ -26,4 +25,4 @@ def test_list_tuned_models():
     tuned_model_names = list_tuned_models.list_tuned_models(_PROJECT_ID, _LOCATION)
     assert len(tuned_model_names) > 0
     for tuned_model_name in tuned_model_names:
-      assert tuned_model_name.startswith('projects/_PROJECT_ID/locations/us-central1/models/')
+        assert tuned_model_name.startswith('projects/_PROJECT_ID/locations/us-central1/models/')

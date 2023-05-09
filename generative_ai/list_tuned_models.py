@@ -15,8 +15,7 @@
 # [START aiplatform_sdk_list_tuned_models]
 
 import vertexai
-from vertexai.preview.language_models import TextGenerationModel, TextEmbeddingModel
-
+from vertexai.preview.language_models import TextGenerationModel
 
 
 def list_tuned_models(project_id, location):

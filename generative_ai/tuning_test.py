@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-from vertexai.preview.language_models import TextEmbeddingModel
+import os
 
 import tuning
 
 _TRAINING_DATASET = "gs://..."
-_PROJECT_ID = "YOUR_PROJECT_ID"
-_LOCATION = "us-south1"
+_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+_LOCATION = "us-central1"
 
 
 def test_tuning():

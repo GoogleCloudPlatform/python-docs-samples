@@ -12,11 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-from vertexai.preview.language_models import TextGenerationModel
-
 import ideation
+
 
 interview_expected_response = '''1. Tell me about a time when you successfully managed a complex project. What were the challenges you faced, and how did you overcome them?
 2. What is your approach to planning and prioritizing tasks?
