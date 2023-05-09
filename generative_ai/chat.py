@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_chat]
+# [START aiplatform_sdk_chat]
 from vertexai.preview.language_models import ChatModel, InputOutputTextPair
 
 
@@ -38,7 +38,7 @@ def science_tutoring(temperature=.2):
 
     response = chat.send_message("How many planets are there in the solar system?", **parameters)
     print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_chat]
+# [END aiplatform_sdk_chat]
 
     return response
 
