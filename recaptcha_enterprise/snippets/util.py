@@ -17,7 +17,7 @@ import hmac
 import secrets
 
 
-def _get_hashed_account_id(account_id: str, key: str) -> str:
+def get_hashed_account_id(account_id: str, key: str) -> str:
     salt = secrets.token_hex(16)
     salted_account_id = salt + account_id
 

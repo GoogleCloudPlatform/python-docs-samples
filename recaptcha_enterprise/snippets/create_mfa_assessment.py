@@ -15,17 +15,16 @@
 # [START recaptcha_enterprise_mfa_assessment]
 
 from google.cloud import recaptchaenterprise_v1
-from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_mfa_assessment(
-        project_id: str,
-        recaptcha_site_key: str,
-        token: str,
-        recaptcha_action: str,
-        hashed_account_id: str,
-        email: str,
-        phone_number: str,
+    project_id: str,
+    recaptcha_site_key: str,
+    token: str,
+    recaptcha_action: str,
+    hashed_account_id: str,
+    email: str,
+    phone_number: str,
 ) -> None:
     """Creates an assessment to obtain Multi-Factor Authentication result.
 
@@ -97,13 +96,17 @@ def create_mfa_assessment(
     print(f"MFA result: {result}")
 
 
-def verify_response_integrity(response: Assessment, recaptcha_action: str) -> bool:
+def verify_response_integrity(
+        response: recaptchaenterprise_v1.Assessment,
+        recaptcha_action: str
+) -> bool:
     # Check if the token is valid.
     if not response.token_properties.valid:
         print(
             f"The CreateAssessment call failed because the token was "
             f"invalid for the following reasons: "
-            f"{response.token_properties.invalid_reason}")
+            f"{response.token_properties.invalid_reason}"
+        )
         return False
 
     # Check if the expected action was executed.
