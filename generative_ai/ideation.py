@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_ideation]
+# [START aiplatform_sdk_ideation]
 from vertexai.preview.language_models import TextGenerationModel
 
 
@@ -27,7 +27,7 @@ def interview(temperature=.2):
         top_p=.8,
     )
     print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_ideation]
+# [END aiplatform_sdk_ideation]
 
     return response
 

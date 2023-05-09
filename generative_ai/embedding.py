@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_embedding]
+# [START aiplatform_sdk_embedding]
 from vertexai.preview.language_models import TextEmbeddingModel
 
 
@@ -23,7 +23,7 @@ def text_embedding():
   for embedding in embeddings:
       vector = embedding.values
       print(f'Length of Embedding Vector: {len(vector)}')
-# [END generativeai_sdk_embedding]
+# [END aiplatform_sdk_embedding]
   return vector
 
 

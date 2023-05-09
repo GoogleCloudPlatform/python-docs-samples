@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_sentiment_analysis]
+# [START aiplatform_sdk_sentiment_analysis]
 from vertexai.preview.language_models import TextGenerationModel
 
 
@@ -63,7 +63,7 @@ Classify the sentiment of the message: ''',
       top_p=0,
     )
     print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_sentiment_analysis]
+# [END aiplatform_sdk_sentiment_analysis]
 
     return response
 

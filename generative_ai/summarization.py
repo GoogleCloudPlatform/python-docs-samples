@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_summarization]
+# [START aiplatform_sdk_summarization]
 from vertexai.preview.language_models import TextGenerationModel
 
 
@@ -57,7 +57,7 @@ Summary:
         top_p=.95,
     )
     print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_summarization]
+# [END aiplatform_sdk_summarization]
 
     return response
 

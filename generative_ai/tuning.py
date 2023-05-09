@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeai_sdk_tuning]
+# [START aiplatform_sdk_tuning]
 from typing import Union
 import pandas as pd
 
@@ -60,7 +60,7 @@ def tuning(
   # Test the tuned model:
   response = model.predict("Tell me some ideas combining VR and fitness:")
   print(f"Response from Model: {response.text}")
-# [END generativeai_sdk_tuning]
+# [END aiplatform_sdk_tuning]
 
   return response
 
