@@ -27,6 +27,7 @@ from google.api_core.exceptions import (
     NotFound,
     ServiceUnavailable,
 )
+from google.cloud.dataproc_v1 import ClusterStatus, GetClusterRequest
 from google.cloud.dataproc_v1.services.cluster_controller.client import (
     ClusterControllerClient,
 )
@@ -90,15 +91,20 @@ def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
 
     try:
         setup_cluster(cluster_client)
+        request = GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME)
+        response = cluster_client.get_cluster(request=request)
+        # verify the cluster is in the RUNNING state before proceeding
+    # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
+        assert response.status.state == ClusterStatus.State.RUNNING
+
         # Wrapper function for client library function
         update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
         new_num_cluster = cluster_client.get_cluster(
             project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
         )
+        out, _ = capsys.readouterr()
+        assert CLUSTER_NAME in out
+        assert new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES
 
     finally:
         teardown_cluster(cluster_client)
-
-    out, _ = capsys.readouterr()
-    assert CLUSTER_NAME in out
-    assert new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES

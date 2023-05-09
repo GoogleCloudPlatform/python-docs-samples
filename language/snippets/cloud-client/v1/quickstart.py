@@ -29,8 +29,8 @@ def run_quickstart():
 
     # The text to analyze
     text = "Hello, world!"
-    document = language_v1.Document(
-        content=text, type_=language_v1.Document.Type.PLAIN_TEXT
+    document = language_v1.types.Document(
+        content=text, type_=language_v1.types.Document.Type.PLAIN_TEXT
     )
 
     # Detects the sentiment of the text
