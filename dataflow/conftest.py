@@ -92,6 +92,11 @@ def unique_id() -> str:
 
 
 @pytest.fixture(scope="session")
+def unique_name(test_name: str, unique_id: str) -> str:
+    return f"{test_name.replace('/', '-')}-{unique_id}"
+
+
+@pytest.fixture(scope="session")
 def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
     # Override for local testing.
     if "GOOGLE_CLOUD_BUCKET" in os.environ:

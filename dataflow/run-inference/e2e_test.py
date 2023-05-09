@@ -14,20 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" End-to-end tests.
-
-To run locally:
-    GOOGLE_CLOUD_BUCKET="my-bucket-name"  # to avoid creating a new bucket
-    PYTHONPATH=".." pytest -s e2e_test.py
-"""
-
 from __future__ import annotations
 
 import tempfile
 
 import conftest  # python-docs-samples/dataflow/conftest.py
 
-from google.cloud import aiplatform
 import pytest
 
 MODEL_NAME = "google/flan-t5-small"
@@ -57,23 +49,48 @@ def state_dict_path(bucket_name: str) -> str:
     return gcs_path
 
 
-# def test_load_state_dict_vertex(project: str, location: str, bucket_name: str) -> None:
-#     conftest.run_cmd(
-#         "python",
-#         "load-state-dict.py",
-#         f"--model-name={MODEL_NAME}",
-#         f"--state-dict-path=gs://{bucket_name}/test_load_state_dict_vertex.pt",
-#     )
+def test_load_state_dict_vertex(
+    project: str,
+    bucket_name: str,
+    location: str,
+    unique_name: str,
+) -> None:
+    conftest.run_cmd(
+        "python",
+        "load-state-dict.py",
+        f"--model-name={MODEL_NAME}",
+        f"--state-dict-path=gs://{bucket_name}/temp/state_dict_vertex.pt",
+        f"--job-name={unique_name}",
+        f"--project={project}",
+        f"--bucket={bucket_name}",
+        f"--location={location}",
+    )
 
 
-def test_pipeline_local(bucket_name: str, state_dict_path: str) -> None:
-    pass
+def test_pipeline_local(state_dict_path: str) -> None:
+    conftest.run_cmd(
+        "python",
+        "main.py",
+        f"--model-name={MODEL_NAME}",
+        f"--state-dict-path={state_dict_path}",
+    )
 
 
-# def test_pipeline_dataflow(bucket_name: str, state_dict_path: str) -> None:
-#     conftest.run_cmd(
-#         "python",
-#         "main.py",
-#         f"--model-name={MODEL_NAME}",
-#         f"--state-dict-path={state_dict_path}",
-#     )
+def test_pipeline_dataflow(
+    project: str,
+    bucket_name: str,
+    location: str,
+    unique_name: str,
+    state_dict_path: str,
+) -> None:
+    conftest.run_cmd(
+        "python",
+        "main.py",
+        f"--model-name={MODEL_NAME}",
+        f"--state-dict-path={state_dict_path}",
+        "--runner=DataflowRunner",
+        f"--job_name={unique_name}",
+        f"--project={project}",
+        f"--temp_location=gs://{bucket_name}/temp",
+        f"--region={location}",
+    )
