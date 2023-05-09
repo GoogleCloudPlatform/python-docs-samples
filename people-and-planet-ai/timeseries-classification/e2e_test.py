@@ -153,6 +153,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=4G",
+            "--timeout=30m",
             f"--set-env-vars=PROJECT={PROJECT}",
             f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
             f"--set-env-vars=REGION={REGION}",
