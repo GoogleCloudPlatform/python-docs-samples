@@ -100,8 +100,7 @@ def verify_response_integrity(
     response: recaptchaenterprise_v1.Assessment,
     recaptcha_action: str
 ) -> bool:
-    """ Verify the token and action integrity.
-    """
+    """Verifies the token and action integrity."""
     # Check if the token is valid.
     if not response.token_properties.valid:
         print(
