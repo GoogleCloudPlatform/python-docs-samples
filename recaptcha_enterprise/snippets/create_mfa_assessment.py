@@ -52,22 +52,22 @@ def create_mfa_assessment(
     event = recaptchaenterprise_v1.Event(
         site_key=recaptcha_site_key,
         token=token,
-        hashed_account_id=hashed_account_id
+        hashed_account_id=hashed_account_id,
     )
 
     # Set the email address and the phone number to trigger/ verify the MFA challenge.
     endpoint_verification_info = recaptchaenterprise_v1.EndpointVerificationInfo(
         email_address=email,
-        phone_number=phone_number
+        phone_number=phone_number,
     )
 
     account_verification_info = recaptchaenterprise_v1.AccountVerificationInfo(
-        endpoints=[endpoint_verification_info]
+        endpoints=[endpoint_verification_info],
     )
 
     assessment = recaptchaenterprise_v1.Assessment(
         event=event,
-        account_verification=account_verification_info
+        account_verification=account_verification_info,
     )
 
     project_name = f"projects/{project_id}"
@@ -75,7 +75,7 @@ def create_mfa_assessment(
     # Build the assessment request.
     request = recaptchaenterprise_v1.CreateAssessmentRequest(
         assessment=assessment,
-        parent=project_name
+        parent=project_name,
     )
 
     # Check integrity of the response.
@@ -89,6 +89,8 @@ def create_mfa_assessment(
     if result == recaptchaenterprise_v1.types.AccountVerificationInfo.Result.RESULT_UNSPECIFIED:
         print("Result unspecified. Trigger MFA challenge in the client by passing the request token.")
         # Send the request token for assessment. The token is valid for 15 minutes.
+        # To see the security tokens, uncomment the following print statement.
+        # NOTE: running this will expose sensitive information and other PIIs.
         # print(response.account_verification.endpoints[0].request_token)
 
     # If the result is not unspecified, return the result.
