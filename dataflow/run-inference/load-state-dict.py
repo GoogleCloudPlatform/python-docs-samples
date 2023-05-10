@@ -14,8 +14,8 @@
 
 from __future__ import annotations
 
-from transformers import AutoModelForSeq2SeqLM
 import torch
+from transformers import AutoModelForSeq2SeqLM
 
 
 def run_local(model_name: str, state_dict_path: str) -> None:

@@ -17,22 +17,24 @@ from __future__ import annotations
 import logging
 
 import apache_beam as beam
+from apache_beam.ml.inference.base import PredictionResult
 from apache_beam.ml.inference.base import RunInference
-from apache_beam.ml.inference.pytorch_inference import PytorchModelHandlerTensor
 from apache_beam.ml.inference.pytorch_inference import make_tensor_model_fn
+from apache_beam.ml.inference.pytorch_inference import PytorchModelHandlerTensor
 from apache_beam.options.pipeline_options import PipelineOptions
+import torch
 from transformers import AutoConfig
-from transformers import AutoTokenizer
 from transformers import AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer
 
 MAX_RESPONSE_TOKENS = 256
 
 
-def encode_tokens(input_text: str, tokenizer: AutoTokenizer):
+def encode_tokens(input_text: str, tokenizer: AutoTokenizer) -> torch.Tensor:
     return tokenizer(input_text, return_tensors="pt").input_ids[0]
 
 
-def decode_tokens(result, tokenizer: AutoTokenizer):
+def decode_tokens(result: PredictionResult, tokenizer: AutoTokenizer) -> str:
     output_tokens = result.inference
     return tokenizer.decode(output_tokens, skip_special_tokens=True)
 
