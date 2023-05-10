@@ -14,6 +14,8 @@
 
 from __future__ import annotations
 
+import os
+
 import torch
 from transformers import AutoModelForSeq2SeqLM
 
@@ -24,6 +26,8 @@ def run_local(model_name: str, state_dict_path: str) -> None:
         model_name, torch_dtype=torch.bfloat16
     )
     print(f"Model loaded, saving state dict to: {state_dict_path}")
+
+    os.makedirs(os.path.dirname(state_dict_path), exist_ok=True)
     torch.save(model.state_dict(), state_dict_path.replace("gs://", "/gcs/"))
     print("State dict saved successfully!")
 

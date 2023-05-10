@@ -46,7 +46,7 @@ def state_dict_path(bucket_name: str) -> str:
         )
 
         # Then copy it to Cloud Storage.
-        conftest.run_cmd("gsutil", "cp", "--no-clobber", f.name, gcs_path)
+        conftest.run_cmd("gsutil", "cp", "-n", f.name, gcs_path)
     return gcs_path
 
 
