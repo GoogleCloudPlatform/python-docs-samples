@@ -16,13 +16,15 @@
 
 import secrets
 
+from typing import List
+
 from . import cpix_client
 
 
 class FakeClient(cpix_client.CpixClient):
     """Fake CPIX client, for demonstration purposes only."""
 
-    def fetch_keys(self, media_id: str, key_ids: list[str]):
+    def fetch_keys(self, media_id: str, key_ids: List[str]):
         """Generates random key information.
 
         Args:
