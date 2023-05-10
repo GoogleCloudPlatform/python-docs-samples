@@ -15,18 +15,16 @@
 import ideation
 
 
-interview_expected_response = '''1. Tell me about a time when you successfully managed a complex project. What were the challenges you faced, and how did you overcome them?
-2. What is your approach to planning and prioritizing tasks?
-3. How do you communicate with and collaborate with stakeholders?
-4. What is your experience with project management software?
-5. What are your strengths and weaknesses as a program manager?
-6. What are your career goals?
-7. Why are you interested in this role?
-8. What do you know about our company?
-9. What can you contribute to our company?
-10. Do you have any questions for me?
-
-These questions are designed to assess your skills and experience in project management, as well as your fit for the role and company. Be prepared to answer them thoughtfully and honestly, and to provide specific examples from your past experience.'''
+interview_expected_response = '''1. What is your experience with project management?
+2. What is your process for managing a project?
+3. How do you handle unexpected challenges or roadblocks?
+4. How do you communicate with stakeholders?
+5. How do you measure the success of a project?
+6. What are your strengths and weaknesses as a project manager?
+7. What are your salary expectations?
+8. What are your career goals?
+9. Why are you interested in this position?
+10. What questions do you have for me?'''
 
 
 def test_interview():
