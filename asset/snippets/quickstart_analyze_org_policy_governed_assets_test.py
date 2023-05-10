@@ -16,16 +16,15 @@
 
 import quickstart_analyze_org_policy_governed_assets
 
+# Owner of the organization below: cloud-asset-analysis-team.
+ORG_ID = "474566717491"
 
-def get_organization_id():
-    return "474566717491"
-
-
-def get_constraint():
-    return "constraints/compute.requireOsLogin"
+# Find more Organization Policy Constraints at:
+# http://cloud/resource-manager/docs/organization-policy/org-policy-constraints
+CONSTRAINT_NAME = "constraints/compute.requireOsLogin"
 
 
 def test_analyze_org_policy_governed_assets(capsys):
-    quickstart_analyze_org_policy_governed_assets.analyze_org_policy_governed_assets(get_organization_id(), get_constraint())
+    quickstart_analyze_org_policy_governed_assets.analyze_org_policy_governed_assets(ORG_ID, CONSTRAINT_NAME)
     out, _ = capsys.readouterr()
-    assert get_constraint() in out
+    assert CONSTRAINT_NAME in out
