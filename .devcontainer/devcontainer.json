@@ -1,0 +1,26 @@
+{
+  "image": "mcr.microsoft.com/devcontainers/universal:2",
+  "features": {
+  }
+}
+  }
+</div> id="firebaseui-auth-container">
+   </div>
+</div>
+<button id="sign-out" hidden=true>Sign Out</button>
+
+<div id="login-info" hidden=true>
+  <h2>Login info:</h2>
+  {% if user_data %}
+    <dl>
+      <dt>Name</dt><dd>{{ user_data['name'] }}</dd>
+      <dt>Email</dt><dd>{{ user_data['email'] }}</dd>
+      <dt>Last 10 visits</dt><dd>
+        {% for time in times %}
+          <p>{{ time['timestamp'] }}</p>
+        {% endfor %} </dd>
+    </dl>
+  {% elif error_message %}
+    <p>Error: {{ error_message }}</p>
+  {% endif %}
+</div>
