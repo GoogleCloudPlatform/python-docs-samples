@@ -52,7 +52,6 @@
 # DEE Data & AI
 /automl/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /contentwarehouse/**/*                 @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/cloud-media-livestream/**/*           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dataflow/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /datalabeling/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dataproc/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
@@ -94,6 +93,7 @@
 /appengine/standard_python3/spanner/*  @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
+/cloud-media-livestream/**/*           @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers

@@ -52,7 +52,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
-      - "api: cloudmedialivestream"
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -144,6 +143,10 @@ assign_issues_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
@@ -192,7 +195,6 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
-      - "api: cloudmedialivestream"
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -285,6 +287,10 @@ assign_prs_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
