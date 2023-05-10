@@ -47,6 +47,7 @@ def run_vertex_job(
         container_uri="us-docker.pkg.dev/vertex-ai/training/pytorch-gpu.1-13:latest",
         script_path="load-state-dict.py",
         args=[
+            "local",
             f"--model-name={model_name}",
             f"--state-dict-path={state_dict_path}",
         ],
