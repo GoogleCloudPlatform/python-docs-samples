@@ -18,8 +18,11 @@ import json
 import os
 
 from typing import Union
-import clients.fake_client
+
 from flask import current_app
+
+import clients.fake_client
+
 import functions_framework
 import google.api_core.exceptions
 from google.cloud import secretmanager

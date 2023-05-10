@@ -19,8 +19,9 @@ import uuid
 
 import flask
 import google.api_core.exceptions
-import main
 import pytest
+
+import main
 
 PROJECT_ID = "my-project"
 MEDIA_ID = "some-media-id"
