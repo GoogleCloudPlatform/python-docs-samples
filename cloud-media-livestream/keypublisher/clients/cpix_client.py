@@ -17,6 +17,8 @@
 import abc
 import os
 
+from typing import List
+
 from google.cloud import secretmanager
 
 
@@ -24,7 +26,7 @@ class CpixClient(abc.ABC):
     """Abstract class for CPIX clients."""
 
     @abc.abstractmethod
-    def fetch_keys(self, media_id: str, key_ids: list[str]):
+    def fetch_keys(self, media_id: str, key_ids: List[str]):
         """Fetches encryption keys and prepares JSON content to be written to Secret Manager.
 
         Args:
@@ -49,7 +51,7 @@ class CpixClient(abc.ABC):
             set.
         """
 
-    def access_secret_version(self, secret_id: str, version_id: str) -> list[str]:
+    def access_secret_version(self, secret_id: str, version_id: str) -> List[str]:
         client = secretmanager.SecretManagerServiceClient()
         project_id = os.environ.get('PROJECT')
         secret_name = (
