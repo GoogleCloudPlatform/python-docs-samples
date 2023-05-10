@@ -153,6 +153,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             f"--project={PROJECT}",
             f"--region={REGION}",
             "--memory=4G",
+            "--timeout=30m",
             f"--set-env-vars=PROJECT={PROJECT}",
             f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
             f"--set-env-vars=REGION={REGION}",
@@ -224,7 +225,8 @@ def create_datasets(
             "raw_labels_dir": raw_labels_dir,
         },
     )
-    logging.info(f"create_datasets response: {raw_response}")
+    logging.info(f"create_datasets response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
     response = raw_response.json()
     job_id = response["job_id"]
@@ -266,7 +268,8 @@ def train_model(service_url: str, access_token: str, create_datasets: str) -> No
         headers={"Authorization": f"Bearer {access_token}"},
         json={"train_epochs": 10, "batch_size": 8, "sync": True},
     )
-    logging.info(f"train_model response: {raw_response}")
+    logging.info(f"train_model response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
 
 def test_predict(service_url: str, access_token: str, train_model: None) -> None:
@@ -278,7 +281,8 @@ def test_predict(service_url: str, access_token: str, train_model: None) -> None
         headers={"Authorization": f"Bearer {access_token}"},
         json={"inputs": input_data.to_dict("list")},
     )
-    logging.info(f"predict response: {raw_response}")
+    logging.info(f"predict response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
     response = raw_response.json()
     predictions = pd.DataFrame(response["predictions"])
