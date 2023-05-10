@@ -259,6 +259,13 @@ gcloud api-gateway gateways update livestream-key-publisher-api-gateway \
   --location=us-central1
 ```
 
+## Supported Python Versions
+
+The code samples for key publisher are compatible with all current active and
+maintenance versions of Python.
+
+Python >= 3.7
+
 ## Testing
 
 You can run unit tests for this code in a local environment. These tests do not
