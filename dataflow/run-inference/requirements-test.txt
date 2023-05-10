@@ -1,4 +1,4 @@
 google-cloud-aiplatform==1.17.1  # old version to be compatible with apache-beam
 google-cloud-storage==2.9.0
-pytest-parallel==0.1.1
+pytest-xdist==3.2.1
 pytest==7.3.1
