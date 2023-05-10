@@ -27,8 +27,9 @@ def run_local(model_name: str, state_dict_path: str) -> None:
     )
     print(f"Model loaded, saving state dict to: {state_dict_path}")
 
+    state_dict_path = state_dict_path.replace("gs://", "/gcs/")
     os.makedirs(os.path.dirname(state_dict_path), exist_ok=True)
-    torch.save(model.state_dict(), state_dict_path.replace("gs://", "/gcs/"))
+    torch.save(model.state_dict(), state_dict_path)
     print("State dict saved successfully!")
 
 
