@@ -40,6 +40,7 @@ def state_dict_path(bucket_name: str) -> str:
         conftest.run_cmd(
             "python",
             "load-state-dict.py",
+            "local",
             f"--model-name={MODEL_NAME}",
             f"--state-dict-path={f.name}",
         )
@@ -58,6 +59,7 @@ def test_load_state_dict_vertex(
     conftest.run_cmd(
         "python",
         "load-state-dict.py",
+        "vertex",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path=gs://{bucket_name}/temp/state_dict_vertex.pt",
         f"--job-name={unique_name}",
@@ -71,7 +73,6 @@ def test_pipeline_local(state_dict_path: str) -> None:
     conftest.run_cmd(
         "python",
         "main.py",
-        "local",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={state_dict_path}",
     )
@@ -87,7 +88,6 @@ def test_pipeline_dataflow(
     conftest.run_cmd(
         "python",
         "main.py",
-        "vertex",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={state_dict_path}",
         "--runner=DataflowRunner",
