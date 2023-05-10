@@ -21,11 +21,12 @@ from typing import Union
 
 from flask import current_app
 
-import clients.fake_client
-
 import functions_framework
+
 import google.api_core.exceptions
 from google.cloud import secretmanager
+
+import clients.fake_client
 
 PROVIDERS = {
     "FakeProvider": clients.fake_client.FakeClient,
