@@ -18,6 +18,15 @@ from vertexai.preview.language_models import TextGenerationModel
 
 def classify_news_items(temperature=0):
     """Text Classification Example with a Large Language Model"""
+
+    # TODO developer - override these parameters as needed:
+    parameters = {
+        "temperature": temperature,
+        "max_output_tokens": 5,
+        "top_p": 0,
+        "top_k": 1,
+    }
+
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
       '''What is the topic for a given news headline?
@@ -44,12 +53,8 @@ The answer is: entertainment
 
 Text: CNBC Reports Rising Digital Profit as Print Advertising Falls
 The answer is:
-''',
-      temperature=temperature,
-      max_output_tokens=5,
-      top_k=1,
-      top_p=0,
-    )
+''', **parameters)
+
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_classify_news_items]
 

@@ -18,6 +18,15 @@ from vertexai.preview.language_models import TextGenerationModel
 
 def text_summarization(temperature=.2):
     """Summarization Example with a Large Language Model"""
+
+    # TODO developer - override these parameters as needed:
+    parameters = {
+        "temperature": temperature,
+        "max_output_tokens": 256,
+        "top_p": .95,
+        "top_k": 40,
+    }
+
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
         '''Provide a summary with about two sentences for the following article:
@@ -50,12 +59,7 @@ or has been weakened by advances in trading technology and investor \
 learning (Chordia, Subrahmanyam, and Tong 2014; McLean and Pontiff \
 2016; Martineau 2021).
 Summary:
-''',
-        temperature=temperature,
-        max_output_tokens=256,
-        top_k=40,
-        top_p=.95,
-    )
+''', **parameters)
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_summarization]
 

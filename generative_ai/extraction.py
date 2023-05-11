@@ -18,6 +18,15 @@ from vertexai.preview.language_models import TextGenerationModel
 
 def extractive_question_answering(temperature=0):
     """Extractive Question Answering with a Large Language Model."""
+
+    # TODO developer - override these parameters as needed:
+    parameters = {
+        "temperature": temperature,
+        "max_output_tokens": 256,
+        "top_p": 0,
+        "top_k": 1,
+    }
+
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
       '''Background: There is evidence that there have been significant changes \
@@ -54,12 +63,7 @@ Q: What has been analyzed to compare Amazon rainfall in the past and present?
 A: Sediment deposits.
 
 Q: What has the lower rainfall in the Amazon during the LGM been attributed to?
-A:''',
-      temperature=temperature,
-      max_output_tokens=256,
-      top_k=1,
-      top_p=0,
-    )
+A:''', **parameters)
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_extraction]
 

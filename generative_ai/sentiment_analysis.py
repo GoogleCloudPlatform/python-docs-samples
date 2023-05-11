@@ -18,6 +18,15 @@ from vertexai.preview.language_models import TextGenerationModel
 
 def sentiment_analysis(temperature=0):
     """Sentiment analysis example with a Large Language Model."""
+
+    # TODO developer - override these parameters as needed:
+    parameters = {
+        "temperature": temperature,
+        "max_output_tokens": 5,
+        "top_p": 0,
+        "top_k": 1,
+    }
+
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
       '''I had to compare two versions of Hamlet for my Shakespeare class and \
@@ -56,12 +65,7 @@ Classify the sentiment of the message: negative
 
 Tweet: The Pixel 7 Pro, is too big to fit in my jeans pocket, so I bought \
 new jeans.
-Classify the sentiment of the message: ''',
-      max_output_tokens=5,
-      temperature=temperature,
-      top_k=1,
-      top_p=0,
-    )
+Classify the sentiment of the message: ''', **parameters)
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_sentiment_analysis]
 
