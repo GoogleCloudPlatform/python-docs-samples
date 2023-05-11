@@ -21,10 +21,10 @@ def classify_news_items(temperature=0):
 
     # TODO developer - override these parameters as needed:
     parameters = {
-        "temperature": temperature,
-        "max_output_tokens": 5,
-        "top_p": 0,
-        "top_k": 1,
+        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 5,      # Token limit determines the maximum amount of text output.
+        "top_p": 0,                  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 1,                  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
