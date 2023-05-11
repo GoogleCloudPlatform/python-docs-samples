@@ -19,7 +19,6 @@ from google.cloud import aiplatform
 import list_tuned_models
 
 
-
 _PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 _LOCATION = "us-central1"
 
