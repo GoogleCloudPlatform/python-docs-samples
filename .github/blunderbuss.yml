@@ -30,7 +30,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -112,6 +111,11 @@ assign_issues_by:
       - bradmiro
 
   # Self-service teams
+  - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team
   - labels:
       - "api: contentwarehouse"
       - "api: documentai"
@@ -169,7 +173,6 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -197,6 +200,7 @@ assign_prs_by:
       - "api: dataproc"
       - "api: dialogflow"
       - "api: enterpriseknowledgegraph"
+      - "api: discoveryengine"
       - "api: language"
       - "api: ml"
       - "api: notebooks"
@@ -252,6 +256,11 @@ assign_prs_by:
 
   # Self-service teams
   - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team  
+  - labels:
       - "api: contentwarehouse"
       - "api: documentai"
     to:
@@ -298,4 +307,3 @@ assign_prs:
 ###
 # Updates should be made to both assign_issues_by & assign_prs_by sections
 ###
-

@@ -861,7 +861,7 @@ def async_detect_document(gcs_source_uri, gcs_destination_uri):
     # the first two pages of the input file.
     output = blob_list[0]
 
-    json_string = output.download_as_string()
+    json_string = output.download_as_bytes().decode("utf-8")
     response = json.loads(json_string)
 
     # The actual response for the first page of the input file.

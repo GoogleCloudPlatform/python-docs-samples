@@ -57,6 +57,7 @@
 /dataproc/**/*                         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /dialogflow-cx/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/discoveryengine/**/*                  @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /documentai/**/*                       @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /enterpriseknowledgegraph/**/*         @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /jobs/**/*                             @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
@@ -88,8 +89,9 @@
 /pubsub/**/*                           @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 # ---* Fully Eng Owned
-/appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes  @GoogleCloudPlatform/python-samples-reviewers
+/appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*  @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
+/asset/**/*                            @GoogleCloudPlatform/cloud-asset-analysis-team @GoogleCloudPlatform/cloud-asset-platform-team @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
 /data-science-onramp/                  @leahecole @bradmiro @GoogleCloudPlatform/python-samples-reviewers
@@ -101,7 +103,6 @@
 /iot/**/*                              @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
 
 # Does not have owner
-/asset/**/*                            @GoogleCloudPlatform/python-samples-reviewers
 /blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers
 /iam/api-client/**/*                   @GoogleCloudPlatform/python-samples-reviewers
 /iap/**/*                              @GoogleCloudPlatform/python-samples-reviewers

@@ -14,6 +14,8 @@
 
 from flask import render_template, Response
 
+import functions_framework
+
 from app import get_index_context, init_connection_pool, migrate_db, save_vote
 
 ############ TABS vs. SPACES App for Cloud Functions ############
@@ -24,6 +26,7 @@ db = init_connection_pool()
 migrate_db(db)
 
 
+@functions_framework.http
 def votes(request):
     if request.method == "GET":
         context = get_index_context(db)

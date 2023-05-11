@@ -194,6 +194,9 @@ def _session_tests(
     if TEST_CONFIG["pip_version_override"]:
         pip_version = TEST_CONFIG["pip_version_override"]
         session.install(f"pip=={pip_version}")
+    else:
+        session.install("--upgrade", "pip")
+
     """Runs py.test for a particular project."""
     concurrent_args = []
     if os.path.exists("requirements.txt"):
