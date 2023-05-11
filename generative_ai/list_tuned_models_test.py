@@ -14,9 +14,10 @@
 
 import os
 
+from google.cloud import aiplatform
+
 import list_tuned_models
 
-from google.cloud import aiplatform
 
 
 _PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
