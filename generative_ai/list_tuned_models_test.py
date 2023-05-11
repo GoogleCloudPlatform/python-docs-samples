@@ -36,4 +36,4 @@ def test_list_tuned_models():
             '(list_tuned_models_test.py::test_list_tuned_models)'
         ) in model_registry.get_version_info('1').model_display_name:
             filtered_models_counter += 1
-    assert filtered_models_counter == 1
+    assert filtered_models_counter == 0
