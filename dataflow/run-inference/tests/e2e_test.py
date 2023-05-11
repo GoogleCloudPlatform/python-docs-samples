@@ -14,6 +14,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+"""End-to-end tests.
+
+To use an existing bucket, set it without the 'gs://' prefix:
+    GOOGLE_CLOUD_BUCKET="my-bucket-name"
+
+Run with `pytest` (local environment):
+    # Run all tests.
+    PYTHONPATH=.. pytest -s tests/e2e_test.py
+
+    # Run a single test.
+    PYTHONPATH=.. pytest -s tests/e2e_test.py -k test_name
+
+Run with `nox` (clean virtual environment):
+    nox -s lint
+    nox -s py-3.11
+"""
+
 from __future__ import annotations
 
 import tempfile
