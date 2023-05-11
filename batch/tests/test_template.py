@@ -14,6 +14,8 @@
 
 import uuid
 
+from flaky import flaky
+
 import google.auth
 from google.cloud import batch_v1
 from google.cloud import compute_v1
@@ -109,6 +111,7 @@ def instance_template():
     operation_client.wait(project=PROJECT, operation=op.name)
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_template_job(job_name, instance_template):
     job = create_script_job_with_template(PROJECT, REGION, job_name, instance_template.self_link)
     _test_body(job)

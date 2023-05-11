@@ -44,9 +44,7 @@ def enable_certificate_authority(
 
     # Enable the Certificate Authority.
     operation = caServiceClient.enable_certificate_authority(request=request)
-    result = operation.result()
-
-    print("Operation result:", result)
+    operation.result()
 
     # Get the current CA state.
     ca_state = caServiceClient.get_certificate_authority(name=ca_path).state
