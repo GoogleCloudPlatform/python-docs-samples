@@ -25,9 +25,9 @@ import detect
 ASSET_BUCKET = "cloud-samples-data"
 
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
-GCS_SOURCE_URI = 'gs://{}/HodgeConj.pdf'.format(BUCKET)
-GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
+OUTPUT_PREFIX = f'TEST_OUTPUT_{uuid.uuid4()}'
+GCS_SOURCE_URI = f'gs://{BUCKET}/HodgeConj.pdf'
+GCS_DESTINATION_URI = f'gs://{BUCKET}/{OUTPUT_PREFIX}/'
 
 
 def test_labels(capsys):
@@ -40,7 +40,7 @@ def test_labels(capsys):
 
 
 def test_labels_uri(capsys):
-    file_name = 'gs://{}/vision/label/wakeupcat.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/label/wakeupcat.jpg'
     detect.detect_labels_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'Labels' in out
@@ -56,7 +56,7 @@ def test_landmarks(capsys):
 
 
 def test_landmarks_uri(capsys):
-    file_name = 'gs://{}/vision/landmark/pofa.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/landmark/pofa.jpg'
     detect.detect_landmarks_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'palace' in out.lower()
@@ -72,7 +72,7 @@ def test_faces(capsys):
 
 
 def test_faces_uri(capsys):
-    file_name = 'gs://{}/vision/face/face_no_surprise.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/face/face_no_surprise.jpg'
     detect.detect_faces_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'face bound' in out
@@ -88,7 +88,7 @@ def test_logos(capsys):
 
 
 def test_logos_uri(capsys):
-    file_name = 'gs://{}/vision/logo/logo_google.png'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/logo/logo_google.png'
     detect.detect_logos_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'google' in out.lower()
@@ -105,7 +105,7 @@ def test_safe_search(capsys):
 
 
 def test_safe_search_uri(capsys):
-    file_name = 'gs://{}/vision/label/wakeupcat.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/label/wakeupcat.jpg'
     detect.detect_safe_search_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'VERY_LIKELY' in out
@@ -122,7 +122,7 @@ def test_detect_text(capsys):
 
 
 def test_detect_text_uri(capsys):
-    file_name = 'gs://{}/vision/text/screen.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/text/screen.jpg'
     detect.detect_text_uri(file_name)
     out, _ = capsys.readouterr()
     assert '37%' in out
@@ -138,7 +138,7 @@ def test_detect_properties(capsys):
 
 
 def test_detect_properties_uri(capsys):
-    file_name = 'gs://{}/vision/landmark/pofa.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/landmark/pofa.jpg'
     detect.detect_properties_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'frac' in out
@@ -170,7 +170,7 @@ def test_detect_web(capsys):
 
 
 def test_detect_web_uri(capsys):
-    file_name = 'gs://{}/vision/landmark/pofa.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/landmark/pofa.jpg'
 
     @backoff.on_exception(
         backoff.expo, Exception, max_time=60, giveup=only_sample_error)
@@ -199,7 +199,7 @@ def test_detect_web_with_geo(capsys):
 
 
 def test_detect_web_with_geo_uri(capsys):
-    file_name = 'gs://{}/vision/web/city.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/web/city.jpg'
 
     @backoff.on_exception(
         backoff.expo, Exception, max_time=60, giveup=only_sample_error)
@@ -222,7 +222,7 @@ def test_detect_document(capsys):
 
 
 def test_detect_document_uri(capsys):
-    file_name = 'gs://{}/vision/text/screen.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/text/screen.jpg'
     detect.detect_document_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'class' in out
@@ -238,7 +238,7 @@ def test_detect_crop_hints(capsys):
 
 
 def test_detect_crop_hints_uri(capsys):
-    file_name = 'gs://{}/vision/label/wakeupcat.jpg'.format(ASSET_BUCKET)
+    file_name = f'gs://{ASSET_BUCKET}/vision/label/wakeupcat.jpg'
     detect.detect_crop_hints_uri(file_name)
     out, _ = capsys.readouterr()
     assert 'bounds: ' in out

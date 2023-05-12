@@ -25,14 +25,13 @@ import argparse
 def transcribe_file_with_enhanced_model(path):
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_enhanced_model]
-    import io
 
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
     # path = 'resources/commercial_mono.wav'
-    with io.open(path, "rb") as audio_file:
+    with open(path, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -50,8 +49,8 @@ def transcribe_file_with_enhanced_model(path):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_enhanced_model]
 
 

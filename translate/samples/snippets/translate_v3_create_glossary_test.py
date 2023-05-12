@@ -31,7 +31,7 @@ GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_create_glossary(capsys):
     try:
-        glossary_id = "test-{}".format(uuid.uuid4())
+        glossary_id = f"test-{uuid.uuid4()}"
         translate_v3_create_glossary.create_glossary(
             PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
         )
@@ -49,6 +49,6 @@ def test_create_glossary(capsys):
                 translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
             except NotFound as e:
                 # Ignoring this case.
-                print("Got NotFound, detail: {}".format(str(e)))
+                print(f"Got NotFound, detail: {str(e)}")
 
         delete_glossary()

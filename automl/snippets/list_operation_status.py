@@ -31,7 +31,7 @@ def list_operation_status(project_id):
 
     print("List of operations:")
     for operation in response:
-        print("Name: {}".format(operation.name))
+        print(f"Name: {operation.name}")
         print("Operation details:")
         print(operation)
     # [END automl_list_operation_status]

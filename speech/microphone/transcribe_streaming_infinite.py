@@ -32,7 +32,7 @@ import time
 
 from google.cloud import speech
 import pyaudio
-from six.moves import queue
+import queue
 
 # Audio recording parameters
 STREAMING_LIMIT = 240000  # 4 minutes

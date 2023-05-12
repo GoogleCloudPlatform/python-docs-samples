@@ -17,7 +17,7 @@ import os
 
 from documentai.snippets import get_evaluation_sample
 
-import mock
+from unittest import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

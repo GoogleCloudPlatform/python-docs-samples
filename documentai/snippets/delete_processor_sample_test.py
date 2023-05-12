@@ -16,7 +16,7 @@
 import os
 
 from documentai.snippets import delete_processor_sample
-import mock
+from unittest import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
