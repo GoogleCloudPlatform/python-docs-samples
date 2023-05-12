@@ -14,7 +14,7 @@
 #
 
 
-# [START contentwarehouse_get_document_schemas]
+# [START contentwarehouse_list_document_schemas]
 
 from google.cloud import contentwarehouse
 
