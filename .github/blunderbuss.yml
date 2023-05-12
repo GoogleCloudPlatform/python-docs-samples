@@ -30,7 +30,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -113,6 +112,11 @@ assign_issues_by:
 
   # Self-service teams
   - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team
+  - labels:
       - "api: contentwarehouse"
       - "api: documentai"
     to:
@@ -173,7 +177,6 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -256,6 +259,11 @@ assign_prs_by:
       - bradmiro
 
   # Self-service teams
+  - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team  
   - labels:
       - "api: contentwarehouse"
       - "api: documentai"
