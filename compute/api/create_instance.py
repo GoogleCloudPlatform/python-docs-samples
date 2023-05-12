@@ -29,7 +29,6 @@ import os
 import time
 
 import googleapiclient.discovery
-from six.moves import input
 
 
 # [START list_instances]
@@ -50,7 +49,7 @@ def create_instance(compute, project, zone, name, bucket):
     machine_type = "zones/%s/machineTypes/n1-standard-1" % zone
     startup_script = open(
         os.path.join(
-            os.path.dirname(__file__), 'startup-script.sh'), 'r').read()
+            os.path.dirname(__file__), 'startup-script.sh')).read()
     image_url = "http://storage.googleapis.com/gce-demo-input/photo.jpg"
     image_caption = "Ready for dessert?"
 
@@ -154,7 +153,7 @@ def main(project, bucket, zone, instance_name, wait=True):
 
     instances = list_instances(compute, project, zone)
 
-    print('Instances in project %s and zone %s:' % (project, zone))
+    print('Instances in project {} and zone {}:'.format(project, zone))
     for instance in instances:
         print(' - ' + instance['name'])
 

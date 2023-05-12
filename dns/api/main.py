@@ -85,7 +85,7 @@ def create_command(args):
     """Adds a zone with the given name, DNS name, and description."""
     zone = create_zone(
         args.project_id, args.name, args.dns_name, args.description)
-    print('Zone {} added.'.format(zone.name))
+    print(f'Zone {zone.name} added.')
 
 
 def get_command(args):
@@ -106,7 +106,7 @@ def list_command(args):
 def delete_command(args):
     """Deletes a zone."""
     delete_zone(args.project_id, args.name)
-    print('Zone {} deleted.'.format(args.name))
+    print(f'Zone {args.name} deleted.')
 
 
 def list_resource_records_command(args):

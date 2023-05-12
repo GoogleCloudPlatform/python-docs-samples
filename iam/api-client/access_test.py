@@ -55,7 +55,7 @@ def test_member():
 def test_get_policy(capsys):
     access.get_policy(GCLOUD_PROJECT, version=3)
     out, _ = capsys.readouterr()
-    assert u"etag" in out
+    assert "etag" in out
 
 
 def test_modify_policy_add_role(test_member, capsys):
@@ -65,7 +65,7 @@ def test_modify_policy_add_role(test_member, capsys):
         policy = access.get_policy(GCLOUD_PROJECT, version=3)
         access.modify_policy_add_role(policy, GCLOUD_PROJECT, test_member)
         out, _ = capsys.readouterr()
-        assert u"etag" in out
+        assert "etag" in out
     test_call()
 
 
@@ -87,11 +87,11 @@ def test_set_policy(capsys):
         policy = access.get_policy(GCLOUD_PROJECT, version=3)
         access.set_policy(GCLOUD_PROJECT, policy)
         out, _ = capsys.readouterr()
-        assert u"etag" in out
+        assert "etag" in out
     test_call()
 
 
 def test_permissions(capsys):
     access.test_permissions(GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
-    assert u"permissions" in out
+    assert "permissions" in out

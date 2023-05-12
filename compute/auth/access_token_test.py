@@ -12,8 +12,7 @@
 # limitations under the License.
 
 import os
-
-import mock
+from unittest import mock
 
 import access_token
 
