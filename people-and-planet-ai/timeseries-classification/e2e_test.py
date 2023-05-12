@@ -152,7 +152,7 @@ def service_url(bucket_name: str, container_image: str) -> str:
             "--platform=managed",
             f"--project={PROJECT}",
             f"--region={REGION}",
-            "--memory=1G",
+            "--memory=4G",
             "--timeout=30m",
             f"--set-env-vars=PROJECT={PROJECT}",
             f"--set-env-vars=STORAGE_PATH=gs://{bucket_name}",
@@ -217,17 +217,18 @@ def access_token() -> str:
 def create_datasets(
     service_url: str, access_token: str, raw_data_dir: str, raw_labels_dir: str
 ) -> str:
-
-    response = requests.post(
+    raw_response = requests.post(
         f"{service_url}/create-datasets",
         headers={"Authorization": f"Bearer {access_token}"},
         json={
             "raw_data_dir": raw_data_dir,
             "raw_labels_dir": raw_labels_dir,
         },
-    ).json()
-    logging.info(f"create_datasets response: {response}")
+    )
+    logging.info(f"create_datasets response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
+    response = raw_response.json()
     job_id = response["job_id"]
     job_url = response["job_url"]
     logging.info(f"create_datasets job_id: {job_id}")
@@ -262,25 +263,28 @@ def create_datasets(
 @pytest.fixture(scope="session")
 def train_model(service_url: str, access_token: str, create_datasets: str) -> None:
     logging.info("Training model")
-    response = requests.post(
+    raw_response = requests.post(
         url=f"{service_url}/train-model",
         headers={"Authorization": f"Bearer {access_token}"},
         json={"train_epochs": 10, "batch_size": 8, "sync": True},
     )
-    logging.info(f"train_model response: {response}")
+    logging.info(f"train_model response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
 
 def test_predict(service_url: str, access_token: str, train_model: None) -> None:
     with open("test_data/56980685061237.npz", "rb") as f:
         input_data = pd.DataFrame(np.load(f)["x"])
 
-    response = requests.post(
+    raw_response = requests.post(
         url=f"{service_url}/predict",
         headers={"Authorization": f"Bearer {access_token}"},
         json={"inputs": input_data.to_dict("list")},
-    ).json()
-    logging.info(f"predict response: {response}")
+    )
+    logging.info(f"predict response: {raw_response}\n{raw_response.text}")
+    raw_response.raise_for_status()
 
+    response = raw_response.json()
     predictions = pd.DataFrame(response["predictions"])
 
     # Check that we get non-empty predictions.
