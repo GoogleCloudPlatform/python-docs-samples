@@ -32,7 +32,7 @@ project_id = os.environ["GCP_PROJECT"]
 
 # [START functions_ocr_detect]
 def detect_text(bucket, filename):
-    print("Looking for text in image {}".format(filename))
+    print(f"Looking for text in image {filename}")
 
     futures = []
 
@@ -45,11 +45,11 @@ def detect_text(bucket, filename):
         text = annotations[0].description
     else:
         text = ""
-    print("Extracted text {} from image ({} chars).".format(text, len(text)))
+    print(f"Extracted text {text} from image ({len(text)} chars).")
 
     detect_language_response = translate_client.detect_language(text)
     src_lang = detect_language_response["language"]
-    print("Detected language {} for text {}.".format(src_lang, text))
+    print(f"Detected language {src_lang} for text {text}.")
 
     # Submit a message to the bus for each target language
     to_langs = os.environ["TO_LANG"].split(",")
@@ -124,7 +124,7 @@ def translate_text(event, context):
     target_lang = validate_message(message, "lang")
     src_lang = validate_message(message, "src_lang")
 
-    print("Translating text into {}.".format(target_lang))
+    print(f"Translating text into {target_lang}.")
     translated_text = translate_client.translate(
         text, target_language=target_lang, source_language=src_lang
     )
@@ -155,14 +155,14 @@ def save_result(event, context):
     filename = validate_message(message, "filename")
     lang = validate_message(message, "lang")
 
-    print("Received request to save file {}.".format(filename))
+    print(f"Received request to save file {filename}.")
 
     bucket_name = os.environ["RESULT_BUCKET"]
-    result_filename = "{}_{}.txt".format(filename, lang)
+    result_filename = f"{filename}_{lang}.txt"
     bucket = storage_client.get_bucket(bucket_name)
     blob = bucket.blob(result_filename)
 
-    print("Saving result to {} in bucket {}.".format(result_filename, bucket_name))
+    print(f"Saving result to {result_filename} in bucket {bucket_name}.")
 
     blob.upload_from_string(text)
 

@@ -29,7 +29,7 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
-test_job_id = "test-job-{}".format(uuid.uuid4())
+test_job_id = f"test-job-{uuid.uuid4()}"
 
 
 @pytest.fixture(scope="module")

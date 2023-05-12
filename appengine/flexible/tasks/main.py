@@ -24,7 +24,7 @@ app = Flask(__name__)
 def example_task_handler():
     """Log the request payload."""
     payload = request.get_data(as_text=True) or '(empty payload)'
-    print('Received task with payload: {}'.format(payload))
+    print(f'Received task with payload: {payload}')
     return render_template("index.html", payload=payload)
 # [END cloud_tasks_appengine_quickstart]
 

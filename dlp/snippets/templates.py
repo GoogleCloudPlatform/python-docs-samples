@@ -14,7 +14,6 @@
 
 """Sample app that sets up Data Loss Prevention API inspect templates."""
 
-from __future__ import print_function
 
 import argparse
 import os
@@ -84,7 +83,7 @@ def create_inspect_template(
         }
     )
 
-    print("Successfully created template {}".format(response.name))
+    print(f"Successfully created template {response.name}")
 
 
 # [END dlp_create_inspect_template]
@@ -112,18 +111,18 @@ def list_inspect_templates(project):
     response = dlp.list_inspect_templates(request={"parent": parent})
 
     for template in response:
-        print("Template {}:".format(template.name))
+        print(f"Template {template.name}:")
         if template.display_name:
-            print("  Display Name: {}".format(template.display_name))
-        print("  Created: {}".format(template.create_time))
-        print("  Updated: {}".format(template.update_time))
+            print(f"  Display Name: {template.display_name}")
+        print(f"  Created: {template.create_time}")
+        print(f"  Updated: {template.update_time}")
 
         config = template.inspect_config
         print(
             "  InfoTypes: {}".format(", ".join([it.name for it in config.info_types]))
         )
-        print("  Minimum likelihood: {}".format(config.min_likelihood))
-        print("  Include quotes: {}".format(config.include_quote))
+        print(f"  Minimum likelihood: {config.min_likelihood}")
+        print(f"  Include quotes: {config.include_quote}")
         print(
             "  Max findings per request: {}".format(
                 config.limits.max_findings_per_request
@@ -154,12 +153,12 @@ def delete_inspect_template(project, template_id):
     parent = f"projects/{project}"
 
     # Combine the template id with the parent id.
-    template_resource = "{}/inspectTemplates/{}".format(parent, template_id)
+    template_resource = f"{parent}/inspectTemplates/{template_id}"
 
     # Call the API.
     dlp.delete_inspect_template(request={"name": template_resource})
 
-    print("Template {} successfully deleted.".format(template_resource))
+    print(f"Template {template_resource} successfully deleted.")
 
 
 # [END dlp_delete_inspect_template]

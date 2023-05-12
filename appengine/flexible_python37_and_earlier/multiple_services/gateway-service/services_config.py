@@ -45,13 +45,13 @@ def map_services(environment):
 def production_url(service_name):
     """Generates url for a service when deployed to App Engine."""
     project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
-    project_url = '{}.appspot.com'.format(project_id)
+    project_url = f'{project_id}.appspot.com'
     if service_name == 'default':
-        return 'https://{}'.format(project_url)
+        return f'https://{project_url}'
     else:
-        return 'https://{}-dot-{}'.format(service_name, project_url)
+        return f'https://{service_name}-dot-{project_url}'
 
 
 def local_url(port):
     """Generates url for a service when running locally"""
-    return 'http://localhost:{}'.format(str(port))
+    return f'http://localhost:{str(port)}'

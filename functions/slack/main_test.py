@@ -16,7 +16,7 @@ import os
 import time
 
 import googleapiclient.discovery
-import mock
+from unittest import mock
 import pytest
 from slack.signature import SignatureVerifier
 
@@ -29,7 +29,7 @@ kg_search = googleapiclient.discovery.build(
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
-class Request(object):
+class Request:
     def __init__(self, data='', headers={}):
         self.data = data
         self.headers = headers
@@ -38,7 +38,7 @@ class Request(object):
         return self.data
 
 
-class TestGCFPySlackSample(object):
+class TestGCFPySlackSample:
     def test_verify_signature_request_form_empty(self):
         with pytest.raises(ValueError):
             request = Request()

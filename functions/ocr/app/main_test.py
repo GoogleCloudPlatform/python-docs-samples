@@ -15,7 +15,7 @@ import base64
 import concurrent.futures
 import json
 
-import mock
+from unittest import mock
 
 import main
 

@@ -17,7 +17,7 @@ import concurrent.futures
 import json
 
 from cloudevents.http import CloudEvent
-import mock
+from unittest import mock
 
 
 import main

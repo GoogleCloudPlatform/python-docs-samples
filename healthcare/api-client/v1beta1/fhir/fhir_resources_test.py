@@ -29,8 +29,8 @@ base_url = "https://healthcare.googleapis.com/v1beta1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-dataset_id = "test_dataset_{}".format(uuid.uuid4())
-fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
+dataset_id = f"test_dataset_{uuid.uuid4()}"
+fhir_store_id = f"test_fhir_store-{uuid.uuid4()}"
 resource_type = "Patient"
 client = fhir_stores.get_client(service_account_json)
 
@@ -45,7 +45,6 @@ def fatal_code(e):
 class OperationNotComplete(Exception):
     """Operation is not yet complete"""
 
-    pass
 
 
 @retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))

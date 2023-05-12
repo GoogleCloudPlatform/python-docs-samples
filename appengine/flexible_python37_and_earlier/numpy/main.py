@@ -26,10 +26,10 @@ def calculate():
     x = np.array([[1, 2], [3, 4]])
     y = np.array([[5, 6], [7, 8]])
 
-    return_str += 'x: {} , y: {}<br />'.format(str(x), str(y))
+    return_str += f'x: {str(x)} , y: {str(y)}<br />'
 
     # Multiply matrices
-    return_str += 'x dot y : {}'.format(str(np.dot(x, y)))
+    return_str += f'x dot y : {str(np.dot(x, y))}'
     return return_str
 
 

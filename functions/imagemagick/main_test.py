@@ -15,7 +15,7 @@
 from collections import UserDict
 import uuid
 
-from mock import MagicMock, patch
+from unittest.mock import MagicMock, patch
 
 import main
 
