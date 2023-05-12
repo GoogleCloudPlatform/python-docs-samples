@@ -14,9 +14,9 @@
 
 import os
 from typing import NoReturn, TypeVar
+from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from unittest.mock import MagicMock, patch
 import pytest
 
 from check_status import cli

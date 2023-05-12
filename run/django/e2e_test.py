@@ -16,8 +16,8 @@
 # secrets, and deploys a Django service
 
 import os
-import subprocess
 from collections.abc import Iterator
+import subprocess
 import uuid
 
 import backoff
