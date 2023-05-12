@@ -17,6 +17,7 @@
 from __future__ import print_function
 
 import argparse
+from typing import List
 
 
 # [START dlp_list_jobs]
@@ -115,6 +116,79 @@ def delete_dlp_job(project, job_name):
 # [END dlp_delete_job]
 
 
+# [START dlp_create_job]
+def create_dlp_job(
+    project: str,
+    bucket: str,
+    info_types: List[str],
+    job_id: str = None,
+    max_findings: int = 100,
+    auto_populate_timespan: bool = True,
+) -> None:
+    """Uses the Data Loss Prevention API to create a DLP job.
+    Args:
+        project: The project id to use as a parent resource.
+        bucket: The name of the GCS bucket to scan. This sample scans all
+            files in the bucket.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        job_id: The id of the job. If omitted, an id will be randomly generated.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+        auto_populate_timespan: Automatically populates time span config start
+            and end times in order to scan new content only.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries (protos are also accepted).
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary. Keys which are None may
+    # optionally be omitted entirely.
+    inspect_config = {
+        "info_types": info_types,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
+        "limits": {"max_findings_per_request": max_findings},
+        "include_quote": True,
+    }
+
+    # Construct a cloud_storage_options dictionary with the bucket's URL.
+    url = "gs://{}/*".format(bucket)
+    storage_config = {
+        "cloud_storage_options": {"file_set": {"url": url}},
+        # Time-based configuration for each storage object.
+        "timespan_config": {
+            # Auto-populate start and end times in order to scan new objects
+            # only.
+            "enable_auto_population_of_timespan_config": auto_populate_timespan
+        },
+    }
+
+    # Construct the job definition.
+    job = {"inspect_config": inspect_config, "storage_config": storage_config}
+
+    # Call the API.
+    response = dlp.create_dlp_job(
+        request={
+            "parent": parent,
+            "inspect_job": job,
+            "job_id": job_id
+        }
+    )
+
+    # Print out the result.
+    print("Job : {} status: {}".format(response.name, response.state))
+
+# [END dlp_create_job]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -152,9 +226,51 @@ if __name__ == "__main__":
         help="The name of the DlpJob resource to be deleted. " "Example: X-#####",
     )
 
+    create_parser = subparsers.add_parser(
+        "create", help="Create a Data Loss Prevention API job."
+    )
+    create_parser.add_argument(
+        "project", help="The project id to use as a parent resource."
+    )
+    create_parser.add_argument(
+        "bucket",
+        help="The name of the GCS bucket to scan. This sample scans all files "
+        "in the bucket."
+    )
+    create_parser.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+    )
+    create_parser.add_argument(
+        "--job_id",
+        help="The id of the job. If omitted, an id will be randomly generated."
+    )
+    create_parser.add_argument(
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
+    create_parser.add_argument(
+        "--auto_populate_timespan",
+        type=bool,
+        help="Limit scan to new content only.",
+    )
+
     args = parser.parse_args()
 
     if args.content == "list":
         list_dlp_jobs(args.project, filter_string=args.filter, job_type=args.type)
     elif args.content == "delete":
         delete_dlp_job(args.project, args.job_name)
+    elif args.content == "create":
+        create_dlp_job(
+            args.project,
+            args.bucket,
+            args.info_types,
+            job_id=args.job_id,
+            max_findings=args.max_findings,
+            auto_populate_timespan=args.auto_populate_timespan,
+        )

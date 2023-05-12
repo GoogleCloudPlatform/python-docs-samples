@@ -31,9 +31,8 @@ def run(
     train_data_dir: str,
     eval_data_dir: str,
     train_eval_split: List[int],
-    **beam_args: List[str],
+    beam_args: List[str],
 ) -> str:
-
     labels = pd.concat(
         [
             data_utils.read_labels(filename)
@@ -41,7 +40,7 @@ def run(
         ]
     ).sort_values(by="start_time")
 
-    beam_options = PipelineOptions(flags=[], **beam_args)
+    beam_options = PipelineOptions(beam_args, save_main_session=True)
     pipeline = beam.Pipeline(options=beam_options)
 
     training_data, evaluation_data = (
@@ -82,4 +81,25 @@ def run(
     try:
         return result._job.id
     except Exception:
-        return beam_args.get("job_name")
+        return "local_job"
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--raw-data-dir", required=True)
+    parser.add_argument("--raw-labels-dir", required=True)
+    parser.add_argument("--train-data-dir", required=True)
+    parser.add_argument("--eval-data-dir", required=True)
+    args, beam_args = parser.parse_known_args()
+
+    job_id = run(
+        raw_data_dir=args.raw_data_dir,
+        raw_labels_dir=args.raw_labels_dir,
+        train_data_dir=args.train_data_dir,
+        eval_data_dir=args.eval_data_dir,
+        train_eval_split=[80, 20],
+        beam_args=beam_args,
+    )
+    print(f"job_id: {job_id}")
