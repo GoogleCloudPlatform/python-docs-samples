@@ -73,13 +73,42 @@ def participant_id(conversation_id):
     yield participant_id
 
 
-# Test live transcription with streaming_analyze_content.
-def test_analyze_content_audio_stream(capsys, conversation_id, participant_id):
+# Test live transcription of an audio file with streaming_analyze_content.
+def test_analyze_content_audio(capsys, conversation_id, participant_id):
     # Call StreamingAnalyzeContent to transcribe the audio.
     participant_management.analyze_content_audio(
         conversation_id=conversation_id,
         participant_id=participant_id,
         audio_file_path=AUDIO_FILE_PATH,
     )
+    out, _ = capsys.readouterr()
+    assert "book a room" in out.lower()
+
+
+# Test live transcription of an audio stream with streaming_analyze_content.
+def test_analyze_content_audio_stream(capsys, conversation_id, participant_id):
+    class stream_generator():
+        def __init__(self, audio_file_path):
+            self.audio_file_path = audio_file_path
+
+        def generator(self):
+            with open(self.audio_file_path, "rb") as audio_file:
+                while True:
+                    chunk = audio_file.read(4096)
+                    if not chunk:
+                        break
+                    # The later requests contains audio data.
+                    yield chunk
+    # Call StreamingAnalyzeContent to transcribe the audio.
+    responses = participant_management.analyze_content_audio_stream(
+        conversation_id=conversation_id,
+        participant_id=participant_id,
+        sample_rate_herz=16000,
+        stream=stream_generator(AUDIO_FILE_PATH),
+        language_code="en-US",
+        timeout=300
+    )
+    for response in responses:
+        print(response)
     out, _ = capsys.readouterr()
     assert "book a room" in out.lower()

@@ -172,6 +172,7 @@ def main():
     # Create end user participant.
     end_user = participant_management.create_participant(
         project_id=PROJECT_ID, conversation_id=conversation_id, role='END_USER')
+    participant_id = end_user.name.split("participants/")[1].rstrip()
 
     mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
     print(mic_manager.chunk_size)
@@ -190,7 +191,8 @@ def main():
                     stream.restart_counter += 1
                     # Send request to streaming and get response.
                     responses = participant_management.analyze_content_audio_stream(
-                        participant_name=end_user.name,
+                        conversation_id=conversation_id,
+                        participant_id=participant_id,
                         sample_rate_herz=SAMPLE_RATE,
                         stream=stream,
                         timeout=RESTART_TIMEOUT,

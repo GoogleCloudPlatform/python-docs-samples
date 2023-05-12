@@ -178,28 +178,35 @@ def analyze_content_audio(
 # [END dialogflow_analyze_content_audio]
 
 
-# [START dialogflow_analyze_content_audio]
-def analyze_content_audio_stream(participant_name,
-                                    sample_rate_herz,
-                                    stream,
-                                    timeout,
-                                    language_code,
-                                    single_utterance=False):
-    """Stream audio streams to Dialogflow and receive transcripts and suggestions.
+# [START dialogflow_analyze_content_audio_stream]
+def analyze_content_audio_stream(conversation_id,
+                                 participant_id,
+                                 sample_rate_herz,
+                                 stream,
+                                 timeout,
+                                 language_code,
+                                 single_utterance=False):
+    """Stream audio streams to Dialogflow and receive transcripts and
+    suggestions.
 
     Args:
-        participant_name: resource name of the participant.
+        conversation_id: Id of the conversation.
+        participant_id: Id of the participant.
         sample_rate_herz: herz rate of the sample.
         stream: the stream to process.
         timeout: the timeout of one stream.
         language_code: the language code of the audio
         single_utterance: whether to use single_utterance.
     """
-    from google.cloud import dialogflow_v2beta1 as dialogflow_beta
-    client = dialogflow_beta.ParticipantsClient()
+    credentials, project_id = google.auth.default()
+    client = dialogflow.ParticipantsClient(credentials=credentials)
 
-    audio_config = dialogflow_beta.types.audio_config.InputAudioConfig(
-        audio_encoding=dialogflow_beta.types.audio_config.AudioEncoding.
+    participant_name = client.participant_path(
+        project_id, conversation_id, participant_id
+    )
+
+    audio_config = dialogflow.types.audio_config.InputAudioConfig(
+        audio_encoding=dialogflow.types.audio_config.AudioEncoding.
         AUDIO_ENCODING_LINEAR_16,
         sample_rate_hertz=sample_rate_herz,
         language_code=language_code,
@@ -209,14 +216,11 @@ def analyze_content_audio_stream(participant_name,
         """Generates requests for streaming.
         """
         audio_generator = stream.generator()
-        print("Yield config to streaming analyze content.")
-        yield dialogflow_beta.types.participant.StreamingAnalyzeContentRequest(
+        yield dialogflow.types.participant.StreamingAnalyzeContentRequest(
             participant=participant_name,
             audio_config=audio_config)
-        print("Yield audios to streaming analyze content.")
         for content in audio_generator:
-            # print('Yield audio to streaming analyze content')
-            yield dialogflow_beta.types.participant.StreamingAnalyzeContentRequest(
+            yield dialogflow.types.participant.StreamingAnalyzeContentRequest(
                 input_audio=content)
 
     return client.streaming_analyze_content(gen_requests(
@@ -224,4 +228,4 @@ def analyze_content_audio_stream(participant_name,
         timeout=timeout)
 
 
-# [END dialogflow_analyze_content_audio]
+# [END dialogflow_analyze_content_audio_stream]
