@@ -22,9 +22,9 @@ def execute_workflow(
     # [START workflows_api_quickstart]
     import time
 
-    from google.cloud import workflows_v1beta
-    from google.cloud.workflows import executions_v1beta
-    from google.cloud.workflows.executions_v1beta.types import executions
+    from google.cloud import workflows_v1
+    from google.cloud.workflows import executions_v1
+    from google.cloud.workflows.executions_v1.types import executions
 
     # TODO(developer): Uncomment these lines and replace with your values.
     # project = 'my-project-id'
@@ -35,8 +35,8 @@ def execute_workflow(
         raise Exception('GOOGLE_CLOUD_PROJECT env var is required.')
 
     # Set up API clients.
-    execution_client = executions_v1beta.ExecutionsClient()
-    workflows_client = workflows_v1beta.WorkflowsClient()
+    execution_client = executions_v1.ExecutionsClient()
+    workflows_client = workflows_v1.WorkflowsClient()
 
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project, location, workflow)
@@ -50,18 +50,20 @@ def execute_workflow(
     backoff_delay = 1  # Start wait with delay of 1 second
     print('Poll every second for result...')
     while (not execution_finished):
-        execution = execution_client.get_execution(request={"name": response.name})
+        execution = execution_client.get_execution(
+            request={"name": response.name})
         execution_finished = execution.state != executions.Execution.State.ACTIVE
 
         # If we haven't seen the result yet, wait a second.
         if not execution_finished:
             print('- Waiting for results...')
             time.sleep(backoff_delay)
-            backoff_delay *= 2  # Double the delay to provide exponential backoff.
+            # Double the delay to provide exponential backoff.
+            backoff_delay *= 2
         else:
             print(f'Execution finished with state: {execution.state.name}')
-            print(execution.result)
-            return execution.result
+            print(f'Execution results: {execution.result}')
+            return execution
     # [END workflows_api_quickstart]
 
 

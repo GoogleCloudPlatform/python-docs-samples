@@ -16,6 +16,8 @@
 
 from datetime import datetime
 import os
+import re
+import subprocess
 
 import flask
 import numpy as np
@@ -57,35 +59,42 @@ def run_root() -> dict:
 
 @app.route("/create-datasets", methods=["POST"])
 def run_create_datasets() -> dict:
-    import create_datasets
-
     try:
         args = flask.request.get_json() or {}
-        runner_params = {
-            "runner": "DataflowRunner",
-            "job_name": f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}",
-            "save_main_session": args.get("save_main_session", True),
-            "sdk_container_image": args.get("container_image", CONTAINER_IMAGE),
-            "project": args.get("project", PROJECT),
-            "region": args.get("region", REGION),
-            "temp_location": args.get("temp_location", TEMP_DIR),
-            "experiments": ["use_runner_v2"],
-        }
-        params = {
-            "raw_data_dir": args.get("raw_data_dir", RAW_DATA_DIR),
-            "raw_labels_dir": args.get("raw_labels_dir", RAW_LABELS_DIR),
-            "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
-            "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
-            "train_eval_split": args.get("train_eval_split", DEFAULT_TRAIN_EVAL_SPLIT),
-            **runner_params,
-        }
-        job_id = create_datasets.run(**params)
+        job_name = f"global-fishing-watch-create-datasets-{datetime.now().strftime('%Y%m%d-%H%M%S')}"
+        cmd = [
+            "python",
+            "create_datasets.py",
+            f"--raw-data-dir={args.get('raw_data_dir', RAW_DATA_DIR)}",
+            f"--raw-labels-dir={args.get('raw_labels_dir', RAW_LABELS_DIR)}",
+            f"--train-data-dir={args.get('train_data_dir', TRAIN_DATA_DIR)}",
+            f"--eval-data-dir={args.get('eval_data_dir', EVAL_DATA_DIR)}",
+            f"--train-eval-split={args.get('train_eval_split', DEFAULT_TRAIN_EVAL_SPLIT)}",
+            "--runner=DataflowRunner",
+            f"--job_name={job_name}",
+            f"--project={args.get('project', PROJECT)}",
+            f"--region={args.get('region', REGION)}",
+            f"--temp_location={args.get('temp_location', TEMP_DIR)}",
+            f"--sdk_container_image={CONTAINER_IMAGE}",
+        ]
+        result = subprocess.run(cmd, check=True, capture_output=True)
+        output = result.stdout.decode("utf-8")
+
+        m = re.search(r"^job_id: (.*)$", output)
+        if m:
+            job_id = m.group(1)
+            job_url = (
+                f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
+            )
+        else:
+            job_id = ""
+            job_url = ""
 
         return {
             "method": "create-datasets",
+            "job_name": job_name,
             "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/dataflow/jobs/{REGION}/{job_id}?project={PROJECT}",
-            "params": params,
+            "job_url": job_url,
         }
     except Exception as e:
         return {"error": f"{type(e).__name__}: {e}"}
@@ -100,7 +109,6 @@ def run_train_model() -> dict:
         params = {
             "project": args.get("project", PROJECT),
             "region": args.get("region", REGION),
-            "container_image": args.get("container_image", CONTAINER_IMAGE),
             "train_data_dir": args.get("train_data_dir", TRAIN_DATA_DIR),
             "eval_data_dir": args.get("eval_data_dir", EVAL_DATA_DIR),
             "training_dir": args.get("training_dir", TRAINING_DIR),
@@ -109,13 +117,12 @@ def run_train_model() -> dict:
             "machine_type": args.get("machine_type", DEFAULT_MACHINE_TYPE),
             "gpu_type": args.get("gpu_type", DEFAULT_GPU_TYPE),
             "gpu_count": args.get("gpu_count", DEFAULT_GPU_COUNT),
+            "sync": args.get("sync", False),
         }
-        job_id = train_model.run(**params)
+        train_model.run(**params)
 
         return {
             "method": "train-model",
-            "job_id": job_id,
-            "job_url": f"https://console.cloud.google.com/vertex-ai/locations/{REGION}/training/{job_id}/cpu?project={PROJECT}",
             "params": params,
         }
     except Exception as e:
@@ -148,6 +155,4 @@ def run_predict() -> dict:
 
 
 if __name__ == "__main__":
-    import os
-
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

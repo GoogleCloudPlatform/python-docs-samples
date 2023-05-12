@@ -38,6 +38,7 @@ path:
         dataproc: "dataproc"
         datastore: "datastore"
         dialogflow: "dialogflow"
+        discoveryengine: "discoveryengine"
         dlp: "dlp"
         dns: "dns"
         documentai: "documentai"
