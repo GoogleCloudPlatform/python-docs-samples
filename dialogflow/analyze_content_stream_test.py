@@ -76,7 +76,7 @@ def participant_id(conversation_id):
 # Test live transcription with streaming_analyze_content.
 def test_analyze_content_audio_stream(capsys, conversation_id, participant_id):
     # Call StreamingAnalyzeContent to transcribe the audio.
-    participant_management.analyze_content_audio_stream(
+    participant_management.analyze_content_audio(
         conversation_id=conversation_id,
         participant_id=participant_id,
         audio_file_path=AUDIO_FILE_PATH,

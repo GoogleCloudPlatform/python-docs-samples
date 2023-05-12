@@ -111,8 +111,8 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 
 # [END dialogflow_analyze_content_text]
 
-# [START dialogflow_analyze_content_audio_stream]
-def analyze_content_audio_stream(
+# [START dialogflow_analyze_content_audio]
+def analyze_content_audio(
     conversation_id, participant_id, audio_file_path
 ):
     """Analyze audio content for END_USER with audio files.
@@ -175,17 +175,17 @@ def analyze_content_audio_stream(
     print("=" * 20)
 
 
-# [END dialogflow_analyze_content_audio_stream]
+# [END dialogflow_analyze_content_audio]
 
 
-# [START dialogflow_streaming_analyze_content_audio]
-def streaming_analyze_content_audio(participant_name,
+# [START dialogflow_analyze_content_audio]
+def analyze_content_audio_stream(participant_name,
                                     sample_rate_herz,
                                     stream,
                                     timeout,
                                     language_code,
                                     single_utterance=False):
-    """Stream audio to Dialogflow and receive transcripts and suggestions.
+    """Stream audio streams to Dialogflow and receive transcripts and suggestions.
 
     Args:
         participant_name: resource name of the participant.
@@ -224,4 +224,4 @@ def streaming_analyze_content_audio(participant_name,
         timeout=timeout)
 
 
-# [END dialogflow_streaming_analyze_content_audio]
+# [END dialogflow_analyze_content_audio]

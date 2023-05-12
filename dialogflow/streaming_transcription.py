@@ -189,7 +189,7 @@ def main():
                         stream.restart_counter))
                     stream.restart_counter += 1
                     # Send request to streaming and get response.
-                    responses = participant_management.streaming_analyze_content_audio(
+                    responses = participant_management.analyze_content_audio_stream(
                         participant_name=end_user.name,
                         sample_rate_herz=SAMPLE_RATE,
                         stream=stream,
