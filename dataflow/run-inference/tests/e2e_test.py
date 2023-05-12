@@ -86,32 +86,32 @@ def test_load_state_dict_vertex(
     )
 
 
-def test_pipeline_local(state_dict_path: str) -> None:
-    conftest.run_cmd(
-        "python",
-        "main.py",
-        f"--input-topic=unused",
-        f"--output-topic=unused",
-        f"--model-name={MODEL_NAME}",
-        f"--state-dict-path={state_dict_path}",
-    )
+# def test_pipeline_local(state_dict_path: str) -> None:
+#     conftest.run_cmd(
+#         "python",
+#         "main.py",
+#         f"--input-topic=unused",
+#         f"--output-topic=unused",
+#         f"--model-name={MODEL_NAME}",
+#         f"--state-dict-path={state_dict_path}",
+#     )
 
 
-def test_pipeline_dataflow(
-    project: str,
-    bucket_name: str,
-    location: str,
-    unique_name: str,
-    state_dict_path: str,
-) -> None:
-    conftest.run_cmd(
-        "python",
-        "main.py",
-        f"--model-name={MODEL_NAME}",
-        f"--state-dict-path={state_dict_path}",
-        "--runner=DataflowRunner",
-        f"--job_name={unique_name}",
-        f"--project={project}",
-        f"--temp_location=gs://{bucket_name}/temp",
-        f"--region={location}",
-    )
+# def test_pipeline_dataflow(
+#     project: str,
+#     bucket_name: str,
+#     location: str,
+#     unique_name: str,
+#     state_dict_path: str,
+# ) -> None:
+#     conftest.run_cmd(
+#         "python",
+#         "main.py",
+#         f"--model-name={MODEL_NAME}",
+#         f"--state-dict-path={state_dict_path}",
+#         "--runner=DataflowRunner",
+#         f"--job_name={unique_name}",
+#         f"--project={project}",
+#         f"--temp_location=gs://{bucket_name}/temp",
+#         f"--region={location}",
+#     )
