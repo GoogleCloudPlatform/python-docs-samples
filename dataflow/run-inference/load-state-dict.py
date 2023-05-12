@@ -41,7 +41,9 @@ def run_local(model_name: str, state_dict_path: str) -> None:
 
     # Assume Cloud Storage FUSE is mounted in `/gcs`.
     state_dict_path = state_dict_path.replace("gs://", "/gcs/")
-    os.makedirs(os.path.dirname(state_dict_path), exist_ok=True)
+    directory = os.path.dirname(state_dict_path)
+    if directory and not os.path.exists(directory):
+        os.makedirs(os.path.dirname(state_dict_path), exist_ok=True)
     torch.save(model.state_dict(), state_dict_path)
     print("State dict saved successfully!")
 

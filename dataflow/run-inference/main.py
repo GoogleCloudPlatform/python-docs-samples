@@ -32,6 +32,30 @@ from transformers import AutoTokenizer
 MAX_RESPONSE_TOKENS = 256
 
 
+class RunPipeline(beam.PTransform):
+    def __init__(self, model_name: str, state_dict_path: str) -> None:
+        super().__init__()
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.model_handler = PytorchModelHandlerTensor(
+            state_dict_path=state_dict_path,
+            model_class=AutoModelForSeq2SeqLM.from_config,
+            model_params={"config": AutoConfig.from_pretrained(model_name)},
+            inference_fn=make_tensor_model_fn("generate"),
+        )
+
+    def expand(self, pcoll: beam.PCollection[str]) -> beam.PCollection[str]:
+        return (
+            pcoll
+            | "Encode tokens" >> beam.Map(encode_inputs, self.tokenizer)
+            | "RunInference"
+            >> RunInference(
+                self.model_handler,
+                inference_args={"max_new_tokens": MAX_RESPONSE_TOKENS},
+            )
+            | "Decode tokens" >> beam.Map(decode_outputs, self.tokenizer)
+        )
+
+
 def encode_inputs(input_text: str, tokenizer: AutoTokenizer) -> torch.Tensor:
     """Encodes input text into token tensors.
 
@@ -57,45 +81,20 @@ def decode_outputs(result: PredictionResult, tokenizer: AutoTokenizer) -> str:
     return tokenizer.decode(output_tokens, skip_special_tokens=True)
 
 
-def run(
-    model_name: str,
-    state_dict_path: str,
-    beam_options: PipelineOptions | None = None,
-) -> None:
-    """Runs the Apache Beam pipeline.
-
-    Args:
-        model_name: HuggingFace model name compatible with AutoModelForSeq2SeqLM.
-        state_dict_path: File path to the model's state_dict, can be in Cloud Storage.
-        beam_options: Apache Beam pipeline options.
-    """
-    model_handler = PytorchModelHandlerTensor(
-        state_dict_path=state_dict_path,
-        model_class=AutoModelForSeq2SeqLM.from_config,
-        model_params={"config": AutoConfig.from_pretrained(model_name)},
-        inference_fn=make_tensor_model_fn("generate"),
-    )
-
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    with beam.Pipeline(options=beam_options) as pipeline:
-        _ = (
-            pipeline
-            | beam.Create(["Hello!"])
-            | "Encode tokens" >> beam.Map(encode_inputs, tokenizer)
-            | "RunInference"
-            >> RunInference(
-                model_handler,
-                inference_args={"max_new_tokens": MAX_RESPONSE_TOKENS},
-            )
-            | "Decode tokens" >> beam.Map(decode_outputs, tokenizer)
-            | beam.Map(logging.info)
-        )
-
-
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--messages-topic",
+        required=True,
+        help="Pub/Sub topic for input text messages",
+    )
+    parser.add_argument(
+        "--responses-topic",
+        required=True,
+        help="Pub/Sub topic for output text responses",
+    )
     parser.add_argument(
         "--model-name",
         required=True,
@@ -115,8 +114,11 @@ if __name__ == "__main__":
         streaming=True,
         requirements_file="requirements.txt",
     )
-    run(
-        state_dict_path=args.state_dict_path,
-        model_name=args.model_name,
-        beam_options=beam_options,
-    )
+    with beam.Pipeline(options=beam_options) as pipeline:
+        _ = (
+            pipeline
+            | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
+            | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
+            | "Run pipeline" >> RunPipeline(args.model_name, args.state_dict_path)
+            | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
+        )

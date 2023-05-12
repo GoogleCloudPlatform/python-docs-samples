@@ -90,6 +90,8 @@ def test_pipeline_local(state_dict_path: str) -> None:
     conftest.run_cmd(
         "python",
         "main.py",
+        f"--input-topic=unused",
+        f"--output-topic=unused",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={state_dict_path}",
     )
