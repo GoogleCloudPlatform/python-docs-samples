@@ -1,4 +1,4 @@
-selenium==4.9.0
+selenium==4.9.1
 Flask==2.2.2
 pytest==7.2.1
 pytest-flask==1.2.0
