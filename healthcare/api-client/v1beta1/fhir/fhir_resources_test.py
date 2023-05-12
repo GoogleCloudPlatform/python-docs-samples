@@ -46,7 +46,6 @@ class OperationNotComplete(Exception):
     """Operation is not yet complete"""
 
 
-
 @retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
 def wait_for_operation(operation_name: str):
     operation = (

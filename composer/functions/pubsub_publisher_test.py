@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from unittest import mock
+
 import pytest
 
 import pubsub_publisher

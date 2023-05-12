@@ -15,9 +15,8 @@
 from collections import UserDict
 from datetime import datetime
 import json
-import uuid
-
 from unittest.mock import MagicMock, patch
+import uuid
 
 import main
 

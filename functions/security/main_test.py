@@ -12,8 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import flask
 from unittest import mock
+
+import flask
 
 import main
 
