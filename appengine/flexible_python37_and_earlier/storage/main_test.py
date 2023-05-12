@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from io import BytesIO
-import requests
 import os
 import uuid
 
@@ -21,6 +20,7 @@ import flask
 import flask.testing
 from google.cloud import storage
 import pytest
+import requests
 
 import main
 
