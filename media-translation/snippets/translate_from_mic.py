@@ -21,10 +21,10 @@ Example usage:
 # [START mediatranslation_translate_from_mic]
 
 import itertools
+import queue
 
 from google.cloud import mediatranslation as media
 import pyaudio
-import queue
 
 # Audio recording parameters
 RATE = 16000

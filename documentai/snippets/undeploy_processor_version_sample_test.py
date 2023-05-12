@@ -14,9 +14,9 @@
 #
 
 import os
+from unittest import mock
 
 from documentai.snippets import undeploy_processor_version_sample
-from unittest import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
