@@ -44,7 +44,7 @@ def enable_secret_version_with_etag(project_id, secret_id, version_id, etag):
     # Disable the secret version.
     response = client.enable_secret_version(request=request)
 
-    print("Enabled secret version: {}".format(response.name))
+    print(f"Enabled secret version: {response.name}")
     # [END secretmanager_enable_secret_version_with_etag]
 
     return response

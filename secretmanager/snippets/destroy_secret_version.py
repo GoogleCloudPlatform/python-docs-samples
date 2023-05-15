@@ -38,7 +38,7 @@ def destroy_secret_version(project_id, secret_id, version_id):
     # Destroy the secret version.
     response = client.destroy_secret_version(request={"name": name})
 
-    print("Destroyed secret version: {}".format(response.name))
+    print(f"Destroyed secret version: {response.name}")
     # [END secretmanager_destroy_secret_version]
 
     return response

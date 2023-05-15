@@ -46,7 +46,7 @@ def create_secret(project_id, secret_id):
     )
 
     # Print the new secret name.
-    print("Created secret: {}".format(response.name))
+    print(f"Created secret: {response.name}")
     # [END secretmanager_create_secret]
 
     return response

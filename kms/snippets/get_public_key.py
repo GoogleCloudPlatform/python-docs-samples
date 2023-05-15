@@ -51,7 +51,7 @@ def get_public_key(project_id, location_id, key_ring_id, key_id, version_id):
         raise Exception('The response received from the server was corrupted in-transit.')
     # End integrity verification
 
-    print('Public key: {}'.format(public_key.pem))
+    print(f'Public key: {public_key.pem}')
     return public_key
 
 
