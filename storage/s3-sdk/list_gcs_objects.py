@@ -17,10 +17,12 @@
 import argparse
 
 # [START storage_s3_sdk_list_objects]
-import boto3
+import boto3  # type: ignore
 
 
-def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name):
+def list_gcs_objects(
+    google_access_key_id: str, google_access_key_secret: str, bucket_name: str
+):
     """Lists GCS objects using boto3 SDK"""
     # Create a new client and do the following:
     # 1. Change the endpoint URL to use the
