@@ -153,16 +153,16 @@ def main(project, bucket, zone, instance_name, wait=True):
 
     instances = list_instances(compute, project, zone)
 
-    print('Instances in project {} and zone {}:'.format(project, zone))
+    print(f'Instances in project {project} and zone {zone}:')
     for instance in instances:
-        print(' - ' + instance['name'])
+        print(f' - {instance["name"]}')
 
-    print("""
+    print(f"""
 Instance created.
 It will take a minute or two for the instance to complete work.
-Check this URL: http://storage.googleapis.com/{}/output.png
+Check this URL: http://storage.googleapis.com/{bucket}/output.png
 Once the image is uploaded press enter to delete the instance.
-""".format(bucket))
+""")
 
     if wait:
         input()
