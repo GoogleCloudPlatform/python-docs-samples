@@ -22,8 +22,8 @@ def query_or_composite_filter(project_id: str) -> None:
     client = firestore.Client(project=project_id)
     col_ref = client.collection("users")
 
-    filter_1 = FieldFilter(u"birthYear", u"==", 1906)
-    filter_2 = FieldFilter(u"birthYear", u"==", 1912)
+    filter_1 = FieldFilter("birthYear", "==", 1906)
+    filter_2 = FieldFilter("birthYear", "==", 1912)
 
     # Create the union filter of the two filters (queries)
     or_filter = Or(filters=[filter_1, filter_2])
