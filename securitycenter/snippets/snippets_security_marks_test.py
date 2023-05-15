@@ -36,7 +36,7 @@ def asset_name(organization_id):
     client = securitycenter.SecurityCenterClient()
     # organization_id is the numeric ID of the organization.
     # organization_id=1234567777
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     assets = list(client.list_assets(request={"parent": org_name}))
     # Select a random asset to avoid collision between integration tests.
     asset = (random.sample(assets, 1)[0]).asset.name
@@ -45,7 +45,7 @@ def asset_name(organization_id):
     update = client.update_security_marks(
         request={
             "security_marks": {
-                "name": "{}/securityMarks".format(asset),
+                "name": f"{asset}/securityMarks",
                 "marks": {"other": "other_val"},
             }
         }
@@ -60,7 +60,7 @@ def source_name(organization_id):
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     source = client.create_source(
         request={
             "parent": org_name,

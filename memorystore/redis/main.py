@@ -27,7 +27,7 @@ redis_client = redis.StrictRedis(host=redis_host, port=redis_port)
 @app.route('/')
 def index():
     value = redis_client.incr('counter', 1)
-    return 'Visitor number: {}'.format(value)
+    return f'Visitor number: {value}'
 
 
 @app.errorhandler(500)

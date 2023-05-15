@@ -37,7 +37,7 @@ def list_secret_versions(project_id, secret_id):
 
     # List all secret versions.
     for version in client.list_secret_versions(request={"parent": parent}):
-        print("Found secret version: {}".format(version.name))
+        print(f"Found secret version: {version.name}")
 
 
 # [END secretmanager_list_secret_versions]

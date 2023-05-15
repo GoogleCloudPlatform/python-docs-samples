@@ -48,6 +48,6 @@ def sign_mac(project_id, location_id, key_ring_id, key_id, version_id, data):
     sign_response = client.mac_sign(
         request={'name': key_version_name, 'data': data_bytes})
 
-    print('Signature: {}'.format(base64.b64encode(sign_response.mac)))
+    print(f'Signature: {base64.b64encode(sign_response.mac)}')
     return sign_response
 # [END kms_sign_mac]

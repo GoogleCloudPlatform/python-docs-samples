@@ -64,6 +64,6 @@ def encrypt_asymmetric(project_id, location_id, key_ring_id, key_id, version_id,
 
     # Encrypt the data using the public key.
     ciphertext = rsa_key.encrypt(plaintext_bytes, pad)
-    print('Ciphertext: {}'.format(base64.b64encode(ciphertext)))
+    print(f'Ciphertext: {base64.b64encode(ciphertext)}')
     return ciphertext
 # [END kms_encrypt_asymmetric]
