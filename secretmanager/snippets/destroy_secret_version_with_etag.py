@@ -44,7 +44,7 @@ def destroy_secret_version_with_etag(project_id, secret_id, version_id, etag):
     # Destroy the secret version.
     response = client.destroy_secret_version(request=request)
 
-    print("Destroyed secret version: {}".format(response.name))
+    print(f"Destroyed secret version: {response.name}")
     # [END secretmanager_destroy_secret_version_with_etag]
 
     return response

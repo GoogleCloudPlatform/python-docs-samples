@@ -39,7 +39,7 @@ def update_secret_with_etag(project_id, secret_id, etag):
     )
 
     # Print the new secret name.
-    print("Updated secret: {}".format(response.name))
+    print(f"Updated secret: {response.name}")
     # [END secretmanager_update_secret_with_etag]
 
     return response

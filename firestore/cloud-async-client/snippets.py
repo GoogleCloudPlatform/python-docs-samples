@@ -86,7 +86,7 @@ async def add_data_types():
 
 
 # [START firestore_data_custom_type_definition_async]
-class City(object):
+class City:
     def __init__(self, name, state, country, capital=False, population=0, regions=[]):
         self.name = name
         self.state = state
