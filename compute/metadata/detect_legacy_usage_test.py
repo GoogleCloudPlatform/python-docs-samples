@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import json
+from unittest import mock
 
-import mock
 import requests
 
 import detect_legacy_usage

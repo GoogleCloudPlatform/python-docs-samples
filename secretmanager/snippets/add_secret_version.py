@@ -55,7 +55,7 @@ def add_secret_version(project_id, secret_id, payload):
     )
 
     # Print the new secret version name.
-    print("Added secret version: {}".format(response.name))
+    print(f"Added secret version: {response.name}")
     # [END secretmanager_add_secret_version]
 
     return response

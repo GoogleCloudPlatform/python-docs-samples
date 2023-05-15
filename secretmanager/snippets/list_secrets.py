@@ -36,7 +36,7 @@ def list_secrets(project_id):
 
     # List all secrets.
     for secret in client.list_secrets(request={"parent": parent}):
-        print("Found secret: {}".format(secret.name))
+        print(f"Found secret: {secret.name}")
 
 
 # [END secretmanager_list_secrets]
