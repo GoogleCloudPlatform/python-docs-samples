@@ -46,7 +46,10 @@ def list_gcs_buckets(google_access_key_id, google_access_key_secret):
     response = client.list_buckets()
 
     # Return list of bucket names
-    return response["Buckets"]
+    results = []
+    for bucket in response["Buckets"]:
+        results.append(bucket["Name"])
+    return results
 
 
 # [END storage_s3_sdk_list_buckets]
