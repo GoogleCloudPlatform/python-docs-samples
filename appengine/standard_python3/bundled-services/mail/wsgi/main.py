@@ -35,7 +35,7 @@ def HelloReceiver(environ, start_response):
 
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
-    return [b"success"]
+    return ["success".encode()]
 
 
 # [END gae_mail_handler_receive_wsgi]
@@ -55,7 +55,7 @@ def BounceReceiver(environ, start_response):
     # Return suitable response
     response = http.HTTPStatus.OK
     start_response(f"{response.value} {response.phrase}", [])
-    return [b"success"]
+    return ["success".encode()]
 
 
 # [END gae_mail_handler_bounce_wsgi]
@@ -128,7 +128,7 @@ class WSGIApplication:
             if match is not None:
                 return callable(environ, start_response)
         start_response("404 Not Found", [("Content-Type", "text/plain")])
-        return [b"Not found"]
+        return ["Not found".encode()]
 
 
 app = wrap_wsgi_app(WSGIApplication())
