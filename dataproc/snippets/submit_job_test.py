@@ -87,7 +87,12 @@ def cluster_name(cluster_client):
 
 # InvalidArgument is thrown when the subnetwork is not ready
 @backoff.on_exception(backoff.expo, (InvalidArgument, InternalServerError, ServiceUnavailable), max_tries=5)
-def test_submit_job(capsys, cluster_name):
+def test_submit_job(capsys, cluster_name, cluster_client):
+    request = dataproc.GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=cluster_name)
+    response = cluster_client.get_cluster(request=request)
+    # verify the cluster is in the RUNNING state before proceeding
+    # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
+    assert response.status.state == dataproc.ClusterStatus.State.RUNNING
     submit_job.submit_job(PROJECT_ID, REGION, cluster_name)
     out, _ = capsys.readouterr()
 
