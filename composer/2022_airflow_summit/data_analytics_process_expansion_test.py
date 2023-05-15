@@ -205,7 +205,7 @@ def bq_dataset(test_bucket):
     destination_table = BQ_CLIENT.get_table(
         BQ_DESTINATION_TABLE_ID
     )  # Make an API request.
-    print(f"Loaded {destination_table.num_rows} rows.")
+    print("Loaded {} rows.".format(destination_table.num_rows))
 
     yield
 
