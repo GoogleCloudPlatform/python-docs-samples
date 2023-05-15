@@ -15,7 +15,6 @@
 # [START job_search_create_job]
 
 from google.cloud import talent
-import six
 
 
 def create_job(
@@ -40,15 +39,15 @@ def create_job(
     # address_two = '111 8th Avenue, New York, NY 10011'
     # language_code = 'en-US'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(company_id, six.binary_type):
+    if isinstance(company_id, bytes):
         company_id = company_id.decode("utf-8")
-    if isinstance(requisition_id, six.binary_type):
+    if isinstance(requisition_id, bytes):
         requisition_id = requisition_id.decode("utf-8")
-    if isinstance(job_application_url, six.binary_type):
+    if isinstance(job_application_url, bytes):
         job_application_url = job_application_url.decode("utf-8")
     parent = f"projects/{project_id}/tenants/{tenant_id}"
     uris = [job_application_url]
@@ -68,7 +67,7 @@ def create_job(
     }
 
     response = client.create_job(parent=parent, job=job)
-    print("Created job: {}".format(response.name))
+    print(f"Created job: {response.name}")
     return response.name
 
 

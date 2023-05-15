@@ -48,7 +48,7 @@ def test_main(capsys):
     # the IAP JWT in order to expose it to this test.  Thus, this test
     # exercises both make_iap_request and validate_jwt.
     resp = make_iap_request.make_iap_request(
-        'https://{}/'.format(REFLECT_SERVICE_HOSTNAME),
+        f'https://{REFLECT_SERVICE_HOSTNAME}/',
         IAP_CLIENT_ID)
     iap_jwt = resp.split(': ').pop()
 
