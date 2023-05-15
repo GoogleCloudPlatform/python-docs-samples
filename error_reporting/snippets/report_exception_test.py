@@ -16,10 +16,8 @@
 
 import report_exception
 
-
 def test_error_sends():
     report_exception.simulate_error()
-
 
 def test_manual_error_sends():
     report_exception.report_manual_error()
