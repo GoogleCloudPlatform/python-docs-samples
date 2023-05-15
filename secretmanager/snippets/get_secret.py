@@ -44,10 +44,10 @@ def get_secret(project_id, secret_id):
     elif "user_managed" in response.replication:
         replication = "MANAGED"
     else:
-        raise "Unknown replication {}".format(response.replication)
+        raise f"Unknown replication {response.replication}"
 
     # Print data about the secret.
-    print("Got secret {} with replication policy {}".format(response.name, replication))
+    print(f"Got secret {response.name} with replication policy {replication}")
     # [END secretmanager_get_secret]
 
     return response

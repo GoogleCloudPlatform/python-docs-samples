@@ -40,7 +40,7 @@ def import_manually_wrapped_key(project_id, location_id, key_ring_id, crypto_key
         serialization.PrivateFormat.PKCS8,
         serialization.NoEncryption())
 
-    print('Generated key bytes: {}'.format(formatted_key))
+    print(f'Generated key bytes: {formatted_key}')
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
@@ -77,5 +77,5 @@ def import_manually_wrapped_key(project_id, location_id, key_ring_id, crypto_key
         "rsa_aes_wrapped_key": wrapped_kwp_key + wrapped_target_key,
     })
 
-    print('Imported: {}'.format(import_job.name))
+    print(f'Imported: {import_job.name}')
 # [END kms_import_manually_wrapped_key]
