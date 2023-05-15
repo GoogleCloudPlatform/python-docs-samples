@@ -42,6 +42,6 @@ def create_key_ring(project_id, location_id, key_ring_id):
     # Call the API.
     created_key_ring = client.create_key_ring(
         request={'parent': location_name, 'key_ring_id': key_ring_id, 'key_ring': key_ring})
-    print('Created key ring: {}'.format(created_key_ring.name))
+    print(f'Created key ring: {created_key_ring.name}')
     return created_key_ring
 # [END kms_create_key_ring]
