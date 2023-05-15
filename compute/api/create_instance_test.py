@@ -24,7 +24,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_main(capsys):
-    instance_name = 'test-instance-{}'.format(uuid.uuid4())
+    instance_name = f'test-instance-{uuid.uuid4()}'
     main(
         PROJECT,
         BUCKET,

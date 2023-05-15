@@ -18,7 +18,7 @@ import grpc
 import helloworld_pb2 as helloworld__pb2
 
 
-class GreeterStub(object):
+class GreeterStub:
   """The greeting service definition.
   """
 
@@ -40,7 +40,7 @@ class GreeterStub(object):
         )
 
 
-class GreeterServicer(object):
+class GreeterServicer:
   """The greeting service definition.
   """
 

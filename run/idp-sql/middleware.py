@@ -14,7 +14,7 @@
 
 
 from functools import wraps
-from typing import Callable, Dict, TypeVar
+from typing import Callable, TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
@@ -54,8 +54,8 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 
 
 def field_name_modifier(
-    logger: structlog._loggers.PrintLogger, log_method: str, event_dict: Dict
-) -> Dict:
+    logger: structlog._loggers.PrintLogger, log_method: str, event_dict: dict
+) -> dict:
     # Changes the keys for some of the fields, to match Cloud Logging's expectations
     event_dict["severity"] = event_dict["level"]
     del event_dict["level"]

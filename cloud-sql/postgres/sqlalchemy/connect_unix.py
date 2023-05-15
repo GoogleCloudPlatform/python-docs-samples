@@ -40,7 +40,7 @@ def connect_unix_socket() -> sqlalchemy.engine.base.Engine:
             username=db_user,
             password=db_pass,
             database=db_name,
-            query={"unix_sock": "{}/.s.PGSQL.5432".format(unix_socket_path)},
+            query={"unix_sock": f"{unix_socket_path}/.s.PGSQL.5432"},
         ),
         # [START_EXCLUDE]
         # Pool size is the maximum number of permanent connections to keep.
