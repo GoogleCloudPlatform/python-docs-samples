@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host="127.0.0.1", port=PORT, debug=True)
+    app.run(host="127.0.0.1", port=PORT, debug=False)
 
 # [END run_pubsub_server_setup]
 # [END cloudrun_pubsub_server_setup]
