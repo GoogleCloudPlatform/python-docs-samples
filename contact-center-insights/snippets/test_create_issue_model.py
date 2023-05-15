@@ -67,4 +67,4 @@ def test_create_issue_model(capsys, issue_model_resource):
     issue_model = issue_model_resource
     if issue_model:
         out, err = capsys.readouterr()
-        assert "Created {}".format(issue_model.name) in out
+        assert f"Created {issue_model.name}" in out

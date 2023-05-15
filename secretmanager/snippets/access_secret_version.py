@@ -52,7 +52,7 @@ def access_secret_version(project_id, secret_id, version_id):
     # WARNING: Do not print the secret in a production environment - this
     # snippet is showing how to access the secret material.
     payload = response.payload.data.decode("UTF-8")
-    print("Plaintext: {}".format(payload))
+    print(f"Plaintext: {payload}")
     # [END secretmanager_access_secret_version]
 
     return response

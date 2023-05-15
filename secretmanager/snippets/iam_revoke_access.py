@@ -47,7 +47,7 @@ def iam_revoke_access(project_id, secret_id, member):
     new_policy = client.set_iam_policy(request={"resource": name, "policy": policy})
 
     # Print data about the secret.
-    print("Updated IAM policy on {}".format(secret_id))
+    print(f"Updated IAM policy on {secret_id}")
     # [END secretmanager_iam_revoke_access]
 
     return new_policy
