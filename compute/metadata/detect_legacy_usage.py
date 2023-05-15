@@ -30,7 +30,7 @@ METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 # [START compute_wait_for_legacy_usage]
 def wait_for_legacy_usage(callback):
-    url = '{}/instance/legacy-endpoint-access'.format(METADATA_URL)
+    url = f'{METADATA_URL}/instance/legacy-endpoint-access'
     last_etag = '0'
     counts = None
     while True:

@@ -44,6 +44,6 @@ def generate_random_bytes(project_id, location_id, num_bytes):
     random_bytes_response = client.generate_random_bytes(
       request={'location': location_name, 'length_bytes': num_bytes, 'protection_level': protection_level})
 
-    print('Random bytes: {}'.format(base64.b64encode(random_bytes_response.data)))
+    print(f'Random bytes: {base64.b64encode(random_bytes_response.data)}')
     return random_bytes_response
 # [END kms_generate_random_bytes]
