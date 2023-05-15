@@ -21,12 +21,20 @@ import boto3
 
 
 def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name):
-    """Lists GCS objects using boto3 SDK"""
-    # Create a new client and do the following:
-    # 1. Change the endpoint URL to use the
-    #    Google Cloud Storage XML API endpoint.
-    # 2. Use Cloud Storage HMAC Credentials.
+    """Lists all Cloud Storage objects using AWS SDK for Python (boto3)
+    Positional arguments:
+    google_access_key_id          -- hash-based message authentication code (HMAC) access ID
+    google_access_key_secret      -- HMAC access secret
+    bucket_name                   -- name of Cloud Storage bucket
 
+    Returned value is a list of strings, one for each object in the bucket.
+
+    To use this sample:
+    1. Create a Cloud Storage HMAC key: https://cloud.google.com/storage/docs/authentication/managing-hmackeys#create
+    2. Change endpoint_url to a Google Cloud Storage XML API endpoint.
+
+    To learn more about HMAC: https://cloud.google.com/storage/docs/authentication/hmackeys#overview
+    """
     client = boto3.client(
         "s3",
         region_name="auto",
@@ -38,10 +46,11 @@ def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name
     # Call GCS to list objects in bucket_name
     response = client.list_objects(Bucket=bucket_name)
 
-    # Print object names
-    print("Objects:")
+    # Return list of object names in bucket
+    results = []
     for blob in response["Contents"]:
-        print(blob["Key"])
+        results.append(blob["Key"])
+    return results
 
 
 # [END storage_s3_sdk_list_objects]
