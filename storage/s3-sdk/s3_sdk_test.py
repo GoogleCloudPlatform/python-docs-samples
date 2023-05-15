@@ -85,4 +85,4 @@ def test_list_blobs(capsys, hmac_fixture, test_bucket, test_blob):
         google_access_key_secret=hmac_fixture[1],
         bucket_name=test_bucket.name,
     )
-    test_blob.name in result
+    assert test_blob.name in result
