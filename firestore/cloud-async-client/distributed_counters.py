@@ -18,7 +18,7 @@ import random
 from google.cloud import firestore
 
 
-class Shard(object):
+class Shard:
     """
     A shard is a distributed counter. Each shard can support being incremented
     once per second. Multiple shards are needed within a Counter to allow
@@ -32,7 +32,7 @@ class Shard(object):
         return {"count": self._count}
 
 
-class Counter(object):
+class Counter:
     """
     A counter stores a collection of shards which are
     summed to return a total count. This allows for more
