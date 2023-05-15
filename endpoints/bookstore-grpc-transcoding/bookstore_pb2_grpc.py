@@ -19,7 +19,7 @@ import bookstore_pb2 as bookstore__pb2
 from google.protobuf import empty_pb2 as google_dot_protobuf_dot_empty__pb2
 
 
-class BookstoreStub(object):
+class BookstoreStub:
   """A simple Bookstore API.
 
   The API manages shelves and books resources. Shelves contain books.
@@ -73,7 +73,7 @@ class BookstoreStub(object):
         )
 
 
-class BookstoreServicer(object):
+class BookstoreServicer:
   """A simple Bookstore API.
 
   The API manages shelves and books resources. Shelves contain books.

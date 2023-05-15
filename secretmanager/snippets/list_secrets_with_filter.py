@@ -39,7 +39,7 @@ def list_secrets_with_filter(project_id, filter_str):
 
     # List all secrets.
     for secret in client.list_secrets(request={"parent": parent, "filter": filter_str}):
-        print("Found secret: {}".format(secret.name))
+        print(f"Found secret: {secret.name}")
 
 
 # [END secretmanager_list_secrets_with_filter]

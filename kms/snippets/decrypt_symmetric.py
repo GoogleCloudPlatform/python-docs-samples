@@ -53,7 +53,7 @@ def decrypt_symmetric(project_id, location_id, key_ring_id, key_id, ciphertext):
         raise Exception('The response received from the server was corrupted in-transit.')
     # End integrity verification
 
-    print('Plaintext: {}'.format(decrypt_response.plaintext))
+    print(f'Plaintext: {decrypt_response.plaintext}')
     return decrypt_response
 
 

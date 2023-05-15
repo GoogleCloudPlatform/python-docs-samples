@@ -16,9 +16,9 @@
 # These tests are unit tests that mock Pub/Sub.
 import base64
 import json
+from unittest import mock
 import uuid
 
-import mock
 import pytest
 
 import main

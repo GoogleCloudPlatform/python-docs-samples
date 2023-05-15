@@ -15,7 +15,6 @@
 # [START job_search_histogram_search]
 
 from google.cloud import talent
-import six
 
 
 def search_jobs(project_id, tenant_id, query):
@@ -34,11 +33,11 @@ def search_jobs(project_id, tenant_id, query):
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # query = 'count(base_compensation, [bucket(12, 20)])'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(query, six.binary_type):
+    if isinstance(query, bytes):
         query = query.decode("utf-8")
     parent = f"projects/{project_id}/tenants/{tenant_id}"
     domain = "www.example.com"

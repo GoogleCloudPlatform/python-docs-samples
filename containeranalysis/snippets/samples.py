@@ -159,7 +159,7 @@ def get_discovery_info(resource_url, project_id):
 
     from google.cloud.devtools import containeranalysis_v1
 
-    filter_str = 'kind="DISCOVERY" AND resourceUrl="{}"'.format(resource_url)
+    filter_str = f'kind="DISCOVERY" AND resourceUrl="{resource_url}"'
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
     project_name = f"projects/{project_id}"
@@ -202,7 +202,7 @@ def get_occurrences_for_image(resource_url, project_id):
 
     from google.cloud.devtools import containeranalysis_v1
 
-    filter_str = 'resourceUrl="{}"'.format(resource_url)
+    filter_str = f'resourceUrl="{resource_url}"'
     client = containeranalysis_v1.ContainerAnalysisClient()
     grafeas_client = client.get_grafeas_client()
     project_name = f"projects/{project_id}"
@@ -250,7 +250,7 @@ class MessageReceiver:
     def pubsub_callback(self, message):
         # every time a pubsub message comes in, print it and count it
         self.msg_count += 1
-        print('Message {}: {}'.format(self.msg_count, message.data))
+        print(f'Message {self.msg_count}: {message.data}')
         message.ack()
 
 

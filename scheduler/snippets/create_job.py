@@ -35,7 +35,7 @@ def create_scheduler_job(project_id, location_id, service_id):
             "app_engine_routing": {"service": service_id},
             "relative_uri": "/log_payload",
             "http_method": 1,
-            "body": "Hello World".encode(),
+            "body": b"Hello World",
         },
         "schedule": "* * * * *",
         "time_zone": "America/Los_Angeles",
@@ -44,7 +44,7 @@ def create_scheduler_job(project_id, location_id, service_id):
     # Use the client to send the job creation request.
     response = client.create_job(request={"parent": parent, "job": job})
 
-    print("Created job: {}".format(response.name))
+    print(f"Created job: {response.name}")
     # [END cloudscheduler_create_job]
     return response
 
