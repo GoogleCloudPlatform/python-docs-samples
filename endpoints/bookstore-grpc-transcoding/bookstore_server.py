@@ -106,7 +106,7 @@ def serve(port, shutdown_grace_duration):
     store = create_sample_bookstore()
     bookstore_pb2_grpc.add_BookstoreServicer_to_server(
         BookstoreServicer(store), server)
-    server.add_insecure_port('[::]:{}'.format(port))
+    server.add_insecure_port(f'[::]:{port}')
     server.start()
 
     try:

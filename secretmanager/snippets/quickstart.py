@@ -60,7 +60,7 @@ def quickstart(_project_id=None, _secret_id=None):
     # WARNING: Do not print the secret in a production environment - this
     # snippet is showing how to access the secret material.
     payload = response.payload.data.decode("UTF-8")
-    print("Plaintext: {}".format(payload))
+    print(f"Plaintext: {payload}")
     # [END secretmanager_quickstart]
 
 

@@ -95,7 +95,7 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
     private_key_file = f'/tmp/key-{uuid.uuid4()}'
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
-    with open(f'{private_key_file}.pub', 'r') as original:
+    with open(f'{private_key_file}.pub') as original:
         public_key = original.read().strip()
 
     # Expiration time is in microseconds.

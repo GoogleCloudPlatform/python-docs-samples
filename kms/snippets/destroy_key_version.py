@@ -40,6 +40,6 @@ def destroy_key_version(project_id, location_id, key_ring_id, key_id, version_id
 
     # Call the API.
     destroyed_version = client.destroy_crypto_key_version(request={'name': key_version_name})
-    print('Destroyed key version: {}'.format(destroyed_version.name))
+    print(f'Destroyed key version: {destroyed_version.name}')
     return destroyed_version
 # [END kms_destroy_key_version]
