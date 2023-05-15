@@ -15,7 +15,6 @@
 # [START cloudrun_pubsub_server_setup]
 # [START run_pubsub_server_setup]
 # [START cloudrun_pubsub_server]
-# [START run_pubsub_server]
 
 import base64
 import os
@@ -34,7 +33,6 @@ if __name__ == "__main__":
 # [END run_pubsub_server_setup]
 # [END cloudrun_pubsub_server_setup]
 # [END cloudrun_pubsub_server]
-# [END run_pubsub_server]
 
 # [START cloudrun_pubsub_handler]
 # [START run_pubsub_handler]
