@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_pubsub_server_setup]
 # [START cloudrun_pubsub_server]
 import base64
 import os
@@ -29,7 +28,6 @@ if __name__ == "__main__":
     # application on Cloud Run. See entrypoint in Dockerfile.
     app.run(host="127.0.0.1", port=PORT, debug=False)
 
-# [END cloudrun_pubsub_server_setup]
 # [END cloudrun_pubsub_server]
 
 
