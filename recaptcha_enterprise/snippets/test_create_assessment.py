@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 # All Rights Reserved.
-
 import multiprocessing
 import os
 import re
@@ -37,8 +36,10 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 from annotate_assessment import annotate_assessment
 from create_assessment import create_assessment
+from create_mfa_assessment import create_mfa_assessment
 from create_site_key import create_site_key
 from delete_site_key import delete_site_key
+from util import get_hashed_account_id
 
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 DOMAIN_NAME = "localhost"
@@ -107,6 +108,27 @@ def test_assessment(
     annotate_assessment(project_id=GOOGLE_CLOUD_PROJECT, assessment_id=assessment_name)
     out, _ = capsys.readouterr()
     assert re.search("Annotated response sent successfully !", out)
+
+
+@pytest.mark.usefixtures("live_server")
+def test_mfa_assessment(
+        capsys: CaptureFixture, recaptcha_site_key: str, browser: WebDriver
+) -> None:
+    # Get token.
+    token, action = get_token(recaptcha_site_key, browser)
+    # Create assessment.
+    account_id = "alicebob"
+    key = "your_secret_key"
+    create_mfa_assessment(
+        project_id=GOOGLE_CLOUD_PROJECT,
+        recaptcha_site_key=recaptcha_site_key,
+        token=token,
+        recaptcha_action=action,
+        hashed_account_id=get_hashed_account_id(account_id, key),
+        email="abc@example.com",
+        phone_number="+12345678901")
+    out, _ = capsys.readouterr()
+    assert re.search("Result unspecified. Trigger MFA challenge in the client by passing the request token.", out)
 
 
 def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
