@@ -65,14 +65,14 @@ def generate_jwt():
     res = slist.execute()
     signature = base64.urlsafe_b64encode(
         base64.decodestring(res['signature']))
-    signed_jwt = '{}.{}'.format(header_and_payload, signature)
+    signed_jwt = f'{header_and_payload}.{signature}'
 
     return signed_jwt
 
 
 def make_request(signed_jwt):
     """Makes a request to the auth info endpoint for Google JWTs."""
-    headers = {'Authorization': 'Bearer {}'.format(signed_jwt)}
+    headers = {'Authorization': f'Bearer {signed_jwt}'}
     conn = httplib.HTTPSConnection(HOST)
     conn.request("GET", '/auth/info/googlejwt', None, headers)
     res = conn.getresponse()
