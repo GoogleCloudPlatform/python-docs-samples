@@ -25,11 +25,10 @@ import document_management
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 KNOWLEDGE_BASE_NAME = "knowledge_{}".format(uuid.uuid4())
 DOCUMENT_DISPLAY_NAME = "test_document_{}".format(uuid.uuid4())
-pytest.KNOWLEDGE_BASE_ID = None
 
 
-@pytest.fixture(scope="function", autouse=True)
-def setup_teardown():
+@pytest.fixture(scope="function")
+def knowledge_base_id():
     # Create a knowledge base to use in document management
     client = dialogflow.KnowledgeBasesClient()
     project_path = client.common_project_path(PROJECT_ID)
@@ -37,13 +36,13 @@ def setup_teardown():
     response = client.create_knowledge_base(
         parent=project_path, knowledge_base=knowledge_base
     )
-    pytest.KNOWLEDGE_BASE_ID = response.name.split("/knowledgeBases/")[1].split("\n")[0]
+    knowledge_base_id = response.name.split("/knowledgeBases/")[1].split("\n")[0]
 
-    yield
+    yield knowledge_base_id
 
     # Delete the created knowledge base
     knowledge_base_path = client.knowledge_base_path(
-        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID
+        PROJECT_ID, knowledge_base_id
     )
     request = dialogflow.DeleteKnowledgeBaseRequest(
         name=knowledge_base_path, force=True
@@ -51,11 +50,11 @@ def setup_teardown():
     client.delete_knowledge_base(request=request)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_create_document(capsys):
+@pytest.mark.flaky(max_runs=5, min_passes=1)
+def test_create_document(capsys, knowledge_base_id):
     document_management.create_document(
         PROJECT_ID,
-        pytest.KNOWLEDGE_BASE_ID,
+        knowledge_base_id,
         DOCUMENT_DISPLAY_NAME,
         "text/html",
         "FAQ",

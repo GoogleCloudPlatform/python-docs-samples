@@ -49,7 +49,7 @@ def test_bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-storage-s3-test-{}".format(uuid.uuid4())
+        bucket_name = f"bucket-storage-s3-test-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
@@ -60,7 +60,7 @@ def test_bucket():
 def test_blob(test_bucket):
     """Yields a blob that is deleted after the test completes."""
     bucket = test_bucket
-    blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
+    blob = bucket.blob(f"storage_snippets_test_sigil-{uuid.uuid4()}")
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
 

@@ -15,7 +15,6 @@
 # [START job_search_delete_tenant]
 
 from google.cloud import talent
-import six
 
 
 def delete_tenant(project_id, tenant_id):
@@ -26,9 +25,9 @@ def delete_tenant(project_id, tenant_id):
     # project_id = 'Your Google Cloud Project ID'
     # tenant_id = 'Your Tenant ID)'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
     name = client.tenant_path(project_id, tenant_id)
 
