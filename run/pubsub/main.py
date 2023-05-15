@@ -14,6 +14,8 @@
 
 # [START cloudrun_pubsub_server_setup]
 # [START run_pubsub_server_setup]
+# [START cloudrun_pubsub_server]
+
 import base64
 import os
 
@@ -21,8 +23,17 @@ from flask import Flask, request
 
 
 app = Flask(__name__)
+
+if __name__ == "__main__":
+    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
+
+    # This is used when running locally. Gunicorn is used to run the
+    # application on Cloud Run. See entrypoint in Dockerfile.
+    app.run(host="127.0.0.1", port=PORT, debug=True)
+
 # [END run_pubsub_server_setup]
 # [END cloudrun_pubsub_server_setup]
+# [END cloudrun_pubsub_server]
 
 
 # [START cloudrun_pubsub_handler]
@@ -53,11 +64,3 @@ def index():
 
 # [END run_pubsub_handler]
 # [END cloudrun_pubsub_handler]
-
-
-if __name__ == "__main__":
-    PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
-
-    # This is used when running locally. Gunicorn is used to run the
-    # application on Cloud Run. See entrypoint in Dockerfile.
-    app.run(host="127.0.0.1", port=PORT, debug=True)
