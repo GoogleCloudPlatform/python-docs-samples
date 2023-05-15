@@ -34,6 +34,7 @@ if __name__ == "__main__":
 # [END cloudrun_pubsub_server_setup]
 # [END cloudrun_pubsub_server]
 
+
 # [START cloudrun_pubsub_handler]
 # [START run_pubsub_handler]
 @app.route("/", methods=["POST"])
