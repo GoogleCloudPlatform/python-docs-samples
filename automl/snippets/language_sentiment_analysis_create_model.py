@@ -38,7 +38,7 @@ def create_model(project_id, dataset_id, display_name):
     # Create a model with the model metadata in the region.
     response = client.create_model(parent=project_location, model=model)
 
-    print("Training operation name: {}".format(response.operation.name))
+    print(f"Training operation name: {response.operation.name}")
     print("Training started...")
     # [END automl_language_sentiment_analysis_create_model]
     return response

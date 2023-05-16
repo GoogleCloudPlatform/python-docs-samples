@@ -52,7 +52,7 @@ CLUSTER = {
 @pytest.fixture(scope='module')
 def cluster_client():
     cluster_client = ClusterControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)}
+        client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
     )
     return cluster_client
 

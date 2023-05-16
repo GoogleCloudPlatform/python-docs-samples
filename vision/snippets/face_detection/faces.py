@@ -81,7 +81,7 @@ def main(input_filename, output_filename, max_results):
         print('Found {} face{}'.format(
             len(faces), '' if len(faces) == 1 else 's'))
 
-        print('Writing to file {}'.format(output_filename))
+        print(f'Writing to file {output_filename}')
         # Reset the file pointer, so we can read the file again
         image.seek(0)
         highlight_faces(image, faces, output_filename)
