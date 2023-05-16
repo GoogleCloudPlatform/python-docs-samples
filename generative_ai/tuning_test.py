@@ -15,10 +15,11 @@
 import os
 import uuid
 
-import pytest
 from google.cloud import aiplatform
-from google.cloud.aiplatform.compat.types import pipeline_state
 from google.cloud import storage
+from google.cloud.aiplatform.compat.types import pipeline_state
+import pytest
+
 import tuning
 
 _PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')

@@ -17,8 +17,8 @@ from typing import Union
 
 import pandas as pd
 
-import vertexai
 from google.auth import default
+import vertexai
 from vertexai.preview.language_models import TextGenerationModel
 credentials, _ = default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
