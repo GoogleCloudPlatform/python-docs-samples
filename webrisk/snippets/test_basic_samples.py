@@ -13,9 +13,7 @@
 #  limitations under the License.
 import base64
 import hashlib
-import re
 
-from _pytest.capture import CaptureFixture
 import google
 from google.cloud import webrisk_v1
 
