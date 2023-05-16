@@ -110,7 +110,7 @@ def HomePage(environ, start_response):
 
         response = http.HTTPStatus.CREATED
         start_response(f"{response.value} {response.phrase}", [])
-        return [f"Successfully sent mail to {address}.".encode()]
+        return [f"Successfully sent mail to {address}.".encode("utf-8")]
 
 
 routes = {
