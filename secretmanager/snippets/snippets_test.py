@@ -14,7 +14,7 @@
 import base64
 import os
 import time
-from typing import Generator, Tuple
+from typing import Iterator, Tuple
 import uuid
 
 from google.api_core import exceptions
@@ -66,7 +66,7 @@ def iam_user() -> str:
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
-) -> Generator[str, None, None]:
+) -> Iterator[str]:
     secret_id = f"python-secret-{uuid.uuid4()}"
 
     yield secret_id
@@ -84,7 +84,7 @@ def secret_id(
 @pytest.fixture()
 def secret(
     client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str
-) -> Generator[Tuple[str, str, str], None, None]:
+) -> Iterator[Tuple[str, str, str]]:
     print(f"creating secret {secret_id}")
 
     parent = f"projects/{project_id}"
@@ -103,7 +103,7 @@ def secret(
 @pytest.fixture()
 def secret_version(
     client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
-) -> Tuple[str, str, str, str]:
+) -> Iterator[Tuple[str, str, str, str]]:
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
