@@ -12,35 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from flask.testing import FlaskClient
 import pytest
 
 
 @pytest.fixture
-def app():
+def app() -> FlaskClient:
     import main
 
     main.app.testing = True
     return main.app.test_client()
 
 
-def test_index(app):
+def test_index(app: FlaskClient) -> None:
     r = app.get("/")
     assert r.status_code == 200
 
 
-def test_log_payload(capsys, app):
+def test_log_payload(app: FlaskClient) -> None:
     payload = "test_payload"
-
-    r = app.post("/log_payload", data=payload)
-    assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert payload in out
+    response = app.post("/log_payload", data=payload)
+    assert response.status_code == 200
+    assert payload in response
 
 
-def test_empty_payload(capsys, app):
-    r = app.post("/log_payload")
-    assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert "empty payload" in out
+def test_empty_payload(app: FlaskClient) -> None:
+    response = app.post("/log_payload")
+    assert response.status_code == 200
+    assert "empty payload" in response
