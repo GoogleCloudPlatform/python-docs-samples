@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START v2_response_streaming]
+# [START functions_response_streaming]
 from flask import Response, stream_with_context
 
 import functions_framework
@@ -44,6 +44,8 @@ def stream_big_query_output(request):
     def generate():
         for row in query_job:
             yield row[0]
+
     return Response(stream_with_context(generate()))
 
-# [END v2_response_streaming]
+
+# [END functions_response_streaming]
