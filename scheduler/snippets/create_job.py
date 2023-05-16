@@ -12,19 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudscheduler_create_job]
 
-def create_scheduler_job(project_id, location_id, service_id):
-    """Create a job with an App Engine target via the Cloud Scheduler API"""
-    # [START cloudscheduler_create_job]
-    from google.cloud import scheduler
+from google.cloud import scheduler
+from google.cloud.scheduler_v1 import Job
+
+
+def create_scheduler_job(project_id: str, location_id: str, service_id: str) -> Job:
+    """Create a job with an App Engine target via the Cloud Scheduler API.
+
+    Args:
+        project_id: The Google Cloud project id.
+        location_id: The location for the job.
+        service_id: An unique service id for the job.
+
+    Returns:
+        The created job.
+    """
 
     # Create a client.
     client = scheduler.CloudSchedulerClient()
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'PROJECT_ID'
-    # location_id = 'LOCATION_ID'
-    # service_id = 'my-service'
 
     # Construct the fully qualified location path.
     parent = f"projects/{project_id}/locations/{location_id}"
@@ -45,31 +52,6 @@ def create_scheduler_job(project_id, location_id, service_id):
     response = client.create_job(request={"parent": parent, "job": job})
 
     print(f"Created job: {response.name}")
-    # [END cloudscheduler_create_job]
     return response
 
-
-def delete_scheduler_job(project_id, location_id, job_id):
-    """Delete a job via the Cloud Scheduler API"""
-    # [START cloudscheduler_delete_job]
-    from google.api_core.exceptions import GoogleAPICallError
-    from google.cloud import scheduler
-
-    # Create a client.
-    client = scheduler.CloudSchedulerClient()
-
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'PROJECT_ID'
-    # location_id = 'LOCATION_ID'
-    # job_id = 'JOB_ID'
-
-    # Construct the fully qualified job path.
-    job = f"projects/{project_id}/locations/{location_id}/jobs/{job_id}"
-
-    # Use the client to send the job deletion request.
-    try:
-        client.delete_job(name=job)
-        print("Job deleted.")
-    except GoogleAPICallError as e:
-        print("Error: %s" % e)
-    # [END cloudscheduler_delete_job]
+# [END cloudscheduler_create_job]
