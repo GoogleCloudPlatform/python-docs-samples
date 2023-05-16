@@ -40,8 +40,6 @@ from typing import NamedTuple, TypeVar
 # - typing.re.Pattern --> re.Pattern
 
 # WARNING: Not idempotent! Running multiple times might not work.
-# - AbstractSet is converted into Set, which "collides" with the builtin set.
-#       Fix: only patch types imported by `typing`
 # - Optional and Union are converted to `|` syntax.
 #       Fix: support `|` types on parser
 
@@ -120,9 +118,12 @@ class TypeHint(NamedTuple):
             case (name, args):
                 return f"{name}[{', '.join(map(str, args))}]"
 
-    def patch(self) -> TypeHint:
-        name = RENAME_TYPES.get(self.name, self.name)
-        return TypeHint(name, [arg.patch() for arg in self.args])
+    def patch(self, types: set[str]) -> TypeHint:
+        if self.name in types:
+            name = RENAME_TYPES.get(self.name, self.name)
+        else:
+            name = self.name
+        return TypeHint(name, [arg.patch(types) for arg in self.args])
 
 
 def list_files(root_dir: str, ext: list[str], exclude: list[str] = []) -> Iterator[str]:
@@ -140,15 +141,16 @@ def patch_file(file_path: str, dry_run: bool = False, quiet: bool = False) -> No
         before = f.read()
     try:
         lines = [line.rstrip() for line in before.splitlines()]
-        if any(line.startswith("from typing import ") for line in lines):
+        if types := find_typing_imports(lines):
             lines = insert_import_annotations(lines)
             lines = [patched for line in lines for patched in patch_imports(line)]
             lines = sort_imports(lines)
-            after = patch_type_hints("\n".join(lines)) + "\n"
+            after = patch_type_hints("\n".join(lines), types) + "\n"
             if not dry_run:
-                with open(file_path, "w") as f:
-                    f.write(after)
-                print(file_path)
+                if before != after:
+                    with open(file_path, "w") as f:
+                        f.write(after)
+                    print(file_path)
             elif not quiet:
                 print(f"| {file_path}")
                 print(f"+--{'-' * len(file_path)}")
@@ -179,6 +181,15 @@ def insert_import_annotations(lines: list[str]) -> list[str]:
             if lines[i].startswith("from __future__ import "):
                 return lines[:i] + [new_import] + lines[i:]
             return lines[:i] + [new_import, ""] + lines[i:]
+
+
+def find_typing_imports(lines: list[str]) -> set[str]:
+    return {
+        name.strip()
+        for line in lines
+        if line.startswith("from typing import ")
+        for name in line.split("import")[1].split(",")
+    }
 
 
 def find_import(lines: list[str]) -> int | None:
@@ -220,9 +231,7 @@ def patch_imports(line: str) -> Iterator[str]:
         yield line
         return
 
-    _, import_str = line.split("import")
-    types = {name.strip() for name in import_str.split(",")}
-
+    types = find_typing_imports([line])
     collections_types = types.intersection(COLLECTIONS_TYPES)
     collections_abc_types = types.intersection(COLLECTIONS_ABC_TYPES)
     contextlib_types = types.intersection(CONTEXTLIB_TYPES)
@@ -255,10 +264,10 @@ def patch_imports(line: str) -> Iterator[str]:
         yield f"from typing import {', '.join(names)}"
 
 
-def patch_type_hints(txt: str) -> str:
+def patch_type_hints(txt: str, types: set[str]) -> str:
     if m := re.search(rf"(?:->|:) *(\w+)", txt):
         (typ, left) = parse_type_hint(txt[m.start(1) :])
-        return f"{txt[:m.start(1)]}{typ.patch()}{patch_type_hints(left)}"
+        return f"{txt[:m.start(1)]}{typ.patch(types)}{patch_type_hints(left, types)}"
     return txt
 
 
