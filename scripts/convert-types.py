@@ -305,6 +305,9 @@ def run(patterns: list[str], dry_run: bool = False, quiet: bool = False):
 if __name__ == "__main__":
     import argparse
 
+    assert sys.version_info.major == 3, "Requires Python 3"
+    assert sys.version_info.minor >= 10, "Requires Python >= 3.10 for pattern matching"
+
     parser = argparse.ArgumentParser()
     parser.add_argument("patterns", nargs="*", default=["**/*.py"])
     parser.add_argument("--dry-run", action="store_true")
