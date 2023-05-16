@@ -26,7 +26,7 @@ def list_feeds(parent_resource):
 
     client = asset_v1.AssetServiceClient()
     response = client.list_feeds(request={"parent": parent_resource})
-    print("feeds: {}".format(response.feeds))
+    print(f"feeds: {response.feeds}")
     # [END asset_quickstart_list_feeds]
 
 

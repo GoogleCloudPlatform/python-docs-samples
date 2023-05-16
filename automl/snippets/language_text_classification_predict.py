@@ -36,8 +36,8 @@ def predict(project_id, model_id, content):
     response = prediction_client.predict(name=model_full_id, payload=payload)
 
     for annotation_payload in response.payload:
-        print(u"Predicted class name: {}".format(annotation_payload.display_name))
+        print(f"Predicted class name: {annotation_payload.display_name}")
         print(
-            u"Predicted class score: {}".format(annotation_payload.classification.score)
+            f"Predicted class score: {annotation_payload.classification.score}"
         )
     # [END automl_language_text_classification_predict]

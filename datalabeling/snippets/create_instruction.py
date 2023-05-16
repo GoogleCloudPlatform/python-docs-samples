@@ -56,15 +56,15 @@ def create_instruction(project_id, data_type, instruction_gcs_uri):
 
     # The format of the resource name:
     # project_id/{project_id}/instruction/{instruction_id}
-    print("The instruction resource name: {}".format(result.name))
-    print("Display name: {}".format(result.display_name))
-    print("Description: {}".format(result.description))
+    print(f"The instruction resource name: {result.name}")
+    print(f"Display name: {result.display_name}")
+    print(f"Description: {result.description}")
     print("Create time:")
-    print("\tseconds: {}".format(result.create_time.timestamp_pb().seconds))
-    print("\tnanos: {}".format(result.create_time.timestamp_pb().nanos))
-    print("Data type: {}".format(datalabeling.DataType(result.data_type).name))
+    print(f"\tseconds: {result.create_time.timestamp_pb().seconds}")
+    print(f"\tnanos: {result.create_time.timestamp_pb().nanos}")
+    print(f"Data type: {datalabeling.DataType(result.data_type).name}")
     print("Pdf instruction:")
-    print("\tGcs file uri: {}\n".format(result.pdf_instruction.gcs_file_uri))
+    print(f"\tGcs file uri: {result.pdf_instruction.gcs_file_uri}\n")
 
     return result
 

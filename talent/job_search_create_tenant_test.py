@@ -21,7 +21,7 @@ import job_search_create_tenant
 import job_search_delete_tenant
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TENANT_EXT_UNIQUE_ID = "TEST_TENANT_{}".format(uuid.uuid4())
+TENANT_EXT_UNIQUE_ID = f"TEST_TENANT_{uuid.uuid4()}"
 
 
 def test_create_tenant(capsys, cleaner):

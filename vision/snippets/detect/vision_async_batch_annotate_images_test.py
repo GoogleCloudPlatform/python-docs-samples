@@ -24,8 +24,8 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 GCS_ROOT = "gs://cloud-samples-data/vision/"
 
 BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
-OUTPUT_PREFIX = "TEST_OUTPUT_{}".format(uuid.uuid4())
-GCS_DESTINATION_URI = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
+OUTPUT_PREFIX = f"TEST_OUTPUT_{uuid.uuid4()}"
+GCS_DESTINATION_URI = f"gs://{BUCKET}/{OUTPUT_PREFIX}/"
 
 
 @pytest.fixture()
