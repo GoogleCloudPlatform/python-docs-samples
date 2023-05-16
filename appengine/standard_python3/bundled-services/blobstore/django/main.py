@@ -65,15 +65,13 @@ def upload_form(request):
     """Create the HTML form to upload a file."""
     upload_url = blobstore.create_upload_url("/upload_photo")
 
-    response = """
+    response = f"""
   <html><body>
-  <form action="{}" method="POST" enctype="multipart/form-data">
+  <form action="{upload_url}" method="POST" enctype="multipart/form-data">
     Upload File: <input type="file" name="file"><br>
     <input type="submit" name="submit" value="Submit">
   </form>
-  </body></html>""".format(
-        upload_url
-    )
+  </body></html>"""
 
     return HttpResponse(response)
 
