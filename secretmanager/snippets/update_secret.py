@@ -15,6 +15,8 @@
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_update_secret]
 def update_secret(project_id: str, secret_id: str) -> secretmanager.UpdateSecretRequest:

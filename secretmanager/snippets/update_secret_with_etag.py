@@ -15,6 +15,8 @@
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_update_secret_with_etag]
 def update_secret_with_etag(
