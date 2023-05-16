@@ -18,9 +18,10 @@ from typing import Union
 import pandas as pd
 
 import vertexai
+from google.auth import default
 from vertexai.preview.language_models import TextGenerationModel
+credentials, _ = default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
-from google.cloud import aiplatform
 
 def tuning(
     project_id: str,
@@ -45,10 +46,14 @@ def tuning(
     Args:
       project_id: GCP Project ID, used to initialize vertexai
       location: GCP Region, used to initialize vertexai
-      training_data: GCS URI of training file or pandas dataframe of training data
+      training_data: GCS URI of jsonl file or pandas dataframe of training data
       train_steps: Number of training steps to use when tuning the model.
     """
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(
+        project=project_id,
+        location=location,
+        credentials=credentials
+    )
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
