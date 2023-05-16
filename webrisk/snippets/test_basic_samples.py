@@ -28,18 +28,25 @@ PROJECT = google.auth.default()[1]
 
 
 def test_search_uri_with_threat(capsys: CaptureFixture) -> None:
-    search_uri("http://testsafebrowsing.appspot.com/s/malware.html", webrisk_v1.ThreatType.MALWARE)
-    assert re.search("The URI has the following threat: ", capsys.readouterr().out)
+    response = search_uri(
+        "http://testsafebrowsing.appspot.com/s/malware.html",
+        webrisk_v1.ThreatType.MALWARE,
+    )
+    assert response.threat.threat_types
 
 
 def test_search_uri_without_threat(capsys: CaptureFixture) -> None:
-    search_uri("http://testsafebrowsing.appspot.com/malware.html", webrisk_v1.ThreatType.MALWARE)
-    assert re.search("The URL is safe!", capsys.readouterr().out)
+    response = search_uri(
+        "http://testsafebrowsing.appspot.com/malware.html",
+        webrisk_v1.ThreatType.MALWARE,
+    )
+    assert not response.threat.threat_types
 
 
 def test_submit_uri(capsys: CaptureFixture) -> None:
-    submit_uri(PROJECT, "http://testsafebrowsing.appspot.com/s/malware.html")
-    assert re.search("Submission response: ", capsys.readouterr().out)
+    malware_uri = "http://testsafebrowsing.appspot.com/s/malware.html"
+    response = submit_uri(PROJECT, malware_uri)
+    assert response.uri == malware_uri
 
 
 def test_search_hashes(capsys: CaptureFixture) -> None:
@@ -48,10 +55,12 @@ def test_search_hashes(capsys: CaptureFixture) -> None:
     sha256.update(base64.urlsafe_b64encode(bytes(uri, "utf-8")))
     hex_string = sha256.digest()
 
+    # The hash list may or may not be empty. Hence, no assertion is required as long as the code runs to completion.
     search_hashes(hex_string, webrisk_v1.ThreatType.MALWARE)
-    assert re.search("Completed searching threat hashes.", capsys.readouterr().out)
 
 
 def test_compute_threatdiff_list(capsys: CaptureFixture) -> None:
-    compute_threatlist_diff(webrisk_v1.ThreatType.MALWARE, b'', 1024, 1024, webrisk_v1.CompressionType.RAW)
-    assert re.search("Obtained threat list diff.", capsys.readouterr().out)
+    response = compute_threatlist_diff(
+        webrisk_v1.ThreatType.MALWARE, b"", 1024, 1024, webrisk_v1.CompressionType.RAW
+    )
+    assert response.response_type

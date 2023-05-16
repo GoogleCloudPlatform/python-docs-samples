@@ -14,6 +14,7 @@
 
 # [START webrisk_compute_threatlist_diff]
 from google.cloud import webrisk_v1
+from google.cloud.webrisk_v1 import ComputeThreatListDiffResponse
 
 
 def compute_threatlist_diff(
@@ -22,7 +23,7 @@ def compute_threatlist_diff(
     max_diff_entries: int,
     max_database_entries: int,
     compression_type: webrisk_v1.CompressionType,
-) -> None:
+) -> ComputeThreatListDiffResponse:
     """Gets the most recent threat list diffs. These diffs should be applied to a local database of
     hashes to keep it up-to-date.
 
@@ -50,6 +51,10 @@ def compute_threatlist_diff(
 
         compression_type: The compression type supported by the client.
             compression_type = webrisk_v1.CompressionType.RAW
+
+    Returns:
+        The response which contains the diff between local and remote threat lists. In addition to the threat list,
+        the response also contains the version token and the recommended time for next diff.
     """
 
     webrisk_client = webrisk_v1.WebRiskServiceClient()
@@ -70,12 +75,12 @@ def compute_threatlist_diff(
     # https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#computethreatlistdiffresponse
     # Type of response: DIFF/ RESET/ RESPONSE_TYPE_UNSPECIFIED
     print(response.response_type)
-
     # New version token to be used the next time when querying.
     print(response.new_version_token)
-
     # Recommended next diff timestamp.
     print(response.recommended_next_diff)
 
-    print("Obtained threat list diff.")
+    return response
+
+
 # [END webrisk_compute_threatlist_diff]
