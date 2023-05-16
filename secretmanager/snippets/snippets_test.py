@@ -16,9 +16,9 @@ import os
 import time
 import uuid
 
-import pytest
 from google.api_core import exceptions
 from google.cloud import secretmanager
+import pytest
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version

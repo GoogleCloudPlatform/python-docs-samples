@@ -18,8 +18,8 @@ command line application and sample code for accessing a secret version.
 
 import argparse
 
-import google_crc32c  # type: ignore
 from google.cloud import secretmanager
+import google_crc32c  # type: ignore
 
 
 # [START secretmanager_access_secret_version]

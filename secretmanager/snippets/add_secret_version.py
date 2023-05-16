@@ -19,8 +19,8 @@ specified payload to an existing secret.
 
 import argparse
 
-import google_crc32c  # type: ignore
 from google.cloud import secretmanager
+import google_crc32c  # type: ignore
 
 
 # [START secretmanager_add_secret_version]
