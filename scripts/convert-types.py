@@ -296,7 +296,7 @@ def parse_type_hint(src: str) -> tuple[TypeHint, str]:
 
 def run(patterns: list[str], dry_run: bool = False, quiet: bool = False):
     for pattern in patterns:
-        for filename in glob(pattern):
+        for filename in glob(pattern, recursive=True):
             patch_file(filename, dry_run, quiet)
 
 
