@@ -18,12 +18,12 @@ user managed replication.
 """
 
 import argparse
-
+import typing
 from google.cloud import secretmanager
 
 
 def create_ummr_secret(
-    project_id: str, secret_id: str, locations: list[str]
+    project_id: str, secret_id: str, locations: typing.List[str]
 ) -> secretmanager.CreateSecretRequest:
     """
     Create a new secret with the given name. A secret is a logical wrapper
