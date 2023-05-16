@@ -102,8 +102,8 @@ def secret(
 
 @pytest.fixture()
 def secret_version(
-    client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, dict]
-):
+    client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
+) -> Tuple[str, str, str, str]:
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
@@ -138,13 +138,13 @@ def test_quickstart(project_id: str, secret_id: str) -> None:
     quickstart(project_id, secret_id)
 
 
-def test_access_secret_version(secret_version) -> None:
+def test_access_secret_version(secret_version: Tuple[str, str, str, str]) -> None:
     project_id, secret_id, version_id, _ = secret_version
     version = access_secret_version(project_id, secret_id, version_id)
     assert version.payload.data == b"hello world!"
 
 
-def test_add_secret_version(secret) -> None:
+def test_add_secret_version(secret: Tuple[str, str, str]) -> None:
     project_id, secret_id, _ = secret
     payload = "test123"
     version = add_secret_version(project_id, secret_id, payload)
@@ -167,7 +167,7 @@ def test_create_secret_with_user_managed_replication(
 
 
 def test_delete_secret(
-    client: secretmanager.SecretManagerServiceClient, secret
+    client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
 ) -> None:
     project_id, secret_id, _ = secret
     delete_secret(project_id, secret_id)
@@ -178,7 +178,7 @@ def test_delete_secret(
 
 
 def test_delete_secret_with_etag(
-    client: secretmanager.SecretManagerServiceClient, secret
+    client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
 ) -> None:
     project_id, secret_id, etag = secret
     delete_secret_with_etag(project_id, secret_id, etag)
@@ -189,7 +189,8 @@ def test_delete_secret_with_etag(
 
 
 def test_destroy_secret_version(
-    client: secretmanager.SecretManagerServiceClient, secret_version
+    client: secretmanager.SecretManagerServiceClient,
+    secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, _ = secret_version
     version = destroy_secret_version(project_id, secret_id, version_id)
@@ -197,7 +198,8 @@ def test_destroy_secret_version(
 
 
 def test_destroy_secret_version_with_etag(
-    client: secretmanager.SecretManagerServiceClient, secret_version
+    client: secretmanager.SecretManagerServiceClient,
+    secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, etag = secret_version
     version = destroy_secret_version_with_etag(project_id, secret_id, version_id, etag)
@@ -205,7 +207,8 @@ def test_destroy_secret_version_with_etag(
 
 
 def test_enable_disable_secret_version(
-    client: secretmanager.SecretManagerServiceClient, secret_version
+    client: secretmanager.SecretManagerServiceClient,
+    secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, _ = secret_version
     version = disable_secret_version(project_id, secret_id, version_id)
@@ -216,7 +219,8 @@ def test_enable_disable_secret_version(
 
 
 def test_enable_disable_secret_version_with_etag(
-    client: secretmanager.SecretManagerServiceClient, secret_version
+    client: secretmanager.SecretManagerServiceClient,
+    secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, etag = secret_version
     version = disable_secret_version_with_etag(project_id, secret_id, version_id, etag)
@@ -229,7 +233,8 @@ def test_enable_disable_secret_version_with_etag(
 
 
 def test_get_secret_version(
-    client: secretmanager.SecretManagerServiceClient, secret_version
+    client: secretmanager.SecretManagerServiceClient,
+    secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, _ = secret_version
     version = get_secret_version(project_id, secret_id, version_id)
@@ -237,14 +242,18 @@ def test_get_secret_version(
     assert version_id in version.name
 
 
-def test_get_secret(client: secretmanager.SecretManagerServiceClient, secret) -> None:
+def test_get_secret(
+    client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
+) -> None:
     project_id, secret_id, _ = secret
     snippet_secret = get_secret(project_id, secret_id)
     assert secret_id in snippet_secret.name
 
 
 def test_iam_grant_access(
-    client: secretmanager.SecretManagerServiceClient, secret, iam_user
+    client: secretmanager.SecretManagerServiceClient,
+    secret: Tuple[str, str, str],
+    iam_user: str,
 ) -> None:
     project_id, secret_id, _ = secret
     policy = iam_grant_access(project_id, secret_id, iam_user)
@@ -252,14 +261,20 @@ def test_iam_grant_access(
 
 
 def test_iam_revoke_access(
-    client: secretmanager.SecretManagerServiceClient, secret, iam_user
+    client: secretmanager.SecretManagerServiceClient,
+    secret: Tuple[str, str, str],
+    iam_user: str,
 ) -> None:
     project_id, secret_id, _ = secret
     policy = iam_revoke_access(project_id, secret_id, iam_user)
     assert not any(iam_user in b.members for b in policy.bindings)
 
 
-def test_list_secret_versions(capsys, secret_version, another_secret_version) -> None:
+def test_list_secret_versions(
+    capsys: pytest.LogCaptureFixture,
+    secret_version: Tuple[str, str, str, str],
+    another_secret_version: Tuple[str, str, str, str],
+) -> None:
     project_id, secret_id, version_id, _ = secret_version
     version_1 = get_secret_version(project_id, secret_id, version_id)
     _, _, another_version_id, _ = another_secret_version
@@ -273,7 +288,9 @@ def test_list_secret_versions(capsys, secret_version, another_secret_version) ->
 
 
 def test_list_secret_versions_with_filter(
-    capsys, secret_version, another_secret_version
+    capsys: pytest.LogCaptureFixture,
+    secret_version: Tuple[str, str, str, str],
+    another_secret_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, secret_id, version_id, _ = secret_version
     enabled = get_secret_version(project_id, secret_id, version_id)
@@ -288,16 +305,20 @@ def test_list_secret_versions_with_filter(
     assert f"Found secret version: {disabled.name}" not in out
 
 
-def test_list_secrets(capsys, secret) -> None:
+def test_list_secrets(
+    capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str]
+) -> None:
     project_id, secret_id, _ = secret
-    secret = get_secret(project_id, secret_id)
+    got_secret = get_secret(project_id, secret_id)
     list_secrets(project_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found secret: {secret.name}" in out
+    assert f"Found secret: {got_secret.name}" in out
 
 
-def test_list_secrets_with_filter(capsys, secret) -> None:
+def test_list_secrets_with_filter(
+    capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str]
+) -> None:
     project_id, secret_id, _ = secret
     unlabeled = get_secret(project_id, secret_id)
     list_secrets_with_filter(project_id, "labels.secretmanager:rocks")
@@ -313,26 +334,26 @@ def test_list_secrets_with_filter(capsys, secret) -> None:
     assert f"Found secret: {labeled.name}" in out
 
 
-def test_update_secret(secret) -> None:
+def test_update_secret(secret: Tuple[str, str, str]) -> None:
     project_id, secret_id, _ = secret
-    secret = update_secret(project_id, secret_id)
-    assert secret.labels["secretmanager"] == "rocks"
+    updated_secret = update_secret(project_id, secret_id)
+    assert updated_secret.labels["secretmanager"] == "rocks"
 
 
-def test_consume_event_notification(pubsub_message) -> None:
+def test_consume_event_notification(pubsub_message: dict) -> None:
     got = consume_event_notification(pubsub_message, None)
     assert (
         got == "Received SECRET_UPDATE for projects/p/secrets/s. New metadata: hello!"
     )
 
 
-def test_update_secret_with_etag(secret) -> None:
+def test_update_secret_with_etag(secret: Tuple[str, str, str]) -> None:
     project_id, secret_id, etag = secret
-    secret = update_secret_with_etag(project_id, secret_id, etag)
-    assert secret.labels["secretmanager"] == "rocks"
+    updated_secret = update_secret_with_etag(project_id, secret_id, etag)
+    assert updated_secret.labels["secretmanager"] == "rocks"
 
 
-def test_update_secret_with_alias(secret_version) -> None:
+def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> None:
     project_id, secret_id, version_id, _ = secret_version
     secret = update_secret_with_alias(project_id, secret_id)
     assert secret.version_aliases["test"] == 1
