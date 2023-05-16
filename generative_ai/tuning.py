@@ -20,6 +20,7 @@ import pandas as pd
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel
 
+from google.cloud import aiplatform
 
 def tuning(
     project_id: str,
@@ -55,15 +56,12 @@ def tuning(
       # Optional:
       train_steps=train_steps,
       tuning_job_location="europe-west4",
-      tuned_model_location="us-central1",
+      tuned_model_location=location,
     )
 
-    # Test the tuned model:
-    response = model.predict("Tell me some ideas combining VR and fitness:")
-    print(f"Response from Model: {response.text}")
+    print(model._job.status)
 # [END aiplatform_sdk_tuning]
-
-    return response
+    return model
 
 
 if __name__ == "__main__":
