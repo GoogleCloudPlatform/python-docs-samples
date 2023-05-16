@@ -24,9 +24,9 @@ def compute_threatlist_diff(
     max_database_entries: int,
     compression_type: webrisk_v1.CompressionType,
 ) -> ComputeThreatListDiffResponse:
-    """Gets the most recent threat list diffs. These diffs should be applied to a local database of
-    hashes to keep it up-to-date.
-
+    """Gets the most recent threat list diffs. 
+    
+    These diffs should be applied to a local database of hashes to keep it up-to-date. 
     If the local database is empty or excessively out-of-date,
     a complete snapshot of the database will be returned. This Method only updates a
     single ThreatList at a time. To update multiple ThreatList databases, this method needs to be
