@@ -33,10 +33,10 @@ def test_log_payload(app: FlaskClient) -> None:
     payload = "test_payload"
     response = app.post("/log_payload", data=payload)
     assert response.status_code == 200
-    assert payload in response
+    assert payload in response.response
 
 
 def test_empty_payload(app: FlaskClient) -> None:
     response = app.post("/log_payload")
     assert response.status_code == 200
-    assert "empty payload" in response
+    assert "empty payload" in response.response
