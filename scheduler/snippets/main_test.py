@@ -17,26 +17,26 @@ import pytest
 
 
 @pytest.fixture
-def app():
+def app() -> FlaskClient:
     import main
 
     main.app.testing = True
     return main.app.test_client()
 
 
-def test_index(app) -> None:
+def test_index(app: FlaskClient) -> None:
     r = app.get("/")
     assert r.status_code == 200
 
 
-def test_log_payload(app) -> None:
+def test_log_payload(app: FlaskClient) -> None:
     payload = "test_payload"
     response = app.post("/log_payload", data=payload)
     assert response.status_code == 200
     assert payload in response.text
 
 
-def test_empty_payload(app) -> None:
+def test_empty_payload(app: FlaskClient) -> None:
     response = app.post("/log_payload")
     assert response.status_code == 200
     assert "empty payload" in response.text
