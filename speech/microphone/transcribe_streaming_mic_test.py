@@ -17,12 +17,12 @@ import re
 import threading
 import time
 
-import mock
+from unittest import mock
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-class MockPyAudio(object):
+class MockPyAudio:
     def __init__(self, audio_filename):
         self.audio_filename = audio_filename
 

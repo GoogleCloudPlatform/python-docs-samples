@@ -38,7 +38,7 @@ def disable_secret_version(project_id, secret_id, version_id):
     # Disable the secret version.
     response = client.disable_secret_version(request={"name": name})
 
-    print("Disabled secret version: {}".format(response.name))
+    print(f"Disabled secret version: {response.name}")
     # [END secretmanager_disable_secret_version]
 
     return response

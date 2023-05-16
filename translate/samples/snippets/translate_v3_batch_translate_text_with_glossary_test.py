@@ -62,7 +62,7 @@ def test_batch_translate_text_with_glossary(capsys, bucket):
 
     translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
         "gs://cloud-samples-data/translation/text_with_glossary.txt",
-        "gs://{}/translation/BATCH_TRANSLATION_GLOS_OUTPUT/".format(bucket.name),
+        f"gs://{bucket.name}/translation/BATCH_TRANSLATION_GLOS_OUTPUT/",
         PROJECT_ID,
         GLOSSARY_ID,
         MAX_TIMEOUT,
