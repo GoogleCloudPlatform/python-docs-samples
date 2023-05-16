@@ -122,11 +122,13 @@ def patch_file(file_path: str, dry_run: bool = False, quiet: bool = False) -> No
             lines = [patched for line in lines for patched in patch_imports(line)]
             lines = sort_imports(lines)
             after = patch_type_hints("\n".join(lines), types) + "\n"
+            if before == after:
+                return
+
             if not dry_run:
-                if before != after:
-                    with open(file_path, "w") as f:
-                        f.write(after)
-                    print(file_path)
+                with open(file_path, "w") as f:
+                    f.write(after)
+                print(file_path)
             elif not quiet:
                 print(f"| {file_path}")
                 print(f"+--{'-' * len(file_path)}")
