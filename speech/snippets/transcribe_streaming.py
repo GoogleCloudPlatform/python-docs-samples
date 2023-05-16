@@ -24,13 +24,12 @@ import argparse
 # [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file):
     """Streams transcription of the given audio file."""
-    import io
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
     # [START speech_python_migration_streaming_request]
-    with io.open(stream_file, "rb") as audio_file:
+    with open(stream_file, "rb") as audio_file:
         content = audio_file.read()
 
     # In practice, stream should be a generator yielding chunks of audio data.
@@ -61,13 +60,13 @@ def transcribe_streaming(stream_file):
         # is_final result. The other results will be for subsequent portions of
         # the audio.
         for result in response.results:
-            print("Finished: {}".format(result.is_final))
-            print("Stability: {}".format(result.stability))
+            print(f"Finished: {result.is_final}")
+            print(f"Stability: {result.stability}")
             alternatives = result.alternatives
             # The alternatives are ordered from most likely to least.
             for alternative in alternatives:
-                print("Confidence: {}".format(alternative.confidence))
-                print("Transcript: {}".format(alternative.transcript))
+                print(f"Confidence: {alternative.confidence}")
+                print(f"Transcript: {alternative.transcript}")
     # [END speech_python_migration_streaming_response]
 
 
