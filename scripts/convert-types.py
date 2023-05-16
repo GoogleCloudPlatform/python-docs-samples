@@ -26,9 +26,8 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 import difflib
-from fnmatch import fnmatch
+from glob import glob
 import logging
-import os
 import re
 import sys
 from typing import NamedTuple, TypeVar
@@ -36,23 +35,10 @@ from typing import NamedTuple, TypeVar
 # Cases not covered:
 # - Multi-line imports like `from M import (\nA,\nB,\n)`
 # - Importing `typing` directly like `import typing` and `x: typing.Any`
+# - Parsing types with `|` syntax like Union or Optional
 # - typing.re.Match --> re.Match
 # - typing.re.Pattern --> re.Pattern
 
-# WARNING: Not idempotent! Running multiple times might not work.
-# - Optional and Union are converted to `|` syntax.
-#       Fix: support `|` types on parser
-
-
-EXTENSIONS = ["py"]
-EXCLUDE_DIRS = [
-    ".git",
-    ".github",
-    ".kokoro",
-    ".nox",
-    ".vscode",
-    "env",
-]
 
 BUILTIN_TYPES = {"Tuple", "List", "Dict", "Set", "FrozenSet", "Type"}
 COLLECTIONS_TYPES = {"Deque", "DefaultDict", "OrderedDict", "Counter", "ChainMap"}
@@ -124,16 +110,6 @@ class TypeHint(NamedTuple):
         else:
             name = self.name
         return TypeHint(name, [arg.patch(types) for arg in self.args])
-
-
-def list_files(root_dir: str, ext: list[str], exclude: list[str] = []) -> Iterator[str]:
-    for root, _, files in os.walk(root_dir):
-        for file_name in files:
-            file_path = os.path.join(root, file_name)
-            if any(fnmatch(file_path, f"*/{pattern}/*") for pattern in exclude):
-                continue
-            if any(file_path.endswith(x) for x in ext):
-                yield file_path
 
 
 def patch_file(file_path: str, dry_run: bool = False, quiet: bool = False) -> None:
@@ -279,7 +255,7 @@ def parse_text(src: str, txt: str) -> tuple[str, str]:
 
 
 def parse_identifier(src: str) -> tuple[str, str]:
-    if m := re.search(r"\w+", src):
+    if m := re.search(r"[\w\._]+", src):
         return (m.group(), src[m.end() :])
     raise SyntaxError("name")
 
@@ -318,16 +294,17 @@ def parse_type_hint(src: str) -> tuple[TypeHint, str]:
         return (TypeHint(name, []), src)
 
 
-def run(root_dir: str, dry_run: bool = False, quiet: bool = False):
-    for file_name in list_files(root_dir, EXTENSIONS, EXCLUDE_DIRS):
-        patch_file(file_name, dry_run, quiet)
+def run(patterns: list[str], dry_run: bool = False, quiet: bool = False):
+    for pattern in patterns:
+        for filename in glob(pattern):
+            patch_file(filename, dry_run, quiet)
 
 
 if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser()
-    parser.add_argument("root_dir", nargs="?", default=os.getcwd())
+    parser.add_argument("patterns", nargs="*", default=["**/*.py"])
     parser.add_argument("--dry-run", action="store_true")
     parser.add_argument("--quiet", action="store_true")
     args = parser.parse_args()
