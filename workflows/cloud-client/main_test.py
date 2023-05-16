@@ -24,36 +24,33 @@ LOCATION = "us-central1"
 WORKFLOW_ID = "myFirstWorkflow"
 
 
-def test_workflow_execution():
+def test_workflow_execution() -> None:
     assert PROJECT != ""
 
     if not workflow_exists():
         workflow_file = open("myFirstWorkflow.workflows.yaml").read()
 
         workflows_client = workflows_v1.WorkflowsClient()
-        workflows_client.create_workflow(request={
-            # Manually construct the location
-            # https://github.com/googleapis/python-workflows/issues/21
-            "parent": f'projects/{PROJECT}/locations/{LOCATION}',
-            "workflow_id": WORKFLOW_ID,
-            "workflow": {
-                "name": WORKFLOW_ID,
-                "source_contents": workflow_file
+        workflows_client.create_workflow(
+            request={
+                # Manually construct the location
+                # https://github.com/googleapis/python-workflows/issues/21
+                "parent": f"projects/{PROJECT}/locations/{LOCATION}",
+                "workflow_id": WORKFLOW_ID,
+                "workflow": {"name": WORKFLOW_ID, "source_contents": workflow_file},
             }
-        })
+        )
 
     result = main.execute_workflow(PROJECT)
     assert result.state == executions.Execution.State.SUCCEEDED
     assert len(result.result) > 0
 
 
-def workflow_exists():
-    """Returns True if the workflow exists in this project
-    """
+def workflow_exists() -> bool:
+    """Returns True if the workflow exists in this project"""
     try:
         workflows_client = workflows_v1.WorkflowsClient()
-        workflow_name = workflows_client.workflow_path(
-            PROJECT, LOCATION, WORKFLOW_ID)
+        workflow_name = workflows_client.workflow_path(PROJECT, LOCATION, WORKFLOW_ID)
         workflows_client.get_workflow(request={"name": workflow_name})
         return True
     except Exception as e:
