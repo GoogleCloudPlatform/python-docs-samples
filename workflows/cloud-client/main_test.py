@@ -24,7 +24,7 @@ LOCATION = "us-central1"
 WORKFLOW_ID = "myFirstWorkflow"
 
 
-def test_workflow_execution():
+def test_workflow_execution() -> None:
     assert PROJECT != ""
 
     if not workflow_exists():
@@ -46,7 +46,7 @@ def test_workflow_execution():
     assert len(result.result) > 0
 
 
-def workflow_exists():
+def workflow_exists() -> bool:
     """Returns True if the workflow exists in this project"""
     try:
         workflows_client = workflows_v1.WorkflowsClient()
