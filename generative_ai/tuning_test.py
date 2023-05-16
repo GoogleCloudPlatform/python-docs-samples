@@ -35,24 +35,24 @@ def get_model_display_name(tuned_model):
 
 
 def upload_to_gcs(bucket, name, data):
-  client = storage.Client()
-  bucket = client.get_bucket(bucket)
-  blob = bucket.blob(name)
-  blob.upload_from_string(data)
+    client = storage.Client()
+    bucket = client.get_bucket(bucket)
+    blob = bucket.blob(name)
+    blob.upload_from_string(data)
 
 
 def download_from_gcs(bucket, name):
-  client = storage.Client()
-  bucket = client.get_bucket(bucket)
-  blob = bucket.blob(name)
-  return blob.download_as_bytes()
+    client = storage.Client()
+    bucket = client.get_bucket(bucket)
+    blob = bucket.blob(name)
+    return blob.download_as_bytes()
 
 
 def delete_from_gcs(bucket, name):
-  client = storage.Client()
-  bucket = client.get_bucket(bucket)
-  blob = bucket.blob(name)
-  blob.delete()
+    client = storage.Client()
+    bucket = client.get_bucket(bucket)
+    blob = bucket.blob(name)
+    blob.delete()
 
 
 @pytest.fixture(scope='function')
@@ -72,7 +72,7 @@ def teardown_model(tuned_model, training_data_filename):
         if training_data_filename in model_registry.get_version_info('1').model_display_name:
             display_name = model_registry.get_version_info('1').model_display_name
             for endpoint in aiplatform.Endpoint.list():
-                for curr_model in endpoint.list_models():
+                for _ in endpoint.list_models():
                     if endpoint.display_name == display_name:
                         endpoint.undeploy_all()
                         endpoint.delete()
@@ -90,7 +90,7 @@ def test_tuning(training_data_filename):
     )
     try:
         assert (
-            tuned_model._job.status == 
+            tuned_model._job.status ==
             pipeline_state.PipelineState.PIPELINE_STATE_SUCCEEDED
         )
     finally:

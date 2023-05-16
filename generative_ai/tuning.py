@@ -52,11 +52,11 @@ def tuning(
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
-      training_data=training_data,
-      # Optional:
-      train_steps=train_steps,
-      tuning_job_location="europe-west4",
-      tuned_model_location=location,
+        training_data=training_data,
+        # Optional:
+        train_steps=train_steps,
+        tuning_job_location="europe-west4",
+        tuned_model_location=location,
     )
 
     print(model._job.status)
