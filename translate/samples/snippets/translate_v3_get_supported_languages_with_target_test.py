@@ -23,5 +23,5 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 def test_list_languages_with_target(capsys):
     get_supported_langs.get_supported_languages_with_target(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert u"Language Code: sq" in out
-    assert u"Display Name: albanska" in out
+    assert "Language Code: sq" in out
+    assert "Display Name: albanska" in out

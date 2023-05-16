@@ -46,12 +46,12 @@ def create_dataset(project_id):
 
     # The format of resource name:
     # project_id/{project_id}/datasets/{dataset_id}
-    print("The dataset resource name: {}".format(response.name))
-    print("Display name: {}".format(response.display_name))
-    print("Description: {}".format(response.description))
+    print(f"The dataset resource name: {response.name}")
+    print(f"Display name: {response.display_name}")
+    print(f"Description: {response.description}")
     print("Create time:")
-    print("\tseconds: {}".format(response.create_time.timestamp_pb().seconds))
-    print("\tnanos: {}\n".format(response.create_time.timestamp_pb().nanos))
+    print(f"\tseconds: {response.create_time.timestamp_pb().seconds}")
+    print(f"\tnanos: {response.create_time.timestamp_pb().nanos}\n")
 
     return response
 
@@ -79,12 +79,12 @@ def list_datasets(project_id):
     for element in response:
         # The format of resource name:
         # project_id/{project_id}/datasets/{dataset_id}
-        print("The dataset resource name: {}\n".format(element.name))
-        print("Display name: {}".format(element.display_name))
-        print("Description: {}".format(element.description))
+        print(f"The dataset resource name: {element.name}\n")
+        print(f"Display name: {element.display_name}")
+        print(f"Description: {element.description}")
         print("Create time:")
-        print("\tseconds: {}".format(element.create_time.timestamp_pb().seconds))
-        print("\tnanos: {}".format(element.create_time.timestamp_pb().nanos))
+        print(f"\tseconds: {element.create_time.timestamp_pb().seconds}")
+        print(f"\tnanos: {element.create_time.timestamp_pb().nanos}")
 
 
 # [END datalabeling_list_datasets_beta]
@@ -106,12 +106,12 @@ def get_dataset(dataset_resource_name):
 
     response = client.get_dataset(request={"name": dataset_resource_name})
 
-    print("The dataset resource name: {}\n".format(response.name))
-    print("Display name: {}".format(response.display_name))
-    print("Description: {}".format(response.description))
+    print(f"The dataset resource name: {response.name}\n")
+    print(f"Display name: {response.display_name}")
+    print(f"Description: {response.description}")
     print("Create time:")
-    print("\tseconds: {}".format(response.create_time.timestamp_pb().seconds))
-    print("\tnanos: {}".format(response.create_time.timestamp_pb().nanos))
+    print(f"\tseconds: {response.create_time.timestamp_pb().seconds}")
+    print(f"\tnanos: {response.create_time.timestamp_pb().nanos}")
 
 
 # [END datalabeling_get_dataset_beta]
@@ -133,7 +133,7 @@ def delete_dataset(dataset_resource_name):
 
     response = client.delete_dataset(request={"name": dataset_resource_name})
 
-    print("Dataset deleted. {}\n".format(response))
+    print(f"Dataset deleted. {response}\n")
 
 
 # [END datalabeling_delete_dataset_beta]

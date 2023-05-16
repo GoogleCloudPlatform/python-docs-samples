@@ -70,7 +70,7 @@ def create_product(
         product_id=product_id)
 
     # Display the product information.
-    print('Product name: {}'.format(response.name))
+    print(f'Product name: {response.name}')
 # [END vision_product_search_create_product]
 
 
@@ -91,12 +91,12 @@ def list_products(project_id, location):
 
     # Display the product information.
     for product in products:
-        print('Product name: {}'.format(product.name))
+        print(f'Product name: {product.name}')
         print('Product id: {}'.format(product.name.split('/')[-1]))
-        print('Product display name: {}'.format(product.display_name))
-        print('Product description: {}'.format(product.description))
-        print('Product category: {}'.format(product.product_category))
-        print('Product labels: {}\n'.format(product.product_labels))
+        print(f'Product display name: {product.display_name}')
+        print(f'Product description: {product.description}')
+        print(f'Product category: {product.product_category}')
+        print(f'Product labels: {product.product_labels}\n')
 # [END vision_product_search_list_products]
 
 
@@ -118,12 +118,12 @@ def get_product(project_id, location, product_id):
     product = client.get_product(name=product_path)
 
     # Display the product information.
-    print('Product name: {}'.format(product.name))
+    print(f'Product name: {product.name}')
     print('Product id: {}'.format(product.name.split('/')[-1]))
-    print('Product display name: {}'.format(product.display_name))
-    print('Product description: {}'.format(product.description))
-    print('Product category: {}'.format(product.product_category))
-    print('Product labels: {}'.format(product.product_labels))
+    print(f'Product display name: {product.display_name}')
+    print(f'Product description: {product.description}')
+    print(f'Product category: {product.product_category}')
+    print(f'Product labels: {product.product_labels}')
 # [END vision_product_search_get_product]
 
 
@@ -159,8 +159,8 @@ def update_product_labels(
         product=product, update_mask=update_mask)
 
     # Display the updated product information.
-    print('Product name: {}'.format(updated_product.name))
-    print('Updated product labels: {}'.format(product.product_labels))
+    print(f'Product name: {updated_product.name}')
+    print(f'Updated product labels: {product.product_labels}')
 # [END vision_product_search_update_product_labels]
 
 
