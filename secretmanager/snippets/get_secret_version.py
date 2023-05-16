@@ -19,9 +19,13 @@ version, but not the secret payload.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_get_secret_version]
-def get_secret_version(project_id, secret_id, version_id):
+def get_secret_version(
+    project_id: str, secret_id: str, version_id: str
+) -> secretmanager.GetSecretVersionRequest:
     """
     Get information about the given secret version. It does not include the
     payload data.

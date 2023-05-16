@@ -20,7 +20,7 @@ import base64
 
 
 # [START secretmanager_consume_event_notification]
-def consume_event_notification(event, unused_context):
+def consume_event_notification(event: dict, unused_context) -> str:
     """
     consume_event_notification demonstrates how to consume and process a
     Pub/Sub notification from Secret Manager.

@@ -17,7 +17,7 @@ import argparse
 
 
 # [START secretmanager_update_secret]
-def update_secret(project_id, secret_id):
+def update_secret(project_id: str, secret_id: str):
     """
     Update the metadata about an existing secret.
     """

@@ -19,8 +19,12 @@ user managed replication.
 
 import argparse
 
+from google.cloud import secretmanager
 
-def create_ummr_secret(project_id, secret_id, locations):
+
+def create_ummr_secret(
+    project_id: str, secret_id: str, locations: list[str]
+) -> secretmanager.CreateSecretRequest:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
