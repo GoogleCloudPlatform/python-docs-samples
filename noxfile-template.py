@@ -203,21 +203,21 @@ def _session_tests(
         with open("requirements.txt") as rfile:
             packages = rfile.read()
         if os.path.exists("constraints.txt"):
-            session.install("-r", "requirements.txt", "-c", "constraints.txt")
+            session.install("-r", "requirements.txt", "-c", "constraints.txt", "--only-binary", ":all")
         elif "pyspark" in packages:
             session.install("-r", "requirements.txt", "--use-pep517")
         else:
-            session.install("-r", "requirements.txt")
+            session.install("-r", "requirements.txt", "--only-binary", ":all")
 
     if os.path.exists("requirements-test.txt"):
         with open("requirements-test.txt") as rtfile:
             packages += rtfile.read()
         if os.path.exists("constraints-test.txt"):
             session.install(
-                "-r", "requirements-test.txt", "-c", "constraints-test.txt"
+                "-r", "requirements-test.txt", "-c", "constraints-test.txt", "--only-binary", ":all"
             )
         else:
-            session.install("-r", "requirements-test.txt")
+            session.install("-r", "requirements-test.txt", "--only-binary", ":all")
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())

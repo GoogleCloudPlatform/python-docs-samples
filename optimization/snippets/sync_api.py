@@ -27,7 +27,7 @@ def call_sync_api(project_id: str) -> None:
     request_file_name = "resources/sync_request.json"
     fleet_routing_client = optimization_v1.FleetRoutingClient()
 
-    with open(request_file_name, "r") as f:
+    with open(request_file_name) as f:
         # The request must include the `parent` field with the value set to
         # 'projects/{YOUR_GCP_PROJECT_ID}'.
         fleet_routing_request = optimization_v1.OptimizeToursRequest.from_json(f.read())

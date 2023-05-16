@@ -36,10 +36,10 @@ def predict(project_id, model_id, content):
     response = prediction_client.predict(name=model_full_id, payload=payload)
 
     for annotation_payload in response.payload:
-        print("Text Extract Entity Types: {}".format(annotation_payload.display_name))
-        print("Text Score: {}".format(annotation_payload.text_extraction.score))
+        print(f"Text Extract Entity Types: {annotation_payload.display_name}")
+        print(f"Text Score: {annotation_payload.text_extraction.score}")
         text_segment = annotation_payload.text_extraction.text_segment
-        print("Text Extract Entity Content: {}".format(text_segment.content))
-        print("Text Start Offset: {}".format(text_segment.start_offset))
-        print("Text End Offset: {}".format(text_segment.end_offset))
+        print(f"Text Extract Entity Content: {text_segment.content}")
+        print(f"Text Start Offset: {text_segment.start_offset}")
+        print(f"Text End Offset: {text_segment.end_offset}")
     # [END automl_language_entity_extraction_predict]
