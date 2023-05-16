@@ -80,7 +80,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Iterate over results.
     for job in response:
-        print(f"Job: {job.name}; status: {job.sate.name}")
+        print(f"Job: {job.name}; status: {job.state.name}")
 
 
 # [END dlp_list_jobs]
