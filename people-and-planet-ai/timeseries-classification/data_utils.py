@@ -13,10 +13,12 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
+from collections.abc import Iterable
 from datetime import datetime, timedelta
 import os
 import time
-from typing import Dict, Iterable
 
 import numpy as np
 import pandas as pd
@@ -34,14 +36,14 @@ def to_unix_time(timestamp: datetime) -> int:
     return time.mktime(timestamp.timetuple())
 
 
-def with_fixed_time_steps(input_data: Dict[str, np.ndarray]) -> pd.DataFrame:
+def with_fixed_time_steps(input_data: dict[str, np.ndarray]) -> pd.DataFrame:
     return (
         pd.DataFrame(input_data)
-        .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
+        .assign(timestamp=lambda df: df"].map(datetime.utcfromtimestamp))
         .resample(TIME_STEP_INTERVAL, on="timestamp")
         .mean()
         .reset_index()
-        .assign(timestamp=lambda df: df["timestamp"].map(to_unix_time))
+        .assign(timestamp=lambda df: df"].map(to_unix_time))
         .interpolate()
     )
 
@@ -50,7 +52,7 @@ def read_data(data_file: str) -> pd.DataFrame:
     mmsi = os.path.splitext(os.path.basename(data_file))[0]
     with tf.io.gfile.GFile(data_file, "rb") as f:
         return with_fixed_time_steps(np.load(f)["x"]).assign(
-            mmsi=lambda df: df["mmsi"].map(lambda _: int(mmsi)),
+            mmsi=lambda df: df"].map(lambda _: int(mmsi)),
         )
 
 
@@ -60,8 +62,8 @@ def read_labels(labels_file: str) -> pd.DataFrame:
             pd.read_csv(f, parse_dates=["start_time", "end_time"])
             .astype({"mmsi": int})
             .assign(
-                start_time=lambda df: df["start_time"].map(to_unix_time),
-                end_time=lambda df: df["end_time"].map(to_unix_time),
+                start_time=lambda df: df"].map(to_unix_time),
+                end_time=lambda df: df"].map(to_unix_time),
             )
         )
 
@@ -86,7 +88,7 @@ def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
+def generate_training_points(data: pd.DataFrame) -> Iterable[dict[str, np.ndarray]]:
     # Pandas assigns NaN (Not-a-Number) if a value is missing.
     # If is_fishing equals itself it means it's populated because (NaN != NaN).
     # For the training data points, we only get points where we have a label.

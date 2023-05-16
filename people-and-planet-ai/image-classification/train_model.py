@@ -14,18 +14,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
+from collections.abc import Callable, Iterable
 from datetime import datetime
 import io
 import logging
 import random
 import time
-from typing import Callable, Dict, Iterable, Optional, Tuple, TypeVar
+from typing import TypeVar
 
+from PIL import Image, ImageFile
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import trainingjob
-from PIL import Image, ImageFile
 import requests
 
 a = TypeVar("a")
@@ -41,7 +44,7 @@ def run(
     min_images_per_class: int,
     max_images_per_class: int,
     budget_milli_node_hours: int,
-    pipeline_options: Optional[PipelineOptions] = None,
+    pipeline_options: PipelineOptions | None = None,
 ) -> None:
     """Creates a balanced dataset and signals AI Platform to train a model.
 
@@ -62,7 +65,7 @@ def run(
             pipeline
             | "Read images info"
             >> beam.io.ReadFromBigQuery(dataset=bigquery_dataset, table=bigquery_table)
-            | "Key by category" >> beam.WithKeys(lambda x: x["category"])
+            | "Key by category" >> beam.WithKeys(lambda x: x"])
             | "Random samples"
             >> beam.combiners.Sample.FixedSizePerKey(max_images_per_class)
             | "Remove key" >> beam.Values()
@@ -104,8 +107,8 @@ def run(
 
 
 def get_image(
-    image_info: Dict[str, str], cloud_storage_path: str
-) -> Iterable[Tuple[str, str]]:
+    image_info: dict[str, str], cloud_storage_path: str
+) -> Iterable[tuple[str, str]]:
     """Makes sure an image exists in Cloud Storage.
 
     Checks if the image file_name exists in Cloud Storage.
@@ -113,7 +116,7 @@ def get_image(
     If the image can't be downloaded, it is skipped.
 
     Args:
-        image_info: Dict of {'category', 'file_name'}.
+        image_info: dict of {'category', 'file_name'}.
         cloud_storage_path: Cloud Storage path to look for and download images.
 
     Returns:
@@ -144,7 +147,7 @@ def get_image(
 
 
 def write_dataset_csv_file(
-    dataset_csv_filename: str, images: Iterable[Tuple[str, str]]
+    dataset_csv_filename: str, images: Iterable[tuple[str, str]]
 ) -> str:
     """Writes the dataset image file names and categories in a CSV file.
 
@@ -172,7 +175,7 @@ def write_dataset_csv_file(
 
 def create_dataset(
     dataset_csv_filename: str, project: str, region: str, dataset_name: str
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """Creates an dataset for AI Platform.
 
     For more information:
@@ -294,7 +297,7 @@ def url_get(url: str) -> bytes:
     return with_retries(lambda: requests.get(url).content)
 
 
-def with_retries(f: Callable[[], a], max_attempts: int = 3) -> a:
+def with_retries(f: Callable[a], max_attempts: int = 3) -> a:
     """Runs a function with retries, using exponential backoff.
 
     For more information:

@@ -20,11 +20,13 @@ It reads JSON encoded messages from Pub/Sub, transforms the message data and
 writes the results to BigQuery.
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
 import time
-from typing import Any, Dict, List
+from typing import Any
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -42,11 +44,11 @@ SCHEMA = ",".join(
 )
 
 
-def parse_json_message(message: str) -> Dict[str, Any]:
+def parse_json_message(message: str) -> dict[str, Any]:
     """Parse the input json message and add 'score' & 'processing_time' keys."""
     row = json.loads(message)
     return {
-        "url": row["url"],
+        "url": row"],
         "score": 1.0 if row["review"] == "positive" else 0.0,
         "processing_time": int(time.time()),
     }
@@ -56,7 +58,7 @@ def run(
     input_subscription: str,
     output_table: str,
     window_interval_sec: int = 60,
-    beam_args: List[str] = None,
+    beam_args: list[str] = None,
 ) -> None:
     """Build and run the pipeline."""
     options = PipelineOptions(beam_args, save_main_session=True, streaming=True)
@@ -72,7 +74,7 @@ def run(
             | "Parse JSON messages" >> beam.Map(parse_json_message)
             | "Fixed-size windows"
             >> beam.WindowInto(window.FixedWindows(window_interval_sec, 0))
-            | "Add URL keys" >> beam.WithKeys(lambda msg: msg["url"])
+            | "Add URL keys" >> beam.WithKeys(lambda msg: msg"])
             | "Group by URLs" >> beam.GroupByKey()
             | "Get statistics"
             >> beam.MapTuple(

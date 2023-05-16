@@ -17,16 +17,18 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional, Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT create_image_from_snapshot>
 def create_image_from_snapshot(project_id: str, source_snapshot_name: str, image_name: str,
-                               source_project_id: Optional[str] = None,
-                               guest_os_features: Optional[Iterable[str]] = None,
-                               storage_location: Optional[str] = None) -> compute_v1.Image:
+                               source_project_id: str | None = None,
+                               guest_os_features: Iterable[str] | None = None,
+                               storage_location: str | None = None) -> compute_v1.Image:
     """
     Creates an image based on a snapshot.
 

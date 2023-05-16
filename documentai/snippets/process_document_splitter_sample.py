@@ -15,7 +15,9 @@
 
 # [START documentai_process_splitter_document]
 
-from typing import Sequence
+from __future__ import annotations
+
+from collections.abc import Sequence
 
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai

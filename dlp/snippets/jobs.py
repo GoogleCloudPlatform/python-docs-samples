@@ -14,10 +14,10 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
+from __future__ import annotations
 from __future__ import print_function
 
 import argparse
-from typing import List
 
 
 # [START dlp_list_jobs]
@@ -120,7 +120,7 @@ def delete_dlp_job(project, job_name):
 def create_dlp_job(
     project: str,
     bucket: str,
-    info_types: List[str],
+    info_types: list[str],
     job_id: str = None,
     max_findings: int = 100,
     auto_populate_timespan: bool = True,

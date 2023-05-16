@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import os
 import tarfile
 import time
-from typing import Tuple
 import uuid
 
 from google.cloud import storage
@@ -54,7 +55,7 @@ def shared_state() -> dict:
 @pytest.fixture(autouse=True)
 def setup_teardown(
     shared_state: dict,
-) -> Tuple[storage.bucket.Bucket, aip.JobServiceClient]:
+) -> tuple[storage.bucket.Bucket, aip.JobServiceClient]:
 
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(STAGING_BUCKET, location=REGION)
@@ -85,7 +86,7 @@ def setup_teardown(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_tfkeras(
-    setup_teardown: Tuple[storage.bucket.Bucket, aip.JobServiceClient],
+    setup_teardown: tuple[storage.bucket.Bucket, aip.JobServiceClient],
     shared_state: dict,
 ) -> None:
     bucket, aip_job_client = setup_teardown

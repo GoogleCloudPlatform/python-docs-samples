@@ -14,10 +14,10 @@
 
 """Uses of the Data Loss Prevention API for deidentifying sensitive data."""
 
+from __future__ import annotations
 from __future__ import print_function
 
 import argparse
-from typing import List
 
 
 # [START dlp_deidentify_masking]
@@ -943,7 +943,7 @@ def deidentify_with_simple_word_list(
     project: str,
     input_str: str,
     custom_info_type_name: str,
-    word_list: List[str],
+    word_list: list[str],
 ) -> None:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.

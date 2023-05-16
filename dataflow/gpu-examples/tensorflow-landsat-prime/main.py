@@ -48,16 +48,18 @@ The overall workflow of the pipeline is the following:
 - Create a JPEG image and save it to Cloud Storage.
 """
 
+from __future__ import annotations
+
 import argparse
 import logging
 import os
 import re
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
+from PIL import Image
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import numpy as np
-from PIL import Image
 import rasterio
 import tensorflow as tf
 
@@ -127,12 +129,12 @@ def check_gpus(_: None, gpus_optional: bool = False) -> None:
         raise RuntimeError("No GPUs found.")
 
 
-def get_band_paths(scene: str, band_names: List[str]) -> Tuple[str, List[str]]:
+def get_band_paths(scene: str, band_names: list[str]) -> tuple[str, list[str]]:
     """Gets the Cloud Storage paths for each band in a Landsat scene.
 
     Args:
         scene: Landsat 8 scene ID.
-        band_names: List of the band names corresponding to [Red, Green, Blue] channels.
+        band_names: list of the band names corresponding to [Red, Green, Blue] channels.
 
     Returns:
         A (scene, band_paths) pair.
@@ -175,11 +177,11 @@ def save_to_gcs(
 
 def load_as_rgb(
     scene: str,
-    band_paths: List[str],
+    band_paths: list[str],
     min_value: float = DEFAULT_MIN_BAND_VALUE,
     max_value: float = DEFAULT_MAX_BAND_VALUE,
     gamma: float = DEFAULT_GAMMA,
-) -> Tuple[str, np.ndarray]:
+) -> tuple[str, np.ndarray]:
     """Loads a scene's bands data and converts it into a pixel-ready format
     for an RGB image.
 
@@ -231,17 +233,17 @@ def load_as_rgb(
 
 
 def run(
-    scenes: List[str],
+    scenes: list[str],
     output_path_prefix: str,
-    vis_params: Dict[str, Any],
+    vis_params: dict[str, Any],
     gpu_type: str = DEFAULT_GPU_TYPE,
     gpu_count: int = DEFAULT_GPU_COUNT,
-    beam_args: Optional[List[str]] = None,
+    beam_args: list[str] | None = None,
 ) -> None:
     """Load multiple Landsat scenes and render them as JPEG files.
 
     Args:
-        scenes: List of Landsat 8 scene IDs.
+        scenes: list of Landsat 8 scene IDs.
         output_path_prefix: Path prefix to save the output files.
         vis_params: Visualization parameters including {rgb_bands, min, max, gamma}.
         beam_args: Optional list of arguments for Beam pipeline options.
