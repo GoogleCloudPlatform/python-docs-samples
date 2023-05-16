@@ -30,7 +30,7 @@ class FakeClient(cpix_client.CpixClient):
         Args:
         media_id (string): Name for your asset, sometimes used by DRM providers to
             show usage and reports.
-        key_ids (string[]): List of IDs of any keys to fetch and prepare.
+        key_ids (list[string]): List of IDs of any keys to fetch and prepare.
 
         Returns:
         dict: Object containing key information to be written to Secret Manager.

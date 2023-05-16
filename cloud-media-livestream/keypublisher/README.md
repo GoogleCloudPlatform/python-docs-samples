@@ -15,7 +15,7 @@ and preferred region/zone.
 
 ### Enable APIs
 
-Enable Google APIs used to host your key publisher and write key information to
+Enable the following Google APIs to host your key publisher and write key information to
 Secret Manager.
 
 ```shell
@@ -118,8 +118,9 @@ Create the API:
 gcloud api-gateway apis create livestream-key-publisher-api --display-name="Live Stream Key Publisher API"
 ```
 
-Create a file `api-config.yml`. A template file `api-config.template.yml` is
-included here. Copy the template file and replace any needed values. In
+Create a file `api-config.yml`. Take a look at the example template file:
+[`api-config.template.yml`](./api-config.template.yml).
+Copy the template file and replace any needed values. In
 particular `CLOUD_FUNCTION_URL` must be replaced with the URL you received when
 you deployed your function.
 
@@ -169,7 +170,7 @@ You will get the `defaultHostname` field in the response. For example,
 defaultHostname: livestream-key-publisher-api-gateway-48mwfke9.uc.gateway.dev
 ```
 
-You will send API requests to this URL.
+You will send API requests to the URL received from your response.
 
 Create an API key to use for making queries to your API, and restrict the API
 key such that only your newly created `livestream-key-publisher-api` can be

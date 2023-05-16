@@ -65,7 +65,7 @@ def write_secret(secret_id: str, payload: str) -> str:
         A string containing the name of the new secret version.
     """
     client = secretmanager.SecretManagerServiceClient()
-    project_name = "projects/{}".format(os.environ.get("PROJECT"))
+    project_name = f"projects/{os.environ.get('PROJECT')}"
     try:
         secret = client.create_secret(
             request={
@@ -76,7 +76,7 @@ def write_secret(secret_id: str, payload: str) -> str:
         )
         secret_name = secret.name
     except google.api_core.exceptions.AlreadyExists:
-        secret_name = "{}/secrets/{}".format(project_name, secret_id)
+        secret_name = f"{project_name}/secrets/{secret_id}"
     version = client.add_secret_version(
         request={"parent": secret_name, "payload": {"data": str.encode(payload)}}
     )
@@ -89,7 +89,7 @@ def validate_environment(cpix_client):
     for required_var in required_vars:
         if required_var not in os.environ:
             return http_response(
-                'environment variable "{}" must be set'.format(required_var), 400
+                f'environment variable "{required_var}" must be set', 400
             )
 
 
