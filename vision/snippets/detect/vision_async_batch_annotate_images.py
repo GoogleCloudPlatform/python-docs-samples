@@ -49,7 +49,7 @@ def sample_async_batch_annotate_images(
 
     # The output is written to GCS with the provided output_uri as prefix
     gcs_output_uri = response.output_config.gcs_destination.uri
-    print("Output written to GCS with prefix: {}".format(gcs_output_uri))
+    print(f"Output written to GCS with prefix: {gcs_output_uri}")
 
 
 # [END vision_async_batch_annotate_images]
