@@ -15,11 +15,11 @@
 # [START aiplatform_sdk_tuning]
 from typing import Union
 
-import pandas as pd
-
 from google.auth import default
+import pandas as pd
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel
+
 credentials, _ = default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
 
