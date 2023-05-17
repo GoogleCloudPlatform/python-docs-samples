@@ -36,6 +36,4 @@ def list_logs(project_id: str) -> List[str]:
         print(log)
 
     return logs
-
-
 # [END logging_list_logs]
