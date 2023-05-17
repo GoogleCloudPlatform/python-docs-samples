@@ -16,7 +16,8 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional
+from __future__ import annotations
+
 
 from google.api_core.exceptions import BadRequest
 from google.cloud import compute_v1
@@ -30,8 +31,8 @@ def create_kms_encrypted_disk(
         disk_type: str,
         disk_size_gb: int,
         kms_key_name: str,
-        disk_link: Optional[str] = None,
-        image_link: Optional[str] = None
+        disk_link: str | None = None,
+        image_link: str | None = None
 ) -> compute_v1.Disk:
     """
     Creates a zonal disk in a project. If you do not provide values for disk_link or image_link,
