@@ -14,7 +14,6 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
-from __future__ import print_function
 
 import argparse
 from typing import List
@@ -81,7 +80,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Iterate over results.
     for job in response:
-        print("Job: %s; status: %s" % (job.name, job.state.name))
+        print(f"Job: {job.name}; status: {job.state.name}")
 
 
 # [END dlp_list_jobs]
@@ -160,7 +159,7 @@ def create_dlp_job(
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = "gs://{}/*".format(bucket)
+    url = f"gs://{bucket}/*"
     storage_config = {
         "cloud_storage_options": {"file_set": {"url": url}},
         # Time-based configuration for each storage object.
@@ -184,7 +183,7 @@ def create_dlp_job(
     )
 
     # Print out the result.
-    print("Job : {} status: {}".format(response.name, response.state))
+    print(f"Job : {response.name} status: {response.state}")
 
 # [END dlp_create_job]
 

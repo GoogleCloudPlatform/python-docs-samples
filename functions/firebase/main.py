@@ -97,7 +97,7 @@ def make_upper_case(data, context):
     if cur_value != new_value:
         print(f'Replacing value: {cur_value} --> {new_value}')
         affected_doc.set({
-            u'original': new_value
+            'original': new_value
         })
     else:
         # Value is already upper-case
