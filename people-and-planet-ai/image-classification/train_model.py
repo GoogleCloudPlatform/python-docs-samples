@@ -297,7 +297,7 @@ def url_get(url: str) -> bytes:
     return with_retries(lambda: requests.get(url).content)
 
 
-def with_retries(f: Callable[a], max_attempts: int = 3) -> a:
+def with_retries(f: Callable[[], a], max_attempts: int = 3) -> a:
     """Runs a function with retries, using exponential backoff.
 
     For more information:
