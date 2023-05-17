@@ -16,7 +16,13 @@ from google.cloud import kms
 
 # [START kms_verify_mac]
 def verify_mac(
-    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, data: str, signature: bytes
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    data: str,
+    signature: bytes,
 ) -> kms.MacVerifyResponse:
     """
     Verify the signature of data from an HMAC key.

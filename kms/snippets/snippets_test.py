@@ -48,8 +48,7 @@ from create_key_labels import create_key_labels
 from create_key_mac import create_key_mac
 from create_key_ring import create_key_ring
 from create_key_rotation_schedule import create_key_rotation_schedule
-from create_key_symmetric_encrypt_decrypt import \
-    create_key_symmetric_encrypt_decrypt
+from create_key_symmetric_encrypt_decrypt import create_key_symmetric_encrypt_decrypt
 from create_key_version import create_key_version
 from decrypt_asymmetric import decrypt_asymmetric
 from decrypt_symmetric import decrypt_symmetric
@@ -135,7 +134,10 @@ def key_ring_id(
 
 @pytest.fixture(scope="module")
 def asymmetric_decrypt_key_id(
-    client: kms.KeyManagementServiceClient, project_id: str, location_id: str, key_ring_id: str
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
 ) -> str:
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
     key_id = f"{uuid.uuid4()}"
@@ -158,7 +160,10 @@ def asymmetric_decrypt_key_id(
 
 @pytest.fixture(scope="module")
 def asymmetric_sign_ec_key_id(
-    client: kms.KeyManagementServiceClient, project_id: str, location_id: str, key_ring_id: str
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
 ) -> str:
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
     key_id = f"{uuid.uuid4()}"
@@ -181,7 +186,10 @@ def asymmetric_sign_ec_key_id(
 
 @pytest.fixture(scope="module")
 def asymmetric_sign_rsa_key_id(
-    client: kms.KeyManagementServiceClient, project_id: str, location_id: str, key_ring_id: str
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
 ) -> str:
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
     key_id = f"{uuid.uuid4()}"
@@ -204,7 +212,10 @@ def asymmetric_sign_rsa_key_id(
 
 @pytest.fixture(scope="module")
 def hsm_key_id(
-    client: kms.KeyManagementServiceClient, project_id: str, location_id: str, key_ring_id: str
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
 ) -> str:
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
     key_id = f"{uuid.uuid4()}"
@@ -228,7 +239,10 @@ def hsm_key_id(
 
 @pytest.fixture(scope="module")
 def hmac_key_id(
-    client: kms.KeyManagementServiceClient, project_id: str, location_id: str, key_ring_id: str
+    client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
 ) -> str:
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
     key_id = f"{uuid.uuid4()}"
@@ -276,7 +290,9 @@ def symmetric_key_id(
     return key_id
 
 
-def wait_for_ready(client: kms.KeyManagementServiceClient, key_version_name: str) -> None:
+def wait_for_ready(
+    client: kms.KeyManagementServiceClient, key_version_name: str
+) -> None:
     for i in range(4):
         key_version = client.get_crypto_key_version(request={"name": key_version_name})
         if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
@@ -285,14 +301,24 @@ def wait_for_ready(client: kms.KeyManagementServiceClient, key_version_name: str
     pytest.fail(f"{key_version_name} not ready")
 
 
-def test_create_import_job(project_id: str, location_id: str, key_ring_id: str, import_job_id: str, capsys: pytest.CaptureFixture) -> None:
+def test_create_import_job(
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    import_job_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     create_import_job(project_id, location_id, key_ring_id, import_job_id)
     out, _ = capsys.readouterr()
     assert "Created import job" in out
 
 
 def test_check_state_import_job(
-    project_id: str, location_id: str, key_ring_id: str, import_job_id: str, capsys: pytest.CaptureFixture
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    import_job_id: str,
+    capsys: pytest.CaptureFixture,
 ) -> None:
     check_state_import_job(project_id, location_id, key_ring_id, import_job_id)
     out, _ = capsys.readouterr()
@@ -300,14 +326,20 @@ def test_check_state_import_job(
 
 
 def test_check_state_imported_key(
-    project_id: str, location_id: str, key_ring_id: str, import_job_id: str, capsys: pytest.CaptureFixture
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    import_job_id: str,
+    capsys: pytest.CaptureFixture,
 ) -> None:
     check_state_imported_key(project_id, location_id, key_ring_id, import_job_id)
     out, _ = capsys.readouterr()
     assert "Current state" in out
 
 
-def test_create_key_asymmetric_decrypt(project_id: str, location_id: str, key_ring_id: str) -> None:
+def test_create_key_asymmetric_decrypt(
+    project_id: str, location_id: str, key_ring_id: str
+) -> None:
     key_id = f"{uuid.uuid4()}"
     key = create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, key_id)
     assert key.purpose == kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_DECRYPT
@@ -317,7 +349,9 @@ def test_create_key_asymmetric_decrypt(project_id: str, location_id: str, key_ri
     )
 
 
-def test_create_key_asymmetric_sign(project_id: str, location_id: str, key_ring_id: str) -> None:
+def test_create_key_asymmetric_sign(
+    project_id: str, location_id: str, key_ring_id: str
+) -> None:
     key_id = f"{uuid.uuid4()}"
     key = create_key_asymmetric_sign(project_id, location_id, key_ring_id, key_id)
     assert key.purpose == kms.CryptoKey.CryptoKeyPurpose.ASYMMETRIC_SIGN
@@ -328,7 +362,11 @@ def test_create_key_asymmetric_sign(project_id: str, location_id: str, key_ring_
 
 
 def test_create_key_for_import(
-    project_id: str, location_id: str, key_ring_id: str, import_tests_key_id: str, capsys: pytest.CaptureFixture
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    import_tests_key_id: str,
+    capsys: pytest.CaptureFixture,
 ) -> None:
     create_key_for_import(project_id, location_id, key_ring_id, import_tests_key_id)
     out, _ = capsys.readouterr()
@@ -373,14 +411,18 @@ def test_create_key_ring(project_id: str, location_id: str, key_ring_id: str) ->
     assert key_ring
 
 
-def test_create_key_rotation_schedule(project_id: str, location_id: str, key_ring_id: str) -> None:
+def test_create_key_rotation_schedule(
+    project_id: str, location_id: str, key_ring_id: str
+) -> None:
     key_id = f"{uuid.uuid4()}"
     key = create_key_rotation_schedule(project_id, location_id, key_ring_id, key_id)
     assert key.rotation_period == datetime.timedelta(seconds=60 * 60 * 24 * 30)
     assert key.next_rotation_time
 
 
-def test_create_key_symmetric_encrypt_decrypt(project_id: str, location_id: str, key_ring_id: str) -> None:
+def test_create_key_symmetric_encrypt_decrypt(
+    project_id: str, location_id: str, key_ring_id: str
+) -> None:
     key_id = f"{uuid.uuid4()}"
     key = create_key_symmetric_encrypt_decrypt(
         project_id, location_id, key_ring_id, key_id
@@ -392,7 +434,9 @@ def test_create_key_symmetric_encrypt_decrypt(project_id: str, location_id: str,
     )
 
 
-def test_create_key_version(project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str) -> None:
+def test_create_key_version(
+    project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str
+) -> None:
     version = create_key_version(project_id, location_id, key_ring_id, symmetric_key_id)
     assert version
 
@@ -558,12 +602,16 @@ def test_generate_random_bytes(
     assert len(generate_random_bytes_response.data) == 256
 
 
-def test_get_key_labels(project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str) -> None:
+def test_get_key_labels(
+    project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str
+) -> None:
     key = get_key_labels(project_id, location_id, key_ring_id, symmetric_key_id)
     assert key.labels == {"foo": "bar", "zip": "zap"}
 
 
-def test_get_key_version_attestation(project_id: str, location_id: str, key_ring_id: str, hsm_key_id: str) -> None:
+def test_get_key_version_attestation(
+    project_id: str, location_id: str, key_ring_id: str, hsm_key_id: str
+) -> None:
     attestation = get_key_version_attestation(
         project_id, location_id, key_ring_id, hsm_key_id, "1"
     )
@@ -589,7 +637,9 @@ def test_get_public_key_jwk(
     assert "kty" in public_key
 
 
-def test_iam_add_member(project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str) -> None:
+def test_iam_add_member(
+    project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str
+) -> None:
     member = "group:test@google.com"
     policy = iam_add_member(
         project_id, location_id, key_ring_id, symmetric_key_id, member
@@ -597,7 +647,9 @@ def test_iam_add_member(project_id: str, location_id: str, key_ring_id: str, sym
     assert any(member in b.members for b in policy.bindings)
 
 
-def test_iam_get_policy(project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str) -> None:
+def test_iam_get_policy(
+    project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str
+) -> None:
     policy = iam_get_policy(project_id, location_id, key_ring_id, symmetric_key_id)
     assert policy
 
@@ -632,7 +684,12 @@ def test_iam_remove_member(
 
 
 def test_import_manually_wrapped_key(
-    project_id: str, location_id: str, key_ring_id: str, import_job_id: str, import_tests_key_id: str, capsys: pytest.CaptureFixture
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    import_job_id: str,
+    import_tests_key_id: str,
+    capsys: pytest.CaptureFixture,
 ) -> None:
     import_manually_wrapped_key(
         project_id, location_id, key_ring_id, import_tests_key_id, import_job_id
@@ -728,7 +785,9 @@ def test_update_key_remove_rotation(
     assert not key.next_rotation_time
 
 
-def test_update_key_set_primary(project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str) -> None:
+def test_update_key_set_primary(
+    project_id: str, location_id: str, key_ring_id: str, symmetric_key_id: str
+) -> None:
     key = update_key_set_primary(
         project_id, location_id, key_ring_id, symmetric_key_id, "1"
     )

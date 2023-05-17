@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_enable_key_version]
-def enable_key_version(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str) -> kms.CryptoKeyVersion:
+def enable_key_version(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
+) -> kms.CryptoKeyVersion:
     """
     Enable a key.
 

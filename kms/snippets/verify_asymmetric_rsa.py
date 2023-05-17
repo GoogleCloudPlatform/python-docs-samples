@@ -14,7 +14,13 @@
 
 # [START kms_verify_asymmetric_signature_rsa]
 def verify_asymmetric_rsa(
-    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, message: str, signature: str
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    message: str,
+    signature: str,
 ) -> bool:
     """
     Verify the signature of an message signed with an asymmetric RSA key.

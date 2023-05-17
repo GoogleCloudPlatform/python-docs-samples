@@ -13,8 +13,11 @@
 
 from google.iam.v1 import policy_pb2 as iam_policy
 
+
 # [START kms_iam_add_member]
-def iam_add_member(project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str) -> iam_policy.Policy:
+def iam_add_member(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str
+) -> iam_policy.Policy:
     """
     Add an IAM member to a resource.
 

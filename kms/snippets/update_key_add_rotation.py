@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_update_key_add_rotation_schedule]
-def update_key_add_rotation(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.CryptoKey:
+def update_key_add_rotation(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Add a rotation schedule to an existing key.
 

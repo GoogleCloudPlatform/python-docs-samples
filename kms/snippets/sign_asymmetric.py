@@ -15,7 +15,14 @@ from google.cloud import kms
 
 
 # [START kms_sign_asymmetric]
-def sign_asymmetric(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, message: str) -> kms.AsymmetricSignResponse:
+def sign_asymmetric(
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    message: str,
+) -> kms.AsymmetricSignResponse:
     """
     Sign a message using the public key part of an asymmetric key.
 

@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_get_public_key]
-def get_public_key(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str) -> kms.PublicKey:
+def get_public_key(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
+) -> kms.PublicKey:
     """
     Get the public key for an asymmetric key.
 

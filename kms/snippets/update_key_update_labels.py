@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_update_key_update_labels]
-def update_key_update_labels(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.CryptoKey:
+def update_key_update_labels(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Update labels on an existing key.
 

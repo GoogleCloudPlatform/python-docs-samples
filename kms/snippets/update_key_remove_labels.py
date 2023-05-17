@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_update_key_remove_labels]
-def update_key_remove_labels(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.CryptoKey:
+def update_key_remove_labels(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Remove labels from an existing key.
 

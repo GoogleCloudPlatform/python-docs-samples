@@ -14,7 +14,12 @@
 
 # [START kms_encrypt_asymmetric]
 def encrypt_asymmetric(
-    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, plaintext: str
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    plaintext: str,
 ) -> bytes:
     """
     Encrypt plaintext using the public key portion of an asymmetric key.

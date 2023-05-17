@@ -15,7 +15,9 @@ from google.cloud import kms
 
 
 # [START kms_get_key_labels]
-def get_key_labels(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.CryptoKey:
+def get_key_labels(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Get a key and its labels.
 

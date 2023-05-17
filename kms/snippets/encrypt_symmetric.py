@@ -13,7 +13,9 @@
 
 
 # [START kms_encrypt_symmetric]
-def encrypt_symmetric(project_id: str, location_id: str, key_ring_id: str, key_id: str, plaintext: str) -> bytes:
+def encrypt_symmetric(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, plaintext: str
+) -> bytes:
     """
     Encrypt plaintext using a symmetric key.
 

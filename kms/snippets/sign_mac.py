@@ -15,7 +15,14 @@ from google.cloud import kms
 
 
 # [START kms_sign_mac]
-def sign_mac(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, data: str) -> kms.MacSignResponse:
+def sign_mac(
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    data: str,
+) -> kms.MacSignResponse:
     """
     Sign a message using the public key part of an asymmetric key.
 

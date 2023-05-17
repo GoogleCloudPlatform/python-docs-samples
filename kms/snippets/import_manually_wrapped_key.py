@@ -14,7 +14,11 @@
 
 # [START kms_import_manually_wrapped_key]
 def import_manually_wrapped_key(
-    project_id: str, location_id: str, key_ring_id: str, crypto_key_id: str, import_job_id: str
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    crypto_key_id: str,
+    import_job_id: str,
 ) -> None:
     """
     Generates and imports local key material to Cloud KMS.

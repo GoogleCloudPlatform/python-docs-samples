@@ -13,10 +13,13 @@
 
 from google.cloud import kms
 
-from typing import Any # TODO(glasnt) fix
+from typing import Any  # TODO(glasnt) fix
+
 
 # [START kms_iam_remove_member]
-def iam_remove_member(project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str) -> Any:
+def iam_remove_member(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str
+) -> Any:
     """
     Remove an IAM member from a resource.
 
