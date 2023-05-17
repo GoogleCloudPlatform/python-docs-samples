@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 
 # [START gae_flex_websockets_app]
 from flask import Flask, render_template

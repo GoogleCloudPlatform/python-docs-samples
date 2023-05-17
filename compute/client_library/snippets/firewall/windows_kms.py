@@ -20,6 +20,8 @@
 
 
 # [START compute_create_egress_rule_windows_activation]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

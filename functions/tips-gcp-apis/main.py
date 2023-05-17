@@ -50,7 +50,7 @@ def gcp_api_call(request):
     topic_path = pubsub.topic_path(project, topic_name)
 
     # Process the request
-    data = 'Test message'.encode('utf-8')
+    data = b'Test message'
     pubsub.publish(topic_path, data=data)
 
     return '1 message published'

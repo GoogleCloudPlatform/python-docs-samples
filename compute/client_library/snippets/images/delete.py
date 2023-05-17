@@ -20,6 +20,8 @@
 
 
 # [START compute_images_delete]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

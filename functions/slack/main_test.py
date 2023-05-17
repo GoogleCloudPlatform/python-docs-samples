@@ -1,9 +1,10 @@
-# Copyright 2018, Google, LLC.
+# Copyright 2018 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -14,9 +15,9 @@
 import json
 import os
 import time
+from unittest import mock
 
 import googleapiclient.discovery
-import mock
 import pytest
 from slack.signature import SignatureVerifier
 
@@ -29,7 +30,7 @@ kg_search = googleapiclient.discovery.build(
 example_response = kg_search.entities().search(query='lion', limit=1).execute()
 
 
-class Request(object):
+class Request:
     def __init__(self, data='', headers={}):
         self.data = data
         self.headers = headers
@@ -38,7 +39,7 @@ class Request(object):
         return self.data
 
 
-class TestGCFPySlackSample(object):
+class TestGCFPySlackSample:
     def test_verify_signature_request_form_empty(self):
         with pytest.raises(ValueError):
             request = Request()
