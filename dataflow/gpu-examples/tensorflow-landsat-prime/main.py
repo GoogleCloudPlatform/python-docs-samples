@@ -56,10 +56,10 @@ import os
 import re
 from typing import Any
 
-from PIL import Image
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 import numpy as np
+from PIL import Image
 import rasterio
 import tensorflow as tf
 
