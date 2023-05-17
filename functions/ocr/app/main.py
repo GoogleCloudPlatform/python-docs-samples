@@ -114,12 +114,13 @@ def validate_message(message: dict, param: str) -> Any:
 
 
 # [START functions_ocr_process]
-def process_image(file_info: dict) -> None:
+def process_image(file_info: dict, context: dict) -> None:
     """Cloud Function triggered by Cloud Storage when a file is changed.
 
     Args:
         file_info: Metadata of the changed file, provided by the
             triggering Cloud Storage event.
+        context: a dictionary containing metadata about the event.
 
     Returns:
         None; the output is written to stdout and Stackdriver Logging.
