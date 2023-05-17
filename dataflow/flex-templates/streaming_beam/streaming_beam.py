@@ -48,7 +48,7 @@ def parse_json_message(message: str) -> dict[str, Any]:
     """Parse the input json message and add 'score' & 'processing_time' keys."""
     row = json.loads(message)
     return {
-        "url": row"],
+        "url": row["url"],
         "score": 1.0 if row["review"] == "positive" else 0.0,
         "processing_time": int(time.time()),
     }
@@ -74,7 +74,7 @@ def run(
             | "Parse JSON messages" >> beam.Map(parse_json_message)
             | "Fixed-size windows"
             >> beam.WindowInto(window.FixedWindows(window_interval_sec, 0))
-            | "Add URL keys" >> beam.WithKeys(lambda msg: msg"])
+            | "Add URL keys" >> beam.WithKeys(lambda msg: msg["url"])
             | "Group by URLs" >> beam.GroupByKey()
             | "Get statistics"
             >> beam.MapTuple(

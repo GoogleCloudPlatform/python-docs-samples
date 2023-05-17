@@ -33,6 +33,7 @@ import sys
 from typing import NamedTuple, TypeVar
 
 # Cases not covered:
+# - False positives with lambdas due to the `:` misinterpreted as a type hint
 # - Multi-line imports like `from M import (\nA,\nB,\n)`
 # - Importing `typing` directly like `import typing` and `x: typing.Any`
 # - Parsing types with `|` syntax like Union or Optional

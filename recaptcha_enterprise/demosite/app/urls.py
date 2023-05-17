@@ -28,8 +28,8 @@ from backend.create_recaptcha_assessment import create_assessment
 SAMPLE_THRESHOLD_SCORE = 0.50
 
 context = {
-    "project_id": os.environ"],
-    "site_key": os.environ"],
+    "project_id": os.environ["GOOGLE_CLOUD_PROJECT"],
+    "site_key": os.environ["SITE_KEY"],
 }
 
 # Parse config file and read available reCAPTCHA actions. All reCAPTCHA actions registered in the client
