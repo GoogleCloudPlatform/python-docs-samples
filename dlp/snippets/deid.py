@@ -14,9 +14,9 @@
 
 """Uses of the Data Loss Prevention API for deidentifying sensitive data."""
 
+from __future__ import annotations
 
 import argparse
-from typing import List
 
 
 # [START dlp_deidentify_masking]
@@ -83,6 +83,7 @@ def deidentify_with_mask(
 
 # [END dlp_deidentify_masking]
 
+
 # [START dlp_deidentify_redact]
 def deidentify_with_redact(
     project,
@@ -134,6 +135,7 @@ def deidentify_with_redact(
 
 
 # [END dlp_deidentify_redact]
+
 
 # [START dlp_deidentify_replace]
 def deidentify_with_replace(
@@ -292,6 +294,7 @@ def deidentify_with_fpe(
 
 
 # [END dlp_deidentify_fpe]
+
 
 # [START dlp_deidentify_deterministic]
 def deidentify_with_deterministic(
@@ -942,7 +945,7 @@ def deidentify_with_simple_word_list(
     project: str,
     input_str: str,
     custom_info_type_name: str,
-    word_list: List[str],
+    word_list: list[str],
 ) -> None:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string by matching against custom word list.
@@ -965,7 +968,7 @@ def deidentify_with_simple_word_list(
     custom_info_types = [
         {
             "info_type": {"name": custom_info_type_name},
-            "dictionary": {"word_list": word_list}
+            "dictionary": {"word_list": word_list},
         }
     ]
 
@@ -978,9 +981,7 @@ def deidentify_with_simple_word_list(
     deidentify_config = {
         "info_type_transformations": {
             "transformations": [
-                {
-                    "primitive_transformation": {"replace_with_info_type_config": {}}
-                }
+                {"primitive_transformation": {"replace_with_info_type_config": {}}}
             ]
         }
     }
@@ -1008,12 +1009,7 @@ def deidentify_with_simple_word_list(
 
 
 # [START dlp_deidentify_exception_list]
-def deidentify_with_exception_list(
-    project,
-    content_string,
-    info_types,
-    exception_list
-):
+def deidentify_with_exception_list(project, content_string, info_types, exception_list):
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string but ignore matches against custom list.
 
@@ -1100,7 +1096,7 @@ def deidentify_table_bucketing(
     deid_content_list,
     bucket_size,
     bucketing_lower_bound,
-    bucketing_upper_bound
+    bucketing_upper_bound,
 ):
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with fixed size bucket ranges.
@@ -1176,7 +1172,7 @@ def deidentify_table_bucketing(
     fixed_size_bucketing_config = {
         "bucket_size": bucket_size,
         "lower_bound": {"integer_value": bucketing_lower_bound},
-        "upper_bound": {"integer_value": bucketing_upper_bound}
+        "upper_bound": {"integer_value": bucketing_upper_bound},
     }
 
     # Specify fields to be de-identified
@@ -1190,24 +1186,23 @@ def deidentify_table_bucketing(
                     "fields": deid_content_list,
                     "primitive_transformation": {
                         "fixed_size_bucketing_config": fixed_size_bucketing_config
-                    }
+                    },
                 }
             ]
         }
     }
 
     # Call the API.
-    response = dlp.deidentify_content(request={
-        "parent": parent,
-        "deidentify_config": deidentify_config,
-        "item": item
-    })
+    response = dlp.deidentify_content(
+        request={"parent": parent, "deidentify_config": deidentify_config, "item": item}
+    )
 
     # Print the results.
     print(f"Table after de-identification: {response.item.table}")
 
     # Return the response.
     return response.item.table
+
 
 # [END dlp_deidentify_table_bucketing]
 
@@ -1220,7 +1215,7 @@ def deidentify_table_condition_replace_with_info_types(
     info_types,
     condition_field=None,
     condition_operator=None,
-    condition_value=None
+    condition_value=None,
 ):
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with info-types based on a condition.
@@ -1301,7 +1296,7 @@ def deidentify_table_condition_replace_with_info_types(
         {
             "field": {"name": condition_field},
             "operator": condition_operator,
-            "value": {"integer_value": condition_value}
+            "value": {"integer_value": condition_value},
         }
     ]
 
@@ -1313,16 +1308,16 @@ def deidentify_table_condition_replace_with_info_types(
                     "info_type_transformations": {
                         "transformations": [
                             {
-                                "primitive_transformation": {"replace_with_info_type_config": {}}
+                                "primitive_transformation": {
+                                    "replace_with_info_type_config": {}
+                                }
                             }
                         ]
                     },
                     "fields": deid_field_list,
                     "condition": {
-                        "expressions": {
-                            "conditions": {"conditions": condition}
-                        }
-                    }
+                        "expressions": {"conditions": {"conditions": condition}}
+                    },
                 }
             ]
         }
@@ -1337,12 +1332,14 @@ def deidentify_table_condition_replace_with_info_types(
             "parent": parent,
             "deidentify_config": deidentify_config,
             "item": item,
-            "inspect_config": inspect_config
-        })
+            "inspect_config": inspect_config,
+        }
+    )
 
     print(f"Table after de-identification: {response.item.table}")
 
     return response.item.table
+
 
 # [END dlp_deidentify_table_condition_infotypes]
 
@@ -1355,7 +1352,7 @@ def deidentify_table_condition_masking(
     condition_field=None,
     condition_operator=None,
     condition_value=None,
-    masking_character=None
+    masking_character=None,
 ):
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by masking them based on a condition.
@@ -1435,7 +1432,7 @@ def deidentify_table_condition_masking(
         {
             "field": {"name": condition_field},
             "operator": condition_operator,
-            "value": {"integer_value": condition_value}
+            "value": {"integer_value": condition_value},
         }
     ]
 
@@ -1451,10 +1448,8 @@ def deidentify_table_condition_masking(
                     },
                     "fields": deid_content_list,
                     "condition": {
-                        "expressions": {
-                            "conditions": {"conditions": condition}
-                        }
-                    }
+                        "expressions": {"conditions": {"conditions": condition}}
+                    },
                 }
             ]
         }
@@ -1465,11 +1460,8 @@ def deidentify_table_condition_masking(
 
     # Call the API.
     response = dlp.deidentify_content(
-        request={
-            "parent": parent,
-            "deidentify_config": deidentify_config,
-            "item": item
-        })
+        request={"parent": parent, "deidentify_config": deidentify_config, "item": item}
+    )
 
     # Print the result
     print(f"Table after de-identification: {response.item.table}")
@@ -1477,15 +1469,13 @@ def deidentify_table_condition_masking(
     # Return the response
     return response.item.table
 
+
 # [END dlp_deidentify_table_condition_masking]
 
 
 # [START dlp_deidentify_table_infotypes]
 def deidentify_table_replace_with_info_types(
-    project,
-    table_data,
-    info_types,
-    deid_content_list
+    project, table_data, info_types, deid_content_list
 ):
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by replacing them with info type.
@@ -1551,7 +1541,9 @@ def deidentify_table_replace_with_info_types(
                     "info_type_transformations": {
                         "transformations": [
                             {
-                                "primitive_transformation": {"replace_with_info_type_config": {}}
+                                "primitive_transformation": {
+                                    "replace_with_info_type_config": {}
+                                }
                             }
                         ]
                     },
@@ -1570,8 +1562,9 @@ def deidentify_table_replace_with_info_types(
             "parent": parent,
             "deidentify_config": deidentify_config,
             "item": item,
-            "inspect_config": inspect_config
-        })
+            "inspect_config": inspect_config,
+        }
+    )
 
     # Print the result
     print(f"Table after de-identification: {response.item.table}")
@@ -1817,7 +1810,7 @@ if __name__ == "__main__":
 
     deid_word_list_parser = subparsers.add_parser(
         "deid_simple_word_list",
-        help="Deidentify sensitive data in a string against a custom simple word list"
+        help="Deidentify sensitive data in a string against a custom simple word list",
     )
     deid_word_list_parser.add_argument(
         "project",
@@ -1838,7 +1831,7 @@ if __name__ == "__main__":
 
     deid_exception_list_parser = subparsers.add_parser(
         "deid_exception_list",
-        help="De-identify sensitive data in a string , ignore matches against a custom word list"
+        help="De-identify sensitive data in a string , ignore matches against a custom word list",
     )
     deid_exception_list_parser.add_argument(
         "project",
@@ -1853,7 +1846,7 @@ if __name__ == "__main__":
         nargs="+",
         help="Strings representing info types to look for. A full list of "
         "info categories and types is available from the API. Examples "
-        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     deid_exception_list_parser.add_argument(
         "exception_list",
@@ -1863,7 +1856,7 @@ if __name__ == "__main__":
     table_bucketing_parser = subparsers.add_parser(
         "deid_table_bucketing",
         help="De-identify sensitive data in a table by replacing "
-             "them with fixed size bucket ranges.",
+        "them with fixed size bucket ranges.",
     )
     table_bucketing_parser.add_argument(
         "--project",
@@ -1874,8 +1867,7 @@ if __name__ == "__main__":
         help="Json string representing table data",
     )
     table_bucketing_parser.add_argument(
-        "--deid_content_list",
-        help="A list of fields in table to de-identify."
+        "--deid_content_list", help="A list of fields in table to de-identify."
     )
     table_bucketing_parser.add_argument(
         "--bucket_size",
@@ -1904,8 +1896,7 @@ if __name__ == "__main__":
         help="Json string representing table data",
     )
     table_condition_replace_parser.add_argument(
-        "deid_content_list",
-        help="A list of fields in table to de-identify."
+        "deid_content_list", help="A list of fields in table to de-identify."
     )
     table_condition_replace_parser.add_argument(
         "--info_types",
@@ -1916,8 +1907,7 @@ if __name__ == "__main__":
     )
     table_condition_replace_parser.add_argument(
         "--condition_field",
-        help="A table Field within the record this condition is evaluated "
-        "against.",
+        help="A table Field within the record this condition is evaluated " "against.",
     )
     table_condition_replace_parser.add_argument(
         "--condition_operator",
@@ -1945,13 +1935,11 @@ if __name__ == "__main__":
         help="Json string representing table data",
     )
     table_condition_mask_parser.add_argument(
-        "deid_content_list",
-        help="A list of fields in table to de-identify."
+        "deid_content_list", help="A list of fields in table to de-identify."
     )
     table_condition_mask_parser.add_argument(
         "--condition_field",
-        help="A table Field within the record this condition is evaluated "
-        "against.",
+        help="A table Field within the record this condition is evaluated " "against.",
     )
     table_condition_mask_parser.add_argument(
         "--condition_operator",
@@ -2080,7 +2068,7 @@ if __name__ == "__main__":
             args.info_types,
             condition_field=args.condition_field,
             condition_operator=args.condition_operator,
-            condition_value=args.condition_value
+            condition_value=args.condition_value,
         )
     elif args.content == "deid_table_condition_mask":
         deidentify_table_condition_masking(
@@ -2090,7 +2078,7 @@ if __name__ == "__main__":
             condition_field=args.condition_field,
             condition_operator=args.condition_operator,
             condition_value=args.condition_value,
-            masking_character=args.masking_character
+            masking_character=args.masking_character,
         )
     elif args.content == "table_replace_with_infotype":
         deidentify_table_replace_with_info_types(

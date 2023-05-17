@@ -20,8 +20,11 @@
 
 
 # [START compute_regional_disk_create_from_disk]
+from __future__ import annotations
+
+from collections.abc import Iterable
 import sys
-from typing import Any, Iterable, Optional
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -82,8 +85,8 @@ def create_regional_disk(
     disk_name: str,
     disk_type: str,
     disk_size_gb: int,
-    disk_link: Optional[str] = None,
-    snapshot_link: Optional[str] = None,
+    disk_link: str | None = None,
+    snapshot_link: str | None = None,
 ) -> compute_v1.Disk:
     """
     Creates a regional disk from an existing zonal disk in a given project.
