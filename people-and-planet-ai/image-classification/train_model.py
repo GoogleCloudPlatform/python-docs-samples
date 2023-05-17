@@ -24,11 +24,11 @@ import random
 import time
 from typing import TypeVar
 
-from PIL import Image, ImageFile
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from google.cloud import aiplatform
 from google.cloud.aiplatform.gapic.schema import trainingjob
+from PIL import Image, ImageFile
 import requests
 
 a = TypeVar("a")
