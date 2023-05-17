@@ -14,10 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
+from collections.abc import Callable
 import os
 import re
 import sys
-from typing import Callable
 
 import click
 import github

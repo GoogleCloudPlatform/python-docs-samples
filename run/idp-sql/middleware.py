@@ -13,8 +13,11 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, TypeVar
+from typing import TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401

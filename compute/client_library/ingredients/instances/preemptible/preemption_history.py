@@ -12,18 +12,19 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+from __future__ import annotations
+
 import datetime
-from typing import List, Tuple
 
 
 # <INGREDIENT preemption_history>
 def preemption_history(
     project_id: str, zone: str, instance_name: str = None
-) -> List[Tuple[str, datetime.datetime]]:
+) -> list[tuple[str, datetime.datetime]]:
     """
     Get a list of preemption operations from given zone in a project. Optionally limit
     the results to instance name.
