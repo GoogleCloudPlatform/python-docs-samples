@@ -33,7 +33,7 @@ import sys
 from typing import NamedTuple, TypeVar
 
 # TODO:
-# - False positives with lambdas due to the `:` misinterpreted as a type hint
+# - False positives with lambdas and dict comprehensions due to the `:` misinterpreted as a type hint
 # - Sort imports case insensitive (e.g. PIL, Flask)
 # - Type hint arguments can be lists like `Callable[[a, b], c]`
 
