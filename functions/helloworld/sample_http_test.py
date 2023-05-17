@@ -24,7 +24,7 @@ def test_print_name():
     req = Mock(get_json=Mock(return_value=data), args=data)
 
     # Call tested function
-    assert main.hello_http(req) == 'Hello {}!'.format(name)
+    assert main.hello_http(req) == f'Hello {name}!'
 
 
 def test_print_hello_world():

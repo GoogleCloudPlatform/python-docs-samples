@@ -32,10 +32,10 @@ def make_request():
 
     resp = requests.get(
         url,
-        headers={'Authorization': 'Bearer {}'.format(token)}
+        headers={'Authorization': f'Bearer {token}'}
     )
 
-    message = 'Response when calling {}:\n\n'.format(url)
+    message = f'Response when calling {url}:\n\n'
     message += resp.text
 
     return message, 200, {'Content-type': 'text/plain'}

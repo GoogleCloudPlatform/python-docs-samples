@@ -21,8 +21,8 @@ import snippets
 
 TEST_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
 TEST_LOCATION = os.getenv('TEST_QUEUE_LOCATION', 'us-central1')
-QUEUE_NAME_1 = "queue-{}".format(uuid.uuid4())
-QUEUE_NAME_2 = "queue-{}".format(uuid.uuid4())
+QUEUE_NAME_1 = f"queue-{uuid.uuid4()}"
+QUEUE_NAME_2 = f"queue-{uuid.uuid4()}"
 
 
 @pytest.mark.order1
@@ -111,7 +111,7 @@ def test_retry_task():
     QUEUE_SIZE = 3
     QUEUE_NAME = []
     for i in range(QUEUE_SIZE):
-        QUEUE_NAME.append("queue-{}".format(uuid.uuid4()))
+        QUEUE_NAME.append(f"queue-{uuid.uuid4()}")
 
     name = "projects/{}/locations/{}/queues/{}".format(
         TEST_PROJECT_ID, TEST_LOCATION, QUEUE_NAME[2])
