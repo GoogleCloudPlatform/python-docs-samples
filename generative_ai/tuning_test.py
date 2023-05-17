@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import os
 import uuid
 
@@ -44,7 +45,10 @@ def download_from_gcs(bucket, name):
     client = storage.Client()
     bucket = client.get_bucket(bucket)
     blob = bucket.blob(name)
-    return blob.download_as_bytes()
+    data = blob.download_as_bytes()
+    return "\n".join(
+        data.decode().splitlines()[:10]
+    )
 
 
 def delete_from_gcs(bucket, name):
@@ -80,7 +84,6 @@ def teardown_model(tuned_model, training_data_filename):
 
 def test_tuning(training_data_filename):
     """Takes approx. 40 minutes."""
-
     tuned_model = tuning.tuning(
         training_data=training_data_filename,
         project_id=_PROJECT_ID,
