@@ -14,6 +14,8 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
+from __future__ import annotations
+
 import argparse
 
 

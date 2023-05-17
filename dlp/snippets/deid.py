@@ -14,6 +14,8 @@
 
 """Uses of the Data Loss Prevention API for deidentifying sensitive data."""
 
+from __future__ import annotations
+
 import argparse
 
 
