@@ -20,6 +20,8 @@
 
 
 # [START compute_disk_clone_encrypted_disk_kms]
+from __future__ import annotations
+
 import sys
 from typing import Any
 
