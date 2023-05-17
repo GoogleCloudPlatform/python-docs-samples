@@ -48,7 +48,8 @@ from create_key_labels import create_key_labels
 from create_key_mac import create_key_mac
 from create_key_ring import create_key_ring
 from create_key_rotation_schedule import create_key_rotation_schedule
-from create_key_symmetric_encrypt_decrypt import create_key_symmetric_encrypt_decrypt
+from create_key_symmetric_encrypt_decrypt import \
+    create_key_symmetric_encrypt_decrypt
 from create_key_version import create_key_version
 from decrypt_asymmetric import decrypt_asymmetric
 from decrypt_symmetric import decrypt_symmetric
