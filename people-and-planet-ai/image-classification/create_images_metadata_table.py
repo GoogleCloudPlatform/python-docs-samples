@@ -78,7 +78,7 @@ def run(
             | "Get images info" >> beam.FlatMap(get_images_metadata)
             | "Filter invalid rows"
             >> beam.Filter(
-                lambda x: x"] not in INVALID_CATEGORIES
+                lambda x: x["category"] not in INVALID_CATEGORIES
                 or x["category"].startswith("unknown ")
                 or x["category"].endswith(" desconocida")
                 or x["category"].endswith(" desconocido")
@@ -103,9 +103,9 @@ def get_images_metadata(metadata_url: str) -> Iterable[dict[str, str]]:
             metadata = json.load(f)
 
     categories = {
-        category["id"]: category"] for category in metadata["categories"]
+        category["id"]: category["name"] for category in metadata["categories"]
     }
-    file_names = {image["id"]: image"] for image in metadata["images"]}
+    file_names = {image["id"]: image["file_name"] for image in metadata["images"]}
 
     for annotation in metadata["annotations"]:
         category_id = annotation["category_id"]
