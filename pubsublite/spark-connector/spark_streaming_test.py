@@ -227,7 +227,7 @@ def test_spark_streaming_from_pubsublite(
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
         client_options={
-            "api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)
+            "api_endpoint": f"{CLOUD_REGION}-dataproc.googleapis.com:443"
         }
     )
 

@@ -92,7 +92,7 @@ def create_jwt(project_id, private_key_file, algorithm, jwt_expires_minutes):
     }
 
     # Read the private key file.
-    with open(private_key_file, 'r') as f:
+    with open(private_key_file) as f:
         private_key = f.read()
 
     print('Creating JWT using {} from private key file {}'.format(
@@ -105,7 +105,7 @@ def create_jwt(project_id, private_key_file, algorithm, jwt_expires_minutes):
 # [START iot_mqtt_config]
 def error_str(rc):
     """Convert a Paho error to a human readable string."""
-    return '{}: {}'.format(rc, mqtt.error_string(rc))
+    return f'{rc}: {mqtt.error_string(rc)}'
 
 
 def on_connect(client, unused_userdata, unused_flags, rc):
@@ -140,16 +140,16 @@ def on_publish(unused_client, userdata, mid):
         print('Pending response count {}'.format(
                 len(gateway_state.pending_responses)))
     except KeyError:
-        print('Unable to find key {}'.format(mid))
+        print(f'Unable to find key {mid}')
 
 
 def on_subscribe(unused_client, unused_userdata, mid, granted_qos):
-    print('on_subscribe: mid {}, qos {}'.format(mid, granted_qos))
+    print(f'on_subscribe: mid {mid}, qos {granted_qos}')
     try:
         client_addr, response = gateway_state.pending_subscribes[mid]
         udpSerSock.sendto(response.encode(), client_addr)
     except KeyError:
-        print('Unable to find mid: {}'.format(mid))
+        print(f'Unable to find mid: {mid}')
 
 
 def on_message(unused_client, unused_userdata, message):
@@ -163,7 +163,7 @@ def on_message(unused_client, unused_userdata, message):
         udpSerSock.sendto(payload, client_addr)
         print('Sent message to device')
     except KeyError:
-        print('Nobody subscribes to topic {}'.format(message.topic))
+        print(f'Nobody subscribes to topic {message.topic}')
 
 
 def get_client(
@@ -255,13 +255,13 @@ def parse_command_line_args():
 
 
 def attach_device(client, device_id):
-    attach_topic = '/devices/{}/attach'.format(device_id)
+    attach_topic = f'/devices/{device_id}/attach'
     print(attach_topic)
     return client.publish(attach_topic,    "", qos=1)
 
 
 def detatch_device(client, device_id):
-    detach_topic = '/devices/{}/detach'.format(device_id)
+    detach_topic = f'/devices/{device_id}/detach'
     print(detach_topic)
     return client.publish(detach_topic, "", qos=1)
 
@@ -286,20 +286,20 @@ def main():
     while True:
         client.loop()
         if gateway_state.connected is False:
-            print('connect status {}'.format(gateway_state.connected))
+            print(f'connect status {gateway_state.connected}')
             time.sleep(1)
             continue
 
         try:
             data, client_addr = udpSerSock.recvfrom(BUFF_SIZE)
-        except socket.error:
+        except OSError:
             continue
         print('[{}]: From Address {}:{} receive data: {}'.format(
                 ctime(), client_addr[0], client_addr[1], data.decode("utf-8")))
 
         command = json.loads(data.decode('utf-8'))
         if not command:
-            print('invalid json command {}'.format(data))
+            print(f'invalid json command {data}')
             continue
 
         action = command["action"]
@@ -307,38 +307,38 @@ def main():
         template = '{{ "device": "{}", "command": "{}", "status" : "ok" }}'
 
         if action == 'event':
-            print('Sending telemetry event for device {}'.format(device_id))
+            print(f'Sending telemetry event for device {device_id}')
             payload = command["data"]
-            mqtt_topic = '/devices/{}/events'.format(device_id)
+            mqtt_topic = f'/devices/{device_id}/events'
             print('Publishing message to topic {} with payload \'{}\''.format(
                     mqtt_topic, payload))
             _, event_mid = client.publish(mqtt_topic, payload, qos=1)
             response = template.format(device_id, 'event')
-            print('Save mid {} for response {}'.format(event_mid, response))
+            print(f'Save mid {event_mid} for response {response}')
             gateway_state.pending_responses[event_mid] = (
                 client_addr, response)
         elif action == 'attach':
             _, attach_mid = attach_device(client, device_id)
             response = template.format(device_id, 'attach')
-            print('Save mid {} for response {}'.format(attach_mid, response))
+            print(f'Save mid {attach_mid} for response {response}')
             gateway_state.pending_responses[attach_mid] = (
                 client_addr, response)
         elif action == 'detach':
             _, detach_mid = detatch_device(client, device_id)
             response = template.format(device_id, 'detach')
-            print('Save mid {} for response {}'.format(detach_mid, response))
+            print(f'Save mid {detach_mid} for response {response}')
             gateway_state.pending_responses[detach_mid] = (
                 client_addr, response)
         elif action == "subscribe":
-            print('subscribe config for {}'.format(device_id))
-            subscribe_topic = '/devices/{}/config'.format(device_id)
+            print(f'subscribe config for {device_id}')
+            subscribe_topic = f'/devices/{device_id}/config'
             _, mid = client.subscribe(subscribe_topic, qos=1)
             response = template.format(device_id, 'subscribe')
             gateway_state.subscriptions[subscribe_topic] = (client_addr)
-            print('Save mid {} for response {}'.format(mid, response))
+            print(f'Save mid {mid} for response {response}')
             gateway_state.pending_subscribes[mid] = (client_addr, response)
     else:
-        print('undefined action: {}'.format(action))
+        print(f'undefined action: {action}')
 
     print('Finished.')
 # [END iot_mqtt_run]

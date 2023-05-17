@@ -14,9 +14,6 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
-from __future__ import annotations
-from __future__ import print_function
-
 import argparse
 
 
@@ -81,7 +78,7 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
     # Iterate over results.
     for job in response:
-        print("Job: %s; status: %s" % (job.name, job.state.name))
+        print(f"Job: {job.name}; status: {job.state.name}")
 
 
 # [END dlp_list_jobs]
@@ -160,7 +157,7 @@ def create_dlp_job(
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = "gs://{}/*".format(bucket)
+    url = f"gs://{bucket}/*"
     storage_config = {
         "cloud_storage_options": {"file_set": {"url": url}},
         # Time-based configuration for each storage object.
@@ -176,15 +173,12 @@ def create_dlp_job(
 
     # Call the API.
     response = dlp.create_dlp_job(
-        request={
-            "parent": parent,
-            "inspect_job": job,
-            "job_id": job_id
-        }
+        request={"parent": parent, "inspect_job": job, "job_id": job_id}
     )
 
     # Print out the result.
-    print("Job : {} status: {}".format(response.name, response.state))
+    print(f"Job : {response.name} status: {response.state}")
+
 
 # [END dlp_create_job]
 
@@ -235,18 +229,18 @@ if __name__ == "__main__":
     create_parser.add_argument(
         "bucket",
         help="The name of the GCS bucket to scan. This sample scans all files "
-        "in the bucket."
+        "in the bucket.",
     )
     create_parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     create_parser.add_argument(
         "--job_id",
-        help="The id of the job. If omitted, an id will be randomly generated."
+        help="The id of the job. If omitted, an id will be randomly generated.",
     )
     create_parser.add_argument(
         "--max_findings",

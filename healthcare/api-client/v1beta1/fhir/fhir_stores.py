@@ -33,7 +33,7 @@ def get_client(service_account_json):
     )
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = "{}?labels=CHC_BETA&version={}".format(discovery_api, api_version)
+    discovery_url = f"{discovery_api}?labels=CHC_BETA&version={api_version}"
 
     return discovery.build(
         service_name,
@@ -46,7 +46,7 @@ def get_client(service_account_json):
 def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
     """Creates a dataset."""
     client = get_client(service_account_json)
-    dataset_parent = "projects/{}/locations/{}".format(project_id, cloud_region)
+    dataset_parent = f"projects/{project_id}/locations/{cloud_region}"
 
     body = {}
 
@@ -59,10 +59,10 @@ def create_dataset(service_account_json, project_id, cloud_region, dataset_id):
 
     try:
         response = request.execute()
-        print("Created dataset: {}".format(dataset_id))
+        print(f"Created dataset: {dataset_id}")
         return response
     except HttpError as e:
-        print("Error, dataset not created: {}".format(e))
+        print(f"Error, dataset not created: {e}")
         return ""
 
 
@@ -77,10 +77,10 @@ def delete_dataset(service_account_json, project_id, cloud_region, dataset_id):
 
     try:
         response = request.execute()
-        print("Deleted dataset: {}".format(dataset_id))
+        print(f"Deleted dataset: {dataset_id}")
         return response
     except HttpError as e:
-        print("Error, dataset not deleted: {}".format(e))
+        print(f"Error, dataset not deleted: {e}")
         return ""
 
 
@@ -104,7 +104,7 @@ def create_fhir_store(
     )
 
     response = request.execute()
-    print("Created FHIR store: {}".format(fhir_store_id))
+    print(f"Created FHIR store: {fhir_store_id}")
     return response
 
 
@@ -116,7 +116,7 @@ def delete_fhir_store(
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, cloud_region, dataset_id
     )
-    fhir_store_name = "{}/fhirStores/{}".format(fhir_store_parent, fhir_store_id)
+    fhir_store_name = f"{fhir_store_parent}/fhirStores/{fhir_store_id}"
 
     request = (
         client.projects()
@@ -127,7 +127,7 @@ def delete_fhir_store(
     )
 
     response = request.execute()
-    print("Deleted FHIR store: {}".format(fhir_store_id))
+    print(f"Deleted FHIR store: {fhir_store_id}")
     return response
 
 
