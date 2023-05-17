@@ -13,9 +13,9 @@
 # limitations under the License.
 
 # [START functions_cloudevent_storage]
-import functions_framework
-
 from cloudevents.http import CloudEvent
+
+import functions_framework
 
 
 # Triggered by a change in a storage bucket
