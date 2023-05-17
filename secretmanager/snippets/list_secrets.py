@@ -20,7 +20,7 @@ import argparse
 
 
 # [START secretmanager_list_secrets]
-def list_secrets(project_id):
+def list_secrets(project_id: str) -> None:
     """
     List all secrets in the given project.
     """
