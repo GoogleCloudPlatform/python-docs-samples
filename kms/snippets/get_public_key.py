@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_get_public_key]
-def get_public_key(project_id, location_id, key_ring_id, key_id, version_id):
+def get_public_key(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str) -> kms.PublicKey:
     """
     Get the public key for an asymmetric key.
 
@@ -36,26 +38,30 @@ def get_public_key(project_id, location_id, key_ring_id, key_id, version_id):
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Call the API.
-    public_key = client.get_public_key(request={'name': key_version_name})
+    public_key = client.get_public_key(request={"name": key_version_name})
 
     # Optional, but recommended: perform integrity verification on public_key.
     # For more details on ensuring E2E in-transit integrity to and from Cloud KMS visit:
     # https://cloud.google.com/kms/docs/data-integrity-guidelines
     if not public_key.name == key_version_name:
-        raise Exception('The request sent to the server was corrupted in-transit.')
+        raise Exception("The request sent to the server was corrupted in-transit.")
     # See crc32c() function defined below.
     if not public_key.pem_crc32c == crc32c(public_key.pem):
-        raise Exception('The response received from the server was corrupted in-transit.')
+        raise Exception(
+            "The response received from the server was corrupted in-transit."
+        )
     # End integrity verification
 
-    print(f'Public key: {public_key.pem}')
+    print(f"Public key: {public_key.pem}")
     return public_key
 
 
-def crc32c(data):
+def crc32c(data: bytes) -> int:
     """
     Calculates the CRC32C checksum of the provided data.
     Args:
@@ -63,8 +69,11 @@ def crc32c(data):
     Returns:
         An int representing the CRC32C checksum of the provided bytes.
     """
-    import crcmod
-    import six
-    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun('crc-32c')
+    import crcmod  # type: ignore
+    import six  # type: ignore
+
+    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
     return crc32c_fun(six.ensure_binary(data))
+
+
 # [END kms_get_public_key]

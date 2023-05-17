@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_sign_mac]
-def sign_mac(project_id, location_id, key_ring_id, key_id, version_id, data):
+def sign_mac(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, data: str) -> kms.MacSignResponse:
     """
     Sign a message using the public key part of an asymmetric key.
 
@@ -39,15 +41,20 @@ def sign_mac(project_id, location_id, key_ring_id, key_id, version_id, data):
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Convert the message to bytes.
-    data_bytes = data.encode('utf-8')
+    data_bytes = data.encode("utf-8")
 
     # Call the API
     sign_response = client.mac_sign(
-        request={'name': key_version_name, 'data': data_bytes})
+        request={"name": key_version_name, "data": data_bytes}
+    )
 
-    print(f'Signature: {base64.b64encode(sign_response.mac)}')
+    print(f"Signature: {base64.b64encode(sign_response.mac)!r}")
     return sign_response
+
+
 # [END kms_sign_mac]

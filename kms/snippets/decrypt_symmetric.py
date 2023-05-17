@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_decrypt_symmetric]
-def decrypt_symmetric(project_id, location_id, key_ring_id, key_id, ciphertext):
+def decrypt_symmetric(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, ciphertext: bytes
+) -> kms.SymmetricDecrypt:
     """
     Decrypt the ciphertext using the symmetric key
 
@@ -44,20 +48,27 @@ def decrypt_symmetric(project_id, location_id, key_ring_id, key_id, ciphertext):
 
     # Call the API.
     decrypt_response = client.decrypt(
-        request={'name': key_name, 'ciphertext': ciphertext, 'ciphertext_crc32c': ciphertext_crc32c})
+        request={
+            "name": key_name,
+            "ciphertext": ciphertext,
+            "ciphertext_crc32c": ciphertext_crc32c,
+        }
+    )
 
     # Optional, but recommended: perform integrity verification on decrypt_response.
     # For more details on ensuring E2E in-transit integrity to and from Cloud KMS visit:
     # https://cloud.google.com/kms/docs/data-integrity-guidelines
     if not decrypt_response.plaintext_crc32c == crc32c(decrypt_response.plaintext):
-        raise Exception('The response received from the server was corrupted in-transit.')
+        raise Exception(
+            "The response received from the server was corrupted in-transit."
+        )
     # End integrity verification
 
-    print(f'Plaintext: {decrypt_response.plaintext}')
+    print(f"Plaintext: {decrypt_response.plaintext!r}")
     return decrypt_response
 
 
-def crc32c(data):
+def crc32c(data: bytes) -> int:
     """
     Calculates the CRC32C checksum of the provided data.
     Args:
@@ -65,8 +76,11 @@ def crc32c(data):
     Returns:
         An int representing the CRC32C checksum of the provided bytes.
     """
-    import crcmod
-    import six
-    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun('crc-32c')
+    import crcmod  # type: ignore
+    import six  # type: ignore
+
+    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
     return crc32c_fun(six.ensure_binary(data))
+
+
 # [END kms_decrypt_symmetric]

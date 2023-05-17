@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_iam_remove_member]
-def iam_remove_member(project_id, location_id, key_ring_id, key_id, member):
+def iam_remove_member(project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str) -> kms.Policy:
     """
     Remove an IAM member from a resource.
 
@@ -42,20 +44,19 @@ def iam_remove_member(project_id, location_id, key_ring_id, key_id, member):
     # resource_name = client.key_ring_path(project_id, location_id, key_ring_id);
 
     # Get the current policy.
-    policy = client.get_iam_policy(request={'resource': resource_name})
+    policy = client.get_iam_policy(request={"resource": resource_name})
 
     # Remove the member from the policy.
     for binding in policy.bindings:
-        if binding.role == 'roles/cloudkms.cryptoKeyEncrypterDecrypter':
+        if binding.role == "roles/cloudkms.cryptoKeyEncrypterDecrypter":
             if member in binding.members:
                 binding.members.remove(member)
 
     # Save the updated IAM policy.
-    request = {
-        'resource': resource_name,
-        'policy': policy
-    }
+    request = {"resource": resource_name, "policy": policy}
     updated_policy = client.set_iam_policy(request=request)
-    print(f'Removed {member} from {resource_name}')
+    print(f"Removed {member} from {resource_name}")
     return updated_policy
+
+
 # [END kms_iam_remove_member]

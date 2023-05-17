@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_enable_key_version]
-def enable_key_version(project_id, location_id, key_ring_id, key_id, version_id):
+def enable_key_version(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str) -> kms.CryptoKeyVersion:
     """
     Enable a key.
 
@@ -36,18 +38,24 @@ def enable_key_version(project_id, location_id, key_ring_id, key_id, version_id)
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     key_version = {
-        'name': key_version_name,
-        'state': kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED
+        "name": key_version_name,
+        "state": kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED,
     }
 
     # Build the update mask.
-    update_mask = {'paths': ['state']}
+    update_mask = {"paths": ["state"]}
 
     # Call the API.
-    enabled_version = client.update_crypto_key_version(request={'crypto_key_version': key_version, 'update_mask': update_mask})
-    print(f'Enabled key version: {enabled_version.name}')
+    enabled_version = client.update_crypto_key_version(
+        request={"crypto_key_version": key_version, "update_mask": update_mask}
+    )
+    print(f"Enabled key version: {enabled_version.name}")
     return enabled_version
+
+
 # [END kms_enable_key_version]

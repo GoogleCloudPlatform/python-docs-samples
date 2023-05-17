@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_sign_asymmetric]
-def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, message):
+def sign_asymmetric(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, message: str) -> kms.AsymmetricSignResponse:
     """
     Sign a message using the public key part of an asymmetric key.
 
@@ -42,10 +44,12 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Convert the message to bytes.
-    message_bytes = message.encode('utf-8')
+    message_bytes = message.encode("utf-8")
 
     # Calculate the hash.
     hash_ = hashlib.sha256(message_bytes).digest()
@@ -54,7 +58,7 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
     #
     # Note: Key algorithms will require a varying hash function. For
     # example, EC_SIGN_P384_SHA384 requires SHA-384.
-    digest = {'sha256': hash_}
+    digest = {"sha256": hash_}
 
     # Optional, but recommended: compute digest's CRC32C.
     # See crc32c() function defined below.
@@ -62,24 +66,31 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
 
     # Call the API
     sign_response = client.asymmetric_sign(
-        request={'name': key_version_name, 'digest': digest, 'digest_crc32c': digest_crc32c})
+        request={
+            "name": key_version_name,
+            "digest": digest,
+            "digest_crc32c": digest_crc32c,
+        }
+    )
 
     # Optional, but recommended: perform integrity verification on sign_response.
     # For more details on ensuring E2E in-transit integrity to and from Cloud KMS visit:
     # https://cloud.google.com/kms/docs/data-integrity-guidelines
     if not sign_response.verified_digest_crc32c:
-        raise Exception('The request sent to the server was corrupted in-transit.')
+        raise Exception("The request sent to the server was corrupted in-transit.")
     if not sign_response.name == key_version_name:
-        raise Exception('The request sent to the server was corrupted in-transit.')
+        raise Exception("The request sent to the server was corrupted in-transit.")
     if not sign_response.signature_crc32c == crc32c(sign_response.signature):
-        raise Exception('The response received from the server was corrupted in-transit.')
+        raise Exception(
+            "The response received from the server was corrupted in-transit."
+        )
     # End integrity verification
 
-    print(f'Signature: {base64.b64encode(sign_response.signature)}')
+    print(f"Signature: {base64.b64encode(sign_response.signature)!r}")
     return sign_response
 
 
-def crc32c(data):
+def crc32c(data: bytes) -> int:
     """
     Calculates the CRC32C checksum of the provided data.
     Args:
@@ -87,8 +98,11 @@ def crc32c(data):
     Returns:
         An int representing the CRC32C checksum of the provided bytes.
     """
-    import crcmod
-    import six
-    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun('crc-32c')
+    import crcmod  # type: ignore
+    import six  # type: ignore
+
+    crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
     return crc32c_fun(six.ensure_binary(data))
+
+
 # [END kms_sign_asymmetric]

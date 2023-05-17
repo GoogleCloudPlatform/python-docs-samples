@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_disable_key_version]
-def disable_key_version(project_id, location_id, key_ring_id, key_id, version_id):
+def disable_key_version(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
+) -> kms.CryptoKeyVersion:
     """
     Disable a key.
 
@@ -36,18 +40,24 @@ def disable_key_version(project_id, location_id, key_ring_id, key_id, version_id
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     key_version = {
-        'name': key_version_name,
-        'state': kms.CryptoKeyVersion.CryptoKeyVersionState.DISABLED
+        "name": key_version_name,
+        "state": kms.CryptoKeyVersion.CryptoKeyVersionState.DISABLED,
     }
 
     # Build the update mask.
-    update_mask = {'paths': ['state']}
+    update_mask = {"paths": ["state"]}
 
     # Call the API.
-    disabled_version = client.update_crypto_key_version(request={'crypto_key_version': key_version, 'update_mask': update_mask})
-    print(f'Disabled key version: {disabled_version.name}')
+    disabled_version = client.update_crypto_key_version(
+        request={"crypto_key_version": key_version, "update_mask": update_mask}
+    )
+    print(f"Disabled key version: {disabled_version.name}")
     return disabled_version
+
+
 # [END kms_disable_key_version]

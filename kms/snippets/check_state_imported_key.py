@@ -13,7 +13,9 @@
 
 
 # [START kms_check_state_imported_key]
-def check_state_imported_key(project_id, location_id, key_ring_id, import_job_id):
+def check_state_imported_key(
+    project_id: str, location_id: str, key_ring_id: str, import_job_id: str
+) -> None:
     """
     Check the state of an import job in Cloud KMS.
 
@@ -32,10 +34,13 @@ def check_state_imported_key(project_id, location_id, key_ring_id, import_job_id
 
     # Retrieve the fully-qualified import_job string.
     import_job_name = client.import_job_path(
-        project_id, location_id, key_ring_id, import_job_id)
+        project_id, location_id, key_ring_id, import_job_id
+    )
 
     # Retrieve the state from an existing import job.
     import_job = client.get_import_job(name=import_job_name)
 
-    print(f'Current state of import job {import_job.name}: {import_job.state}')
+    print(f"Current state of import job {import_job.name}: {import_job.state}")
+
+
 # [END kms_check_state_imported_key]

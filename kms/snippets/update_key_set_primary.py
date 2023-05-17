@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_update_key_set_primary]
-def update_key_set_primary(project_id, location_id, key_ring_id, key_id, version_id):
+def update_key_set_primary(project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str) -> kms.CryptoKey:
     """
     Update the primary version of a key.
 
@@ -39,7 +41,11 @@ def update_key_set_primary(project_id, location_id, key_ring_id, key_id, version
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     # Call the API.
-    updated_key = client.update_crypto_key_primary_version(request={'name': key_name, 'crypto_key_version_id': version_id})
-    print(f'Updated {updated_key.name} primary to {version_id}')
+    updated_key = client.update_crypto_key_primary_version(
+        request={"name": key_name, "crypto_key_version_id": version_id}
+    )
+    print(f"Updated {updated_key.name} primary to {version_id}")
     return updated_key
+
+
 # [END kms_update_key_set_primary]

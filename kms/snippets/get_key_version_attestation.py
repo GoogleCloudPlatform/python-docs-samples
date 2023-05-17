@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_get_key_version_attestation]
-def get_key_version_attestation(project_id, location_id, key_ring_id, key_id, version_id):
+def get_key_version_attestation(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
+) -> kms.Attestation:
     """
     Get an HSM-backend key's attestation.
 
@@ -39,18 +43,22 @@ def get_key_version_attestation(project_id, location_id, key_ring_id, key_id, ve
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Call the API.
-    version = client.get_crypto_key_version(request={'name': key_version_name})
+    version = client.get_crypto_key_version(request={"name": key_version_name})
 
     # Only HSM keys have an attestation. For other key types, the attestion
     # will be None.
     attestation = version.attestation
     if not attestation:
-        raise 'no attestation - attestations only exist on HSM keys'
+        raise "no attestation - attestations only exist on HSM keys"
 
     encoded_attestation = base64.b64encode(attestation.content)
-    print(f'Got key attestation: {encoded_attestation}')
+    print(f"Got key attestation: {encoded_attestation!r}")
     return attestation
+
+
 # [END kms_get_key_version_attestation]

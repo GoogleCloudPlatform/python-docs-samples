@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_iam_get_policy]
-def iam_get_policy(project_id, location_id, key_ring_id, key_id):
+def iam_get_policy(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.Policy:
     """
     Get the IAM policy for a resource.
 
@@ -41,14 +43,16 @@ def iam_get_policy(project_id, location_id, key_ring_id, key_id):
     # resource_name = client.key_ring_path(project_id, location_id, key_ring_id);
 
     # Get the current policy.
-    policy = client.get_iam_policy(request={'resource': resource_name})
+    policy = client.get_iam_policy(request={"resource": resource_name})
 
     # Print the policy
-    print(f'IAM policy for {resource_name}')
+    print(f"IAM policy for {resource_name}")
     for binding in policy.bindings:
         print(binding.role)
         for member in binding.members:
-            print(f'- {member}')
+            print(f"- {member}")
 
     return policy
+
+
 # [END kms_iam_get_policy]

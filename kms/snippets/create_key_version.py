@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_create_key_version]
-def create_key_version(project_id, location_id, key_ring_id, key_id):
+def create_key_version(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Creates a new version of the given key.
 
@@ -41,7 +45,11 @@ def create_key_version(project_id, location_id, key_ring_id, key_id):
     version = {}
 
     # Call the API.
-    created_version = client.create_crypto_key_version(request={'parent': key_name, 'crypto_key_version': version})
-    print(f'Created key version: {created_version.name}')
+    created_version = client.create_crypto_key_version(
+        request={"parent": key_name, "crypto_key_version": version}
+    )
+    print(f"Created key version: {created_version.name}")
     return created_version
+
+
 # [END kms_create_key_version]

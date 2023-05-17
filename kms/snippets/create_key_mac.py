@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_create_key_mac]
-def create_key_mac(project_id, location_id, key_ring_id, key_id):
+def create_key_mac(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Creates a new key in Cloud KMS for HMAC operations.
 
@@ -30,7 +34,7 @@ def create_key_mac(project_id, location_id, key_ring_id, key_id):
 
     # Import the client library.
     from google.cloud import kms
-    from google.protobuf import duration_pb2
+    from google.protobuf import duration_pb2  # type: ignore
     import datetime
 
     # Create the client.
@@ -43,19 +47,23 @@ def create_key_mac(project_id, location_id, key_ring_id, key_id):
     purpose = kms.CryptoKey.CryptoKeyPurpose.MAC
     algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.HMAC_SHA256
     key = {
-        'purpose': purpose,
-        'version_template': {
-            'algorithm': algorithm,
+        "purpose": purpose,
+        "version_template": {
+            "algorithm": algorithm,
         },
-
         # Optional: customize how long key versions should be kept before
         # destroying.
-        'destroy_scheduled_duration': duration_pb2.Duration().FromTimedelta(datetime.timedelta(days=1))
+        "destroy_scheduled_duration": duration_pb2.Duration().FromTimedelta(
+            datetime.timedelta(days=1)
+        ),
     }
 
     # Call the API.
     created_key = client.create_crypto_key(
-        request={'parent': key_ring_name, 'crypto_key_id': key_id, 'crypto_key': key})
-    print(f'Created mac key: {created_key.name}')
+        request={"parent": key_ring_name, "crypto_key_id": key_id, "crypto_key": key}
+    )
+    print(f"Created mac key: {created_key.name}")
     return created_key
+
+
 # [END kms_create_key_mac]

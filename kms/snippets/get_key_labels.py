@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from google.cloud import kms
+
 
 # [START kms_get_key_labels]
-def get_key_labels(project_id, location_id, key_ring_id, key_id):
+def get_key_labels(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.CryptoKey:
     """
     Get a key and its labels.
 
@@ -38,11 +40,13 @@ def get_key_labels(project_id, location_id, key_ring_id, key_id):
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     # Call the API.
-    key = client.get_crypto_key(request={'name': key_name})
+    key = client.get_crypto_key(request={"name": key_name})
 
     # Example of iterating over labels.
     for k, v in key.labels.items():
-        print(f'{k} = {v}')
+        print(f"{k} = {v}")
 
     return key
+
+
 # [END kms_get_key_labels]

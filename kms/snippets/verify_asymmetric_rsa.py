@@ -13,7 +13,9 @@
 
 
 # [START kms_verify_asymmetric_signature_rsa]
-def verify_asymmetric_rsa(project_id, location_id, key_ring_id, key_id, version_id, message, signature):
+def verify_asymmetric_rsa(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str, message: str, signature: str
+) -> bool:
     """
     Verify the signature of an message signed with an asymmetric RSA key.
 
@@ -44,19 +46,21 @@ def verify_asymmetric_rsa(project_id, location_id, key_ring_id, key_id, version_
     import hashlib
 
     # Convert the message to bytes.
-    message_bytes = message.encode('utf-8')
+    message_bytes = message.encode("utf-8")
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Get the public key.
-    public_key = client.get_public_key(request={'name': key_version_name})
+    public_key = client.get_public_key(request={"name": key_version_name})
 
     # Extract and parse the public key as a PEM-encoded RSA key.
-    pem = public_key.pem.encode('utf-8')
+    pem = public_key.pem.encode("utf-8")
     rsa_key = serialization.load_pem_public_key(pem, default_backend())
     hash_ = hashlib.sha256(message_bytes).digest()
 
@@ -65,9 +69,11 @@ def verify_asymmetric_rsa(project_id, location_id, key_ring_id, key_id, version_
         sha256 = hashes.SHA256()
         pad = padding.PKCS1v15()
         rsa_key.verify(signature, hash_, pad, utils.Prehashed(sha256))
-        print('Signature verified')
+        print("Signature verified")
         return True
     except InvalidSignature:
-        print('Signature failed to verify')
+        print("Signature failed to verify")
         return False
+
+
 # [END kms_verify_asymmetric_signature_rsa]
