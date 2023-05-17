@@ -367,7 +367,7 @@ def test_create_key_mac(project_id: str, location_id: str, key_ring_id: str) -> 
     )
 
 
-def test_create_key_ring(project_id: str, location_id: str) -> None:
+def test_create_key_ring(project_id: str, location_id: str, key_ring_id: str) -> None:
     key_ring_id = f"{uuid.uuid4()}"
     key_ring = create_key_ring(project_id, location_id, key_ring_id)
     assert key_ring

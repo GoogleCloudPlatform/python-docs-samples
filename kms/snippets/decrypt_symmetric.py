@@ -17,7 +17,7 @@ from google.cloud import kms
 # [START kms_decrypt_symmetric]
 def decrypt_symmetric(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, ciphertext: bytes
-) -> kms.SymmetricDecrypt:
+) -> kms.DecryptResponse:
     """
     Decrypt the ciphertext using the symmetric key
 

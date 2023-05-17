@@ -11,11 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from google.cloud import kms
+from google.iam.v1 import policy_pb2 as iam_policy
 
 
 # [START kms_iam_get_policy]
-def iam_get_policy(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> kms.Policy:
+def iam_get_policy(project_id: str, location_id: str, key_ring_id: str, key_id: str) -> iam_policy.Policy:
     """
     Get the IAM policy for a resource.
 

@@ -14,13 +14,11 @@
 # See the License for the specific language governing permissions and
 
 import argparse
-from typing import List
 
-from google.cloud import kms
-
+from google.cloud import kms_v1
 
 # [START kms_quickstart]
-def quickstart(project_id: str, location_id: str) -> List[kms.ListKeyRingsPager]:
+def quickstart(project_id: str, location_id: str) -> kms_v1.services.key_management_service.pagers.ListKeyRingsPager:
     # Import the client library.
     from google.cloud import kms
 

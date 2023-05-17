@@ -11,11 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from google.cloud import kms
-
+from google.iam.v1 import policy_pb2 as iam_policy
 
 # [START kms_iam_add_member]
-def iam_add_member(project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str) -> kms.Policy:
+def iam_add_member(project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str) -> iam_policy.Policy:
     """
     Add an IAM member to a resource.
 

@@ -16,7 +16,7 @@ from google.cloud import kms
 
 # [START kms_create_key_ring]
 def create_key_ring(
-    project_id: str, location_id: str, key_ring_id: str, key_id: str
+    project_id: str, location_id: str, key_ring_id: str
 ) -> kms.CryptoKey:
     """
     Creates a new key ring in Cloud KMS
