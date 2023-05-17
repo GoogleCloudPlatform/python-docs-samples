@@ -23,8 +23,8 @@ import boto3
 def list_gcs_buckets(google_access_key_id, google_access_key_secret):
     """Lists all Cloud Storage buckets using AWS SDK for Python (boto3)
     Positional arguments:
-    google_access_key_id          -- hash-based message authentication code (HMAC) access ID
-    google_access_key_secret      -- HMAC access secret
+        google_access_key_id: hash-based message authentication code (HMAC) access ID
+        google_access_key_secret: HMAC access secret
 
     Returned value is a list of strings, one for each bucket name.
 
@@ -49,9 +49,8 @@ def list_gcs_buckets(google_access_key_id, google_access_key_secret):
     results = []
     for bucket in response["Buckets"]:
         results.append(bucket["Name"])
+        print(bucket["Name"])  # Can remove if not needed after development
     return results
-
-
 # [END storage_s3_sdk_list_buckets]
 
 
