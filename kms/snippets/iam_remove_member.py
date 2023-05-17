@@ -11,15 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from google.cloud import kms
-
-from typing import Any  # TODO(glasnt) fix
+from google.iam.v1 import policy_pb2 as iam_policy
 
 
 # [START kms_iam_remove_member]
 def iam_remove_member(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str
-) -> Any:
+) -> iam_policy.Policy:
     """
     Remove an IAM member from a resource.
 
