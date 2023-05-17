@@ -18,9 +18,13 @@ command line application and sample code for destroying a secret version.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_destroy_secret_version]
-def destroy_secret_version(project_id, secret_id, version_id):
+def destroy_secret_version(
+    project_id: str, secret_id: str, version_id: str
+) -> secretmanager.DestroySecretVersionRequest:
     """
     Destroy the given secret version, making the payload irrecoverable. Other
     secrets versions are unaffected.

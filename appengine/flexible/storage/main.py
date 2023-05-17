@@ -15,7 +15,6 @@
 # [START gae_flex_storage_app]
 import logging
 import os
-from typing import Union
 
 from flask import Flask, request
 from google.cloud import storage
@@ -67,7 +66,7 @@ def upload() -> str:
 
 
 @app.errorhandler(500)
-def server_error(e: Union[Exception, int]) -> str:
+def server_error(e: Exception | int) -> str:
     logging.exception("An error occurred during a request.")
     return (
         """

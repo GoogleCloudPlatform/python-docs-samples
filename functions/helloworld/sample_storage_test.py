@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START functions_storage_unit_test]
-import mock
+from unittest import mock
 
 import main
 
@@ -35,5 +35,5 @@ def test_print(capsys):
     # Call tested function
     main.hello_gcs(event, context)
     out, err = capsys.readouterr()
-    assert 'File: {}\n'.format(name) in out
+    assert f'File: {name}\n' in out
 # [END functions_storage_unit_test]

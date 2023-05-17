@@ -15,7 +15,7 @@
 import base64
 import os
 
-from mock import MagicMock
+from unittest.mock import MagicMock
 
 import main
 
