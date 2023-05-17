@@ -40,6 +40,6 @@ def update_key_set_primary(project_id, location_id, key_ring_id, key_id, version
 
     # Call the API.
     updated_key = client.update_crypto_key_primary_version(request={'name': key_name, 'crypto_key_version_id': version_id})
-    print('Updated {} primary to {}'.format(updated_key.name, version_id))
+    print(f'Updated {updated_key.name} primary to {version_id}')
     return updated_key
 # [END kms_update_key_set_primary]

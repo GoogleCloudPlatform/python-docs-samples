@@ -166,7 +166,7 @@ def write_dataset_csv_file(
     logging.info(f"Writing dataset CSV file: {dataset_csv_filename}")
     with beam.io.gcp.gcsio.GcsIO().open(dataset_csv_filename, "w") as f:
         for category, image_gcs_path in images:
-            f.write(f"{image_gcs_path},{category}\n".encode("utf-8"))
+            f.write(f"{image_gcs_path},{category}\n".encode())
     return dataset_csv_filename
 
 

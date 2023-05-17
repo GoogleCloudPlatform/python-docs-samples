@@ -24,7 +24,7 @@ import create_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-west1"
-CLUSTER_NAME = "py-cc-test-{}".format(str(uuid.uuid4()))
+CLUSTER_NAME = f"py-cc-test-{str(uuid.uuid4())}"
 
 
 cluster_client = dataproc.ClusterControllerClient(

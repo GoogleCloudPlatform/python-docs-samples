@@ -30,7 +30,7 @@ def create_queue(project, queue_name, location):
     # Use the client to create the queue.
     response = client.create_queue(request={"parent": parent, "queue": queue})
 
-    print("Created queue {}".format(response.name))
+    print(f"Created queue {response.name}")
     return response
 
 

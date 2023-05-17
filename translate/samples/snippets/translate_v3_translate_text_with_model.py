@@ -43,7 +43,7 @@ def translate_text_with_model(
     )
     # Display the translation for each input text provided
     for translation in response.translations:
-        print("Translated text: {}".format(translation.translated_text))
+        print(f"Translated text: {translation.translated_text}")
 
 
 # [END translate_v3_translate_text_with_model]

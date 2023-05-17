@@ -60,6 +60,7 @@ def index():
 # [END index]
 
 
+# [START gae_standard_pubsub_auth_push]
 # [START push]
 @app.route('/push-handlers/receive_messages', methods=['POST'])
 def receive_messages_handler():
@@ -102,6 +103,7 @@ def receive_messages_handler():
     # Returning any 2xx status indicates successful receipt of the message.
     return 'OK', 200
 # [END push]
+# [END gae_standard_pubsub_auth_push]
 
 
 @app.errorhandler(500)

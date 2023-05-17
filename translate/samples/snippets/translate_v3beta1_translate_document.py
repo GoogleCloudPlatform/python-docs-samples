@@ -48,7 +48,7 @@ def translate_document(project_id: str, file_path: str):
 
     # If not provided in the TranslationRequest, the translated file will only be returned through a byte-stream
     # and its output mime type will be the same as the input file's mime type
-    print("Response: Detected Language Code - {}".format(response.document_translation.detected_language_code))
+    print(f"Response: Detected Language Code - {response.document_translation.detected_language_code}")
 
 
 # [END translate_v3beta1_translate_document]

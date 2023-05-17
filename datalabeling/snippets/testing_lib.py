@@ -58,14 +58,14 @@ def delete_old_datasets(project_id):
     cutoff_time = time.time() - 7200
     for element in response:
         if element.create_time.timestamp_pb().seconds < cutoff_time:
-            print("Deleting {}".format(element.name))
+            print(f"Deleting {element.name}")
             try:
                 dataset_sample.delete_dataset(element.name)
             except FailedPrecondition as e:
                 # We're always getting FailedPrecondition with 400
                 # resource conflict. I don't know why.
-                print("Deleting {} failed.".format(element.name))
-                print("Detail: {}".format(e))
+                print(f"Deleting {element.name} failed.")
+                print(f"Detail: {e}")
             # To avoid quota error
             time.sleep(1)
 

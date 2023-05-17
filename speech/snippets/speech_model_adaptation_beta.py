@@ -89,7 +89,7 @@ def transcribe_with_model_adaptation(
     response = speech_client.recognize(config=config, audio=audio)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     # [END speech_transcribe_with_model_adaptation]
 
