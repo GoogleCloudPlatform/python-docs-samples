@@ -58,7 +58,6 @@ from disable_key_version import disable_key_version
 from enable_key_version import enable_key_version
 from encrypt_asymmetric import encrypt_asymmetric
 from encrypt_symmetric import encrypt_symmetric
-from import_manually_wrapped_key import import_manually_wrapped_key
 from generate_random_bytes import generate_random_bytes
 from get_key_labels import get_key_labels
 from get_key_version_attestation import get_key_version_attestation
@@ -67,6 +66,7 @@ from get_public_key_jwk import get_public_key_jwk
 from iam_add_member import iam_add_member
 from iam_get_policy import iam_get_policy
 from iam_remove_member import iam_remove_member
+from import_manually_wrapped_key import import_manually_wrapped_key
 from quickstart import quickstart
 from restore_key_version import restore_key_version
 from sign_asymmetric import sign_asymmetric
