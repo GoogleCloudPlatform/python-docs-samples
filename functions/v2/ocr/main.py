@@ -17,8 +17,6 @@ import base64
 import json
 import os
 
-from cloudevents.http import CloudEvent
-
 import functions_framework
 
 from google.cloud import pubsub_v1
@@ -38,7 +36,7 @@ project_id = os.environ.get("GCP_PROJECT")
 
 # [START functions_ocr_process]
 @functions_framework.cloud_event
-def process_image(cloud_event: CloudEvent) -> None:
+def process_image(cloud_event):
     """Cloud Function triggered by Cloud Storage when a file is changed.
 
     Gets the names of the newly created object and its bucket then calls
@@ -68,14 +66,10 @@ def process_image(cloud_event: CloudEvent) -> None:
 
 
 # [START functions_ocr_detect]
-def detect_text(bucket: str, filename: str) -> None:
+def detect_text(bucket, filename):
     """Extract the text from an image uploaded to Cloud Storage, then
     publish messages requesting subscribing services translate the text
     to each target language and save the result.
-
-    Args:
-        bucket: name of GCS bucket in which the file is stored.
-        filename: name of the file to be read.
     """
 
     print(f"Looking for text in image {filename}")
@@ -126,7 +120,7 @@ def detect_text(bucket: str, filename: str) -> None:
 
 # [START functions_ocr_translate]
 @functions_framework.cloud_event
-def translate_text(cloud_event: CloudEvent) -> None:
+def translate_text(cloud_event):
     """Cloud Function triggered by PubSub when a message is received from
     a subscription.
 
@@ -177,7 +171,7 @@ def translate_text(cloud_event: CloudEvent) -> None:
 
 # [START functions_ocr_save]
 @functions_framework.cloud_event
-def save_result(cloud_event: CloudEvent) -> None:
+def save_result(cloud_event):
     """Cloud Function triggered by PubSub when a message is received from
     a subscription.
 
