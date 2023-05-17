@@ -56,6 +56,6 @@ def create_key_asymmetric_decrypt(project_id, location_id, key_ring_id, key_id):
     # Call the API.
     created_key = client.create_crypto_key(
         request={'parent': key_ring_name, 'crypto_key_id': key_id, 'crypto_key': key})
-    print('Created asymmetric decrypt key: {}'.format(created_key.name))
+    print(f'Created asymmetric decrypt key: {created_key.name}')
     return created_key
 # [END kms_create_key_asymmetric_decrypt]

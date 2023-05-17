@@ -59,7 +59,7 @@ def app():
 def dataflow_job_name(request):
     label = request.param
     job_name = datetime.now().strftime(
-        "{}-%Y%m%d-%H%M%S-{}".format(label, uuid.uuid4().hex[:5])
+        f"{label}-%Y%m%d-%H%M%S-{uuid.uuid4().hex[:5]}"
     )
 
     yield job_name
@@ -135,7 +135,7 @@ def test_run_template_python(app, dataflow_job_name):
     template = "gs://dataflow-templates/latest/Word_Count"
     parameters = {
         "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
-        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
+        "output": f"gs://{BUCKET}/dataflow/wordcount/outputs",
     }
     res = main.run(project, dataflow_job_name, template, parameters)
     assert dataflow_job_name in res["job"]["name"]
@@ -156,7 +156,7 @@ def test_run_template_http_url(app, dataflow_job_name):
         "job": dataflow_job_name,
         "template": "gs://dataflow-templates/latest/Word_Count",
         "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
-        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
+        "output": f"gs://{BUCKET}/dataflow/wordcount/outputs",
     }
     with app.test_request_context("/?" + url_encode(args)):
         res = main.run_template(flask.request)
@@ -173,7 +173,7 @@ def test_run_template_http_data(app, dataflow_job_name):
         "job": dataflow_job_name,
         "template": "gs://dataflow-templates/latest/Word_Count",
         "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
-        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
+        "output": f"gs://{BUCKET}/dataflow/wordcount/outputs",
     }
     with app.test_request_context(data=args):
         res = main.run_template(flask.request)
@@ -190,7 +190,7 @@ def test_run_template_http_json(app, dataflow_job_name):
         "job": dataflow_job_name,
         "template": "gs://dataflow-templates/latest/Word_Count",
         "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
-        "output": "gs://{}/dataflow/wordcount/outputs".format(BUCKET),
+        "output": f"gs://{BUCKET}/dataflow/wordcount/outputs",
     }
     with app.test_request_context(json=args):
         res = main.run_template(flask.request)

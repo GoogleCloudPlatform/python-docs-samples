@@ -14,13 +14,12 @@
 
 import json
 import os
-from typing import Dict
 
 from middleware import logger
 
 
 # [START cloudrun_user_auth_secrets]
-def get_cred_config() -> Dict[str, str]:
+def get_cred_config() -> dict[str, str]:
     secret = os.environ.get("CLOUD_SQL_CREDENTIALS_SECRET")
     if secret:
         return json.loads(secret)

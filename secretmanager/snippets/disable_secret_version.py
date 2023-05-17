@@ -18,9 +18,13 @@ command line application and sample code for disabling a secret version.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_disable_secret_version]
-def disable_secret_version(project_id, secret_id, version_id):
+def disable_secret_version(
+    project_id: str, secret_id: str, version_id: str
+) -> secretmanager.DisableSecretVersionRequest:
     """
     Disable the given secret version. Future requests will throw an error until
     the secret version is enabled. Other secrets versions are unaffected.
@@ -38,7 +42,7 @@ def disable_secret_version(project_id, secret_id, version_id):
     # Disable the secret version.
     response = client.disable_secret_version(request={"name": name})
 
-    print("Disabled secret version: {}".format(response.name))
+    print(f"Disabled secret version: {response.name}")
     # [END secretmanager_disable_secret_version]
 
     return response

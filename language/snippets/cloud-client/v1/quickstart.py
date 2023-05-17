@@ -38,8 +38,8 @@ def run_quickstart():
         request={"document": document}
     ).document_sentiment
 
-    print("Text: {}".format(text))
-    print("Sentiment: {}, {}".format(sentiment.score, sentiment.magnitude))
+    print(f"Text: {text}")
+    print(f"Sentiment: {sentiment.score}, {sentiment.magnitude}")
     # [END language_quickstart]
 
 

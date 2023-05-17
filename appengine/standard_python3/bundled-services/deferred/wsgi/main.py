@@ -44,7 +44,7 @@ def IncrementCounter(environ, start_response):
     deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=40)
 
     start_response("200 OK", [("Content-Type", "text/html")])
-    return ["Deferred counter increment.".encode("utf-8")]
+    return [b"Deferred counter increment."]
 
 
 def ViewCounter(environ, start_response):
@@ -77,7 +77,7 @@ class WSGIApplication:
                 return handler(environ, start_response)
 
         start_response("404 Not Found", [("Content-Type", "text/plain")])
-        return ["Not found".encode("utf-8")]
+        return [b"Not found"]
 
 
 app = wrap_wsgi_app(WSGIApplication(), use_deferred=True)

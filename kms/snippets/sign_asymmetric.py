@@ -75,7 +75,7 @@ def sign_asymmetric(project_id, location_id, key_ring_id, key_id, version_id, me
         raise Exception('The response received from the server was corrupted in-transit.')
     # End integrity verification
 
-    print('Signature: {}'.format(base64.b64encode(sign_response.signature)))
+    print(f'Signature: {base64.b64encode(sign_response.signature)}')
     return sign_response
 
 

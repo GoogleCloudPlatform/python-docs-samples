@@ -12,13 +12,14 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 
 
-from typing import List
+from __future__ import annotations
+
 
 from google.cloud import compute_v1
 
@@ -26,7 +27,7 @@ from google.cloud import compute_v1
 # <INGREDIENT create_custom_instances_no_helper>
 def create_custom_instances_no_helper(
     project_id: str, zone: str, instance_name: str, core_count: int, memory: int
-) -> List[compute_v1.Instance]:
+) -> list[compute_v1.Instance]:
     """
     Create 7 new VM instances without using a CustomMachineType helper function.
 

@@ -33,6 +33,6 @@ def create_dataset(
     # Create a dataset with the dataset metadata in the region.
     created_dataset = client.create_dataset(parent=project_location, dataset=dataset)
     # Display the dataset information
-    print("Dataset name: {}".format(created_dataset.name))
+    print(f"Dataset name: {created_dataset.name}")
     print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
 # [END automl_video_object_tracking_create_dataset_beta]

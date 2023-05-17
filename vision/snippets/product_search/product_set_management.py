@@ -61,7 +61,7 @@ def create_product_set(
         product_set_id=product_set_id)
 
     # Display the product set information.
-    print('Product set name: {}'.format(response.name))
+    print(f'Product set name: {response.name}')
 # [END vision_product_search_create_product_set]
 
 
@@ -82,9 +82,9 @@ def list_product_sets(project_id, location):
 
     # Display the product set information.
     for product_set in product_sets:
-        print('Product set name: {}'.format(product_set.name))
+        print(f'Product set name: {product_set.name}')
         print('Product set id: {}'.format(product_set.name.split('/')[-1]))
-        print('Product set display name: {}'.format(product_set.display_name))
+        print(f'Product set display name: {product_set.display_name}')
         print('Product set index time: ')
         print(product_set.index_time)
 # [END vision_product_search_list_product_sets]
@@ -109,9 +109,9 @@ def get_product_set(project_id, location, product_set_id):
     product_set = client.get_product_set(name=product_set_path)
 
     # Display the product set information.
-    print('Product set name: {}'.format(product_set.name))
+    print(f'Product set name: {product_set.name}')
     print('Product set id: {}'.format(product_set.name.split('/')[-1]))
-    print('Product set display name: {}'.format(product_set.display_name))
+    print(f'Product set display name: {product_set.display_name}')
     print('Product set index time: ')
     print(product_set.index_time)
 # [END vision_product_search_get_product_set]

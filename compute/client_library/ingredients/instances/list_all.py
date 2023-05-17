@@ -16,8 +16,10 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+from __future__ import annotations
+
 from collections import defaultdict
-from typing import Dict, Iterable
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
@@ -25,7 +27,7 @@ from google.cloud import compute_v1
 # <INGREDIENT list_all_instances>
 def list_all_instances(
     project_id: str,
-) -> Dict[str, Iterable[compute_v1.Instance]]:
+) -> dict[str, Iterable[compute_v1.Instance]]:
     """
     Returns a dictionary of all instances present in a project, grouped by their zone.
 

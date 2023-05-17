@@ -15,9 +15,11 @@
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_update_secret]
-def update_secret(project_id, secret_id):
+def update_secret(project_id: str, secret_id: str) -> secretmanager.UpdateSecretRequest:
     """
     Update the metadata about an existing secret.
     """
@@ -39,7 +41,7 @@ def update_secret(project_id, secret_id):
     )
 
     # Print the new secret name.
-    print("Updated secret: {}".format(response.name))
+    print(f"Updated secret: {response.name}")
     # [END secretmanager_update_secret]
 
     return response

@@ -56,7 +56,7 @@ def batch_translate_document(
     print("Waiting for operation to complete...")
     response = operation.result(timeout)
 
-    print("Total Pages: {}".format(response.total_pages))
+    print(f"Total Pages: {response.total_pages}")
 
 
 # [END translate_v3beta1_batch_translate_document]

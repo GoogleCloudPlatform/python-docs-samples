@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
 from __future__ import print_function
 
+from collections.abc import Callable
 import glob
 import os
 from pathlib import Path
 import sys
-from typing import Callable, Dict, List, Optional
 
 import nox
 
@@ -71,7 +72,7 @@ except ImportError as e:
 TEST_CONFIG.update(TEST_CONFIG_OVERRIDE)
 
 
-def get_pytest_env_vars() -> Dict[str, str]:
+def get_pytest_env_vars() -> dict[str, str]:
     """Returns a dict for pytest invocation."""
     ret = {}
 
@@ -105,7 +106,7 @@ nox.options.error_on_missing_interpreters = True
 #
 
 
-def _determine_local_import_names(start_dir: str) -> List[str]:
+def _determine_local_import_names(start_dir: str) -> list[str]:
     """Determines all import names that should be considered "local".
 
     This is used when running the linter to insure that import order is
@@ -203,21 +204,21 @@ def _session_tests(
         with open("requirements.txt") as rfile:
             packages = rfile.read()
         if os.path.exists("constraints.txt"):
-            session.install("-r", "requirements.txt", "-c", "constraints.txt")
+            session.install("-r", "requirements.txt", "-c", "constraints.txt", "--only-binary", ":all")
         elif "pyspark" in packages:
             session.install("-r", "requirements.txt", "--use-pep517")
         else:
-            session.install("-r", "requirements.txt")
+            session.install("-r", "requirements.txt", "--only-binary", ":all")
 
     if os.path.exists("requirements-test.txt"):
         with open("requirements-test.txt") as rtfile:
             packages += rtfile.read()
         if os.path.exists("constraints-test.txt"):
             session.install(
-                "-r", "requirements-test.txt", "-c", "constraints-test.txt"
+                "-r", "requirements-test.txt", "-c", "constraints-test.txt", "--only-binary", ":all"
             )
         else:
-            session.install("-r", "requirements-test.txt")
+            session.install("-r", "requirements-test.txt", "--only-binary", ":all")
 
     if INSTALL_LIBRARY_FROM_SOURCE:
         session.install("-e", _get_repo_root())
@@ -257,7 +258,7 @@ def py(session: nox.sessions.Session) -> None:
 #
 
 
-def _get_repo_root() -> Optional[str]:
+def _get_repo_root() -> str | None:
     """Returns the root folder of the project."""
     # Get root of this repository.
     # Assume we don't have directories nested deeper than 10 items.
