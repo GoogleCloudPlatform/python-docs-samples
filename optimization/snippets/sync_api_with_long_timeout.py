@@ -26,7 +26,7 @@ from google.cloud.optimization_v1.services.fleet_routing.transports import (
 
 
 def long_timeout(request_file_name: str, project_id: str) -> None:
-    with open(request_file_name, "r") as f:
+    with open(request_file_name) as f:
         fleet_routing_request = optimization_v1.OptimizeToursRequest.from_json(f.read())
         fleet_routing_request.parent = f"projects/{project_id}"
 

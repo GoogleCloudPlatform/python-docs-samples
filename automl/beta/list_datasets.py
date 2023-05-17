@@ -30,10 +30,10 @@ def list_datasets(project_id="YOUR_PROJECT_ID"):
 
     print("List of datasets:")
     for dataset in response:
-        print("Dataset name: {}".format(dataset.name))
+        print(f"Dataset name: {dataset.name}")
         print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-        print("Dataset display name: {}".format(dataset.display_name))
-        print("Dataset create time: {}".format(dataset.create_time))
+        print(f"Dataset display name: {dataset.display_name}")
+        print(f"Dataset create time: {dataset.create_time}")
         # [END automl_video_object_tracking_list_datasets_beta]
 
         print(

@@ -52,7 +52,7 @@ def import_product_sets(project_id, location, gcs_uri):
     response = client.import_product_sets(
         parent=location_path, input_config=input_config)
 
-    print('Processing operation name: {}'.format(response.operation.name))
+    print(f'Processing operation name: {response.operation.name}')
     # synchronous check of operation status
     result = response.result()
     print('Processing done.')
@@ -66,7 +66,7 @@ def import_product_sets(project_id, location, gcs_uri):
             reference_image = result.reference_images[i]
             print(reference_image)
         else:
-            print('Status code not OK: {}'.format(status.message))
+            print(f'Status code not OK: {status.message}')
 # [END vision_product_search_import_product_images]
 
 

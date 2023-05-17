@@ -31,8 +31,8 @@ def get_supported_languages_with_target(project_id="YOUR_PROJECT_ID"):
     )
     # List language codes of supported languages
     for language in response.languages:
-        print("Language Code: {}".format(language.language_code))
-        print("Display Name: {}".format(language.display_name))
+        print(f"Language Code: {language.language_code}")
+        print(f"Display Name: {language.display_name}")
 
 
 # [END translate_v3_get_supported_languages_for_target]

@@ -39,7 +39,7 @@ def instantiate_inline_workflow_template(project_id, region):
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
 
-    parent = "projects/{}/regions/{}".format(project_id, region)
+    parent = f"projects/{project_id}/regions/{region}"
 
     template = {
         "jobs": [

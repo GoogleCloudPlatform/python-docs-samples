@@ -20,7 +20,7 @@ import argparse
 
 
 # [START secretmanager_delete_secret]
-def delete_secret(project_id, secret_id):
+def delete_secret(project_id: str, secret_id: str) -> None:
     """
     Delete the secret with the given name and all of its versions.
     """

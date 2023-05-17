@@ -39,5 +39,5 @@ def predict(project_id, model_id, file_path):
     response = prediction_client.predict(name=model_full_id, payload=payload)
     translated_content = response.payload[0].translation.translated_content
 
-    print(u"Translated content: {}".format(translated_content.content))
+    print(f"Translated content: {translated_content.content}")
     # [END automl_translate_predict]
