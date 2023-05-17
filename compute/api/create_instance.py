@@ -33,8 +33,8 @@ import googleapiclient.discovery
 
 # [START list_instances]
 def list_instances(
-        compute: object, 
-        project: str, 
+        compute: object,
+        project: str,
         zone: str,
 ) -> list:
     """Lists all instances in the specified zone.
@@ -56,10 +56,10 @@ def list_instances(
 
 # [START create_instance]
 def create_instance(
-        compute: object, 
-        project: str, 
-        zone: str, 
-        name: str, 
+        compute: object,
+        project: str,
+        zone: str,
+        name: str,
         bucket: str,
 ) -> str:
     """Creates an instance in the specified zone.
@@ -146,9 +146,9 @@ def create_instance(
 
 # [START delete_instance]
 def delete_instance(
-        compute: object, 
-        project: str, 
-        zone: str, 
+        compute: object,
+        project: str,
+        zone: str,
         name: str,
 ) -> str:
     """Deletes an instance.
@@ -172,8 +172,8 @@ def delete_instance(
 
 # [START wait_for_operation]
 def wait_for_operation(
-        compute: object, 
-        project: str, 
+        compute: object,
+        project: str,
         zone: str,
         operation: str,
 ) -> dict:
@@ -210,10 +210,10 @@ def wait_for_operation(
 
 # [START run]
 def main(
-        project: str, 
+        project: str,
         bucket: str,
-        zone: str, 
-        instance_name: str, 
+        zone: str,
+        instance_name: str,
         wait=True,
 ) -> None:
     """Runs the demo.
