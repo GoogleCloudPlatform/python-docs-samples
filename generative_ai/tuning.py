@@ -60,7 +60,7 @@ def tuning(
         training_data=training_data,
         # Optional:
         train_steps=train_steps,
-        tuning_job_location="europe-west4",
+        tuning_job_location="europe-west4", # Only supported in europe-west4 for Public Preview
         tuned_model_location=location,
     )
 
