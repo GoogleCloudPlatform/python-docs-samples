@@ -83,7 +83,7 @@ def teardown_model(tuned_model, training_data_filename):
 
 
 def test_tuning(training_data_filename):
-    """Takes approx. 40 minutes."""
+    """Takes approx. 20 minutes."""
     tuned_model = tuning.tuning(
         training_data=training_data_filename,
         project_id=_PROJECT_ID,
