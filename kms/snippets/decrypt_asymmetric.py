@@ -22,7 +22,7 @@ def decrypt_asymmetric(
     key_id: str,
     version_id: str,
     ciphertext: bytes,
-) -> kms.AsymmetricDecrypt:
+) -> kms.AsymmetricDecryptRequest:
     """
     Decrypt the ciphertext using an asymmetric key.
 
