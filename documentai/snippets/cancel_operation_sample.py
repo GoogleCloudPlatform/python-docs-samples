@@ -18,8 +18,8 @@
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import FailedPrecondition
 from google.api_core.exceptions import NotFound
-from google.cloud import documentai
-from google.longrunning.operations_pb2 import CancelOperationRequest
+from google.cloud import documentai  # type: ignore
+from google.longrunning.operations_pb2 import CancelOperationRequest  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
 # location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'

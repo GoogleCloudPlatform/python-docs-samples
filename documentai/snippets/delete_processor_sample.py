@@ -17,7 +17,7 @@
 
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import NotFound
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'

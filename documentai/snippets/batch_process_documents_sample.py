@@ -19,7 +19,7 @@ import re
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import RetryError
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -41,7 +41,7 @@ def batch_process_documents(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
-    field_mask: str = None,
+    field_mask: str | None = None,
     timeout: int = 400,
 ):
 

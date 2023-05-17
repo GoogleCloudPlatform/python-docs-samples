@@ -16,7 +16,7 @@
 # [START documentai_process_document_processor_version]
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -35,7 +35,7 @@ def process_document_processor_version_sample(
     processor_version_id: str,
     file_path: str,
     mime_type: str,
-    field_mask: str = None,
+    field_mask: str | None = None,
 ):
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
