@@ -65,7 +65,7 @@ def run(
             pipeline
             | "Read images info"
             >> beam.io.ReadFromBigQuery(dataset=bigquery_dataset, table=bigquery_table)
-            | "Key by category" >> beam.WithKeys(lambda x: x"])
+            | "Key by category" >> beam.WithKeys(lambda x: x["category"])
             | "Random samples"
             >> beam.combiners.Sample.FixedSizePerKey(max_images_per_class)
             | "Remove key" >> beam.Values()
