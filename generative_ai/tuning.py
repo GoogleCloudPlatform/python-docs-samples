@@ -28,7 +28,7 @@ def tuning(
     location: str,
     training_data: Union[pd.DataFrame, str],
     train_steps: int = 10,
-):
+) -> None:
     """Tune a new model, based on a prompt-response data.
 
     "training_data" can be either the GCS URI of a file formatted in JSONL format
@@ -60,7 +60,7 @@ def tuning(
         training_data=training_data,
         # Optional:
         train_steps=train_steps,
-        tuning_job_location="europe-west4", # Only supported in europe-west4 for Public Preview
+        tuning_job_location="europe-west4",  # Only supported in europe-west4 for Public Preview
         tuned_model_location=location,
     )
 
