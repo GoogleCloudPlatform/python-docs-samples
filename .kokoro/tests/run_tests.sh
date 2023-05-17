@@ -167,12 +167,19 @@ btlr_args=(
     "**/requirements.txt"
 )
 
-# if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
+if [[ -n "${NUM_TEST_WORKERS:-}" ]]; then
     btlr_args+=(
 	"--max-concurrency"
 	"${NUM_TEST_WORKERS}"
     )
-# fi
+fi
+
+# DEBUG
+
+btlr_args+=(
+    "--max-concurrency"
+    "10"
+)
 
 if [[ -n "${DIFF_FROM:-}"  ]]; then
     btlr_args+=(
