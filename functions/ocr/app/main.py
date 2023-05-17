@@ -1,12 +1,13 @@
-# Copyright 2018, Google, LLC.
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Copyright 2018 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
@@ -135,7 +136,7 @@ def process_image(file_info: dict) -> None:
 
 
 # [START functions_ocr_translate]
-def translate_text(event: dict) -> None:
+def translate_text(event: dict, context: dict) -> None:
     """
     Cloud Function triggered by PubSub when a message is received from
     a subscription.
@@ -146,6 +147,7 @@ def translate_text(event: dict) -> None:
 
     Args:
         event: dictionary containing the PubSub event.
+        context: a dictionary containing metadata about the event.
 
     Returns:
         None; the output is written to stdout and Stackdriver Logging.
@@ -171,9 +173,9 @@ def translate_text(event: dict) -> None:
         "filename": filename,
         "lang": target_lang,
     }
-    message_data = json.dumps(message).encode("utf-8")
+    encoded_message = json.dumps(message).encode("utf-8")
     topic_path = publisher.topic_path(project_id, topic_name)
-    future = publisher.publish(topic_path, data=message_data)
+    future = publisher.publish(topic_path, data=encoded_message)
     future.result()
 
 
@@ -181,13 +183,14 @@ def translate_text(event: dict) -> None:
 
 
 # [START functions_ocr_save]
-def save_result(event: dict) -> None:
+def save_result(event: dict, context: dict) -> None:
     """
     Cloud Function triggered by PubSub when a message is received from
     a subscription.
 
     Args:
         event: dictionary containing the PubSub event.
+        context: a dictionary containing metadata about the event.
 
     Returns:
         None; the output is written to stdout and Stackdriver Logging.
