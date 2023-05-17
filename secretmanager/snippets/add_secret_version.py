@@ -19,11 +19,14 @@ specified payload to an existing secret.
 
 import argparse
 
-import google_crc32c
+from google.cloud import secretmanager
+import google_crc32c  # type: ignore
 
 
 # [START secretmanager_add_secret_version]
-def add_secret_version(project_id, secret_id, payload):
+def add_secret_version(
+    project_id: str, secret_id: str, payload: str
+) -> secretmanager.SecretVersion:
     """
     Add a new secret version to the given secret with the provided payload.
     """
@@ -39,25 +42,27 @@ def add_secret_version(project_id, secret_id, payload):
 
     # Convert the string payload into a bytes. This step can be omitted if you
     # pass in bytes instead of a str for the payload argument.
-    payload = payload.encode("UTF-8")
+    payload_bytes = payload.encode("UTF-8")
 
     # Calculate payload checksum. Passing a checksum in add-version request
     # is optional.
     crc32c = google_crc32c.Checksum()
-    crc32c.update(payload)
+    crc32c.update(payload_bytes)
 
     # Add the secret version.
     response = client.add_secret_version(
         request={
             "parent": parent,
-            "payload": {"data": payload, "data_crc32c": int(crc32c.hexdigest(), 16)},
+            "payload": {
+                "data": payload_bytes,
+                "data_crc32c": int(crc32c.hexdigest(), 16),
+            },
         }
     )
 
     # Print the new secret version name.
     print(f"Added secret version: {response.name}")
     # [END secretmanager_add_secret_version]
-
     return response
 
 
