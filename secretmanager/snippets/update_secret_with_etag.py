@@ -15,9 +15,13 @@
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_update_secret_with_etag]
-def update_secret_with_etag(project_id, secret_id, etag):
+def update_secret_with_etag(
+    project_id: str, secret_id: str, etag: str
+) -> secretmanager.UpdateSecretRequest:
     """
     Update the metadata about an existing secret, using etag.
     """

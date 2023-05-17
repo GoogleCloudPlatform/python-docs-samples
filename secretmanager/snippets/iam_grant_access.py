@@ -18,9 +18,13 @@ command line application and sample code for granting access to a secret.
 
 import argparse
 
+from google.iam.v1 import iam_policy_pb2  # type: ignore
+
 
 # [START secretmanager_iam_grant_access]
-def iam_grant_access(project_id, secret_id, member):
+def iam_grant_access(
+    project_id: str, secret_id: str, member: str
+) -> iam_policy_pb2.SetIamPolicyRequest:
     """
     Grant the given member access to a secret.
     """
