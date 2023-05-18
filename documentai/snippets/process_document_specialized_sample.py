@@ -17,7 +17,7 @@
 
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -29,7 +29,7 @@ from google.cloud import documentai
 
 def process_document_specialized_sample(
     project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
-):
+) -> None:
     # Online processing request to Document AI
     document = process_document(
         project_id, location, processor_id, file_path, mime_type
