@@ -32,7 +32,7 @@ from google.cloud import documentai  # type: ignore
 
 def process_document_form_sample(
     project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
-):
+) -> None:
     # Online processing request to Document AI
     document = process_document(
         project_id, location, processor_id, file_path, mime_type

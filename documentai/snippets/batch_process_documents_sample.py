@@ -44,7 +44,7 @@ def batch_process_documents(
     gcs_output_uri_prefix: str,
     field_mask: Optional[str] = None,
     timeout: int = 400,
-):
+) -> None:
 
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")

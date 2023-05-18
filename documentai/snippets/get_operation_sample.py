@@ -25,7 +25,7 @@ from google.longrunning.operations_pb2 import GetOperationRequest  # type: ignor
 # operation_name = 'YOUR_OPERATION_NAME' # Format is 'projects/project_id/locations/location/operations/operation_id'
 
 
-def get_operation_sample(location: str, operation_name: str):
+def get_operation_sample(location: str, operation_name: str) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

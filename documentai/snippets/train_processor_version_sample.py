@@ -35,7 +35,7 @@ def train_processor_version_sample(
     processor_version_display_name: str,
     train_data_uri: Optional[str] = None,
     test_data_uri: Optional[str] = None,
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

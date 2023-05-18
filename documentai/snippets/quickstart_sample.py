@@ -30,7 +30,7 @@ from google.cloud import documentai  # type: ignore
 
 def quickstart(
     project_id: str, location: str, processor_id: str, file_path: str, mime_type: str
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

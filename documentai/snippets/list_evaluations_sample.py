@@ -27,7 +27,7 @@ from google.cloud import documentai  # type: ignore
 
 def list_evaluations_sample(
     project_id: str, location: str, processor_id: str, processor_version_id: str
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

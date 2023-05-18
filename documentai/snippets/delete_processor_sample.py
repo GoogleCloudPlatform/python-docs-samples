@@ -25,7 +25,7 @@ from google.cloud import documentai  # type: ignore
 # processor_id = 'YOUR_PROCESSOR_ID'
 
 
-def delete_processor_sample(project_id: str, location: str, processor_id: str):
+def delete_processor_sample(project_id: str, location: str, processor_id: str) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

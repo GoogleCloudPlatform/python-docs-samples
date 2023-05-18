@@ -35,7 +35,7 @@ def process_document_sample(
     file_path: str,
     mime_type: str,
     field_mask: Optional[str] = None,
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

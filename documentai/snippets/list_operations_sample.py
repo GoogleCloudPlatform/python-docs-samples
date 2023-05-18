@@ -32,7 +32,7 @@ from google.longrunning.operations_pb2 import ListOperationsRequest  # type: ign
 # operations_filter = "TYPE=BATCH_PROCESS_DOCUMENTS AND STATE=RUNNING"
 
 
-def list_operations_sample(project_id: str, location: str, operations_filter: str):
+def list_operations_sample(project_id: str, location: str, operations_filter: str) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

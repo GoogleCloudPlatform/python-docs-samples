@@ -32,7 +32,7 @@ def evaluate_processor_version_sample(
     processor_id: str,
     processor_version_id: str,
     gcs_input_uri: str,
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
