@@ -17,8 +17,8 @@
 import argparse
 import os
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
+from google.oauth2 import service_account  # type: ignore
+import googleapiclient.discovery  # type: ignore
 
 credentials = service_account.Credentials.from_service_account_file(
     filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
@@ -28,7 +28,7 @@ service = googleapiclient.discovery.build(
 
 
 # [START iam_view_grantable_roles]
-def view_grantable_roles(full_resource_name):
+def view_grantable_roles(full_resource_name: str) -> None:
     roles = service.roles().queryGrantableRoles(body={
         'fullResourceName': full_resource_name
     }).execute()
