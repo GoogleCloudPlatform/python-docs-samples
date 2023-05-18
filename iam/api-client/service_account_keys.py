@@ -28,7 +28,7 @@ import argparse
 import os
 
 from google.oauth2 import service_account
-import googleapiclient.discovery
+import googleapiclient.discovery  # type: ignore
 
 # [END iam_create_key]
 # [END iam_list_keys]
@@ -36,7 +36,7 @@ import googleapiclient.discovery
 
 
 # [START iam_create_key]
-def create_key(service_account_email):
+def create_key(service_account_email: str) -> None:
     """Creates a key for a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -63,7 +63,7 @@ def create_key(service_account_email):
 
 
 # [START iam_list_keys]
-def list_keys(service_account_email):
+def list_keys(service_account_email: str) -> None:
     """Lists all keys for a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -82,7 +82,7 @@ def list_keys(service_account_email):
 
 
 # [START iam_delete_key]
-def delete_key(full_key_name):
+def delete_key(full_key_name: str) -> None:
     """Deletes a service account key."""
 
     credentials = service_account.Credentials.from_service_account_file(
