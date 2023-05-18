@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
 
 import os
-from typing import Dict
 import uuid
 
 import pytest
@@ -27,7 +27,7 @@ from snippets.cloud_sql_connection_pool import (
 
 
 @pytest.fixture(name="conn_vars")
-def setup() -> Dict[str, str]:
+def setup() -> dict[str, str]:
     try:
         conn_vars = {}
         conn_vars["db_user"] = os.environ["POSTGRES_USER"]
@@ -48,7 +48,7 @@ def setup() -> Dict[str, str]:
 
 def test_init_tcp_connection_engine(
         capsys: pytest.CaptureFixture,
-        conn_vars: Dict[str, str]) -> None:
+        conn_vars: dict[str, str]) -> None:
 
     init_tcp_connection_engine(
         db_user=conn_vars["db_user"],
@@ -63,7 +63,7 @@ def test_init_tcp_connection_engine(
 
 def test_init_unix_connection_engine(
         capsys: pytest.CaptureFixture,
-        conn_vars: Dict[str, str]) -> None:
+        conn_vars: dict[str, str]) -> None:
 
     init_unix_connection_engine(
         db_user=conn_vars["db_user"],
@@ -79,7 +79,7 @@ def test_init_unix_connection_engine(
 
 def test_init_db(
         capsys: pytest.CaptureFixture,
-        conn_vars: Dict[str, str]) -> None:
+        conn_vars: dict[str, str]) -> None:
 
     table_name = f"votes_{uuid.uuid4().hex}"
 

@@ -16,7 +16,7 @@
 
 from __future__ import annotations
 
-from typing import Any as AnyType, Optional
+from typing import Any as AnyType
 
 from datasets.arrow_dataset import Dataset
 import numpy as np
@@ -83,7 +83,7 @@ class WeatherModel(PreTrainedModel):
         )
 
     def forward(
-        self, inputs: torch.Tensor, labels: Optional[torch.Tensor] = None
+        self, inputs: torch.Tensor, labels: torch.Tensor | None = None
     ) -> dict[str, torch.Tensor]:
         """Computes predictions as expected by ModelOutputs.
 

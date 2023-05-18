@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_tuning]
-from typing import Union
+from __future__ import annotations
+
 
 import pandas as pd
 
@@ -24,7 +25,7 @@ from vertexai.preview.language_models import TextGenerationModel
 def tuning(
     project_id: str,
     location: str,
-    training_data: Union[pd.DataFrame, str],
+    training_data: pd.DataFrame | str,
     train_steps: int = 10,
 ):
     """Tune a new model, based on a prompt-response data.

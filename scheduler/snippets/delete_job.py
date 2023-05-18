@@ -17,7 +17,7 @@
 from google.cloud import scheduler
 
 
-def delete_scheduler_job(project_id: str, location_id: str, job_id: str) -> None:
+def delete_scheduler_job(project_id: str, location_id: str, job_id: str) -> bool:
     """Delete a job via the Cloud Scheduler API.
 
     Args:
@@ -35,5 +35,6 @@ def delete_scheduler_job(project_id: str, location_id: str, job_id: str) -> None
     # Use the client to send the job deletion request.
     client.delete_job(name=job)
     print("Job deleted.")
+    return True
 
 # [END cloudscheduler_delete_job]
