@@ -42,7 +42,7 @@ HEADERS = {'Metadata-Flavor': 'Google'}
 # [START run_command_local]
 def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
     """Execute an external command (wrapper for Python subprocess)."""
-    logging.info('Executing command: {cmd}'.format(cmd=str(cmd)))
+    logging.info(f'Executing command: {str(cmd)}')
     stdout = subprocess.PIPE if capture_output else None
     process = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
     output = process.communicate()[0]
@@ -65,7 +65,7 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
     private_key_file = private_key_file or '/tmp/key-' + str(uuid.uuid4())
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
-    with open(private_key_file + '.pub', 'r') as original:
+    with open(private_key_file + '.pub') as original:
         public_key = original.read().strip()
 
     # Expiration time is in microseconds.
@@ -97,7 +97,7 @@ def run_ssh(cmd, private_key_file, username, hostname):
     """Run a command on a remote system."""
     ssh_command = [
         'ssh', '-i', private_key_file, '-o', 'StrictHostKeyChecking=no',
-        '{username}@{hostname}'.format(username=username, hostname=hostname),
+        f'{username}@{hostname}',
         cmd,
     ]
     ssh = subprocess.Popen(

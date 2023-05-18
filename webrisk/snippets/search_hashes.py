@@ -16,7 +16,7 @@
 from google.cloud import webrisk_v1
 
 
-def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> None:
+def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> list:
     """Gets the full hashes that match the requested hash prefix.
 
     This is used after a hash prefix is looked up in a threatList and there is a match.
@@ -37,6 +37,9 @@ def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> Non
             For the list on threat types, see:
             https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threattype
             threat_type = [webrisk_v1.ThreatType.MALWARE, webrisk_v1.ThreatType.SOCIAL_ENGINEERING]
+
+    Returns:
+        A hash list that contain all hashes that matches the given hash prefix.
     """
     webrisk_client = webrisk_v1.WebRiskServiceClient()
 
@@ -51,9 +54,10 @@ def search_hashes(hash_prefix: bytes, threat_type: webrisk_v1.ThreatType) -> Non
     # specified in threat_hash.expire_time
     # For more information on response type, see:
     # https://cloud.google.com/web-risk/docs/reference/rpc/google.cloud.webrisk.v1#threathash
+    hash_list = []
     for threat_hash in response.threats:
-        print(threat_hash.hash)
+        hash_list.append(threat_hash.hash)
+    return hash_list
 
-    print("Completed searching threat hashes.")
 
 # [END webrisk_search_hash]

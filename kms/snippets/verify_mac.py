@@ -46,6 +46,6 @@ def verify_mac(project_id, location_id, key_ring_id, key_id, version_id, data, s
     verify_response = client.mac_verify(
         request={'name': key_version_name, 'data': data_bytes, 'mac': signature})
 
-    print('Verified: {}'.format(verify_response.success))
+    print(f'Verified: {verify_response.success}')
     return verify_response
 # [END kms_verify_mac]

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2020 Google LLC
 #
@@ -61,20 +60,20 @@ def sample_analyze_sentiment(gcs_content_uri):
         request={"document": document, "encoding_type": encoding_type}
     )
     # Get overall sentiment of the input document
-    print("Document sentiment score: {}".format(response.document_sentiment.score))
+    print(f"Document sentiment score: {response.document_sentiment.score}")
     print(
-        "Document sentiment magnitude: {}".format(response.document_sentiment.magnitude)
+        f"Document sentiment magnitude: {response.document_sentiment.magnitude}"
     )
     # Get sentiment for all sentences in the document
     for sentence in response.sentences:
-        print("Sentence text: {}".format(sentence.text.content))
-        print("Sentence sentiment score: {}".format(sentence.sentiment.score))
-        print("Sentence sentiment magnitude: {}".format(sentence.sentiment.magnitude))
+        print(f"Sentence text: {sentence.text.content}")
+        print(f"Sentence sentiment score: {sentence.sentiment.score}")
+        print(f"Sentence sentiment magnitude: {sentence.sentiment.magnitude}")
 
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print("Language of the text: {}".format(response.language))
+    print(f"Language of the text: {response.language}")
 
 
 # [END language_sentiment_gcs]

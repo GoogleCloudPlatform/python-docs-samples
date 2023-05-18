@@ -54,7 +54,7 @@ DISCOVERY_API = 'https://cloudiot.googleapis.com/$discovery/rest'
 SERVICE_NAME = 'cloudiot'
 
 
-class Server(object):
+class Server:
     """Represents the state of the server."""
 
     def __init__(self, service_account_json):
@@ -64,7 +64,7 @@ class Server(object):
             sys.exit('Could not load service account credential '
                      'from {}'.format(service_account_json))
 
-        discovery_url = '{}?version={}'.format(DISCOVERY_API, API_VERSION)
+        discovery_url = f'{DISCOVERY_API}?version={API_VERSION}'
 
         self._service = discovery.build(
             SERVICE_NAME,
@@ -133,7 +133,7 @@ class Server(object):
             # If the server responds with a HtppError, log it here, but
             # continue so that the message does not stay NACK'ed on the
             # pubsub channel.
-            print('Error executing ModifyCloudToDeviceConfig: {}'.format(e))
+            print(f'Error executing ModifyCloudToDeviceConfig: {e}')
         finally:
             self._update_config_mutex.release()
 
@@ -179,7 +179,7 @@ class Server(object):
             # are not redelivered to this subscription.
             message.ack()
 
-        print('Listening for messages on {}'.format(subscription_path))
+        print(f'Listening for messages on {subscription_path}')
         subscriber.subscribe(subscription_path, callback=callback)
 
         # The subscriber is non-blocking, so keep the main thread from

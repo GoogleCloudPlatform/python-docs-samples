@@ -26,7 +26,7 @@ def analyze_iam_policy_longrunning_gcs(project_id, dump_file_path):
     # TODO dump_file_path = 'Your analysis dump file path'
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
 
     # Build analysis query
     analysis_query = asset_v1.IamPolicyAnalysisQuery()
@@ -55,7 +55,7 @@ def analyze_iam_policy_longrunning_bigquery(project_id, dataset, table):
     # TODO table = 'Your BigQuery table name'
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
 
     # Build analysis query
     analysis_query = asset_v1.IamPolicyAnalysisQuery()

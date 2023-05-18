@@ -15,7 +15,6 @@
 
 # [START translate_hybrid_imports]
 import html
-import io
 import os
 
 # Imports the Google Cloud client libraries
@@ -48,7 +47,7 @@ def pic_to_text(infile):
     client = vision.ImageAnnotatorClient()
 
     # Opens the input image file
-    with io.open(infile, "rb") as image_file:
+    with open(infile, "rb") as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -57,7 +56,7 @@ def pic_to_text(infile):
     # For less dense text, use text_detection
     response = client.document_text_detection(image=image)
     text = response.full_text_annotation.text
-    print("Detected text: {}".format(text))
+    print(f"Detected text: {text}")
 
     return text
     # [END translate_hybrid_vision]

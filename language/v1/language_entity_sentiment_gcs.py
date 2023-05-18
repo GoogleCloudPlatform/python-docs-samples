@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2020 Google LLC
 #
@@ -62,26 +61,26 @@ def sample_analyze_entity_sentiment(gcs_content_uri):
     )
     # Loop through entitites returned from the API
     for entity in response.entities:
-        print("Representative name for the entity: {}".format(entity.name))
+        print(f"Representative name for the entity: {entity.name}")
         # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
-        print("Entity type: {}".format(language_v1.Entity.Type(entity.type_).name))
+        print(f"Entity type: {language_v1.Entity.Type(entity.type_).name}")
         # Get the salience score associated with the entity in the [0, 1.0] range
-        print("Salience score: {}".format(entity.salience))
+        print(f"Salience score: {entity.salience}")
         # Get the aggregate sentiment expressed for this entity in the provided document.
         sentiment = entity.sentiment
-        print("Entity sentiment score: {}".format(sentiment.score))
-        print("Entity sentiment magnitude: {}".format(sentiment.magnitude))
+        print(f"Entity sentiment score: {sentiment.score}")
+        print(f"Entity sentiment magnitude: {sentiment.magnitude}")
         # Loop over the metadata associated with entity. For many known entities,
         # the metadata is a Wikipedia URL (wikipedia_url) and Knowledge Graph MID (mid).
         # Some entity types may have additional metadata, e.g. ADDRESS entities
         # may have metadata for the address street_name, postal_code, et al.
         for metadata_name, metadata_value in entity.metadata.items():
-            print("{} = {}".format(metadata_name, metadata_value))
+            print(f"{metadata_name} = {metadata_value}")
 
         # Loop over the mentions of this entity in the input document.
         # The API currently supports proper noun mentions.
         for mention in entity.mentions:
-            print("Mention text: {}".format(mention.text.content))
+            print(f"Mention text: {mention.text.content}")
             # Get the mention type, e.g. PROPER for proper noun
             print(
                 "Mention type: {}".format(
@@ -92,7 +91,7 @@ def sample_analyze_entity_sentiment(gcs_content_uri):
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print("Language of the text: {}".format(response.language))
+    print(f"Language of the text: {response.language}")
 
 
 # [END language_entity_sentiment_gcs]

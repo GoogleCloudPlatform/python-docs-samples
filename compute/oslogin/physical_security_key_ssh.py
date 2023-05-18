@@ -38,7 +38,7 @@ def ssh_command(key_files, username, ip_address):
     command = ["ssh"]
     for key_file in key_files:
         command.extend(["-i", key_file])
-    command.append("{username}@{ip}".format(username=username, ip=ip_address))
+    command.append(f"{username}@{ip_address}")
     return command
 
 
@@ -52,7 +52,7 @@ def main(user_key, ip_address, dryrun, directory=None):
     # Retrieve security keys and OS Login username from a user's Google account.
     profile = (
         oslogin.users()
-        .getLoginProfile(name="users/{}".format(user_key), view="SECURITY_KEY")
+        .getLoginProfile(name=f"users/{user_key}", view="SECURITY_KEY")
         .execute()
     )
 

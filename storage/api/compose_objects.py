@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2013 Google Inc.
+# Copyright 2013 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -51,7 +49,7 @@ def main(bucket, destination, sources):
             name=filename,
             bucket=bucket)
         resp = req.execute()
-        print('> Uploaded source file {}'.format(filename))
+        print(f'> Uploaded source file {filename}')
         print(json.dumps(resp, indent=2))
 
     # Construct a request to compose the source files into the destination.
@@ -69,7 +67,7 @@ def main(bucket, destination, sources):
 
     resp = req.execute()
 
-    print('> Composed files into {}'.format(destination))
+    print(f'> Composed files into {destination}')
     print(json.dumps(resp, indent=2))
 
     # Download and print the composed object.

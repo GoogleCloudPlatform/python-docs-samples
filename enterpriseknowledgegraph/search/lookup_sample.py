@@ -15,7 +15,9 @@
 
 # [START enterpriseknowledgegraph_lookup]
 
-from typing import Sequence
+from __future__ import annotations
+
+from collections.abc import Sequence
 
 from google.cloud import enterpriseknowledgegraph as ekg
 

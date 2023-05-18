@@ -24,7 +24,6 @@ Example usage:
 # [START vision_web_detection_tutorial]
 # [START vision_web_detection_tutorial_imports]
 import argparse
-import io
 
 from google.cloud import vision
 # [END vision_web_detection_tutorial_imports]
@@ -40,7 +39,7 @@ def annotate(path):
         image.source.image_uri = path
 
     else:
-        with io.open(path, 'rb') as image_file:
+        with open(path, 'rb') as image_file:
             content = image_file.read()
 
         image = vision.Image(content=content)
@@ -59,29 +58,29 @@ def report(annotations):
             len(annotations.pages_with_matching_images)))
 
         for page in annotations.pages_with_matching_images:
-            print('Url   : {}'.format(page.url))
+            print(f'Url   : {page.url}')
 
     if annotations.full_matching_images:
         print('\n{} Full Matches found: '.format(
               len(annotations.full_matching_images)))
 
         for image in annotations.full_matching_images:
-            print('Url  : {}'.format(image.url))
+            print(f'Url  : {image.url}')
 
     if annotations.partial_matching_images:
         print('\n{} Partial Matches found: '.format(
               len(annotations.partial_matching_images)))
 
         for image in annotations.partial_matching_images:
-            print('Url  : {}'.format(image.url))
+            print(f'Url  : {image.url}')
 
     if annotations.web_entities:
         print('\n{} Web entities found: '.format(
               len(annotations.web_entities)))
 
         for entity in annotations.web_entities:
-            print('Score      : {}'.format(entity.score))
-            print('Description: {}'.format(entity.description))
+            print(f'Score      : {entity.score}')
+            print(f'Description: {entity.description}')
     # [END vision_web_detection_tutorial_print_annotations]
 
 

@@ -75,7 +75,7 @@ def write_file(mnt_dir, filename):
 
 def read_file(full_path):
     '''Read files and return contents'''
-    with open(full_path, 'r') as reader:
+    with open(full_path) as reader:
         return reader.read()
 
 

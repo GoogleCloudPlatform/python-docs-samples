@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from functools import reduce
 import logging
 import os
-from typing import Dict, Tuple, TypeVar
+from typing import TypeVar
 
 import tensorflow as tf
 from tensorflow import keras
@@ -39,9 +41,9 @@ PADDING = 24
 
 
 def validated(
-    tensor_dict: Dict[str, tf.Tensor],
-    spec_dict: Dict[str, tf.TypeSpec],
-) -> Dict[str, tf.Tensor]:
+    tensor_dict: dict[str, tf.Tensor],
+    spec_dict: dict[str, tf.TypeSpec],
+) -> dict[str, tf.Tensor]:
     for field, spec in spec_dict.items():
         if field not in tensor_dict:
             raise KeyError(
@@ -58,7 +60,7 @@ def validated(
     return tensor_dict
 
 
-def serialize(value_dict: Dict[str, a]) -> bytes:
+def serialize(value_dict: dict[str, a]) -> bytes:
     spec_dict = {**INPUTS_SPEC, **OUTPUTS_SPEC}
     tensor_dict = {
         field: tf.convert_to_tensor(value, spec_dict[field].dtype)
@@ -83,7 +85,7 @@ def serialize(value_dict: Dict[str, a]) -> bytes:
 
 def deserialize(
     serialized_example: bytes,
-) -> Tuple[Dict[str, tf.Tensor], Dict[str, tf.Tensor]]:
+) -> tuple[dict[str, tf.Tensor], dict[str, tf.Tensor]]:
     features = {
         field: tf.io.FixedLenFeature(shape=(), dtype=tf.string)
         for field in [*INPUTS_SPEC.keys(), *OUTPUTS_SPEC.keys()]
@@ -95,7 +97,7 @@ def deserialize(
         tensor.set_shape(spec.shape)
         return tensor
 
-    def parse_features(spec_dict: Dict[str, tf.TypeSpec]) -> Dict[str, tf.Tensor]:
+    def parse_features(spec_dict: dict[str, tf.TypeSpec]) -> dict[str, tf.Tensor]:
         tensor_dict = {
             field: parse_tensor(bytes_value, spec_dict[field])
             for field, bytes_value in example.items()
@@ -142,7 +144,7 @@ def create_model(train_dataset: tf.data.Dataset) -> keras.Model:
         # We transform each (lat, lon) pair into a 3D point in the unit sphere.
         #   https://en.wikipedia.org/wiki/Spherical_coordinate_system#Cartesian_coordinates
         class GeoPoint(keras.layers.Layer):
-            def call(self: a, latlon: Tuple[tf.Tensor, tf.Tensor]) -> tf.Tensor:
+            def call(self: a, latlon: tuple[tf.Tensor, tf.Tensor]) -> tf.Tensor:
                 lat, lon = latlon
                 x = tf.cos(lon) * tf.sin(lat)
                 y = tf.sin(lon) * tf.sin(lat)

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2020 Google LLC
 #
@@ -61,10 +60,10 @@ def sample_classify_text(gcs_content_uri):
         # Get the name of the category representing the document.
         # See the predefined taxonomy of categories:
         # https://cloud.google.com/natural-language/docs/categories
-        print("Category name: {}".format(category.name))
+        print(f"Category name: {category.name}")
         # Get the confidence. Number representing how certain the classifier
         # is that this category represents the provided text.
-        print("Confidence: {}".format(category.confidence))
+        print(f"Confidence: {category.confidence}")
 
 
 # [END language_classify_gcs]

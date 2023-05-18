@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from cloudevents.http import CloudEvent
+import pytest
 
 import main
 
 
-def test_functions_eventsource_storage(capsys):
+def test_functions_eventsource_storage(capsys: pytest.LogCaptureFixture) -> None:
     attributes = {
         "id": "5e9f24a",
         "type": "google.cloud.storage.object.v1.finalized",

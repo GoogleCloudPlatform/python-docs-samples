@@ -27,7 +27,7 @@ def is_ipv6(addr):
     try:
         socket.inet_pton(socket.AF_INET6, addr)
         return True
-    except socket.error:
+    except OSError:
         return False
 
 
@@ -45,9 +45,9 @@ def index():
         user_ip = '.'.join(user_ip.split('.')[:2])
 
     with open('/tmp/seen.txt', 'a') as f:
-        f.write('{}\n'.format(user_ip))
+        f.write(f'{user_ip}\n')
 
-    with open('/tmp/seen.txt', 'r') as f:
+    with open('/tmp/seen.txt') as f:
         seen = f.read()
 
     output = """

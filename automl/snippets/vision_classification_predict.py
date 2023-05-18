@@ -45,6 +45,6 @@ def predict(project_id, model_id, file_path):
 
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(result.classification.score))
+        print(f"Predicted class name: {result.display_name}")
+        print(f"Predicted class score: {result.classification.score}")
     # [END automl_vision_classification_predict]

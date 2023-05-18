@@ -48,6 +48,6 @@ def disable_key_version(project_id, location_id, key_ring_id, key_id, version_id
 
     # Call the API.
     disabled_version = client.update_crypto_key_version(request={'crypto_key_version': key_version, 'update_mask': update_mask})
-    print('Disabled key version: {}'.format(disabled_version.name))
+    print(f'Disabled key version: {disabled_version.name}')
     return disabled_version
 # [END kms_disable_key_version]

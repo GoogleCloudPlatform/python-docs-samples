@@ -15,7 +15,6 @@
 """Sample app that uses the Data Loss Prevent API to redact the contents of
 an image file."""
 
-from __future__ import print_function
 
 import argparse
 
