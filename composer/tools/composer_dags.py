@@ -15,13 +15,15 @@
 # limitations under the License.
 """Standalone script to pause/unpause all the dags in the specific environment."""
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
 import re
 import subprocess
 import sys
-import typing
+from typing import Any
 
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s - %(message)s")
 logger = logging.getLogger(__name__)
@@ -36,7 +38,7 @@ class DAG:
   @staticmethod
   def get_list_of_dags(project_name: str, environment: str, location: str,
                        sdk_endpoint: str,
-                       airflow_version: typing.Tuple[int]) -> typing.List[str]:
+                       airflow_version: tuple[int]) -> list[str]:
     """Retrieves the list of dags for particular project."""
     sub_command = ("list_dags" if airflow_version < (2, 0, 0) else "dags list")
     command = (
@@ -60,7 +62,7 @@ class DAG:
       command: str,
       command_input: str = None,
       log_command: bool = True,
-  ) -> typing.Tuple[int, str]:
+  ) -> tuple[int, str]:
     """Executes shell command and returns its output."""
 
     p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
@@ -78,7 +80,7 @@ class DAG:
   @staticmethod
   def pause_dag(project_name: str, environment: str, location: str,
                 sdk_endpoint: str, dag_id: str,
-                airflow_version: typing.List[int]) -> str:
+                airflow_version: list[int]) -> str:
     """Pause specific DAG in the given environment."""
     sub_command = ("pause" if airflow_version < (2, 0, 0) else "dags pause")
     command = (
@@ -97,7 +99,7 @@ class DAG:
   @staticmethod
   def unpause_dag(project_name: str, environment: str, location: str,
                   sdk_endpoint: str, dag_id: str,
-                  airflow_version: typing.List[int]) -> str:
+                  airflow_version: list[int]) -> str:
     """UnPause specific DAG in the given environment."""
     sub_command = ("unpause" if airflow_version < (2, 0, 0) else "dags unpause")
     command = (
@@ -115,7 +117,7 @@ class DAG:
 
   @staticmethod
   def describe_environment(project_name: str, environment: str, location: str,
-                           sdk_endpoint: str) -> typing.Any:
+                           sdk_endpoint: str) -> Any:
     """Returns the given environment json object to parse necessary details."""
     logger.info("*** Fetching details of the environment: %s...", environment)
     command = (
@@ -175,7 +177,7 @@ def main(project_name: str,
   return 0
 
 
-def parse_arguments() -> typing.Dict[typing.Any, typing.Any]:
+def parse_arguments() -> dict[Any, Any]:
   """Parses command line parameters."""
   argument_parser = argparse.ArgumentParser(
       usage="Script to Pause/UnPause DAGs in Cloud Composer Environment \n")

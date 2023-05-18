@@ -17,7 +17,7 @@
 
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import FailedPrecondition
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = 'YOUR_PROJECT_ID'
@@ -28,7 +28,7 @@ from google.cloud import documentai
 
 def deploy_processor_version_sample(
     project_id: str, location: str, processor_id: str, processor_version_id: str
-):
+) -> None:
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 

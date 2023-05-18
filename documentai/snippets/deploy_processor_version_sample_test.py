@@ -13,6 +13,8 @@
 # limitations under the License.
 #
 
+# flake8: noqa
+
 import os
 from unittest import mock
 

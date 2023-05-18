@@ -20,6 +20,8 @@
 
 
 # [START compute_stop_instance]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

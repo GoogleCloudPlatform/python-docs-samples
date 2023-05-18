@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def text_summarization(temperature=.2):
+def text_summarization(temperature: float = .2) -> None:
     """Summarization Example with a Large Language Model"""
 
     # TODO developer - override these parameters as needed:

@@ -32,10 +32,10 @@ import manager  # noqa
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-topic_id = "test-device-events-{}".format(str(uuid.uuid4()))
-device_id = "test-device-{}".format(str(uuid.uuid4()))
-registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
-pubsub_topic = "projects/{}/topics/{}".format(project_id, topic_id)
+topic_id = f"test-device-events-{str(uuid.uuid4())}"
+device_id = f"test-device-{str(uuid.uuid4())}"
+registry_id = f"test-registry-{uuid.uuid4().hex}-{int(time.time())}"
+pubsub_topic = f"projects/{project_id}/topics/{topic_id}"
 
 cloud_region = "us-central1"
 destination_file_name = "destination-file.bin"
@@ -46,7 +46,7 @@ storage_client = storage.Client()
 
 @pytest.fixture(scope="module")
 def test_bucket_name():
-    bucket_name = "python-docs-samples-iot-{}".format(uuid.uuid4())
+    bucket_name = f"python-docs-samples-iot-{uuid.uuid4()}"
 
     yield bucket_name
 
@@ -70,7 +70,7 @@ def test_blob(test_bucket):
     """Provides a pre-existing blob in the test bucket."""
     bucket = storage_client.bucket(test_bucket)
     # Name of the blob
-    blob = bucket.blob("iot_core_store_file_gcs-{}".format(uuid.uuid4()))
+    blob = bucket.blob(f"iot_core_store_file_gcs-{uuid.uuid4()}")
     # Text in the blob
     blob.upload_from_string("This file on GCS will go to a device.")
 
@@ -99,7 +99,7 @@ def test_upload_local_file(test_bucket, capsys):
         gcs_to_device.upload_local_file(test_bucket, gcs_file_name, source_file.name)
 
     out, _ = capsys.readouterr()
-    assert "File {} uploaded as {}.".format(source_file.name, gcs_file_name) in out
+    assert f"File {source_file.name} uploaded as {gcs_file_name}." in out
 
 
 def test_make_file_public(test_bucket, test_blob):
