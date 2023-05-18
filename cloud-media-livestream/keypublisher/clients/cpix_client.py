@@ -17,6 +17,7 @@
 import abc
 import os
 
+from typing import Dict
 from typing import List
 
 from google.cloud import secretmanager
@@ -26,7 +27,7 @@ class CpixClient(abc.ABC):
     """Abstract class for CPIX clients."""
 
     @abc.abstractmethod
-    def fetch_keys(self, media_id: str, key_ids: List[str]):
+    def fetch_keys(self, media_id: str, key_ids: List[str]) -> Dict[str, object]:
         """Fetches encryption keys and prepares JSON content to be written to Secret Manager.
 
         Args:
@@ -35,12 +36,13 @@ class CpixClient(abc.ABC):
         key_ids (list[string]): List of IDs of any keys to fetch and prepare.
 
         Returns:
-        dict: Object containing key information to be written to Secret Manager.
+        Dictionary mapping key IDs to JSON-structured object containing key
+            information to be written to Secret Manager.
         """
 
     @property
     @abc.abstractmethod
-    def required_env_vars(self):
+    def required_env_vars(self) -> List[str]:
         """Returns environment variables which must be set to use the class.
 
         The `PROJECT` env var is always required and does not need to be included
@@ -51,7 +53,19 @@ class CpixClient(abc.ABC):
             set.
         """
 
-    def access_secret_version(self, secret_id: str, version_id: str) -> List[str]:
+    def access_secret_version(
+        self, secret_id: str, version_id: str
+    ) -> secretmanager.AccessSecretVersionResponse:
+        """Fetches the content of the secret given secret id and version number
+
+        Args:
+        secret_id (string): Name of the secret.
+        version_id (string): Version number of the secret.
+
+        Returns:
+        secretmanager.AccessSecretVersionResponse object containing value of the
+            secret.
+        """
         client = secretmanager.SecretManagerServiceClient()
         project_id = os.environ.get('PROJECT')
         secret_name = (

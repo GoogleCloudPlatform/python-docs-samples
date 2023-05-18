@@ -20,12 +20,14 @@ import os
 from typing import Union
 
 from flask import current_app
+from flask import Request
 
 import functions_framework
 
 import google.api_core.exceptions
 from google.cloud import secretmanager
 
+import clients.cpix_client
 import clients.fake_client
 
 PROVIDERS = {
@@ -83,7 +85,7 @@ def write_secret(secret_id: str, payload: str) -> str:
     return version.name
 
 
-def validate_environment(cpix_client):
+def validate_environment(cpix_client: clients.cpix_client.CpixClient) -> str:
     required_vars = ["PROJECT"]
     required_vars.extend(cpix_client.required_env_vars())
     for required_var in required_vars:
@@ -94,7 +96,7 @@ def validate_environment(cpix_client):
 
 
 @functions_framework.http
-def keys(request):
+def keys(request: Request) -> str:
     """Fetches encryption keys and uploads key information to Secret Manager.
 
     Entrypoint of the Cloud Function.

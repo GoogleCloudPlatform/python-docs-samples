@@ -16,6 +16,7 @@
 
 import secrets
 
+from typing import Dict
 from typing import List
 
 from . import cpix_client
@@ -24,12 +25,12 @@ from . import cpix_client
 class FakeClient(cpix_client.CpixClient):
     """Fake CPIX client, for demonstration purposes only."""
 
-    def fetch_keys(self, media_id: str, key_ids: List[str]):
+    def fetch_keys(self, media_id: str, key_ids: List[str]) -> Dict[str, object]:
         """Generates random key information.
 
         Args:
         media_id (string): Name for your asset, sometimes used by DRM providers to
-            show usage and reports.
+        show usage and reports.
         key_ids (list[string]): List of IDs of any keys to fetch and prepare.
 
         Returns:
@@ -40,14 +41,14 @@ class FakeClient(cpix_client.CpixClient):
         for key_id in key_ids:
             fake_key = secrets.token_hex(16)
             key_info['encryptionKeys'].append({
-                'keyId': key_id.replace('-', ''),
-                'key': fake_key,
-                'keyUri': (
-                    f'https://storage.googleapis.com/bucket-name/{fake_key}.bin'
-                ),
-                'iv': secrets.token_hex(16),
-            })
+                    'keyId': key_id.replace('-', ''),
+                    'key': fake_key,
+                    'keyUri': (
+                        f'https://storage.googleapis.com/bucket-name/{fake_key}.bin'
+                    ),
+                    'iv': secrets.token_hex(16),
+                })
         return key_info
 
-    def required_env_vars(self):
+    def required_env_vars(self) -> List[str]:
         return []
