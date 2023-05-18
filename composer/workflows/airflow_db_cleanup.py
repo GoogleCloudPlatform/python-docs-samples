@@ -332,7 +332,7 @@ def cleanup_function(**context):
             dags = session.query(airflow_db_model.dag_id).distinct()
             session.commit()
 
-            list_dags = [str(list(dag)[0]) for dag in dags]
+            list_dags = [str(list(dag)[0]) for dag in dags] + [None]
             for dag in list_dags:
                 query = build_query(session, airflow_db_model, age_check_column,
                                     max_date, keep_last, keep_last_filters,
