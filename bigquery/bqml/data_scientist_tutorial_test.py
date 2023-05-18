@@ -25,8 +25,8 @@ client = bigquery.Client()
 # We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
-dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
-full_dataset_id = "{}.{}".format(client.project, dataset_id)
+dataset_id = f"bqml_tutorial_{str(uuid.uuid4().hex)}"
+full_dataset_id = f"{client.project}.{dataset_id}"
 # [END bqml_data_scientist_tutorial_import_and_client]
 
 

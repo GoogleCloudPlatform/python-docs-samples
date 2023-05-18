@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import argparse
 import logging
-from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -31,7 +32,7 @@ def check_gpus(_: None, gpus_optional: bool = False) -> None:
         raise RuntimeError("No GPUs found.")
 
 
-def run(input_text: str, beam_args: Optional[List[str]] = None) -> None:
+def run(input_text: str, beam_args: list[str] | None = None) -> None:
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     pipeline = beam.Pipeline(options=beam_options)
     (

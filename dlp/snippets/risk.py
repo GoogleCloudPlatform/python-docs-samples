@@ -14,7 +14,6 @@
 
 """Sample app that uses the Data Loss Prevent API to perform risk anaylsis."""
 
-from __future__ import print_function
 
 import argparse
 
@@ -104,7 +103,7 @@ def numerical_risk_analysis(
             for percent, result in enumerate(results.quantile_values):
                 value = result.integer_value
                 if prev_value != value:
-                    print("Value at {}% quantile: {}".format(percent, value))
+                    print(f"Value at {percent}% quantile: {value}")
                     prev_value = value
             subscription.set_result(None)
         else:
@@ -211,7 +210,7 @@ def categorical_risk_analysis(
             )
             # Print bucket stats
             for i, bucket in enumerate(histogram_buckets):
-                print("Bucket {}:".format(i))
+                print(f"Bucket {i}:")
                 print(
                     "   Most common value occurs {} time(s)".format(
                         bucket.value_frequency_upper_bound
@@ -222,7 +221,7 @@ def categorical_risk_analysis(
                         bucket.value_frequency_lower_bound
                     )
                 )
-                print("   {} unique values total.".format(bucket.bucket_size))
+                print(f"   {bucket.bucket_size} unique values total.")
                 for value in bucket.bucket_values:
                     print(
                         "   Value {} occurs {} time(s)".format(
@@ -342,7 +341,7 @@ def k_anonymity_analysis(
             )
             # Print bucket stats
             for i, bucket in enumerate(histogram_buckets):
-                print("Bucket {}:".format(i))
+                print(f"Bucket {i}:")
                 if bucket.equivalence_class_size_lower_bound:
                     print(
                         "   Bucket size range: [{}, {}]".format(
@@ -481,7 +480,7 @@ def l_diversity_analysis(
             )
             # Print bucket stats
             for i, bucket in enumerate(histogram_buckets):
-                print("Bucket {}:".format(i))
+                print(f"Bucket {i}:")
                 print(
                     "   Bucket size range: [{}, {}]".format(
                         bucket.sensitive_value_frequency_lower_bound,
@@ -495,15 +494,13 @@ def l_diversity_analysis(
                         )
                     )
                     print(
-                        "   Class size: {}".format(value_bucket.equivalence_class_size)
+                        f"   Class size: {value_bucket.equivalence_class_size}"
                     )
                     for value in value_bucket.top_sensitive_values:
                         print(
-                            (
                                 "   Sensitive value {} occurs {} time(s)".format(
                                     value.value, value.count
                                 )
-                            )
                         )
             subscription.set_result(None)
         else:
@@ -639,13 +636,13 @@ def k_map_estimate_analysis(
             )
             # Print bucket stats
             for i, bucket in enumerate(histogram_buckets):
-                print("Bucket {}:".format(i))
+                print(f"Bucket {i}:")
                 print(
                     "   Anonymity range: [{}, {}]".format(
                         bucket.min_anonymity, bucket.max_anonymity
                     )
                 )
-                print("   Size: {}".format(bucket.bucket_size))
+                print(f"   Size: {bucket.bucket_size}")
                 for value_bucket in bucket.bucket_values:
                     print(
                         "   Values: {}".format(

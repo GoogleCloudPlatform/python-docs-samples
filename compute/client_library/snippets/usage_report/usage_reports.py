@@ -26,6 +26,8 @@ with the Compute Engine API and how to configure usage reports using the API.
 # [START compute_usage_report_set]
 # [START compute_usage_report_get]
 # [START compute_usage_report_disable]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

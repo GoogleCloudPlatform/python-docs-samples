@@ -21,12 +21,12 @@ https://cloud.google.com/iam/docs/granting-changing-revoking-access.
 import argparse
 import os
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
+from google.oauth2 import service_account  # type: ignore
+import googleapiclient.discovery  # type: ignore
 
 
 # [START iam_get_policy]
-def get_policy(project_id, version=1):
+def get_policy(project_id: str, version: int = 1) -> dict:
     """Gets IAM policy for a project."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -52,7 +52,7 @@ def get_policy(project_id, version=1):
 
 
 # [START iam_modify_policy_add_member]
-def modify_policy_add_member(policy, role, member):
+def modify_policy_add_member(policy: dict, role: str, member: str) -> dict:
     """Adds a new member to a role binding."""
 
     binding = next(b for b in policy["bindings"] if b["role"] == role)
@@ -65,7 +65,7 @@ def modify_policy_add_member(policy, role, member):
 
 
 # [START iam_modify_policy_add_role]
-def modify_policy_add_role(policy, role, member):
+def modify_policy_add_role(policy: dict, role: str, member: str) -> dict:
     """Adds a new role binding to a policy."""
 
     binding = {"role": role, "members": [member]}
@@ -78,7 +78,7 @@ def modify_policy_add_role(policy, role, member):
 
 
 # [START iam_modify_policy_remove_member]
-def modify_policy_remove_member(policy, role, member):
+def modify_policy_remove_member(policy: dict, role: str, member: str) -> dict:
     """Removes a  member from a role binding."""
     binding = next(b for b in policy["bindings"] if b["role"] == role)
     if "members" in binding and member in binding["members"]:
@@ -91,7 +91,7 @@ def modify_policy_remove_member(policy, role, member):
 
 
 # [START iam_set_policy]
-def set_policy(project_id, policy):
+def set_policy(project_id: str, policy: dict) -> dict:
     """Sets IAM policy for a project."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -115,7 +115,7 @@ def set_policy(project_id, policy):
 
 
 # [START iam_test_permissions]
-def test_permissions(project_id):
+def test_permissions(project_id: str) -> dict:
     """Tests IAM permissions of the caller"""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -144,7 +144,7 @@ def test_permissions(project_id):
 # [END iam_test_permissions]
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,

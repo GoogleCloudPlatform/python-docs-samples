@@ -32,11 +32,11 @@ import manager  # noqa
 cloud_region = "us-central1"
 device_id_template = "test-device-{}"
 rsa_cert_path = "resources/rsa_cert.pem"
-topic_id = "test-device-events-topic-{}".format(uuid.uuid4())
-subscription_name = "test-device-images-{}".format(uuid.uuid4())
+topic_id = f"test-device-events-topic-{uuid.uuid4()}"
+subscription_name = f"test-device-images-{uuid.uuid4()}"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-registry_id = "test-registry-{}-{}".format(uuid.uuid4().hex, int(time.time()))
+registry_id = f"test-registry-{uuid.uuid4().hex}-{int(time.time())}"
 
 
 @pytest.fixture(scope="session")
@@ -45,7 +45,7 @@ def test_topic():
     try:
         topic = manager.create_iot_topic(project_id, topic_id)
     except AlreadyExists as e:
-        print("The topic already exists, detail: {}".format(str(e)))
+        print(f"The topic already exists, detail: {str(e)}")
         # Ignore the error, fetch the topic
         topic = pubsub_client.get_topic(
             request={"topic": pubsub_client.topic_path(project_id, topic_id)}
@@ -58,7 +58,7 @@ def test_topic():
         pubsub_client.delete_topic(request={"topic": topic_path})
     except NotFound as e:
         # We ignore this case.
-        print("The topic doesn't exist: detail: {}".format(str(e)))
+        print(f"The topic doesn't exist: detail: {str(e)}")
 
 
 @pytest.fixture(scope="session")
@@ -71,7 +71,7 @@ def test_subscription(test_topic):
             request={"name": subscription_path, "topic": test_topic.name}
         )
     except AlreadyExists as e:
-        print("The topic already exists, detail: {}".format(str(e)))
+        print(f"The topic already exists, detail: {str(e)}")
         # Ignore the error, fetch the subscription
         subscription = subscriber.get_subscription(
             request={"subscription": subscription_path}
@@ -83,7 +83,7 @@ def test_subscription(test_topic):
         subscriber.delete_subscription(request={"subscription": subscription_path})
     except NotFound as e:
         # We ignore this case.
-        print("The subscription doesn't exist: detail: {}".format(str(e)))
+        print(f"The subscription doesn't exist: detail: {str(e)}")
 
 
 @pytest.fixture(scope="session")
@@ -106,7 +106,7 @@ def test_registry_id(test_topic):
             )
         except NotFound as e:
             # We ignore this case.
-            print("The registry doesn't exist: detail: {}".format(str(e)))
+            print(f"The registry doesn't exist: detail: {str(e)}")
 
     delete_registry()
 
@@ -128,7 +128,7 @@ def test_device_id(test_registry_id):
             )
         except AlreadyExists as e:
             # We ignore this case.
-            print("The device already exists: detail: {}".format(str(e)))
+            print(f"The device already exists: detail: {str(e)}")
 
     create_device()
 
@@ -146,7 +146,7 @@ def test_device_id(test_registry_id):
             )
         except NotFound as e:
             # We ignore this case.
-            print("The device doesn't exist: detail: {}".format(str(e)))
+            print(f"The device doesn't exist: detail: {str(e)}")
 
     delete_device()
 
@@ -246,7 +246,7 @@ def device_and_gateways(test_registry_id):
             )
         except NotFound as e:
             # We ignore this case.
-            print("The device doesn't exist: detail: {}".format(str(e)))
+            print(f"The device doesn't exist: detail: {str(e)}")
 
     delete_device()
 
@@ -262,7 +262,7 @@ def device_and_gateways(test_registry_id):
             )
         except NotFound as e:
             # We ignore this case.
-            print("The gateway doesn't exist: detail: {}".format(str(e)))
+            print(f"The gateway doesn't exist: detail: {str(e)}")
         try:
             manager.delete_device(
                 service_account_json,
@@ -273,6 +273,6 @@ def device_and_gateways(test_registry_id):
             )
         except NotFound as e:
             # We ignore this case.
-            print("The gateway doesn't exist: detail: {}".format(str(e)))
+            print(f"The gateway doesn't exist: detail: {str(e)}")
 
     delete_gateways()
