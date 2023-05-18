@@ -134,7 +134,7 @@ def keys(request: Request) -> str:
 
         media_id = request_json.get("mediaId")
         if not media_id:
-            return http_response('"mediaId" field must be specified', 400)
+            return http_response("'mediaId' field must be specified", 400)
         provider_key = request_json.get("provider")
         if not provider_key:
             return http_response(
