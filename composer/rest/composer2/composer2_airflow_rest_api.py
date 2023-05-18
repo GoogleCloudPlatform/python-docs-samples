@@ -19,6 +19,8 @@ Trigger a DAG in Cloud Composer 2 environment using the Airflow 2 stable REST AP
 
 # [START composer_2_trigger_dag]
 # [START composer_2_trigger_dag_for_import]
+from __future__ import annotations
+
 from typing import Any
 
 import google.auth

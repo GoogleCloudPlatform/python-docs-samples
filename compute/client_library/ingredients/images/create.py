@@ -18,8 +18,9 @@
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 
+from __future__ import annotations
+
 import warnings
-from typing import Optional
 
 from google.cloud import compute_v1
 
@@ -31,7 +32,7 @@ STOPPED_MACHINE_STATUS = (
 
 
 def create_image_from_disk(project_id: str, zone: str, source_disk_name: str, image_name: str,
-                           storage_location: Optional[str] = None, force_create: bool = False) -> compute_v1.Image:
+                           storage_location: str | None = None, force_create: bool = False) -> compute_v1.Image:
     """
     Creates a new disk image.
 

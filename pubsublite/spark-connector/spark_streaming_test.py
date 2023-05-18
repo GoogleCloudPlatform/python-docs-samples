@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
 
+from collections.abc import Generator
 import os
 import pathlib
 import re
-from typing import Generator
 import uuid
 
 from google.api_core.exceptions import NotFound
@@ -226,7 +227,7 @@ def test_spark_streaming_from_pubsublite(
     # Create a Dataproc job client.
     job_client = dataproc_v1.JobControllerClient(
         client_options={
-            "api_endpoint": "{}-dataproc.googleapis.com:443".format(CLOUD_REGION)
+            "api_endpoint": f"{CLOUD_REGION}-dataproc.googleapis.com:443"
         }
     )
 

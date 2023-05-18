@@ -49,7 +49,7 @@ def create_patient(
     service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Creates a new Patient resource in a FHIR store."""
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Patient".format(
         url, dataset_id, fhir_store_id
@@ -87,7 +87,7 @@ def create_encounter(
     patient_id,
 ):
     """Creates a new Encounter resource in a FHIR store based on a Patient."""
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Encounter".format(
         url, dataset_id, fhir_store_id
@@ -110,7 +110,7 @@ def create_encounter(
                 "text": "The patient had an abnormal heart rate. She was concerned about this."
             }
         ],
-        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "subject": {"reference": f"Patient/{patient_id}"},
         "resourceType": "Encounter",
     }
 
@@ -138,7 +138,7 @@ def create_observation(
     Creates a new Observation resource in a FHIR store based on
     an Encounter.
     """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir/Observation".format(
         url, dataset_id, fhir_store_id
@@ -152,7 +152,7 @@ def create_observation(
     body = {
         "resourceType": "Observation",
         "status": "final",
-        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "subject": {"reference": f"Patient/{patient_id}"},
         "effectiveDateTime": "2020-01-01T00:00:00+00:00",
         "code": {
             "coding": [
@@ -164,7 +164,7 @@ def create_observation(
             ]
         },
         "valueQuantity": {"value": 55, "unit": "bpm"},
-        "encounter": {"reference": "Encounter/{}".format(encounter_id)},
+        "encounter": {"reference": f"Encounter/{encounter_id}"},
     }
     response = session.post(fhir_store_path, headers=headers, json=body)
     response.raise_for_status()
@@ -192,7 +192,7 @@ def delete_resource(
     resource was successfully deleted, search for or get the resource and
     see if it exists.
     """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}/{}".format(
         url, dataset_id, fhir_store_id, resource_type, resource_id
@@ -202,7 +202,7 @@ def delete_resource(
     session = get_session(service_account_json)
 
     response = session.delete(resource_path)
-    print("Deleted {} resource with ID {}.".format(resource_type, resource_id))
+    print(f"Deleted {resource_type} resource with ID {resource_id}.")
 
     return response
 
@@ -222,7 +222,7 @@ def conditional_update_resource(
     If a resource is found based on the search criteria specified in
     the query parameters, updates the entire contents of that resource.
     """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     # The search query in this request updates all Observations
     # using the Observation's identifier (ABC-12345 in my-code-system)
@@ -237,7 +237,7 @@ def conditional_update_resource(
     body = {
         "resourceType": "Observation",
         "status": "cancelled",
-        "subject": {"reference": "Patient/{}".format(patient_id)},
+        "subject": {"reference": f"Patient/{patient_id}"},
         "effectiveDateTime": "2020-01-01T00:00:00+00:00",
         "code": {
             "coding": [
@@ -249,7 +249,7 @@ def conditional_update_resource(
             ]
         },
         "valueQuantity": {"value": 55, "unit": "bpm"},
-        "encounter": {"reference": "Encounter/{}".format(encounter_id)},
+        "encounter": {"reference": f"Encounter/{encounter_id}"},
     }
 
     headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
@@ -279,7 +279,7 @@ def conditional_delete_resource(
     service_account_json, base_url, project_id, cloud_region, dataset_id, fhir_store_id
 ):
     """Deletes FHIR resources that match a search query."""
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     # The search query in this request deletes all Observations
     # with a status of 'cancelled'.
@@ -314,7 +314,7 @@ def conditional_patch_resource(
     the query parameters, updates part of that resource by
     applying the operations specified in a JSON Patch document.
     """
-    url = "{}/projects/{}/locations/{}".format(base_url, project_id, cloud_region)
+    url = f"{base_url}/projects/{project_id}/locations/{cloud_region}"
 
     # The search query in this request updates all Observations
     # if the subject of the Observation is a particular patient.

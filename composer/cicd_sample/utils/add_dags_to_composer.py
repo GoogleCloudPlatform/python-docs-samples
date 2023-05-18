@@ -13,18 +13,19 @@
 # limitations under the License.
 
 # [START composer_cicd_add_dags_to_composer_utility]
+from __future__ import annotations
+
 import argparse
 import glob
 import os
 from shutil import copytree, ignore_patterns
 import tempfile
-from typing import List, Tuple
 
 # Imports the Google Cloud client library
 from google.cloud import storage
 
 
-def _create_dags_list(dags_directory: str) -> Tuple[str, List[str]]:
+def _create_dags_list(dags_directory: str) -> tuple[str, list[str]]:
     temp_dir = tempfile.mkdtemp()
 
     # ignore non-DAG Python files

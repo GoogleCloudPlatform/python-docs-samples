@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # [START genappbuilder_list_operations]
-from typing import Optional
+from __future__ import annotations
+
 
 from google.cloud import discoveryengine_v1beta as genappbuilder
 
@@ -32,7 +33,7 @@ def list_operations_sample(
     project_id: str,
     location: str,
     search_engine_id: str,
-    operations_filter: Optional[str] = None,
+    operations_filter: str | None = None,
 ) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()
