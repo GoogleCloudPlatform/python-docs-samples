@@ -36,7 +36,7 @@ def predict(project_id, model_id, content):
     response = prediction_client.predict(name=model_full_id, payload=payload)
 
     for annotation_payload in response.payload:
-        print("Predicted class name: {}".format(annotation_payload.display_name))
+        print(f"Predicted class name: {annotation_payload.display_name}")
         print(
             "Predicted sentiment score: {}".format(
                 annotation_payload.text_sentiment.sentiment

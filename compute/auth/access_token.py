@@ -51,7 +51,7 @@ def list_buckets(project_id, access_token):
         'project': project_id
     }
     headers = {
-        'Authorization': 'Bearer {}'.format(access_token)
+        'Authorization': f'Bearer {access_token}'
     }
 
     r = requests.get(url, params=params, headers=headers)

@@ -28,7 +28,7 @@ def get_operation_status(
         operation_full_id
     )
 
-    print("Name: {}".format(response.name))
+    print(f"Name: {response.name}")
     print("Operation details:")
     print(response)
 # [END automl_get_operation_status_beta]

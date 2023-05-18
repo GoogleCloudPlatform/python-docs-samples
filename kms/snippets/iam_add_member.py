@@ -56,6 +56,6 @@ def iam_add_member(project_id, location_id, key_ring_id, key_id, member):
     }
 
     updated_policy = client.set_iam_policy(request=request)
-    print('Added {} to {}'.format(member, resource_name))
+    print(f'Added {member} to {resource_name}')
     return updated_policy
 # [END kms_iam_add_member]

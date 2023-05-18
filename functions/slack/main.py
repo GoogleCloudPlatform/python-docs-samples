@@ -48,7 +48,7 @@ def format_slack_message(query, response):
 
     message = {
         'response_type': 'in_channel',
-        'text': 'Query: {}'.format(query),
+        'text': f'Query: {query}',
         'attachments': []
     }
 

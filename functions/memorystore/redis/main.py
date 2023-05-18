@@ -27,6 +27,6 @@ redis_client = redis.StrictRedis(host=redis_host, port=redis_port)
 @functions_framework.http
 def visit_count(request):
     value = redis_client.incr('visits', 1)
-    return 'Visit count: {}'.format(value)
+    return f'Visit count: {value}'
 
 # [END functions_memorystore_redis]

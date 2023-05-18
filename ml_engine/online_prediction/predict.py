@@ -44,10 +44,10 @@ def predict_json(project, model, instances, version=None):
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    name = 'projects/{}/models/{}'.format(project, model)
+    name = f'projects/{project}/models/{model}'
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += f'/versions/{version}'
 
     response = service.projects().predict(
         name=name,

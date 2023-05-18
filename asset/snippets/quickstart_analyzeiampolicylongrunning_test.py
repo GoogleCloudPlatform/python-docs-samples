@@ -25,8 +25,8 @@ import pytest
 import quickstart_analyzeiampolicylongrunning
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-BUCKET = "analysis-{}".format(int(uuid.uuid4()))
-DATASET = "analysis_{}".format(int(uuid.uuid4()))
+BUCKET = f"analysis-{int(uuid.uuid4())}"
+DATASET = f"analysis_{int(uuid.uuid4())}"
 
 
 @pytest.fixture(scope="module")
@@ -48,13 +48,13 @@ def analysis_bucket(storage_client):
     try:
         bucket.delete(force=True)
     except Exception as e:
-        print("Failed to delete bucket{}".format(BUCKET))
+        print(f"Failed to delete bucket{BUCKET}")
         raise e
 
 
 @pytest.fixture(scope="module")
 def dataset(bigquery_client):
-    dataset_id = "{}.{}".format(PROJECT, DATASET)
+    dataset_id = f"{PROJECT}.{DATASET}"
     dataset = bigquery.Dataset(dataset_id)
     dataset.location = "US"
     dataset = bigquery_client.create_dataset(dataset)
@@ -66,12 +66,12 @@ def dataset(bigquery_client):
 
 
 def test_analyze_iam_policy_longrunning(analysis_bucket, dataset, capsys):
-    dump_file_path = "gs://{}/analysis-dump.txt".format(analysis_bucket)
+    dump_file_path = f"gs://{analysis_bucket}/analysis-dump.txt"
     quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_gcs(PROJECT, dump_file_path)
     out, _ = capsys.readouterr()
     assert "True" in out
 
-    dataset_id = "projects/{}/datasets/{}".format(PROJECT, dataset)
+    dataset_id = f"projects/{PROJECT}/datasets/{dataset}"
     quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_bigquery(PROJECT, dataset_id, "analysis_")
     out, _ = capsys.readouterr()
     assert "True" in out

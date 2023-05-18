@@ -25,7 +25,7 @@ import bookstore_pb2_grpc
 def run(host, port, api_key, auth_token, timeout):
     """Makes a basic ListShelves call against a gRPC Bookstore server."""
 
-    channel = grpc.insecure_channel('{}:{}'.format(host, port))
+    channel = grpc.insecure_channel(f'{host}:{port}')
 
     stub = bookstore_pb2_grpc.BookstoreStub(channel)
     metadata = []
@@ -34,7 +34,7 @@ def run(host, port, api_key, auth_token, timeout):
     if auth_token:
         metadata.append(('authorization', 'Bearer ' + auth_token))
     shelves = stub.ListShelves(empty_pb2.Empty(), timeout, metadata=metadata)
-    print('ListShelves: {}'.format(shelves))
+    print(f'ListShelves: {shelves}')
 
 
 if __name__ == '__main__':

@@ -50,5 +50,5 @@ def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
 
     # Call the API.
     created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': crypto_key_id, 'crypto_key': key})
-    print('Created hsm key: {}'.format(created_key.name))
+    print(f'Created hsm key: {created_key.name}')
 # [END kms_create_key_for_import]

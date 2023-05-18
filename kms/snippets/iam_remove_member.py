@@ -56,6 +56,6 @@ def iam_remove_member(project_id, location_id, key_ring_id, key_id, member):
         'policy': policy
     }
     updated_policy = client.set_iam_policy(request=request)
-    print('Removed {} from {}'.format(member, resource_name))
+    print(f'Removed {member} from {resource_name}')
     return updated_policy
 # [END kms_iam_remove_member]

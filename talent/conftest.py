@@ -30,7 +30,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 @pytest.fixture(scope="module")
 def tenant():
-    tenant_ext_unique_id = "TEST_TENANT_{}".format(uuid.uuid4())
+    tenant_ext_unique_id = f"TEST_TENANT_{uuid.uuid4()}"
     # create a temporary tenant
     tenant_name = job_search_create_tenant.create_tenant(
         PROJECT_ID, tenant_ext_unique_id
@@ -44,12 +44,12 @@ def tenant():
     try:
         job_search_delete_tenant.delete_tenant(PROJECT_ID, tenant_id)
     except NotFound as e:
-        print("Ignoring NotFound upon cleanup, details: {}".format(e))
+        print(f"Ignoring NotFound upon cleanup, details: {e}")
 
 
 @pytest.fixture(scope="module")
 def company(tenant):
-    company_ext_id = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
+    company_ext_id = f"COMPANY_EXT_ID_{uuid.uuid4()}"
 
     # create a temporary company
     company_name = job_search_create_company.create_company(
@@ -64,12 +64,12 @@ def company(tenant):
     try:
         job_search_delete_company.delete_company(PROJECT_ID, tenant, company_id)
     except NotFound as e:
-        print("Ignoring NotFound upon cleanup, details: {}".format(e))
+        print(f"Ignoring NotFound upon cleanup, details: {e}")
 
 
 @pytest.fixture(scope="module")
 def job(tenant, company):
-    post_unique_id = "TEST_POST_{}".format(uuid.uuid4().hex)[:20]
+    post_unique_id = f"TEST_POST_{uuid.uuid4().hex}"[:20]
     # create a temporary job
     job_name = job_search_create_job.create_job(
         PROJECT_ID, tenant, company, post_unique_id, "www.jobUrl.com"
@@ -83,4 +83,4 @@ def job(tenant, company):
     try:
         job_search_delete_job.delete_job(PROJECT_ID, tenant, job_id)
     except NotFound as e:
-        print("Ignoring NotFound upon cleanup, details: {}".format(e))
+        print(f"Ignoring NotFound upon cleanup, details: {e}")

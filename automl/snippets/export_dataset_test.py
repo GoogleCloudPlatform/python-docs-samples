@@ -18,7 +18,7 @@ import os
 import export_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-BUCKET_ID = "{}-lcm".format(PROJECT_ID)
+BUCKET_ID = f"{PROJECT_ID}-lcm"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 DATASET_ID = "TEN0000000000000000000"
 
@@ -30,7 +30,7 @@ def test_export_dataset(capsys):
     # valid.
     try:
         export_dataset.export_dataset(
-            PROJECT_ID, DATASET_ID, "gs://{}/{}/".format(BUCKET_ID, PREFIX)
+            PROJECT_ID, DATASET_ID, f"gs://{BUCKET_ID}/{PREFIX}/"
         )
         out, _ = capsys.readouterr()
         assert (

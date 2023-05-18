@@ -14,7 +14,8 @@
 #
 
 # [START genappbuilder_import_documents]
-from typing import Optional
+from __future__ import annotations
+
 
 from google.cloud import discoveryengine_v1beta as genappbuilder
 
@@ -34,9 +35,9 @@ def import_documents_sample(
     project_id: str,
     location: str,
     search_engine_id: str,
-    gcs_uri: Optional[str] = None,
-    bigquery_dataset: Optional[str] = None,
-    bigquery_table: Optional[str] = None,
+    gcs_uri: str | None = None,
+    bigquery_dataset: str | None = None,
+    bigquery_table: str | None = None,
 ) -> None:
     # Create a client
     client = genappbuilder.DocumentServiceClient()

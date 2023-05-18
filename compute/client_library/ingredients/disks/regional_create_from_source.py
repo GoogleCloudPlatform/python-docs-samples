@@ -16,7 +16,9 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Iterable, Optional
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
@@ -25,8 +27,8 @@ from google.cloud import compute_v1
 def create_regional_disk(project_id: str, region: str, replica_zones: Iterable[str],
                          disk_name: str, disk_type: str,
                          disk_size_gb: int,
-                         disk_link: Optional[str] = None,
-                         snapshot_link: Optional[str] = None) -> compute_v1.Disk:
+                         disk_link: str | None = None,
+                         snapshot_link: str | None = None) -> compute_v1.Disk:
     """
     Creates a regional disk from an existing zonal disk in a given project.
 

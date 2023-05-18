@@ -53,8 +53,8 @@ def create_glossary(
     operation = client.create_glossary(parent=parent, glossary=glossary)
 
     result = operation.result(timeout)
-    print("Created: {}".format(result.name))
-    print("Input Uri: {}".format(result.input_config.gcs_source.input_uri))
+    print(f"Created: {result.name}")
+    print(f"Input Uri: {result.input_config.gcs_source.input_uri}")
 
 
 # [END translate_v3_create_glossary]

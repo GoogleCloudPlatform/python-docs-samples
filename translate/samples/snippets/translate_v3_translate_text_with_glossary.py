@@ -47,7 +47,7 @@ def translate_text_with_glossary(
 
     print("Translated text: \n")
     for translation in response.glossary_translations:
-        print("\t {}".format(translation.translated_text))
+        print(f"\t {translation.translated_text}")
 
 
 # [END translate_v3_translate_text_with_glossary]
