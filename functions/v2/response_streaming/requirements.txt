@@ -1,3 +1,4 @@
 Flask==2.2.2
 functions-framework==3.3.0
 google-cloud-bigquery==3.6.0
+pytest==7.2.1
