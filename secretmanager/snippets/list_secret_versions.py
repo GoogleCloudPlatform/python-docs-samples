@@ -21,7 +21,7 @@ import argparse
 
 
 # [START secretmanager_list_secret_versions]
-def list_secret_versions(project_id, secret_id):
+def list_secret_versions(project_id: str, secret_id: str) -> None:
     """
     List all secret versions in the given secret and their metadata.
     """

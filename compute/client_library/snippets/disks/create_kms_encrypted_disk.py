@@ -20,8 +20,10 @@
 
 
 # [START compute_create_kms_encrypted_disk]
+from __future__ import annotations
+
 import sys
-from typing import Any, Optional
+from typing import Any
 
 from google.api_core.exceptions import BadRequest
 from google.api_core.extended_operation import ExtendedOperation
@@ -83,8 +85,8 @@ def create_kms_encrypted_disk(
     disk_type: str,
     disk_size_gb: int,
     kms_key_name: str,
-    disk_link: Optional[str] = None,
-    image_link: Optional[str] = None,
+    disk_link: str | None = None,
+    image_link: str | None = None,
 ) -> compute_v1.Disk:
     """
     Creates a zonal disk in a project. If you do not provide values for disk_link or image_link,

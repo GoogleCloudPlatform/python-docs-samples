@@ -12,7 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # flake8: noqa
-from typing import Iterable, Optional
+from __future__ import annotations
+
+from collections.abc import Iterable
 import uuid
 
 from google.cloud import compute_v1
@@ -20,8 +22,8 @@ from google.cloud import compute_v1
 
 # <INGREDIENT bulk_insert_instance>
 def bulk_insert_instance(project_id: str, zone: str, template: compute_v1.InstanceTemplate,
-                         count: int, name_pattern: str, min_count: Optional[int] = None,
-                         labels: Optional[dict] = None) -> Iterable[compute_v1.Instance]:
+                         count: int, name_pattern: str, min_count: int | None = None,
+                         labels: dict | None = None) -> Iterable[compute_v1.Instance]:
     """
     Create multiple VMs based on an Instance Template. The newly created instances will
     be returned as a list and will share a label with key `bulk_batch` and a random

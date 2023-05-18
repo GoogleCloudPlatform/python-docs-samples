@@ -64,8 +64,8 @@ def translate_from_file(file_path="path/to/your/file"):
         translation = result.text_translation_result.translation
 
         if result.text_translation_result.is_final:
-            print("\nFinal translation: {0}".format(translation))
+            print(f"\nFinal translation: {translation}")
             break
 
-        print("\nPartial translation: {0}".format(translation))
+        print(f"\nPartial translation: {translation}")
     # [END mediatranslation_translate_from_file]

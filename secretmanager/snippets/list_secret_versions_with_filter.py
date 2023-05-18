@@ -19,7 +19,9 @@ secret.
 
 
 # [START secretmanager_list_secret_versions_with_filter]
-def list_secret_versions_with_filter(project_id, secret_id, filter_str="state:ENABLED"):
+def list_secret_versions_with_filter(
+    project_id: str, secret_id: str, filter_str: str = "state:ENABLED"
+) -> None:
     """
     List all secret versions in the given secret and their metadata.
 

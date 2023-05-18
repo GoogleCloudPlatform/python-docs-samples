@@ -18,9 +18,11 @@ command line application and sample code for getting metadata about a secret.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_get_secret]
-def get_secret(project_id, secret_id):
+def get_secret(project_id: str, secret_id: str) -> secretmanager.GetSecretRequest:
     """
     Get information about the given secret. This only returns metadata about
     the secret container, not any secret material.
@@ -44,7 +46,7 @@ def get_secret(project_id, secret_id):
     elif "user_managed" in response.replication:
         replication = "MANAGED"
     else:
-        raise f"Unknown replication {response.replication}"
+        raise Exception(f"Unknown replication {response.replication}")
 
     # Print data about the secret.
     print(f"Got secret {response.name} with replication policy {replication}")

@@ -31,7 +31,7 @@ REGION = "us-central1"
 def cluster_client():
     return dataproc.ClusterControllerClient(
         client_options={
-            "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
+            "api_endpoint": f"{REGION}-dataproc.googleapis.com:443"
         }
     )
 
@@ -73,7 +73,7 @@ def teardown_cluster(cluster_client, curr_cluster_name):
 
 @pytest.fixture(scope='module')
 def cluster_name(cluster_client):
-    curr_cluster_name = "py-sj-test-{}".format(str(uuid.uuid4()))
+    curr_cluster_name = f"py-sj-test-{str(uuid.uuid4())}"
 
     try:
         setup_cluster(cluster_client, curr_cluster_name)

@@ -15,6 +15,6 @@
 import extraction
 
 
-def test_extractive_question_answering():
+def test_extractive_question_answering() -> None:
     content = extraction.extractive_question_answering(temperature=0).text
     assert content == 'Reduced moist tropical vegetation cover.'

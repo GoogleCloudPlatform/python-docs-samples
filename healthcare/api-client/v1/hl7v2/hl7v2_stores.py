@@ -48,7 +48,7 @@ def create_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     )
 
     response = request.execute()
-    print("Created HL7v2 store: {}".format(hl7v2_store_id))
+    print(f"Created HL7v2 store: {hl7v2_store_id}")
     return response
 
 
@@ -78,7 +78,7 @@ def delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
+    hl7v2_store_name = f"{hl7v2_store_parent}/hl7V2Stores/{hl7v2_store_id}"
 
     request = (
         client.projects()
@@ -89,7 +89,7 @@ def delete_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     )
 
     response = request.execute()
-    print("Deleted HL7v2 store: {}".format(hl7v2_store_id))
+    print(f"Deleted HL7v2 store: {hl7v2_store_id}")
     return response
 
 
@@ -119,7 +119,7 @@ def get_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
+    hl7v2_store_name = f"{hl7v2_store_parent}/hl7V2Stores/{hl7v2_store_id}"
 
     hl7v2_stores = client.projects().locations().datasets().hl7V2Stores()
     hl7v2_store = hl7v2_stores.get(name=hl7v2_store_name).execute()
@@ -212,7 +212,7 @@ def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
+    hl7v2_store_name = f"{hl7v2_store_parent}/hl7V2Stores/{hl7v2_store_id}"
 
     # TODO(developer): Replace with the full URI of an existing Pub/Sub topic
     patch = {"notificationConfigs": None}
@@ -227,7 +227,7 @@ def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
 
     response = request.execute()
     print(
-        "Patched HL7v2 store {} with Cloud Pub/Sub topic: None".format(hl7v2_store_id)
+        f"Patched HL7v2 store {hl7v2_store_id} with Cloud Pub/Sub topic: None"
     )
     return response
 
@@ -258,7 +258,7 @@ def get_hl7v2_store_iam_policy(project_id, location, dataset_id, hl7v2_store_id)
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
+    hl7v2_store_name = f"{hl7v2_store_parent}/hl7V2Stores/{hl7v2_store_id}"
 
     request = (
         client.projects()
@@ -313,7 +313,7 @@ def set_hl7v2_store_iam_policy(
     hl7v2_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    hl7v2_store_name = "{}/hl7V2Stores/{}".format(hl7v2_store_parent, hl7v2_store_id)
+    hl7v2_store_name = f"{hl7v2_store_parent}/hl7V2Stores/{hl7v2_store_id}"
 
     policy = {"bindings": [{"role": role, "members": [member]}]}
 

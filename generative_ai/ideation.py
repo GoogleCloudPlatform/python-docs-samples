@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def interview(temperature=.2):
+def interview(temperature: float = .2) -> None:
     """Ideation example with a Large Language Model"""
 
     # TODO developer - override these parameters as needed:

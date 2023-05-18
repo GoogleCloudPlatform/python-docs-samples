@@ -30,7 +30,7 @@ logging.getLogger("googleapiclient.discovery_cache").setLevel(logging.CRITICAL)
 cloud_region = "us-central1"
 device_id_template = "test-device-{}"
 gateway_id_template = "test-gateway-{}"
-topic_id = "test-device-events-topic-{}".format(int(time.time()))
+topic_id = f"test-device-events-topic-{int(time.time())}"
 
 ca_cert_path = "resources/roots.pem"
 log_path = "config_log.csv"
@@ -47,10 +47,10 @@ if (
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 service_account_json = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
-pubsub_topic = "projects/{}/topics/{}".format(project_id, topic_id)
-registry_id = "test-registry-{}".format(int(time.time()))
+pubsub_topic = f"projects/{project_id}/topics/{topic_id}"
+registry_id = f"test-registry-{int(time.time())}"
 
-base_url = "https://console.cloud.google.com/iot/locations/{}".format(cloud_region)
+base_url = f"https://console.cloud.google.com/iot/locations/{cloud_region}"
 edit_template = "{}/registries/{}?project={}".format(base_url, "{}", "{}")
 
 device_url_template = "{}/registries/{}/devices/{}?project={}".format(
@@ -72,14 +72,14 @@ if __name__ == "__main__":
     device_id = device_id_template.format("noauthbind")
 
     # [START iot_gateway_demo_create_registry]
-    print("Creating registry: {}".format(registry_id))
+    print(f"Creating registry: {registry_id}")
     manager.create_registry(
         service_account_json, project_id, cloud_region, pubsub_topic, registry_id
     )
     # [END iot_gateway_demo_create_registry]
 
     # [START iot_gateway_demo_create_gateway]
-    print("Creating gateway: {}".format(gateway_id))
+    print(f"Creating gateway: {gateway_id}")
     manager.create_gateway(
         service_account_json,
         project_id,
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     # [END iot_gateway_demo_create_gateway]
 
     # [START iot_gateway_demo_create_bound_device]
-    print("Creating device to bind: {}".format(device_id))
+    print(f"Creating device to bind: {device_id}")
     manager.create_device(
         service_account_json, project_id, cloud_region, registry_id, device_id
     )
@@ -112,9 +112,9 @@ if __name__ == "__main__":
     # [END iot_gateway_demo_bind_device]
 
     # [START iot_gateway_demo_listen]
-    print("Listening for messages for {} seconds".format(listen_time))
+    print(f"Listening for messages for {listen_time} seconds")
     print("Try setting configuration in: ")
-    print("\t{}".format(edit_template.format(registry_id, project_id)))
+    print(f"\t{edit_template.format(registry_id, project_id)}")
     try:
         input("Press enter to continue")
     except SyntaxError:
@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     # [START iot_gateway_demo_publish]
     print("Publishing messages demo")
-    print("Publishing: {} messages".format(num_messages))
+    print(f"Publishing: {num_messages} messages")
     cloudiot_mqtt_example.send_data_from_bound_device(
         service_account_json,
         project_id,
@@ -179,7 +179,7 @@ if __name__ == "__main__":
     )
 
     print("You can read the state messages for your device at this URL:")
-    print("\t{}".format(device_url_template).format(registry_id, device_id, project_id))
+    print(f"\t{device_url_template}".format(registry_id, device_id, project_id))
     try:
         input("Press enter to continue after reading the messages.")
     except SyntaxError:

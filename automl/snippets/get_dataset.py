@@ -33,10 +33,10 @@ def get_dataset(project_id, dataset_id):
     dataset = client.get_dataset(name=dataset_full_id)
 
     # Display the dataset information
-    print("Dataset name: {}".format(dataset.name))
+    print(f"Dataset name: {dataset.name}")
     print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print("Dataset display name: {}".format(dataset.display_name))
-    print("Dataset create time: {}".format(dataset.create_time))
+    print(f"Dataset display name: {dataset.display_name}")
+    print(f"Dataset create time: {dataset.create_time}")
     # [END automl_language_sentiment_analysis_get_dataset]
     # [END automl_language_text_classification_get_dataset]
     # [END automl_translate_get_dataset]

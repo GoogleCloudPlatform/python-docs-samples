@@ -19,6 +19,6 @@ expected_response = '''The efficient-market hypothesis (EMH) states that asset p
 A direct implication is that it is impossible to "beat the market" consistently on a risk-adjusted basis.'''
 
 
-def test_text_summarization():
+def test_text_summarization() -> None:
     content = summarization.text_summarization(temperature=0).text
     assert content == expected_response

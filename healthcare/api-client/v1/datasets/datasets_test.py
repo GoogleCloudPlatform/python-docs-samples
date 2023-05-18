@@ -25,8 +25,8 @@ import datasets
 cloud_region = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-dataset_id = "test-dataset-{}".format(uuid.uuid4())
-destination_dataset_id = "test-destination-dataset-{}".format(uuid.uuid4())
+dataset_id = f"test-dataset-{uuid.uuid4()}"
+destination_dataset_id = f"test-destination-dataset-{uuid.uuid4()}"
 time_zone = "UTC"
 
 
@@ -50,7 +50,7 @@ def test_dataset():
             # likely the first request failed on the client side, but
             # the creation suceeded on the server side.
             if err.resp.status == 409:
-                print("Got exception {} while creating dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while creating dataset")
             else:
                 raise
 
@@ -71,7 +71,7 @@ def test_dataset():
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
-                print("Got exception {} while deleting dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while deleting dataset")
             else:
                 raise
 
@@ -95,7 +95,7 @@ def dest_dataset_id():
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
-                print("Got exception {} while deleting dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while deleting dataset")
             else:
                 raise
 
@@ -119,7 +119,7 @@ def crud_dataset_id():
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
-                print("Got exception {} while deleting dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while deleting dataset")
             else:
                 raise
 

@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # [START bigquery_remote_function_translation]
-from typing import List
+from __future__ import annotations
+
 
 import flask
 import functions_framework
@@ -89,8 +90,8 @@ def extract_project_from_caller(job: str) -> str:
 
 
 def translate_text(
-    calls: List[str], project: str, target_language_code: str
-) -> List[str]:
+    calls: list[str], project: str, target_language_code: str
+) -> list[str]:
     """Translates the input text to specified language using Translation API.
 
     Args:

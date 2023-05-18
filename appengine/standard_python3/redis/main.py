@@ -34,7 +34,7 @@ redis_client = redis.StrictRedis(
 @app.route('/')
 def index():
     value = redis_client.incr('counter', 1)
-    return 'Value is {}'.format(value)
+    return f'Value is {value}'
 # [END gae_py37_redis_example]
 
 

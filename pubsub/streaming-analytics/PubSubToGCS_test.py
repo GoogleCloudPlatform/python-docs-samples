@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from unittest import mock
 import uuid
 
 from apache_beam.io.gcp.gcsio import GcsIO
@@ -20,7 +21,7 @@ from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.test_utils import TempDir
 from apache_beam.transforms.window import TimestampedValue
-import mock
+
 
 import PubSubToGCS
 
