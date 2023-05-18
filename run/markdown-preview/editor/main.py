@@ -24,15 +24,17 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
-    # Render the default template
+    """Render the default template."""
     f = open("templates/markdown.md")
     return render_template("index.html", default=f.read())
 
 
 # [START cloudrun_secure_request_do]
-# [START run_secure_request_do]
 @app.route("/render", methods=["POST"])
 def render_handler():
+    """Parse the markdown from JSON and send it to the Renderer service to be
+    transformed into HTML.
+    """
     body = request.get_json(silent=True)
     if not body:
         return "Error rendering markdown: Invalid JSON", 400
@@ -44,7 +46,6 @@ def render_handler():
     except Exception as err:
         return f"Error rendering markdown: {err}", 500
 
-# [END run_secure_request_do]
 # [END cloudrun_secure_request_do]
 
 

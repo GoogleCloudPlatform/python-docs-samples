@@ -23,6 +23,15 @@ from google.auth import jwt
 
 
 def receive_authorized_get_request(request):
+    """Parse the authorization header and decode the information
+    being sent by the Bearer token.
+
+    Args:
+        request: Flask request object
+    Returns:
+        The email from the request's Authorization header.
+    """
+    
     """
     receive_authorized_get_request takes the "Authorization" header from a
     request, decodes it using the google-auth client library, and returns

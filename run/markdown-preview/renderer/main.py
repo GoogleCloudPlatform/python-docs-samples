@@ -24,8 +24,8 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+    """Parses the markdown and outputs the formatted HTML"""
     data = request.get_data(as_text=True)
-    # Parses the markdown and outputs the formatted HTML
     html = markdown.markdown(data)
 
     # Keep the paragraph tags
