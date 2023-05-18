@@ -39,7 +39,7 @@ def teardown():
 
 def test_video_classification_create_dataset(capsys):
     # create dataset
-    dataset_name = "test_{}".format(uuid.uuid4()).replace("-", "")[:32]
+    dataset_name = f"test_{uuid.uuid4()}".replace("-", "")[:32]
     video_object_tracking_create_dataset.create_dataset(
         PROJECT_ID, dataset_name
     )

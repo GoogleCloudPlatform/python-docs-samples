@@ -67,7 +67,7 @@ def main():
         mmap.measure_float_put(LATENCY_MS, ms)
         mmap.record()
 
-        print("Fake latency recorded ({}: {})".format(num, ms))
+        print(f"Fake latency recorded ({num}: {ms})")
 
     # Keep the thread alive long enough for the exporter to export at least
     # once.

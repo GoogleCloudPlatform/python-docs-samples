@@ -904,7 +904,6 @@ def eventual_consistent_query(client):
     query = client.query(kind="Task")
     query.fetch(eventual=True)
     # [END datastore_eventual_consistent_query]
-    pass
 
 
 def index_merge_queries(client):

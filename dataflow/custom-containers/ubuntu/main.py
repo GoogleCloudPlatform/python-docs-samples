@@ -14,15 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import logging
 import platform
-from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 
 
-def run(beam_args: Optional[List[str]] = None) -> None:
+def run(beam_args: list[str] | None = None) -> None:
     beam_options = PipelineOptions(beam_args, save_main_session=True)
     pipeline = beam.Pipeline(options=beam_options)
     (

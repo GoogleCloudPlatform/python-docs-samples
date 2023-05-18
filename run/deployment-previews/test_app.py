@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import os
-from typing import List, NoReturn, TypeVar
+from typing import NoReturn, TypeVar
+from unittest.mock import MagicMock, patch
 
 from click.testing import CliRunner
-from mock import MagicMock, patch
 import pytest
 
 from check_status import cli
@@ -52,7 +54,7 @@ def test_set_no_project() -> NoReturn:
     assert "Missing option '--project-id'" in response.output
 
 
-def service_data(name: str, tags: List[str]) -> dict:
+def service_data(name: str, tags: list[str]) -> dict:
     traffic = [
         {
             "revisionName": f"{name}-00001-aaa",

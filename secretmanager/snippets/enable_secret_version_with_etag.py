@@ -18,9 +18,13 @@ command line application and sample code for enabling a secret version.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_enable_secret_version_with_etag]
-def enable_secret_version_with_etag(project_id, secret_id, version_id, etag):
+def enable_secret_version_with_etag(
+    project_id: str, secret_id: str, version_id: str, etag: str
+) -> secretmanager.EnableSecretVersionRequest:
     """
     Enable the given secret version, enabling it to be accessed after
     previously being disabled. Other secrets versions are unaffected.
@@ -44,7 +48,7 @@ def enable_secret_version_with_etag(project_id, secret_id, version_id, etag):
     # Disable the secret version.
     response = client.enable_secret_version(request=request)
 
-    print("Enabled secret version: {}".format(response.name))
+    print(f"Enabled secret version: {response.name}")
     # [END secretmanager_enable_secret_version_with_etag]
 
     return response

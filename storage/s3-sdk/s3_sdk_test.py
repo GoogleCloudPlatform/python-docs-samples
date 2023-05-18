@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from typing import Tuple
 import uuid
 
 import backoff
@@ -30,7 +31,7 @@ STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
 
 @pytest.fixture(scope="module")
-def hmac_fixture():
+def hmac_fixture() -> Tuple[storage.hmac_key.HMACKeyMetadata, str]:
     """
     Creates an HMAC Key and secret to supply to the S3 SDK tests. The key
     will be deleted after the test session.
@@ -45,11 +46,11 @@ def hmac_fixture():
 
 
 @pytest.fixture(scope="module")
-def test_bucket():
+def test_bucket() -> storage.Bucket:
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
-        bucket_name = "bucket-storage-s3-test-{}".format(uuid.uuid4())
+        bucket_name = f"bucket-storage-s3-test-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
     bucket.create()
     yield bucket
@@ -57,10 +58,10 @@ def test_bucket():
 
 
 @pytest.fixture(scope="module")
-def test_blob(test_bucket):
+def test_blob(test_bucket: storage.Bucket) -> storage.Blob:
     """Yields a blob that is deleted after the test completes."""
     bucket = test_bucket
-    blob = bucket.blob("storage_snippets_test_sigil-{}".format(uuid.uuid4()))
+    blob = bucket.blob(f"storage_snippets_test_sigil-{uuid.uuid4()}")
     blob.upload_from_string("Hello, is it me you're looking for?")
     yield blob
 
@@ -68,25 +69,23 @@ def test_blob(test_bucket):
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_buckets(capsys, hmac_fixture, test_bucket):
-    list_gcs_buckets.list_gcs_buckets(
+def test_list_buckets(hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str], test_bucket: storage.Bucket) -> None:
+    result = list_gcs_buckets.list_gcs_buckets(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
     )
-    out, _ = capsys.readouterr()
-    assert "Buckets:" in out
-    assert test_bucket.name in out
+    assert test_bucket.name in result
 
 
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_blobs(capsys, hmac_fixture, test_bucket, test_blob):
-    list_gcs_objects.list_gcs_objects(
+def test_list_blobs(
+    hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str], test_bucket: storage.Bucket, test_blob: storage.Blob
+) -> None:
+    result = list_gcs_objects.list_gcs_objects(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
         bucket_name=test_bucket.name,
     )
-    out, _ = capsys.readouterr()
-    assert "Objects:" in out
-    assert test_blob.name in out
+    assert test_blob.name in result

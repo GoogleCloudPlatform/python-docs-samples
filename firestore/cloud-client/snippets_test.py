@@ -28,11 +28,11 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 class TestFirestoreClient(firestore.Client):
     def __init__(self, *args, **kwargs):
         self._UNIQUE_STRING = UNIQUE_STRING
-        self._super = super(TestFirestoreClient, self)
+        self._super = super()
         self._super.__init__(*args, **kwargs)
 
     def collection(self, collection_name, *args, **kwargs):
-        collection_name += '-{}'.format(self._UNIQUE_STRING)
+        collection_name += f'-{self._UNIQUE_STRING}'
         return self._super.collection(collection_name, *args, **kwargs)
 
 
@@ -172,7 +172,7 @@ def test_update_multiple():
 
 
 def test_update_server_timestamp(db):
-    db.collection(u'objects').document(u'some-id').set({'timestamp': 0})
+    db.collection('objects').document('some-id').set({'timestamp': 0})
     snippets.update_server_timestamp()
 
 
@@ -316,11 +316,11 @@ def test_delete_full_collection():
 # TODO: b/132092178
 def test_collection_group_query(db):
     museum_docs = snippets.collection_group_query(db)
-    names = set([museum.name for museum in museum_docs])
-    assert names == {u'Legion of Honor', u'The Getty',
-                     u'National Air and Space Museum',
-                     u'National Museum of Nature and Science',
-                     u'Beijing Ancient Observatory'}
+    names = {museum.name for museum in museum_docs}
+    assert names == {'Legion of Honor', 'The Getty',
+                     'National Air and Space Museum',
+                     'National Museum of Nature and Science',
+                     'Beijing Ancient Observatory'}
 
 
 def test_list_document_subcollections():

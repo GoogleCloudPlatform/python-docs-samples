@@ -14,12 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
+from collections.abc import Callable, Iterable
 from datetime import datetime
 import io
 import logging
 import random
 import time
-from typing import Callable, Dict, Iterable, Optional, Tuple, TypeVar
+from typing import TypeVar
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -41,7 +44,7 @@ def run(
     min_images_per_class: int,
     max_images_per_class: int,
     budget_milli_node_hours: int,
-    pipeline_options: Optional[PipelineOptions] = None,
+    pipeline_options: PipelineOptions | None = None,
 ) -> None:
     """Creates a balanced dataset and signals AI Platform to train a model.
 
@@ -104,8 +107,8 @@ def run(
 
 
 def get_image(
-    image_info: Dict[str, str], cloud_storage_path: str
-) -> Iterable[Tuple[str, str]]:
+    image_info: dict[str, str], cloud_storage_path: str
+) -> Iterable[tuple[str, str]]:
     """Makes sure an image exists in Cloud Storage.
 
     Checks if the image file_name exists in Cloud Storage.
@@ -113,7 +116,7 @@ def get_image(
     If the image can't be downloaded, it is skipped.
 
     Args:
-        image_info: Dict of {'category', 'file_name'}.
+        image_info: dict of {'category', 'file_name'}.
         cloud_storage_path: Cloud Storage path to look for and download images.
 
     Returns:
@@ -144,7 +147,7 @@ def get_image(
 
 
 def write_dataset_csv_file(
-    dataset_csv_filename: str, images: Iterable[Tuple[str, str]]
+    dataset_csv_filename: str, images: Iterable[tuple[str, str]]
 ) -> str:
     """Writes the dataset image file names and categories in a CSV file.
 
@@ -166,13 +169,13 @@ def write_dataset_csv_file(
     logging.info(f"Writing dataset CSV file: {dataset_csv_filename}")
     with beam.io.gcp.gcsio.GcsIO().open(dataset_csv_filename, "w") as f:
         for category, image_gcs_path in images:
-            f.write(f"{image_gcs_path},{category}\n".encode("utf-8"))
+            f.write(f"{image_gcs_path},{category}\n".encode())
     return dataset_csv_filename
 
 
 def create_dataset(
     dataset_csv_filename: str, project: str, region: str, dataset_name: str
-) -> Tuple[str, str]:
+) -> tuple[str, str]:
     """Creates an dataset for AI Platform.
 
     For more information:

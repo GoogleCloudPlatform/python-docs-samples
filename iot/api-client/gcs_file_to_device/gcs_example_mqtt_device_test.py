@@ -47,6 +47,6 @@ def test_download_blob(test_blob, capsys):
 
         out, _ = capsys.readouterr()
         assert (
-            "Config {} downloaded to {}.".format(test_blob.name, destination_file_name)
+            f"Config {test_blob.name} downloaded to {destination_file_name}."
             in out
         )

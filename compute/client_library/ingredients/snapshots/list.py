@@ -16,7 +16,9 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 

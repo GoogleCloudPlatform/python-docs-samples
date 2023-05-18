@@ -15,9 +15,9 @@
 # This test creates a Cloud SQL instance, a Cloud Storage bucket, associated
 # secrets, and deploys a Django service
 
+from collections.abc import Iterator
 import os
 import subprocess
-from typing import Iterator, List, Tuple
 import uuid
 
 import backoff
@@ -163,7 +163,7 @@ def deployed_service() -> str:
 
 
 @pytest.fixture
-def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
+def service_url_auth_token(deployed_service: str) -> Iterator[tuple[str, str]]:
     # Get Cloud Run service URL and auth token
     service_url = (
         run_shell_cmd(
@@ -205,7 +205,7 @@ def service_url_auth_token(deployed_service: str) -> Iterator[Tuple[str, str]]:
     # no deletion needed
 
 
-def test_end_to_end(service_url_auth_token: List[str]) -> None:
+def test_end_to_end(service_url_auth_token: list[str]) -> None:
     service_url, auth_token = service_url_auth_token
     headers = {"Authorization": f"Bearer {auth_token}"}
     login_slug = "/admin/login/?next=/admin/"

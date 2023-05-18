@@ -38,7 +38,7 @@ ID = "{rand}_{time}".format(
 
 
 def _id(name):
-    return "{}_{}".format(name, ID)
+    return f"{name}_{ID}"
 
 
 def test_list_models():
