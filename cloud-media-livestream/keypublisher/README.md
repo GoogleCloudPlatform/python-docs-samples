@@ -4,6 +4,9 @@ Code intended to be run by users of the Live Stream API. This code utilizes DRM
 provider CPIX APIs to fetch encryption keys and store them in Google Secret
 Manager for use with the Live Stream API's encryption feature.
 
+To create a zip archive of all the files needed to run key publisher, run the
+script `./package.sh`.
+
 ## 1. Setup
 
 ### Install and configure gcloud

@@ -31,14 +31,13 @@ fi
 
 cd "${SRC_DIRECTORY}"
 mkdir "${ZIP_DIR}"
-cp main.py main_test.py README.md api-config.template.yml requirements.txt "${ZIP_DIR}/"
+cp main.py main_test.py README.md requirements.txt "${ZIP_DIR}/"
+
+mkdir "${ZIP_DIR}/templates"
+cp templates/*.py "${ZIP_DIR}/templates/"
 
 mkdir "${ZIP_DIR}/clients"
 cp clients/*.py "${ZIP_DIR}/clients/"
-rm ${ZIP_DIR}/clients/keyos*
-
-#mkdir "${ZIP_DIR}/third_party"
-#cp third_party/*.py "${ZIP_DIR}/third_party/"
 
 cd "$(dirname "${ZIP_DIR}")"
 zip -r "${OUTPUT_FILE}" "$(basename "${ZIP_DIR}")"
