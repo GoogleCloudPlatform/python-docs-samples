@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextEmbeddingModel
 
 
-def text_embedding():
+def text_embedding() -> None:
     """Text embedding with a Large Language Model."""
     model = TextEmbeddingModel.from_pretrained("textembedding-gecko@001")
     embeddings = model.get_embeddings(["What is life?"])
