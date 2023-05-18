@@ -95,14 +95,14 @@ def get_similar_products_file(
     for result in results:
         product = result.product
 
-        print('Score(Confidence): {}'.format(result.score))
-        print('Image name: {}'.format(result.image))
+        print(f'Score(Confidence): {result.score}')
+        print(f'Image name: {result.image}')
 
-        print('Product name: {}'.format(product.name))
+        print(f'Product name: {product.name}')
         print('Product display name: {}'.format(
             product.display_name))
-        print('Product description: {}\n'.format(product.description))
-        print('Product labels: {}\n'.format(product.product_labels))
+        print(f'Product description: {product.description}\n')
+        print(f'Product labels: {product.product_labels}\n')
 # [END vision_product_search_get_similar_products]
 
 
@@ -156,14 +156,14 @@ def get_similar_products_uri(
     for result in results:
         product = result.product
 
-        print('Score(Confidence): {}'.format(result.score))
-        print('Image name: {}'.format(result.image))
+        print(f'Score(Confidence): {result.score}')
+        print(f'Image name: {result.image}')
 
-        print('Product name: {}'.format(product.name))
+        print(f'Product name: {product.name}')
         print('Product display name: {}'.format(
             product.display_name))
-        print('Product description: {}\n'.format(product.description))
-        print('Product labels: {}\n'.format(product.product_labels))
+        print(f'Product description: {product.description}\n')
+        print(f'Product labels: {product.product_labels}\n')
 # [END vision_product_search_get_similar_products_gcs]
 
 

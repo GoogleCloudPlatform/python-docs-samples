@@ -56,11 +56,11 @@ def create_bigquery_dataset(dataset_id: str):
 
     bigquery_client = bigquery.Client()
 
-    dataset_id_full = "{}.{}".format(PROJECT_ID, dataset_id)
+    dataset_id_full = f"{PROJECT_ID}.{dataset_id}"
     dataset = bigquery.Dataset(dataset_id_full)
 
     dataset = bigquery_client.create_dataset(dataset)
-    print("Dataset {} created.".format(dataset.dataset_id))
+    print(f"Dataset {dataset.dataset_id} created.")
 
 
 @backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)
@@ -69,7 +69,7 @@ def delete_bigquery_dataset(dataset_id: str):
 
     bigquery_client = bigquery.Client()
     bigquery_client.delete_dataset(dataset_id)
-    print("Dataset {} deleted.".format(dataset_id))
+    print(f"Dataset {dataset_id} deleted.")
 
 
 @backoff.on_exception(backoff.expo, ServiceUnavailable, max_tries=3)

@@ -15,11 +15,12 @@
 
 # [START documentai_batch_process_document]
 import re
+from typing import Optional
 
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import InternalServerError
 from google.api_core.exceptions import RetryError
-from google.cloud import documentai
+from google.cloud import documentai  # type: ignore
 from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -41,9 +42,9 @@ def batch_process_documents(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
-    field_mask: str = None,
+    field_mask: Optional[str] = None,
     timeout: int = 400,
-):
+) -> None:
 
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")

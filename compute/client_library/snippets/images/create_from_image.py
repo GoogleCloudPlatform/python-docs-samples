@@ -20,8 +20,11 @@
 
 
 # [START compute_images_create_from_image]
+from __future__ import annotations
+
+from collections.abc import Iterable
 import sys
-from typing import Any, Iterable, Optional
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -79,9 +82,9 @@ def create_image_from_image(
     project_id: str,
     source_image_name: str,
     image_name: str,
-    source_project_id: Optional[str] = None,
-    guest_os_features: Optional[Iterable[str]] = None,
-    storage_location: Optional[str] = None,
+    source_project_id: str | None = None,
+    guest_os_features: Iterable[str] | None = None,
+    storage_location: str | None = None,
 ) -> compute_v1.Image:
     """
     Creates a copy of another image.

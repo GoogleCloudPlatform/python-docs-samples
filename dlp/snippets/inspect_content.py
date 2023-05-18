@@ -15,7 +15,6 @@
 """Sample app that uses the Data Loss Prevention API to inspect a string, a
 local file or a file on Google Cloud Storage."""
 
-from __future__ import print_function
 
 import argparse
 import json
@@ -68,9 +67,9 @@ def inspect_string_basic(
     # Print out the results.
     if response.result.findings:
         for finding in response.result.findings:
-            print("Quote: {}".format(finding.quote))
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            print(f"Quote: {finding.quote}")
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
 
@@ -121,7 +120,7 @@ def inspect_string(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -130,7 +129,7 @@ def inspect_string(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -163,11 +162,11 @@ def inspect_string(
         for finding in response.result.findings:
             try:
                 if finding.quote:
-                    print("Quote: {}".format(finding.quote))
+                    print(f"Quote: {finding.quote}")
             except AttributeError:
                 pass
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
 
@@ -247,7 +246,7 @@ def inspect_table(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -256,7 +255,7 @@ def inspect_table(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -297,11 +296,11 @@ def inspect_table(
         for finding in response.result.findings:
             try:
                 if finding.quote:
-                    print("Quote: {}".format(finding.quote))
+                    print(f"Quote: {finding.quote}")
             except AttributeError:
                 pass
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
 
@@ -360,7 +359,7 @@ def inspect_file(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -369,7 +368,7 @@ def inspect_file(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -418,11 +417,11 @@ def inspect_file(
     if response.result.findings:
         for finding in response.result.findings:
             try:
-                print("Quote: {}".format(finding.quote))
+                print(f"Quote: {finding.quote}")
             except AttributeError:
                 pass
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
     else:
         print("No findings.")
 
@@ -491,7 +490,7 @@ def inspect_gcs_file(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -500,7 +499,7 @@ def inspect_gcs_file(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -517,7 +516,7 @@ def inspect_gcs_file(
     }
 
     # Construct a storage_config containing the file's URL.
-    url = "gs://{}/{}".format(bucket, filename)
+    url = f"gs://{bucket}/{filename}"
     storage_config = {"cloud_storage_options": {"file_set": {"url": url}}}
 
     # Convert the project id into full resource ids.
@@ -537,7 +536,7 @@ def inspect_gcs_file(
     operation = dlp.create_dlp_job(
         request={"parent": parent, "inspect_job": inspect_job}
     )
-    print("Inspection operation started: {}".format(operation.name))
+    print(f"Inspection operation started: {operation.name}")
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -652,7 +651,7 @@ def inspect_datastore(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -661,7 +660,7 @@ def inspect_datastore(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -705,7 +704,7 @@ def inspect_datastore(
     operation = dlp.create_dlp_job(
         request={"parent": parent, "inspect_job": inspect_job}
     )
-    print("Inspection operation started: {}".format(operation.name))
+    print(f"Inspection operation started: {operation.name}")
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -823,7 +822,7 @@ def inspect_bigquery(
         custom_dictionaries = []
     dictionaries = [
         {
-            "info_type": {"name": "CUSTOM_DICTIONARY_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_DICTIONARY_{i}"},
             "dictionary": {"word_list": {"words": custom_dict.split(",")}},
         }
         for i, custom_dict in enumerate(custom_dictionaries)
@@ -832,7 +831,7 @@ def inspect_bigquery(
         custom_regexes = []
     regexes = [
         {
-            "info_type": {"name": "CUSTOM_REGEX_{}".format(i)},
+            "info_type": {"name": f"CUSTOM_REGEX_{i}"},
             "regex": {"pattern": custom_regex},
         }
         for i, custom_regex in enumerate(custom_regexes)
@@ -876,7 +875,7 @@ def inspect_bigquery(
     operation = dlp.create_dlp_job(
         request={"parent": parent, "inspect_job": inspect_job}
     )
-    print("Inspection operation started: {}".format(operation.name))
+    print(f"Inspection operation started: {operation.name}")
 
     # Create a Pub/Sub client and find the subscription. The subscription is
     # expected to already be listening to the topic.
@@ -928,6 +927,59 @@ def inspect_bigquery(
 
 
 # [END dlp_inspect_bigquery]
+
+
+# [START dlp_inspect_image_all_infotypes]
+def inspect_image_file_all_infotypes(
+    project,
+    filename,
+    include_quote=True,
+):
+    """Uses the Data Loss Prevention API to analyze strings for protected data in image file.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": {"include_quote": include_quote},
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Print out the results.
+    print("Findings: ", response.result.findings.count)
+    if response.result.findings:
+        for finding in response.result.findings:
+            print(f"Quote: {finding.quote}")
+            print(f"Info type: {finding.info_type.name}")
+            print(f"Likelihood: {finding.likelihood}")
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_image_all_infotypes]
 
 
 if __name__ == "__main__":
@@ -1356,6 +1408,26 @@ if __name__ == "__main__":
         default=300,
     )
 
+    parser_image_file = subparsers.add_parser(
+        "image_all_infotypes",
+        help="Inspect a local file with all info types."
+    )
+    parser_image_file.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_file.add_argument(
+        "filename",
+        help="The path to the file to inspect."
+    )
+    parser_image_file.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+        "information in the results.",
+        default=True,
+    )
+
     args = parser.parse_args()
 
     if args.content == "string":
@@ -1435,4 +1507,11 @@ if __name__ == "__main__":
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             timeout=args.timeout,
+        )
+
+    elif args.content == "image_all_infotypes":
+        inspect_image_file_all_infotypes(
+            args.project,
+            args.filename,
+            include_quote=args.include_quote,
         )

@@ -13,12 +13,21 @@
 # limitations under the License.
 
 # [START functions_cloudevent_storage]
+from cloudevents.http import CloudEvent
+
 import functions_framework
 
 
 # Triggered by a change in a storage bucket
 @functions_framework.cloud_event
-def hello_gcs(cloud_event):
+def hello_gcs(cloud_event: CloudEvent) -> None:
+    """This function is triggered by a change in a storage bucket.
+
+    Args:
+        cloud_event: The CloudEvent that triggered this function.
+    Returns:
+        None.
+    """
     data = cloud_event.data
 
     event_id = cloud_event["id"]

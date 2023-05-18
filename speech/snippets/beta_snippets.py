@@ -27,7 +27,6 @@ Example usage:
 """
 
 import argparse
-import io
 
 
 def transcribe_file_with_enhanced_model():
@@ -39,7 +38,7 @@ def transcribe_file_with_enhanced_model():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -57,8 +56,8 @@ def transcribe_file_with_enhanced_model():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_enhanced_model_beta]
 
 
@@ -71,7 +70,7 @@ def transcribe_file_with_metadata():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     # Here we construct a recognition metadata object.
@@ -106,8 +105,8 @@ def transcribe_file_with_metadata():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_recognition_metadata_beta]
 
 
@@ -120,7 +119,7 @@ def transcribe_file_with_auto_punctuation():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -137,8 +136,8 @@ def transcribe_file_with_auto_punctuation():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_auto_punctuation_beta]
 
 
@@ -183,7 +182,7 @@ def transcribe_file_with_diarization():
     # Printing out the output:
     for word_info in words_info:
         print(
-            "word: '{}', speaker_tag: {}".format(word_info.word, word_info.speaker_tag)
+            f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}"
         )
     # [END speech_transcribe_diarization_beta]
 
@@ -216,9 +215,9 @@ def transcribe_file_with_multichannel():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
-        print("Channel Tag: {}".format(result.channel_tag))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+        print(f"Channel Tag: {result.channel_tag}")
     # [END speech_transcribe_multichannel_beta]
 
 
@@ -253,8 +252,8 @@ def transcribe_file_with_multilanguage():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}: {}".format(i, alternative))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}: {alternative}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_multilanguage_beta]
 
 
@@ -285,8 +284,8 @@ def transcribe_file_with_word_level_confidence():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
         print(
             "First Word and Confidence: ({}, {})".format(
                 alternative.words[0].word, alternative.words[0].confidence
@@ -305,7 +304,7 @@ def transcribe_file_with_spoken_punctuation_end_emojis():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -324,8 +323,8 @@ def transcribe_file_with_spoken_punctuation_end_emojis():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_transcribe_spoken_punctuation_emojis_beta]
 
 

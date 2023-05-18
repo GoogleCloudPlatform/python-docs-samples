@@ -25,4 +25,4 @@ def context(grpc_context):
     except KeyError as key_error:
         grpc_context.code(grpc.StatusCode.NOT_FOUND)
         grpc_context.details(
-            'Unable to find the item keyed by {}'.format(key_error))
+            f'Unable to find the item keyed by {key_error}')

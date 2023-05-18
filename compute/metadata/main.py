@@ -64,7 +64,7 @@ def wait_for_maintenance(callback):
 
 def maintenance_callback(event):
     if event:
-        print('Undergoing host maintenance: {}'.format(event))
+        print(f'Undergoing host maintenance: {event}')
     else:
         print('Finished host maintenance')
 

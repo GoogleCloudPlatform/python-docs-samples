@@ -58,6 +58,6 @@ def update_asset_discovery_org_settings(organization_id):
             "update_mask": field_mask,
         }
     )
-    print("Asset Discovery Enabled? {}".format(updated.enable_asset_discovery))
+    print(f"Asset Discovery Enabled? {updated.enable_asset_discovery}")
     # [END securitycenter_enable_asset_discovery]
     return updated

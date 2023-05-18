@@ -14,10 +14,12 @@
 
 import os
 
+import pytest
+
 import grantable_roles
 
 
-def test_grantable_roles(capsys):
+def test_grantable_roles(capsys: pytest.CaptureFixture) -> None:
     project = os.environ['GOOGLE_CLOUD_PROJECT']
     resource = '//cloudresourcemanager.googleapis.com/projects/' + project
     grantable_roles.view_grantable_roles(resource)

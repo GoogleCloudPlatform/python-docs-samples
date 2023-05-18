@@ -27,7 +27,7 @@ def batch_get_assets_history(project_id, asset_names):
     # ["//storage.googleapis.com/[BUCKET_NAME]",]'
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
     content_type = asset_v1.ContentType.RESOURCE
     read_time_window = asset_v1.TimeWindow()
     response = client.batch_get_assets_history(
@@ -38,7 +38,7 @@ def batch_get_assets_history(project_id, asset_names):
             "read_time_window": read_time_window,
         }
     )
-    print("assets: {}".format(response.assets))
+    print(f"assets: {response.assets}")
     # [END asset_quickstart_batch_get_assets_history]
 
 

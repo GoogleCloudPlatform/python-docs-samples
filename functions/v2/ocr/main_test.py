@@ -15,13 +15,14 @@
 import base64
 import concurrent.futures
 import json
+from unittest import mock
 
 from cloudevents.http import CloudEvent
-import mock
 
 
 import main
 
+# flake8: noqa
 
 class TestGCFPyOCRSample:
     @mock.patch.object(main, "publisher")
@@ -71,16 +72,18 @@ class TestGCFPyOCRSample:
             "source": "https://example.com/event-producer",
         }
         data = {
-            "message": base64.b64encode(
-                json.dumps(
-                    {
-                        "text": "menu",
-                        "filename": "sample-file",
-                        "lang": "es",
-                        "src_lang": "en",
-                    }
-                ).encode("utf-8")
-            )
+            "message": {
+                "data": base64.b64encode(
+                    json.dumps(
+                        {
+                            "text": "menu",
+                            "filename": "sample-file",
+                            "lang": "es",
+                            "src_lang": "en",
+                        }
+                    ).encode("utf-8")
+                )
+            }
         }
 
         event = CloudEvent(attributes, data)
@@ -98,15 +101,17 @@ class TestGCFPyOCRSample:
             "source": "https://example.com/event-producer",
         }
         data = {
-            "message": base64.b64encode(
-                json.dumps(
-                    {
-                        "text": "menu",
-                        "filename": "sample-file",
-                        "lang": "fr",
-                    }
-                ).encode("utf-8")
-            )
+            "message": {
+                "data": base64.b64encode(
+                    json.dumps(
+                        {
+                            "text": "menu",
+                            "filename": "sample-file",
+                            "lang": "fr",
+                        }
+                    ).encode("utf-8")
+                )
+            }
         }
 
         event = CloudEvent(attributes, data)

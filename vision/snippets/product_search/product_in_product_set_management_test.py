@@ -58,7 +58,7 @@ def test_add_product_to_product_set(capsys, test_resources):
         PROJECT_ID, LOCATION, product_id, product_set_id)
     list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(product_id) in out
+    assert f'Product id: {product_id}' in out
 
 
 def test_remove_product_from_product_set(capsys, test_resources):
@@ -67,13 +67,13 @@ def test_remove_product_from_product_set(capsys, test_resources):
         PROJECT_ID, LOCATION, product_id, product_set_id)
     list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(product_id) in out
+    assert f'Product id: {product_id}' in out
 
     remove_product_from_product_set(
         PROJECT_ID, LOCATION, product_id, product_set_id)
     list_products_in_product_set(PROJECT_ID, LOCATION, product_set_id)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(product_id) not in out
+    assert f'Product id: {product_id}' not in out
 
 
 def test_purge_products_in_product_set(capsys, test_resources):
@@ -82,11 +82,11 @@ def test_purge_products_in_product_set(capsys, test_resources):
         PROJECT_ID, LOCATION, product_id, product_set_id)
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(product_id) in out
+    assert f'Product id: {product_id}' in out
 
     purge_products_in_product_set(
         PROJECT_ID, LOCATION, product_set_id, force=True)
 
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
-    assert 'Product id: {}'.format(product_id) not in out
+    assert f'Product id: {product_id}' not in out
