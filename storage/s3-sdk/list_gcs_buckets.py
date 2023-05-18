@@ -20,7 +20,9 @@ import argparse
 import boto3  # type: ignore
 
 
-def list_gcs_buckets(google_access_key_id: str, google_access_key_secret: str) -> None:
+def list_gcs_buckets(
+    google_access_key_id: str, google_access_key_secret: str
+) -> list[str]:
     """Lists all Cloud Storage buckets using AWS SDK for Python (boto3)
     Positional arguments:
         google_access_key_id: hash-based message authentication code (HMAC) access ID
