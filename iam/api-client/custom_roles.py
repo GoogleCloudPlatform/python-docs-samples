@@ -24,9 +24,8 @@ https://cloud.google.com/iam/docs/creating-custom-roles.
 import argparse
 import os
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
-
+from google.oauth2 import service_account  # type: ignore
+import googleapiclient.discovery  # type: ignore
 
 credentials = service_account.Credentials.from_service_account_file(
     filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
@@ -36,7 +35,7 @@ service = googleapiclient.discovery.build(
 
 
 # [START iam_query_testable_permissions]
-def query_testable_permissions(resource):
+def query_testable_permissions(resource: str) -> None:
     """Lists valid permissions for a resource."""
 
     # pylint: disable=no-member
@@ -49,7 +48,7 @@ def query_testable_permissions(resource):
 
 
 # [START iam_get_role]
-def get_role(name):
+def get_role(name: str) -> None:
     """Gets a role."""
 
     # pylint: disable=no-member
@@ -61,7 +60,7 @@ def get_role(name):
 
 
 # [START iam_create_role]
-def create_role(name, project, title, description, permissions, stage):
+def create_role(name: str, project: str, title: str, description: str, permissions: str, stage: str) -> dict:
     """Creates a role."""
 
     # pylint: disable=no-member
@@ -83,7 +82,7 @@ def create_role(name, project, title, description, permissions, stage):
 
 
 # [START iam_edit_role]
-def edit_role(name, project, title, description, permissions, stage):
+def edit_role(name: str, project: str, title: str, description: str, permissions: str, stage: str) -> dict:
     """Creates a role."""
 
     # pylint: disable=no-member
@@ -102,7 +101,7 @@ def edit_role(name, project, title, description, permissions, stage):
 
 
 # [START iam_list_roles]
-def list_roles(project_id):
+def list_roles(project_id: str) -> None:
     """Lists roles."""
 
     # pylint: disable=no-member
@@ -114,7 +113,7 @@ def list_roles(project_id):
 
 
 # [START iam_disable_role]
-def disable_role(name, project):
+def disable_role(name: str, project: str) -> dict:
     """Disables a role."""
 
     # pylint: disable=no-member
@@ -130,7 +129,7 @@ def disable_role(name, project):
 
 
 # [START iam_delete_role]
-def delete_role(name, project):
+def delete_role(name: str, project: str) -> dict:
     """Deletes a role."""
 
     # pylint: disable=no-member
@@ -143,7 +142,7 @@ def delete_role(name, project):
 
 
 # [START iam_undelete_role]
-def undelete_role(name, project):
+def undelete_role(name: str, project: str) -> dict:
     """Undeletes a role."""
 
     # pylint: disable=no-member
@@ -158,7 +157,7 @@ def undelete_role(name, project):
 # [END iam_undelete_role]
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
