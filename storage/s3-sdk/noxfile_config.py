@@ -21,7 +21,7 @@ import os
 # RUN_TESTS_SESSION. The reason we can not use multiple project is
 # that our new projects are enforced to have
 # 'constraints/iam.disableServiceAccountKeyCreation' policy.
-def get_service_account_email():
+def get_service_account_email() -> str:
     session = os.environ.get("RUN_TESTS_SESSION")
     if session == "py-3.6":
         return "py36-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"
@@ -35,13 +35,13 @@ def get_service_account_email():
 TEST_CONFIG_OVERRIDE = {
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    'envs': {
-        'HMAC_KEY_TEST_SERVICE_ACCOUNT': get_service_account_email(),
+    "envs": {
+        "HMAC_KEY_TEST_SERVICE_ACCOUNT": get_service_account_email(),
         # Some tests can not use multiple projects because of several reasons:
         # 1. The new projects is enforced to have the
         # 'constraints/iam.disableServiceAccountKeyCreation' policy.
         # 2. The new projects buckets need to have universal permission model.
         # For those tests, we'll use the original project.
-        'MAIN_GOOGLE_CLOUD_PROJECT': 'python-docs-samples-tests'
+        "MAIN_GOOGLE_CLOUD_PROJECT": "python-docs-samples-tests",
     },
 }

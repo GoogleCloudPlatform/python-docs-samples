@@ -20,8 +20,11 @@
 
 
 # [START compute_instances_bulk_insert]
+from __future__ import annotations
+
+from collections.abc import Iterable
 import sys
-from typing import Any, Iterable, Optional
+from typing import Any
 import uuid
 
 from google.api_core.extended_operation import ExtendedOperation
@@ -100,8 +103,8 @@ def bulk_insert_instance(
     template: compute_v1.InstanceTemplate,
     count: int,
     name_pattern: str,
-    min_count: Optional[int] = None,
-    labels: Optional[dict] = None,
+    min_count: int | None = None,
+    labels: dict | None = None,
 ) -> Iterable[compute_v1.Instance]:
     """
     Create multiple VMs based on an Instance Template. The newly created instances will

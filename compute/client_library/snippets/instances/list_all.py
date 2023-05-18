@@ -20,15 +20,17 @@
 
 
 # [START compute_instances_list_all]
+from __future__ import annotations
+
 from collections import defaultdict
-from typing import Dict, Iterable
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
 
 def list_all_instances(
     project_id: str,
-) -> Dict[str, Iterable[compute_v1.Instance]]:
+) -> dict[str, Iterable[compute_v1.Instance]]:
     """
     Returns a dictionary of all instances present in a project, grouped by their zone.
 

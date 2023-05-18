@@ -16,11 +16,12 @@ import os
 import uuid
 
 from googleapiclient.errors import HttpError
+import pytest
 
 import service_accounts
 
 
-def test_service_accounts(capsys):
+def test_service_accounts(capsys: pytest.CaptureFixture) -> None:
     project_id = os.environ['GOOGLE_CLOUD_PROJECT']
     name = f'test-{uuid.uuid4().hex[:25]}'
 

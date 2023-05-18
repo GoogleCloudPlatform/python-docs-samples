@@ -21,6 +21,8 @@
 
 # [START compute_regional_disk_resize]
 # [START compute_disk_resize]
+from __future__ import annotations
+
 import re
 import sys
 from typing import Any

@@ -16,7 +16,8 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional
+from __future__ import annotations
+
 
 from google.cloud import compute_v1
 
@@ -25,7 +26,7 @@ from google.cloud import compute_v1
 def create_windows_instance(project_id: str, zone: str, instance_name: str,
                             machine_type: str, source_image_family: str = "windows-2022",
                             network_link: str = "global/networks/default",
-                            subnetwork_link: Optional[str] = None) -> compute_v1.Instance:
+                            subnetwork_link: str | None = None) -> compute_v1.Instance:
     """
     Creates a new Windows Server instance that has only an internal IP address.
 
@@ -58,7 +59,7 @@ def create_windows_instance(project_id: str, zone: str, instance_name: str,
     )
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 100, True, base_image.self_link, True)]
-    
+
     # You must verify or configure routes and firewall rules in your VPC network
     # to allow access to kms.windows.googlecloud.com.
     # More information about access to kms.windows.googlecloud.com: https://cloud.google.com/compute/docs/instances/windows/creating-managing-windows-instances#kms-server
