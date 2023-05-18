@@ -13,10 +13,11 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
 import argparse
 import json
 import logging
-from typing import List
 
 from apache_beam import CombineFn, CombineGlobally, DoFn, io, ParDo, Pipeline, WindowInto
 from apache_beam.error import PipelineError
@@ -96,7 +97,7 @@ def run(
     pubsub_subscription: str,
     destination_log_name: str,
     window_size: float,
-    pipeline_args: List[str] = None
+    pipeline_args: list[str] = None
 ) -> None:
     '''Runs Dataflow pipeline'''
 
@@ -105,6 +106,9 @@ def run(
         streaming=True,
         save_main_session=True
     )
+
+    # TODO: Read job's deployment region
+
     pipeline = Pipeline(options=pipeline_options)
     _ = (
         pipeline

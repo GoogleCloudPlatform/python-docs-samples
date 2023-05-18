@@ -1,2 +1,0 @@
-# If we don't constraint this, the dependency resolver can take a really long time.
-google-cloud-bigquery==2.34.4

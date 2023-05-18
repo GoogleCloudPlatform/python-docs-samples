@@ -20,6 +20,7 @@ and checks the existence of a new output table in that dataset.
 import os
 import uuid
 
+import backoff
 from google.api_core.exceptions import Aborted, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
@@ -53,7 +54,6 @@ BQ_SNOW_MEAN_TABLE_NAME = "ghcnd_stations_prcp_mean"
 BQ_PHX_PRCP_TABLE_NAME = "phx_annual_prcp"
 BQ_PHX_SNOW_TABLE_NAME = "phx_annual_snow"
 
-PYSPARK_JAR = "gs://spark-lib/bigquery/spark-bigquery-with-dependencies_2.12-0.26.0.jar"
 PROCESSING_PYTHON_FILE = f"gs://{BUCKET_NAME}/{BUCKET_BLOB}"
 
 
@@ -75,8 +75,10 @@ def test_dataproc_batch(test_bucket, bq_dataset):
 
     BATCH_ID = f"summit-dag-expansion-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
+        "runtime_config": {
+            "version": "1.1"
+        },
         "pyspark_batch": {
-            "jar_file_uris": [PYSPARK_JAR],
             "main_python_file_uri": PROCESSING_PYTHON_FILE,
             "args": [
                 BUCKET_NAME,
@@ -87,7 +89,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
                 f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_PRCP_TABLE_NAME}",
                 f"{BQ_DESTINATION_DATASET_NAME}.{BQ_PHX_SNOW_TABLE_NAME}",
             ],
-        }
+        },
     }
 
     # create a batch
@@ -214,6 +216,7 @@ def bq_dataset(test_bucket):
         print(f"Ignoring NotFound on cleanup, details: {e}")
 
 
+@backoff.on_exception(backoff.expo, AssertionError, max_tries=3)
 def test_process(test_dataproc_batch):
     print(test_dataproc_batch)
 

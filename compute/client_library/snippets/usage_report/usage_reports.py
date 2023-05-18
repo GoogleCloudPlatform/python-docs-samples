@@ -26,6 +26,8 @@ with the Compute Engine API and how to configure usage reports using the API.
 # [START compute_usage_report_set]
 # [START compute_usage_report_get]
 # [START compute_usage_report_disable]
+from __future__ import annotations
+
 import sys
 from typing import Any
 
@@ -45,8 +47,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -126,6 +129,7 @@ def set_usage_export_bucket(
 
 # [END compute_usage_report_set]
 
+
 # [START compute_usage_report_get]
 def get_usage_export_bucket(project_id: str) -> compute_v1.UsageExportLocation:
     """
@@ -171,8 +175,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.

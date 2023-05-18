@@ -16,6 +16,7 @@ from collections import defaultdict
 import datetime
 from pprint import pprint
 
+from google.api_core.client_options import ClientOptions
 import google.cloud.exceptions
 from google.cloud import datastore  # noqa: I100
 
@@ -883,12 +884,26 @@ def property_by_kind_run_query(client):
     return representations_by_property
 
 
+def regional_endpoint():
+    # [START datastore_regional_endpoints]
+    ENDPOINT = "https://datastore.googleapis.com"
+    client_options = ClientOptions(api_endpoint=ENDPOINT)
+    client = datastore.Client(client_options=client_options)
+
+    query = client.query(kind="Task")
+    results = list(query.fetch())
+    for r in results:
+        print(r)
+    # [END datastore_regional_endpoints]
+
+    return client
+
+
 def eventual_consistent_query(client):
     # [START datastore_eventual_consistent_query]
     query = client.query(kind="Task")
     query.fetch(eventual=True)
     # [END datastore_eventual_consistent_query]
-    pass
 
 
 def index_merge_queries(client):

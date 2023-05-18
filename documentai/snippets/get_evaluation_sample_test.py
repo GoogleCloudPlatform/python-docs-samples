@@ -13,11 +13,12 @@
 # limitations under the License.
 #
 
+# flake8: noqa
+
 import os
+from unittest import mock
 
 from documentai.snippets import get_evaluation_sample
-
-import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -27,12 +28,9 @@ evaluation_id = "55cdab6206095055"
 
 
 # Mocking request
-@mock.patch(
-    "google.cloud.documentai_v1beta3.DocumentProcessorServiceClient.get_evaluation"
-)
-@mock.patch("google.cloud.documentai_v1beta3.Evaluation")
+@mock.patch("google.cloud.documentai.DocumentProcessorServiceClient.get_evaluation")
+@mock.patch("google.cloud.documentai.Evaluation")
 def test_get_evaluation(evaluation_mock, get_evaluation_mock, capsys):
-
     get_evaluation_mock.return_value = evaluation_mock
 
     get_evaluation_sample.get_evaluation_sample(

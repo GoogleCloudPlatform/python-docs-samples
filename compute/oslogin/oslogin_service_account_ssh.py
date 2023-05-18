@@ -16,14 +16,15 @@
 # [START compute_oslogin_ssh]
 """
 Example of using the OS Login API to apply public SSH keys for a service
-account, and use that service account to execute commands on a remote
+account, and use that service account to run commands on a remote
 instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
+from __future__ import annotations
+
 import argparse
 import subprocess
 import time
-from typing import List, Optional, Tuple
 import uuid
 
 from google.cloud import oslogin_v1
@@ -36,26 +37,26 @@ HEADERS = {'Metadata-Flavor': 'Google'}
 
 
 def execute(
-    cmd: List[str],
-    cwd: Optional[str] = None,
-    capture_output: Optional[bool] = False,
-    env: Optional[dict] = None,
-    raise_errors: Optional[bool] = True
-) -> Tuple[int, str]:
+    cmd: list[str],
+    cwd: str | None = None,
+    capture_output: bool | None = False,
+    env: dict | None = None,
+    raise_errors: bool | None = True
+) -> tuple[int, str]:
     """
-    Executes an external command (wrapper for Python subprocess).
+    Run an external command (wrapper for Python subprocess).
 
     Args:
-        cmd: The command to be executed.
-        cwd: Directory in which to execute the command.
+        cmd: The command to be run.
+        cwd: Directory in which to run the command.
         capture_output: Should the command output be captured and returned or just ignored.
         env: Environmental variables passed to the child process.
-        raise_errors: Should errors in executed command raise exceptions.
+        raise_errors: Should errors in run command raise exceptions.
 
     Returns:
         Return code and captured output.
     """
-    print(f'Executing command: {cmd}')
+    print(f'Running command: {cmd}')
     process = subprocess.run(
         cmd,
         cwd=cwd,
@@ -95,7 +96,7 @@ def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
     private_key_file = f'/tmp/key-{uuid.uuid4()}'
     execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
-    with open(f'{private_key_file}.pub', 'r') as original:
+    with open(f'{private_key_file}.pub') as original:
         public_key = original.read().strip()
 
     # Expiration time is in microseconds.
@@ -126,7 +127,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
         hostname: Hostname of the machine you want to run the command on.
 
     Returns:
-        Output of the executed command.
+        Output of the run command.
     """
     ssh_command = [
         'ssh',
@@ -136,7 +137,7 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
         f'{username}@{hostname}',
         cmd,
     ]
-    print(f"Executing ssh command: {' '.join(ssh_command)}")
+    print(f"Running ssh command: {' '.join(ssh_command)}")
     tries = 0
     while tries < 3:
         try:
@@ -148,12 +149,16 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
                 text=True,
                 check=True,
                 env={'SSH_AUTH_SOCK': ''},
+                timeout=10
             )
-        except subprocess.CalledProcessError as err:
-            time.sleep(30)
+        except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as err:
+            time.sleep(10)
             tries += 1
             if tries == 3:
-                print(f"Failed to execute SSH command (return code: {err.returncode}. Output received: {err.output}")
+                if isinstance(err, subprocess.CalledProcessError):
+                    print(f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}")
+                else:
+                    print("Failed to run SSH - timed out.")
                 raise err
         else:
             return ssh.stdout
@@ -162,11 +167,11 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
 def main(
     cmd,
     project: str,
-    instance: Optional[str] = None,
-    zone: Optional[str] = None,
-    account: Optional[str] = None,
-    hostname: Optional[str] = None,
-    oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None
+    instance: str | None = None,
+    zone: str | None = None,
+    account: str | None = None,
+    hostname: str | None = None,
+    oslogin: oslogin_v1.OsLoginServiceClient | None = None
 ) -> None:
     """Runs a command on a remote system."""
 

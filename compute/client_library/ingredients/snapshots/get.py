@@ -16,7 +16,6 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Iterable
 
 from google.cloud import compute_v1
 
@@ -38,5 +37,3 @@ def get_snapshot(project_id: str, snapshot_name: str) -> compute_v1.Snapshot:
 
     return snapshot_client.get(project=project_id, snapshot=snapshot_name)
 # </INGREDIENT>
-
-

@@ -27,16 +27,16 @@ def list_glossaries(project_id="YOUR_PROJECT_ID"):
 
     # Iterate over all results
     for glossary in client.list_glossaries(parent=parent):
-        print("Name: {}".format(glossary.name))
-        print("Entry count: {}".format(glossary.entry_count))
-        print("Input uri: {}".format(glossary.input_config.gcs_source.input_uri))
+        print(f"Name: {glossary.name}")
+        print(f"Entry count: {glossary.entry_count}")
+        print(f"Input uri: {glossary.input_config.gcs_source.input_uri}")
 
         # Note: You can create a glossary using one of two modes:
         # language_code_set or language_pair. When listing the information for
         # a glossary, you can only get information for the mode you used
         # when creating the glossary.
         for language_code in glossary.language_codes_set.language_codes:
-            print("Language code: {}".format(language_code))
+            print(f"Language code: {language_code}")
 
 
 # [END translate_v3_list_glossary]

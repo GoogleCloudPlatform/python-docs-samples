@@ -21,8 +21,11 @@
 
 
 # [START compute_snapshot_delete_by_filter]
+from __future__ import annotations
+
+from collections.abc import Iterable
 import sys
-from typing import Any, Iterable, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -32,8 +35,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -75,7 +79,7 @@ def wait_for_extended_operation(
     return result
 
 
-def delete_snapshot(project_id: str, snapshot_name: str) -> NoReturn:
+def delete_snapshot(project_id: str, snapshot_name: str) -> None:
     """
     Delete a snapshot of a disk.
 
@@ -89,16 +93,14 @@ def delete_snapshot(project_id: str, snapshot_name: str) -> NoReturn:
 
     wait_for_extended_operation(operation, "snapshot deletion")
 
-    return
 
-
-def list_snapshots(project_id: str, filter: str = "") -> Iterable[compute_v1.Snapshot]:
+def list_snapshots(project_id: str, filter_: str = "") -> Iterable[compute_v1.Snapshot]:
     """
     List snapshots from a project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        filter: filter to be applied when listing snapshots. Learn more about filters here:
+        filter_: filter to be applied when listing snapshots. Learn more about filters here:
             https://cloud.google.com/python/docs/reference/compute/latest/google.cloud.compute_v1.types.ListSnapshotsRequest
 
     Returns:
@@ -108,7 +110,7 @@ def list_snapshots(project_id: str, filter: str = "") -> Iterable[compute_v1.Sna
     snapshot_client = compute_v1.SnapshotsClient()
     request = compute_v1.ListSnapshotsRequest()
     request.project = project_id
-    request.filter = filter
+    request.filter = filter_
 
     return snapshot_client.list(request)
 

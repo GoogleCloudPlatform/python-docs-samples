@@ -21,9 +21,11 @@
 
 # [START compute_create_windows_instance_external_ip]
 # [START compute_create_windows_instance_internal_ip]
+from __future__ import annotations
+
 import re
 import sys
-from typing import Any, List, Optional
+from typing import Any
 import warnings
 
 from google.api_core.extended_operation import ExtendedOperation
@@ -89,8 +91,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -136,14 +139,14 @@ def create_instance(
     project_id: str,
     zone: str,
     instance_name: str,
-    disks: List[compute_v1.AttachedDisk],
+    disks: list[compute_v1.AttachedDisk],
     machine_type: str = "n1-standard-1",
     network_link: str = "global/networks/default",
     subnetwork_link: str = None,
     internal_ip: str = None,
     external_access: bool = False,
     external_ipv4: str = None,
-    accelerators: List[compute_v1.AcceleratorConfig] = None,
+    accelerators: list[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
     spot: bool = False,
     instance_termination_action: str = "STOP",
@@ -271,7 +274,7 @@ def create_windows_instance(
     machine_type: str,
     source_image_family: str = "windows-2022",
     network_link: str = "global/networks/default",
-    subnetwork_link: Optional[str] = None,
+    subnetwork_link: str | None = None,
 ) -> compute_v1.Instance:
     """
     Creates a new Windows Server instance that has only an internal IP address.

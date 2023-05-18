@@ -13,11 +13,12 @@
 # limitations under the License.
 #
 
+# flake8: noqa
+
 import os
+from unittest import mock
 
 from documentai.snippets import train_processor_version_sample
-
-import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -29,10 +30,10 @@ test_data_uri = "gs://bucket/directory/"
 
 # Mocking request as training can take a long time
 @mock.patch(
-    "google.cloud.documentai_v1beta3.DocumentProcessorServiceClient.train_processor_version"
+    "google.cloud.documentai.DocumentProcessorServiceClient.train_processor_version"
 )
-@mock.patch("google.cloud.documentai_v1beta3.TrainProcessorVersionResponse")
-@mock.patch("google.cloud.documentai_v1beta3.TrainProcessorVersionMetadata")
+@mock.patch("google.cloud.documentai.TrainProcessorVersionResponse")
+@mock.patch("google.cloud.documentai.TrainProcessorVersionMetadata")
 @mock.patch("google.api_core.operation.Operation")
 def test_train_processor_version(
     operation_mock,

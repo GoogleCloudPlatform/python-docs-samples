@@ -22,11 +22,11 @@ import predict
 MODEL = 'census'
 JSON_VERSION = 'v2json'
 PROJECT = 'python-docs-samples-tests'
-CONF_KEY = u'confidence'
-PRED_KEY = u'predictions'
+CONF_KEY = 'confidence'
+PRED_KEY = 'predictions'
 EXPECTED_OUTPUT = {
     CONF_KEY: 0.7760370969772339,
-    PRED_KEY: u' <=50K'
+    PRED_KEY: ' <=50K'
 }
 CONFIDENCE_EPSILON = 1e-4
 

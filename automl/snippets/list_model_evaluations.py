@@ -33,10 +33,10 @@ def list_model_evaluations(project_id, model_id):
 
     print("List of model evaluations:")
     for evaluation in client.list_model_evaluations(parent=model_full_id, filter=""):
-        print("Model evaluation name: {}".format(evaluation.name))
-        print("Model annotation spec id: {}".format(evaluation.annotation_spec_id))
-        print("Create Time: {}".format(evaluation.create_time))
-        print("Evaluation example count: {}".format(evaluation.evaluated_example_count))
+        print(f"Model evaluation name: {evaluation.name}")
+        print(f"Model annotation spec id: {evaluation.annotation_spec_id}")
+        print(f"Create Time: {evaluation.create_time}")
+        print(f"Evaluation example count: {evaluation.evaluated_example_count}")
         # [END automl_language_sentiment_analysis_list_model_evaluations]
         # [END automl_language_text_classification_list_model_evaluations]
         # [END automl_translate_list_model_evaluations]

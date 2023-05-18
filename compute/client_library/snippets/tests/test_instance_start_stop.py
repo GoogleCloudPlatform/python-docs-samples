@@ -23,13 +23,15 @@ import pytest
 
 from ..disks.clone_encrypted_disk import create_disk_from_customer_encrypted_disk
 from ..disks.delete import delete_disk
+from ..instances.change_machine_type import change_machine_type
+from ..instances.get import get_instance
 from ..instances.start import start_instance
 from ..instances.start_encrypted import start_instance_with_encryption_key
 from ..instances.stop import stop_instance
 
 PROJECT = google.auth.default()[1]
 
-INSTANCE_ZONE = "europe-central2-b"
+INSTANCE_ZONE = "europe-west2-b"
 
 KEY = "".join(random.sample(string.ascii_letters, 32))
 KEY_B64 = base64.b64encode(
@@ -187,3 +189,14 @@ def test_clone_encrypted_disk(autodelete_disk_name, compute_encrypted_instance):
         encryption_key=KEY_B64)
 
     assert new_disk.name == autodelete_disk_name
+
+
+def test_change_machine_type(compute_instance):
+    assert _get_status(compute_instance) == "RUNNING"
+
+    stop_instance(PROJECT, INSTANCE_ZONE, compute_instance.name)
+
+    assert not get_instance(PROJECT, INSTANCE_ZONE, compute_instance.name).machine_type.endswith("e2-standard-2")
+    change_machine_type(PROJECT, INSTANCE_ZONE, compute_instance.name, "e2-standard-2")
+
+    assert get_instance(PROJECT, INSTANCE_ZONE, compute_instance.name).machine_type.endswith("e2-standard-2")

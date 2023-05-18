@@ -1,0 +1,2 @@
+google-cloud-dialogflow==2.21.0
+Flask==2.2.2

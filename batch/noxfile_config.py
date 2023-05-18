@@ -13,5 +13,6 @@
 #  limitations under the License.
 
 TEST_CONFIG_OVERRIDE = {
+    # "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
     "gcloud_project_env": "BUILD_SPECIFIC_GCLOUD_PROJECT",
 }

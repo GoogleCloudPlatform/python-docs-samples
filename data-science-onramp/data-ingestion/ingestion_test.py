@@ -20,7 +20,8 @@ import os
 import re
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core import retry
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -144,7 +145,7 @@ def get_dataproc_job_output(result):
     """Get the dataproc job logs in plain text"""
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
-    return blob.download_as_string().decode("utf-8")
+    return blob.download_as_bytes().decode("utf-8")
 
 
 def assert_table_success_message(table_name, out):
@@ -154,6 +155,8 @@ def assert_table_success_message(table_name, out):
     ), f"Table {table_name} sucess message not printed in job logs"
 
 
+# retry on InvalidArgument subnetwork not ready error
+@retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_setup():
     """Test setup.py by submitting it to a dataproc cluster
     Check table upload success message as well as data in the table itself"""

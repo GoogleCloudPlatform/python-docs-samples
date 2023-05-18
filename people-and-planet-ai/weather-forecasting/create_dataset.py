@@ -20,7 +20,6 @@ from collections.abc import Iterator
 from datetime import datetime, timedelta
 import logging
 import random
-from typing import List, Optional
 import uuid
 
 import apache_beam as beam
@@ -148,7 +147,7 @@ def run(
     num_bins: int = NUM_BINS,
     max_requests: int = MAX_REQUESTS,
     min_batch_size: int = MIN_BATCH_SIZE,
-    beam_args: Optional[List[str]] = None,
+    beam_args: list[str] | None = None,
 ) -> None:
     """Runs an Apache Beam pipeline to create a dataset.
 

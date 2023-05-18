@@ -332,7 +332,7 @@ def cleanup_function(**context):
             dags = session.query(airflow_db_model.dag_id).distinct()
             session.commit()
 
-            list_dags = [str(list(dag)[0]) for dag in dags]
+            list_dags = [str(list(dag)[0]) for dag in dags] + [None]
             for dag in list_dags:
                 query = build_query(session, airflow_db_model, age_check_column,
                                     max_date, keep_last, keep_last_filters,
@@ -361,6 +361,18 @@ def cleanup_function(**context):
         session.close()
 
 
+def analyze_db():
+    session = settings.Session()
+    session.execute("ANALYZE")
+    session.commit()
+
+
+analyze_op = PythonOperator(
+    task_id="analyze_query",
+    python_callable=analyze_db,
+    provide_context=True,
+    dag=dag)
+
 for db_object in DATABASE_OBJECTS:
 
     cleanup_op = PythonOperator(
@@ -371,5 +383,6 @@ for db_object in DATABASE_OBJECTS:
         dag=dag)
 
     print_configuration.set_downstream(cleanup_op)
+    cleanup_op.set_downstream(analyze_op)
 
 # [END composer_metadb_cleanup]

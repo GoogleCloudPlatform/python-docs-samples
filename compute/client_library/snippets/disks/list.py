@@ -20,8 +20,9 @@
 
 
 # [START compute_disk_list]
-import sys
-from typing import Iterable, NoReturn
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 

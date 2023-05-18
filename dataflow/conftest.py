@@ -10,6 +10,9 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
+from __future__ import annotations
+
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
 from google.api_core.exceptions import NotFound
 import itertools
@@ -21,7 +24,7 @@ import platform
 import re
 import subprocess
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Set
+from typing import Any
 import uuid
 
 import pytest
@@ -122,10 +125,9 @@ class Utils:
         dataset_name: str, table_name: str, project: str = PROJECT, **kwargs
     ) -> str:
         from google.cloud import bigquery
+
         bigquery_client = bigquery.Client()
-        table = bigquery.Table(
-            f"{project}.{dataset_name}.{table_name}", **kwargs
-        )
+        table = bigquery.Table(f"{project}.{dataset_name}.{table_name}", **kwargs)
         result = bigquery_client.create_table(table)
         logging.info(f"Created bigquery_table: {result.full_table_id}")
         yield result.table_id
@@ -146,7 +148,7 @@ class Utils:
             return False
 
     @staticmethod
-    def bigquery_query(query: str, region: str = REGION) -> Iterable[Dict[str, Any]]:
+    def bigquery_query(query: str, region: str = REGION) -> Iterable[dict[str, Any]]:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
@@ -249,10 +251,10 @@ class Utils:
 
     @staticmethod
     def cloud_build_submit(
-        image_name: Optional[str] = None,
-        config: Optional[str] = None,
+        image_name: str | None = None,
+        config: str | None = None,
         source: str = ".",
-        substitutions: Optional[Dict[str, str]] = None,
+        substitutions: dict[str, str] | None = None,
         project: str = PROJECT,
     ) -> None:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
@@ -363,7 +365,7 @@ class Utils:
         raise ValueError(f"Dataflow job not found: job_name={job_name}")
 
     @staticmethod
-    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> Dict[str, Any]:
+    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> dict[str, Any]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
@@ -387,10 +389,10 @@ class Utils:
         job_id: str,
         project: str = PROJECT,
         region: str = REGION,
-        target_states: Set[str] = {"JOB_STATE_DONE"},
+        target_states: set[str] = {"JOB_STATE_DONE"},
         timeout_sec: str = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
-    ) -> Optional[str]:
+    ) -> str | None:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
@@ -424,6 +426,10 @@ class Utils:
             return False
 
         Utils.wait_until(job_is_done, timeout_sec, poll_interval_sec)
+        assert job_is_done(), (
+            f"Dataflow job is not done after {timeout_sec} seconds\n"
+            + Utils.dataflow_job_url(job_id, project, region)
+        )
 
     @staticmethod
     def dataflow_jobs_cancel(
@@ -513,7 +519,7 @@ class Utils:
         job_name: str,
         template_path: str,
         bucket_name: str,
-        parameters: Dict[str, str] = {},
+        parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:
@@ -554,7 +560,7 @@ class Utils:
         job_name: str,
         template_path: str,
         bucket_name: str,
-        parameters: Dict[str, str] = {},
+        parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:

@@ -17,7 +17,8 @@ import os
 import re
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core import retry
+from google.api_core.exceptions import InvalidArgument, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -40,7 +41,7 @@ CSV_FILE = "testing_data/raw_data.csv"
 
 # Dataproc constants
 DATAPROC_CLUSTER = f"process-test-{TEST_ID}"
-CLUSTER_REGION = "us-central1"
+CLUSTER_REGION = "us-west1"
 CLUSTER_IMAGE = "2.0-debian10"
 CLUSTER_CONFIG = {  # Dataproc cluster configuration
     "project_id": PROJECT_ID,
@@ -160,6 +161,8 @@ def get_blob_from_path(path):
     return bucket.blob(output_location)
 
 
+# retry on InvalidArgument subnetwork not ready error
+@retry.Retry(predicate=retry.if_exception_type(InvalidArgument))
 def test_process():
     """Tests process.py by submitting it to a Dataproc cluster"""
     # Submit job to Dataproc cluster
@@ -176,7 +179,7 @@ def test_process():
     # Get job output
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
-    out = blob.download_as_string().decode("utf-8")
+    out = blob.download_as_bytes().decode("utf-8")
 
     # trip duration
     assert not is_in_table(r"\d*.\d* s", out)

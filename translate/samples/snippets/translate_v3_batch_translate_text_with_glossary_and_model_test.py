@@ -40,7 +40,7 @@ def bucket():
 def test_batch_translate_text_with_glossary_and_model(capsys, bucket):
     translate_v3_batch_translate_text_with_glossary_and_model.batch_translate_text_with_glossary_and_model(
         "gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt",
-        "gs://{}/translation/BATCH_TRANSLATION_GLOS_MODEL_OUTPUT/".format(bucket.name),
+        f"gs://{bucket.name}/translation/BATCH_TRANSLATION_GLOS_MODEL_OUTPUT/",
         PROJECT_ID,
         MODEL_ID,
         GLOSSARY_ID,

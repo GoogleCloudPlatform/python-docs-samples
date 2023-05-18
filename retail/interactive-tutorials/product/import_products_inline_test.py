@@ -15,7 +15,10 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
 
+
+@Retry()
 def test_import_products_gcs():
     output = str(
         subprocess.check_output("python import_products_inline_source.py", shell=True)

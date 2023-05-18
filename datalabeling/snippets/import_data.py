@@ -48,7 +48,7 @@ def import_data(dataset_resource_name, data_type, input_gcs_uri):
 
     # The format of resource name:
     # project_id/{project_id}/datasets/{dataset_id}
-    print("Dataset resource name: {}\n".format(result.dataset))
+    print(f"Dataset resource name: {result.dataset}\n")
 
     return result
 

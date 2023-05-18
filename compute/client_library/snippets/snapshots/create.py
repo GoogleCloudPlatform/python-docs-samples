@@ -20,8 +20,10 @@
 
 
 # [START compute_snapshot_create]
+from __future__ import annotations
+
 import sys
-from typing import Any, Optional
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -31,8 +33,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -79,10 +82,10 @@ def create_snapshot(
     disk_name: str,
     snapshot_name: str,
     *,
-    zone: Optional[str] = None,
-    region: Optional[str] = None,
-    location: Optional[str] = None,
-    disk_project_id: Optional[str] = None,
+    zone: str | None = None,
+    region: str | None = None,
+    location: str | None = None,
+    disk_project_id: str | None = None,
 ) -> compute_v1.Snapshot:
     """
     Create a snapshot of a disk.

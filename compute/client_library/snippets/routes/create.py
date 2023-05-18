@@ -20,8 +20,10 @@
 
 
 # [START compute_route_create]
+from __future__ import annotations
+
 import sys
-from typing import Any, Optional
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -31,8 +33,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -80,11 +83,11 @@ def create_route(
     route_name: str,
     destination_range: str,
     *,
-    next_hop_gateway: Optional[str] = None,
-    next_hop_ip: Optional[str] = None,
-    next_hop_instance: Optional[str] = None,
-    next_hop_vpn_tunnel: Optional[str] = None,
-    next_hop_ilb: Optional[str] = None,
+    next_hop_gateway: str | None = None,
+    next_hop_ip: str | None = None,
+    next_hop_instance: str | None = None,
+    next_hop_vpn_tunnel: str | None = None,
+    next_hop_ilb: str | None = None,
 ) -> compute_v1.Route:
     """
     Create a new route in selected network by providing a destination and next hop name.

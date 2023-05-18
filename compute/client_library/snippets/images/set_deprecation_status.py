@@ -20,8 +20,10 @@
 
 
 # [START compute_images_set_deprecation_status]
+from __future__ import annotations
+
 import sys
-from typing import Any, NoReturn
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1
@@ -31,8 +33,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -76,7 +79,7 @@ def wait_for_extended_operation(
 
 def set_deprecation_status(
     project_id: str, image_name: str, status: compute_v1.DeprecationStatus.State
-) -> NoReturn:
+) -> None:
     """
     Modify the deprecation status of an image.
 

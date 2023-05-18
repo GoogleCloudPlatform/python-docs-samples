@@ -19,7 +19,9 @@
 # directory and apply your changes there.
 
 
-from typing import Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
@@ -86,7 +88,6 @@ def delete_firewall_rule(project_id: str, firewall_rule_name: str) -> None:
     operation = firewall_client.delete(project=project_id, firewall=firewall_rule_name)
 
     wait_for_extended_operation(operation, "firewall rule deletion")
-    return
 
 
 def get_firewall_rule(project_id: str, firewall_rule_name: str) -> compute_v1.Firewall:
@@ -146,7 +147,6 @@ def patch_firewall_priority(
     )
 
     wait_for_extended_operation(operation, "firewall rule patching")
-    return
 
 
 if __name__ == "__main__":

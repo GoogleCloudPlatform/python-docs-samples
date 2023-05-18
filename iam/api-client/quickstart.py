@@ -19,7 +19,7 @@ import google.auth
 import googleapiclient.discovery
 
 
-def quickstart(project_id, member):
+def quickstart(project_id: str, member: str) -> None:
     """Gets a policy, adds a member, prints their permissions, and removes the member."""
 
     # Role to be granted.
@@ -43,7 +43,7 @@ def quickstart(project_id, member):
     modify_policy_remove_member(crm_service, project_id, role, member)
 
 
-def initialize_service():
+def initialize_service() -> dict:
     """Initializes a Cloud Resource Manager service."""
 
     credentials, _ = google.auth.default(
@@ -55,7 +55,7 @@ def initialize_service():
     return crm_service
 
 
-def modify_policy_add_role(crm_service, project_id, role, member):
+def modify_policy_add_role(crm_service: str, project_id: str, role: str, member: str) -> None:
     """Adds a new role binding to a policy."""
 
     policy = get_policy(crm_service, project_id)
@@ -74,7 +74,7 @@ def modify_policy_add_role(crm_service, project_id, role, member):
     set_policy(crm_service, project_id, policy)
 
 
-def modify_policy_remove_member(crm_service, project_id, role, member):
+def modify_policy_remove_member(crm_service: str, project_id: str, role: str, member: str) -> None:
     """Removes a  member from a role binding."""
 
     policy = get_policy(crm_service, project_id)
@@ -86,7 +86,7 @@ def modify_policy_remove_member(crm_service, project_id, role, member):
     set_policy(crm_service, project_id, policy)
 
 
-def get_policy(crm_service, project_id, version=3):
+def get_policy(crm_service: str, project_id: str, version: int = 3) -> dict:
     """Gets IAM policy for a project."""
 
     policy = (
@@ -100,7 +100,7 @@ def get_policy(crm_service, project_id, version=3):
     return policy
 
 
-def set_policy(crm_service, project_id, policy):
+def set_policy(crm_service: str, project_id: str, policy: str) -> dict:
     """Sets IAM policy for a project."""
 
     policy = (

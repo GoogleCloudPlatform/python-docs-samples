@@ -87,7 +87,7 @@ def unexpected_error(e):
     logging.exception('An error occured while processing the request.')
     response = jsonify({
         'code': http_client.INTERNAL_SERVER_ERROR,
-        'message': 'Exception: {}'.format(e)})
+        'message': f'Exception: {e}'})
     response.status_code = http_client.INTERNAL_SERVER_ERROR
     return response
 

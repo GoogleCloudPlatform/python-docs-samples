@@ -84,6 +84,7 @@ def test_datalab_query_magic(ipython_interactive):
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_client_library_query_magic(ipython_interactive):
     import pandas
 
@@ -106,6 +107,7 @@ def test_client_library_query_magic(ipython_interactive):
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_query_magic_results_variable(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -155,6 +157,7 @@ def test_client_library_query_magic_results_variable(ipython_interactive):
     ip.user_ns.pop(variable_name)  # clean up variable
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_list_tables_magic(ipython_interactive):
     ip = _set_up_ipython('google.datalab.kernel')
 
@@ -170,6 +173,7 @@ def test_datalab_list_tables_magic(ipython_interactive):
     assert "shakespeare" in html_element.data
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_query():
     # [START bigquery_migration_datalab_query]
     import google.datalab.bigquery as bq
@@ -201,6 +205,7 @@ def test_client_library_query():
     assert len(df) == 100
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_gcs_csv(to_delete):
     # [START bigquery_migration_datalab_load_table_from_gcs_csv]
     import google.datalab.bigquery as bq
@@ -209,7 +214,7 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
     dataset_id = 'import_sample'
     # [END bigquery_migration_datalab_load_table_from_gcs_csv]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f'test_dataset_{int(time.time() * 1000)}'
     to_delete.append(dataset_id)
     # [START bigquery_migration_datalab_load_table_from_gcs_csv]
     bq.Dataset(dataset_id).create()
@@ -220,7 +225,7 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
         {'name': 'post_abbr', 'type': 'STRING'},
     ]
     table = bq.Table(
-        '{}.us_states'.format(dataset_id)).create(schema=schema)
+        f'{dataset_id}.us_states').create(schema=schema)
     table.load(
         'gs://cloud-samples-data/bigquery/us-states/us-states.csv',
         mode='append',
@@ -242,7 +247,7 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     dataset_id = 'import_sample'
     # [END bigquery_migration_client_library_load_table_from_gcs_csv]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f'test_dataset_{int(time.time() * 1000)}'
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_gcs_csv]
     dataset = client.create_dataset(dataset_id)
@@ -269,6 +274,7 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     assert table.num_rows == 50
 
 
+@pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_dataframe(to_delete):
     """ Wrap test with retries to handle transient errors """
     @Retry()
@@ -281,7 +287,7 @@ def test_datalab_load_table_from_dataframe(to_delete):
         dataset_id = 'import_sample'
         # [END bigquery_migration_datalab_load_table_from_dataframe]
         # Use unique dataset ID to avoid collisions when running tests
-        dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+        dataset_id = f'test_dataset_{int(time.time() * 1000)}'
         to_delete.append(dataset_id)
         # [START bigquery_migration_datalab_load_table_from_dataframe]
         bq.Dataset(dataset_id).create()
@@ -298,7 +304,7 @@ def test_datalab_load_table_from_dataframe(to_delete):
         ])
         schema = bq.Schema.from_data(dataframe)
         table = bq.Table(
-            '{}.monty_python'.format(dataset_id)).create(schema=schema)
+            f'{dataset_id}.monty_python').create(schema=schema)
         table.insert(dataframe)  # Starts steaming insert of data
         # [END bigquery_migration_datalab_load_table_from_dataframe]
         # The Datalab library uses tabledata().insertAll() to load data from
@@ -320,7 +326,7 @@ def test_client_library_load_table_from_dataframe(to_delete):
     dataset_id = 'import_sample'
     # [END bigquery_migration_client_library_load_table_from_dataframe]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f'test_dataset_{int(time.time() * 1000)}'
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_dataframe]
     dataset = client.create_dataset(dataset_id)

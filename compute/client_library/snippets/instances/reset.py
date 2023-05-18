@@ -20,8 +20,9 @@
 
 
 # [START compute_reset_instance]
+from __future__ import annotations
+
 import sys
-import time
 from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
@@ -32,8 +33,9 @@ def wait_for_extended_operation(
     operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
 ) -> Any:
     """
-    This method will wait for the extended (long-running) operation to
-    complete. If the operation is successful, it will return its result.
+    Waits for the extended (long-running) operation to complete.
+
+    If the operation is successful, it will return its result.
     If the operation ends with an error, an exception will be raised.
     If there were any warnings during the execution of the operation
     they will be printed to sys.stderr.
@@ -90,8 +92,6 @@ def reset_instance(project_id: str, zone: str, instance_name: str) -> None:
     )
 
     wait_for_extended_operation(operation, "instance reset")
-
-    return
 
 
 # [END compute_reset_instance]

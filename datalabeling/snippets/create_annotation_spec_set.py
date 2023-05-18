@@ -58,13 +58,13 @@ def create_annotation_spec_set(project_id):
 
     # The format of the resource name:
     # project_id/{project_id}/annotationSpecSets/{annotationSpecSets_id}
-    print("The annotation_spec_set resource name: {}".format(response.name))
-    print("Display name: {}".format(response.display_name))
-    print("Description: {}".format(response.description))
+    print(f"The annotation_spec_set resource name: {response.name}")
+    print(f"Display name: {response.display_name}")
+    print(f"Description: {response.description}")
     print("Annotation specs:")
     for annotation_spec in response.annotation_specs:
-        print("\tDisplay name: {}".format(annotation_spec.display_name))
-        print("\tDescription: {}\n".format(annotation_spec.description))
+        print(f"\tDisplay name: {annotation_spec.display_name}")
+        print(f"\tDescription: {annotation_spec.description}\n")
 
     return response
 
