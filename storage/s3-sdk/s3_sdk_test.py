@@ -18,7 +18,7 @@ import uuid
 
 import backoff
 from botocore.exceptions import ClientError
-from google.cloud import HMACKeyMetadata, storage
+from google.cloud import storage
 import pytest
 
 import list_gcs_buckets
@@ -31,7 +31,7 @@ STORAGE_CLIENT = storage.Client(project=PROJECT_ID)
 
 
 @pytest.fixture(scope="module")
-def hmac_fixture() -> Tuple[HMACKeyMetadata, str]:
+def hmac_fixture() -> Tuple[storage.HMACKeyMetadata, str]:
     """
     Creates an HMAC Key and secret to supply to the S3 SDK tests. The key
     will be deleted after the test session.
@@ -69,7 +69,7 @@ def test_blob(test_bucket: storage.Bucket) -> storage.Blob:
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_buckets(hmac_fixture: Tuple[HMACKeyMetadata, str], test_bucket: storage.Bucket) -> None:
+def test_list_buckets(hmac_fixture: Tuple[storage.HMACKeyMetadata, str], test_bucket: storage.Bucket) -> None:
     result = list_gcs_buckets.list_gcs_buckets(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
@@ -81,7 +81,7 @@ def test_list_buckets(hmac_fixture: Tuple[HMACKeyMetadata, str], test_bucket: st
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
 def test_list_blobs(
-    hmac_fixture: Tuple[HMACKeyMetadata, str], test_bucket: storage.Bucket, test_blob: storage.Blob
+    hmac_fixture: Tuple[storage.HMACKeyMetadata, str], test_bucket: storage.Bucket, test_blob: storage.Blob
 ) -> None:
     result = list_gcs_objects.list_gcs_objects(
         google_access_key_id=hmac_fixture[0].access_id,
