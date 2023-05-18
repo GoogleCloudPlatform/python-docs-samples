@@ -43,6 +43,4 @@ def new_request(data):
 
     response = urllib.request.urlopen(req)
     return response.read()
-
-
 # [END cloudrun_secure_request]
