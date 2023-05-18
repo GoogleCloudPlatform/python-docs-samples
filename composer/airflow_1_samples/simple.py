@@ -15,7 +15,6 @@
 """An example DAG demonstrating simple Apache Airflow operators."""
 
 # [START composer_simple_airflow_1]
-from __future__ import print_function
 
 # [START composer_simple_define_dag_airflow_1]
 import datetime

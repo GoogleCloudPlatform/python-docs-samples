@@ -20,6 +20,8 @@
 
 
 # [START compute_disk_create_from_snapshot]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

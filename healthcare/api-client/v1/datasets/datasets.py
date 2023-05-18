@@ -35,7 +35,7 @@ def create_dataset(project_id, location, dataset_id):
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
-    dataset_parent = "projects/{}/locations/{}".format(project_id, location)
+    dataset_parent = f"projects/{project_id}/locations/{location}"
 
     request = (
         client.projects()
@@ -45,7 +45,7 @@ def create_dataset(project_id, location, dataset_id):
     )
 
     response = request.execute()
-    print("Created dataset: {}".format(dataset_id))
+    print(f"Created dataset: {dataset_id}")
     return response
 
 
@@ -78,7 +78,7 @@ def delete_dataset(project_id, location, dataset_id):
     request = client.projects().locations().datasets().delete(name=dataset_name)
 
     response = request.execute()
-    print("Deleted dataset: {}".format(dataset_id))
+    print(f"Deleted dataset: {dataset_id}")
     return response
 
 
@@ -138,7 +138,7 @@ def list_datasets(project_id, location):
     # TODO(developer): Uncomment these lines and replace with your values.
     # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the location of the datasets
-    dataset_parent = "projects/{}/locations/{}".format(project_id, location)
+    dataset_parent = f"projects/{project_id}/locations/{location}"
 
     datasets = (
         client.projects()
@@ -182,8 +182,8 @@ def patch_dataset(project_id, location, dataset_id, time_zone):
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
     # time_zone = 'GMT'  # replace with the dataset's time zone
-    dataset_parent = "projects/{}/locations/{}".format(project_id, location)
-    dataset_name = "{}/datasets/{}".format(dataset_parent, dataset_id)
+    dataset_parent = f"projects/{project_id}/locations/{location}"
+    dataset_name = f"{dataset_parent}/datasets/{dataset_id}"
 
     # Sets the time zone
     patch = {"timeZone": time_zone}
@@ -196,7 +196,7 @@ def patch_dataset(project_id, location, dataset_id, time_zone):
     )
 
     response = request.execute()
-    print("Patched dataset {} with time zone: {}".format(dataset_id, time_zone))
+    print(f"Patched dataset {dataset_id} with time zone: {time_zone}")
     return response
 
 

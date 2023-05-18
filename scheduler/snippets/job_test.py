@@ -14,8 +14,6 @@
 
 import os
 
-from _pytest.capture import CaptureFixture
-
 import create_job
 import delete_job
 
@@ -23,14 +21,12 @@ TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("LOCATION_ID", "us-central1")
 
 
-def test_create_job(capsys: CaptureFixture):
+def test_create_job():
     response = create_job.create_scheduler_job(
         TEST_PROJECT_ID, TEST_LOCATION, "my-service"
     )
     assert response.name
 
     job_name = response.name.split("/")[-1]
-    delete_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
-
-    out, _ = capsys.readouterr()
-    assert "Job deleted." in out
+    is_deleted = delete_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
+    assert is_deleted

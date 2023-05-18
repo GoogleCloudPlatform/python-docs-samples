@@ -14,11 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
+from collections.abc import Iterable
 import io
 import json
 import logging
 import os
-from typing import Dict, Iterable, Optional
 import zipfile
 
 import apache_beam as beam
@@ -43,7 +45,7 @@ INVALID_CATEGORIES = {
 def run(
     bigquery_dataset: str,
     bigquery_table: str,
-    pipeline_options: Optional[PipelineOptions] = None,
+    pipeline_options: PipelineOptions | None = None,
 ) -> None:
     """Creates the images metadata table in BigQuery.
 
@@ -92,7 +94,7 @@ def run(
         )
 
 
-def get_images_metadata(metadata_url: str) -> Iterable[Dict[str, str]]:
+def get_images_metadata(metadata_url: str) -> Iterable[dict[str, str]]:
     """Returns an iterable of {'category', 'file_name'} dicts. """
     content = requests.get(metadata_url).content
     with zipfile.ZipFile(io.BytesIO(content)) as zf:
