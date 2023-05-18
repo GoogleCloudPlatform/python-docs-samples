@@ -85,14 +85,28 @@ def write_secret(secret_id: str, payload: str) -> str:
     return version.name
 
 
-def validate_environment(cpix_client: clients.cpix_client.CpixClient) -> str:
+def validate_environment(
+    cpix_client: clients.cpix_client.CpixClient
+) -> Union[None, str]:
+    """Validates the required environment variables are set
+
+    Args:
+        cpix_client: a CPIX client that inherits the abstract
+        clients.cpix_client.CpixClient
+    Returns:
+        If missing environment variable(s), return a response text, that can be
+        turned into a Response object using `make_response`
+        <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
+        Otherwise, return None
+    """
     required_vars = ["PROJECT"]
     required_vars.extend(cpix_client.required_env_vars())
     for required_var in required_vars:
         if required_var not in os.environ:
             return http_response(
-                f'environment variable "{required_var}" must be set', 400
+                f"environment variable '{required_var}' must be set", 400
             )
+    return None
 
 
 @functions_framework.http
@@ -124,22 +138,18 @@ def keys(request: Request) -> str:
         provider_key = request_json.get("provider")
         if not provider_key:
             return http_response(
-                '"provider" field must be specified. supported providers: {}'.format(
-                    ", ".join(PROVIDERS.keys())
-                ),
+                f"'provider' field must be specified. supported providers: {PROVIDERS.keys()}",
                 400,
             )
         if provider_key not in PROVIDERS:
             return http_response(
-                '"{}" is not a valid provider. supported providers: {}'.format(
-                    provider_key, ", ".join(PROVIDERS.keys())
-                ),
+                f"'{provider_key}' is not a valid provider. supported providers: {PROVIDERS.keys()}",
                 400,
             )
         key_ids = request_json.get("keyIds")
         if not key_ids:
             return http_response(
-                'at least one key ID must be specified via the "keyIds" field', 400
+                "at least one key ID must be specified via the 'keyIds' field", 400
             )
 
         cpix_client = PROVIDERS[provider_key]()

@@ -52,7 +52,9 @@ class TestMain:
     def test_should_create_secret_and_version(self, mocker):
         key_id = uuid.uuid4()
         secret_name = "the-secret-name"
-        self.secret_manager_mock.return_value.create_secret.return_value.name = secret_name
+        self.secret_manager_mock.return_value.create_secret.return_value.name = (
+            secret_name
+        )
         with self.app.test_request_context(
             method="POST",
             json={
@@ -148,14 +150,14 @@ class TestMain:
         with self.app.test_request_context(method="POST", json={"name": "test"}):
             resp = flask.make_response(main.keys(flask.request))
             assert resp.status_code == 400
-            assert '"mediaId" field must be specified' in resp.get_json()["message"]
+            assert "'mediaId' field must be specified" in resp.get_json()["message"]
 
     def test_should_fail_on_missing_provider(self):
         del self.secret_manager_mock
         with self.app.test_request_context(method="POST", json={"mediaId": "mid"}):
             resp = flask.make_response(main.keys(flask.request))
             assert resp.status_code == 400
-            assert '"provider" field must be specified' in resp.get_json()["message"]
+            assert "'provider' field must be specified" in resp.get_json()["message"]
 
     def test_should_fail_on_missing_keyid(self):
         del self.secret_manager_mock
@@ -181,6 +183,6 @@ class TestMain:
             resp = flask.make_response(main.keys(flask.request))
             assert resp.status_code == 400
             assert (
-                'environment variable "PROJECT" must be set'
+                "environment variable 'PROJECT' must be set"
                 in resp.get_json()["message"]
             )
