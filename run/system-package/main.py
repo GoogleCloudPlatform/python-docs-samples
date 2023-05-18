@@ -34,11 +34,11 @@ def index():
         return response
 
     except Exception as e:
-        print("error: {}".format(e))
+        print(f"error: {e}")
 
         # If no graphviz definition or bad graphviz def, return 400
         if "syntax" in str(e):
-            return "Bad Request: {}".format(e), 400
+            return f"Bad Request: {e}", 400
 
         return "Internal Server Error", 500
 

@@ -26,13 +26,13 @@ Example usage:
 
 # [START speech_transcribe_infinite_streaming]
 
+import queue
 import re
 import sys
 import time
 
 from google.cloud import speech
 import pyaudio
-from six.moves import queue
 
 # Audio recording parameters
 STREAMING_LIMIT = 240000  # 4 minutes

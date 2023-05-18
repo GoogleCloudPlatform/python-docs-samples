@@ -14,15 +14,16 @@
 # limitations under the License.
 
 # [START gke_create_cluster]
+from __future__ import annotations
+
 import argparse
 import sys
-from typing import Dict
 
 import backoff
 from google.cloud import container_v1
 
 
-def on_success(details: Dict[str, str]) -> None:
+def on_success(details: dict[str, str]) -> None:
     """
     A handler function to pass into the retry backoff algorithm as the function
     to be executed upon a successful attempt.
@@ -33,7 +34,7 @@ def on_success(details: Dict[str, str]) -> None:
     print("Successfully created cluster after {elapsed:0.1f} seconds".format(**details))
 
 
-def on_failure(details: Dict[str, str]) -> None:
+def on_failure(details: dict[str, str]) -> None:
     """
     A handler function to pass into the retry backoff algorithm as the function
     to be executed upon a failed attempt.

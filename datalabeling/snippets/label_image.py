@@ -63,7 +63,7 @@ def label_image(
         }
     )
 
-    print("Label_image operation name: {}".format(response.operation.name))
+    print(f"Label_image operation name: {response.operation.name}")
     return response
 
 

@@ -15,9 +15,11 @@
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_update_secret]
-def update_secret(project_id, secret_id):
+def update_secret(project_id: str, secret_id: str) -> secretmanager.UpdateSecretRequest:
     """
     Update the metadata about an existing secret.
     """

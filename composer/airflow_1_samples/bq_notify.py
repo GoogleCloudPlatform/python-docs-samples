@@ -99,7 +99,7 @@ with models.DAG(
         task_id="make_bq_dataset",
         # Executing 'bq' command requires Google Cloud SDK which comes
         # preinstalled in Cloud Composer.
-        bash_command="bq ls {} || bq mk {}".format(bq_dataset_name, bq_dataset_name),
+        bash_command=f"bq ls {bq_dataset_name} || bq mk {bq_dataset_name}",
     )
     # [END composer_bash_bq_airflow_1]
 

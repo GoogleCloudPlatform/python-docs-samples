@@ -62,8 +62,8 @@ def create_reference_image(
         reference_image_id=reference_image_id)
 
     # Display the reference image information.
-    print('Reference image name: {}'.format(image.name))
-    print('Reference image uri: {}'.format(image.uri))
+    print(f'Reference image name: {image.name}')
+    print(f'Reference image uri: {image.uri}')
 # [END vision_product_search_create_reference_image]
 
 
@@ -87,9 +87,9 @@ def list_reference_images(
 
     # Display the reference image information.
     for image in reference_images:
-        print('Reference image name: {}'.format(image.name))
+        print(f'Reference image name: {image.name}')
         print('Reference image id: {}'.format(image.name.split('/')[-1]))
-        print('Reference image uri: {}'.format(image.uri))
+        print(f'Reference image uri: {image.uri}')
         print('Reference image bounding polygons: {}'.format(
             image.bounding_polys))
 # [END vision_product_search_list_reference_images]
@@ -116,10 +116,10 @@ def get_reference_image(
     image = client.get_reference_image(name=reference_image_path)
 
     # Display the reference image information.
-    print('Reference image name: {}'.format(image.name))
+    print(f'Reference image name: {image.name}')
     print('Reference image id: {}'.format(image.name.split('/')[-1]))
-    print('Reference image uri: {}'.format(image.uri))
-    print('Reference image bounding polygons: {}'.format(image.bounding_polys))
+    print(f'Reference image uri: {image.uri}')
+    print(f'Reference image bounding polygons: {image.bounding_polys}')
 # [END vision_product_search_get_reference_image]
 
 

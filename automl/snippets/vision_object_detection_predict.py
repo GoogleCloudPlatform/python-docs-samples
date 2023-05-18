@@ -45,10 +45,10 @@ def predict(project_id, model_id, file_path):
     response = prediction_client.predict(request=request)
     print("Prediction results:")
     for result in response.payload:
-        print("Predicted class name: {}".format(result.display_name))
-        print("Predicted class score: {}".format(result.image_object_detection.score))
+        print(f"Predicted class name: {result.display_name}")
+        print(f"Predicted class score: {result.image_object_detection.score}")
         bounding_box = result.image_object_detection.bounding_box
         print("Normalized Vertices:")
         for vertex in bounding_box.normalized_vertices:
-            print("\tX: {}, Y: {}".format(vertex.x, vertex.y))
+            print(f"\tX: {vertex.x}, Y: {vertex.y}")
     # [END automl_vision_object_detection_predict]

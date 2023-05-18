@@ -39,4 +39,4 @@ def conversation_resource(project_id):
 def test_create_conversation(capsys, conversation_resource):
     conversation = conversation_resource
     out, err = capsys.readouterr()
-    assert "Created {}".format(conversation.name) in out
+    assert f"Created {conversation.name}" in out

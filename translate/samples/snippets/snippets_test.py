@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright 2016 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,17 +31,17 @@ def test_list_languages(capsys):
 def test_list_languages_with_target(capsys):
     snippets.list_languages_with_target("is")
     out, _ = capsys.readouterr()
-    assert u"íslenska (is)" in out
+    assert "íslenska (is)" in out
 
 
 def test_translate_text(capsys):
     snippets.translate_text("is", "Hello world")
     out, _ = capsys.readouterr()
-    assert u"Halló heimur" in out
+    assert "Halló heimur" in out
 
 
 def test_translate_utf8(capsys):
-    text = u"파인애플 13개"
+    text = "파인애플 13개"
     snippets.translate_text("en", text)
     out, _ = capsys.readouterr()
-    assert u"13 pineapples" in out
+    assert "13 pineapples" in out

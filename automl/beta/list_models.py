@@ -38,9 +38,9 @@ def list_models(project_id):
         else:
             deployment_state = "undeployed"
 
-        print("Model name: {}".format(model.name))
+        print(f"Model name: {model.name}")
         print("Model id: {}".format(model.name.split("/")[-1]))
-        print("Model display name: {}".format(model.display_name))
-        print("Model create time: {}".format(model.create_time))
-        print("Model deployment state: {}".format(deployment_state))
+        print(f"Model display name: {model.display_name}")
+        print(f"Model create time: {model.create_time}")
+        print(f"Model deployment state: {deployment_state}")
     # [END automl_list_models_beta]

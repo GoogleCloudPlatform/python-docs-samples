@@ -1,2 +1,2 @@
-google-cloud-pubsub==2.16.1
+google-cloud-pubsub==2.17.0
 functions-framework==3.3.0

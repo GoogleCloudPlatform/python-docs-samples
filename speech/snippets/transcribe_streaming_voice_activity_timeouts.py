@@ -16,7 +16,6 @@
 import argparse
 
 # [START speech_transcribe_streaming_voice_activity_timeouts]
-import io
 from time import sleep
 
 from google.cloud.speech_v2 import SpeechClient
@@ -43,7 +42,7 @@ def transcribe_streaming_voice_activity_timeouts(
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
@@ -104,7 +103,7 @@ def transcribe_streaming_voice_activity_timeouts(
         ):
             print("Speech ended.")
         for result in response.results:
-            print("Transcript: {}".format(result.alternatives[0].transcript))
+            print(f"Transcript: {result.alternatives[0].transcript}")
 
     return responses
 

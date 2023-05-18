@@ -14,7 +14,6 @@
 
 
 # [START speech_adaptation_v2_custom_class_reference]
-import io
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
@@ -39,7 +38,7 @@ def adaptation_v2_custom_class_reference(
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # Create a persistent CustomClass to reference in phrases
@@ -84,7 +83,7 @@ def adaptation_v2_custom_class_reference(
     response = client.recognize(request=request)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
 

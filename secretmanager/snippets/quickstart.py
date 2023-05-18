@@ -17,7 +17,7 @@ command line application and sample code for creating an accessing a secret.
 """
 
 
-def quickstart(_project_id=None, _secret_id=None):
+def quickstart(_project_id: str, _secret_id: str) -> None:
     # [START secretmanager_quickstart]
     # Import the Secret Manager client library.
     from google.cloud import secretmanager
@@ -65,4 +65,4 @@ def quickstart(_project_id=None, _secret_id=None):
 
 
 if __name__ == "__main__":
-    quickstart()
+    quickstart("YOUR_PROJECT_ID", "YOUR_SECRET_ID")

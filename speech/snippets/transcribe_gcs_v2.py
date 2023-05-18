@@ -44,7 +44,7 @@ def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
     response = client.recognize(request=request)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
 

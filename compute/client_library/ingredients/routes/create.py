@@ -16,16 +16,17 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional
+from __future__ import annotations
+
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT create_route>
 def create_route(project_id: str, network: str, route_name: str, destination_range: str, *,
-                 next_hop_gateway: Optional[str] = None,
-                 next_hop_ip: Optional[str] = None, next_hop_instance: Optional[str] = None,
-                 next_hop_vpn_tunnel: Optional[str] = None, next_hop_ilb: Optional[str] = None) -> compute_v1.Route:
+                 next_hop_gateway: str | None = None,
+                 next_hop_ip: str | None = None, next_hop_instance: str | None = None,
+                 next_hop_vpn_tunnel: str | None = None, next_hop_ilb: str | None = None) -> compute_v1.Route:
     """
     Create a new route in selected network by providing a destination and next hop name.
 
@@ -55,10 +56,10 @@ def create_route(project_id: str, network: str, route_name: str, destination_ran
     """
     excl_args = {next_hop_instance, next_hop_ilb, next_hop_vpn_tunnel, next_hop_gateway, next_hop_ip}
     args_set = sum(1 if arg is not None else 0 for arg in excl_args)
-    
+
     if args_set != 1:
         raise RuntimeError("You must specify exactly one next_hop_* parameter.")
-    
+
     route = compute_v1.Route()
     route.name = route_name
     route.network = network

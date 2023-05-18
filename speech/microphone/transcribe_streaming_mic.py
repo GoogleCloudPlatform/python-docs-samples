@@ -24,22 +24,21 @@ Example usage:
 """
 
 # [START speech_transcribe_streaming_mic]
-from __future__ import division
 
+import queue
 import re
 import sys
 
 from google.cloud import speech
 
 import pyaudio
-from six.moves import queue
 
 # Audio recording parameters
 RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 
-class MicrophoneStream(object):
+class MicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
     def __init__(self, rate, chunk):

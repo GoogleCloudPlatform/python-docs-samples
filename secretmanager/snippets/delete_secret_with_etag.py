@@ -20,7 +20,7 @@ import argparse
 
 
 # [START secretmanager_delete_secret_with_etag]
-def delete_secret_with_etag(project_id, secret_id, etag):
+def delete_secret_with_etag(project_id: str, secret_id: str, etag: str) -> None:
     """
     Delete the secret with the given name, etag, and all of its versions.
     """

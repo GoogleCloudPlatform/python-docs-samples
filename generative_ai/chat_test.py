@@ -15,7 +15,7 @@
 import chat
 
 
-def test_science_tutoring():
+def test_science_tutoring() -> None:
     content = chat.science_tutoring(temperature=0).text
     assert "Mercury" in content
     assert "Venus" in content
