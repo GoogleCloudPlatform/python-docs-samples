@@ -18,7 +18,7 @@ import uuid
 
 import backoff
 from botocore.exceptions import ClientError
-from google.cloud import storage, HMACKeyMetadata
+from google.cloud import HMACKeyMetadata, storage
 import pytest
 
 import list_gcs_buckets
