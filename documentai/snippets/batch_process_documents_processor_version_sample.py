@@ -15,6 +15,7 @@
 
 # [START documentai_batch_process_documents_processor_version]
 import re
+from typing import Optional
 
 from google.api_core.client_options import ClientOptions
 from google.api_core.exceptions import InternalServerError
@@ -43,7 +44,7 @@ def batch_process_documents_processor_version(
     input_mime_type: str,
     gcs_output_bucket: str,
     gcs_output_uri_prefix: str,
-    field_mask: str | None = None,
+    field_mask: Optional[str] = None,
     timeout: int = 400,
 ):
 

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Optional
 
 # [START documentai_process_document_processor_version]
 
@@ -35,7 +36,7 @@ def process_document_processor_version_sample(
     processor_version_id: str,
     file_path: str,
     mime_type: str,
-    field_mask: str | None = None,
+    field_mask: Optional[str] = None,
 ):
     # You must set the api_endpoint if you use a location other than 'us'.
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")

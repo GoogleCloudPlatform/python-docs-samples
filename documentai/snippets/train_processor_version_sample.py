@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+from typing import Optional
 
 # [START documentai_train_processor_version]
 
@@ -32,8 +33,8 @@ def train_processor_version_sample(
     location: str,
     processor_id: str,
     processor_version_display_name: str,
-    train_data_uri: str | None = None,
-    test_data_uri: str | None = None,
+    train_data_uri: Optional[str] = None,
+    test_data_uri: Optional[str] = None,
 ):
     # You must set the api_endpoint if you use a location other than 'us', e.g.:
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
