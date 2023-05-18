@@ -19,6 +19,8 @@ import mock
 
 import main
 
+# flake8: noqa
+
 
 class TestGCFPyOCRSample():
     @mock.patch.object(main, 'publisher')
