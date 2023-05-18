@@ -20,13 +20,13 @@ import functions_framework
 
 # Triggered by a change in a storage bucket
 @functions_framework.cloud_event
-def hello_gcs(cloud_event: CloudEvent) -> None:
+def hello_gcs(cloud_event: CloudEvent) -> dict:
     """This function is triggered by a change in a storage bucket.
 
     Args:
         cloud_event: The CloudEvent that triggered this function.
     Returns:
-        None.
+        
     """
     data = cloud_event.data
 
@@ -46,6 +46,8 @@ def hello_gcs(cloud_event: CloudEvent) -> None:
     print(f"Metageneration: {metageneration}")
     print(f"Created: {timeCreated}")
     print(f"Updated: {updated}")
+
+    return event_id, event_type, bucket, name, metageneration, timeCreated, updated
 
 
 # [END functions_cloudevent_storage]
