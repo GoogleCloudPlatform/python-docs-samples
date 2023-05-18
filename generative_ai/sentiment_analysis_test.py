@@ -15,7 +15,7 @@
 import sentiment_analysis
 
 
-def test_sentiment_analysis():
+def test_sentiment_analysis() -> None:
 
     content = sentiment_analysis.sentiment_analysis(temperature=0).text
     assert content == '''positive'''

@@ -15,6 +15,6 @@
 import embedding
 
 
-def test_text_embedding():
+def test_text_embedding() -> None:
     content = embedding.text_embedding()
     assert len(content) == 768
