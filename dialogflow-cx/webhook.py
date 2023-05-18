@@ -15,12 +15,13 @@
 """ handle_webhook will return the correct fullfilment response dependong the tag that is sent in the request"""
 
 # [START dialogflow_cx_webhook]
+import functions_framework
 
 # TODO(developer): change entry point to handle_webhook in cloud function
 
 
+@functions_framework.http
 def handle_webhook(request):
-
     req = request.get_json()
 
     tag = req["fulfillmentInfo"]["tag"]
