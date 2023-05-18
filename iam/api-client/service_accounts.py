@@ -28,8 +28,8 @@ import argparse
 # [START iam_delete_service_account]
 import os
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
+from google.oauth2 import service_account  # type: ignore
+import googleapiclient.discovery  # type: ignore
 
 # [END iam_create_service_account]
 # [END iam_list_service_accounts]
@@ -40,7 +40,7 @@ import googleapiclient.discovery
 
 
 # [START iam_create_service_account]
-def create_service_account(project_id, name, display_name):
+def create_service_account(project_id: str, name: str, display_name: str) -> dict:
     """Creates a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -65,7 +65,7 @@ def create_service_account(project_id, name, display_name):
 
 
 # [START iam_list_service_accounts]
-def list_service_accounts(project_id):
+def list_service_accounts(project_id: str) -> dict:
     """Lists all service accounts for the current project."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -87,7 +87,7 @@ def list_service_accounts(project_id):
 
 
 # [START iam_rename_service_account]
-def rename_service_account(email, new_display_name):
+def rename_service_account(email: str, new_display_name: str) -> dict:
     """Changes a service account's display name."""
 
     # First, get a service account using List() or Get()
@@ -115,7 +115,7 @@ def rename_service_account(email, new_display_name):
 
 
 # [START iam_disable_service_account]
-def disable_service_account(email):
+def disable_service_account(email: str) -> None:
     """Disables a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -133,7 +133,7 @@ def disable_service_account(email):
 
 
 # [START iam_enable_service_account]
-def enable_service_account(email):
+def enable_service_account(email: str) -> None:
     """Enables a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -151,7 +151,7 @@ def enable_service_account(email):
 
 
 # [START iam_delete_service_account]
-def delete_service_account(email):
+def delete_service_account(email: str) -> None:
     """Deletes a service account."""
 
     credentials = service_account.Credentials.from_service_account_file(
@@ -168,7 +168,7 @@ def delete_service_account(email):
 # [END iam_delete_service_account]
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
