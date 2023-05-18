@@ -17,7 +17,6 @@
 from os import environ
 import uuid
 
-from _pytest.capture import CaptureFixture
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 from google.cloud import servicedirectory_v1
@@ -95,30 +94,24 @@ def test_resolve_service() -> None:
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
 )
-def test_delete_endpoint(capsys: CaptureFixture) -> None:
-    snippets.delete_endpoint(
+def test_delete_endpoint() -> None:
+    is_deleted = snippets.delete_endpoint(
         PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID, ENDPOINT_ID
     )
-
-    out, _ = capsys.readouterr()
-    assert ENDPOINT_ID in out
+    assert is_deleted
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
 )
-def test_delete_service(capsys: CaptureFixture) -> None:
-    snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
-
-    out, _ = capsys.readouterr()
-    assert SERVICE_ID in out
+def test_delete_service() -> None:
+    is_deleted = snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
+    assert is_deleted
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
 )
-def test_delete_namespace(capsys: CaptureFixture) -> None:
-    snippets.delete_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
-
-    out, _ = capsys.readouterr()
-    assert NAMESPACE_ID in out
+def test_delete_namespace() -> None:
+    is_deleted = snippets.delete_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
+    assert is_deleted

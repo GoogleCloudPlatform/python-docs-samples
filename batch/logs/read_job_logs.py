@@ -14,6 +14,8 @@
 
 
 # [START batch_job_logs]
+from __future__ import annotations
+
 from typing import NoReturn
 
 from google.cloud import batch_v1

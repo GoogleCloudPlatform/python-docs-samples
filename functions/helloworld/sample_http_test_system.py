@@ -23,7 +23,7 @@ def test_no_args():
     BASE_URL = os.getenv('BASE_URL')
     assert BASE_URL is not None
 
-    res = requests.get('{}/hello_http'.format(BASE_URL))
+    res = requests.get(f'{BASE_URL}/hello_http')
     assert res.text == 'Hello, World!'
 
 
@@ -33,8 +33,8 @@ def test_args():
 
     name = str(uuid.uuid4())
     res = requests.post(
-      '{}/hello_http'.format(BASE_URL),
+      f'{BASE_URL}/hello_http',
       json={'name': name}
     )
-    assert res.text == 'Hello, {}!'.format(name)
+    assert res.text == f'Hello, {name}!'
 # [END functions_http_system_test]

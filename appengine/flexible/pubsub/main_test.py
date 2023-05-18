@@ -45,7 +45,7 @@ def test_push_endpoint(client):
         data=json.dumps({
             "message": {
                 "data": base64.b64encode(
-                    u'Test message'.encode('utf-8')
+                    b'Test message'
                 ).decode('utf-8')
             }
         })

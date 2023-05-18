@@ -15,6 +15,8 @@
 This script is used to generate the full code samples inside the `snippets`
 directory, to be then used in Google Compute Engine public documentation.
 """
+from __future__ import annotations
+
 import argparse
 import ast
 from collections import defaultdict
@@ -25,7 +27,6 @@ import os
 from pathlib import Path
 import re
 import subprocess
-from typing import List, Tuple
 import warnings
 
 import isort
@@ -73,8 +74,8 @@ class Ingredient:
     text that will be pasted into the snippet.
     """
 
-    simple_imports: List[ImportItem] = field(default_factory=list)
-    imports_from: List[Tuple[str, ImportItem]] = field(default_factory=list)
+    simple_imports: list[ImportItem] = field(default_factory=list)
+    imports_from: list[tuple[str, ImportItem]] = field(default_factory=list)
     text: str = ""
     name: str = ""
 
@@ -94,7 +95,7 @@ IGNORED_OUTPUT_FILES = (
 )
 
 
-def parse_imports(script: str) -> Tuple[List[ImportItem], List[Tuple[str, ImportItem]]]:
+def parse_imports(script: str) -> tuple[list[ImportItem], list[tuple[str, ImportItem]]]:
     """
     Reads a Python script file and analyzes it to extract information
     about the various things it imports. Returns a pair of lists containing

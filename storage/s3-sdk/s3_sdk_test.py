@@ -68,25 +68,21 @@ def test_blob(test_bucket):
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_buckets(capsys, hmac_fixture, test_bucket):
-    list_gcs_buckets.list_gcs_buckets(
+def test_list_buckets(hmac_fixture, test_bucket):
+    results = list_gcs_buckets.list_gcs_buckets(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
     )
-    out, _ = capsys.readouterr()
-    assert "Buckets:" in out
-    assert test_bucket.name in out
+    assert test_bucket.name in results
 
 
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_blobs(capsys, hmac_fixture, test_bucket, test_blob):
-    list_gcs_objects.list_gcs_objects(
+def test_list_blobs(hmac_fixture, test_bucket, test_blob):
+    result = list_gcs_objects.list_gcs_objects(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
         bucket_name=test_bucket.name,
     )
-    out, _ = capsys.readouterr()
-    assert "Objects:" in out
-    assert test_blob.name in out
+    assert test_blob.name in result
