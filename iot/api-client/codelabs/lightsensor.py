@@ -61,7 +61,7 @@ def make_message(device_id, action, data=''):
         return '{{ "device" : "{}", "action":"{}", "data" : "{}" }}'.format(
                 device_id, action, data)
     else:
-        return '{{ "device" : "{}", "action":"{}" }}'.format(device_id, action)
+        return f'{{ "device" : "{device_id}", "action":"{action}" }}'
 
 
 def run_action(sock, device_id, action, data=''):
@@ -70,7 +70,7 @@ def run_action(sock, device_id, action, data=''):
     message = make_message(device_id, action, data)
     if not message:
         return
-    print('Send message: {}'.format(message))
+    print(f'Send message: {message}')
     send_command(sock, message.encode(), True)
 
 
@@ -81,14 +81,14 @@ def detect_light(device_id, sock):
     # Simulate minor light changes in an environment.
     LightSensor.lux += random.uniform(-10, 10)
 
-    lux = "{:.3f}".format(LightSensor.lux)
+    lux = f"{LightSensor.lux:.3f}"
 
     sys.stdout.write(
-            '\r>> ' + bcolors.CGREEN + bcolors.CBOLD + 'Lux: {}'.format(lux) +
+            '\r>> ' + bcolors.CGREEN + bcolors.CBOLD + f'Lux: {lux}' +
             bcolors.ENDC + ' <<')
     sys.stdout.flush()
 
-    message = make_message(device_id, 'event', 'lux={}'.format(lux)).encode()
+    message = make_message(device_id, 'event', f'lux={lux}').encode()
 
     send_command(sock, message, False)
     time.sleep(LightSensor.interval)
@@ -140,7 +140,7 @@ def main():
     if not device_id:
         sys.exit('The device id must be specified.')
 
-    print('Bringing up device {}'.format(device_id))
+    print(f'Bringing up device {device_id}')
 
     try:
         run_action(sock, device_id, 'detach')
@@ -159,7 +159,7 @@ def main():
             # Try to read message from the socket.
             try:
                 data = sock.recv(BUFF_SIZE)
-            except socket.error as e:
+            except OSError as e:
                 err = e.args[0]
 
                 # If there is no data from the socket, just report the lux

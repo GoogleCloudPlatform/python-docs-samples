@@ -42,7 +42,7 @@ def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
 
     # Display the translation for each input text provided
     for translation in response.translations:
-        print("Translated text: {}".format(translation.translated_text))
+        print(f"Translated text: {translation.translated_text}")
 
 
 # [END translate_v3_translate_text]

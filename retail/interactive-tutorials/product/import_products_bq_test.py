@@ -15,6 +15,8 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from setup_product.setup_cleanup import (
     create_bq_dataset,
     create_bq_table,
@@ -23,6 +25,7 @@ from setup_product.setup_cleanup import (
 )
 
 
+@Retry()
 def test_import_products_bq(table_id_prefix):
     dataset = "products"
     valid_products_table = f"{table_id_prefix}products"

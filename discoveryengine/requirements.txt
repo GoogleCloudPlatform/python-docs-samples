@@ -1,0 +1,2 @@
+google-cloud-discoveryengine==0.7.0
+google-api-core==2.11.0

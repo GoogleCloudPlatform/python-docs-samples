@@ -15,7 +15,7 @@
 - getCurrentTime:
     call: http.get
     args:
-      url: https://us-central1-workflowsample.cloudfunctions.net/datetime
+      url: https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam
     result: currentTime
 - readWikipedia:
     call: http.get
@@ -23,7 +23,7 @@
       url: https://en.wikipedia.org/w/api.php
       query:
         action: opensearch
-        search: ${currentTime.body.dayOfTheWeek}
+        search: ${currentTime.body.dayOfWeek}
     result: wikiResult
 - returnResult:
     return: ${wikiResult.body[1]}

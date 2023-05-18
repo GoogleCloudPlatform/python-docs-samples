@@ -43,5 +43,5 @@ def create_import_job(project_id, location_id, key_ring_id, import_job_id):
     # Call the client to create a new import job.
     import_job = client.create_import_job({"parent": key_ring_name, "import_job_id": import_job_id, "import_job": import_job_params})
 
-    print('Created import job: {}'.format(import_job.name))
+    print(f'Created import job: {import_job.name}')
 # [END kms_create_import_job]

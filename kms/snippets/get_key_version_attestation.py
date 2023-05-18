@@ -51,6 +51,6 @@ def get_key_version_attestation(project_id, location_id, key_ring_id, key_id, ve
         raise 'no attestation - attestations only exist on HSM keys'
 
     encoded_attestation = base64.b64encode(attestation.content)
-    print('Got key attestation: {}'.format(encoded_attestation))
+    print(f'Got key attestation: {encoded_attestation}')
     return attestation
 # [END kms_get_key_version_attestation]

@@ -1,2 +1,2 @@
 functions-framework==3.3.0
-redis==4.5.4
+redis==4.5.5

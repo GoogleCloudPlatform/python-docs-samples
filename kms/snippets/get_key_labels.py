@@ -42,7 +42,7 @@ def get_key_labels(project_id, location_id, key_ring_id, key_id):
 
     # Example of iterating over labels.
     for k, v in key.labels.items():
-        print('{} = {}'.format(k, v))
+        print(f'{k} = {v}')
 
     return key
 # [END kms_get_key_labels]

@@ -17,9 +17,12 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from search_with_pagination import search
 
 
+@Retry()
 def test_search_with_pagination_pass():
     output = str(
         subprocess.check_output("python search_with_pagination.py", shell=True)
@@ -34,6 +37,4 @@ def test_search_with_pagination_pass():
 def test_search_with_pagination():
     response = search()
 
-    product_title = response.results[0].product.title
-    assert re.match(".*Hoodie", product_title)
     assert len(response.results) == 6

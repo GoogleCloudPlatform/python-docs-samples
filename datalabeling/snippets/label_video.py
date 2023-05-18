@@ -58,7 +58,7 @@ def label_video(
         }
     )
 
-    print("Label_video operation name: {}".format(response.operation.name))
+    print(f"Label_video operation name: {response.operation.name}")
     return response
 
 

@@ -220,7 +220,7 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
                  oslogin=oslogin_client)
 
         out, _ = capsys.readouterr()
-        assert_value = 'Linux {test_id}'.format(test_id=TEST_ID)
+        assert_value = f'Linux {TEST_ID}'
         assert assert_value in out
     except (AssertionError, subprocess.TimeoutExpired) as err:
         fw_client = compute_v1.FirewallsClient()

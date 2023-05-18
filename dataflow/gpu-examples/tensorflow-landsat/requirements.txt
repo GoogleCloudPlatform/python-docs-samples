@@ -1,4 +1,4 @@
-pillow==9.5.0
-apache-beam[gcp]==2.35.0
+Pillow==9.5.0
+apache-beam[gcp]==2.46.0
 rasterio==1.3.6
-tensorflow==2.9.3
+tensorflow==2.12.0  # Check TensorFlow/CUDA compatibility with Dockerfile: https://www.tensorflow.org/install/source#gpu

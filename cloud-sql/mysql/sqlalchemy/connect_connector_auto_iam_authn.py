@@ -32,7 +32,7 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
     instance_connection_name = os.environ["INSTANCE_CONNECTION_NAME"]  # e.g. 'project:region:instance'
-    db_iam_user = os.environ["DB_IAM_USER"]  # e.g. 'sa-name@project-id.iam'
+    db_iam_user = os.environ["DB_IAM_USER"]  # e.g. 'service-account-name'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC

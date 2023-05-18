@@ -26,7 +26,7 @@ def get_operation_status(operation_full_id):
     # Get the latest state of a long-running operation.
     response = client._transport.operations_client.get_operation(operation_full_id)
 
-    print("Name: {}".format(response.name))
+    print(f"Name: {response.name}")
     print("Operation details:")
     print(response)
     # [END automl_get_operation_status]

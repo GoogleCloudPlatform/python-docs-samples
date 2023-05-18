@@ -27,7 +27,7 @@ TEST_UUID = uuid.uuid4()
 BUCKET = f"optimization-ai-{TEST_UUID}"
 OUTPUT_PREFIX = f"code_snippets_test_output_{TEST_UUID}"
 INPUT_URI = "gs://cloud-samples-data/optimization-ai/async_request_model.json"
-BATCH_OUTPUT_URI_PREFIX = "gs://{}/{}/".format(BUCKET, OUTPUT_PREFIX)
+BATCH_OUTPUT_URI_PREFIX = f"gs://{BUCKET}/{OUTPUT_PREFIX}/"
 
 
 @pytest.fixture(autouse=True)

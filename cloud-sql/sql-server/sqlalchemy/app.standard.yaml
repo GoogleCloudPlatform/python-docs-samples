@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python37
+runtime: python310
 entrypoint: gunicorn -b :$PORT app:app
 
 # Note: Saving credentials in environment variables is convenient, but not
@@ -20,7 +20,7 @@ entrypoint: gunicorn -b :$PORT app:app
 # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
 # keep secrets safe.
 env_variables:
-  INSTANCE_CONNECTION_NAME: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>
+  INSTANCE_CONNECTION_NAME: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>
   DB_USER: <YOUR_DB_USER_NAME>
   DB_PASS: <YOUR_DB_PASSWORD>
   DB_NAME: <YOUR_DB_NAME>

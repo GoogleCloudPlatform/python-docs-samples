@@ -81,7 +81,7 @@ def quickstart(project_id, region, cluster_name, job_file_path):
         storage.Client()
         .get_bucket(matches.group(1))
         .blob(f"{matches.group(2)}.000000000")
-        .download_as_string()
+        .download_as_bytes().decode("utf-8")
     )
 
     print(f"Job finished successfully: {output}")

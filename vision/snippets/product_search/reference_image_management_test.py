@@ -27,7 +27,7 @@ LOCATION = 'us-west1'
 
 PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
 PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'test_{}'.format(uuid.uuid4())
+PRODUCT_ID = f'test_{uuid.uuid4()}'
 
 REFERENCE_IMAGE_ID = 'fake_reference_image_id_for_testing'
 GCS_URI = 'gs://cloud-samples-data/vision/product_search/shoes_1.jpg'

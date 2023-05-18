@@ -48,6 +48,6 @@ def enable_key_version(project_id, location_id, key_ring_id, key_id, version_id)
 
     # Call the API.
     enabled_version = client.update_crypto_key_version(request={'crypto_key_version': key_version, 'update_mask': update_mask})
-    print('Enabled key version: {}'.format(enabled_version.name))
+    print(f'Enabled key version: {enabled_version.name}')
     return enabled_version
 # [END kms_enable_key_version]

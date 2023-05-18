@@ -34,7 +34,7 @@ def update_feed(feed_name, topic):
     # In this example, we update topic of the feed
     update_mask.paths.append("feed_output_config.pubsub_destination.topic")
     response = client.update_feed(request={"feed": feed, "update_mask": update_mask})
-    print("updated_feed: {}".format(response))
+    print(f"updated_feed: {response}")
     # [END asset_quickstart_update_feed]
 
 

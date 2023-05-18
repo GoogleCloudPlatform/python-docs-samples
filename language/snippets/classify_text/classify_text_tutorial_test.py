@@ -36,7 +36,7 @@ def index_file(tmpdir_factory):
 
 
 def test_classify(capsys):
-    with open(os.path.join(RESOURCES, "query_text1.txt"), "r") as f:
+    with open(os.path.join(RESOURCES, "query_text1.txt")) as f:
         text = f.read()
     classify_text_tutorial.classify(text)
     out, err = capsys.readouterr()

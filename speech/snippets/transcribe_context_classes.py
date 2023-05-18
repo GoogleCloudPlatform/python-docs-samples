@@ -44,6 +44,6 @@ def transcribe_context_classes(storage_uri):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
     # [END speech_context_classes]

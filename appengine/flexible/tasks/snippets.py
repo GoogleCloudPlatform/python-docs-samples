@@ -101,7 +101,7 @@ def create_task(project, location, queue):
 
     response = client.create_task(parent=parent, task=task)
     eta = response.schedule_time.strftime("%m/%d/%Y, %H:%M:%S")
-    print('Task {} enqueued, ETA {}.'.format(response.name, eta))
+    print(f'Task {response.name} enqueued, ETA {eta}.')
     # [END cloud_tasks_taskqueues_new_task]
     return response
 

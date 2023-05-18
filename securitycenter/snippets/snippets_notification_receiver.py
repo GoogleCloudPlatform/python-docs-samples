@@ -39,7 +39,7 @@ def receive_notifications(project_id, subscription_name):
                 notification_msg.notification_config_name
             )
         )
-        print("Finding: {}".format(notification_msg.finding))
+        print(f"Finding: {notification_msg.finding}")
 
         # Ack the message to prevent it from being pulled again
         message.ack()
@@ -49,7 +49,7 @@ def receive_notifications(project_id, subscription_name):
 
     streaming_pull_future = subscriber.subscribe(subscription_path, callback=callback)
 
-    print("Listening for messages on {}...\n".format(subscription_path))
+    print(f"Listening for messages on {subscription_path}...\n")
     try:
         streaming_pull_future.result(timeout=1)  # Block for 1 second
     except concurrent.futures.TimeoutError:

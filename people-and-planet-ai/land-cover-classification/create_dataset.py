@@ -26,7 +26,6 @@ The land cover labels for the training dataset come from the ESA WorldCover.
 from __future__ import annotations
 
 from collections.abc import Iterable
-from typing import List, Optional
 
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
@@ -152,7 +151,7 @@ def run_tensorflow(
     patch_size: int = PATCH_SIZE,
     max_requests: int = MAX_REQUESTS,
     polygons: list[list[tuple[float, float]]] = WORLD_POLYGONS,
-    beam_args: Optional[List[str]] = None,
+    beam_args: list[str] | None = None,
 ) -> None:
     """Runs an Apache Beam pipeline to create a dataset.
 

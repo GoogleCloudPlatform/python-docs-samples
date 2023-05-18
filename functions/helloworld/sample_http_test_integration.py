@@ -51,7 +51,7 @@ def test_args():
       BASE_URL,
       json={'name': name}
     )
-    assert res.text == 'Hello {}!'.format(name)
+    assert res.text == f'Hello {name}!'
 
     # Stop the functions framework process
     process.kill()

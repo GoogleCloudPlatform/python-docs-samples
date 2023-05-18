@@ -61,7 +61,7 @@ def encrypt_symmetric(project_id, location_id, key_ring_id, key_id, plaintext):
         raise Exception('The response received from the server was corrupted in-transit.')
     # End integrity verification
 
-    print('Ciphertext: {}'.format(base64.b64encode(encrypt_response.ciphertext)))
+    print(f'Ciphertext: {base64.b64encode(encrypt_response.ciphertext)}')
     return encrypt_response
 
 

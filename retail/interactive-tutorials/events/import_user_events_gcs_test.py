@@ -15,10 +15,13 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from setup_events.setup_cleanup import create_bucket, delete_bucket, upload_blob
 from setup_events.update_user_events_json import update_events_timestamp
 
 
+@Retry()
 def test_import_events_gcs(bucket_name_prefix):
     # gcs buckets have a limit of 63 characters. Get the last 60 characters
     bucket_name = bucket_name_prefix[63:]

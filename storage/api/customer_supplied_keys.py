@@ -132,7 +132,7 @@ def rotate_key(bucket, obj, current_encryption_key, current_key_hash,
 
 
 def main(bucket, filename):
-    print('Uploading object gs://{}/{}'.format(bucket, filename))
+    print(f'Uploading object gs://{bucket}/{filename}')
     upload_object(bucket, filename, ENCRYPTION_KEY, KEY_HASH)
     print('Downloading it back')
     with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:

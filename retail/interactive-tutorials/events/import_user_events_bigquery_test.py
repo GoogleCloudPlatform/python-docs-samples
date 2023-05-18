@@ -15,6 +15,8 @@
 import re
 import subprocess
 
+from google.api_core.retry import Retry
+
 from setup_events.setup_cleanup import (
     create_bq_dataset,
     create_bq_table,
@@ -24,6 +26,7 @@ from setup_events.setup_cleanup import (
 from setup_events.update_user_events_json import update_events_timestamp
 
 
+@Retry()
 def test_import_products_bq(table_id_prefix):
     dataset = "user_events"
     valid_products_table = f"{table_id_prefix}events"

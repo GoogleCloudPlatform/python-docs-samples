@@ -45,6 +45,6 @@ def create_dataset(project_id, display_name):
     created_dataset = response.result()
 
     # Display the dataset information
-    print("Dataset name: {}".format(created_dataset.name))
+    print(f"Dataset name: {created_dataset.name}")
     print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
     # [END automl_language_sentiment_analysis_create_dataset]

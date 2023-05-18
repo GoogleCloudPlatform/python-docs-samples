@@ -21,6 +21,8 @@
 
 # [START compute_regional_disk_attach]
 # [START compute_disk_attach]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

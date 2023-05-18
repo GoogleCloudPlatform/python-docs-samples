@@ -18,9 +18,11 @@ command line application and sample code for creating a new secret.
 
 import argparse
 
+from google.cloud import secretmanager
+
 
 # [START secretmanager_create_secret]
-def create_secret(project_id, secret_id):
+def create_secret(project_id: str, secret_id: str) -> secretmanager.CreateSecretRequest:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
@@ -46,7 +48,7 @@ def create_secret(project_id, secret_id):
     )
 
     # Print the new secret name.
-    print("Created secret: {}".format(response.name))
+    print(f"Created secret: {response.name}")
     # [END secretmanager_create_secret]
 
     return response
