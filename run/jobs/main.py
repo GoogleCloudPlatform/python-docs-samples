@@ -56,8 +56,8 @@ def random_failure(rate):
     if rate < 0 or rate > 1:
         # Return without retrying the Job Task
         print(
-            f"Invalid FAIL_RATE env var value: {rate}. " +
-            "Must be a float between 0 and 1 inclusive."
+            f"Invalid FAIL_RATE env var value: {rate}. "
+            + "Must be a float between 0 and 1 inclusive."
         )
         return
 
@@ -71,8 +71,9 @@ if __name__ == "__main__":
     try:
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
-        message = f"Task #{TASK_INDEX}, " \
-                  + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
+        message = (
+            f"Task #{TASK_INDEX}, " + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
+        )
 
         print(json.dumps({"message": message, "severity": "ERROR"}))
         # [START cloudrun_jobs_exit_process]

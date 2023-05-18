@@ -46,7 +46,7 @@ def index():
 
 @app.route("/improved", methods=["GET"])
 def improved():
-    """Example route showing improved error logs and default values for 
+    """Example route showing improved error logs and default values for
     improved troubleshooting.
     """
     print("hello: received request.")

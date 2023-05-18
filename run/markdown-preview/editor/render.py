@@ -21,8 +21,8 @@ import google.oauth2.id_token
 
 
 def new_request(data):
-    """Creates a new HTTP request with IAM ID Token credential. 
-    
+    """Creates a new HTTP request with IAM ID Token credential.
+
     This token is automatically handled by private Cloud Run and Cloud Functions.
 
     Args:
@@ -43,5 +43,6 @@ def new_request(data):
 
     response = urllib.request.urlopen(req)
     return response.read()
+
 
 # [END cloudrun_secure_request]

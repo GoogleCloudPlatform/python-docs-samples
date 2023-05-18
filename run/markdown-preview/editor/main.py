@@ -46,6 +46,7 @@ def render_handler():
     except Exception as err:
         return f"Error rendering markdown: {err}", 500
 
+
 # [END cloudrun_secure_request_do]
 
 

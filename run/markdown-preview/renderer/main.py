@@ -29,7 +29,7 @@ def index():
     html = markdown.markdown(data)
 
     # Keep the paragraph tags
-    allowed_tags = list(bleach.sanitizer.ALLOWED_TAGS) + ['p']
+    allowed_tags = list(bleach.sanitizer.ALLOWED_TAGS) + ["p"]
     # Sanitize and return
     clean = bleach.clean(html, strip=True, tags=allowed_tags)
     return clean

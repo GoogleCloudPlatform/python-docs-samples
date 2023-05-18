@@ -31,7 +31,7 @@ def receive_authorized_get_request(request):
     Returns:
         The email from the request's Authorization header.
     """
-    
+
     """
     receive_authorized_get_request takes the "Authorization" header from a
     request, decodes it using the google-auth client library, and returns
@@ -39,7 +39,6 @@ def receive_authorized_get_request(request):
     """
     auth_header = request.headers.get("Authorization")
     if auth_header:
-
         # split the auth type and value from the header.
         auth_type, creds = auth_header.split(" ", 1)
 

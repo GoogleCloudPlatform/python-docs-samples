@@ -27,8 +27,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
-    """Receive and parse Pub/Sub messages containing Cloud Storage event data.
-    """
+    """Receive and parse Pub/Sub messages containing Cloud Storage event data."""
     envelope = request.get_json()
     if not envelope:
         msg = "no Pub/Sub message received"
@@ -73,7 +72,6 @@ def index():
             return ("", 500)
 
     return ("", 500)
-
 
     # [END cloudrun_imageproc_controller]
 
