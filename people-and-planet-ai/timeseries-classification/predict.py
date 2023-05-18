@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, List, Optional
+from __future__ import annotations
+
 
 import numpy as np
 import pandas as pd
@@ -21,10 +22,10 @@ from tensorflow import keras
 import data_utils
 import trainer
 
-model: Optional[keras.Model] = None
+model: keras.Model | None = None
 
 
-def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
+def predict(model: keras.Model, inputs: dict[str, np.ndarray]) -> pd.DataFrame:
     data = data_utils.with_fixed_time_steps(inputs)
 
     # Our model always expects a batch prediction, so we create a batch with
@@ -39,7 +40,7 @@ def predict(model: keras.Model, inputs: Dict[str, np.ndarray]) -> pd.DataFrame:
     return data[trainer.PADDING:].assign(is_fishing=predictions["is_fishing"][0])
 
 
-def run(model_dir: str, inputs: Dict[str, List[float]]) -> Dict[str, np.ndarray]:
+def run(model_dir: str, inputs: dict[str, list[float]]) -> dict[str, np.ndarray]:
     # Cache the model so it only has to be loaded once per runtime.
     global model
     if model is None:

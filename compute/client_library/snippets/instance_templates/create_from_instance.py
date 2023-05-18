@@ -20,6 +20,8 @@
 
 
 # [START compute_template_create_from_instance]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import datetime
 import logging
 import os
-from typing import Dict
 
 from flask import Flask, render_template, request, Response
 
@@ -92,7 +93,7 @@ def cast_vote() -> Response:
 
 
 # get_index_context gets data required for rendering HTML application
-def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
+def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
     votes = []
 
     with db.connect() as conn:
