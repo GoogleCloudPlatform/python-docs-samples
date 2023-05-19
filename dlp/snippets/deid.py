@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 
+from typing import List
+
 
 # [START dlp_deidentify_masking]
 def deidentify_with_mask(
