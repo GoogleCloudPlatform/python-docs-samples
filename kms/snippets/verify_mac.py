@@ -20,7 +20,7 @@ def verify_mac(
     location_id: str,
     key_ring_id: str,
     key_id: str,
-    version_id: str,    
+    version_id: str,
     data: str,
     signature: bytes,
 ) -> kms.MacVerifyResponse:

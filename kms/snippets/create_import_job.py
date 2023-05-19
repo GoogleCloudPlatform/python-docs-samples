@@ -13,6 +13,9 @@
 
 
 # [START kms_create_import_job]
+from google.cloud import kms
+
+
 def create_import_job(
     project_id: str, location_id: str, key_ring_id: str, import_job_id: str
 ) -> None:
@@ -25,9 +28,6 @@ def create_import_job(
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
         import_job_id (string): ID of the import job (e.g. 'my-import-job').
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

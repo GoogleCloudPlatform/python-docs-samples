@@ -29,7 +29,6 @@ def check_state_import_job(
         import_job_id (string): ID of the import job (e.g. 'my-import-job').
     """
 
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 

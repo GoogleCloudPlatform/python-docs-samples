@@ -50,7 +50,6 @@ def encrypt_asymmetric(
 
     """
 
-
     # Convert the plaintext to bytes.
     plaintext_bytes = plaintext.encode("utf-8")
 
