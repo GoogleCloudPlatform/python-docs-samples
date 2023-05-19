@@ -17,8 +17,7 @@
 import abc
 import os
 
-from typing import Dict
-from typing import List
+from typing import Dict, List
 
 from google.cloud import secretmanager
 
@@ -31,12 +30,12 @@ class CpixClient(abc.ABC):
         """Fetches encryption keys and prepares JSON content to be written to Secret Manager.
 
         Args:
-        media_id (string): Name for your asset, sometimes used by DRM providers to
-            show usage and reports.
-        key_ids (list[string]): List of IDs of any keys to fetch and prepare.
+            media_id (string): Name for your asset, sometimes used by DRM providers to
+                show usage and reports.
+            key_ids (list[string]): List of IDs of any keys to fetch and prepare.
 
         Returns:
-        Dictionary mapping key IDs to JSON-structured object containing key
+            Dictionary mapping key IDs to JSON-structured object containing key
             information to be written to Secret Manager.
         """
 
