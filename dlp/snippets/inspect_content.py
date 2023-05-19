@@ -1154,7 +1154,9 @@ def inspect_bigquery_table_with_sampling(
     # so that it can signal that it is done and the main thread can continue.
     job_done = threading.Event()
 
-    def callback(message):
+    def callback(
+        message: google.cloud.pubsub_v1.subscriber.message.Message
+    ) -> None:
         try:
             if message.attributes["DlpJobName"] == operation.name:
                 # This is the message we're looking for, so acknowledge it.
