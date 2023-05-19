@@ -984,6 +984,68 @@ def inspect_image_file_all_infotypes(
 # [END dlp_inspect_image_all_infotypes]
 
 
+# [START dlp_inspect_image_listed_infotypes]
+def inspect_image_file_listed_infotypes(
+    project: str,
+    filename: str,
+    info_types: List[str],
+    include_quote=True,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze strings in an image for
+    data matching the given infoTypes.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path of the image file to inspect.
+        info_types:  A list of strings representing infoTypes to look for.
+            A full list of info type categories can be fetched from the API.
+        include_quote: Boolean for whether to display a matching snippet of
+            the detected information in the results.
+    """
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": include_quote,
+    }
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": 'IMAGE', "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Info type: {}".format(finding.info_type.name))
+            if include_quote:
+                print("Quote: {}".format(finding.quote))
+            print("Likelihood: {} \n".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+# [END dlp_inspect_image_listed_infotypes]
+
+
 # [START dlp_inspect_gcs_with_sampling]
 def inspect_gcs_with_sampling(
     project: str,
@@ -1579,6 +1641,33 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_image_infotypes = subparsers.add_parser(
+        "image_listed_infotypes",
+        help="Inspect a local file with listed info types."
+    )
+    parser_image_infotypes.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_infotypes.add_argument(
+        "filename",
+        help="The path to the file to inspect."
+    )
+    parser_image_infotypes.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+    )
+    parser_image_infotypes.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+             "information in the results.",
+        default=True,
+    )
+
     parser_gcs_with_sampling = subparsers.add_parser(
         "gcs_with_sampling",
         help="Inspect files on Google Cloud Storage by limiting the "
@@ -1743,5 +1832,12 @@ if __name__ == "__main__":
         inspect_image_file_all_infotypes(
             args.project,
             args.filename,
+            include_quote=args.include_quote,
+        )
+    elif args.content == "image_listed_infotypes":
+        inspect_image_file_listed_infotypes(
+            args.project,
+            args.filename,
+            args.info_types,
             include_quote=args.include_quote,
         )

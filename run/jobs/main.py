@@ -31,6 +31,12 @@ FAIL_RATE = os.getenv("FAIL_RATE", 0)
 
 # Define main script
 def main(sleep_ms=0, fail_rate=0):
+    """Program that simulates work using the sleep method and random failures.
+
+    Args:
+        sleep_ms: number of milliseconds to sleep
+        fail_rate: rate of simulated errors
+    """
     print(f"Starting Task #{TASK_INDEX}, Attempt #{TASK_ATTEMPT}...")
     # Simulate work by waiting for a specific amount of time
     time.sleep(float(sleep_ms) / 1000)  # Convert to seconds
@@ -41,13 +47,17 @@ def main(sleep_ms=0, fail_rate=0):
     print(f"Completed Task #{TASK_INDEX}.")
 
 
-# Throw an error based on fail rate
 def random_failure(rate):
+    """Throws an error based on fail rate
+
+    Args:
+        rate: an integer between 0 and 1
+    """
     if rate < 0 or rate > 1:
         # Return without retrying the Job Task
         print(
-            f"Invalid FAIL_RATE env var value: {rate}. " +
-            "Must be a float between 0 and 1 inclusive."
+            f"Invalid FAIL_RATE env var value: {rate}. "
+            + "Must be a float between 0 and 1 inclusive."
         )
         return
 
@@ -61,8 +71,9 @@ if __name__ == "__main__":
     try:
         main(SLEEP_MS, FAIL_RATE)
     except Exception as err:
-        message = f"Task #{TASK_INDEX}, " \
-                  + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
+        message = (
+            f"Task #{TASK_INDEX}, " + f"Attempt #{TASK_ATTEMPT} failed: {str(err)}"
+        )
 
         print(json.dumps({"message": message, "severity": "ERROR"}))
         # [START cloudrun_jobs_exit_process]
