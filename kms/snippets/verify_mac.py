@@ -11,16 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_verify_mac]
 from google.cloud import kms
 
 
-# [START kms_verify_mac]
 def verify_mac(
     project_id: str,
     location_id: str,
     key_ring_id: str,
     key_id: str,
-    version_id: str,
+    version_id: str,    
     data: str,
     signature: bytes,
 ) -> kms.MacVerifyResponse:
@@ -39,9 +39,6 @@ def verify_mac(
     Returns:
         MacVerifyResponse: Success.
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

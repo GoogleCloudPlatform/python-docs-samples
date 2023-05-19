@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_iam_add_member]
+from google.cloud import kms
 from google.iam.v1 import policy_pb2 as iam_policy
 
 
-# [START kms_iam_add_member]
 def iam_add_member(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str
 ) -> iam_policy.Policy:
@@ -32,9 +33,6 @@ def iam_add_member(
         Policy: Updated Cloud IAM policy.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

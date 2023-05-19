@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_sign_mac]
 from google.cloud import kms
 
 
-# [START kms_sign_mac]
 def sign_mac(
     project_id: str,
     location_id: str,
@@ -37,9 +37,6 @@ def sign_mac(
     Returns:
         MacSignResponse: Signature.
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Import base64 for printing the ciphertext.
     import base64

@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from google.cloud import kms
-
-
 # [START kms_get_public_key_jwk]
+from google.cloud import kms
+from jwcrypto import jwk
+
+
 def get_public_key_jwk(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
 ) -> kms.PublicKey:
@@ -32,10 +33,6 @@ def get_public_key_jwk(
         PublicKey: Cloud KMS public key response.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
-    from jwcrypto import jwk
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
@@ -61,8 +58,8 @@ def get_public_key_jwk(
     # End integrity verification
 
     # Convert to JWK format.
-    jwk = jwk.JWK.from_pem(public_key.pem.encode())
-    return jwk.export(private_key=False)
+    jwk_key = jwk.JWK.from_pem(public_key.pem.encode())
+    return jwk_key.export(private_key=False)
 
 
 def crc32c(data: bytes) -> int:

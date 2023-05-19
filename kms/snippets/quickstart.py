@@ -15,16 +15,14 @@
 
 import argparse
 
-from google.cloud import kms_v1
-
-
 # [START kms_quickstart]
+from google.cloud import kms_v1
+from google.cloud import kms
+
+
 def quickstart(
     project_id: str, location_id: str
 ) -> kms_v1.services.key_management_service.pagers.ListKeyRingsPager:
-    # Import the client library.
-    from google.cloud import kms
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 

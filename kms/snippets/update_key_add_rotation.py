@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from google.cloud import kms
-
-
 # [START kms_update_key_add_rotation_schedule]
+from google.cloud import kms
+import time
+
 def update_key_add_rotation(
     project_id: str, location_id: str, key_ring_id: str, key_id: str
 ) -> kms.CryptoKey:
@@ -31,12 +31,6 @@ def update_key_add_rotation(
         CryptoKey: Updated Cloud KMS key.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import time for getting the current time.
-    import time
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

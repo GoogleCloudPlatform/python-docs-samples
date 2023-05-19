@@ -13,6 +13,21 @@
 
 
 # [START kms_verify_asymmetric_signature_rsa]
+
+# Import hashlib.
+import hashlib
+
+# Import cryptographic helpers from the cryptography package.
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.primitives.asymmetric import utils
+# Import the client library.
+from google.cloud import kms
+
+
 def verify_asymmetric_rsa(
     project_id: str,
     location_id: str,
@@ -38,18 +53,6 @@ def verify_asymmetric_rsa(
         bool: True if verified, False otherwise
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import cryptographic helpers from the cryptography package.
-    from cryptography.exceptions import InvalidSignature
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes, serialization
-    from cryptography.hazmat.primitives.asymmetric import padding, utils
-
-    # Import hashlib.
-    import hashlib
 
     # Convert the message to bytes.
     message_bytes = message.encode("utf-8")

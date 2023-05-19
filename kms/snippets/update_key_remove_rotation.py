@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_update_key_remove_rotation_schedule]
 from google.cloud import kms
 
 
-# [START kms_update_key_remove_rotation_schedule]
 def update_key_remove_rotation(
     project_id: str, location_id: str, key_ring_id: str, key_id: str
 ) -> kms.CryptoKey:
@@ -31,9 +31,6 @@ def update_key_remove_rotation(
         CryptoKey: Updated Cloud KMS key.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

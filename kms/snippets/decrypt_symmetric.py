@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_decrypt_symmetric]
 from google.cloud import kms
 
 
-# [START kms_decrypt_symmetric]
 def decrypt_symmetric(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, ciphertext: bytes
 ) -> kms.DecryptResponse:
@@ -32,9 +32,6 @@ def decrypt_symmetric(
         DecryptResponse: Response including plaintext.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

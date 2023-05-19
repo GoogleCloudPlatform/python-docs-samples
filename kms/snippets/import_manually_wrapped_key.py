@@ -13,6 +13,13 @@
 
 
 # [START kms_import_manually_wrapped_key]
+# Import the client library and Python standard cryptographic libraries.
+import os
+from cryptography.hazmat import backends
+from cryptography.hazmat.primitives import hashes, keywrap, serialization
+from cryptography.hazmat.primitives.asymmetric import ec, padding
+from google.cloud import kms
+
 def import_manually_wrapped_key(
     project_id: str,
     location_id: str,
@@ -30,13 +37,6 @@ def import_manually_wrapped_key(
         crypto_key_id (string): ID of the key to import (e.g. 'my-asymmetric-signing-key').
         import_job_id (string): ID of the import job (e.g. 'my-import-job').
     """
-
-    # Import the client library and Python standard cryptographic libraries.
-    import os
-    from cryptography.hazmat import backends
-    from cryptography.hazmat.primitives import hashes, keywrap, serialization
-    from cryptography.hazmat.primitives.asymmetric import ec, padding
-    from google.cloud import kms
 
     # Generate some key material in Python and format it in PKCS #8 DER as
     # required by Google Cloud KMS.

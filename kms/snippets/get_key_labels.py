@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_get_key_labels]
 from google.cloud import kms
 
 
-# [START kms_get_key_labels]
 def get_key_labels(
     project_id: str, location_id: str, key_ring_id: str, key_id: str
 ) -> kms.CryptoKey:
@@ -31,9 +31,6 @@ def get_key_labels(
         CryptoKey: Cloud KMS key.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

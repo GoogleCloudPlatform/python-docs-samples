@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START kms_get_public_key]
 from google.cloud import kms
 
 
-# [START kms_get_public_key]
 def get_public_key(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
 ) -> kms.PublicKey:
@@ -32,9 +32,6 @@ def get_public_key(
         PublicKey: Cloud KMS public key response.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
