@@ -45,7 +45,7 @@ def test_event(test_topic, test_registry_id, test_device_id, capsys):  # noqa
     )
 
     sub_topic = "events"
-    mqtt_topic = "/devices/{}/{}".format(test_device_id, sub_topic)
+    mqtt_topic = f"/devices/{test_device_id}/{sub_topic}"
 
     client = cloudiot_mqtt_example.get_client(
         project_id,
@@ -78,7 +78,7 @@ def test_state(test_topic, test_registry_id, test_device_id, capsys):  # noqa
     )
 
     sub_topic = "state"
-    mqtt_topic = "/devices/{}/{}".format(test_device_id, sub_topic)
+    mqtt_topic = f"/devices/{test_device_id}/{sub_topic}"
 
     client = cloudiot_mqtt_example.get_client(
         project_id,
@@ -135,7 +135,7 @@ def test_config(test_topic, test_registry_id, test_device_id, capsys):  # noqa
 
     out, _ = capsys.readouterr()
     assert "Received message" in out
-    assert "/devices/{}/config".format(test_device_id) in out
+    assert f"/devices/{test_device_id}/config" in out
 
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)

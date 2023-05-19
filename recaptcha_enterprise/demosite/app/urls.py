@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from __future__ import annotations
+
 import configparser
 import enum
 import json
 import os
-from typing import Tuple
 
 from flask import jsonify, render_template, request, Response
 from google.cloud.recaptchaenterprise_v1 import Assessment
@@ -288,7 +289,7 @@ def on_comment_submit() -> Response:
 
 
 # Classify the action as BAD/ NOT_BAD based on conditions specified.
-def check_for_bad_action(assessment_response: Assessment, recaptcha_action: str) -> Tuple[str, str]:
+def check_for_bad_action(assessment_response: Assessment, recaptcha_action: str) -> tuple[str, str]:
     reason = ""
     label = Label.NOT_BAD.value
 

@@ -94,7 +94,7 @@ def delete_consent_store(
     )
 
     response = request.execute()
-    print("Deleted consent store: {}".format(consent_store_id))
+    print(f"Deleted consent store: {consent_store_id}")
     return response
 
 

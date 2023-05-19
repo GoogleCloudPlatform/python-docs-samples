@@ -20,6 +20,8 @@
 
 
 # [START compute_regional_disk_delete]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

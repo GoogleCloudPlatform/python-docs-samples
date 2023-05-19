@@ -21,8 +21,11 @@
 
 
 # [START compute_snapshot_delete_by_filter]
+from __future__ import annotations
+
+from collections.abc import Iterable
 import sys
-from typing import Any, Iterable
+from typing import Any
 
 from google.api_core.extended_operation import ExtendedOperation
 from google.cloud import compute_v1

@@ -35,5 +35,5 @@ with airflow.DAG(
         default_args=default_args) as dag:
     t1 = bash_operator.BashOperator(
         task_id='print_coin_result',
-        bash_command='echo "{0}"'.format(coin_module.flip_coin()),
+        bash_command=f'echo "{coin_module.flip_coin()}"',
         dag=dag)

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_pubsub_server_setup]
 # [START cloudrun_pubsub_server]
 import base64
 
@@ -21,7 +20,6 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
-# [END cloudrun_pubsub_server_setup]
 # [END cloudrun_pubsub_server]
 
 

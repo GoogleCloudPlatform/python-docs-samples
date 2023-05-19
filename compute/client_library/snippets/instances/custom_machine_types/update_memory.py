@@ -20,6 +20,8 @@
 
 
 # [START compute_custom_machine_type_update_memory]
+from __future__ import annotations
+
 import sys
 import time
 from typing import Any

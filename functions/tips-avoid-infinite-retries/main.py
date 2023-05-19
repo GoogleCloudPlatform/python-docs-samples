@@ -39,10 +39,10 @@ def avoid_infinite_retries(data, context):
     # Ignore events that are too old
     max_age_ms = 10000
     if event_age_ms > max_age_ms:
-        print('Dropped {} (age {}ms)'.format(context.event_id, event_age_ms))
+        print(f'Dropped {context.event_id} (age {event_age_ms}ms)')
         return 'Timeout'
 
     # Do what the function is supposed to do
-    print('Processed {} (age {}ms)'.format(context.event_id, event_age_ms))
+    print(f'Processed {context.event_id} (age {event_age_ms}ms)')
     return  # To retry the execution, raise an exception here
 # [END functions_tips_infinite_retries]

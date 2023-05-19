@@ -18,7 +18,10 @@ import vertexai
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def list_tuned_models(project_id, location):
+def list_tuned_models(
+        project_id: str,
+        location: str,
+) -> None:
     """List tuned models."""
     vertexai.init(project=project_id, location=location)
     model = TextGenerationModel.from_pretrained("text-bison@001")

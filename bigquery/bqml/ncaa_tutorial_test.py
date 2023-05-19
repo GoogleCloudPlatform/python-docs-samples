@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
 import os
 import uuid
 
@@ -26,8 +25,8 @@ client = bigquery.Client()
 # We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
-dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
-full_dataset_id = "{}.{}".format(client.project, dataset_id)
+dataset_id = f"bqml_tutorial_{str(uuid.uuid4().hex)}"
+full_dataset_id = f"{client.project}.{dataset_id}"
 # [END bqml_ncaa_tutorial_import_and_client]
 
 
@@ -53,7 +52,7 @@ def test_ncaa_tutorial(delete_dataset):
     for fname in query_files:
         query_filepath = os.path.join(
             resources_directory, fname)
-        sql = io.open(query_filepath, 'r', encoding='utf-8').read().format(dataset_id)
+        sql = open(query_filepath, encoding='utf-8').read().format(dataset_id)
         client.query(sql).result()
 
     # [START bqml_ncaa_tutorial_create_model]

@@ -42,7 +42,7 @@ def bucket_object(storage_client):
 
 @pytest.fixture(scope='module')
 def uploaded_file(bucket_object):
-    name = 'test-{}.txt'.format(str(uuid.uuid4()))
+    name = f'test-{str(uuid.uuid4())}.txt'
     blob = bucket_object.blob(name)
 
     test_dir = path.dirname(path.abspath(__file__))

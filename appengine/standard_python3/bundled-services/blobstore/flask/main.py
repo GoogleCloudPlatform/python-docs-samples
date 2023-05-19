@@ -71,7 +71,7 @@ def upload():
 
     response = """
   <html><body>
-  <form action="{0}" method="POST" enctype="multipart/form-data">
+  <form action="{}" method="POST" enctype="multipart/form-data">
     Upload File: <input type="file" name="file"><br>
     <input type="submit" name="submit" value="Submit Now">
   </form>

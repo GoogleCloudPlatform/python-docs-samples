@@ -97,7 +97,7 @@ def test_push_endpoint(monkeypatch, client, fake_token):
         data=json.dumps({
             "message": {
                 "data": base64.b64encode(
-                    u'Test message'.encode('utf-8')
+                    b'Test message'
                 ).decode('utf-8')
             }
         }),
