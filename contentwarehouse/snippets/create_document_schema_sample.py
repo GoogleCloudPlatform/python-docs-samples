@@ -23,10 +23,7 @@ from google.cloud import contentwarehouse
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 
 
-def sample_create_document_schema(
-    project_number: str,
-    location: str
-) -> None:
+def sample_create_document_schema(project_number: str, location: str) -> None:
     """Creates document schema.
 
     Args:
@@ -51,19 +48,15 @@ def sample_create_document_schema(
     request = contentwarehouse.CreateDocumentSchemaRequest(
         # The full resource name of the location, e.g.:
         # projects/{project_number}/locations/{location}/
-        parent=document_schema_client.common_location_path(
-        project_number,
-        location),
+        parent=document_schema_client.common_location_path(project_number, location),
         document_schema=document_schema,
     )
 
     # Make the request
-    response = document_schema_client.create_document_schema(
-        request=request
-    )
+    response = document_schema_client.create_document_schema(request=request)
 
     # Print response
-    print("Document Schema Created:",response)
+    print("Document Schema Created:", response)
 
 
 # [END contentwarehouse_create_document_schema]

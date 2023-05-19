@@ -31,7 +31,8 @@ def test_get_document_schema(capsys: pytest.CaptureFixture) -> None:
     get_document_schema_sample.sample_get_document_schema(
         project_number=project_number,
         location=location,
-        document_schema_id=document_schema_id)
+        document_schema_id=document_schema_id,
+    )
 
     out, _ = capsys.readouterr()
 

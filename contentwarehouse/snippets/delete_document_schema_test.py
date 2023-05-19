@@ -31,7 +31,8 @@ def test_delete_document_schema(capsys: pytest.CaptureFixture) -> None:
     delete_document_schema_sample.sample_delete_document_schema(
         project_number=project_number,
         location=location,
-        document_schema_id=document_schema_id)
+        document_schema_id=document_schema_id,
+    )
 
     out, _ = capsys.readouterr()
 

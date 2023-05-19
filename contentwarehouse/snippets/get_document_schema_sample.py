@@ -25,9 +25,7 @@ from google.cloud import contentwarehouse
 
 
 def sample_get_document_schema(
-    project_number: str,
-    location: str,
-    document_schema_id: str
+    project_number: str, location: str, document_schema_id: str
 ) -> None:
     """Gets document schema details.
 
@@ -53,12 +51,10 @@ def sample_get_document_schema(
     )
 
     # Make the request
-    response = document_schema_client.get_document_schema(
-        request=request
-    )
+    response = document_schema_client.get_document_schema(request=request)
 
     # Handle the response
-    print("Document Schema:",response)
+    print("Document Schema:", response)
 
 
 # [END contentwarehouse_get_document_schema]

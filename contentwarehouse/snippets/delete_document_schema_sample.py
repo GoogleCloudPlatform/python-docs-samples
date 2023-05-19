@@ -25,9 +25,7 @@ from google.cloud import contentwarehouse
 
 
 def sample_delete_document_schema(
-    project_number: str,
-    location: str,
-    document_schema_id: str
+    project_number: str, location: str, document_schema_id: str
 ) -> None:
     """Deletes document schema.
 
@@ -53,11 +51,10 @@ def sample_delete_document_schema(
     )
 
     # Make the request
-    response = document_schema_client.delete_document_schema(
-        request=request
-    )
+    response = document_schema_client.delete_document_schema(request=request)
 
     # Print response
-    print("Document Schema Deleted:",response)
+    print("Document Schema Deleted:", response)
+
 
 # [END contentwarehouse_delete_document_schema]

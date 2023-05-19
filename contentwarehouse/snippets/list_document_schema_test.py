@@ -28,8 +28,8 @@ def test_list_document_schemas(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
     list_document_schema_sample.sample_list_document_schemas(
-        project_number=project_number,
-        location=location)
+        project_number=project_number, location=location
+    )
 
     out, _ = capsys.readouterr()
 

@@ -28,8 +28,8 @@ def test_create_document_schema(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
     create_document_schema_sample.sample_create_document_schema(
-        project_number=project_number,
-        location=location)
+        project_number=project_number, location=location
+    )
 
     out, _ = capsys.readouterr()
 

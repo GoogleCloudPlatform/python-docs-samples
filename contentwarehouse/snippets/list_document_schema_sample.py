@@ -23,12 +23,9 @@ from google.cloud import contentwarehouse
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 
 
-def sample_list_document_schemas(
-    project_number: str,
-    location: str
-) -> None:
+def sample_list_document_schemas(project_number: str, location: str) -> None:
     """Lists document schemas.
-    
+
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
@@ -39,8 +36,7 @@ def sample_list_document_schemas(
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
     parent = document_schema_client.common_location_path(
-        project=project_number,
-        location=location
+        project=project_number, location=location
     )
 
     # Initialize request argument(s)
