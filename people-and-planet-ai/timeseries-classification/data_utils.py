@@ -13,10 +13,12 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
+from collections.abc import Iterable
 from datetime import datetime, timedelta
 import os
 import time
-from typing import Dict, Iterable
 
 import numpy as np
 import pandas as pd
@@ -34,7 +36,7 @@ def to_unix_time(timestamp: datetime) -> int:
     return time.mktime(timestamp.timetuple())
 
 
-def with_fixed_time_steps(input_data: Dict[str, np.ndarray]) -> pd.DataFrame:
+def with_fixed_time_steps(input_data: dict[str, np.ndarray]) -> pd.DataFrame:
     return (
         pd.DataFrame(input_data)
         .assign(timestamp=lambda df: df["timestamp"].map(datetime.utcfromtimestamp))
@@ -86,7 +88,7 @@ def label_data(data: pd.DataFrame, labels: pd.DataFrame) -> pd.DataFrame:
     )
 
 
-def generate_training_points(data: pd.DataFrame) -> Iterable[Dict[str, np.ndarray]]:
+def generate_training_points(data: pd.DataFrame) -> Iterable[dict[str, np.ndarray]]:
     # Pandas assigns NaN (Not-a-Number) if a value is missing.
     # If is_fishing equals itself it means it's populated because (NaN != NaN).
     # For the training data points, we only get points where we have a label.

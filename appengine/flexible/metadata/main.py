@@ -50,7 +50,7 @@ def index():
     # Websocket connections must be made directly to this instance, so the
     # external IP address of this instance is needed.
     external_ip = get_external_ip()
-    return 'External IP: {}'.format(external_ip)
+    return f'External IP: {external_ip}'
 
 
 @app.errorhandler(500)

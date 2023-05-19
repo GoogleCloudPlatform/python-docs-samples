@@ -27,6 +27,6 @@ interview_expected_response = '''1. What is your experience with project managem
 10. What questions do you have for me?'''
 
 
-def test_interview():
+def test_interview() -> None:
     content = ideation.interview(temperature=0).text
     assert content == interview_expected_response

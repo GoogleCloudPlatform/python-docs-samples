@@ -76,7 +76,7 @@ class WriteToGCS(DoFn):
 
         with io.gcsio.GcsIO().open(filename=filename, mode="w") as f:
             for message_body, publish_time in batch:
-                f.write(f"{message_body},{publish_time}\n".encode("utf-8"))
+                f.write(f"{message_body},{publish_time}\n".encode())
 
 
 def run(input_topic, output_path, window_size=1.0, num_shards=5, pipeline_args=None):

@@ -57,6 +57,6 @@ def lazy_globals(request):
     if not lazy_global:
         lazy_global = function_specific_computation()
 
-    return 'Lazy: {}, non-lazy: {}.'.format(lazy_global, non_lazy_global)
+    return f'Lazy: {lazy_global}, non-lazy: {non_lazy_global}.'
 # [END cloudrun_tips_global_lazy]
 # [END functions_tips_lazy_globals]

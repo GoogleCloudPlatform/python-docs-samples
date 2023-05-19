@@ -18,23 +18,22 @@ from os import environ
 import uuid
 
 import backoff
-from google.api_core.exceptions import (InternalServerError, NotFound,
-                                        ServiceUnavailable)
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 from google.cloud import servicedirectory_v1
 
 import quickstart
 import snippets
 
-PROJECT_ID = environ['GOOGLE_CLOUD_PROJECT']
-LOCATION_ID = 'us-east1'
-NAMESPACE_ID = f'test-namespace-{uuid.uuid4().hex}'
-SERVICE_ID = f'test-service-{uuid.uuid4().hex}'
-ENDPOINT_ID = f'test-endpoint-{uuid.uuid4().hex}'
-ADDRESS = '1.2.3.4'
+PROJECT_ID = environ["GOOGLE_CLOUD_PROJECT"]
+LOCATION_ID = "us-east1"
+NAMESPACE_ID = f"test-namespace-{uuid.uuid4().hex}"
+SERVICE_ID = f"test-service-{uuid.uuid4().hex}"
+ENDPOINT_ID = f"test-endpoint-{uuid.uuid4().hex}"
+ADDRESS = "1.2.3.4"
 PORT = 443
 
 
-def teardown_module():
+def teardown_module() -> None:
     client = servicedirectory_v1.RegistrationServiceClient()
     namespace_name = client.namespace_path(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
     all_namespaces = quickstart.list_namespaces(PROJECT_ID, LOCATION_ID).namespaces
@@ -49,58 +48,70 @@ def teardown_module():
             break
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_create_namespace():
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_create_namespace() -> None:
     response = snippets.create_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
 
     assert NAMESPACE_ID in response.name
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_create_service():
-    response = snippets.create_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
-                                       SERVICE_ID)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_create_service() -> None:
+    response = snippets.create_service(
+        PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID
+    )
 
     assert SERVICE_ID in response.name
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_create_endpoint():
-    response = snippets.create_endpoint(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
-                                        SERVICE_ID, ENDPOINT_ID, ADDRESS, PORT)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_create_endpoint() -> None:
+    response = snippets.create_endpoint(
+        PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID, ENDPOINT_ID, ADDRESS, PORT
+    )
 
     assert ENDPOINT_ID in response.name
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_resolve_service():
-    response = snippets.resolve_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID,
-                                        SERVICE_ID)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_resolve_service() -> None:
+    response = snippets.resolve_service(
+        PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID
+    )
 
     assert len(response.service.endpoints) == 1
     assert ENDPOINT_ID in response.service.endpoints[0].name
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_delete_endpoint(capsys):
-    snippets.delete_endpoint(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID,
-                             ENDPOINT_ID)
-
-    out, _ = capsys.readouterr()
-    assert ENDPOINT_ID in out
-
-
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_delete_service(capsys):
-    snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
-
-    out, _ = capsys.readouterr()
-    assert SERVICE_ID in out
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_delete_endpoint() -> None:
+    is_deleted = snippets.delete_endpoint(
+        PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID, ENDPOINT_ID
+    )
+    assert is_deleted
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5)
-def test_delete_namespace(capsys):
-    snippets.delete_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_delete_service() -> None:
+    is_deleted = snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
+    assert is_deleted
 
-    out, _ = capsys.readouterr()
-    assert NAMESPACE_ID in out
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
+)
+def test_delete_namespace() -> None:
+    is_deleted = snippets.delete_namespace(PROJECT_ID, LOCATION_ID, NAMESPACE_ID)
+    assert is_deleted

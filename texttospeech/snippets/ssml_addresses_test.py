@@ -23,7 +23,7 @@ from ssml_addresses import ssml_to_audio, text_to_ssml
 def test_text_to_ssml(capsys):
 
     # Read expected SSML output from resources
-    with open("resources/example.ssml", "r") as f:
+    with open("resources/example.ssml") as f:
         expected_ssml = f.read()
 
     # Assert plaintext converted to SSML
@@ -35,7 +35,7 @@ def test_text_to_ssml(capsys):
 def test_ssml_to_audio(capsys):
 
     # Read SSML input from resources
-    with open("resources/example.ssml", "r") as f:
+    with open("resources/example.ssml") as f:
         input_ssml = f.read()
 
     # Assert audio file generated

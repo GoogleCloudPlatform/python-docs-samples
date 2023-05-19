@@ -59,7 +59,7 @@ def sample_recognize(storage_uri):
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"Transcript: {alternative.transcript}")
 
     # [END speech_quickstart_beta]
     return response

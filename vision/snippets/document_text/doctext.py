@@ -23,7 +23,6 @@ Example:
 # [START vision_document_text_tutorial_imports]
 import argparse
 from enum import Enum
-import io
 
 from google.cloud import vision
 from PIL import Image, ImageDraw
@@ -67,7 +66,7 @@ def get_document_bounds(image_file, feature):
 
     bounds = []
 
-    with io.open(image_file, "rb") as image_file:
+    with open(image_file, "rb") as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)

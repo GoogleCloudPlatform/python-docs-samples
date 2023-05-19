@@ -21,7 +21,7 @@ import pytest
 import delete_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
-BUCKET_ID = "{}-lcm".format(PROJECT_ID)
+BUCKET_ID = f"{PROJECT_ID}-lcm"
 
 
 @pytest.fixture(scope="function")

@@ -52,7 +52,7 @@ def create_token_aws(project_number: str, pool_id: str, provider_id: str) -> Non
     print("URL encoded token:\n%s" % urllib.parse.quote(json.dumps(token)))
 
 
-def main():
+def main() -> None:
     # TODO(Developer): Replace the below credentials.
     # project_number: Google Project number (not the project id)
     project_number = "my-project-number"

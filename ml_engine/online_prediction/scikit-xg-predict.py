@@ -1,4 +1,3 @@
-
 # Copyright 2018 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -36,10 +35,10 @@ def predict_json(project, model, instances, version=None):
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
     service = googleapiclient.discovery.build('ml', 'v1')
-    name = 'projects/{}/models/{}'.format(project, model)
+    name = f'projects/{project}/models/{model}'
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += f'/versions/{version}'
 
     response = service.projects().predict(
         name=name,

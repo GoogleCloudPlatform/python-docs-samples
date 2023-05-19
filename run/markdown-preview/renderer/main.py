@@ -24,12 +24,12 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+    """Parses the markdown and outputs the formatted HTML"""
     data = request.get_data(as_text=True)
-    # Parses the markdown and outputs the formatted HTML
     html = markdown.markdown(data)
 
     # Keep the paragraph tags
-    allowed_tags = list(bleach.sanitizer.ALLOWED_TAGS) + ['p']
+    allowed_tags = list(bleach.sanitizer.ALLOWED_TAGS) + ["p"]
     # Sanitize and return
     clean = bleach.clean(html, strip=True, tags=allowed_tags)
     return clean

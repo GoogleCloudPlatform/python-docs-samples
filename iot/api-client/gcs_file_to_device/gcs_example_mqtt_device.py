@@ -54,7 +54,7 @@ def create_jwt(project_id, private_key_file, algorithm):
         "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60),
         "aud": project_id,
     }
-    with open(private_key_file, "r") as f:
+    with open(private_key_file) as f:
         private_key = f.read()
     print(
         "Creating JWT using {} from private key file {}".format(
@@ -69,10 +69,10 @@ def create_jwt(project_id, private_key_file, algorithm):
 
 def error_str(rc):
     """Convert a Paho error to a human readable string."""
-    return "{}: {}".format(rc, mqtt.error_string(rc))
+    return f"{rc}: {mqtt.error_string(rc)}"
 
 
-class Device(object):
+class Device:
     """Represents the state of a single device."""
 
     def __init__(self):
@@ -132,9 +132,9 @@ class Device(object):
         data = json.loads(payload)
         print("Received new config.")
         bucket_name = data["bucket_name"]
-        print("Bucket name is: '{}'".format(bucket_name))
+        print(f"Bucket name is: '{bucket_name}'")
         config_name = data["gcs_file_name"]
-        print("Config name is: '{}'".format(config_name))
+        print(f"Config name is: '{config_name}'")
         # Destination file name is a byte literal because it's a file
         # name.
         destination_file_name = data[b"destination_file_name"]
@@ -152,7 +152,7 @@ def download_blob(bucket_name, config_name, destination_file_name):
 
     blob.download_to_filename(destination_file_name)
 
-    print("Config {} downloaded to {}.".format(config_name, destination_file_name))
+    print(f"Config {config_name} downloaded to {destination_file_name}.")
 
 
 def parse_command_line_args():
@@ -226,10 +226,10 @@ def main():
     client.loop_start()
 
     # This is the topic that the device will publish telemetry events to.
-    mqtt_telemetry_topic = "/devices/{}/events".format(args.device_id)
+    mqtt_telemetry_topic = f"/devices/{args.device_id}/events"
 
     # This is the topic that the device will receive configuration updates on.
-    mqtt_config_topic = "/devices/{}/config".format(args.device_id)
+    mqtt_config_topic = f"/devices/{args.device_id}/config"
 
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
@@ -239,8 +239,8 @@ def main():
 
     # Publish num_messages mesages to the MQTT bridge once per second.
     for i in range(1, args.num_messages + 1):
-        payload = "{}/{}-payload-{}".format(args.registry_id, args.device_id, i)
-        print("Publishing message {}/{}: '{}'".format(i, args.num_messages, payload))
+        payload = f"{args.registry_id}/{args.device_id}-payload-{i}"
+        print(f"Publishing message {i}/{args.num_messages}: '{payload}'")
         client.publish(request={"topic": mqtt_telemetry_topic, "messages": payload})
         # Send events every second.
         time.sleep(1)

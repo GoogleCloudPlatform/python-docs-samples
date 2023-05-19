@@ -84,7 +84,7 @@ def save_vote() -> Response:
 
     return Response(
         status=200,
-        response="Vote successfully cast for '{}' at time {}!".format(team, time_cast),
+        response=f"Vote successfully cast for '{team}' at time {time_cast}!",
     )
 
 

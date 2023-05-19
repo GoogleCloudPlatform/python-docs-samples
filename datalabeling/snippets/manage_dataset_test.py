@@ -46,7 +46,7 @@ def cleaner():
     # We see occational RetryError while deleting old datasets.
     # We can just ignore it and move on.
     except RetryError as e:
-        print("delete_old_datasets failed: detail {}".format(e))
+        print(f"delete_old_datasets failed: detail {e}")
 
     resource_names = []
 

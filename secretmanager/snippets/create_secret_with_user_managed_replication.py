@@ -18,9 +18,14 @@ user managed replication.
 """
 
 import argparse
+import typing
+
+from google.cloud import secretmanager
 
 
-def create_ummr_secret(project_id, secret_id, locations):
+def create_ummr_secret(
+    project_id: str, secret_id: str, locations: typing.List[str]
+) -> secretmanager.CreateSecretRequest:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
@@ -50,7 +55,7 @@ def create_ummr_secret(project_id, secret_id, locations):
     )
 
     # Print the new secret name.
-    print("Created secret: {}".format(response.name))
+    print(f"Created secret: {response.name}")
 
     return response
 
