@@ -120,9 +120,7 @@ def test_fhir_store():
             # likely the first request failed on the client side, but
             # the creation suceeded on the server side.
             if err.resp.status == 409:
-                print(
-                    f"Got exception {err.resp.status} while creating FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while creating FHIR store")
             else:
                 raise
 
@@ -143,9 +141,7 @@ def test_fhir_store():
             # if we try to delete a FHIR store when the parent dataset
             # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
-                print(
-                    f"Got exception {err.resp.status} while deleting FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 
@@ -183,9 +179,7 @@ def test_patient():
             # The API returns 200 whether the resource exists or was
             # successfully deleted or not.
             if err.resp.status > 200:
-                print(
-                    f"Got exception {err.resp.status} while deleting FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 

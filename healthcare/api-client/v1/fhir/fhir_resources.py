@@ -954,32 +954,39 @@ def search_resources_get(
     fhir_store_id,
     resource_type,
 ):
-    """Uses the searchResources GET method to search for resources in the given FHIR store.
-
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
     """
+    Uses the searchResources GET method to search for resources in the given FHIR store.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
+
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
-    # resource_type = 'Patient'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
+    # resource_type = 'Patient'  # replace with the FHIR resource type
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
@@ -1006,35 +1013,41 @@ def search_resources_get(
 
 # [START healthcare_search_resources_post]
 def search_resources_post(project_id, location, dataset_id, fhir_store_id):
-    """Searches for resources in the given FHIR store.
-
-    Uses the _search POST method and a query string containing the information to
-    search for. In this sample, the search criteria is 'family:exact=Smith' on a
-    Patient resource.
-
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
     """
+    Searches for resources in the given FHIR store. Uses the
+    _search POST method and a query string containing the
+    information to search for. In this sample, the search criteria is
+    'family:exact=Smith' on a Patient resource.
+
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
+
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
     fhir_store_path = "{}/datasets/{}/fhirStores/{}/fhir".format(
@@ -1044,7 +1057,7 @@ def search_resources_post(project_id, location, dataset_id, fhir_store_id):
     resource_path = f"{fhir_store_path}/Patient/_search?family:exact=Smith"
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     response = session.post(resource_path, headers=headers)
     response.raise_for_status()
@@ -1074,30 +1087,35 @@ def get_patient_everything(
 ):
     """Gets all the resources in the patient compartment.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     # resource_id = 'b682d-0e-4843-a4a9-78c9ac64'  # replace with the Patient resource's ID
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
@@ -1107,7 +1125,7 @@ def get_patient_everything(
     resource_path += "/$everything"
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     response = session.get(resource_path, headers=headers)
     response.raise_for_status()
@@ -1132,30 +1150,35 @@ def execute_bundle(
 ):
     """Executes the operations in the given bundle.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     # bundle = 'bundle.json'  # replace with the bundle file
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
@@ -1163,7 +1186,7 @@ def execute_bundle(
         url, dataset_id, fhir_store_id
     )
 
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     with open(bundle) as bundle_file:
         bundle_file_content = bundle_file.read()
@@ -1186,34 +1209,39 @@ def execute_bundle(
 def create_implementation_guide(
     project_id, location, dataset_id, fhir_store_id, implementation_guide_file
 ):
-    """Creates a new ImplementationGuide resource in a FHIR store from an
-
+    """
+    Creates a new ImplementationGuide resource in a FHIR store from an
     ImplementationGuide JSON file.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     # implementation_guide_definition_file = 'ImplementationGuide-hl7.fhir.us.core.json'  # replace with the ImplementationGuide resource file
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
@@ -1222,7 +1250,7 @@ def create_implementation_guide(
     )
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     with open(implementation_guide_file) as implementation_guide:
         implementation_guide_content = json.load(implementation_guide)
@@ -1250,14 +1278,12 @@ def enable_implementation_guide(
     fhir_store_id,
     implementation_guide_url,
 ):
-    """Patches an existing FHIR store to enable an ImplementationGuide resource
-
+    """
+    Patches an existing FHIR store to enable an ImplementationGuide resource
     that exists in the FHIR store.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
 
@@ -1268,7 +1294,7 @@ def enable_implementation_guide(
     client = discovery.build(service_name, api_version)
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
+    # project_id = 'my-project'  # replace with your GCP project ID
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
     # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
@@ -1290,9 +1316,7 @@ def enable_implementation_guide(
         .datasets()
         .fhirStores()
         .patch(
-            name=fhir_store_name,
-            updateMask="validationConfig",
-            body=validation_config,
+            name=fhir_store_name, updateMask="validationConfig", body=validation_config
         )
     )
 
@@ -1313,34 +1337,39 @@ def enable_implementation_guide(
 def create_structure_definition(
     project_id, location, dataset_id, fhir_store_id, structure_definition_file
 ):
-    """Creates a new StructureDefinition resource in a FHIR store from a
-
+    """
+    Creates a new StructureDefinition resource in a FHIR store from a
     StructureDefinition JSON file.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
     # structure_definition_file = 'StructureDefinition-us-core-patient.json'  # replace with the StructureDefinition resource file
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
@@ -1349,7 +1378,7 @@ def create_structure_definition(
     )
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     with open(structure_definition_file) as structure_definition:
         structure_definition_content = json.load(structure_definition)
@@ -1378,33 +1407,37 @@ def validate_resource(
     resource_type,
 ):
     """Validates an input FHIR resource's conformance to the base profile
-
     configured on the FHIR store.
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
-    # resource_type = 'Patient'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
+    # resource_type = 'Patient'  # replace with the FHIR resource type
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
     resource_path = "{}/datasets/{}/fhirStores/{}/fhir/{}".format(
@@ -1425,7 +1458,7 @@ def validate_resource(
     }
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     response = session.post(resource_path, headers=headers, json=body)
     response.raise_for_status()
@@ -1444,36 +1477,40 @@ def validate_resource(
 def validate_resource_profile_url(
     project_id, location, dataset_id, fhir_store_id, resource_type, profile_url
 ):
-    """Validates an input FHIR resource's conformance to a profile URL.
-
-    The profile StructureDefinition resource must exist in the FHIR store before
+    """Validates an input FHIR resource's conformance to a profile URL. The
+    profile StructureDefinition resource must exist in the FHIR store before
     performing validation against the URL.
 
-    See
-    https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
-    before running the sample.
-    """
+    See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
+    before running the sample."""
+    # Imports Python's built-in "os" module
+    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Construct the Google credentials object by getting the default credentials from the current environment.
-    from google.auth import default
+    # Imports a module to allow authentication using a service account
+    from google.oauth2 import service_account
 
-    credentials, _ = default()
-
+    # Gets credentials from the environment.
+    credentials = service_account.Credentials.from_service_account_file(
+        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
+    )
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
 
     # TODO(developer): Uncomment these lines and replace with your values.
-    # project_id = 'my-project'
-    # location = 'us-central1'
-    # dataset_id = 'my-dataset'
-    # fhir_store_id = 'my-fhir-store'
-    # resource_type = 'Patient'
+    # project_id = 'my-project'  # replace with your GCP project ID
+    # location = 'us-central1'  # replace with the parent dataset's location
+    # dataset_id = 'my-dataset'  # replace with the parent dataset's ID
+    # fhir_store_id = 'my-fhir-store' # replace with the FHIR store ID
+    # resource_type = 'Patient'  # replace with the FHIR resource type
     # profile_url = 'http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient'  # replace with the profile URL
     url = f"{base_url}/projects/{project_id}/locations/{location}"
 
@@ -1496,7 +1533,7 @@ def validate_resource_profile_url(
     }
 
     # Sets required application/fhir+json header on the request
-    headers = {"content-type": "application/fhir+json;charset=utf-8"}
+    headers = {"Content-Type": "application/fhir+json;charset=utf-8"}
 
     response = session.post(resource_path, headers=headers, json=body, params=params)
     response.raise_for_status()
@@ -1549,19 +1586,15 @@ def parse_command_line_args():
     parser.add_argument(
         "--patient_id",
         default=None,
-        help=(
-            "Identifier for a Patient resource. Can be used as a reference "
-            "for an Encounter/Observation"
-        ),
+        help="Identifier for a Patient resource. Can be used as a reference "
+        "for an Encounter/Observation",
     )
 
     parser.add_argument(
         "--encounter_id",
         default=None,
-        help=(
-            "Identifier for an Encounter resource. Can be used as a "
-            "reference for an Observation"
-        ),
+        help="Identifier for an Encounter resource. Can be used as a "
+        "reference for an Observation",
     )
 
     parser.add_argument(
@@ -1571,9 +1604,7 @@ def parse_command_line_args():
     )
 
     parser.add_argument(
-        "--uri_prefix",
-        default=None,
-        help="Prefix of gs:// URIs for import and export",
+        "--uri_prefix", default=None, help="Prefix of gs:// URIs for import and export"
     )
 
     parser.add_argument("--version_id", default=None, help="Version of a FHIR resource")
@@ -1599,10 +1630,7 @@ def parse_command_line_args():
     parser.add_argument(
         "--implementation_guide_url",
         default=None,
-        help=(
-            "the URL defined in the 'url' property of the ImplementationGuide"
-            " resource"
-        ),
+        help="the URL defined in the 'url' property of the ImplementationGuide resource",
     )
 
     command = parser.add_subparsers(dest="command")
@@ -1635,8 +1663,7 @@ def parse_command_line_args():
     )
     command.add_parser("validate-resource", help=validate_resource.__doc__)
     command.add_parser(
-        "validate-resource-profile-url",
-        help=validate_resource_profile_url.__doc__,
+        "validate-resource-profile-url", help=validate_resource_profile_url.__doc__
     )
 
     return parser.parse_args()
