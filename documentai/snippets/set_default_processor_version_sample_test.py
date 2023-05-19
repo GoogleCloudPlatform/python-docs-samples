@@ -13,6 +13,8 @@
 # limitations under the License.
 #
 
+# flake8: noqa
+
 import os
 
 from documentai.snippets import set_default_processor_version_sample

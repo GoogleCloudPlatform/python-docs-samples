@@ -21,8 +21,10 @@
 
 # [START compute_windows_image_create]
 # [START compute_images_create]
+from __future__ import annotations
+
 import sys
-from typing import Any, Optional
+from typing import Any
 import warnings
 
 from google.api_core.extended_operation import ExtendedOperation
@@ -88,7 +90,7 @@ def create_image_from_disk(
     zone: str,
     source_disk_name: str,
     image_name: str,
-    storage_location: Optional[str] = None,
+    storage_location: str | None = None,
     force_create: bool = False,
 ) -> compute_v1.Image:
     """

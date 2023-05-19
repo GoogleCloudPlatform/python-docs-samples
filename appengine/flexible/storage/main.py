@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START gae_flex_storage_app]
+from __future__ import annotations
+
 import logging
 import os
 

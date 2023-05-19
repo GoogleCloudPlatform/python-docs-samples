@@ -23,6 +23,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
+    """Example route for receiving authorized requests."""
     return receive_authorized_get_request(request)
 
 

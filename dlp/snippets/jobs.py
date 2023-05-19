@@ -14,9 +14,9 @@
 
 """Sample app to list and delete DLP jobs using the Data Loss Prevent API. """
 
+from __future__ import annotations
 
 import argparse
-from typing import List
 
 
 # [START dlp_list_jobs]
@@ -119,7 +119,7 @@ def delete_dlp_job(project, job_name):
 def create_dlp_job(
     project: str,
     bucket: str,
-    info_types: List[str],
+    info_types: list[str],
     job_id: str = None,
     max_findings: int = 100,
     auto_populate_timespan: bool = True,
@@ -175,15 +175,12 @@ def create_dlp_job(
 
     # Call the API.
     response = dlp.create_dlp_job(
-        request={
-            "parent": parent,
-            "inspect_job": job,
-            "job_id": job_id
-        }
+        request={"parent": parent, "inspect_job": job, "job_id": job_id}
     )
 
     # Print out the result.
     print(f"Job : {response.name} status: {response.state}")
+
 
 # [END dlp_create_job]
 
@@ -234,18 +231,18 @@ if __name__ == "__main__":
     create_parser.add_argument(
         "bucket",
         help="The name of the GCS bucket to scan. This sample scans all files "
-        "in the bucket."
+        "in the bucket.",
     )
     create_parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     create_parser.add_argument(
         "--job_id",
-        help="The id of the job. If omitted, an id will be randomly generated."
+        help="The id of the job. If omitted, an id will be randomly generated.",
     )
     create_parser.add_argument(
         "--max_findings",
