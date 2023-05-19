@@ -31,7 +31,7 @@ class CpixClient(abc.ABC):
 
         Args:
             media_id (string): Name for your asset, sometimes used by DRM providers to
-                show usage and reports.
+            show usage and reports.
             key_ids (list[string]): List of IDs of any keys to fetch and prepare.
 
         Returns:
@@ -48,7 +48,7 @@ class CpixClient(abc.ABC):
         in the returned list.
 
         Returns:
-        list of strings, names of environment variables which must be
+            List of strings, names of environment variables which must be
             set.
         """
 
@@ -58,11 +58,11 @@ class CpixClient(abc.ABC):
         """Fetches the content of the secret given secret id and version number
 
         Args:
-        secret_id (string): Name of the secret.
-        version_id (string): Version number of the secret.
+            secret_id (string): Name of the secret.
+            version_id (string): Version number of the secret.
 
         Returns:
-        secretmanager.AccessSecretVersionResponse object containing value of the
+            secretmanager.AccessSecretVersionResponse object containing value of the
             secret.
         """
         client = secretmanager.SecretManagerServiceClient()
