@@ -48,7 +48,7 @@ def create_vod_session(
     parent = f"projects/{project_id}/locations/{location}"
 
     vod_session = stitcher_v1.types.VodSession(
-        source_uri=source_uri, ad_tag_uri=ad_tag_uri
+        source_uri=source_uri, ad_tag_uri=ad_tag_uri, ad_tracking="SERVER"
     )
 
     response = client.create_vod_session(parent=parent, vod_session=vod_session)

@@ -50,7 +50,6 @@ akamai_key = cloud_cdn_private_key
 updated_akamai_key = updated_cloud_cdn_private_key
 
 
-@pytest.mark.skip()
 def test_cdn_key_operations(capsys: pytest.fixture) -> None:
 
     utils.delete_stale_cdn_keys(project_id, location)

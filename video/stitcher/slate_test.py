@@ -25,39 +25,32 @@ import list_slates
 import update_slate
 import utils
 
-location = "us-west1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
+location = "us-central1"
 now = timestamp_pb2.Timestamp()
 now.GetCurrentTime()
-
-slate_id = f"python-test-slate-{uuid.uuid4().hex[:5]}-{now.seconds}"
 
 input_bucket_name = "cloud-samples-data/media/"
 slate_video_file_name = "ForBiggerEscapes.mp4"
 updated_slate_video_file_name = "ForBiggerJoyrides.mp4"
-
+slate_id = f"python-test-slate-{uuid.uuid4().hex[:5]}-{now.seconds}"
 slate_uri = f"https://storage.googleapis.com/{input_bucket_name}{slate_video_file_name}"
 updated_slate_uri = (
     f"https://storage.googleapis.com/{input_bucket_name}{updated_slate_video_file_name}"
 )
 
 
-@pytest.mark.skip()
 def test_slate_operations(capsys: pytest.fixture) -> None:
 
     utils.delete_stale_slates(project_id, location)
 
-    slate_name_project_number = (
-        f"projects/{project_number}/locations/{location}/slates/{slate_id}"
-    )
     slate_name_project_id = (
         f"projects/{project_id}/locations/{location}/slates/{slate_id}"
     )
 
     create_slate.create_slate(project_id, location, slate_id, slate_uri)
     out, _ = capsys.readouterr()
-    assert slate_name_project_number in out
+    assert slate_name_project_id in out
 
     list_slates.list_slates(project_id, location)
     out, _ = capsys.readouterr()

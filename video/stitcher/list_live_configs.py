@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google Inc. All Rights Reserved.
+# Copyright 2023 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Video Stitcher sample for deleting a slate.
+"""Google Cloud Video Stitcher sample for listing all live configs in a location.
 Example usage:
-    python delete_slate.py --project_id <project-id> --location <location> \
-        --slate_id <slate-id>
+    python list_live_configs.py --project_id <project-id> --location <location>
 """
 
-# [START videostitcher_delete_slate]
+# [START videostitcher_list_live_configs]
 
 import argparse
 
@@ -29,40 +28,35 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 )
 
 
-def delete_slate(project_id: str, location: str, slate_id: str) -> str:
-    """Deletes a slate.
+def list_live_configs(project_id: str, location: str) -> str:
+    """Lists all live configs in a location.
     Args:
         project_id: The GCP project ID.
-        location: The location of the slate.
-        slate_id: The user-defined slate ID."""
+        location: The location of the live configs."""
 
     client = VideoStitcherServiceClient()
 
-    name = f"projects/{project_id}/locations/{location}/slates/{slate_id}"
-    operation = client.delete_slate(name=name)
-    response = operation.result()
-    print("Deleted slate")
+    parent = f"projects/{project_id}/locations/{location}"
+    response = client.list_live_configs(parent=parent)
+    print("Live configs:")
+    for live_config in response.live_configs:
+        print({live_config.name})
+
     return response
 
 
-# [END videostitcher_delete_slate]
+# [END videostitcher_list_live_configs]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
-        help="The location of the slate.",
-        required=True,
-    )
-    parser.add_argument(
-        "--slate_id",
-        help="The user-defined slate ID.",
+        help="The location of the live configs.",
         required=True,
     )
     args = parser.parse_args()
-    delete_slate(
+    list_live_configs(
         args.project_id,
         args.location,
-        args.slate_id,
     )

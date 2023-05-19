@@ -47,7 +47,8 @@ def create_slate(project_id: str, location: str, slate_id: str, slate_uri: str) 
         uri=slate_uri,
     )
 
-    response = client.create_slate(parent=parent, slate_id=slate_id, slate=slate)
+    operation = client.create_slate(parent=parent, slate_id=slate_id, slate=slate)
+    response = operation.result()
     print(f"Slate: {response.name}")
     return response
 

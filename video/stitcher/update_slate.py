@@ -48,7 +48,8 @@ def update_slate(project_id: str, location: str, slate_id: str, slate_uri: str) 
     )
     update_mask = field_mask.FieldMask(paths=["uri"])
 
-    response = client.update_slate(slate=slate, update_mask=update_mask)
+    operation = client.update_slate(slate=slate, update_mask=update_mask)
+    response = operation.result()
     print(f"Updated slate: {response.name}")
     return response
 
