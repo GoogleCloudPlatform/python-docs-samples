@@ -18,7 +18,6 @@ import multiprocessing
 import os
 import re
 import time
-import typing
 
 from _pytest.capture import CaptureFixture
 from flask import Flask, render_template, url_for
@@ -131,7 +130,7 @@ def test_mfa_assessment(
     assert re.search("Result unspecified. Trigger MFA challenge in the client by passing the request token.", out)
 
 
-def get_token(recaptcha_site_key: str, browser: WebDriver) -> typing.Tuple:
+def get_token(recaptcha_site_key: str, browser: WebDriver) -> tuple:
     browser.get(url_for("assess", site_key=recaptcha_site_key, _external=True))
     time.sleep(5)
 

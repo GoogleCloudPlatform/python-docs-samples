@@ -13,7 +13,9 @@
 #  limitations under the License.
 
 # [START batch_list_jobs]
-from typing import Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import batch_v1
 

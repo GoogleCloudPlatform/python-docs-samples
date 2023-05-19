@@ -28,7 +28,7 @@ db_connection_name = os.environ.get('CLOUD_SQL_CONNECTION_NAME')
 # set to `standard`
 if os.environ.get('GAE_ENV') == 'standard':
     # If deployed, use the local socket interface for accessing Cloud SQL
-    unix_socket = '/cloudsql/{}'.format(db_connection_name)
+    unix_socket = f'/cloudsql/{db_connection_name}'
     engine_url = 'mysql+pymysql://{}:{}@/{}?unix_socket={}'.format(
         db_user, db_password, db_name, unix_socket)
 else:

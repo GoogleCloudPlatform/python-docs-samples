@@ -95,7 +95,7 @@ def receive_messages_handler():
 
         CLAIMS.append(claim)
     except Exception as e:
-        return 'Invalid token: {}\n'.format(e), 400
+        return f'Invalid token: {e}\n', 400
 
     envelope = json.loads(request.data.decode('utf-8'))
     payload = base64.b64decode(envelope['message']['data'])

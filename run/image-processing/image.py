@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START cloudrun_imageproc_handler_setup]
-# [START run_imageproc_handler_setup]
 import os
 import tempfile
 
@@ -22,14 +21,16 @@ from wand.image import Image
 
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
-# [END run_imageproc_handler_setup]
 # [END cloudrun_imageproc_handler_setup]
 
 
 # [START cloudrun_imageproc_handler_analyze]
-# [START run_imageproc_handler_analyze]
-# Blurs uploaded images that are flagged as Adult or Violence.
 def blur_offensive_images(data):
+    """Blurs uploaded images that are flagged as Adult or Violence.
+
+    Args:
+        data: Pub/Sub message data
+    """
     file_data = data
 
     file_name = file_data["name"]
@@ -57,14 +58,16 @@ def blur_offensive_images(data):
         print(f"The image {file_name} was detected as OK.")
 
 
-# [END run_imageproc_handler_analyze]
 # [END cloudrun_imageproc_handler_analyze]
 
 
 # [START cloudrun_imageproc_handler_blur]
-# [START run_imageproc_handler_blur]
-# Blurs the given file using ImageMagick.
 def __blur_image(current_blob):
+    """Blurs the given file using ImageMagick.
+
+    Args:
+        current_blob: a Cloud Storage blob
+    """
     file_name = current_blob.name
     _, temp_local_filename = tempfile.mkstemp()
 
@@ -92,5 +95,4 @@ def __blur_image(current_blob):
     os.remove(temp_local_filename)
 
 
-# [END run_imageproc_handler_blur]
 # [END cloudrun_imageproc_handler_blur]

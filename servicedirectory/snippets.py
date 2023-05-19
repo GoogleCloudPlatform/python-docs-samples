@@ -57,7 +57,7 @@ def create_namespace(project_id: str, location: str, namespace_id: str) -> Names
 
 
 # [START servicedirectory_delete_namespace]
-def delete_namespace(project_id: str, location: str, namespace_id: str) -> None:
+def delete_namespace(project_id: str, location: str, namespace_id: str) -> bool:
     """Deletes a namespace in the given location.
 
     Args:
@@ -71,8 +71,8 @@ def delete_namespace(project_id: str, location: str, namespace_id: str) -> None:
     namespace_name = client.namespace_path(project_id, location, namespace_id)
 
     client.delete_namespace(name=namespace_name)
-
     print(f"Deleted namespace {namespace_name}.")
+    return True
 
 
 # [END servicedirectory_delete_namespace]
@@ -118,7 +118,7 @@ def create_service(
 # [START servicedirectory_delete_service]
 def delete_service(
     project_id: str, location: str, namespace_id: str, service_id: str
-) -> None:
+) -> bool:
     """Deletes a service in the given namespace.
 
     Args:
@@ -133,8 +133,8 @@ def delete_service(
     service_name = client.service_path(project_id, location, namespace_id, service_id)
 
     client.delete_service(name=service_name)
-
     print(f"Deleted service {service_name}.")
+    return True
 
 
 # [END servicedirectory_delete_service]
@@ -234,7 +234,7 @@ def delete_endpoint(
     namespace_id: str,
     service_id: str,
     endpoint_id: str,
-) -> None:
+) -> bool:
     """Deletes a endpoint in the given service.
 
     Args:
@@ -252,8 +252,8 @@ def delete_endpoint(
     )
 
     client.delete_endpoint(name=endpoint_name)
-
     print(f"Deleted endpoint {endpoint_name}.")
+    return True
 
 
 # [END servicedirectory_delete_endpoint]
