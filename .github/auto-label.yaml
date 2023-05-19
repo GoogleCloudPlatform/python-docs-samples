@@ -33,6 +33,7 @@ path:
         contact-center-insights: "contactcenterinsights"
         container: "container"
         container-analysis: "containeranalysis"
+        contentwarehouse: "contentwarehouse"
         datacatalog: "datacatalog"
         datalabeling: "datalabeling"
         dataproc: "dataproc"
