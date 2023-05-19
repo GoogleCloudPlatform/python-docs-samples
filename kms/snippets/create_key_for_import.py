@@ -13,7 +13,12 @@
 
 
 # [START kms_create_key_for_import]
-def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
+from google.cloud import kms
+
+
+def create_key_for_import(
+    project_id: str, location_id: str, key_ring_id: str, crypto_key_id: str
+) -> None:
     """
 
     Sets up an empty CryptoKey within a KeyRing for import.
@@ -26,9 +31,6 @@ def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
         crypto_key_id (string): ID of the key to import (e.g. 'my-asymmetric-signing-key').
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
@@ -38,17 +40,25 @@ def create_key_for_import(project_id, location_id, key_ring_id, crypto_key_id):
     algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.EC_SIGN_P256_SHA256
     protection_level = kms.ProtectionLevel.HSM
     key = {
-        'purpose': purpose,
-        'version_template': {
-            'algorithm': algorithm,
-            'protection_level': protection_level
-        }
+        "purpose": purpose,
+        "version_template": {
+            "algorithm": algorithm,
+            "protection_level": protection_level,
+        },
     }
 
     # Build the parent key ring name.
     key_ring_name = client.key_ring_path(project_id, location_id, key_ring_id)
 
     # Call the API.
-    created_key = client.create_crypto_key(request={'parent': key_ring_name, 'crypto_key_id': crypto_key_id, 'crypto_key': key})
-    print(f'Created hsm key: {created_key.name}')
+    created_key = client.create_crypto_key(
+        request={
+            "parent": key_ring_name,
+            "crypto_key_id": crypto_key_id,
+            "crypto_key": key,
+        }
+    )
+    print(f"Created hsm key: {created_key.name}")
+
+
 # [END kms_create_key_for_import]

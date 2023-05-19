@@ -147,6 +147,10 @@ assign_issues_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
@@ -291,6 +295,10 @@ assign_prs_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
