@@ -13,6 +13,14 @@
 
 
 # [START kms_generate_random_bytes]
+
+# Import base64 for encoding the bytes for printing.
+import base64
+
+# Import the client library.
+from google.cloud import kms
+
+
 def generate_random_bytes(project_id: str, location_id: str, num_bytes: int) -> bytes:
     """
     Generate random bytes with entropy sourced from the given location.
@@ -26,12 +34,6 @@ def generate_random_bytes(project_id: str, location_id: str, num_bytes: int) -> 
         bytes: Encrypted ciphertext.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import base64 for encoding the bytes for printing.
-    import base64
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

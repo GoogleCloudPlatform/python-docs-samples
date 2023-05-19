@@ -16,8 +16,8 @@
 import argparse
 
 # [START kms_quickstart]
-from google.cloud import kms_v1
 from google.cloud import kms
+from google.cloud import kms_v1
 
 
 def quickstart(

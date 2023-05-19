@@ -13,6 +13,9 @@
 
 
 # [START kms_create_key_for_import]
+from google.cloud import kms
+
+
 def create_key_for_import(
     project_id: str, location_id: str, key_ring_id: str, crypto_key_id: str
 ) -> None:
@@ -27,9 +30,6 @@ def create_key_for_import(
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
         crypto_key_id (string): ID of the key to import (e.g. 'my-asymmetric-signing-key').
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

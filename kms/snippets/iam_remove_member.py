@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 
 # [START kms_iam_remove_member]
+from google.cloud import kms
 from google.iam.v1 import policy_pb2 as iam_policy
 
-from google.cloud import kms
 
 def iam_remove_member(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, member: str

@@ -12,6 +12,11 @@
 # See the License for the specific language governing permissions and
 
 # [START kms_sign_asymmetric]
+# Import base64 for printing the ciphertext.
+import base64
+# Import hashlib for calculating hashes.
+import hashlib
+# Import the client library.
 from google.cloud import kms
 
 
@@ -37,12 +42,6 @@ def sign_asymmetric(
     Returns:
         AsymmetricSignResponse: Signature.
     """
-
-    # Import base64 for printing the ciphertext.
-    import base64
-
-    # Import hashlib for calculating hashes.
-    import hashlib
 
     # Create the client.
     client = kms.KeyManagementServiceClient()

@@ -13,12 +13,17 @@
 
 
 # [START kms_import_manually_wrapped_key]
-# Import the client library and Python standard cryptographic libraries.
 import os
+
+# Import the client library and Python standard cryptographic libraries.
 from cryptography.hazmat import backends
-from cryptography.hazmat.primitives import hashes, keywrap, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, padding
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import keywrap
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric import padding
 from google.cloud import kms
+
 
 def import_manually_wrapped_key(
     project_id: str,

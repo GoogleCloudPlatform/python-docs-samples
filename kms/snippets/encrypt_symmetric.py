@@ -13,6 +13,14 @@
 
 
 # [START kms_encrypt_symmetric]
+
+# Import base64 for printing the ciphertext.
+import base64
+
+# Import the client library.
+from google.cloud import kms
+
+
 def encrypt_symmetric(
     project_id: str, location_id: str, key_ring_id: str, key_id: str, plaintext: str
 ) -> bytes:
@@ -30,12 +38,6 @@ def encrypt_symmetric(
         bytes: Encrypted ciphertext.
 
     """
-
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import base64 for printing the ciphertext.
-    import base64
 
     # Convert the plaintext to bytes.
     plaintext_bytes = plaintext.encode("utf-8")

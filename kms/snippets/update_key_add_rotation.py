@@ -11,9 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+
 # [START kms_update_key_add_rotation_schedule]
-from google.cloud import kms
 import time
+
+from google.cloud import kms
+
 
 def update_key_add_rotation(
     project_id: str, location_id: str, key_ring_id: str, key_id: str

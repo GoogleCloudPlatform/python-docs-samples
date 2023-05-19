@@ -13,6 +13,9 @@
 
 
 # [START kms_check_state_imported_key]
+from google.cloud import kms
+
+
 def check_state_imported_key(
     project_id: str, location_id: str, key_ring_id: str, import_job_id: str
 ) -> None:
@@ -25,9 +28,6 @@ def check_state_imported_key(
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
         import_job_id (string): ID of the import job (e.g. 'my-import-job').
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
