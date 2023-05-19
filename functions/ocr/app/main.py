@@ -16,7 +16,7 @@
 import base64
 import json
 import os
-from typing import Any
+from typing import TypeVar
 
 from google.cloud import pubsub_v1
 from google.cloud import storage
@@ -87,9 +87,11 @@ def detect_text(bucket: str, filename: str) -> None:
 
 # [END functions_ocr_detect]
 
+T = TypeVar('T')
+
 
 # [START message_validatation_helper]
-def validate_message(message: dict, param: str) -> Any:
+def validate_message(message: dict[str, T], param: str) -> T:
     """
     Placeholder function for validating message parts.
 
