@@ -13,7 +13,14 @@
 
 
 # [START kms_update_key_add_rotation_schedule]
-def update_key_add_rotation(project_id, location_id, key_ring_id, key_id):
+import time
+
+from google.cloud import kms
+
+
+def update_key_add_rotation(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Add a rotation schedule to an existing key.
 
@@ -28,12 +35,6 @@ def update_key_add_rotation(project_id, location_id, key_ring_id, key_id):
 
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import time for getting the current time.
-    import time
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
@@ -41,20 +42,25 @@ def update_key_add_rotation(project_id, location_id, key_ring_id, key_id):
     key_name = client.crypto_key_path(project_id, location_id, key_ring_id, key_id)
 
     key = {
-        'name': key_name,
-        'rotation_period': {
-            'seconds': 60*60*24*30  # Rotate the key every 30 days.
+        "name": key_name,
+        "rotation_period": {
+            "seconds": 60 * 60 * 24 * 30  # Rotate the key every 30 days.
         },
-        'next_rotation_time': {
-            'seconds': int(time.time()) + 60*60*24  # Start the first rotation in 24 hours.
-        }
+        "next_rotation_time": {
+            "seconds": int(time.time())
+            + 60 * 60 * 24  # Start the first rotation in 24 hours.
+        },
     }
 
     # Build the update mask.
-    update_mask = {'paths': ['rotation_period', 'next_rotation_time']}
+    update_mask = {"paths": ["rotation_period", "next_rotation_time"]}
 
     # Call the API.
-    updated_key = client.update_crypto_key(request={'crypto_key': key, 'update_mask': update_mask})
-    print(f'Updated key: {updated_key.name}')
+    updated_key = client.update_crypto_key(
+        request={"crypto_key": key, "update_mask": update_mask}
+    )
+    print(f"Updated key: {updated_key.name}")
     return updated_key
+
+
 # [END kms_update_key_add_rotation_schedule]
