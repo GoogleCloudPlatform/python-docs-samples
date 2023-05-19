@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def extractive_question_answering(temperature=0):
+def extractive_question_answering(temperature: float = 0.2) -> None:
     """Extractive Question Answering with a Large Language Model."""
 
     # TODO developer - override these parameters as needed:

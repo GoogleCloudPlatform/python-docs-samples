@@ -15,12 +15,15 @@
 # limitations under the License.
 
 import argparse
+from typing import List
 
 # [START storage_s3_sdk_list_objects]
-import boto3
+import boto3  # type: ignore
 
 
-def list_gcs_objects(google_access_key_id, google_access_key_secret, bucket_name):
+def list_gcs_objects(
+    google_access_key_id: str, google_access_key_secret: str, bucket_name: str
+) -> List[str]:
     """Lists all Cloud Storage objects using AWS SDK for Python (boto3)
     Positional arguments:
         google_access_key_id: hash-based message authentication code (HMAC) access ID

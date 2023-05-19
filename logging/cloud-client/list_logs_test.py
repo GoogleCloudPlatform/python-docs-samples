@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,9 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import extraction
+import list_logs
+import os
+
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-def test_extractive_question_answering() -> None:
-    content = extraction.extractive_question_answering(temperature=0).text
-    assert content == 'Reduced moist tropical vegetation cover.'
+def test_list_logs(capsys):
+    logs = list_logs.list_logs(PROJECT)
+    assert "logs" in str(logs)
