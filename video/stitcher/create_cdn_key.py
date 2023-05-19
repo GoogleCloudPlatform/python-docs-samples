@@ -75,9 +75,10 @@ def create_cdn_key(
             private_key=private_key,
         )
 
-    response = client.create_cdn_key(
+    operation = client.create_cdn_key(
         parent=parent, cdn_key_id=cdn_key_id, cdn_key=cdn_key
     )
+    response = operation.result()
     print(f"CDN key: {response.name}")
     return response
 

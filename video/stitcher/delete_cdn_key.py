@@ -39,7 +39,8 @@ def delete_cdn_key(project_id: str, location: str, cdn_key_id: str) -> str:
     client = VideoStitcherServiceClient()
 
     name = f"projects/{project_id}/locations/{location}/cdnKeys/{cdn_key_id}"
-    response = client.delete_cdn_key(name=name)
+    operation = client.delete_cdn_key(name=name)
+    response = operation.result()
     print("Deleted CDN key")
     return response
 
