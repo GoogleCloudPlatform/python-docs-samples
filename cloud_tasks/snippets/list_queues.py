@@ -13,28 +13,33 @@
 # limitations under the License.
 
 # [START cloud_tasks_list_queues]
-def list_queues(project, location):
-    """List all task queues."""
+from typing import List
 
-    from google.cloud import tasks_v2
+from google.cloud import tasks_v2
+
+
+def list_queues(project: str, location: str) -> List[str]:
+    """List all queues
+    Args:
+        project: The project ID to list queues from.
+        location: The location ID to list queues from.
+
+    Returns:
+        A list of queue names.
+    """
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # Construct the fully qualified location path.
-    parent = f"projects/{project}/locations/{location}"
+    # Use the client to send a ListQueuesRequest.
+    response = client.list_queues(
+        tasks_v2.ListQueuesRequest(
+            parent=client.common_location_path(project, location)
+        )
+    )
 
-    # Use the client to obtain the queues.
-    response = client.list_queues(request={"parent": parent})
-
-    # Print the results.
-    num_results = 0
-    for queue in response:
-        num_results = num_results + 1
-        print(queue.name)
-
-    if num_results == 0:
-        print("No queues found!")
+    # Return the results.
+    return [queue.name for queue in response]
 
 
 # [END cloud_tasks_list_queues]
