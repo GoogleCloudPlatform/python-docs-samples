@@ -18,6 +18,15 @@ from google.cloud import logging
 
 
 def get_sink(project_id: str, sink_name: str) -> logging.Sink:
+    """Retrieves the metadata for a Cloud Logging Sink.
+
+    Args:
+        project_id: the ID of the project
+        sink_name: the name of the sink
+
+    Returns:
+        A Cloud Logging Sink.
+    """
     client = logging.Client(project=project_id)
     sink = client.sink(sink_name)
     sink.reload()
