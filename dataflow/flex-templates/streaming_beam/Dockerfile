@@ -31,3 +31,5 @@ RUN apt-get update \
 
 # Since we already downloaded all the dependencies, there's no need to rebuild everything.
 ENV PIP_NO_DEPS=True
+
+ENTRYPOINT ["/opt/google/dataflow/python_template_launcher"]

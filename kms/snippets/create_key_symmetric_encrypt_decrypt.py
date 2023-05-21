@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-
 # [START kms_create_key_symmetric_encrypt_decrypt]
-def create_key_symmetric_encrypt_decrypt(project_id, location_id, key_ring_id, key_id):
+from google.cloud import kms
+
+
+def create_key_symmetric_encrypt_decrypt(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str
+) -> kms.CryptoKey:
     """
     Creates a new symmetric encryption/decryption key in Cloud KMS.
 
@@ -28,9 +32,6 @@ def create_key_symmetric_encrypt_decrypt(project_id, location_id, key_ring_id, k
 
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
@@ -39,17 +40,22 @@ def create_key_symmetric_encrypt_decrypt(project_id, location_id, key_ring_id, k
 
     # Build the key.
     purpose = kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT
-    algorithm = kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
+    algorithm = (
+        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION
+    )
     key = {
-        'purpose': purpose,
-        'version_template': {
-            'algorithm': algorithm,
-        }
+        "purpose": purpose,
+        "version_template": {
+            "algorithm": algorithm,
+        },
     }
 
     # Call the API.
     created_key = client.create_crypto_key(
-        request={'parent': key_ring_name, 'crypto_key_id': key_id, 'crypto_key': key})
-    print(f'Created symmetric key: {created_key.name}')
+        request={"parent": key_ring_name, "crypto_key_id": key_id, "crypto_key": key}
+    )
+    print(f"Created symmetric key: {created_key.name}")
     return created_key
+
+
 # [END kms_create_key_symmetric_encrypt_decrypt]
