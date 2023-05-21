@@ -237,7 +237,16 @@ def text_to_speech(text: str, outfile: str) -> str:
 
 # [START translate_hybrid_integration]
 def main():
+    """This method is called when the tutorial is run in the Google Cloud
+    Translation API. It creates a glossary, translates text to
+    French, and speaks the translated text.
 
+    Args:
+    None
+
+    Returns:
+    None
+    """
     # Photo from which to extract text
     infile = "resources/example.png"
     # Name of file that will hold synthetic speech

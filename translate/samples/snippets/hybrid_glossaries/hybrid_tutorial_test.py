@@ -25,7 +25,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 # VISION TESTS
 
 
-def test_vision_standard_format():
+def test_vision_standard_format() -> None:
     # Generate text using Vision API
     text = hybrid_tutorial.pic_to_text("resources/standard_format.jpeg")
 
@@ -35,7 +35,7 @@ def test_vision_standard_format():
 # TRANSLATE TESTS
 
 
-def test_create_and_delete_glossary():
+def test_create_and_delete_glossary() -> None:
     sys.path.insert(1, "../")
     from google.cloud import translate_v3 as translate
 
@@ -58,7 +58,7 @@ def test_create_and_delete_glossary():
     print(f"Deleted: {result.name}")
 
 
-def test_translate_standard():
+def test_translate_standard() -> None:
 
     expected_text = "Good morning"
 
@@ -73,7 +73,7 @@ def test_translate_standard():
     assert text == expected_text
 
 
-def test_translate_glossary():
+def test_translate_glossary() -> None:
 
     expected_text = "I eat goat cheese"
     input_text = "Je mange du chevre"
@@ -92,7 +92,7 @@ def test_translate_glossary():
 # TEXT-TO-SPEECH TESTS
 
 
-def test_tts_standard(capsys):
+def test_tts_standard(capsys) -> None:
     outfile = "resources/test_standard_text.mp3"
     text = "this is\na test!"
 
