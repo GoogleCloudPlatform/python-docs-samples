@@ -263,7 +263,7 @@ def main():
         text_to_translate, "fr", "en", PROJECT_ID, created_glossary_name
     )
     # translated text -> synthetic audio
-    generated_outfile = text_to_speech(text_to_speak, outfile)
+    text_to_speech(text_to_speak, outfile)
     # [END translate_hybrid_integration]
 
 
