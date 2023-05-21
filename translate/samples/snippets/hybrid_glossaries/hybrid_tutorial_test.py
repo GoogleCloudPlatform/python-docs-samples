@@ -16,10 +16,7 @@ import os
 import sys
 import uuid
 
-from hybrid_tutorial import create_glossary
-from hybrid_tutorial import pic_to_text
-from hybrid_tutorial import text_to_speech
-from hybrid_tutorial import translate_text
+import hybrid_tutorial
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -30,7 +27,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 def test_vision_standard_format():
     # Generate text using Vision API
-    text = pic_to_text('resources/standard_format.jpeg')
+    text = hybrid_tutorial.pic_to_text("resources/standard_format.jpeg")
 
     assert len(text) > 0
 
@@ -40,18 +37,25 @@ def test_vision_standard_format():
 
 def test_create_and_delete_glossary():
     sys.path.insert(1, "../")
-    from translate_v3_delete_glossary import delete_glossary
+    from google.cloud import translate_v3 as translate
 
     languages = ["fr", "en"]
     glossary_name = f"test-glossary-{uuid.uuid4()}"
     glossary_uri = "gs://cloud-samples-data/translation/bistro_glossary.csv"
 
     # create_glossary will raise an exception if creation fails
-    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
 
     # Delete glossary so that future tests will pass
     # delete_glossary will raise an exception if deletion fails
-    delete_glossary(PROJECT_ID, glossary_name)
+    client = translate.TranslationServiceClient()
+
+    name = client.glossary_path(PROJECT_ID, "us-central1", created_glossary_name)
+
+    operation = client.delete_glossary(name=name)
+    result = operation.result(timeout=180)
+    assert created_glossary_name in result.name
+    print(f"Deleted: {result.name}")
 
 
 def test_translate_standard():
@@ -62,9 +66,9 @@ def test_translate_standard():
     languages = ["fr", "en"]
     glossary_name = "bistro-glossary"
     glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
-    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
 
-    text = translate_text("Bonjour", "fr", "en", PROJECT_ID, "bistro-glossary")
+    text = hybrid_tutorial.translate_text("Bonjour", "fr", "en", PROJECT_ID, created_glossary_name)
 
     assert text == expected_text
 
@@ -78,9 +82,9 @@ def test_translate_glossary():
     languages = ["fr", "en"]
     glossary_name = "bistro-glossary"
     glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
-    create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
 
-    text = translate_text(input_text, "fr", "en", PROJECT_ID, "bistro-glossary")
+    text = hybrid_tutorial.translate_text(input_text, "fr", "en", PROJECT_ID, created_glossary_name)
 
     assert text == expected_text
 
@@ -92,7 +96,7 @@ def test_tts_standard(capsys):
     outfile = "resources/test_standard_text.mp3"
     text = "this is\na test!"
 
-    text_to_speech(text, outfile)
+    response = hybrid_tutorial.text_to_speech(text, outfile)
 
     # Assert audio file generated
     assert os.path.isfile(outfile)
