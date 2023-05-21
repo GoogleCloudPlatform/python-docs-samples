@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START cloudrun_imageproc_controller]
-# [START run_imageproc_controller]
 import base64
 import json
 import os
@@ -28,6 +27,7 @@ app = Flask(__name__)
 
 @app.route("/", methods=["POST"])
 def index():
+    """Receive and parse Pub/Sub messages containing Cloud Storage event data."""
     envelope = request.get_json()
     if not envelope:
         msg = "no Pub/Sub message received"
@@ -72,7 +72,7 @@ def index():
             return ("", 500)
 
     return ("", 500)
-    # [END run_imageproc_controller]
+
     # [END cloudrun_imageproc_controller]
 
 
