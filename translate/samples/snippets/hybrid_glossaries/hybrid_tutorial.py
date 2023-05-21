@@ -68,7 +68,7 @@ def create_glossary(
         project_id: str,
         glossary_name: str,
         glossary_uri: str,
-    ) -> str:
+) -> str:
     """Creates a GCP glossary resource
     Assumes you've already manually uploaded a glossary to Cloud Storage
 
@@ -232,7 +232,7 @@ def text_to_speech(text: str, outfile: str) -> str:
         out.write(response.audio_content)
         print("Audio content written to file " + outfile)
     # [END translate_hybrid_tts]
-    return response
+    return outfile
 
 
 # [START translate_hybrid_integration]
@@ -263,7 +263,7 @@ def main():
         text_to_translate, "fr", "en", PROJECT_ID, created_glossary_name
     )
     # translated text -> synthetic audio
-    response = text_to_speech(text_to_speak, outfile)
+    generated_outfile = text_to_speech(text_to_speak, outfile)
     # [END translate_hybrid_integration]
 
 

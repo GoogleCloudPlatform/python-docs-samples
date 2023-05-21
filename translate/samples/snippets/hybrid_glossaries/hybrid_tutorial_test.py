@@ -96,14 +96,14 @@ def test_tts_standard(capsys):
     outfile = "resources/test_standard_text.mp3"
     text = "this is\na test!"
 
-    response = hybrid_tutorial.text_to_speech(text, outfile)
+    generated_outfile = hybrid_tutorial.text_to_speech(text, outfile)
 
     # Assert audio file generated
-    assert os.path.isfile(outfile)
+    assert os.path.isfile(generated_outfile)
     out, err = capsys.readouterr()
 
     # Assert success message printed
-    assert "Audio content written to file " + outfile in out
+    assert "Audio content written to file " + generated_outfile in out
 
     # Delete test file
     os.remove(outfile)
