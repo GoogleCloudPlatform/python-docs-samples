@@ -92,7 +92,7 @@ def test_translate_glossary() -> None:
 # TEXT-TO-SPEECH TESTS
 
 
-def test_tts_standard(capsys) -> None:
+def test_tts_standard(capsys: pytest.LogCaptureFixture) -> None:
     outfile = "resources/test_standard_text.mp3"
     text = "this is\na test!"
 
