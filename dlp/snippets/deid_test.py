@@ -215,6 +215,21 @@ def test_deidentify_with_date_shift_using_context_field(tempdir, capsys):
     assert "Successful" in out
 
 
+def test_deidentify_with_time_extract(tempdir, capsys):
+    output_filepath = os.path.join(tempdir, "year-extracted.csv")
+
+    deid.deidentify_with_time_extract(
+        GCLOUD_PROJECT,
+        input_csv_file=CSV_FILE,
+        output_csv_file=output_filepath,
+        date_fields=DATE_FIELDS,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Successful" in out
+
+
 def test_reidentify_with_fpe(capsys):
     labeled_fpe_string = "My SSN is SSN_TOKEN(9):731997681"
 
