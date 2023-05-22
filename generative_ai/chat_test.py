@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
+from google.api_core.exceptions import ResourceExhausted
+
 import chat
 
 
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_science_tutoring() -> None:
     content = chat.science_tutoring(temperature=0).text
     assert "Mercury" in content

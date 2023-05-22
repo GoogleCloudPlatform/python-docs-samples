@@ -16,39 +16,30 @@ import os
 import uuid
 
 from google.cloud import tasks_v2
-import pytest
 
 import list_queues
 
 TEST_PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
-TEST_QUEUE_NAME = f"my-queue-{uuid.uuid4().hex}"
 
 
-@pytest.fixture()
-def test_queue():
+def test_list_queues() -> None:
     client = tasks_v2.CloudTasksClient()
-    parent = f"projects/{TEST_PROJECT_ID}/locations/{TEST_LOCATION}"
-    queue = {
-        # The fully qualified path to the queue
-        "name": client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME),
-    }
-    q = client.create_queue(request={"parent": parent, "queue": queue})
 
-    yield q
+    queue = client.create_queue(
+        tasks_v2.CreateQueueRequest(
+            parent=client.common_location_path(TEST_PROJECT_ID, TEST_LOCATION),
+            queue=tasks_v2.Queue(
+                name=client.queue_path(
+                    TEST_PROJECT_ID, TEST_LOCATION, f"my-queue-{uuid.uuid4().hex}"
+                )
+            ),
+        )
+    )
 
-    client.delete_queue(request={"name": q.name})
+    # Existant queue is returned
+    assert queue.name in list_queues.list_queues(TEST_PROJECT_ID, TEST_LOCATION)
 
-
-def test_list_queues_not_present(capsys):
-    list_queues.list_queues(TEST_PROJECT_ID, TEST_LOCATION)
-    out, _ = capsys.readouterr()
-
-    assert TEST_QUEUE_NAME not in out
-
-
-def test_list_queues_present(capsys, test_queue):
-    list_queues.list_queues(TEST_PROJECT_ID, TEST_LOCATION)
-    out, _ = capsys.readouterr()
-
-    assert TEST_QUEUE_NAME in out
+    # Non-existant queue is not returned
+    client.delete_queue(tasks_v2.DeleteQueueRequest(name=queue.name))
+    assert queue.name not in list_queues.list_queues(TEST_PROJECT_ID, TEST_LOCATION)
