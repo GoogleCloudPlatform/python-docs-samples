@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import backoff
-from google.api_core.exceptions import ResourceExhausted
+import get_sink
+import os
 
-import embedding
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_text_embedding() -> None:
-    content = embedding.text_embedding()
-    assert len(content) == 768
+def test_get_sink():
+    sink_name = "_Default"
+    sink = get_sink.get_sink(PROJECT, sink_name)
+    assert sink_name in sink.destination
