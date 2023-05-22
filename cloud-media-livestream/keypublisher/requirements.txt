@@ -1,4 +1,4 @@
-cryptography==37.0.2
+cryptography==39.0.1
 Flask==2.2.2
 functions-framework==3.1.0
 google-cloud-secret-manager==2.12.1
