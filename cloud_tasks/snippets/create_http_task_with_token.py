@@ -15,59 +15,57 @@
 # limitations under the License.
 
 
-def create_http_task(
-    project,
-    queue,
-    location,
-    url,
-    service_account_email,
-    audience=None,
-    payload=None,
-):
-    # [START cloud_tasks_create_http_task_with_token]
-    """Create a task for a given queue with an arbitrary payload."""
+# [START cloud_tasks_create_http_task_with_token]
+from typing import Optional
 
-    from google.cloud import tasks_v2
+from google.cloud import tasks_v2
+
+
+def create_http_task_with_token(
+    project: str,
+    location: str,
+    queue: str,
+    url: str,
+    payload: bytes,
+    service_account_email: str,
+    audience: Optional[str] = None,
+) -> tasks_v2.Task:
+    """Create an HTTP POST task with an OIDC token and an arbitrary payload.
+    Args:
+        project: The project ID where the queue is located.
+        location: The location where the queue is located.
+        queue: The ID of the queue to add the task to.
+        url: The target URL of the task.
+        payload: The payload to send.
+        service_account_email: The service account to use for generating the OIDC token.
+        audience: Audience to use when generating the OIDC token.
+    Returns:
+        The newly created task.
+    """
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # TODO(developer): Uncomment these lines and replace with your values.
-    # project = 'my-project-id'
-    # queue = 'my-queue'
-    # location = 'us-central1'
-    # url = 'https://example.com/task_handler?param=value'
-    # audience = 'https://example.com/task_handler'
-    # service_account_email = 'service-account@my-project-id.iam.gserviceaccount.com';
-    # payload = 'hello'
-
-    # Construct the fully qualified queue name.
-    parent = client.queue_path(project, location, queue)
-
     # Construct the request body.
-    task = {
-        "http_request": {  # Specify the type of request.
-            "http_method": tasks_v2.HttpMethod.POST,
-            "url": url,  # The full url path that the task will be sent to.
-            "oidc_token": {
-                "service_account_email": service_account_email,
-                "audience": audience,
-            },
-        }
-    }
-
-    if payload is not None:
-        # The API expects a payload of type bytes.
-        converted_payload = payload.encode()
-
-        # Add the payload to the request.
-        task["http_request"]["body"] = converted_payload
+    task = tasks_v2.Task(
+        http_request=tasks_v2.HttpRequest(
+            http_method=tasks_v2.HttpMethod.POST,
+            url=url,
+            oidc_token=tasks_v2.OidcToken(
+                service_account_email=service_account_email,
+                audience=audience,
+            ),
+            body=payload,
+        ),
+    )
 
     # Use the client to build and send the task.
-    response = client.create_task(request={"parent": parent, "task": task})
-
-    print(f"Created task {response.name}")
-    return response
+    return client.create_task(
+        tasks_v2.CreateTaskRequest(
+            parent=client.queue_path(project, location, queue),
+            task=task,
+        )
+    )
 
 
 # [END cloud_tasks_create_http_task_with_token]

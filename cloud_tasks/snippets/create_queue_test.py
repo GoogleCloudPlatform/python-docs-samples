@@ -16,25 +16,20 @@ import os
 import uuid
 
 from google.cloud import tasks_v2
-import pytest
 
 import create_queue
 
 TEST_PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
-TEST_QUEUE_NAME = f"my-queue-{uuid.uuid4().hex}"
+TEST_QUEUE_ID = f"my-queue-{uuid.uuid4().hex}"
 
 
-@pytest.fixture()
-def test_queue():
+def test_create_queue() -> None:
     client = tasks_v2.CloudTasksClient()
-    q = create_queue.create_queue(TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION)
 
-    yield q
+    queue = create_queue.create_queue(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_ID)
+    assert queue.name == client.queue_path(
+        TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_ID
+    )
 
-    client.delete_queue(request={"name": q.name})
-
-
-def test_create_queue(capsys, test_queue):
-    out, _ = capsys.readouterr()
-    assert "Created queue" in out
+    client.delete_queue(tasks_v2.DeleteQueueRequest(name=queue.name))
