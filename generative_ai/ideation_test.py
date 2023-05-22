@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
+from google.api_core.exceptions import ResourceExhausted
+
 import ideation
 
 
@@ -27,6 +30,7 @@ interview_expected_response = '''1. What is your experience with project managem
 10. What questions do you have for me?'''
 
 
-def test_interview():
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_interview() -> None:
     content = ideation.interview(temperature=0).text
     assert content == interview_expected_response

@@ -21,7 +21,7 @@ import os
 # RUN_TESTS_SESSION. The reason we can not use multiple project is
 # that our new projects are enforced to have
 # 'constraints/iam.disableServiceAccountKeyCreation' policy.
-def get_service_account_email():
+def get_service_account_email() -> str:
     session = os.environ.get("RUN_TESTS_SESSION")
     if session == "py-3.6":
         return "py36-storage-test@" "python-docs-samples-tests.iam.gserviceaccount.com"

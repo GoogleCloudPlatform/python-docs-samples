@@ -24,6 +24,9 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
+    """Example route to write structured log entries with request log
+    correlation.
+    """
     # This is set as a custom environment variable on deployment.
     # To automatically detect the current project, use the metadata server.
     # https://cloud.google.com/run/docs/reference/container-contract#metadata-server
