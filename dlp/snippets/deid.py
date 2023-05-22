@@ -18,6 +18,10 @@ from __future__ import annotations
 
 import argparse
 
+from typing import Dict
+from typing import List
+from typing import Union
+
 
 # [START dlp_deidentify_masking]
 def deidentify_with_mask(
@@ -1573,6 +1577,100 @@ def deidentify_table_replace_with_info_types(
 # [END dlp_deidentify_table_infotypes]
 
 
+# [START dlp_deidentify_table_fpe]
+def deidentify_table_with_fpe(
+    project: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    deid_content_list: List[str],
+    key_name: str = None,
+    wrapped_key: str = None,
+    alphabet: str = None,
+) -> None:
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+      table while maintaining format.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Dictionary representing table data.
+        deid_content_list: A list of fields in table to de-identify.
+        key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
+            AES-256 key. Example:
+            key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
+            keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
+        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
+            should be encrypted using the Cloud KMS key specified by key_name.
+        alphabet: The set of characters to replace sensitive ones with. For
+            more information, see https://cloud.google.com/dlp/docs/reference/
+            rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table.
+    item = {"table": table}
+
+    # Specify fields to be de-identified.
+    deid_content_list = [{"name": _i} for _i in deid_content_list]
+
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    import base64
+
+    wrapped_key = base64.b64decode(wrapped_key)
+
+    # Construct FPE configuration dictionary
+    crypto_replace_ffx_fpe_config = {
+        "crypto_key": {
+            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name},
+        },
+        "common_alphabet": alphabet,
+    }
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "primitive_transformation": {
+                        "crypto_replace_ffx_fpe_config": crypto_replace_ffx_fpe_config
+                    },
+                    "fields": deid_content_list,
+                }
+            ]
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item
+        })
+
+    # Print out results.
+    print(f"Table after de-identification: {response.item.table}")
+
+
+# [END dlp_deidentify_table_fpe]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -1983,6 +2081,45 @@ if __name__ == "__main__":
         help="A list of fields in table to de-identify.",
     )
 
+    table_fpe_parser = subparsers.add_parser(
+        "deid_table_fpe",
+        help="Deidentify sensitive data in a string using Format Preserving "
+        "Encryption (FPE).",
+    )
+    table_fpe_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    table_fpe_parser.add_argument(
+        "table_data",
+        help="Dictionary representing table data",
+    )
+    table_fpe_parser.add_argument(
+        "deid_content_list",
+        help="A list of fields in table to de-identify.",
+    )
+    table_fpe_parser.add_argument(
+        "key_name",
+        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
+    table_fpe_parser.add_argument(
+        "wrapped_key",
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
+        "be encrypted using the Cloud KMS key specified by key_name.",
+    )
+    table_fpe_parser.add_argument(
+        "-a",
+        "--alphabet",
+        default="ALPHA_NUMERIC",
+        help="The set of characters to replace sensitive ones with. Commonly "
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2086,4 +2223,13 @@ if __name__ == "__main__":
             args.table_data,
             args.info_types,
             args.deid_content_list,
+        )
+    elif args.content == "deid_table_fpe":
+        deidentify_table_with_fpe(
+            args.project,
+            args.table_data,
+            args.deid_content_list,
+            wrapped_key=args.wrapped_key,
+            key_name=args.key_name,
+            alphabet=args.alphabet,
         )

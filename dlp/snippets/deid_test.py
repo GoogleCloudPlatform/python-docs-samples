@@ -442,3 +442,27 @@ def test_deidentify_table_replace_with_info_types(capsys):
     assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
     assert "There are 14 kisses in [PERSON_NAME] novels." in out
     assert "[PERSON_NAME] loved cats." in out
+
+
+def test_deidentify_table_with_fpe(capsys):
+    table_data = {
+        "header": ["employee_id", "date", "compensation"],
+        "rows": [
+            ["11111", "2015", "$10"],
+            ["11111", "2016", "$20"],
+            ["22222", "2016", "$15"],
+        ]
+    }
+
+    deid.deidentify_table_with_fpe(
+        GCLOUD_PROJECT,
+        table_data,
+        ["employee_id"],
+        alphabet='NUMERIC',
+        wrapped_key=WRAPPED_KEY,
+        key_name=KEY_NAME,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "11111" not in out
+    assert "22222" not in out
