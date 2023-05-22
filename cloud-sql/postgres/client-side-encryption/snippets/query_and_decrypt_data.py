@@ -24,6 +24,9 @@ from .encrypt_and_insert_data import encrypt_and_insert_data
 
 
 def main() -> None:
+    """
+    Connects to the database, inserts encrypted data and retrieves encrypted data.
+    """
     db_user = os.environ["DB_USER"]  # e.g. "root", "postgres"
     db_pass = os.environ["DB_PASS"]  # e.g. "mysupersecretpassword"
     db_name = os.environ["DB_NAME"]  # e.g. "votes_db"
@@ -68,6 +71,9 @@ def query_and_decrypt_data(
     env_aead: tink.aead.KmsEnvelopeAead,
     table_name: str,
 ) -> None:
+    """
+    Retrieves data from the database and decrypts it using the KmsEnvelopeAead object.
+    """
     with db.connect() as conn:
         # Execute the query and fetch all results
         recent_votes = conn.execute(

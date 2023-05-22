@@ -68,16 +68,10 @@ def setup_key() -> tink.aead.KmsEnvelopeAead:
 def test_query_and_decrypt_data(
     capsys: pytest.CaptureFixture,
     pool: sqlalchemy.engine.Engine,
-    env_aead: tink.aead.KmsEnvelopeAead
+    env_aead: tink.aead.KmsEnvelopeAead,
 ) -> None:
-
     # Insert data into table before testing
-    encrypt_and_insert_data(
-        pool,
-        env_aead,
-        table_name,
-        "SPACES",
-        "hello@example.com")
+    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
 
     query_and_decrypt_data(pool, env_aead, table_name)
 
