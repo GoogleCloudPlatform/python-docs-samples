@@ -26,14 +26,25 @@ from google.api_core.exceptions import NotFound
 from google.cloud.devtools import containeranalysis_v1
 from google.cloud.pubsub import PublisherClient, SubscriberClient
 from google.cloud.pubsub_v1.subscriber.message import Message
-
 from grafeas.grafeas_v1 import DiscoveryOccurrence
 from grafeas.grafeas_v1 import NoteKind
 from grafeas.grafeas_v1 import Severity
 from grafeas.grafeas_v1 import Version
-import pytest
 
-import samples
+from create_note import create_note
+from create_occurrence import create_occurrence
+from create_occurrence_subscription import create_occurrence_subscription
+from delete_note import delete_note
+from delete_occurrence import delete_occurrence
+from find_high_severity_vulnerabilities_for_image import find_high_severity_vulnerabilities_for_image
+from find_vulnerabilities_for_image import find_vulnerabilities_for_image
+from get_note import get_note
+from get_occurrence import get_occurrence
+from get_occurrences_for_image import get_occurrences_for_image
+from get_occurrences_for_note import get_occurrences_for_note
+from poll_discovery_finished import poll_discovery_finished
+
+import pytest
 
 PROJECT_ID = environ["GOOGLE_CLOUD_PROJECT"]
 SLEEP_TIME = 1
@@ -63,23 +74,23 @@ class TestContainerAnalysisSamples:
         print(f"SETUP {test_method.__name__}")
         self.note_id = f"note-{uuid.uuid4()}"
         self.image_url = f"{uuid.uuid4()}.{test_method.__name__}"
-        self.note_obj = samples.create_note(self.note_id, PROJECT_ID)
+        self.note_obj = create_note(self.note_id, PROJECT_ID)
 
     def teardown_method(self, test_method: Type[MessageReceiver]) -> None:
         print(f"TEAR DOWN {test_method.__name__}")
         try:
-            samples.delete_note(self.note_id, PROJECT_ID)
+            delete_note(self.note_id, PROJECT_ID)
         except NotFound:
             pass
 
     def test_create_note(self) -> None:
-        new_note = samples.get_note(self.note_id, PROJECT_ID)
+        new_note = get_note(self.note_id, PROJECT_ID)
         assert new_note.name == self.note_obj.name
 
     def test_delete_note(self) -> None:
-        samples.delete_note(self.note_id, PROJECT_ID)
+        delete_note(self.note_id, PROJECT_ID)
         try:
-            samples.get_note(self.note_obj, PROJECT_ID)
+            get_note(self.note_obj, PROJECT_ID)
         except InvalidArgument:
             pass
         else:
@@ -87,21 +98,21 @@ class TestContainerAnalysisSamples:
             assert False
 
     def test_create_occurrence(self) -> None:
-        created = samples.create_occurrence(
+        created = create_occurrence(
             self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
         )
-        retrieved = samples.get_occurrence(basename(created.name), PROJECT_ID)
+        retrieved = get_occurrence(basename(created.name), PROJECT_ID)
         assert created.name == retrieved.name
         # clean up
-        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+        delete_occurrence(basename(created.name), PROJECT_ID)
 
     def test_delete_occurrence(self) -> None:
-        created = samples.create_occurrence(
+        created = create_occurrence(
             self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
         )
-        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+        delete_occurrence(basename(created.name), PROJECT_ID)
         try:
-            samples.get_occurrence(basename(created.name), PROJECT_ID)
+            get_occurrence(basename(created.name), PROJECT_ID)
         except NotFound:
             pass
         else:
@@ -109,36 +120,36 @@ class TestContainerAnalysisSamples:
             assert False
 
     def test_occurrences_for_image(self) -> None:
-        orig_count = samples.get_occurrences_for_image(self.image_url, PROJECT_ID)
-        occ = samples.create_occurrence(
+        orig_count = get_occurrences_for_image(self.image_url, PROJECT_ID)
+        occ = create_occurrence(
             self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
         )
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            new_count = samples.get_occurrences_for_image(self.image_url, PROJECT_ID)
+            new_count = get_occurrences_for_image(self.image_url, PROJECT_ID)
             time.sleep(SLEEP_TIME)
         assert new_count == 1
         assert orig_count == 0
         # clean up
-        samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+        delete_occurrence(basename(occ.name), PROJECT_ID)
 
     def test_occurrences_for_note(self) -> None:
-        orig_count = samples.get_occurrences_for_note(self.note_id, PROJECT_ID)
-        occ = samples.create_occurrence(
+        orig_count = get_occurrences_for_note(self.note_id, PROJECT_ID)
+        occ = create_occurrence(
             self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
         )
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
             tries += 1
-            new_count = samples.get_occurrences_for_note(self.note_id, PROJECT_ID)
+            new_count = get_occurrences_for_note(self.note_id, PROJECT_ID)
             time.sleep(SLEEP_TIME)
         assert new_count == 1
         assert orig_count == 0
         # clean up
-        samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+        delete_occurrence(basename(occ.name), PROJECT_ID)
 
     @pytest.mark.flaky(max_runs=3, min_passes=1)
     def test_pubsub(self) -> None:
@@ -154,7 +165,7 @@ class TestContainerAnalysisSamples:
 
         subscription_id = f"container-analysis-test-{uuid.uuid4()}"
         subscription_name = client.subscription_path(PROJECT_ID, subscription_id)
-        samples.create_occurrence_subscription(subscription_id, PROJECT_ID)
+        create_occurrence_subscription(subscription_id, PROJECT_ID)
 
         # I can not make it pass with multiple messages. My guess is
         # the server started to dedup?
@@ -165,11 +176,11 @@ class TestContainerAnalysisSamples:
             client.subscribe(subscription_name, receiver.pubsub_callback)
 
             for i in range(message_count):
-                occ = samples.create_occurrence(
+                occ = create_occurrence(
                     self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
                 )
                 time.sleep(SLEEP_TIME)
-                samples.delete_occurrence(basename(occ.name), PROJECT_ID)
+                delete_occurrence(basename(occ.name), PROJECT_ID)
                 time.sleep(SLEEP_TIME)
             # We saw occational failure with 60 seconds timeout, so we bumped it
             # to 180 seconds.
@@ -184,7 +195,7 @@ class TestContainerAnalysisSamples:
     def test_poll_discovery_occurrence_fails(self) -> None:
         # try with no discovery occurrence
         try:
-            samples.poll_discovery_finished(self.image_url, 5, PROJECT_ID)
+            poll_discovery_finished(self.image_url, 5, PROJECT_ID)
         except RuntimeError:
             pass
         else:
@@ -212,36 +223,36 @@ class TestContainerAnalysisSamples:
             parent=f"projects/{PROJECT_ID}", occurrence=occurrence
         )
 
-        disc = samples.poll_discovery_finished(self.image_url, 10, PROJECT_ID)
+        disc = poll_discovery_finished(self.image_url, 10, PROJECT_ID)
         status = disc.discovery.analysis_status
         assert disc is not None
         assert status == DiscoveryOccurrence.AnalysisStatus.FINISHED_SUCCESS
 
         # clean up
-        samples.delete_occurrence(basename(created.name), PROJECT_ID)
-        samples.delete_note(note_id, PROJECT_ID)
+        delete_occurrence(basename(created.name), PROJECT_ID)
+        delete_note(note_id, PROJECT_ID)
 
     def test_find_vulnerabilities_for_image(self) -> None:
-        occ_list = samples.find_vulnerabilities_for_image(self.image_url, PROJECT_ID)
+        occ_list = find_vulnerabilities_for_image(self.image_url, PROJECT_ID)
         assert len(occ_list) == 0
 
-        created = samples.create_occurrence(
+        created = create_occurrence(
             self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
         )
         tries = 0
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = samples.find_vulnerabilities_for_image(
+            occ_list = find_vulnerabilities_for_image(
                 self.image_url, PROJECT_ID
             )
             count = len(occ_list)
             time.sleep(SLEEP_TIME)
         assert len(occ_list) == 1
-        samples.delete_occurrence(basename(created.name), PROJECT_ID)
+        delete_occurrence(basename(created.name), PROJECT_ID)
 
     def test_find_high_severity_vulnerabilities(self) -> None:
-        occ_list = samples.find_high_severity_vulnerabilities_for_image(
+        occ_list = find_high_severity_vulnerabilities_for_image(
             self.image_url, PROJECT_ID
         )
         assert len(occ_list) == 0
@@ -289,12 +300,12 @@ class TestContainerAnalysisSamples:
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = samples.find_vulnerabilities_for_image(
+            occ_list = find_vulnerabilities_for_image(
                 self.image_url, PROJECT_ID
             )
             count = len(occ_list)
             time.sleep(SLEEP_TIME)
         assert len(occ_list) == 1
         # clean up
-        samples.delete_occurrence(basename(created.name), PROJECT_ID)
-        samples.delete_note(note_id, PROJECT_ID)
+        delete_occurrence(basename(created.name), PROJECT_ID)
+        delete_note(note_id, PROJECT_ID)
