@@ -16,12 +16,13 @@ import os
 import uuid
 
 import pytest
+import sqlalchemy
+import tink
+
 from snippets.cloud_kms_env_aead import init_tink_env_aead
 from snippets.cloud_sql_connection_pool import init_db
 from snippets.encrypt_and_insert_data import encrypt_and_insert_data
 from snippets.query_and_decrypt_data import query_and_decrypt_data
-import sqlalchemy
-import tink
 
 table_name = f"votes_{uuid.uuid4().hex}"
 
