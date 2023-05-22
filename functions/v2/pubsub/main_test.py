@@ -14,8 +14,9 @@
 
 import base64
 
-import main
 import pytest
+
+import main
 
 
 def test_functions_pubsub_subscribe_should_print_message(
