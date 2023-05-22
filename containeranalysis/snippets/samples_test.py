@@ -30,6 +30,7 @@ from grafeas.grafeas_v1 import DiscoveryOccurrence
 from grafeas.grafeas_v1 import NoteKind
 from grafeas.grafeas_v1 import Severity
 from grafeas.grafeas_v1 import Version
+import pytest
 
 from create_note import create_note
 from create_occurrence import create_occurrence
@@ -44,7 +45,6 @@ from get_occurrences_for_image import get_occurrences_for_image
 from get_occurrences_for_note import get_occurrences_for_note
 from poll_discovery_finished import poll_discovery_finished
 
-import pytest
 
 PROJECT_ID = environ["GOOGLE_CLOUD_PROJECT"]
 SLEEP_TIME = 1
