@@ -1049,12 +1049,8 @@ def inspect_image_file_listed_infotypes(
 # [START dlp_inspect_bigquery_with_sampling]
 def inspect_bigquery_table_with_sampling(
     project: str,
-    bigquery_project: str,
-    dataset_id: str,
-    table_id: str,
     topic_id: str,
     subscription_id: str,
-    info_types: List[str] = None,
     min_likelihood: str = None,
     max_findings: str = None,
     timeout: int = 300,
@@ -1063,16 +1059,11 @@ def inspect_bigquery_table_with_sampling(
     the amount of data to be scanned.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        bigquery_project: The Google Cloud project id of the target table.
-        dataset_id: The id of the target BigQuery dataset.
-        table_id: The id of the target BigQuery table.
         topic_id: The id of the Cloud Pub/Sub topic to which the API will
             broadcast job completion. The topic must already exist.
         subscription_id: The id of the Cloud Pub/Sub subscription to listen on
             while waiting for job completion. The subscription must already
             exist and be subscribed to the topic.
-        info_types: A list of strings representing infoTypes to look for.
-            A full list of info type categories can be fetched from the API.
         min_likelihood: A string representing the minimum likelihood threshold
             that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
             'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
@@ -1093,26 +1084,21 @@ def inspect_bigquery_table_with_sampling(
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
-    # Prepare info_types by converting the list of strings into a list of
-    # dictionaries.
-    if not info_types:
-        info_types = ["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"]
-    info_types = [{"name": info_type} for info_type in info_types]
-
     # Specify how the content should be inspected. Keys which are None may
     # optionally be omitted entirely.
     inspect_config = {
-        "info_types": info_types,
+        "info_types": [{"name": "PERSON_NAME"}],
         "min_likelihood": min_likelihood,
         "limits": {"max_findings_per_request": max_findings},
-        "include_quote": True
+        "include_quote": True,
     }
 
     # Specify the BigQuery table to be inspected.
+    # Here we are using public bigquery table.
     table_reference = {
-        "project_id": bigquery_project,
-        "dataset_id": dataset_id,
-        "table_id": table_id,
+        "project_id": "bigquery-public-data",
+        "dataset_id": "usa_names",
+        "table_id": "usa_1910_current",
     }
 
     # Construct a storage_config containing the target BigQuery info.
@@ -1121,7 +1107,7 @@ def inspect_bigquery_table_with_sampling(
             "table_reference": table_reference,
             "rows_limit": 1000,
             "sample_method": 'RANDOM_START',
-            "identifying_fields": [{"name": "Name"}]
+            "identifying_fields": [{"name": "name"}],
         }
     }
 
@@ -1632,16 +1618,6 @@ if __name__ == "__main__":
         "data to be scanned."
     )
     parser_bigquery_with_sampling.add_argument(
-        "bigquery_project",
-        help="The Google Cloud project id of the target table.",
-    )
-    parser_bigquery_with_sampling.add_argument(
-        "dataset_id", help="The ID of the target BigQuery dataset."
-    )
-    parser_bigquery_with_sampling.add_argument(
-        "table_id", help="The ID of the target BigQuery table."
-    )
-    parser_bigquery_with_sampling.add_argument(
         "topic_id",
         help="The id of the Cloud Pub/Sub topic to use to report that the job "
         'is complete, e.g. "dlp-sample-topic".',
@@ -1657,15 +1633,6 @@ if __name__ == "__main__":
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
         default=default_project,
-    )
-    parser_bigquery_with_sampling.add_argument(
-        "--info_types",
-        nargs="+",
-        help="Strings representing infoTypes to look for. A full list of "
-        "info categories and types is available from the API. Examples "
-        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-        "If unspecified, the three above examples will be used.",
-        default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     parser_bigquery_with_sampling.add_argument(
         "--min_likelihood",
@@ -1823,12 +1790,8 @@ if __name__ == "__main__":
     elif args.content == "bigquery_with_sampling":
         inspect_bigquery_table_with_sampling(
             args.project,
-            args.bigquery_project,
-            args.dataset_id,
-            args.table_id,
             args.topic_id,
             args.subscription_id,
-            info_types=args.info_types,
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             timeout=args.timeout,

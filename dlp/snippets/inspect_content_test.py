@@ -531,17 +531,13 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_bigquery_with_sampling(bigquery_project, topic_id, subscription_id, capsys):
+def test_inspect_bigquery_with_sampling(topic_id, subscription_id, capsys):
     out = ""
     try:
         inspect_content.inspect_bigquery_table_with_sampling(
             GCLOUD_PROJECT,
-            bigquery_project,
-            BIGQUERY_DATASET_ID,
-            BIGQUERY_TABLE_ID,
             topic_id,
             subscription_id,
-            ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             timeout=TIMEOUT,
         )
 
