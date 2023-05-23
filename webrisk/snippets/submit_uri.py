@@ -14,9 +14,10 @@
 
 # [START webrisk_submit_uri]
 from google.cloud import webrisk_v1
+from google.cloud.webrisk_v1 import Submission
 
 
-def submit_uri(project_id: str, uri: str) -> None:
+def submit_uri(project_id: str, uri: str) -> Submission:
     """Submits a URI suspected of containing malicious content to be reviewed.
 
     Returns a google.longrunning.Operation which, once the review is complete, is updated with its result.
@@ -28,6 +29,9 @@ def submit_uri(project_id: str, uri: str) -> None:
          project_id: The name of the project that is making the submission.
          uri: The URI that is being reported for malicious content to be analyzed.
              uri = "http://testsafebrowsing.appspot.com/s/malware.html"
+
+    Returns:
+        Submission response that contains the URI submitted.
     """
     webrisk_client = webrisk_v1.WebRiskServiceClient()
 
@@ -39,6 +43,7 @@ def submit_uri(project_id: str, uri: str) -> None:
     request.submission = submission
 
     response = webrisk_client.create_submission(request)
-    print(f"Submission response: {response}")
+    return response
+
 
 # [END webrisk_submit_uri]

@@ -16,13 +16,14 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import List
+from __future__ import annotations
+
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT create_with_existing_disks>
-def create_with_existing_disks(project_id: str, zone: str, instance_name: str, disk_names: List[str]) -> compute_v1.Instance:
+def create_with_existing_disks(project_id: str, zone: str, instance_name: str, disk_names: list[str]) -> compute_v1.Instance:
     """
     Create a new VM instance using selected disks. The first disk in disk_names will
     be used as boot disk.

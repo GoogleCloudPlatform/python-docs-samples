@@ -29,7 +29,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 @pytest.fixture(scope="function")
 def bucket():
     # Create a temporary bucket to store annotation output.
-    bucket_name = "test-{}".format(uuid.uuid4())
+    bucket_name = f"test-{uuid.uuid4()}"
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
     bucket = storage_client.create_bucket(bucket, location="us-central1")

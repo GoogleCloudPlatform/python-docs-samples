@@ -1,12 +1,10 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2016 Google Inc.
+# Copyright 2016 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -109,7 +107,7 @@ def get_object(bucket, filename, out_file):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print("Download {}%.".format(int(status.progress() * 100)))
+        print(f"Download {int(status.progress() * 100)}%.")
 
     return out_file
 

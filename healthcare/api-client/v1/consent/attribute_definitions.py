@@ -70,7 +70,7 @@ def create_resource_attribute_definition(
     )
 
     response = request.execute()
-    print("Created RESOURCE attribute definition: {}".format(response))
+    print(f"Created RESOURCE attribute definition: {response}")
 
     return response
 
@@ -136,7 +136,7 @@ def create_request_attribute_definition(
     )
 
     response = request.execute()
-    print("Created REQUEST attribute definition: {}".format(response))
+    print(f"Created REQUEST attribute definition: {response}")
 
     return response
 
@@ -189,7 +189,7 @@ def get_attribute_definition(
     )
 
     response = request.execute()
-    print("Got attribute definition: {}".format(attribute_definition_id))
+    print(f"Got attribute definition: {attribute_definition_id}")
     return response
 
 
@@ -348,7 +348,7 @@ def delete_attribute_definition(
     )
 
     response = request.execute()
-    print("Deleted attribute definition: {}".format(attribute_definition_id))
+    print(f"Deleted attribute definition: {attribute_definition_id}")
     return response
 
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2019 Google LLC
 #
@@ -41,7 +40,7 @@ def sample_cancel_operation(project, operation_id):
 
     operations_client.cancel_operation(name)
 
-    print(u"Cancelled operation: {}".format(name))
+    print(f"Cancelled operation: {name}")
 
 
 # [END automl_cancel_operation]

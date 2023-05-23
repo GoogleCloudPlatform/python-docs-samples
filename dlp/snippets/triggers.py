@@ -14,7 +14,6 @@
 
 """Sample app that sets up Data Loss Prevention API automation triggers."""
 
-from __future__ import print_function
 
 import argparse
 import os
@@ -75,7 +74,7 @@ def create_trigger(
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = "gs://{}/*".format(bucket)
+    url = f"gs://{bucket}/*"
     storage_config = {
         "cloud_storage_options": {"file_set": {"url": url}},
         # Time-based configuration for each storage object.
@@ -111,7 +110,7 @@ def create_trigger(
         request={"parent": parent, "job_trigger": job_trigger, "trigger_id": trigger_id}
     )
 
-    print("Successfully created trigger {}".format(response.name))
+    print(f"Successfully created trigger {response.name}")
 
 
 # [END dlp_create_trigger]
@@ -139,15 +138,15 @@ def list_triggers(project):
     response = dlp.list_job_triggers(request={"parent": parent})
 
     for trigger in response:
-        print("Trigger {}:".format(trigger.name))
-        print("  Created: {}".format(trigger.create_time))
-        print("  Updated: {}".format(trigger.update_time))
+        print(f"Trigger {trigger.name}:")
+        print(f"  Created: {trigger.create_time}")
+        print(f"  Updated: {trigger.update_time}")
         if trigger.display_name:
-            print("  Display Name: {}".format(trigger.display_name))
+            print(f"  Display Name: {trigger.display_name}")
         if trigger.description:
-            print("  Description: {}".format(trigger.discription))
-        print("  Status: {}".format(trigger.status))
-        print("  Error count: {}".format(len(trigger.errors)))
+            print(f"  Description: {trigger.discription}")
+        print(f"  Status: {trigger.status}")
+        print(f"  Error count: {len(trigger.errors)}")
 
 
 # [END dlp_list_triggers]
@@ -173,12 +172,12 @@ def delete_trigger(project, trigger_id):
     parent = f"projects/{project}"
 
     # Combine the trigger id with the parent id.
-    trigger_resource = "{}/jobTriggers/{}".format(parent, trigger_id)
+    trigger_resource = f"{parent}/jobTriggers/{trigger_id}"
 
     # Call the API.
     dlp.delete_job_trigger(request={"name": trigger_resource})
 
-    print("Trigger {} successfully deleted.".format(trigger_resource))
+    print(f"Trigger {trigger_resource} successfully deleted.")
 
 
 # [END dlp_delete_trigger]

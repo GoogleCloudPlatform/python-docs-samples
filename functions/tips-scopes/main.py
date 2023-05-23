@@ -51,6 +51,6 @@ def scope_demo(request):
     # Per-function scope
     # This computation runs every time this function is called
     function_var = light_computation()
-    return 'Instance: {}; function: {}'.format(instance_var, function_var)
+    return f'Instance: {instance_var}; function: {function_var}'
 # [END functions_tips_scopes]
 # [END cloudrun_tips_global_scope]

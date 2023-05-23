@@ -21,9 +21,9 @@ import quickstart_createfeed
 
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-ASSET_NAME = "assets-{}".format(uuid.uuid4().hex)
-FEED_ID = "feed-{}".format(uuid.uuid4().hex)
-FEED_ID_R = "feed-{}".format(uuid.uuid4().hex)
+ASSET_NAME = f"assets-{uuid.uuid4().hex}"
+FEED_ID = f"feed-{uuid.uuid4().hex}"
+FEED_ID_R = f"feed-{uuid.uuid4().hex}"
 
 
 def test_create_feed(capsys, test_topic, deleter):

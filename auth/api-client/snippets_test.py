@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import os
+from unittest import mock
 
 import google.auth
-import mock
 
 import snippets
 

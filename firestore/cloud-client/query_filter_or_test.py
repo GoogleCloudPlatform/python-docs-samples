@@ -27,10 +27,10 @@ PROJECT_ID = os.environ['FIRESTORE_PROJECT']
 @pytest.fixture(scope="module")
 def data():
     return {
-            u'aturing': {u'birthYear': 1912},
-            u'cbabbage': {u'birthYear': 1791},
-            u'ghopper': {u'birthYear': 1906},
-            u'alovelace': {u'birthYear': 1815},
+            'aturing': {'birthYear': 1912},
+            'cbabbage': {'birthYear': 1791},
+            'ghopper': {'birthYear': 1906},
+            'alovelace': {'birthYear': 1815},
     }
 
 

@@ -25,7 +25,7 @@ import pytest
 import quickstart_searchallresources
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-DATASET = "dataset_{}".format(uuid.uuid4().hex)
+DATASET = f"dataset_{uuid.uuid4().hex}"
 
 
 @pytest.fixture(scope="module")
@@ -42,14 +42,14 @@ def asset_dataset(bigquery_client):
     try:
         bigquery_client.delete_dataset(dataset)
     except NotFound as e:
-        print("Failed to delete dataset {}".format(DATASET))
+        print(f"Failed to delete dataset {DATASET}")
         raise e
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_search_all_resources(asset_dataset, capsys):
-    scope = "projects/{}".format(PROJECT)
-    query = "name:{}".format(DATASET)
+    scope = f"projects/{PROJECT}"
+    query = f"name:{DATASET}"
 
     # Dataset creation takes some time to propagate, so the dataset is not
     # immediately searchable. Need some time before the snippet will pass.

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,7 +15,6 @@
 """Sample app that queries the Data Loss Prevention API for supported
 categories and info types."""
 
-from __future__ import print_function
 
 import argparse
 

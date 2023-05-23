@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# NVIDIA CUDA container: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda
-# Supported NVIDIA images: https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md
-# TensorFlow/CUDA compatibility: https://www.tensorflow.org/install/source#gpu
 FROM python:3.10-slim
 
 WORKDIR /pipeline

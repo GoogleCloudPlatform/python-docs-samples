@@ -21,7 +21,7 @@ import job_search_create_job
 import job_search_delete_job
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-JOB_EXT_UNIQUE_ID = "TEST_JOB_{}".format(uuid.uuid4())
+JOB_EXT_UNIQUE_ID = f"TEST_JOB_{uuid.uuid4()}"
 
 
 def test_create_job(capsys, tenant, company, cleaner):
