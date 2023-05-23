@@ -15,9 +15,9 @@
 import os
 
 import pytest
+from tink.aead import KmsEnvelopeAead
 
 from snippets.cloud_kms_env_aead import init_tink_env_aead
-from tink.aead import KmsEnvelopeAead
 
 
 @pytest.fixture(name="kms_uri")

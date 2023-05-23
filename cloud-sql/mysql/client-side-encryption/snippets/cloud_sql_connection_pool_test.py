@@ -20,11 +20,9 @@ import uuid
 import pytest
 import sqlalchemy
 
-from snippets.cloud_sql_connection_pool import (
-    init_db,
-    init_tcp_connection_engine,
-    init_unix_connection_engine,
-)
+from snippets.cloud_sql_connection_pool import (init_db,
+                                                init_tcp_connection_engine,
+                                                init_unix_connection_engine)
 
 
 @pytest.fixture(name="conn_vars")
@@ -57,6 +55,7 @@ def test_init_tcp_connection_engine(conn_vars: dict[str, str]) -> None:
 
     assert isinstance(engine, sqlalchemy.engine.base.Engine)
     assert conn_vars["db_name"] in engine.url
+
 
 def test_init_unix_connection_engine(conn_vars: dict[str, str]) -> None:
     engine = init_unix_connection_engine(
