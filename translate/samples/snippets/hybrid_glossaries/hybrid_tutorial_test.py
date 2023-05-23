@@ -16,8 +16,9 @@ import os
 import sys
 import uuid
 
-import hybrid_tutorial
 import pytest
+
+import hybrid_tutorial
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
