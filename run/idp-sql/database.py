@@ -33,6 +33,10 @@ db = None
 
 
 def init_connection_engine() -> sqlalchemy.engine.base.Engine:
+    """Initializes a connection pool for a Cloud SQL instance of PostgreSQL.
+    Returns:
+        A SQLAlchemy Engine instance.
+    """
     if os.getenv("TRAMPOLINE_CI", None):
         logger.info("Using NullPool for testing")
         db_config: dict[str, Any] = {"poolclass": NullPool}
@@ -65,6 +69,12 @@ def init_connection_engine() -> sqlalchemy.engine.base.Engine:
 def init_tcp_connection_engine(
     db_config: dict[str, type[NullPool]]
 ) -> sqlalchemy.engine.base.Engine:
+    """Initializes a TCP connection pool for a Cloud SQL instance of PostgreSQL.
+    Args:
+        db_config: a dictionary with connection pool config
+    Returns:
+        A SQLAlchemy Engine instance.
+    """
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -89,7 +99,7 @@ def init_tcp_connection_engine(
         **db_config,
     )
     pool.dialect.description_encoding = None
-    logger.info("Database engine initialised from tcp connection")
+    logger.info("Database engine initialized from tcp connection")
 
     return pool
 
@@ -98,6 +108,12 @@ def init_tcp_connection_engine(
 def init_unix_connection_engine(
     db_config: dict[str, int]
 ) -> sqlalchemy.engine.base.Engine:
+    """Initializes a Unix socket connection pool for a Cloud SQL instance of PostgreSQL.
+    Args:
+        db_config: a dictionary with connection pool config
+    Returns:
+        A SQLAlchemy Engine instance.
+    """
     creds = credentials.get_cred_config()
     db_user = creds["DB_USER"]
     db_pass = creds["DB_PASSWORD"]
@@ -122,7 +138,7 @@ def init_unix_connection_engine(
         **db_config,
     )
     pool.dialect.description_encoding = None
-    logger.info("Database engine initialised from unix conection")
+    logger.info("Database engine initialized from unix connection")
 
     return pool
 
@@ -131,7 +147,7 @@ def init_unix_connection_engine(
 
 
 def create_tables() -> None:
-
+    """Initializes SQLAlchemy connection and creates database table."""
     # This is called before any request on the main app, ensuring the database has been setup
     logger.info("Creating tables")
     global db
@@ -150,6 +166,10 @@ def create_tables() -> None:
 
 
 def get_index_context() -> dict[str, Any]:
+    """Query PostgreSQL database and transform data for UI.
+    Returns:
+        A dictionary of counts and votes.
+    """
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
@@ -180,6 +200,12 @@ def get_index_context() -> dict[str, Any]:
 
 
 def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
+    """Save a vote into the PostgreSQL database.
+    Args:
+        team: the name of the team
+        uid: the user id
+        time_cast: the time of the vote
+    """
     # Preparing a statement before hand can help protect against injections.
     stmt = sqlalchemy.text(
         "INSERT INTO pet_votes (time_cast, candidate, uid)"
@@ -194,6 +220,7 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
 
 
 def shutdown() -> None:
+    """Clean up sessions and database connections."""
     # Find all Sessions in memory and close them.
     close_all_sessions()
     logger.info("All sessions closed.")

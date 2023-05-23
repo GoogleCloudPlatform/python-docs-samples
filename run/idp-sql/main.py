@@ -28,11 +28,13 @@ app = Flask(__name__, static_folder="static", static_url_path="")
 
 @app.before_first_request
 def create_table() -> None:
+    """Initialize database connection and table on startup."""
     database.create_tables()
 
 
 @app.route("/", methods=["GET"])
 def index() -> str:
+    """Renders default UI with votes from database."""
     context = database.get_index_context()
     cats_count = context["cats_count"]
     dogs_count = context["dogs_count"]
@@ -61,6 +63,7 @@ def index() -> str:
 @app.route("/", methods=["POST"])
 @jwt_authenticated
 def save_vote() -> Response:
+    """Save a vote into the database."""
     # Get the team and time the vote was cast.
     team = request.form["team"]
     uid = request.uid
@@ -91,6 +94,7 @@ def save_vote() -> Response:
 # https://cloud.google.com/blog/topics/developers-practitioners/graceful-shutdowns-cloud-run-deep-dive
 # [START cloudrun_sigterm_handler]
 def shutdown_handler(signal: int, frame: FrameType) -> None:
+    """Gracefully shutdown app."""
     logger.info("Signal received, safely shutting down.")
     database.shutdown()
     middleware.logging_flush()

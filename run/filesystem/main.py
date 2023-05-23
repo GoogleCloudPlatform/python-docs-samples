@@ -29,9 +29,10 @@ filename = os.environ.get('FILENAME', 'test')
 @app.route('/', defaults={'path': ''})
 @app.route('/<path:path>')
 def index(path):
-    """
-    Redirects to the file system path to interact with file system
-    Writes a new file on each request
+    """Renders UI by redirects to the file system path to interact with file 
+    system.
+    
+    Writes a new file on each request.
     """
     # Redirect to mount path
     path = '/' + path
@@ -66,7 +67,11 @@ def index(path):
 
 
 def write_file(mnt_dir, filename):
-    '''Write files to a directory with date created'''
+    """Write files to a directory with date created.
+    Args:
+        mnt_dir: the file system mount directory
+        filename: the file name
+    """
     date = datetime.datetime.utcnow()
     file_date = '{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}:{dt:%M}-{dt:%Y}'.format(dt=date)
     with open(f'{mnt_dir}/{filename}-{file_date}.txt', 'a') as f:
@@ -74,13 +79,24 @@ def write_file(mnt_dir, filename):
 
 
 def read_file(full_path):
-    '''Read files and return contents'''
+    """Read files and return contents.
+    Args:
+        full_path: the path to the file
+    Returns:
+        The file contents.
+    """
     with open(full_path) as reader:
         return reader.read()
 
 
 def shutdown_handler(signal, frame):
-    '''SIGTERM handler'''
+    """SIGTERM handler.
+    Learn more at https://docs.python.org/3/library/signal.html
+
+    Args:
+        signal: the signal number
+        frame: The current stack frame
+    """
     print('Caught SIGTERM signal.', flush=True)
     return
 
