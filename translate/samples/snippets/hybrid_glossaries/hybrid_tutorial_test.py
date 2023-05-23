@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import os
 import sys
 import uuid
 
 import hybrid_tutorial
+import pytest
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
