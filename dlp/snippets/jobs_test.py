@@ -144,6 +144,14 @@ def test_create_dlp_job(bucket, capsys):
 
 
 def test_get_dlp_job(test_job_name, capsys):
+    jobs.list_dlp_jobs(
+        GCLOUD_PROJECT,
+        job_type="RISK_ANALYSIS_JOB",
+    )
+
+    out, _ = capsys.readouterr()
+    assert test_job_name in out
+
     jobs.get_dlp_job(GCLOUD_PROJECT, test_job_name)
 
     out, _ = capsys.readouterr()
