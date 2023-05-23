@@ -22,12 +22,11 @@ app = Flask(__name__)
 
 @app.route("/")
 def calculate():
-    """Foo.
-
-    Foo.
+    """Performs a dot product on predefined arrays.
 
     Returns:
-        Foo.
+        Returns a formatted message containing the dot product result of
+        two predefined arrays.
     """
     return_str = ""
     x = np.array([[1, 2], [3, 4]])
