@@ -70,7 +70,7 @@ def query_and_decrypt_data(
     db: sqlalchemy.engine.base.Engine,
     env_aead: tink.aead.KmsEnvelopeAead,
     table_name: str,
-) -> None:
+) -> list[tuple[str]]:
     """
     Retrieves data from the database and decrypts it using the KmsEnvelopeAead object.
     """
@@ -82,6 +82,7 @@ def query_and_decrypt_data(
         ).fetchall()
 
         print("Team\tEmail\tTime Cast")
+        output = []
 
         for row in recent_votes:
             team = row[0]
@@ -99,6 +100,8 @@ def query_and_decrypt_data(
 
             # Print recent votes
             print(f"{team}\t{email}\t{time_cast}")
+            output.append((team, email, time_cast))
+    return output
 
 
 # [END cloud_sql_postgres_cse_query]

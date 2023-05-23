@@ -73,8 +73,10 @@ def test_query_and_decrypt_data(
     # Insert data into table before testing
     encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
 
-    query_and_decrypt_data(pool, env_aead, table_name)
+    output = query_and_decrypt_data(pool, env_aead, table_name)
 
-    captured = capsys.readouterr()
-    assert "Team\tEmail\tTime Cast" in captured.out
-    assert "hello@example.com" in captured.out
+    for row in output:
+        if row[1] == "hello@example.com":
+            break
+    else:
+        pytest.fail("Failed to find vote in the decrypted data.")
