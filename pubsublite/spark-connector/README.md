@@ -196,4 +196,4 @@ Here is an example output: <!--TODO: update attributes field output with the nex
 [Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd
 [Dataproc Image Version 1.5]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-1.5
 [Dataproc Image Version 2.0]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-2.0
-[compatability]: gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar
+[compatibility]: gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar
