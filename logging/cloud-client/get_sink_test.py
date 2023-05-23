@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# https://peps.python.org/pep-0621
-[project]
-name = "weather-model"
-version = "1.0.0"
-dependencies = [
-    "datasets==2.12.0",
-    "torch==1.13.1",  # make sure this matches the `container_uri` in `notebooks/3-training.ipynb`
-    "transformers==4.29.2",
-]
+import get_sink
+import os
 
-[project.scripts]
-weather-trainer = "weather.trainer:main"
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+
+def test_get_sink():
+    sink_name = "_Default"
+    sink = get_sink.get_sink(PROJECT, sink_name)
+    assert sink_name in sink.destination
