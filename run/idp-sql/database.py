@@ -154,15 +154,17 @@ def create_tables() -> None:
     db = init_connection_engine()
     # Create pet_votes table if it doesn't already exist
     with db.begin() as conn:
-        conn.execute(sqlalchemy.text(
-            "CREATE TABLE IF NOT EXISTS pet_votes"
-            "( vote_id SERIAL NOT NULL, "
-            "time_cast timestamp NOT NULL, "
-            "candidate VARCHAR(6) NOT NULL, "
-            "uid VARCHAR(128) NOT NULL, "
-            "PRIMARY KEY (vote_id)"
-            ");"
-        ))
+        conn.execute(
+            sqlalchemy.text(
+                "CREATE TABLE IF NOT EXISTS pet_votes"
+                "( vote_id SERIAL NOT NULL, "
+                "time_cast timestamp NOT NULL, "
+                "candidate VARCHAR(6) NOT NULL, "
+                "uid VARCHAR(128) NOT NULL, "
+                "PRIMARY KEY (vote_id)"
+                ");"
+            )
+        )
 
 
 def get_index_context() -> dict[str, Any]:
@@ -173,10 +175,12 @@ def get_index_context() -> dict[str, Any]:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(sqlalchemy.text(
-            "SELECT candidate, time_cast FROM pet_votes "
-            "ORDER BY time_cast DESC LIMIT 5"
-        )).fetchall()
+        recent_votes = conn.execute(
+            sqlalchemy.text(
+                "SELECT candidate, time_cast FROM pet_votes "
+                "ORDER BY time_cast DESC LIMIT 5"
+            )
+        ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append(
@@ -215,7 +219,9 @@ def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.begin() as conn:
-        conn.execute(stmt, parameters={"time_cast": time_cast, "candidate": team, "uid": uid})
+        conn.execute(
+            stmt, parameters={"time_cast": time_cast, "candidate": team, "uid": uid}
+        )
     logger.info("Vote for %s saved.", team)
 
 
