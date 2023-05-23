@@ -83,7 +83,7 @@ db = None
 # as the function is loaded. This is primarily to help testing.
 @app.before_first_request
 def init_db() -> sqlalchemy.engine.base.Engine:
-    """Initiates connection to database and its' structure."""
+    """Initiates connection to database and its structure."""
     global db
     db = init_connection_pool()
     migrate_db(db)
