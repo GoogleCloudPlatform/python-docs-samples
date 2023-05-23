@@ -16,7 +16,7 @@
 import base64
 import json
 import os
-from typing import TypeVar
+from typing import TypedDict, TypeVar
 
 from google.cloud import pubsub_v1
 from google.cloud import storage
@@ -35,6 +35,8 @@ project_id = os.environ["GCP_PROJECT"]
 # [START functions_ocr_detect]
 def detect_text(bucket: str, filename: str) -> None:
     """
+    Extract the text from an image uploaded to Cloud Storage.
+
     Extract the text from an image uploaded to Cloud Storage, then
     publish messages requesting subscribing services translate the text
     to each target language and save the result.
@@ -91,7 +93,7 @@ T = TypeVar('T')
 
 
 # [START message_validatation_helper]
-def validate_message(message: dict[str, T], param: str) -> T:
+def validate_message(message: TypedDict[str, T], param: str) -> T:
     """
     Placeholder function for validating message parts.
 
