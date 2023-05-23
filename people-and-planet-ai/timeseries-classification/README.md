@@ -5,7 +5,7 @@
 > [Watch the video in YouTube<br> ![thumbnail](http://img.youtube.com/vi/LnEhSVEJUuY/0.jpg)](https://youtu.be/LnEhSVEJUuY)
 
 This model is trained to classify if a ship is fishing or not every hour from their
-[_Maritime Mobile Service Identitiy_ (MMSI)](https://en.wikipedia.org/wiki/Maritime_Mobile_Service_Identity)
+[_Maritime Mobile Service Identity_ (MMSI)](https://en.wikipedia.org/wiki/Maritime_Mobile_Service_Identity)
 location data.
 
 * **Model**: 1D Fully Convolutional Network in [Keras]
