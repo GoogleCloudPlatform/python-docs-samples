@@ -30,7 +30,7 @@ from google.cloud import vision
 # [END vision_web_detection_tutorial_imports]
 
 
-def annotate(path):
+def annotate(path: str) -> vision.WebDetection:
     """Returns web annotations given the path to an image.
 
     Args:
@@ -59,7 +59,7 @@ def annotate(path):
     return web_detection
 
 
-def report(annotations):
+def report(annotations: vision.WebDetection) -> None:
     """Prints detected features in the provided web annotations.
 
     Args:
@@ -69,9 +69,7 @@ def report(annotations):
     # [START vision_web_detection_tutorial_print_annotations]
     if annotations.pages_with_matching_images:
         print(
-            "\n{} Pages with matching images retrieved".format(
-                len(annotations.pages_with_matching_images)
-            )
+            f"\n{len(annotations.pages_with_matching_images)} Pages with matching images retrieved"
         )
 
         for page in annotations.pages_with_matching_images:
@@ -79,9 +77,7 @@ def report(annotations):
 
     if annotations.full_matching_images:
         print(
-            "\n{} Full Matches found: ".format(
-                len(annotations.full_matching_images)
-            )
+            f"\n{len(annotations.full_matching_images)} Full Matches found: "
         )
 
         for image in annotations.full_matching_images:
@@ -89,18 +85,14 @@ def report(annotations):
 
     if annotations.partial_matching_images:
         print(
-            "\n{} Partial Matches found: ".format(
-                len(annotations.partial_matching_images)
-            )
+            f"\n{len(annotations.partial_matching_images)} Partial Matches found: "
         )
 
         for image in annotations.partial_matching_images:
             print(f"Url  : {image.url}")
 
     if annotations.web_entities:
-        print(
-            "\n{} Web entities found: ".format(len(annotations.web_entities))
-        )
+        print(f"\n{len(annotations.web_entities)} Web entities found: ")
 
         for entity in annotations.web_entities:
             print(f"Score      : {entity.score}")
