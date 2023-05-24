@@ -89,7 +89,7 @@ Here's a table showing the minimum requirements to run an inference pipeline.
 
 | Model name             | Memory needed | Machine type    | VM Memory |
 |------------------------|---------------|-----------------|-----------|
-| `google/flan-t5-small` | > 320 MB      | `n2-standard-2` | 8 GB      | 
+| `google/flan-t5-small` | > 320 MB      | `n2-standard-2` | 8 GB      |
 | `google/flan-t5-base`  | > 1 GB        | `n2-standard-2` | 8 GB      |
 | `google/flan-t5-large` | > 3.2 GB      | `n2-standard-2` | 8 GB      |
 | `google/flan-t5-xl`    | > 12 GB       | `n2-highmem-2`  | 16 GB     |

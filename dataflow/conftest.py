@@ -10,6 +10,9 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 
+from __future__ import annotations
+
+from collections.abc import Callable, Iterator
 from dataclasses import dataclass
 from datetime import datetime
 import itertools
@@ -21,48 +24,13 @@ import platform
 import re
 import subprocess
 import time
-from typing import Any, Callable, Dict, Iterable, Optional, Set
+from typing import Any
 import uuid
 
+from google.api_core import retry
 import pytest
 
-# Default options.
-UUID = uuid.uuid4().hex[0:6]
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
-
-TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
-POLL_INTERVAL_SEC = 60  # 1 minute in seconds
-LIST_PAGE_SIZE = 100
-
-HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
-UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
-
-PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
-
-
-def run_cmd(*cmd: str) -> subprocess.CompletedProcess:
-    try:
-        print(f">> {cmd}")
-        start = datetime.now()
-        p = subprocess.run(
-            cmd,
-            check=True,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-        )
-        print(p.stderr.decode("utf-8"))
-        print(p.stdout.decode("utf-8"))
-        elapsed = (datetime.now() - start).seconds
-        minutes = int(elapsed / 60)
-        seconds = elapsed - minutes * 60
-        print(f"Command `{cmd[0]}` finished in {minutes}m {seconds}s")
-        return p
-    except subprocess.CalledProcessError as e:
-        # Include the error message from the failed command.
-        print(e.stderr.decode("utf-8"))
-        print(e.stdout.decode("utf-8"))
-        raise RuntimeError(f"{e}\n\n{e.stderr.decode('utf-8')}") from e
+TIMEOUT = 1 * 60 * 60  # 1 hour (in seconds)
 
 
 @pytest.fixture(scope="session")
@@ -87,7 +55,7 @@ def location() -> str:
 @pytest.fixture(scope="session")
 def unique_id() -> str:
     id = uuid.uuid4().hex[0:6]
-    print(f"Test unique identifier: {id}")
+    print(f"unique_id: {id}")
     return id
 
 
@@ -97,7 +65,7 @@ def unique_name(test_name: str, unique_id: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
+def bucket_name(test_name: str, location: str, unique_id: str) -> Iterator[str]:
     # Override for local testing.
     if "GOOGLE_CLOUD_BUCKET" in os.environ:
         bucket_name = os.environ["GOOGLE_CLOUD_BUCKET"]
@@ -126,7 +94,216 @@ def bucket_name(test_name: str, location: str, unique_id: str) -> Iterable[str]:
     bucket.delete(force=True)
 
 
-# For backwards compatibility only, prefer fixture-style.
+@pytest.fixture(scope="session")
+def pubsub_topic(
+    test_name: str, project: str, unique_id: str
+) -> Iterator[Callable[[str], str]]:
+    from google.cloud import pubsub
+
+    publisher = pubsub.PublisherClient()
+    created_topics = []
+
+    def create_topic(name: str) -> str:
+        unique_name = f"{test_name.replace('/', '-')}-{name}-{unique_id}"
+        topic_path = publisher.topic_path(project, unique_name)
+        topic = publisher.create_topic(name=topic_path)
+
+        print(f"pubsub_topic created: {topic.name}")
+        created_topics.append(topic.name)
+        return topic.name
+
+    yield create_topic
+
+    for topic_path in created_topics:
+        publisher.delete_topic(topic=topic_path)
+        print(f"pubsub_topic deleted: {topic_path}")
+
+
+@pytest.fixture(scope="session")
+def pubsub_subscription(
+    test_name: str, project: str, unique_id: str
+) -> Iterator[Callable[[str, str], str]]:
+    from google.cloud import pubsub
+
+    subscriber = pubsub.SubscriberClient()
+    created_subscriptions = []
+
+    def create_subscription(name: str, topic_path: str) -> str:
+        unique_name = f"{test_name.replace('/', '-')}-{name}-{unique_id}"
+        subscription_path = subscriber.subscription_path(project, unique_name)
+        subscription = subscriber.create_subscription(
+            name=subscription_path, topic=topic_path
+        )
+
+        print(f"pubsub_subscription created: {subscription.name}")
+        created_subscriptions.append(subscription.name)
+        return subscription.name
+
+    yield create_subscription
+
+    for subscription_path in created_subscriptions:
+        subscriber.delete_subscription(subscription=subscription_path)
+        print(f"pubsub_subscription deleted: {subscription_path}")
+
+
+def pubsub_publish(topic_path: str, messages: list[str]) -> None:
+    from google.cloud import pubsub
+
+    publisher = pubsub.PublisherClient()
+    futures = [publisher.publish(topic_path, msg.encode("utf-8")) for msg in messages]
+    _ = [future.result() for future in futures]  # wait synchronously
+    print(f"pubsub_publish {len(messages)} message(s) to {topic_path}:")
+    for msg in messages:
+        print(f"- {repr(msg)}")
+
+
+@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT)
+def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
+    from google.cloud import pubsub
+
+    subscriber = pubsub.SubscriberClient()
+    with subscriber:
+        response = subscriber.pull(subscription=subscription_path, max_messages=10)
+        messages = [m.message.data.decode("utf-8") for m in response.received_messages]
+        if not messages:
+            raise ValueError("pubsub_wait_for_messages no messages received")
+
+        print(f"pubsub_receive got {len(messages)} message(s)")
+        for msg in messages:
+            print(f"- {repr(msg)}")
+
+        ack_ids = [m.ack_id for m in response.received_messages]
+        subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
+        print(f"pubsub_receive ack messages")
+    return messages
+
+
+def dataflow_job_url(project: str, location: str, job_id: str) -> str:
+    return f"https://console.cloud.google.com/dataflow/jobs/{location}/{job_id}?project={project}"
+
+
+@retry.Retry(retry.if_exception_type(LookupError), timeout=TIMEOUT)
+def dataflow_find_job_by_name(project: str, location: str, job_name: str) -> str:
+    from google.cloud import dataflow_v1beta3 as dataflow
+
+    # https://cloud.google.com/python/docs/reference/dataflow/latest/google.cloud.dataflow_v1beta3.services.jobs_v1_beta3.JobsV1Beta3Client#google_cloud_dataflow_v1beta3_services_jobs_v1_beta3_JobsV1Beta3Client_list_jobs
+    dataflow_client = dataflow.JobsV1Beta3Client()
+    request = dataflow.ListJobsRequest(
+        project_id=project,
+        location=location,
+    )
+    for job in dataflow_client.list_jobs(request):
+        if job.name == job_name:
+            return job.id
+    raise LookupError(f"dataflow_find_job_by_name job name not found: {job_name}")
+
+
+@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT)
+def dataflow_wait_until_running(project: str, location: str, job_id: str) -> str:
+    from google.cloud import dataflow_v1beta3 as dataflow
+    from google.cloud.dataflow_v1beta3.types import JobView, JobState
+
+    # https://cloud.google.com/python/docs/reference/dataflow/latest/google.cloud.dataflow_v1beta3.services.jobs_v1_beta3.JobsV1Beta3Client#google_cloud_dataflow_v1beta3_services_jobs_v1_beta3_JobsV1Beta3Client_get_job
+    dataflow_client = dataflow.JobsV1Beta3Client()
+    request = dataflow.GetJobRequest(
+        project_id=project,
+        location=location,
+        job_id=job_id,
+        view=JobView.JOB_VIEW_SUMMARY,
+    )
+    response = dataflow_client.get_job(request)
+
+    job_url = dataflow_job_url(project, location, job_id)
+    state = response.current_state
+    if state == JobState.JOB_STATE_FAILED:
+        raise RuntimeError(f"Dataflow job failed unexpectedly\n{job_url}")
+    if state != JobState.JOB_STATE_RUNNING:
+        raise ValueError(f"Dataflow job is not running, state: {state.name}\n{job_url}")
+    return state.name
+
+
+def dataflow_num_workers(project: str, location: str, job_id: str) -> int:
+    from google.cloud import dataflow_v1beta3 as dataflow
+    from google.cloud.dataflow_v1beta3.types import JobMessageImportance
+
+    # https://cloud.google.com/python/docs/reference/dataflow/latest/google.cloud.dataflow_v1beta3.services.messages_v1_beta3.MessagesV1Beta3Client#google_cloud_dataflow_v1beta3_services_messages_v1_beta3_MessagesV1Beta3Client_list_job_messages
+    dataflow_client = dataflow.MessagesV1Beta3Client()
+    request = dataflow.ListJobMessagesRequest(
+        project_id=project,
+        location=location,
+        job_id=job_id,
+        minimum_importance=JobMessageImportance.JOB_MESSAGE_BASIC,
+    )
+
+    response = dataflow_client.list_job_messages(request)._response
+    num_workers = [event.current_num_workers for event in response.autoscaling_events]
+    if num_workers:
+        return num_workers[-1]
+    return 0
+
+
+def dataflow_cancel_job(project: str, location: str, job_id: str) -> None:
+    from google.cloud import dataflow_v1beta3 as dataflow
+    from google.cloud.dataflow_v1beta3.types import Job, JobState
+
+    # https://cloud.google.com/python/docs/reference/dataflow/latest/google.cloud.dataflow_v1beta3.services.jobs_v1_beta3.JobsV1Beta3Client#google_cloud_dataflow_v1beta3_services_jobs_v1_beta3_JobsV1Beta3Client_update_job
+    dataflow_client = dataflow.JobsV1Beta3Client()
+    request = dataflow.UpdateJobRequest(
+        project_id=project,
+        location=location,
+        job_id=job_id,
+        job=Job(requested_state=JobState.JOB_STATE_CANCELLED),
+    )
+    response = dataflow_client.update_job(request=request)
+    print(response)
+
+
+@retry.Retry(retry.if_exception_type(AssertionError), timeout=TIMEOUT)
+def wait_until(condition: Callable[[], bool], message: str) -> None:
+    assert condition(), message
+
+
+def run_cmd(*cmd: str) -> subprocess.CompletedProcess:
+    try:
+        print(f"run_cmd: {cmd}")
+        start = datetime.now()
+        p = subprocess.run(
+            cmd,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        print(p.stderr.decode("utf-8").strip())
+        print(p.stdout.decode("utf-8").strip())
+        elapsed = (datetime.now() - start).seconds
+        minutes = int(elapsed / 60)
+        seconds = elapsed - minutes * 60
+        print(f"-- run_cmd `{cmd[0]}` finished in {minutes}m {seconds}s")
+        return p
+    except subprocess.CalledProcessError as e:
+        # Include the error message from the failed command.
+        print(e.stderr.decode("utf-8"))
+        print(e.stdout.decode("utf-8"))
+        raise RuntimeError(f"{e}\n\n{e.stderr.decode('utf-8')}") from e
+
+
+# ---- FOR BACKWARDS COMPATIBILITY ONLY, prefer fixture-style ---- #
+
+# Default options.
+UUID = uuid.uuid4().hex[0:6]
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
+
+POLL_INTERVAL_SEC = 60  # 1 minute in seconds
+LIST_PAGE_SIZE = 100
+TIMEOUT = 30 * 60  # 30 minutes in seconds
+
+HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
+UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
+
+PYTHON_VERSION = "".join(platform.python_version_tuple()[0:2])
+
+
 @dataclass
 class Utils:
     uuid: str = UUID
@@ -145,7 +322,7 @@ class Utils:
     @staticmethod
     def wait_until(
         is_done: Callable[[], bool],
-        timeout_sec: int = TIMEOUT_SEC,
+        timeout_sec: int = TIMEOUT,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> bool:
         for _ in range(0, timeout_sec, poll_interval_sec):
@@ -170,8 +347,7 @@ class Utils:
         yield bucket.name
 
         # Print all the objects in the bucket before deleting for debugging.
-        logging.info(
-            f"Deleting bucket {bucket.name} with the following contents:")
+        logging.info(f"Deleting bucket {bucket.name} with the following contents:")
         total_files = 0
         total_size = 0
         for blob in bucket.list_blobs():
@@ -238,7 +414,7 @@ class Utils:
             return False
 
     @staticmethod
-    def bigquery_query(query: str, region: str = REGION) -> Iterable[Dict[str, Any]]:
+    def bigquery_query(query: str, region: str = REGION) -> Iterator[dict[str, Any]]:
         from google.cloud import bigquery
 
         bigquery_client = bigquery.Client()
@@ -251,8 +427,7 @@ class Utils:
         from google.cloud import pubsub
 
         publisher_client = pubsub.PublisherClient()
-        topic_path = publisher_client.topic_path(
-            project, Utils.hyphen_name(name))
+        topic_path = publisher_client.topic_path(project, Utils.hyphen_name(name))
         topic = publisher_client.create_topic(request={"name": topic_path})
 
         logging.info(f"Created pubsub_topic: {topic.name}")
@@ -262,8 +437,7 @@ class Utils:
         # library throws an error upon deletion.
         # We use gcloud for a workaround. See also:
         # https://github.com/GoogleCloudPlatform/python-docs-samples/issues/4492
-        cmd = ["gcloud", "pubsub", "--project",
-               project, "topics", "delete", topic.name]
+        cmd = ["gcloud", "pubsub", "--project", project, "topics", "delete", topic.name]
         logging.info(f"{cmd}")
         subprocess.check_call(cmd)
         logging.info(f"Deleted pubsub_topic: {topic.name}")
@@ -318,8 +492,7 @@ class Utils:
             publisher_client = pubsub.PublisherClient()
             for i in itertools.count():
                 msg = new_msg(i)
-                publisher_client.publish(
-                    topic_path, msg.encode("utf-8")).result()
+                publisher_client.publish(topic_path, msg.encode("utf-8")).result()
                 time.sleep(sleep_sec)
 
         # Start a subprocess in the background to do the publishing.
@@ -344,10 +517,10 @@ class Utils:
 
     @staticmethod
     def cloud_build_submit(
-        image_name: Optional[str] = None,
-        config: Optional[str] = None,
+        image_name: str | None = None,
+        config: str | None = None,
         source: str = ".",
-        substitutions: Optional[Dict[str, str]] = None,
+        substitutions: dict[str, str] | None = None,
         project: str = PROJECT,
     ) -> None:
         """Sends a Cloud Build job, if an image_name is provided it will be deleted at teardown."""
@@ -376,8 +549,7 @@ class Utils:
                     ]
                     logging.info(f"{cmd}")
                     subprocess.check_call(cmd)
-                    logging.info(
-                        f"Cloud build finished successfully: {config}")
+                    logging.info(f"Cloud build finished successfully: {config}")
                     yield f.read()
             except Exception as e:
                 logging.exception(e)
@@ -395,8 +567,7 @@ class Utils:
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(
-                f"Created image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
@@ -414,8 +585,7 @@ class Utils:
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(
-                f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
 
     @staticmethod
     def dataflow_job_url(
@@ -428,7 +598,7 @@ class Utils:
     @staticmethod
     def dataflow_jobs_list(
         project: str = PROJECT, page_size: int = 30
-    ) -> Iterable[dict]:
+    ) -> Iterator[dict]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
@@ -461,7 +631,7 @@ class Utils:
         raise ValueError(f"Dataflow job not found: job_name={job_name}")
 
     @staticmethod
-    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> Dict[str, Any]:
+    def dataflow_jobs_get(job_id: str, project: str = PROJECT) -> dict[str, Any]:
         from googleapiclient.discovery import build
 
         dataflow = build("dataflow", "v1b3")
@@ -485,10 +655,10 @@ class Utils:
         job_id: str,
         project: str = PROJECT,
         region: str = REGION,
-        target_states: Set[str] = {"JOB_STATE_DONE"},
-        timeout_sec: str = TIMEOUT_SEC,
+        target_states: set[str] = {"JOB_STATE_DONE"},
+        timeout_sec: int = TIMEOUT,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
-    ) -> Optional[str]:
+    ) -> str | None:
         """For a list of all the valid states:
         https://cloud.google.com/dataflow/docs/reference/rest/v1b3/projects.jobs#Job.JobState
         """
@@ -522,8 +692,10 @@ class Utils:
             return False
 
         Utils.wait_until(job_is_done, timeout_sec, poll_interval_sec)
-        assert job_is_done(), (f"Dataflow job is not done after {timeout_sec} seconds\n"
-                               + Utils.dataflow_job_url(job_id, project, region))
+        assert job_is_done(), (
+            f"Dataflow job is not done after {timeout_sec} seconds\n"
+            + Utils.dataflow_job_url(job_id, project, region)
+        )
 
     @staticmethod
     def dataflow_jobs_cancel(
@@ -613,7 +785,7 @@ class Utils:
         job_name: str,
         template_path: str,
         bucket_name: str,
-        parameters: Dict[str, str] = {},
+        parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:
@@ -654,7 +826,7 @@ class Utils:
         job_name: str,
         template_path: str,
         bucket_name: str,
-        parameters: Dict[str, str] = {},
+        parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
     ) -> str:

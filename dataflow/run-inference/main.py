@@ -28,35 +28,12 @@ import torch
 from transformers import AutoConfig
 from transformers import AutoModelForSeq2SeqLM
 from transformers import AutoTokenizer
+from transformers.tokenization_utils import PreTrainedTokenizer
 
 MAX_RESPONSE_TOKENS = 256
 
 
-class RunPipeline(beam.PTransform):
-    def __init__(self, model_name: str, state_dict_path: str) -> None:
-        super().__init__()
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.model_handler = PytorchModelHandlerTensor(
-            state_dict_path=state_dict_path,
-            model_class=AutoModelForSeq2SeqLM.from_config,
-            model_params={"config": AutoConfig.from_pretrained(model_name)},
-            inference_fn=make_tensor_model_fn("generate"),
-        )
-
-    def expand(self, pcoll: beam.PCollection[str]) -> beam.PCollection[str]:
-        return (
-            pcoll
-            | "Encode tokens" >> beam.Map(encode_inputs, self.tokenizer)
-            | "RunInference"
-            >> RunInference(
-                self.model_handler,
-                inference_args={"max_new_tokens": MAX_RESPONSE_TOKENS},
-            )
-            | "Decode tokens" >> beam.Map(decode_outputs, self.tokenizer)
-        )
-
-
-def encode_inputs(input_text: str, tokenizer: AutoTokenizer) -> torch.Tensor:
+def to_tensors(input_text: str, tokenizer: PreTrainedTokenizer) -> torch.Tensor:
     """Encodes input text into token tensors.
 
     Args:
@@ -68,7 +45,7 @@ def encode_inputs(input_text: str, tokenizer: AutoTokenizer) -> torch.Tensor:
     return tokenizer(input_text, return_tensors="pt").input_ids[0]
 
 
-def decode_outputs(result: PredictionResult, tokenizer: AutoTokenizer) -> str:
+def get_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> str:
     """Decodes output token tensors into text.
 
     Args:
@@ -79,6 +56,42 @@ def decode_outputs(result: PredictionResult, tokenizer: AutoTokenizer) -> str:
     """
     output_tokens = result.inference
     return tokenizer.decode(output_tokens, skip_special_tokens=True)
+
+
+@beam.ptransform_fn
+def AskLanguageModel(
+    pcollection: beam.PCollection[str],
+    model_name: str,
+    state_dict_path: str,
+    max_response_tokens: int = MAX_RESPONSE_TOKENS,
+) -> beam.PCollection[str]:
+    """Asks an LLM a prompt message.
+
+    Args:
+        pcollection: Input PCollection of messages for the model.
+        model_name: HuggingFace model name compatible with AutoModelForSeq2SeqLM.
+        state_dict_path: File path to the model's state_dict, can be in Cloud Storage.
+        max_response_tokens: Maximum number of tokens for the model to generate.
+
+    Returns: A PCollection with the model's responses.
+    """
+    model_handler = PytorchModelHandlerTensor(
+        state_dict_path=state_dict_path,
+        model_class=AutoModelForSeq2SeqLM.from_config,
+        model_params={"config": AutoConfig.from_pretrained(model_name)},
+        inference_fn=make_tensor_model_fn("generate"),
+    )
+    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    return (
+        pcollection
+        | "To tensors" >> beam.Map(to_tensors, tokenizer)
+        | "RunInference"
+        >> RunInference(
+            model_handler,
+            inference_args={"max_new_tokens": max_response_tokens},
+        )
+        | "Get response" >> beam.Map(get_response, tokenizer)
+    )
 
 
 if __name__ == "__main__":
@@ -112,13 +125,16 @@ if __name__ == "__main__":
         beam_args,
         save_main_session=True,
         streaming=True,
-        requirements_file="requirements.txt",
+        pickle_library="cloudpickle",
     )
-    with beam.Pipeline(options=beam_options) as pipeline:
-        _ = (
-            pipeline
-            | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
-            | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
-            | "Run pipeline" >> RunPipeline(args.model_name, args.state_dict_path)
-            | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
-        )
+
+    pipeline = beam.Pipeline(options=beam_options)
+    _ = (
+        pipeline
+        | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
+        | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
+        | "Ask LLM" >> AskLanguageModel(args.model_name, args.state_dict_path)
+        | "Encode bytes" >> beam.Map(lambda msg: msg.encode("utf-8"))
+        | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
+    )
+    pipeline.run()
