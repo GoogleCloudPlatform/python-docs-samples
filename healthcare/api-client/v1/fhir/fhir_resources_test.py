@@ -65,6 +65,8 @@ client = discovery.build("healthcare", "v1")
 class OperationNotComplete(Exception):
     """Operation is not yet complete"""
 
+    pass
+
 
 @retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
 def wait_for_operation(operation_name: str):
@@ -118,9 +120,7 @@ def test_fhir_store():
             # likely the first request failed on the client side, but
             # the creation suceeded on the server side.
             if err.resp.status == 409:
-                print(
-                    f"Got exception {err.resp.status} while creating FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while creating FHIR store")
             else:
                 raise
 
@@ -141,9 +141,7 @@ def test_fhir_store():
             # if we try to delete a FHIR store when the parent dataset
             # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
-                print(
-                    f"Got exception {err.resp.status} while deleting FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 
@@ -159,7 +157,7 @@ def test_patient():
         dataset_id,
         fhir_store_id,
     )
-    patient_resource = patient_response.json()
+    patient_resource = patient_response
     patient_resource_id = patient_resource["id"]
 
     yield patient_resource_id
@@ -181,9 +179,7 @@ def test_patient():
             # The API returns 200 whether the resource exists or was
             # successfully deleted or not.
             if err.resp.status > 200:
-                print(
-                    f"Got exception {err.resp.status} while deleting FHIR store"
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 
@@ -206,7 +202,7 @@ def test_create_resource_from_file(test_dataset, test_fhir_store, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "Created FHIR resource" in out
+    assert f"Created {resource_type_from_file} resource" in out
 
 
 def test_create_patient(test_dataset, test_fhir_store, capsys):
@@ -249,7 +245,12 @@ def test_validate_resource_profile_url(
     )
 
     fhir_resources.validate_resource_profile_url(
-        project_id, location, dataset_id, fhir_store_id, resource_type, profile_url
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        profile_url,
     )
 
     out, _ = capsys.readouterr()
@@ -271,7 +272,7 @@ def test_get_patient(test_dataset, test_fhir_store, test_patient, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert "Got Patient resource" in out
+    assert "Got contents of Patient resource with ID" in out
 
 
 def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
@@ -287,6 +288,21 @@ def test_update_patient(test_dataset, test_fhir_store, test_patient, capsys):
     out, _ = capsys.readouterr()
 
     assert "Updated Patient resource" in out
+
+
+def test_patch_patient(test_dataset, test_fhir_store, test_patient, capsys):
+    fhir_resources.patch_resource(
+        project_id,
+        location,
+        dataset_id,
+        fhir_store_id,
+        resource_type,
+        test_patient,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Patched Patient resource" in out
 
 
 def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
@@ -323,9 +339,9 @@ def test_resource_versions(test_dataset, test_fhir_store, test_patient, capsys):
     out, _ = capsys.readouterr()
 
     # list_resource_history test
-    assert "History for Patient resource" in out
+    assert "History for Patient resource with ID" in out
     # get_resource_history test
-    assert "Got history for Patient resource" in out
+    assert "Got contents of Patient resource with ID" in out
 
 
 def test_search_resources_post(test_dataset, test_fhir_store, test_patient, capsys):
