@@ -536,3 +536,21 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
         assert "Job name:" in out
     finally:
         delete_dlp_job(out)
+
+
+@pytest.mark.flaky(max_runs=2, min_passes=1)
+def test_inspect_bigquery_with_sampling(topic_id, subscription_id, capsys):
+    out = ""
+    try:
+        inspect_content.inspect_bigquery_table_with_sampling(
+            GCLOUD_PROJECT,
+            topic_id,
+            subscription_id,
+            timeout=TIMEOUT,
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+        assert "Job name:" in out
+    finally:
+        delete_dlp_job(out)
