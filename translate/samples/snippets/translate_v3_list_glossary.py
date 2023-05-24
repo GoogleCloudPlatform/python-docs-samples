@@ -16,9 +16,17 @@
 from google.cloud import translate
 
 
-def list_glossaries(project_id="YOUR_PROJECT_ID"):
-    """List Glossaries."""
+def list_glossaries(
+        project_id: str = "YOUR_PROJECT_ID"
+) -> translate.v3.glossary.Glossary:
+    """List Glossaries.
 
+    Args:
+        project_id: The GCP project ID.
+
+    Returns:
+        The glossary.
+    """
     client = translate.TranslationServiceClient()
 
     location = "us-central1"
@@ -38,5 +46,5 @@ def list_glossaries(project_id="YOUR_PROJECT_ID"):
         for language_code in glossary.language_codes_set.language_codes:
             print(f"Language code: {language_code}")
 
-
+    return glossary
 # [END translate_v3_list_glossary]

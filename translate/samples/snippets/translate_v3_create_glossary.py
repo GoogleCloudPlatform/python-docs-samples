@@ -17,11 +17,11 @@ from google.cloud import translate_v3 as translate
 
 
 def create_glossary(
-    project_id="YOUR_PROJECT_ID",
-    input_uri="YOUR_INPUT_URI",
-    glossary_id="YOUR_GLOSSARY_ID",
-    timeout=180,
-):
+    project_id: str = "YOUR_PROJECT_ID",
+    input_uri: str = "YOUR_INPUT_URI",
+    glossary_id: str = "YOUR_GLOSSARY_ID",
+    timeout: int = 180,
+) -> translate.types.Glossary:
     """
     Create a equivalent term sets glossary. Glossary can be words or
     short phrases (usually fewer than five words).
@@ -56,5 +56,5 @@ def create_glossary(
     print(f"Created: {result.name}")
     print(f"Input Uri: {result.input_config.gcs_source.input_uri}")
 
-
+    return result
 # [END translate_v3_create_glossary]
