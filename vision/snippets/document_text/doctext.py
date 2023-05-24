@@ -26,6 +26,7 @@ from enum import Enum
 
 from google.cloud import vision
 from PIL import Image, ImageDraw
+
 # [END vision_document_text_tutorial_imports]
 
 
@@ -41,7 +42,7 @@ def draw_boxes(image, bounds, color):
     """Draws a border around the image using the hints in the vector list.
 
     Args:
-        image: the input image object. 
+        image: the input image object.
         bounds: list of coordinates for the boxes.
         color: the color of the box.
 
@@ -111,6 +112,8 @@ def get_document_bounds(image_file, feature):
 
     # The list `bounds` contains the coordinates of the bounding boxes.
     return bounds
+
+
 # [END vision_document_text_tutorial_detect_bounds]
 
 
