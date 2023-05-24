@@ -20,6 +20,8 @@ from typing import List
 
 
 # [START dlp_create_trigger]
+from typing import Optional  # noqa: I100, E402
+
 import google.cloud.dlp
 
 
@@ -28,12 +30,12 @@ def create_trigger(
     bucket: str,
     scan_period_days: int,
     info_types: List[str],
-    trigger_id: str | None = None,
-    display_name: str | None = None,
-    description: str | None = None,
-    min_likelihood: int | None = None,
-    max_findings: int | None = None,
-    auto_populate_timespan: bool | None = False,
+    trigger_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    description: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    auto_populate_timespan: Optional[bool] = False,
 ) -> None:
     """Creates a scheduled Data Loss Prevention API inspect_content trigger.
     Args:

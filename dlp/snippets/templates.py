@@ -20,17 +20,19 @@ from typing import List
 
 
 # [START dlp_create_inspect_template]
+from typing import Optional  # noqa: I100, E402
+
 import google.cloud.dlp
 
 
 def create_inspect_template(
     project: str,
     info_types: List[str],
-    template_id: str | None = None,
-    display_name: str | None = None,
-    min_likelihood: int | None = None,
-    max_findings: int | None = None,
-    include_quote: bool | None = None,
+    template_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    include_quote: Optional[bool] = None,
 ) -> None:
     """Creates a Data Loss Prevention API inspect template.
     Args:

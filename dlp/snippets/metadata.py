@@ -20,10 +20,12 @@ import argparse
 
 
 # [START dlp_list_info_types]
+from typing import Optional  # noqa: I100, E402
+
 import google.cloud.dlp
 
 
-def list_info_types(language_code: str | None = None, result_filter: str | None = None) -> None:
+def list_info_types(language_code: Optional[str] = None, result_filter: Optional[str] = None) -> None:
     """List types of sensitive information within a category.
     Args:
         language_code: The BCP-47 language code to use, e.g. 'en-US'.

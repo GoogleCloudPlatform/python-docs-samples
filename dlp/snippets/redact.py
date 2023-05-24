@@ -179,7 +179,7 @@ def redact_image_all_text(
 
 
 # [START dlp_redact_image_listed_infotypes]
-from typing import List  # noqa: E402, F811, I100
+from typing import List, Optional  # noqa: E402, F811, I100
 
 import google.cloud.dlp  # noqa: E402, F811
 
@@ -189,8 +189,8 @@ def redact_image_listed_info_types(
     filename: str,
     output_filename: str,
     info_types: List[str],
-    min_likelihood: str | None = None,
-    mime_type: str | None = None,
+    min_likelihood: Optional[str] = None,
+    mime_type: Optional[str] = None,
 ) -> None:
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:

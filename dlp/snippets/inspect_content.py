@@ -177,6 +177,8 @@ def inspect_string(
 # [END dlp_inspect_string]
 
 # [START dlp_inspect_table]
+from typing import List, Optional  # noqa: E402, I100
+
 import google.cloud.dlp  # noqa: F811, E402
 
 
@@ -186,8 +188,8 @@ def inspect_table(
     info_types: List[str],
     custom_dictionaries: List[str] = None,
     custom_regexes: List[str] = None,
-    min_likelihood: str | None = None,
-    max_findings: int | None = None,
+    min_likelihood: Optional[str] = None,
+    max_findings: Optional[int] = None,
     include_quote: bool = True,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
@@ -310,6 +312,8 @@ def inspect_table(
 
 # [START dlp_inspect_file]
 import mimetypes  # noqa: I100, E402
+from typing import Optional  # noqa: I100, E402
+
 
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -321,7 +325,7 @@ def inspect_file(
     min_likelihood: str = None,
     custom_dictionaries: List[str] = None,
     custom_regexes: List[str] = None,
-    max_findings: int | None = None,
+    max_findings: Optional[int] = None,
     include_quote: bool = True,
     mime_type: str = None,
 ) -> None:
@@ -426,13 +430,16 @@ def inspect_file(
 
 
 # [END dlp_inspect_file]
+
+
+# [START dlp_inspect_gcs]
 import threading  # noqa: F811, E402, I100
+from typing import Optional  # noqa: I100, E402
 
 import google.cloud.dlp  # noqa: F811, E402
 import google.cloud.pubsub  # noqa: F811, E402
 
 
-# [START dlp_inspect_gcs]
 def inspect_gcs_file(
     project: str,
     bucket: str,
@@ -442,8 +449,8 @@ def inspect_gcs_file(
     info_types: List[str],
     custom_dictionaries: List[str] = None,
     custom_regexes: List[str] = None,
-    min_likelihood: str | None = None,
-    max_findings: int | None = None,
+    min_likelihood: Optional[str] = None,
+    max_findings: Optional[int] = None,
     timeout: int = 300,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze a file on GCS.
@@ -584,7 +591,7 @@ def inspect_gcs_file(
 
 # [START dlp_inspect_datastore]
 import threading  # noqa: F811, E402, I100
-from typing import List  # noqa: E402, I100
+from typing import List, Optional  # noqa: E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 import google.cloud.pubsub  # noqa: F811, E402
@@ -600,8 +607,8 @@ def inspect_datastore(
     custom_dictionaries: List[str] = None,
     custom_regexes: List[str] = None,
     namespace_id: str = None,
-    min_likelihood: int | None = None,
-    max_findings: int | None = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
     timeout: int = 300,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze Datastore data.
@@ -751,7 +758,7 @@ def inspect_datastore(
 
 # [START dlp_inspect_bigquery]
 import threading  # noqa: F811, E402, I100
-from typing import List  # noqa: E402
+from typing import List, Optional  # noqa: E402
 
 import google.cloud.dlp  # noqa: F811, E402
 import google.cloud.pubsub  # noqa: F811, E402
@@ -767,8 +774,8 @@ def inspect_bigquery(
     info_types: List[str],
     custom_dictionaries: List[str] = None,
     custom_regexes: List[str] = None,
-    min_likelihood: int | None = None,
-    max_findings: int | None = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
     timeout: int = 500,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze BigQuery data.
@@ -917,7 +924,7 @@ def inspect_bigquery(
 
 
 # [START dlp_inspect_image_all_infotypes]
-import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.dlp  # noqa: F811, E402, I100
 
 
 def inspect_image_file_all_infotypes(

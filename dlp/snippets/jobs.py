@@ -20,11 +20,13 @@ import argparse
 
 
 # [START dlp_list_jobs]
+from typing import Optional  # noqa: I100, E402
+
 import google.cloud.dlp
 
 
 def list_dlp_jobs(
-    project: str, filter_string: str | None = None, job_type: str | None = None
+    project: str, filter_string: Optional[str] = None, job_type: Optional[str] = None
 ) -> None:
     """Uses the Data Loss Prevention API to lists DLP jobs that match the
         specified filter in the request.
