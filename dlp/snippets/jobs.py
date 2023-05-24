@@ -20,7 +20,14 @@ import argparse
 
 
 # [START dlp_list_jobs]
-def list_dlp_jobs(project, filter_string=None, job_type=None):
+from typing import Optional  # noqa: I100, E402
+
+import google.cloud.dlp
+
+
+def list_dlp_jobs(
+    project: str, filter_string: Optional[str] = None, job_type: Optional[str] = None
+) -> None:
     """Uses the Data Loss Prevention API to lists DLP jobs that match the
         specified filter in the request.
     Args:
@@ -54,9 +61,6 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library.
-    import google.cloud.dlp
-
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -87,7 +91,10 @@ def list_dlp_jobs(project, filter_string=None, job_type=None):
 
 
 # [START dlp_delete_job]
-def delete_dlp_job(project, job_name):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def delete_dlp_job(project: str, job_name: str) -> None:
     """Uses the Data Loss Prevention API to delete a long-running DLP job.
     Args:
         project: The project id to use as a parent resource.
@@ -96,9 +103,6 @@ def delete_dlp_job(project, job_name):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -116,6 +120,9 @@ def delete_dlp_job(project, job_name):
 
 
 # [START dlp_create_job]
+import google.cloud.dlp  # noqa: 402
+
+
 def create_dlp_job(
     project: str,
     bucket: str,
@@ -136,8 +143,6 @@ def create_dlp_job(
         auto_populate_timespan: Automatically populates time span config start
             and end times in order to scan new content only.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
