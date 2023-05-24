@@ -8,7 +8,7 @@
 This section contains samples for [Google Cloud Error Reporting](https://cloud.google.com/error-reporting).
 
 A startup script has been provided to demonstrated how to properly provision a GCE 
-instance with fluentd configured. Note the intallation of fluentd, the addition of the config file,
+instance with fluentd configured. Note the installation of fluentd, the addition of the config file,
  and the restarting of the fluetnd service. You can start an instance  using
 it like this:
 
