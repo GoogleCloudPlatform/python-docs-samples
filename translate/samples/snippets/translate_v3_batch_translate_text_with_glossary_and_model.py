@@ -22,7 +22,7 @@ def batch_translate_text_with_glossary_and_model(
     project_id: str,
     model_id: str,
     glossary_id: str,
-) -> translate.BatchTranslateTextResponse:
+) -> translate.TranslateTextResponse:
     """Batch translate text with Glossary and Translation model.
     Args:
         input_uri: The input text to be translated.

@@ -21,7 +21,7 @@ def create_glossary(
     input_uri: str = "YOUR_INPUT_URI",
     glossary_id: str = "YOUR_GLOSSARY_ID",
     timeout: int = 180,
-) -> translate.types.Glossary:
+) -> translate.Glossary:
     """
     Create a equivalent term sets glossary. Glossary can be words or
     short phrases (usually fewer than five words).

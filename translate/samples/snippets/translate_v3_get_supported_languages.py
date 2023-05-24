@@ -18,7 +18,7 @@ from google.cloud import translate
 
 def get_supported_languages(
         project_id: str = "YOUR_PROJECT_ID"
-) -> translate.v3.language_codes_pb2.SupportedLanguages:
+) -> translate.SupportedLanguages:
     """Getting a list of supported language codes.
 
     Args:

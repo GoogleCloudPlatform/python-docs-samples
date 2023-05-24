@@ -23,7 +23,7 @@ def batch_translate_text_with_glossary(
     project_id: str = "YOUR_PROJECT_ID",
     glossary_id: str = "YOUR_GLOSSARY_ID",
     timeout: int = 320,
-) -> translate.BatchTranslateTextResponse:
+) -> translate.TranslateTextResponse:
     """Translates a batch of texts on GCS and stores the result in a GCS location.
     Glossary is applied for translation.
 

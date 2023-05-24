@@ -19,7 +19,7 @@ from google.cloud import translate_v3 as translate
 def get_glossary(
         project_id: str = "YOUR_PROJECT_ID",
         glossary_id: str = "YOUR_GLOSSARY_ID"
-) -> translate.v3.glossary_pb2.Glossary:
+) -> translate.Glossary:
     """Get a particular glossary based on the glossary ID.
 
     Args:

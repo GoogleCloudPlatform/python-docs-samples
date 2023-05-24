@@ -18,7 +18,7 @@ from google.cloud import translate
 
 def list_glossaries(
         project_id: str = "YOUR_PROJECT_ID"
-) -> translate.v3.glossary.Glossary:
+) -> translate.Glossary:
     """List Glossaries.
 
     Args:

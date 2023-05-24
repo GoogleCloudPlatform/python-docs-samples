@@ -21,7 +21,7 @@ def translate_text_with_glossary(
     text: str = "YOUR_TEXT_TO_TRANSLATE",
     project_id: str = "YOUR_PROJECT_ID",
     glossary_id: str = "YOUR_GLOSSARY_ID",
-) -> translate.TranslationServiceClient:
+) -> translate.TranslateTextResponse:
     """Translates a given text using a glossary.
 
     Args:

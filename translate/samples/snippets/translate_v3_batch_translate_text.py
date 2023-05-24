@@ -21,7 +21,7 @@ def batch_translate_text(
     output_uri: str = "gs://YOUR_BUCKET_ID/path/to/save/results/",
     project_id: str = "YOUR_PROJECT_ID",
     timeout: int = 180
-) -> translate.v3.types.BatchTranslateTextResponse:
+) -> translate.TranslateTextResponse:
     """Translates a batch of texts on GCS and stores the result in a GCS location.
 
     Args:

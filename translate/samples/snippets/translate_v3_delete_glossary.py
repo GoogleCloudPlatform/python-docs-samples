@@ -20,7 +20,7 @@ def delete_glossary(
     project_id: str = "YOUR_PROJECT_ID",
     glossary_id: str = "YOUR_GLOSSARY_ID",
     timeout: int = 180,
-) -> translate.glossary_pb2.Glossary:
+) -> translate.Glossary:
     """Delete a specific glossary based on the glossary ID.
 
     Args:
