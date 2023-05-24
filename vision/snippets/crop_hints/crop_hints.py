@@ -25,6 +25,7 @@ Examples:
 import argparse
 
 from typing import MutableSequence
+
 from google.cloud import vision
 from PIL import Image, ImageDraw
 
