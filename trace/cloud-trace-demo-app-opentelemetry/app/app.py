@@ -21,6 +21,7 @@ import random
 import time
 
 import flask
+
 # [START trace_demo_imports]
 from opentelemetry import trace
 from opentelemetry.exporter.cloud_trace import CloudTraceSpanExporter
@@ -30,12 +31,18 @@ from opentelemetry.propagate import set_global_textmap
 from opentelemetry.propagators.cloud_trace_propagator import CloudTraceFormatPropagator
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
+
 # [END trace_demo_imports]
 import requests
 
 
 # [START trace_demo_create_exporter]
 def configure_exporter(exporter):
+    """Configures OpenTelemetry context propagation to use Cloud Trace context
+
+    Args:
+        exporter: exporter instance to be configured in the OpenTelemetry tracer provider
+    """
     set_global_textmap(CloudTraceFormatPropagator())
     tracer_provider = TracerProvider()
     tracer_provider.add_span_processor(BatchSpanProcessor(exporter))
@@ -55,7 +62,7 @@ RequestsInstrumentor().instrument()
 
 
 @app.route("/")
-def template_test():
+def template_test() -> str or (str, int):
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
 
@@ -63,9 +70,9 @@ def template_test():
     # Return received input with the keyword
     keyword = os.getenv("KEYWORD")
     endpoint = os.getenv("ENDPOINT")
-# [START trace_context_header]
+    # [START trace_context_header]
     if endpoint is not None and endpoint != "":
-        data = {'body': keyword}
+        data = {"body": keyword}
         response = requests.get(
             endpoint,
             params=data,
@@ -73,6 +80,8 @@ def template_test():
         return keyword + "\n" + response.text
     else:
         return keyword, 200
+
+
 # [END trace_context_header]
 
 
