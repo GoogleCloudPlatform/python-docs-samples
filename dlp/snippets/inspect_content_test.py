@@ -91,8 +91,6 @@ def topic_id() -> Iterator[str]:
     except google.api_core.exceptions.AlreadyExists:
         pass
 
-    breakpoint()
-
     yield TOPIC_ID
 
     publisher.delete_topic(request={"topic": topic_path})
