@@ -32,7 +32,7 @@ from PIL import Image, ImageDraw
 # [END vision_crop_hints_tutorial_imports]
 
 
-def get_crop_hint(path) -> MutableSequence[vision.Vertex]:
+def get_crop_hint(path: str) -> MutableSequence[vision.Vertex]:
     # [START vision_crop_hints_tutorial_get_crop_hints]
     """Detect crop hints on a single image and return the first result.
 
