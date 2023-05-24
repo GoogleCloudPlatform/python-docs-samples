@@ -19,16 +19,22 @@ import argparse
 
 
 # [START dlp_numerical_stats]
+import concurrent.futures
+
+import google.cloud.dlp
+import google.cloud.pubsub
+
+
 def numerical_risk_analysis(
-    project,
-    table_project_id,
-    dataset_id,
-    table_id,
-    column_name,
-    topic_id,
-    subscription_id,
-    timeout=300,
-):
+    project: str,
+    table_project_id: str,
+    dataset_id: str,
+    table_id: str,
+    column_name: str,
+    topic_id: str,
+    subscription_id: str,
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to compute risk metrics of a column
        of numerical data in a Google BigQuery table.
     Args:
@@ -47,14 +53,6 @@ def numerical_risk_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import concurrent.futures
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -84,7 +82,7 @@ def numerical_risk_analysis(
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(request={"parent": parent, "risk_job": risk_job})
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
@@ -130,16 +128,23 @@ def numerical_risk_analysis(
 
 
 # [START dlp_categorical_stats]
+
+import concurrent.futures  # noqa: E402, F811, I100
+
+import google.cloud.dlp  # noqa: E402, F811
+import google.cloud.pubsub  # noqa: E402, F811
+
+
 def categorical_risk_analysis(
-    project,
-    table_project_id,
-    dataset_id,
-    table_id,
-    column_name,
-    topic_id,
-    subscription_id,
-    timeout=300,
-):
+    project: str,
+    table_project_id: str,
+    dataset_id: str,
+    table_id: str,
+    column_name: str,
+    topic_id: str,
+    subscription_id: str,
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to compute risk metrics of a column
        of categorical data in a Google BigQuery table.
     Args:
@@ -158,14 +163,6 @@ def categorical_risk_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import concurrent.futures
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -197,7 +194,7 @@ def categorical_risk_analysis(
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(request={"parent": parent, "risk_job": risk_job})
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
@@ -253,16 +250,26 @@ def categorical_risk_analysis(
 
 
 # [START dlp_k_anonymity]
+
+import concurrent.futures  # noqa: I100, F811, E402
+
+from typing import List  # noqa: E402, F811
+
+import google.cloud.dlp  # noqa: I100, F811, E402
+from google.cloud.dlp_v2 import types  # noqa: I100, F811, E402
+import google.cloud.pubsub  # noqa: I100, F811, E402
+
+
 def k_anonymity_analysis(
-    project,
-    table_project_id,
-    dataset_id,
-    table_id,
-    topic_id,
-    subscription_id,
-    quasi_ids,
-    timeout=300,
-):
+    project: str,
+    table_project_id: str,
+    dataset_id: str,
+    table_id: str,
+    topic_id: str,
+    subscription_id: str,
+    quasi_ids: List[str],
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to compute the k-anonymity of a
         column set in a Google BigQuery table.
     Args:
@@ -281,17 +288,9 @@ def k_anonymity_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import concurrent.futures
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Create helper function for unpacking values
-    def get_values(obj):
+    def get_values(obj: types.Value) -> int:
         return int(obj.integer_value)
 
     # Instantiate a client.
@@ -309,7 +308,7 @@ def k_anonymity_analysis(
     }
 
     # Convert quasi id list to Protobuf type
-    def map_fields(field):
+    def map_fields(field: str) -> dict:
         return {"name": field}
 
     quasi_ids = map(map_fields, quasi_ids)
@@ -328,7 +327,7 @@ def k_anonymity_analysis(
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(request={"parent": parent, "risk_job": risk_job})
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
@@ -385,17 +384,25 @@ def k_anonymity_analysis(
 
 
 # [START dlp_l_diversity]
+from types import List  # noqa: I100, F811, E402
+import concurrent.futures  # noqa: I100, F811, E402
+
+import google.cloud.dlp  # noqa: I100, F811, E402
+from google.cloud.dlp_v2 import types  # noqa: I100, F811, E402
+import google.cloud.pubsub  # noqa: I100, F811, E402
+
+
 def l_diversity_analysis(
-    project,
-    table_project_id,
-    dataset_id,
-    table_id,
-    topic_id,
-    subscription_id,
-    sensitive_attribute,
-    quasi_ids,
-    timeout=300,
-):
+    project: str,
+    table_project_id: str,
+    dataset_id: str,
+    table_id: str,
+    topic_id: str,
+    subscription_id: str,
+    sensitive_attribute: str,
+    quasi_ids: List[str],
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to compute the l-diversity of a
         column set in a Google BigQuery table.
     Args:
@@ -415,17 +422,9 @@ def l_diversity_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import concurrent.futures
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Create helper function for unpacking values
-    def get_values(obj):
+    def get_values(obj: types.Value) -> int:
         return int(obj.integer_value)
 
     # Instantiate a client.
@@ -443,7 +442,7 @@ def l_diversity_analysis(
     }
 
     # Convert quasi id list to Protobuf type
-    def map_fields(field):
+    def map_fields(field: str) -> dict:
         return {"name": field}
 
     quasi_ids = map(map_fields, quasi_ids)
@@ -467,7 +466,7 @@ def l_diversity_analysis(
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(request={"parent": parent, "risk_job": risk_job})
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()
@@ -493,14 +492,12 @@ def l_diversity_analysis(
                             map(get_values, value_bucket.quasi_ids_values)
                         )
                     )
-                    print(
-                        f"   Class size: {value_bucket.equivalence_class_size}"
-                    )
+                    print(f"   Class size: {value_bucket.equivalence_class_size}")
                     for value in value_bucket.top_sensitive_values:
                         print(
-                                "   Sensitive value {} occurs {} time(s)".format(
-                                    value.value, value.count
-                                )
+                            "   Sensitive value {} occurs {} time(s)".format(
+                                value.value, value.count
+                            )
                         )
             subscription.set_result(None)
         else:
@@ -527,18 +524,26 @@ def l_diversity_analysis(
 
 
 # [START dlp_k_map]
+from typing import List  # noqa: I100, E402
+import concurrent.futures  # noqa: I100, F811, E402
+
+import google.cloud.dlp  # noqa: I100, F811, E402
+from google.cloud.dlp_v2 import types  # noqa: I100, F811, E402
+import google.cloud.pubsub  # noqa: I100, F811, E402
+
+
 def k_map_estimate_analysis(
-    project,
-    table_project_id,
-    dataset_id,
-    table_id,
-    topic_id,
-    subscription_id,
-    quasi_ids,
-    info_types,
-    region_code="US",
-    timeout=300,
-):
+    project: str,
+    table_project_id: str,
+    dataset_id: str,
+    table_id: str,
+    topic_id: str,
+    subscription_id: str,
+    quasi_ids: List[str],
+    info_types: List[str],
+    region_code: str = "US",
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to compute the k-map risk estimation
         of a column set in a Google BigQuery table.
     Args:
@@ -564,17 +569,9 @@ def k_map_estimate_analysis(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import concurrent.futures
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Create helper function for unpacking values
-    def get_values(obj):
+    def get_values(obj: types.Value) -> int:
         return int(obj.integer_value)
 
     # Instantiate a client.
@@ -599,7 +596,7 @@ def k_map_estimate_analysis(
         )
 
     # Convert quasi id list to Protobuf type
-    def map_fields(quasi_id, info_type):
+    def map_fields(quasi_id: str, info_type: str) -> dict:
         return {"field": {"name": quasi_id}, "info_type": {"name": info_type}}
 
     quasi_ids = map(map_fields, quasi_ids, info_types)
@@ -623,7 +620,7 @@ def k_map_estimate_analysis(
     # Call API to start risk analysis job
     operation = dlp.create_dlp_job(request={"parent": parent, "risk_job": risk_job})
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         if message.attributes["DlpJobName"] == operation.name:
             # This is the message we're looking for, so acknowledge it.
             message.ack()

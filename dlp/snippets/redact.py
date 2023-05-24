@@ -23,18 +23,20 @@ import mimetypes
 
 # [END dlp_redact_image]
 import os
+from typing import List
 
 # [START dlp_redact_image]
+import google.cloud.dlp
 
 
 def redact_image(
-    project,
-    filename,
-    output_filename,
-    info_types,
-    min_likelihood=None,
-    mime_type=None,
-):
+    project: str,
+    filename: str,
+    output_filename: str,
+    info_types: List[str],
+    min_likelihood: str = None,
+    mime_type: str = None,
+) -> None:
     """Uses the Data Loss Prevention API to redact protected data in an image.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -50,8 +52,6 @@ def redact_image(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -122,13 +122,14 @@ def redact_image(
 # [END dlp_redact_image]
 
 # [START dlp_redact_image_all_text]
+import google.cloud.dlp  # noqa: E402, F811
 
 
 def redact_image_all_text(
-    project,
-    filename,
-    output_filename,
-):
+    project: str,
+    filename: str,
+    output_filename: str,
+) -> None:
     """Uses the Data Loss Prevention API to redact all text in an image.
 
     Args:
@@ -139,8 +140,6 @@ def redact_image_all_text(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -180,33 +179,35 @@ def redact_image_all_text(
 
 
 # [START dlp_redact_image_listed_infotypes]
-def redact_image_listed_info_types(
-    project,
-    filename,
-    output_filename,
-    info_types,
-    min_likelihood=None,
-    mime_type=None
-):
-    """Uses the Data Loss Prevention API to redact protected data in an image.
-       Args:
-           project: The Google Cloud project id to use as a parent resource.
-           filename: The path to the file to inspect.
-           output_filename: The path to which the redacted image will be written.
-               A full list of info type categories can be fetched from the API.
-           info_types: A list of strings representing info types to look for.
-               A full list of info type categories can be fetched from the API.
-           min_likelihood: A string representing the minimum likelihood threshold
-               that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
-               'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
-           mime_type: The MIME type of the file. If not specified, the type is
-               inferred via the Python standard library's mimetypes module.
-       Returns:
-           None; the response from the API is printed to the terminal.
-       """
+from typing import List  # noqa: E402, F811, I100
 
-    # Import the client library
-    import google.cloud.dlp
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def redact_image_listed_info_types(
+    project: str,
+    filename: str,
+    output_filename: str,
+    info_types: List[str],
+    min_likelihood: str | None = None,
+    mime_type: str | None = None,
+) -> None:
+    """Uses the Data Loss Prevention API to redact protected data in an image.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        output_filename: The path to which the redacted image will be written.
+            A full list of info type categories can be fetched from the API.
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
+        min_likelihood: A string representing the minimum likelihood threshold
+            that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED',
+            'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.
+        mime_type: The MIME type of the file. If not specified, the type is
+            inferred via the Python standard library's mimetypes module.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -225,10 +226,7 @@ def redact_image_listed_info_types(
 
     # Construct the configuration dictionary. Keys which are None may
     # optionally be omitted entirely.
-    inspect_config = {
-        "min_likelihood": min_likelihood,
-        "info_types": info_types
-    }
+    inspect_config = {"min_likelihood": min_likelihood, "info_types": info_types}
 
     # If mime_type is not specified, guess it from the filename.
     if mime_type is None:
@@ -277,23 +275,23 @@ def redact_image_listed_info_types(
 
 
 # [START dlp_redact_image_all_infotypes]
-def redact_image_all_info_types(
-    project,
-    filename,
-    output_filename,
-):
-    """Uses the Data Loss Prevention API to redact protected data in an image.
-       Args:
-           project: The Google Cloud project id to use as a parent resource.
-           filename: The path to the file to inspect.
-           output_filename: The path to which the redacted image will be written.
-               A full list of info type categories can be fetched from the API.
-       Returns:
-           None; the response from the API is printed to the terminal.
-    """
+import google.cloud.dlp  # noqa: F811, E402
 
-    # Import the client library
-    import google.cloud.dlp
+
+def redact_image_all_info_types(
+    project: str,
+    filename: str,
+    output_filename: str,
+) -> None:
+    """Uses the Data Loss Prevention API to redact protected data in an image.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        output_filename: The path to which the redacted image will be written.
+            A full list of info type categories can be fetched from the API.
+    Returns:
+        None; the response from the API is printed to the terminal.
+    """
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -323,6 +321,9 @@ def redact_image_all_info_types(
 
 
 # [START dlp_redact_image_colored_infotypes]
+import google.cloud.dlp  # noqa: E402, F811
+
+
 def redact_image_with_colored_info_types(
     project: str,
     filename: str,
@@ -335,8 +336,6 @@ def redact_image_with_colored_info_types(
            filename: The path of the image file to inspect.
            output_filename: The path to which the redacted image will be written.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -345,42 +344,44 @@ def redact_image_with_colored_info_types(
     # contains an infoType and the color used for the replacement.
 
     ssn_redaction_config = {
-        "info_type": {"name": 'US_SOCIAL_SECURITY_NUMBER'},
+        "info_type": {"name": "US_SOCIAL_SECURITY_NUMBER"},
         "redaction_color": {
             "red": 0.3,
             "green": 0.1,
             "blue": 0.6,
-        }
+        },
     }
 
     email_redaction_config = {
-        "info_type": {"name": 'EMAIL_ADDRESS'},
+        "info_type": {"name": "EMAIL_ADDRESS"},
         "redaction_color": {
             "red": 0.5,
             "green": 0.5,
             "blue": 1.0,
-        }
+        },
     }
 
     phone_redaction_config = {
-        "info_type": {"name": 'PHONE_NUMBER'},
+        "info_type": {"name": "PHONE_NUMBER"},
         "redaction_color": {
             "red": 1.0,
             "green": 0.0,
             "blue": 0.6,
-        }
+        },
     }
 
-    image_redaction_configs = [ssn_redaction_config, email_redaction_config, phone_redaction_config]
+    image_redaction_configs = [
+        ssn_redaction_config,
+        email_redaction_config,
+        phone_redaction_config,
+    ]
 
     # Construct the configuration dictionary.
-    inspect_config = {
-        "info_types": [_i["info_type"] for _i in image_redaction_configs]
-    }
+    inspect_config = {"info_types": [_i["info_type"] for _i in image_redaction_configs]}
 
     # Construct the byte_item, containing the file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type_": 'IMAGE', "data": f.read()}
+        byte_item = {"type_": "IMAGE", "data": f.read()}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
@@ -401,6 +402,7 @@ def redact_image_with_colored_info_types(
 
     byte_count = len(response.redacted_image)
     print(f"Wrote {byte_count} to {output_filename}")
+
 
 # [END dlp_redact_image_colored_infotypes]
 
@@ -476,7 +478,7 @@ if __name__ == "__main__":
         nargs="+",
         help="Strings representing info types to look for. A full list of "
         "info categories and types is available from the API. Examples "
-        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     listed_info_types_parser.add_argument(
         "--min_likelihood",

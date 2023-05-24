@@ -25,10 +25,10 @@ from typing import List
 
 # [START dlp_inspect_string_basic]
 def inspect_string_basic(
-    project,
-    content_string,
-    info_types=["PHONE_NUMBER"],
-):
+    project: str,
+    content_string: str,
+    info_types: List[str] = ["PHONE_NUMBER"],
+) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -80,16 +80,19 @@ def inspect_string_basic(
 
 
 # [START dlp_inspect_string]
+from typing import List  # noqa: E402
+
+
 def inspect_string(
-    project,
-    content_string,
-    info_types,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    min_likelihood=None,
-    max_findings=None,
-    include_quote=True,
-):
+    project: str,
+    content_string: str,
+    info_types: List[str],
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    min_likelihood: str = None,
+    max_findings: str = None,
+    include_quote: str = True,
+) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -179,15 +182,15 @@ def inspect_string(
 
 
 def inspect_table(
-    project,
-    data,
-    info_types,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    min_likelihood=None,
-    max_findings=None,
-    include_quote=True,
-):
+    project: str,
+    data: str,
+    info_types: List[str],
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    min_likelihood: str | None = None,
+    max_findings: int | None = None,
+    include_quote: bool = True,
+) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -313,16 +316,16 @@ def inspect_table(
 
 
 def inspect_file(
-    project,
-    filename,
-    info_types,
-    min_likelihood=None,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    max_findings=None,
-    include_quote=True,
-    mime_type=None,
-):
+    project: str,
+    filename: str,
+    info_types: List[str],
+    min_likelihood: str = None,
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    max_findings: int | None = None,
+    include_quote: bool = True,
+    mime_type: str = None,
+) -> None:
     """Uses the Data Loss Prevention API to analyze a file for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -433,18 +436,18 @@ def inspect_file(
 
 # [START dlp_inspect_gcs]
 def inspect_gcs_file(
-    project,
-    bucket,
-    filename,
-    topic_id,
-    subscription_id,
-    info_types,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    min_likelihood=None,
-    max_findings=None,
-    timeout=300,
-):
+    project: str,
+    bucket: str,
+    filename: str,
+    topic_id: str,
+    subscription_id: str,
+    info_types: List[str],
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    min_likelihood: str | None = None,
+    max_findings: int | None = None,
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to analyze a file on GCS.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -549,7 +552,7 @@ def inspect_gcs_file(
     # so that it can signal that it is done and the main thread can continue.
     job_done = threading.Event()
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         try:
             if message.attributes["DlpJobName"] == operation.name:
                 # This is the message we're looking for, so acknowledge it.
@@ -592,20 +595,23 @@ def inspect_gcs_file(
 
 
 # [START dlp_inspect_datastore]
+from typing import List  # noqa: E402
+
+
 def inspect_datastore(
-    project,
-    datastore_project,
-    kind,
-    topic_id,
-    subscription_id,
-    info_types,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    namespace_id=None,
-    min_likelihood=None,
-    max_findings=None,
-    timeout=300,
-):
+    project: str,
+    datastore_project: str,
+    kind: str,
+    topic_id: str,
+    subscription_id: str,
+    info_types: List[str],
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    namespace_id: str = None,
+    min_likelihood: int | None = None,
+    max_findings: int | None = None,
+    timeout: int = 300,
+) -> None:
     """Uses the Data Loss Prevention API to analyze Datastore data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -717,7 +723,7 @@ def inspect_datastore(
     # so that it can signal that it is done and the main thread can continue.
     job_done = threading.Event()
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         try:
             if message.attributes["DlpJobName"] == operation.name:
                 # This is the message we're looking for, so acknowledge it.
@@ -762,20 +768,23 @@ def inspect_datastore(
 
 
 # [START dlp_inspect_bigquery]
+from typing import List  # noqa: E402
+
+
 def inspect_bigquery(
-    project,
-    bigquery_project,
-    dataset_id,
-    table_id,
-    topic_id,
-    subscription_id,
-    info_types,
-    custom_dictionaries=None,
-    custom_regexes=None,
-    min_likelihood=None,
-    max_findings=None,
-    timeout=500,
-):
+    project: str,
+    bigquery_project: str,
+    dataset_id: str,
+    table_id: str,
+    topic_id: str,
+    subscription_id: str,
+    info_types: List[str],
+    custom_dictionaries: List[str] = None,
+    custom_regexes: List[str] = None,
+    min_likelihood: int | None = None,
+    max_findings: int | None = None,
+    timeout: int = 500,
+) -> None:
     """Uses the Data Loss Prevention API to analyze BigQuery data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -888,7 +897,7 @@ def inspect_bigquery(
     # so that it can signal that it is done and the main thread can continue.
     job_done = threading.Event()
 
-    def callback(message):
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         try:
             if message.attributes["DlpJobName"] == operation.name:
                 # This is the message we're looking for, so acknowledge it.
@@ -933,10 +942,10 @@ def inspect_bigquery(
 
 # [START dlp_inspect_image_all_infotypes]
 def inspect_image_file_all_infotypes(
-    project,
-    filename,
-    include_quote=True,
-):
+    project: str,
+    filename: str,
+    include_quote: bool = True,
+) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data in image file.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -956,7 +965,7 @@ def inspect_image_file_all_infotypes(
 
     # Construct the byte_item, containing the image file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type_": 'IMAGE', "data": f.read()}
+        byte_item = {"type_": "IMAGE", "data": f.read()}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
@@ -989,7 +998,7 @@ def inspect_image_file_listed_infotypes(
     project: str,
     filename: str,
     info_types: List[str],
-    include_quote=True,
+    include_quote: bool = True,
 ) -> None:
     """Uses the Data Loss Prevention API to analyze strings in an image for
     data matching the given infoTypes.
@@ -1019,7 +1028,7 @@ def inspect_image_file_listed_infotypes(
 
     # Construct the byte_item, containing the image file's byte data.
     with open(filename, mode="rb") as f:
-        byte_item = {"type_": 'IMAGE', "data": f.read()}
+        byte_item = {"type_": "IMAGE", "data": f.read()}
 
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
@@ -1042,6 +1051,7 @@ def inspect_image_file_listed_infotypes(
             print("Likelihood: {} \n".format(finding.likelihood))
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_image_listed_infotypes]
 
@@ -1106,7 +1116,7 @@ def inspect_bigquery_table_with_sampling(
         "big_query_options": {
             "table_reference": table_reference,
             "rows_limit": 1000,
-            "sample_method": 'RANDOM_START',
+            "sample_method": "RANDOM_START",
             "identifying_fields": [{"name": "name"}],
         }
     }
@@ -1140,9 +1150,7 @@ def inspect_bigquery_table_with_sampling(
     # so that it can signal that it is done and the main thread can continue.
     job_done = threading.Event()
 
-    def callback(
-        message: google.cloud.pubsub_v1.subscriber.message.Message
-    ) -> None:
+    def callback(message: google.cloud.pubsub_v1.subscriber.message.Message) -> None:
         try:
             if message.attributes["DlpJobName"] == operation.name:
                 # This is the message we're looking for, so acknowledge it.
@@ -1182,6 +1190,7 @@ def inspect_bigquery_table_with_sampling(
             "No event received before the timeout. Please verify that the "
             "subscription provided is subscribed to the topic provided."
         )
+
 
 # [END dlp_inspect_bigquery_with_sampling]
 
@@ -1615,7 +1624,7 @@ if __name__ == "__main__":
     parser_bigquery_with_sampling = subparsers.add_parser(
         "bigquery_with_sampling",
         help="Inspect files on Google BigQuery by limiting the amount of "
-        "data to be scanned."
+        "data to be scanned.",
     )
     parser_bigquery_with_sampling.add_argument(
         "topic_id",
@@ -1661,18 +1670,14 @@ if __name__ == "__main__":
     )
 
     parser_image_file = subparsers.add_parser(
-        "image_all_infotypes",
-        help="Inspect a local file with all info types."
+        "image_all_infotypes", help="Inspect a local file with all info types."
     )
     parser_image_file.add_argument(
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
         default=default_project,
     )
-    parser_image_file.add_argument(
-        "filename",
-        help="The path to the file to inspect."
-    )
+    parser_image_file.add_argument("filename", help="The path to the file to inspect.")
     parser_image_file.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
@@ -1681,8 +1686,7 @@ if __name__ == "__main__":
     )
 
     parser_image_infotypes = subparsers.add_parser(
-        "image_listed_infotypes",
-        help="Inspect a local file with listed info types."
+        "image_listed_infotypes", help="Inspect a local file with listed info types."
     )
     parser_image_infotypes.add_argument(
         "--project",
@@ -1690,20 +1694,19 @@ if __name__ == "__main__":
         default=default_project,
     )
     parser_image_infotypes.add_argument(
-        "filename",
-        help="The path to the file to inspect."
+        "filename", help="The path to the file to inspect."
     )
     parser_image_infotypes.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser_image_infotypes.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
-             "information in the results.",
+        "information in the results.",
         default=True,
     )
 
