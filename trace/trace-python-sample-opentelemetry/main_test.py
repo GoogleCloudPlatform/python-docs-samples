@@ -17,7 +17,7 @@ import os
 import main
 
 
-def test_index():
+def test_index() -> None:
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     main.app.testing = True
     main.app.config["TRACER"] = main.initialize_tracer(project_id)
@@ -28,7 +28,7 @@ def test_index():
     assert "Tracing requests" in resp.data.decode("utf-8")
 
 
-def test_redirect():
+def test_redirect() -> None:
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     main.app.testing = True
     main.app.config["TRACER"] = main.initialize_tracer(project_id)
