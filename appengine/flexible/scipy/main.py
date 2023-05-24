@@ -23,15 +23,21 @@ from PIL import Image
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def resize():
-    """Demonstrates using Pillow to resize an image."""
+    """Demonstrates using Pillow to resize an image.
+
+    This takes a predefined image, resizes it to 300x300 pixesls, and writes it on disk.
+
+    Returns:
+        A message stating that the image has been resized.
+    """
     app_path = os.path.dirname(os.path.realpath(__file__))
-    image_path = os.path.join(app_path, 'assets/google_logo.jpg')
+    image_path = os.path.join(app_path, "assets/google_logo.jpg")
     img = Image.fromarray(imageio.imread(image_path))
     img_tinted = img.resize((300, 300))
 
-    output_image_path = request.args.get('output_image_path')
+    output_image_path = request.args.get("output_image_path")
     # Write the tinted image back to disk
     imageio.imwrite(output_image_path, img_tinted)
     return "Image resized."
@@ -39,14 +45,19 @@ def resize():
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
-    An internal error occurred: <pre>{}</pre>
-    See logs for full stacktrace.
-    """.format(e), 500
+    """Serves a formatted message on-error.
+
+    Returns:
+        The error message and a code 500 status.
+    """
+    logging.exception("An error occurred during a request.")
+    return (
+        f"An internal error occurred: <pre>{e}</pre><br>See logs for full stacktrace.",
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

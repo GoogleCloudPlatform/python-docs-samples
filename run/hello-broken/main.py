@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START cloudrun_broken_service]
-# [START run_broken_service]
 import json
 import os
 
@@ -25,31 +24,34 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET"])
 def index():
+    """Example route for testing local troubleshooting.
+
+    This route may raise an HTTP 5XX error due to missing environment variable.
+    """
     print("hello: received request.")
 
     # [START cloudrun_broken_service_problem]
-    # [START run_broken_service_problem]
     NAME = os.getenv("NAME")
 
     if not NAME:
         print("Environment validation failed.")
         raise Exception("Missing required service parameter.")
-    # [END run_broken_service_problem]
     # [END cloudrun_broken_service_problem]
 
     return f"Hello {NAME}"
 
 
-# [END run_broken_service]
 # [END cloudrun_broken_service]
 
 
 @app.route("/improved", methods=["GET"])
 def improved():
+    """Example route showing improved error logs and default values for
+    improved troubleshooting.
+    """
     print("hello: received request.")
 
     # [START cloudrun_broken_service_upgrade]
-    # [START run_broken_service_upgrade]
     NAME = os.getenv("NAME")
 
     if not NAME:
@@ -59,19 +61,16 @@ def improved():
             "message": f"NAME not set, default to {NAME}",
         }
         print(json.dumps(error_message))
-    # [END run_broken_service_upgrade]
     # [END cloudrun_broken_service_upgrade]
 
     return f"Hello {NAME}"
 
 
 # [START cloudrun_broken_service]
-# [START run_broken_service]
 if __name__ == "__main__":
     PORT = int(os.getenv("PORT")) if os.getenv("PORT") else 8080
 
     # This is used when running locally. Gunicorn is used to run the
     # application on Cloud Run. See entrypoint in Dockerfile.
     app.run(host="127.0.0.1", port=PORT, debug=True)
-# [END run_broken_service]
 # [END cloudrun_broken_service]

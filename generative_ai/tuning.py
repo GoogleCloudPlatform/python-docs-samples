@@ -16,10 +16,12 @@
 from __future__ import annotations
 
 
+from google.auth import default
 import pandas as pd
-
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel
+
+credentials, _ = default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
 
 
 def tuning(
@@ -27,7 +29,7 @@ def tuning(
     location: str,
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
-):
+) -> None:
     """Tune a new model, based on a prompt-response data.
 
     "training_data" can be either the GCS URI of a file formatted in JSONL format
@@ -45,26 +47,27 @@ def tuning(
     Args:
       project_id: GCP Project ID, used to initialize vertexai
       location: GCP Region, used to initialize vertexai
-      training_data: GCS URI of training file or pandas dataframe of training data
+      training_data: GCS URI of jsonl file or pandas dataframe of training data
       train_steps: Number of training steps to use when tuning the model.
     """
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(
+        project=project_id,
+        location=location,
+        credentials=credentials
+    )
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
-      training_data=training_data,
-      # Optional:
-      train_steps=train_steps,
-      tuning_job_location="europe-west4",
-      tuned_model_location="us-central1",
+        training_data=training_data,
+        # Optional:
+        train_steps=train_steps,
+        tuning_job_location="europe-west4",  # Only supported in europe-west4 for Public Preview
+        tuned_model_location=location,
     )
 
-    # Test the tuned model:
-    response = model.predict("Tell me some ideas combining VR and fitness:")
-    print(f"Response from Model: {response.text}")
+    print(model._job.status)
 # [END aiplatform_sdk_tuning]
-
-    return response
+    return model
 
 
 if __name__ == "__main__":

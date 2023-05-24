@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def sentiment_analysis(temperature=0):
+def sentiment_analysis(temperature: float = 0.2) -> None:
     """Sentiment analysis example with a Large Language Model."""
 
     # TODO developer - override these parameters as needed:

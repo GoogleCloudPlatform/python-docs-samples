@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import backoff
+from google.api_core.exceptions import ResourceExhausted
+
 import sentiment_analysis
 
 
-def test_sentiment_analysis():
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_sentiment_analysis() -> None:
 
     content = sentiment_analysis.sentiment_analysis(temperature=0).text
     assert content == '''positive'''

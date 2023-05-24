@@ -15,11 +15,12 @@
 """Tests for quickstart."""
 
 import os
+from typing import Iterator
 import uuid
 
 import google.auth
-from googleapiclient import errors
-import googleapiclient.discovery
+from googleapiclient import errors  # type: ignore
+import googleapiclient.discovery  # type: ignore
 import pytest
 from retrying import retry
 
@@ -29,14 +30,14 @@ import quickstart
 GCLOUD_PROJECT = os.environ["GCLOUD_PROJECT"]
 
 
-def retry_if_conflict(exception):
+def retry_if_conflict(exception: Exception) -> bool:
     return isinstance(
         exception, errors.HttpError
     ) and "There were concurrent policy changes" in str(exception)
 
 
 @pytest.fixture(scope="module")
-def test_member():
+def test_member() -> Iterator[str]:
     # section to create service account to test policy updates.
     # we use the first portion of uuid4 because full version is too long.
     name = f"test-{uuid.uuid4().hex[:25]}"
@@ -50,7 +51,7 @@ def test_member():
     delete_service_account(email)
 
 
-def create_service_account(project_id, name, display_name):
+def create_service_account(project_id: str, name: str, display_name: str) -> dict:
     """Creates a service account."""
 
     credentials, _ = google.auth.default(
@@ -73,7 +74,7 @@ def create_service_account(project_id, name, display_name):
     return my_service_account
 
 
-def delete_service_account(email):
+def delete_service_account(email: str) -> None:
     """Deletes a service account."""
 
     credentials, _ = google.auth.default(
@@ -89,14 +90,14 @@ def delete_service_account(email):
     print("Deleted service account: " + email)
 
 
-def test_quickstart(test_member, capsys):
+def test_quickstart(test_member: str, capsys: pytest.CaptureFixture) -> None:
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,
         stop_max_attempt_number=5,
         retry_on_exception=retry_if_conflict,
     )
-    def test_call():
+    def test_call() -> None:
         quickstart.quickstart(GCLOUD_PROJECT, test_member)
         out, _ = capsys.readouterr()
         assert test_member in out

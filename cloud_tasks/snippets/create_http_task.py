@@ -17,89 +17,84 @@
 import argparse
 
 
+# [START cloud_tasks_create_http_task]
+import datetime
+import json
+from typing import Dict, Optional
+
+from google.cloud import tasks_v2
+from google.protobuf import duration_pb2, timestamp_pb2
+
+
 def create_http_task(
-    project,
-    queue,
-    location,
-    url,
-    payload=None,
-    in_seconds=None,
-    task_name=None,
-    deadline=None,
-):
-    # [START cloud_tasks_create_http_task]
-    """Create a task for a given queue with an arbitrary payload."""
-
-    import datetime
-    import json
-
-    from google.cloud import tasks_v2
-    from google.protobuf import duration_pb2, timestamp_pb2
+    project: str,
+    location: str,
+    queue: str,
+    url: str,
+    json_payload: Dict,
+    scheduled_seconds_from_now: Optional[int] = None,
+    task_id: Optional[str] = None,
+    deadline_in_seconds: Optional[int] = None,
+) -> tasks_v2.Task:
+    """Create an HTTP POST task with a JSON payload.
+    Args:
+        project: The project ID where the queue is located.
+        location: The location where the queue is located.
+        queue: The ID of the queue to add the task to.
+        url: The target URL of the task.
+        json_payload: The JSON payload to send.
+        scheduled_seconds_from_now: Seconds from now to schedule the task for.
+        task_id: ID to use for the newly created task.
+        deadline_in_seconds: The deadline in seconds for task.
+    Returns:
+        The newly created task.
+    """
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # TODO(developer): Uncomment these lines and replace with your values.
-    # project = 'my-project-id'
-    # queue = 'my-queue'
-    # location = 'us-central1'
-    # url = 'https://example.com/task_handler'
-    # payload = 'hello' or {'param': 'value'} for application/json
-    # in_seconds = 180
-    # task_name = 'my-unique-task'
-    # deadline = 900
+    # Construct the task.
+    task = tasks_v2.Task(
+        http_request=tasks_v2.HttpRequest(
+            http_method=tasks_v2.HttpMethod.POST,
+            url=url,
+            headers={"Content-type": "application/json"},
+            body=json.dumps(json_payload).encode(),
+        ),
+        name=(
+            client.task_path(project, location, queue, task_id)
+            if task_id is not None
+            else None
+        ),
+    )
 
-    # Construct the fully qualified queue name.
-    parent = client.queue_path(project, location, queue)
-
-    # Construct the request body.
-    task = {
-        "http_request": {  # Specify the type of request.
-            "http_method": tasks_v2.HttpMethod.POST,
-            "url": url,  # The full url path that the task will be sent to.
-        }
-    }
-    if payload is not None:
-        if isinstance(payload, dict):
-            # Convert dict to JSON string
-            payload = json.dumps(payload)
-            # specify http content-type to application/json
-            task["http_request"]["headers"] = {"Content-type": "application/json"}
-
-        # The API expects a payload of type bytes.
-        converted_payload = payload.encode()
-
-        # Add the payload to the request.
-        task["http_request"]["body"] = converted_payload
-
-    if in_seconds is not None:
-        # Convert "seconds from now" into an rfc3339 datetime string.
-        d = datetime.datetime.utcnow() + datetime.timedelta(seconds=in_seconds)
-
-        # Create Timestamp protobuf.
+    # Convert "seconds from now" to an absolute Protobuf Timestamp
+    if scheduled_seconds_from_now is not None:
         timestamp = timestamp_pb2.Timestamp()
-        timestamp.FromDatetime(d)
+        timestamp.FromDatetime(
+            datetime.datetime.utcnow()
+            + datetime.timedelta(seconds=scheduled_seconds_from_now)
+        )
+        task.schedule_time = timestamp
 
-        # Add the timestamp to the tasks.
-        task["schedule_time"] = timestamp
-
-    if task_name is not None:
-        # Add the name to tasks.
-        task["name"] = client.task_path(project, location, queue, task_name)
-
-    if deadline is not None:
-        # Add dispatch deadline for requests sent to the worker.
+    # Convert "deadline in seconds" to a Protobuf Duration
+    if deadline_in_seconds is not None:
         duration = duration_pb2.Duration()
-        duration.FromSeconds(deadline)
-        task["dispatch_deadline"] = duration
+        duration.FromSeconds(deadline_in_seconds)
+        task.dispatch_deadline = duration
 
-    # Use the client to build and send the task.
-    response = client.create_task(request={"parent": parent, "task": task})
+    # Use the client to send a CreateTaskRequest.
+    return client.create_task(
+        tasks_v2.CreateTaskRequest(
+            # The queue to add the task to
+            parent=client.queue_path(project, location, queue),
+            # The task itself
+            task=task,
+        )
+    )
 
-    print(f"Created task {response.name}")
-    # [END cloud_tasks_create_http_task]
-    return response
 
+# [END cloud_tasks_create_http_task]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

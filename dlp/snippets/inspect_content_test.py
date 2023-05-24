@@ -328,6 +328,19 @@ def test_inspect_image_file_all_infotypes(capsys):
     assert "Info type: EMAIL_ADDRESS" in out
 
 
+def test_inspect_image_file_listed_infotypes(capsys):
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+
+    inspect_content.inspect_image_file_listed_infotypes(
+        GCLOUD_PROJECT,
+        test_filepath,
+        ["EMAIL_ADDRESS"],
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Info type: EMAIL_ADDRESS" in out
+
+
 def delete_dlp_job(out):
     for line in str(out).split("\n"):
         if "Job name" in line:
@@ -508,6 +521,24 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
             subscription_id,
             ["FIRST_NAME", "EMAIL_ADDRESS", "PHONE_NUMBER"],
             timeout=1,
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+        assert "Job name:" in out
+    finally:
+        delete_dlp_job(out)
+
+
+@pytest.mark.flaky(max_runs=2, min_passes=1)
+def test_inspect_bigquery_with_sampling(topic_id, subscription_id, capsys):
+    out = ""
+    try:
+        inspect_content.inspect_bigquery_table_with_sampling(
+            GCLOUD_PROJECT,
+            topic_id,
+            subscription_id,
+            timeout=TIMEOUT,
         )
 
         out, _ = capsys.readouterr()

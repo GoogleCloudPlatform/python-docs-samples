@@ -14,11 +14,15 @@
 
 import base64
 
+import pytest
+
 import main
 
 
-def test_functions_pubsub_subscribe_should_print_message(capsys):
-    event = type('cloudevent', (object,), {"attributes": {}, "data": {}})
+def test_functions_pubsub_subscribe_should_print_message(
+    capsys: pytest.CaptureFixture,
+) -> None:
+    event = type("cloudevent", (object,), {"attributes": {}, "data": {}})
 
     event.data = {
         "message": {

@@ -17,7 +17,10 @@
 
 import re
 
+import functions_framework
 
+
+@functions_framework.http
 def log_session_id_for_troubleshooting(request):
     """Webhook will log session id corresponding to request."""
 
