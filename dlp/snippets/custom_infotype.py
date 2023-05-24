@@ -737,6 +737,9 @@ def inspect_string_multiple_rules(project: str, content_string: str) -> None:
 
 
 # [START dlp_inspect_with_medical_record_number_custom_regex_detector]
+import google.cloud.dlp  # noqa: E402, F811
+
+
 def inspect_with_medical_record_number_custom_regex_detector(
     project: str,
     content_string: str,
@@ -751,9 +754,6 @@ def inspect_with_medical_record_number_custom_regex_detector(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -800,6 +800,9 @@ def inspect_with_medical_record_number_custom_regex_detector(
 
 
 # [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_with_medical_record_number_w_custom_hotwords(
     project: str,
     content_string: str,
@@ -815,9 +818,6 @@ def inspect_with_medical_record_number_w_custom_hotwords(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()

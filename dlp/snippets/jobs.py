@@ -118,6 +118,9 @@ def delete_dlp_job(project: str, job_name: str) -> None:
 
 
 # [START dlp_create_job]
+import google.cloud.dlp  # noqa: 402
+
+
 def create_dlp_job(
     project: str,
     bucket: str,
@@ -138,8 +141,6 @@ def create_dlp_job(
         auto_populate_timespan: Automatically populates time span config start
             and end times in order to scan new content only.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()

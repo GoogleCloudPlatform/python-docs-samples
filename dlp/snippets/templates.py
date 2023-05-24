@@ -20,6 +20,9 @@ from typing import List
 
 
 # [START dlp_create_inspect_template]
+import google.cloud.dlp
+
+
 def create_inspect_template(
     project: str,
     info_types: List[str],
@@ -46,9 +49,6 @@ def create_inspect_template(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -90,7 +90,7 @@ def create_inspect_template(
 
 
 # [START dlp_list_templates]
-import google.cloud.dlp  # noqa: E402
+import google.cloud.dlp  # noqa: E402, F811
 
 
 def list_inspect_templates(project: str) -> None:

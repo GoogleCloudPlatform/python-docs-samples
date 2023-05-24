@@ -752,6 +752,8 @@ def reidentify_free_text_with_fpe_using_surrogate(
 
 # [START dlp_deidentify_date_shift]
 import base64  # noqa: F811, E402, I100
+import csv  # noqa: F811, E402, I100
+from datetime import datetime  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402
 
 import google.cloud.dlp  # noqa: F811, E402
@@ -811,10 +813,6 @@ def deidentify_with_date_shift(
         date_fields = map(map_fields, date_fields)
     else:
         date_fields = []
-
-    # Read and parse the CSV file
-    import csv
-    from datetime import datetime
 
     f = []
     with open(input_csv_file) as csvfile:

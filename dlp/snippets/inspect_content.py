@@ -22,8 +22,10 @@ import os
 
 from typing import List
 
-
 # [START dlp_inspect_string_basic]
+import google.cloud.dlp
+
+
 def inspect_string_basic(
     project: str,
     content_string: str,
@@ -38,9 +40,6 @@ def inspect_string_basic(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -80,7 +79,9 @@ def inspect_string_basic(
 
 
 # [START dlp_inspect_string]
-from typing import List  # noqa: E402
+from typing import List  # noqa: E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
 
 
 def inspect_string(
@@ -108,9 +109,6 @@ def inspect_string(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -179,6 +177,7 @@ def inspect_string(
 # [END dlp_inspect_string]
 
 # [START dlp_inspect_table]
+import google.cloud.dlp  # noqa: F811, E402
 
 
 def inspect_table(
@@ -234,9 +233,6 @@ def inspect_table(
             Info type: EMAIL_ADDRESS
             Likelihood: 4
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -313,6 +309,9 @@ def inspect_table(
 # [END dlp_inspect_table]
 
 # [START dlp_inspect_file]
+import mimetypes  # noqa: I100, E402
+
+import google.cloud.dlp  # noqa: F811, E402
 
 
 def inspect_file(
@@ -343,11 +342,6 @@ def inspect_file(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    import mimetypes
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -432,6 +426,10 @@ def inspect_file(
 
 
 # [END dlp_inspect_file]
+import threading  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.pubsub  # noqa: F811, E402
 
 
 # [START dlp_inspect_gcs]
@@ -469,16 +467,6 @@ def inspect_gcs_file(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
-
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -595,7 +583,11 @@ def inspect_gcs_file(
 
 
 # [START dlp_inspect_datastore]
-from typing import List  # noqa: E402
+import threading  # noqa: F811, E402, I100
+from typing import List  # noqa: E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.pubsub  # noqa: F811, E402
 
 
 def inspect_datastore(
@@ -633,16 +625,6 @@ def inspect_datastore(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
-
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -768,7 +750,11 @@ def inspect_datastore(
 
 
 # [START dlp_inspect_bigquery]
+import threading  # noqa: F811, E402, I100
 from typing import List  # noqa: E402
+
+import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.pubsub  # noqa: F811, E402
 
 
 def inspect_bigquery(
@@ -807,16 +793,6 @@ def inspect_bigquery(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
-
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -941,6 +917,9 @@ def inspect_bigquery(
 
 
 # [START dlp_inspect_image_all_infotypes]
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_image_file_all_infotypes(
     project: str,
     filename: str,
@@ -956,9 +935,6 @@ def inspect_image_file_all_infotypes(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -994,6 +970,9 @@ def inspect_image_file_all_infotypes(
 
 
 # [START dlp_inspect_image_listed_infotypes]
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_image_file_listed_infotypes(
     project: str,
     filename: str,
@@ -1010,8 +989,6 @@ def inspect_image_file_listed_infotypes(
         include_quote: Boolean for whether to display a matching snippet of
             the detected information in the results.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1057,6 +1034,12 @@ def inspect_image_file_listed_infotypes(
 
 
 # [START dlp_inspect_bigquery_with_sampling]
+import threading  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.pubsub  # noqa: F811, E402
+
+
 def inspect_bigquery_table_with_sampling(
     project: str,
     topic_id: str,
@@ -1080,16 +1063,6 @@ def inspect_bigquery_table_with_sampling(
         max_findings: The maximum number of findings to report; 0 = no maximum.
         timeout: The number of seconds to wait for a response from the API.
     """
-
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
