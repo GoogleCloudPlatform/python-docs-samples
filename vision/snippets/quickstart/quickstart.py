@@ -45,6 +45,10 @@ def run_quickstart() -> vision.EntityAnnotation:
     response = client.label_detection(image=image)
     labels = response.label_annotations
 
+    print('Labels:')
+    for label in labels:
+        print(label.description)
+
     return labels
 
 
