@@ -52,7 +52,7 @@ def create_diagram(dot):
 
     Args:
         dot: diagram description in graphviz DOT syntax
-        
+
     Returns:
         A diagram in the PNG image format.
     """

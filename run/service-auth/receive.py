@@ -28,7 +28,7 @@ def receive_authorized_get_request(request):
 
     Args:
         request: Flask request object
-        
+
     Returns:
         The email from the request's Authorization header.
     """

@@ -174,7 +174,7 @@ def create_tables() -> None:
 
 def get_index_context() -> dict[str, Any]:
     """Query PostgreSQL database and transform data for UI.
-    
+
     Returns:
         A dictionary of counts and votes.
     """
