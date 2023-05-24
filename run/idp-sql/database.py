@@ -34,6 +34,7 @@ db = None
 
 def init_connection_engine() -> sqlalchemy.engine.base.Engine:
     """Initializes a connection pool for a Cloud SQL instance of PostgreSQL.
+
     Returns:
         A SQLAlchemy Engine instance.
     """
@@ -70,8 +71,10 @@ def init_tcp_connection_engine(
     db_config: dict[str, type[NullPool]]
 ) -> sqlalchemy.engine.base.Engine:
     """Initializes a TCP connection pool for a Cloud SQL instance of PostgreSQL.
+
     Args:
         db_config: a dictionary with connection pool config
+
     Returns:
         A SQLAlchemy Engine instance.
     """
@@ -109,8 +112,10 @@ def init_unix_connection_engine(
     db_config: dict[str, int]
 ) -> sqlalchemy.engine.base.Engine:
     """Initializes a Unix socket connection pool for a Cloud SQL instance of PostgreSQL.
+
     Args:
         db_config: a dictionary with connection pool config
+
     Returns:
         A SQLAlchemy Engine instance.
     """
@@ -169,6 +174,7 @@ def create_tables() -> None:
 
 def get_index_context() -> dict[str, Any]:
     """Query PostgreSQL database and transform data for UI.
+    
     Returns:
         A dictionary of counts and votes.
     """
@@ -205,6 +211,7 @@ def get_index_context() -> dict[str, Any]:
 
 def save_vote(team: str, uid: str, time_cast: datetime.datetime) -> None:
     """Save a vote into the PostgreSQL database.
+
     Args:
         team: the name of the team
         uid: the user id

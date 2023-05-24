@@ -68,6 +68,7 @@ def index(path):
 
 def write_file(mnt_dir, filename):
     """Write files to a directory with date created.
+
     Args:
         mnt_dir: the file system mount directory
         filename: the file name
@@ -80,8 +81,10 @@ def write_file(mnt_dir, filename):
 
 def read_file(full_path):
     """Read files and return contents.
+
     Args:
         full_path: the path to the file
+        
     Returns:
         The file contents.
     """

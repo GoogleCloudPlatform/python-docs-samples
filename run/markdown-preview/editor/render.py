@@ -27,6 +27,7 @@ def new_request(data):
 
     Args:
         data: data for the authenticated request
+        
     Returns:
         The response from the HTTP request
     """

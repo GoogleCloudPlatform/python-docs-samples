@@ -72,6 +72,7 @@ def field_name_modifier(
         logger: A logger object.
         log_method: The name of the wrapped method.
         event_dict:Current context together with the current event.
+
     Returns:
         A structlog processor.
     """
@@ -85,6 +86,7 @@ def field_name_modifier(
 
 def getJSONLogger() -> structlog._config.BoundLoggerLazyProxy:
     """Initialize a logger configured for JSON structured logs.
+    
     Returns:
         A configured logger object.
     """
