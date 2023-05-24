@@ -48,7 +48,7 @@ def export_data(dataset_resource_name, annotated_dataset_resource_name, export_g
         }
     )
 
-    print("Dataset ID: {}\n".format(response.result().dataset))
+    print(f"Dataset ID: {response.result().dataset}\n")
     print("Output config:")
     print("\tGcs destination:")
     print(

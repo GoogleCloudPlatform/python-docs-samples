@@ -64,7 +64,7 @@ def receive_sms():
     sender = request.values.get('From')
     body = request.values.get('Body')
 
-    message = 'Hello, {}, you said: {}'.format(sender, body)
+    message = f'Hello, {sender}, you said: {body}'
 
     response = messaging_response.MessagingResponse()
     response.message(message)

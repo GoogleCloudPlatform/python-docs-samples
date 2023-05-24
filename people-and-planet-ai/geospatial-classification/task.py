@@ -27,8 +27,9 @@ For more information on the Sentinel-2 dataset:
 https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2
 """
 
+from __future__ import annotations
+
 import argparse
-from typing import Tuple
 
 import tensorflow as tf
 
@@ -80,7 +81,7 @@ def create_features_dict() -> dict:
 
 def get_feature_and_label_vectors(
     inputs: dict, features_dict: dict
-) -> Tuple[tf.Tensor, int]:
+) -> tuple[tf.Tensor, int]:
     """Formats data."""
 
     label_value = tf.cast(inputs.pop(LABEL), tf.int32)
@@ -90,7 +91,7 @@ def get_feature_and_label_vectors(
     return features_vec, label_value
 
 
-def create_datasets(bucket: str) -> Tuple[tf.data.Dataset, tf.data.Dataset]:
+def create_datasets(bucket: str) -> tuple[tf.data.Dataset, tf.data.Dataset]:
     """Creates training and validation datasets."""
 
     train_data_dir = f"gs://{bucket}/geospatial_training.tfrecord.gz"

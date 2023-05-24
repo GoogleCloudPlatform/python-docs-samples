@@ -32,11 +32,9 @@ def batch_job_create(client_service, company_name):
     def job_create_callback(request_id, response, exception):
         if exception is not None:
             print('Got exception while creating job: %s' % exception)
-            pass
         else:
             print('Job created: %s' % response)
             created_jobs.append(response)
-            pass
 
     batch = client_service.new_batch_http_request()
     job_to_be_created1 = base_job_sample.generate_job_with_required_fields(
@@ -65,11 +63,9 @@ def batch_job_update(client_service, jobs_to_be_updated):
     def job_update_callback(request_id, response, exception):
         if exception is not None:
             print('Got exception while updating job: %s' % exception)
-            pass
         else:
             print('Job updated: %s' % response)
             updated_jobs.append(response)
-            pass
 
     batch = client_service.new_batch_http_request()
     for index in range(0, len(jobs_to_be_updated)):
@@ -100,10 +96,8 @@ def batch_job_delete(client_service, jobs_to_be_deleted):
     def job_delete_callback(request_id, response, exception):
         if exception is not None:
             print('Got exception while deleting job: %s' % exception)
-            pass
         else:
             print('Job deleted')
-            pass
 
     batch = client_service.new_batch_http_request()
     for job_to_be_deleted in jobs_to_be_deleted:

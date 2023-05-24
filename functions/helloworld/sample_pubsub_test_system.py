@@ -58,5 +58,5 @@ def test_print_name(publisher_client):
         start_time
     ], stdout=subprocess.PIPE)
     logs = str(log_process.communicate()[0])
-    assert 'Hello {}!'.format(name) in logs
+    assert f'Hello {name}!' in logs
 # [END functions_pubsub_system_test]

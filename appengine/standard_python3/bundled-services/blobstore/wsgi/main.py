@@ -31,7 +31,7 @@ class UploadFormHandler:
 
         response = """
                   <html><body>
-                  <form action="{0}" method="POST" enctype="multipart/form-data">
+                  <form action="{}" method="POST" enctype="multipart/form-data">
                     Upload File: <input type="file" name="file"><br>
                     <input type="submit" name="submit" value="Submit">
                   </form>
@@ -84,7 +84,7 @@ urls = [
 # [END gae_blobstore_handler_wsgi]
 
 
-class Application(object):
+class Application:
     def __init__(self, routes):
         self.routes = routes
 

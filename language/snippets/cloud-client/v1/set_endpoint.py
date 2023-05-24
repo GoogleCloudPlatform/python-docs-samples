@@ -35,7 +35,7 @@ def set_endpoint():
         request={"document": document}
     ).document_sentiment
 
-    print("Sentiment: {}, {}".format(sentiment.score, sentiment.magnitude))
+    print(f"Sentiment: {sentiment.score}, {sentiment.magnitude}")
 
 
 if __name__ == "__main__":

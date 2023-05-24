@@ -82,12 +82,12 @@ def list_products_in_product_set(
 
     # Display the product information.
     for product in products:
-        print('Product name: {}'.format(product.name))
+        print(f'Product name: {product.name}')
         print('Product id: {}'.format(product.name.split('/')[-1]))
-        print('Product display name: {}'.format(product.display_name))
-        print('Product description: {}'.format(product.description))
-        print('Product category: {}'.format(product.product_category))
-        print('Product labels: {}'.format(product.product_labels))
+        print(f'Product display name: {product.display_name}')
+        print(f'Product description: {product.description}')
+        print(f'Product category: {product.product_category}')
+        print(f'Product labels: {product.product_labels}')
 # [END vision_product_search_list_products_in_product_set]
 
 

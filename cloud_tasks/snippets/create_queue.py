@@ -13,25 +13,30 @@
 # limitations under the License.
 
 # [START cloud_tasks_create_queue]
-def create_queue(project, queue_name, location):
-    """Create a task queue."""
+from google.cloud import tasks_v2
 
-    from google.cloud import tasks_v2
+
+def create_queue(project: str, location: str, queue_id: str) -> tasks_v2.Queue:
+    """Create a queue.
+    Args:
+        project: The project ID to create the queue in.
+        location: The location to create the queue in.
+        queue_id: The ID to use for the new queue.
+
+    Returns:
+        The newly created queue.
+    """
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # Construct the fully qualified location path.
-    parent = f"projects/{project}/locations/{location}"
-
-    # Construct the create queue request.
-    queue = {"name": client.queue_path(project, location, queue_name)}
-
-    # Use the client to create the queue.
-    response = client.create_queue(request={"parent": parent, "queue": queue})
-
-    print(f"Created queue {response.name}")
-    return response
+    # Use the client to send a CreateQueueRequest.
+    return client.create_queue(
+        tasks_v2.CreateQueueRequest(
+            parent=client.common_location_path(project, location),
+            queue=tasks_v2.Queue(name=client.queue_path(project, location, queue_id)),
+        )
+    )
 
 
 # [END cloud_tasks_create_queue]

@@ -15,13 +15,14 @@
 import base64
 import concurrent.futures
 import json
+from unittest import mock
 
 from cloudevents.http import CloudEvent
-import mock
 
 
 import main
 
+# flake8: noqa
 
 class TestGCFPyOCRSample:
     @mock.patch.object(main, "publisher")

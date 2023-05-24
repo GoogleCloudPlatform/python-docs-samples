@@ -13,8 +13,11 @@
 # limitations under the License.
 
 
+from __future__ import annotations
+
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, TypeVar
+from typing import TypeVar
 
 import firebase_admin
 from firebase_admin import auth  # noqa: F401
@@ -29,6 +32,12 @@ default_app = firebase_admin.initialize_app()
 
 # [START cloudrun_user_auth_jwt]
 def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
+    """Use the Firebase Admin SDK to parse Authorization header to verify the
+    user ID token.
+
+    The server extracts the Identity Platform uid for that user.
+    """
+
     @wraps(func)
     def decorated_function(*args: a, **kwargs: a) -> a:
         header = request.headers.get("Authorization", None)
@@ -56,6 +65,17 @@ def jwt_authenticated(func: Callable[..., int]) -> Callable[..., int]:
 def field_name_modifier(
     logger: structlog._loggers.PrintLogger, log_method: str, event_dict: dict
 ) -> dict:
+    """A structlog processor for mapping fields to Cloud Logging.
+    Learn more at https://www.structlog.org/en/stable/processors.html
+
+    Args:
+        logger: A logger object.
+        log_method: The name of the wrapped method.
+        event_dict:Current context together with the current event.
+
+    Returns:
+        A structlog processor.
+    """
     # Changes the keys for some of the fields, to match Cloud Logging's expectations
     event_dict["severity"] = event_dict["level"]
     del event_dict["level"]
@@ -65,6 +85,11 @@ def field_name_modifier(
 
 
 def getJSONLogger() -> structlog._config.BoundLoggerLazyProxy:
+    """Initialize a logger configured for JSON structured logs.
+
+    Returns:
+        A configured logger object.
+    """
     # extend using https://www.structlog.org/en/stable/processors.html
     structlog.configure(
         processors=[

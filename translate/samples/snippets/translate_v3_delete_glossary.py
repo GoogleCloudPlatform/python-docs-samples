@@ -28,7 +28,7 @@ def delete_glossary(
 
     operation = client.delete_glossary(name=name)
     result = operation.result(timeout)
-    print("Deleted: {}".format(result.name))
+    print(f"Deleted: {result.name}")
 
 
 # [END translate_v3_delete_glossary]

@@ -16,7 +16,7 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def classify_news_items(temperature=0):
+def classify_news_items(temperature: float = 0.2) -> None:
     """Text Classification Example with a Large Language Model"""
 
     # TODO developer - override these parameters as needed:

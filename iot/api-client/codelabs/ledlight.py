@@ -41,17 +41,17 @@ def make_message(device_id, action, data=''):
         return '{{ "device" : "{}", "action":"{}", "data" : "{}" }}'.format(
             device_id, action, data)
     else:
-        return '{{ "device" : "{}", "action":"{}" }}'.format(device_id, action)
+        return f'{{ "device" : "{device_id}", "action":"{action}" }}'
 
 
 def run_action(device_id, action, data=''):
     message = make_message(device_id, action, data)
     if not message:
         return
-    print('Send message: {}'.format(message))
+    print(f'Send message: {message}')
 
     event_response = send_command(client_sock, message).decode('utf-8')
-    print('Received response: {}'.format(event_response))
+    print(f'Received response: {event_response}')
 
 
 def main():
@@ -59,7 +59,7 @@ def main():
     if not device_id:
         sys.exit('The device id must be specified.')
 
-    print('Bringing up device {}'.format(device_id))
+    print(f'Bringing up device {device_id}')
     try:
         run_action(device_id, 'detach')
         run_action(device_id, 'attach')

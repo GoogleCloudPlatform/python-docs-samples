@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from typing import Iterator
 import uuid
 
 import google.api_core.exceptions
@@ -30,7 +31,7 @@ TEST_TRIGGER_ID = "test-trigger" + UNIQUE_STRING
 
 
 @pytest.fixture(scope="module")
-def bucket():
+def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
 
@@ -62,7 +63,9 @@ def bucket():
     bucket.delete()
 
 
-def test_create_list_and_delete_trigger(bucket, capsys):
+def test_create_list_and_delete_trigger(
+    bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
+) -> None:
     try:
         triggers.create_trigger(
             GCLOUD_PROJECT,

@@ -59,7 +59,7 @@ def create_jwt(project_id, private_key_file, algorithm):
         'exp': datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60),
         'aud': project_id
     }
-    with open(private_key_file, 'r') as f:
+    with open(private_key_file) as f:
         private_key = f.read()
     print('Creating JWT using {} from private key file {}'.format(
         algorithm, private_key_file))
@@ -68,10 +68,10 @@ def create_jwt(project_id, private_key_file, algorithm):
 
 def error_str(rc):
     """Convert a Paho error to a human readable string."""
-    return '{}: {}'.format(rc, mqtt.error_string(rc))
+    return f'{rc}: {mqtt.error_string(rc)}'
 
 
-class Device(object):
+class Device:
     """Represents the state of a single device."""
 
     def __init__(self):
@@ -225,10 +225,10 @@ def main():
 
     # This is the topic that the device will publish telemetry events
     # (temperature data) to.
-    mqtt_telemetry_topic = '/devices/{}/events'.format(args.device_id)
+    mqtt_telemetry_topic = f'/devices/{args.device_id}/events'
 
     # This is the topic that the device will receive configuration updates on.
-    mqtt_config_topic = '/devices/{}/config'.format(args.device_id)
+    mqtt_config_topic = f'/devices/{args.device_id}/config'
 
     # Wait up to 5 seconds for the device to connect.
     device.wait_for_connection(5)
