@@ -16,7 +16,7 @@
 import base64
 import json
 import os
-from typing import TypedDict, TypeVar
+from typing import Dict, TypeVar
 
 from google.cloud import pubsub_v1
 from google.cloud import storage
@@ -93,7 +93,7 @@ T = TypeVar('T')
 
 
 # [START message_validatation_helper]
-def validate_message(message: TypedDict[str, T], param: str) -> T:
+def validate_message(message: Dict[str, T], param: str) -> T:
     """
     Placeholder function for validating message parts.
 
