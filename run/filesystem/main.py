@@ -84,7 +84,7 @@ def read_file(full_path):
 
     Args:
         full_path: the path to the file
-        
+
     Returns:
         The file contents.
     """
