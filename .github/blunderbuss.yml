@@ -51,6 +51,10 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: people-and-planet-ai"
+    to:
+      - davidcavazos
+  - labels:
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -61,7 +65,6 @@ assign_issues_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: people-and-planet-ai"
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
@@ -198,6 +201,10 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: people-and-planet-ai"
+    to:
+      - davidcavazos
+  - labels:
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -209,7 +216,6 @@ assign_prs_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: people-and-planet-ai"
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
