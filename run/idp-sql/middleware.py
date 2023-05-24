@@ -86,7 +86,7 @@ def field_name_modifier(
 
 def getJSONLogger() -> structlog._config.BoundLoggerLazyProxy:
     """Initialize a logger configured for JSON structured logs.
-    
+
     Returns:
         A configured logger object.
     """
