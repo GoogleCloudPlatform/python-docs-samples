@@ -384,7 +384,7 @@ def k_anonymity_analysis(
 
 
 # [START dlp_l_diversity]
-from types import List  # noqa: I100, F811, E402
+from typing import List  # noqa: I100, F811, E402
 import concurrent.futures  # noqa: I100, F811, E402
 
 import google.cloud.dlp  # noqa: I100, F811, E402
