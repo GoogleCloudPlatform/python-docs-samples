@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 import metadata
 
 
-def test_fetch_info_types(capsys):
+def test_fetch_info_types(capsys: pytest.CaptureFixture) -> None:
     metadata.list_info_types()
 
     out, _ = capsys.readouterr()

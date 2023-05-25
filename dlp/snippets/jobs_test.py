@@ -13,8 +13,10 @@
 # limitations under the License.
 
 import os
+from typing import Iterator
 import uuid
 
+import google.cloud.dlp
 import google.cloud.storage
 import pytest
 
@@ -33,7 +35,7 @@ test_job_id = f"test-job-{uuid.uuid4()}"
 
 
 @pytest.fixture(scope="module")
-def bucket():
+def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
 
@@ -50,7 +52,6 @@ def bucket():
         blob = bucket.blob(name)
         blob.upload_from_filename(path)
         blobs.append(blob)
-
     # Yield the object to the test; lines after this execute as a teardown.
     yield bucket
 
@@ -66,9 +67,7 @@ def bucket():
 
 
 @pytest.fixture(scope="module")
-def test_job_name():
-    import google.cloud.dlp
-
+def test_job_name() -> Iterator[str]:
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     parent = f"projects/{GCLOUD_PROJECT}"
@@ -100,14 +99,16 @@ def test_job_name():
         print("Issue during teardown, missing job")
 
 
-def test_list_dlp_jobs(test_job_name, capsys):
+def test_list_dlp_jobs(test_job_name: str, capsys: pytest.CaptureFixture) -> None:
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()
     assert test_job_name not in out
 
 
-def test_list_dlp_jobs_with_filter(test_job_name, capsys):
+def test_list_dlp_jobs_with_filter(
+    test_job_name: str, capsys: pytest.CaptureFixture
+) -> None:
     jobs.list_dlp_jobs(
         GCLOUD_PROJECT,
         filter_string="state=RUNNING OR state=DONE",
@@ -118,18 +119,22 @@ def test_list_dlp_jobs_with_filter(test_job_name, capsys):
     assert test_job_name in out
 
 
-def test_list_dlp_jobs_with_job_type(test_job_name, capsys):
+def test_list_dlp_jobs_with_job_type(
+    test_job_name: str, capsys: pytest.CaptureFixture
+) -> None:
     jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type="INSPECT_JOB")
 
     out, _ = capsys.readouterr()
     assert test_job_name not in out  # job created is a risk analysis job
 
 
-def test_delete_dlp_job(test_job_name, capsys):
+def test_delete_dlp_job(test_job_name: str) -> None:
     jobs.delete_dlp_job(GCLOUD_PROJECT, test_job_name)
 
 
-def test_create_and_get_dlp_job(bucket, capsys):
+def test_create_dlp_job(
+    bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
+) -> None:
     jobs.create_dlp_job(
         GCLOUD_PROJECT,
         bucket.name,
