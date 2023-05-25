@@ -90,7 +90,7 @@ def test_job_name():
     )
     full_path = response.name
     # API expects only job name, not full project path
-    job_name = full_path[full_path.rfind("/") + 1 :]
+    job_name = full_path[full_path.rfind("/") + 1:]
     yield job_name
 
     # clean up job if not deleted
@@ -129,7 +129,7 @@ def test_delete_dlp_job(test_job_name, capsys):
     jobs.delete_dlp_job(GCLOUD_PROJECT, test_job_name)
 
 
-def test_create_dlp_job(bucket, capsys):
+def test_create_and_get_dlp_job(bucket, capsys):
     jobs.create_dlp_job(
         GCLOUD_PROJECT,
         bucket.name,
@@ -140,19 +140,10 @@ def test_create_dlp_job(bucket, capsys):
     assert test_job_id in out
 
     job_name = f"i-{test_job_id}"
+
+    jobs.get_dlp_job(GCLOUD_PROJECT, job_name)
+
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
     jobs.delete_dlp_job(GCLOUD_PROJECT, job_name)
-
-
-def test_get_dlp_job(test_job_name, capsys):
-    jobs.list_dlp_jobs(
-        GCLOUD_PROJECT,
-        job_type="RISK_ANALYSIS_JOB",
-    )
-
-    out, _ = capsys.readouterr()
-    assert test_job_name in out
-
-    jobs.get_dlp_job(GCLOUD_PROJECT, test_job_name)
-
-    out, _ = capsys.readouterr()
-    assert test_job_name in out
