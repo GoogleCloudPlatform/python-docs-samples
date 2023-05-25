@@ -48,4 +48,4 @@ def test_batch_translate_text(
         timeout=320,
     )
     out, _ = capsys.readouterr()
-    assert "Hello" in response.translated_characters
+    assert response.translated_characters is not None

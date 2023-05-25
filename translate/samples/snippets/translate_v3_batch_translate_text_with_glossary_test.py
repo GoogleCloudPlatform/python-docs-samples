@@ -71,4 +71,5 @@ def test_batch_translate_text_with_glossary(
     )
 
     out, _ = capsys.readouterr()
-    assert "9" in response.total_characters
+    assert "Total Characters: 9" in out
+    assert response is not None

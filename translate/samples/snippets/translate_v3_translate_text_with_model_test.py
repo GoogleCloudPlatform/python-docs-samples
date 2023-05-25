@@ -28,4 +28,5 @@ def test_translate_text_with_model(capsys: pytest.LogCaptureFixture) -> None:
         "That' il do it.", PROJECT_ID, MODEL_ID
     )
     out, _ = capsys.readouterr()
-    assert "それはそうだ" or "それじゃあ" in response.translations[0].translated_text
+    assert "それはそうだ" or "それじゃあ" in out
+    assert response is not None

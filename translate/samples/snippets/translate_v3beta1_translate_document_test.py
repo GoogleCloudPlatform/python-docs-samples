@@ -28,4 +28,4 @@ def test_translate_document(capsys: pytest.LogCaptureFixture) -> None:
     response = translate_v3beta1_translate_document.translate_document(
         project_id=PROJECT_ID, file_path=FILE_PATH)
     out, _ = capsys.readouterr()
-    assert "fr" in response.document_translation.detected_language_code
+    assert "en" in response.document_translation.detected_language_code

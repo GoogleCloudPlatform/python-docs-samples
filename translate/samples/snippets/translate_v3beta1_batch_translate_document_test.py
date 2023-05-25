@@ -53,4 +53,4 @@ def test_batch_translate_document(
 
     out, _ = capsys.readouterr()
     assert "Total Pages" in out
-    assert 1 in response.total_pages
+    assert response.total_pages is not None

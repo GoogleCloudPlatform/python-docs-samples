@@ -26,5 +26,5 @@ GLOSSARY_ID = "DO_NOT_DELETE_TEST_GLOSSARY"
 def test_list_glossary(capsys: pytest.LogCaptureFixture) -> None:
     glossary = translate_v3_list_glossary.list_glossaries(PROJECT_ID)
     out, _ = capsys.readouterr()
-    assert GLOSSARY_ID in out
-    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in glossary.input_config.gcs_source.input_uri
+    assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
+    assert glossary is not None

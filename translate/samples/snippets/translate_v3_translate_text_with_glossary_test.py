@@ -28,4 +28,5 @@ def test_translate_text_with_glossary(capsys: pytest.LogCaptureFixture) -> None:
         "account", PROJECT_ID, GLOSSARY_ID
     )
     out, _ = capsys.readouterr()
-    assert "アカウント" or "口座" in response.glossary_translations[0].translated_text
+    assert "アカウント" or "口座" in out
+    assert response is not None

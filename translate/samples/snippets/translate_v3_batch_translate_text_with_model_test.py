@@ -48,5 +48,6 @@ def test_batch_translate_text_with_model(
         MODEL_ID,
     )
     out, _ = capsys.readouterr()
-    assert "15" in response.total_characters
-    assert "15" in response.translated_characters
+    assert "Total Characters: 15" in out
+    assert "Translated Characters: 15" in out
+    assert response is not None
