@@ -21,11 +21,24 @@ import subprocess
 import googleapiclient.discovery
 
 
-def write_ssh_key_files(security_keys, directory):
-    """Store the SSH key files."""
+def write_ssh_key_files(security_keys: list[dict], directory: str) -> list[str]:
+    """
+    Store the SSH key files.
+
+    Saves the SSH keys into files inside specified directory. Using the naming
+    template of `google_sk_{i}`.
+
+    Args:
+        security_keys: list of dictionaries representing security keys retrieved
+            from the OSLogin API.
+        directory: path to directory in which the security keys will be stored.
+
+    Returns:
+        List of paths to the saved keys.
+    """
     key_files = []
     for index, key in enumerate(security_keys):
-        key_file = os.path.join(directory, "google_sk_%s" % index)
+        key_file = os.path.join(directory, f"google_sk_{index}")
         with open(key_file, "w") as f:
             f.write(key.get("privateKey"))
             os.chmod(key_file, 0o600)
@@ -33,8 +46,18 @@ def write_ssh_key_files(security_keys, directory):
     return key_files
 
 
-def ssh_command(key_files, username, ip_address):
-    """Construct the SSH command for a given IP address and key files."""
+def ssh_command(key_files: list[str], username: str, ip_address: str) -> list[str]:
+    """
+    Construct the SSH command for a given IP address and key files.
+
+    Args:
+        key_files: SSH keys to be used for authentication.
+        username: username used to authenticate.
+        ip_address: the IP address or hostname of the remote system.
+
+    Returns:
+        SSH command as a list of strings.
+    """
     command = ["ssh"]
     for key_file in key_files:
         command.extend(["-i", key_file])
@@ -42,8 +65,18 @@ def ssh_command(key_files, username, ip_address):
     return command
 
 
-def main(user_key, ip_address, dryrun, directory=None):
-    """Configure SSH key files and print SSH command."""
+def main(
+    user_key: str, ip_address: str, dryrun: bool, directory: str | None = None
+) -> None:
+    """
+    Configure SSH key files and print SSH command.
+
+    Args:
+        user_key: name of the user you want to authenticate as. Usually an email address.
+        ip_address: the IP address of the machine you want to connect to.
+        dryrun: bool flag to do dry run, without connecting to the remote machine.
+        directory: the directory to store SSH private keys.
+    """
     directory = directory or os.path.join(os.path.expanduser("~"), ".ssh")
 
     # Create the OS Login API object.
@@ -67,10 +100,16 @@ def main(user_key, ip_address, dryrun, directory=None):
     security_keys = profile.get("securityKeys")
 
     if security_keys is None:
-        print("The account you are using to authenticate does not have any security keys assigned to it.")
-        print("Please check your Application Default Credentials "
-              "(https://cloud.google.com/docs/authentication/application-default-credentials).")
-        print("More info about using security keys: https://cloud.google.com/compute/docs/oslogin/security-keys")
+        print(
+            "The account you are using to authenticate does not have any security keys assigned to it."
+        )
+        print(
+            "Please check your Application Default Credentials "
+            "(https://cloud.google.com/docs/authentication/application-default-credentials)."
+        )
+        print(
+            "More info about using security keys: https://cloud.google.com/compute/docs/oslogin/security-keys"
+        )
         return
 
     key_files = write_ssh_key_files(security_keys, directory)
