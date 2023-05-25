@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 
+from typing import List
+
 
 # [START dlp_deidentify_masking]
 from typing import List  # noqa: F811, E402
@@ -1619,6 +1621,74 @@ def deidentify_table_replace_with_info_types(
 # [END dlp_deidentify_table_infotypes]
 
 
+# [START dlp_deidentify_dictionary_replacement]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def deindentify_with_dictionary_replacement(
+    project: str,
+    input_str: str,
+    info_types: List[str],
+    word_list: List[str],
+) -> None:
+
+    """Uses the Data Loss Prevention API to de-identify sensitive data in a
+    string by replacing each piece of detected sensitive data with a value
+    that Cloud DLP randomly selects from a list of words that you provide.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing infoTypes to look for.
+        word_list: List of words or phrases to search for in the data.
+    """
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct list of info types
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "info_types": info_types,
+                    "primitive_transformation": {
+                        "replace_dictionary_config": {
+                            "word_list": {"words": word_list}
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    # Construct the `item`
+    item = {"value": input_str}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "inspect_config": {"info_types": info_types},
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    print(f"De-identified Content: {response.item.value}")
+
+
+# [END dlp_deidentify_dictionary_replacement]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -2029,6 +2099,30 @@ if __name__ == "__main__":
         help="A list of fields in table to de-identify.",
     )
 
+    replace_from_dictionary_parser = subparsers.add_parser(
+        "dictionary_replacement",
+        help="De-identify sensitive data in a string by replacing it with a "
+        "random value from a custom word list.",
+    )
+    replace_from_dictionary_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    replace_from_dictionary_parser.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing infoTypes to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    replace_from_dictionary_parser.add_argument(
+        "input_str",
+        help="The string to de-identify.",
+    )
+    replace_from_dictionary_parser.add_argument(
+        "word_list", help="List of words or phrases to search for in the data."
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2132,4 +2226,11 @@ if __name__ == "__main__":
             args.table_data,
             args.info_types,
             args.deid_content_list,
+        )
+    elif args.content == "dictionary_replacement":
+        deindentify_with_dictionary_replacement(
+            args.project,
+            args.input_str,
+            args.info_types,
+            args.word_list,
         )
