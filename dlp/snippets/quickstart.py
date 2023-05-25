@@ -20,7 +20,7 @@ import argparse
 import sys
 
 
-def quickstart(project_id):
+def quickstart(project_id: str) -> None:
     """Demonstrates use of the Data Loss Prevention API client library."""
 
     # [START dlp_quickstart]
