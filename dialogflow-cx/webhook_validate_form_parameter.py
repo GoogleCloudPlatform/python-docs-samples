@@ -17,8 +17,10 @@
 
 
 # [START dialogflow_cx_v3_webhook_validate_form_parameter]
+import functions_framework
 
 
+@functions_framework.http
 def validate_parameter(request):
     """Webhook will validate or invalidate parameter based on logic configured by the user."""
     return {
