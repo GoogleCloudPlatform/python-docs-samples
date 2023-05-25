@@ -133,7 +133,7 @@ def create_ssh_key(
 
 
 # [START run_command_remote]
-def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> list[str]:
+def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> List[str]:
     """
     Run a command on a remote system.
 
