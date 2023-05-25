@@ -16,8 +16,7 @@ import os
 import sys
 import uuid
 
-# noqa: I100
-import pytest
+import pytest # noqa: I100
 
 import hybrid_tutorial
 
