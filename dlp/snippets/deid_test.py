@@ -445,7 +445,7 @@ def test_deidentify_table_replace_with_info_types(capsys: pytest.CaptureFixture)
     assert "[PERSON_NAME] loved cats." in out
 
 
-def test_deindentify_with_dictionary_replacement(capsys):
+def test_deindentify_with_dictionary_replacement(capsys: pytest.CaptureFixture) -> None:
     deid.deindentify_with_dictionary_replacement(
         GCLOUD_PROJECT,
         "My name is Alicia Abernathy, and my email address is aabernathy@example.com.",

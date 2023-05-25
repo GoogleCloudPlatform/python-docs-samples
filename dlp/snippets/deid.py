@@ -1622,6 +1622,11 @@ def deidentify_table_replace_with_info_types(
 
 
 # [START dlp_deidentify_dictionary_replacement]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deindentify_with_dictionary_replacement(
     project: str,
     input_str: str,
@@ -1638,9 +1643,6 @@ def deindentify_with_dictionary_replacement(
         info_types: A list of strings representing infoTypes to look for.
         word_list: List of words or phrases to search for in the data.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
