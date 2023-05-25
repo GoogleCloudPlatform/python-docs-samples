@@ -22,9 +22,10 @@ from tink.integration import gcpkms
 logger = logging.getLogger(__name__)
 
 
-def init_tink_env_aead(
-        key_uri: str,
-        credentials: str) -> tink.aead.KmsEnvelopeAead:
+def init_tink_env_aead(key_uri: str, credentials: str) -> tink.aead.KmsEnvelopeAead:
+    """
+    Initiates the Envelope AEAD object using the KMS credentials.
+    """
     aead.register()
 
     try:

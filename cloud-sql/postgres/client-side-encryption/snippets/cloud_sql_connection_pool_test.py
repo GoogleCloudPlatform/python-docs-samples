@@ -18,11 +18,12 @@ import os
 import uuid
 
 import pytest
+import sqlalchemy
 
 from snippets.cloud_sql_connection_pool import (
     init_db,
     init_tcp_connection_engine,
-    init_unix_connection_engine
+    init_unix_connection_engine,
 )
 
 
@@ -46,26 +47,20 @@ def setup() -> dict[str, str]:
         yield conn_vars
 
 
-def test_init_tcp_connection_engine(
-        capsys: pytest.CaptureFixture,
-        conn_vars: dict[str, str]) -> None:
-
-    init_tcp_connection_engine(
+def test_init_tcp_connection_engine(conn_vars: dict[str, str]) -> None:
+    engine = init_tcp_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
         db_pass=conn_vars["db_pass"],
         db_host=conn_vars["db_host"],
     )
 
-    captured = capsys.readouterr().out
-    assert "Created TCP connection pool" in captured
+    assert isinstance(engine, sqlalchemy.engine.base.Engine)
+    assert conn_vars["db_name"] in engine.url
 
 
-def test_init_unix_connection_engine(
-        capsys: pytest.CaptureFixture,
-        conn_vars: dict[str, str]) -> None:
-
-    init_unix_connection_engine(
+def test_init_unix_connection_engine(conn_vars: dict[str, str]) -> None:
+    engine = init_unix_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
         db_pass=conn_vars["db_pass"],
@@ -73,17 +68,14 @@ def test_init_unix_connection_engine(
         db_socket_dir=conn_vars["db_socket_dir"],
     )
 
-    captured = capsys.readouterr().out
-    assert "Created Unix socket connection pool" in captured
+    assert isinstance(engine, sqlalchemy.engine.base.Engine)
+    assert conn_vars["db_name"] in engine.url
 
 
-def test_init_db(
-        capsys: pytest.CaptureFixture,
-        conn_vars: dict[str, str]) -> None:
-
+def test_init_db(conn_vars: dict[str, str]) -> None:
     table_name = f"votes_{uuid.uuid4().hex}"
 
-    init_db(
+    engine = init_db(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
         db_pass=conn_vars["db_pass"],
@@ -91,5 +83,10 @@ def test_init_db(
         db_host=conn_vars["db_host"],
     )
 
-    captured = capsys.readouterr().out
-    assert f"Created table {table_name} in db {conn_vars['db_name']}" in captured
+    assert isinstance(engine, sqlalchemy.engine.base.Engine)
+
+    try:
+        with engine.connect() as conn:
+            conn.execute(f"SELECT count(*) FROM {table_name}").all()
+    except Exception as error:
+        pytest.fail(f"Database wasn't initialized properly: {error}")

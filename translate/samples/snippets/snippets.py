@@ -25,7 +25,7 @@ import argparse
 
 
 # [START translate_detect_language]
-def detect_language(text):
+def detect_language(text: str) -> dict:
     """Detects the text's language."""
     from google.cloud import translate_v2 as translate
 
@@ -39,11 +39,12 @@ def detect_language(text):
     print("Confidence: {}".format(result["confidence"]))
     print("Language: {}".format(result["language"]))
 
-
+    return result
 # [END translate_detect_language]
 
+
 # [START translate_list_codes]
-def list_languages():
+def list_languages() -> dict:
     """Lists all available languages."""
     from google.cloud import translate_v2 as translate
 
@@ -54,11 +55,12 @@ def list_languages():
     for language in results:
         print("{name} ({language})".format(**language))
 
-
+    return results
 # [END translate_list_codes]
 
+
 # [START translate_list_language_names]
-def list_languages_with_target(target):
+def list_languages_with_target(target: str) -> dict:
     """Lists all available languages and localizes them to the target language.
 
     Target must be an ISO 639-1 language code.
@@ -73,11 +75,16 @@ def list_languages_with_target(target):
     for language in results:
         print("{name} ({language})".format(**language))
 
-
+    return results
 # [END translate_list_language_names]
 
+
 # [START translate_text_with_model]
-def translate_text_with_model(target, text, model="nmt"):
+def translate_text_with_model(
+        target: str,
+        text: str,
+        model: str = "nmt"
+) -> dict:
     """Translates text into the target language.
 
     Make sure your project is allowlisted.
@@ -100,11 +107,12 @@ def translate_text_with_model(target, text, model="nmt"):
     print("Translation: {}".format(result["translatedText"]))
     print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
-
+    return result
 # [END translate_text_with_model]
 
+
 # [START translate_translate_text]
-def translate_text(target, text):
+def translate_text(target: str, text: str) -> dict:
     """Translates text into the target language.
 
     Target must be an ISO 639-1 language code.
@@ -125,7 +133,7 @@ def translate_text(target, text):
     print("Translation: {}".format(result["translatedText"]))
     print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
-
+    return result
 # [END translate_translate_text]
 
 
