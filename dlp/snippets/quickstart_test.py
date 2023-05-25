@@ -14,12 +14,14 @@
 
 import os
 
+import pytest
+
 import quickstart
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def test_quickstart(capsys):
+def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     quickstart.quickstart(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()

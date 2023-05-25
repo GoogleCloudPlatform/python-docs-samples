@@ -22,14 +22,25 @@ from typing import List
 
 
 # [START dlp_deidentify_masking]
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_mask(
-    project, input_str, info_types, masking_character=None, number_to_mask=0
-):
+    project: str,
+    input_str: str,
+    info_types: List[str],
+    masking_character: str = None,
+    number_to_mask: int = 0,
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by masking it with a character.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
+            A full list of info type categories can be fetched from the API.
         masking_character: The character to mask matching sensitive data with.
         number_to_mask: The maximum number of sensitive characters to mask in
             a match. If omitted or set to zero, the API will default to no
@@ -37,9 +48,6 @@ def deidentify_with_mask(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -87,11 +95,16 @@ def deidentify_with_mask(
 
 
 # [START dlp_deidentify_redact]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_redact(
-    project,
-    input_str,
-    info_types,
-):
+    project: str,
+    input_str: str,
+    info_types: List[str],
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by redacting matched input values.
     Args:
@@ -101,7 +114,6 @@ def deidentify_with_redact(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -140,12 +152,17 @@ def deidentify_with_redact(
 
 
 # [START dlp_deidentify_replace]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_replace(
-    project,
-    input_str,
-    info_types,
-    replacement_str="REPLACEMENT_STR",
-):
+    project: str,
+    input_str: str,
+    info_types: List[str],
+    replacement_str: str = "REPLACEMENT_STR",
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing matched input values with a value you specify.
     Args:
@@ -157,7 +174,6 @@ def deidentify_with_replace(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -203,22 +219,27 @@ def deidentify_with_replace(
 # [END dlp_deidentify_replace]
 
 # [START dlp_deidentify_fpe]
+import base64  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_with_fpe(
-    project,
-    input_str,
-    info_types,
-    alphabet=None,
-    surrogate_type=None,
-    key_name=None,
-    wrapped_key=None,
-):
+    project: str,
+    input_str: str,
+    info_types: List[str],
+    alphabet: str = None,
+    surrogate_type: str = None,
+    key_name: str = None,
+    wrapped_key: str = None,
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string using Format Preserving Encryption (FPE).
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
             rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
@@ -235,8 +256,6 @@ def deidentify_with_fpe(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -246,8 +265,6 @@ def deidentify_with_fpe(
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
-    import base64
-
     wrapped_key = base64.b64decode(wrapped_key)
 
     # Construct FPE configuration dictionary
@@ -299,18 +316,25 @@ def deidentify_with_fpe(
 
 
 # [START dlp_deidentify_deterministic]
+import base64  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_deterministic(
-    project,
-    input_str,
-    info_types,
-    surrogate_type=None,
-    key_name=None,
-    wrapped_key=None,
-):
+    project: str,
+    input_str: str,
+    info_types: List[str],
+    surrogate_type: str = None,
+    key_name: str = None,
+    wrapped_key: str = None,
+) -> None:
     """Deidentifies sensitive data in a string using deterministic encryption.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         input_str: The string to deidentify (will be treated as text).
+        info_types: A list of strings representing info types to look for.
         surrogate_type: The name of the surrogate custom info type to use. Only
             necessary if you want to reverse the deidentification process. Can
             be essentially any arbitrary string, as long as it doesn't appear
@@ -324,10 +348,6 @@ def deidentify_with_deterministic(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import base64
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -389,14 +409,19 @@ def deidentify_with_deterministic(
 
 
 # [START dlp_reidentify_fpe]
+import base64  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def reidentify_with_fpe(
-    project,
-    input_str,
-    alphabet=None,
-    surrogate_type=None,
-    key_name=None,
-    wrapped_key=None,
-):
+    project: str,
+    input_str: str,
+    alphabet: str = None,
+    surrogate_type: str = None,
+    key_name: str = None,
+    wrapped_key: str = None,
+) -> None:
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE).
     Args:
@@ -416,8 +441,6 @@ def reidentify_with_fpe(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -427,8 +450,6 @@ def reidentify_with_fpe(
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
-    import base64
-
     wrapped_key = base64.b64decode(wrapped_key)
 
     # Construct Deidentify Config
@@ -480,13 +501,18 @@ def reidentify_with_fpe(
 
 
 # [START dlp_reidentify_deterministic]
+import base64  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def reidentify_with_deterministic(
-    project,
-    input_str,
-    surrogate_type=None,
-    key_name=None,
-    wrapped_key=None,
-):
+    project: str,
+    input_str: str,
+    surrogate_type: str = None,
+    key_name: str = None,
+    wrapped_key: str = None,
+) -> None:
     """Re-identifies content that was previously de-identified through deterministic encryption.
     Args:
         project: The Google Cloud project ID to use as a parent resource.
@@ -503,10 +529,6 @@ def reidentify_with_deterministic(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    import base64
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -566,14 +588,19 @@ def reidentify_with_deterministic(
 
 
 # [START dlp_deidentify_free_text_with_fpe_using_surrogate]
+import base64  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_free_text_with_fpe_using_surrogate(
-    project,
-    input_str,
-    alphabet="NUMERIC",
-    info_type="PHONE_NUMBER",
-    surrogate_type="PHONE_TOKEN",
-    unwrapped_key="YWJjZGVmZ2hpamtsbW5vcA==",
-):
+    project: str,
+    input_str: str,
+    alphabet: str = "NUMERIC",
+    info_type: str = "PHONE_NUMBER",
+    surrogate_type: str = "PHONE_TOKEN",
+    unwrapped_key: str = "YWJjZGVmZ2hpamtsbW5vcA==",
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
        string using Format Preserving Encryption (FPE).
        The encryption is performed with an unwrapped key.
@@ -591,8 +618,6 @@ def deidentify_free_text_with_fpe_using_surrogate(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -600,10 +625,8 @@ def deidentify_free_text_with_fpe_using_surrogate(
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
 
-    # The unwrapped key is base64-encoded, but the library expects a binary
+    # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
-    import base64
-
     unwrapped_key = base64.b64decode(unwrapped_key)
 
     # Construct de-identify config
@@ -650,13 +673,18 @@ def deidentify_free_text_with_fpe_using_surrogate(
 
 
 # [START dlp_reidentify_free_text_with_fpe_using_surrogate]
+import base64  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def reidentify_free_text_with_fpe_using_surrogate(
-    project,
-    input_str,
-    alphabet="NUMERIC",
-    surrogate_type="PHONE_TOKEN",
-    unwrapped_key="YWJjZGVmZ2hpamtsbW5vcA==",
-):
+    project: str,
+    input_str: str,
+    alphabet: str = "NUMERIC",
+    surrogate_type: str = "PHONE_TOKEN",
+    unwrapped_key: str = "YWJjZGVmZ2hpamtsbW5vcA==",
+) -> None:
     """Uses the Data Loss Prevention API to reidentify sensitive data in a
     string that was encrypted by Format Preserving Encryption (FPE) with
     surrogate type. The encryption is performed with an unwrapped key.
@@ -672,8 +700,6 @@ def reidentify_free_text_with_fpe_using_surrogate(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -681,10 +707,8 @@ def reidentify_free_text_with_fpe_using_surrogate(
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
 
-    # The unwrapped key is base64-encoded, but the library expects a binary
+    # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
-    import base64
-
     unwrapped_key = base64.b64decode(unwrapped_key)
 
     # Construct Deidentify Config
@@ -729,17 +753,26 @@ def reidentify_free_text_with_fpe_using_surrogate(
 
 
 # [START dlp_deidentify_date_shift]
+import base64  # noqa: F811, E402, I100
+import csv  # noqa: F811, E402, I100
+from datetime import datetime  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+from google.cloud.dlp_v2 import types  # noqa: F811, E402
+
+
 def deidentify_with_date_shift(
-    project,
-    input_csv_file=None,
-    output_csv_file=None,
-    date_fields=None,
-    lower_bound_days=None,
-    upper_bound_days=None,
-    context_field_id=None,
-    wrapped_key=None,
-    key_name=None,
-):
+    project: str,
+    input_csv_file: str = None,
+    output_csv_file: str = None,
+    date_fields: List[str] = None,
+    lower_bound_days: int = None,
+    upper_bound_days: int = None,
+    context_field_id: str = None,
+    wrapped_key: str = None,
+    key_name: str = None,
+) -> None:
     """Uses the Data Loss Prevention API to deidentify dates in a CSV file by
         pseudorandomly shifting them.
     Args:
@@ -767,8 +800,6 @@ def deidentify_with_date_shift(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -777,17 +808,13 @@ def deidentify_with_date_shift(
     parent = f"projects/{project}"
 
     # Convert date field list to Protobuf type
-    def map_fields(field):
+    def map_fields(field: str) -> dict:
         return {"name": field}
 
     if date_fields:
         date_fields = map(map_fields, date_fields)
     else:
         date_fields = []
-
-    # Read and parse the CSV file
-    import csv
-    from datetime import datetime
 
     f = []
     with open(input_csv_file) as csvfile:
@@ -796,10 +823,10 @@ def deidentify_with_date_shift(
             f.append(row)
 
     #  Helper function for converting CSV rows to Protobuf types
-    def map_headers(header):
+    def map_headers(header: str) -> dict:
         return {"name": header}
 
-    def map_data(value):
+    def map_data(value: str) -> dict:
         try:
             date = datetime.strptime(value, "%m/%d/%Y")
             return {
@@ -808,7 +835,7 @@ def deidentify_with_date_shift(
         except ValueError:
             return {"string_value": value}
 
-    def map_rows(row):
+    def map_rows(row: str) -> dict:
         return {"values": map(map_data, row)}
 
     # Using the helper functions, convert CSV rows to protobuf-compatible
@@ -829,7 +856,6 @@ def deidentify_with_date_shift(
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
     if context_field_id and key_name and wrapped_key:
-        import base64
 
         date_shift_config["context"] = {"name": context_field_id}
         date_shift_config["crypto_key"] = {
@@ -859,10 +885,10 @@ def deidentify_with_date_shift(
     }
 
     # Write to CSV helper methods
-    def write_header(header):
+    def write_header(header: types.storage.FieldId) -> str:
         return header.name
 
-    def write_data(data):
+    def write_data(data: types.storage.Value) -> str:
         return data.string_value or "{}/{}/{}".format(
             data.date_value.month,
             data.date_value.day,
@@ -892,7 +918,14 @@ def deidentify_with_date_shift(
 
 
 # [START dlp_deidentify_replace_infotype]
-def deidentify_with_replace_infotype(project, item, info_types):
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def deidentify_with_replace_infotype(
+    project: str, item: str, info_types: List[str]
+) -> None:
     """Uses the Data Loss Prevention API to deidentify sensitive data in a
     string by replacing it with the info type.
     Args:
@@ -903,9 +936,6 @@ def deidentify_with_replace_infotype(project, item, info_types):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -943,6 +973,9 @@ def deidentify_with_replace_infotype(project, item, info_types):
 
 
 # [START dlp_deidentify_simple_word_list]
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_simple_word_list(
     project: str,
     input_str: str,
@@ -958,9 +991,6 @@ def deidentify_with_simple_word_list(
         custom_info_type_name: The name of the custom info type to use.
         word_list: The list of strings to match against.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1011,7 +1041,14 @@ def deidentify_with_simple_word_list(
 
 
 # [START dlp_deidentify_exception_list]
-def deidentify_with_exception_list(project, content_string, info_types, exception_list):
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def deidentify_with_exception_list(
+    project: str, content_string: str, info_types: List[str], exception_list: List[str]
+) -> None:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
       string but ignore matches against custom list.
 
@@ -1025,8 +1062,6 @@ def deidentify_with_exception_list(project, content_string, info_types, exceptio
     Returns:
           None; the response from the API is printed to the terminal.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1092,14 +1127,20 @@ def deidentify_with_exception_list(project, content_string, info_types, exceptio
 
 
 # [START dlp_deidentify_table_bucketing]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+from google.cloud.dlp_v2 import types  # noqa: F811, E402
+
+
 def deidentify_table_bucketing(
-    project,
-    table_data,
-    deid_content_list,
-    bucket_size,
-    bucketing_lower_bound,
-    bucketing_upper_bound,
-):
+    project: str,
+    table_data: str,
+    deid_content_list: List[str],
+    bucket_size: int,
+    bucketing_lower_bound: int,
+    bucketing_upper_bound: int,
+) -> types.dlp.Table:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with fixed size bucket ranges.
     Args:
@@ -1148,9 +1189,6 @@ def deidentify_table_bucketing(
             "rows": [["robertfrost@xyz.com", "4232342345", "30:40"],
             ["johndoe@pqr.com", "4253458383", "60:70"]]}'
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1210,15 +1248,21 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_condition_infotypes]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+from google.cloud.dlp_v2 import types  # noqa: F811, E402
+
+
 def deidentify_table_condition_replace_with_info_types(
-    project,
-    table_data,
-    deid_content_list,
-    info_types,
-    condition_field=None,
-    condition_operator=None,
-    condition_value=None,
-):
+    project: str,
+    table_data: str,
+    deid_content_list: List[str],
+    info_types: List[str],
+    condition_field: str = None,
+    condition_operator: str = None,
+    condition_value: str = None,
+) -> types.dlp.Table:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with info-types based on a condition.
     Args:
@@ -1268,9 +1312,6 @@ def deidentify_table_condition_replace_with_info_types(
         "rows": [["robertfrost@xyz.com", "4232342345", "45"],
         ["[EMAIL_ADDRESS]", "4253458383", "63"]]}'
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1347,15 +1388,21 @@ def deidentify_table_condition_replace_with_info_types(
 
 
 # [START dlp_deidentify_table_condition_masking]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+from google.cloud.dlp_v2 import types  # noqa: F811, E402
+
+
 def deidentify_table_condition_masking(
-    project,
-    table_data,
-    deid_content_list,
-    condition_field=None,
-    condition_operator=None,
-    condition_value=None,
-    masking_character=None,
-):
+    project: str,
+    table_data: str,
+    deid_content_list: List[str],
+    condition_field: str = None,
+    condition_operator: str = None,
+    condition_value: str = None,
+    masking_character: str = None,
+) -> types.dlp.Table:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by masking them based on a condition.
 
@@ -1407,9 +1454,6 @@ def deidentify_table_condition_masking(
         "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
         ["johndoe@pqr.com", "4253458383", "64", "**"]]}'
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -1476,9 +1520,14 @@ def deidentify_table_condition_masking(
 
 
 # [START dlp_deidentify_table_infotypes]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_table_replace_with_info_types(
-    project, table_data, info_types, deid_content_list
-):
+    project: str, table_data: str, info_types: List[str], deid_content_list: List[str]
+) -> None:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by replacing them with info type.
 
@@ -1510,9 +1559,6 @@ def deidentify_table_replace_with_info_types(
             ]
         }'
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
