@@ -40,6 +40,15 @@ LICENSES = 'TRUE'
 
 
 def acquire_token(audience: str = AUDIENCE_URL) -> str:
+    """
+    Requests identity information from metadata server.
+
+    Args:
+        audience: specify the audience parameter for the call.
+
+    Returns:
+        Information retrieved from the metadata server.
+    """
     # Construct a URL with the audience and format.
     url = METADATA_VM_IDENTITY_URL.format(audience, FORMAT, LICENSES)
 
@@ -53,7 +62,13 @@ def acquire_token(audience: str = AUDIENCE_URL) -> str:
 
 # [START compute_vm_identity_verify_token]
 def verify_token(token: str, audience: str) -> dict:
-    """Verify token signature and return the token payload"""
+    """
+    Verify token signature and return the token payload.
+
+    Args:
+        token:
+        audience:
+    """
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
     return payload

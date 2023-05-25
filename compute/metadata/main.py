@@ -22,6 +22,7 @@ For more information, see the README.md under /compute.
 # [START all]
 
 import time
+from typing import Callable, NoReturn, Optional
 
 import requests
 
@@ -30,7 +31,16 @@ METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
 METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
 
 
-def wait_for_maintenance(callback):
+def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
+    """
+    Start an infinite loop waiting for maintenance signal.
+
+    Args:
+        callback: Function to be called when a maintenance is scheduled.
+
+    Returns:
+        Never returns, unless there's an error.
+    """
     url = METADATA_URL + 'instance/maintenance-event'
     last_maintenance_event = None
     # [START hanging_get]
@@ -62,7 +72,13 @@ def wait_for_maintenance(callback):
             callback(maintenance_event)
 
 
-def maintenance_callback(event):
+def maintenance_callback(event: Optional[str]) -> None:
+    """
+    Example callback function to handle the maintenance event.
+
+    Args:
+        event: details about scheduled maintenance.
+    """
     if event:
         print(f'Undergoing host maintenance: {event}')
     else:
