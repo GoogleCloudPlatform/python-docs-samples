@@ -25,6 +25,7 @@ import argparse
 import logging
 import subprocess
 import time
+from typing import List
 import uuid
 
 from google.auth.exceptions import RefreshError
@@ -42,7 +43,7 @@ HEADERS = {"Metadata-Flavor": "Google"}
 
 # [START run_command_local]
 def execute(
-    cmd: list[str],
+    cmd: List[str],
     cwd: str | None = None,
     capture_output: bool = False,
     env: dict | None = None,
@@ -97,7 +98,7 @@ def create_ssh_key(
         expire_time: expiration time of the SSH key (is seconds).
 
     Returns:
-        Path to the private SSH key file.
+        Path to the private SSH key file.mypy
     """
     private_key_file = private_key_file or "/tmp/key-" + str(uuid.uuid4())
     execute(["ssh-keygen", "-t", "rsa", "-N", "", "-f", private_key_file])
