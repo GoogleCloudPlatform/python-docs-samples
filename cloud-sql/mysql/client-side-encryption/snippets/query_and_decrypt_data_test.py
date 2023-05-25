@@ -12,20 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Copyright 2021 Google LLC
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-
 import os
 import uuid
 
@@ -79,21 +65,16 @@ def setup_key() -> tink.aead.KmsEnvelopeAead:
 
 
 def test_query_and_decrypt_data(
-    capsys: pytest.CaptureFixture,
     pool: sqlalchemy.engine.Engine,
-    env_aead: tink.aead.KmsEnvelopeAead
+    env_aead: tink.aead.KmsEnvelopeAead,
 ) -> None:
-
     # Insert data into table before testing
-    encrypt_and_insert_data(
-        pool,
-        env_aead,
-        table_name,
-        "SPACES",
-        "hello@example.com")
+    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
 
-    query_and_decrypt_data(pool, env_aead, table_name)
+    output = query_and_decrypt_data(pool, env_aead, table_name)
 
-    captured = capsys.readouterr()
-    assert "Team\tEmail\tTime Cast" in captured.out
-    assert "hello@example.com" in captured.out
+    for row in output:
+        if row[1] == "hello@example.com":
+            break
+    else:
+        pytest.fail("Failed to find vote in the decrypted data.")
