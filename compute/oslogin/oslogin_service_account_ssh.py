@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import subprocess
 import time
+from typing import Optional
 import uuid
 
 from google.cloud import oslogin_v1
@@ -39,7 +40,7 @@ HEADERS = {"Metadata-Flavor": "Google"}
 
 def execute(
     cmd: list[str],
-    cwd: str | None = None,
+    cwd: Optional[str] = None,
     capture_output: bool | None = False,
     env: dict | None = None,
     raise_errors: bool | None = True,
@@ -176,10 +177,10 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
 def main(
     cmd: str,
     project: str,
-    instance: str | None = None,
-    zone: str | None = None,
-    account: str | None = None,
-    hostname: str | None = None,
+    instance: Optional[str] = None,
+    zone: Optional[str] = None,
+    account: Optional[str] = None,
+    hostname: Optional[str] = None,
     oslogin: oslogin_v1.OsLoginServiceClient | None = None,
 ) -> str:
     """

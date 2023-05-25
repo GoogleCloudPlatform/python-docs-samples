@@ -25,7 +25,7 @@ import argparse
 import logging
 import subprocess
 import time
-from typing import List
+from typing import List, Optional
 import uuid
 
 from google.auth.exceptions import RefreshError
@@ -44,9 +44,9 @@ HEADERS = {"Metadata-Flavor": "Google"}
 # [START run_command_local]
 def execute(
     cmd: List[str],
-    cwd: str | None = None,
+    cwd: Optional[str] = None,
     capture_output: bool = False,
-    env: dict | None = None,
+    env: Optional[dict] = None,
     raise_errors: bool = True,
 ) -> (int, str):
     """
@@ -85,7 +85,7 @@ def execute(
 def create_ssh_key(
     oslogin: googleapiclient.discovery.Resource,
     account: str,
-    private_key_file: str | None = None,
+    private_key_file: Optional[str] = None,
     expire_time: int = 300,
 ) -> str:
     """
@@ -173,11 +173,11 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> li
 def main(
     cmd: str,
     project: str,
-    instance: str | None = None,
-    zone: str | None = None,
+    instance: Optional[str] = None,
+    zone: Optional[str] = None,
     oslogin: googleapiclient.discovery.Resource | None = None,
-    account: str | None = None,
-    hostname: str | None = None,
+    account: Optional[str] = None,
+    hostname: Optional[str] = None,
 ) -> str:
     """
     Run a command on a remote system.

@@ -17,6 +17,7 @@
 import argparse
 import os
 import subprocess
+from typing import Optional
 
 import googleapiclient.discovery
 
@@ -66,7 +67,7 @@ def ssh_command(key_files: list[str], username: str, ip_address: str) -> list[st
 
 
 def main(
-    user_key: str, ip_address: str, dryrun: bool, directory: str | None = None
+    user_key: str, ip_address: str, dryrun: bool, directory: Optional[str] = None
 ) -> None:
     """
     Configure SSH key files and print SSH command.
