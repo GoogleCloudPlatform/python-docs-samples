@@ -1130,9 +1130,7 @@ def deidentify_with_exception_list(
 
 
 # [START dlp_deidentify_table_bucketing]
-from typing import Dict  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402, I100
-from typing import Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1233,9 +1231,7 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_condition_infotypes]
-from typing import Dict  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402, I100
-from typing import Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1355,9 +1351,7 @@ def deidentify_table_condition_replace_with_info_types(
 
 
 # [START dlp_deidentify_table_condition_masking]
-from typing import Dict  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402, I100
-from typing import Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1466,9 +1460,7 @@ def deidentify_table_condition_masking(
 
 
 # [START dlp_deidentify_table_infotypes]
-from typing import Dict  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402, I100
-from typing import Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -1641,9 +1633,7 @@ def deindentify_with_dictionary_replacement(
 
 
 # [START dlp_deidentify_table_row_suppress]
-from typing import Dict  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402, I100
-from typing import Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
