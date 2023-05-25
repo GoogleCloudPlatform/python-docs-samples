@@ -87,7 +87,7 @@ def state_dict_path() -> str:
 
 @pytest.fixture(scope="session")
 def container_image(project: str, test_name: str, unique_id: str) -> Iterator[str]:
-    image_name = f"gcr.io/{project}/{test_name}:{unique_id}"
+    image_name = f"gcr.io/{project}/{test_name}/{unique_id}"
 
     # conftest.run_cmd("gcloud", "builds", "submit", ".", f"--tag={image_name}")
     yield image_name
