@@ -535,7 +535,7 @@ encrypted_disk_name = f'test-disk-{uuid.uuid4().hex[:5]}'
 ```
 
 All temporary resources should be explicitly deleted when testing is
-complete. Use pytest's fixture for cleaning up these resouces instead
+complete. Use pytest's fixture for cleaning up these resources instead
 of doing it in test itself.
 
 We recommend using `finally` to ensure that resource deletion occurs even if there is an error on creation. For example, this fixture creates a Dataproc cluster and tears it down regardless of errors during creation.

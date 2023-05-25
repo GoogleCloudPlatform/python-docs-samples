@@ -15,12 +15,12 @@
 # returns fullfillment response for dialogflow detect_intent call
 
 # [START dialogflow_webhook]
-
 # TODO: change the default Entry Point text to handleWebhook
+import functions_framework
 
 
+@functions_framework.http
 def handleWebhook(request):
-
     req = request.get_json()
 
     responseText = ""
