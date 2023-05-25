@@ -191,6 +191,9 @@ def create_dlp_job(
 
 
 # [START dlp_get_job]
+import google.cloud.dlp  # noqa: 402
+
+
 def get_dlp_job(
     project: str,
     job_name: str
@@ -200,8 +203,6 @@ def get_dlp_job(
         project: The project id to use as a parent resource.
         job_name: The name of the DlpJob resource to be retrieved.
     """
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
