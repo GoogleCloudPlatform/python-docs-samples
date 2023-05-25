@@ -19,6 +19,9 @@ import sqlalchemy
 def init_tcp_connection_engine(
     db_user: str, db_pass: str, db_name: str, db_host: str
 ) -> sqlalchemy.engine.base.Engine:
+    """
+    Creates a connection to the database using tcp socket.
+    """
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
@@ -50,6 +53,9 @@ def init_unix_connection_engine(
     instance_connection_name: str,
     db_socket_dir: str,
 ) -> sqlalchemy.engine.base.Engine:
+    """
+    Creates a connection to the database using unix socket.
+    """
     # Remember - storing secrets in plaintext is potentially unsafe. Consider using
     # something like https://cloud.google.com/secret-manager/docs/overview to help keep
     # secrets secret.
@@ -78,7 +84,7 @@ def init_db(
     db_socket_dir: str = None,
     db_host: str = None,
 ) -> sqlalchemy.engine.base.Engine:
-
+    """Starts a connection to the database and creates voting table if it doesn't exist."""
     if db_host:
         db = init_tcp_connection_engine(db_user, db_pass, db_name, db_host)
     else:
