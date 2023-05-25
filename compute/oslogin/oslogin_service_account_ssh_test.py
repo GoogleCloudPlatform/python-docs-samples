@@ -40,21 +40,24 @@ import pytest
 from oslogin_service_account_ssh import main
 
 PROJECT = google.auth.default()[1]
-ZONE = "europe-north1-a"
-TEST_ID = f"oslogin-test-{uuid.uuid4().hex[:10]}"
-FIREWALL_TAG = "ssh-oslogin-test"
+ZONE = 'europe-north1-a'
+TEST_ID = f'oslogin-test-{uuid.uuid4().hex[:10]}'
+FIREWALL_TAG = 'ssh-oslogin-test'
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope='module')
 def oslogin_service_account():
-    account_email = f"{TEST_ID}@{PROJECT}.iam.gserviceaccount.com"
+    account_email = f'{TEST_ID}@{PROJECT}.iam.gserviceaccount.com'
 
-    iam = googleapiclient.discovery.build("iam", "v1", cache_discovery=False)
+    iam = googleapiclient.discovery.build(
+        'iam', 'v1', cache_discovery=False)
 
     # Create a temporary service account.
     iam.projects().serviceAccounts().create(
-        name=f"projects/{PROJECT}", body={"accountId": TEST_ID}
-    ).execute()
+        name=f'projects/{PROJECT}',
+        body={
+            'accountId': TEST_ID
+        }).execute()
 
     # Wait for the creation to propagate through the system, so the
     # following calls don't fail sometimes.
@@ -62,45 +65,38 @@ def oslogin_service_account():
 
     # Grant the service account access to itself.
     iam.projects().serviceAccounts().setIamPolicy(
-        resource=f"projects/{PROJECT}/serviceAccounts/{account_email}",
+        resource=f'projects/{PROJECT}/serviceAccounts/{account_email}',
         body={
-            "policy": {
-                "bindings": [
+            'policy': {
+                'bindings': [
                     {
-                        "members": [f"serviceAccount:{account_email}"],
-                        "role": "roles/iam.serviceAccountUser",
+                        'members': [
+                            f'serviceAccount:{account_email}'
+                        ],
+                        'role': 'roles/iam.serviceAccountUser'
                     }
                 ]
             }
-        },
-    ).execute()
+        }).execute()
 
     # Create a service account key.
-    service_account_key = (
-        iam.projects()
-        .serviceAccounts()
-        .keys()
-        .create(
-            name=f"projects/{PROJECT}/serviceAccounts/{account_email}",
-            body={},
-        )
-        .execute()
-    )
+    service_account_key = iam.projects().serviceAccounts().keys().create(
+        name=f'projects/{PROJECT}/serviceAccounts/{account_email}',
+        body={},
+    ).execute()
 
     # Create a credentials object and use it to initialize the OS Login API.
     credentials = service_account.Credentials.from_service_account_info(
-        json.loads(
-            base64.b64decode(service_account_key["privateKeyData"]).decode("utf-8")
-        )
-    )
+        json.loads(base64.b64decode(
+            service_account_key['privateKeyData']).decode('utf-8')))
 
-    yield {"name": account_email, "credentials": credentials}
+    yield {'name': account_email, 'credentials': credentials}
 
     # Cleanup
     # Delete the temporary service account and its associated keys.
     try:
         iam.projects().serviceAccounts().delete(
-            name=f"projects/{PROJECT}/serviceAccounts/{account_email}"
+            name=f'projects/{PROJECT}/serviceAccounts/{account_email}'
         ).execute()
     except googleapiclient.errors.Error:
         pass
@@ -118,13 +114,13 @@ def _create_firewall():
     request = compute_v1.InsertFirewallRequest()
     request.project = PROJECT
     request.firewall_resource = compute_v1.Firewall()
-    request.firewall_resource.network = "/global/networks/default"
+    request.firewall_resource.network = '/global/networks/default'
     request.firewall_resource.name = TEST_ID
     request.firewall_resource.target_tags = [FIREWALL_TAG]
-    request.firewall_resource.source_ranges = ["0.0.0.0/0"]
+    request.firewall_resource.source_ranges = ['0.0.0.0/0']
     request.firewall_resource.allowed = [compute_v1.Allowed()]
     request.firewall_resource.allowed[0].I_p_protocol = "tcp"
-    request.firewall_resource.allowed[0].ports = ["22"]
+    request.firewall_resource.allowed[0].ports = ['22']
 
     firewall_client = compute_v1.FirewallsClient()
     firewall_client.insert(request).result()
@@ -171,14 +167,14 @@ def oslogin_instance(oslogin_service_account):
     instance.tags.items = [FIREWALL_TAG]
 
     sa = compute_v1.ServiceAccount()
-    sa.email = oslogin_service_account["name"]
-    sa.scopes = ["https://www.googleapis.com/auth/cloud-platform"]
+    sa.email = oslogin_service_account['name']
+    sa.scopes = ['https://www.googleapis.com/auth/cloud-platform']
     instance.service_accounts = [sa]
 
     instance.metadata = compute_v1.Metadata()
     item = compute_v1.Items()
-    item.key = "enable-oslogin"
-    item.value = "TRUE"
+    item.key = 'enable-oslogin'
+    item.value = 'TRUE'
     instance.metadata.items = [item]
     instance.zone = ZONE
 
@@ -193,14 +189,9 @@ def oslogin_instance(oslogin_service_account):
     policy = compute_v1.ZoneSetPolicyRequest()
     binding = compute_v1.Binding()
     binding.members = [f'serviceAccount:{oslogin_service_account["name"]}']
-    binding.role = "roles/compute.osLogin"
+    binding.role = 'roles/compute.osLogin'
     policy.bindings = [binding]
-    client.set_iam_policy(
-        project=PROJECT,
-        zone=ZONE,
-        resource=TEST_ID,
-        zone_set_policy_request_resource=policy,
-    )
+    client.set_iam_policy(project=PROJECT, zone=ZONE, resource=TEST_ID, zone_set_policy_request_resource=policy)
 
     for attempt in range(5):
         time.sleep(5)
@@ -216,27 +207,20 @@ def oslogin_instance(oslogin_service_account):
     client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
 
-def test_oslogin_ssh(oslogin_instance, oslogin_service_account):
+def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
     account = f'users/{oslogin_service_account["name"]}'
-    oslogin_client = oslogin_v1.OsLoginServiceClient(
-        credentials=oslogin_service_account["credentials"]
-    )
+    oslogin_client = oslogin_v1.OsLoginServiceClient(credentials=oslogin_service_account['credentials'])
     # Letting everything settle down...
     time.sleep(60)
 
     try:
         with _create_firewall():
-            out = main(
-                "uname -a",
-                PROJECT,
-                account=account,
-                hostname=oslogin_instance.network_interfaces[0]
-                .access_configs[0]
-                .nat_i_p,
-                oslogin=oslogin_client,
-            )
+            main('uname -a', PROJECT, account=account,
+                 hostname=oslogin_instance.network_interfaces[0].access_configs[0].nat_i_p,
+                 oslogin=oslogin_client)
 
-        assert_value = f"Linux {TEST_ID}"
+        out, _ = capsys.readouterr()
+        assert_value = f'Linux {TEST_ID}'
         assert assert_value in out
     except (AssertionError, subprocess.TimeoutExpired) as err:
         fw_client = compute_v1.FirewallsClient()

@@ -31,10 +31,9 @@ from google.cloud import oslogin_v1
 import requests
 
 SERVICE_ACCOUNT_METADATA_URL = (
-    "http://metadata.google.internal/computeMetadata/v1/instance/"
-    "service-accounts/default/email"
-)
-HEADERS = {"Metadata-Flavor": "Google"}
+    'http://metadata.google.internal/computeMetadata/v1/instance/'
+    'service-accounts/default/email')
+HEADERS = {'Metadata-Flavor': 'Google'}
 
 
 def execute(
@@ -42,7 +41,7 @@ def execute(
     cwd: str | None = None,
     capture_output: bool | None = False,
     env: dict | None = None,
-    raise_errors: bool | None = True,
+    raise_errors: bool | None = True
 ) -> tuple[int, str]:
     """
     Run an external command (wrapper for Python subprocess).
@@ -57,7 +56,7 @@ def execute(
     Returns:
         Return code and captured output.
     """
-    print(f"Running command: {cmd}")
+    print(f'Running command: {cmd}')
     process = subprocess.run(
         cmd,
         cwd=cwd,
@@ -65,24 +64,21 @@ def execute(
         stderr=subprocess.STDOUT,
         text=True,
         env=env,
-        check=raise_errors,
+        check=raise_errors
     )
     output = process.stdout
     returncode = process.returncode
 
     if returncode:
-        print(f"Command returned error status {returncode}")
+        print(f'Command returned error status {returncode}')
         if capture_output:
             print(f"With output: {output}")
 
     return returncode, output
 
 
-def create_ssh_key(
-    oslogin_client: oslogin_v1.OsLoginServiceClient,
-    account: str,
-    expire_time: int = 300,
-) -> str:
+def create_ssh_key(oslogin_client: oslogin_v1.OsLoginServiceClient,
+                   account: str, expire_time: int = 300) -> str:
     """
     Generates a temporary SSH key pair and apply it to the specified account.
 
@@ -97,10 +93,10 @@ def create_ssh_key(
         to the file name.
 
     """
-    private_key_file = f"/tmp/key-{uuid.uuid4()}"
-    execute(["ssh-keygen", "-t", "rsa", "-N", "", "-f", private_key_file])
+    private_key_file = f'/tmp/key-{uuid.uuid4()}'
+    execute(['ssh-keygen', '-t', 'rsa', '-N', '', '-f', private_key_file])
 
-    with open(f"{private_key_file}.pub") as original:
+    with open(f'{private_key_file}.pub') as original:
         public_key = original.read().strip()
 
     # Expiration time is in microseconds.
@@ -111,7 +107,7 @@ def create_ssh_key(
     request.ssh_public_key.key = public_key
     request.ssh_public_key.expiration_time_usec = expiration
 
-    print(f"Setting key for {account}...")
+    print(f'Setting key for {account}...')
     oslogin_client.import_ssh_public_key(request)
 
     # Let the key properly propagate
@@ -125,23 +121,20 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
     Runs a command on a remote system.
 
     Args:
-        cmd: command to be run.
-        private_key_file: private SSH key to be used for authentication.
-        username: username to be used for authentication.
-        hostname: hostname of the machine you want to run the command on.
+        cmd: Command to be run.
+        private_key_file: Private SSH key to be used for authentication.
+        username: Username to be used for authentication.
+        hostname: Hostname of the machine you want to run the command on.
 
     Returns:
-        Output of the executed command.
+        Output of the run command.
     """
     ssh_command = [
-        "ssh",
-        "-i",
-        private_key_file,
-        "-o",
-        "StrictHostKeyChecking=no",
-        "-o",
-        "UserKnownHostsFile=/dev/null",
-        f"{username}@{hostname}",
+        'ssh',
+        '-i', private_key_file,
+        '-o', 'StrictHostKeyChecking=no',
+        '-o', 'UserKnownHostsFile=/dev/null',
+        f'{username}@{hostname}',
         cmd,
     ]
     print(f"Running ssh command: {' '.join(ssh_command)}")
@@ -155,17 +148,15 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
                 stderr=subprocess.STDOUT,
                 text=True,
                 check=True,
-                env={"SSH_AUTH_SOCK": ""},
-                timeout=10,
+                env={'SSH_AUTH_SOCK': ''},
+                timeout=10
             )
         except (subprocess.CalledProcessError, subprocess.TimeoutExpired) as err:
             time.sleep(10)
             tries += 1
             if tries == 3:
                 if isinstance(err, subprocess.CalledProcessError):
-                    print(
-                        f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}"
-                    )
+                    print(f"Failed to run SSH command (return code: {err.returncode}. Output received: {err.output}")
                 else:
                     print("Failed to run SSH - timed out.")
                 raise err
@@ -174,41 +165,26 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
 
 
 def main(
-    cmd: str,
+    cmd,
     project: str,
     instance: str | None = None,
     zone: str | None = None,
     account: str | None = None,
     hostname: str | None = None,
-    oslogin: oslogin_v1.OsLoginServiceClient | None = None,
-) -> str:
-    """
-    Runs a command on a remote system.
-
-    Args:
-        cmd: command to be executed on the remote host.
-        project: name of the project in which te remote instance is hosted.
-        instance: name of the remote system instance.
-        zone: zone in which the remote system resides. I.e. us-west3-a
-        account: account to be used for authentication.
-        hostname: hostname of the remote system.
-        oslogin: OSLogin service client object. If not provided, a new client will be created.
-
-    Returns:
-        The commands output.
-    """
+    oslogin: oslogin_v1.OsLoginServiceClient | None = None
+) -> None:
+    """Runs a command on a remote system."""
 
     # Create the OS Login API object.
     if oslogin is None:
         oslogin = oslogin_v1.OsLoginServiceClient()
 
     # Identify the service account ID if it is not already provided.
-    account = (
-        account or requests.get(SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
-    )
+    account = account or requests.get(
+        SERVICE_ACCOUNT_METADATA_URL, headers=HEADERS).text
 
-    if not account.startswith("users/"):
-        account = f"users/{account}"
+    if not account.startswith('users/'):
+        account = f'users/{account}'
 
     # Create a new SSH key pair and associate it with the service account.
     private_key_file = create_ssh_key(oslogin, account)
@@ -221,44 +197,44 @@ def main(
         # Create the hostname of the target instance using the instance name,
         # the zone where the instance is located, and the project that owns the
         # instance.
-        hostname = hostname or f"{instance}.{zone}.c.{project}.internal"
+        hostname = hostname or f'{instance}.{zone}.c.{project}.internal'
 
         # Run a command on the remote instance over SSH.
         result = run_ssh(cmd, private_key_file, username, hostname)
 
         # Print the command line output from the remote instance.
         print(result)
-        return result
     finally:
         # Shred the private key and delete the pair.
-        execute(["shred", private_key_file])
-        execute(["rm", private_key_file])
-        execute(["rm", f"{private_key_file}.pub"])
+        execute(['shred', private_key_file])
+        execute(['rm', private_key_file])
+        execute(['rm', f'{private_key_file}.pub'])
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
-        "--cmd", default="uname -a", help="The command to run on the remote instance."
-    )
-    parser.add_argument("--project", help="Your Google Cloud project ID.")
-    parser.add_argument("--zone", help="The zone where the target instance is located.")
-    parser.add_argument("--instance", help="The target instance for the ssh command.")
-    parser.add_argument("--account", help="The service account email.")
+        '--cmd', default='uname -a',
+        help='The command to run on the remote instance.')
     parser.add_argument(
-        "--hostname",
-        help="The external IP address or hostname for the target instance.",
-    )
+        '--project',
+        help='Your Google Cloud project ID.')
+    parser.add_argument(
+        '--zone',
+        help='The zone where the target instance is located.')
+    parser.add_argument(
+        '--instance',
+        help='The target instance for the ssh command.')
+    parser.add_argument(
+        '--account',
+        help='The service account email.')
+    parser.add_argument(
+        '--hostname',
+        help='The external IP address or hostname for the target instance.')
     args = parser.parse_args()
 
-    main(
-        args.cmd,
-        args.project,
-        instance=args.instance,
-        zone=args.zone,
-        account=args.account,
-        hostname=args.hostname,
-    )
+    main(args.cmd, args.project, instance=args.instance, zone=args.zone,
+         account=args.account, hostname=args.hostname)
 # [END compute_oslogin_ssh]
