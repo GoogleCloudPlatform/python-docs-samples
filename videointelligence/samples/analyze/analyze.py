@@ -37,6 +37,7 @@ import argparse
 import io
 
 from google.cloud import videointelligence
+
 # [END video_detect_text]
 
 
@@ -412,6 +413,8 @@ def video_detect_text(path):
         print("Rotated Bounding Box Vertices:")
         for vertex in frame.rotated_bounding_box.vertices:
             print("\tVertex.x: {}, Vertex.y: {}".format(vertex.x, vertex.y))
+
+
 # [END video_detect_text]
 
 
