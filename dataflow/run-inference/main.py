@@ -81,7 +81,7 @@ def AskLanguageModel(
         model_params={"config": AutoConfig.from_pretrained(model_name)},
         inference_fn=make_tensor_model_fn("generate"),
     )
-    tokenizer = AutoTokenizer.from_pretrained(args.model_name)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
     return (
         pcollection
         | "To tensors" >> beam.Map(to_tensors, tokenizer)
