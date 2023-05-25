@@ -13,7 +13,15 @@
 
 
 # [START kms_generate_random_bytes]
-def generate_random_bytes(project_id, location_id, num_bytes):
+
+# Import base64 for encoding the bytes for printing.
+import base64
+
+# Import the client library.
+from google.cloud import kms
+
+
+def generate_random_bytes(project_id: str, location_id: str, num_bytes: int) -> bytes:
     """
     Generate random bytes with entropy sourced from the given location.
 
@@ -27,12 +35,6 @@ def generate_random_bytes(project_id, location_id, num_bytes):
 
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import base64 for encoding the bytes for printing.
-    import base64
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
@@ -42,8 +44,15 @@ def generate_random_bytes(project_id, location_id, num_bytes):
     # Call the API.
     protection_level = kms.ProtectionLevel.HSM
     random_bytes_response = client.generate_random_bytes(
-      request={'location': location_name, 'length_bytes': num_bytes, 'protection_level': protection_level})
+        request={
+            "location": location_name,
+            "length_bytes": num_bytes,
+            "protection_level": protection_level,
+        }
+    )
 
-    print(f'Random bytes: {base64.b64encode(random_bytes_response.data)}')
+    print(f"Random bytes: {base64.b64encode(random_bytes_response.data)}")
     return random_bytes_response
+
+
 # [END kms_generate_random_bytes]

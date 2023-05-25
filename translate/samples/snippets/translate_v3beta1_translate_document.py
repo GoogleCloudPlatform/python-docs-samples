@@ -16,12 +16,22 @@
 from google.cloud import translate_v3beta1 as translate
 
 
-def translate_document(project_id: str, file_path: str):
+def translate_document(
+        project_id: str,
+        file_path: str,
+) -> translate.TranslationServiceClient:
+    """Translates a document.
+
+    Args:
+        project_id: The GCP project ID.
+        file_path: The path to the file to be translated.
+
+    Returns:
+        The translated document.
+    """
 
     client = translate.TranslationServiceClient()
-
     location = "us-central1"
-
     parent = f"projects/{project_id}/locations/{location}"
 
     # Supported file types: https://cloud.google.com/translate/docs/supported-formats
@@ -50,5 +60,5 @@ def translate_document(project_id: str, file_path: str):
     # and its output mime type will be the same as the input file's mime type
     print(f"Response: Detected Language Code - {response.document_translation.detected_language_code}")
 
-
+    return response
 # [END translate_v3beta1_translate_document]

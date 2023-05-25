@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START cloudrun_secure_request]
-# [START run_secure_request]
 import os
 import urllib
 
@@ -22,12 +21,16 @@ import google.oauth2.id_token
 
 
 def new_request(data):
-    """
-    new_request creates a new HTTP request with IAM ID Token credential.
-    This token is automatically handled by private Cloud Run (fully managed)
-    and Cloud Functions.
-    """
+    """Creates a new HTTP request with IAM ID Token credential.
 
+    This token is automatically handled by private Cloud Run and Cloud Functions.
+
+    Args:
+        data: data for the authenticated request
+
+    Returns:
+        The response from the HTTP request
+    """
     url = os.environ.get("EDITOR_UPSTREAM_RENDER_URL")
     if not url:
         raise Exception("EDITOR_UPSTREAM_RENDER_URL missing")
@@ -41,5 +44,6 @@ def new_request(data):
 
     response = urllib.request.urlopen(req)
     return response.read()
-# [END run_secure_request]
+
+
 # [END cloudrun_secure_request]
