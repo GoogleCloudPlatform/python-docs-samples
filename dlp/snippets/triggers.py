@@ -14,24 +14,29 @@
 
 """Sample app that sets up Data Loss Prevention API automation triggers."""
 
-
 import argparse
 import os
+from typing import List
 
 
 # [START dlp_create_trigger]
+from typing import Optional  # noqa: I100, E402
+
+import google.cloud.dlp
+
+
 def create_trigger(
-    project,
-    bucket,
-    scan_period_days,
-    info_types,
-    trigger_id=None,
-    display_name=None,
-    description=None,
-    min_likelihood=None,
-    max_findings=None,
-    auto_populate_timespan=False,
-):
+    project: str,
+    bucket: str,
+    scan_period_days: int,
+    info_types: List[str],
+    trigger_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    description: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    auto_populate_timespan: Optional[bool] = False,
+) -> None:
     """Creates a scheduled Data Loss Prevention API inspect_content trigger.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -54,9 +59,6 @@ def create_trigger(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -117,16 +119,16 @@ def create_trigger(
 
 
 # [START dlp_list_triggers]
-def list_triggers(project):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def list_triggers(project: str) -> None:
     """Lists all Data Loss Prevention API triggers.
     Args:
         project: The Google Cloud project id to use as a parent resource.
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -153,7 +155,10 @@ def list_triggers(project):
 
 
 # [START dlp_delete_trigger]
-def delete_trigger(project, trigger_id):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def delete_trigger(project: str, trigger_id: str) -> None:
     """Deletes a Data Loss Prevention API trigger.
     Args:
         project: The id of the Google Cloud project which owns the trigger.
@@ -161,9 +166,6 @@ def delete_trigger(project, trigger_id):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()

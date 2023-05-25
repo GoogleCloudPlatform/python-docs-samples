@@ -13,20 +13,24 @@
 # limitations under the License.
 
 # [START cloud_tasks_delete_queue]
-def delete_queue(project, queue_name, location):
-    """Delete a task queue."""
+from google.cloud import tasks_v2
 
-    from google.cloud import tasks_v2
+
+def delete_queue(project: str, location: str, queue_id: str) -> None:
+    """Delete a queue.
+    Args:
+        project: The project ID where the queue is located.
+        location: The location ID where the queue is located.
+        queue_id: The ID of the queue to delete.
+    """
 
     # Create a client.
     client = tasks_v2.CloudTasksClient()
 
-    # Get the fully qualified path to queue.
-    queue = client.queue_path(project, location, queue_name)
-
-    # Use the client to delete the queue.
-    client.delete_queue(request={"name": queue})
-    print("Deleted queue")
+    # Use the client to send a DeleteQueueRequest.
+    client.delete_queue(
+        tasks_v2.DeleteQueueRequest(name=client.queue_path(project, location, queue_id))
+    )
 
 
 # [END cloud_tasks_delete_queue]

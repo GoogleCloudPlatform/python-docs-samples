@@ -16,6 +16,8 @@ import os
 import shutil
 import tempfile
 
+from typing import Iterator, TextIO
+
 import pytest
 
 import redact
@@ -25,13 +27,13 @@ RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @pytest.fixture(scope="module")
-def tempdir():
+def tempdir() -> Iterator[TextIO]:
     tempdir = tempfile.mkdtemp()
     yield tempdir
     shutil.rmtree(tempdir)
 
 
-def test_redact_image_file(tempdir, capsys):
+def test_redact_image_file(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
@@ -46,7 +48,7 @@ def test_redact_image_file(tempdir, capsys):
     assert output_filepath in out
 
 
-def test_redact_image_all_text(tempdir, capsys):
+def test_redact_image_all_text(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
@@ -60,7 +62,7 @@ def test_redact_image_all_text(tempdir, capsys):
     assert output_filepath in out
 
 
-def test_redact_image_listed_info_types(tempdir, capsys):
+def test_redact_image_listed_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
@@ -75,11 +77,25 @@ def test_redact_image_listed_info_types(tempdir, capsys):
     assert output_filepath in out
 
 
-def test_redact_image_all_info_types(tempdir, capsys):
+def test_redact_image_all_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
     redact.redact_image_all_info_types(
+        GCLOUD_PROJECT,
+        test_filepath,
+        output_filepath,
+    )
+
+    out, _ = capsys.readouterr()
+    assert output_filepath in out
+
+
+def test_redact_image_with_colored_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+    output_filepath = os.path.join(tempdir, "redacted.png")
+
+    redact.redact_image_with_colored_info_types(
         GCLOUD_PROJECT,
         test_filepath,
         output_filepath,

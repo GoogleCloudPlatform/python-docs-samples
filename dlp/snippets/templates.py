@@ -14,21 +14,26 @@
 
 """Sample app that sets up Data Loss Prevention API inspect templates."""
 
-
 import argparse
 import os
+from typing import List
 
 
 # [START dlp_create_inspect_template]
+from typing import Optional  # noqa: I100, E402
+
+import google.cloud.dlp
+
+
 def create_inspect_template(
-    project,
-    info_types,
-    template_id=None,
-    display_name=None,
-    min_likelihood=None,
-    max_findings=None,
-    include_quote=None,
-):
+    project: str,
+    info_types: List[str],
+    template_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    include_quote: Optional[bool] = None,
+) -> None:
     """Creates a Data Loss Prevention API inspect template.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -46,9 +51,6 @@ def create_inspect_template(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -90,16 +92,16 @@ def create_inspect_template(
 
 
 # [START dlp_list_templates]
-def list_inspect_templates(project):
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def list_inspect_templates(project: str) -> None:
     """Lists all Data Loss Prevention API inspect templates.
     Args:
         project: The Google Cloud project id to use as a parent resource.
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -134,7 +136,10 @@ def list_inspect_templates(project):
 
 
 # [START dlp_delete_inspect_template]
-def delete_inspect_template(project, template_id):
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def delete_inspect_template(project: str, template_id: str) -> None:
     """Deletes a Data Loss Prevention API template.
     Args:
         project: The id of the Google Cloud project which owns the template.
@@ -142,9 +147,6 @@ def delete_inspect_template(project, template_id):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()

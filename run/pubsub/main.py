@@ -27,6 +27,7 @@ app = Flask(__name__)
 # [START run_pubsub_handler]
 @app.route("/", methods=["POST"])
 def index():
+    """Receive and parse Pub/Sub messages."""
     envelope = request.get_json()
     if not envelope:
         msg = "no Pub/Sub message received"
