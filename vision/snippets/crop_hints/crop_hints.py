@@ -24,17 +24,27 @@ Examples:
 # [START vision_crop_hints_tutorial_imports]
 import argparse
 
+from typing import MutableSequence
+
 from google.cloud import vision
 from PIL import Image, ImageDraw
+
 # [END vision_crop_hints_tutorial_imports]
 
 
-def get_crop_hint(path):
+def get_crop_hint(path: str) -> MutableSequence[vision.Vertex]:
     # [START vision_crop_hints_tutorial_get_crop_hints]
-    """Detect crop hints on a single image and return the first result."""
+    """Detect crop hints on a single image and return the first result.
+
+    Args:
+        path: path to the image file.
+
+    Returns:
+        The vertices for the bounding polygon.
+    """
     client = vision.ImageAnnotatorClient()
 
-    with open(path, 'rb') as image_file:
+    with open(path, "rb") as image_file:
         content = image_file.read()
 
     image = vision.Image(content=content)
@@ -52,46 +62,62 @@ def get_crop_hint(path):
     return vertices
 
 
-def draw_hint(image_file):
-    """Draw a border around the image using the hints in the vector list."""
+def draw_hint(image_file: str) -> None:
+    """Draw a border around the image using the hints in the vector list.
+
+    Args:
+        image_file: path to the image file.
+    """
     # [START vision_crop_hints_tutorial_draw_crop_hints]
     vects = get_crop_hint(image_file)
 
     im = Image.open(image_file)
     draw = ImageDraw.Draw(im)
-    draw.polygon([
-        vects[0].x, vects[0].y,
-        vects[1].x, vects[1].y,
-        vects[2].x, vects[2].y,
-        vects[3].x, vects[3].y], None, 'red')
-    im.save('output-hint.jpg', 'JPEG')
-    print('Saved new image to output-hint.jpg')
+    draw.polygon(
+        [
+            vects[0].x,
+            vects[0].y,
+            vects[1].x,
+            vects[1].y,
+            vects[2].x,
+            vects[2].y,
+            vects[3].x,
+            vects[3].y,
+        ],
+        None,
+        "red",
+    )
+    im.save("output-hint.jpg", "JPEG")
+    print("Saved new image to output-hint.jpg")
     # [END vision_crop_hints_tutorial_draw_crop_hints]
 
 
-def crop_to_hint(image_file):
-    """Crop the image using the hints in the vector list."""
+def crop_to_hint(image_file: str) -> None:
+    """Crop the image using the hints in the vector list.
+
+    Args:
+        image_file: path to the image file.
+    """
     # [START vision_crop_hints_tutorial_crop_to_hints]
     vects = get_crop_hint(image_file)
 
     im = Image.open(image_file)
-    im2 = im.crop([vects[0].x, vects[0].y,
-                  vects[2].x - 1, vects[2].y - 1])
-    im2.save('output-crop.jpg', 'JPEG')
-    print('Saved new image to output-crop.jpg')
+    im2 = im.crop([vects[0].x, vects[0].y, vects[2].x - 1, vects[2].y - 1])
+    im2.save("output-crop.jpg", "JPEG")
+    print("Saved new image to output-crop.jpg")
     # [END vision_crop_hints_tutorial_crop_to_hints]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # [START vision_crop_hints_tutorial_run_application]
     parser = argparse.ArgumentParser()
-    parser.add_argument('image_file', help='The image you\'d like to crop.')
-    parser.add_argument('mode', help='Set to "crop" or "draw".')
+    parser.add_argument("image_file", help="The image you'd like to crop.")
+    parser.add_argument("mode", help='Set to "crop" or "draw".')
     args = parser.parse_args()
 
-    if args.mode == 'crop':
+    if args.mode == "crop":
         crop_to_hint(args.image_file)
-    elif args.mode == 'draw':
+    elif args.mode == "draw":
         draw_hint(args.image_file)
     # [END vision_crop_hints_tutorial_run_application]
 # [END vision_crop_hints_tutorial]
