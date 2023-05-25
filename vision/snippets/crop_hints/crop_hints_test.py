@@ -17,21 +17,15 @@ import os
 import crop_hints
 
 
-def test_crop(capsys):
+def test_crop() -> None:
     """Checks the output image for cropping the image is created."""
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/cropme.jpg')
+    file_name = os.path.join(os.path.dirname(__file__), "resources/cropme.jpg")
     crop_hints.crop_to_hint(file_name)
-    out, _ = capsys.readouterr()
-    assert os.path.isfile('output-crop.jpg')
+    assert os.path.isfile("output-crop.jpg")
 
 
-def test_draw(capsys):
+def test_draw() -> None:
     """Checks the output image for drawing the crop hint is created."""
-    file_name = os.path.join(
-        os.path.dirname(__file__),
-        'resources/cropme.jpg')
+    file_name = os.path.join(os.path.dirname(__file__), "resources/cropme.jpg")
     crop_hints.draw_hint(file_name)
-    out, _ = capsys.readouterr()
-    assert os.path.isfile('output-hint.jpg')
+    assert os.path.isfile("output-hint.jpg")
