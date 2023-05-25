@@ -41,9 +41,9 @@ HEADERS = {"Metadata-Flavor": "Google"}
 def execute(
     cmd: list[str],
     cwd: Optional[str] = None,
-    capture_output: bool | None = False,
-    env: dict | None = None,
-    raise_errors: bool | None = True,
+    capture_output: bool = False,
+    env: Optional[dict] = None,
+    raise_errors: bool = True,
 ) -> tuple[int, str]:
     """
     Run an external command (wrapper for Python subprocess).
@@ -181,7 +181,7 @@ def main(
     zone: Optional[str] = None,
     account: Optional[str] = None,
     hostname: Optional[str] = None,
-    oslogin: oslogin_v1.OsLoginServiceClient | None = None,
+    oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None,
 ) -> str:
     """
     Runs a command on a remote system.

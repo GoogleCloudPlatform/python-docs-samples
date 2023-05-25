@@ -175,7 +175,7 @@ def main(
     project: str,
     instance: Optional[str] = None,
     zone: Optional[str] = None,
-    oslogin: googleapiclient.discovery.Resource | None = None,
+    oslogin: Optional[googleapiclient.discovery.Resource] = None,
     account: Optional[str] = None,
     hostname: Optional[str] = None,
 ) -> str:
