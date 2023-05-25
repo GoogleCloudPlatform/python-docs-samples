@@ -582,7 +582,12 @@ def test_inspect_bigquery_with_sampling(
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_with_sampling(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_with_sampling(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_gcs_with_sampling(

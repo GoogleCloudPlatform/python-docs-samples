@@ -1176,6 +1176,12 @@ def inspect_bigquery_table_with_sampling(
 
 
 # [START dlp_inspect_gcs_with_sampling]
+import threading  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.pubsub  # noqa: F811, E402
+
+
 def inspect_gcs_with_sampling(
     project: str,
     bucket: str,
@@ -1206,16 +1212,6 @@ def inspect_gcs_with_sampling(
         max_findings: The maximum number of findings to report; 0 = no maximum.
         timeout: The number of seconds to wait for a response from the API.
     """
-
-    # This sample also uses threading.Event() to wait for the job to finish.
-    import threading
-
-    # Import the client library.
-    import google.cloud.dlp
-
-    # This sample additionally uses Cloud Pub/Sub to receive results from
-    # potentially long-running operations.
-    import google.cloud.pubsub
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
