@@ -39,9 +39,8 @@ from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.util import assert_that
 from apache_beam.testing.util import is_not_empty
-import pytest
-
 import conftest  # python-docs-samples/dataflow/conftest.py
+import pytest
 
 import main
 
@@ -90,7 +89,7 @@ def state_dict_path() -> str:
 def container_image(project: str, test_name: str, unique_id: str) -> Iterator[str]:
     image_name = f"gcr.io/{project}/{test_name}:{unique_id}"
 
-    conftest.run_cmd("gcloud", "builds", "submit", ".", f"--tag={image_name}")
+    # conftest.run_cmd("gcloud", "builds", "submit", ".", f"--tag={image_name}")
     yield image_name
 
     conftest.run_cmd(
@@ -134,10 +133,10 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={MACHINE_TYPE}",
-        f"--sdk_container_image={container_image}",
-        # "--requirements_file=requirements.txt",
-        # "--prebuild_sdk_container_engine=cloud_build",
-        # f"--docker_registry_push_url={container_image}",
+        # f"--sdk_container_image={container_image}",
+        "--requirements_file=requirements.txt",
+        "--prebuild_sdk_container_engine=cloud_build",
+        f"--docker_registry_push_url={container_image}",
         "--sdk_location=container",
     )
 
