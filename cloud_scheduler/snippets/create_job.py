@@ -14,11 +14,12 @@
 
 # [START cloudscheduler_create_job]
 
-from google.cloud import scheduler
-from google.cloud.scheduler_v1 import Job
+from google.cloud import scheduler_v1
 
 
-def create_scheduler_job(project_id: str, location_id: str, service_id: str) -> Job:
+def create_scheduler_job(
+    project_id: str, location_id: str, service_id: str
+) -> scheduler_v1.Job:
     """Create a job with an App Engine target via the Cloud Scheduler API.
 
     Args:
@@ -31,27 +32,29 @@ def create_scheduler_job(project_id: str, location_id: str, service_id: str) -> 
     """
 
     # Create a client.
-    client = scheduler.CloudSchedulerClient()
+    client = scheduler_v1.CloudSchedulerClient()
 
-    # Construct the fully qualified location path.
-    parent = f"projects/{project_id}/locations/{location_id}"
-
-    # Construct the request body.
-    job = {
-        "app_engine_http_target": {
-            "app_engine_routing": {"service": service_id},
-            "relative_uri": "/log_payload",
-            "http_method": 1,
-            "body": b"Hello World",
-        },
-        "schedule": "* * * * *",
-        "time_zone": "America/Los_Angeles",
-    }
+    # Construct the job.
+    job = scheduler_v1.Job(
+        app_engine_http_target=scheduler_v1.AppEngineHttpTarget(
+            app_engine_routing=scheduler_v1.AppEngineRouting(service=service_id),
+            relative_uri="/log_payload",
+            http_method=scheduler_v1.HttpMethod.POST,
+            body=b"Hello World",
+        ),
+        schedule="* * * * *",
+        time_zone="America/Los_Angeles",
+    )
 
     # Use the client to send the job creation request.
-    response = client.create_job(request={"parent": parent, "job": job})
+    response = client.create_job(
+        scheduler_v1.CreateJobRequest(
+            parent=client.common_location_path(project_id, location_id),
+            job=job,
+        )
+    )
 
-    print(f"Created job: {response.name}")
     return response
+
 
 # [END cloudscheduler_create_job]
