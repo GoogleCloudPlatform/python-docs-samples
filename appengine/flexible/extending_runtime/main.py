@@ -32,8 +32,6 @@ def fortune():
     """
     output = subprocess.check_output("/usr/games/fortune")
     return output, 200, {"Content-Type": "text/plain; charset=utf-8"}
-
-
 # [END example]
 
 
