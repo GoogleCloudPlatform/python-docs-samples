@@ -18,9 +18,9 @@ import re
 from google.api_core.retry import Retry
 
 import transcribe_async_gcs
-from speech.snippets.transcribe_diarization_gcs_beta import transcribe_diarization_gcs_beta
-from speech.snippets.transcribe_multilanguage_gcs_beta import transcribe_file_with_multilanguage_gcs
-from speech.snippets.transcribe_word_level_confidence_gcs_beta import transcribe_file_with_word_level_confidence
+import transcribe_diarization_gcs_beta
+import transcribe_multilanguage_gcs_beta
+import transcribe_word_level_confidence_gcs_beta
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 BUCKET = "cloud-samples-data"
@@ -36,16 +36,16 @@ def test_transcribe_gcs():
 
 
 def test_transcribe_diarization_gcs_beta():
-    is_completed = transcribe_diarization_gcs_beta(GCS_DIARIZATION_AUDIO_PATH)
+    is_completed = transcribe_diarization_gcs_beta.transcribe_diarization_gcs_beta(GCS_DIARIZATION_AUDIO_PATH)
     assert is_completed
 
 
 def test_transcribe_multilanguage_gcs_bets():
-    transcript = transcribe_file_with_multilanguage_gcs(GCS_MUTLILANGUAGE_PATH)
+    transcript = transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(GCS_MUTLILANGUAGE_PATH)
     assert re.search("Transcript: OK Google", transcript)
 
 
 def test_transcribe_word_level_confidence_gcs_beta():
-    transcript = transcribe_file_with_word_level_confidence(GCS_AUDIO_PATH)
+    transcript = transcribe_word_level_confidence_gcs_beta.transcribe_file_with_word_level_confidence(GCS_AUDIO_PATH)
     assert re.search("Transcript: how old is the Brooklyn Bridge", transcript)
     assert re.search("First Word and Confidence: \\(how", transcript)
