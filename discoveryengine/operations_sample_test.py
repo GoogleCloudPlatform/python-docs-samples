@@ -28,35 +28,34 @@ operation_id = "import-documents-6754238352371303556"
 operation_name = f"projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{search_engine_id}/branches/0/operations/{operation_id}"
 
 
-def test_get_operation(capsys):
+def test_get_operation():
     try:
-        get_operation_sample.get_operation_sample(operation_name=operation_name)
+        operation = get_operation_sample.get_operation_sample(
+            operation_name=operation_name
+        )
+        assert operation
     except NotFound as e:
         print(e.message)
-
-    out, _ = capsys.readouterr()
-
-    assert operation_id in out
+        pass
 
 
-def test_list_operations(capsys):
-    list_operations_sample.list_operations_sample(
+def test_list_operations():
+    response = list_operations_sample.list_operations_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
     )
 
-    out, _ = capsys.readouterr()
+    assert response
+    assert response.operations
 
-    assert "operations" in out
 
-
-def test_poll_operation(capsys):
+def test_poll_operation():
     try:
-        poll_operation_sample.poll_operation_sample(operation_name=operation_name)
+        operation = poll_operation_sample.poll_operation_sample(
+            operation_name=operation_name
+        )
+        assert operation
     except NotFound as e:
         print(e.message)
-
-    out, _ = capsys.readouterr()
-
-    assert operation_id in out
+        pass
