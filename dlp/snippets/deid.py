@@ -1693,6 +1693,13 @@ def deindentify_with_dictionary_replacement(
 
 
 # [START dlp_deidentify_table_row_suppress]
+from typing import Dict  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
+from typing import Union  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_table_suppress_row(
     project: str,
     table_data: Dict[str, Union[List[str], List[List[str]]]],
@@ -1716,15 +1723,12 @@ def deidentify_table_suppress_row(
 
     >> $ python deid.py deid_table_row_suppress \
     '{"header": ["email", "phone number", "age"],
-    "rows": [["robertfrost@xyz.com", "4232342345", "35"],
-    ["johndoe@pqr.com", "4253458383", "64"]]}' \
+    "rows": [["robertfrost@example.com", "4232342345", "35"],
+    ["johndoe@example.com", "4253458383", "64"]]}' \
     "age" "GREATER_THAN" 50
     >> '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"]]}'
+        "rows": [["robertfrost@example.com", "4232342345", "35", "21"]]}'
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
