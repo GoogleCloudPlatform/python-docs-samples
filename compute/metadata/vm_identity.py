@@ -25,49 +25,77 @@ import pprint
 # [START compute_vm_identity_verify_token]
 import google.auth.transport.requests
 from google.oauth2 import id_token
+
 # [END compute_vm_identity_verify_token]
 
 # [START compute_vm_identity_acquire_token]
 import requests
 
-AUDIENCE_URL = 'http://www.example.com'
-METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
-METADATA_VM_IDENTITY_URL = 'http://metadata.google.internal/computeMetadata/v1/' \
-                           'instance/service-accounts/default/identity?' \
-                           'audience={}&format={}&licenses={}'
-FORMAT = 'full'
-LICENSES = 'TRUE'
+AUDIENCE_URL = "http://www.example.com"
+METADATA_HEADERS = {"Metadata-Flavor": "Google"}
+METADATA_VM_IDENTITY_URL = (
+    "http://metadata.google.internal/computeMetadata/v1/"
+    "instance/service-accounts/default/identity?"
+    "audience={audience}&format={format}&licenses={licenses}"
+)
+FORMAT = "full"
+LICENSES = "TRUE"
 
 
-def acquire_token(audience: str = AUDIENCE_URL) -> str:
+def acquire_token(
+    audience: str = AUDIENCE_URL, format: str = "standard", licenses: bool = True
+) -> str:
     """
-    Requests identity information from metadata server.
+    Requests identity information from the metadata server.
 
     Args:
-        audience: specify the audience parameter for the call.
+        audience: the unique URI agreed upon by both the instance and the
+            system verifying the instance's identity. For example, the audience
+            could be a URL for the connection between the two systems.
+        format: the optional parameter that specifies whether the project and
+            instance details are included in the payload. Specify `full` to
+            include this information in the payload or standard to omit the
+            information from the payload. The default value is `standard`.
+        licenses: an optional parameter that specifies whether license
+            codes for images associated with this instance are included in the
+            payload. Specify TRUE to include this information or FALSE to omit
+            this information from the payload. The default value is FALSE.
+            Has no effect unless format is `full`.
 
     Returns:
-        Information retrieved from the metadata server.
+        A JSON Web Token signed using the RS256 algorithm. The token includes a
+        Google signature and additional information in the payload. You can send
+        this token to other systems and applications so that they can verify the
+        token and confirm that the identity of your instance.
     """
     # Construct a URL with the audience and format.
-    url = METADATA_VM_IDENTITY_URL.format(audience, FORMAT, LICENSES)
+    url = METADATA_VM_IDENTITY_URL.format(
+        audience=audience, format=format, licenses=licenses)
 
     # Request a token from the metadata server.
     r = requests.get(url, headers=METADATA_HEADERS)
     # Extract and return the token from the response.
     r.raise_for_status()
     return r.text
+
+
 # [END compute_vm_identity_acquire_token]
 
 
 # [START compute_vm_identity_verify_token]
+
 def verify_token(token: str, audience: str) -> dict:
     """
     Verify token signature and return the token payload.
 
     Args:
-        token:
-        audience:
+        token: the JSON Web Token received from the metadata server to
+            be verified.
+        audience: the unique URI agreed upon by both the instance and the
+            system verifying the instance's identity.
+
+    Returns:
+        Dictionary containing the token payload.
     """
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
@@ -75,7 +103,7 @@ def verify_token(token: str, audience: str) -> dict:
 # [END compute_vm_identity_verify_token]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     token_ = acquire_token(AUDIENCE_URL)
     print("Received token:", token_)
     print("Token verification:")

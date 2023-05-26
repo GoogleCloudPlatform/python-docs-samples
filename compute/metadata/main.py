@@ -27,8 +27,8 @@ from typing import Callable, NoReturn, Optional
 import requests
 
 
-METADATA_URL = 'http://metadata.google.internal/computeMetadata/v1/'
-METADATA_HEADERS = {'Metadata-Flavor': 'Google'}
+METADATA_URL = "http://metadata.google.internal/computeMetadata/v1/"
+METADATA_HEADERS = {"Metadata-Flavor": "Google"}
 
 
 def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
@@ -41,16 +41,17 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
     Returns:
         Never returns, unless there's an error.
     """
-    url = METADATA_URL + 'instance/maintenance-event'
+    url = METADATA_URL + "instance/maintenance-event"
     last_maintenance_event = None
     # [START hanging_get]
-    last_etag = '0'
+    last_etag = "0"
 
     while True:
         r = requests.get(
             url,
-            params={'last_etag': last_etag, 'wait_for_change': True},
-            headers=METADATA_HEADERS)
+            params={"last_etag": last_etag, "wait_for_change": True},
+            headers=METADATA_HEADERS,
+        )
 
         # During maintenance the service can return a 503, so these should
         # be retried.
@@ -59,10 +60,10 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
             continue
         r.raise_for_status()
 
-        last_etag = r.headers['etag']
+        last_etag = r.headers["etag"]
         # [END hanging_get]
 
-        if r.text == 'NONE':
+        if r.text == "NONE":
             maintenance_event = None
         else:
             maintenance_event = r.text
@@ -80,15 +81,15 @@ def maintenance_callback(event: Optional[str]) -> None:
         event: details about scheduled maintenance.
     """
     if event:
-        print(f'Undergoing host maintenance: {event}')
+        print(f"Undergoing host maintenance: {event}")
     else:
-        print('Finished host maintenance')
+        print("Finished host maintenance")
 
 
 def main():
     wait_for_maintenance(maintenance_callback)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 # [END all]

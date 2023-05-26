@@ -19,26 +19,30 @@ import requests
 import main
 
 
-@mock.patch('main.requests')
+@mock.patch("main.requests")
 def test_wait_for_maintenance(requests_mock):
     # Response 1 is a host maintenance event.
     response1_mock = mock.Mock()
     response1_mock.status_code = 200
-    response1_mock.text = 'MIGRATE_ON_HOST_MAINTENANCE'
-    response1_mock.headers = {'etag': 1}
+    response1_mock.text = "MIGRATE_ON_HOST_MAINTENANCE"
+    response1_mock.headers = {"etag": 1}
     # Response 2 is the end of the event.
     response2_mock = mock.Mock()
     response2_mock.status_code = 200
-    response2_mock.text = 'NONE'
-    response2_mock.headers = {'etag': 2}
+    response2_mock.text = "NONE"
+    response2_mock.headers = {"etag": 2}
     # Response 3 is a 503
     response3_mock = mock.Mock()
     response3_mock.status_code = 503
 
     requests_mock.codes.ok = requests.codes.ok
     requests_mock.get.side_effect = [
-        response1_mock, response2_mock, response3_mock, response2_mock,
-        StopIteration()]
+        response1_mock,
+        response2_mock,
+        response3_mock,
+        response2_mock,
+        StopIteration(),
+    ]
 
     callback_mock = mock.Mock()
 
@@ -48,6 +52,5 @@ def test_wait_for_maintenance(requests_mock):
         pass
 
     assert callback_mock.call_count == 2
-    assert callback_mock.call_args_list[0][0] == (
-        'MIGRATE_ON_HOST_MAINTENANCE',)
+    assert callback_mock.call_args_list[0][0] == ("MIGRATE_ON_HOST_MAINTENANCE",)
     assert callback_mock.call_args_list[1][0] == (None,)
