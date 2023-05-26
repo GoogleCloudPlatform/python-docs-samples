@@ -17,7 +17,7 @@
 from __future__ import annotations
 
 
-from google.cloud import discoveryengine_v1beta as genappbuilder
+from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -38,9 +38,9 @@ def import_documents_sample(
     gcs_uri: str | None = None,
     bigquery_dataset: str | None = None,
     bigquery_table: str | None = None,
-) -> None:
+) -> str:
     # Create a client
-    client = genappbuilder.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient()
 
     # The full resource name of the search engine branch.
     # e.g. projects/{project}/locations/{location}/dataStores/{data_store}/branches/{branch}
@@ -52,25 +52,25 @@ def import_documents_sample(
     )
 
     if gcs_uri:
-        request = genappbuilder.ImportDocumentsRequest(
+        request = discoveryengine.ImportDocumentsRequest(
             parent=parent,
-            gcs_source=genappbuilder.GcsSource(
+            gcs_source=discoveryengine.GcsSource(
                 input_uris=[gcs_uri], data_schema="custom"
             ),
             # Options: `FULL`, `INCREMENTAL`
-            reconciliation_mode=genappbuilder.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
+            reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
         )
     else:
-        request = genappbuilder.ImportDocumentsRequest(
+        request = discoveryengine.ImportDocumentsRequest(
             parent=parent,
-            bigquery_source=genappbuilder.BigQuerySource(
+            bigquery_source=discoveryengine.BigQuerySource(
                 project_id=project_id,
                 dataset_id=bigquery_dataset,
                 table_id=bigquery_table,
                 data_schema="custom",
             ),
             # Options: `FULL`, `INCREMENTAL`
-            reconciliation_mode=genappbuilder.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
+            reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
         )
 
     # Make the request
@@ -81,11 +81,13 @@ def import_documents_sample(
 
     # Once the operation is complete,
     # get information from operation metadata
-    metadata = genappbuilder.ImportDocumentsMetadata(operation.metadata)
+    metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
     # Handle the response
     print(response)
     print(metadata)
+
+    return operation.operation.name
 
 
 # [END genappbuilder_import_documents]
