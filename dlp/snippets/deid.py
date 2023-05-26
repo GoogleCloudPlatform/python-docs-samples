@@ -18,11 +18,6 @@ from __future__ import annotations
 
 import argparse
 
-from typing import List
-from typing import Dict
-from typing import List
-from typing import Union
-
 
 # [START dlp_deidentify_masking]
 from typing import List  # noqa: F811, E402
