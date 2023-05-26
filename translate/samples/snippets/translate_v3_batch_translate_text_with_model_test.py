@@ -26,7 +26,7 @@ MODEL_ID = "TRL251293382528204800"
 
 
 @pytest.fixture(scope="function")
-def bucket():
+def bucket() -> storage.Bucket:
     """Create a temporary bucket to store annotation output."""
     bucket_name = f"tmp-{uuid.uuid4().hex}"
     storage_client = storage.Client()
@@ -37,8 +37,11 @@ def bucket():
     bucket.delete(force=True)
 
 
-def test_batch_translate_text_with_model(capsys, bucket):
-    translate_v3_batch_translate_text_with_model.batch_translate_text_with_model(
+def test_batch_translate_text_with_model(
+        capsys: pytest.LogCaptureFixture,
+        bucket: storage.Bucket,
+) -> None:
+    response = translate_v3_batch_translate_text_with_model.batch_translate_text_with_model(
         "gs://cloud-samples-data/translation/custom_model_text.txt",
         f"gs://{bucket.name}/translation/BATCH_TRANSLATION_MODEL_OUTPUT/",
         PROJECT_ID,
@@ -47,3 +50,4 @@ def test_batch_translate_text_with_model(capsys, bucket):
     out, _ = capsys.readouterr()
     assert "Total Characters: 15" in out
     assert "Translated Characters: 15" in out
+    assert response is not None
