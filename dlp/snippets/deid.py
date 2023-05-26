@@ -1130,7 +1130,9 @@ def deidentify_with_exception_list(
 
 
 # [START dlp_deidentify_table_bucketing]
+from typing import Dict  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402, I100
+from typing import Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1138,7 +1140,7 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_bucketing(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     bucket_size: int,
     bucketing_lower_bound: int,
@@ -1148,7 +1150,7 @@ def deidentify_table_bucketing(
     table by replacing them with fixed size bucket ranges.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Json string representing table data.
+        table_data: Dictionary representing table data.
         deid_content_list: A list of fields in table to de-identify.
         bucket_size: Size of each bucket for fixed sized bucketing
             (except for minimum and maximum buckets). So if ``bucketing_lower_bound`` = 10,
@@ -1163,34 +1165,14 @@ def deidentify_table_bucketing(
        the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-       "header":[
-           "email",
-           "phone number",
-           "age"
-       ],
-       "rows":[
-           [
-               "robertfrost@xyz.com",
-               "4232342345"
-               "35"
-           ],
-           [
-               "johndoe@pqr.com",
-               "4253458383"
-               "68"
-           ]
-       ]
-    }
-
     >> $ python deid.py deid_table_bucketing \
         '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "35"],
-        ["johndoe@pqr.com", "4253458383", "68"]]}' \
+        "rows": [["robertfrost@example.com", "4232342345", "35"],
+        ["johndoe@example.com", "4253458383", "68"]]}' \
         ["age"] 10 0 100
         >>  '{"header": ["email", "phone number", "age"],
-            "rows": [["robertfrost@xyz.com", "4232342345", "30:40"],
-            ["johndoe@pqr.com", "4253458383", "60:70"]]}'
+            "rows": [["robertfrost@example.com", "4232342345", "30:40"],
+            ["johndoe@example.com", "4253458383", "60:70"]]}'
     """
 
     # Instantiate a client.
@@ -1251,7 +1233,9 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_condition_infotypes]
+from typing import Dict  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402, I100
+from typing import Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1259,12 +1243,12 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_condition_replace_with_info_types(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     info_types: List[str],
     condition_field: str = None,
     condition_operator: str = None,
-    condition_value: str = None,
+    condition_value: int = None,
 ) -> types.dlp.Table:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with info-types based on a condition.
@@ -1286,33 +1270,13 @@ def deidentify_table_condition_replace_with_info_types(
        the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-       "header":[
-           "email",
-           "phone number"
-           "age"
-       ],
-       "rows":[
-           [
-               "robertfrost@xyz.com",
-               "4232342345"
-               "45"
-           ],
-           [
-               "johndoe@pqr.com",
-               "4253458383"
-               "63"
-           ]
-       ]
-    }
-
     >> $ python deid.py deid_table_condition_replace \
     '{"header": ["email", "phone number", "age"],
-    "rows": [["robertfrost@xyz.com", "4232342345", "45"],
-    ["johndoe@pqr.com", "4253458383", "63"]]}' ["email"] \
+    "rows": [["robertfrost@example.com", "4232342345", "45"],
+    ["johndoe@example.com", "4253458383", "63"]]}' ["email"] \
     ["EMAIL_ADDRESS"] "age" "GREATER_THAN" 50
     >> '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "45"],
+        "rows": [["robertfrost@example.com", "4232342345", "45"],
         ["[EMAIL_ADDRESS]", "4253458383", "63"]]}'
     """
 
@@ -1391,7 +1355,9 @@ def deidentify_table_condition_replace_with_info_types(
 
 
 # [START dlp_deidentify_table_condition_masking]
+from typing import Dict  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402, I100
+from typing import Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1399,11 +1365,11 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_condition_masking(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     condition_field: str = None,
     condition_operator: str = None,
-    condition_value: str = None,
+    condition_value: int = None,
     masking_character: str = None,
 ) -> types.dlp.Table:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
@@ -1425,37 +1391,14 @@ def deidentify_table_condition_masking(
         the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-        "header":[
-            "email",
-            "phone number",
-            "age",
-            "happiness_score"
-        ],
-        "rows":[
-            [
-                "robertfrost@xyz.com",
-                "4232342345",
-                "35",
-                "21"
-            ],
-            [
-                "johndoe@pqr.com",
-                "4253458383",
-                "64",
-                "34"
-            ]
-        ]
-    }
-
     >> $ python deid.py deid_table_condition_mask \
     '{"header": ["email", "phone number", "age", "happiness_score"],
-    "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
-    ["johndoe@pqr.com", "4253458383", "64", "34"]]}' \
+    "rows": [["robertfrost@example.com", "4232342345", "35", "21"],
+    ["johndoe@example.com", "4253458383", "64", "34"]]}' \
     ["happiness_score"] "age" "GREATER_THAN" 50
     >> '{"header": ["email", "phone number", "age", "happiness_score"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
-        ["johndoe@pqr.com", "4253458383", "64", "**"]]}'
+        "rows": [["robertfrost@example.com", "4232342345", "35", "21"],
+        ["johndoe@example.com", "4253458383", "64", "**"]]}'
     """
 
     # Instantiate a client.
@@ -1523,13 +1466,18 @@ def deidentify_table_condition_masking(
 
 
 # [START dlp_deidentify_table_infotypes]
+from typing import Dict  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402, I100
+from typing import Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_table_replace_with_info_types(
-    project: str, table_data: str, info_types: List[str], deid_content_list: List[str]
+    project: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    info_types: List[str],
+    deid_content_list: List[str],
 ) -> None:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by replacing them with info type.
@@ -1549,16 +1497,16 @@ def deidentify_table_replace_with_info_types(
     '{
         "header": ["name", "email", "phone number"],
         "rows": [
-            ["Robert Frost", "robertfrost@xyz.com", "4232342345"],
-            ["John Doe", "johndoe@pqr.com", "4253458383"]
+            ["Robert Frost", "robertfrost@example.com", "4232342345"],
+            ["John Doe", "johndoe@example.com", "4253458383"]
         ]
     }' \
     ["PERSON_NAME"] ["name"]
     >> '{
             "header": ["name", "email", "phone number"],
             "rows": [
-                ["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
-                ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]
+                ["[PERSON_NAME]", "robertfrost@example.com", "4232342345"],
+                ["[PERSON_NAME]", "johndoe@example.com", "4253458383"]
             ]
         }'
     """
