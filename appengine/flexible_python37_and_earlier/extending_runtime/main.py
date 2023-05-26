@@ -23,24 +23,34 @@ app = Flask(__name__)
 
 
 # [START example]
-@app.route('/')
+@app.route("/")
 def fortune():
-    output = subprocess.check_output('/usr/games/fortune')
-    return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+    """Runs the 'fortune' command and serves the output.
+
+    Returns:
+        The output of the 'fortune' command.
+    """
+    output = subprocess.check_output("/usr/games/fortune")
+    return output, 200, {"Content-Type": "text/plain; charset=utf-8"}
 # [END example]
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
-    An internal error occurred: <pre>{}</pre>
-    See logs for full stacktrace.
-    """.format(e), 500
+    """Serves a formatted message on-error.
+
+    Returns:
+        The error message and a code 500 status.
+    """
+    logging.exception("An error occurred during a request.")
+    return (
+        f"An internal error occurred: <pre>{e}</pre><br>See logs for full stacktrace.",
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See CMD in Dockerfile.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 # [END app]
