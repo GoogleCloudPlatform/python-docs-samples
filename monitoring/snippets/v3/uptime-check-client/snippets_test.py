@@ -29,8 +29,7 @@ def random_name(length):
 
 
 class UptimeFixture:
-    """A test fixture that creates uptime check config.
-    """
+    """A test fixture that creates uptime check config."""
 
     def __init__(self):
         self.project_id = snippets.project_id()
@@ -59,13 +58,13 @@ def uptime():
         yield uptime
 
 
-def test_create_and_delete(capsys):
+def test_create_and_delete() -> None:
     # create and delete happen in uptime fixture.
     with UptimeFixture():
         pass
 
 
-def test_update_uptime_config(capsys):
+def test_update_uptime_config() -> None:
     # create and delete happen in uptime fixture.
     new_display_name = random_name(10)
     new_uptime_check_path = "/" + random_name(10)
@@ -75,31 +74,26 @@ def test_update_uptime_config(capsys):
         # in this case.
         @backoff.on_exception(backoff.expo, DeadlineExceeded, max_time=120)
         def call_sample():
-            snippets.update_uptime_check_config(
-                fixture.config_get.name, new_display_name, new_uptime_check_path)
+            return snippets.update_uptime_check_config(
+                fixture.config_get.name, new_display_name, new_uptime_check_path
+            )
 
-        call_sample()
+        result = call_sample()
 
-        out, _ = capsys.readouterr()
-        snippets.get_uptime_check_config(fixture.config_get.name)
-        out, _ = capsys.readouterr()
-        assert new_display_name in out
-        assert new_uptime_check_path in out
+        assert new_display_name == result.display_name
+        assert new_uptime_check_path == result.http_check.path
 
 
-def test_get_uptime_check_config(capsys, uptime):
-    snippets.get_uptime_check_config(uptime.config_get.name)
-    out, _ = capsys.readouterr()
-    assert uptime.config_get.display_name in out
+def test_get_uptime_check_config(uptime) -> None:
+    config = snippets.get_uptime_check_config(uptime.config_get.name)
+    assert uptime.config_get.display_name == config.display_name
 
 
-def test_list_uptime_check_configs(capsys, uptime):
-    snippets.list_uptime_check_configs(uptime.project_name)
-    out, _ = capsys.readouterr()
-    assert uptime.config_get.display_name in out
+def test_list_uptime_check_configs(uptime) -> None:
+    result = snippets.list_uptime_check_configs(uptime.project_name)
+    assert any(item.display_name == uptime.config_get.display_name for item in result)
 
 
-def test_list_uptime_check_ips(capsys):
-    snippets.list_uptime_check_ips()
-    out, _ = capsys.readouterr()
-    assert "Singapore" in out
+def test_list_uptime_check_ips() -> None:
+    result = snippets.list_uptime_check_ips()
+    assert any(item.location == "Singapore" for item in result)
