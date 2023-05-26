@@ -14,8 +14,9 @@
 #
 
 # [START genappbuilder_search]
+from typing import List
 
-from google.cloud import discoveryengine_v1beta as genappbuilder
+from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -31,9 +32,9 @@ def search_sample(
     search_engine_id: str,
     serving_config_id: str,
     search_query: str,
-) -> None:
+) -> List[discoveryengine.SearchResponse.SearchResult]:
     # Create a client
-    client = genappbuilder.SearchServiceClient()
+    client = discoveryengine.SearchServiceClient()
 
     # The full resource name of the search engine serving config
     # e.g. projects/{project_id}/locations/{location}
@@ -44,13 +45,15 @@ def search_sample(
         serving_config=serving_config_id,
     )
 
-    request = genappbuilder.SearchRequest(
+    request = discoveryengine.SearchRequest(
         serving_config=serving_config,
         query=search_query,
     )
     response = client.search(request)
     for result in response.results:
         print(result)
+
+    return response.results
 
 
 # [END genappbuilder_search]
