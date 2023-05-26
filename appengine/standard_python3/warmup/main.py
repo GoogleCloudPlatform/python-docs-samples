@@ -23,7 +23,7 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     """Serves a predefined placeholder string.
-    
+
     Returns:
         A predefined string saying 'Hello World!'
     """
@@ -35,7 +35,7 @@ def warmup():
     """Served stub function returning no content.
 
     Your warmup logic can be implemented here (e.g. set up a database connection pool)
-    
+
     Returns:
         An empty string, an HTTP code 200, and an empty object.
     """
