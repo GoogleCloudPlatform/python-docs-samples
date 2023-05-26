@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 # [START genappbuilder_list_documents]
+from typing import Any
 from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -21,9 +22,7 @@ from google.cloud import discoveryengine
 # search_engine_id = "YOUR_SEARCH_ENGINE_ID"
 
 
-def list_documents_sample(
-    project_id: str, location: str, search_engine_id: str
-) -> discoveryengine.ListDocumentsResponse:
+def list_documents_sample(project_id: str, location: str, search_engine_id: str) -> Any:
     # Create a client
     client = discoveryengine.DocumentServiceClient()
 
@@ -42,7 +41,7 @@ def list_documents_sample(
     for result in response:
         print(result)
 
-    return response._response
+    return response
 
 
 # [END genappbuilder_list_documents]
