@@ -89,7 +89,7 @@ def test_job_name() -> Iterator[str]:
     )
     full_path = response.name
     # API expects only job name, not full project path
-    job_name = full_path[full_path.rfind("/") + 1 :]
+    job_name = full_path[full_path.rfind("/") + 1:]
     yield job_name
 
     # clean up job if not deleted
@@ -145,4 +145,10 @@ def test_create_dlp_job(
     assert test_job_id in out
 
     job_name = f"i-{test_job_id}"
+
+    jobs.get_dlp_job(GCLOUD_PROJECT, job_name)
+
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
     jobs.delete_dlp_job(GCLOUD_PROJECT, job_name)
