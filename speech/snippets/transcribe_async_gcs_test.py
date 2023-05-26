@@ -30,7 +30,7 @@ GCS_MUTLILANGUAGE_PATH = "gs://" + BUCKET + "/speech/Google_Gnome.wav"
 
 
 @Retry()
-def test_transcribe_gcs(capsys):
+def test_transcribe_gcs():
     transcript = transcribe_async_gcs.transcribe_gcs(GCS_AUDIO_PATH)
     assert re.search(r"how old is the Brooklyn Bridge", transcript, re.DOTALL | re.I)
 
