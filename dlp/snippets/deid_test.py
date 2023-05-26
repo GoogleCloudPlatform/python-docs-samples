@@ -457,7 +457,7 @@ def test_deindentify_with_dictionary_replacement(capsys: pytest.CaptureFixture) 
     assert "izumi@example.com" in out or "alex@example.com" in out or "tal@example.com" in out
 
 
-def test_deidentify_table_suppress_row(capsys):
+def test_deidentify_table_suppress_row(capsys: pytest.CaptureFixture) -> None:
     deid.deidentify_table_suppress_row(
         GCLOUD_PROJECT,
         TABLE_DATA,
