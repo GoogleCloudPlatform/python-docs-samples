@@ -23,7 +23,7 @@ from google.cloud import discoveryengine
 
 def list_documents_sample(
     project_id: str, location: str, search_engine_id: str
-) -> discoveryengine.ListDocumentsPager:
+) -> discoveryengine.ListDocumentsResponse:
     # Create a client
     client = discoveryengine.DocumentServiceClient()
 
@@ -42,7 +42,7 @@ def list_documents_sample(
     for result in response:
         print(result)
 
-    return response
+    return response._response
 
 
 # [END genappbuilder_list_documents]
