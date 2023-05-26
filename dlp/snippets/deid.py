@@ -1689,6 +1689,123 @@ def deindentify_with_dictionary_replacement(
 # [END dlp_deidentify_dictionary_replacement]
 
 
+# [START dlp_deidentify_table_row_suppress]
+def deidentify_table_suppress_row(
+    project,
+    table_data,
+    condition_field,
+    condition_operator,
+    condition_value
+):
+    """ Uses the Data Loss Prevention API to de-identify sensitive data in a
+      table by suppressing entire row/s based on a condition.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Json string representing table data.
+        condition_field: A table Field within the record this condition is evaluated against.
+        condition_operator: Operator used to compare the field or infoType to the value. One of:
+            RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS,
+            LESS_THAN_OR_EQUALS, EXISTS.
+        condition_value: Value to compare against. [Mandatory, except for ``EXISTS`` tests.].
+
+    Returns:
+        De-identified table is returned;
+        the response from the API is also printed to the terminal.
+
+    Example:
+    table_data = {
+        "header":[
+            "email",
+            "phone number",
+            "age"
+        ],
+        "rows":[
+            [
+                "robertfrost@xyz.com",
+                "4232342345",
+                "35"
+            ],
+            [
+                "johndoe@pqr.com",
+                "4253458383",
+                "64"
+            ]
+        ]
+    }
+
+    >> $ python deid.py deid_table_row_suppress \
+    '{"header": ["email", "phone number", "age"],
+    "rows": [["robertfrost@xyz.com", "4232342345", "35"],
+    ["johndoe@pqr.com", "4253458383", "64"]]}' \
+    "age" "GREATER_THAN" 50
+    >> '{"header": ["email", "phone number", "age"],
+        "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"]]}'
+    """
+
+    # Import the client library
+    import google.cloud.dlp
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item`.
+    item = {"table": table}
+
+    # Construct condition list.
+    condition = [
+        {
+            "field": {"name": condition_field},
+            "operator": condition_operator,
+            "value": {"integer_value": condition_value}
+        }
+    ]
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "record_transformations": {
+            "record_suppressions": [
+                {
+                    "condition": {
+                        "expressions": {
+                            "conditions": {"conditions": condition}
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item
+        })
+
+    # Print the result.
+    print("Table after de-identification: {}".format(response.item.table))
+
+    # Return the response.
+    return response.item.table
+
+
+# [END dlp_deidentify_table_row_suppress]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -2123,6 +2240,36 @@ if __name__ == "__main__":
         "word_list", help="List of words or phrases to search for in the data."
     )
 
+    table_row_suppress_parser = subparsers.add_parser(
+        "deid_table_row_suppress",
+        help="De-identify sensitive data in a table by suppressing "
+             "entire row/s based on a condition.",
+    )
+    table_row_suppress_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    table_row_suppress_parser.add_argument(
+        "table_data",
+        help="Json string representing table data",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_field",
+        help="A table Field within the record this condition is evaluated "
+             "against.",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_operator",
+        help="Operator used to compare the field or infoType to the value. "
+             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+             "EXISTS.",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_value",
+        help="Value to compare against. [Mandatory, except for ``EXISTS`` tests.].",
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2233,4 +2380,12 @@ if __name__ == "__main__":
             args.input_str,
             args.info_types,
             args.word_list,
+        )
+    elif args.content == "deid_table_row_suppress":
+        deidentify_table_suppress_row(
+            args.project,
+            args.table_data,
+            condition_field=args.condition_field,
+            condition_operator=args.condition_operator,
+            condition_value=args.condition_value,
         )
