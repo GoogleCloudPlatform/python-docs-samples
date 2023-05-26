@@ -579,3 +579,29 @@ def test_inspect_bigquery_with_sampling(
         assert "Job name:" in out
     finally:
         delete_dlp_job(out)
+
+
+@pytest.mark.flaky(max_runs=2, min_passes=1)
+def test_inspect_gcs_with_sampling(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    out = ""
+    try:
+        inspect_content.inspect_gcs_with_sampling(
+            GCLOUD_PROJECT,
+            bucket.name,
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            ["TEXT_FILE"],
+            timeout=TIMEOUT,
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started:" in out
+        assert "Job name:" in out
+    finally:
+        delete_dlp_job(out)
