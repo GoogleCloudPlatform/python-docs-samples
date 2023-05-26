@@ -56,7 +56,7 @@ def get_external_ip():
 
 @app.route("/")
 def index():
-    """Servces a string with the instance's external IP address.
+    """Serves a string with the instance's external IP address.
 
     Websocket connections must be made directly to this instance.
 
