@@ -14,6 +14,7 @@
 #
 # [START genappbuilder_list_documents]
 from typing import Any
+
 from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
