@@ -18,8 +18,6 @@ from __future__ import annotations
 
 import argparse
 
-from typing import List
-
 
 # [START dlp_deidentify_masking]
 from typing import List  # noqa: F811, E402
@@ -1127,7 +1125,7 @@ def deidentify_with_exception_list(
 
 
 # [START dlp_deidentify_table_bucketing]
-from typing import List  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1135,7 +1133,7 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_bucketing(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     bucket_size: int,
     bucketing_lower_bound: int,
@@ -1145,7 +1143,7 @@ def deidentify_table_bucketing(
     table by replacing them with fixed size bucket ranges.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Json string representing table data.
+        table_data: Dictionary representing table data.
         deid_content_list: A list of fields in table to de-identify.
         bucket_size: Size of each bucket for fixed sized bucketing
             (except for minimum and maximum buckets). So if ``bucketing_lower_bound`` = 10,
@@ -1160,34 +1158,14 @@ def deidentify_table_bucketing(
        the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-       "header":[
-           "email",
-           "phone number",
-           "age"
-       ],
-       "rows":[
-           [
-               "robertfrost@xyz.com",
-               "4232342345"
-               "35"
-           ],
-           [
-               "johndoe@pqr.com",
-               "4253458383"
-               "68"
-           ]
-       ]
-    }
-
     >> $ python deid.py deid_table_bucketing \
         '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "35"],
-        ["johndoe@pqr.com", "4253458383", "68"]]}' \
+        "rows": [["robertfrost@example.com", "4232342345", "35"],
+        ["johndoe@example.com", "4253458383", "68"]]}' \
         ["age"] 10 0 100
         >>  '{"header": ["email", "phone number", "age"],
-            "rows": [["robertfrost@xyz.com", "4232342345", "30:40"],
-            ["johndoe@pqr.com", "4253458383", "60:70"]]}'
+            "rows": [["robertfrost@example.com", "4232342345", "30:40"],
+            ["johndoe@example.com", "4253458383", "60:70"]]}'
     """
 
     # Instantiate a client.
@@ -1248,7 +1226,7 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_condition_infotypes]
-from typing import List  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1256,12 +1234,12 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_condition_replace_with_info_types(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     info_types: List[str],
     condition_field: str = None,
     condition_operator: str = None,
-    condition_value: str = None,
+    condition_value: int = None,
 ) -> types.dlp.Table:
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     table by replacing them with info-types based on a condition.
@@ -1283,33 +1261,13 @@ def deidentify_table_condition_replace_with_info_types(
        the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-       "header":[
-           "email",
-           "phone number"
-           "age"
-       ],
-       "rows":[
-           [
-               "robertfrost@xyz.com",
-               "4232342345"
-               "45"
-           ],
-           [
-               "johndoe@pqr.com",
-               "4253458383"
-               "63"
-           ]
-       ]
-    }
-
     >> $ python deid.py deid_table_condition_replace \
     '{"header": ["email", "phone number", "age"],
-    "rows": [["robertfrost@xyz.com", "4232342345", "45"],
-    ["johndoe@pqr.com", "4253458383", "63"]]}' ["email"] \
+    "rows": [["robertfrost@example.com", "4232342345", "45"],
+    ["johndoe@example.com", "4253458383", "63"]]}' ["email"] \
     ["EMAIL_ADDRESS"] "age" "GREATER_THAN" 50
     >> '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "45"],
+        "rows": [["robertfrost@example.com", "4232342345", "45"],
         ["[EMAIL_ADDRESS]", "4253458383", "63"]]}'
     """
 
@@ -1388,7 +1346,7 @@ def deidentify_table_condition_replace_with_info_types(
 
 
 # [START dlp_deidentify_table_condition_masking]
-from typing import List  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 from google.cloud.dlp_v2 import types  # noqa: F811, E402
@@ -1396,11 +1354,11 @@ from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 def deidentify_table_condition_masking(
     project: str,
-    table_data: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
     deid_content_list: List[str],
     condition_field: str = None,
     condition_operator: str = None,
-    condition_value: str = None,
+    condition_value: int = None,
     masking_character: str = None,
 ) -> types.dlp.Table:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
@@ -1422,37 +1380,14 @@ def deidentify_table_condition_masking(
         the response from the API is also printed to the terminal.
 
     Example:
-    table_data = {
-        "header":[
-            "email",
-            "phone number",
-            "age",
-            "happiness_score"
-        ],
-        "rows":[
-            [
-                "robertfrost@xyz.com",
-                "4232342345",
-                "35",
-                "21"
-            ],
-            [
-                "johndoe@pqr.com",
-                "4253458383",
-                "64",
-                "34"
-            ]
-        ]
-    }
-
     >> $ python deid.py deid_table_condition_mask \
     '{"header": ["email", "phone number", "age", "happiness_score"],
-    "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
-    ["johndoe@pqr.com", "4253458383", "64", "34"]]}' \
+    "rows": [["robertfrost@example.com", "4232342345", "35", "21"],
+    ["johndoe@example.com", "4253458383", "64", "34"]]}' \
     ["happiness_score"] "age" "GREATER_THAN" 50
     >> '{"header": ["email", "phone number", "age", "happiness_score"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "35", "21"],
-        ["johndoe@pqr.com", "4253458383", "64", "**"]]}'
+        "rows": [["robertfrost@example.com", "4232342345", "35", "21"],
+        ["johndoe@example.com", "4253458383", "64", "**"]]}'
     """
 
     # Instantiate a client.
@@ -1520,13 +1455,16 @@ def deidentify_table_condition_masking(
 
 
 # [START dlp_deidentify_table_infotypes]
-from typing import List  # noqa: F811, E402, I100
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_table_replace_with_info_types(
-    project: str, table_data: str, info_types: List[str], deid_content_list: List[str]
+    project: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    info_types: List[str],
+    deid_content_list: List[str],
 ) -> None:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in a
       table by replacing them with info type.
@@ -1546,16 +1484,16 @@ def deidentify_table_replace_with_info_types(
     '{
         "header": ["name", "email", "phone number"],
         "rows": [
-            ["Robert Frost", "robertfrost@xyz.com", "4232342345"],
-            ["John Doe", "johndoe@pqr.com", "4253458383"]
+            ["Robert Frost", "robertfrost@example.com", "4232342345"],
+            ["John Doe", "johndoe@example.com", "4253458383"]
         ]
     }' \
     ["PERSON_NAME"] ["name"]
     >> '{
             "header": ["name", "email", "phone number"],
             "rows": [
-                ["[PERSON_NAME]", "robertfrost@xyz.com", "4232342345"],
-                ["[PERSON_NAME]", "johndoe@pqr.com", "4253458383"]
+                ["[PERSON_NAME]", "robertfrost@example.com", "4232342345"],
+                ["[PERSON_NAME]", "johndoe@example.com", "4253458383"]
             ]
         }'
     """
@@ -1687,6 +1625,99 @@ def deindentify_with_dictionary_replacement(
 
 
 # [END dlp_deidentify_dictionary_replacement]
+
+
+# [START dlp_deidentify_table_row_suppress]
+from typing import Dict, List, Union  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def deidentify_table_suppress_row(
+    project: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    condition_field: str,
+    condition_operator: str,
+    condition_value: int,
+) -> None:
+    """ Uses the Data Loss Prevention API to de-identify sensitive data in a
+      table by suppressing entire row/s based on a condition.
+
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Dictionary representing table data.
+        condition_field: A table field within the record this condition is evaluated against.
+        condition_operator: Operator used to compare the field or infoType to the value. One of:
+            RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS,
+            LESS_THAN_OR_EQUALS, EXISTS.
+        condition_value: Value to compare against. [Mandatory, except for ``EXISTS`` tests.].
+
+    Example:
+
+    >> $ python deid.py deid_table_row_suppress \
+    '{"header": ["email", "phone number", "age"],
+    "rows": [["robertfrost@example.com", "4232342345", "35"],
+    ["johndoe@example.com", "4253458383", "64"]]}' \
+    "age" "GREATER_THAN" 50
+    >> '{"header": ["email", "phone number", "age"],
+        "rows": [["robertfrost@example.com", "4232342345", "35", "21"]]}'
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` containing the table data.
+    item = {"table": table}
+
+    # Construct condition list.
+    condition = [
+        {
+            "field": {"name": condition_field},
+            "operator": condition_operator,
+            "value": {"integer_value": condition_value}
+        }
+    ]
+
+    # Construct deidentify configuration dictionary
+    deidentify_config = {
+        "record_transformations": {
+            "record_suppressions": [
+                {
+                    "condition": {
+                        "expressions": {
+                            "conditions": {"conditions": condition}
+                        }
+                    }
+                }
+            ]
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item
+        })
+
+    # Print the result.
+    print("Table after de-identification: {}".format(response.item.table))
+
+
+# [END dlp_deidentify_table_row_suppress]
 
 
 if __name__ == "__main__":
@@ -2123,6 +2154,36 @@ if __name__ == "__main__":
         "word_list", help="List of words or phrases to search for in the data."
     )
 
+    table_row_suppress_parser = subparsers.add_parser(
+        "deid_table_row_suppress",
+        help="De-identify sensitive data in a table by suppressing "
+        "entire row/s based on a condition.",
+    )
+    table_row_suppress_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    table_row_suppress_parser.add_argument(
+        "table_data",
+        help="Json string representing table data",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_field",
+        help="A table Field within the record this condition is evaluated "
+        "against.",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_operator",
+        help="Operator used to compare the field or infoType to the value. "
+        "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+        "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+        "EXISTS.",
+    )
+    table_row_suppress_parser.add_argument(
+        "--condition_value",
+        help="Value to compare against. [Mandatory, except for ``EXISTS`` tests.].",
+    )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2233,4 +2294,12 @@ if __name__ == "__main__":
             args.input_str,
             args.info_types,
             args.word_list,
+        )
+    elif args.content == "deid_table_row_suppress":
+        deidentify_table_suppress_row(
+            args.project,
+            args.table_data,
+            condition_field=args.condition_field,
+            condition_operator=args.condition_operator,
+            condition_value=args.condition_value,
         )

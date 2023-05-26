@@ -455,3 +455,19 @@ def test_deindentify_with_dictionary_replacement(capsys: pytest.CaptureFixture) 
     out, _ = capsys.readouterr()
     assert "aabernathy@example.com" not in out
     assert "izumi@example.com" in out or "alex@example.com" in out or "tal@example.com" in out
+
+
+def test_deidentify_table_suppress_row(capsys: pytest.CaptureFixture) -> None:
+    deid.deidentify_table_suppress_row(
+        GCLOUD_PROJECT,
+        TABLE_DATA,
+        "age",
+        "GREATER_THAN",
+        89
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "string_value: \"Charles Dickens\"" not in out
+    assert "string_value: \"Jane Austen\"" in out
+    assert "string_value: \"Mark Twain\"" not in out
