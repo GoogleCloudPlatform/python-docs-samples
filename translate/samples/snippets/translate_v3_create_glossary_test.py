@@ -29,22 +29,20 @@ GLOSSARY_INPUT_URI = "gs://cloud-samples-data/translation/glossary_ja.csv"
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_create_glossary(capsys):
+def test_create_glossary(capsys: pytest.LogCaptureFixture) -> None:
     try:
         glossary_id = f"test-{uuid.uuid4()}"
-        translate_v3_create_glossary.create_glossary(
+        result = translate_v3_create_glossary.create_glossary(
             PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
         )
         out, _ = capsys.readouterr()
-        # assert
-        assert "Created:" in out
-        assert "gs://cloud-samples-data/translation/glossary_ja.csv" in out
+        assert "gs://cloud-samples-data/translation/glossary_ja.csv" in result.input_config.gcs_source.input_uri
     finally:
         # cleanup
         @backoff.on_exception(
             backoff.expo, (DeadlineExceeded, GoogleAPICallError), max_time=60
         )
-        def delete_glossary():
+        def delete_glossary() -> None:
             try:
                 translate_v3_delete_glossary.delete_glossary(PROJECT_ID, glossary_id)
             except NotFound as e:

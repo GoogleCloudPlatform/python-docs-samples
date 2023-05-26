@@ -28,6 +28,9 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
+    """
+    Connects to the database, encrypts and inserts some data.
+    """
     db_user = os.environ["DB_USER"]  # e.g. "root", "postgres"
     db_pass = os.environ["DB_PASS"]  # e.g. "mysupersecretpassword"
     db_name = os.environ["DB_NAME"]  # e.g. "votes_db"
@@ -73,6 +76,10 @@ def encrypt_and_insert_data(
     team: str,
     email: str,
 ) -> None:
+    """
+    Inserts a vote into the database with email address previously encrypted using
+    a KmsEnvelopeAead object.
+    """
     time_cast = datetime.datetime.now(tz=datetime.timezone.utc)
     # Use the envelope AEAD primitive to encrypt the email, using the team name as
     # associated data. Encryption with associated data ensures authenticity
@@ -93,11 +100,7 @@ def encrypt_and_insert_data(
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.connect() as conn:
-        conn.execute(
-            stmt,
-            time_cast=time_cast,
-            team=team,
-            voter_email=encrypted_email)
+        conn.execute(stmt, time_cast=time_cast, team=team, voter_email=encrypted_email)
     print(f"Vote successfully cast for '{team}' at time {time_cast}!")
 
 
