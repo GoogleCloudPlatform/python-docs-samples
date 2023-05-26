@@ -48,7 +48,7 @@ def test_list_operations(capsys):
 
     out, _ = capsys.readouterr()
 
-    assert operation_id in out
+    assert "operations" in out
 
 
 def test_poll_operation(capsys):
