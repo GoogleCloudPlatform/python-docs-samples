@@ -19,6 +19,8 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
+    external_ip = main.get_external_ip()
+
     r = client.get("/")
     assert r.status_code == 200
-    assert "External IP: localhost" in r.data.decode("utf-8")
+    assert f"External IP: {external_ip}" in r.data.decode("utf-8")
