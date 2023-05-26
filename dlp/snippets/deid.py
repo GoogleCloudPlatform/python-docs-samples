@@ -20,6 +20,7 @@ import argparse
 
 from typing import List
 from typing import Dict
+from typing import List
 
 
 # [START dlp_deidentify_masking]
