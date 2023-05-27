@@ -40,7 +40,7 @@ import googleapiclient.discovery
 def main(
         bucket: str,
         destination: str,
-        sources: list[str],
+        sources: list,
 ) -> str:
     # Construct the service object for the interacting with the Cloud Storage
     # API.
