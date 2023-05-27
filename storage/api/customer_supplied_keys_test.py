@@ -22,7 +22,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @pytest.mark.flaky
-def test_main(capsys):
+def test_main(capsys: pytest.CaptureFixture) -> None:
     main(BUCKET, __file__)
     out, err = capsys.readouterr()
 

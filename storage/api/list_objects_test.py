@@ -18,5 +18,5 @@ from list_objects import main
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_main():
+def test_main() -> None:
     main(BUCKET)

@@ -19,7 +19,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
 BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
-def test_main():
+def test_main() -> None:
     main(
         BUCKET,
         'dest.txt',

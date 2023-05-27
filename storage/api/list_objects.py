@@ -29,8 +29,12 @@ import json
 import googleapiclient.discovery
 
 
-def create_service():
-    """Creates the service object for calling the Cloud Storage API."""
+def create_service() -> googleapiclient.discovery.Resource:
+    """Creates the service object for calling the Cloud Storage API.
+
+    Returns:
+        A service object for interacting with the Cloud Storage API.
+    """
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
     # You can browse other available api services and versions here:
@@ -38,8 +42,15 @@ def create_service():
     return googleapiclient.discovery.build('storage', 'v1')
 
 
-def get_bucket_metadata(bucket):
-    """Retrieves metadata about the given bucket."""
+def get_bucket_metadata(bucket: str) -> dict:
+    """Retrieves metadata about the given bucket.
+
+    Args:
+        bucket: The name of the bucket to retrieve metadata for.
+
+    Returns:
+        A dictionary containing metadata about the bucket.
+    """
     service = create_service()
 
     # Make a request to buckets.get to retrieve a list of objects in the
@@ -48,8 +59,15 @@ def get_bucket_metadata(bucket):
     return req.execute()
 
 
-def list_bucket(bucket):
-    """Returns a list of metadata of the objects within the given bucket."""
+def list_bucket(bucket: str):
+    """Returns a list of metadata of the objects within the given bucket.
+
+    Args:
+        bucket: The name of the bucket to retrieve metadata for.
+
+    Returns:
+        A list of metadata objects for the objects in the bucket.
+    """
     service = create_service()
 
     # Create a request to objects.list to retrieve a list of objects.
@@ -67,7 +85,15 @@ def list_bucket(bucket):
     return all_objects
 
 
-def main(bucket):
+def main(bucket: str) -> None:
+    """Prints out the metadata of the objects in the given bucket.
+
+    Args:
+        bucket: The name of the bucket to retrieve metadata for.
+
+    Returns:
+        None.
+    """
     print(json.dumps(get_bucket_metadata(bucket), indent=2))
     print(json.dumps(list_bucket(bucket), indent=2))
 

@@ -37,7 +37,11 @@ import json
 import googleapiclient.discovery
 
 
-def main(bucket, destination, sources):
+def main(
+        bucket: str,
+        destination: str,
+        sources: list[str],
+) -> str:
     # Construct the service object for the interacting with the Cloud Storage
     # API.
     service = googleapiclient.discovery.build('storage', 'v1')
@@ -79,6 +83,8 @@ def main(bucket, destination, sources):
 
     print('> Composed file contents:')
     print(res)
+
+    return res
 
 
 if __name__ == '__main__':

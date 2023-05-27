@@ -24,7 +24,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @pytest.fixture()
-def test_file():
+def test_file() -> str:
     _, file_path = tempfile.mkstemp()
 
     with open(file_path, "w+b") as f:
@@ -35,7 +35,7 @@ def test_file():
     os.remove(file_path)
 
 
-def test_main(capsys, test_file):
+def test_main(capsys: pytest.CaptureFixture, test_file: str) -> None:
     main(BUCKET, test_file)
     out, err = capsys.readouterr()
 
