@@ -101,7 +101,7 @@ class ResumableMicrophoneStream:
 
     def __enter__(self: object) -> object:
         """Opens the stream.
-        
+
         Args:
         self: The class instance.
 
@@ -141,7 +141,7 @@ class ResumableMicrophoneStream:
             **kwargs: object,
     ) -> object:
         """Continuously collect data from the audio stream, into the buffer.
-        
+
         Args:
         self: The class instance.
         in_data: The audio data as a bytes object.
@@ -155,11 +155,11 @@ class ResumableMicrophoneStream:
 
     def generator(self: object) -> object:
         """Stream Audio from microphone to API and to local buffer
-        
+
         Args:
             self: The class instance.
 
-        returns: 
+        returns:
             The data from the audio stream.
         """
         while not self.closed:
