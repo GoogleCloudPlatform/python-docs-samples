@@ -28,6 +28,7 @@ def example_task_handler() -> str:
     print(f"Received job with payload: {payload}")
     return f"Printed job payload: {payload}"
 
+
 # [END cloudscheduler_app]
 
 
