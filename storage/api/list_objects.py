@@ -58,7 +58,7 @@ def get_bucket_metadata(bucket: str) -> dict:
     return req.execute()
 
 
-def list_bucket(bucket: str):
+def list_bucket(bucket: str) -> list:
     """Returns a list of metadata of the objects within the given bucket.
 
     Args:

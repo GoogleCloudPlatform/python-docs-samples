@@ -67,13 +67,13 @@ def upload_object(
         key_hash: str,
 ) -> googleapiclient.http.HttpRequest:
     """Uploads an object, specifying a custom encryption key.
-    
+
     Args:
         bucket: The name of the bucket to upload to.
         filename: The name of the file to upload.
         encryption_key: The encryption key to use for the upload.
         key_hash: The hash of the encryption key
-    
+
     Returns:
         The http request object.
     """
