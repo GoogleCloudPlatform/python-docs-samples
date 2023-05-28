@@ -16,6 +16,8 @@ import os
 import re
 from uuid import uuid4
 
+import pytest
+
 from google.api_core.retry import Retry
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
@@ -25,14 +27,16 @@ import adaptation_v2_inline_phrase_set
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
 @Retry()
-def test_adaptation_v2_inline_phrase_set(capsys):
+def test_adaptation_v2_inline_phrase_set(
+    capsys: pytest.CaptureFixture
+) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
