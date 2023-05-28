@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START sample]
+# [START gae_storage_appengine_client_sample]
 """A sample app that uses GCS client to operate on bucket and file."""
 
-# [START imports]
+# [START gae_storage_appengine_client_imports]
 import os
 
 import cloudstorage
@@ -25,20 +25,20 @@ from google.appengine.api import app_identity
 
 import webapp2
 
-# [END imports]
+# [END gae_storage_appengine_client_imports]
 
-# [START retries]
+# [START gae_storage_appengine_client_retries]
 cloudstorage.set_default_retry_params(
     cloudstorage.RetryParams(
         initial_delay=0.2, max_delay=5.0, backoff_factor=2, max_retry_period=15
         ))
-# [END retries]
+# [END gae_storage_appengine_client_retries]
 
 
 class MainPage(webapp2.RequestHandler):
     """Main page for GCS demo application."""
 
-# [START get_default_bucket]
+# [START gae_storage_appengine_client_get_default_bucket]
     def get(self):
         bucket_name = os.environ.get(
             'BUCKET_NAME', app_identity.get_default_gcs_bucket_name())
@@ -48,7 +48,7 @@ class MainPage(webapp2.RequestHandler):
             'Demo GCS Application running from Version: {}\n'.format(
                 os.environ['CURRENT_VERSION_ID']))
         self.response.write('Using bucket name: {}\n\n'.format(bucket_name))
-# [END get_default_bucket]
+# [END gae_storage_appengine_client_get_default_bucket]
 
         bucket = '/' + bucket_name
         filename = bucket + '/demo-testfile'
@@ -75,7 +75,7 @@ class MainPage(webapp2.RequestHandler):
         self.delete_files()
         self.response.write('\n\nThe demo ran successfully!\n')
 
-# [START write]
+# [START gae_storage_appengine_client_write]
     def create_file(self, filename):
         """Create a file."""
 
@@ -91,9 +91,9 @@ class MainPage(webapp2.RequestHandler):
             cloudstorage_file.write('abcde\n')
             cloudstorage_file.write('f'*1024*4 + '\n')
         self.tmp_filenames_to_clean_up.append(filename)
-# [END write]
+# [END gae_storage_appengine_client_write]
 
-# [START read]
+# [START gae_storage_appengine_client_read]
     def read_file(self, filename):
         self.response.write(
             'Abbreviated file content (first line and last 1K):\n')
@@ -102,7 +102,7 @@ class MainPage(webapp2.RequestHandler):
             self.response.write(cloudstorage_file.readline())
             cloudstorage_file.seek(-1024, os.SEEK_END)
             self.response.write(cloudstorage_file.read())
-# [END read]
+# [END gae_storage_appengine_client_read]
 
     def stat_file(self, filename):
         self.response.write('File stat:\n')
@@ -117,7 +117,7 @@ class MainPage(webapp2.RequestHandler):
         for f in filenames:
             self.create_file(f)
 
-# [START list_bucket]
+# [START gae_storage_appengine_client_list_bucket]
     def list_bucket(self, bucket):
         """Create several files and paginate through them."""
 
@@ -137,7 +137,7 @@ class MainPage(webapp2.RequestHandler):
                 break
             stats = cloudstorage.listbucket(
                 bucket + '/foo', max_keys=page_size, marker=stat.filename)
-# [END list_bucket]
+# [END gae_storage_appengine_client_list_bucket]
 
     def list_bucket_directory_mode(self, bucket):
         self.response.write('Listbucket directory mode result:\n')
@@ -150,7 +150,7 @@ class MainPage(webapp2.RequestHandler):
                     self.response.write('  {}'.format(subdir_file))
                     self.response.write('\n')
 
-# [START delete_files]
+# [START gae_storage_appengine_client_delete_files]
     def delete_files(self):
         self.response.write('Deleting files...\n')
         for filename in self.tmp_filenames_to_clean_up:
@@ -159,9 +159,9 @@ class MainPage(webapp2.RequestHandler):
                 cloudstorage.delete(filename)
             except cloudstorage.NotFoundError:
                 pass
-# [END delete_files]
+# [END gae_storage_appengine_client_delete_files]
 
 
 app = webapp2.WSGIApplication(
     [('/', MainPage)], debug=True)
-# [END sample]
+# [END gae_storage_appengine_client_sample]

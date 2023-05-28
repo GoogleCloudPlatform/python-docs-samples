@@ -20,7 +20,7 @@ This sample is used on this page:
 For more information, see README.md
 """
 
-# [START all]
+# [START gae_ndb_overview_all]
 import cgi
 import textwrap
 import urllib
@@ -30,14 +30,14 @@ from google.appengine.ext import ndb
 import webapp2
 
 
-# [START greeting]
+# [START gae_ndb_overview_greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-# [END greeting]
+# [END gae_ndb_overview_greeting]
 
-# [START query]
+# [START gae_ndb_overview_query]
     @classmethod
     def query_book(cls, ancestor_key):
         return cls.query(ancestor=ancestor_key).order(-cls.date)
@@ -49,7 +49,7 @@ class MainPage(webapp2.RequestHandler):
         guestbook_name = self.request.get('guestbook_name')
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
-# [END query]
+# [END gae_ndb_overview_query]
 
         greeting_blockquotes = []
         for greeting in greetings:
@@ -82,7 +82,7 @@ class MainPage(webapp2.RequestHandler):
                 guestbook_name=cgi.escape(guestbook_name)))
 
 
-# [START submit]
+# [START gae_ndb_overview_submit]
 class SubmitForm(webapp2.RequestHandler):
     def post(self):
         # We set the parent key on each 'Greeting' to ensure each guestbook's
@@ -92,7 +92,7 @@ class SubmitForm(webapp2.RequestHandler):
                                            guestbook_name or "*notitle*"),
                             content=self.request.get('content'))
         greeting.put()
-# [END submit]
+# [END gae_ndb_overview_submit]
         self.redirect('/?' + urllib.urlencode(
             {'guestbook_name': guestbook_name}))
 
@@ -101,4 +101,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', SubmitForm)
 ])
-# [END all]
+# [END gae_ndb_overview_all]

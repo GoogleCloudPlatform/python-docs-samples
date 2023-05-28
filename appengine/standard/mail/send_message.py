@@ -18,7 +18,7 @@ import webapp2
 
 
 def send_approved_mail(sender_address):
-    # [START send_message]
+    # [START gae_mail_send_message]
     message = mail.EmailMessage(
         sender=sender_address,
         subject="Your account has been approved")
@@ -35,7 +35,7 @@ Please let us know if you have any questions.
 The example.com Team
 """
     message.send()
-    # [END send_message]
+    # [END gae_mail_send_message]
 
 
 class SendMessageHandler(webapp2.RequestHandler):

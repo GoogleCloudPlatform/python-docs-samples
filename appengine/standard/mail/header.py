@@ -19,7 +19,7 @@ import webapp2
 
 
 def send_example_mail(sender_address, email_thread_id):
-    # [START send_mail]
+    # [START gae_mail_send_mail]
     mail.send_mail(sender=sender_address,
                    to="Albert Johnson <Albert.Johnson@example.com>",
                    subject="An example email",
@@ -29,7 +29,7 @@ The email references a given email thread id.
 The example.com Team
 """,
                    headers={"References": email_thread_id})
-    # [END send_mail]
+    # [END gae_mail_send_mail]
 
 
 class SendMailHandler(webapp2.RequestHandler):

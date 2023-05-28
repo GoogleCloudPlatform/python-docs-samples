@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START log_sender_handler]
+# [START gae_mail_log_sender_handler]
 import logging
 
 from google.appengine.ext.webapp.mail_handlers import InboundMailHandler
@@ -22,21 +22,21 @@ import webapp2
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info("Received a message from: " + mail_message.sender)
-# [END log_sender_handler]
-# [START bodies]
+# [END gae_mail_log_sender_handler]
+# [START gae_mail_bodies]
         plaintext_bodies = mail_message.bodies('text/plain')
         html_bodies = mail_message.bodies('text/html')
 
         for content_type, body in html_bodies:
             decoded_html = body.decode()
             # ...
-# [END bodies]
+# [END gae_mail_bodies]
             logging.info("Html body of length %d.", len(decoded_html))
         for content_type, body in plaintext_bodies:
             plaintext = body.decode()
             logging.info("Plain text body of length %d.", len(plaintext))
 
 
-# [START app]
+# [START gae_mail_app]
 app = webapp2.WSGIApplication([LogSenderHandler.mapping()], debug=True)
-# [END app]
+# [END gae_mail_app]

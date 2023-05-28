@@ -18,7 +18,7 @@ import webapp2
 
 
 def send_approved_mail(sender_address):
-    # [START send_mail]
+    # [START gae_mail_send_mail]
     mail.send_mail(sender=sender_address,
                    to="Albert Johnson <Albert.Johnson@example.com>",
                    subject="Your account has been approved",
@@ -32,7 +32,7 @@ Please let us know if you have any questions.
 
 The example.com Team
 """)
-    # [END send_mail]
+    # [END gae_mail_send_mail]
 
 
 class SendMailHandler(webapp2.RequestHandler):

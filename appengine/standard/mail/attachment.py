@@ -17,7 +17,7 @@ from google.appengine.api import mail
 import webapp2
 
 
-# [START send_attachment]
+# [START gae_mail_send_attachment]
 class AttachmentHandler(webapp2.RequestHandler):
     def post(self):
         f = self.request.POST['file']
@@ -31,7 +31,7 @@ Attached is the document file you requested.
 The example.com Team
 """,
                        attachments=[(f.filename, f.file.read())])
-# [END send_attachment]
+# [END gae_mail_send_attachment]
         self.response.content_type = 'text/plain'
         self.response.write('Sent {} to Albert.'.format(f.filename))
 
