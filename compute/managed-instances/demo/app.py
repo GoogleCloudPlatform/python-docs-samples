@@ -39,23 +39,26 @@ _cpu_burner = None
 
 @app.before_first_request
 def init():
+    """Initialize the application."""
     global _cpu_burner
     _cpu_burner = CpuBurner()
 
 
-@app.route('/')
+@app.route("/")
 def index():
     """Returns the demo UI."""
     global _cpu_burner, _is_healthy
-    return render_template('index.html',
-                           hostname=gethostname(),
-                           zone=_get_zone(),
-                           template=_get_template(),
-                           healthy=_is_healthy,
-                           working=_cpu_burner.is_running())
+    return render_template(
+        "index.html",
+        hostname=gethostname(),
+        zone=_get_zone(),
+        template=_get_template(),
+        healthy=_is_healthy,
+        working=_cpu_burner.is_running(),
+    )
 
 
-@app.route('/health')
+@app.route("/health")
 def health():
     """Returns the simulated 'healthy'/'unhealthy' status of the server.
 
@@ -63,75 +66,83 @@ def health():
         HTTP status 200 if 'healthy', HTTP status 500 if 'unhealthy'
     """
     global _is_healthy
-    template = render_template('health.html', healthy=_is_healthy)
+    template = render_template("health.html", healthy=_is_healthy)
     return make_response(template, 200 if _is_healthy else 500)
 
 
-@app.route('/makeHealthy')
+@app.route("/makeHealthy")
 def make_healthy():
     """Sets the server to simulate a 'healthy' status."""
     global _cpu_burner, _is_healthy
     _is_healthy = True
 
-    template = render_template('index.html',
-                               hostname=gethostname(),
-                               zone=_get_zone(),
-                               template=_get_template(),
-                               healthy=True,
-                               working=_cpu_burner.is_running())
+    template = render_template(
+        "index.html",
+        hostname=gethostname(),
+        zone=_get_zone(),
+        template=_get_template(),
+        healthy=True,
+        working=_cpu_burner.is_running(),
+    )
     response = make_response(template, 302)
-    response.headers['Location'] = '/'
+    response.headers["Location"] = "/"
     return response
 
 
-@app.route('/makeUnhealthy')
+@app.route("/makeUnhealthy")
 def make_unhealthy():
     """Sets the server to simulate an 'unhealthy' status."""
     global _cpu_burner, _is_healthy
     _is_healthy = False
 
-    template = render_template('index.html',
-                               hostname=gethostname(),
-                               zone=_get_zone(),
-                               template=_get_template(),
-                               healthy=False,
-                               working=_cpu_burner.is_running())
+    template = render_template(
+        "index.html",
+        hostname=gethostname(),
+        zone=_get_zone(),
+        template=_get_template(),
+        healthy=False,
+        working=_cpu_burner.is_running(),
+    )
     response = make_response(template, 302)
-    response.headers['Location'] = '/'
+    response.headers["Location"] = "/"
     return response
 
 
-@app.route('/startLoad')
+@app.route("/startLoad")
 def start_load():
     """Sets the server to simulate high CPU load."""
     global _cpu_burner, _is_healthy
     _cpu_burner.start()
 
-    template = render_template('index.html',
-                               hostname=gethostname(),
-                               zone=_get_zone(),
-                               template=_get_template(),
-                               healthy=_is_healthy,
-                               working=True)
+    template = render_template(
+        "index.html",
+        hostname=gethostname(),
+        zone=_get_zone(),
+        template=_get_template(),
+        healthy=_is_healthy,
+        working=True,
+    )
     response = make_response(template, 302)
-    response.headers['Location'] = '/'
+    response.headers["Location"] = "/"
     return response
 
 
-@app.route('/stopLoad')
+@app.route("/stopLoad")
 def stop_load():
     """Sets the server to stop simulating CPU load."""
     global _cpu_burner, _is_healthy
     _cpu_burner.stop()
 
-    template = render_template('index.html',
-                               hostname=gethostname(),
-                               zone=_get_zone(),
-                               template=_get_template(),
-                               healthy=_is_healthy,
-                               working=False)
+    template = render_template(
+        "index.html",
+        hostname=gethostname(),
+        zone=_get_zone(),
+        template=_get_template(),
+        healthy=_is_healthy,
+        working=False,
+    )
     response = make_response(template, 302)
-    response.headers['Location'] = '/'
+    response.headers["Location"] = "/"
     return response
 
 
@@ -142,13 +153,14 @@ def _get_zone():
         str: The name of the zone if the zone was successfully determined.
         Empty string otherwise.
     """
-    r = get('http://metadata.google.internal/'
-            'computeMetadata/v1/instance/zone',
-            headers={'Metadata-Flavor': 'Google'})
+    r = get(
+        "http://metadata.google.internal/" "computeMetadata/v1/instance/zone",
+        headers={"Metadata-Flavor": "Google"},
+    )
     if r.status_code == 200:
-        return sub(r'.+zones/(.+)', r'\1', r.text)
+        return sub(r".+zones/(.+)", r"\1", r.text)
     else:
-        return ''
+        return ""
 
 
 def _get_template():
@@ -159,13 +171,15 @@ def _get_template():
         determined and this instance was built using an instance template.
         Empty string otherwise.
     """
-    r = get('http://metadata.google.internal/'
-            'computeMetadata/v1/instance/attributes/instance-template',
-            headers={'Metadata-Flavor': 'Google'})
+    r = get(
+        "http://metadata.google.internal/"
+        "computeMetadata/v1/instance/attributes/instance-template",
+        headers={"Metadata-Flavor": "Google"},
+    )
     if r.status_code == 200:
-        return sub(r'.+instanceTemplates/(.+)', r'\1', r.text)
+        return sub(r".+instanceTemplates/(.+)", r"\1", r.text)
     else:
-        return ''
+        return ""
 
 
 class CpuBurner:
@@ -173,6 +187,7 @@ class CpuBurner:
     Object to asynchronously burn CPU cycles to simulate high CPU load.
     Burns CPU in a separate process and can be toggled on and off.
     """
+
     def __init__(self):
         self._toggle = Value(c_bool, False, lock=True)
         self._process = Process(target=self._burn_cpu)
@@ -193,7 +208,7 @@ class CpuBurner:
     def _burn_cpu(self):
         """Burn CPU cycles if work is toggled, otherwise sleep."""
         while True:
-            random()*random() if self._toggle.value else sleep(1)
+            random() * random() if self._toggle.value else sleep(1)
 
 
 if __name__ == "__main__":
