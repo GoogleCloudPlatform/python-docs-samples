@@ -15,11 +15,11 @@
 import os
 from uuid import uuid4
 
-import pytest
-
 from google.api_core.retry import Retry
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+import pytest
 
 import create_recognizer
 

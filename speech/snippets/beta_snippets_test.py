@@ -14,9 +14,9 @@
 
 import os
 
-import pytest
-
 from google.api_core.retry import Retry
+
+import pytest
 
 from beta_snippets import (
     transcribe_file_with_auto_punctuation,

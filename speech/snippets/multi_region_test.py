@@ -24,6 +24,7 @@ import multi_region
 def test_multi_region(
     capsys: pytest.CaptureFixture
 ) -> None:
-    multi_region.sync_recognize_with_multi_region_gcs()
+    result = multi_region.sync_recognize_with_multi_region_gcs()
     out, _ = capsys.readouterr()
     assert "Transcript: how old is the Brooklyn Bridge" in out
+    assert result is not None

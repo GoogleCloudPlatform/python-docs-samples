@@ -16,8 +16,6 @@ import os
 import re
 from uuid import uuid4
 
-import pytest
-
 import backoff
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
@@ -40,9 +38,7 @@ def delete_phrase_set(name: str) -> None:
 
 
 @backoff.on_exception(backoff.expo, Exception, max_time=120)
-def test_adaptation_v2_phrase_set_reference(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_adaptation_v2_phrase_set_reference() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

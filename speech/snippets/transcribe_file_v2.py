@@ -19,7 +19,11 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_file_v2(project_id, recognizer_id, audio_file):
+def transcribe_file_v2(
+        project_id: str,
+        recognizer_id: str,
+        audio_file: str,
+) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
     client = SpeechClient()
 

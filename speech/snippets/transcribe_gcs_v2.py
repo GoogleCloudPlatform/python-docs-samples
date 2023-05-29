@@ -18,7 +18,21 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
+def transcribe_gcs_v2(
+        project_id: str,
+        recognizer_id: str,
+        gcs_uri: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribes audio from a Google Cloud Storage URI.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer.
+        gcs_uri: The Google Cloud Storage URI.
+
+    Returns:
+        The RecognizeResponse.
+    """
     # Instantiates a client
     client = SpeechClient()
 
