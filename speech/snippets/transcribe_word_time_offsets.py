@@ -27,7 +27,7 @@ from google.cloud import speech
 
 def transcribe_file_with_word_time_offsets(
         speech_file: str,
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously and output the word time
     offsets."""
 

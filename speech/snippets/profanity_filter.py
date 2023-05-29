@@ -26,7 +26,7 @@ from google.cloud import speech
 
 def sync_recognize_with_profanity_filter_gcs(
         gcs_uri: str
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
 
     client = speech.SpeechClient()
 

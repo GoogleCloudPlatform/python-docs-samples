@@ -23,7 +23,7 @@ from google.cloud import speech
 # [END speech_python_migration_imports]
 
 
-def run_quickstart() -> speech.RecognitionResult:
+def run_quickstart() -> speech.RecognizeResponse:
 
     # Instantiates a client
     # [START speech_python_migration_client]

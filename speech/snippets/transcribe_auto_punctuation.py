@@ -27,7 +27,7 @@ from google.cloud import speech
 
 def transcribe_file_with_auto_punctuation(
         path: str
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file with auto punctuation enabled."""
     client = speech.SpeechClient()
 

@@ -31,7 +31,7 @@ from google.cloud import speech
 def transcribe_model_selection(
         speech_file: str,
         model: str,
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     the selected model."""
     client = speech.SpeechClient()
@@ -64,7 +64,7 @@ def transcribe_model_selection(
 def transcribe_model_selection_gcs(
         gcs_uri: str,
         model: str,
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously with
     the selected model."""
     from google.cloud import speech

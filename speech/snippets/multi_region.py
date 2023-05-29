@@ -19,7 +19,7 @@ from google.api_core import client_options
 from google.cloud import speech
 
 
-def sync_recognize_with_multi_region_gcs() -> speech.RecognitionResult:
+def sync_recognize_with_multi_region_gcs() -> speech.RecognizeResponse:
     """Recognizes speech synchronously in the GCS bucket."""
 
     # Instantiates a client

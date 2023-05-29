@@ -59,7 +59,7 @@ def transcribe_file(speech_file: str) -> speech.RecognitionResult:
 
 
 # [START speech_transcribe_sync_gcs]
-def transcribe_gcs(gcs_uri: str) -> speech.RecognitionResult:
+def transcribe_gcs(gcs_uri: str) -> speech.RecognizeResponse:
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
 

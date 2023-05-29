@@ -18,7 +18,7 @@ from google.cloud import speech
 
 def transcribe_context_classes(
         storage_uri: str
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Provides "hints" to the speech recognizer to
     favor specific classes of words in the results.
 

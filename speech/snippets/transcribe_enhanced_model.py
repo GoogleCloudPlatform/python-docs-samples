@@ -27,7 +27,7 @@ from google.cloud import speech
 
 def transcribe_file_with_enhanced_model(
         path: str
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file using an enhanced model."""
 
     client = speech.SpeechClient()

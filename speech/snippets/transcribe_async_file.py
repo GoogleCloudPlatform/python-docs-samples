@@ -21,7 +21,7 @@ batch processing.
 from google.cloud import speech
 
 
-def transcribe_file(speech_file: str) -> speech.RecognitionResult:
+def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously."""
     client = speech.SpeechClient()
 
