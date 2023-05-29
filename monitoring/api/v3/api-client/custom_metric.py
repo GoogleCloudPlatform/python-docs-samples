@@ -157,6 +157,7 @@ def read_timeseries(client, project_resource, custom_metric_type):
         interval_startTime=get_start_time(),
         interval_endTime=get_now(),
     )
+    print(type(request))
     response = request.execute()
     return response
 
