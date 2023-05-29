@@ -15,53 +15,105 @@
 from __future__ import absolute_import
 
 import os
+from unittest import mock
+
+from google.cloud import dialogflow_v2beta1 as dialogflow
+import pytest
 
 import conversation_profile_management
+import test_utils
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 CONVERSATION_PROFILE_DISPLAY_NAME = "fake_conversation_profile_name"
+CONVERSATION_PROFILE_NAME = f"conversationProfiles/{CONVERSATION_PROFILE_DISPLAY_NAME}"
 
 
-def test_create_conversation_profile(capsys):
-    # Check the conversation profile does not yet exists.
-    conversation_profile_management.list_conversation_profiles(PROJECT_ID)
+@pytest.fixture(scope="function")
+def mock_conversation():
+    yield mock.MagicMock(
+        return_value=test_utils.create_mock_conversation(
+            CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME))
 
-    out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out
+
+@pytest.fixture(scope="function")
+def mock_conversation_list():
+    yield mock.MagicMock(
+        return_value=[
+            test_utils.create_mock_conversation(
+                CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME)])
+
+
+def test_create_conversation_profile(capsys, mock_conversation, mock_conversation_list):
+    # Check the conversation profile does not yet exist.
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.list_conversation_profiles",
+        mock.MagicMock(spec=dialogflow.ListConversationProfilesResponse),
+    ):
+        response = conversation_profile_management.list_conversation_profiles(
+            PROJECT_ID
+        )
+
+        assert not any(
+            x.display_name == CONVERSATION_PROFILE_DISPLAY_NAME for x in response
+        )
 
     # Create a conversation profile.
-    conversation_profile_management.create_conversation_profile_article_faq(
-        project_id=PROJECT_ID,
-        display_name=CONVERSATION_PROFILE_DISPLAY_NAME,
-        article_suggestion_knowledge_base_id="abc",
-    )
-    out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
-
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.create_conversation_profile",
+        mock_conversation,
+    ):
+        response = (
+            conversation_profile_management.create_conversation_profile_article_faq(
+                project_id=PROJECT_ID,
+                display_name=CONVERSATION_PROFILE_DISPLAY_NAME,
+                article_suggestion_knowledge_base_id="abc",
+            )
+        )
+        out, _ = capsys.readouterr()
+        assert response.display_name == CONVERSATION_PROFILE_DISPLAY_NAME
     conversation_profile_id = out.split("conversationProfiles/")[1].rstrip()
 
     # List conversation profiles.
-    conversation_profile_management.list_conversation_profiles(PROJECT_ID)
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.list_conversation_profiles",
+        mock_conversation_list,
+    ):
+        response = conversation_profile_management.list_conversation_profiles(
+            PROJECT_ID
+        )
 
-    out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+        assert any(
+            x.display_name == CONVERSATION_PROFILE_DISPLAY_NAME for x in response
+        )
 
     # Get the conversation profile.
-    conversation_profile_management.get_conversation_profile(
-        PROJECT_ID, conversation_profile_id
-    )
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.get_conversation_profile",
+        mock_conversation,
+    ):
+        conversation_profile_management.get_conversation_profile(
+            PROJECT_ID, conversation_profile_id
+        )
 
-    out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+        out, _ = capsys.readouterr()
+        assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
 
     # Delete the conversation profile.
-    conversation_profile_management.delete_conversation_profile(
-        PROJECT_ID, conversation_profile_id
-    )
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.list_conversation_profiles",
+        mock.MagicMock(return_value=None),
+    ):
+        conversation_profile_management.delete_conversation_profile(
+            PROJECT_ID, conversation_profile_id
+        )
 
-    # Verify the conversation profile is deleted.
-    conversation_profile_management.list_conversation_profiles(PROJECT_ID)
+    with mock.patch(
+        "conversation_profile_management.dialogflow.ConversationProfilesClient.list_conversation_profiles",
+        mock.MagicMock(spec=dialogflow.ListConversationProfilesResponse),
+    ):
+        # Verify the conversation profile is deleted.
+        conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
-    out, _ = capsys.readouterr()
-    assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out
+        out, _ = capsys.readouterr()
+        assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out

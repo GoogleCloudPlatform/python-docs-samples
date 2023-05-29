@@ -44,8 +44,6 @@ def create_participant(project_id, conversation_id, role):
         print("Name: {}".format(response.name))
 
         return response
-
-
 # [END dialogflow_create_participant]
 
 

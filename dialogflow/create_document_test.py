@@ -14,17 +14,34 @@
 
 from __future__ import absolute_import
 
+from unittest import mock
 import os
 import uuid
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
+from pytest import CaptureFixture
 import pytest
 
 import document_management
+import test_utils
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-KNOWLEDGE_BASE_NAME = "knowledge_{}".format(uuid.uuid4())
-DOCUMENT_DISPLAY_NAME = "test_document_{}".format(uuid.uuid4())
+KNOWLEDGE_BASE_NAME = f"knowledge_{uuid.uuid4()}"
+DOCUMENT_DISPLAY_NAME = f"test_document_{uuid.uuid4()}"
+MIME_TYPE = "text/html"
+KNOWLEDGE_TYPE = "FAQ"
+CONTENT_URI = "https://cloud.google.com/storage/docs/faq"
+
+
+@pytest.fixture(scope="function")
+def mock_create_document_operation():
+    return test_utils.create_mock_create_document_operation(
+        DOCUMENT_DISPLAY_NAME,
+        knowledge_base_id,
+        MIME_TYPE,
+        [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
+        CONTENT_URI
+    )
 
 
 @pytest.fixture(scope="function")
@@ -41,24 +58,29 @@ def knowledge_base_id():
     yield knowledge_base_id
 
     # Delete the created knowledge base
-    knowledge_base_path = client.knowledge_base_path(
-        PROJECT_ID, knowledge_base_id
-    )
+    knowledge_base_path = client.knowledge_base_path(PROJECT_ID, knowledge_base_id)
     request = dialogflow.DeleteKnowledgeBaseRequest(
         name=knowledge_base_path, force=True
     )
     client.delete_knowledge_base(request=request)
 
 
-@pytest.mark.flaky(max_runs=5, min_passes=1)
-def test_create_document(capsys, knowledge_base_id):
-    document_management.create_document(
-        PROJECT_ID,
-        knowledge_base_id,
-        DOCUMENT_DISPLAY_NAME,
-        "text/html",
-        "FAQ",
-        "https://cloud.google.com/storage/docs/faq",
-    )
-    out, _ = capsys.readouterr()
-    assert DOCUMENT_DISPLAY_NAME in out
+def test_create_document(
+    capsys: CaptureFixture[str],
+    knowledge_base_id: str,
+    mock_create_document_operation: mock.MagicMock,
+):
+    with mock.patch(
+        "document_management.dialogflow.DocumentsClient.create_document",
+        mock_create_document_operation,
+    ):
+        document_management.create_document(
+            PROJECT_ID,
+            knowledge_base_id,
+            DOCUMENT_DISPLAY_NAME,
+            MIME_TYPE,
+            KNOWLEDGE_TYPE,
+            CONTENT_URI,
+        )
+        out, _ = capsys.readouterr()
+        assert DOCUMENT_DISPLAY_NAME in out
