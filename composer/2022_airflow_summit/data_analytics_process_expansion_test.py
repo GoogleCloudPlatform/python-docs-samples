@@ -21,7 +21,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound
+from google.api_core.exceptions import Aborted, InternalServerError, NotFound
 from google.cloud import bigquery
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
@@ -147,7 +147,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
     try:
         # Make the request
         response = dataproc_client.delete_batch(request=request)
-    except NotFound:
+    except (InternalServerError, NotFound):
         # There will only be a response if the deletion fails
         # otherwise response will be None
         print(response)
