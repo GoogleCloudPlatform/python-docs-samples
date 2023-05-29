@@ -14,12 +14,11 @@
 
 from __future__ import absolute_import
 
-from unittest import mock
 import os
+from unittest import mock
 import uuid
 
 from google.cloud import dialogflow_v2beta1 as dialogflow
-from pytest import CaptureFixture
 import pytest
 
 import document_management
@@ -66,7 +65,7 @@ def knowledge_base_id():
 
 
 def test_create_document(
-    capsys: CaptureFixture[str],
+    capsys: pytest.CaptureFixture[str],
     knowledge_base_id: str,
     mock_create_document_operation: mock.MagicMock,
 ):

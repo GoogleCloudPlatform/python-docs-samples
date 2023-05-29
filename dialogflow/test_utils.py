@@ -46,3 +46,6 @@ def create_mock_document(
     document.knowledge_types = knowledge_types
     document.content_uri = content_uri
     return mock.MagicMock(return_value=document)
+
+# def create_analyze_text_response():
+#     mock.

@@ -34,28 +34,28 @@ DOCUMENT_DISPLAY_NAME = "Cancel an order"
 MIME_TYPE = "text/html"
 KNOWLEDGE_BASE_DISPLAY_NAME = "fake_KNOWLEDGE_BASE_DISPLAY_NAME"
 KNOWLEDGE_BASE_ID = "documents/123"
-KNOWLEDGE_TYPE= "ARTICLE_SUGGESTION"
+KNOWLEDGE_TYPE = "ARTICLE_SUGGESTION"
 
 
 @pytest.fixture(scope="function")
 def mock_create_document_operation():
     return test_utils.create_mock_create_document_operation(
-        DOCUMENT_DISPLAY_NAME,        
+        DOCUMENT_DISPLAY_NAME,
         KNOWLEDGE_BASE_ID,
         MIME_TYPE,
         [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
-        CONTENT_URI
+        CONTENT_URI,
     )
 
 
 @pytest.fixture(scope="function")
 def mock_document():
     return test_utils.create_mock_document(
-        DOCUMENT_DISPLAY_NAME,        
+        DOCUMENT_DISPLAY_NAME,
         KNOWLEDGE_BASE_ID,
         MIME_TYPE,
         [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
-        CONTENT_URI
+        CONTENT_URI,
     )
 
 
@@ -90,11 +90,12 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
         )
         out, _ = capsys.readouterr()
         document_id = out.split("documents/")[1].split(" - MIME Type:")[0].rstrip()
-        assert(document_id == '123')
+        assert document_id == "123"
 
     # Get the Document
-    with mock.patch("document_management.dialogflow.DocumentsClient.get_document",
-        mock_document):
+    with mock.patch(
+        "document_management.dialogflow.DocumentsClient.get_document", mock_document
+    ):
         document_management.get_document(PROJECT_ID, knowledge_base_id, document_id)
 
         out, _ = capsys.readouterr()
@@ -133,49 +134,53 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
     out, _ = capsys.readouterr()
     human_agent_id = out.split("participants/")[1].rstrip()
 
-    # AnalyzeContent
-    participant_management.analyze_content_text(
-        project_id=PROJECT_ID,
-        conversation_id=conversation_id,
-        participant_id=human_agent_id,
-        text="Hi, how are you?",
-    )
-    out, _ = capsys.readouterr()
+    with mock.patch(
+        "document_management.dialogflow.ParticipantsClient.analyze_content",
+        mock.MagicMock(spec=dialogflow.AnalyzeContentResponse),
+    ):
+        # AnalyzeContent
+        participant_management.analyze_content_text(
+            project_id=PROJECT_ID,
+            conversation_id=conversation_id,
+            participant_id=human_agent_id,
+            text="Hi, how are you?",
+        )
+        out, _ = capsys.readouterr()
 
-    participant_management.analyze_content_text(
-        project_id=PROJECT_ID,
-        conversation_id=conversation_id,
-        participant_id=end_user_id,
-        text="Hi, I am doing well, how about you?",
-    )
-    out, _ = capsys.readouterr()
+        participant_management.analyze_content_text(
+            project_id=PROJECT_ID,
+            conversation_id=conversation_id,
+            participant_id=end_user_id,
+            text="Hi, I am doing well, how about you?",
+        )
+        out, _ = capsys.readouterr()
 
-    participant_management.analyze_content_text(
-        project_id=PROJECT_ID,
-        conversation_id=conversation_id,
-        participant_id=human_agent_id,
-        text="Great. How can I help you?",
-    )
-    out, _ = capsys.readouterr()
+        participant_management.analyze_content_text(
+            project_id=PROJECT_ID,
+            conversation_id=conversation_id,
+            participant_id=human_agent_id,
+            text="Great. How can I help you?",
+        )
+        out, _ = capsys.readouterr()
 
-    participant_management.analyze_content_text(
-        project_id=PROJECT_ID,
-        conversation_id=conversation_id,
-        participant_id=end_user_id,
-        text="So I ordered something, but I do not like it.",
-    )
-    out, _ = capsys.readouterr()
+        participant_management.analyze_content_text(
+            project_id=PROJECT_ID,
+            conversation_id=conversation_id,
+            participant_id=end_user_id,
+            text="So I ordered something, but I do not like it.",
+        )
+        out, _ = capsys.readouterr()
 
-    participant_management.analyze_content_text(
-        project_id=PROJECT_ID,
-        conversation_id=conversation_id,
-        participant_id=end_user_id,
-        text="Thinking if I can cancel that order",
-    )
-    suggestion_out, _ = capsys.readouterr()
-    # Currently suggestion_out won't contain the suggestion we want since it
-    # takes time for document to be ready to serve.
-    # assert 'Cancel an order' in suggestion_out
+        participant_management.analyze_content_text(
+            project_id=PROJECT_ID,
+            conversation_id=conversation_id,
+            participant_id=end_user_id,
+            text="Thinking if I can cancel that order",
+        )
+        suggestion_out, _ = capsys.readouterr()
+        # Currently suggestion_out won't contain the suggestion we want since it
+        # takes time for document to be ready to serve.
+        # assert 'Cancel an order' in suggestion_out
 
     # Complete conversation.
     conversation_management.complete_conversation(
@@ -189,9 +194,9 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
 
     # Delete document.
     with mock.patch(
-            "document_management.dialogflow.DocumentsClient.delete_document",
-            mock.MagicMock(spec=Operation),
-        ):
+        "document_management.dialogflow.DocumentsClient.delete_document",
+        mock.MagicMock(spec=Operation),
+    ):
         document_management.delete_document(PROJECT_ID, knowledge_base_id, document_id)
 
     # Delete the Knowledge Base.

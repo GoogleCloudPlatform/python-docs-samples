@@ -67,7 +67,8 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
     )
     print("AnalyzeContent Response:")
     print("Reply Text: {}".format(response.reply_text))
-
+    print("Response: {}".format(response.human_agent_suggestion_results))
+    # assert response.human_agent_suggestion_results=="test"
     for suggestion_result in response.human_agent_suggestion_results:
         if suggestion_result.error is not None:
             print("Error: {}".format(suggestion_result.error.message))

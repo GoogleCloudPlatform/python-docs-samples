@@ -35,13 +35,6 @@ Examples:
 
 import argparse
 
-KNOWLEDGE_TYPES = [
-    "KNOWLEDGE_TYPE_UNSPECIFIED",
-    "FAQ",
-    "EXTRACTIVE_QA",
-    "ARTICLE_SUGGESTION",
-]
-
 # [START dialogflow_list_document]
 # [START dialogflow_create_document]
 # [START dialogflow_get_document]
@@ -52,6 +45,13 @@ from google.cloud import dialogflow_v2beta1 as dialogflow
 # [END dialogflow_create_document]
 # [END dialogflow_list_document]
 
+
+KNOWLEDGE_TYPES = [
+    "KNOWLEDGE_TYPE_UNSPECIFIED",
+    "FAQ",
+    "EXTRACTIVE_QA",
+    "ARTICLE_SUGGESTION",
+]
 
 # [START dialogflow_list_document]
 def list_documents(project_id, knowledge_base_id):
