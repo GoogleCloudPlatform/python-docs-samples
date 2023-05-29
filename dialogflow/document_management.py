@@ -53,6 +53,7 @@ KNOWLEDGE_TYPES = [
     "ARTICLE_SUGGESTION",
 ]
 
+
 # [START dialogflow_list_document]
 def list_documents(project_id, knowledge_base_id):
     """Lists the Documents belonging to a Knowledge base.
