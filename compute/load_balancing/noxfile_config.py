@@ -13,5 +13,5 @@
 #  limitations under the License.
 
 TEST_CONFIG_OVERRIDE = {
-    "enforce_type_hints": False,
+    "enforce_type_hints": True,
 }
