@@ -30,7 +30,7 @@ import uuid
 from google.api_core import retry
 import pytest
 
-TIMEOUT = 1 * 60 * 60  # 1 hour (in seconds)
+TIMEOUT = 30 * 60  # 30 minutes (in seconds)
 
 
 @pytest.fixture(scope="session")

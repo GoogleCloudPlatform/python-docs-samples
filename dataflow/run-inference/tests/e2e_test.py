@@ -134,9 +134,6 @@ def dataflow_job(
         f"--region={location}",
         f"--machine_type={MACHINE_TYPE}",
         f"--sdk_container_image={container_image}",
-        # "--requirements_file=requirements.txt",
-        # "--prebuild_sdk_container_engine=cloud_build",
-        # f"--docker_registry_push_url={container_image}",
         "--sdk_location=container",
     )
 
