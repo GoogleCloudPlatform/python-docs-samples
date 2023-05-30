@@ -40,7 +40,7 @@ several necessary permissions.
 """
 
 
-def test_main(capsys):
+def test_main():
     pytest.skip("We are disabling this test, as it will be replaced.")
     # Initialize variables.
     cmd = "uname -a"
@@ -104,10 +104,10 @@ def test_main(capsys):
     # find for now.
     @backoff.on_exception(backoff.expo, (CalledProcessError, RefreshError), max_tries=5)
     def ssh_login():
-        main(cmd, project, test_id, zone, oslogin, account, hostname)
-        out, _ = capsys.readouterr()
+        response = main(cmd, project, test_id, zone, oslogin, account, hostname)
+        response = " ".join(response)
         assert_value = f"{test_id}"
-        assert assert_value in out
+        assert assert_value in response
 
     # Test SSH to the instance.
     ssh_login()

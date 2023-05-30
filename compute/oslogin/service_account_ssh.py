@@ -178,7 +178,7 @@ def main(
     oslogin: Optional[googleapiclient.discovery.Resource] = None,
     account: Optional[str] = None,
     hostname: Optional[str] = None,
-) -> str:
+) -> List[str]:
     """
     Run a command on a remote system.
 
@@ -239,7 +239,7 @@ def main(
     # Print the command line output from the remote instance.
     # Use .rstrip() rather than end='' for Python 2 compatability.
     for line in result:
-        print(line.decode("utf-8").rstrip("\n\r"))
+        print(line.rstrip("\n\r"))
 
     # Shred the private key and delete the pair.
     execute(["shred", private_key_file])
