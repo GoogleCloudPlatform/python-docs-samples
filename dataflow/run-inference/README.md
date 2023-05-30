@@ -17,14 +17,16 @@ export LOCATION="us-central1"  # or your location of choice
 ```
 
 Create the following Pub/Sub topics:
-* `messages`: For the input messages to send to the LLM model.
+* `messages`: For the input messages to send to the model.
 * `responses`: For the model's responses.
-
-  <button onclick="https://console.cloud.google.com/cloudpubsub/topic/create">Click here to create a Pub/Sub topic</button>
 
 ```sh
 export MESSAGES_TOPIC="projects/$PROJECT/topics/messages"
 export RESPONSES_TOPIC="projects/$PROJECT/topics/responses"
+
+# Create the Pub/Sub topics.
+gcloud pubsub topics create $MESSAGES_TOPIC
+gcloud pubsub topics create $RESPONSES_TOPIC
 ```
 
 ## Loading the `state_dict`
@@ -100,16 +102,20 @@ Here's a table showing the minimum requirements to run an inference pipeline.
 export MODEL_NAME="google/flan-t5-xl"
 export MACHINE_TYPE="n2-highmem-2"
 
+export MODEL_NAME="google/flan-t5-base"
+export MACHINE_TYPE="n2-standard-2"
+
 python main.py \
   --messages-topic="$MESSAGES_TOPIC" \
   --responses-topic="$RESPONSES_TOPIC" \
-  --state-dict-path="gs://$BUCKET/run-inference/$MODEL_NAME.pt" \
   --model-name="$MODEL_NAME" \
+  --state-dict-path="gs://$BUCKET/run-inference/$MODEL_NAME.pt" \
   --runner="DataflowRunner" \
   --project="$PROJECT" \
   --temp_location="gs://$BUCKET/temp" \
   --region="$LOCATION" \
-  --machine_type="$MACHINE_TYPE"
+  --machine_type="$MACHINE_TYPE" \
+  --requirements_file="requirements.txt"
 ```
 
 ## What's next?
