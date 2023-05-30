@@ -65,7 +65,7 @@ def transcribe_file_with_word_time_offsets(
 # [START speech_transcribe_async_word_time_offsets_gcs]
 def transcribe_gcs_with_word_time_offsets(
         gcs_uri: str,
-) -> speech.RecognitionResult:
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously and output the word time
     offsets."""
     from google.cloud import speech

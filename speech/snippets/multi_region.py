@@ -24,7 +24,13 @@ def sync_recognize_with_multi_region_gcs() -> speech.RecognizeResponse:
 
     # Instantiates a client
     # [START speech_multi_region_client]
-    client = speech.SpeechClient(client_options=client_options)
+
+    # Pass an additional argument, ClientOptions, to specify the new endpoint.
+    _client_options = client_options.ClientOptions(
+        api_endpoint="eu-speech.googleapis.com"
+    )
+
+    client = speech.SpeechClient(client_options=_client_options)
     # [END speech_multi_region_client]
 
     # The name of the audio file to transcribe
