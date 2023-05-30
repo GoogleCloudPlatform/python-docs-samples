@@ -1,0 +1,5 @@
+# Ignore everything except the source files.
+**/*
+!Dockerfile
+!requirements.txt
+!*.py

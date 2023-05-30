@@ -85,25 +85,35 @@ python load-state-dict.py vertex \
 
 ## Running the pipeline
 
-To run the pipeline in Dataflow, we just need to make sure the model fits into memory.
+To run the pipeline in Dataflow, we just need to make sure the model fits into memory along with the rest of the memory used by each worker.
 
-Here's a table showing the minimum requirements to run an inference pipeline.
+Here's a table showing the recommended machine types to run an inference pipeline.
 
-| Model name             | Memory needed | Machine type    | VM Memory |
-|------------------------|---------------|-----------------|-----------|
-| `google/flan-t5-small` | > 320 MB      | `n2-standard-2` | 8 GB      |
-| `google/flan-t5-base`  | > 1 GB        | `n2-standard-2` | 8 GB      |
-| `google/flan-t5-large` | > 3.2 GB      | `n2-standard-2` | 8 GB      |
-| `google/flan-t5-xl`    | > 12 GB       | `n2-highmem-2`  | 16 GB     |
-| `google/flan-t5-xxl`   | > 44 GB       | `n2-highmem-8`  | 64 GB     |
-| `google/flan-ul2`      | > 80 GB       | `n2-highmem-16` | 128 GB    |
+| Model name             | Machine type    | VM Memory |
+|------------------------|-----------------|-----------|
+| `google/flan-t5-small` | `n2-highmem-2`  | 16 GB     |
+| `google/flan-t5-base`  | `n2-highmem-4`  | 32 GB     |
+| `google/flan-t5-large` | `n2-highmem-4`  | 32 GB     |
+| `google/flan-t5-xl`    | `n2-highmem-4`  | 32 GB     |
+| `google/flan-t5-xxl`   | `n2-highmem-8`  | 64 GB     |
+| `google/flan-ul2`      | `n2-highmem-16` | 128 GB    |
+
+To run the streaming pipeline, we recommend building a custom container to avoid installing
+dependencies every time a worker starts.
+This helps to reduce the worker startup time and memory use.
+
+```sh
+export CONTAINER_IMAGE="gcr.io/$PROJECT/dataflow/run-inference:latest"
+
+# Build the container image with Cloud Build.
+gcloud builds submit . --tag="$CONTAINER_IMAGE" --machine-type="e2-highcpu-32"
+```
+
+Once your image is built, you can launch the pipeline using the appropriate machine type.
 
 ```sh
 export MODEL_NAME="google/flan-t5-xl"
-export MACHINE_TYPE="n2-highmem-2"
-
-export MODEL_NAME="google/flan-t5-base"
-export MACHINE_TYPE="n2-standard-2"
+export MACHINE_TYPE="n2-highmem-4"
 
 python main.py \
   --messages-topic="$MESSAGES_TOPIC" \
@@ -115,14 +125,15 @@ python main.py \
   --temp_location="gs://$BUCKET/temp" \
   --region="$LOCATION" \
   --machine_type="$MACHINE_TYPE" \
-  --requirements_file="requirements.txt"
+  --sdk_container_image="$CONTAINER_IMAGE" \
+  --sdk_location="container"
 ```
 
 ## What's next?
 
-[available machine types](https://cloud.google.com/compute/docs/general-purpose-machines)
-
-[VM instance pricing](https://cloud.google.com/compute/vm-instance-pricing).
+- [Available machine types](https://cloud.google.com/compute/docs/general-purpose-machines)
+- [VM instance pricing](https://cloud.google.com/compute/vm-instance-pricing).
+- [Dataflow with GPUs](https://cloud.google.com/dataflow/docs/concepts/gpu-support)
 
 [flan-t5-small]: https://huggingface.co/google/flan-t5-small
 [flan-t5-base]: https://huggingface.co/google/flan-t5-base

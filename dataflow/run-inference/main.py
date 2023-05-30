@@ -59,7 +59,7 @@ def get_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> st
 
 
 @beam.ptransform_fn
-def AskLanguageModel(
+def AskModel(
     pcollection: beam.PCollection[str],
     model_name: str,
     state_dict_path: str,
@@ -124,16 +124,17 @@ if __name__ == "__main__":
     beam_options = PipelineOptions(
         beam_args,
         save_main_session=True,
-        streaming=True,
         pickle_library="cloudpickle",
+        streaming=True,
     )
 
+    simple_name = args.model_name.split("/")[-1]
     pipeline = beam.Pipeline(options=beam_options)
     _ = (
         pipeline
         | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
         | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
-        | "Ask LLM" >> AskLanguageModel(args.model_name, args.state_dict_path)
+        | f"Ask {simple_name}" >> AskModel(args.model_name, args.state_dict_path)
         | "Encode bytes" >> beam.Map(lambda msg: msg.encode("utf-8"))
         | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
     )
