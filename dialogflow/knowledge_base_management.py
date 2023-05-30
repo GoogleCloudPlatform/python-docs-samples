@@ -52,6 +52,7 @@ def create_knowledge_base(project_id, display_name):
     print("Knowledge Base created:\n")
     print("Display Name: {}\n".format(response.display_name))
     print("Name: {}\n".format(response.name))
+    return (response.name, response.display_name)
 
 
 # [END dialogflow_create_knowledge_base]

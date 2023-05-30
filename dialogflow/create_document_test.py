@@ -52,13 +52,16 @@ def knowledge_base_id():
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_create_document(capsys, knowledge_base_id):
-    document_management.create_document(
-        PROJECT_ID,
-        knowledge_base_id,
-        DOCUMENT_DISPLAY_NAME,
-        "text/html",
-        "FAQ",
-        "https://cloud.google.com/storage/docs/faq",
-    )
-    out, _ = capsys.readouterr()
-    assert DOCUMENT_DISPLAY_NAME in out
+    try:
+        document_management.create_document(
+            PROJECT_ID,
+            knowledge_base_id,
+            DOCUMENT_DISPLAY_NAME,
+            "text/html",
+            "FAQ",
+            "https://cloud.google.com/storage/docs/faq",
+        )
+        out, _ = capsys.readouterr()
+        assert DOCUMENT_DISPLAY_NAME in out
+    except Exception as e:
+        assert str(e) == ""     # See error causing exception in this case
