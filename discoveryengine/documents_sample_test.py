@@ -28,21 +28,19 @@ bigquery_dataset = "genappbuilder_test"
 bigquery_table = "import_documents_test"
 
 
-def test_import_documents_gcs(capsys):
-    import_documents_sample.import_documents_sample(
+def test_import_documents_gcs():
+    operation_name = import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
         gcs_uri=gcs_uri,
     )
 
-    out, _ = capsys.readouterr()
-
-    assert "operations/import-documents" in out
+    assert "operations/import-documents" in operation_name
 
 
-def test_import_documents_bigquery(capsys):
-    import_documents_sample.import_documents_sample(
+def test_import_documents_bigquery():
+    operation_name = import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
@@ -50,18 +48,14 @@ def test_import_documents_bigquery(capsys):
         bigquery_table=bigquery_table,
     )
 
-    out, _ = capsys.readouterr()
-
-    assert "operations/import-documents" in out
+    assert "operations/import-documents" in operation_name
 
 
-def test_list_documents(capsys):
-    list_documents_sample.list_documents_sample(
+def test_list_documents():
+    response = list_documents_sample.list_documents_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
     )
 
-    out, _ = capsys.readouterr()
-
-    assert f"Documents in {search_engine_id}" in out
+    assert response

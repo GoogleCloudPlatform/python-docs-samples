@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2023 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
+    external_ip = main.get_external_ip()
+
     r = client.get("/")
     assert r.status_code == 200
-    assert "Hello World" in r.data.decode("utf-8")
+    assert f"External IP: {external_ip}" in r.data.decode("utf-8")

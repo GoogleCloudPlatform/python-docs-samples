@@ -18,10 +18,23 @@ import pprint
 import time
 import uuid
 
+from google.api import metric_pb2  # type: ignore
+from google.api import monitored_resource_pb2  # type: ignore
+from google.cloud.monitoring_v3.services.metric_service import pagers
+
+
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-def create_metric_descriptor(project_id):
+def create_metric_descriptor(project_id: str) -> metric_pb2.MetricDescriptor:
+    """Creates a new metric description
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        A new instance of metric description.
+    """
     # [START monitoring_create_metric]
     from google.api import label_pb2 as ga_label
     from google.api import metric_pb2 as ga_metric
@@ -46,9 +59,15 @@ def create_metric_descriptor(project_id):
     )
     print("Created {}.".format(descriptor.name))
     # [END monitoring_create_metric]
+    return descriptor
 
 
-def delete_metric_descriptor(descriptor_name):
+def delete_metric_descriptor(descriptor_name: str) -> None:
+    """Deletes metric description
+
+    Args:
+        descriptor_name: Fully qualified descriptor name
+    """
     # [START monitoring_delete_metric]
     from google.cloud import monitoring_v3
 
@@ -58,7 +77,12 @@ def delete_metric_descriptor(descriptor_name):
     # [END monitoring_delete_metric]
 
 
-def write_time_series(project_id):
+def write_time_series(project_id: str) -> None:
+    """Writes a custom metric time series
+
+    Args:
+        project_id: Google Cloud project id
+    """
     # [START monitoring_write_timeseries]
     from google.cloud import monitoring_v3
 
@@ -69,11 +93,11 @@ def write_time_series(project_id):
     series.metric.type = "custom.googleapis.com/my_metric" + str(uuid.uuid4())
     series.resource.type = "gce_instance"
     series.resource.labels["instance_id"] = "1234567890123456789"
-    series.resource.labels["zone"] = "us-central1-f"
+    series.resource.labels["zone"] = "us-central1-c"
     series.metric.labels["TestLabel"] = "My Label Data"
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {"end_time": {"seconds": seconds, "nanos": nanos}}
     )
@@ -83,7 +107,16 @@ def write_time_series(project_id):
     # [END monitoring_write_timeseries]
 
 
-def list_time_series(project_id):
+def list_time_series(project_id: str) -> pagers.ListTimeSeriesPager:
+    """Prints CPU utilization metric collected during last 20 minutes
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of time series.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_read_timeseries_simple]
     from google.cloud import monitoring_v3
 
@@ -92,7 +125,7 @@ def list_time_series(project_id):
 
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {
             "end_time": {"seconds": seconds, "nanos": nanos},
@@ -111,9 +144,19 @@ def list_time_series(project_id):
     for result in results:
         print(result)
     # [END monitoring_read_timeseries_simple]
+    return results
 
 
-def list_time_series_header(project_id):
+def list_time_series_header(project_id: str) -> pagers.ListTimeSeriesPager:
+    """Prints CPU utilization metric's headers collected during last 20 minutes
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of time series.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_read_timeseries_fields]
     from google.cloud import monitoring_v3
 
@@ -121,7 +164,7 @@ def list_time_series_header(project_id):
     project_name = f"projects/{project_id}"
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {
             "end_time": {"seconds": seconds, "nanos": nanos},
@@ -139,9 +182,19 @@ def list_time_series_header(project_id):
     for result in results:
         print(result)
     # [END monitoring_read_timeseries_fields]
+    return results
 
 
-def list_time_series_aggregate(project_id):
+def list_time_series_aggregate(project_id: str) -> pagers.ListTimeSeriesPager:
+    """Prints aggregated CPU utilization metric for last hour
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of time series.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_read_timeseries_align]
     from google.cloud import monitoring_v3
 
@@ -150,7 +203,7 @@ def list_time_series_aggregate(project_id):
 
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {
             "end_time": {"seconds": seconds, "nanos": nanos},
@@ -176,9 +229,19 @@ def list_time_series_aggregate(project_id):
     for result in results:
         print(result)
     # [END monitoring_read_timeseries_align]
+    return results
 
 
-def list_time_series_reduce(project_id):
+def list_time_series_reduce(project_id: str) -> pagers.ListTimeSeriesPager:
+    """Prints CPU utilization for last hour using reducer
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of time series.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_read_timeseries_reduce]
     from google.cloud import monitoring_v3
 
@@ -187,7 +250,7 @@ def list_time_series_reduce(project_id):
 
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {
             "end_time": {"seconds": seconds, "nanos": nanos},
@@ -215,20 +278,43 @@ def list_time_series_reduce(project_id):
     for result in results:
         print(result)
     # [END monitoring_read_timeseries_reduce]
+    return results
 
 
-def list_metric_descriptors(project_id):
+def list_metric_descriptors(project_id: str) -> pagers.ListMetricDescriptorsPager:
+    """Gets a list of metric descriptions
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of metric descriptors in the project.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_list_descriptors]
     from google.cloud import monitoring_v3
 
     client = monitoring_v3.MetricServiceClient()
     project_name = f"projects/{project_id}"
-    for descriptor in client.list_metric_descriptors(name=project_name):
+    descriptors = client.list_metric_descriptors(name=project_name)
+    for descriptor in descriptors:
         print(descriptor.type)
     # [END monitoring_list_descriptors]
+    return descriptors
 
 
-def list_monitored_resources(project_id):
+def list_monitored_resources(
+    project_id: str,
+) -> pagers.ListMonitoredResourceDescriptorsPager:
+    """Gets a list of monitored resource descriptors
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        Collection of monitored resource descriptors.
+        Iterating over this object will yield results and resolve additional pages automatically.
+    """
     # [START monitoring_list_resources]
     from google.cloud import monitoring_v3
 
@@ -238,9 +324,21 @@ def list_monitored_resources(project_id):
     for descriptor in resource_descriptors:
         print(descriptor.type)
     # [END monitoring_list_resources]
+    return resource_descriptors
 
 
-def get_monitored_resource_descriptor(project_id, resource_type_name):
+def get_monitored_resource_descriptor(
+    project_id: str, resource_type_name: str
+) -> monitored_resource_pb2.MonitoredResourceDescriptor:
+    """Prints monitored resource description by type
+
+    Args:
+        project_id: Google Cloud project id
+        resource_type_name: a monitored resource type
+
+    Returns:
+        An object that describes the monitored resource
+    """
     # [START monitoring_get_resource]
     from google.cloud import monitoring_v3
 
@@ -248,11 +346,21 @@ def get_monitored_resource_descriptor(project_id, resource_type_name):
     resource_path = (
         f"projects/{project_id}/monitoredResourceDescriptors/{resource_type_name}"
     )
-    pprint.pprint(client.get_monitored_resource_descriptor(name=resource_path))
+    descriptor = client.get_monitored_resource_descriptor(name=resource_path)
+    pprint.pprint(descriptor)
     # [END monitoring_get_resource]
+    return descriptor
 
 
-def get_metric_descriptor(metric_name):
+def get_metric_descriptor(metric_name: str) -> metric_pb2.MetricDescriptor:
+    """Gets metric descriptor by type
+
+    Args:
+        metric_name: fully qualified descriptor name
+
+    Returns:
+        An object that describes the monitored metric
+    """
     # [START monitoring_get_descriptor]
     from google.cloud import monitoring_v3
 
@@ -260,6 +368,7 @@ def get_metric_descriptor(metric_name):
     descriptor = client.get_metric_descriptor(name=metric_name)
     pprint.pprint(descriptor)
     # [END monitoring_get_descriptor]
+    return descriptor
 
 
 if __name__ == "__main__":
