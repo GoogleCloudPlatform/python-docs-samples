@@ -37,7 +37,7 @@ def create_participant(project_id, conversation_id, role):
     )
     if role in ROLES:
         response = client.create_participant(
-            parent=conversation_path, participant={"role": role}, timeout=600
+            parent=conversation_path, participant={"role": role}, timeout=900
         )
         print("Participant Created.")
         print("Role: {}".format(response.role))

@@ -18,7 +18,6 @@ import os
 import uuid
 
 from google.cloud import dialogflow_v2
-import pytest
 
 import knowledge_base_management
 
