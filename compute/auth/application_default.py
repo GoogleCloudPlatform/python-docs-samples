@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -21,31 +21,49 @@ For more information, see the README.md under /compute.
 """
 
 # [START all]
-
+# [START compute_auth_application_default]
 import argparse
-from typing import Dict
+from typing import List
 
-import googleapiclient.discovery
-
-
-def create_service() -> googleapiclient.discovery.Resource:
-    """Construct the service object for interacting with the Cloud Storage API -
-    the 'storage' service, at version 'v1'.
-    Authentication is provided by application default credentials.
-    When running locally, these are available after running
-    `gcloud auth application-default login`. When running on Compute Engine,
-    these are available from the environment."""
-    return googleapiclient.discovery.build("storage", "v1")
+from google.cloud import storage
 
 
-def list_buckets(service: googleapiclient.discovery.Resource, project_id: str) -> Dict:
-    """List buckets in Cloud Storage"""
-    return service.buckets().list(project=project_id).execute()
+def create_client() -> storage.Client:
+    """
+    Construct a client object for the Storage API using the
+    application default credentials.
+
+    Returns:
+        Storage API client object.
+    """
+    # Construct the service object for interacting with the Cloud Storage API -
+    # the 'storage' service, at version 'v1'.
+    # Authentication is provided by application default credentials.
+    # When running locally, these are available after running
+    # `gcloud auth application-default login`. When running on Compute
+    # Engine, these are available from the environment.
+    return storage.Client()
+
+
+def list_buckets(client: storage.Client, project_id: str) -> List[storage.Bucket]:
+    """
+    Retrieve bucket list of a project using provided client object.
+
+
+    Args:
+        client: Storage API client object.
+        project_id: name of the project to list buckets from.
+
+    Returns:
+        List of Buckets found in the project.
+    """
+    buckets = client.list_buckets()
+    return list(buckets)
 
 
 def main(project_id: str) -> None:
-    service = create_service()
-    buckets = list_buckets(service, project_id)
+    client = create_client()
+    buckets = list_buckets(client, project_id)
     print(buckets)
 
 
@@ -58,4 +76,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.project_id)
+# [END compute_auth_application_default]
 # [END all]
