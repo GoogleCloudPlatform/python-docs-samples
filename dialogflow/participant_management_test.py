@@ -74,7 +74,7 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
     assert f"Display Name: {KNOWLEDGE_BASE_DISPLAY_NAME}" in out
 
     with mock.patch(
-        "document_management.dialogflow.DocumentsClient.create_document",
+        "google.cloud.dialogflow_v2beta1.DocumentsClient.create_document",
         mock_create_document_operation,
     ):
         # Create documents. Note that you should get read permission of bucket gs://cloud-samples-data/dialogflow/participant_test.html
@@ -94,7 +94,7 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
 
     # Get the Document
     with mock.patch(
-        "document_management.dialogflow.DocumentsClient.get_document", mock_document
+        "google.cloud.dialogflow_v2beta1.DocumentsClient.get_document", mock_document
     ):
         document_management.get_document(PROJECT_ID, knowledge_base_id, document_id)
 
@@ -135,7 +135,7 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
     human_agent_id = out.split("participants/")[1].rstrip()
 
     with mock.patch(
-        "document_management.dialogflow.ParticipantsClient.analyze_content",
+        "google.cloud.dialogflow_v2beta1.ParticipantsClient.analyze_content",
         mock.MagicMock(spec=dialogflow.AnalyzeContentResponse),
     ):
         # AnalyzeContent
@@ -194,7 +194,7 @@ def test_analyze_content_text(capsys, mock_create_document_operation, mock_docum
 
     # Delete document.
     with mock.patch(
-        "document_management.dialogflow.DocumentsClient.delete_document",
+        "google.cloud.dialogflow_v2beta1.DocumentsClient.delete_document",
         mock.MagicMock(spec=Operation),
     ):
         document_management.delete_document(PROJECT_ID, knowledge_base_id, document_id)

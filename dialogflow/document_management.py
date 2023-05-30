@@ -35,17 +35,6 @@ Examples:
 
 import argparse
 
-# [START dialogflow_list_document]
-# [START dialogflow_create_document]
-# [START dialogflow_get_document]
-# [START dialogflow_delete_document]
-from google.cloud import dialogflow_v2beta1 as dialogflow
-# [END dialogflow_delete_document]
-# [END dialogflow_get_document]
-# [END dialogflow_create_document]
-# [END dialogflow_list_document]
-
-
 KNOWLEDGE_TYPES = [
     "KNOWLEDGE_TYPE_UNSPECIFIED",
     "FAQ",
@@ -61,6 +50,8 @@ def list_documents(project_id, knowledge_base_id):
     Args:
         project_id: The GCP project linked with the agent.
         knowledge_base_id: Id of the Knowledge base."""
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.DocumentsClient()
     knowledge_base_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
         project_id, knowledge_base_id
@@ -98,6 +89,8 @@ def create_document(
             EXTRACTIVE_QA.
         content_uri: Uri of the document, e.g. gs://path/mydoc.csv,
             http://mypage.com/faq.html."""
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.DocumentsClient()
     knowledge_base_path = dialogflow.KnowledgeBasesClient.knowledge_base_path(
         project_id, knowledge_base_id
@@ -122,6 +115,8 @@ def create_document(
     for knowledge_type in document.knowledge_types:
         print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
     print(" - Source: {}\n".format(document.content_uri))
+
+
 # [END dialogflow_create_document]
 
 
@@ -133,6 +128,8 @@ def get_document(project_id, knowledge_base_id, document_id):
         project_id: The GCP project linked with the agent.
         knowledge_base_id: Id of the Knowledge base.
         document_id: Id of the Document."""
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.DocumentsClient()
     document_path = client.document_path(project_id, knowledge_base_id, document_id)
 
@@ -146,6 +143,8 @@ def get_document(project_id, knowledge_base_id, document_id):
         print("    - {}".format(KNOWLEDGE_TYPES[knowledge_type]))
     print(" - Source: {}\n".format(response.content_uri))
     return response
+
+
 # [END dialogflow_get_document]
 
 
@@ -157,6 +156,8 @@ def delete_document(project_id, knowledge_base_id, document_id):
         project_id: The GCP project linked with the agent.
         knowledge_base_id: Id of the Knowledge base.
         document_id: Id of the Document."""
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     client = dialogflow.DocumentsClient()
     document_path = client.document_path(project_id, knowledge_base_id, document_id)
 
@@ -164,6 +165,8 @@ def delete_document(project_id, knowledge_base_id, document_id):
     print("operation running:\n {}".format(response.operation))
     print("Waiting for results...")
     print("Done.\n {}".format(response.result()))
+
+
 # [END dialogflow_delete_document]
 
 

@@ -26,6 +26,7 @@ import test_utils
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 KNOWLEDGE_BASE_NAME = f"knowledge_{uuid.uuid4()}"
+KNOWLEDGE_BASE_ID = uuid.uuid4().hex[0:27]
 DOCUMENT_DISPLAY_NAME = f"test_document_{uuid.uuid4()}"
 MIME_TYPE = "text/html"
 KNOWLEDGE_TYPE = "FAQ"
@@ -36,46 +37,24 @@ CONTENT_URI = "https://cloud.google.com/storage/docs/faq"
 def mock_create_document_operation():
     return test_utils.create_mock_create_document_operation(
         DOCUMENT_DISPLAY_NAME,
-        knowledge_base_id,
+        KNOWLEDGE_BASE_ID,
         MIME_TYPE,
         [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
-        CONTENT_URI
+        CONTENT_URI,
     )
-
-
-@pytest.fixture(scope="function")
-def knowledge_base_id():
-    # Create a knowledge base to use in document management
-    client = dialogflow.KnowledgeBasesClient()
-    project_path = client.common_project_path(PROJECT_ID)
-    knowledge_base = dialogflow.KnowledgeBase(display_name=KNOWLEDGE_BASE_NAME)
-    response = client.create_knowledge_base(
-        parent=project_path, knowledge_base=knowledge_base
-    )
-    knowledge_base_id = response.name.split("/knowledgeBases/")[1].split("\n")[0]
-
-    yield knowledge_base_id
-
-    # Delete the created knowledge base
-    knowledge_base_path = client.knowledge_base_path(PROJECT_ID, knowledge_base_id)
-    request = dialogflow.DeleteKnowledgeBaseRequest(
-        name=knowledge_base_path, force=True
-    )
-    client.delete_knowledge_base(request=request)
 
 
 def test_create_document(
     capsys: pytest.CaptureFixture[str],
-    knowledge_base_id: str,
     mock_create_document_operation: mock.MagicMock,
 ):
     with mock.patch(
-        "document_management.dialogflow.DocumentsClient.create_document",
+        "google.cloud.dialogflow_v2beta1.DocumentsClient.create_document",
         mock_create_document_operation,
     ):
         document_management.create_document(
             PROJECT_ID,
-            knowledge_base_id,
+            KNOWLEDGE_BASE_ID,
             DOCUMENT_DISPLAY_NAME,
             MIME_TYPE,
             KNOWLEDGE_TYPE,
