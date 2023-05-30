@@ -1721,7 +1721,7 @@ def deidentify_table_suppress_row(
 
 
 # [START dlp_deidentify_table_with_crypto_hash]
-from typing import Dict, List, Union  # noqa: F811, E402
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -1813,7 +1813,7 @@ def deidentify_table_with_crypto_hash(
 
 
 # [START dlp_deidentify_table_with_multiple_crypto_hash]
-from typing import Dict, List, Union  # noqa: F811, E402
+from typing import Dict, List, Union  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
