@@ -25,10 +25,6 @@ Run with `pytest` (local environment):
 
     # Run a single test.
     PYTHONPATH=.. pytest -s tests/e2e_test.py -k test_name
-
-Run with `nox` (clean virtual environment):
-    nox -s lint
-    nox -s py-3.11
 """
 
 from __future__ import annotations
