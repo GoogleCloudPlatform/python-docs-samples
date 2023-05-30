@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -20,8 +20,9 @@ For more information, see the README.md under /compute.
 """
 
 # [START all]
+# [START compute_auth_access_token]
+
 import argparse
-from typing import Dict
 
 import requests
 
@@ -32,7 +33,12 @@ SERVICE_ACCOUNT = "default"
 
 
 def get_access_token() -> str:
-    """Get an access token from the metadata server"""
+    """
+    Retrieves access token from the metadata server.
+
+    Returns:
+        The access token.
+    """
     url = f"{METADATA_URL}instance/service-accounts/{SERVICE_ACCOUNT}/token"
 
     # Request an access token from the metadata server.
@@ -45,8 +51,17 @@ def get_access_token() -> str:
     return access_token
 
 
-def list_buckets(project_id: str, access_token: str) -> Dict:
-    """List buckets in Cloud Storage"""
+def list_buckets(project_id: str, access_token: str) -> dict:
+    """
+    Calls Storage API to retrieve a list of buckets.
+
+    Args:
+        project_id: name of the project to list buckets from.
+        access_token: access token to authenticate with.
+
+    Returns:
+        Response from the API.
+    """
     url = "https://www.googleapis.com/storage/v1/b"
     params = {"project": project_id}
     headers = {"Authorization": f"Bearer {access_token}"}
@@ -58,6 +73,13 @@ def list_buckets(project_id: str, access_token: str) -> Dict:
 
 
 def main(project_id: str) -> None:
+    """
+    Retrieves access token from metadata server and uses it to list
+    buckets in a project.
+
+    Args:
+        project_id: name of the project to list buckets from.
+    """
     access_token = get_access_token()
     buckets = list_buckets(project_id, access_token)
     print(buckets)
@@ -72,4 +94,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.project_id)
+# [END compute_auth_access_token]
 # [END all]
