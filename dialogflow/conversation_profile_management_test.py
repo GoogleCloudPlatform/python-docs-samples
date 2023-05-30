@@ -97,7 +97,7 @@ def test_create_conversation_profile(capsys, mock_conversation, mock_conversatio
         )
 
         out, _ = capsys.readouterr()
-        assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) in out
+        assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" in out
 
     # Delete the conversation profile.
     with mock.patch(
@@ -116,4 +116,4 @@ def test_create_conversation_profile(capsys, mock_conversation, mock_conversatio
         conversation_profile_management.list_conversation_profiles(PROJECT_ID)
 
         out, _ = capsys.readouterr()
-        assert "Display Name: {}".format(CONVERSATION_PROFILE_DISPLAY_NAME) not in out
+        assert f"Display Name: {CONVERSATION_PROFILE_DISPLAY_NAME}" not in out
