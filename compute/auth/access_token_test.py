@@ -23,7 +23,7 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @mock.patch("access_token.requests")
-def test_main(requests_mock):
+def test_main(requests_mock: mock.MagicMock) -> None:
     metadata_response = mock.Mock()
     metadata_response.status_code = 200
     metadata_response.json.return_value = {"access_token": "123"}

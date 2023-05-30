@@ -21,5 +21,5 @@ from application_default import main
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-def test_main():
+def test_main() -> None:
     main(PROJECT)

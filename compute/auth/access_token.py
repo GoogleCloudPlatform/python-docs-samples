@@ -21,7 +21,9 @@ For more information, see the README.md under /compute.
 
 # [START all]
 # [START compute_auth_access_token]
+
 import argparse
+from typing import Dict
 
 import requests
 

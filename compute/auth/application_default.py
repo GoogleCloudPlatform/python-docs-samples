@@ -28,6 +28,7 @@ from typing import List
 from google.cloud import storage
 
 
+
 def create_client() -> storage.Client:
     """
     Construct a client object for the Storage API using the
@@ -48,6 +49,7 @@ def create_client() -> storage.Client:
 def list_buckets(client: storage.Client, project_id: str) -> List[storage.Bucket]:
     """
     Retrieve bucket list of a project using provided client object.
+
 
     Args:
         client: Storage API client object.
