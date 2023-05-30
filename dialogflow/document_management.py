@@ -106,7 +106,7 @@ def create_document(
 
     response = client.create_document(parent=knowledge_base_path, document=document)
     print("Waiting for results...")
-    document = response.result(timeout=120)
+    document = response.result(timeout=300)
     print("Created Document:")
     print(" - Display Name: {}".format(document.display_name))
     print(" - Knowledge ID: {}".format(document.name))

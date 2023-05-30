@@ -25,19 +25,6 @@ import knowledge_base_management
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-@pytest.fixture(scope="function", autouse=True)
-def teardown():
-    yield
-
-    # Delete the created knowledge base
-    client = dialogflow_v2.KnowledgeBasesClient()
-    assert pytest.KNOWLEDGE_BASE_ID is not None
-    knowledge_base_path = client.knowledge_base_path(
-        PROJECT_ID, pytest.KNOWLEDGE_BASE_ID
-    )
-    client.delete_knowledge_base(name=knowledge_base_path)
-
-
 def test_create_knowledge_base():
     name = None
 
