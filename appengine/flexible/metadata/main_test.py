@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2023 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-import create_job
-import delete_job
-
-TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-TEST_LOCATION = os.getenv("LOCATION_ID", "us-central1")
+import main
 
 
-def test_create_job():
-    response = create_job.create_scheduler_job(
-        TEST_PROJECT_ID, TEST_LOCATION, "my-service"
-    )
-    assert response.name
+def test_index():
+    main.app.testing = True
+    client = main.app.test_client()
 
-    job_name = response.name.split("/")[-1]
-    is_deleted = delete_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
-    assert is_deleted
+    external_ip = main.get_external_ip()
+
+    r = client.get("/")
+    assert r.status_code == 200
+    assert f"External IP: {external_ip}" in r.data.decode("utf-8")

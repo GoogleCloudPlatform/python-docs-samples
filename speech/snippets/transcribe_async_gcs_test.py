@@ -18,14 +18,34 @@ import re
 from google.api_core.retry import Retry
 
 import transcribe_async_gcs
+import transcribe_diarization_gcs_beta
+import transcribe_multilanguage_gcs_beta
+import transcribe_word_level_confidence_gcs_beta
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+BUCKET = "cloud-samples-data"
+GCS_AUDIO_PATH = "gs://" + BUCKET + "/speech/brooklyn_bridge.flac"
+GCS_DIARIZATION_AUDIO_PATH = "gs://" + BUCKET + "/speech/commercial_mono.wav"
+GCS_MUTLILANGUAGE_PATH = "gs://" + BUCKET + "/speech/Google_Gnome.wav"
 
 
 @Retry()
-def test_transcribe_gcs(capsys):
-    gcs_path = "gs://python-docs-samples-tests/speech/audio.flac"
-    transcribe_async_gcs.transcribe_gcs(gcs_path)
-    out, err = capsys.readouterr()
+def test_transcribe_gcs():
+    transcript = transcribe_async_gcs.transcribe_gcs(GCS_AUDIO_PATH)
+    assert re.search(r"how old is the Brooklyn Bridge", transcript, re.DOTALL | re.I)
 
-    assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)
+
+def test_transcribe_diarization_gcs_beta():
+    is_completed = transcribe_diarization_gcs_beta.transcribe_diarization_gcs_beta(GCS_DIARIZATION_AUDIO_PATH)
+    assert is_completed
+
+
+def test_transcribe_multilanguage_gcs_bets():
+    transcript = transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(GCS_MUTLILANGUAGE_PATH)
+    assert re.search("Transcript: OK Google", transcript)
+
+
+def test_transcribe_word_level_confidence_gcs_beta():
+    transcript = transcribe_word_level_confidence_gcs_beta.transcribe_file_with_word_level_confidence(GCS_AUDIO_PATH)
+    assert re.search("Transcript: how old is the Brooklyn Bridge", transcript)
+    assert re.search("First Word and Confidence: \\(how", transcript)

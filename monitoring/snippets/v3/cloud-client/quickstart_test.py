@@ -22,11 +22,9 @@ import quickstart
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
-def test_quickstart(capsys):
+def test_quickstart(capsys) -> None:
     @backoff.on_exception(backoff.expo, AssertionError, max_time=60)
     def eventually_consistent_test():
-        quickstart.run_quickstart(PROJECT)
-        out, _ = capsys.readouterr()
-        assert "wrote" in out
+        assert quickstart.run_quickstart(PROJECT)
 
     eventually_consistent_test()
