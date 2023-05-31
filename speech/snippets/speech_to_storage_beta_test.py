@@ -68,4 +68,3 @@ def bucket():
         blob.delete()
 
     bucket.delete(force=True)
-    
