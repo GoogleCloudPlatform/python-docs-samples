@@ -1,2 +1,2 @@
-google-cloud-spanner==3.35.0
+google-cloud-spanner==3.35.1
 functions-framework==3.3.0
