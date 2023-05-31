@@ -39,7 +39,7 @@ language_code = "en-US"
 
 
 @Retry()
-def test_export_transcript_to_storage_beta() -> None:
+def test_export_transcript_to_storage_beta(bucket, capsys):
     results = speech_to_storage_beta.export_transcript_to_storage_beta(
         INPUT_STORAGE_URI,
         OUTPUT_STORAGE_URI,
@@ -53,7 +53,7 @@ def test_export_transcript_to_storage_beta() -> None:
 
 
 @pytest.fixture
-def bucket() -> storage.Bucket:
+def bucket():
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():
