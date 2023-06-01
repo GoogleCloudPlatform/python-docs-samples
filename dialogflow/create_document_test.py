@@ -24,7 +24,7 @@ import pytest
 import document_management
 import test_utils
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+PROJECT_ID = "mock-dialogflow-project"
 KNOWLEDGE_BASE_NAME = f"knowledge_{uuid.uuid4()}"
 KNOWLEDGE_BASE_ID = uuid.uuid4().hex[0:27]
 DOCUMENT_DISPLAY_NAME = f"test_document_{uuid.uuid4()}"
