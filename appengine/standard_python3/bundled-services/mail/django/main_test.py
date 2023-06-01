@@ -99,7 +99,7 @@ def test_send_receive(version):
     assert response.status_code == 200
 
     # Send valid mail
-    post_with_retries(
+    response = post_with_retries(
         f"https://{version_hostname}/",
         data={
             "email": f"valid-user@{version_id}-dot-{project_id}.appspotmail.com",
