@@ -15,6 +15,10 @@
 import os
 import time
 from typing import Iterator
+
+from unittest import mock
+from unittest.mock import MagicMock
+
 import uuid
 
 import backoff
@@ -27,9 +31,6 @@ import google.cloud.exceptions
 import google.cloud.pubsub
 import google.cloud.storage
 import pytest
-
-from unittest import mock
-from unittest.mock import MagicMock
 
 import inspect_content
 

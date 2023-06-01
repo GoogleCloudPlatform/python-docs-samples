@@ -1321,7 +1321,7 @@ def inspect_gcs_with_sampling(
 
 
 # [START dlp_inspect_data_to_hybrid_job_trigger]
-import time # noqa: F811, E402, I100
+import time  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
