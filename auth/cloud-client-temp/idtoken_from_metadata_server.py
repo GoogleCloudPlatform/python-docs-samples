@@ -28,7 +28,7 @@ def idtoken_from_metadata_server(url: str):
 
     Args:
         url: The url or target audience to obtain the ID token for.
-            Examples: http://www.abc.com
+            Examples: http://www.example.com
     """
 
     request = google.auth.transport.requests.Request()
