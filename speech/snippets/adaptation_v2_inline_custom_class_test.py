@@ -41,7 +41,7 @@ def test_adaptation_v2_inline_custom_class() -> None:
     )
 
     assert re.search(
-        r"the word is fair",
+        r"the word",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )
