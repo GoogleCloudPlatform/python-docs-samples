@@ -20,14 +20,14 @@ Example usage:
     python transcribe.py gs://cloud-samples-tests/speech/brooklyn.flac
 """
 
+# [START speech_transcribe_sync]
 import argparse
 
+from google.cloud import speech
 
-# [START speech_transcribe_sync]
-def transcribe_file(speech_file):
+
+def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file."""
-    from google.cloud import speech
-
     client = speech.SpeechClient()
 
     # [START speech_python_migration_sync_request]
@@ -54,12 +54,12 @@ def transcribe_file(speech_file):
         print(f"Transcript: {result.alternatives[0].transcript}")
     # [END speech_python_migration_sync_response]
 
-
+    return response
 # [END speech_transcribe_sync]
 
 
 # [START speech_transcribe_sync_gcs]
-def transcribe_gcs(gcs_uri):
+def transcribe_gcs(gcs_uri: str) -> speech.RecognizeResponse:
     """Transcribes the audio file specified by the gcs_uri."""
     from google.cloud import speech
 
@@ -82,7 +82,7 @@ def transcribe_gcs(gcs_uri):
         # The first alternative is the most likely one for this portion.
         print(f"Transcript: {result.alternatives[0].transcript}")
 
-
+    return response
 # [END speech_transcribe_sync_gcs]
 
 
