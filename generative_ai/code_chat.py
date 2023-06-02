@@ -15,7 +15,10 @@
 # [START aiplatform_sdk_code_chat]
 from vertexai.preview.language_models import CodeChatModel
 
-def write_a_function(temperature=.2):
+
+def write_a_function(
+        temperature: float = 0.2
+) -> object:
     """Example of using Code Chat Model to write a function."""
 
     # TODO developer - override these parameters as needed:
@@ -32,6 +35,7 @@ def write_a_function(temperature=.2):
 # [END aiplatform_sdk_code_chat]
 
     return response
+
 
 if __name__ == "__main__":
     write_a_function()

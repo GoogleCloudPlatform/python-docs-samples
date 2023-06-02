@@ -15,7 +15,10 @@
 # [START aiplatform_sdk_code_completion_comment]
 from vertexai.preview.language_models import CodeGenerationModel
 
-def complete_code_comment(temperature=.2):
+
+def complete_code_comment(
+        temperature: float = 0.2
+) -> object:
     """Example of using Code Completion to complete a code comment."""
 
     # TODO developer - override these parameters as needed:
@@ -28,13 +31,13 @@ def complete_code_comment(temperature=.2):
     response = code_completion_model.predict(prefix="""
     def reverse_string(s):
         return s[::-1]
-    //This function""",
-    **parameters)
+    //This function""", **parameters)
 
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_code_completion_comment]
 
     return response
+
 
 if __name__ == "__main__":
     complete_code_comment()

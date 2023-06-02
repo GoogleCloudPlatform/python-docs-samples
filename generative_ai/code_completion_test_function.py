@@ -15,7 +15,10 @@
 # [START aiplatform_sdk_code_completion_test_function]
 from vertexai.preview.language_models import CodeGenerationModel
 
-def complete_test_function(temperature=.2):
+
+def complete_test_function(
+        temperature: float = 0.2
+) -> object:
     """Example of using Code Completion to complete a test function."""
 
     # TODO developer - override these parameters as needed:
@@ -28,14 +31,14 @@ def complete_test_function(temperature=.2):
     response = code_completion_model.predict(
         prefix="""def reverse_string(s):
             return s[::-1]
-        def test_empty_input_string()""",
-        **parameters)
-    
+        def test_empty_input_string()""", **parameters)
+
     print(f"Response from Model: {response.text}")
 
 # [END aiplatform_sdk_code_completion_test_function]
 
     return response
+
 
 if __name__ == "__main__":
     complete_test_function()

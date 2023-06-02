@@ -15,7 +15,10 @@
 # [START aiplatform_sdk_code_generation_unittest]
 from vertexai.preview.language_models import CodeGenerationModel
 
-def generate_unittest(temperature=.2):
+
+def generate_unittest(
+        temperature: float = 0.2
+) -> object:
     """Example of using Code Generation to write a unit test."""
 
     # TODO developer - override these parameters as needed:
@@ -44,6 +47,7 @@ def generate_unittest(temperature=.2):
 # [END aiplatform_sdk_code_generation_unittest]
 
     return response
+
 
 if __name__ == "__main__":
     generate_unittest()

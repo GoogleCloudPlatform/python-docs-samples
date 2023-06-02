@@ -15,7 +15,10 @@
 # [START aiplatform_sdk_code_completion_function]
 from vertexai.preview.language_models import CodeGenerationModel
 
-def complete_a_function(temperature=.2):
+
+def complete_a_function(
+        temperature: float = 0.2
+) -> object:
     """Example of using Code Generation to write a unit test for a function."""
 
     # TODO developer - override these parameters as needed:
@@ -26,13 +29,13 @@ def complete_a_function(temperature=.2):
 
     code_generation_model = CodeGenerationModel.from_pretrained("code-bison@001")
     response = code_generation_model.predict(
-        prefix="Write a function that checks if a year is a leap year.",
-        **parameters)
+        prefix="Write a function that checks if a year is a leap year.", **parameters)
 
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_code_completion_function]
 
     return response
+
 
 if __name__ == "__main__":
     complete_a_function()
