@@ -31,10 +31,7 @@ MIME_TYPE = "text/html"
 KNOWLEDGE_TYPE = "FAQ"
 CONTENT_URI = "https://cloud.google.com/storage/docs/faq"
 
-
-@pytest.fixture(scope="function")
-def mock_create_document_operation():
-    return test_utils.create_mock_create_document_operation(
+CREATE_DOCUMENT_OPERATION = test_utils.create_mock_create_document_operation(
         DOCUMENT_DISPLAY_NAME,
         KNOWLEDGE_BASE_ID,
         MIME_TYPE,
@@ -44,12 +41,11 @@ def mock_create_document_operation():
 
 
 def test_create_document(
-    capsys: pytest.CaptureFixture[str],
-    mock_create_document_operation: mock.MagicMock,
+    capsys: pytest.CaptureFixture[str]
 ):
     with mock.patch(
         "google.cloud.dialogflow_v2beta1.DocumentsClient.create_document",
-        mock_create_document_operation,
+        CREATE_DOCUMENT_OPERATION,
     ):
         document_management.create_document(
             PROJECT_ID,
