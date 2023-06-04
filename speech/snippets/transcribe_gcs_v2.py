@@ -51,7 +51,7 @@ def transcribe_gcs_v2(
     config = cloud_speech.RecognitionConfig(auto_decoding_config={})
 
     request = cloud_speech.BatchRecognizeRequest(
-        recognizer=recognizer.name, config=config, uri=gcs_uri
+        recognizer=recognizer.name, config=config, files=gcs_uri
     )
 
     # Transcribes the audio into text
