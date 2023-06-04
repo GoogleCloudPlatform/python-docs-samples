@@ -55,7 +55,7 @@ def transcribe_gcs_v2(
     )
 
     # Transcribes the audio into text
-    response = client.recognize(request=request)
+    response = client.batch_recognize(request=request)
 
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
