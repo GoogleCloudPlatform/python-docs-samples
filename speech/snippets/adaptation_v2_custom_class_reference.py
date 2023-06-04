@@ -20,8 +20,24 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_custom_class_reference(
-    project_id, recognizer_id, phrase_set_id, custom_class_id, audio_file
-):
+    project_id: str,
+    recognizer_id: str,
+    phrase_set_id: str,
+    custom_class_id: str,
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribe audio file using a custom class.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer to use.
+        phrase_set_id: The ID of the phrase set to use.
+        custom_class_id: The ID of the custom class to use.
+        audio_file: The audio file to transcribe.
+
+    Returns:
+        The transcript of the audio file.
+    """
     # Instantiates a client
     client = SpeechClient()
 
