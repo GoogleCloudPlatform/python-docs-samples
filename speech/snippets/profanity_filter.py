@@ -21,9 +21,12 @@ Example usage:
 
 
 # [START speech_recognize_with_profanity_filter_gcs]
-def sync_recognize_with_profanity_filter_gcs(gcs_uri):
+from google.cloud import speech
 
-    from google.cloud import speech
+
+def sync_recognize_with_profanity_filter_gcs(
+        gcs_uri: str
+) -> speech.RecognizeResponse:
 
     client = speech.SpeechClient()
 
@@ -38,12 +41,13 @@ def sync_recognize_with_profanity_filter_gcs(gcs_uri):
 
     response = client.recognize(config=config, audio=audio)
 
-    for i, result in enumerate(response.results):
+    for result in response.results:
         alternative = result.alternatives[0]
         print(f"Transcript: {alternative.transcript}")
 
-
+    return response.results
 # [END speech_recognize_with_profanity_filter_gcs]
+
 
 sync_recognize_with_profanity_filter_gcs(
     "gs://cloud-samples-tests/speech/brooklyn.flac"
