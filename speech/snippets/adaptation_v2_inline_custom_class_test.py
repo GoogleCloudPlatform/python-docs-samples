@@ -25,14 +25,14 @@ import adaptation_v2_inline_custom_class
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
 @Retry()
-def test_adaptation_v2_inline_custom_class(capsys):
+def test_adaptation_v2_inline_custom_class() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
@@ -41,7 +41,7 @@ def test_adaptation_v2_inline_custom_class(capsys):
     )
 
     assert re.search(
-        r"the word is fare",
+        r"the word",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )

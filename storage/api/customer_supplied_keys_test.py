@@ -1,6 +1,6 @@
-# Copyright 2016 Google LLC
+# Copyright 2023 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the 'License');
+# Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
@@ -23,7 +23,7 @@ BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
 
 
 @pytest.mark.flaky
-def test_main(capsys):
+def test_main(capsys: pytest.CaptureFixture) -> None:
     main(BUCKET, __file__)
     out, err = capsys.readouterr()
 
