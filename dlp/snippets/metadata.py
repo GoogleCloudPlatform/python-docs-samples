@@ -71,5 +71,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     list_info_types(language_code=args.language_code, result_filter=args.filter)
-
-
