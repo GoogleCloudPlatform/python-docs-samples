@@ -41,7 +41,8 @@ import pytest
 import main
 
 MODEL_NAME = "google/flan-t5-small"
-MACHINE_TYPE = "n2-highmem-2"
+VERTEX_MACHINE_TYPE = "e2-standard-2"
+DATAFLOW_MACHINE_TYPE = "n2-highmem-2"
 
 
 @pytest.fixture(scope="session")
@@ -136,8 +137,7 @@ def dataflow_job(
         f"--project={project}",
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
-        f"--machine_type={MACHINE_TYPE}",
-        # "--requirements_file=requirements.txt",
+        f"--machine_type={DATAFLOW_MACHINE_TYPE}",
         f"--sdk_container_image={container_image}",
         "--sdk_location=container",
     )
@@ -169,6 +169,7 @@ def test_load_state_dict_vertex(
         f"--project={project}",
         f"--bucket={bucket_name}",
         f"--location={location}",
+        f"--machine-type={VERTEX_MACHINE_TYPE}",
     )
 
 
