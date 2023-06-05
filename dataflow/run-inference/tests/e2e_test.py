@@ -41,7 +41,7 @@ import pytest
 import main
 
 MODEL_NAME = "google/flan-t5-small"
-VERTEX_MACHINE_TYPE = "e2-standard-2"
+VERTEX_MACHINE_TYPE = "e2-standard-4"
 DATAFLOW_MACHINE_TYPE = "n2-highmem-2"
 
 

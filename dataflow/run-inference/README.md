@@ -60,9 +60,9 @@ Here's a table showing the minimum requirements to load a model's `state_dict`.
 
 | Model name             | Memory needed | Machine type    | VM Memory | VM Disk |
 |------------------------|---------------|-----------------|-----------|---------|
-| `google/flan-t5-small` | > 480 MB      | `e2-standard-2` | 8 GB      | 100 GB  |
-| `google/flan-t5-base`  | > 1.5 GB      | `e2-standard-2` | 8 GB      | 100 GB  |
-| `google/flan-t5-large` | > 4.8 GB      | `e2-standard-2` | 8 GB      | 100 GB  |
+| `google/flan-t5-small` | > 480 MB      | `e2-standard-4` | 16 GB      | 100 GB  |
+| `google/flan-t5-base`  | > 1.5 GB      | `e2-standard-4` | 16 GB      | 100 GB  |
+| `google/flan-t5-large` | > 4.8 GB      | `e2-standard-4` | 16 GB      | 100 GB  |
 | `google/flan-t5-xl`    | > 18 GB       | `e2-highmem-4`  | 32 GB     | 100 GB  |
 | `google/flan-t5-xxl`   | > 66 GB       | `e2-highmem-16` | 128 GB    | 100 GB  |
 | `google/flan-ul2`      | > 120 GB      | `e2-highmem-16` | 128 GB    | 150 GB  |
