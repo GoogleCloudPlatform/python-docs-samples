@@ -19,12 +19,23 @@ from google.cloud import speech_v1p1beta1 as speech
 
 
 def transcribe_with_model_adaptation(
-    project_id, location, storage_uri, custom_class_id, phrase_set_id
-):
-
-    """
-    Create`PhraseSet` and `CustomClasses` to create custom lists of similar
+    project_id: str,
+    location: str,
+    storage_uri: str,
+    custom_class_id: str,
+    phrase_set_id: str,
+) -> str:
+    """Create`PhraseSet` and `CustomClasses` to create custom lists of similar
     items that are likely to occur in your input data.
+
+    Args:
+        project_id: The GCP project ID.
+        location: The GCS location of the input audio.
+        storage_uri: The Cloud Storage URI of the input audio.
+        custom_class_id: The ID of the custom class to create
+
+    Returns:
+        The transcript of the input audio.
     """
 
     # Create the adaptation client

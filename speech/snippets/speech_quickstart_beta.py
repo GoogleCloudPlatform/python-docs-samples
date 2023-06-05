@@ -26,7 +26,7 @@
 from google.cloud import speech_v1p1beta1 as speech
 
 
-def sample_recognize(storage_uri):
+def sample_recognize(storage_uri: str) -> speech.RecognizeResponse:
     """
     Performs synchronous speech recognition on an audio file
 
@@ -65,7 +65,7 @@ def sample_recognize(storage_uri):
     return response
 
 
-def main():
+def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser()
