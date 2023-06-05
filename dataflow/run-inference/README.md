@@ -102,6 +102,10 @@ To run the streaming pipeline, we recommend building a custom container to avoid
 dependencies every time a worker starts.
 This helps to reduce the worker startup time and memory use.
 
+> ⚠️ Your locally installed Python version **must** match the Python version in the [`Dockerfile`](Dockerfile).
+> If you have a different Python version, consider changing the Dockerfile, or installing the required Python version.
+
+
 ```sh
 export CONTAINER_IMAGE="gcr.io/$PROJECT/dataflow/run-inference:latest"
 
