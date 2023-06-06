@@ -56,7 +56,7 @@ You can run smaller models locally if you have enough memory to load the model. 
 If you're not running the model locally, launch a Vertex AI custom job to load the model for into an appropriately sized VM.
 The minimum (and default) disk size for Vertex AI is 100 GB, but some models might require a larger disk.
 
-Here's a table showing the minimum requirements to load a model's `state_dict`.
+The following table provides the minimum requirements to load a model's `state_dict`.
 
 | Model name             | Memory needed | Machine type    | VM Memory | VM Disk |
 |------------------------|---------------|-----------------|-----------|---------|
