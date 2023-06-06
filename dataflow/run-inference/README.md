@@ -29,7 +29,7 @@ gcloud pubsub topics create $MESSAGES_TOPIC
 gcloud pubsub topics create $RESPONSES_TOPIC
 ```
 
-## Loading the `state_dict`
+## Load the `state_dict`
 
 LLMs can be **very large** models. Make sure the VMs you choose have enough memory to load them.
 Larger models generally give better results, but require more memory and can be slower to run on CPUs.
