@@ -83,33 +83,6 @@ def state_dict_path() -> str:
 
 
 @pytest.fixture(scope="session")
-def container_image(project: str, test_name: str, unique_id: str) -> Iterator[str]:
-    image_name = f"gcr.io/{project}/{test_name}:{unique_id}"
-
-    # https://cloud.google.com/sdk/gcloud/reference/builds/submit
-    conftest.run_cmd(
-        "gcloud",
-        "builds",
-        "submit",
-        ".",
-        f"--tag={image_name}",
-        "--machine-type=e2-highcpu-32",
-    )
-
-    yield image_name
-
-    # https://cloud.google.com/sdk/gcloud/reference/container/images/delete
-    conftest.run_cmd(
-        "gcloud",
-        "container",
-        "images",
-        "delete",
-        image_name,
-        "--force-delete-tags",
-    )
-
-
-@pytest.fixture(scope="session")
 def dataflow_job(
     project: str,
     bucket_name: str,
@@ -118,7 +91,6 @@ def dataflow_job(
     messages_topic: str,
     responses_topic: str,
     state_dict_path: str,
-    container_image: str,
 ) -> Iterator[str]:
     # Upload the state dict to Cloud Storage.
     state_dict_gcs = f"gs://{bucket_name}/temp/state_dict.pt"
