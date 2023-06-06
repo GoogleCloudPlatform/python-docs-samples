@@ -85,9 +85,9 @@ python download_model.py vertex \
 
 ## Run the pipeline
 
-To run the pipeline in Dataflow, we just need to make sure the model fits into memory along with the rest of the memory used by each worker.
+To run the pipeline in Dataflow, the model must fit into memory along with the rest of the memory used by each worker.
 
-Here's a table showing the recommended machine types to run an inference pipeline.
+The following table shows the recommended machine types to run an inference pipeline.
 
 | Model name             | Machine type    | VM Memory |
 |------------------------|-----------------|-----------|
