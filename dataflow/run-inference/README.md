@@ -48,7 +48,7 @@ You can add GPUs if you need faster responses.
 
 When running in Dataflow, Apache Beam's [`RunInference`](https://beam.apache.org/documentation/transforms/python/elementwise/runinference/) expects the model's  [`state_dict`](https://pytorch.org/tutorials/recipes/recipes/what_is_state_dict.html) to reside in Cloud Storage.
 
-Since LLMs can be so large, we want to save our `state_dict` as `float16` instead of the default `float32`.
+Because LLMs can be so large, save the `state_dict` as `float16` instead of the default `float32`.
 This means each parameter uses 16 bits instead of 32 bits, making the `state_dict` be half the size, which minimizes the time to load the model.
 However, converting the `state_dict` from `float32` to `float16` means our VM has to fit _both_ into memory.
 
