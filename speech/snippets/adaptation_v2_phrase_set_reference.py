@@ -20,8 +20,22 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_phrase_set_reference(
-    project_id, recognizer_id, phrase_set_id, audio_file
-):
+    project_id: str,
+    recognizer_id: str,
+    phrase_set_id: str,
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribe audio files using a PhraseSet.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer to use.
+        phrase_set_id: The ID of the PhraseSet to use.
+        audio_file: The path to the audio file to transcribe.
+
+    Returns:
+        The response from the recognize call.
+    """
     # Instantiates a client
     client = SpeechClient()
 

@@ -31,7 +31,11 @@ client = speech.AdaptationClient()
 
 
 @Retry()
-def test_model_adaptation_beta(custom_class_id, phrase_set_id, capsys):
+def test_model_adaptation_beta(
+    custom_class_id: str,
+    phrase_set_id: str,
+    capsys: pytest.CaptureFixture
+) -> None:
     class_id = custom_class_id
     phrase_id = phrase_set_id
     transcript = speech_model_adaptation_beta.transcribe_with_model_adaptation(
@@ -41,7 +45,7 @@ def test_model_adaptation_beta(custom_class_id, phrase_set_id, capsys):
 
 
 @pytest.fixture
-def custom_class_id():
+def custom_class_id() -> str:
     # The custom class id can't be too long
     custom_class_id = f"customClassId{str(uuid.uuid4())[:8]}"
     yield custom_class_id
@@ -53,7 +57,7 @@ def custom_class_id():
 
 
 @pytest.fixture
-def phrase_set_id():
+def phrase_set_id() -> str:
     # The phrase set id can't be too long
     phrase_set_id = f"phraseSetId{str(uuid.uuid4())[:8]}"
     yield phrase_set_id

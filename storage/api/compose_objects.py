@@ -1,4 +1,4 @@
-# Copyright 2013 Google, Inc.
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,7 +37,11 @@ import json
 import googleapiclient.discovery
 
 
-def main(bucket, destination, sources):
+def main(
+        bucket: str,
+        destination: str,
+        sources: list,
+) -> str:
     # Construct the service object for the interacting with the Cloud Storage
     # API.
     service = googleapiclient.discovery.build('storage', 'v1')
@@ -79,6 +83,8 @@ def main(bucket, destination, sources):
 
     print('> Composed file contents:')
     print(res)
+
+    return res
 
 
 if __name__ == '__main__':
