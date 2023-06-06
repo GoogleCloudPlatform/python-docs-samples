@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import tasks_v2
 
 import create_queue
@@ -24,6 +25,7 @@ TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
 TEST_QUEUE_ID = f"my-queue-{uuid.uuid4().hex}"
 
 
+@Retry()
 def test_create_queue() -> None:
     client = tasks_v2.CloudTasksClient()
 
