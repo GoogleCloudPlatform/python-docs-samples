@@ -83,7 +83,7 @@ python download_model.py vertex \
     --disk-size-gb="$DISK_SIZE_GB"
 ```
 
-## Running the pipeline
+## Run the pipeline
 
 To run the pipeline in Dataflow, we just need to make sure the model fits into memory along with the rest of the memory used by each worker.
 
