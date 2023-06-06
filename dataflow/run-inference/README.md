@@ -52,7 +52,7 @@ Because LLMs can be so large, save the `state_dict` as `float16` instead of the 
 With this configuration, each parameter uses 16 bits instead of 32 bits, making the `state_dict` half the size, which minimizes the time needed to load the model.
 However, converting the `state_dict` from `float32` to `float16` means our VM has to fit _both_ into memory.
 
-For smaller models, you can run it locally as long as you have enough memory to load the model and a fast internet connection to download the weights and upload them to Cloud Storage.
+You can run smaller models locally if you have enough memory to load the model. You also need a fast internet connection to download the weights and to upload them to Cloud Storage.
 Otherwise, we can launch a Vertex AI custom job to load it for us using a VM with the right size.
 The minimum (and default) disk size for Vertex AI is 100 GB, but some models might require a larger disk.
 
