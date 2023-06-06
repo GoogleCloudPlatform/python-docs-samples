@@ -85,7 +85,7 @@ def run_vertex_job(
     job = aiplatform.CustomJob.from_local_script(
         display_name=job_name,
         container_uri="us-docker.pkg.dev/vertex-ai/training/pytorch-gpu.1-13:latest",
-        script_path="load-state-dict.py",
+        script_path="download_model.py",
         args=[
             "local",
             f"--model-name={model_name}",
