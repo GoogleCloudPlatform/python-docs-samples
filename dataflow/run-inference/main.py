@@ -133,12 +133,10 @@ if __name__ == "__main__":
     pipeline = beam.Pipeline(options=beam_options)
     _ = (
         pipeline
-        | beam.Create(["Hello!"])
-        # | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
-        # | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
+        | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
+        | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
         | f"Ask {simple_name}" >> AskModel(args.model_name, args.state_dict_path)
-        | beam.Map(print)
-        # | "Encode bytes" >> beam.Map(lambda msg: msg.encode("utf-8"))
-        # | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
+        | "Encode bytes" >> beam.Map(lambda msg: msg.encode("utf-8"))
+        | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
     )
     pipeline.run()
