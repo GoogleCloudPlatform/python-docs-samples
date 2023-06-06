@@ -19,7 +19,11 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def adaptation_v2_inline_phrase_set(project_id, recognizer_id, audio_file):
+def adaptation_v2_inline_phrase_set(
+        project_id: str,
+        recognizer_id: str,
+        audio_file: str,
+) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
     client = SpeechClient()
 

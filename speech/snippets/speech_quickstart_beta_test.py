@@ -18,7 +18,7 @@ import speech_quickstart_beta
 
 
 @Retry()
-def test_quickstart_beta():
+def test_quickstart_beta() -> None:
     response = speech_quickstart_beta.sample_recognize(
         "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
     )
