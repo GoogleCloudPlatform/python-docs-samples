@@ -29,7 +29,7 @@ gcloud pubsub topics create $MESSAGES_TOPIC
 gcloud pubsub topics create $RESPONSES_TOPIC
 ```
 
-## Loading the `state_dict`
+## Load the `state_dict`
 
 LLMs can be **very large** models. Make sure the VMs you choose have enough memory to load them.
 Larger models generally give better results, but require more memory and can be slower to run on CPUs.
@@ -48,15 +48,15 @@ You can add GPUs if you need faster responses.
 
 When running in Dataflow, Apache Beam's [`RunInference`](https://beam.apache.org/documentation/transforms/python/elementwise/runinference/) expects the model's  [`state_dict`](https://pytorch.org/tutorials/recipes/recipes/what_is_state_dict.html) to reside in Cloud Storage.
 
-Since LLMs can be so large, we want to save our `state_dict` as `float16` instead of the default `float32`.
-This means each parameter uses 16 bits instead of 32 bits, making the `state_dict` be half the size, which minimizes the time to load the model.
+Because LLMs can be so large, save the `state_dict` as `float16` instead of the default `float32`.
+With this configuration, each parameter uses 16 bits instead of 32 bits, making the `state_dict` half the size, which minimizes the time needed to load the model.
 However, converting the `state_dict` from `float32` to `float16` means our VM has to fit _both_ into memory.
 
-For smaller models, you can run it locally as long as you have enough memory to load the model and a fast internet connection to download the weights and upload them to Cloud Storage.
-Otherwise, we can launch a Vertex AI custom job to load it for us using a VM with the right size.
+You can run smaller models locally if you have enough memory to load the model. You also need a fast internet connection to download the weights and to upload them to Cloud Storage.
+If you're not running the model locally, launch a Vertex AI custom job to load the model for into an appropriately sized VM.
 The minimum (and default) disk size for Vertex AI is 100 GB, but some models might require a larger disk.
 
-Here's a table showing the minimum requirements to load a model's `state_dict`.
+The following table provides the minimum requirements to load a model's `state_dict`.
 
 | Model name             | Memory needed | Machine type    | VM Memory | VM Disk |
 |------------------------|---------------|-----------------|-----------|---------|
@@ -83,11 +83,11 @@ python download_model.py vertex \
     --disk-size-gb="$DISK_SIZE_GB"
 ```
 
-## Running the pipeline
+## Run the pipeline
 
-To run the pipeline in Dataflow, we just need to make sure the model fits into memory along with the rest of the memory used by each worker.
+To run the pipeline in Dataflow, the model must fit into memory along with the rest of the memory used by each worker.
 
-Here's a table showing the recommended machine types to run an inference pipeline.
+The following table shows the recommended machine types to run an inference pipeline.
 
 | Model name             | Machine type    | VM Memory |
 |------------------------|-----------------|-----------|
