@@ -53,7 +53,7 @@ With this configuration, each parameter uses 16 bits instead of 32 bits, making 
 However, converting the `state_dict` from `float32` to `float16` means our VM has to fit _both_ into memory.
 
 You can run smaller models locally if you have enough memory to load the model. You also need a fast internet connection to download the weights and to upload them to Cloud Storage.
-Otherwise, we can launch a Vertex AI custom job to load it for us using a VM with the right size.
+If you're not running the model locally, launch a Vertex AI custom job to load the model for into an appropriately sized VM.
 The minimum (and default) disk size for Vertex AI is 100 GB, but some models might require a larger disk.
 
 Here's a table showing the minimum requirements to load a model's `state_dict`.
