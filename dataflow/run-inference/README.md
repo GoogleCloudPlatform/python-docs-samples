@@ -60,9 +60,9 @@ Here's a table showing the minimum requirements to load a model's `state_dict`.
 
 | Model name             | Memory needed | Machine type    | VM Memory | VM Disk |
 |------------------------|---------------|-----------------|-----------|---------|
-| `google/flan-t5-small` | > 480 MB      | `e2-standard-4` | 16 GB      | 100 GB  |
-| `google/flan-t5-base`  | > 1.5 GB      | `e2-standard-4` | 16 GB      | 100 GB  |
-| `google/flan-t5-large` | > 4.8 GB      | `e2-standard-4` | 16 GB      | 100 GB  |
+| `google/flan-t5-small` | > 480 MB      | `e2-standard-4` | 16 GB     | 100 GB  |
+| `google/flan-t5-base`  | > 1.5 GB      | `e2-standard-4` | 16 GB     | 100 GB  |
+| `google/flan-t5-large` | > 4.8 GB      | `e2-standard-4` | 16 GB     | 100 GB  |
 | `google/flan-t5-xl`    | > 18 GB       | `e2-highmem-4`  | 32 GB     | 100 GB  |
 | `google/flan-t5-xxl`   | > 66 GB       | `e2-highmem-16` | 128 GB    | 100 GB  |
 | `google/flan-ul2`      | > 120 GB      | `e2-highmem-16` | 128 GB    | 150 GB  |
@@ -72,7 +72,7 @@ export MODEL_NAME="google/flan-t5-xl"
 export MACHINE_TYPE="e2-highmem-4"
 export DISK_SIZE_GB=100  # minimum is 100
 
-python load-state-dict.py vertex \
+python download_model.py vertex \
     --model-name="$MODEL_NAME" \
     --state-dict-path="gs://$BUCKET/run-inference/$MODEL_NAME.pt" \
     --job-name="Load $MODEL_NAME" \
@@ -92,33 +92,17 @@ Here's a table showing the recommended machine types to run an inference pipelin
 | Model name             | Machine type    | VM Memory |
 |------------------------|-----------------|-----------|
 | `google/flan-t5-small` | `n2-highmem-2`  | 16 GB     |
-| `google/flan-t5-base`  | `n2-highmem-4`  | 32 GB     |
+| `google/flan-t5-base`  | `n2-highmem-2`  | 16 GB     |
 | `google/flan-t5-large` | `n2-highmem-4`  | 32 GB     |
 | `google/flan-t5-xl`    | `n2-highmem-4`  | 32 GB     |
 | `google/flan-t5-xxl`   | `n2-highmem-8`  | 64 GB     |
 | `google/flan-ul2`      | `n2-highmem-16` | 128 GB    |
 
-To run the streaming pipeline, we recommend building a custom container to avoid installing
-dependencies every time a worker starts.
-This helps to reduce the worker startup time and memory use.
-
-> ⚠️ Your locally installed Python version **must** match the Python version in the [`Dockerfile`](Dockerfile).
-> If you have a different Python version, consider changing the Dockerfile, or installing the required Python version.
-
-
-```sh
-export CONTAINER_IMAGE="gcr.io/$PROJECT/dataflow/run-inference:latest"
-
-# Build the container image with Cloud Build.
-gcloud builds submit . --tag="$CONTAINER_IMAGE" --machine-type="e2-highcpu-32"
-```
-
-Once your image is built, you can launch the pipeline using the appropriate machine type.
-
 ```sh
 export MODEL_NAME="google/flan-t5-xl"
 export MACHINE_TYPE="n2-highmem-4"
 
+# Launch the Datflow pipeline.
 python main.py \
   --messages-topic="$MESSAGES_TOPIC" \
   --responses-topic="$RESPONSES_TOPIC" \
@@ -129,8 +113,9 @@ python main.py \
   --temp_location="gs://$BUCKET/temp" \
   --region="$LOCATION" \
   --machine_type="$MACHINE_TYPE" \
-  --sdk_container_image="$CONTAINER_IMAGE" \
-  --sdk_location="container"
+  --requirements_file="requirements.txt" \
+  --requirements_cache="skip" \
+  --experiments="use_sibling_sdk_workers"
 ```
 
 ## What's next?

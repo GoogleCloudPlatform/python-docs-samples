@@ -74,7 +74,7 @@ def state_dict_path() -> str:
     print(f"state_dict_path: {filename}")
     conftest.run_cmd(
         "python",
-        "load-state-dict.py",
+        "download_model.py",
         "local",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={filename}",
@@ -138,8 +138,9 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
-        f"--sdk_container_image={container_image}",
-        "--sdk_location=container",
+        "--requirements_file=requirements.txt",
+        "--requirements_cache=skip",
+        "--experiments=use_sibling_sdk_workers",
     )
 
     # Get the job ID.
@@ -161,7 +162,7 @@ def test_load_state_dict_vertex(
 ) -> None:
     conftest.run_cmd(
         "python",
-        "load-state-dict.py",
+        "download_model.py",
         "vertex",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path=gs://{bucket_name}/temp/state_dict_vertex.pt",
