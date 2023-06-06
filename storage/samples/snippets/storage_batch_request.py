@@ -28,7 +28,14 @@ from google.cloud import storage
 
 
 def batch_request(bucket_name, prefix=None):
-    """Use a batch request to patch a list of objects with the given prefix in a bucket."""
+    """
+    Use a batch request to patch a list of objects with the given prefix in a bucket.
+
+    Note that Cloud Storage does not support batch operations for uploading or downloading.
+    Additionally, the current batch design does not support library methods whose return values
+    depend on the response payload.
+    See https://cloud.google.com/python/docs/reference/storage/latest/google.cloud.storage.batch
+    """
     # The ID of your GCS bucket
     # bucket_name = "my-bucket"
     # The prefix of the object paths
