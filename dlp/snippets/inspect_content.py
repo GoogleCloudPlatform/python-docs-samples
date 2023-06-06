@@ -1320,7 +1320,7 @@ def inspect_gcs_with_sampling(
 # [END dlp_inspect_gcs_with_sampling]
 
 
-# [START dlp_inspect_data_to_hybrid_job_trigger]
+# [START dlp_inspect_send_data_to_hybrid_job_trigger]
 import time  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
@@ -1405,7 +1405,7 @@ def inspect_data_to_hybrid_job_trigger(
         print("No findings.")
 
 
-# [END dlp_inspect_data_to_hybrid_job_trigger]
+# [END dlp_inspect_send_data_to_hybrid_job_trigger]
 
 
 if __name__ == "__main__":
