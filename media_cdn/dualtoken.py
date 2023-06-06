@@ -191,7 +191,6 @@ def sign_path_component(url_prefix: str, filename: str, key_name: str,
         specified URL prefix and configuration.
     """
 
-    epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_duration = expiration_time.astimezone(
         tz=datetime.timezone.utc
     ) - datetime.datetime.fromtimestamp(0, tz=datetime.timezone.utc)
