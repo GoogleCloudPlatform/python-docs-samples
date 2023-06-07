@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2023 Google, LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_audit_storage_server]
+# [START eventarc_audit_storage_http_server]
 import os
 
 from flask import Flask, request
@@ -22,10 +22,10 @@ from google.events.cloud.storage import StorageObjectData
 from google.events.cloud.audit import AuditLog, LogEntryData
 
 app = Flask(__name__)
-# [END eventarc_storage_server]
+# [END eventarc_audit_storage_http_server]
 
 
-# [START eventarc_storage_handler]
+# [START eventarc_audit_storage_http_handler]
 @app.route("/", methods=["POST"])
 def index():
     event = from_http(request.headers, request.get_data())
@@ -43,7 +43,7 @@ def index():
     )
 
 
-# [END eventarc_audit_storage_handler]
+# [START eventarc_audit_storage_http_handler]
 
 
 # [START eventarc_audit_storage_server]
