@@ -17,7 +17,7 @@ from vertexai.preview.language_models import CodeChatModel
 
 
 def write_a_function(
-        temperature: float = 0.2
+        temperature: float = 0.5
 ) -> object:
     """Example of using Code Chat Model to write a function."""
 

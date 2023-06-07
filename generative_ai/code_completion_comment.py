@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_completion_comment]
+import textwrap
+
 from vertexai.preview.language_models import CodeGenerationModel
 
 
@@ -28,10 +30,10 @@ def complete_code_comment(
     }
 
     code_completion_model = CodeGenerationModel.from_pretrained("code-gecko@001")
-    response = code_completion_model.predict(prefix="""
+    response = code_completion_model.predict(prefix=textwrap.dedent("""\
     def reverse_string(s):
         return s[::-1]
-    //This function""", **parameters)
+    //This function"""), **parameters)
 
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_code_completion_comment]

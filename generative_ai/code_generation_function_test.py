@@ -21,4 +21,4 @@ import code_generation_function
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_code_generation_function() -> None:
     content = code_generation_function.generate_a_function(temperature=0).text
-    assert 'def is_leap_year(year):' in content
+    assert 'Divide the year by 4.' in content

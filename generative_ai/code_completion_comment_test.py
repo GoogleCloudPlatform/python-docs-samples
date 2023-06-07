@@ -19,6 +19,6 @@ import code_completion_comment
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_code_chat() -> None:
+def test_code_completion_comment() -> None:
     content = code_completion_comment.complete_code_comment(temperature=0).text
     assert 'reverses a string' in content

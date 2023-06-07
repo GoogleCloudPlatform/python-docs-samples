@@ -13,11 +13,13 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_generation_unittest]
+import textwrap
+
 from vertexai.preview.language_models import CodeGenerationModel
 
 
 def generate_unittest(
-        temperature: float = 0.2
+        temperature: float = 0.5
 ) -> object:
     """Example of using Code Generation to write a unit test."""
 
@@ -28,7 +30,7 @@ def generate_unittest(
     }
 
     code_generation_model = CodeGenerationModel.from_pretrained("code-bison@001")
-    response = code_generation_model.predict(prefix="""
+    response = code_generation_model.predict(prefix=textwrap.dedent("""\
     Write a unit test for this function:
     def is_leap_year(year):
         if year % 4 == 0:
@@ -41,7 +43,7 @@ def generate_unittest(
                 return True
         else:
             return False
-    """, **parameters)
+    """), **parameters)
 
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_code_generation_unittest]
