@@ -304,6 +304,7 @@ assign_prs_by:
       - GoogleCloudPlatform/cloud-retail-team
   - labels:
       - "api: cloudmedia"
+      - "api: videostitcher"
     to:
       - GoogleCloudPlatform/cloud-media-team
 
