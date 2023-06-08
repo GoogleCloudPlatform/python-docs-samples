@@ -18,6 +18,7 @@ import random
 import string
 import time
 
+from google.api_core.retry import Retry
 from google.api_core import exceptions
 
 import automl_tables_model

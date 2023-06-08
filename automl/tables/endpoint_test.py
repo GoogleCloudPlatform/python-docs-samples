@@ -15,6 +15,8 @@
 # limitations under the License.
 import os
 
+from google.api_core.retry import Retry
+
 import automl_tables_set_endpoint
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
