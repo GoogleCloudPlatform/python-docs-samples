@@ -219,6 +219,7 @@ assign_prs_by:
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
+      - "api: transcoder"
       - "api: translate"
       - "api: vision"
     to:
