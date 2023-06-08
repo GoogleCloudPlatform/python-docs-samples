@@ -18,8 +18,7 @@ import random
 import string
 import time
 
-from google.api_core.retry import Retry
-from google.api_core import exceptions
+from google.api_core import exceptions, retry
 
 import automl_tables_model
 import dataset_test
@@ -42,7 +41,7 @@ def _id(name):
     return f"{name}_{ID}"
 
 
-@Retry()
+@retry.Retry()
 def test_list_models():
     ensure_model_ready()
     assert (
@@ -58,7 +57,7 @@ def test_list_models():
     )
 
 
-@Retry()
+@retry.Retry()
 def test_list_model_evaluations():
     model = ensure_model_ready()
     mes = automl_tables_model.list_model_evaluations(
@@ -69,7 +68,7 @@ def test_list_model_evaluations():
         assert me.name.startswith(model.name)
 
 
-@Retry()
+@retry.Retry()
 def test_get_model_evaluations():
     model = ensure_model_ready()
     me = automl_tables_model.list_model_evaluations(

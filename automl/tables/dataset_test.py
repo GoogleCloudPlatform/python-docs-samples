@@ -18,8 +18,7 @@ import random
 import string
 import time
 
-from google.api_core.retry import Retry
-from google.api_core import exceptions
+from google.api_core import exceptions, retry
 import pytest
 
 import automl_tables_dataset
@@ -65,6 +64,7 @@ def ensure_dataset_ready():
     return dataset
 
 
+@retry.Retry()
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     name = _id("d_cr_dl")
@@ -83,7 +83,7 @@ def test_dataset_create_import_delete(capsys):
         automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
 
-@Retry()
+@retry.Retry()
 def test_dataset_update(capsys):
     dataset = ensure_dataset_ready()
     automl_tables_dataset.update_dataset(
@@ -99,7 +99,7 @@ def test_dataset_update(capsys):
     assert "Weight column updated." in out
 
 
-@Retry()
+@retry.Retry()
 def test_list_datasets():
     ensure_dataset_ready()
     assert (
