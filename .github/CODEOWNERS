@@ -102,6 +102,7 @@
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
 /iot/**/*                              @GoogleCloudPlatform/api-iot @GoogleCloudPlatform/python-samples-reviewers
+/video/stitcher/*                    @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 
 # Does not have owner
 /blog/**/*                             @GoogleCloudPlatform/python-samples-reviewers
