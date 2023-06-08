@@ -26,7 +26,7 @@ def complete_code_comment(
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,    # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 64,    # Token limit determines the maximum amount of text output.
     }
 
     code_completion_model = CodeGenerationModel.from_pretrained("code-gecko@001")

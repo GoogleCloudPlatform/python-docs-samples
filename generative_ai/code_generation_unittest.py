@@ -26,7 +26,7 @@ def generate_unittest(
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 512,    # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 256,    # Token limit determines the maximum amount of text output.
     }
 
     code_generation_model = CodeGenerationModel.from_pretrained("code-bison@001")

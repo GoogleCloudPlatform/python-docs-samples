@@ -24,7 +24,7 @@ def write_a_function(
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,    # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 1024,    # Token limit determines the maximum amount of text output.
     }
 
     code_chat_model = CodeChatModel.from_pretrained("codechat-bison@001")
