@@ -18,10 +18,10 @@ import textwrap
 from vertexai.preview.language_models import CodeGenerationModel
 
 
-def complete_code_comment(
+def complete_code_function(
         temperature: float = 0.2
 ) -> object:
-    """Example of using Code Completion to complete a code comment."""
+    """Example of using Code Completion to complete a function."""
 
     # TODO developer - override these parameters as needed:
     parameters = {
@@ -30,10 +30,7 @@ def complete_code_comment(
     }
 
     code_completion_model = CodeGenerationModel.from_pretrained("code-gecko@001")
-    response = code_completion_model.predict(prefix=textwrap.dedent("""\
-    def reverse_string(s):
-        return s[::-1]
-    //This function"""), **parameters)
+    response = code_completion_model.predict(prefix="def reverse_string(s):", **parameters)
 
     print(f"Response from Model: {response.text}")
 # [END aiplatform_sdk_code_completion_comment]
@@ -42,4 +39,4 @@ def complete_code_comment(
 
 
 if __name__ == "__main__":
-    complete_code_comment()
+    complete_code_function()
