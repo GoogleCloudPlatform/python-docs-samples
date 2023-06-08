@@ -41,6 +41,7 @@ def _id(name):
     return f"{name}_{ID}"
 
 
+@Retry()
 def test_list_models():
     ensure_model_ready()
     assert (
@@ -56,6 +57,7 @@ def test_list_models():
     )
 
 
+@Retry()
 def test_list_model_evaluations():
     model = ensure_model_ready()
     mes = automl_tables_model.list_model_evaluations(
@@ -66,6 +68,7 @@ def test_list_model_evaluations():
         assert me.name.startswith(model.name)
 
 
+@Retry()
 def test_get_model_evaluations():
     model = ensure_model_ready()
     me = automl_tables_model.list_model_evaluations(

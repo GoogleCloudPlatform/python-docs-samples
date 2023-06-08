@@ -15,6 +15,7 @@
 import datetime
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl
 import pytest
 
@@ -24,6 +25,7 @@ import vision_classification_create_dataset
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
+@Retry()
 @pytest.mark.slow
 def test_vision_classification_create_dataset(capsys):
     # create dataset

@@ -13,9 +13,6 @@
 # limitations under the License.
 
 # [START automl_get_operation_status_beta]
-from google.cloud import automl_v1beta1 as automl
-
-
 def get_operation_status(
     operation_full_id="projects/YOUR_PROJECT_ID/locations/us-central1/"
                       "operations/YOUR_OPERATION_ID",

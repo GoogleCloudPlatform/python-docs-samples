@@ -82,6 +82,7 @@ def test_dataset_create_import_delete(capsys):
         automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
 
+@Retry()
 def test_dataset_update(capsys):
     dataset = ensure_dataset_ready()
     automl_tables_dataset.update_dataset(
@@ -97,6 +98,7 @@ def test_dataset_update(capsys):
     assert "Weight column updated." in out
 
 
+@Retry()
 def test_list_datasets():
     ensure_dataset_ready()
     assert (
