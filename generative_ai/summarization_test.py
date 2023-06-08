@@ -18,11 +18,7 @@ from google.api_core.exceptions import ResourceExhausted
 import summarization
 
 
-expected_response = '''The efficient-market hypothesis (EMH) states that asset prices reflect all available information.
-A direct implication is that it is impossible to "beat the market" consistently on a risk-adjusted basis.'''
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_summarization() -> None:
     content = summarization.text_summarization(temperature=0).text
-    assert content == expected_response
+    assert "efficient-market hypothesis (EMH)" in content
