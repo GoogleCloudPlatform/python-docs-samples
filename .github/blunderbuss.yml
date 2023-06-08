@@ -18,18 +18,6 @@
 assign_issues_by:
   # DEE teams
   - labels:
-      - "api: appengine"
-      - "api: cloudbuild"
-      - "api: cloudscheduler"
-      - "api: cloudtasks"
-      - "api: containeranalysis"
-      - "api: eventarc"
-      - "api: functions"
-      - "api: run"
-      - "api: workflows"
-    to:
-      - GoogleCloudPlatform/torus-dpe
-  - labels:
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -167,18 +155,6 @@ assign_issues_by:
 ###
 assign_prs_by:
   # DEE teams
-  - labels:
-      - "api: appengine"
-      - "api: cloudbuild"
-      - "api: cloudscheduler"
-      - "api: cloudtasks"
-      - "api: containeranalysis"
-      - "api: eventarc"
-      - "api: functions"
-      - "api: run"
-      - "api: workflows"
-    to:
-      - GoogleCloudPlatform/torus-dpe
   - labels:
       - "api: batch"
       - "api: compute"
