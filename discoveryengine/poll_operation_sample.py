@@ -16,7 +16,7 @@
 # [START genappbuilder_poll_operation]
 from time import sleep
 
-from google.cloud import discoveryengine_v1beta as genappbuilder
+from google.cloud import discoveryengine
 
 from google.longrunning import operations_pb2
 
@@ -25,9 +25,11 @@ from google.longrunning import operations_pb2
 # operation_name = "YOUR_OPERATION_NAME"
 
 
-def poll_operation_sample(operation_name: str, limit: int = 10):
+def poll_operation_sample(
+    operation_name: str, limit: int = 10
+) -> operations_pb2.Operation:
     # Create a client
-    client = genappbuilder.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient()
 
     # Make GetOperation request
     request = operations_pb2.GetOperationRequest(name=operation_name)
@@ -43,6 +45,8 @@ def poll_operation_sample(operation_name: str, limit: int = 10):
 
         # Wait 10 seconds before polling again
         sleep(10)
+
+    return operation
 
 
 # [END genappbuilder_poll_operation]

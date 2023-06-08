@@ -25,26 +25,26 @@ import adaptation_v2_custom_class_reference
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
-def delete_phrase_set(name):
+def delete_phrase_set(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeletePhraseSetRequest(name=name)
     client.delete_phrase_set(request=request)
 
 
-def delete_custom_class(name):
+def delete_custom_class(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteCustomClassRequest(name=name)
     client.delete_custom_class(request=request)
 
 
 @Retry()
-def test_adaptation_v2_custom_class_reference(capsys):
+def test_adaptation_v2_custom_class_reference() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

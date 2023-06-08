@@ -44,4 +44,5 @@ TEST_CONFIG_OVERRIDE = {
         "RESULT_TOPIC": "result-topic",
         "RESULT_BUCKET": "result-bucket",
     },
+    "enforce_type_hints": True,
 }
