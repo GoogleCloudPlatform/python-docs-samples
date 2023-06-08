@@ -26,7 +26,10 @@
 from google.cloud import speech_v1p1beta1 as speech
 
 
-def sample_recognize(storage_uri, phrase):
+def sample_recognize(
+        storage_uri: str,
+        phrase: str
+) -> speech.RecognizeResponse:
     """
     Transcribe a short audio file with speech adaptation.
 
@@ -80,7 +83,7 @@ def sample_recognize(storage_uri, phrase):
     return response
 
 
-def main():
+def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser()

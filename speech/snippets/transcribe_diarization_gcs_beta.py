@@ -17,11 +17,14 @@
 from google.cloud import speech
 
 
-def transcribe_diarization_gcs_beta(gcs_uri: str):
+def transcribe_diarization_gcs_beta(gcs_uri: str) -> bool:
     """ Transcribe a remote audio file (stored in Google Cloud Storage) using speaker diarization.
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
+
+    Returns:
+        True if the operation successfully completed, False otherwise.
     """
 
     client = speech.SpeechClient()
