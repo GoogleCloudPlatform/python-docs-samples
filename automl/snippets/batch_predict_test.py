@@ -24,6 +24,7 @@ BUCKET_ID = f"{PROJECT_ID}-lcm"
 MODEL_ID = "TEN0000000000000000000"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
+
 @Retry()
 def test_batch_predict(capsys):
     # As batch prediction can take a long time. Try to batch predict on a model
