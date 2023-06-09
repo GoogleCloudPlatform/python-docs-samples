@@ -23,7 +23,7 @@ def temp_dataset():
     from google.cloud import bigquery
 
     client = bigquery.Client()
-    dataset_id = "temp_dataset_{}".format(int(time.time() * 1000))
+    dataset_id = f"temp_dataset_{int(time.time() * 1000)}"
     dataset_ref = bigquery.DatasetReference(client.project, dataset_id)
     dataset = client.create_dataset(bigquery.Dataset(dataset_ref))
     yield dataset

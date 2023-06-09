@@ -1,4 +1,6 @@
-# Copyright 2019 Google LLC
+#!/usr/bin/env python
+
+# Copyright 2023 Google LLC. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,23 +14,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+import quickstart_analyze_org_policies
 
-import create_job
+# Owner of the organization below: cloud-asset-analysis-team.
+ORG_ID = "474566717491"
 
-TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-TEST_LOCATION = os.getenv("LOCATION_ID", "us-central1")
+# Find more Organization Policy Constraints at:
+# http://cloud/resource-manager/docs/organization-policy/org-policy-constraints
+CONSTRAINT_NAME = "constraints/compute.requireOsLogin"
 
 
-def test_create_job(capsys):
-    create_result = create_job.create_scheduler_job(
-        TEST_PROJECT_ID, TEST_LOCATION, "my-service"
-    )
+def test_analyze_org_policies(capsys):
+    quickstart_analyze_org_policies.analyze_org_policies(ORG_ID, CONSTRAINT_NAME)
     out, _ = capsys.readouterr()
-    assert "Created job:" in out
-
-    job_name = create_result.name.split("/")[-1]
-    create_job.delete_scheduler_job(TEST_PROJECT_ID, TEST_LOCATION, job_name)
-
-    out, _ = capsys.readouterr()
-    assert "Job deleted." in out
+    assert CONSTRAINT_NAME in out

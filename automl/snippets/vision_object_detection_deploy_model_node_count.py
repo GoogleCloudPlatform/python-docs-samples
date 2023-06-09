@@ -36,5 +36,5 @@ def deploy_model(project_id, model_id):
     )
     response = client.deploy_model(request=request)
 
-    print("Model deployment finished. {}".format(response.result()))
+    print(f"Model deployment finished. {response.result()}")
     # [END automl_vision_object_detection_deploy_model_node_count]

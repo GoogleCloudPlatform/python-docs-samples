@@ -25,6 +25,7 @@ path:
         bigquery: "bigquery"
         bigquery_storage: "bigquerystorage"
         billing: "cloudbilling"
+        cloud-media-livestream: "cloudmedia"
         cloud_tasks: "tasks"
         cloud-sql: "cloudsql"
         cloudbuild: "cloudbuild"

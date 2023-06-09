@@ -32,7 +32,7 @@ def call_async_api(
     fleet_routing_client = optimization_v1.FleetRoutingClient()
     request_file_name = "resources/async_request.json"
 
-    with open(request_file_name, "r") as f:
+    with open(request_file_name) as f:
         fleet_routing_request = optimization_v1.BatchOptimizeToursRequest.from_json(
             f.read()
         )

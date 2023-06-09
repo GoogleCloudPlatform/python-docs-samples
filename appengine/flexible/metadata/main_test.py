@@ -1,4 +1,4 @@
-# Copyright 2019 Google LLC
+# Copyright 2023 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,35 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
+import main
 
 
-@pytest.fixture
-def app():
-    import main
-
+def test_index():
     main.app.testing = True
-    return main.app.test_client()
+    client = main.app.test_client()
 
+    external_ip = main.get_external_ip()
 
-def test_index(app):
-    r = app.get("/")
+    r = client.get("/")
     assert r.status_code == 200
-
-
-def test_log_payload(capsys, app):
-    payload = "test_payload"
-
-    r = app.post("/log_payload", data=payload)
-    assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert payload in out
-
-
-def test_empty_payload(capsys, app):
-    r = app.post("/log_payload")
-    assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert "empty payload" in out
+    assert f"External IP: {external_ip}" in r.data.decode("utf-8")

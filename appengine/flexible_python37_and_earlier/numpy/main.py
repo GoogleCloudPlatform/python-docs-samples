@@ -20,29 +20,40 @@ import numpy as np
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def calculate():
-    return_str = ''
+    """Performs a dot product on predefined arrays.
+
+    Returns:
+        Returns a formatted message containing the dot product result of
+        two predefined arrays.
+    """
+    return_str = ""
     x = np.array([[1, 2], [3, 4]])
     y = np.array([[5, 6], [7, 8]])
 
-    return_str += 'x: {} , y: {}<br />'.format(str(x), str(y))
+    return_str += f"x: {str(x)} , y: {str(y)}<br />"
 
     # Multiply matrices
-    return_str += 'x dot y : {}'.format(str(np.dot(x, y)))
+    return_str += f"x dot y : {str(np.dot(x, y))}"
     return return_str
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
-    An internal error occurred: <pre>{}</pre>
-    See logs for full stacktrace.
-    """.format(e), 500
+    """Serves a formatted message on-error.
+
+    Returns:
+        The error message and a code 500 status.
+    """
+    logging.exception("An error occurred during a request.")
+    return (
+        f"An internal error occurred: <pre>{e}</pre><br>See logs for full stacktrace.",
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

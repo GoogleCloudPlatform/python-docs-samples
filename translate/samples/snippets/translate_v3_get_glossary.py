@@ -16,17 +16,27 @@
 from google.cloud import translate_v3 as translate
 
 
-def get_glossary(project_id="YOUR_PROJECT_ID", glossary_id="YOUR_GLOSSARY_ID"):
-    """Get a particular glossary based on the glossary ID."""
+def get_glossary(
+        project_id: str = "YOUR_PROJECT_ID",
+        glossary_id: str = "YOUR_GLOSSARY_ID"
+) -> translate.Glossary:
+    """Get a particular glossary based on the glossary ID.
 
+    Args:
+        project_id: The GCP project ID.
+        glossary_id: The ID of the glossary to retrieve.
+
+    Returns:
+        The glossary.
+    """
     client = translate.TranslationServiceClient()
 
     name = client.glossary_path(project_id, "us-central1", glossary_id)
 
     response = client.get_glossary(name=name)
-    print(u"Glossary name: {}".format(response.name))
-    print(u"Entry count: {}".format(response.entry_count))
-    print(u"Input URI: {}".format(response.input_config.gcs_source.input_uri))
+    print(f"Glossary name: {response.name}")
+    print(f"Entry count: {response.entry_count}")
+    print(f"Input URI: {response.input_config.gcs_source.input_uri}")
 
-
+    return response
 # [END translate_v3_get_glossary]

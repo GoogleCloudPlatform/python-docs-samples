@@ -57,7 +57,7 @@ def get_client(service_account_json):
     )
     scoped_credentials = credentials.with_scopes(api_scopes)
 
-    discovery_url = "{}?version={}".format(discovery_api, api_version)
+    discovery_url = f"{discovery_api}?version={api_version}"
 
     return discovery.build(
         service_name,
@@ -73,12 +73,11 @@ def create_bucket(bucket_name):
 
     try:
         storage_client.create_bucket(bucket_name)
-        print("Bucket {} created".format(bucket_name))
+        print(f"Bucket {bucket_name} created")
     except BaseException:
         # If the bucket already exists, ignore the 409 HTTP error and
         # continue with the rest of the program.
-        print("Bucket {} already exists.".format(bucket_name))
-        pass
+        print(f"Bucket {bucket_name} already exists.")
 
 
 def upload_local_file(bucket_name, gcs_file_name, source_file_name):
@@ -89,7 +88,7 @@ def upload_local_file(bucket_name, gcs_file_name, source_file_name):
 
     config.upload_from_filename(source_file_name)
 
-    print("File {} uploaded as {}.".format(source_file_name, gcs_file_name))
+    print(f"File {source_file_name} uploaded as {gcs_file_name}.")
 
 
 def make_file_public(bucket_name, gcs_file_name):
@@ -100,7 +99,7 @@ def make_file_public(bucket_name, gcs_file_name):
 
     config.make_public()
 
-    print("File {} is publicly accessible at {}".format(config.name, config.public_url))
+    print(f"File {config.name} is publicly accessible at {config.public_url}")
 
 
 def send_to_device(
@@ -153,12 +152,12 @@ def send_to_device(
 
     try:
         request.execute()
-        print("Successfully sent file to device: {}".format(device_id))
+        print(f"Successfully sent file to device: {device_id}")
     except HttpError as e:
         # If the server responds with an HtppError, most likely because
         # the config version sent differs from the version on the
         # device, log it here.
-        print("Error executing ModifyCloudToDeviceConfig: {}".format(e))
+        print(f"Error executing ModifyCloudToDeviceConfig: {e}")
 
 
 def get_state(service_account_json, project_id, cloud_region, registry_id, device_id):

@@ -50,7 +50,7 @@ def get_key_id(api_key_name: str):
 
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
     out = "Failed to authenticate after 5 tries"
-    for _ in range(5):
+    for i in range(5):
         try:
             authenticate_with_api_key.authenticate_with_api_key(
                 PROJECT, api_key.key_string
@@ -58,7 +58,7 @@ def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
             out, _ = capsys.readouterr()
             break
         except Exception:
-            sleep(10)
+            sleep(i * 10)
 
     assert re.search("Successfully authenticated using the API key", out)
 

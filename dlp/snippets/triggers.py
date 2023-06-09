@@ -14,25 +14,29 @@
 
 """Sample app that sets up Data Loss Prevention API automation triggers."""
 
-from __future__ import print_function
-
 import argparse
 import os
+from typing import List
 
 
 # [START dlp_create_trigger]
+from typing import Optional  # noqa: I100, E402
+
+import google.cloud.dlp
+
+
 def create_trigger(
-    project,
-    bucket,
-    scan_period_days,
-    info_types,
-    trigger_id=None,
-    display_name=None,
-    description=None,
-    min_likelihood=None,
-    max_findings=None,
-    auto_populate_timespan=False,
-):
+    project: str,
+    bucket: str,
+    scan_period_days: int,
+    info_types: List[str],
+    trigger_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    description: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    auto_populate_timespan: Optional[bool] = False,
+) -> None:
     """Creates a scheduled Data Loss Prevention API inspect_content trigger.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -56,9 +60,6 @@ def create_trigger(
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library
-    import google.cloud.dlp
-
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -75,7 +76,7 @@ def create_trigger(
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = "gs://{}/*".format(bucket)
+    url = f"gs://{bucket}/*"
     storage_config = {
         "cloud_storage_options": {"file_set": {"url": url}},
         # Time-based configuration for each storage object.
@@ -111,23 +112,23 @@ def create_trigger(
         request={"parent": parent, "job_trigger": job_trigger, "trigger_id": trigger_id}
     )
 
-    print("Successfully created trigger {}".format(response.name))
+    print(f"Successfully created trigger {response.name}")
 
 
 # [END dlp_create_trigger]
 
 
 # [START dlp_list_triggers]
-def list_triggers(project):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def list_triggers(project: str) -> None:
     """Lists all Data Loss Prevention API triggers.
     Args:
         project: The Google Cloud project id to use as a parent resource.
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -139,22 +140,25 @@ def list_triggers(project):
     response = dlp.list_job_triggers(request={"parent": parent})
 
     for trigger in response:
-        print("Trigger {}:".format(trigger.name))
-        print("  Created: {}".format(trigger.create_time))
-        print("  Updated: {}".format(trigger.update_time))
+        print(f"Trigger {trigger.name}:")
+        print(f"  Created: {trigger.create_time}")
+        print(f"  Updated: {trigger.update_time}")
         if trigger.display_name:
-            print("  Display Name: {}".format(trigger.display_name))
+            print(f"  Display Name: {trigger.display_name}")
         if trigger.description:
-            print("  Description: {}".format(trigger.discription))
-        print("  Status: {}".format(trigger.status))
-        print("  Error count: {}".format(len(trigger.errors)))
+            print(f"  Description: {trigger.discription}")
+        print(f"  Status: {trigger.status}")
+        print(f"  Error count: {len(trigger.errors)}")
 
 
 # [END dlp_list_triggers]
 
 
 # [START dlp_delete_trigger]
-def delete_trigger(project, trigger_id):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def delete_trigger(project: str, trigger_id: str) -> None:
     """Deletes a Data Loss Prevention API trigger.
     Args:
         project: The id of the Google Cloud project which owns the trigger.
@@ -163,9 +167,6 @@ def delete_trigger(project, trigger_id):
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library
-    import google.cloud.dlp
-
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -173,12 +174,12 @@ def delete_trigger(project, trigger_id):
     parent = f"projects/{project}"
 
     # Combine the trigger id with the parent id.
-    trigger_resource = "{}/jobTriggers/{}".format(parent, trigger_id)
+    trigger_resource = f"{parent}/jobTriggers/{trigger_id}"
 
     # Call the API.
     dlp.delete_job_trigger(request={"name": trigger_resource})
 
-    print("Trigger {} successfully deleted.".format(trigger_resource))
+    print(f"Trigger {trigger_resource} successfully deleted.")
 
 
 # [END dlp_delete_trigger]

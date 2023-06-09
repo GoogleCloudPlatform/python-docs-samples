@@ -24,23 +24,31 @@ Example usage:
 # [START vision_web_detection_tutorial]
 # [START vision_web_detection_tutorial_imports]
 import argparse
-import io
 
 from google.cloud import vision
+
 # [END vision_web_detection_tutorial_imports]
 
 
-def annotate(path):
-    """Returns web annotations given the path to an image."""
+def annotate(path: str) -> vision.WebDetection:
+    """Returns web annotations given the path to an image.
+
+    Args:
+        path: path to the input image.
+
+    Returns:
+        An WebDetection object with relevant information of the
+        image from the internet (i.e., the annotations).
+    """
     # [START vision_web_detection_tutorial_annotate]
     client = vision.ImageAnnotatorClient()
 
-    if path.startswith('http') or path.startswith('gs:'):
+    if path.startswith("http") or path.startswith("gs:"):
         image = vision.Image()
         image.source.image_uri = path
 
     else:
-        with io.open(path, 'rb') as image_file:
+        with open(path, "rb") as image_file:
             content = image_file.read()
 
         image = vision.Image(content=content)
@@ -51,48 +59,58 @@ def annotate(path):
     return web_detection
 
 
-def report(annotations):
-    """Prints detected features in the provided web annotations."""
+def report(annotations: vision.WebDetection) -> None:
+    """Prints detected features in the provided web annotations.
+
+    Args:
+        annotations: The web annotations (WebDetection object) from which
+        the features should be parsed and printed.
+    """
     # [START vision_web_detection_tutorial_print_annotations]
     if annotations.pages_with_matching_images:
-        print('\n{} Pages with matching images retrieved'.format(
-            len(annotations.pages_with_matching_images)))
+        print(
+            f"\n{len(annotations.pages_with_matching_images)} Pages with matching images retrieved"
+        )
 
         for page in annotations.pages_with_matching_images:
-            print('Url   : {}'.format(page.url))
+            print(f"Url   : {page.url}")
 
     if annotations.full_matching_images:
-        print('\n{} Full Matches found: '.format(
-              len(annotations.full_matching_images)))
+        print(
+            f"\n{len(annotations.full_matching_images)} Full Matches found: "
+        )
 
         for image in annotations.full_matching_images:
-            print('Url  : {}'.format(image.url))
+            print(f"Url  : {image.url}")
 
     if annotations.partial_matching_images:
-        print('\n{} Partial Matches found: '.format(
-              len(annotations.partial_matching_images)))
+        print(
+            f"\n{len(annotations.partial_matching_images)} Partial Matches found: "
+        )
 
         for image in annotations.partial_matching_images:
-            print('Url  : {}'.format(image.url))
+            print(f"Url  : {image.url}")
 
     if annotations.web_entities:
-        print('\n{} Web entities found: '.format(
-              len(annotations.web_entities)))
+        print(f"\n{len(annotations.web_entities)} Web entities found: ")
 
         for entity in annotations.web_entities:
-            print('Score      : {}'.format(entity.score))
-            print('Description: {}'.format(entity.description))
+            print(f"Score      : {entity.score}")
+            print(f"Description: {entity.description}")
     # [END vision_web_detection_tutorial_print_annotations]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # [START vision_web_detection_tutorial_run_application]
     parser = argparse.ArgumentParser(
         description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    path_help = str('The image to detect, can be web URI, '
-                    'Google Cloud Storage, or path to local file.')
-    parser.add_argument('image_url', help=path_help)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    path_help = str(
+        "The image to detect, can be web URI, "
+        "Google Cloud Storage, or path to local file."
+    )
+    parser.add_argument("image_url", help=path_help)
     args = parser.parse_args()
 
     report(annotate(args.image_url))

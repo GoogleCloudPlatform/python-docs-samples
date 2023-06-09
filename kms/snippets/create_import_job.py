@@ -13,7 +13,12 @@
 
 
 # [START kms_create_import_job]
-def create_import_job(project_id, location_id, key_ring_id, import_job_id):
+from google.cloud import kms
+
+
+def create_import_job(
+    project_id: str, location_id: str, key_ring_id: str, import_job_id: str
+) -> None:
     """
     Create a new import job in Cloud KMS.
 
@@ -23,9 +28,6 @@ def create_import_job(project_id, location_id, key_ring_id, import_job_id):
         key_ring_id (string): ID of the Cloud KMS key ring (e.g. 'my-key-ring').
         import_job_id (string): ID of the import job (e.g. 'my-import-job').
     """
-
-    # Import the client library.
-    from google.cloud import kms
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
@@ -38,10 +40,21 @@ def create_import_job(project_id, location_id, key_ring_id, import_job_id):
 
     import_method = kms.ImportJob.ImportMethod.RSA_OAEP_3072_SHA1_AES_256
     protection_level = kms.ProtectionLevel.HSM
-    import_job_params = {"import_method": import_method, "protection_level": protection_level}
+    import_job_params = {
+        "import_method": import_method,
+        "protection_level": protection_level,
+    }
 
     # Call the client to create a new import job.
-    import_job = client.create_import_job({"parent": key_ring_name, "import_job_id": import_job_id, "import_job": import_job_params})
+    import_job = client.create_import_job(
+        {
+            "parent": key_ring_name,
+            "import_job_id": import_job_id,
+            "import_job": import_job_params,
+        }
+    )
 
-    print('Created import job: {}'.format(import_job.name))
+    print(f"Created import job: {import_job.name}")
+
+
 # [END kms_create_import_job]

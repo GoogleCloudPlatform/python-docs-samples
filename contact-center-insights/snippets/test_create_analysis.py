@@ -65,4 +65,4 @@ def analysis_resource(conversation_resource):
 def test_create_analysis(capsys, analysis_resource):
     analysis = analysis_resource
     out, err = capsys.readouterr()
-    assert "Created {}".format(analysis.name) in out
+    assert f"Created {analysis.name}" in out

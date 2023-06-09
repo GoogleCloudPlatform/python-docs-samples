@@ -20,12 +20,14 @@
 
 
 # [START compute_custom_machine_type_create_with_helper]
+from __future__ import annotations
+
 from collections import namedtuple
 from enum import Enum
 from enum import unique
 import re
 import sys
-from typing import Any, List
+from typing import Any
 import warnings
 
 from google.api_core.extended_operation import ExtendedOperation
@@ -330,14 +332,14 @@ def create_instance(
     project_id: str,
     zone: str,
     instance_name: str,
-    disks: List[compute_v1.AttachedDisk],
+    disks: list[compute_v1.AttachedDisk],
     machine_type: str = "n1-standard-1",
     network_link: str = "global/networks/default",
     subnetwork_link: str = None,
     internal_ip: str = None,
     external_access: bool = False,
     external_ipv4: str = None,
-    accelerators: List[compute_v1.AcceleratorConfig] = None,
+    accelerators: list[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
     spot: bool = False,
     instance_termination_action: str = "STOP",

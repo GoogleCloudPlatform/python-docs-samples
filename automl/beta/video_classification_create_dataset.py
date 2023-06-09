@@ -36,7 +36,7 @@ def create_dataset(
     created_dataset = client.create_dataset(parent=project_location, dataset=dataset)
 
     # Display the dataset information
-    print("Dataset name: {}".format(created_dataset.name))
+    print(f"Dataset name: {created_dataset.name}")
 
     # To get the dataset id, you have to parse it out of the `name` field.
     # As dataset Ids are required for other methods.

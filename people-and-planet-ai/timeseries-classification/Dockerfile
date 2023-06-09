@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# NVIDIA CUDA container: https://catalog.ngc.nvidia.com/orgs/nvidia/containers/cuda
-# Supported NVIDIA images: https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/supported-tags.md
-# TensorFlow/CUDA compatibility: https://www.tensorflow.org/install/source#gpu
 FROM python:3.10-slim
 
 WORKDIR /pipeline
@@ -28,5 +25,5 @@ RUN pip install --no-cache-dir --upgrade pip \
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
 # Check this matches the apache-beam version in the requirements.txt
-COPY --from=apache/beam_python3.10_sdk:2.46.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.10_sdk:2.47.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]

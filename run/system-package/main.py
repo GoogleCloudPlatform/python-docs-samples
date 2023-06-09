@@ -22,11 +22,11 @@ app = Flask(__name__)
 
 
 # [START cloudrun_system_package_handler]
-# [START run_system_package_handler]
 @app.route("/diagram.png", methods=["GET"])
 def index():
-    # Takes an HTTP GET request with query param dot and
-    # returns a png with the rendered DOT diagram in a HTTP response.
+    """Takes an HTTP GET request with query param dot and
+    returns a png with the rendered DOT diagram in a HTTP response.
+    """
     try:
         image = create_diagram(request.args.get("dot"))
         response = make_response(image)
@@ -34,23 +34,28 @@ def index():
         return response
 
     except Exception as e:
-        print("error: {}".format(e))
+        print(f"error: {e}")
 
         # If no graphviz definition or bad graphviz def, return 400
         if "syntax" in str(e):
-            return "Bad Request: {}".format(e), 400
+            return f"Bad Request: {e}", 400
 
         return "Internal Server Error", 500
 
 
-# [END run_system_package_handler]
 # [END cloudrun_system_package_handler]
 
 
 # [START cloudrun_system_package_exec]
-# [START run_system_package_exec]
 def create_diagram(dot):
-    # Generates a diagram based on a graphviz DOT diagram description.
+    """Generates a diagram based on a graphviz DOT diagram description.
+
+    Args:
+        dot: diagram description in graphviz DOT syntax
+
+    Returns:
+        A diagram in the PNG image format.
+    """
     if not dot:
         raise Exception("syntax: no graphviz definition provided")
 
@@ -74,7 +79,6 @@ def create_diagram(dot):
     return image
 
 
-# [END run_system_package_exec]
 # [END cloudrun_system_package_exec]
 
 

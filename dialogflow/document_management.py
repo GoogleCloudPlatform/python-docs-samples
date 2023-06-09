@@ -73,7 +73,7 @@ def list_documents(project_id, knowledge_base_id):
 # [END dialogflow_list_document]
 
 
-# [START dialogflow_create_document]]
+# [START dialogflow_create_document]
 def create_document(
     project_id, knowledge_base_id, display_name, mime_type, knowledge_type, content_uri
 ):
@@ -120,7 +120,7 @@ def create_document(
 # [END dialogflow_create_document]
 
 
-# [START dialogflow_get_document]]
+# [START dialogflow_get_document]
 def get_document(project_id, knowledge_base_id, document_id):
     """Gets a Document.
 
@@ -145,10 +145,10 @@ def get_document(project_id, knowledge_base_id, document_id):
     return response
 
 
-# [END dialogflow_get_document]]
+# [END dialogflow_get_document]
 
 
-# [START dialogflow_delete_document]]
+# [START dialogflow_delete_document]
 def delete_document(project_id, knowledge_base_id, document_id):
     """Deletes a Document.
 
@@ -167,7 +167,7 @@ def delete_document(project_id, knowledge_base_id, document_id):
     print("Done.\n {}".format(response.result()))
 
 
-# [END dialogflow_delete_document]]
+# [END dialogflow_delete_document]
 
 
 if __name__ == "__main__":

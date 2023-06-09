@@ -14,13 +14,26 @@
 
 
 # [START speech_transcribe_streaming_v2]
-import io
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
+def transcribe_streaming_v2(
+        project_id: str,
+        recognizer_id: str,
+        audio_file: str,
+) -> cloud_speech.StreamingRecognizeResponse:
+    """Transcribes audio from audio file stream.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer to use.
+        audio_file: The path to the audio file to transcribe.
+
+    Returns:
+        The response from the transcribe method.
+    """
     # Instantiates a client
     client = SpeechClient()
 
@@ -37,7 +50,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
@@ -58,10 +71,11 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
         recognizer=recognizer.name, streaming_config=streaming_config
     )
 
-    def requests(config, audio):
+    def requests(
+            config: cloud_speech.RecognitionConfig, audio: list
+    ) -> list:
         yield config
-        for message in audio:
-            yield message
+        yield from audio
 
     # Transcribes the audio into text
     responses_iterator = client.streaming_recognize(
@@ -71,7 +85,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
     for response in responses_iterator:
         responses.append(response)
         for result in response.results:
-            print("Transcript: {}".format(result.alternatives[0].transcript))
+            print(f"Transcript: {result.alternatives[0].transcript}")
 
     return responses
 

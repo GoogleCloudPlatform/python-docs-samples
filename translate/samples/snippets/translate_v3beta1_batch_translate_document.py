@@ -21,9 +21,19 @@ def batch_translate_document(
     input_uri: str,
     output_uri: str,
     project_id: str,
-    timeout=180,
-):
+    timeout: int = 180,
+) -> translate.BatchTranslateDocumentResponse:
+    """Batch translate documents.
 
+    Args:
+        input_uri: Google Cloud Storage location of the input document.
+        output_uri: Google Cloud Storage location of the output document.
+        project_id: The GCP project ID.
+        timeout: The timeout for this request.
+
+    Returns:
+        Translated document response
+    """
     client = translate.TranslationServiceClient()
 
     # The ``global`` location is not supported for batch translation
@@ -56,7 +66,7 @@ def batch_translate_document(
     print("Waiting for operation to complete...")
     response = operation.result(timeout)
 
-    print("Total Pages: {}".format(response.total_pages))
+    print(f"Total Pages: {response.total_pages}")
 
-
+    return response
 # [END translate_v3beta1_batch_translate_document]

@@ -20,6 +20,8 @@
 
 
 # [START compute_disk_autodelete_change]
+from __future__ import annotations
+
 import sys
 from typing import Any
 

@@ -58,7 +58,7 @@ def label_text(
         }
     )
 
-    print("Label_text operation name: {}".format(response.operation.name))
+    print(f"Label_text operation name: {response.operation.name}")
     return response
 
 

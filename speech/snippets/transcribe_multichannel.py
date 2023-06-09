@@ -20,15 +20,24 @@ Example usage:
         gs://cloud-samples-tests/speech/multi.wav
 """
 
+# [START speech_transcribe_multichannel]
 import argparse
 
+from google.cloud import speech
 
-def transcribe_file_with_multichannel(speech_file):
+
+def transcribe_file_with_multichannel(
+        speech_file: str
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
-    multi channel."""
-    # [START speech_transcribe_multichannel]
-    from google.cloud import speech
+    multi channel.
 
+    Args:
+        speech_file: A path to audio file to be recognized.
+
+    Returns:
+        The RecognizeResponse results.
+    """
     client = speech.SpeechClient()
 
     with open(speech_file, "rb") as audio_file:
@@ -49,15 +58,26 @@ def transcribe_file_with_multichannel(speech_file):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
-        print("Channel Tag: {}".format(result.channel_tag))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+        print(f"Channel Tag: {result.channel_tag}")
+
+    return result
     # [END speech_transcribe_multichannel]
 
 
-def transcribe_gcs_with_multichannel(gcs_uri):
+def transcribe_gcs_with_multichannel(
+        gcs_uri: str
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file on GCS with
-    multi channel."""
+    multi channel.
+
+    Args:
+        gcs_uri: A path to audio file to be recognized.
+
+    Returns:
+        The RecognizeResponse results.
+    """
     # [START speech_transcribe_multichannel_gcs]
     from google.cloud import speech
 
@@ -78,9 +98,11 @@ def transcribe_gcs_with_multichannel(gcs_uri):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
-        print("Channel Tag: {}".format(result.channel_tag))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+        print(f"Channel Tag: {result.channel_tag}")
+
+    return result
     # [END speech_transcribe_multichannel_gcs]
 
 

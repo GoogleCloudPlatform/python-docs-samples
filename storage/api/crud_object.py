@@ -1,19 +1,16 @@
-#!/usr/bin/env python
-
-# Copyright (C) 2016 Google Inc.
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Application for uploading an object using the Cloud Storage API.
 
 This sample is used on this page:
@@ -31,7 +28,23 @@ import googleapiclient.discovery
 import googleapiclient.http
 
 
-def main(bucket, filename, readers=[], owners=[]):
+def main(
+        bucket: str,
+        filename: str,
+        readers: list = [],
+        owners: list = [],
+) -> None:
+    """Main method that calls on the function in this file.
+
+    Args:
+        bucket: The name of the bucket in which to upload the object.
+        filename: The name of the object to upload.
+        readers: The email addresses of the users who can read the object.
+        owners: The email addresses of the users who can write the object.
+
+    Returns:
+        None.
+    """
     print('Uploading object..')
     resp = upload_object(bucket, filename, readers, owners)
     print(json.dumps(resp, indent=2))
@@ -47,15 +60,35 @@ def main(bucket, filename, readers=[], owners=[]):
     print('Done')
 
 
-def create_service():
-    # Construct the service object for interacting with the Cloud Storage API -
-    # the 'storage' service, at version 'v1'.
-    # You can browse other available api services and versions here:
-    #     http://g.co/dv/api-client-library/python/apis/
+def create_service() -> googleapiclient.discovery.Resource:
+    """Construct the service object for interacting with the
+    Cloud Storage API - the 'storage' service, at version 'v1'.
+    You can browse other available api services and versions here:
+    http://g.co/dv/api-client-library/python/apis/
+
+    Returns:
+        The service object for the Cloud Storage API.
+    """
     return googleapiclient.discovery.build('storage', 'v1')
 
 
-def upload_object(bucket, filename, readers, owners):
+def upload_object(
+        bucket: str,
+        filename: str,
+        readers: list = [],
+        owners: list = [],
+) -> googleapiclient.http.HttpRequest:
+    """Upload an object.
+
+    Args:
+        bucket: The name of the bucket in which to upload the object.
+        filename: The name of the object to upload.
+        readers: The email addresses of the users who can read the object.
+        owners: The email addresses of the users who can write the object.
+
+    Returns:
+        The response from the upload request.
+    """
     service = create_service()
 
     # This is the request body as specified:
@@ -97,7 +130,20 @@ def upload_object(bucket, filename, readers, owners):
     return resp
 
 
-def get_object(bucket, filename, out_file):
+def get_object(
+        bucket: str,
+        filename: str,
+        out_file: str = None,
+) -> googleapiclient.http.HttpRequest:
+    """Get an object.
+
+    Args:
+        bucket: The name of the bucket in which to look for the object.
+        filename: The name of the object to get.
+
+    Returns:
+        The response from the get request.
+    """
     service = create_service()
 
     # Use get_media instead of get to get the actual contents of the object.
@@ -109,12 +155,24 @@ def get_object(bucket, filename, out_file):
     done = False
     while done is False:
         status, done = downloader.next_chunk()
-        print("Download {}%.".format(int(status.progress() * 100)))
+        print(f"Download {int(status.progress() * 100)}%.")
 
     return out_file
 
 
-def delete_object(bucket, filename):
+def delete_object(
+        bucket: str,
+        filename: str,
+) -> googleapiclient.http.HttpRequest:
+    """Delete an object.
+
+    Args:
+        bucket: The name of the bucket in which to look for the object.
+        filename: The name of the object to delete.
+
+    Returns:
+        The response from the delete request.
+    """
     service = create_service()
 
     req = service.objects().delete(bucket=bucket, object=filename)

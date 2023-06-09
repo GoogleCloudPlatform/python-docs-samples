@@ -1,18 +1,17 @@
-#!/usr/bin/env python
-
-# Copyright 2016 Google Inc. All rights reserved.
+# Copyright 2023 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the 'License');
+# Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an 'AS IS' BASIS,
+# distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """Command-line sample app demonstrating customer-supplied encryption keys.
 
 This sample demonstrates uploading an object while supplying an encryption key,
@@ -52,7 +51,7 @@ ANOTHER_ENCRYPTION_KEY = 'oevtavYZC+TfGtV86kJBKTeytXAm1s2r3xIqam+QPKM='
 ANOTHER_KEY_HASH = '/gd0N3k3MK0SEDxnUiaswl0FFv6+5PHpo+5KD5SBCeA='
 
 
-def create_service():
+def create_service() -> googleapiclient.discovery.Resource:
     """Creates the service object for calling the Cloud Storage API."""
     # Construct the service object for interacting with the Cloud Storage API -
     # the 'storage' service, at version 'v1'.
@@ -61,8 +60,23 @@ def create_service():
     return googleapiclient.discovery.build('storage', 'v1')
 
 
-def upload_object(bucket, filename, encryption_key, key_hash):
-    """Uploads an object, specifying a custom encryption key."""
+def upload_object(
+        bucket: str,
+        filename: str,
+        encryption_key: str,
+        key_hash: str,
+) -> googleapiclient.http.HttpRequest:
+    """Uploads an object, specifying a custom encryption key.
+
+    Args:
+        bucket: The name of the bucket to upload to.
+        filename: The name of the file to upload.
+        encryption_key: The encryption key to use for the upload.
+        key_hash: The hash of the encryption key
+
+    Returns:
+        The http request object.
+    """
     service = create_service()
 
     with open(filename, 'rb') as f:
@@ -82,8 +96,25 @@ def upload_object(bucket, filename, encryption_key, key_hash):
     return resp
 
 
-def download_object(bucket, obj, out_file, encryption_key, key_hash):
-    """Downloads an object protected by a custom encryption key."""
+def download_object(
+        bucket: str,
+        obj: str,
+        out_file: str,
+        encryption_key: str,
+        key_hash: str,
+) -> googleapiclient.http.HttpRequest:
+    """Downloads an object protected by a custom encryption key.
+
+    Args:
+        bucket: The name of the bucket to download from.
+        obj: The name of the object to download.
+        filename: The name of the file to download to.
+        encryption_key: The encryption key to use for the download
+        key_hash: The hash of the encryption key
+
+    Returns:
+        The http request object.
+    """
     service = create_service()
 
     request = service.objects().get_media(bucket=bucket, object=obj)
@@ -97,9 +128,27 @@ def download_object(bucket, obj, out_file, encryption_key, key_hash):
     out_file.write(request.execute())
 
 
-def rotate_key(bucket, obj, current_encryption_key, current_key_hash,
-               new_encryption_key, new_key_hash):
-    """Changes the encryption key used to store an existing object."""
+def rotate_key(
+        bucket: str,
+        obj: str,
+        current_encryption_key: str,
+        current_key_hash: str,
+        new_encryption_key: str,
+        new_key_hash: str,
+) -> googleapiclient.http.HttpRequest:
+    """Changes the encryption key used to store an existing object.
+
+    Args:
+        bucket: The name of the bucket to upload to.
+        obj: The name of the object to upload.
+        current_encryption_key: The current encryption key to use for the upload.
+        current_key_hash: The current hash of the encryption key
+        new_encryption_key: The new encryption key to use for the upload.
+        new_key_hash: The new hash of the encryption key
+
+    Returns:
+        The http request object.
+    """
     service = create_service()
 
     request = service.objects().rewrite(
@@ -131,8 +180,20 @@ def rotate_key(bucket, obj, current_encryption_key, current_key_hash,
         rewrite_response.execute()
 
 
-def main(bucket, filename):
-    print('Uploading object gs://{}/{}'.format(bucket, filename))
+def main(
+        bucket: str,
+        filename: str,
+) -> None:
+    """Main method to upload and download objects.
+
+    Args:
+        bucket: The name of the bucket to upload to.
+        filename: The name of the file to upload.
+
+    Returns:
+        None.
+    """
+    print(f'Uploading object gs://{bucket}/{filename}')
     upload_object(bucket, filename, ENCRYPTION_KEY, KEY_HASH)
     print('Downloading it back')
     with tempfile.NamedTemporaryFile(mode='w+b') as tmpfile:

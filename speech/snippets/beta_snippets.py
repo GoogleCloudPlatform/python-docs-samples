@@ -27,10 +27,11 @@ Example usage:
 """
 
 import argparse
-import io
+
+from google.cloud import speech_v1p1beta1 as speech
 
 
-def transcribe_file_with_enhanced_model():
+def transcribe_file_with_enhanced_model() -> speech.RecognizeResponse:
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_enhanced_model_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -39,7 +40,7 @@ def transcribe_file_with_enhanced_model():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -57,12 +58,14 @@ def transcribe_file_with_enhanced_model():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_enhanced_model_beta]
 
 
-def transcribe_file_with_metadata():
+def transcribe_file_with_metadata() -> speech.RecognizeResponse:
     """Send a request that includes recognition metadata."""
     # [START speech_transcribe_recognition_metadata_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -71,7 +74,7 @@ def transcribe_file_with_metadata():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     # Here we construct a recognition metadata object.
@@ -106,12 +109,14 @@ def transcribe_file_with_metadata():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_recognition_metadata_beta]
 
 
-def transcribe_file_with_auto_punctuation():
+def transcribe_file_with_auto_punctuation() -> speech.RecognizeResponse:
     """Transcribe the given audio file with auto punctuation enabled."""
     # [START speech_transcribe_auto_punctuation_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -120,7 +125,7 @@ def transcribe_file_with_auto_punctuation():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -137,12 +142,14 @@ def transcribe_file_with_auto_punctuation():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_auto_punctuation_beta]
 
 
-def transcribe_file_with_diarization():
+def transcribe_file_with_diarization() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with diarization."""
     # [START speech_transcribe_diarization_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -183,12 +190,14 @@ def transcribe_file_with_diarization():
     # Printing out the output:
     for word_info in words_info:
         print(
-            "word: '{}', speaker_tag: {}".format(word_info.word, word_info.speaker_tag)
+            f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}"
         )
+
+    return result
     # [END speech_transcribe_diarization_beta]
 
 
-def transcribe_file_with_multichannel():
+def transcribe_file_with_multichannel() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     multi channel."""
     # [START speech_transcribe_multichannel_beta]
@@ -216,13 +225,15 @@ def transcribe_file_with_multichannel():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
-        print("Channel Tag: {}".format(result.channel_tag))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+        print(f"Channel Tag: {result.channel_tag}")
+
+    return response.results
     # [END speech_transcribe_multichannel_beta]
 
 
-def transcribe_file_with_multilanguage():
+def transcribe_file_with_multilanguage() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     multi language."""
     # [START speech_transcribe_multilanguage_beta]
@@ -253,12 +264,14 @@ def transcribe_file_with_multilanguage():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}: {}".format(i, alternative))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}: {alternative}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_multilanguage_beta]
 
 
-def transcribe_file_with_word_level_confidence():
+def transcribe_file_with_word_level_confidence() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     word level confidence."""
     # [START speech_transcribe_word_level_confidence_beta]
@@ -285,17 +298,19 @@ def transcribe_file_with_word_level_confidence():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
         print(
             "First Word and Confidence: ({}, {})".format(
                 alternative.words[0].word, alternative.words[0].confidence
             )
         )
+
+    return response.results
     # [END speech_transcribe_word_level_confidence_beta]
 
 
-def transcribe_file_with_spoken_punctuation_end_emojis():
+def transcribe_file_with_spoken_punctuation_end_emojis() -> speech.RecognizeResponse:
     """Transcribe the given audio file with spoken punctuation and emojis enabled."""
     # [START speech_transcribe_spoken_punctuation_emojis_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -305,7 +320,7 @@ def transcribe_file_with_spoken_punctuation_end_emojis():
 
     speech_file = "resources/commercial_mono.wav"
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -324,8 +339,10 @@ def transcribe_file_with_spoken_punctuation_end_emojis():
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_spoken_punctuation_emojis_beta]
 
 

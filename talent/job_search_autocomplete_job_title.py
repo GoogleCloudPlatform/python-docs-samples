@@ -15,7 +15,6 @@
 # [START job_search_autocomplete_job_title]
 
 from google.cloud import talent_v4beta1
-import six
 
 
 def complete_query(project_id, tenant_id, query):
@@ -27,11 +26,11 @@ def complete_query(project_id, tenant_id, query):
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # query = '[partially typed job title]'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(query, six.binary_type):
+    if isinstance(query, bytes):
         query = query.decode("utf-8")
 
     parent = f"projects/{project_id}/tenants/{tenant_id}"

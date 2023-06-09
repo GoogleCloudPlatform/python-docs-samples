@@ -19,19 +19,20 @@ Example usage:
     python transcribe_auto_punctuation.py resources/commercial_mono.wav
 """
 
+# [START speech_transcribe_auto_punctuation]
 import argparse
-import io
+
+from google.cloud import speech
 
 
-def transcribe_file_with_auto_punctuation(path):
+def transcribe_file_with_auto_punctuation(
+        path: str
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file with auto punctuation enabled."""
-    # [START speech_transcribe_auto_punctuation]
-    from google.cloud import speech
-
     client = speech.SpeechClient()
 
     # path = 'resources/commercial_mono.wav'
-    with io.open(path, "rb") as audio_file:
+    with open(path, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -48,8 +49,10 @@ def transcribe_file_with_auto_punctuation(path):
     for i, result in enumerate(response.results):
         alternative = result.alternatives[0]
         print("-" * 20)
-        print("First alternative of result {}".format(i))
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"First alternative of result {i}")
+        print(f"Transcript: {alternative.transcript}")
+
+    return response
     # [END speech_transcribe_auto_punctuation]
 
 

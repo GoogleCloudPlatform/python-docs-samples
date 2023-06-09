@@ -49,7 +49,7 @@ def create_dicom_store(project_id, location, dataset_id, dicom_store_id):
     )
 
     response = request.execute()
-    print("Created DICOM store: {}".format(dicom_store_id))
+    print(f"Created DICOM store: {dicom_store_id}")
     return response
 
 
@@ -79,7 +79,7 @@ def delete_dicom_store(project_id, location, dataset_id, dicom_store_id):
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
     request = (
         client.projects()
@@ -90,7 +90,7 @@ def delete_dicom_store(project_id, location, dataset_id, dicom_store_id):
     )
 
     response = request.execute()
-    print("Deleted DICOM store: {}".format(dicom_store_id))
+    print(f"Deleted DICOM store: {dicom_store_id}")
     return response
 
 
@@ -123,7 +123,7 @@ def get_dicom_store(project_id, location, dataset_id, dicom_store_id):
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
     dicom_stores = client.projects().locations().datasets().dicomStores()
     dicom_store = dicom_stores.get(name=dicom_store_name).execute()
@@ -201,11 +201,11 @@ def patch_dicom_store(project_id, location, dataset_id, dicom_store_id, pubsub_t
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
     patch = {
         "notificationConfig": {
-            "pubsubTopic": "projects/{}/topics/{}".format(project_id, pubsub_topic)
+            "pubsubTopic": f"projects/{project_id}/topics/{pubsub_topic}"
         }
     }
 
@@ -255,9 +255,9 @@ def export_dicom_instance(project_id, location, dataset_id, dicom_store_id, uri_
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
-    body = {"gcsDestination": {"uriPrefix": "gs://{}".format(uri_prefix)}}
+    body = {"gcsDestination": {"uriPrefix": f"gs://{uri_prefix}"}}
 
     request = (
         client.projects()
@@ -268,7 +268,7 @@ def export_dicom_instance(project_id, location, dataset_id, dicom_store_id, uri_
     )
 
     response = request.execute()
-    print("Exported DICOM instances to bucket: gs://{}".format(uri_prefix))
+    print(f"Exported DICOM instances to bucket: gs://{uri_prefix}")
 
     return response
 
@@ -303,9 +303,9 @@ def import_dicom_instance(
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
-    body = {"gcsSource": {"uri": "gs://{}".format(content_uri)}}
+    body = {"gcsSource": {"uri": f"gs://{content_uri}"}}
 
     # Escape "import()" method keyword because "import"
     # is a reserved keyword in Python
@@ -318,7 +318,7 @@ def import_dicom_instance(
     )
 
     response = request.execute()
-    print("Imported DICOM instance: {}".format(content_uri))
+    print(f"Imported DICOM instance: {content_uri}")
 
     return response
 
@@ -349,7 +349,7 @@ def get_dicom_store_iam_policy(project_id, location, dataset_id, dicom_store_id)
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
     request = (
         client.projects()
@@ -407,7 +407,7 @@ def set_dicom_store_iam_policy(
     dicom_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
-    dicom_store_name = "{}/dicomStores/{}".format(dicom_store_parent, dicom_store_id)
+    dicom_store_name = f"{dicom_store_parent}/dicomStores/{dicom_store_id}"
 
     policy = {"bindings": [{"role": role, "members": [member]}]}
 

@@ -12,8 +12,9 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-from pathlib import Path
+
 # [START compute_certificate_create_regional]
+from pathlib import Path
 from pprint import pprint
 from typing import Union
 
@@ -26,8 +27,8 @@ def create_regional_certificate(
     certificate_file: Union[str, Path],
     private_key_file: Union[str, Path],
     certificate_name: str,
-    description: str = "Certificate created from a code sample."
-) -> None:
+    description: str = "Certificate created from a code sample.",
+) -> dict:
     """
     Create a regional SSL self-signed certificate within your Google Cloud project.
 
@@ -38,6 +39,9 @@ def create_regional_certificate(
         private_key_file: path to the private key you used to sign the certificate with.
         certificate_name: name for the certificate once it's created in your project.
         description: description of the certificate.
+
+        Returns:
+        Dictionary with information about the new regional SSL self-signed certificate.
     """
     service = discovery.build("compute", "v1")
 
@@ -62,6 +66,8 @@ def create_regional_certificate(
     )
     response = request.execute()
     pprint(response)
+
+    return response
 
 
 # [END compute_certificate_create_regional]

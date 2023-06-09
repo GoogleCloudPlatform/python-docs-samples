@@ -13,9 +13,10 @@
 # limitations under the License.
 
 # [START genappbuilder_list_operations]
-from typing import Optional
+from __future__ import annotations
 
-from google.cloud import discoveryengine_v1beta as genappbuilder
+
+from google.cloud import discoveryengine
 
 from google.longrunning import operations_pb2
 
@@ -32,10 +33,10 @@ def list_operations_sample(
     project_id: str,
     location: str,
     search_engine_id: str,
-    operations_filter: Optional[str] = None,
-) -> None:
+    operations_filter: str | None = None,
+) -> operations_pb2.ListOperationsResponse:
     # Create a client
-    client = genappbuilder.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient()
 
     # The full resource name of the search engine branch.
     name = f"projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{search_engine_id}"
@@ -52,6 +53,8 @@ def list_operations_sample(
     # Print the Operation Information
     for operation in response.operations:
         print(operation)
+
+    return response
 
 
 # [END genappbuilder_list_operations]

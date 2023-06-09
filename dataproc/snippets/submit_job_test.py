@@ -31,7 +31,7 @@ REGION = "us-central1"
 def cluster_client():
     return dataproc.ClusterControllerClient(
         client_options={
-            "api_endpoint": "{}-dataproc.googleapis.com:443".format(REGION)
+            "api_endpoint": f"{REGION}-dataproc.googleapis.com:443"
         }
     )
 
@@ -73,7 +73,7 @@ def teardown_cluster(cluster_client, curr_cluster_name):
 
 @pytest.fixture(scope='module')
 def cluster_name(cluster_client):
-    curr_cluster_name = "py-sj-test-{}".format(str(uuid.uuid4()))
+    curr_cluster_name = f"py-sj-test-{str(uuid.uuid4())}"
 
     try:
         setup_cluster(cluster_client, curr_cluster_name)
@@ -87,7 +87,12 @@ def cluster_name(cluster_client):
 
 # InvalidArgument is thrown when the subnetwork is not ready
 @backoff.on_exception(backoff.expo, (InvalidArgument, InternalServerError, ServiceUnavailable), max_tries=5)
-def test_submit_job(capsys, cluster_name):
+def test_submit_job(capsys, cluster_name, cluster_client):
+    request = dataproc.GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=cluster_name)
+    response = cluster_client.get_cluster(request=request)
+    # verify the cluster is in the RUNNING state before proceeding
+    # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
+    assert response.status.state == dataproc.ClusterStatus.State.RUNNING
     submit_job.submit_job(PROJECT_ID, REGION, cluster_name)
     out, _ = capsys.readouterr()
 
