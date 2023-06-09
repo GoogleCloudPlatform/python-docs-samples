@@ -51,17 +51,6 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
     operation = client.synthesize_long_audio(request=request)
     # Set a deadline for your LRO to finish. 300 seconds is reasonable, but can be adjusted depending on the length of the input.
     # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
-    deadline = 300
-    curr_time = 0
-    interval = 10
-    while not operation.done() and curr_time < deadline:
-        time.sleep(interval)
-        curr_time += interval
+    result = operation.result(timeout=300)
+    print("\nFinished processing, check your GCS bucket to find your audio file!")
 
-    if operation.done():
-        print("\nFinished processing, check your GCS bucket to find your audio file!")
-    else:
-        print(
-            "\nOperation timed out, likely due to an error."
-            "If you do not believe this is due to an error, consider increasing the deadline for your operation."
-        )
