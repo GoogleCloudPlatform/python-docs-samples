@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM pytorch/pytorch:1.9.1-cuda11.1-cudnn8-runtime
+FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-devel
 
 WORKDIR /pipeline
 
@@ -30,5 +30,5 @@ RUN apt-get update \
     && pip check
 
 # Set the entrypoint to Apache Beam SDK worker launcher.
-COPY --from=apache/beam_python3.8_sdk:2.38.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.11_sdk:2.48.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
