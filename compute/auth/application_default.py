@@ -20,7 +20,6 @@ Compute Engine.
 For more information, see the README.md under /compute.
 """
 
-# [START all]
 # [START compute_auth_application_default]
 import argparse
 from typing import List
@@ -77,4 +76,3 @@ if __name__ == "__main__":
 
     main(args.project_id)
 # [END compute_auth_application_default]
-# [END all]
