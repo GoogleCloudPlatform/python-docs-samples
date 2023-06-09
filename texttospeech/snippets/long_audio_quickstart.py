@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import time
-
 from google.cloud import texttospeech
 
 
@@ -53,4 +51,3 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
     # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
     result = operation.result(timeout=300)
     print("\nFinished processing, check your GCS bucket to find your audio file!")
-
