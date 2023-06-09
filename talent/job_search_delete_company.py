@@ -15,7 +15,6 @@
 # [START job_search_delete_company]
 
 from google.cloud import talent
-import six
 
 
 def delete_company(project_id, tenant_id, company_id):
@@ -27,11 +26,11 @@ def delete_company(project_id, tenant_id, company_id):
     # tenant_id = 'Your Tenant ID (using tenancy is optional)'
     # company_id = 'ID of the company to delete'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(company_id, six.binary_type):
+    if isinstance(company_id, bytes):
         company_id = company_id.decode("utf-8")
     name = client.company_path(project_id, tenant_id, company_id)
 

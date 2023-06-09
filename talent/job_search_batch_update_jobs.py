@@ -15,7 +15,6 @@
 # [START job_search_batch_update_jobs]
 
 from google.cloud import talent
-import six
 
 
 def batch_update_jobs(
@@ -67,41 +66,41 @@ def batch_update_jobs(
     # address_two = '111 8th Avenue, New York, NY 10011'
     # language_code_two = 'en-US'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
-    if isinstance(tenant_id, six.binary_type):
+    if isinstance(tenant_id, bytes):
         tenant_id = tenant_id.decode("utf-8")
-    if isinstance(job_name_one, six.binary_type):
+    if isinstance(job_name_one, bytes):
         job_name_one = job_name_one.decode("utf-8")
-    if isinstance(company_name_one, six.binary_type):
+    if isinstance(company_name_one, bytes):
         company_name_one = company_name_one.decode("utf-8")
-    if isinstance(requisition_id_one, six.binary_type):
+    if isinstance(requisition_id_one, bytes):
         requisition_id_one = requisition_id_one.decode("utf-8")
-    if isinstance(title_one, six.binary_type):
+    if isinstance(title_one, bytes):
         title_one = title_one.decode("utf-8")
-    if isinstance(description_one, six.binary_type):
+    if isinstance(description_one, bytes):
         description_one = description_one.decode("utf-8")
-    if isinstance(job_application_url_one, six.binary_type):
+    if isinstance(job_application_url_one, bytes):
         job_application_url_one = job_application_url_one.decode("utf-8")
-    if isinstance(address_one, six.binary_type):
+    if isinstance(address_one, bytes):
         address_one = address_one.decode("utf-8")
-    if isinstance(language_code_one, six.binary_type):
+    if isinstance(language_code_one, bytes):
         language_code_one = language_code_one.decode("utf-8")
-    if isinstance(job_name_two, six.binary_type):
+    if isinstance(job_name_two, bytes):
         job_name_two = job_name_two.decode("utf-8")
-    if isinstance(company_name_two, six.binary_type):
+    if isinstance(company_name_two, bytes):
         company_name_two = company_name_two.decode("utf-8")
-    if isinstance(requisition_id_two, six.binary_type):
+    if isinstance(requisition_id_two, bytes):
         requisition_id_two = requisition_id_two.decode("utf-8")
-    if isinstance(title_two, six.binary_type):
+    if isinstance(title_two, bytes):
         title_two = title_two.decode("utf-8")
-    if isinstance(description_two, six.binary_type):
+    if isinstance(description_two, bytes):
         description_two = description_two.decode("utf-8")
-    if isinstance(job_application_url_two, six.binary_type):
+    if isinstance(job_application_url_two, bytes):
         job_application_url_two = job_application_url_two.decode("utf-8")
-    if isinstance(address_two, six.binary_type):
+    if isinstance(address_two, bytes):
         address_two = address_two.decode("utf-8")
-    if isinstance(language_code_two, six.binary_type):
+    if isinstance(language_code_two, bytes):
         language_code_two = language_code_two.decode("utf-8")
     parent = f"projects/{project_id}/tenants/{tenant_id}"
     uris = [job_application_url_one]
@@ -139,7 +138,7 @@ def batch_update_jobs(
     print("Waiting for operation to complete...")
     response = operation.result(90)
 
-    print("Batch response: {}".format(response))
+    print(f"Batch response: {response}")
 
 
 # [END job_search_batch_update_jobs]

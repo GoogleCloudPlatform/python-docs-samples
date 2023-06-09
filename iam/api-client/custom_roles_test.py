@@ -13,12 +13,12 @@
 # limitations under the License.
 
 import os
+from typing import Iterator
 import uuid
 
 import pytest
 
 import custom_roles
-
 
 GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
@@ -31,7 +31,7 @@ GCLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 # Since this fixture will throw an exception upon failing to create or delete
 # a custom role, there are no separatetests for those activities needed.
 @pytest.fixture(scope="module")
-def custom_role():
+def custom_role() -> Iterator[str]:
     role_name = "pythonTestCustomRole" + str(uuid.uuid4().hex)
     custom_roles.create_role(
         role_name,
@@ -47,7 +47,7 @@ def custom_role():
     custom_roles.delete_role(role_name, GCLOUD_PROJECT)
 
 
-def test_query_testable_permissions(capsys):
+def test_query_testable_permissions(capsys: pytest.CaptureFixture) -> None:
     custom_roles.query_testable_permissions(
         "//cloudresourcemanager.googleapis.com/projects/" + GCLOUD_PROJECT
     )
@@ -56,19 +56,19 @@ def test_query_testable_permissions(capsys):
     assert "\n" in out
 
 
-def test_list_roles(capsys):
+def test_list_roles(capsys: pytest.CaptureFixture) -> None:
     custom_roles.list_roles(GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
     assert "roles/" in out
 
 
-def test_get_role(capsys):
+def test_get_role(capsys: pytest.CaptureFixture) -> None:
     custom_roles.get_role("roles/appengine.appViewer")
     out, _ = capsys.readouterr()
     assert "roles/" in out
 
 
-def test_edit_role(custom_role, capsys):
+def test_edit_role(custom_role: dict, capsys: pytest.CaptureFixture) -> None:
     custom_roles.edit_role(
         custom_role,
         GCLOUD_PROJECT,
@@ -81,7 +81,7 @@ def test_edit_role(custom_role, capsys):
     assert "Updated role:" in out
 
 
-def test_disable_role(custom_role, capsys):
+def test_disable_role(custom_role: dict, capsys: pytest.CaptureFixture) -> None:
     custom_roles.disable_role(custom_role, GCLOUD_PROJECT)
     out, _ = capsys.readouterr()
     assert "Disabled role:" in out

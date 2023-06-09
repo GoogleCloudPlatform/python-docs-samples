@@ -145,7 +145,7 @@ def get_dataproc_job_output(result):
     """Get the dataproc job logs in plain text"""
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
-    return blob.download_as_string().decode("utf-8")
+    return blob.download_as_bytes().decode("utf-8")
 
 
 def assert_table_success_message(table_name, out):

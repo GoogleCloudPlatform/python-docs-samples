@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-
 # [START kms_restore_key_version]
-def restore_key_version(project_id, location_id, key_ring_id, key_id, version_id):
+from google.cloud import kms
+
+
+def restore_key_version(
+    project_id: str, location_id: str, key_ring_id: str, key_id: str, version_id: str
+) -> kms.CryptoKeyVersion:
     """
     Restore a key version scheduled for destruction.
 
@@ -29,17 +33,20 @@ def restore_key_version(project_id, location_id, key_ring_id, key_id, version_id
 
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Call the API.
-    restored_version = client.restore_crypto_key_version(request={'name': key_version_name})
-    print('Restored key version: {}'.format(restored_version.name))
+    restored_version = client.restore_crypto_key_version(
+        request={"name": key_version_name}
+    )
+    print(f"Restored key version: {restored_version.name}")
     return restored_version
+
+
 # [END kms_restore_key_version]

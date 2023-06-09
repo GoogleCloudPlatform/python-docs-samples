@@ -41,9 +41,10 @@ function fetchServerResponse({ body, url }) {
 // This code is internal to the demo.
 // It passes the score to the demo to display it.
 function useAssessmentInClient(score) {
-  if (score?.data?.score && score?.data?.verdict) {
+  if (score?.data?.score && score?.data?.label) {
     const demoElement = document.querySelector("recaptcha-demo");
     demoElement.setAttribute("score", score?.data?.score);
-    demoElement.setAttribute("verdict", score?.data?.verdict);
+    demoElement.setAttribute("label", score?.data?.label);
+    demoElement.setAttribute("reason", score?.data?.reason);
   }
 }

@@ -20,8 +20,9 @@
 
 
 # [START compute_preemptible_history]
+from __future__ import annotations
+
 import datetime
-from typing import List, Tuple
 
 from google.cloud import compute_v1
 from google.cloud.compute_v1.services.zone_operations import pagers
@@ -52,7 +53,7 @@ def list_zone_operations(
 
 def preemption_history(
     project_id: str, zone: str, instance_name: str = None
-) -> List[Tuple[str, datetime.datetime]]:
+) -> list[tuple[str, datetime.datetime]]:
     """
     Get a list of preemption operations from given zone in a project. Optionally limit
     the results to instance name.

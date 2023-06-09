@@ -18,9 +18,13 @@ command line application and sample code for revoking access to a secret.
 
 import argparse
 
+from google.iam.v1 import iam_policy_pb2  # type: ignore
+
 
 # [START secretmanager_iam_revoke_access]
-def iam_revoke_access(project_id, secret_id, member):
+def iam_revoke_access(
+    project_id: str, secret_id: str, member: str
+) -> iam_policy_pb2.SetIamPolicyRequest:
     """
     Revoke the given member access to a secret.
     """
@@ -47,7 +51,7 @@ def iam_revoke_access(project_id, secret_id, member):
     new_policy = client.set_iam_policy(request={"resource": name, "policy": policy})
 
     # Print data about the secret.
-    print("Updated IAM policy on {}".format(secret_id))
+    print(f"Updated IAM policy on {secret_id}")
     # [END secretmanager_iam_revoke_access]
 
     return new_policy

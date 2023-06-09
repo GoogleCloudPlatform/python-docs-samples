@@ -30,7 +30,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -52,6 +51,10 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: people-and-planet-ai"
+    to:
+      - davidcavazos
+  - labels:
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
@@ -62,7 +65,6 @@ assign_issues_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: people-and-planet-ai"
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
@@ -113,6 +115,11 @@ assign_issues_by:
 
   # Self-service teams
   - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team
+  - labels:
       - "api: contentwarehouse"
       - "api: documentai"
     to:
@@ -143,6 +150,10 @@ assign_issues_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
@@ -169,7 +180,6 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/torus-dpe
   - labels:
-      - "api: asset"
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -191,20 +201,25 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/dee-platform-ops
   - labels:
+      - "api: people-and-planet-ai"
+    to:
+      - davidcavazos
+  - labels:
       - "api: datacatalog"
       - 'api: dataflow'
       - "api: datalabeling"
       - "api: dataproc"
       - "api: dialogflow"
       - "api: enterpriseknowledgegraph"
+      - "api: discoveryengine"
       - "api: language"
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: people-and-planet-ai"
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
+      - "api: transcoder"
       - "api: translate"
       - "api: vision"
     to:
@@ -252,6 +267,11 @@ assign_prs_by:
 
   # Self-service teams
   - labels:
+      - "api: asset"
+    to:
+      - GoogleCloudPlatform/cloud-asset-analysis-team
+      - GoogleCloudPlatform/cloud-asset-platform-team  
+  - labels:
       - "api: contentwarehouse"
       - "api: documentai"
     to:
@@ -282,6 +302,11 @@ assign_prs_by:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
+  - labels:
+      - "api: cloudmedia"
+      - "api: videostitcher"
+    to:
+      - GoogleCloudPlatform/cloud-media-team
 
   # Self-service individuals
   - labels:
@@ -298,4 +323,3 @@ assign_prs:
 ###
 # Updates should be made to both assign_issues_by & assign_prs_by sections
 ###
-

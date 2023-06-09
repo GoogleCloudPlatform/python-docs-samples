@@ -26,7 +26,10 @@
 from google.cloud import speech_v1p1beta1 as speech
 
 
-def sample_recognize(storage_uri, phrase):
+def sample_recognize(
+        storage_uri: str,
+        phrase: str
+) -> speech.RecognizeResponse:
     """
     Transcribe a short audio file with speech adaptation.
 
@@ -74,13 +77,13 @@ def sample_recognize(storage_uri, phrase):
     for result in response.results:
         # First alternative is the most probable result
         alternative = result.alternatives[0]
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"Transcript: {alternative.transcript}")
 
     # [END speech_adaptation_beta]
     return response
 
 
-def main():
+def main() -> None:
     import argparse
 
     parser = argparse.ArgumentParser()

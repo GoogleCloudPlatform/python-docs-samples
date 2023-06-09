@@ -25,7 +25,7 @@ import argparse
 
 
 # [START translate_detect_language]
-def detect_language(text):
+def detect_language(text: str) -> dict:
     """Detects the text's language."""
     from google.cloud import translate_v2 as translate
 
@@ -35,15 +35,16 @@ def detect_language(text):
     # will return a sequence of results for each text.
     result = translate_client.detect_language(text)
 
-    print("Text: {}".format(text))
+    print(f"Text: {text}")
     print("Confidence: {}".format(result["confidence"]))
     print("Language: {}".format(result["language"]))
 
-
+    return result
 # [END translate_detect_language]
 
+
 # [START translate_list_codes]
-def list_languages():
+def list_languages() -> dict:
     """Lists all available languages."""
     from google.cloud import translate_v2 as translate
 
@@ -52,13 +53,14 @@ def list_languages():
     results = translate_client.get_languages()
 
     for language in results:
-        print(u"{name} ({language})".format(**language))
+        print("{name} ({language})".format(**language))
 
-
+    return results
 # [END translate_list_codes]
 
+
 # [START translate_list_language_names]
-def list_languages_with_target(target):
+def list_languages_with_target(target: str) -> dict:
     """Lists all available languages and localizes them to the target language.
 
     Target must be an ISO 639-1 language code.
@@ -71,13 +73,18 @@ def list_languages_with_target(target):
     results = translate_client.get_languages(target_language=target)
 
     for language in results:
-        print(u"{name} ({language})".format(**language))
+        print("{name} ({language})".format(**language))
 
-
+    return results
 # [END translate_list_language_names]
 
+
 # [START translate_text_with_model]
-def translate_text_with_model(target, text, model="nmt"):
+def translate_text_with_model(
+        target: str,
+        text: str,
+        model: str = "nmt"
+) -> dict:
     """Translates text into the target language.
 
     Make sure your project is allowlisted.
@@ -96,37 +103,37 @@ def translate_text_with_model(target, text, model="nmt"):
     # will return a sequence of results for each text.
     result = translate_client.translate(text, target_language=target, model=model)
 
-    print(u"Text: {}".format(result["input"]))
-    print(u"Translation: {}".format(result["translatedText"]))
-    print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
+    print("Text: {}".format(result["input"]))
+    print("Translation: {}".format(result["translatedText"]))
+    print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
-
+    return result
 # [END translate_text_with_model]
 
+
 # [START translate_translate_text]
-def translate_text(target, text):
+def translate_text(target: str, text: str) -> dict:
     """Translates text into the target language.
 
     Target must be an ISO 639-1 language code.
     See https://g.co/cloud/translate/v2/translate-reference#supported_languages
     """
-    import six
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()
 
-    if isinstance(text, six.binary_type):
+    if isinstance(text, bytes):
         text = text.decode("utf-8")
 
     # Text can also be a sequence of strings, in which case this method
     # will return a sequence of results for each text.
     result = translate_client.translate(text, target_language=target)
 
-    print(u"Text: {}".format(result["input"]))
-    print(u"Translation: {}".format(result["translatedText"]))
-    print(u"Detected source language: {}".format(result["detectedSourceLanguage"]))
+    print("Text: {}".format(result["input"]))
+    print("Translation: {}".format(result["translatedText"]))
+    print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
-
+    return result
 # [END translate_translate_text]
 
 

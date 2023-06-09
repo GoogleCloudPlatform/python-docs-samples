@@ -15,7 +15,6 @@
 # [START job_search_list_tenants]
 
 from google.cloud import talent
-import six
 
 
 def list_tenants(project_id):
@@ -25,7 +24,7 @@ def list_tenants(project_id):
 
     # project_id = 'Your Google Cloud Project ID'
 
-    if isinstance(project_id, six.binary_type):
+    if isinstance(project_id, bytes):
         project_id = project_id.decode("utf-8")
     parent = f"projects/{project_id}"
 

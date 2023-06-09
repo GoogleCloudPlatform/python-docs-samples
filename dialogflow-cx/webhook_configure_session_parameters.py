@@ -16,10 +16,12 @@
 """ DialogFlow CX: webhook to configure new session parameters."""
 
 # [START dialogflow_cx_v3_webhook_configure_session_parameters]
+import functions_framework
 
 # TODO (developer): change entry point to configure_session_params in Cloud Function
 
 
+@functions_framework.http
 def configure_session_params(request):
     """Webhook to validate or configure new session parameters."""
 

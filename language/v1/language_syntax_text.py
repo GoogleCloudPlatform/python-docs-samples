@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 #
 # Copyright 2020 Google LLC
 #
@@ -59,9 +58,9 @@ def sample_analyze_syntax(text_content):
     for token in response.tokens:
         # Get the text content of this token. Usually a word or punctuation.
         text = token.text
-        print("Token text: {}".format(text.content))
+        print(f"Token text: {text.content}")
         print(
-            "Location of this token in overall document: {}".format(text.begin_offset)
+            f"Location of this token in overall document: {text.begin_offset}"
         )
         # Get the part of speech information for this token.
         # Part of speech is defined in:
@@ -88,12 +87,12 @@ def sample_analyze_syntax(text_content):
         # See API reference for additional Part of Speech information available
         # Get the lemma of the token. Wikipedia lemma description
         # https://en.wikipedia.org/wiki/Lemma_(morphology)
-        print("Lemma: {}".format(token.lemma))
+        print(f"Lemma: {token.lemma}")
         # Get the dependency tree parse information for this token.
         # For more information on dependency labels:
         # http://www.aclweb.org/anthology/P13-2017
         dependency_edge = token.dependency_edge
-        print("Head token index: {}".format(dependency_edge.head_token_index))
+        print(f"Head token index: {dependency_edge.head_token_index}")
         print(
             "Label: {}".format(
                 language_v1.DependencyEdge.Label(dependency_edge.label).name
@@ -103,7 +102,7 @@ def sample_analyze_syntax(text_content):
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print("Language of the text: {}".format(response.language))
+    print(f"Language of the text: {response.language}")
 
 
 # [END language_syntax_text]

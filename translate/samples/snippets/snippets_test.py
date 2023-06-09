@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 # Copyright 2016 Google, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,36 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 
 import snippets
 
 
-def test_detect_language(capsys):
-    snippets.detect_language("Hæ sæta")
+def test_detect_language(capsys: pytest.LogCaptureFixture) -> None:
+    result = snippets.detect_language("Hæ sæta")
     out, _ = capsys.readouterr()
-    assert "is" in out
+    assert "is" in result["language"]
 
 
-def test_list_languages(capsys):
-    snippets.list_languages()
+def test_list_languages(capsys: pytest.LogCaptureFixture) -> None:
+    results = snippets.list_languages()
     out, _ = capsys.readouterr()
-    assert "Icelandic (is)" in out
+    for language in results:
+        print("{name} ({language})".format(**language))
+    assert "Afrikaans" in results[0]["name"]
 
 
-def test_list_languages_with_target(capsys):
-    snippets.list_languages_with_target("is")
+def test_list_languages_with_target(capsys: pytest.LogCaptureFixture) -> None:
+    results = snippets.list_languages_with_target("is")
     out, _ = capsys.readouterr()
-    assert u"íslenska (is)" in out
+    assert "afríkanska" in results[0]["name"]
 
 
-def test_translate_text(capsys):
-    snippets.translate_text("is", "Hello world")
+def test_translate_text(capsys: pytest.LogCaptureFixture) -> None:
+    result = snippets.translate_text("is", "Hello world")
     out, _ = capsys.readouterr()
-    assert u"Halló heimur" in out
+    assert "Halló heimur" in result["translatedText"]
 
 
-def test_translate_utf8(capsys):
-    text = u"파인애플 13개"
-    snippets.translate_text("en", text)
+def test_translate_utf8(capsys: pytest.LogCaptureFixture) -> None:
+    text = "파인애플 13개"
+    result = snippets.translate_text("en", text)
     out, _ = capsys.readouterr()
-    assert u"13 pineapples" in out
+    assert "13 pineapples" in result["translatedText"]

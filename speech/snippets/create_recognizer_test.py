@@ -19,17 +19,21 @@ from google.api_core.retry import Retry
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+import pytest
+
 import create_recognizer
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
 @Retry()
-def test_create_recognizer(capsys):
+def test_create_recognizer(
+    capsys: pytest.CaptureFixture
+) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer = create_recognizer.create_recognizer(

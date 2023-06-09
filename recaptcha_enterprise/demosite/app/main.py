@@ -18,6 +18,8 @@ import urls
 
 app = Flask(__name__)
 
+app.config["TEMPLATES_AUTO_RELOAD"] = True
+
 # Template URL rules.
 app.add_url_rule(rule="/", methods=["GET"], view_func=urls.home)
 app.add_url_rule(rule="/store", methods=["GET"], view_func=urls.store)

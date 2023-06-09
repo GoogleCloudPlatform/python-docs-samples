@@ -179,7 +179,7 @@ def test_process():
     # Get job output
     output_location = result.driver_output_resource_uri + ".000000000"
     blob = get_blob_from_path(output_location)
-    out = blob.download_as_string().decode("utf-8")
+    out = blob.download_as_bytes().decode("utf-8")
 
     # trip duration
     assert not is_in_table(r"\d*.\d* s", out)

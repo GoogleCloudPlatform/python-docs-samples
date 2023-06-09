@@ -18,12 +18,20 @@ from google.cloud import translate
 
 
 def translate_text_with_glossary(
-    text="YOUR_TEXT_TO_TRANSLATE",
-    project_id="YOUR_PROJECT_ID",
-    glossary_id="YOUR_GLOSSARY_ID",
-):
-    """Translates a given text using a glossary."""
+    text: str = "YOUR_TEXT_TO_TRANSLATE",
+    project_id: str = "YOUR_PROJECT_ID",
+    glossary_id: str = "YOUR_GLOSSARY_ID",
+) -> translate.TranslateTextResponse:
+    """Translates a given text using a glossary.
 
+    Args:
+        text: The text to translate.
+        project_id: The ID of the GCP project that owns the glossary.
+        glossary_id: The ID of the glossary to use.
+
+    Returns:
+        The translated text.
+"""
     client = translate.TranslationServiceClient()
     location = "us-central1"
     parent = f"projects/{project_id}/locations/{location}"
@@ -47,7 +55,7 @@ def translate_text_with_glossary(
 
     print("Translated text: \n")
     for translation in response.glossary_translations:
-        print("\t {}".format(translation.translated_text))
+        print(f"\t {translation.translated_text}")
 
-
+    return response
 # [END translate_v3_translate_text_with_glossary]

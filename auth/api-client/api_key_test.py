@@ -14,10 +14,12 @@
 import os
 import re
 from time import sleep
+from unittest import mock
 import uuid
 
 from _pytest.capture import CaptureFixture
 import google.auth.transport.requests
+from google.cloud import language_v1
 from google.cloud.api_keys_v2 import Key
 import pytest
 
@@ -47,19 +49,23 @@ def api_key():
 def get_key_id(api_key_name: str):
     return api_key_name.rsplit("/")[-1]
 
+def get_mock_sentiment_response():
+    response = mock.MagicMock(spec=language_v1.AnalyzeSentimentResponse)
+    sentiment = mock.MagicMock(spec=language_v1.Sentiment)
+    sentiment.score=0.2
+    sentiment.magnitude=3.6
+    response.document_sentiment = sentiment
+    return mock.MagicMock(return_value=response)
 
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
-    out = "Failed to authenticate after 5 tries"
-    for _ in range(5):
-        try:
-            authenticate_with_api_key.authenticate_with_api_key(
-                PROJECT, api_key.key_string
-            )
-            out, _ = capsys.readouterr()
-            break
-        except Exception:
-            sleep(10)
-
+    with mock.patch(
+        "google.cloud.language_v1.LanguageServiceClient.analyze_sentiment",
+        get_mock_sentiment_response()
+    ):
+        authenticate_with_api_key.authenticate_with_api_key(
+            PROJECT, api_key.key_string
+        )
+    out, _ = capsys.readouterr()
     assert re.search("Successfully authenticated using the API key", out)
 
 

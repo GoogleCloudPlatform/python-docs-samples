@@ -886,7 +886,7 @@ def property_by_kind_run_query(client):
 
 def regional_endpoint():
     # [START datastore_regional_endpoints]
-    ENDPOINT = "https://datastore.googleapis.com"
+    ENDPOINT = "https://nam5-datastore.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
 
@@ -904,7 +904,6 @@ def eventual_consistent_query(client):
     query = client.query(kind="Task")
     query.fetch(eventual=True)
     # [END datastore_eventual_consistent_query]
-    pass
 
 
 def index_merge_queries(client):

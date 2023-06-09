@@ -40,7 +40,7 @@ def set_topic_policy(topic_name):
     # Set the policy
     topic.set_iam_policy(policy)
 
-    print('IAM policy for topic {} set.'.format(topic.name))
+    print(f'IAM policy for topic {topic.name} set.')
 
 
 if __name__ == '__main__':

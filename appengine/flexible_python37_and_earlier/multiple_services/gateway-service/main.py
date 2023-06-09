@@ -41,7 +41,7 @@ def say_hello(service):
     url = app.config['SERVICE_MAP'][service]
     res = requests.get(url + '/hello')
     responses.append(res.content)
-    return '\n'.encode().join(responses)
+    return b'\n'.join(responses)
 
 
 @app.route('/<path>')

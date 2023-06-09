@@ -12,15 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START speech_quickstart]
 
-def run_quickstart():
-    # [START speech_quickstart]
+# Imports the Google Cloud client library
 
-    # Imports the Google Cloud client library
-    # [START speech_python_migration_imports]
-    from google.cloud import speech
+# [START speech_python_migration_imports]
 
-    # [END speech_python_migration_imports]
+from google.cloud import speech
+
+# [END speech_python_migration_imports]
+
+
+def run_quickstart() -> speech.RecognizeResponse:
 
     # Instantiates a client
     # [START speech_python_migration_client]
@@ -42,8 +45,10 @@ def run_quickstart():
     response = client.recognize(config=config, audio=audio)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
     # [END speech_quickstart]
+
+    return response
 
 
 if __name__ == "__main__":

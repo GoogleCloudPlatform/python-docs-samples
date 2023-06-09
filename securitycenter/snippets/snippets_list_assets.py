@@ -26,7 +26,7 @@ def list_all_assets(organization_id):
     client = securitycenter.SecurityCenterClient()
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     # Call the API and print results.
     asset_iterator = client.list_assets(request={"parent": org_name})
@@ -46,7 +46,7 @@ def list_assets_with_filters(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     project_filter = (
         "security_center_properties.resource_type="
@@ -74,7 +74,7 @@ def list_assets_with_filters_and_read_time(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     project_filter = (
         "security_center_properties.resource_type="
@@ -106,7 +106,7 @@ def list_point_in_time_changes(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     project_filter = (
         "security_center_properties.resource_type="
         + '"google.cloud.resourcemanager.Project"'
@@ -140,7 +140,7 @@ def group_assets(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     group_by_type = "security_center_properties.resource_type"
 
@@ -163,7 +163,7 @@ def group_filtered_assets(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     group_by_type = "security_center_properties.resource_type"
     only_projects = (
@@ -194,7 +194,7 @@ def group_assets_by_changes(organization_id):
 
     # organization_id is the numeric ID of the organization.
     # organization_id = "1234567777"
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
     result_iterator = client.group_assets(
         request={
             "parent": org_name,

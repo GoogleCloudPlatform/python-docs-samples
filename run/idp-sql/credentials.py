@@ -14,13 +14,18 @@
 
 import json
 import os
-from typing import Dict
 
 from middleware import logger
 
 
 # [START cloudrun_user_auth_secrets]
-def get_cred_config() -> Dict[str, str]:
+def get_cred_config() -> dict[str, str]:
+    """Retrieve Cloud SQL credentials stored in Secret Manager
+    or default to environment variables.
+
+    Returns:
+        A dictionary with Cloud SQL credential values
+    """
     secret = os.environ.get("CLOUD_SQL_CREDENTIALS_SECRET")
     if secret:
         return json.loads(secret)

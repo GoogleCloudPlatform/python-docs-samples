@@ -28,10 +28,10 @@ import model_test
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_MODEL = model_test.STATIC_MODEL
-GCS_INPUT = "gs://{}-automl-tables-test/bank-marketing.csv".format(PROJECT)
-GCS_OUTPUT = "gs://{}-automl-tables-test/TABLE_TEST_OUTPUT/".format(PROJECT)
-BQ_INPUT = "bq://{}.automl_test.bank_marketing".format(PROJECT)
-BQ_OUTPUT = "bq://{}".format(PROJECT)
+GCS_INPUT = f"gs://{PROJECT}-automl-tables-test/bank-marketing.csv"
+GCS_OUTPUT = f"gs://{PROJECT}-automl-tables-test/TABLE_TEST_OUTPUT/"
+BQ_INPUT = f"bq://{PROJECT}.automl_test.bank_marketing"
+BQ_OUTPUT = f"bq://{PROJECT}"
 PARAMS = {}
 
 

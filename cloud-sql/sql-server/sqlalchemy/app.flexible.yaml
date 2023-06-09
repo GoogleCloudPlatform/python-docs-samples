@@ -28,4 +28,4 @@ env_variables:
   DB_NAME: <YOUR_DB_NAME>
 
 beta_settings:
-  cloud_sql_instances: <PROJECT-ID>:<INSTANCE-REGION>:<INSTANCE-NAME>=tcp:1433
+  cloud_sql_instances: <PROJECT_ID>:<INSTANCE_REGION>:<INSTANCE_NAME>=tcp:1433

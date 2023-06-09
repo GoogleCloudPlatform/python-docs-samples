@@ -31,7 +31,7 @@ def list_clusters(dataproc, project, region):
     for cluster in dataproc.list_clusters(
         request={"project_id": project, "region": region}
     ):
-        print(("{} - {}".format(cluster.cluster_name, cluster.status.state.name)))
+        print(f"{cluster.cluster_name} - {cluster.status.state.name}")
 
 
 # [END dataproc_list_clusters]

@@ -32,7 +32,7 @@ def source_name(organization_id):
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
-    org_name = "organizations/{org_id}".format(org_id=organization_id)
+    org_name = f"organizations/{organization_id}"
 
     source = client.create_source(
         request={

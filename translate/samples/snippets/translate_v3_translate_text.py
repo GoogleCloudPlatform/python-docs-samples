@@ -18,7 +18,10 @@ from google.cloud import translate
 
 
 # Initialize Translation client
-def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
+def translate_text(
+        text: str = "YOUR_TEXT_TO_TRANSLATE",
+        project_id: str = "YOUR_PROJECT_ID"
+) -> translate.TranslationServiceClient:
     """Translating Text."""
 
     client = translate.TranslationServiceClient()
@@ -42,7 +45,7 @@ def translate_text(text="YOUR_TEXT_TO_TRANSLATE", project_id="YOUR_PROJECT_ID"):
 
     # Display the translation for each input text provided
     for translation in response.translations:
-        print("Translated text: {}".format(translation.translated_text))
+        print(f"Translated text: {translation.translated_text}")
 
-
+    return response
 # [END translate_v3_translate_text]

@@ -22,13 +22,11 @@ https://cloud.google.com/natural-language/docs/classify-text-tutorial.
 
 # [START language_classify_text_tutorial_imports]
 import argparse
-import io
 import json
 import os
 
 from google.cloud import language_v1
 import numpy
-import six
 
 # [END language_classify_text_tutorial_imports]
 
@@ -80,18 +78,18 @@ def index(path, index_file):
             continue
 
         try:
-            with io.open(file_path, "r") as f:
+            with open(file_path) as f:
                 text = f.read()
                 categories = classify(text, verbose=False)
 
                 result[filename] = categories
         except Exception:
-            print("Failed to process {}".format(file_path))
+            print(f"Failed to process {file_path}")
 
-    with io.open(index_file, "w", encoding="utf-8") as f:
+    with open(index_file, "w", encoding="utf-8") as f:
         f.write(json.dumps(result, ensure_ascii=False))
 
-    print("Texts indexed in file: {}".format(index_file))
+    print(f"Texts indexed in file: {index_file}")
     return result
 
 
@@ -118,7 +116,7 @@ def split_labels(categories):
     Then x and y are considered more similar than y and z.
     """
     _categories = {}
-    for name, confidence in six.iteritems(categories):
+    for name, confidence in categories.items():
         labels = [label for label in name.split("/") if label]
         for label in labels:
             _categories[label] = confidence
@@ -140,7 +138,7 @@ def similarity(categories1, categories2):
 
     # Compute the cosine similarity.
     dot = 0.0
-    for label, confidence in six.iteritems(categories1):
+    for label, confidence in categories1.items():
         dot += confidence * categories2.get(label, 0.0)
 
     return dot / (norm1 * norm2)
@@ -152,26 +150,26 @@ def query(index_file, text, n_top=3):
     the query text.
     """
 
-    with io.open(index_file, "r") as f:
+    with open(index_file) as f:
         index = json.load(f)
 
     # Get the categories of the query text.
     query_categories = classify(text, verbose=False)
 
     similarities = []
-    for filename, categories in six.iteritems(index):
+    for filename, categories in index.items():
         similarities.append((filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
     print("=" * 20)
-    print("Query: {}\n".format(text))
-    for category, confidence in six.iteritems(query_categories):
-        print("\tCategory: {}, confidence: {}".format(category, confidence))
-    print("\nMost similar {} indexed texts:".format(n_top))
+    print(f"Query: {text}\n")
+    for category, confidence in query_categories.items():
+        print(f"\tCategory: {category}, confidence: {confidence}")
+    print(f"\nMost similar {n_top} indexed texts:")
     for filename, sim in similarities[:n_top]:
-        print("\tFilename: {}".format(filename))
-        print("\tSimilarity: {}".format(sim))
+        print(f"\tFilename: {filename}")
+        print(f"\tSimilarity: {sim}")
         print("\n")
 
     return similarities
@@ -189,7 +187,7 @@ def query_category(index_file, category_string, n_top=3):
     https://cloud.google.com/natural-language/docs/categories
     """
 
-    with io.open(index_file, "r") as f:
+    with open(index_file) as f:
         index = json.load(f)
 
     # Make the category_string into a dictionary so that it is
@@ -197,17 +195,17 @@ def query_category(index_file, category_string, n_top=3):
     query_categories = {category_string: 1.0}
 
     similarities = []
-    for filename, categories in six.iteritems(index):
+    for filename, categories in index.items():
         similarities.append((filename, similarity(query_categories, categories)))
 
     similarities = sorted(similarities, key=lambda p: p[1], reverse=True)
 
     print("=" * 20)
-    print("Query: {}\n".format(category_string))
-    print("\nMost similar {} indexed texts:".format(n_top))
+    print(f"Query: {category_string}\n")
+    print(f"\nMost similar {n_top} indexed texts:")
     for filename, sim in similarities[:n_top]:
-        print("\tFilename: {}".format(filename))
-        print("\tSimilarity: {}".format(sim))
+        print(f"\tFilename: {filename}")
+        print(f"\tSimilarity: {sim}")
         print("\n")
 
     return similarities

@@ -45,10 +45,10 @@ def test_main(capsys):
     # Initialize variables.
     cmd = 'uname -a'
     project = os.environ['GOOGLE_CLOUD_PROJECT']
-    test_id = 'oslogin-test-{id}'.format(id=str(random.randint(0, 1000000)))
+    test_id = f'oslogin-test-{str(random.randint(0, 1000000))}'
     zone = 'us-east1-d'
     image_family = 'projects/debian-cloud/global/images/family/debian-11'
-    machine_type = 'zones/{zone}/machineTypes/f1-micro'.format(zone=zone)
+    machine_type = f'zones/{zone}/machineTypes/f1-micro'
     account_email = '{test_id}@{project}.iam.gserviceaccount.com'.format(
         test_id=test_id, project=project)
 
@@ -96,7 +96,7 @@ def test_main(capsys):
     def ssh_login():
         main(cmd, project, test_id, zone, oslogin, account, hostname)
         out, _ = capsys.readouterr()
-        assert_value = '{test_id}'.format(test_id=test_id)
+        assert_value = f'{test_id}'
         assert assert_value in out
 
     # Test SSH to the instance.

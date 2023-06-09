@@ -74,14 +74,14 @@ def download_output(project, cluster_id, output_bucket, job_id):
     output_blob = "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
         cluster_id, job_id
     )
-    return bucket.blob(output_blob).download_as_string()
+    return bucket.blob(output_blob).download_as_bytes().decode("utf-8")
 
 
 # [START dataproc_create_cluster]
 def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
     # Create the cluster client.
     cluster_client = dataproc_v1.ClusterControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(region)}
+        client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
 
     # Create the cluster config.
@@ -100,7 +100,7 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
     )
     result = operation.result()
 
-    print("Cluster created successfully: {}".format(result.cluster_name))
+    print(f"Cluster created successfully: {result.cluster_name}")
 
 # [END dataproc_create_cluster]
 
@@ -110,13 +110,13 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
 # [START dataproc_submit_job]
     # Create the job client.
     job_client = dataproc_v1.JobControllerClient(
-        client_options={"api_endpoint": "{}-dataproc.googleapis.com:443".format(region)}
+        client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
 
     # Create the job config.
     job = {
         "placement": {"cluster_name": cluster_name},
-        "pyspark_job": {"main_python_file_uri": "gs://{}/{}".format(gcs_bucket, spark_filename)},
+        "pyspark_job": {"main_python_file_uri": f"gs://{gcs_bucket}/{spark_filename}"},
     }
 
     operation = job_client.submit_job_as_operation(
@@ -132,7 +132,7 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
         storage.Client()
         .get_bucket(matches.group(1))
         .blob(f"{matches.group(2)}.000000000")
-        .download_as_string()
+        .download_as_bytes().decode("utf-8")
     )
 
     print(f"Job finished successfully: {output}\r\n")
@@ -149,7 +149,7 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
     )
     operation.result()
 
-    print("Cluster {} successfully deleted.".format(cluster_name))
+    print(f"Cluster {cluster_name} successfully deleted.")
 # [END dataproc_delete_cluster]
 
 

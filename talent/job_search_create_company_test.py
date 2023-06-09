@@ -21,7 +21,7 @@ import job_search_create_company
 import job_search_delete_company
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-COMPANY_EXT_ID = "COMPANY_EXT_ID_{}".format(uuid.uuid4())
+COMPANY_EXT_ID = f"COMPANY_EXT_ID_{uuid.uuid4()}"
 
 
 def test_create_company(capsys, tenant, cleaner):

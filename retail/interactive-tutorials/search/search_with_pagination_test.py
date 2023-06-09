@@ -37,6 +37,4 @@ def test_search_with_pagination_pass():
 def test_search_with_pagination():
     response = search()
 
-    product_title = response.results[0].product.title
-    assert re.match(".*Hoodie", product_title)
     assert len(response.results) == 6

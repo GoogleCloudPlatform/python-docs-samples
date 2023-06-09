@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import os
+from typing import Generator
 import uuid
 
 from google.cloud import tasks_v2
@@ -24,39 +25,35 @@ import create_http_task
 
 TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
-TEST_QUEUE_NAME = f"my-queue-{uuid.uuid4().hex}"
+TEST_QUEUE_ID = f"my-queue-{uuid.uuid4().hex}"
 
 
 @pytest.fixture()
-def test_queue():
+def test_queue() -> Generator[tasks_v2.Queue, None, None]:
     client = tasks_v2.CloudTasksClient()
-    parent = f"projects/{TEST_PROJECT_ID}/locations/{TEST_LOCATION}"
-    queue = {
-        # The fully qualified path to the queue
-        "name": client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME),
-    }
-    q = client.create_queue(request={"parent": parent, "queue": queue})
-
-    yield q
-
-    client.delete_queue(request={"name": q.name})
-
-
-def test_create_http_task(test_queue):
-    url = "https://example.com/task_handler"
-    result = create_http_task.create_http_task(
-        TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION, url
+    queue = client.create_queue(
+        tasks_v2.CreateQueueRequest(
+            parent=client.common_location_path(TEST_PROJECT_ID, TEST_LOCATION),
+            queue=tasks_v2.Queue(
+                name=client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_ID)
+            ),
+        )
     )
-    assert TEST_QUEUE_NAME in result.name
 
-    result = create_http_task.create_http_task(
+    yield queue
+    client.delete_queue(request={"name": queue.name})
+
+
+def test_create_http_task(test_queue: tasks_v2.Queue) -> None:
+    task = create_http_task.create_http_task(
         TEST_PROJECT_ID,
-        TEST_QUEUE_NAME,
         TEST_LOCATION,
-        url,
-        payload="hello",
-        in_seconds=180,
-        task_name=uuid.uuid4().hex,
-        deadline=900,
+        TEST_QUEUE_ID,
+        "https://example.com/task_handler",
+        json_payload={"greeting": "hola"},
+        scheduled_seconds_from_now=180,
+        task_id=uuid.uuid4().hex,
+        deadline_in_seconds=900,
     )
-    assert TEST_QUEUE_NAME in result.name
+    assert task.name.startswith(test_queue.name)
+    assert task.http_request.url == "https://example.com/task_handler"

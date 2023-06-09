@@ -86,7 +86,7 @@ def text_to_ssml(inputfile):
     # A string of SSML text based on plaintext input
 
     # Parses lines of input file
-    with open(inputfile, "r") as f:
+    with open(inputfile) as f:
         raw_lines = f.read()
 
     # Replace special characters with HTML Ampersand Character Codes
