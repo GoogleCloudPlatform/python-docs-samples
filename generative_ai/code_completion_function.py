@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_completion_comment]
-import textwrap
-
 from vertexai.preview.language_models import CodeGenerationModel
 
 
