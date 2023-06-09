@@ -13,7 +13,15 @@
 # limitations under the License.
 
 
-def run_quickstart(project=""):
+def run_quickstart(project_id: str) -> bool:
+    """Writes a custom metric time series
+
+    Args:
+        project_id: Google Cloud project id
+
+    Returns:
+        True on success
+    """
     # [START monitoring_quickstart]
     from google.cloud import monitoring_v3
 
@@ -21,7 +29,7 @@ def run_quickstart(project=""):
 
     client = monitoring_v3.MetricServiceClient()
     # project = 'my-project'  # TODO: Update to your project ID.
-    project_name = f"projects/{project}"
+    project_name = f"projects/{project_id}"
 
     series = monitoring_v3.TimeSeries()
     series.metric.type = "custom.googleapis.com/my_metric"
@@ -31,7 +39,7 @@ def run_quickstart(project=""):
     series.resource.labels["zone"] = "us-central1-f"
     now = time.time()
     seconds = int(now)
-    nanos = int((now - seconds) * 10 ** 9)
+    nanos = int((now - seconds) * 10**9)
     interval = monitoring_v3.TimeInterval(
         {"end_time": {"seconds": seconds, "nanos": nanos}}
     )
@@ -39,6 +47,7 @@ def run_quickstart(project=""):
     series.points = [point]
     client.create_time_series(request={"name": project_name, "time_series": [series]})
     print("Successfully wrote time series.")
+    return True
     # [END monitoring_quickstart]
 
 

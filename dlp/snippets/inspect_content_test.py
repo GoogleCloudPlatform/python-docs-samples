@@ -14,6 +14,7 @@
 
 import os
 import time
+from typing import Iterator
 import uuid
 
 import backoff
@@ -48,7 +49,7 @@ DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
 
 @pytest.fixture(scope="module")
-def bucket():
+def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     # Creates a GCS bucket, uploads files required for the test, and tears down
     # the entire bucket afterwards.
 
@@ -81,7 +82,7 @@ def bucket():
 
 
 @pytest.fixture(scope="module")
-def topic_id():
+def topic_id() -> Iterator[str]:
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()
     topic_path = publisher.topic_path(GCLOUD_PROJECT, TOPIC_ID)
@@ -96,7 +97,7 @@ def topic_id():
 
 
 @pytest.fixture(scope="module")
-def subscription_id(topic_id):
+def subscription_id(topic_id: str) -> Iterator[str]:
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
@@ -114,7 +115,7 @@ def subscription_id(topic_id):
 
 
 @pytest.fixture(scope="module")
-def datastore_project():
+def datastore_project() -> Iterator[str]:
     # Adds test Datastore data, yields the project ID and then tears down.
     datastore_client = google.cloud.datastore.Client()
 
@@ -129,14 +130,14 @@ def datastore_project():
     yield GCLOUD_PROJECT
 
     @backoff.on_exception(backoff.expo, ServiceUnavailable, max_time=120)
-    def cleanup():
+    def cleanup() -> None:
         datastore_client.delete(key)
 
     cleanup()
 
 
 @pytest.fixture(scope="module")
-def bigquery_project():
+def bigquery_project() -> Iterator[str]:
     # Adds test Bigquery data, yields the project ID and then tears down.
     bigquery_client = google.cloud.bigquery.Client()
 
@@ -169,13 +170,13 @@ def bigquery_project():
     yield GCLOUD_PROJECT
 
     @backoff.on_exception(backoff.expo, ServiceUnavailable, max_time=120)
-    def cleanup():
+    def cleanup() -> None:
         bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
 
     cleanup()
 
 
-def test_inspect_string_basic(capsys):
+def test_inspect_string_basic(capsys: pytest.CaptureFixture) -> None:
     test_string = "String with a phone number: 234-555-6789"
 
     inspect_content.inspect_string_basic(GCLOUD_PROJECT, test_string)
@@ -185,7 +186,7 @@ def test_inspect_string_basic(capsys):
     assert "Quote: 234-555-6789" in out
 
 
-def test_inspect_string(capsys):
+def test_inspect_string(capsys: pytest.CaptureFixture) -> None:
     test_string = "My name is Gary Smith and my email is gary@example.com"
 
     inspect_content.inspect_string(
@@ -200,7 +201,7 @@ def test_inspect_string(capsys):
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def test_inspect_table(capsys):
+def test_inspect_table(capsys: pytest.CaptureFixture) -> None:
     test_tabular_data = {
         "header": ["email", "phone number"],
         "rows": [
@@ -221,7 +222,7 @@ def test_inspect_table(capsys):
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def test_inspect_string_with_custom_info_types(capsys):
+def test_inspect_string_with_custom_info_types(capsys: pytest.CaptureFixture) -> None:
     test_string = "My name is Gary Smith and my email is gary@example.com"
     dictionaries = ["Gary Smith"]
     regexes = ["\\w+@\\w+.com"]
@@ -240,7 +241,7 @@ def test_inspect_string_with_custom_info_types(capsys):
     assert "Info type: CUSTOM_REGEX_0" in out
 
 
-def test_inspect_string_no_results(capsys):
+def test_inspect_string_no_results(capsys: pytest.CaptureFixture) -> None:
     test_string = "Nothing to see here"
 
     inspect_content.inspect_string(
@@ -254,7 +255,7 @@ def test_inspect_string_no_results(capsys):
     assert "No findings" in out
 
 
-def test_inspect_file(capsys):
+def test_inspect_file(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.txt")
 
     inspect_content.inspect_file(
@@ -268,7 +269,7 @@ def test_inspect_file(capsys):
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def test_inspect_file_with_custom_info_types(capsys):
+def test_inspect_file_with_custom_info_types(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.txt")
     dictionaries = ["gary@somedomain.com"]
     regexes = ["\\(\\d{3}\\) \\d{3}-\\d{4}"]
@@ -287,7 +288,7 @@ def test_inspect_file_with_custom_info_types(capsys):
     assert "Info type: CUSTOM_REGEX_0" in out
 
 
-def test_inspect_file_no_results(capsys):
+def test_inspect_file_no_results(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "harmless.txt")
 
     inspect_content.inspect_file(
@@ -301,7 +302,7 @@ def test_inspect_file_no_results(capsys):
     assert "No findings" in out
 
 
-def test_inspect_image_file(capsys):
+def test_inspect_image_file(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
 
     inspect_content.inspect_file(
@@ -315,20 +316,17 @@ def test_inspect_image_file(capsys):
     assert "Info type: PHONE_NUMBER" in out
 
 
-def test_inspect_image_file_all_infotypes(capsys):
+def test_inspect_image_file_all_infotypes(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
 
-    inspect_content.inspect_image_file_all_infotypes(
-        GCLOUD_PROJECT,
-        test_filepath
-    )
+    inspect_content.inspect_image_file_all_infotypes(GCLOUD_PROJECT, test_filepath)
 
     out, _ = capsys.readouterr()
     assert "Info type: PHONE_NUMBER" in out
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def test_inspect_image_file_listed_infotypes(capsys):
+def test_inspect_image_file_listed_infotypes(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
 
     inspect_content.inspect_image_file_listed_infotypes(
@@ -341,7 +339,7 @@ def test_inspect_image_file_listed_infotypes(capsys):
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def delete_dlp_job(out):
+def delete_dlp_job(out: str) -> None:
     for line in str(out).split("\n"):
         if "Job name" in line:
             job_name = line.split(":")[1].strip()
@@ -349,7 +347,9 @@ def delete_dlp_job(out):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file(
+    bucket: str, topic_id: str, subscription_id: str, capsys: pytest.CaptureFixture
+) -> None:
     out = ""
     try:
         inspect_content.inspect_gcs_file(
@@ -371,8 +371,11 @@ def test_inspect_gcs_file(bucket, topic_id, subscription_id, capsys):
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_gcs_file_with_custom_info_types(
-    bucket, topic_id, subscription_id, capsys
-):
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         dictionaries = ["gary@somedomain.com"]
@@ -399,7 +402,12 @@ def test_inspect_gcs_file_with_custom_info_types(
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_file_no_results(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_gcs_file(
@@ -421,7 +429,12 @@ def test_inspect_gcs_file_no_results(bucket, topic_id, subscription_id, capsys):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_image_file(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_gcs_file(
@@ -442,7 +455,12 @@ def test_inspect_gcs_image_file(bucket, topic_id, subscription_id, capsys):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
+def test_inspect_gcs_multiple_files(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_gcs_file(
@@ -464,7 +482,12 @@ def test_inspect_gcs_multiple_files(bucket, topic_id, subscription_id, capsys):
 
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys):
+def test_inspect_datastore(
+    datastore_project: str,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_datastore(
@@ -486,8 +509,11 @@ def test_inspect_datastore(datastore_project, topic_id, subscription_id, capsys)
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore_no_results(
-    datastore_project, topic_id, subscription_id, capsys
-):
+    datastore_project: str,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_datastore(
@@ -509,7 +535,12 @@ def test_inspect_datastore_no_results(
 
 @pytest.mark.skip(reason="Table not found error. Should be inspected.")
 @pytest.mark.flaky(max_runs=2, min_passes=1)
-def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
+def test_inspect_bigquery(
+    bigquery_project: str,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     out = ""
     try:
         inspect_content.inspect_bigquery(
@@ -525,6 +556,52 @@ def test_inspect_bigquery(bigquery_project, topic_id, subscription_id, capsys):
 
         out, _ = capsys.readouterr()
         assert "Inspection operation started" in out
+        assert "Job name:" in out
+    finally:
+        delete_dlp_job(out)
+
+
+@pytest.mark.flaky(max_runs=2, min_passes=1)
+def test_inspect_bigquery_with_sampling(
+    topic_id: str, subscription_id: str, capsys: pytest.CaptureFixture
+) -> None:
+    out = ""
+    try:
+        inspect_content.inspect_bigquery_table_with_sampling(
+            GCLOUD_PROJECT,
+            topic_id,
+            subscription_id,
+            timeout=TIMEOUT,
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started" in out
+        assert "Job name:" in out
+    finally:
+        delete_dlp_job(out)
+
+
+@pytest.mark.flaky(max_runs=2, min_passes=1)
+def test_inspect_gcs_with_sampling(
+    bucket: google.cloud.storage.bucket.Bucket,
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
+    out = ""
+    try:
+        inspect_content.inspect_gcs_with_sampling(
+            GCLOUD_PROJECT,
+            bucket.name,
+            topic_id,
+            subscription_id,
+            ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+            ["TEXT_FILE"],
+            timeout=TIMEOUT,
+        )
+
+        out, _ = capsys.readouterr()
+        assert "Inspection operation started:" in out
         assert "Job name:" in out
     finally:
         delete_dlp_job(out)

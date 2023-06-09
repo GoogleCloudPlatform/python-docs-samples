@@ -24,13 +24,16 @@ Example usage:
 
 import argparse
 
+from google.cloud import speech
+
 
 # [START speech_transcribe_model_selection]
-def transcribe_model_selection(speech_file, model):
+def transcribe_model_selection(
+        speech_file: str,
+        model: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     the selected model."""
-    from google.cloud import speech
-
     client = speech.SpeechClient()
 
     with open(speech_file, "rb") as audio_file:
@@ -53,12 +56,15 @@ def transcribe_model_selection(speech_file, model):
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
 
-
+    return response
 # [END speech_transcribe_model_selection]
 
 
 # [START speech_transcribe_model_selection_gcs]
-def transcribe_model_selection_gcs(gcs_uri, model):
+def transcribe_model_selection_gcs(
+        gcs_uri: str,
+        model: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously with
     the selected model."""
     from google.cloud import speech
@@ -85,7 +91,7 @@ def transcribe_model_selection_gcs(gcs_uri, model):
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
 
-
+    return response
 # [END speech_transcribe_model_selection_gcs]
 
 
