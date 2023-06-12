@@ -12,20 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-devel
+FROM pytorch/pytorch:2.0.1-cuda11.7-cudnn8-runtime
 
 WORKDIR /pipeline
 
 COPY requirements.txt .
 COPY *.py ./
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends g++ cmake lit \
-    && rm -rf /var/lib/apt/lists/* \
-    # Install the pipeline requirements and check that there are no conflicts.
-    # Since the image already has all the dependencies installed,
-    # there's no need to run with the --requirements_file option.
-    && pip install --no-cache-dir --upgrade pip \
+# Install the pipeline requirements and check that there are no conflicts.
+# Since the image already has all the dependencies installed,
+# there's no need to run with the --requirements_file option.
+RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir -r requirements.txt \
     && pip check
 
