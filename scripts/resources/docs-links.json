@@ -1,7 +1,4 @@
 {
-  "/storage/docs/encryption": [
-    "storage/api/customer_supplied_keys.py"
-  ], 
   "/appengine/docs/python/datastore/entity-property-reference": [
     "appengine/ndb/properties/snippets.py", 
     "appengine/ndb/properties/snippets_test.py"
@@ -189,9 +186,6 @@
   "/appengine/docs/flexible/python/runtime": [
     "managed_vms/websockets/main.py"
   ], 
-  "/storage/docs/authentication": [
-    "storage/api/list_objects.py"
-  ], 
   "/appengine/docs/python/users/loginurls": [
     "appengine/users/main.py"
   ], 
@@ -258,9 +252,6 @@
   "/error-reporting/docs/setting-up-on-compute-engine": [
     "error_reporting/main.py"
   ], 
-  "/docs/authentication": [
-    "storage/api/list_objects.py"
-  ], 
   "/bigquery/streaming-data-into-bigquery": [
     "bigquery/api/streaming.py"
   ], 
@@ -294,10 +285,6 @@
     "managed_vms/hello_world/main.py", 
     "managed_vms/hello_world/requirements.txt", 
     "managed_vms/hello_world/app.yaml"
-  ], 
-  "/storage/docs/json_api/v1/json-api-python-samples": [
-    "storage/api/crud_object.py", 
-    "storage/api/list_objects.py"
   ], 
   "/dns/records/": [
     "dns/api/main.py"
