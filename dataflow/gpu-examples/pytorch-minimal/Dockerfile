@@ -20,7 +20,7 @@ COPY requirements.txt .
 COPY *.py ./
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends g++ \
+    && apt-get install -y --no-install-recommends g++ cmake lit \
     && rm -rf /var/lib/apt/lists/* \
     # Install the pipeline requirements and check that there are no conflicts.
     # Since the image already has all the dependencies installed,
