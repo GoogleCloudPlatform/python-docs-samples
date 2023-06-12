@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2023 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,8 +16,11 @@
 import os
 
 from cloudevents.http import from_http
+
 from flask import Flask, request
+
 from google.events.cloud.storage import StorageObjectData
+
 
 app = Flask(__name__)
 # [END eventarc_storage_server]
@@ -26,7 +29,6 @@ app = Flask(__name__)
 # [START eventarc_storage_handler]
 @app.route("/", methods=["POST"])
 def index():
-    print("HEADERS:")
     event = from_http(request.headers, request.get_data())
 
     # Gets the GCS bucket name from the CloudEvent data
@@ -38,8 +40,6 @@ def index():
         f"Cloud Storage object changed: {gcs_object}" +
         f" updated at {update_time}", 200
     )
-
-
 # [END eventarc_audit_storage_handler]
 
 

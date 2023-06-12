@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2023 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,12 +13,14 @@
 # limitations under the License.
 from uuid import uuid4
 
-import pytest
 from cloudevents.conversion import to_binary
 from cloudevents.http import CloudEvent
+
 from google.events.cloud.storage import StorageObjectData
 
 import main
+
+import pytest
 
 ce_attributes = {
     "id": str(uuid4),
