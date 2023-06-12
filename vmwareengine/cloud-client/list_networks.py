@@ -17,6 +17,16 @@ from google.cloud import vmwareengine_v1
 
 
 def list_networks(project_id: str, region: str) -> Iterable[vmwareengine_v1.VmwareEngineNetwork]:
+    """
+    Retrieves a list of VMWare Engine networks defined in given region.
+
+    Args:
+        project_id:
+        region:
+
+    Returns:
+        An iterable collection containing the VMWareEngineNetworks.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
 
     return client.list_vmware_engine_networks(parent=f'projects/{project_id}/locations/{region}')

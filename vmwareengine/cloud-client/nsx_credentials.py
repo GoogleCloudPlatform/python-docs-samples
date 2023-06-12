@@ -16,6 +16,17 @@ from google.cloud import vmwareengine_v1
 
 
 def get_nsx_credentials(project_id: str, zone: str, private_cloud: str) -> vmwareengine_v1.Credentials:
+    """
+    Retrieves NSX credentials for a Private Cloud.
+
+    Args:
+        project_id:
+        zone:
+        private_cloud:
+
+    Returns:
+        A Credentials object.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     credentials = client.show_nsx_credentials(
         private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}")

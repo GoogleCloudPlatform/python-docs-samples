@@ -16,6 +16,19 @@ from google.cloud import vmwareengine_v1
 
 
 def create_private_cloud(project_id: str, zone: str, network_name: str, cloud_name: str, cluster_name: str) -> vmwareengine_v1.PrivateCloud():
+    """
+    Creates a new Private Cloud using VMWare Engine.
+
+    Args:
+        project_id: name of the project you want to use.
+        zone: the zone you want to use, i.e. "us-central1-a"
+        network_name: name of the VMWareNetwork to use for the new Private Cloud
+        cloud_name: name of the new Private Cloud
+        cluster_name: name for the new cluster in this Private Cloud
+
+    Returns:
+        Private Cloud object.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
 
     request = vmwareengine_v1.CreatePrivateCloudRequest()

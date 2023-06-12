@@ -18,6 +18,13 @@ from google.cloud import vmwareengine_v1
 def create_legacy_network(project_id: str, region: str) -> vmwareengine_v1.VmwareEngineNetwork:
     """
     Creates a new legacy network.
+
+    Args:
+        project_id: name of the project you want to use.
+        region: name of the region you want to use. I.e. "us-central1"
+
+    Returns:
+        The newly created VmwareEngineNetwork object.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.CreateVmwareEngineNetworkRequest()

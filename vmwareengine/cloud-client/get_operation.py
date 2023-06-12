@@ -19,6 +19,15 @@ from google.api_core.operation import Operation
 
 
 def get_operation_by_name(operation_name: str) -> Operation:
+    """
+    Retrieve detailed information about an operation.
+
+    Args:
+        operation_name:
+
+    Returns:
+        Operation object with details.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     request = GetOperationRequest()
     request.name = operation_name
@@ -26,4 +35,15 @@ def get_operation_by_name(operation_name: str) -> Operation:
 
 
 def get_operation(project_id: str, region: str, operation_id: str) -> Operation:
+    """
+    Retrieve detailed information about an operation.
+
+    Args:
+        project_id:
+        region:
+        operation_id:
+
+    Returns:
+        Operation object with details.
+    """
     return get_operation_by_name(f"projects/{project_id}/locations/{region}/operations/{operation_id}")

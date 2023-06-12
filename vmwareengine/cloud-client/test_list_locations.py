@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import pytest
-
 import google.auth
 
 from list_locations import list_locations
@@ -22,6 +19,6 @@ from list_locations import list_locations
 PROJECT = google.auth.default()[1]
 
 
-def test_locations_list(capsys):
-    list_locations(PROJECT)
-    assert 'asia-northeast1' in capsys.readouterr().out
+def test_locations_list():
+    locations = list_locations(PROJECT)
+    assert 'asia-northeast1' in locations

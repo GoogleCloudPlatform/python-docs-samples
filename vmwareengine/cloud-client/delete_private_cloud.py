@@ -15,7 +15,13 @@
 from google.cloud import vmwareengine_v1
 
 
-def delete_private_cloud_by_name(cloud_name: str):
+def delete_private_cloud_by_name(cloud_name: str) ->  None:
+    """
+    Deletes VMWare Private Cloud.
+
+    Args:
+        cloud_name:
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.DeletePrivateCloudRequest()
     request.force = True

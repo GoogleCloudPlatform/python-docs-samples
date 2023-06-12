@@ -17,6 +17,13 @@ from google.cloud import vmwareengine_v1
 
 
 def delete_legacy_network(project_id: str, region: str) -> None:
+    """
+    Deletes a legacy VMWare Network.
+
+    Args:
+        project_id: name of the project hosting the network.
+        region: region in which the legacy network is located in.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     client.delete_vmware_engine_network(name=f"projects/{project_id}/"
                                              f"locations/{region}/"

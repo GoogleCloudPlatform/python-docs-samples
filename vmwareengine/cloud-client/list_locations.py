@@ -18,10 +18,20 @@ from google.cloud import vmwareengine_v1
 from google.cloud.location.locations_pb2 import ListLocationsRequest
 
 
-def list_locations(project_id: str):
+def list_locations(project_id: str) -> str:
+    """
+    Prints a list of available locations for use in VMWare Engine.
+
+    Args:
+        project_id:
+
+    Returns:
+        String containing the list of all available locations.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     request = ListLocationsRequest()
     request.name = f"projects/{project_id}"
     locations = client.list_locations(request)
     print(locations)
+    return str(locations)
 # [END vmwareengine_list_locations]
