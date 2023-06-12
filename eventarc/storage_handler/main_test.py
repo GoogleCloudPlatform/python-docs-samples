@@ -11,20 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import copy
-
 from uuid import uuid4
 
 import pytest
-
-from google.events.cloud.storage import StorageObjectData
-from google.protobuf.json_format import MessageToJson
-
-from cloudevents.http import CloudEvent
 from cloudevents.conversion import to_binary
+from cloudevents.http import CloudEvent
+from google.events.cloud.storage import StorageObjectData
 
 import main
-
 
 ce_attributes = {
     "id": str(uuid4),
@@ -40,13 +34,11 @@ def client():
     return main.app.test_client()
 
 
-def test_endpoint(client, capsys):
+def test_endpoint(client):
     storagedata = StorageObjectData(bucket="test-bucket", name="my-file.txt")
     event = CloudEvent(ce_attributes, StorageObjectData.to_dict(storagedata))
     headers, body = to_binary(event)
 
     r = client.post("/", headers=headers, data=body)
     assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert f"Cloud Storage Object changed: test-bucket/my-file.txt"
+    assert "Cloud Storage object changed: test-bucket/my-file.txt" in r.text

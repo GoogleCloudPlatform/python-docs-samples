@@ -15,9 +15,8 @@
 # [START eventarc_audit_storage_server]
 import os
 
-from flask import Flask, request
 from cloudevents.http import from_http
-from google.protobuf import json_format
+from flask import Flask, request
 from google.events.cloud.storage import StorageObjectData
 
 app = Flask(__name__)
@@ -30,15 +29,15 @@ def index():
     print("HEADERS:")
     event = from_http(request.headers, request.get_data())
 
-    # Gets the GCS bucket name from the CloudEvent header
+    # Gets the GCS bucket name from the CloudEvent data
     # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
-    bucket = event.get("subject")
-
     storage_obj = StorageObjectData(event.data)
-
     gcs_object = os.path.join(storage_obj.bucket, storage_obj.name)
     update_time = storage_obj.updated
-    return (f"Cloud Storage object changed: {gcs_object} updated at {update_time}", 200)
+    return (
+        f"Cloud Storage object changed: {gcs_object}" +
+        f" updated at {update_time}", 200
+    )
 
 
 # [END eventarc_audit_storage_handler]
