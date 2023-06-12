@@ -11,20 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import copy
-
 from uuid import uuid4
 
 import pytest
-import unittest
-
-from google.events.cloud.audit import LogEntryData, AuditLog, AuthenticationInfo
-
-from cloudevents.http import CloudEvent
 from cloudevents.conversion import to_binary
+from cloudevents.http import CloudEvent
+from google.events.cloud.audit import (AuditLog, AuthenticationInfo,
+                                       LogEntryData)
 
 import main
-
 
 ce_attributes = {
     "id": str(uuid4),
@@ -45,14 +40,12 @@ def test_endpoint(client, capsys):
         proto_payload=AuditLog(
             service_name="storage.googleapis.com",
             resource_name="my-bucket/my-file.txt",
-            authentication_info=AuthenticationInfo(principal_email="user@example.com"),
+            authentication_info=AuthenticationInfo(
+                principal_email="user@example.com"),
         )
     )
     event = CloudEvent(ce_attributes, LogEntryData.to_dict(logentry))
     headers, body = to_binary(event)
 
     r = client.post("/", headers=headers, data=body)
-    assert (
-        "my-bucket/my-file.txt updated by user@example.com"
-        in r.get_data(as_text=True)
-    )
+    assert "my-bucket/my-file.txt updated by user@example.com" in r.text

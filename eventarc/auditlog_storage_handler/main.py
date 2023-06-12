@@ -12,20 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_audit_storage_http_server]
+# [START eventarc_audit_cloudevent_server]
 import os
 
-from flask import Flask, request
 from cloudevents.http import from_http
-from google.protobuf import json_format
-from google.events.cloud.storage import StorageObjectData
-from google.events.cloud.audit import AuditLog, LogEntryData
+from flask import Flask, request
+from google.events.cloud.audit import LogEntryData
 
 app = Flask(__name__)
-# [END eventarc_audit_storage_http_server]
+# [END eventarc_audit_cloudevent_server]
 
 
-# [START eventarc_audit_storage_http_handler]
+# [START eventarc_audit_cloudevent_handler]
 @app.route("/", methods=["POST"])
 def index():
     event = from_http(request.headers, request.get_data())
@@ -34,19 +32,19 @@ def index():
     auditlog = log_entry.proto_payload
 
     if auditlog.service_name != "storage.googleapis.com":
-        return("non-storage audit log found.", 400)
+        return ("non-storage audit log found.", 400)
 
     user = auditlog.authentication_info.principal_email
     return (
-        f"Cloud Storage object changed: {auditlog.resource_name} updated by {user}",
+        f"Cloud Storage object changed: {auditlog.resource_name}" +
+        f"updated by {user}",
         200,
     )
 
+# [END eventarc_audit_cloudevent_handler]
 
-# [START eventarc_audit_storage_http_handler]
 
-
-# [START eventarc_audit_storage_server]
+# [START eventarc_audit_cloudevent_server]
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
-# [END eventarc_audit_storage_server]
+# [END eventarc_audit_cloudevent_server]
