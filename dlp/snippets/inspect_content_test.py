@@ -481,6 +481,7 @@ def test_inspect_gcs_multiple_files(
         delete_dlp_job(out)
 
 
+@backoff.on_exception(backoff.expo, TimeoutError, max_time=60)
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore(
     datastore_project: str,
@@ -503,11 +504,15 @@ def test_inspect_datastore(
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
+    except AssertionError as e:
+        if "No event received before the timeout" in str(e):
+            raise TimeoutError
+        raise e
     finally:
         delete_dlp_job(out)
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@backoff.on_exception(backoff.expo, TimeoutError, max_time=60)
 def test_inspect_datastore_no_results(
     datastore_project: str,
     topic_id: str,
@@ -529,6 +534,10 @@ def test_inspect_datastore_no_results(
         out, _ = capsys.readouterr()
         assert "No findings" in out
         assert "Job name:" in out
+    except AssertionError as e:
+        if "No event received before the timeout" in str(e):
+            raise TimeoutError
+        raise e
     finally:
         delete_dlp_job(out)
 

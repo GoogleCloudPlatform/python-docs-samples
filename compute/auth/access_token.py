@@ -19,7 +19,6 @@
 For more information, see the README.md under /compute.
 """
 
-# [START all]
 # [START compute_auth_access_token]
 
 import argparse
@@ -95,4 +94,3 @@ if __name__ == "__main__":
 
     main(args.project_id)
 # [END compute_auth_access_token]
-# [END all]

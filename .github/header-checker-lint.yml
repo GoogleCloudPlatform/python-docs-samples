@@ -23,6 +23,7 @@ ignoreFiles:
   - "dlp/snippets/resources/accounts.txt"
   - "dlp/snippets/resources/harmless.txt"
   - "dlp/snippets/resources/test.txt"
+  - "dlp/snippets/resources/term_list.txt"
 
 ignoreLicenseYear: true
 
