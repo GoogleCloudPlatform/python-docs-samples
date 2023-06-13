@@ -22,9 +22,8 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
     with tempfile.TemporaryDirectory() as test_dir:
-        output_image_path = os.path.join(test_dir, 'resized_google_logo.jpg')
-        r = client.get(
-            '/', query_string={'output_image_path': output_image_path})
+        output_image_path = os.path.join(test_dir, "resized_google_logo.jpg")
+        r = client.get("/", query_string={"output_image_path": output_image_path})
 
         assert os.path.isfile(output_image_path)
         assert r.status_code == 200

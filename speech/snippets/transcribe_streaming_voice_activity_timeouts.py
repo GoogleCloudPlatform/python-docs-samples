@@ -24,8 +24,24 @@ from google.protobuf import duration_pb2  # type: ignore
 
 
 def transcribe_streaming_voice_activity_timeouts(
-    project_id, recognizer_id, speech_start_timeout, speech_end_timeout, audio_file
-):
+    project_id: str,
+    recognizer_id: str,
+    speech_start_timeout: int,
+    speech_end_timeout: int,
+    audio_file: str,
+) -> cloud_speech.StreamingRecognizeResponse:
+    """Transcribes audio from audio file to text.
+
+    Args:
+        project_id: The GCP project ID to use.
+        recognizer_id: The ID of the recognizer to use.
+        speech_start_timeout: The timeout in seconds for speech start.
+        speech_end_timeout: The timeout in seconds for speech end.
+        audio_file: The audio file to transcribe.
+
+    Returns:
+        The streaming response containing the transcript.
+    """
     # Instantiates a client
     client = SpeechClient()
 
@@ -78,7 +94,9 @@ def transcribe_streaming_voice_activity_timeouts(
         recognizer=recognizer.name, streaming_config=streaming_config
     )
 
-    def requests(config, audio):
+    def requests(
+            config: cloud_speech.RecognitionConfig, audio: list
+    ) -> list:
         yield config
         for message in audio:
             sleep(0.5)

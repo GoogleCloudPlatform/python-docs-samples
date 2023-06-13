@@ -18,13 +18,23 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_model(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID",
-    model_id="YOUR_MODEL_ID",
-):
+    input_uri: str = "gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+    output_uri: str = "gs://YOUR_BUCKET_ID/path/to/save/results/",
+    project_id: str = "YOUR_PROJECT_ID",
+    model_id: str = "YOUR_MODEL_ID",
+) -> translate.TranslationServiceClient:
     """Batch translate text using Translation model.
-    Model can be AutoML or General[built-in] model."""
+    Model can be AutoML or General[built-in] model.
+
+    Args:
+        input_uri: The input file to translate.
+        output_uri: The output file to save the translation results.
+        project_id: The ID of the GCP project that owns the model.
+        model_id: The model ID.
+
+    Returns:
+        The response from the batch translation API.
+    """
 
     client = translate.TranslationServiceClient()
 
@@ -65,5 +75,5 @@ def batch_translate_text_with_model(
     print(f"Total Characters: {response.total_characters}")
     print(f"Translated Characters: {response.translated_characters}")
 
-
+    return response
 # [END translate_v3_batch_translate_text_with_model]

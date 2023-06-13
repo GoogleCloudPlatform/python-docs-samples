@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+from typing import Iterator
 import uuid
 
 import google.cloud.bigquery
@@ -43,7 +44,7 @@ DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 # hypothesis where DLP service somehow loses the connection to the
 # topic, now we use function scope for Pub/Sub fixtures.
 @pytest.fixture(scope="module")
-def topic_id():
+def topic_id() -> Iterator[str]:
     # Creates a pubsub topic, and tears it down.
     publisher = google.cloud.pubsub.PublisherClient()
     topic_path = publisher.topic_path(GCLOUD_PROJECT, TOPIC_ID)
@@ -58,7 +59,7 @@ def topic_id():
 
 
 @pytest.fixture(scope="module")
-def subscription_id(topic_id):
+def subscription_id(topic_id: str) -> Iterator[str]:
     # Subscribes to a topic.
     subscriber = google.cloud.pubsub.SubscriberClient()
     topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
@@ -76,7 +77,7 @@ def subscription_id(topic_id):
 
 
 @pytest.fixture(scope="module")
-def bigquery_project():
+def bigquery_project() -> Iterator[str]:
     # Adds test Bigquery data, yields the project ID and then tears down.
 
     bigquery_client = google.cloud.bigquery.Client()
@@ -163,7 +164,12 @@ def bigquery_project():
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_numerical_risk_analysis(topic_id, subscription_id, bigquery_project, capsys):
+def test_numerical_risk_analysis(
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.numerical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -185,8 +191,11 @@ def test_numerical_risk_analysis(topic_id, subscription_id, bigquery_project, ca
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_string_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -208,8 +217,11 @@ def test_categorical_risk_analysis_on_string_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_number_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.categorical_risk_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -231,8 +243,10 @@ def test_categorical_risk_analysis_on_number_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_single_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -255,8 +269,10 @@ def test_k_anonymity_analysis_single_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.k_anonymity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -279,8 +295,11 @@ def test_k_anonymity_analysis_multiple_fields(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_single_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -305,8 +324,11 @@ def test_l_diversity_analysis_single_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.l_diversity_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -331,8 +353,11 @@ def test_l_diversity_analysis_multiple_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_single_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str,
+    subscription_id: str,
+    bigquery_project: str,
+    capsys: pytest.CaptureFixture,
+) -> None:
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -357,8 +382,8 @@ def test_k_map_estimate_analysis_single_field(
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_k_map_estimate_analysis_multiple_field(
-    topic_id, subscription_id, bigquery_project, capsys
-):
+    topic_id: str, subscription_id: str, capsys: pytest.CaptureFixture
+) -> None:
     risk.k_map_estimate_analysis(
         GCLOUD_PROJECT,
         TABLE_PROJECT,
@@ -383,8 +408,8 @@ def test_k_map_estimate_analysis_multiple_field(
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
-    topic_id, subscription_id, bigquery_project
-):
+    topic_id: str, subscription_id: str
+) -> None:
     with pytest.raises(ValueError):
         risk.k_map_estimate_analysis(
             GCLOUD_PROJECT,

@@ -20,11 +20,12 @@ Example usage:
 
 import argparse
 
+from google.cloud import speech
+
 
 # [START speech_transcribe_streaming]
-def transcribe_streaming(stream_file):
+def transcribe_streaming(stream_file: str) -> speech.RecognitionConfig:
     """Streams transcription of the given audio file."""
-    from google.cloud import speech
 
     client = speech.SpeechClient()
 
@@ -67,6 +68,8 @@ def transcribe_streaming(stream_file):
             for alternative in alternatives:
                 print(f"Confidence: {alternative.confidence}")
                 print(f"Transcript: {alternative.transcript}")
+
+    return response
     # [END speech_python_migration_streaming_response]
 
 

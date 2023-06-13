@@ -31,7 +31,7 @@ import pytest
 # GCP Project
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
-DATAPROC_REGION = "northamerica-northeast1"
+DATAPROC_REGION = "us-central1"
 
 
 # Google Cloud Storage constants

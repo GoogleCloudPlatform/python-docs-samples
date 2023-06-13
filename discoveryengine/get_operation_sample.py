@@ -14,7 +14,7 @@
 #
 
 # [START genappbuilder_get_operation]
-from google.cloud import discoveryengine_v1beta as genappbuilder
+from google.cloud import discoveryengine
 
 from google.longrunning import operations_pb2
 
@@ -23,9 +23,9 @@ from google.longrunning import operations_pb2
 # operation_name = "YOUR_OPERATION_NAME"
 
 
-def get_operation_sample(operation_name: str) -> None:
+def get_operation_sample(operation_name: str) -> operations_pb2.Operation:
     # Create a client
-    client = genappbuilder.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient()
 
     # Make GetOperation request
     request = operations_pb2.GetOperationRequest(name=operation_name)
@@ -33,6 +33,8 @@ def get_operation_sample(operation_name: str) -> None:
 
     # Print the Operation Information
     print(operation)
+
+    return operation
 
 
 # [END genappbuilder_get_operation]

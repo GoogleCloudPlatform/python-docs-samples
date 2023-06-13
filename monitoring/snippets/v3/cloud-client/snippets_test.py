@@ -13,7 +13,6 @@
 # limitations under the License.
 
 import os
-import re
 
 import backoff
 from google.api_core.exceptions import InternalServerError
@@ -28,22 +27,23 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture(scope="function")
-def custom_metric_descriptor(capsys):
-    snippets.create_metric_descriptor(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    match = re.search(r"Created (.*)\.", out)
-    metric_name = match.group(1)
-    yield metric_name
+def custom_metric_descriptor() -> None:
+    descriptor = snippets.create_metric_descriptor(PROJECT_ID)
+    if descriptor is not None:
+        yield descriptor.name
+    else:
+        yield None
 
     # teardown
     try:
-        snippets.delete_metric_descriptor(metric_name)
+        if descriptor is not None:
+            snippets.delete_metric_descriptor(descriptor.name)
     except NotFound:
         print("Metric descriptor already deleted")
 
 
 @pytest.fixture(scope="module")
-def write_time_series():
+def write_time_series() -> None:
     @backoff.on_exception(backoff.expo, InternalServerError, max_time=120)
     def write():
         snippets.write_time_series(PROJECT_ID)
@@ -52,72 +52,56 @@ def write_time_series():
     yield
 
 
-def test_get_delete_metric_descriptor(capsys, custom_metric_descriptor):
+def test_get_delete_metric_descriptor(custom_metric_descriptor) -> None:
     try:
 
         @backoff.on_exception(backoff.expo, (AssertionError, NotFound), max_time=60)
         def eventually_consistent_test():
-            snippets.get_metric_descriptor(custom_metric_descriptor)
-            out, _ = capsys.readouterr()
-            assert "DOUBLE" in out
+            result = snippets.get_metric_descriptor(custom_metric_descriptor)
+            assert result.value_type == 3  # (3 == MetricDescriptor.ValueType.DOUBLE)
 
         eventually_consistent_test()
     finally:
         snippets.delete_metric_descriptor(custom_metric_descriptor)
-        out, _ = capsys.readouterr()
-    assert "Deleted metric" in out
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_metric_descriptors(capsys):
-    snippets.list_metric_descriptors(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "logging.googleapis.com/byte_count" in out
+def test_list_metric_descriptors() -> None:
+    result = snippets.list_metric_descriptors(PROJECT_ID)
+    assert any(item.type == "logging.googleapis.com/byte_count" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_resources(capsys):
-    snippets.list_monitored_resources(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "pubsub_topic" in out
+def test_list_resources() -> None:
+    result = snippets.list_monitored_resources(PROJECT_ID)
+    assert any(item.type == "pubsub_topic" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_get_resources(capsys):
-    snippets.get_monitored_resource_descriptor(PROJECT_ID, "pubsub_topic")
-    out, _ = capsys.readouterr()
-    assert "A topic in Google Cloud Pub/Sub" in out
+def test_get_resources() -> None:
+    result = snippets.get_monitored_resource_descriptor(PROJECT_ID, "pubsub_topic")
+    assert result.display_name == "Cloud Pub/Sub Topic"
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_time_series(capsys, write_time_series):
-    snippets.list_time_series(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "gce_instance" in out
+def test_list_time_series(write_time_series) -> None:
+    result = snippets.list_time_series(PROJECT_ID)
+    assert any(item.resource.type == "gce_instance" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_time_series_header(capsys, write_time_series):
-    snippets.list_time_series_header(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "gce_instance" in out
+def test_list_time_series_header(write_time_series) -> None:
+    result = snippets.list_time_series_header(PROJECT_ID)
+    assert any(item.resource.type == "gce_instance" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_time_series_aggregate(capsys, write_time_series):
-    snippets.list_time_series_aggregate(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "points" in out
-    assert "interval" in out
-    assert "start_time" in out
-    assert "end_time" in out
+def test_list_time_series_aggregate(write_time_series) -> None:
+    result = snippets.list_time_series_aggregate(PROJECT_ID)
+    assert any(item.resource.type == "gce_instance" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
-def test_list_time_series_reduce(capsys, write_time_series):
-    snippets.list_time_series_reduce(PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "points" in out
-    assert "interval" in out
-    assert "start_time" in out
-    assert "end_time" in out
+def test_list_time_series_reduce(write_time_series) -> None:
+    result = snippets.list_time_series_reduce(PROJECT_ID)
+    assert any(item.resource.type == "gce_instance" for item in result)

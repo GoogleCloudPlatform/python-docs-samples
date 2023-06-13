@@ -214,25 +214,70 @@ To run this sample:
     positional arguments:
       {create-resource-from-file,create-patient,create-encounter,create-observation,delete-resource,get-resource,list-resource-history,execute-bundle,get-resource-history,delete-resource-purge,update-resource,patch-resource,search-resources-get,search-resources-post,get-patient-everything,create-structure-definition,create-implementation-guide,enable-implementation-guide,validate-resource,validate-resource-profile-url}
         create-resource-from-file
-                            Creates a new FHIR resource in a FHIR store using a
+                            Creates a new FHIR resource in a FHIR store from a
                             JSON resource file. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#create for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: A valid FHIR resource type.
+                            See https://www.hl7.org/fhir/resourcelist.html.
+                            resource_file: The path to a JSON file containing a
+                            FHIR resource. Returns: A dict representing the
+                            created FHIR resource.
         create-patient      Creates a new Patient resource in a FHIR store. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
-        create-encounter    Creates a new Encounter resource in a FHIR store based
-                            on a Patient. See
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#create for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store that holds the Patient resource. Returns: A
+                            dict representing the created Patient resource.
+        create-encounter    Creates a new Encounter resource in a FHIR store that
+                            references a Patient resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#create for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. patient_id: The "logical id" of the
+                            referenced Patient resource. The ID is assigned by the
+                            server. Returns: A dict representing the created
+                            Encounter resource.
         create-observation  Creates a new Observation resource in a FHIR store
-                            based on an Encounter. See
+                            that references an Encounter and Patient resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#create for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. patient_id: The "logical id" of the
+                            referenced Patient resource. The ID is assigned by the
+                            server. encounter_id: The "logical id" of the
+                            referenced Encounter resource. The ID is assigned by
+                            the server. Returns: A dict representing the created
+                            Observation resource.
         delete-resource     Deletes a FHIR resource. Regardless of whether the
                             operation succeeds or fails, the server returns a 200
                             OK HTTP status code. To check that the resource was
@@ -240,39 +285,128 @@ To run this sample:
                             and see if it exists. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
-        get-resource        Gets a FHIR resource. See
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#delete for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: The type of the FHIR
+                            resource. resource_id: The "logical id" of the FHIR
+                            resource you want to delete. The ID is assigned by the
+                            server. Returns: An empty dict.
+        get-resource        Gets the contents of a FHIR resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#read for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: The type of FHIR resource.
+                            resource_id: The "logical id" of the resource you want
+                            to get the contents of. The ID is assigned by the
+                            server. Returns: A dict representing the FHIR
+                            resource.
         list-resource-history
                             Gets the history of a resource. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#history for the Python API
+                            reference. Args: project_id: The project ID or project
+                            number of the Cloud project you want to use. location:
+                            The name of the parent dataset's location. dataset_id:
+                            The name of the parent dataset. fhir_store_id: The
+                            name of the FHIR store. resource_type: The type of
+                            FHIR resource. resource_id: The "logical id" of the
+                            resource whose history you want to list. The ID is
+                            assigned by the server. Returns: A dict representing
+                            the FHIR resource.
         execute-bundle      Executes the operations in the given bundle. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
                             running the sample.
         get-resource-history
-                            Gets a version resource. See
+                            Gets the contents of a version (current or historical)
+                            of a FHIR resource by version ID. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#vread for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: The type of FHIR resource.
+                            resource_id: The "logical id" of the resource whose
+                            details you want to view at a particular version. The
+                            ID is assigned by the server. version_id: The ID of
+                            the version. Changes whenever the FHIR resource is
+                            modified. Returns: A dict representing the FHIR
+                            resource at the specified version.
         delete-resource-purge
-                            Deletes versions of a resource (excluding current
-                            version). See
+                            Deletes all versions of a FHIR resource (excluding the
+                            current version). See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
-        update-resource     Updates an existing resource. See
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#Resource_purge for the Python API
+                            reference. Args: project_id: The project ID or project
+                            number of the Cloud project you want to use. location:
+                            The name of the parent dataset's location. dataset_id:
+                            The name of the parent dataset. fhir_store_id: The
+                            name of the FHIR store. resource_type: The type of the
+                            FHIR resource. resource_id: The "logical id" of the
+                            resource. The ID is assigned by the server. Returns:
+                            An empty dict.
+        update-resource     Updates the entire contents of a FHIR resource.
+                            Creates a new current version if the resource already
+                            exists, or creates a new resource with an initial
+                            version if no resource already exists with the
+                            provided ID. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
-        patch-resource      Updates part of an existing resource. See
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#update for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: The type of the FHIR
+                            resource. resource_id: The "logical id" of the
+                            resource. The ID is assigned by the server. Returns: A
+                            dict representing the updated FHIR resource.
+        patch-resource      Updates part of an existing FHIR resource by applying
+                            the operations specified in a [JSON
+                            Patch](http://jsonpatch.com/) document. See
                             https://github.com/GoogleCloudPlatform/python-docs-
                             samples/tree/main/healthcare/api-client/v1/fhir before
-                            running the sample.
+                            running the sample. See
+                            https://googleapis.github.io/google-api-python-client/
+                            docs/dyn/healthcare_v1.projects.locations.datasets.fhi
+                            rStores.fhir.html#patch for the Python API reference.
+                            Args: project_id: The project ID or project number of
+                            the Cloud project you want to use. location: The name
+                            of the parent dataset's location. dataset_id: The name
+                            of the parent dataset. fhir_store_id: The name of the
+                            FHIR store. resource_type: The type of the FHIR
+                            resource. resource_id: The "logical id" of the
+                            resource. The ID is assigned by the server. Returns: A
+                            dict representing the patched FHIR resource.
         search-resources-get
                             Uses the searchResources GET method to search for
                             resources in the given FHIR store. See

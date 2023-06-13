@@ -16,6 +16,7 @@ import os
 import re
 
 from google.api_core.retry import Retry
+import pytest
 
 import transcribe_word_time_offsets
 
@@ -23,8 +24,10 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_file_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
+def test_transcribe_file_with_word_time_offsets(
+    capsys: pytest.CaptureFixture
+) -> None:
+    result = transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
         os.path.join(RESOURCES, "audio.raw")
     )
     out, _ = capsys.readouterr()
@@ -34,11 +37,14 @@ def test_transcribe_file_with_word_time_offsets(capsys):
     time = float(match.group(1))
 
     assert time > 0
+    assert result is not None
 
 
 @Retry()
-def test_transcribe_gcs_with_word_time_offsets(capsys):
-    transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
+def test_transcribe_gcs_with_word_time_offsets(
+    capsys: pytest.CaptureFixture
+) -> None:
+    result = transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
         "gs://python-docs-samples-tests/speech/audio.flac"
     )
     out, _ = capsys.readouterr()
@@ -48,3 +54,4 @@ def test_transcribe_gcs_with_word_time_offsets(capsys):
     time = float(match.group(1))
 
     assert time > 0
+    assert result is not None

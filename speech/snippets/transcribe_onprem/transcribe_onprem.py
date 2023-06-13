@@ -13,21 +13,29 @@
 # limitations under the License.
 
 import argparse
+import io
+
+from google.cloud import speech_v1p1beta1
+
+import grpc
 
 
 # [START speech_transcribe_onprem]
-def transcribe_onprem(local_file_path, api_endpoint):
+def transcribe_onprem(
+        local_file_path: str,
+        api_endpoint: str,
+) -> speech_v1p1beta1.RecognizeResponse:
     """
     Transcribe a short audio file using synchronous speech recognition on-prem
 
     Args:
       local_file_path: The path to local audio file, e.g. /path/audio.wav
       api_endpoint: Endpoint to call for speech recognition, e.g. 0.0.0.0:10000
-    """
-    from google.cloud import speech_v1p1beta1
-    import grpc
-    import io
 
+    Returns:
+      The speech recognition response
+          {
+    """
     # api_endpoint = '0.0.0.0:10000'
     # local_file_path = '../resources/two_channel_16k.raw'
 
@@ -63,7 +71,7 @@ def transcribe_onprem(local_file_path, api_endpoint):
         alternative = result.alternatives[0]
         print(f"Transcript: {alternative.transcript}")
 
-
+    return response
 # [END speech_transcribe_onprem]
 
 

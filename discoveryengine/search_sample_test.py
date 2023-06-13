@@ -24,8 +24,8 @@ serving_config_id = "default_config"
 search_query = "Google"
 
 
-def test_search(capsys):
-    search_sample.search_sample(
+def test_search():
+    response = search_sample.search_sample(
         project_id=project_id,
         location=location,
         search_engine_id=search_engine_id,
@@ -33,6 +33,4 @@ def test_search(capsys):
         search_query=search_query,
     )
 
-    out, _ = capsys.readouterr()
-
-    assert search_query in out
+    assert response
