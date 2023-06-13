@@ -49,13 +49,15 @@ def api_key():
 def get_key_id(api_key_name: str):
     return api_key_name.rsplit("/")[-1]
 
+
 def get_mock_sentiment_response():
     response = mock.MagicMock(spec=language_v1.AnalyzeSentimentResponse)
     sentiment = mock.MagicMock(spec=language_v1.Sentiment)
-    sentiment.score=0.2
-    sentiment.magnitude=3.6
+    sentiment.score = 0.2
+    sentiment.magnitude = 3.6
     response.document_sentiment = sentiment
     return mock.MagicMock(return_value=response)
+
 
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture):
     with mock.patch(
