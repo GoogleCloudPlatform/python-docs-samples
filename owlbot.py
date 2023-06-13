@@ -32,7 +32,7 @@ s.replace(
 s.replace(
     "noxfile.py",
     r"""("isort",\n\s+"--fss",\n\s+\*LINT_PATHS,)""",
-    r""""isort",\n\t\t"--profile=google",\n\t\t"--fss",\n\t\t*LINT_PATHS,""",
+    r""""isort",\n\t\t"--profile=google",\n\t\t"--fss",\n\t\t"--known-local-folder=main",\n\t\t*LINT_PATHS,""",
 )
 
 # ----------------------------------------------------------------------------
