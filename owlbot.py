@@ -27,6 +27,14 @@ s.replace(
     r"""LINT_PATHS = ["."]""",
 )
 
+# TODO: Remove once https://github.com/googleapis/synthtool/pull/1811 is merged.
+# Update isort configuration to use Google profile.
+s.replace(
+    "noxfile.py",
+    r"""("isort",\n\s+"--fss",\n\s+\*LINT_PATHS,)""",
+    r""""isort",\n\t\t"--profile=google",\n\t\t"--fss",\n\t\t*LINT_PATHS,""",
+)
+
 # ----------------------------------------------------------------------------
 # Run blacken session
 # ----------------------------------------------------------------------------
