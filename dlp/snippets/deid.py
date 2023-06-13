@@ -918,6 +918,13 @@ def deidentify_with_date_shift(
 
 
 # [START dlp_deidentify_time_extract]
+import csv  # noqa: F811, E402, I100
+from datetime import datetime  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def deidentify_with_time_extract(
     project: str,
     date_fields: List[str],
@@ -933,11 +940,8 @@ def deidentify_with_time_extract(
         input_csv_file: The path to the CSV file to deidentify. The first row
             of the file must specify column names, and all other rows must
             contain valid values.
-        output_csv_file: The path to save the time extracted CSV file.
+        output_csv_file: The output file path to save the time extracted data.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -950,10 +954,6 @@ def deidentify_with_time_extract(
         date_fields = map(map_fields, date_fields)
     else:
         date_fields = []
-
-    # Read and parse the CSV file
-    import csv
-    from datetime import datetime
 
     f = []
     with open(input_csv_file) as csvfile:
@@ -1006,7 +1006,7 @@ def deidentify_with_time_extract(
         }
     }
 
-    # Write to CSV helper methods
+    # Write to CSV helper methods.
     def write_header(header):
         return header.name
 
@@ -1029,17 +1029,17 @@ def deidentify_with_time_extract(
         }
     )
 
-    # Print the result
+    # Print the result.
     print("Table after de-identification: {}".format(response.item.table))
 
-    # Write results to CSV file
+    # Write results to CSV file.
     with open(output_csv_file, "w") as csvfile:
         write_file = csv.writer(csvfile, delimiter=",")
         write_file.writerow(map(write_header, response.item.table.headers))
         for row in response.item.table.rows:
             write_file.writerow(map(write_data, row.values))
 
-    # Print status
+    # Print status.
     print(f"Successfully saved date-extracted output to {output_csv_file}")
 
 
@@ -2291,11 +2291,17 @@ if __name__ == "__main__":
     time_extract_parser.add_argument(
         "input_csv_file",
         help="The path to the CSV file to deidentify. The first row of the "
-        "file must specify column names, and all other rows must contain "
-        "valid values.",
+             "file must specify column names, and all other rows must contain "
+             "valid values.",
     )
     time_extract_parser.add_argument(
-        "output_csv_file", help="The path to save the date-shifted CSV file."
+        "date_fields",
+        nargs="+",
+        help="The list of date fields in the CSV file to de-identify. Example: "
+             "['birth_date', 'register_date']",
+    )
+    time_extract_parser.add_argument(
+        "output_csv_file", help="The path to save the time-extracted data."
     )
 
     replace_with_infotype_parser = subparsers.add_parser(
@@ -2663,9 +2669,9 @@ if __name__ == "__main__":
     elif args.content == "deid_time_extract":
         deidentify_with_time_extract(
             args.project,
+            date_fields=args.date_fields,
             input_csv_file=args.input_csv_file,
             output_csv_file=args.output_csv_file,
-            date_fields=args.date_fields,
         )
     elif args.content == "replace_with_infotype":
         deidentify_with_replace_infotype(
