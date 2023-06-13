@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START eventarc_audit_storage_server]
+# [START eventarc_storage_cloudevent_server]
 import os
 
 from cloudevents.http import from_http
@@ -23,10 +23,10 @@ from google.events.cloud.storage import StorageObjectData
 
 
 app = Flask(__name__)
-# [END eventarc_storage_server]
+# [END eventarc_storage_cloudevent_server]
 
 
-# [START eventarc_storage_handler]
+# [START eventarc_storage_cloudevent_handler]
 @app.route("/", methods=["POST"])
 def index():
     event = from_http(request.headers, request.get_data())
@@ -40,10 +40,10 @@ def index():
         f"Cloud Storage object changed: {gcs_object}" +
         f" updated at {update_time}", 200
     )
-# [END eventarc_audit_storage_handler]
+# [END eventarc_audit_storage_cloudevent_handler]
 
 
-# [START eventarc_audit_storage_server]
+# [START eventarc_storage_cloudevent_server]
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
-# [END eventarc_audit_storage_server]
+# [END eventarc_storage_cloudevent_server]
