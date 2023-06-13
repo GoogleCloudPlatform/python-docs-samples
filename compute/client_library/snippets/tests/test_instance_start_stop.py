@@ -183,10 +183,14 @@ def test_clone_encrypted_disk(autodelete_disk_name, compute_encrypted_instance):
     assert _get_status(compute_encrypted_instance) == "RUNNING"
 
     new_disk = create_disk_from_customer_encrypted_disk(
-        PROJECT, INSTANCE_ZONE, autodelete_disk_name,
+        PROJECT,
+        INSTANCE_ZONE,
+        autodelete_disk_name,
         f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard",
-        10, compute_encrypted_instance.disks[0].source,
-        encryption_key=KEY_B64)
+        10,
+        compute_encrypted_instance.disks[0].source,
+        encryption_key=KEY_B64,
+    )
 
     assert new_disk.name == autodelete_disk_name
 
@@ -196,7 +200,11 @@ def test_change_machine_type(compute_instance):
 
     stop_instance(PROJECT, INSTANCE_ZONE, compute_instance.name)
 
-    assert not get_instance(PROJECT, INSTANCE_ZONE, compute_instance.name).machine_type.endswith("e2-standard-2")
+    assert not get_instance(
+        PROJECT, INSTANCE_ZONE, compute_instance.name
+    ).machine_type.endswith("e2-standard-2")
     change_machine_type(PROJECT, INSTANCE_ZONE, compute_instance.name, "e2-standard-2")
 
-    assert get_instance(PROJECT, INSTANCE_ZONE, compute_instance.name).machine_type.endswith("e2-standard-2")
+    assert get_instance(
+        PROJECT, INSTANCE_ZONE, compute_instance.name
+    ).machine_type.endswith("e2-standard-2")

@@ -22,8 +22,8 @@ import grpc
 
 # [START speech_transcribe_onprem]
 def transcribe_onprem(
-        local_file_path: str,
-        api_endpoint: str,
+    local_file_path: str,
+    api_endpoint: str,
 ) -> speech_v1p1beta1.RecognizeResponse:
     """
     Transcribe a short audio file using synchronous speech recognition on-prem
@@ -72,6 +72,8 @@ def transcribe_onprem(
         print(f"Transcript: {alternative.transcript}")
 
     return response
+
+
 # [END speech_transcribe_onprem]
 
 

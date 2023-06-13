@@ -21,9 +21,7 @@ import quickstart
 
 
 @Retry()
-def test_quickstart(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_quickstart(capsys: pytest.CaptureFixture) -> None:
     result = quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert "Transcript: how old is the Brooklyn Bridge" in out

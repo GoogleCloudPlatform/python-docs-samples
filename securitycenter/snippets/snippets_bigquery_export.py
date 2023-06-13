@@ -23,7 +23,6 @@
 def create_bigquery_export(
     parent: str, export_filter: str, bigquery_dataset_id: str, bigquery_export_id: str
 ):
-
     from google.cloud import securitycenter
 
     """

@@ -76,17 +76,13 @@ def report(annotations: vision.WebDetection) -> None:
             print(f"Url   : {page.url}")
 
     if annotations.full_matching_images:
-        print(
-            f"\n{len(annotations.full_matching_images)} Full Matches found: "
-        )
+        print(f"\n{len(annotations.full_matching_images)} Full Matches found: ")
 
         for image in annotations.full_matching_images:
             print(f"Url  : {image.url}")
 
     if annotations.partial_matching_images:
-        print(
-            f"\n{len(annotations.partial_matching_images)} Partial Matches found: "
-        )
+        print(f"\n{len(annotations.partial_matching_images)} Partial Matches found: ")
 
         for image in annotations.partial_matching_images:
             print(f"Url  : {image.url}")

@@ -52,4 +52,6 @@ if __name__ == "__main__":
     parser.add_argument("topic", help="Topic name of the feed")
     parser.add_argument("content_type", help="Content type of the feed")
     args = parser.parse_args()
-    create_feed(args.project_id, args.feed_id, args.asset_names, args.topic, args.content_type)
+    create_feed(
+        args.project_id, args.feed_id, args.asset_names, args.topic, args.content_type
+    )

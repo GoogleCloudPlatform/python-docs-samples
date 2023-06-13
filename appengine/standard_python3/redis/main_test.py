@@ -19,17 +19,17 @@ import main
 
 def test_index():
     try:
-        main.redis_client.set('counter', 0)
+        main.redis_client.set("counter", 0)
     except Exception:
-        pytest.skip('Redis is unavailable.')
+        pytest.skip("Redis is unavailable.")
 
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert '1' in r.data.decode('utf-8')
+    assert "1" in r.data.decode("utf-8")
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert '2' in r.data.decode('utf-8')
+    assert "2" in r.data.decode("utf-8")

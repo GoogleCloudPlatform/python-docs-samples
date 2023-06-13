@@ -26,8 +26,7 @@ def setup() -> str:
     yield kms_uri
 
 
-def test_cloud_kms_env_aead(
-        capsys: pytest.CaptureFixture, kms_uri: str) -> None:
+def test_cloud_kms_env_aead(capsys: pytest.CaptureFixture, kms_uri: str) -> None:
     credentials = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS", "")
 
     # Create env_aead primitive

@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,6 +17,7 @@ from __future__ import print_function
 # [START notestore_imports]
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
+
 # [END notestore_imports]
 from protorpc import messages
 
@@ -27,8 +29,8 @@ class Account(ndb.Model):
 
 
 class Employee(ndb.Model):
-    full_name = ndb.StringProperty('n')
-    retirement_age = ndb.IntegerProperty('r')
+    full_name = ndb.StringProperty("n")
+    retirement_age = ndb.IntegerProperty("r")
 
 
 class Article(ndb.Model):
@@ -38,10 +40,7 @@ class Article(ndb.Model):
 
 
 def create_article():
-    article = Article(
-        title='Python versus Ruby',
-        stars=3,
-        tags=['python', 'ruby'])
+    article = Article(title="Python versus Ruby", stars=3, tags=["python", "ruby"])
     article.put()
     return article
 
@@ -64,15 +63,12 @@ class ContactWithLocalStructuredProperty(ndb.Model):
 
 def create_contact():
     guido = Contact(
-        name='Guido',
+        name="Guido",
         addresses=[
-            Address(
-                type='home',
-                city='Amsterdam'),
-            Address(
-                type='work',
-                street='Spear St',
-                city='SF')])
+            Address(type="home", city="Amsterdam"),
+            Address(type="work", street="Spear St", city="SF"),
+        ],
+    )
 
     guido.put()
     return guido
@@ -80,15 +76,12 @@ def create_contact():
 
 def create_contact_with_local_structured_property():
     guido = ContactWithLocalStructuredProperty(
-        name='Guido',
+        name="Guido",
         addresses=[
-            Address(
-                type='home',
-                city='Amsterdam'),
-            Address(
-                type='work',
-                street='Spear St',
-                city='SF')])
+            Address(type="home", city="Amsterdam"),
+            Address(type="work", street="Spear St", city="SF"),
+        ],
+    )
 
     guido.put()
     return guido
@@ -100,7 +93,7 @@ class SomeEntity(ndb.Model):
 
 
 def create_some_entity():
-    entity = SomeEntity(name='Nick')
+    entity = SomeEntity(name="Nick")
     entity.put()
     return entity
 
@@ -111,14 +104,14 @@ class Note(messages.Message):
 
 
 class NoteStore(ndb.Model):
-    note = msgprop.MessageProperty(Note, indexed_fields=['when'])
+    note = msgprop.MessageProperty(Note, indexed_fields=["when"])
     name = ndb.StringProperty()
 
 
 def create_note_store():
-    my_note = Note(text='Excellent note', when=50)
+    my_note = Note(text="Excellent note", when=50)
 
-    ns = NoteStore(note=my_note, name='excellent')
+    ns = NoteStore(note=my_note, name="excellent")
     key = ns.put()
 
     new_notes = NoteStore.query(NoteStore.note.when >= 10).fetch()
@@ -131,8 +124,7 @@ class Notebook(messages.Message):
 
 class SignedStorableNotebook(ndb.Model):
     author = ndb.StringProperty()
-    nb = msgprop.MessageProperty(
-        Notebook, indexed_fields=['notes.text', 'notes.when'])
+    nb = msgprop.MessageProperty(Notebook, indexed_fields=["notes.text", "notes.when"])
 
 
 class Color(messages.Enum):
@@ -147,5 +139,5 @@ class Part(ndb.Model):
 
 
 def print_part():
-    p1 = Part(name='foo', color=Color.RED)
+    p1 = Part(name="foo", color=Color.RED)
     print(p1.color)  # prints "RED"

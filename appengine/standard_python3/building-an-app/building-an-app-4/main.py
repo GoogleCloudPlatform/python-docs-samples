@@ -33,29 +33,29 @@ app = Flask(__name__)
 # [START gae_python38_datastore_store_and_fetch_user_times]
 # [START gae_python3_datastore_store_and_fetch_user_times]
 def store_time(email, dt):
-    entity = datastore.Entity(key=datastore_client.key('User', email, 'visit'))
-    entity.update({
-        'timestamp': dt
-    })
+    entity = datastore.Entity(key=datastore_client.key("User", email, "visit"))
+    entity.update({"timestamp": dt})
 
     datastore_client.put(entity)
 
 
 def fetch_times(email, limit):
-    ancestor = datastore_client.key('User', email)
-    query = datastore_client.query(kind='visit', ancestor=ancestor)
-    query.order = ['-timestamp']
+    ancestor = datastore_client.key("User", email)
+    query = datastore_client.query(kind="visit", ancestor=ancestor)
+    query.order = ["-timestamp"]
 
     times = query.fetch(limit=limit)
 
     return times
+
+
 # [END gae_python3_datastore_store_and_fetch_user_times]
 # [END gae_python38_datastore_store_and_fetch_user_times]
 
 
 # [START gae_python38_datastore_render_user_times]
 # [START gae_python3_datastore_render_user_times]
-@app.route('/')
+@app.route("/")
 def root():
     # Verify Firebase auth.
     id_token = request.cookies.get("token")
@@ -71,10 +71,11 @@ def root():
             # session store (see for instance
             # http://flask.pocoo.org/docs/1.0/quickstart/#sessions).
             claims = google.oauth2.id_token.verify_firebase_token(
-                id_token, firebase_request_adapter)
+                id_token, firebase_request_adapter
+            )
 
-            store_time(claims['email'], datetime.datetime.now(tz=datetime.timezone.utc))
-            times = fetch_times(claims['email'], 10)
+            store_time(claims["email"], datetime.datetime.now(tz=datetime.timezone.utc))
+            times = fetch_times(claims["email"], 10)
 
         except ValueError as exc:
             # This will be raised if the token is expired or any other
@@ -82,13 +83,15 @@ def root():
             error_message = str(exc)
 
     return render_template(
-        'index.html',
-        user_data=claims, error_message=error_message, times=times)
+        "index.html", user_data=claims, error_message=error_message, times=times
+    )
+
+
 # [END gae_python3_datastore_render_user_times]
 # [END gae_python38_datastore_render_user_times]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
@@ -97,4 +100,4 @@ if __name__ == '__main__':
     # the "static" directory. See:
     # http://flask.pocoo.org/docs/1.0/quickstart/#static-files. Once deployed,
     # App Engine itself will serve those files as configured in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

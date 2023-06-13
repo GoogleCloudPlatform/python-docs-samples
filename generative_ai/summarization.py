@@ -16,20 +16,20 @@
 from vertexai.preview.language_models import TextGenerationModel
 
 
-def text_summarization(temperature: float = .2) -> None:
+def text_summarization(temperature: float = 0.2) -> None:
     """Summarization Example with a Large Language Model"""
 
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,    # Token limit determines the maximum amount of text output.
-        "top_p": .95,                # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 40,                 # A top_k of 1 means the selected token is the most probable among all tokens.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
+        "top_p": 0.95,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-        '''Provide a summary with about two sentences for the following article:
+        """Provide a summary with about two sentences for the following article:
 The efficient-market hypothesis (EMH) is a hypothesis in financial \
 economics that states that asset prices reflect all available \
 information. A direct implication is that it is impossible to \
@@ -59,9 +59,11 @@ or has been weakened by advances in trading technology and investor \
 learning (Chordia, Subrahmanyam, and Tong 2014; McLean and Pontiff \
 2016; Martineau 2021).
 Summary:
-''', **parameters)
+""",
+        **parameters,
+    )
     print(f"Response from Model: {response.text}")
-# [END aiplatform_sdk_summarization]
+    # [END aiplatform_sdk_summarization]
 
     return response
 

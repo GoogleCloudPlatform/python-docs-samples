@@ -46,4 +46,6 @@ def translate_text_with_model(
         print(f"Translated text: {translation.translated_text}")
 
     return response
+
+
 # [END translate_v3_translate_text_with_model]

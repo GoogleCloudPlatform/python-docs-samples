@@ -24,7 +24,7 @@ binary_headers = {
     "ce-id": str(uuid4),
     "ce-type": "com.pytest.sample.event",
     "ce-source": "<my-test-source>",
-    "ce-specversion": "1.0"
+    "ce-specversion": "1.0",
 }
 
 
@@ -36,10 +36,12 @@ def client():
 
 def test_endpoint(client, capsys):
     test_headers = copy.copy(binary_headers)
-    test_headers['Ce-Subject'] = 'test-subject'
+    test_headers["Ce-Subject"] = "test-subject"
 
-    r = client.post('/', headers=test_headers)
+    r = client.post("/", headers=test_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert f"Detected change in Cloud Storage bucket: {test_headers['Ce-Subject']}" in out
+    assert (
+        f"Detected change in Cloud Storage bucket: {test_headers['Ce-Subject']}" in out
+    )

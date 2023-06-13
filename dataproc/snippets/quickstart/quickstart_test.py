@@ -101,7 +101,7 @@ def test_quickstart(capsys, staging_bucket_name):
             PROJECT_ID,
             REGION,
             cluster_name,
-            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME)
+            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME),
         )
         out, _ = capsys.readouterr()
 

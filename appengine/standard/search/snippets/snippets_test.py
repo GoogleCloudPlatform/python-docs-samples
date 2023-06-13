@@ -26,15 +26,15 @@ def search_stub(testbed):
 
 @pytest.fixture
 def index(search_stub):
-    return search.Index('products')
+    return search.Index("products")
 
 
 @pytest.fixture
 def document():
     return search.Document(
-        doc_id='doc1',
-        fields=[
-            search.TextField(name='title', value='Meep: A biography')])
+        doc_id="doc1",
+        fields=[search.TextField(name="title", value="Meep: A biography")],
+    )
 
 
 def test_simple_search(index):
@@ -64,14 +64,14 @@ def test_add_document_and_get_doc_id(index, document):
 
 
 def test_get_document_by_id(index):
-    index.put(search.Document(doc_id='AZ124'))
-    index.put(search.Document(doc_id='AZ125'))
-    index.put(search.Document(doc_id='AZ126'))
+    index.put(search.Document(doc_id="AZ124"))
+    index.put(search.Document(doc_id="AZ125"))
+    index.put(search.Document(doc_id="AZ126"))
 
     doc, docs = snippets.get_document_by_id()
 
-    assert doc.doc_id == 'AZ125'
-    assert [x.doc_id for x in docs] == ['AZ125', 'AZ126']
+    assert doc.doc_id == "AZ125"
+    assert [x.doc_id for x in docs] == ["AZ125", "AZ126"]
 
 
 def test_query_index(index):
@@ -94,8 +94,9 @@ def test_query_options(index):
 
 def test_query_results(index, document):
     index.put(document)
-    total_matches, list_of_docs, number_of_docs_returned = (
-        snippets.query_results(index, 'meep'))
+    total_matches, list_of_docs, number_of_docs_returned = snippets.query_results(
+        index, "meep"
+    )
 
     assert total_matches == 1
     assert list_of_docs
@@ -104,17 +105,17 @@ def test_query_results(index, document):
 
 def test_query_offset(index, document):
     index.put(document)
-    snippets.query_offset(index, 'meep')
+    snippets.query_offset(index, "meep")
 
 
 def test_query_cursor(index, document):
     index.put(document)
-    snippets.query_cursor(index, 'meep')
+    snippets.query_cursor(index, "meep")
 
 
 def test_query_per_document_cursor(index, document):
     index.put(document)
-    snippets.query_per_document_cursor(index, 'meep')
+    snippets.query_per_document_cursor(index, "meep")
 
 
 def test_saving_and_restoring_cursor(index):

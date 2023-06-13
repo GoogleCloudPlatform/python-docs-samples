@@ -21,11 +21,12 @@ spanner.Client = MagicMock()
 
 def test_main():
     import main
+
     snapshot_mock = main.client.instance().database().snapshot().__enter__()
-    snapshot_mock.execute_sql.return_value = [('SingerID', 'AlbumID', 'Album')]
+    snapshot_mock.execute_sql.return_value = [("SingerID", "AlbumID", "Album")]
 
     response = main.spanner_read_data(None)
 
-    assert 'SingerID' in response
-    assert 'AlbumID' in response
-    assert 'Album' in response
+    assert "SingerID" in response
+    assert "AlbumID" in response
+    assert "Album" in response

@@ -39,15 +39,15 @@ def setup() -> dict[str, str]:
         raise Exception(
             "The following env variables must be set to run these tests:"
             "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST, "
-            "SQLSERVER_INSTANCE")
+            "SQLSERVER_INSTANCE"
+        )
     else:
         yield conn_vars
 
 
 def test_init_tcp_connection_engine(
-        capsys: pytest.CaptureFixture,
-        conn_vars: dict[str, str]) -> None:
-
+    capsys: pytest.CaptureFixture, conn_vars: dict[str, str]
+) -> None:
     init_tcp_connection_engine(
         db_user=conn_vars["db_user"],
         db_name=conn_vars["db_name"],
@@ -59,10 +59,7 @@ def test_init_tcp_connection_engine(
     assert "Created TCP connection pool" in captured
 
 
-def test_init_db(
-        capsys: pytest.CaptureFixture,
-        conn_vars: dict[str, str]) -> None:
-
+def test_init_db(capsys: pytest.CaptureFixture, conn_vars: dict[str, str]) -> None:
     table_name = f"votes_{uuid.uuid4().hex}"
 
     init_db(

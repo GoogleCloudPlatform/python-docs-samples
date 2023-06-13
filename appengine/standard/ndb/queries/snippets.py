@@ -15,8 +15,16 @@
 from google.appengine.ext import ndb
 
 from guestbook import Greeting
-from snippets_models import (Account, Address, Article,
-                             Bar, Contact, Employee, FlexEmployee, Manager)
+from snippets_models import (
+    Account,
+    Address,
+    Article,
+    Bar,
+    Contact,
+    Employee,
+    FlexEmployee,
+    Manager,
+)
 
 
 def query_account_equality():
@@ -42,46 +50,46 @@ def query_account_in_steps():
 
 
 def query_article_inequality():
-    query = Article.query(Article.tags != 'perl')
+    query = Article.query(Article.tags != "perl")
     return query
 
 
 def query_article_inequality_explicit():
-    query = Article.query(ndb.OR(Article.tags < 'perl',
-                                 Article.tags > 'perl'))
+    query = Article.query(ndb.OR(Article.tags < "perl", Article.tags > "perl"))
     return query
 
 
 def articles_with_tags_example():
     # [START included_in_inequality]
-    Article(title='Perl + Python = Parrot',
-            stars=5,
-            tags=['python', 'perl'])
+    Article(title="Perl + Python = Parrot", stars=5, tags=["python", "perl"])
     # [END included_in_inequality]
     # [START excluded_from_inequality]
-    Article(title='Introduction to Perl',
-            stars=3,
-            tags=['perl'])
+    Article(title="Introduction to Perl", stars=3, tags=["perl"])
     # [END excluded_from_inequality]
 
 
 def query_article_in():
-    query = Article.query(Article.tags.IN(['python', 'ruby', 'php']))
+    query = Article.query(Article.tags.IN(["python", "ruby", "php"]))
     return query
 
 
 def query_article_in_equivalent():
-    query = Article.query(ndb.OR(Article.tags == 'python',
-                                 Article.tags == 'ruby',
-                                 Article.tags == 'php'))
+    query = Article.query(
+        ndb.OR(Article.tags == "python", Article.tags == "ruby", Article.tags == "php")
+    )
     return query
 
 
 def query_article_nested():
-    query = Article.query(ndb.AND(Article.tags == 'python',
-                                  ndb.OR(Article.tags.IN(['ruby', 'jruby']),
-                                         ndb.AND(Article.tags == 'php',
-                                                 Article.tags != 'perl'))))
+    query = Article.query(
+        ndb.AND(
+            Article.tags == "python",
+            ndb.OR(
+                Article.tags.IN(["ruby", "jruby"]),
+                ndb.AND(Article.tags == "php", Article.tags != "perl"),
+            ),
+        )
+    )
     return query
 
 
@@ -103,11 +111,11 @@ def query_purchase_with_customer_key():
     class Purchase(ndb.Model):
         customer = ndb.KeyProperty(kind=Customer)
         price = ndb.IntegerProperty()
+
     # [END purchase_with_customer_key_models]
 
     def query_purchases_for_customer_via_key(customer_entity):
-        purchases = Purchase.query(
-            Purchase.customer == customer_entity.key).fetch()
+        purchases = Purchase.query(Purchase.customer == customer_entity.key).fetch()
         return purchases
 
     return Customer, Purchase, query_purchases_for_customer_via_key
@@ -120,6 +128,7 @@ def query_purchase_with_ancestor_key():
 
     class Purchase(ndb.Model):
         price = ndb.IntegerProperty()
+
     # [END purchase_with_ancestor_key_models]
 
     def create_purchase_for_customer_with_ancestor(customer_entity):
@@ -130,9 +139,12 @@ def query_purchase_with_ancestor_key():
         purchases = Purchase.query(ancestor=customer_entity.key).fetch()
         return purchases
 
-    return (Customer, Purchase,
-            create_purchase_for_customer_with_ancestor,
-            query_for_purchases_of_customer_with_ancestor)
+    return (
+        Customer,
+        Purchase,
+        create_purchase_for_customer_with_ancestor,
+        query_for_purchases_of_customer_with_ancestor,
+    )
 
 
 def print_query():
@@ -143,25 +155,28 @@ def print_query():
 
 
 def query_contact_with_city():
-    query = Contact.query(Contact.addresses.city == 'Amsterdam')
+    query = Contact.query(Contact.addresses.city == "Amsterdam")
     return query
 
 
 def query_contact_sub_entities_beware():
-    query = Contact.query(Contact.addresses.city == 'Amsterdam',  # Beware!
-                          Contact.addresses.street == 'Spear St')
+    query = Contact.query(
+        Contact.addresses.city == "Amsterdam",  # Beware!
+        Contact.addresses.street == "Spear St",
+    )
     return query
 
 
 def query_contact_multiple_values_in_single_sub_entity():
-    query = Contact.query(Contact.addresses == Address(city='San Francisco',
-                                                       street='Spear St'))
+    query = Contact.query(
+        Contact.addresses == Address(city="San Francisco", street="Spear St")
+    )
     return query
 
 
 def query_properties_named_by_string_on_expando():
-    property_to_query = 'location'
-    query = FlexEmployee.query(ndb.GenericProperty(property_to_query) == 'SF')
+    property_to_query = "location"
+    query = FlexEmployee.query(ndb.GenericProperty(property_to_query) == "SF")
     return query
 
 
@@ -176,7 +191,7 @@ def query_properties_named_by_string_using_getattr(keyword, value):
 
 
 def order_query_results_by_property(keyword):
-    expando_query = FlexEmployee.query().order(ndb.GenericProperty('location'))
+    expando_query = FlexEmployee.query().order(ndb.GenericProperty("location"))
 
     property_query = Article.query().order(Article._properties[keyword])
 
@@ -206,7 +221,7 @@ def reverse_queries():
 def fetch_message_accounts_inefficient(message_query):
     message_account_pairs = []
     for message in message_query:
-        key = ndb.Key('Account', message.userid)
+        key = ndb.Key("Account", message.userid)
         account = key.get()
         message_account_pairs.append((message, account))
 
@@ -215,7 +230,7 @@ def fetch_message_accounts_inefficient(message_query):
 
 def fetch_message_accounts_efficient(message_query):
     def callback(message):
-        key = ndb.Key('Account', message.userid)
+        key = ndb.Key("Account", message.userid)
         account = key.get()
         return message, account
 

@@ -66,7 +66,11 @@ def test_feed(test_topic):
     @backoff.on_exception(backoff.expo, InternalServerError, max_time=60)
     def create_feed():
         return quickstart_createfeed.create_feed(
-            PROJECT, feed_id, [asset_name], test_topic.name, asset_v1.ContentType.RESOURCE
+            PROJECT,
+            feed_id,
+            [asset_name],
+            test_topic.name,
+            asset_v1.ContentType.RESOURCE,
         )
 
     feed = create_feed()

@@ -29,8 +29,8 @@ import time
 
 from flask import Flask, redirect, render_template, request
 
-redis_host = os.environ.get('REDIS_HOST', 'localhost')
-redis_port = os.environ.get('REDIS_PORT', '6379')
+redis_host = os.environ.get("REDIS_HOST", "localhost")
+redis_port = os.environ.get("REDIS_PORT", "6379")
 client = redis.Redis(host=redis_host, port=redis_port)
 
 
@@ -38,7 +38,7 @@ client = redis.Redis(host=redis_host, port=redis_port)
 def query_for_data():
     # Add artificial delay so user can see when cache has been used
     time.sleep(5)
-    return 'prestored value'
+    return "prestored value"
 
 
 def get_data(cache_key):
@@ -49,7 +49,7 @@ def get_data(cache_key):
         return data.decode()
     else:
         data = query_for_data()
-    ##      memcache.add('key', data, 60)
+        ##      memcache.add('key', data, 60)
         client.set(cache_key, data, ex=60)
 
     return data
@@ -98,34 +98,34 @@ def increment_counter(name, expires=60, value=0):
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/showdata', methods=['GET'])
+@app.route("/showdata", methods=["GET"])
 def showdata():
-    data = get_data('data')
+    data = get_data("data")
 
     values = {}
     for key in client.keys():
-        if key == 'data':
+        if key == "data":
             next
         values[key.decode()] = client.get(key).decode()
 
-    return render_template('showdata.html', data=data, values=values)
+    return render_template("showdata.html", data=data, values=values)
 
 
-@app.route('/showdata', methods=['POST'])
+@app.route("/showdata", methods=["POST"])
 def savedata():
-    key = request.form['key']
-    value = request.form['value']
+    key = request.form["key"]
+    value = request.form["value"]
     add_values({key: value})
-    if key == 'counter':
-        increment_counter('counter', expires=60, value=value)
-    return redirect('/')
+    if key == "counter":
+        increment_counter("counter", expires=60, value=value)
+    return redirect("/")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

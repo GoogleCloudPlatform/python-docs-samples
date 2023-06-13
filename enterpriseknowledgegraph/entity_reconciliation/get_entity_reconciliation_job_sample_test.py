@@ -29,7 +29,7 @@ def test_get_entity_reconciliation_job(capsys):
         get_entity_reconciliation_job_sample.get_entity_reconciliation_job_sample(
             project_id=project_id, location=location, job_id=job_id
         )
-    except (NotFound) as e:
+    except NotFound as e:
         print(e.message)
 
     out, _ = capsys.readouterr()

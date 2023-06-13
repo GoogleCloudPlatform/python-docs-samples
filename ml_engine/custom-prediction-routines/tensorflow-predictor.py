@@ -23,8 +23,7 @@ class MyPredictor(object):
     """An example Predictor for an AI Platform custom prediction routine."""
 
     def __init__(self, model, preprocessor):
-        """Stores artifacts for prediction. Only initialized via `from_path`.
-        """
+        """Stores artifacts for prediction. Only initialized via `from_path`."""
         self._model = model
         self._preprocessor = preprocessor
 
@@ -63,11 +62,11 @@ class MyPredictor(object):
         Returns:
             An instance of `MyPredictor`.
         """
-        model_path = os.path.join(model_dir, 'model.h5')
+        model_path = os.path.join(model_dir, "model.h5")
         model = keras.models.load_model(model_path)
 
-        preprocessor_path = os.path.join(model_dir, 'preprocessor.pkl')
-        with open(preprocessor_path, 'rb') as f:
+        preprocessor_path = os.path.join(model_dir, "preprocessor.pkl")
+        with open(preprocessor_path, "rb") as f:
             preprocessor = pickle.load(f)
 
         return cls(model, preprocessor)

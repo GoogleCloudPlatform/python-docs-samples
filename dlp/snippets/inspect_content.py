@@ -1234,7 +1234,7 @@ def inspect_gcs_with_sampling(
 
     # Setting default file types as CSV files
     if not file_types:
-        file_types = ['CSV']
+        file_types = ["CSV"]
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
     url = "gs://{}/*".format(bucket)
@@ -1244,7 +1244,7 @@ def inspect_gcs_with_sampling(
             "bytes_limit_per_file": 200,
             "file_types": file_types,
             "files_limit_percent": 90,
-            "sample_method": 'RANDOM_START',
+            "sample_method": "RANDOM_START",
         }
     }
 
@@ -1317,6 +1317,7 @@ def inspect_gcs_with_sampling(
             "subscription provided is subscribed to the topic provided."
         )
 
+
 # [END dlp_inspect_gcs_with_sampling]
 
 
@@ -1366,7 +1367,7 @@ def inspect_data_to_hybrid_job_trigger(
             "labels": {
                 "env": "prod",
                 "appointment-bookings-comments": "",
-            }
+            },
         },
     }
 
@@ -1397,9 +1398,7 @@ def inspect_data_to_hybrid_job_trigger(
     if job.inspect_details.result.info_type_stats:
         for finding in job.inspect_details.result.info_type_stats:
             print(
-                "Info type: {}; Count: {}".format(
-                    finding.info_type.name, finding.count
-                )
+                "Info type: {}; Count: {}".format(finding.info_type.name, finding.count)
             )
     else:
         print("No findings.")
@@ -1962,7 +1961,7 @@ if __name__ == "__main__":
         "--file_types",
         help="List of extensions of the files in the bucket to inspect, "
         "e.g. ['CSV']",
-        default=['CSV'],
+        default=["CSV"],
     )
     parser_gcs_with_sampling.add_argument(
         "--min_likelihood",
@@ -1992,7 +1991,7 @@ if __name__ == "__main__":
 
     parser_hybrid_job_trigger = subparsers.add_parser(
         "hybrid_job_trigger",
-        help="Inspect sensitive information from virtually any source."
+        help="Inspect sensitive information from virtually any source.",
     )
     parser_hybrid_job_trigger.add_argument(
         "--project",
@@ -2003,7 +2002,9 @@ if __name__ == "__main__":
         "--trigger_id",
         help="The job trigger identifier for hybrid job trigger.",
     )
-    parser_hybrid_job_trigger.add_argument("content_string", help="The string to inspect.")
+    parser_hybrid_job_trigger.add_argument(
+        "content_string", help="The string to inspect."
+    )
 
     args = parser.parse_args()
 
