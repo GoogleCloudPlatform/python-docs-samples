@@ -26,6 +26,7 @@ from enum import Enum
 
 from google.cloud import vision
 from PIL import Image, ImageDraw
+
 # [END vision_document_text_tutorial_imports]
 
 
@@ -38,7 +39,16 @@ class FeatureType(Enum):
 
 
 def draw_boxes(image, bounds, color):
-    """Draw a border around the image using the hints in the vector list."""
+    """Draws a border around the image using the hints in the vector list.
+
+    Args:
+        image: the input image object.
+        bounds: list of coordinates for the boxes.
+        color: the color of the box.
+
+    Returns:
+        An image with colored bounds added.
+    """
     draw = ImageDraw.Draw(image)
 
     for bound in bounds:
@@ -61,7 +71,15 @@ def draw_boxes(image, bounds, color):
 
 # [START vision_document_text_tutorial_detect_bounds]
 def get_document_bounds(image_file, feature):
-    """Returns document bounds given an image."""
+    """Finds the document bounds given an image and feature type.
+
+    Args:
+        image_file: path to the image file.
+        feature: feature type to detect.
+
+    Returns:
+        List of coordinates for the corresponding feature type.
+    """
     client = vision.ImageAnnotatorClient()
 
     bounds = []
@@ -94,10 +112,18 @@ def get_document_bounds(image_file, feature):
 
     # The list `bounds` contains the coordinates of the bounding boxes.
     return bounds
+
+
 # [END vision_document_text_tutorial_detect_bounds]
 
 
 def render_doc_text(filein, fileout):
+    """Outlines document features (blocks, paragraphs and words) given an image.
+
+    Args:
+        filein: path to the input image.
+        fileout: path to the output image.
+    """
     image = Image.open(filein)
     bounds = get_document_bounds(filein, FeatureType.BLOCK)
     draw_boxes(image, bounds, "blue")

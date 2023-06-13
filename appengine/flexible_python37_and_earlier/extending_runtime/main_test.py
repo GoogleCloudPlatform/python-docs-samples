@@ -20,12 +20,13 @@ import main
 
 
 @pytest.mark.skipif(
-    not os.path.exists('/usr/games/fortune'),
-    reason='Fortune executable is not installed.')
+    not os.path.exists("/usr/games/fortune"),
+    reason="Fortune executable is not installed.",
+)
 def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
     assert len(r.data)

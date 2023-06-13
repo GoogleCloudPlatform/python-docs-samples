@@ -18,14 +18,25 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_glossary(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID",
-    glossary_id="YOUR_GLOSSARY_ID",
-    timeout=320,
-):
+    input_uri: str = "gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+    output_uri: str = "gs://YOUR_BUCKET_ID/path/to/save/results/",
+    project_id: str = "YOUR_PROJECT_ID",
+    glossary_id: str = "YOUR_GLOSSARY_ID",
+    timeout: int = 320,
+) -> translate.TranslateTextResponse:
     """Translates a batch of texts on GCS and stores the result in a GCS location.
-    Glossary is applied for translation."""
+    Glossary is applied for translation.
+
+    Args:
+        input_uri (str): The input file to translate.
+        output_uri (str): The output file to save the translations to.
+        project_id (str): The ID of the GCP project that owns the location.
+        glossary_id (str): The ID of the glossary to use.
+        timeout (int): The amount of time, in seconds, to wait for the operation to complete.
+
+    Returns:
+        The response from the batch.
+    """
 
     client = translate.TranslationServiceClient()
 
@@ -71,5 +82,5 @@ def batch_translate_text_with_glossary(
     print(f"Total Characters: {response.total_characters}")
     print(f"Translated Characters: {response.translated_characters}")
 
-
+    return response
 # [END translate_v3_batch_translate_text_with_glossary]

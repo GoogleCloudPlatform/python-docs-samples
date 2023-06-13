@@ -26,7 +26,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GLOSSARY_ID = "DO_NOT_DELETE_TEST_GLOSSARY"
 
 
-def get_ephemeral_bucket():
+def get_ephemeral_bucket() -> storage.Bucket:
     """Create a temporary bucket to store annotation output."""
     bucket_name = f"tmp-{uuid.uuid4().hex}"
     storage_client = storage.Client()
@@ -38,12 +38,12 @@ def get_ephemeral_bucket():
 
 
 @pytest.fixture(scope="function")
-def bucket():
+def bucket() -> storage.Bucket:
     """Create a bucket feature for testing"""
     return next(get_ephemeral_bucket())
 
 
-def on_backoff(invocation_dict):
+def on_backoff(invocation_dict: dict) -> None:
     """Backoff callback; create a testing bucket for each backoff run"""
     invocation_dict["kwargs"]["bucket"] = next(get_ephemeral_bucket())
 
@@ -58,9 +58,11 @@ MAX_TIMEOUT = 500
     max_tries=5,
     on_backoff=on_backoff,
 )
-def test_batch_translate_text_with_glossary(capsys, bucket):
-
-    translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
+def test_batch_translate_text_with_glossary(
+    capsys: pytest.LogCaptureFixture,
+    bucket: storage.Bucket,
+) -> None:
+    response = translate_v3_batch_translate_text_with_glossary.batch_translate_text_with_glossary(
         "gs://cloud-samples-data/translation/text_with_glossary.txt",
         f"gs://{bucket.name}/translation/BATCH_TRANSLATION_GLOS_OUTPUT/",
         PROJECT_ID,
@@ -70,3 +72,4 @@ def test_batch_translate_text_with_glossary(capsys, bucket):
 
     out, _ = capsys.readouterr()
     assert "Total Characters: 9" in out
+    assert response is not None

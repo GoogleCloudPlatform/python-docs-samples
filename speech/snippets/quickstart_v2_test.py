@@ -25,14 +25,14 @@ import quickstart_v2
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
 @Retry()
-def test_quickstart_v2(capsys):
+def test_quickstart_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

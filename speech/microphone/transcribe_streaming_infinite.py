@@ -44,8 +44,12 @@ GREEN = "\033[0;32m"
 YELLOW = "\033[0;33m"
 
 
-def get_current_time():
-    """Return Current Time in MS."""
+def get_current_time() -> int:
+    """Return Current Time in MS.
+
+    Returns:
+        int: Current Time in MS.
+    """
 
     return int(round(time.time() * 1000))
 
@@ -53,7 +57,20 @@ def get_current_time():
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
-    def __init__(self, rate, chunk_size):
+    def __init__(
+            self: object,
+            rate: int,
+            chunk_size: int,
+    ) -> None:
+        """Creates a resumable microphone stream.
+
+        Args:
+        self: The class instance.
+        rate: The audio file's sampling rate.
+        chunk_size: The audio file's chunk size.
+
+        returns: None
+        """
         self._rate = rate
         self.chunk_size = chunk_size
         self._num_channels = 1
@@ -82,13 +99,33 @@ class ResumableMicrophoneStream:
             stream_callback=self._fill_buffer,
         )
 
-    def __enter__(self):
+    def __enter__(self: object) -> object:
+        """Opens the stream.
 
+        Args:
+        self: The class instance.
+
+        returns: None
+        """
         self.closed = False
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(
+            self: object,
+            type: object,
+            value: object,
+            traceback: object,
+    ) -> object:
+        """Closes the stream and releases resources.
 
+        Args:
+        self: The class instance.
+        type: The exception type.
+        value: The exception value.
+        traceback: The exception traceback.
+
+        returns: None
+        """
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
@@ -97,15 +134,34 @@ class ResumableMicrophoneStream:
         self._buff.put(None)
         self._audio_interface.terminate()
 
-    def _fill_buffer(self, in_data, *args, **kwargs):
-        """Continuously collect data from the audio stream, into the buffer."""
+    def _fill_buffer(
+            self: object,
+            in_data: object,
+            *args: object,
+            **kwargs: object,
+    ) -> object:
+        """Continuously collect data from the audio stream, into the buffer.
 
+        Args:
+        self: The class instance.
+        in_data: The audio data as a bytes object.
+        args: Additional arguments.
+        kwargs: Additional arguments.
+
+        returns: None
+        """
         self._buff.put(in_data)
         return None, pyaudio.paContinue
 
-    def generator(self):
-        """Stream Audio from microphone to API and to local buffer"""
+    def generator(self: object) -> object:
+        """Stream Audio from microphone to API and to local buffer
 
+        Args:
+            self: The class instance.
+
+        returns:
+            The data from the audio stream.
+        """
         while not self.closed:
             data = []
 
@@ -160,7 +216,10 @@ class ResumableMicrophoneStream:
             yield b"".join(data)
 
 
-def listen_print_loop(responses, stream):
+def listen_print_loop(
+        responses: object,
+        stream: object
+) -> object:
     """Iterates through server responses and prints them.
 
     The responses passed is a generator that will block until a response
@@ -174,8 +233,14 @@ def listen_print_loop(responses, stream):
     response is an interim one, print a line feed at the end of it, to allow
     the next result to overwrite it, until the response is a final one. For the
     final one, print a newline to preserve the finalized transcription.
-    """
 
+    Arg:
+        responses: The responses returned from the API.
+        stream: The audio stream to be processed.
+
+    Returns:
+        The transcript of the result
+    """
     for response in responses:
 
         if get_current_time() - stream.start_time > STREAMING_LIMIT:
@@ -227,7 +292,6 @@ def listen_print_loop(responses, stream):
                 sys.stdout.write("Exiting...\n")
                 stream.closed = True
                 break
-
         else:
             sys.stdout.write(RED)
             sys.stdout.write("\033[K")
@@ -235,10 +299,11 @@ def listen_print_loop(responses, stream):
 
             stream.last_transcript_was_final = False
 
+        return transcript
 
-def main():
+
+def main() -> None:
     """start bidirectional streaming from microphone input to speech API"""
-
     client = speech.SpeechClient()
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,

@@ -13,7 +13,9 @@
 # limitations under the License.
 #
 # [START genappbuilder_list_documents]
-from google.cloud import discoveryengine_v1beta as genappbuilder
+from typing import Any
+
+from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -21,13 +23,9 @@ from google.cloud import discoveryengine_v1beta as genappbuilder
 # search_engine_id = "YOUR_SEARCH_ENGINE_ID"
 
 
-def list_documents_sample(
-    project_id: str,
-    location: str,
-    search_engine_id: str
-) -> None:
+def list_documents_sample(project_id: str, location: str, search_engine_id: str) -> Any:
     # Create a client
-    client = genappbuilder.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient()
 
     # The full resource name of the search engine branch.
     # e.g. projects/{project}/locations/{location}/dataStores/{data_store}/branches/{branch}
@@ -43,6 +41,8 @@ def list_documents_sample(
     print(f"Documents in {search_engine_id}:")
     for result in response:
         print(result)
+
+    return response
 
 
 # [END genappbuilder_list_documents]
