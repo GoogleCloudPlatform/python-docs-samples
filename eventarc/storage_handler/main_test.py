@@ -18,9 +18,10 @@ from cloudevents.http import CloudEvent
 
 from google.events.cloud.storage import StorageObjectData
 
+import pytest
+
 import main
 
-import pytest
 
 ce_attributes = {
     "id": str(uuid4),
