@@ -1,0 +1,8 @@
+{
+  "default_version": "v1",
+  "name": "python-docs-samples",
+  "name_pretty": "Google Cloud Python Samples",
+  "issue_tracker": "https://github.com/GoogleCloudPlatform/python-docs-samples/issues",
+  "language": "python",
+  "repo": "GoogleCloudPlatform/python-docs-samples"
+}
