@@ -16,9 +16,9 @@ import os
 import sys
 import uuid
 
-import pytest # noqa: I100
-
 import hybrid_tutorial
+
+import pytest  # noqa: I100
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]

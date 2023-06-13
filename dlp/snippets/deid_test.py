@@ -471,3 +471,69 @@ def test_deidentify_table_suppress_row(capsys: pytest.CaptureFixture) -> None:
     assert "string_value: \"Charles Dickens\"" not in out
     assert "string_value: \"Jane Austen\"" in out
     assert "string_value: \"Mark Twain\"" not in out
+
+
+def test_deidentify_table_with_crypro_hash(capsys: pytest.CaptureFixture) -> None:
+    table_data = {
+        "header": ["user_id", "comments"],
+        "rows": [
+            [
+                "abby_abernathy@example.org",
+                "my email is abby_abernathy@example.org and phone is 858-555-0222",
+            ],
+            [
+                "bert_beauregard@example.org",
+                "my email is bert_beauregard@example.org and phone is 858-555-0223",
+            ],
+            [
+                "cathy_crenshaw@example.org",
+                "my email is cathy_crenshaw@example.org and phone is 858-555-0224",
+            ],
+        ],
+    }
+
+    deid.deidentify_table_with_crypto_hash(
+        GCLOUD_PROJECT,
+        table_data,
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+        "TRANSIENT-CRYPTO-KEY",
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "abby_abernathy@example.org" not in out
+    assert "858-555-0222" not in out
+
+
+def test_deidentify_table_with_multiple_crypto_hash(capsys: pytest.CaptureFixture) -> None:
+    table_data = {
+        "header": ["user_id", "comments"],
+        "rows": [
+            [
+                "user1@example.org",
+                "my email is user1@example.org and phone is 858-333-2222",
+            ],
+            [
+                "abbyabernathy1",
+                "my userid is abbyabernathy1 and my email is aabernathy@example.com",
+            ],
+        ],
+    }
+
+    deid.deidentify_table_with_multiple_crypto_hash(
+        GCLOUD_PROJECT,
+        table_data,
+        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
+        "TRANSIENT-CRYPTO-KEY-1",
+        "TRANSIENT-CRYPTO-KEY-2",
+        ["user_id"],
+        ["comments"],
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "user1@example.org" not in out
+    assert "858-555-0222" not in out
+    assert "string_value: \"abbyabernathy1\"" not in out
+    assert "my userid is abbyabernathy1" in out
+    assert "aabernathy@example.com" not in out
