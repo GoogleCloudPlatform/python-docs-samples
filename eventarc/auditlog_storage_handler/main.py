@@ -36,10 +36,11 @@ def index():
 
     user = auditlog.authentication_info.principal_email
     return (
-        f"Cloud Storage object changed: {auditlog.resource_name}" +
-        f"updated by {user}",
+        f"Cloud Storage object changed: {auditlog.resource_name}"
+        + f"updated by {user}",
         200,
     )
+
 
 # [END eventarc_audit_cloudevent_handler]
 

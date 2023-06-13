@@ -13,13 +13,15 @@
 # limitations under the License.
 from uuid import uuid4
 
-import pytest
 from cloudevents.conversion import to_binary
 from cloudevents.http import CloudEvent
-from google.events.cloud.audit import (AuditLog, AuthenticationInfo,
-                                       LogEntryData)
+
+from google.events.cloud.audit import AuditLog, AuthenticationInfo, LogEntryData
+
+import pytest
 
 import main
+
 
 ce_attributes = {
     "id": str(uuid4),
