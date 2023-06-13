@@ -37,7 +37,7 @@ def index():
     user = auditlog.authentication_info.principal_email
     return (
         f"Cloud Storage object changed: {auditlog.resource_name}"
-        + f"updated by {user}",
+        + f" updated by {user}",
         200,
     )
 
