@@ -40,7 +40,7 @@ def index():
         f"Cloud Storage object changed: {gcs_object}" +
         f" updated at {update_time}", 200
     )
-# [END eventarc_audit_storage_cloudevent_handler]
+# [END eventarc_storage_cloudevent_handler]
 
 
 # [START eventarc_storage_cloudevent_server]
