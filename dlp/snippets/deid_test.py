@@ -539,7 +539,7 @@ def test_deidentify_table_with_multiple_crypto_hash(capsys: pytest.CaptureFixtur
     assert "aabernathy@example.com" not in out
 
 
-def test_deidentify_table_with_fpe(capsys):
+def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture) -> None:
     table_data = {
         "header": ["employee_id", "date", "compensation"],
         "rows": [
@@ -561,3 +561,28 @@ def test_deidentify_table_with_fpe(capsys):
     out, _ = capsys.readouterr()
     assert "11111" not in out
     assert "22222" not in out
+
+    response = out.split(":")[1:]
+
+    deid_col_id = response.index(' "employee_id"\n}\nheaders {\n  name')
+    total_columns = len(table_data['header'])
+    total_rows = len(table_data['rows'][0])
+
+    deid_emp_ids = [response[i].split("\n")[0][2:-1] for i in
+                    range(deid_col_id + total_columns, len(response), total_columns)]
+
+    for i in range(total_rows):
+        table_data['rows'][i][deid_col_id - 1] = deid_emp_ids[i]
+
+    deid.reidentify_table_with_fpe(
+        GCLOUD_PROJECT,
+        table_data,
+        ["employee_id"],
+        alphabet='NUMERIC',
+        wrapped_key=WRAPPED_KEY,
+        key_name=KEY_NAME,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "11111" in out
+    assert "22222" in out
