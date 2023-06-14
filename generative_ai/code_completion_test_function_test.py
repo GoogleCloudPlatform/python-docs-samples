@@ -15,11 +15,10 @@
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import sentiment_analysis
+import code_completion_test_function
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_sentiment_analysis() -> None:
-
-    content = sentiment_analysis.sentiment_analysis(temperature=0).text
-    assert content is not None
+def test_code_completion_test_function() -> None:
+    content = code_completion_test_function.complete_test_function(temperature=0).text
+    assert '-> None:' in content
