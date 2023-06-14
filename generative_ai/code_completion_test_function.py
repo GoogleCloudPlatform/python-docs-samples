@@ -16,26 +16,26 @@
 from vertexai.preview.language_models import CodeGenerationModel
 
 
-def complete_test_function(
-        temperature: float = 0.2
-) -> object:
+def complete_test_function(temperature: float = 0.2) -> object:
     """Example of using Code Completion to complete a test function."""
 
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 64,    # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 64,  # Token limit determines the maximum amount of text output.
     }
 
     code_completion_model = CodeGenerationModel.from_pretrained("code-gecko@001")
     response = code_completion_model.predict(
         prefix="""def reverse_string(s):
             return s[::-1]
-        def test_empty_input_string()""", **parameters)
+        def test_empty_input_string()""",
+        **parameters,
+    )
 
     print(f"Response from Model: {response.text}")
 
-# [END aiplatform_sdk_code_completion_test_function]
+    # [END aiplatform_sdk_code_completion_test_function]
 
     return response
 
