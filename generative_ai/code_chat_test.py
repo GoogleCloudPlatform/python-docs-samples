@@ -15,10 +15,10 @@
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import sentiment_analysis
+import code_chat
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_sentiment_analysis() -> None:
-    content = sentiment_analysis.sentiment_analysis(temperature=0).text
-    assert content is not None
+def test_code_chat() -> None:
+    content = code_chat.write_a_function(temperature=0).text
+    assert 'def min(a, b):' in content
