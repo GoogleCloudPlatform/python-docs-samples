@@ -20,17 +20,16 @@ ASSET_BUCKET = "cloud-samples-data"
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_file(capsys):
-    file_name = ('../detect/resources/landmark.jpg')
+def test_detect_file(capsys) -> None:
+    file_name = "../detect/resources/landmark.jpg"
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'description' in out.lower()
+    assert "description" in out.lower()
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_web_gsuri(capsys):
-    file_name = ('gs://{}/vision/landmark/pofa.jpg'.format(
-                 ASSET_BUCKET))
+def test_detect_web_gsuri(capsys) -> None:
+    file_name = "gs://{}/vision/landmark/pofa.jpg".format(ASSET_BUCKET)
     web_detect.report(web_detect.annotate(file_name))
     out, _ = capsys.readouterr()
-    assert 'description:' in out.lower()
+    assert "description:" in out.lower()

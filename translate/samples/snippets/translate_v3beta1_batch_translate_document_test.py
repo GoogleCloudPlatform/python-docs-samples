@@ -27,7 +27,7 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture(scope="function")
-def bucket():
+def bucket() -> storage.Bucket:
     # Create a temporary bucket to store annotation output.
     bucket_name = f"test-{uuid.uuid4()}"
     storage_client = storage.Client()
@@ -40,8 +40,11 @@ def bucket():
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_batch_translate_document(capsys, bucket):
-    translate_v3beta1_batch_translate_document.batch_translate_document(
+def test_batch_translate_document(
+    capsys: pytest.LogCaptureFixture,
+    bucket: storage.Bucket,
+) -> None:
+    response = translate_v3beta1_batch_translate_document.batch_translate_document(
         input_uri="gs://cloud-samples-data/translation/async_invoices/*",
         output_uri=f"gs://{bucket.name}/translation/BATCH_TRANSLATE_DOCUMENT_OUTPUT/",
         project_id=PROJECT_ID,
@@ -50,3 +53,4 @@ def test_batch_translate_document(capsys, bucket):
 
     out, _ = capsys.readouterr()
     assert "Total Pages" in out
+    assert response.total_pages is not None

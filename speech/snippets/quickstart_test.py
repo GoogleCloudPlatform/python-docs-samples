@@ -15,11 +15,16 @@
 
 from google.api_core.retry import Retry
 
+import pytest
+
 import quickstart
 
 
 @Retry()
-def test_quickstart(capsys):
-    quickstart.run_quickstart()
+def test_quickstart(
+    capsys: pytest.CaptureFixture
+) -> None:
+    result = quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert "Transcript: how old is the Brooklyn Bridge" in out
+    assert result is not None
