@@ -310,6 +310,102 @@ def inspect_table(
 
 # [END dlp_inspect_table]
 
+
+# [START dlp_inspect_column_values_w_custom_hotwords]
+from typing import Dict, List, Union  # noqa: E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_column_values_w_custom_hotwords(
+    project: str,
+    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    info_types: List[str],
+    custom_hotword: str,
+) -> None:
+    """ Uses the Data Loss Prevention API to inspect table data using builtin
+    infoType detector and to exclude entire column of data from inspection
+    results when matched with custom hot-word.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_data: Dictionary representing table data.
+        info_types: The infoType for which hot-word rule is applied.
+        custom_hotword: The custom regular expression used for likelihood boosting.
+    """
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_data["header"]]
+    rows = []
+    for row in table_data["rows"]:
+        rows.append(
+            {"values": [{"string_value": cell_val} for cell_val in row]}
+        )
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table to be inspected.
+    item = {"table": table}
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct a rule set with caller provided hot-word, with a likelihood
+    # boost to VERY_UNLIKELY when the hot-word are present
+    hotword_rule = {
+        "hotword_regex": {"pattern": custom_hotword},
+        "likelihood_adjustment": {
+            "fixed_likelihood": google.cloud.dlp_v2.Likelihood.VERY_UNLIKELY
+        },
+        "proximity": {"window_before": 1},
+    }
+
+    rule_set = [
+        {
+            "info_types": info_types,
+            "rules": [{"hotword_rule": hotword_rule}],
+        }
+    ]
+
+    # Construct the configuration dictionary, which defines the entire inspect content task.
+    inspect_config = {
+        "info_types": info_types,
+        "rule_set": rule_set,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.POSSIBLE,
+        "include_quote": True,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            try:
+                if finding.quote:
+                    print("Quote: {}".format(finding.quote))
+            except AttributeError:
+                pass
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+# [END dlp_inspect_column_values_w_custom_hotwords]
+
+
 # [START dlp_inspect_file]
 import mimetypes  # noqa: I100, E402
 from typing import Optional  # noqa: I100, E402
@@ -1592,6 +1688,32 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_table_hotword = subparsers.add_parser(
+        "table_w_custom_hotword",
+        help="Inspect a table and exclude column values when matched "
+             "with custom hot-word.",
+    )
+    parser_table_hotword.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_table_hotword.add_argument(
+        "--table_data",
+        help="Dictionary representing a table.",
+    )
+    parser_table_hotword.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+    )
+    parser_table_hotword.add_argument(
+        "custom_hotword",
+        help="The custom regular expression used for likelihood boosting.",
+    )
+
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
     parser_file.add_argument("filename", help="The path to the file to inspect.")
     parser_file.add_argument(
@@ -2103,6 +2225,13 @@ if __name__ == "__main__":
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote,
+        )
+    elif args.content == "table_w_custom_hotword":
+        inspect_column_values_w_custom_hotwords(
+            args.project,
+            args.table_data,
+            args.info_types,
+            args.custom_hotword,
         )
     elif args.content == "file":
         inspect_file(
