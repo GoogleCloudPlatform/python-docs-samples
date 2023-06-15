@@ -976,6 +976,65 @@ def inspect_image_file_all_infotypes(
 # [END dlp_inspect_image_all_infotypes]
 
 
+# [START dlp_inspect_image_file]
+import google.cloud.dlp  # noqa: F811, E402, I100
+
+
+def inspect_image_file(
+    project: str,
+    filename: str,
+    include_quote: bool = True,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze strings for
+    protected data in image file.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = ["PHONE_NUMBER", "EMAIL_ADDRESS", "CREDIT_CARD_NUMBER"]
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration for the Inspect request.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": include_quote,
+    }
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": "IMAGE", "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Parse the response and process results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Quote: {}".format(finding.quote))
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+# [END dlp_inspect_image_file]
+
+
 # [START dlp_inspect_image_listed_infotypes]
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -1898,6 +1957,22 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_image_default_infotypes = subparsers.add_parser(
+        "image_default_infotypes", help="Inspect a local file with default info types."
+    )
+    parser_image_default_infotypes.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_default_infotypes.add_argument("filename", help="The path to the file to inspect.")
+    parser_image_default_infotypes.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+             "information in the results.",
+        default=True,
+    )
+
     parser_image_infotypes = subparsers.add_parser(
         "image_listed_infotypes", help="Inspect a local file with listed info types."
     )
@@ -2110,6 +2185,12 @@ if __name__ == "__main__":
 
     elif args.content == "image_all_infotypes":
         inspect_image_file_all_infotypes(
+            args.project,
+            args.filename,
+            include_quote=args.include_quote,
+        )
+    elif args.content == "image_default_infotypes":
+        inspect_image_file(
             args.project,
             args.filename,
             include_quote=args.include_quote,

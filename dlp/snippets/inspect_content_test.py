@@ -330,6 +330,16 @@ def test_inspect_image_file_all_infotypes(capsys: pytest.CaptureFixture) -> None
     assert "Info type: EMAIL_ADDRESS" in out
 
 
+def test_inspect_image_file_default_infotypes(capsys: pytest.CaptureFixture) -> None:
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+
+    inspect_content.inspect_image_file(GCLOUD_PROJECT, test_filepath)
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Info type: EMAIL_ADDRESS" in out
+
+
 def test_inspect_image_file_listed_infotypes(capsys: pytest.CaptureFixture) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
 
