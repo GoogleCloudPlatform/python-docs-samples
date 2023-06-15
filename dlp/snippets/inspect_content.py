@@ -1320,6 +1320,94 @@ def inspect_gcs_with_sampling(
 # [END dlp_inspect_gcs_with_sampling]
 
 
+# [START dlp_inspect_send_data_to_hybrid_job_trigger]
+import time  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_data_to_hybrid_job_trigger(
+    project: str,
+    trigger_id: str,
+    content_string: str,
+) -> None:
+    """
+    Uses the Data Loss Prevention API to inspect sensitive information
+    using Hybrid jobs trigger that scans payloads of data sent from
+    virtually any source and stores findings in Google Cloud.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        trigger_id: The job trigger identifier for hybrid job trigger.
+        content_string: The string to inspect.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `item` to inspect.
+    item = {"value": content_string}
+
+    # Construct the container details that contains metadata to be
+    # associated with the content. For more details, please refer to
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/Container
+    container_details = {
+        "full_path": "10.0.0.2:logs1:app1",
+        "relative_path": "app1",
+        "root_path": "10.0.0.2:logs1",
+        "type_": "logging_sys",
+        "version": "1.2",
+    }
+
+    # Construct hybrid inspection configuration.
+    hybrid_config = {
+        "item": item,
+        "finding_details": {
+            "container_details": container_details,
+            "labels": {
+                "env": "prod",
+                "appointment-bookings-comments": "",
+            }
+        },
+    }
+
+    # Convert the trigger id into a full resource id.
+    trigger_id = f"projects/{project}/jobTriggers/{trigger_id}"
+
+    # Activate the job trigger.
+    dlp_job = dlp.activate_job_trigger(request={"name": trigger_id})
+
+    # Call the API.
+    dlp.hybrid_inspect_job_trigger(
+        request={
+            "name": trigger_id,
+            "hybrid_item": hybrid_config,
+        }
+    )
+
+    # Get inspection job details.
+    job = dlp.get_dlp_job(request={"name": dlp_job.name})
+
+    # Wait for dlp job to get finished.
+    while job.inspect_details.result.processed_bytes <= 0:
+        time.sleep(5)
+        job = dlp.get_dlp_job(request={"name": dlp_job.name})
+
+    # Print the results.
+    print(f"Job name: {dlp_job.name}")
+    if job.inspect_details.result.info_type_stats:
+        for finding in job.inspect_details.result.info_type_stats:
+            print(
+                "Info type: {}; Count: {}".format(
+                    finding.info_type.name, finding.count
+                )
+            )
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_send_data_to_hybrid_job_trigger]
+
+
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -1902,6 +1990,21 @@ if __name__ == "__main__":
         default=300,
     )
 
+    parser_hybrid_job_trigger = subparsers.add_parser(
+        "hybrid_job_trigger",
+        help="Inspect sensitive information from virtually any source."
+    )
+    parser_hybrid_job_trigger.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_hybrid_job_trigger.add_argument(
+        "--trigger_id",
+        help="The job trigger identifier for hybrid job trigger.",
+    )
+    parser_hybrid_job_trigger.add_argument("content_string", help="The string to inspect.")
+
     args = parser.parse_args()
 
     if args.content == "string":
@@ -2017,4 +2120,10 @@ if __name__ == "__main__":
             args.filename,
             args.info_types,
             include_quote=args.include_quote,
+        )
+    elif args.content == "hybrid_job_trigger":
+        inspect_data_to_hybrid_job_trigger(
+            args.project,
+            args.trigger_id,
+            args.content_string,
         )
