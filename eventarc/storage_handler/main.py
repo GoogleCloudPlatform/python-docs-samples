@@ -37,9 +37,11 @@ def index():
     gcs_object = os.path.join(storage_obj.bucket, storage_obj.name)
     update_time = storage_obj.updated
     return (
-        f"Cloud Storage object changed: {gcs_object}" +
-        f" updated at {update_time}", 200
+        f"Cloud Storage object changed: {gcs_object}" + f" updated at {update_time}",
+        200,
     )
+
+
 # [END eventarc_storage_cloudevent_handler]
 
 
