@@ -14,6 +14,7 @@
 
 # This file contains code samples that demonstrate how to list IAM deny policies.
 
+
 # [START iam_list_deny_policy]
 def list_deny_policy(project_id: str) -> None:
     from google.cloud import iam_v2

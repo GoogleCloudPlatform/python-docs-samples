@@ -32,7 +32,9 @@ def create_saved_query(project_id, saved_query_id, description):
     # TODO: customize your saved query based on the guide below.
     # https://cloud.google.com/asset-inventory/docs/reference/rest/v1/savedQueries#IamPolicyAnalysisQuery
     saved_query.content.iam_policy_analysis_query.scope = parent
-    query_access_selector = saved_query.content.iam_policy_analysis_query.access_selector
+    query_access_selector = (
+        saved_query.content.iam_policy_analysis_query.access_selector
+    )
     query_access_selector.permissions.append("iam.serviceAccounts.actAs")
 
     response = client.create_saved_query(

@@ -59,9 +59,7 @@ def sample_analyze_syntax(text_content):
         # Get the text content of this token. Usually a word or punctuation.
         text = token.text
         print(f"Token text: {text.content}")
-        print(
-            f"Location of this token in overall document: {text.begin_offset}"
-        )
+        print(f"Location of this token in overall document: {text.begin_offset}")
         # Get the part of speech information for this token.
         # Part of speech is defined in:
         # http://www.lrec-conf.org/proceedings/lrec2012/pdf/274_Paper.pdf

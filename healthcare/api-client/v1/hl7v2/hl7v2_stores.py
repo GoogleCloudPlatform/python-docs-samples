@@ -226,9 +226,7 @@ def patch_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
     )
 
     response = request.execute()
-    print(
-        f"Patched HL7v2 store {hl7v2_store_id} with Cloud Pub/Sub topic: None"
-    )
+    print(f"Patched HL7v2 store {hl7v2_store_id} with Cloud Pub/Sub topic: None")
     return response
 
 

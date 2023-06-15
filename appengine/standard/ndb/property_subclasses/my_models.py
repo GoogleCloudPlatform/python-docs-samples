@@ -20,7 +20,7 @@ from google.appengine.ext import ndb
 class LongIntegerProperty(ndb.StringProperty):
     def _validate(self, value):
         if not isinstance(value, (int, long)):
-            raise TypeError('expected an integer, got %s' % repr(value))
+            raise TypeError("expected an integer, got %s" % repr(value))
 
     def _to_base_type(self, value):
         return str(value)  # Doesn't matter if it's an int or a long
@@ -42,16 +42,16 @@ class BoundedLongIntegerProperty(ndb.StringProperty):
     def _to_base_type(self, value):
         # convert from signed -> unsigned
         if value < 0:
-            value += 2 ** self._bits
-        assert 0 <= value < 2 ** self._bits
+            value += 2**self._bits
+        assert 0 <= value < 2**self._bits
         # Return number as a zero-padded hex string with correct number of
         # digits:
-        return '%0*x' % (self._bits // 4, value)
+        return "%0*x" % (self._bits // 4, value)
 
     def _from_base_type(self, value):
         value = int(value, 16)
         if value >= 2 ** (self._bits - 1):
-            value -= 2 ** self._bits
+            value -= 2**self._bits
         return value
 
 

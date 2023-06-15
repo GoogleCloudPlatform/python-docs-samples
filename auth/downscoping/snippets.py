@@ -102,6 +102,7 @@ def token_consumer(bucket_name, object_name):
         object_name (str): The name of the object in the Cloud Storage bucket
             to read.
     """
+
     # Create the OAuth credentials from the downscoped token and pass a
     # refresh handler to handle token expiration. We are passing a
     # refresh_handler instead of a one-time access token/expiry pair.

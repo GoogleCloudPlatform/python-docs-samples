@@ -22,8 +22,8 @@ def text_embedding() -> None:
     embeddings = model.get_embeddings(["What is life?"])
     for embedding in embeddings:
         vector = embedding.values
-        print(f'Length of Embedding Vector: {len(vector)}')
-# [END aiplatform_sdk_embedding]
+        print(f"Length of Embedding Vector: {len(vector)}")
+    # [END aiplatform_sdk_embedding]
     return vector
 
 

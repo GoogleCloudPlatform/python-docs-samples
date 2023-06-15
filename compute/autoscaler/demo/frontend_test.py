@@ -23,6 +23,7 @@ class FakeTime(object):
     intervals (cpu_time_step and wall_time_step, respectively). This can be
     used to simulate arbitrary fraction of CPU time available to the process.
     """
+
     def __init__(self, cpu_time_step=1.0, wall_time_step=1.0):
         self.cpu_time = 0.0
         self.wall_time = 0.0

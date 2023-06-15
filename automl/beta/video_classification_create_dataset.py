@@ -43,4 +43,6 @@ def create_dataset(
     # Name Form:
     #    `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
     print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
+
+
 # [END automl_video_classification_create_dataset_beta]

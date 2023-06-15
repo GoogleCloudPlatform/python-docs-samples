@@ -52,7 +52,7 @@ def asset_bucket(storage_client):
         raise e
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def dataset(bigquery_client):
     dataset_id = f"{PROJECT}.{DATASET}"
     dataset = bigquery.Dataset(dataset_id)
@@ -61,17 +61,14 @@ def dataset(bigquery_client):
 
     yield DATASET
 
-    bigquery_client.delete_dataset(
-            dataset_id, delete_contents=True, not_found_ok=False)
+    bigquery_client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=False)
 
 
 def test_export_assets(asset_bucket, dataset, capsys):
     content_type = asset_v1.ContentType.IAM_POLICY
     dump_file_path = f"gs://{asset_bucket}/assets-dump.txt"
     quickstart_exportassets.export_assets(
-        PROJECT,
-        dump_file_path,
-        content_type=content_type
+        PROJECT, dump_file_path, content_type=content_type
     )
     out, _ = capsys.readouterr()
     assert dump_file_path in out
@@ -79,12 +76,14 @@ def test_export_assets(asset_bucket, dataset, capsys):
     content_type = asset_v1.ContentType.RESOURCE
     dataset_id = f"projects/{PROJECT}/datasets/{dataset}"
     quickstart_exportassets.export_assets_bigquery(
-        PROJECT, dataset_id, "assettable", content_type)
+        PROJECT, dataset_id, "assettable", content_type
+    )
     out, _ = capsys.readouterr()
     assert dataset_id in out
 
     content_type_r = asset_v1.ContentType.RELATIONSHIP
     quickstart_exportassets.export_assets_bigquery(
-        PROJECT, dataset_id, "assettable", content_type_r)
+        PROJECT, dataset_id, "assettable", content_type_r
+    )
     out_r, _ = capsys.readouterr()
     assert dataset_id in out_r

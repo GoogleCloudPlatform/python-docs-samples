@@ -24,12 +24,13 @@ REGION = "us-central1"
 
 
 @backoff.on_exception(
-    backoff.expo, (
-            InternalServerError,
-            ServiceUnavailable,
-            Aborted,
-        ),
-    max_tries=5
+    backoff.expo,
+    (
+        InternalServerError,
+        ServiceUnavailable,
+        Aborted,
+    ),
+    max_tries=5,
 )
 def test_workflows(capsys):
     # Wrapper function for client library function

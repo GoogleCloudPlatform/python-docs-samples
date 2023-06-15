@@ -26,10 +26,7 @@
 from google.cloud import speech_v1p1beta1 as speech
 
 
-def sample_recognize(
-        storage_uri: str,
-        phrase: str
-) -> speech.RecognizeResponse:
+def sample_recognize(storage_uri: str, phrase: str) -> speech.RecognizeResponse:
     """
     Transcribe a short audio file with speech adaptation.
 

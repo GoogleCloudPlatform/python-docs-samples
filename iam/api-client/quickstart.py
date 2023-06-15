@@ -55,7 +55,9 @@ def initialize_service() -> dict:
     return crm_service
 
 
-def modify_policy_add_role(crm_service: str, project_id: str, role: str, member: str) -> None:
+def modify_policy_add_role(
+    crm_service: str, project_id: str, role: str, member: str
+) -> None:
     """Adds a new role binding to a policy."""
 
     policy = get_policy(crm_service, project_id)
@@ -74,7 +76,9 @@ def modify_policy_add_role(crm_service: str, project_id: str, role: str, member:
     set_policy(crm_service, project_id, policy)
 
 
-def modify_policy_remove_member(crm_service: str, project_id: str, role: str, member: str) -> None:
+def modify_policy_remove_member(
+    crm_service: str, project_id: str, role: str, member: str
+) -> None:
     """Removes a  member from a role binding."""
 
     policy = get_policy(crm_service, project_id)
@@ -112,7 +116,6 @@ def set_policy(crm_service: str, project_id: str, policy: str) -> dict:
 
 
 if __name__ == "__main__":
-
     # TODO: replace with your project ID
     project_id = "your-project-id"
     # TODO: Replace with the ID of your member in the form 'user:member@example.com'.

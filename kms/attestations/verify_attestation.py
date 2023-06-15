@@ -43,7 +43,7 @@ def verify(attestation_file, bundle_file):
       True if at least one of the certificates in bundle_file can verify the
       attestation data and its signature.
     """
-    with gzip.open(attestation_file, 'rb') as f:
+    with gzip.open(attestation_file, "rb") as f:
         # An attestation file consists of a data portion and a 256 byte
         # signature portion concatenated together.
         attestation = f.read()
@@ -54,14 +54,18 @@ def verify(attestation_file, bundle_file):
         # Verify the attestation with one of the certificates in the bundle
         for cert in pem.parse_file(bundle_file):
             cert_obj = x509.load_pem_x509_certificate(
-                str(cert).encode('utf-8'), backends.default_backend())
+                str(cert).encode("utf-8"), backends.default_backend()
+            )
             try:
                 # Check if the data was signed by the private key associated
                 # with the public key in the certificate. The data should have
                 # been signed with PKCS1v15 padding.
                 cert_obj.public_key().verify(
-                    signature, data, padding.PKCS1v15(),
-                    cert_obj.signature_hash_algorithm)
+                    signature,
+                    data,
+                    padding.PKCS1v15(),
+                    cert_obj.signature_hash_algorithm,
+                )
                 return True
             except exceptions.InvalidSignature:
                 # Certificate bundles contain certificates that will not be
@@ -69,18 +73,19 @@ def verify(attestation_file, bundle_file):
                 # errors can be ignored.
                 continue
         return False
+
+
 # [END kms_verify_attestations]
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-            description=__doc__)
-    parser.add_argument('attestation_file', help="Name of attestation file.")
-    parser.add_argument('bundle_file', help="Name of certificate bundle file.")
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("attestation_file", help="Name of attestation file.")
+    parser.add_argument("bundle_file", help="Name of certificate bundle file.")
 
     args = parser.parse_args()
 
     if verify(args.attestation_file, args.bundle_file):
-        print('Signature verified.')
+        print("Signature verified.")
     else:
-        print('Signature verification failed.')
+        print("Signature verification failed.")

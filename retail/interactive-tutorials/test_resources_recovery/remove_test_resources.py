@@ -19,14 +19,17 @@ import subprocess
 from google.api_core.exceptions import NotFound, PermissionDenied
 import google.auth
 from google.cloud import storage
-from google.cloud.retail import DeleteProductRequest, ListProductsRequest, \
-    ProductServiceClient
+from google.cloud.retail import (
+    DeleteProductRequest,
+    ListProductsRequest,
+    ProductServiceClient,
+)
 from google.cloud.storage.bucket import Bucket
 
 
 project_id = google.auth.default()[1]
-product_bucket_name = os.environ['BUCKET_NAME']
-events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
+product_bucket_name = os.environ["BUCKET_NAME"]
+events_bucket_name = os.environ["EVENTS_BUCKET_NAME"]
 
 product_dataset = "products"
 events_dataset = "user_events"
@@ -72,7 +75,8 @@ def delete_all_products():
             delete_count += 1
         except PermissionDenied:
             print(
-                "Ignore PermissionDenied in case the product does not exist at time of deletion")
+                "Ignore PermissionDenied in case the product does not exist at time of deletion"
+            )
     print(f"{delete_count} products were deleted from {default_catalog}")
 
 

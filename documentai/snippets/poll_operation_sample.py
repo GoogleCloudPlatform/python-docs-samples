@@ -39,7 +39,7 @@ def poll_operation_sample(location: str, operation_name: str) -> None:
         # Make GetOperation request
         try:
             operation = client.get_operation(request=request)
-        except (NotFound) as e:
+        except NotFound as e:
             print(e.message)
             break
 

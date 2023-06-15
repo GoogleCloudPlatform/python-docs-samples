@@ -24,5 +24,5 @@ def app(testbed):
 
 
 def test_get(app):
-    response = app.get('/')
-    assert 'Bill Holiday' in response.body
+    response = app.get("/")
+    assert "Bill Holiday" in response.body

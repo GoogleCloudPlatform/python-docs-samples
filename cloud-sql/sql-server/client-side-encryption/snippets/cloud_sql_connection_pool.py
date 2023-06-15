@@ -39,7 +39,7 @@ def init_tcp_connection_engine(
             password=db_pass,  # e.g. "my-database-password"
             database=db_name,  # e.g. "my-database-name"
             port=db_port,  # e.g. 1433
-            bytes_to_unicode=False  # disables automatic decoding of bytes
+            bytes_to_unicode=False,  # disables automatic decoding of bytes
         )
 
     pool = sqlalchemy.create_engine(
@@ -60,7 +60,6 @@ def init_db(
     db_host: str,
     table_name: str,
 ) -> sqlalchemy.engine.base.Engine:
-
     db = init_tcp_connection_engine(db_user, db_pass, db_name, db_host)
 
     # Create tables (if they don't already exist)

@@ -70,7 +70,8 @@ def acquire_token(
     """
     # Construct a URL with the audience and format.
     url = METADATA_VM_IDENTITY_URL.format(
-        audience=audience, format=format, licenses=licenses)
+        audience=audience, format=format, licenses=licenses
+    )
 
     # Request a token from the metadata server.
     r = requests.get(url, headers=METADATA_HEADERS)
@@ -83,6 +84,7 @@ def acquire_token(
 
 
 # [START compute_vm_identity_verify_token]
+
 
 def verify_token(token: str, audience: str) -> dict:
     """
@@ -100,6 +102,8 @@ def verify_token(token: str, audience: str) -> dict:
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
     return payload
+
+
 # [END compute_vm_identity_verify_token]
 
 

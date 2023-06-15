@@ -19,10 +19,10 @@ import handle_incoming_email
 
 def test_handle_bounced_email(testbed):
     handler = handle_incoming_email.LogSenderHandler()
-    handler.request = 'request'
+    handler.request = "request"
     message = mail.EmailMessage(
-        sender='support@example.com',
-        subject='Your account has been approved')
-    message.to = 'Albert Johnson <Albert.Johnson@example.com>'
-    message.body = 'Dear Albert.'
+        sender="support@example.com", subject="Your account has been approved"
+    )
+    message.to = "Albert Johnson <Albert.Johnson@example.com>"
+    message.body = "Dear Albert."
     handler.receive(message)

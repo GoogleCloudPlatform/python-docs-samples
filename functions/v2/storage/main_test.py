@@ -37,7 +37,15 @@ def test_functions_eventsource_storage(capsys: pytest.LogCaptureFixture) -> None
 
     event = CloudEvent(attributes, data)
 
-    event_id, event_type, bucket, name, metageneration, timeCreated, updated = main.hello_gcs(event)
+    (
+        event_id,
+        event_type,
+        bucket,
+        name,
+        metageneration,
+        timeCreated,
+        updated,
+    ) = main.hello_gcs(event)
 
     out, _ = capsys.readouterr()
     assert "5e9f24a" in event_id

@@ -24,6 +24,6 @@ def app():
 
 
 def test_get_module_info(app):
-    result = app.get('/')
+    result = app.get("/")
     assert result.status_code == 200
-    assert 'hello world' in result.body
+    assert "hello world" in result.body

@@ -22,14 +22,14 @@ def extractive_question_answering(temperature: float = 0.2) -> None:
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,    # Token limit determines the maximum amount of text output.
-        "top_p": 0,                  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 1,                  # A top_k of 1 means the selected token is the most probable among all tokens.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
+        "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-      '''Background: There is evidence that there have been significant changes \
+        """Background: There is evidence that there have been significant changes \
 in Amazon rainforest vegetation over the last 21,000 years through the Last \
 Glacial Maximum (LGM) and subsequent deglaciation. Analyses of sediment \
 deposits from Amazon basin paleo lakes and from the Amazon Fan indicate that \
@@ -63,9 +63,11 @@ Q: What has been analyzed to compare Amazon rainfall in the past and present?
 A: Sediment deposits.
 
 Q: What has the lower rainfall in the Amazon during the LGM been attributed to?
-A:''', **parameters)
+A:""",
+        **parameters,
+    )
     print(f"Response from Model: {response.text}")
-# [END aiplatform_sdk_extraction]
+    # [END aiplatform_sdk_extraction]
 
     return response
 

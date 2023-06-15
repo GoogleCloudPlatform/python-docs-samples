@@ -68,7 +68,7 @@ def delete_container_image(image_name, project):
     )
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def container_image():
     try:
         build_container_image(IMAGE_NAME, PROJECT)
@@ -118,25 +118,29 @@ def delete_service(cloud_run_service, project):
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def get_service_url(cloud_run_service, project):
-    return subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "--project",
-            project,
-            "services",
-            "describe",
-            cloud_run_service,
-            "--platform=managed",
-            "--region=us-central1",
-            "--format=value(status.url)",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).stdout.strip().decode()
+    return (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "--project",
+                project,
+                "services",
+                "describe",
+                cloud_run_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def service_url(container_image):
     try:
         deploy_image(CLOUD_RUN_SERVICE, container_image, PROJECT)
@@ -207,7 +211,7 @@ def delete_subscription(pubsub_topic):
             )
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def pubsub_topic(service_url):
     try:
         topic = create_topic(PROJECT, TOPIC)
@@ -245,7 +249,9 @@ def test_end_to_end(pubsub_topic):
     # Retry a maximum number of 10 times to find results in stackdriver
     found = False
     for x in range(10):
-        iterator = client.list_log_entries({"resource_names": resource_names, "filter": filters})
+        iterator = client.list_log_entries(
+            {"resource_names": resource_names, "filter": filters}
+        )
         for entry in iterator:
             if entry.text_payload == "Hello Runner!":
                 found = True

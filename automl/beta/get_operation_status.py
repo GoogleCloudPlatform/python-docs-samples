@@ -18,17 +18,17 @@ from google.cloud import automl_v1beta1 as automl
 
 def get_operation_status(
     operation_full_id="projects/YOUR_PROJECT_ID/locations/us-central1/"
-                      "operations/YOUR_OPERATION_ID",
+    "operations/YOUR_OPERATION_ID",
 ):
     """Get operation status."""
     client = automl.AutoMlClient()
 
     # Get the latest state of a long-running operation.
-    response = client._transport.operations_client.get_operation(
-        operation_full_id
-    )
+    response = client._transport.operations_client.get_operation(operation_full_id)
 
     print(f"Name: {response.name}")
     print("Operation details:")
     print(response)
+
+
 # [END automl_get_operation_status_beta]

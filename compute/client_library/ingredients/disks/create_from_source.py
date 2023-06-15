@@ -21,8 +21,14 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_disk_from_disk>
-def create_disk_from_disk(project_id: str, zone: str, disk_name: str, disk_type: str,
-                          disk_size_gb: int, disk_link: str) -> compute_v1.Disk:
+def create_disk_from_disk(
+    project_id: str,
+    zone: str,
+    disk_name: str,
+    disk_type: str,
+    disk_size_gb: int,
+    disk_link: str,
+) -> compute_v1.Disk:
     """
     Creates a disk in a project in a given zone.
 
@@ -52,4 +58,6 @@ def create_disk_from_disk(project_id: str, zone: str, disk_name: str, disk_type:
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
+
 # </INGREDIENT>

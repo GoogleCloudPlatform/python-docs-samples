@@ -33,9 +33,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_file_with_enhanced_model(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_with_enhanced_model(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_enhanced_model()
     out, _ = capsys.readouterr()
 
@@ -44,9 +42,7 @@ def test_transcribe_file_with_enhanced_model(
 
 
 @Retry()
-def test_transcribe_file_with_metadata(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_with_metadata(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_metadata()
     out, _ = capsys.readouterr()
 
@@ -55,9 +51,7 @@ def test_transcribe_file_with_metadata(
 
 
 @Retry()
-def test_transcribe_file_with_auto_punctuation(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_with_auto_punctuation(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
 
@@ -66,9 +60,7 @@ def test_transcribe_file_with_auto_punctuation(
 
 
 @Retry()
-def test_transcribe_diarization(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_diarization(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_diarization()
     out, err = capsys.readouterr()
 
@@ -78,9 +70,7 @@ def test_transcribe_diarization(
 
 
 @Retry()
-def test_transcribe_multichannel_file(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_multichannel_file(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_multichannel()
     out, err = capsys.readouterr()
 
@@ -89,9 +79,7 @@ def test_transcribe_multichannel_file(
 
 
 @Retry()
-def test_transcribe_multilanguage_file(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_multilanguage_file(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_multilanguage()
     out, err = capsys.readouterr()
 
@@ -101,9 +89,7 @@ def test_transcribe_multilanguage_file(
 
 
 @Retry()
-def test_transcribe_word_level_confidence(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_word_level_confidence(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_word_level_confidence()
     out, err = capsys.readouterr()
 
@@ -113,7 +99,7 @@ def test_transcribe_word_level_confidence(
 
 @Retry()
 def test_transcribe_file_with_spoken_punctuation_end_emojis(
-    capsys: pytest.CaptureFixture
+    capsys: pytest.CaptureFixture,
 ) -> None:
     result = transcribe_file_with_spoken_punctuation_end_emojis()
     out, err = capsys.readouterr()

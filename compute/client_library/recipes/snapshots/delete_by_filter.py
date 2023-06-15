@@ -23,6 +23,7 @@
 
 # <INGREDIENT list_snapshots />
 
+
 def delete_snapshots_by_filter(project_id: str, filter: str):
     """
     Deletes all snapshots in project that meet the filter criteria.
@@ -33,5 +34,6 @@ def delete_snapshots_by_filter(project_id: str, filter: str):
     """
     for snapshot in list_snapshots(project_id, filter):
         delete_snapshot(project_id, snapshot.name)
+
 
 # </REGION compute_snapshot_delete_by_filter>

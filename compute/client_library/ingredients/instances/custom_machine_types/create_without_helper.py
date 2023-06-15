@@ -41,21 +41,44 @@ def create_custom_instances_no_helper(
     Returns:
         List of Instance objects.
     """
-    newest_debian = get_image_from_family(
-        project="debian-cloud", family="debian-10"
-    )
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
     params = [
-        (f"{instance_name}_n1", f"zones/{zone}/machineTypes/custom-{core_count}-{memory}"),
-        (f"{instance_name}_n2", f"zones/{zone}/machineTypes/n2-custom-{core_count}-{memory}"),
-        (f"{instance_name}_n2d", f"zones/{zone}/machineTypes/n2d-custom-{core_count}-{memory}"),
-        (f"{instance_name}_e2", f"zones/{zone}/machineTypes/e2-custom-{core_count}-{memory}"),
-        (f"{instance_name}_e2_micro", f"zones/{zone}/machineTypes/e2-custom-micro-{memory}"),
-        (f"{instance_name}_e2_small", f"zones/{zone}/machineTypes/e2-custom-small-{memory}"),
-        (f"{instance_name}_e2_medium", f"zones/{zone}/machineTypes/e2-custom-medium-{memory}"),
+        (
+            f"{instance_name}_n1",
+            f"zones/{zone}/machineTypes/custom-{core_count}-{memory}",
+        ),
+        (
+            f"{instance_name}_n2",
+            f"zones/{zone}/machineTypes/n2-custom-{core_count}-{memory}",
+        ),
+        (
+            f"{instance_name}_n2d",
+            f"zones/{zone}/machineTypes/n2d-custom-{core_count}-{memory}",
+        ),
+        (
+            f"{instance_name}_e2",
+            f"zones/{zone}/machineTypes/e2-custom-{core_count}-{memory}",
+        ),
+        (
+            f"{instance_name}_e2_micro",
+            f"zones/{zone}/machineTypes/e2-custom-micro-{memory}",
+        ),
+        (
+            f"{instance_name}_e2_small",
+            f"zones/{zone}/machineTypes/e2-custom-small-{memory}",
+        ),
+        (
+            f"{instance_name}_e2_medium",
+            f"zones/{zone}/machineTypes/e2-custom-medium-{memory}",
+        ),
     ]
     # The core_count and memory values are not validated anywhere and can be rejected by the API.
-    instances = [create_instance(project_id, zone, name, disks, type) for name, type in params]
+    instances = [
+        create_instance(project_id, zone, name, disks, type) for name, type in params
+    ]
     return instances
+
+
 # </INGREDIENT>

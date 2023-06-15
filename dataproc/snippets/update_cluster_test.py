@@ -43,13 +43,21 @@ CLUSTER = {
     "project_id": PROJECT_ID,
     "cluster_name": CLUSTER_NAME,
     "config": {
-        "master_config": {"num_instances": 1, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
-        "worker_config": {"num_instances": 2, "machine_type_uri": "n1-standard-2", "disk_config": {"boot_disk_size_gb": 100}},
+        "master_config": {
+            "num_instances": 1,
+            "machine_type_uri": "n1-standard-2",
+            "disk_config": {"boot_disk_size_gb": 100},
+        },
+        "worker_config": {
+            "num_instances": 2,
+            "machine_type_uri": "n1-standard-2",
+            "disk_config": {"boot_disk_size_gb": 100},
+        },
     },
 }
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def cluster_client():
     cluster_client = ClusterControllerClient(
         client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
@@ -88,17 +96,20 @@ def teardown_cluster(cluster_client):
     backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
 )
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
-
     try:
         setup_cluster(cluster_client)
-        request = GetClusterRequest(project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME)
+        request = GetClusterRequest(
+            project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
+        )
         response = cluster_client.get_cluster(request=request)
         # verify the cluster is in the RUNNING state before proceeding
-    # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
+        # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
         assert response.status.state == ClusterStatus.State.RUNNING
 
         # Wrapper function for client library function
-        update_cluster.update_cluster(PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES)
+        update_cluster.update_cluster(
+            PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES
+        )
         new_num_cluster = cluster_client.get_cluster(
             project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
         )
