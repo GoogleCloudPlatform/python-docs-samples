@@ -22,9 +22,14 @@ from google.cloud import compute_v1
 
 # <INGREDIENT create_disk_from_customer_encrypted_disk>
 def create_disk_from_customer_encrypted_disk(
-        project_id: str, zone: str, disk_name: str, disk_type: str,
-        disk_size_gb: int, disk_link: str,
-        encryption_key: bytes) -> compute_v1.Disk:
+    project_id: str,
+    zone: str,
+    disk_name: str,
+    disk_type: str,
+    disk_size_gb: int,
+    disk_link: str,
+    encryption_key: bytes,
+) -> compute_v1.Disk:
     """
     Creates a zonal non-boot persistent disk in a project with the copy of data from an existing disk.
 
@@ -61,4 +66,6 @@ def create_disk_from_customer_encrypted_disk(
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
+
 # </INGREDIENT>

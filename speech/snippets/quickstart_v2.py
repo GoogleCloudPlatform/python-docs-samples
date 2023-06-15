@@ -20,9 +20,9 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def quickstart_v2(
-        project_id: str,
-        recognizer_id: str,
-        audio_file: str,
+    project_id: str,
+    recognizer_id: str,
+    audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file."""
     # Instantiates a client

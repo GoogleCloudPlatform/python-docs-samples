@@ -26,4 +26,6 @@ def ndb_django_middleware(get_response):
             return get_response(request)
 
     return middleware
+
+
 # [END ndb_django_middleware]

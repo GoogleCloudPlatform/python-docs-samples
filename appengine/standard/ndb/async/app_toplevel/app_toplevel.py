@@ -30,10 +30,10 @@ class MyRequestHandler(webapp2.RequestHandler):
 
         # ...read something else from Datastore...
 
-        self.response.out.write('Content of the page')
+        self.response.out.write("Content of the page")
 
 
 # This is actually redundant, since the `get` decorator already handles it, but
 # for demonstration purposes, you can also make the entire app toplevel with
 # the following.
-app = ndb.toplevel(webapp2.WSGIApplication([('/', MyRequestHandler)]))
+app = ndb.toplevel(webapp2.WSGIApplication([("/", MyRequestHandler)]))

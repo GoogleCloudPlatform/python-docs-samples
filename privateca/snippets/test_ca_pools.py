@@ -35,7 +35,6 @@ def generate_name() -> str:
 
 
 def test_create_ca_pool(capsys: typing.Any, ca_pool_autodelete_name) -> None:
-
     create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name)
 
     out, _ = capsys.readouterr()
@@ -46,8 +45,9 @@ def test_create_ca_pool(capsys: typing.Any, ca_pool_autodelete_name) -> None:
     )
 
 
-def test_list_ca_pools(capsys: typing.Any, ca_pool_autodelete_name, ca_pool_autodelete_name2) -> None:
-
+def test_list_ca_pools(
+    capsys: typing.Any, ca_pool_autodelete_name, ca_pool_autodelete_name2
+) -> None:
     create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name)
     create_ca_pool(PROJECT, LOCATION, ca_pool_autodelete_name2)
     list_ca_pools(PROJECT, LOCATION)

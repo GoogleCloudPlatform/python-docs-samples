@@ -56,7 +56,6 @@ def shared_state() -> dict:
 def setup_teardown(
     shared_state: dict,
 ) -> tuple[storage.bucket.Bucket, aip.JobServiceClient]:
-
     storage_client = storage.Client()
     bucket = storage_client.create_bucket(STAGING_BUCKET, location=REGION)
     bucket.blob(f"{INPUT_DIR}/{TRAIN_DATA}").upload_from_filename(

@@ -24,6 +24,7 @@ import tensorflow as tf
 
 from trainer import utils
 from trainer.tfkeras_model import model
+
 # [END aiplatform_tfkeras_task_imports]
 
 
@@ -31,10 +32,7 @@ from trainer.tfkeras_model import model
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--input-path",
-        type=str,
-        required=True,
-        help="path to input data"
+        "--input-path", type=str, required=True, help="path to input data"
     )
     parser.add_argument(
         "--num-epochs",
@@ -63,6 +61,8 @@ def get_args() -> argparse.Namespace:
         default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
+
+
 # [END aiplatform_tfkeras_task_args]
 
 
@@ -73,7 +73,7 @@ def train_and_evaluate(
     model_dir: str,
     num_epochs: int = 5,
     batch_size: int = 128,
-    learning_rate: float = 0.01
+    learning_rate: float = 0.01,
 ) -> None:
     """Trains and evaluates the Keras model.
 
@@ -82,7 +82,7 @@ def train_and_evaluate(
 
     # Split datasets into training and testing
     train_feature, eval_feature, train_target, eval_target = utils.load_data(input_path)
-# [END aiplatform_tfkeras_task_train_and_evaluate_load]
+    # [END aiplatform_tfkeras_task_train_and_evaluate_load]
 
     # [START aiplatform_tfkeras_task_train_and_evaluate_dimensions]
     # Extract dimensions of the data
@@ -137,6 +137,8 @@ def train_and_evaluate(
     keras_model.save(model_dir)
     print(f"Model exported to: {model_dir}")
     # [END aiplatform_tfkeras_task_train_and_evaluate_fit_export]
+
+
 # [END aiplatform_tfkeras_task_train_and_evaluate]
 
 

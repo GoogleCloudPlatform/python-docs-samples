@@ -42,6 +42,7 @@ def fixup_paths(path):
     # exists by importing it, and if so appending to its module search path.
     try:
         import google
+
         google.__path__.append("{0}/google".format(path))
     except ImportError:
         pass
@@ -52,14 +53,15 @@ def fixup_paths(path):
 def main(sdk_path, test_path, test_pattern):
     # If the SDK path points to a Google Cloud SDK installation
     # then we should alter it to point to the GAE platform location.
-    if os.path.exists(os.path.join(sdk_path, 'platform/google_appengine')):
-        sdk_path = os.path.join(sdk_path, 'platform/google_appengine')
+    if os.path.exists(os.path.join(sdk_path, "platform/google_appengine")):
+        sdk_path = os.path.join(sdk_path, "platform/google_appengine")
 
     # Make sure google.appengine.* modules are importable.
     fixup_paths(sdk_path)
 
     # Make sure all bundled third-party packages are available.
     import dev_appserver
+
     dev_appserver.fix_sys_path()
 
     # Loading appengine_config from the current project ensures that any
@@ -67,30 +69,34 @@ def main(sdk_path, test_path, test_pattern):
     # sys.path modifications, namespaces, etc.)
     try:
         import appengine_config
+
         (appengine_config)
     except ImportError:
-        print('Note: unable to import appengine_config.')
+        print("Note: unable to import appengine_config.")
 
     # Discover and run tests.
     suite = unittest.loader.TestLoader().discover(test_path, test_pattern)
     return unittest.TextTestRunner(verbosity=2).run(suite)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'sdk_path',
-        help='The path to the Google App Engine SDK or the Google Cloud SDK.')
+        "sdk_path",
+        help="The path to the Google App Engine SDK or the Google Cloud SDK.",
+    )
     parser.add_argument(
-        '--test-path',
-        help='The path to look for tests, defaults to the current directory.',
-        default=os.getcwd())
+        "--test-path",
+        help="The path to look for tests, defaults to the current directory.",
+        default=os.getcwd(),
+    )
     parser.add_argument(
-        '--test-pattern',
-        help='The file pattern for test modules, defaults to *_test.py.',
-        default='*_test.py')
+        "--test-pattern",
+        help="The file pattern for test modules, defaults to *_test.py.",
+        default="*_test.py",
+    )
 
     args = parser.parse_args()
 

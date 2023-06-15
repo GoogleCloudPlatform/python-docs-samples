@@ -49,8 +49,7 @@ def handle_translation(request: flask.Request) -> flask.Response:
                 flask.jsonify(
                     {
                         "errorMessage": (
-                            'project can\'t be extracted from "caller":'
-                            f" {caller}."
+                            'project can\'t be extracted from "caller":' f" {caller}."
                         )
                     }
                 ),
@@ -61,16 +60,12 @@ def handle_translation(request: flask.Request) -> flask.Response:
         target = context.get("target_language", "es")
 
         calls = request_json["calls"]
-        translated = translate_text(
-            [call[0] for call in calls], project, target
-        )
+        translated = translate_text([call[0] for call in calls], project, target)
 
         return flask.jsonify({"replies": translated})
     except Exception as err:
         return flask.make_response(
-            flask.jsonify(
-                {"errorMessage": f"Unexpected error {type(err)}:{err}"}
-            ),
+            flask.jsonify({"errorMessage": f"Unexpected error {type(err)}:{err}"}),
             400,
         )
 
@@ -118,9 +113,7 @@ def translate_text(
         retry=Retry(),
     )
     # Convert the translated value to a list and return it
-    return [
-        translation.translated_text for translation in response.translations
-    ]
+    return [translation.translated_text for translation in response.translations]
 
 
 # [END bigquery_remote_function_translation]

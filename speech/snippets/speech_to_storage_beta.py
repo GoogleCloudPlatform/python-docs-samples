@@ -29,7 +29,6 @@ def export_transcript_to_storage_beta(
     bucket_name,
     object_name,
 ):
-
     # input_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
     audio = speech.RecognitionAudio(uri=input_storage_uri)
 

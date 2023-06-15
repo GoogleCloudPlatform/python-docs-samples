@@ -86,8 +86,8 @@ def test_end_to_end(setup_job):
         f"timestamp>=\"{filter_date.isoformat('T')}\" "
         "resource.type=cloud_run_job "
         f"AND resource.labels.job_name={SERVICE} "
-        f"resource.labels.location = \"{REGION}\" "
-        "-protoPayload.serviceName=\"run.googleapis.com\""
+        f'resource.labels.location = "{REGION}" '
+        '-protoPayload.serviceName="run.googleapis.com"'
     )
 
     # Retry a maximum number of 5 times to find results in Cloud Logging

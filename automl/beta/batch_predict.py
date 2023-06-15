@@ -27,28 +27,22 @@ def batch_predict(
     prediction_client = automl.PredictionServiceClient()
 
     # Get the full path of the model.
-    model_full_id = automl.AutoMlClient.model_path(
-        project_id, "us-central1", model_id
-    )
+    model_full_id = automl.AutoMlClient.model_path(project_id, "us-central1", model_id)
 
     gcs_source = automl.GcsSource(input_uris=[input_uri])
 
     input_config = automl.BatchPredictInputConfig(gcs_source=gcs_source)
     gcs_destination = automl.GcsDestination(output_uri_prefix=output_uri)
-    output_config = automl.BatchPredictOutputConfig(
-        gcs_destination=gcs_destination
-    )
+    output_config = automl.BatchPredictOutputConfig(gcs_destination=gcs_destination)
     params = {}
 
     request = automl.BatchPredictRequest(
         name=model_full_id,
         input_config=input_config,
         output_config=output_config,
-        params=params
+        params=params,
     )
-    response = prediction_client.batch_predict(
-        request=request
-    )
+    response = prediction_client.batch_predict(request=request)
 
     print("Waiting for operation to complete...")
     print(
@@ -56,4 +50,6 @@ def batch_predict(
             response.result()
         )
     )
+
+
 # [END automl_batch_predict_beta]

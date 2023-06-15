@@ -68,8 +68,9 @@ def browser() -> WebDriver:
     chrome_options.add_argument("--window-size=1420,1080")
     chrome_options.add_argument("--headless")
     chrome_options.add_argument("--disable-gpu")
-    browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
-                               options=chrome_options)
+    browser = webdriver.Chrome(
+        service=Service(ChromeDriverManager().install()), options=chrome_options
+    )
     yield browser
     browser.close()
 
@@ -111,7 +112,7 @@ def test_assessment(
 
 @pytest.mark.usefixtures("live_server")
 def test_mfa_assessment(
-        capsys: CaptureFixture, recaptcha_site_key: str, browser: WebDriver
+    capsys: CaptureFixture, recaptcha_site_key: str, browser: WebDriver
 ) -> None:
     # Get token.
     token, action = get_token(recaptcha_site_key, browser)
@@ -125,9 +126,13 @@ def test_mfa_assessment(
         recaptcha_action=action,
         hashed_account_id=get_hashed_account_id(account_id, key),
         email="abc@example.com",
-        phone_number="+12345678901")
+        phone_number="+12345678901",
+    )
     out, _ = capsys.readouterr()
-    assert re.search("Result unspecified. Trigger MFA challenge in the client by passing the request token.", out)
+    assert re.search(
+        "Result unspecified. Trigger MFA challenge in the client by passing the request token.",
+        out,
+    )
 
 
 def get_token(recaptcha_site_key: str, browser: WebDriver) -> tuple:

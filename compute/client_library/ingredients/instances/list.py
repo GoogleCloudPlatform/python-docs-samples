@@ -42,5 +42,6 @@ def list_instances(project_id: str, zone: str) -> Iterable[compute_v1.Instance]:
         print(f" - {instance.name} ({instance.machine_type})")
 
     return instance_list
-# </INGREDIENT>
 
+
+# </INGREDIENT>

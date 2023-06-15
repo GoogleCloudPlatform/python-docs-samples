@@ -16,11 +16,11 @@
 def test_main():
     import main
 
-    main.database_id = 'example-db'
+    main.database_id = "example-db"
 
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Query Result: 1' in r.data.decode('utf-8')
+    assert "Query Result: 1" in r.data.decode("utf-8")

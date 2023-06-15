@@ -20,8 +20,15 @@ import google.auth
 
 from google.cloud import bigquery
 from google.cloud import storage
-from google.cloud.retail import CreateProductRequest, DeleteProductRequest, \
-    FulfillmentInfo, GetProductRequest, PriceInfo, Product, ProductServiceClient
+from google.cloud.retail import (
+    CreateProductRequest,
+    DeleteProductRequest,
+    FulfillmentInfo,
+    GetProductRequest,
+    PriceInfo,
+    Product,
+    ProductServiceClient,
+)
 
 project_id = google.auth.default()[1]
 default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog"
@@ -37,10 +44,10 @@ def generate_product() -> Product:
     fulfillment_info.type_ = "pickup-in-store"
     fulfillment_info.place_ids = ["store0", "store1"]
     return Product(
-        title='Nest Mini',
+        title="Nest Mini",
         type_=Product.Type.PRIMARY,
-        categories=['Speakers and displays'],
-        brands=['Google'],
+        categories=["Speakers and displays"],
+        brands=["Google"],
         price_info=price_info,
         fulfillment_info=[fulfillment_info],
         availability="IN_STOCK",
@@ -53,8 +60,7 @@ def create_product(product_id: str) -> object:
     create_product_request.product_id = product_id
     create_product_request.parent = default_branch_name
 
-    created_product = ProductServiceClient().create_product(
-        create_product_request)
+    created_product = ProductServiceClient().create_product(create_product_request)
     print("---product is created:---")
     print(created_product)
 
@@ -87,8 +93,7 @@ def try_to_delete_product_if_exists(product_name: str):
     get_product_request.name = product_name
     delete_product_request = DeleteProductRequest()
     delete_product_request.name = product_name
-    print(
-        "---delete product from the catalog, if the product already exists---")
+    print("---delete product from the catalog, if the product already exists---")
     try:
         product = ProductServiceClient().get_product(get_product_request)
         ProductServiceClient().delete_product(product.name)
@@ -146,13 +151,11 @@ def upload_blob(bucket_name, source_file_name):
     print(f"Uploading data from {source_file_name} to the bucket {bucket_name}")
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    object_name = re.search('resources/(.*?)$', source_file_name).group(1)
+    object_name = re.search("resources/(.*?)$", source_file_name).group(1)
     blob = bucket.blob(object_name)
     blob.upload_from_filename(source_file_name)
 
-    print(
-        f"File {source_file_name} uploaded to {object_name}."
-    )
+    print(f"File {source_file_name} uploaded to {object_name}.")
 
 
 def create_bq_dataset(dataset_name):
@@ -205,10 +208,9 @@ def upload_data_to_bq_table(dataset, table_name, source, schema_file_path):
     with open(schema_file_path, "rb") as schema:
         schema_dict = json.load(schema)
     job_config = bigquery.LoadJobConfig(
-        source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
-        schema=schema_dict)
+        source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON, schema=schema_dict
+    )
     with open(source, "rb") as source_file:
-        job = bq.load_table_from_file(source_file, full_table_id,
-                                      job_config=job_config)
+        job = bq.load_table_from_file(source_file, full_table_id, job_config=job_config)
     job.result()  # Waits for the job to complete.
     print("data was uploaded")

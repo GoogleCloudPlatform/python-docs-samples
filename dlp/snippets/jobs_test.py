@@ -89,7 +89,7 @@ def test_job_name() -> Iterator[str]:
     )
     full_path = response.name
     # API expects only job name, not full project path
-    job_name = full_path[full_path.rfind("/") + 1:]
+    job_name = full_path[full_path.rfind("/") + 1 :]
     yield job_name
 
     # clean up job if not deleted

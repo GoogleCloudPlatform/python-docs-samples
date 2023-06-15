@@ -69,4 +69,6 @@ def batch_translate_document(
     print(f"Total Pages: {response.total_pages}")
 
     return response
+
+
 # [END translate_v3beta1_batch_translate_document]

@@ -31,13 +31,13 @@ datastore_client = datastore.Client()
 publisher = pubsub.PublisherClient()
 subscriber = pubsub.SubscriberClient()
 
-topic_name = os.environ.get('TOPIC', 'queue')
-sub_name = os.environ.get('SUBSCRIPTION', 'tasklist')
-project = os.environ['GOOGLE_CLOUD_PROJECT']
-topic = 'projects/{}/topics/{}'.format(project, topic_name)
-subscription = 'projects/{}/subscriptions/{}'.format(project, sub_name)
+topic_name = os.environ.get("TOPIC", "queue")
+sub_name = os.environ.get("SUBSCRIPTION", "tasklist")
+project = os.environ["GOOGLE_CLOUD_PROJECT"]
+topic = "projects/{}/topics/{}".format(project, topic_name)
+subscription = "projects/{}/subscriptions/{}".format(project, sub_name)
 
-entity_kind = os.environ.get('ENTITY_KIND', 'Task')
+entity_kind = os.environ.get("ENTITY_KIND", "Task")
 
 
 def increment_counter(id):
@@ -47,67 +47,61 @@ def increment_counter(id):
         if not task:
             task_key = datastore_client.key(entity_kind, id)
             task = datastore.Entity(key=task_key)
-            task['count'] = 0
+            task["count"] = 0
 
-        task['count'] += 1
+        task["count"] += 1
         datastore_client.put(task)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def home_page():
     query = datastore_client.query(kind=entity_kind)
     counters = [
-        {
-            'name': entity.key.name,
-            'count': entity['count']
-        } for entity in query.fetch()
+        {"name": entity.key.name, "count": entity["count"]} for entity in query.fetch()
     ]
-    return render_template('counter.html', counters=counters)
+    return render_template("counter.html", counters=counters)
 
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 def enqueue():
-    key = request.form.get('key', None)
+    key = request.form.get("key", None)
     if key is not None:
-        publisher.publish(topic, b'', key=key)
-    return redirect('/')
+        publisher.publish(topic, b"", key=key)
+    return redirect("/")
 
 
 def processing_tasks():
     """Task processing normally runs continually when triggered by a GET
-       request to /_ah/start. In order to make this more testable, we
-       process tasks until this method returns False, which can only happen
-       if this method is overridden by the tests.
+    request to /_ah/start. In order to make this more testable, we
+    process tasks until this method returns False, which can only happen
+    if this method is overridden by the tests.
     """
     return True
 
 
-@app.route('/_ah/start')
+@app.route("/_ah/start")
 def start_handling_tasks():
     """Indefinitely fetch tasks and update the datastore."""
     while processing_tasks():
         response = subscriber.pull(
-            subscription=subscription,
-            max_messages=5,
-            timeout=60.0
+            subscription=subscription, max_messages=5, timeout=60.0
         )
         for msg in response.received_messages:
-            key = msg.message.attributes.get('key', None)
+            key = msg.message.attributes.get("key", None)
             if key is not None:
                 increment_counter(key)
-            subscriber.acknowledge(
-                subscription=subscription,
-                ack_ids=[msg.ack_id]
-            )
+            subscriber.acknowledge(subscription=subscription, ack_ids=[msg.ack_id])
 
         time.sleep(1)
 
-    return 'Done'   # Never reached except under test
+    return "Done"  # Never reached except under test
+
+
 # [END all]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

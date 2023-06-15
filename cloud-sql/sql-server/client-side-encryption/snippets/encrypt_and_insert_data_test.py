@@ -37,7 +37,8 @@ def setup_pool() -> sqlalchemy.engine.Engine:
     except KeyError:
         raise Exception(
             "The following env variables must be set to run these tests:"
-            "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST")
+            "SQLSERVER_USER, SQLSERVER_PASSWORD, SQLSERVER_DATABASE, SQLSERVER_HOST"
+        )
     else:
         pool = init_db(
             db_user=db_user,
@@ -66,14 +67,9 @@ def setup_key() -> tink.aead.KmsEnvelopeAead:
 def test_encrypt_and_insert_data(
     capsys: pytest.CaptureFixture,
     pool: sqlalchemy.engine.Engine,
-    env_aead: tink.aead.KmsEnvelopeAead
+    env_aead: tink.aead.KmsEnvelopeAead,
 ) -> None:
-    encrypt_and_insert_data(
-        pool,
-        env_aead,
-        table_name,
-        "SPACES",
-        "hello@example.com")
+    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
     captured = capsys.readouterr()
 
     decrypted_emails = []

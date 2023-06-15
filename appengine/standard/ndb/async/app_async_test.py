@@ -24,13 +24,13 @@ def app(testbed):
 
 
 def test_main(app, testbed, login):
-    app_async.Account(id='123', view_counter=4).put()
+    app_async.Account(id="123", view_counter=4).put()
 
     # Log the user in
-    login(id='123')
+    login(id="123")
 
-    response = app.get('/')
+    response = app.get("/")
 
     assert response.status_int == 200
-    account = app_async.Account.get_by_id('123')
+    account = app_async.Account.get_by_id("123")
     assert account.view_counter == 5

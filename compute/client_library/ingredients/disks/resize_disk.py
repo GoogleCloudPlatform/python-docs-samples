@@ -36,14 +36,19 @@ def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> None:
                 * projects/{project_name}/regions/{region}/disks/{disk_name}
         new_size_gb: the new size you want to set for the disk in gigabytes.
     """
-    search_results = re.search(r"/projects/[\w_-]+/(?P<area_type>zones|regions)/"
-                               r"(?P<area_name>[\w_-]+)/disks/(?P<disk_name>[\w_-]+)", disk_link)
+    search_results = re.search(
+        r"/projects/[\w_-]+/(?P<area_type>zones|regions)/"
+        r"(?P<area_name>[\w_-]+)/disks/(?P<disk_name>[\w_-]+)",
+        disk_link,
+    )
 
     if search_results["area_type"] == "regions":
         disk_client = compute_v1.RegionDisksClient()
         request = compute_v1.ResizeRegionDiskRequest()
         request.region = search_results["area_name"]
-        request.region_disks_resize_request_resource = compute_v1.RegionDisksResizeRequest()
+        request.region_disks_resize_request_resource = (
+            compute_v1.RegionDisksResizeRequest()
+        )
         request.region_disks_resize_request_resource.size_gb = new_size_gb
     else:
         disk_client = compute_v1.DisksClient()
@@ -57,4 +62,6 @@ def resize_disk(project_id: str, disk_link: str, new_size_gb: int) -> None:
 
     operation = disk_client.resize(request)
     wait_for_extended_operation(operation, "disk resize")
+
+
 # </INGREDIENT>

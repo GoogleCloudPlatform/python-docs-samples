@@ -20,9 +20,7 @@ import transcribe_context_classes
 
 
 @Retry()
-def test_transcribe_context_classes(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_context_classes(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_context_classes.transcribe_context_classes(
         "gs://cloud-samples-data/speech/commercial_mono.wav"
     )

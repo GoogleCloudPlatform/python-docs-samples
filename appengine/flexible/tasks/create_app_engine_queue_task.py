@@ -40,77 +40,82 @@ def create_task(project, queue, location, payload=None, in_seconds=None):
 
     # Construct the request body.
     task = {
-            'app_engine_http_request': {  # Specify the type of request.
-                'http_method': tasks_v2.HttpMethod.POST,
-                'relative_uri': '/example_task_handler'
-            }
+        "app_engine_http_request": {  # Specify the type of request.
+            "http_method": tasks_v2.HttpMethod.POST,
+            "relative_uri": "/example_task_handler",
+        }
     }
     if payload is not None:
         if isinstance(payload, dict):
             # Convert dict to JSON string
             payload = json.dumps(payload)
             # specify http content-type to application/json
-            task["app_engine_http_request"]["headers"] = {"Content-type": "application/json"}
+            task["app_engine_http_request"]["headers"] = {
+                "Content-type": "application/json"
+            }
         # The API expects a payload of type bytes.
         converted_payload = payload.encode()
 
         # Add the payload to the request.
-        task['app_engine_http_request']['body'] = converted_payload
+        task["app_engine_http_request"]["body"] = converted_payload
 
     if in_seconds is not None:
         # Convert "seconds from now" into an rfc3339 datetime string.
-        d = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(seconds=in_seconds)
+        d = datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(
+            seconds=in_seconds
+        )
 
         # Create Timestamp protobuf.
         timestamp = timestamp_pb2.Timestamp()
         timestamp.FromDatetime(d)
 
         # Add the timestamp to the tasks.
-        task['schedule_time'] = timestamp
+        task["schedule_time"] = timestamp
 
     # Use the client to build and send the task.
     response = client.create_task(parent=parent, task=task)
 
-    print(f'Created task {response.name}')
+    print(f"Created task {response.name}")
     return response
+
+
 # [END cloud_tasks_appengine_create_task]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=create_task.__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
 
     parser.add_argument(
-        '--project',
-        help='Project of the queue to add the task to.',
+        "--project",
+        help="Project of the queue to add the task to.",
         required=True,
     )
 
     parser.add_argument(
-        '--queue',
-        help='ID (short name) of the queue to add the task to.',
+        "--queue",
+        help="ID (short name) of the queue to add the task to.",
         required=True,
     )
 
     parser.add_argument(
-        '--location',
-        help='Location of the queue to add the task to.',
+        "--location",
+        help="Location of the queue to add the task to.",
         required=True,
     )
 
     parser.add_argument(
-        '--payload',
-        help='Optional payload to attach to the push queue.'
+        "--payload", help="Optional payload to attach to the push queue."
     )
 
     parser.add_argument(
-        '--in_seconds', type=int,
-        help='The number of seconds from now to schedule task attempt.'
+        "--in_seconds",
+        type=int,
+        help="The number of seconds from now to schedule task attempt.",
     )
 
     args = parser.parse_args()
 
-    create_task(
-        args.project, args.queue, args.location,
-        args.payload, args.in_seconds)
+    create_task(args.project, args.queue, args.location, args.payload, args.in_seconds)

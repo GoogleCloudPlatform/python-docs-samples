@@ -104,7 +104,6 @@ def create_instance(
             access.nat_i_p = external_ipv4
         network_interface.access_configs = [access]
 
-
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
     instance.network_interfaces = [network_interface]
@@ -120,14 +119,18 @@ def create_instance(
 
     if preemptible:
         # Set the preemptible setting
-        warnings.warn("Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning)
+        warnings.warn(
+            "Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning
+        )
         instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.preemptible = True
 
     if spot:
         # Set the Spot VM setting
         instance.scheduling = compute_v1.Scheduling()
-        instance.scheduling.provisioning_model = compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        instance.scheduling.provisioning_model = (
+            compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        )
         instance.scheduling.instance_termination_action = instance_termination_action
 
     if custom_hostname is not None:
@@ -153,4 +156,6 @@ def create_instance(
 
     print(f"Instance {instance_name} created.")
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
+
+
 # </INGREDIENT>

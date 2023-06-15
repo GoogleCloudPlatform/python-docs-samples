@@ -36,4 +36,6 @@ def get_snapshot(project_id: str, snapshot_name: str) -> compute_v1.Snapshot:
     snapshot_client = compute_v1.SnapshotsClient()
 
     return snapshot_client.get(project=project_id, snapshot=snapshot_name)
+
+
 # </INGREDIENT>

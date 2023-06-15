@@ -28,7 +28,6 @@ def receive_notifications(project_id, subscription_name):
     # TODO: subscription_name = "your-subscription-name"
 
     def callback(message):
-
         # Print the data received for debugging purpose if needed
         print(f"Received message: {message.data}")
 

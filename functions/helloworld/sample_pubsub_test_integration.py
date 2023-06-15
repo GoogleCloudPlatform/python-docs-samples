@@ -26,29 +26,29 @@ def test_print_name():
     name = str(uuid.uuid4())
     port = 8088  # Each running framework instance needs a unique port
 
-    encoded_name = base64.b64encode(name.encode('utf-8')).decode('utf-8')
-    pubsub_message = {
-        'data': {'data': encoded_name}
-    }
+    encoded_name = base64.b64encode(name.encode("utf-8")).decode("utf-8")
+    pubsub_message = {"data": {"data": encoded_name}}
 
     process = subprocess.Popen(
-      [
-        'functions-framework',
-        '--target', 'hello_pubsub',
-        '--signature-type', 'event',
-        '--port', str(port)
-      ],
-      cwd=os.path.dirname(__file__),
-      stdout=subprocess.PIPE
+        [
+            "functions-framework",
+            "--target",
+            "hello_pubsub",
+            "--signature-type",
+            "event",
+            "--port",
+            str(port),
+        ],
+        cwd=os.path.dirname(__file__),
+        stdout=subprocess.PIPE,
     )
 
     # Send HTTP request simulating Pub/Sub message
     # (GCF translates Pub/Sub messages to HTTP requests internally)
-    url = f'http://localhost:{port}/'
+    url = f"http://localhost:{port}/"
 
     retry_policy = Retry(total=6, backoff_factor=1)
-    retry_adapter = requests.adapters.HTTPAdapter(
-      max_retries=retry_policy)
+    retry_adapter = requests.adapters.HTTPAdapter(max_retries=retry_policy)
 
     session = requests.Session()
     session.mount(url, retry_adapter)
@@ -64,5 +64,7 @@ def test_print_name():
 
     print(out, err, response.content)
 
-    assert f'Hello {name}!' in str(out)
+    assert f"Hello {name}!" in str(out)
+
+
 # [END functions_pubsub_integration_test]
