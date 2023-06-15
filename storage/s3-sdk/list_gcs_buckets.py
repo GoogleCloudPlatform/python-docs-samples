@@ -54,6 +54,8 @@ def list_gcs_buckets(
         results.append(bucket["Name"])
         print(bucket["Name"])  # Can remove if not needed after development
     return results
+
+
 # [END storage_s3_sdk_list_buckets]
 
 

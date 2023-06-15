@@ -92,7 +92,7 @@ def test_create_and_update_stored_infotype(
             GCLOUD_PROJECT,
             STORED_INFO_TYPE_ID,
             f"{bucket.name}/{RESOURCE_FILE_NAMES[0]}",
-            f"{bucket.name}"
+            f"{bucket.name}",
         )
         out, _ = capsys.readouterr()
         assert stored_info_type_id in out

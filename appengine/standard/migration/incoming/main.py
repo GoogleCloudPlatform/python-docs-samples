@@ -28,8 +28,7 @@ def get_app_id(request):
     # Requests from App Engine Standard for Python 2.7 will include a
     # trustworthy X-Appengine-Inbound-Appid. Other requests won't have
     # that header, as the App Engine runtime will strip it out
-    incoming_app_id = request.headers.get(
-        'X-Appengine-Inbound-Appid', None)
+    incoming_app_id = request.headers.get("X-Appengine-Inbound-Appid", None)
     if incoming_app_id is not None:
         return incoming_app_id
 
@@ -37,34 +36,31 @@ def get_app_id(request):
     # service account, which will identify the application ID. They will
     # have to include at token in an Authorization header to be recognized
     # by this method.
-    auth_header = request.headers.get('Authorization', None)
+    auth_header = request.headers.get("Authorization", None)
     if auth_header is None:
         return None
 
     # The auth_header must be in the form Authorization: Bearer token.
     bearer, token = auth_header.split()
-    if bearer.lower() != 'bearer':
+    if bearer.lower() != "bearer":
         return None
 
     try:
         info = id_token.verify_oauth2_token(token, requests.Request())
-        service_account_email = info['email']
-        incoming_app_id, domain = service_account_email.split('@')
-        if domain != 'appspot.gserviceaccount.com':  # Not App Engine svc acct
+        service_account_email = info["email"]
+        incoming_app_id, domain = service_account_email.split("@")
+        if domain != "appspot.gserviceaccount.com":  # Not App Engine svc acct
             return None
         else:
             return incoming_app_id
     except Exception as e:
         # report or log if desired, as here:
-        logging.warning('Request has bad OAuth2 id token: {}'.format(e))
+        logging.warning("Request has bad OAuth2 id token: {}".format(e))
         return None
 
 
 class MainPage(webapp2.RequestHandler):
-    allowed_app_ids = [
-        'other-app-id',
-        'other-app-id-2'
-    ]
+    allowed_app_ids = ["other-app-id", "other-app-id-2"]
 
     def get(self):
         incoming_app_id = get_app_id(self.request)
@@ -75,10 +71,8 @@ class MainPage(webapp2.RequestHandler):
         if incoming_app_id not in self.allowed_app_ids:
             self.abort(403)
 
-        self.response.write('This is a protected page.')
+        self.response.write("This is a protected page.")
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage)
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)
 # [END gae_python_app_identity_incoming]

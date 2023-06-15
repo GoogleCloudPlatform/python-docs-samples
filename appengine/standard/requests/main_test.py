@@ -24,22 +24,22 @@ import main
 def test_timer(testbed):
     app = webtest.TestApp(main.app)
 
-    with mock.patch('main.time.sleep') as sleep_mock:
+    with mock.patch("main.time.sleep") as sleep_mock:
         sleep_mock.side_effect = DeadlineExceededError()
-        app.get('/timer', status=500)
+        app.get("/timer", status=500)
         assert sleep_mock.called
 
 
 def test_environment(testbed):
     app = webtest.TestApp(main.app)
-    response = app.get('/environment')
-    assert response.headers['Content-Type'] == 'text/plain'
+    response = app.get("/environment")
+    assert response.headers["Content-Type"] == "text/plain"
     assert response.body
 
 
 def test_request_id(testbed):
     app = webtest.TestApp(main.app)
-    os.environ['REQUEST_LOG_ID'] = '1234'
-    response = app.get('/requestid')
-    assert response.headers['Content-Type'] == 'text/plain'
-    assert '1234' in response.body
+    os.environ["REQUEST_LOG_ID"] = "1234"
+    response = app.get("/requestid")
+    assert response.headers["Content-Type"] == "text/plain"
+    assert "1234" in response.body

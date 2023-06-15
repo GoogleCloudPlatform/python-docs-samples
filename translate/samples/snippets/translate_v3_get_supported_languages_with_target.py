@@ -17,7 +17,7 @@ from google.cloud import translate
 
 
 def get_supported_languages_with_target(
-        project_id: str = "YOUR_PROJECT_ID"
+    project_id: str = "YOUR_PROJECT_ID",
 ) -> translate.SupportedLanguages:
     """Listing supported languages with target language name.
 
@@ -43,4 +43,6 @@ def get_supported_languages_with_target(
         print(f"Display Name: {language.display_name}")
 
     return response
+
+
 # [END translate_v3_get_supported_languages_for_target]

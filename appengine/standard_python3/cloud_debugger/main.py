@@ -21,6 +21,7 @@ from flask import Flask, render_template, request
 # Enable cloud debugger
 try:
     import googleclouddebugger
+
     googleclouddebugger.enable()
 except ImportError:
     pass
@@ -34,13 +35,13 @@ app = Flask(__name__)
 
 
 # There is a bug in the code.
-class StringProcessor():
+class StringProcessor:
     def __init__(self, string):
         self._string = string
 
     def Reverse(self):
-        if self._string == '':
-            return ''
+        if self._string == "":
+            return ""
 
         chars = [c for c in self._string]
         left = 0
@@ -54,38 +55,38 @@ class StringProcessor():
             left += 1
             right -= 1
 
-        return ''.join(chars)
+        return "".join(chars)
 
 
-@app.route('/reverse_string', methods=['GET'])
+@app.route("/reverse_string", methods=["GET"])
 def ReverseString():
     try:
-        s = str(request.args.get('string'))
+        s = str(request.args.get("string"))
     except Exception as e:
         print(e)
-        return 'Not a valid string!'
+        return "Not a valid string!"
 
     current = StringProcessor(s).Reverse()
     expected = s[::-1]
     return render_template("index.html", current=current, expected=expected)
 
 
-@app.route('/')
+@app.route("/")
 def Hello():
     """Return a friendly HTTP greeting."""
-    return '''
+    return """
         Hello! Enter a string to reverse it.
         <form method="get" action="reverse_string">
             <p><input type=text name=string value="abcd">
             <p><input type=submit>
         </form>
-    '''
+    """
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 # [END gae_python3_app]
 # [END gae_python38_app]

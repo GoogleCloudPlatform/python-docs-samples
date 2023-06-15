@@ -17,13 +17,14 @@
 # [START sendgrid-imp]
 import sendgrid
 from sendgrid.helpers.mail import Mail
+
 # [END sendgrid-imp]
 import webapp2
 
 # make a secure connection to SendGrid
 # [START sendgrid-config]
-SENDGRID_API_KEY = 'your-sendgrid-api-key'
-SENDGRID_SENDER = 'your-sendgrid-sender'
+SENDGRID_API_KEY = "your-sendgrid-api-key"
+SENDGRID_SENDER = "your-sendgrid-sender"
 # [END sendgrid-config]
 
 
@@ -31,9 +32,10 @@ def send_simple_message(recipient):
     # [START sendgrid-send]
     message = Mail(
         from_email=SENDGRID_SENDER,
-        to_emails='{},'.format(recipient),
-        subject='This is a test email',
-        html_content='<strong>Example</strong> message.')
+        to_emails="{},".format(recipient),
+        subject="This is a test email",
+        html_content="<strong>Example</strong> message.",
+    )
 
     sg = sendgrid.SendGridAPIClient(SENDGRID_API_KEY)
     response = sg.send(message)
@@ -44,8 +46,9 @@ def send_simple_message(recipient):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        self.response.content_type = 'text/html'
-        self.response.write("""
+        self.response.content_type = "text/html"
+        self.response.write(
+            """
 <!doctype html>
 <html><body>
 <form action="/send" method="POST">
@@ -53,18 +56,18 @@ class MainPage(webapp2.RequestHandler):
 <input type="submit" name="submit" value="Send simple email">
 </form>
 </body></html>
-""")
+"""
+        )
 
 
 class SendEmailHandler(webapp2.RequestHandler):
     def post(self):
-        recipient = self.request.get('recipient')
+        recipient = self.request.get("recipient")
         sg_response = send_simple_message(recipient)
         self.response.set_status(sg_response.status_code)
         self.response.write(sg_response.body)
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/send', SendEmailHandler)
-], debug=True)
+app = webapp2.WSGIApplication(
+    [("/", MainPage), ("/send", SendEmailHandler)], debug=True
+)

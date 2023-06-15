@@ -22,9 +22,7 @@ import profanity_filter
 
 
 @Retry()
-def test_profanity_filter(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_profanity_filter(capsys: pytest.CaptureFixture) -> None:
     result = profanity_filter.sync_recognize_with_profanity_filter_gcs(
         "gs://cloud-samples-tests/speech/brooklyn.flac"
     )

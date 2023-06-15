@@ -24,13 +24,14 @@ def app():
     return flask.Flask(__name__)
 
 
-@unittest.mock.patch('redis.StrictRedis')
+@unittest.mock.patch("redis.StrictRedis")
 def test_visit_count(MockStrictRedis, app):
     mock_redis_client = unittest.mock.Mock()
     mock_redis_client.incr = unittest.mock.Mock(return_value=42)
     MockStrictRedis.return_value = mock_redis_client
 
     import main
+
     with app.test_request_context():
         res = main.visit_count(flask.request)
-        assert 'Visit count: 42' in res
+        assert "Visit count: 42" in res

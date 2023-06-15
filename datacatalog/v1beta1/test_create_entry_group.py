@@ -17,7 +17,6 @@ import create_entry_group
 
 
 def test_create_entry_group(capsys, client, project_id, random_entry_group_id):
-
     create_entry_group.create_entry_group(project_id, random_entry_group_id)
     out, err = capsys.readouterr()
     assert (

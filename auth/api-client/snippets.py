@@ -24,11 +24,13 @@ def implicit(project):
 
     # If you don't specify credentials when constructing the client, the
     # client library will look for credentials in the environment.
-    storage_client = googleapiclient.discovery.build('storage', 'v1')
+    storage_client = googleapiclient.discovery.build("storage", "v1")
 
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+
+
 # [END auth_api_implicit]
 
 
@@ -40,15 +42,19 @@ def explicit(project):
     # Construct service account credentials using the service account key
     # file.
     credentials = service_account.Credentials.from_service_account_file(
-        'service_account.json')
+        "service_account.json"
+    )
 
     # Explicitly pass the credentials to the client library.
     storage_client = googleapiclient.discovery.build(
-        'storage', 'v1', credentials=credentials)
+        "storage", "v1", credentials=credentials
+    )
 
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+
+
 # [END auth_api_explicit]
 
 
@@ -63,11 +69,14 @@ def explicit_compute_engine(project):
 
     # Explicitly pass the credentials to the client library.
     storage_client = googleapiclient.discovery.build(
-        'storage', 'v1', credentials=credentials)
+        "storage", "v1", credentials=credentials
+    )
 
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+
+
 # [END auth_api_explicit_compute_engine]
 
 
@@ -82,35 +91,38 @@ def explicit_app_engine(project):
 
     # Explicitly pass the credentials to the client library.
     storage_client = googleapiclient.discovery.build(
-        'storage', 'v1', credentials=credentials)
+        "storage", "v1", credentials=credentials
+    )
 
     # Make an authenticated API request
     buckets = storage_client.buckets().list(project=project).execute()
     print(buckets)
+
+
 # [END auth_api_explicit_app_engine]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project")
 
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('implicit', help=implicit.__doc__)
-    subparsers.add_parser('explicit', help=explicit.__doc__)
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("implicit", help=implicit.__doc__)
+    subparsers.add_parser("explicit", help=explicit.__doc__)
     subparsers.add_parser(
-        'explicit_compute_engine', help=explicit_compute_engine.__doc__)
-    subparsers.add_parser(
-        'explicit_app_engine', help=explicit_app_engine.__doc__)
+        "explicit_compute_engine", help=explicit_compute_engine.__doc__
+    )
+    subparsers.add_parser("explicit_app_engine", help=explicit_app_engine.__doc__)
 
     args = parser.parse_args()
 
-    if args.command == 'implicit':
+    if args.command == "implicit":
         implicit(args.project)
-    elif args.command == 'explicit':
+    elif args.command == "explicit":
         explicit(args.project)
-    elif args.command == 'explicit_compute_engine':
+    elif args.command == "explicit_compute_engine":
         explicit_compute_engine(args.project)
-    elif args.command == 'explicit_app_engine':
+    elif args.command == "explicit_app_engine":
         explicit_app_engine(args.project)

@@ -19,5 +19,5 @@ def test_set_endpoint(capsys):
     set_endpoint.set_endpoint()
 
     out, _ = capsys.readouterr()
-    assert 'System' in out
-    assert 'bounds:' in out
+    assert "System" in out
+    assert "bounds:" in out

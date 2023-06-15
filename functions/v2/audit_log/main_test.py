@@ -18,7 +18,6 @@ import main
 
 
 def test_functions_log_cloudevent_should_print_message(capsys):
-
     attributes = {
         "source": "test",
         "type": "google.cloud.audit.log.v1.written",

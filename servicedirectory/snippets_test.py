@@ -105,7 +105,9 @@ def test_delete_endpoint() -> None:
     backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=5
 )
 def test_delete_service() -> None:
-    is_deleted = snippets.delete_service(PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID)
+    is_deleted = snippets.delete_service(
+        PROJECT_ID, LOCATION_ID, NAMESPACE_ID, SERVICE_ID
+    )
     assert is_deleted
 
 

@@ -231,9 +231,9 @@ def set(
     if dry_run:
         click.secho("Dry-run: ", fg="blue", bold=True, nl=False)
         click.echo(
-                f"Status would have been created on {repo_name}, "
-                f"commit {commit.sha[:7]}, linking to {revision_url} "
-                f"on service {service_obj['metadata']['name']}"
+            f"Status would have been created on {repo_name}, "
+            f"commit {commit.sha[:7]}, linking to {revision_url} "
+            f"on service {service_obj['metadata']['name']}"
         )
         return
     # [END_EXCLUDE]

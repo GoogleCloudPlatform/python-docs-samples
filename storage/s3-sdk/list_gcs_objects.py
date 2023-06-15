@@ -55,6 +55,8 @@ def list_gcs_objects(
         results.append(blob["Key"])
         print(blob["Key"])  # Can remove if not needed after development
     return results
+
+
 # [END storage_s3_sdk_list_objects]
 
 

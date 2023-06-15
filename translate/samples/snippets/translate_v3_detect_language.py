@@ -17,7 +17,7 @@ from google.cloud import translate
 
 
 def detect_language(
-        project_id: str = "YOUR_PROJECT_ID"
+    project_id: str = "YOUR_PROJECT_ID",
 ) -> translate.DetectLanguageResponse:
     """Detecting the language of a text string.
 
@@ -50,4 +50,6 @@ def detect_language(
         print(f"Confidence: {language.confidence}")
 
     return response
+
+
 # [END translate_v3_detect_language]

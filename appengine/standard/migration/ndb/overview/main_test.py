@@ -18,10 +18,11 @@ import pytest
 @pytest.fixture
 def app():
     import main
+
     main.app.testing = True
     return main.app.test_client()
 
 
 def test_app(app):
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_code == 200

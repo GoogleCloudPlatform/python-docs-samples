@@ -20,22 +20,23 @@ import shopping_cart
 
 @pytest.fixture
 def items(testbed):
-    account = shopping_cart.Account(id='123')
+    account = shopping_cart.Account(id="123")
     account.put()
 
-    items = [shopping_cart.InventoryItem(name='Item {}'.format(i))
-             for i in range(6)]
-    special_items = [shopping_cart.InventoryItem(name='Special {}'.format(i))
-                     for i in range(6)]
+    items = [shopping_cart.InventoryItem(name="Item {}".format(i)) for i in range(6)]
+    special_items = [
+        shopping_cart.InventoryItem(name="Special {}".format(i)) for i in range(6)
+    ]
     for i in items + special_items:
         i.put()
 
-    special_offers = [shopping_cart.SpecialOffer(inventory=item.key)
-                      for item in special_items]
+    special_offers = [
+        shopping_cart.SpecialOffer(inventory=item.key) for item in special_items
+    ]
     cart_items = [
-        shopping_cart.CartItem(
-            account=account.key, inventory=item.key, quantity=i)
-        for i, item in enumerate(items[:6] + special_items[:6])]
+        shopping_cart.CartItem(account=account.key, inventory=item.key, quantity=i)
+        for i, item in enumerate(items[:6] + special_items[:6])
+    ]
     for i in special_offers + cart_items:
         i.put()
 
@@ -81,8 +82,7 @@ def test_get_offers_tasklet(items):
 def test_get_cart_plus_offers_tasklet(items):
     account, items, special_items, cart_items, special_offers = items
 
-    future = shopping_cart.get_cart_plus_offers_tasklet(
-        account)
+    future = shopping_cart.get_cart_plus_offers_tasklet(account)
     cart, offers = future.get_result()
 
     assert len(cart) == 12
@@ -93,18 +93,20 @@ def test_iterate_over_query_results_in_tasklet(items):
     account, items, special_items, cart_items, special_offers = items
 
     future = shopping_cart.iterate_over_query_results_in_tasklet(
-        shopping_cart.InventoryItem, lambda item: '3' in item.name)
+        shopping_cart.InventoryItem, lambda item: "3" in item.name
+    )
 
-    assert '3' in future.get_result().name
+    assert "3" in future.get_result().name
 
 
 def test_do_not_iterate_over_tasklet_like_this(items):
     account, items, special_items, cart_items, special_offers = items
 
     future = shopping_cart.blocking_iteration_over_query_results(
-        shopping_cart.InventoryItem, lambda item: '3' in item.name)
+        shopping_cart.InventoryItem, lambda item: "3" in item.name
+    )
 
-    assert '3' in future.get_result().name
+    assert "3" in future.get_result().name
 
 
 def test_get_google(testbed):
@@ -112,7 +114,7 @@ def test_get_google(testbed):
 
     get_google = shopping_cart.define_get_google()
     future = get_google()
-    assert 'Google' in future.get_result()
+    assert "Google" in future.get_result()
 
 
 class Counter(ndb.Model):
@@ -141,4 +143,4 @@ def test_get_first_ready(testbed):
     testbed.init_urlfetch_stub()
 
     content = shopping_cart.get_first_ready()
-    assert 'html' in content.lower()
+    assert "html" in content.lower()

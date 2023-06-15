@@ -25,57 +25,55 @@ def app():
 
 
 def test_parse_xml(app):
-    with app.test_request_context(method='GET', data="<baz>foo</baz>"):
+    with app.test_request_context(method="GET", data="<baz>foo</baz>"):
         res = main.parse_xml(flask.request)
-        assert res == "{\n  \"baz\": \"foo\"\n}"
+        assert res == '{\n  "baz": "foo"\n}'
 
 
 def test_parse_multipart_data(app, capsys):
-    with app.test_request_context(method='POST', data={'foo': 'bar'}):
+    with app.test_request_context(method="POST", data={"foo": "bar"}):
         res = main.parse_multipart(flask.request)
         out, _ = capsys.readouterr()
-        assert res == 'Done!'
-        assert out == 'Processed field: foo\n'
+        assert res == "Done!"
+        assert out == "Processed field: foo\n"
 
 
 def test_parse_multipart_files(app, capsys):
-    with open(__file__, 'rb') as file:
-        with app.test_request_context(method='POST', data={'test.py': file}):
+    with open(__file__, "rb") as file:
+        with app.test_request_context(method="POST", data={"test.py": file}):
             res = main.parse_multipart(flask.request)
             out, _ = capsys.readouterr()
-            assert res == 'Done!'
-            assert out == 'Processed file: test.py\n'
+            assert res == "Done!"
+            assert out == "Processed file: test.py\n"
 
 
 def test_cors_enabled_function_preflight(app):
-    with app.test_request_context(method='OPTIONS'):
+    with app.test_request_context(method="OPTIONS"):
         res = main.cors_enabled_function(flask.request)
-        assert res[2].get('Access-Control-Allow-Origin') == '*'
-        assert res[2].get('Access-Control-Allow-Methods') == 'GET'
-        assert res[2].get('Access-Control-Allow-Headers') == 'Content-Type'
-        assert res[2].get('Access-Control-Max-Age') == '3600'
+        assert res[2].get("Access-Control-Allow-Origin") == "*"
+        assert res[2].get("Access-Control-Allow-Methods") == "GET"
+        assert res[2].get("Access-Control-Allow-Headers") == "Content-Type"
+        assert res[2].get("Access-Control-Max-Age") == "3600"
 
 
 def test_cors_enabled_function_main(app):
-    with app.test_request_context(method='GET'):
+    with app.test_request_context(method="GET"):
         res = main.cors_enabled_function(flask.request)
-        assert res[2].get('Access-Control-Allow-Origin') == '*'
+        assert res[2].get("Access-Control-Allow-Origin") == "*"
 
 
 def test_cors_enabled_function_auth_preflight(app):
-    with app.test_request_context(method='OPTIONS'):
+    with app.test_request_context(method="OPTIONS"):
         res = main.cors_enabled_function_auth(flask.request)
-        assert res[2].get('Access-Control-Allow-Origin') == \
-            'https://mydomain.com'
-        assert res[2].get('Access-Control-Allow-Methods') == 'GET'
-        assert res[2].get('Access-Control-Allow-Headers') == 'Authorization'
-        assert res[2].get('Access-Control-Max-Age') == '3600'
-        assert res[2].get('Access-Control-Allow-Credentials') == 'true'
+        assert res[2].get("Access-Control-Allow-Origin") == "https://mydomain.com"
+        assert res[2].get("Access-Control-Allow-Methods") == "GET"
+        assert res[2].get("Access-Control-Allow-Headers") == "Authorization"
+        assert res[2].get("Access-Control-Max-Age") == "3600"
+        assert res[2].get("Access-Control-Allow-Credentials") == "true"
 
 
 def test_cors_enabled_function_auth_main(app):
-    with app.test_request_context(method='GET'):
+    with app.test_request_context(method="GET"):
         res = main.cors_enabled_function_auth(flask.request)
-        assert res[2].get('Access-Control-Allow-Origin') == \
-            'https://mydomain.com'
-        assert res[2].get('Access-Control-Allow-Credentials') == 'true'
+        assert res[2].get("Access-Control-Allow-Origin") == "https://mydomain.com"
+        assert res[2].get("Access-Control-Allow-Credentials") == "true"

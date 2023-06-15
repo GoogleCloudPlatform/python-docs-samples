@@ -19,9 +19,9 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def transcribe_gcs_v2(
-        project_id: str,
-        recognizer_id: str,
-        gcs_uri: str,
+    project_id: str,
+    recognizer_id: str,
+    gcs_uri: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribes audio from a Google Cloud Storage URI.
 

@@ -27,11 +27,10 @@ location = "us"
 document_id = "2bq3m8uih3j78"
 user_id = "user:xxxx@example.com"
 policy = {
-    "bindings":
-    [
+    "bindings": [
         {
             "role": "roles/contentwarehouse.documentAdmin",
-            "members": ["xxxx@example.com"]
+            "members": ["xxxx@example.com"],
         }
     ]
 }

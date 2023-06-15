@@ -48,7 +48,8 @@ def create_live_config(
         live_stream_uri: Uri of the livestream to stitch; this URI must reference either an MPEG-DASH
                     manifest (.mpd) file or an M3U playlist manifest (.m3u8) file.
         ad_tag_uri: Uri of the ad tag.
-        slate_id: The user-defined slate ID of the default slate to use when no slates are specified in an ad break's message."""
+        slate_id: The user-defined slate ID of the default slate to use when no slates are specified in an ad break's message.
+    """
 
     client = VideoStitcherServiceClient()
 

@@ -62,7 +62,9 @@ def test_redact_image_all_text(tempdir: TextIO, capsys: pytest.CaptureFixture) -
     assert output_filepath in out
 
 
-def test_redact_image_listed_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
+def test_redact_image_listed_info_types(
+    tempdir: TextIO, capsys: pytest.CaptureFixture
+) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
@@ -77,7 +79,9 @@ def test_redact_image_listed_info_types(tempdir: TextIO, capsys: pytest.CaptureF
     assert output_filepath in out
 
 
-def test_redact_image_all_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
+def test_redact_image_all_info_types(
+    tempdir: TextIO, capsys: pytest.CaptureFixture
+) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 
@@ -91,7 +95,9 @@ def test_redact_image_all_info_types(tempdir: TextIO, capsys: pytest.CaptureFixt
     assert output_filepath in out
 
 
-def test_redact_image_with_colored_info_types(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
+def test_redact_image_with_colored_info_types(
+    tempdir: TextIO, capsys: pytest.CaptureFixture
+) -> None:
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
     output_filepath = os.path.join(tempdir, "redacted.png")
 

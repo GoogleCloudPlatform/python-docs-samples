@@ -85,8 +85,13 @@ def create_mfa_assessment(
     result = response.account_verification.latest_verification_result
     # If the result is unspecified, send the request token to trigger MFA in the client.
     # You can choose to send both the email and phone number's request token.
-    if result == recaptchaenterprise_v1.types.AccountVerificationInfo.Result.RESULT_UNSPECIFIED:
-        print("Result unspecified. Trigger MFA challenge in the client by passing the request token.")
+    if (
+        result
+        == recaptchaenterprise_v1.types.AccountVerificationInfo.Result.RESULT_UNSPECIFIED
+    ):
+        print(
+            "Result unspecified. Trigger MFA challenge in the client by passing the request token."
+        )
         # Send the request token for assessment. The token is valid for 15 minutes.
         # To see the security tokens, uncomment the following print statement.
         # NOTE: running this will expose sensitive information and other PIIs.
@@ -97,8 +102,7 @@ def create_mfa_assessment(
 
 
 def verify_response_integrity(
-    response: recaptchaenterprise_v1.Assessment,
-    recaptcha_action: str
+    response: recaptchaenterprise_v1.Assessment, recaptcha_action: str
 ) -> bool:
     """Verifies the token and action integrity."""
     # Check if the token is valid.
@@ -118,4 +122,6 @@ def verify_response_integrity(
         )
         return False
     return True
+
+
 # [END recaptcha_enterprise_mfa_assessment]
