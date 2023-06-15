@@ -28,7 +28,8 @@ from google.cloud import storage_transfer
 
 
 def get_transfer_job_with_retries(
-        project_id: str, job_name: str, max_retry_duration: float):
+    project_id: str, job_name: str, max_retry_duration: float
+):
     """
     Check the latest transfer operation associated with a transfer job with
     retries.
@@ -45,15 +46,18 @@ def get_transfer_job_with_retries(
     # The maximum amount of time to delay in seconds
     # max_retry_duration = 60
 
-    transfer_job = client.get_transfer_job({
-        'project_id': project_id,
-        'job_name': job_name,
-    },
-        retry=Retry(maximum=max_retry_duration)
+    transfer_job = client.get_transfer_job(
+        {
+            "project_id": project_id,
+            "job_name": job_name,
+        },
+        retry=Retry(maximum=max_retry_duration),
     )
 
-    print(f"Fetched transfer job: {transfer_job.name} "
-          f"with a max retry duration of {max_retry_duration}s")
+    print(
+        f"Fetched transfer job: {transfer_job.name} "
+        f"with a max retry duration of {max_retry_duration}s"
+    )
 
 
 # [END storagetransfer_create_retry_handler]
@@ -61,18 +65,17 @@ def get_transfer_job_with_retries(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project-id',
-        help='The ID of the Google Cloud Platform Project that owns the job',
-        required=True)
+        "--project-id",
+        help="The ID of the Google Cloud Platform Project that owns the job",
+        required=True,
+    )
+    parser.add_argument("--job-name", help="The transfer job to get", required=True)
     parser.add_argument(
-        '--job-name',
-        help='The transfer job to get',
-        required=True)
-    parser.add_argument(
-        '--max-retry-duration',
-        help='The maximum amount of time to delay in seconds',
+        "--max-retry-duration",
+        help="The maximum amount of time to delay in seconds",
         type=float,
-        default=60)
+        default=60,
+    )
 
     args = parser.parse_args()
 

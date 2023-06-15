@@ -35,14 +35,15 @@ def lookup_api_key(api_key_string: str) -> None:
 
     # Initialize the lookup request and set the API key string.
     lookup_key_request = api_keys_v2.LookupKeyRequest(
-      key_string=api_key_string,
-      # Optionally, you can also set the etag (version).
-      # etag=etag,
+        key_string=api_key_string,
+        # Optionally, you can also set the etag (version).
+        # etag=etag,
     )
 
     # Make the request and obtain the response.
     lookup_key_response = client.lookup_key(lookup_key_request)
 
     print(f"Successfully retrieved the API key name: {lookup_key_response.name}")
+
 
 # [END apikeys_lookup_api_key]

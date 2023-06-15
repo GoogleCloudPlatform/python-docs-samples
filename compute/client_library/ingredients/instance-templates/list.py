@@ -36,4 +36,6 @@ def list_instance_templates(project_id: str) -> Iterable[compute_v1.InstanceTemp
     """
     template_client = compute_v1.InstanceTemplatesClient()
     return template_client.list(project=project_id)
+
+
 # </INGREDIENT>

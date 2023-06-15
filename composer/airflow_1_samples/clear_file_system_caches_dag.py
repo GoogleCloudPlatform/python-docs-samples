@@ -21,21 +21,23 @@ from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
-    'clear_file_system_caches_dag',
-    description='clear file system caches on scheduler and workers',
-    schedule_interval='*/30 * * * *',
+    "clear_file_system_caches_dag",
+    description="clear file system caches on scheduler and workers",
+    schedule_interval="*/30 * * * *",
     dagrun_timeout=timedelta(minutes=20),
     start_date=airflow.utils.dates.days_ago(1),
-    catchup=False)
+    catchup=False,
+)
 
 # clean file system cache on scheduler
-os.system('echo 3 | sudo tee /proc/sys/vm/drop_caches')
+os.system("echo 3 | sudo tee /proc/sys/vm/drop_caches")
 
 # clean file system cache on one of workers
 t1 = BashOperator(
-    task_id='clear_caches',
-    bash_command='echo 3 | sudo tee /proc/sys/vm/drop_caches',
+    task_id="clear_caches",
+    bash_command="echo 3 | sudo tee /proc/sys/vm/drop_caches",
     dag=dag,
-    depends_on_past=False)
+    depends_on_past=False,
+)
 
 t1

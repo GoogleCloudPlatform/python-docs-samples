@@ -69,6 +69,8 @@ def index():
 
     output = f"Instance: {instance_id}\nSeen:{seen}"
     return output, 200, {"Content-Type": "text/plain; charset=utf-8"}
+
+
 # [END example]
 
 

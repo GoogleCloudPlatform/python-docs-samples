@@ -28,13 +28,8 @@ def app():
 
 
 def test_publishes_message(app):
-    data = json.dumps({
-        'topic': os.getenv('FUNCTIONS_TOPIC')
-    })
+    data = json.dumps({"topic": os.getenv("FUNCTIONS_TOPIC")})
 
-    with app.test_request_context(
-        data=data,
-        content_type='application/json'
-    ):
+    with app.test_request_context(data=data, content_type="application/json"):
         response = main.gcp_api_call(flask.request)
-        assert response == '1 message published'
+        assert response == "1 message published"

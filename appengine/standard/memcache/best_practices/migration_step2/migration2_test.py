@@ -19,4 +19,4 @@ import migration2
 
 def test_get(testbed):
     app = webtest.TestApp(migration2.app)
-    app.get('/')
+    app.get("/")

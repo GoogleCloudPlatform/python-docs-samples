@@ -31,32 +31,34 @@ import webapp2
 class MainPage(webapp2.RequestHandler):
     def get(self):
         auth_token, _ = app_identity.get_access_token(
-            'https://www.googleapis.com/auth/cloud-platform')
+            "https://www.googleapis.com/auth/cloud-platform"
+        )
         logging.info(
-            'Using token {} to represent identity {}'.format(
-                auth_token, app_identity.get_service_account_name()))
+            "Using token {} to represent identity {}".format(
+                auth_token, app_identity.get_service_account_name()
+            )
+        )
 
         response = urlfetch.fetch(
-            'https://www.googleapis.com/storage/v1/b?project={}'.format(
-                app_identity.get_application_id()),
+            "https://www.googleapis.com/storage/v1/b?project={}".format(
+                app_identity.get_application_id()
+            ),
             method=urlfetch.GET,
-            headers={
-                'Authorization': 'Bearer {}'.format(auth_token)
-            }
+            headers={"Authorization": "Bearer {}".format(auth_token)},
         )
 
         if response.status_code != 200:
             raise Exception(
-                'Call failed. Status code {}. Body {}'.format(
-                    response.status_code, response.content))
+                "Call failed. Status code {}. Body {}".format(
+                    response.status_code, response.content
+                )
+            )
 
         result = json.loads(response.content)
-        self.response.headers['Content-Type'] = 'application/json'
+        self.response.headers["Content-Type"] = "application/json"
         self.response.write(json.dumps(result, indent=2))
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage)
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)
 
 # [END gae_python_app_identity_asserting]

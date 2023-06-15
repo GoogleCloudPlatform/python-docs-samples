@@ -21,7 +21,6 @@ from google.cloud.dialogflowcx_v3.types.agent import ExportAgentRequest
 
 
 def export_long_running_agent(project_id, agent_id, location):
-
     api_endpoint = f"{location}-dialogflow.googleapis.com:443"
     client_options = {"api_endpoint": api_endpoint}
 

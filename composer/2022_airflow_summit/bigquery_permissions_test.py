@@ -22,4 +22,5 @@ def test_dag_import() -> None:
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     import bigquery_permissions
+
     internal_unit_testing.assert_has_valid_dag(bigquery_permissions)

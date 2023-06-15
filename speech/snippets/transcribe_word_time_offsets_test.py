@@ -24,9 +24,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_file_with_word_time_offsets(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_with_word_time_offsets(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_word_time_offsets.transcribe_file_with_word_time_offsets(
         os.path.join(RESOURCES, "audio.raw")
     )
@@ -41,9 +39,7 @@ def test_transcribe_file_with_word_time_offsets(
 
 
 @Retry()
-def test_transcribe_gcs_with_word_time_offsets(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_gcs_with_word_time_offsets(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_word_time_offsets.transcribe_gcs_with_word_time_offsets(
         "gs://python-docs-samples-tests/speech/audio.flac"
     )

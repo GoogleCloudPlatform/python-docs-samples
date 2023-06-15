@@ -46,7 +46,6 @@ slate_uri = f"https://storage.googleapis.com/{input_bucket_name}{slate_video_fil
 
 
 def test_live_config_operations(capsys: pytest.fixture) -> None:
-
     utils.delete_stale_slates(project_id, location)
     utils.delete_stale_live_configs(project_id, location)
 

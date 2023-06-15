@@ -28,27 +28,27 @@ def test_get_greeting(testbed):
     api = main.GreetingApi()
     request = main.GreetingApi.get_greeting.remote.request_type(id=1)
     response = api.get_greeting(request)
-    assert response.message == 'goodbye world!'
+    assert response.message == "goodbye world!"
 
 
 def test_multiply_greeting(testbed):
     api = main.GreetingApi()
     request = main.GreetingApi.multiply_greeting.remote.request_type(
-        times=4,
-        message='help I\'m trapped in a test case.')
+        times=4, message="help I'm trapped in a test case."
+    )
     response = api.multiply_greeting(request)
-    assert response.message == 'help I\'m trapped in a test case.' * 4
+    assert response.message == "help I'm trapped in a test case." * 4
 
 
 def test_authed_greet(testbed):
     api = main.AuthedGreetingApi()
 
-    with mock.patch('main.endpoints.get_current_user') as user_mock:
+    with mock.patch("main.endpoints.get_current_user") as user_mock:
         user_mock.return_value = None
         response = api.greet(message_types.VoidMessage())
-        assert response.message == 'Hello, Anonymous'
+        assert response.message == "Hello, Anonymous"
 
         user_mock.return_value = mock.Mock()
-        user_mock.return_value.email.return_value = 'user@example.com'
+        user_mock.return_value.email.return_value = "user@example.com"
         response = api.greet(message_types.VoidMessage())
-        assert response.message == 'Hello, user@example.com'
+        assert response.message == "Hello, user@example.com"

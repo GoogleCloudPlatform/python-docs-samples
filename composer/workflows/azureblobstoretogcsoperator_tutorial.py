@@ -82,7 +82,6 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
 ) as dag:
-
     azure_blob_to_gcs = AzureBlobStorageToGCSOperator(
         task_id="azure_blob_to_gcs",
         # Azure args
@@ -123,7 +122,6 @@ with models.DAG(
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
-
         for year in range(1997, 2022):
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
             BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"

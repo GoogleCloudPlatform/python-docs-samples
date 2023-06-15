@@ -43,19 +43,25 @@ def document_ocr(request: flask.Request) -> flask.Response:
     try:
         client = documentai.DocumentProcessorServiceClient(
             client_options=ClientOptions(
-                api_endpoint=f"{_LOCATION}-documentai.googleapis.com"))
-        processor_name = client.processor_path(
-            _PROJECT_ID, _LOCATION, _PROCESSOR_ID)
-        calls = request.get_json()['calls']
+                api_endpoint=f"{_LOCATION}-documentai.googleapis.com"
+            )
+        )
+        processor_name = client.processor_path(_PROJECT_ID, _LOCATION, _PROCESSOR_ID)
+        calls = request.get_json()["calls"]
         replies = []
         for call in calls:
             content = urllib.request.urlopen(call[0]).read()
             content_type = call[1]
             results = client.process_document(
-                {'name': processor_name, 'raw_document': {
-                    'content': content, 'mime_type': content_type}})
-            replies.append({'text': results.document.text})
-        return flask.make_response(flask.jsonify({'replies': replies}))
+                {
+                    "name": processor_name,
+                    "raw_document": {"content": content, "mime_type": content_type},
+                }
+            )
+            replies.append({"text": results.document.text})
+        return flask.make_response(flask.jsonify({"replies": replies}))
     except Exception as e:  # Check error message if GoogleAPIException
-        return flask.make_response(flask.jsonify({'errorMessage': str(e)}), 400)
+        return flask.make_response(flask.jsonify({"errorMessage": str(e)}), 400)
+
+
 # [END bigquery_remote_function_document]

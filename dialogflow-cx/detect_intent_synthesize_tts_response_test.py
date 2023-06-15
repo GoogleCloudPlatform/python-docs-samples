@@ -26,7 +26,6 @@ AGENT_ID = os.getenv("AGENT_ID")
 
 
 def test_detect_intent_positive(capsys, tmp_path_factory):
-
     output_file = tmp_path_factory.mktemp("data") / "tmp.wav"
 
     detect_intent_synthesize_tts_response(

@@ -51,6 +51,7 @@ def trip_duration_udf(duration):
 
 # [END datascienceonramp_tripdurationudf]
 
+
 # [START datascienceonramp_stationnameudf]
 def station_name_udf(name):
     """Replaces '/' with '&'."""
@@ -58,6 +59,7 @@ def station_name_udf(name):
 
 
 # [END datascienceonramp_stationnameudf]
+
 
 # [START datascienceonramp_usertypeudf]
 def user_type_udf(user):
@@ -90,6 +92,7 @@ def angle_udf(angle):
 
 
 # [END datascienceonramp_stationlocationudf]
+
 
 # [START datascienceonramp_timeconvertudf]
 def compute_time(duration, start, end):
@@ -135,6 +138,7 @@ def compute_time(duration, start, end):
 
 
 # [END datascienceonramp_timereturnudf]
+
 
 # [START datascienceonramp_timehelperudf]
 def compute_duration_udf(duration, start, end):

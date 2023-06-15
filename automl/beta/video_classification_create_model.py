@@ -39,5 +39,5 @@ def create_model(
 
     print(f"Training operation name: {response.operation.name}")
     print("Training started...")
-# [END automl_video_classification_create_model_beta]
+    # [END automl_video_classification_create_model_beta]
     return response

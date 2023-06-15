@@ -29,26 +29,27 @@ def setup_sdk_imports():
     if six.PY3:
         return
 
-    sdk_path = os.environ.get('GAE_SDK_PATH')
+    sdk_path = os.environ.get("GAE_SDK_PATH")
 
     if not sdk_path:
         return
 
-    if os.path.exists(os.path.join(sdk_path, 'google_appengine')):
-        sdk_path = os.path.join(sdk_path, 'google_appengine')
+    if os.path.exists(os.path.join(sdk_path, "google_appengine")):
+        sdk_path = os.path.join(sdk_path, "google_appengine")
 
-    if 'google' in sys.modules:
-        sys.modules['google'].__path__.append(
-            os.path.join(sdk_path, 'google'))
+    if "google" in sys.modules:
+        sys.modules["google"].__path__.append(os.path.join(sdk_path, "google"))
 
     # This sets up libraries packaged with the SDK, but puts them last in
     # sys.path to prevent clobbering newer versions
     sys.path.append(sdk_path)
     import dev_appserver
+
     sys.path.extend(dev_appserver.EXTRA_PATHS)
 
     # Fixes timezone and other os-level items.
     import google.appengine.tools.os_compat
+
     (google.appengine.tools.os_compat)
 
 
@@ -57,6 +58,7 @@ def import_appengine_config():
     mimic the behavior of the runtime."""
     try:
         import appengine_config
+
         (appengine_config)
     except ImportError:
         pass
@@ -75,12 +77,11 @@ def setup_testbed():
     tb.activate()
     # Create a consistency policy that will simulate the High
     # Replication consistency model.
-    policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(
-        probability=1.0)
+    policy = datastore_stub_util.PseudoRandomHRConsistencyPolicy(probability=1.0)
     # Initialize the datastore stub with this policy.
     tb.init_datastore_v3_stub(
-        datastore_file=tempfile.mkstemp()[1],
-        consistency_policy=policy)
+        datastore_file=tempfile.mkstemp()[1], consistency_policy=policy
+    )
     tb.init_memcache_stub()
 
     # Setup remaining stubs.
@@ -102,21 +103,27 @@ def run_taskqueue_tasks(testbed, app):
 
     tasks = testbed.taskqueue_stub.get_filtered_tasks()
     for task in tasks:
-        namespace = task.headers.get('X-AppEngine-Current-Namespace', '')
+        namespace = task.headers.get("X-AppEngine-Current-Namespace", "")
         previous_namespace = namespace_manager.get_namespace()
         try:
             namespace_manager.set_namespace(namespace)
             app.post(
                 task.url,
                 task.extract_params(),
-                headers=dict([
-                    (k, v) for k, v in task.headers.iteritems()
-                    if k.startswith('X-AppEngine')]))
+                headers=dict(
+                    [
+                        (k, v)
+                        for k, v in task.headers.iteritems()
+                        if k.startswith("X-AppEngine")
+                    ]
+                ),
+            )
         finally:
             namespace_manager.set_namespace(previous_namespace)
 
 
 # py.test helpers
+
 
 @pytest.fixture
 def testbed():
@@ -129,20 +136,25 @@ def testbed():
 @pytest.fixture
 def login(testbed):
     """py.test fixture for logging in GAE users."""
-    def _login(email='user@example.com', id='123', is_admin=False):
+
+    def _login(email="user@example.com", id="123", is_admin=False):
         testbed.setup_env(
             user_email=email,
             user_id=id,
-            user_is_admin='1' if is_admin else '0',
-            overwrite=True)
+            user_is_admin="1" if is_admin else "0",
+            overwrite=True,
+        )
+
     return _login
 
 
 @pytest.fixture
 def run_tasks(testbed):
     """py.test fixture for running GAE tasks."""
+
     def _run_tasks(app):
         run_taskqueue_tasks(testbed, app)
+
     return _run_tasks
 
 

@@ -25,6 +25,8 @@ CONSTRAINT_NAME = "constraints/compute.requireOsLogin"
 
 
 def test_analyze_org_policy_governed_assets(capsys):
-    quickstart_analyze_org_policy_governed_assets.analyze_org_policy_governed_assets(ORG_ID, CONSTRAINT_NAME)
+    quickstart_analyze_org_policy_governed_assets.analyze_org_policy_governed_assets(
+        ORG_ID, CONSTRAINT_NAME
+    )
     out, _ = capsys.readouterr()
     assert CONSTRAINT_NAME in out

@@ -39,12 +39,12 @@ class Article(ndb.Model):
 
 
 class ArticleWithDifferentDatastoreName(ndb.Model):
-    title = ndb.StringProperty('t')
+    title = ndb.StringProperty("t")
 
 
 class Employee(ndb.Model):
-    full_name = ndb.StringProperty('n')
-    retirement_age = ndb.IntegerProperty('r')
+    full_name = ndb.StringProperty("n")
+    retirement_age = ndb.IntegerProperty("r")
 
 
 class Manager(ndb.Model):

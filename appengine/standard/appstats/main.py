@@ -25,11 +25,9 @@ import webapp2
 class MainPage(webapp2.RequestHandler):
     def get(self):
         # Perform some RPCs so that appstats can capture them.
-        memcache.set('example_key', 50)
-        value = memcache.get('example_key')
-        self.response.write('Value is: {}'.format(value))
+        memcache.set("example_key", 50)
+        value = memcache.get("example_key")
+        self.response.write("Value is: {}".format(value))
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage)
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)

@@ -39,7 +39,7 @@ def test_commute_search_sample(company_name, capsys):
     def eventually_consistent_test():
         commute_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
-        expected = ('.*matchingJobs.*1600 Amphitheatre Pkwy.*')
+        expected = ".*matchingJobs.*1600 Amphitheatre Pkwy.*"
         assert re.search(expected, out)
 
     eventually_consistent_test()
