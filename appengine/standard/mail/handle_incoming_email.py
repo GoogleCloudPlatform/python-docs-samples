@@ -22,15 +22,15 @@ import webapp2
 class LogSenderHandler(InboundMailHandler):
     def receive(self, mail_message):
         logging.info("Received a message from: " + mail_message.sender)
-# [END log_sender_handler]
-# [START bodies]
-        plaintext_bodies = mail_message.bodies('text/plain')
-        html_bodies = mail_message.bodies('text/html')
+        # [END log_sender_handler]
+        # [START bodies]
+        plaintext_bodies = mail_message.bodies("text/plain")
+        html_bodies = mail_message.bodies("text/html")
 
         for content_type, body in html_bodies:
             decoded_html = body.decode()
             # ...
-# [END bodies]
+            # [END bodies]
             logging.info("Html body of length %d.", len(decoded_html))
         for content_type, body in plaintext_bodies:
             plaintext = body.decode()

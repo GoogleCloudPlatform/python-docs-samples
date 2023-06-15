@@ -31,27 +31,33 @@ import googleapiclient.discovery
 # [START storagetransfer_transfer_check_apiary]
 def main(project_id, job_name):
     """Review the transfer operations associated with a transfer job."""
-    storagetransfer = googleapiclient.discovery.build('storagetransfer', 'v1')
+    storagetransfer = googleapiclient.discovery.build("storagetransfer", "v1")
 
     filterString = (
-        '{{"project_id": "{project_id}", '
-        '"job_names": ["{job_name}"]}}'
+        '{{"project_id": "{project_id}", ' '"job_names": ["{job_name}"]}}'
     ).format(project_id=project_id, job_name=job_name)
 
-    result = storagetransfer.transferOperations().list(
-        name="transferOperations",
-        filter=filterString).execute()
-    print('Result of transferOperations/list: {}'.format(
-        json.dumps(result, indent=4, sort_keys=True)))
+    result = (
+        storagetransfer.transferOperations()
+        .list(name="transferOperations", filter=filterString)
+        .execute()
+    )
+    print(
+        "Result of transferOperations/list: {}".format(
+            json.dumps(result, indent=4, sort_keys=True)
+        )
+    )
+
+
 # [END storagetransfer_transfer_check_apiary]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('project_id', help='Your Google Cloud project ID.')
-    parser.add_argument('job_name', help='Your job name.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Your Google Cloud project ID.")
+    parser.add_argument("job_name", help="Your job name.")
 
     args = parser.parse_args()
 

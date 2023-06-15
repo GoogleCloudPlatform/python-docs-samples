@@ -51,9 +51,10 @@ def transcribe_gcs(gcs_uri: str) -> str:
         transcript_builder.append(f"\nTranscript: {result.alternatives[0].transcript}")
         transcript_builder.append(f"\nConfidence: {result.alternatives[0].confidence}")
 
-    transcript = ''.join(transcript_builder)
+    transcript = "".join(transcript_builder)
     print(transcript)
 
     return transcript
+
 
 # [END speech_transcribe_async_gcs]

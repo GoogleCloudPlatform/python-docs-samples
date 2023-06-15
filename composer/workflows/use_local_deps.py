@@ -21,19 +21,19 @@ from airflow.operators import bash_operator
 
 # [START composer_dag_local_deps]
 from dependencies import coin_module
+
 # [END composer_dag_local_deps]
 
 default_args = {
-    'start_date':
-        datetime.datetime.combine(
-            datetime.datetime.today() - datetime.timedelta(days=1),
-            datetime.datetime.min.time()),
+    "start_date": datetime.datetime.combine(
+        datetime.datetime.today() - datetime.timedelta(days=1),
+        datetime.datetime.min.time(),
+    ),
 }
 
-with airflow.DAG(
-        'composer_sample_dependencies_dag',
-        default_args=default_args) as dag:
+with airflow.DAG("composer_sample_dependencies_dag", default_args=default_args) as dag:
     t1 = bash_operator.BashOperator(
-        task_id='print_coin_result',
+        task_id="print_coin_result",
         bash_command=f'echo "{coin_module.flip_coin()}"',
-        dag=dag)
+        dag=dag,
+    )

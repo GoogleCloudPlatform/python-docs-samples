@@ -23,28 +23,27 @@ app = Flask(__name__)
 
 
 # [START eventarc_generic_handler]
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 def index():
-    print('Event received!')
+    print("Event received!")
 
-    print('HEADERS:')
+    print("HEADERS:")
     headers = dict(request.headers)
-    headers.pop('Authorization', None)  # do not log authorization header if exists
+    headers.pop("Authorization", None)  # do not log authorization header if exists
     print(headers)
 
-    print('BODY:')
+    print("BODY:")
     body = dict(request.json)
     print(body)
 
-    resp = {
-        "headers": headers,
-        "body": body
-    }
+    resp = {"headers": headers, "body": body}
     return (resp, 200)
+
+
 # [END eventarc_generic_handler]
 
 
 # [START eventarc_generic_server]
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))
 # [END eventarc_generic_server]

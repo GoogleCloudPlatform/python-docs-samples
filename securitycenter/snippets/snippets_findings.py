@@ -351,9 +351,7 @@ def trouble_shoot(source_name):
             "permissions": ["securitycenter.findings.setState"],
         }
     )
-    print(
-        f"Permision to update state? {len(permission_response.permissions) > 0}"
-    )
+    print(f"Permision to update state? {len(permission_response.permissions) > 0}")
     # [END securitycenter_test_iam]
     return permission_response
     assert len(permission_response.permissions) > 0

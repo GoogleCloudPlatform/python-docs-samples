@@ -40,4 +40,5 @@ def structured_logging(request):
 
     return "Success: A log message was written"
 
+
 # [END functions_structured_logging]

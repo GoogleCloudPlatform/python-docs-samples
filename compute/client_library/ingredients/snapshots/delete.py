@@ -33,4 +33,6 @@ def delete_snapshot(project_id: str, snapshot_name: str) -> None:
     operation = snapshot_client.delete(project=project_id, snapshot=snapshot_name)
 
     wait_for_extended_operation(operation, "snapshot deletion")
+
+
 # </INGREDIENT>

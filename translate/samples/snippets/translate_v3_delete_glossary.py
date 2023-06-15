@@ -40,4 +40,6 @@ def delete_glossary(
     print(f"Deleted: {result.name}")
 
     return result
+
+
 # [END translate_v3_delete_glossary]

@@ -53,5 +53,7 @@ def make_authorized_get_request(endpoint, audience):
     response = urllib.request.urlopen(req)
 
     return response.read()
+
+
 # [END cloudrun_service_to_service_auth]
 # [END functions_bearer_token]

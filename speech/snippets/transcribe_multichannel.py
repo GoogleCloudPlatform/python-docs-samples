@@ -26,9 +26,7 @@ import argparse
 from google.cloud import speech
 
 
-def transcribe_file_with_multichannel(
-        speech_file: str
-) -> speech.RecognizeResponse:
+def transcribe_file_with_multichannel(speech_file: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     multi channel.
 
@@ -66,9 +64,7 @@ def transcribe_file_with_multichannel(
     # [END speech_transcribe_multichannel]
 
 
-def transcribe_gcs_with_multichannel(
-        gcs_uri: str
-) -> speech.RecognizeResponse:
+def transcribe_gcs_with_multichannel(gcs_uri: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file on GCS with
     multi channel.
 

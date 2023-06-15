@@ -20,7 +20,9 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT get_instance_serial_port_output>
-def get_instance_serial_port_output(project_id: str, zone: str, instance_name: str) -> compute_v1.SerialPortOutput:
+def get_instance_serial_port_output(
+    project_id: str, zone: str, instance_name: str
+) -> compute_v1.SerialPortOutput:
     """
     Returns the last 1 MB of serial port output from the specified instance.
 
@@ -34,5 +36,9 @@ def get_instance_serial_port_output(project_id: str, zone: str, instance_name: s
 
     """
     instance_client = compute_v1.InstancesClient()
-    return instance_client.get_serial_port_output(project=project_id, zone=zone, instance=instance_name)
+    return instance_client.get_serial_port_output(
+        project=project_id, zone=zone, instance=instance_name
+    )
+
+
 # </INGREDIENT>

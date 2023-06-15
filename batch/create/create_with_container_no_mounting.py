@@ -38,7 +38,10 @@ def create_container_job(project_id: str, region: str, job_name: str) -> batch_v
     runnable.container = batch_v1.Runnable.Container()
     runnable.container.image_uri = "gcr.io/google-containers/busybox"
     runnable.container.entrypoint = "/bin/sh"
-    runnable.container.commands = ["-c", "echo Hello world! This is task ${BATCH_TASK_INDEX}. This job has a total of ${BATCH_TASK_COUNT} tasks."]
+    runnable.container.commands = [
+        "-c",
+        "echo Hello world! This is task ${BATCH_TASK_INDEX}. This job has a total of ${BATCH_TASK_COUNT} tasks.",
+    ]
 
     # Jobs can be divided into tasks. In this case, we have only one task.
     task = batch_v1.TaskSpec()
@@ -84,4 +87,6 @@ def create_container_job(project_id: str, region: str, job_name: str) -> batch_v
     create_request.parent = f"projects/{project_id}/locations/{region}"
 
     return client.create_job(create_request)
+
+
 # [END batch_create_container_job]

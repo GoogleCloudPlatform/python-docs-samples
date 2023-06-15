@@ -27,21 +27,21 @@ SNIPPET_VALUES = {
 }
 
 
-@patch('snippets.query_for_data', return_value='data')
+@patch("snippets.query_for_data", return_value="data")
 def test_get_data_not_present(query_fn, testbed):
     data = snippets.get_data()
     query_fn.assert_called_once_with()
-    assert data == 'data'
-    memcache.delete('key')
+    assert data == "data"
+    memcache.delete("key")
 
 
-@patch('snippets.query_for_data', return_value='data')
+@patch("snippets.query_for_data", return_value="data")
 def test_get_data_present(query_fn, testbed):
-    memcache.add('key', 'data', 9000)
+    memcache.add("key", "data", 9000)
     data = snippets.get_data()
     query_fn.assert_not_called()
-    assert data == 'data'
-    memcache.delete('key')
+    assert data == "data"
+    memcache.delete("key")
 
 
 def test_add_values(testbed):

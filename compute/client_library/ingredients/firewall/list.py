@@ -42,5 +42,6 @@ def list_firewall_rules(project_id: str) -> Iterable[compute_v1.Firewall]:
         print(f" - {firewall.name}: {firewall.description}")
 
     return firewalls_list
-# </INGREDIENT>
 
+
+# </INGREDIENT>

@@ -43,4 +43,6 @@ def list_snapshots(project_id: str, filter_: str = "") -> Iterable[compute_v1.Sn
     request.filter = filter_
 
     return snapshot_client.list(request)
+
+
 # </INGREDIENT>
