@@ -55,6 +55,8 @@ def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
     # [END speech_python_migration_sync_response]
 
     return response
+
+
 # [END speech_transcribe_sync]
 
 
@@ -83,6 +85,8 @@ def transcribe_gcs(gcs_uri: str) -> speech.RecognizeResponse:
         print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
+
+
 # [END speech_transcribe_sync_gcs]
 
 

@@ -57,4 +57,6 @@ def list_all_instances(
             for instance in response.instances:
                 print(f" - {instance.name} ({instance.machine_type})")
     return all_instances
+
+
 # </INGREDIENT>

@@ -44,6 +44,8 @@ def create_participant(project_id, conversation_id, role):
         print("Name: {}".format(response.name))
 
         return response
+
+
 # [END dialogflow_create_participant]
 
 
@@ -110,16 +112,16 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 
 # [END dialogflow_analyze_content_text]
 
+
 # [START dialogflow_analyze_content_audio_stream]
-def analyze_content_audio_stream(
-    conversation_id, participant_id, audio_file_path
-):
+def analyze_content_audio_stream(conversation_id, participant_id, audio_file_path):
     """Analyze audio content for END_USER
 
     Args:
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
-        audio_file_path: audio file in wav/mp3 format contains utterances of END_USER."""
+        audio_file_path: audio file in wav/mp3 format contains utterances of END_USER.
+    """
 
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
@@ -139,7 +141,6 @@ def analyze_content_audio_stream(
     # Generates requests based on the audio files. Will by default use the first channel as
     # END_USER, and second channel as HUMAN_AGENT.
     def request_generator(audio_config, audio_file_path):
-
         # The first request contains the configuration.
         yield dialogflow.StreamingAnalyzeContentRequest(
             participant=participant_path, audio_config=audio_config

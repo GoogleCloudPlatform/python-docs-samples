@@ -34,4 +34,6 @@ def delete_route(project_id: str, route_name: str) -> None:
     operation = route_client.delete(project=project_id, route=route_name)
 
     wait_for_extended_operation(operation, "route deletion")
+
+
 # </INGREDIENT>

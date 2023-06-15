@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
@@ -34,4 +34,6 @@ def get_image(project_id: str, image_name: str) -> compute_v1.Image:
     """
     image_client = compute_v1.ImagesClient()
     return image_client.get(project=project_id, image=image_name)
+
+
 # </INGREDIENT>

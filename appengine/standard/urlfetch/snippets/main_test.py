@@ -25,19 +25,19 @@ def app(testbed):
 
 
 def test_url_lib(app):
-    response = app.get('/')
-    assert 'Google' in response.body
+    response = app.get("/")
+    assert "Google" in response.body
 
 
 def test_url_fetch(app):
-    response = app.get('/url_fetch')
-    assert 'Google' in response.body
+    response = app.get("/url_fetch")
+    assert "Google" in response.body
 
 
 @mock.patch("main.urlfetch")
 def test_url_post(urlfetch_mock, app):
     urlfetch_mock.fetch = mock.Mock(
-        return_value=mock.Mock(content='Albert',
-                               status_code=200))
-    response = app.get('/url_post')
-    assert 'Albert' in response.body
+        return_value=mock.Mock(content="Albert", status_code=200)
+    )
+    response = app.get("/url_post")
+    assert "Albert" in response.body

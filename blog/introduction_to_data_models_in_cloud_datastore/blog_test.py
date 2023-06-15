@@ -18,7 +18,7 @@ import pytest
 
 from blog import main
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.mark.flaky

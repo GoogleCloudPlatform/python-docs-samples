@@ -24,9 +24,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_model_selection_file(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_model_selection_file(capsys: pytest.CaptureFixture) -> None:
     response = transcribe_model_selection.transcribe_model_selection(
         os.path.join(RESOURCES, "Google_Gnome.wav"), "video"
     )
@@ -37,9 +35,7 @@ def test_transcribe_model_selection_file(
 
 
 @Retry()
-def test_transcribe_model_selection_gcs(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_model_selection_gcs(capsys: pytest.CaptureFixture) -> None:
     response = transcribe_model_selection.transcribe_model_selection_gcs(
         "gs://cloud-samples-tests/speech/Google_Gnome.wav", "video"
     )

@@ -28,7 +28,7 @@ def run(
     gpu_count: str,
     sync: bool,
 ) -> None:
-    bucket = training_dir.removeprefix('gs://').split('/')[0]
+    bucket = training_dir.removeprefix("gs://").split("/")[0]
 
     aiplatform.init(project=project, location=region, staging_bucket=bucket)
 

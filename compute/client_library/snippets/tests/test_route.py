@@ -25,12 +25,13 @@ PROJECT = google.auth.default()[1]
 
 def test_route_create_delete():
     route_name = "test-route" + uuid.uuid4().hex[:10]
-    route = create_route_to_windows_activation_host(PROJECT, "global/networks/default", route_name)
+    route = create_route_to_windows_activation_host(
+        PROJECT, "global/networks/default", route_name
+    )
     try:
         assert route.name == route_name
         assert route.dest_range == "35.190.247.13/32"
     finally:
-
         delete_route(PROJECT, route_name)
 
         for route in list_routes(PROJECT):

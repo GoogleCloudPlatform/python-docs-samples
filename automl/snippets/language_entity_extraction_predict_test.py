@@ -38,7 +38,9 @@ def verify_model_state():
         response.result()
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable), max_tries=3
+)
 def test_predict(capsys, verify_model_state):
     verify_model_state
     text = (

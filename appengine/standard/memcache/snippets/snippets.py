@@ -21,18 +21,20 @@ from google.appengine.api import memcache
 
 
 def query_for_data():
-    return 'data'
+    return "data"
 
 
 # [START get_data]
 def get_data():
-    data = memcache.get('key')
+    data = memcache.get("key")
     if data is not None:
         return data
     else:
         data = query_for_data()
-        memcache.add('key', data, 60)
+        memcache.add("key", data, 60)
     return data
+
+
 # [END get_data]
 
 
@@ -46,7 +48,7 @@ def add_values():
     memcache.set_multi(
         {"USA_98115": "cloudy", "USA_94105": "foggy", "USA_94043": "sunny"},
         key_prefix="weather_",
-        time=3600
+        time=3600,
     )
 
     # Atomically increment an integer value.

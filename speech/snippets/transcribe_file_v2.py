@@ -20,9 +20,9 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def transcribe_file_v2(
-        project_id: str,
-        recognizer_id: str,
-        audio_file: str,
+    project_id: str,
+    recognizer_id: str,
+    audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
     client = SpeechClient()

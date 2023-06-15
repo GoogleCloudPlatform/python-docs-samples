@@ -21,4 +21,3 @@
 # <INGREDIENT create_snapshot />
 
 # </REGION compute_snapshot_create>
-

@@ -40,13 +40,13 @@ def run(output_bigquery_table, kms_key, beam_args):
 
     # Schema for the output BigQuery table.
     schema = {
-        'fields': [
-            {'name': 'latitude', 'type': 'FLOAT'},
-            {'name': 'longitude', 'type': 'FLOAT'},
-            {'name': 'acq_date', 'type': 'DATE'},
-            {'name': 'acq_time', 'type': 'TIME'},
-            {'name': 'bright_ti4', 'type': 'FLOAT'},
-            {'name': 'confidence', 'type': 'STRING'},
+        "fields": [
+            {"name": "latitude", "type": "FLOAT"},
+            {"name": "longitude", "type": "FLOAT"},
+            {"name": "acq_date", "type": "DATE"},
+            {"name": "acq_time", "type": "TIME"},
+            {"name": "bright_ti4", "type": "FLOAT"},
+            {"name": "confidence", "type": "STRING"},
         ],
     }
 
@@ -54,14 +54,16 @@ def run(output_bigquery_table, kms_key, beam_args):
     with beam.Pipeline(options=options) as pipeline:
         (
             pipeline
-            | 'Read from BigQuery with KMS key' >>
-            beam.io.Read(beam.io.BigQuerySource(
-                query=query,
-                use_standard_sql=True,
-                kms_key=kms_key,
-            ))
-            | 'Write to BigQuery with KMS key' >>
-            beam.io.WriteToBigQuery(
+            | "Read from BigQuery with KMS key"
+            >> beam.io.Read(
+                beam.io.BigQuerySource(
+                    query=query,
+                    use_standard_sql=True,
+                    kms_key=kms_key,
+                )
+            )
+            | "Write to BigQuery with KMS key"
+            >> beam.io.WriteToBigQuery(
                 output_bigquery_table,
                 schema=schema,
                 write_disposition=beam.io.BigQueryDisposition.WRITE_TRUNCATE,
@@ -71,15 +73,15 @@ def run(output_bigquery_table, kms_key, beam_args):
     # [END dataflow_cmek]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--kms_key',
+        "--kms_key",
         required=True,
-        help='Cloud Key Management Service key name',
+        help="Cloud Key Management Service key name",
     )
     parser.add_argument(
-        '--output_bigquery_table',
+        "--output_bigquery_table",
         required=True,
         help="Output BigQuery table in the format 'PROJECT:DATASET.TABLE'",
     )

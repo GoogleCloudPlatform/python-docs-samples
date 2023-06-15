@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
@@ -21,7 +21,9 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT patch_firewall_priority>
-def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: int) -> None:
+def patch_firewall_priority(
+    project_id: str, firewall_rule_name: str, priority: int
+) -> None:
     """
     Modifies the priority of a given firewall rule.
 
@@ -41,4 +43,6 @@ def patch_firewall_priority(project_id: str, firewall_rule_name: str, priority: 
     )
 
     wait_for_extended_operation(operation, "firewall rule patching")
+
+
 # </INGREDIENT>

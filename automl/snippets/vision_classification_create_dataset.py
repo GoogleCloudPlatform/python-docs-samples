@@ -40,7 +40,9 @@ def create_dataset(project_id, display_name):
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(parent=project_location, dataset=dataset, timeout=300)
+    response = client.create_dataset(
+        parent=project_location, dataset=dataset, timeout=300
+    )
 
     created_dataset = response.result()
 

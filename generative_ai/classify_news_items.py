@@ -22,14 +22,14 @@ def classify_news_items(temperature: float = 0.2) -> None:
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 5,      # Token limit determines the maximum amount of text output.
-        "top_p": 0,                  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 1,                  # A top_k of 1 means the selected token is the most probable among all tokens.
+        "max_output_tokens": 5,  # Token limit determines the maximum amount of text output.
+        "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-      '''What is the topic for a given news headline?
+        """What is the topic for a given news headline?
 - business
 - entertainment
 - health
@@ -53,10 +53,12 @@ The answer is: entertainment
 
 Text: CNBC Reports Rising Digital Profit as Print Advertising Falls
 The answer is:
-''', **parameters)
+""",
+        **parameters,
+    )
 
     print(f"Response from Model: {response.text}")
-# [END aiplatform_sdk_classify_news_items]
+    # [END aiplatform_sdk_classify_news_items]
 
     return response
 
