@@ -25,13 +25,13 @@ import main
 
 
 kg_search = googleapiclient.discovery.build(
-    'kgsearch', 'v1',
-    developerKey=os.environ['KG_API_KEY'])
-example_response = kg_search.entities().search(query='lion', limit=1).execute()
+    "kgsearch", "v1", developerKey=os.environ["KG_API_KEY"]
+)
+example_response = kg_search.entities().search(query="lion", limit=1).execute()
 
 
 class Request:
-    def __init__(self, data='', headers={}):
+    def __init__(self, data="", headers={}):
         self.data = data
         self.headers = headers
 
@@ -47,71 +47,65 @@ class TestGCFPySlackSample:
 
     def test_verify_signature_token_incorrect(self):
         with pytest.raises(ValueError):
-            request = Request(headers={'X-Slack-Signature': '12345'})
+            request = Request(headers={"X-Slack-Signature": "12345"})
             main.verify_signature(request)
 
     def test_verify_web_hook_valid_request(self):
         request = Request()
-        request.body = ''
+        request.body = ""
 
         now = str(int(time.time()))
 
-        verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
-        test_signature = verifier.generate_signature(
-            timestamp=now,
-            body=''
-        )
+        verifier = SignatureVerifier(os.environ["SLACK_SECRET"])
+        test_signature = verifier.generate_signature(timestamp=now, body="")
 
         request.headers = {
-            'X-Slack-Request-Timestamp': now,
-            'X-Slack-Signature': test_signature
+            "X-Slack-Request-Timestamp": now,
+            "X-Slack-Signature": test_signature,
         }
         main.verify_signature(request)
 
     def test_format_slack_message(self):
-        message = main.format_slack_message('lion', example_response)
+        message = main.format_slack_message("lion", example_response)
 
         # Just make sure there's a result.
-        assert 'title' in message['attachments'][0]
-        assert message['attachments'][0]['color'] == '#3367d6'
+        assert "title" in message["attachments"][0]
+        assert message["attachments"][0]["color"] == "#3367d6"
 
     def test_make_search_request(self):
-        with mock.patch.object(main, 'kgsearch'):
+        with mock.patch.object(main, "kgsearch"):
             entities = main.kgsearch.entities.return_value
             search = entities.search.return_value
             search.execute.return_value = example_response
-            message = main.make_search_request('lion')
+            message = main.make_search_request("lion")
         # Just make sure there's a result.
-        assert 'title' in message['attachments'][0]
-        assert message['attachments'][0]['color'] == '#3367d6'
+        assert "title" in message["attachments"][0]
+        assert message["attachments"][0]["color"] == "#3367d6"
 
     def test_kg_search(self):
-        with mock.patch.object(main, 'kgsearch'):
+        with mock.patch.object(main, "kgsearch"):
             entities = main.kgsearch.entities.return_value
             search = entities.search.return_value
             search.execute.return_value = example_response
 
             request = Request()
-            request.form = {
-                'text': 'lion'
-            }
+            request.form = {"text": "lion"}
             request.data = json.dumps(request.form)
 
             now = str(int(time.time()))
-            verifier = SignatureVerifier(os.environ['SLACK_SECRET'])
+            verifier = SignatureVerifier(os.environ["SLACK_SECRET"])
             test_signature = verifier.generate_signature(
-                timestamp=now,
-                body=request.data
+                timestamp=now, body=request.data
             )
 
-            request.method = 'POST'
+            request.method = "POST"
             request.headers = {
-                'X-Slack-Request-Timestamp': now,
-                'X-Slack-Signature': test_signature
+                "X-Slack-Request-Timestamp": now,
+                "X-Slack-Signature": test_signature,
             }
 
-            with mock.patch('main.jsonify', side_effect=json.dumps):
+            with mock.patch("main.jsonify", side_effect=json.dumps):
                 response = main.kg_search(request)
 
-        assert 'lion' in response.lower()
-        assert 'color' in response.lower()
+        assert "lion" in response.lower()
+        assert "color" in response.lower()

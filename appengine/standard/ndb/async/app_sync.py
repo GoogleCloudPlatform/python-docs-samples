@@ -29,7 +29,7 @@ class MyRequestHandler(webapp2.RequestHandler):
 
         # ...read something else from Datastore...
 
-        self.response.out.write('Content of the page')
+        self.response.out.write("Content of the page")
 
 
-app = webapp2.WSGIApplication([('/', MyRequestHandler)])
+app = webapp2.WSGIApplication([("/", MyRequestHandler)])

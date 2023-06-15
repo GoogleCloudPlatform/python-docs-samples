@@ -18,8 +18,7 @@
 import os
 from uuid import uuid4
 
-from documentai.snippets import \
-    batch_process_documents_processor_version_sample
+from documentai.snippets import batch_process_documents_processor_version_sample
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

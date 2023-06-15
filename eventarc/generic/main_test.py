@@ -22,30 +22,28 @@ binary_headers = {
     "ce-id": str(uuid4),
     "ce-type": "com.pytest.sample.event",
     "ce-source": "<my-test-source>",
-    "ce-specversion": "1.0"
+    "ce-specversion": "1.0",
 }
 
 
 @pytest.fixture
 def client():
-
     main.app.testing = True
     return main.app.test_client()
 
 
 def test_relay(client, capsys):
-
-    r = client.post('/', json={'message': {'data': 'Hello'}}, headers=binary_headers)
+    r = client.post("/", json={"message": {"data": "Hello"}}, headers=binary_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
 
     # Assert print
-    assert 'Event received!' in out
+    assert "Event received!" in out
 
     # Ensure output relays HTTP headers
-    assert '"Ce-Specversion":"1.0"' in r.data.decode('utf-8')
+    assert '"Ce-Specversion":"1.0"' in r.data.decode("utf-8")
 
     # Ensure output relays HTTP body
-    assert binary_headers['ce-id'] in out
+    assert binary_headers["ce-id"] in out
     assert "{'message': {'data': 'Hello'}}" in out

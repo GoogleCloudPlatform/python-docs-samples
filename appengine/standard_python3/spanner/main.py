@@ -22,17 +22,19 @@ from google.cloud import spanner
 app = Flask(__name__)
 spanner_client = spanner.Client()
 
-instance_id = os.environ.get('SPANNER_INSTANCE')
-database_id = os.environ.get('SPANNER_DATABASE')
+instance_id = os.environ.get("SPANNER_INSTANCE")
+database_id = os.environ.get("SPANNER_DATABASE")
 
 
-@app.route('/')
+@app.route("/")
 def main():
     database = spanner_client.instance(instance_id).database(database_id)
     with database.snapshot() as snapshot:
-        cursor = snapshot.execute_sql('SELECT 1')
+        cursor = snapshot.execute_sql("SELECT 1")
     results = list(cursor)
 
-    return f'Query Result: {results[0][0]}'
+    return f"Query Result: {results[0][0]}"
+
+
 # [END gae_python3_cloud_spanner]
 # [END gae_python38_cloud_spanner]

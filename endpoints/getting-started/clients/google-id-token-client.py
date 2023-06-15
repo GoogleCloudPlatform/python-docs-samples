@@ -29,27 +29,24 @@ def get_id_token(client_secrets_file, extra_args):
     ID token from those credentials."""
 
     flow = google_auth_oauthlib.flow.InstalledAppFlow.from_client_secrets_file(
-        client_secrets_file, scopes=['openid', 'email', 'profile'])
+        client_secrets_file, scopes=["openid", "email", "profile"]
+    )
 
     # Run the OAuth 2.0 flow to obtain credentials from the user.
     flow.run_local_server()
 
     # The credentials have both an access token and an ID token. Cloud
     # Endpoints uses the ID Token.
-    id_token = flow.oauth2session.token['id_token']
+    id_token = flow.oauth2session.token["id_token"]
 
     return id_token
 
 
 def make_request(host, api_key, id_token):
     """Makes a request to the auth info endpoint for Google ID tokens."""
-    url = urllib.parse.urljoin(host, '/auth/info/googleidtoken')
-    params = {
-        'key': api_key
-    }
-    headers = {
-        'Authorization': 'Bearer {}'.format(id_token)
-    }
+    url = urllib.parse.urljoin(host, "/auth/info/googleidtoken")
+    params = {"key": api_key}
+    headers = {"Authorization": "Bearer {}".format(id_token)}
 
     response = requests.get(url, params=params, headers=headers)
 
@@ -63,17 +60,17 @@ def main(host, api_key, client_secrets_file, extra_args):
     print(response)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     parser.add_argument(
-        'host', help='Your API host, e.g. https://your-project.appspot.com.')
+        "host", help="Your API host, e.g. https://your-project.appspot.com."
+    )
+    parser.add_argument("api_key", help="Your API key.")
     parser.add_argument(
-        'api_key', help='Your API key.')
-    parser.add_argument(
-        'client_secrets_file',
-        help='The path to your OAuth2 client secrets file.')
+        "client_secrets_file", help="The path to your OAuth2 client secrets file."
+    )
 
     args = parser.parse_args()
 

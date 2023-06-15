@@ -37,24 +37,22 @@ import tempfile
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7"],
-
+    "ignored_versions": ["2.7"],
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
     # to use your own Cloud project.
-    'gcloud_project_env': 'GOOGLE_CLOUD_PROJECT',
+    "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
     # 'gcloud_project_env': 'BUILD_SPECIFIC_GCLOUD_PROJECT',
-
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    'envs': {},
+    "envs": {},
 }
 
 
 try:
     # Ensure we can import noxfile_config in the project's directory.
-    sys.path.append('.')
+    sys.path.append(".")
     from noxfile_config import TEST_CONFIG_OVERRIDE
 except ImportError as e:
     print("No user noxfile_config found: detail: {}".format(e))
@@ -69,13 +67,13 @@ def get_pytest_env_vars():
     ret = {}
 
     # Override the GCLOUD_PROJECT and the alias.
-    env_key = TEST_CONFIG['gcloud_project_env']
+    env_key = TEST_CONFIG["gcloud_project_env"]
     # This should error out if not set.
-    ret['GOOGLE_CLOUD_PROJECT'] = os.environ[env_key]
-    ret['GCLOUD_PROJECT'] = os.environ[env_key]  # deprecated
+    ret["GOOGLE_CLOUD_PROJECT"] = os.environ[env_key]
+    ret["GCLOUD_PROJECT"] = os.environ[env_key]  # deprecated
 
     # Apply user supplied envs.
-    ret.update(TEST_CONFIG['envs'])
+    ret.update(TEST_CONFIG["envs"])
     return ret
 
 
@@ -176,7 +174,7 @@ if _GAE_ROOT is None:
 def find_download_appengine_sdk_py(filename):
     """Find a file with the given name upwards."""
     d = os.getcwd()
-    while d != '/':
+    while d != "/":
         fullpath = os.path.join(d, filename)
         if os.path.isfile(fullpath):
             return fullpath
@@ -187,7 +185,8 @@ def _setup_appengine_sdk(session):
     """Installs the App Engine SDK, if needed."""
     session.env["GAE_SDK_PATH"] = os.path.join(_GAE_ROOT, "google_appengine")
     download_appengine_sdk_py = find_download_appengine_sdk_py(
-        'download-appengine-sdk.py')
+        "download-appengine-sdk.py"
+    )
     session.install("requests")
     session.run("python", download_appengine_sdk_py, _GAE_ROOT)
 
@@ -203,7 +202,7 @@ def py(session):
 
         # mailjet_rest has an issue with requests being required pre install
         # https://github.com/mailjet/mailjet-apiv3-python/issues/38
-        if 'appengine/standard/mailjet' in os.getcwd():
+        if "appengine/standard/mailjet" in os.getcwd():
             session.install("requests")
 
         _session_tests(session, post_install=_setup_appengine_sdk)
@@ -217,7 +216,7 @@ def py(session):
 
 
 def _get_repo_root():
-    """ Returns the root folder of the project. """
+    """Returns the root folder of the project."""
     # Get root of this repository. Assume we don't have directories nested deeper than 10 items.
     p = Path(os.getcwd())
     for i in range(10):

@@ -48,6 +48,5 @@ def test_creation():
         assert table.schema == expected_schema
 
     finally:
-
         client.delete_dataset(dataset, delete_contents=True, not_found_ok=True)
         client.delete_table(table, not_found_ok=True)

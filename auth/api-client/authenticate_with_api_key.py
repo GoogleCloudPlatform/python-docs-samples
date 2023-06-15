@@ -29,8 +29,9 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
     """
 
     # Initialize the Language Service client and set the API key and the quota project id.
-    client = language_v1.LanguageServiceClient(client_options={"api_key": api_key_string,
-                                                               "quota_project_id": quota_project_id})
+    client = language_v1.LanguageServiceClient(
+        client_options={"api_key": api_key_string, "quota_project_id": quota_project_id}
+    )
 
     text = "Hello, world!"
     document = language_v1.Document(
@@ -45,5 +46,6 @@ def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> Non
     print(f"Text: {text}")
     print(f"Sentiment: {sentiment.score}, {sentiment.magnitude}")
     print("Successfully authenticated using the API key")
+
 
 # [END apikeys_authenticate_api_key]

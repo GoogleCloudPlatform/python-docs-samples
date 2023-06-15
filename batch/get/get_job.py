@@ -31,5 +31,9 @@ def get_job(project_id: str, region: str, job_name: str) -> batch_v1.Job:
     """
     client = batch_v1.BatchServiceClient()
 
-    return client.get_job(name=f"projects/{project_id}/locations/{region}/jobs/{job_name}")
+    return client.get_job(
+        name=f"projects/{project_id}/locations/{region}/jobs/{job_name}"
+    )
+
+
 # [END batch_get_job]

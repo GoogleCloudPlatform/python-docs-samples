@@ -29,4 +29,4 @@ def flip_coin():
     avg = rand_array.mean()
     # Returns the Gaussian CDF of this average
     ndtr = special.ndtr(avg)
-    return "Heads" if ndtr > .5 else "Tails"
+    return "Heads" if ndtr > 0.5 else "Tails"

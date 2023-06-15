@@ -57,4 +57,6 @@ def create_glossary(
     print(f"Input Uri: {result.input_config.gcs_source.input_uri}")
 
     return result
+
+
 # [END translate_v3_create_glossary]

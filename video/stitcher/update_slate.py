@@ -37,7 +37,8 @@ def update_slate(project_id: str, location: str, slate_id: str, slate_uri: str) 
         project_id: The GCP project ID.
         location: The location of the slate.
         slate_id: The existing slate's ID.
-        slate_uri: Updated uri of the video slate; must be an MP4 video with at least one audio track."""
+        slate_uri: Updated uri of the video slate; must be an MP4 video with at least one audio track.
+    """
 
     client = VideoStitcherServiceClient()
 

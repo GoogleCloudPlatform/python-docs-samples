@@ -34,4 +34,6 @@ def get_sink(project_id: str, sink_name: str) -> logging.Sink:
     print(f"Destination: {sink.destination}")
     print(f"Filter: {sink.filter_}")
     return sink
+
+
 # [END logging_get_sink]

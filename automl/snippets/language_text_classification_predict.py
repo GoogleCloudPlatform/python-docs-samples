@@ -37,7 +37,5 @@ def predict(project_id, model_id, content):
 
     for annotation_payload in response.payload:
         print(f"Predicted class name: {annotation_payload.display_name}")
-        print(
-            f"Predicted class score: {annotation_payload.classification.score}"
-        )
+        print(f"Predicted class score: {annotation_payload.classification.score}")
     # [END automl_language_text_classification_predict]

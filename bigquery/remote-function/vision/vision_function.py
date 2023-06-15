@@ -32,13 +32,15 @@ def label_detection(request: flask.Request) -> flask.Response:
     """
     try:
         client = vision.ImageAnnotatorClient()
-        calls = request.get_json()['calls']
+        calls = request.get_json()["calls"]
         replies = []
         for call in calls:
             content = urllib.request.urlopen(call[0]).read()
-            results = client.label_detection({'content': content})
+            results = client.label_detection({"content": content})
             replies.append(vision.AnnotateImageResponse.to_dict(results))
-        return flask.make_response(flask.jsonify({'replies': replies}))
+        return flask.make_response(flask.jsonify({"replies": replies}))
     except Exception as e:
-        return flask.make_response(flask.jsonify({'errorMessage': str(e)}), 400)
+        return flask.make_response(flask.jsonify({"errorMessage": str(e)}), 400)
+
+
 # [END bigquery_remote_function_vision]

@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from setup_cleanup import create_bq_dataset, create_bq_table, \
-    upload_data_to_bq_table
+from setup_cleanup import create_bq_dataset, create_bq_table, upload_data_to_bq_table
 
 dataset = "user_events"
 valid_events_table = "events"
@@ -24,8 +23,10 @@ invalid_events_source_file = "../resources/user_events_some_invalid.json"
 
 create_bq_dataset(dataset)
 create_bq_table(dataset, valid_events_table, events_schema)
-upload_data_to_bq_table(dataset, valid_events_table, valid_events_source_file,
-                        events_schema)
+upload_data_to_bq_table(
+    dataset, valid_events_table, valid_events_source_file, events_schema
+)
 create_bq_table(dataset, invalid_events_table, events_schema)
-upload_data_to_bq_table(dataset, invalid_events_table,
-                        invalid_events_source_file, events_schema)
+upload_data_to_bq_table(
+    dataset, invalid_events_table, invalid_events_source_file, events_schema
+)

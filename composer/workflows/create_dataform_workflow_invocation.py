@@ -45,7 +45,6 @@ with models.DAG(
     catchup=False,  # Override to match your needs
     tags=["dataform"],
 ) as dag:
-
     create_compilation_result = DataformCreateCompilationResultOperator(
         task_id="create_compilation_result",
         project_id=PROJECT_ID,

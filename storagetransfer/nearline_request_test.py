@@ -25,15 +25,18 @@ import nearline_request_apiary
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
 def test_nearline_request(
-        capsys, project_id: str, source_bucket: Bucket,
-        destination_bucket: Bucket, job_description_unique: str):
-
+    capsys,
+    project_id: str,
+    source_bucket: Bucket,
+    destination_bucket: Bucket,
+    job_description_unique: str,
+):
     nearline_request.create_daily_nearline_30_day_migration(
         project_id=project_id,
         description=job_description_unique,
         source_bucket=source_bucket.name,
         sink_bucket=destination_bucket.name,
-        start_date=datetime.utcnow()
+        start_date=datetime.utcnow(),
     )
 
     out, _ = capsys.readouterr()
@@ -43,15 +46,19 @@ def test_nearline_request(
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
 def test_nearline_request_apiary(
-        capsys, project_id: str, source_bucket: Bucket,
-        destination_bucket: Bucket, job_description_unique: str):
+    capsys,
+    project_id: str,
+    source_bucket: Bucket,
+    destination_bucket: Bucket,
+    job_description_unique: str,
+):
     nearline_request_apiary.main(
         description=job_description_unique,
         project_id=project_id,
         start_date=datetime.utcnow(),
         start_time=datetime.utcnow(),
         source_bucket=source_bucket.name,
-        sink_bucket=destination_bucket.name
+        sink_bucket=destination_bucket.name,
     )
 
     out, _ = capsys.readouterr()

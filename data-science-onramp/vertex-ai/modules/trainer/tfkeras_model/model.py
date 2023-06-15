@@ -18,6 +18,7 @@
 # [START aiplatform_tfkeras_model_tf_import]
 import numpy as np
 import tensorflow as tf
+
 # [END aiplatform_tfkeras_model_tf_import]
 
 
@@ -27,7 +28,7 @@ def input_fn(
     labels: np.array,
     num_epochs: int,
     batch_size: int,
-    shuffle: bool
+    shuffle: bool,
 ) -> tf.data.Dataset:
     """Generates an input function to be used for model training"""
 
@@ -41,23 +42,23 @@ def input_fn(
     dataset = dataset.repeat(num_epochs)
     dataset = dataset.batch(batch_size)
     return dataset
+
+
 # [END aiplatform_tfkeras_model_input_fn]
 
 
 # [START aiplatform_tfkeras_model_create_keras_model]
 # [START aiplatform_tfkeras_model_create_keras_model_init]
 def create_keras_model(
-    input_dim: int,
-    output_dim: int,
-    learning_rate: float
+    input_dim: int, output_dim: int, learning_rate: float
 ) -> tf.keras.Sequential:
     """Creates Keras Model for regression"""
 
     # Define regularizers
     kernel_regularizer = tf.keras.regularizers.l1_l2(l1=1e-5, l2=1e-4)
     bias_regularizer = tf.keras.regularizers.l2(1e-4)
-# [END aiplatform_tfkeras_model_create_keras_model_init]
-# [START aiplatform_tfkeras_model_create_keras_model_define]
+    # [END aiplatform_tfkeras_model_create_keras_model_init]
+    # [START aiplatform_tfkeras_model_create_keras_model_define]
     # Define model layers
     Dense = tf.keras.layers.Dense
     # Define Keras model
@@ -100,6 +101,8 @@ def create_keras_model(
     model.compile(loss="mae", optimizer="adam", metrics=["mae"])
 
     return model
+
+
 # [END aiplatform_tfkeras_model_create_keras_model_define]
 # [END aiplatform_tfkeras_model_create_keras_model]
 # [END aiplatform_tfkeras_model]
