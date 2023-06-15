@@ -151,21 +151,25 @@ outside the scope of PEP 8, such as the “too many arguments” or “too many
 local variables” warnings.
 
 The use of [Black](https://pypi.org/project/black/) to standardize code
-formatting and simplify diffs is recommended, but optional.
+formatting and simplify diffs is recommended.
 
 The default noxfile has `blacken` session for convenience. Here are
 some examples.
 
 If you have pyenv configured:
+
 ```sh
 nox -s blacken
 ```
 
 If you only have docker:
-```
+
+```sh
 cd proj_directory
 ../scripts/run_tests_local.sh . blacken
 ```
+
+Owlbot is an automated tool that will run the `blacken` session automatically on new pull requests.
 
 In addition to the syntax guidelines covered in PEP 8, samples should strive
 to follow the Pythonic philosophy outlined in the

@@ -78,29 +78,19 @@ def list_datasets(project_id, compute_region, filter=None):
         print(f"Dataset display name: {dataset.display_name}")
         metadata = dataset.tables_dataset_metadata
         print(
-            "Dataset primary table spec id: {}".format(
-                metadata.primary_table_spec_id
-            )
+            "Dataset primary table spec id: {}".format(metadata.primary_table_spec_id)
         )
         print(
-            "Dataset target column spec id: {}".format(
-                metadata.target_column_spec_id
-            )
+            "Dataset target column spec id: {}".format(metadata.target_column_spec_id)
         )
         print(
-            "Dataset target column spec id: {}".format(
-                metadata.target_column_spec_id
-            )
+            "Dataset target column spec id: {}".format(metadata.target_column_spec_id)
         )
         print(
-            "Dataset weight column spec id: {}".format(
-                metadata.weight_column_spec_id
-            )
+            "Dataset weight column spec id: {}".format(metadata.weight_column_spec_id)
         )
         print(
-            "Dataset ml use column spec id: {}".format(
-                metadata.ml_use_column_spec_id
-            )
+            "Dataset ml use column spec id: {}".format(metadata.ml_use_column_spec_id)
         )
         print(f"Dataset example count: {dataset.example_count}")
         print(f"Dataset create time: {dataset.create_time}")
@@ -249,14 +239,10 @@ if __name__ == "__main__":
     )
     list_datasets_parser.add_argument("--filter_")
 
-    get_dataset_parser = subparsers.add_parser(
-        "get_dataset", help=get_dataset.__doc__
-    )
+    get_dataset_parser = subparsers.add_parser("get_dataset", help=get_dataset.__doc__)
     get_dataset_parser.add_argument("--dataset_display_name")
 
-    import_data_parser = subparsers.add_parser(
-        "import_data", help=import_data.__doc__
-    )
+    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
     import_data_parser.add_argument("--dataset_display_name")
     import_data_parser.add_argument("--path")
 
@@ -284,9 +270,7 @@ if __name__ == "__main__":
     if args.command == "get_dataset":
         get_dataset(project_id, compute_region, args.dataset_display_name)
     if args.command == "import_data":
-        import_data(
-            project_id, compute_region, args.dataset_display_name, args.path
-        )
+        import_data(project_id, compute_region, args.dataset_display_name, args.path)
     if args.command == "update_dataset":
         update_dataset(
             project_id,

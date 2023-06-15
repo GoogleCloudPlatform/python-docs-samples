@@ -28,9 +28,9 @@
 from google.cloud import bigquery
 
 # TODO(developer): Replace with your values
-project = 'your-project'  # Your GCP Project
-location = 'US'  # the location where you want your BigQuery data to reside. For more info on possible locations see https://cloud.google.com/bigquery/docs/locations
-dataset_name = 'average_weather'
+project = "your-project"  # Your GCP Project
+location = "US"  # the location where you want your BigQuery data to reside. For more info on possible locations see https://cloud.google.com/bigquery/docs/locations
+dataset_name = "average_weather"
 
 
 def create_dataset_and_table(project, location, dataset_name):

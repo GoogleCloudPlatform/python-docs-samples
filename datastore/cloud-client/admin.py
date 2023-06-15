@@ -55,9 +55,7 @@ def import_entities(project_id, input_url):
     # input_url := "gs://bucket-name/overall-export-metadata-file"
     client = DatastoreAdminClient()
 
-    op = client.import_entities(
-        {"project_id": project_id, "input_url": input_url}
-    )
+    op = client.import_entities({"project_id": project_id, "input_url": input_url})
     response = op.result(timeout=300)
 
     print("Entities were imported\n")

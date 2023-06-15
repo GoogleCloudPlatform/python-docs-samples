@@ -26,7 +26,6 @@ processor_version_id = "stable"
 
 
 def test_list_evaluations(capsys):
-
     list_evaluations_sample.list_evaluations_sample(
         project_id=project_id,
         location=location,

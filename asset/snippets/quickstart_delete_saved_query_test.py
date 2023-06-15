@@ -23,7 +23,6 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_delete_saved_query(capsys, test_saved_query):
-
     quickstart_delete_saved_query.delete_saved_query(test_saved_query.name)
 
     out, _ = capsys.readouterr()

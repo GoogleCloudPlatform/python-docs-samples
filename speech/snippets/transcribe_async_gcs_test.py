@@ -36,16 +36,24 @@ def test_transcribe_gcs() -> None:
 
 
 def test_transcribe_diarization_gcs_beta() -> None:
-    is_completed = transcribe_diarization_gcs_beta.transcribe_diarization_gcs_beta(GCS_DIARIZATION_AUDIO_PATH)
+    is_completed = transcribe_diarization_gcs_beta.transcribe_diarization_gcs_beta(
+        GCS_DIARIZATION_AUDIO_PATH
+    )
     assert is_completed
 
 
 def test_transcribe_multilanguage_gcs_bets() -> None:
-    transcript = transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(GCS_MUTLILANGUAGE_PATH)
+    transcript = (
+        transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(
+            GCS_MUTLILANGUAGE_PATH
+        )
+    )
     assert re.search("Transcript: OK Google", transcript)
 
 
 def test_transcribe_word_level_confidence_gcs_beta() -> None:
-    transcript = transcribe_word_level_confidence_gcs_beta.transcribe_file_with_word_level_confidence(GCS_AUDIO_PATH)
+    transcript = transcribe_word_level_confidence_gcs_beta.transcribe_file_with_word_level_confidence(
+        GCS_AUDIO_PATH
+    )
     assert re.search("Transcript: how old is the Brooklyn Bridge", transcript)
     assert re.search("First Word and Confidence: \\(how", transcript)

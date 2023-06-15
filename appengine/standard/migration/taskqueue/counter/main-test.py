@@ -17,41 +17,36 @@ import pytest
 import uuid
 
 
-os.environ['LOCATION'] = 'us-central1'
-os.environ['QUEUE'] = str(uuid.uuid4())
+os.environ["LOCATION"] = "us-central1"
+os.environ["QUEUE"] = str(uuid.uuid4())
 
 # Cannot import main until some environment variables have been set up
-import main     # noqa: E402
+import main  # noqa: E402
 
 
-TEST_NAME = 'taskqueue-migration-' + os.environ['QUEUE']
-TEST_TASKS = {
-    'alpha': 2,
-    'beta': 1,
-    'gamma': 3
-}
+TEST_NAME = "taskqueue-migration-" + os.environ["QUEUE"]
+TEST_TASKS = {"alpha": 2, "beta": 1, "gamma": 3}
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def queue():
     # Setup - create unique Cloud Tasks queue
     project = main.project
     location = main.location
-    parent = 'projects/{}/locations/{}'.format(project, location)
+    parent = "projects/{}/locations/{}".format(project, location)
 
     queue = main.client.create_queue(
-        parent=parent,
-        queue={'name': parent + '/queues/' + TEST_NAME}
+        parent=parent, queue={"name": parent + "/queues/" + TEST_NAME}
     )
 
     yield queue
 
     # Teardown - delete test queue, which also deletes tasks
 
-    main.client.delete_queue(name='{}/queues/{}'.format(parent, TEST_NAME))
+    main.client.delete_queue(name="{}/queues/{}".format(parent, TEST_NAME))
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def entity_kind():
     yield TEST_NAME
 
@@ -73,10 +68,10 @@ def test_get_home_page(queue, entity_kind):
     client = main.app.test_client()
 
     # Counter list should be empty
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Counters' in r.data.decode('utf-8')
-    assert '<li>' not in r.data.decode('utf-8')     # List is empty
+    assert "Counters" in r.data.decode("utf-8")
+    assert "<li>" not in r.data.decode("utf-8")  # List is empty
 
     # Restore main globals
     main.queue_name = save_queue
@@ -94,19 +89,16 @@ def test_enqueuetasks(queue):
     # Post tasks stage, queueing them up
     for task in TEST_TASKS:
         for i in range(TEST_TASKS[task]):
-            r = client.post('/', data={'key': task})
+            r = client.post("/", data={"key": task})
             assert r.status_code == 302
-            assert r.headers.get('location').count('/') == 3
+            assert r.headers.get("location").count("/") == 3
 
     # See if tasks have been created
     counters_found = {}
     tasks = main.client.list_tasks(parent=queue.name)
     for task in tasks:
         details = main.client.get_task(
-            request={
-                'name': task.name,
-                'response_view': main.tasks.Task.View.FULL
-            }
+            request={"name": task.name, "response_view": main.tasks.Task.View.FULL}
         )
 
         key = details.app_engine_http_request.body.decode()
@@ -140,39 +132,35 @@ def test_processtasks(entity_kind):
     for key in TEST_TASKS:
         for i in range(TEST_TASKS[key]):
             r = client.post(
-                '/push-task',
+                "/push-task",
                 data=key,
-                content_type='text/plain',
-                headers=[('X-AppEngine-QueueName', main.queue_name)]
+                content_type="text/plain",
+                headers=[("X-AppEngine-QueueName", main.queue_name)],
             )
 
         assert r.status_code == 200
-        assert r.data == b'OK'
+        assert r.data == b"OK"
 
     # Push tasks with bad X-AppEngine-QueueName header
     r = client.post(
-            '/push-task',
-            data=key,
-            content_type='text/plain',
-            headers=[('X-AppEngine-QueueName', 'WRONG-NAME')]
-        )
+        "/push-task",
+        data=key,
+        content_type="text/plain",
+        headers=[("X-AppEngine-QueueName", "WRONG-NAME")],
+    )
     assert r.status_code == 200
-    assert r.data == b'REJECTED'
+    assert r.data == b"REJECTED"
 
-    r = client.post(
-            '/push-task',
-            data=key,
-            content_type='text/plain'
-        )
+    r = client.post("/push-task", data=key, content_type="text/plain")
     assert r.status_code == 200
-    assert r.data == b'REJECTED'
+    assert r.data == b"REJECTED"
 
     # See that all the tasks were correctly processed
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Counters' in r.data.decode('utf-8')
+    assert "Counters" in r.data.decode("utf-8")
     for key in TEST_TASKS:
-        assert '{}: {}'.format(key, TEST_TASKS[key]) in r.data.decode('utf-8')
+        assert "{}: {}".format(key, TEST_TASKS[key]) in r.data.decode("utf-8")
 
     # Restore main globals
     main.entity_kind = save_entity_kind

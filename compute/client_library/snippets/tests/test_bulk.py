@@ -63,13 +63,14 @@ def instance_template():
 def test_bulk_create(instance_template):
     name_pattern = "i-##-" + uuid.uuid4().hex[:5]
 
-    instances = create_five_instances(PROJECT, INSTANCE_ZONE, instance_template.name,
-                                      name_pattern)
+    instances = create_five_instances(
+        PROJECT, INSTANCE_ZONE, instance_template.name, name_pattern
+    )
 
     names = [instance.name for instance in instances]
     try:
         for i in range(1, 6):
-            name = name_pattern.replace('##', f"0{i}")
+            name = name_pattern.replace("##", f"0{i}")
             assert name in names
     finally:
         for name in names:

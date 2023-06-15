@@ -49,7 +49,6 @@ slate_uri = f"https://storage.googleapis.com/{input_bucket_name}{slate_video_fil
 
 
 def test_live_session_operations(capsys: pytest.fixture) -> None:
-
     # Test setup
 
     slate_name = f"projects/{project_id}/locations/{location}/slates/{slate_id}"

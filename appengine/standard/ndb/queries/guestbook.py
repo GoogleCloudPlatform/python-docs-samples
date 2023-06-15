@@ -21,6 +21,7 @@ import webapp2
 
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
+
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
 
@@ -33,18 +34,18 @@ class MainPage(webapp2.RequestHandler):
     GREETINGS_PER_PAGE = 20
 
     def get(self):
-        guestbook_name = self.request.get('guestbook_name')
-        ancestor_key = ndb.Key('Book', guestbook_name or '*notitle*')
-        greetings = Greeting.query_book(ancestor_key).fetch(
-            self.GREETINGS_PER_PAGE)
+        guestbook_name = self.request.get("guestbook_name")
+        ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
+        greetings = Greeting.query_book(ancestor_key).fetch(self.GREETINGS_PER_PAGE)
 
-        self.response.out.write('<html><body>')
+        self.response.out.write("<html><body>")
 
         for greeting in greetings:
             self.response.out.write(
-                '<blockquote>%s</blockquote>' % cgi.escape(greeting.content))
+                "<blockquote>%s</blockquote>" % cgi.escape(greeting.content)
+            )
 
-        self.response.out.write('</body></html>')
+        self.response.out.write("</body></html>")
 
 
 class List(webapp2.RequestHandler):
@@ -52,24 +53,30 @@ class List(webapp2.RequestHandler):
 
     def get(self):
         """Handles requests like /list?cursor=1234567."""
-        cursor = Cursor(urlsafe=self.request.get('cursor'))
+        cursor = Cursor(urlsafe=self.request.get("cursor"))
         greets, next_cursor, more = Greeting.query().fetch_page(
-            self.GREETINGS_PER_PAGE, start_cursor=cursor)
+            self.GREETINGS_PER_PAGE, start_cursor=cursor
+        )
 
-        self.response.out.write('<html><body>')
+        self.response.out.write("<html><body>")
 
         for greeting in greets:
             self.response.out.write(
-                '<blockquote>%s</blockquote>' % cgi.escape(greeting.content))
+                "<blockquote>%s</blockquote>" % cgi.escape(greeting.content)
+            )
 
         if more and next_cursor:
-            self.response.out.write('<a href="/list?cursor=%s">More...</a>' %
-                                    next_cursor.urlsafe())
+            self.response.out.write(
+                '<a href="/list?cursor=%s">More...</a>' % next_cursor.urlsafe()
+            )
 
-        self.response.out.write('</body></html>')
+        self.response.out.write("</body></html>")
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage),
-    ('/list', List),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/", MainPage),
+        ("/list", List),
+    ],
+    debug=True,
+)

@@ -34,9 +34,7 @@ def autodelete_instance_name():
 
 
 def test_preemptible_creation(autodelete_instance_name):
-    instance = create_spot_instance(
-        PROJECT, INSTANCE_ZONE, autodelete_instance_name
-    )
+    instance = create_spot_instance(PROJECT, INSTANCE_ZONE, autodelete_instance_name)
 
     assert instance.name == autodelete_instance_name
     assert is_spot_vm(PROJECT, INSTANCE_ZONE, instance.name)

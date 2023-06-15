@@ -29,10 +29,10 @@ requests_toolbelt.adapters.appengine.monkeypatch()
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
     # [START requests_get]
-    url = 'http://www.google.com/humans.txt'
+    url = "http://www.google.com/humans.txt"
     response = requests.get(url)
     response.raise_for_status()
     return response.text
@@ -41,9 +41,16 @@ def index():
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
+
+
 # [END app]

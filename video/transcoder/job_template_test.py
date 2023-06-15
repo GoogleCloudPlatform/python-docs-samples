@@ -29,7 +29,6 @@ template_id = f"my-python-test-template-{uuid.uuid4()}"
 
 
 def test_template_operations(capsys):
-
     # Enable the following API on the test project:
     # *   Transcoder API
 

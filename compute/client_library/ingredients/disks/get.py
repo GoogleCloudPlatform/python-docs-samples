@@ -31,4 +31,6 @@ def get_disk(project_id: str, zone: str, disk_name: str) -> compute_v1.Disk:
     """
     disk_client = compute_v1.DisksClient()
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
+
 # </INGREDIENT>

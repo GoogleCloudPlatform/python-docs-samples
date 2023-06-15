@@ -18,19 +18,20 @@ import pytest
 @pytest.fixture
 def app():
     import main
+
     main.app.testing = True
     return main.app.test_client()
 
 
 def test_index(app):
-    r = app.get('/')
+    r = app.get("/")
     assert r.status_code == 200
 
 
 def test_log_payload(capsys, app):
-    payload = 'test_payload'
+    payload = "test_payload"
 
-    r = app.post('/example_task_handler', data=payload)
+    r = app.post("/example_task_handler", data=payload)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
@@ -38,8 +39,8 @@ def test_log_payload(capsys, app):
 
 
 def test_empty_payload(capsys, app):
-    r = app.post('/example_task_handler')
+    r = app.post("/example_task_handler")
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    assert 'empty payload' in out
+    assert "empty payload" in out

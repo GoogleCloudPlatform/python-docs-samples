@@ -24,4 +24,5 @@ def test_dag_import(airflow_database):
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     from . import airflow_db_cleanup as module
+
     internal_unit_testing.assert_has_valid_dag(module)

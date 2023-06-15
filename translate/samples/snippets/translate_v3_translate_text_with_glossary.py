@@ -30,8 +30,7 @@ def translate_text_with_glossary(
         glossary_id: The ID of the glossary to use.
 
     Returns:
-        The translated text.
-"""
+        The translated text."""
     client = translate.TranslationServiceClient()
     location = "us-central1"
     parent = f"projects/{project_id}/locations/{location}"
@@ -58,4 +57,6 @@ def translate_text_with_glossary(
         print(f"\t {translation.translated_text}")
 
     return response
+
+
 # [END translate_v3_translate_text_with_glossary]

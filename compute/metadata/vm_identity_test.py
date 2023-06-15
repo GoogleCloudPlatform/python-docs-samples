@@ -45,7 +45,7 @@ def test_vm_identity():
         pytest.skip("Test can only be run inside GCE VM.")
         return
 
-    token = vm_identity.acquire_token(AUDIENCE, 'full', True)
+    token = vm_identity.acquire_token(AUDIENCE, "full", True)
     assert isinstance(token, str) and token
 
     # Because new GCE instances can have their clocks skewed by a lot, we want

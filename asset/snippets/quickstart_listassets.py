@@ -69,4 +69,6 @@ if __name__ == "__main__":
 
     asset_type_list = args.asset_types.split(",")
 
-    list_assets(args.project_id, asset_type_list, int(args.page_size), args.content_type)
+    list_assets(
+        args.project_id, asset_type_list, int(args.page_size), args.content_type
+    )

@@ -24,12 +24,12 @@ def app(testbed):
 
 
 def test_get(app):
-    app.get('/')
+    app.get("/")
 
 
 def test_read(app):
-    app.get('/read')
+    app.get("/read")
 
 
 def test_delete(app):
-    app.get('/delete')
+    app.get("/delete")

@@ -28,6 +28,6 @@ def app():
 
 def test_env_vars(app):
     with app.test_request_context():
-        os.environ['FOO'] = 'bar'
+        os.environ["FOO"] = "bar"
         res = main.env_vars(flask.request)
-        assert res == 'bar'
+        assert res == "bar"

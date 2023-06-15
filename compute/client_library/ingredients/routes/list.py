@@ -24,7 +24,9 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT list_routes>
-def list_routes(project_id: str, ) -> Iterable[compute_v1.Route]:
+def list_routes(
+    project_id: str,
+) -> Iterable[compute_v1.Route]:
     """
     Lists routes in project.
 
@@ -37,4 +39,6 @@ def list_routes(project_id: str, ) -> Iterable[compute_v1.Route]:
 
     route_client = compute_v1.RoutesClient()
     return route_client.list(project=project_id)
+
+
 # </INGREDIENT>

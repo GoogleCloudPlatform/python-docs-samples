@@ -17,6 +17,7 @@ import threading
 
 class ShelfInfo:
     """The contents of a single shelf."""
+
     def __init__(self, shelf):
         self._shelf = shelf
         self._last_book_id = 0
@@ -53,8 +54,7 @@ class Bookstore:
 
     def list_books(self, shelf_id):
         with self._lock:
-            return [book for (
-                _, book) in self._shelves[shelf_id]._books.items()]
+            return [book for (_, book) in self._shelves[shelf_id]._books.items()]
 
     def create_book(self, shelf_id, book):
         with self._lock:

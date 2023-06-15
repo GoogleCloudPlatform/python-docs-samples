@@ -25,24 +25,18 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 class MockPyAudio:
-    def __init__(
-            self: object,
-            audio_filename: str
-    ) -> None:
+    def __init__(self: object, audio_filename: str) -> None:
         self.audio_filename = audio_filename
 
-    def __call__(
-            self: object,
-            *args: object
-    ) -> object:
+    def __call__(self: object, *args: object) -> object:
         return self
 
     def open(
-            self: object,
-            stream_callback: object,
-            rate: int,
-            *args: object,
-            **kwargs: object
+        self: object,
+        stream_callback: object,
+        rate: int,
+        *args: object,
+        **kwargs: object
     ) -> object:
         self.rate = rate
         self.closed = threading.Event()
@@ -63,11 +57,11 @@ class MockPyAudio:
         pass
 
     def stream_audio(
-            self: object,
-            audio_filename: str,
-            callback: object,
-            closed: object,
-            num_frames: int = 512,
+        self: object,
+        audio_filename: str,
+        callback: object,
+        closed: object,
+        num_frames: int = 512,
     ) -> None:
         with open(audio_filename, "rb") as audio_file:
             while not closed.is_set():

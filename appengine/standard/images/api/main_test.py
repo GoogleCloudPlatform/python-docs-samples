@@ -25,26 +25,24 @@ def app(testbed):
 
 
 def test_img(app):
-    with mock.patch('main.images') as mock_images:
-        mock_images.resize.return_value = 'asdf'
-        mock_images.im_feeling_lucky.return_value = 'gsdf'
-        photo = main.Photo(
-            id=234
-        )
-        photo.title = 'asdf'
-        photo.full_size_image = b'123'
+    with mock.patch("main.images") as mock_images:
+        mock_images.resize.return_value = "asdf"
+        mock_images.im_feeling_lucky.return_value = "gsdf"
+        photo = main.Photo(id=234)
+        photo.title = "asdf"
+        photo.full_size_image = b"123"
         photo.put()
 
-        response = app.get('/img?id=%s' % photo.key.id())
+        response = app.get("/img?id=%s" % photo.key.id())
 
         assert response.status_int == 200
 
 
 def test_img_missing(app):
     # Bogus image id, should get error
-    app.get('/img?id=123', status=404)
+    app.get("/img?id=123", status=404)
 
 
 def test_no_img_id(app):
     # No image id, should get error
-    app.get('/img', status=404)
+    app.get("/img", status=404)

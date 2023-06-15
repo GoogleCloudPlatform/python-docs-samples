@@ -57,11 +57,9 @@ class CpuBurner(object):
         """
         start_walltime_sec = self.get_walltime()
         start_cputime_sec = self.get_user_cputime()
-        while (self.get_user_cputime() <
-               start_cputime_sec + REQUEST_CPUTIME_SEC):
+        while self.get_user_cputime() < start_cputime_sec + REQUEST_CPUTIME_SEC:
             self.busy_wait()
-            if (self.get_walltime() >
-                    start_walltime_sec + REQUEST_TIMEOUT_SEC):
+            if self.get_walltime() > start_walltime_sec + REQUEST_TIMEOUT_SEC:
                 sys.exit(1)
 
     def handle_http_request(self):
@@ -77,8 +75,7 @@ class CpuBurner(object):
             return (500, "Request failed\n")
         else:
             end_time = self.get_walltime()
-            response = "Request took %.2f walltime seconds\n" % (
-                end_time - start_time)
+            response = "Request took %.2f walltime seconds\n" % (end_time - start_time)
             return (200, response)
 
 
@@ -102,8 +99,7 @@ class DemoRequestHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.close()
 
 
-class DemoHttpServer(SocketServer.ThreadingMixIn,
-                     BaseHTTPServer.HTTPServer):
+class DemoHttpServer(SocketServer.ThreadingMixIn, BaseHTTPServer.HTTPServer):
     pass
 
 

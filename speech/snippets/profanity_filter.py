@@ -24,10 +24,7 @@ Example usage:
 from google.cloud import speech
 
 
-def sync_recognize_with_profanity_filter_gcs(
-        gcs_uri: str
-) -> speech.RecognizeResponse:
-
+def sync_recognize_with_profanity_filter_gcs(gcs_uri: str) -> speech.RecognizeResponse:
     client = speech.SpeechClient()
 
     audio = {"uri": gcs_uri}
@@ -46,6 +43,8 @@ def sync_recognize_with_profanity_filter_gcs(
         print(f"Transcript: {alternative.transcript}")
 
     return response.results
+
+
 # [END speech_recognize_with_profanity_filter_gcs]
 
 

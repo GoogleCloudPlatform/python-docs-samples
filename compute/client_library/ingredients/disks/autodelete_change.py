@@ -21,7 +21,9 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT set_disk_autodelete>
-def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_name: str, autodelete: bool) -> None:
+def set_disk_autodelete(
+    project_id: str, zone: str, instance_name: str, disk_name: str, autodelete: bool
+) -> None:
     """
     Set the autodelete flag of a disk to given value.
 
@@ -33,17 +35,28 @@ def set_disk_autodelete(project_id: str, zone: str, instance_name: str, disk_nam
         autodelete: the new value of the autodelete flag.
     """
     instance_client = compute_v1.InstancesClient()
-    instance = instance_client.get(project=project_id, zone=zone, instance=instance_name)
+    instance = instance_client.get(
+        project=project_id, zone=zone, instance=instance_name
+    )
 
     for disk in instance.disks:
         if disk.device_name == disk_name:
             break
     else:
-        raise RuntimeError(f"Instance {instance_name} doesn't have a disk named {disk_name} attached.")
+        raise RuntimeError(
+            f"Instance {instance_name} doesn't have a disk named {disk_name} attached."
+        )
 
     disk.auto_delete = autodelete
 
-    operation = instance_client.update(project=project_id, zone=zone, instance=instance_name, instance_resource=instance)
+    operation = instance_client.update(
+        project=project_id,
+        zone=zone,
+        instance=instance_name,
+        instance_resource=instance,
+    )
 
     wait_for_extended_operation(operation, "disk update")
+
+
 # </INGREDIENT>

@@ -50,4 +50,6 @@ def create_empty_disk(
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk.name)
+
+
 # </INGREDIENT>

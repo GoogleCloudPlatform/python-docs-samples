@@ -133,7 +133,6 @@ def test_create_job_from_preset(capsys, test_bucket):
 
 
 def test_create_job_from_template(capsys, test_bucket):
-
     job_template_name = (
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"
     )
