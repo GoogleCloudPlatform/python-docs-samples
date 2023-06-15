@@ -42,8 +42,7 @@ def test_endpoint(client, capsys):
         proto_payload=AuditLog(
             service_name="storage.googleapis.com",
             resource_name="my-bucket/my-file.txt",
-            authentication_info=AuthenticationInfo(
-                principal_email="user@example.com"),
+            authentication_info=AuthenticationInfo(principal_email="user@example.com"),
         )
     )
     event = CloudEvent(ce_attributes, LogEntryData.to_dict(logentry))
