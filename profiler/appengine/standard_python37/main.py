@@ -14,6 +14,7 @@
 """An example of using https://cloud.google.com/profiler on GAE standard."""
 
 from flask import Flask
+
 # [START profiler_python_appengine_standard_python37]
 import googlecloudprofiler
 
@@ -35,14 +36,14 @@ except (ValueError, NotImplementedError) as exc:
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def hello():
     """Return a friendly HTTP greeting."""
-    return 'Hello World!'
+    return "Hello World!"
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally only. When deploying to Google App
     # Engine, a webserver process such as Gunicorn will serve the app. This
     # can be configured by adding an `entrypoint` to app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

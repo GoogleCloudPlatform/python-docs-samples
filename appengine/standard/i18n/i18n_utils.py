@@ -50,22 +50,22 @@ def _get_plural_forms(js_translations):
     """
     plural = None
     n_plural = 2
-    if '' in js_translations._catalog:
-        for l in js_translations._catalog[''].split('\n'):
-            if l.startswith('Plural-Forms:'):
-                plural = l.split(':', 1)[1].strip()
-                print('plural is {}'.format(plural))
+    if "" in js_translations._catalog:
+        for l in js_translations._catalog[""].split("\n"):
+            if l.startswith("Plural-Forms:"):
+                plural = l.split(":", 1)[1].strip()
+                print("plural is {}".format(plural))
     if plural is not None:
-        for raw_element in plural.split(';'):
+        for raw_element in plural.split(";"):
             element = raw_element.strip()
-            if element.startswith('nplurals='):
-                n_plural = int(element.split('=', 1)[1])
-            elif element.startswith('plural='):
-                plural = element.split('=', 1)[1]
-                print('plural is now {}'.format(plural))
+            if element.startswith("nplurals="):
+                n_plural = int(element.split("=", 1)[1])
+            elif element.startswith("plural="):
+                plural = element.split("=", 1)[1]
+                print("plural is now {}".format(plural))
     else:
         n_plural = 2
-        plural = '(n == 1) ? 0 : 1'
+        plural = "(n == 1) ? 0 : 1"
     return plural, n_plural
 
 
@@ -80,20 +80,20 @@ def convert_translations_to_dict(js_translations):
     """
     plural, n_plural = _get_plural_forms(js_translations)
 
-    translations_dict = {'plural': plural, 'catalog': {}, 'fallback': None}
+    translations_dict = {"plural": plural, "catalog": {}, "fallback": None}
     if js_translations._fallback is not None:
-        translations_dict['fallback'] = convert_translations_to_dict(
+        translations_dict["fallback"] = convert_translations_to_dict(
             js_translations._fallback
         )
     for key, value in js_translations._catalog.items():
-        if key == '':
+        if key == "":
             continue
         if isinstance(key, basestring):
-            translations_dict['catalog'][key] = value
+            translations_dict["catalog"][key] = value
         elif isinstance(key, tuple):
-            if key[0] not in translations_dict['catalog']:
-                translations_dict['catalog'][key[0]] = [''] * n_plural
-            translations_dict['catalog'][key[0]][int(key[1])] = value
+            if key[0] not in translations_dict["catalog"]:
+                translations_dict["catalog"][key[0]] = [""] * n_plural
+            translations_dict["catalog"][key[0]][int(key[1])] = value
     return translations_dict
 
 
@@ -110,11 +110,14 @@ class BaseHandler(webapp2.RequestHandler):
 
         jinja2_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(
-                os.path.join(os.path.dirname(__file__), 'templates')),
-            extensions=['jinja2.ext.i18n'])
+                os.path.join(os.path.dirname(__file__), "templates")
+            ),
+            extensions=["jinja2.ext.i18n"],
+        )
         jinja2_env.install_gettext_translations(
-            self.request.environ['i18n_utils.active_translation'])
-        jinja2_env.globals['get_i18n_js_tag'] = self.get_i18n_js_tag
+            self.request.environ["i18n_utils.active_translation"]
+        )
+        jinja2_env.globals["get_i18n_js_tag"] = self.get_i18n_js_tag
         return jinja2_env
 
     def get_i18n_js_tag(self):
@@ -130,8 +133,8 @@ class BaseHandler(webapp2.RequestHandler):
             translation messages for i18n.
         """
 
-        template = self.jinja2_env.get_template('javascript_tag.jinja2')
-        return template.render({'javascript_body': self.get_i18n_js()})
+        template = self.jinja2_env.get_template("javascript_tag.jinja2")
+        return template.render({"javascript_body": self.get_i18n_js()})
 
     def get_i18n_js(self):
         """Generates a Javascript body for i18n in Javascript.
@@ -147,18 +150,21 @@ class BaseHandler(webapp2.RequestHandler):
 
         try:
             js_translations = gettext.translation(
-                'jsmessages', 'locales', fallback=False,
-                languages=self.request.environ[
-                    'i18n_utils.preferred_languages'],
-                codeset='utf-8')
+                "jsmessages",
+                "locales",
+                fallback=False,
+                languages=self.request.environ["i18n_utils.preferred_languages"],
+                codeset="utf-8",
+            )
         except IOError:
-            template = self.jinja2_env.get_template('null_i18n_js.jinja2')
+            template = self.jinja2_env.get_template("null_i18n_js.jinja2")
             return template.render()
 
         translations_dict = convert_translations_to_dict(js_translations)
-        template = self.jinja2_env.get_template('i18n_js.jinja2')
+        template = self.jinja2_env.get_template("i18n_js.jinja2")
         return template.render(
-            {'translations': json.dumps(translations_dict, indent=1)})
+            {"translations": json.dumps(translations_dict, indent=1)}
+        )
 
 
 class I18nMiddleware(object):
@@ -169,7 +175,7 @@ class I18nMiddleware(object):
     Python runtime.
     """
 
-    def __init__(self, app, default_language='en', locale_path=None):
+    def __init__(self, app, default_language="en", locale_path=None):
         """A constructor for this middleware.
 
         Args:
@@ -183,7 +189,8 @@ class I18nMiddleware(object):
         self.app = app
         if locale_path is None:
             locale_path = os.path.join(
-                os.path.abspath(os.path.dirname(__file__)), 'locales')
+                os.path.abspath(os.path.dirname(__file__)), "locales"
+            )
         self.locale_path = locale_path
         self.default_language = default_language
 
@@ -203,10 +210,14 @@ class I18nMiddleware(object):
         if self.default_language not in preferred_languages:
             preferred_languages.append(self.default_language)
         translation = gettext.translation(
-            'messages', self.locale_path, fallback=True,
-            languages=preferred_languages, codeset='utf-8')
-        translation.install(unicode=True, names=['gettext', 'ngettext'])
-        environ['i18n_utils.active_translation'] = translation
-        environ['i18n_utils.preferred_languages'] = preferred_languages
+            "messages",
+            self.locale_path,
+            fallback=True,
+            languages=preferred_languages,
+            codeset="utf-8",
+        )
+        translation.install(unicode=True, names=["gettext", "ngettext"])
+        environ["i18n_utils.active_translation"] = translation
+        environ["i18n_utils.preferred_languages"] = preferred_languages
 
         return self.app(environ, start_response)

@@ -23,10 +23,18 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_route>
-def create_route(project_id: str, network: str, route_name: str, destination_range: str, *,
-                 next_hop_gateway: str | None = None,
-                 next_hop_ip: str | None = None, next_hop_instance: str | None = None,
-                 next_hop_vpn_tunnel: str | None = None, next_hop_ilb: str | None = None) -> compute_v1.Route:
+def create_route(
+    project_id: str,
+    network: str,
+    route_name: str,
+    destination_range: str,
+    *,
+    next_hop_gateway: str | None = None,
+    next_hop_ip: str | None = None,
+    next_hop_instance: str | None = None,
+    next_hop_vpn_tunnel: str | None = None,
+    next_hop_ilb: str | None = None,
+) -> compute_v1.Route:
     """
     Create a new route in selected network by providing a destination and next hop name.
 
@@ -54,7 +62,13 @@ def create_route(project_id: str, network: str, route_name: str, destination_ran
     Returns:
         A new compute_v1.Route object.
     """
-    excl_args = {next_hop_instance, next_hop_ilb, next_hop_vpn_tunnel, next_hop_gateway, next_hop_ip}
+    excl_args = {
+        next_hop_instance,
+        next_hop_ilb,
+        next_hop_vpn_tunnel,
+        next_hop_gateway,
+        next_hop_ip,
+    }
     args_set = sum(1 if arg is not None else 0 for arg in excl_args)
 
     if args_set != 1:
@@ -82,4 +96,6 @@ def create_route(project_id: str, network: str, route_name: str, destination_ran
     wait_for_extended_operation(operation, "route creation")
 
     return route_client.get(project=project_id, route=route_name)
+
+
 # </INGREDIENT>

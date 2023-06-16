@@ -78,7 +78,6 @@ with models.DAG(
     schedule_interval=datetime.timedelta(days=1),
     default_args=default_dag_args,
 ) as dag:
-
     s3_to_gcs_op = S3ToGCSOperator(
         task_id="s3_to_gcs",
         bucket=S3_BUCKET_NAME,
@@ -110,7 +109,6 @@ with models.DAG(
     )
 
     with TaskGroup("join_bq_datasets") as bq_join_group:
-
         for year in range(1997, 2022):
             BQ_DATASET_NAME = f"bigquery-public-data.ghcn_d.ghcnd_{str(year)}"
             BQ_DESTINATION_TABLE_NAME = "holidays_weather_joined"

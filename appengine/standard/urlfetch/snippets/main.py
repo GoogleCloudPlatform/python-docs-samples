@@ -22,34 +22,36 @@ import urllib
 
 # [START urllib2-imports]
 import urllib2
+
 # [END urllib2-imports]
 
 # [START urlfetch-imports]
 from google.appengine.api import urlfetch
+
 # [END urlfetch-imports]
 import webapp2
 
 
 class UrlLibFetchHandler(webapp2.RequestHandler):
-    """ Demonstrates an HTTP query using urllib2"""
+    """Demonstrates an HTTP query using urllib2"""
 
     def get(self):
         # [START urllib-get]
-        url = 'http://www.google.com/humans.txt'
+        url = "http://www.google.com/humans.txt"
         try:
             result = urllib2.urlopen(url)
             self.response.write(result.read())
         except urllib2.URLError:
-            logging.exception('Caught exception fetching url')
+            logging.exception("Caught exception fetching url")
         # [END urllib-get]
 
 
 class UrlFetchHandler(webapp2.RequestHandler):
-    """ Demonstrates an HTTP query using urlfetch"""
+    """Demonstrates an HTTP query using urlfetch"""
 
     def get(self):
         # [START urlfetch-get]
-        url = 'http://www.google.com/humans.txt'
+        url = "http://www.google.com/humans.txt"
         try:
             result = urlfetch.fetch(url)
             if result.status_code == 200:
@@ -57,44 +59,48 @@ class UrlFetchHandler(webapp2.RequestHandler):
             else:
                 self.response.status_code = result.status_code
         except urlfetch.Error:
-            logging.exception('Caught exception fetching url')
+            logging.exception("Caught exception fetching url")
         # [END urlfetch-get]
 
 
 class UrlPostHandler(webapp2.RequestHandler):
-    """ Demonstrates an HTTP POST form query using urlfetch"""
+    """Demonstrates an HTTP POST form query using urlfetch"""
 
     form_fields = {
-        'first_name': 'Albert',
-        'last_name': 'Johnson',
+        "first_name": "Albert",
+        "last_name": "Johnson",
     }
 
     def get(self):
         # [START urlfetch-post]
         try:
             form_data = urllib.urlencode(UrlPostHandler.form_fields)
-            headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+            headers = {"Content-Type": "application/x-www-form-urlencoded"}
             result = urlfetch.fetch(
-                url='http://localhost:8080/submit_form',
+                url="http://localhost:8080/submit_form",
                 payload=form_data,
                 method=urlfetch.POST,
-                headers=headers)
+                headers=headers,
+            )
             self.response.write(result.content)
         except urlfetch.Error:
-            logging.exception('Caught exception fetching url')
+            logging.exception("Caught exception fetching url")
         # [END urlfetch-post]
 
 
 class SubmitHandler(webapp2.RequestHandler):
-    """ Handler that receives UrlPostHandler POST request"""
+    """Handler that receives UrlPostHandler POST request"""
 
     def post(self):
-        self.response.out.write((self.request.get('first_name')))
+        self.response.out.write((self.request.get("first_name")))
 
 
-app = webapp2.WSGIApplication([
-    ('/', UrlLibFetchHandler),
-    ('/url_fetch', UrlFetchHandler),
-    ('/url_post', UrlPostHandler),
-    ('/submit_form', SubmitHandler)
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/", UrlLibFetchHandler),
+        ("/url_fetch", UrlFetchHandler),
+        ("/url_post", UrlPostHandler),
+        ("/submit_form", SubmitHandler),
+    ],
+    debug=True,
+)

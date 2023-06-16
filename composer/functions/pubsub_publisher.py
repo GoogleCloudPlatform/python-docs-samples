@@ -34,10 +34,10 @@ def pubsub_publisher(request):
     """
     request_json = request.get_json()
     print(request_json)
-    if request.args and 'message' in request.args:
-        data_str = request.args.get('message')
-    elif request_json and 'message' in request_json:
-        data_str = request_json['message']
+    if request.args and "message" in request.args:
+        data_str = request.args.get("message")
+    elif request_json and "message" in request_json:
+        data_str = request_json["message"]
     else:
         return "Message content not found! Use 'message' key to specify"
 
@@ -50,10 +50,10 @@ def pubsub_publisher(request):
     data = data_str.encode("utf-8")
     # When you publish a message, the client returns a future.
     message_length = len(data_str)
-    future = publisher.publish(topic_path,
-                               data,
-                               message_length=str(message_length))
+    future = publisher.publish(topic_path, data, message_length=str(message_length))
     print(future.result())
 
     return f"Message {data} with message_length {message_length} published to {topic_path}."
+
+
 # [END composer_pubsub_publisher_function]

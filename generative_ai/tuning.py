@@ -21,7 +21,7 @@ import pandas as pd
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel
 
-credentials, _ = default(scopes=['https://www.googleapis.com/auth/cloud-platform'])
+credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
 
 def tuning(
@@ -50,11 +50,7 @@ def tuning(
       training_data: GCS URI of jsonl file or pandas dataframe of training data
       train_steps: Number of training steps to use when tuning the model.
     """
-    vertexai.init(
-        project=project_id,
-        location=location,
-        credentials=credentials
-    )
+    vertexai.init(project=project_id, location=location, credentials=credentials)
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
@@ -66,7 +62,7 @@ def tuning(
     )
 
     print(model._job.status)
-# [END aiplatform_sdk_tuning]
+    # [END aiplatform_sdk_tuning]
     return model
 
 

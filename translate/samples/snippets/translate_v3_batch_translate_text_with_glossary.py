@@ -83,4 +83,6 @@ def batch_translate_text_with_glossary(
     print(f"Translated Characters: {response.translated_characters}")
 
     return response
+
+
 # [END translate_v3_batch_translate_text_with_glossary]

@@ -19,8 +19,11 @@
 
 from google.cloud import compute_v1
 
+
 # <INGREDIENT create_with_ssd>
-def create_with_ssd(project_id: str, zone: str, instance_name: str) -> compute_v1.Instance:
+def create_with_ssd(
+    project_id: str, zone: str, instance_name: str
+) -> compute_v1.Instance:
     """
     Create a new VM instance with Debian 10 operating system and SSD local disk.
 
@@ -32,12 +35,14 @@ def create_with_ssd(project_id: str, zone: str, instance_name: str) -> compute_v
     Returns:
         Instance object.
     """
-    newest_debian = get_image_from_family(
-        project="debian-cloud", family="debian-10"
-    )
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
-    disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link, True),
-             local_ssd_disk(zone)]
+    disks = [
+        disk_from_image(disk_type, 10, True, newest_debian.self_link, True),
+        local_ssd_disk(zone),
+    ]
     instance = create_instance(project_id, zone, instance_name, disks)
     return instance
+
+
 # </INGREDIENT>

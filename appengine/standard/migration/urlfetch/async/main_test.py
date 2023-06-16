@@ -22,13 +22,13 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Google is built by a large team ' in r.data.decode('utf-8')
+    assert "Google is built by a large team " in r.data.decode("utf-8")
 
-    r = client.get('/callback')
+    r = client.get("/callback")
     assert r.status_code == 200
-    assert 'Response number 1 is ' in r.data.decode('utf-8')
-    assert 'Response number 2 is ' in r.data.decode('utf-8')
-    assert 'Response number 3 is ' in r.data.decode('utf-8')
-    assert 'Response number 4 is ' in r.data.decode('utf-8')
+    assert "Response number 1 is " in r.data.decode("utf-8")
+    assert "Response number 2 is " in r.data.decode("utf-8")
+    assert "Response number 3 is " in r.data.decode("utf-8")
+    assert "Response number 4 is " in r.data.decode("utf-8")

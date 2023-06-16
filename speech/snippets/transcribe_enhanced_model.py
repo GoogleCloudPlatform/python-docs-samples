@@ -25,9 +25,7 @@ import argparse
 from google.cloud import speech
 
 
-def transcribe_file_with_enhanced_model(
-        path: str
-) -> speech.RecognizeResponse:
+def transcribe_file_with_enhanced_model(path: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file using an enhanced model."""
 
     client = speech.SpeechClient()
