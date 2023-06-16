@@ -56,4 +56,5 @@ def sample_delete_document_schema(
     # Print response
     print("Document Schema Deleted:", response)
 
+
 # [END contentwarehouse_delete_document_schema]
