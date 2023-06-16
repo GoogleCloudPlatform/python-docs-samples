@@ -316,7 +316,7 @@ assign_prs_by:
       - "api: auth"
     to:
       - arithmetic1728
-  -labels:
+  - labels:
       - "api: appengine"
     to:
       - jinglundong
