@@ -30,20 +30,20 @@ instances_client = compute_v1.InstancesClient()
 # @param {object} cloudevent.data.protoPayload The Cloud Audit Log entry.
 def label_gce_instance(cloudevent):
     # Extract parameters from the CloudEvent + Cloud Audit Log data
-    payload = cloudevent.data.get('protoPayload', dict())
-    auth_info = payload.get('authenticationInfo', dict())
-    creator = auth_info.get('principalEmail')
+    payload = cloudevent.data.get("protoPayload", dict())
+    auth_info = payload.get("authenticationInfo", dict())
+    creator = auth_info.get("principalEmail")
 
     # Get relevant VM instance details from the cloudevent's `subject` property
     # Example value:
     #   compute.googleapis.com/projects/<PROJECT_ID>/zones/<ZONE_ID>/instances/<INSTANCE_NAME>
-    instance_params = cloudevent['subject'].split('/')
+    instance_params = cloudevent["subject"].split("/")
 
     # Validate data
     if not creator or not instance_params or len(instance_params) != 7:
         # This is not something retries will fix, so don't throw an Exception
         # (Thrown exceptions trigger retries *if* you enable retries in GCF.)
-        print('ERROR: Invalid `principalEmail` and/or CloudEvent `subject`.')
+        print("ERROR: Invalid `principalEmail` and/or CloudEvent `subject`.")
         return
 
     instance_project = instance_params[2]
@@ -51,40 +51,40 @@ def label_gce_instance(cloudevent):
     instance_name = instance_params[6]
 
     # Format the 'creator' parameter to match GCE label validation requirements
-    creator = re.sub('\\W', '_', creator.lower())
+    creator = re.sub("\\W", "_", creator.lower())
 
     # Get the newly-created VM instance's label fingerprint
     # This is required by the Compute Engine API to prevent duplicate labels
     instance = instances_client.get(
-        project=instance_project,
-        zone=instance_zone,
-        instance=instance_name
+        project=instance_project, zone=instance_zone, instance=instance_name
     )
 
     # Construct API call to label the VM instance with its creator
     request_init = {
-        'project': instance_project,
-        'zone': instance_zone,
-        'instance': instance_name
+        "project": instance_project,
+        "zone": instance_zone,
+        "instance": instance_name,
     }
-    request_init['instances_set_labels_request_resource'] = \
-        compute.InstancesSetLabelsRequest(
-            label_fingerprint=instance.label_fingerprint,
-            labels={'creator': creator}
-        )
+    request_init[
+        "instances_set_labels_request_resource"
+    ] = compute.InstancesSetLabelsRequest(
+        label_fingerprint=instance.label_fingerprint, labels={"creator": creator}
+    )
     request = compute.SetLabelsInstanceRequest(request_init)
 
     # Perform instance-labeling API call
     try:
         instances_client.set_labels_unary(request)
-        print(f'Labelled VM instance {instance_name} with creator: {creator}')
+        print(f"Labelled VM instance {instance_name} with creator: {creator}")
     except GoogleAPIError as e:
         # Swallowing the exception means failed invocations WON'T be retried
-        print('Label operation failed', e)
+        print("Label operation failed", e)
 
         # Uncomment the line below to retry failed invocations.
         # (You'll also have to enable retries in Cloud Functions itself.)
         # raise e
 
     return
+
+
 # [END functions_label_gce_instance]

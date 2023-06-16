@@ -32,9 +32,7 @@ client = speech.AdaptationClient()
 
 @Retry()
 def test_model_adaptation_beta(
-    custom_class_id: str,
-    phrase_set_id: str,
-    capsys: pytest.CaptureFixture
+    custom_class_id: str, phrase_set_id: str, capsys: pytest.CaptureFixture
 ) -> None:
     class_id = custom_class_id
     phrase_id = phrase_set_id

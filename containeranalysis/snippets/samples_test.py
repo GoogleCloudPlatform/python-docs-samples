@@ -37,7 +37,9 @@ from create_occurrence import create_occurrence
 from create_occurrence_subscription import create_occurrence_subscription
 from delete_note import delete_note
 from delete_occurrence import delete_occurrence
-from find_high_severity_vulnerabilities_for_image import find_high_severity_vulnerabilities_for_image
+from find_high_severity_vulnerabilities_for_image import (
+    find_high_severity_vulnerabilities_for_image,
+)
 from find_vulnerabilities_for_image import find_vulnerabilities_for_image
 from get_note import get_note
 from get_occurrence import get_occurrence
@@ -121,9 +123,7 @@ class TestContainerAnalysisSamples:
 
     def test_occurrences_for_image(self) -> None:
         orig_count = get_occurrences_for_image(self.image_url, PROJECT_ID)
-        occ = create_occurrence(
-            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
-        )
+        occ = create_occurrence(self.image_url, self.note_id, PROJECT_ID, PROJECT_ID)
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
@@ -137,9 +137,7 @@ class TestContainerAnalysisSamples:
 
     def test_occurrences_for_note(self) -> None:
         orig_count = get_occurrences_for_note(self.note_id, PROJECT_ID)
-        occ = create_occurrence(
-            self.image_url, self.note_id, PROJECT_ID, PROJECT_ID
-        )
+        occ = create_occurrence(self.image_url, self.note_id, PROJECT_ID, PROJECT_ID)
         new_count = 0
         tries = 0
         while new_count != 1 and tries < TRY_LIMIT:
@@ -243,9 +241,7 @@ class TestContainerAnalysisSamples:
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = find_vulnerabilities_for_image(
-                self.image_url, PROJECT_ID
-            )
+            occ_list = find_vulnerabilities_for_image(self.image_url, PROJECT_ID)
             count = len(occ_list)
             time.sleep(SLEEP_TIME)
         assert len(occ_list) == 1
@@ -300,9 +296,7 @@ class TestContainerAnalysisSamples:
         count = 0
         while count != 1 and tries < TRY_LIMIT:
             tries += 1
-            occ_list = find_vulnerabilities_for_image(
-                self.image_url, PROJECT_ID
-            )
+            occ_list = find_vulnerabilities_for_image(self.image_url, PROJECT_ID)
             count = len(occ_list)
             time.sleep(SLEEP_TIME)
         assert len(occ_list) == 1

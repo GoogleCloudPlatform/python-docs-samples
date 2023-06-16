@@ -44,8 +44,8 @@ def create_firewall_rule_for_windows_activation_host(
     firewall_rule.network = network
 
     allowed = compute_v1.Allowed()
-    allowed.ports = ['1688']
-    allowed.I_p_protocol = 'tcp'
+    allowed.ports = ["1688"]
+    allowed.I_p_protocol = "tcp"
 
     firewall_rule.allowed = [allowed]
     firewall_rule.destination_ranges = ["35.190.247.13/32"]
@@ -53,10 +53,13 @@ def create_firewall_rule_for_windows_activation_host(
     firewall_rule.priority = 0
 
     firewall_client = compute_v1.FirewallsClient()
-    operation = firewall_client.insert(project=project_id, firewall_resource=firewall_rule)
+    operation = firewall_client.insert(
+        project=project_id, firewall_resource=firewall_rule
+    )
 
     wait_for_extended_operation(operation, "windows KSM firewall rule creation")
 
     return firewall_client.get(project=project_id, firewall=firewall_rule_name)
-# </INGREDIENT>
 
+
+# </INGREDIENT>

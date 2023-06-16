@@ -204,7 +204,14 @@ def _session_tests(
         with open("requirements.txt") as rfile:
             packages = rfile.read()
         if os.path.exists("constraints.txt"):
-            session.install("-r", "requirements.txt", "-c", "constraints.txt", "--only-binary", ":all")
+            session.install(
+                "-r",
+                "requirements.txt",
+                "-c",
+                "constraints.txt",
+                "--only-binary",
+                ":all",
+            )
         elif "pyspark" in packages:
             session.install("-r", "requirements.txt", "--use-pep517")
         else:
@@ -215,7 +222,12 @@ def _session_tests(
             packages += rtfile.read()
         if os.path.exists("constraints-test.txt"):
             session.install(
-                "-r", "requirements-test.txt", "-c", "constraints-test.txt", "--only-binary", ":all"
+                "-r",
+                "requirements-test.txt",
+                "-c",
+                "constraints-test.txt",
+                "--only-binary",
+                ":all",
             )
         else:
             session.install("-r", "requirements-test.txt", "--only-binary", ":all")
@@ -227,9 +239,9 @@ def _session_tests(
         post_install(session)
 
     if "pytest-parallel" in packages:
-        concurrent_args.extend(['--workers', 'auto', '--tests-per-worker', 'auto'])
+        concurrent_args.extend(["--workers", "auto", "--tests-per-worker", "auto"])
     elif "pytest-xdist" in packages:
-        concurrent_args.extend(['-n', 'auto'])
+        concurrent_args.extend(["-n", "auto"])
 
     session.run(
         "pytest",

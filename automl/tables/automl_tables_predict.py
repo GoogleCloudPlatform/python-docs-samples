@@ -51,15 +51,11 @@ def predict(
             feature_importance=True,
         )
     else:
-        response = client.predict(
-            model_display_name=model_display_name, inputs=inputs
-        )
+        response = client.predict(model_display_name=model_display_name, inputs=inputs)
 
     print("Prediction results:")
     for result in response.payload:
-        print(
-            f"Predicted class name: {result.tables.value}"
-        )
+        print(f"Predicted class name: {result.tables.value}")
         print(f"Predicted class score: {result.tables.score}")
 
         if feature_importance:
@@ -82,12 +78,7 @@ def predict(
 
 
 def batch_predict_bq(
-    project_id,
-    compute_region,
-    model_display_name,
-    bq_input_uri,
-    bq_output_uri,
-    params
+    project_id, compute_region, model_display_name, bq_input_uri, bq_output_uri, params
 ):
     """Make a batch of predictions."""
     # [START automl_tables_batch_predict_bq]
@@ -104,10 +95,12 @@ def batch_predict_bq(
     client = automl.TablesClient(project=project_id, region=compute_region)
 
     # Query model
-    response = client.batch_predict(bigquery_input_uri=bq_input_uri,
-                                    bigquery_output_uri=bq_output_uri,
-                                    model_display_name=model_display_name,
-                                    params=params)
+    response = client.batch_predict(
+        bigquery_input_uri=bq_input_uri,
+        bigquery_output_uri=bq_output_uri,
+        model_display_name=model_display_name,
+        params=params,
+    )
     print("Making batch prediction... ")
     # `response` is a async operation descriptor,
     # you can register a callback for the operation to complete via `add_done_callback`:
@@ -119,10 +112,15 @@ def batch_predict_bq(
     response.result()
     # AutoML puts predictions in a newly generated dataset with a name by a mask "prediction_" + model_id + "_" + timestamp
     # here's how to get the dataset name:
-    dataset_name = response.metadata.batch_predict_details.output_info.bigquery_output_dataset
+    dataset_name = (
+        response.metadata.batch_predict_details.output_info.bigquery_output_dataset
+    )
 
-    print("Batch prediction complete.\nResults are in '{}' dataset.\n{}".format(
-        dataset_name, response.metadata))
+    print(
+        "Batch prediction complete.\nResults are in '{}' dataset.\n{}".format(
+            dataset_name, response.metadata
+        )
+    )
 
     # [END automl_tables_batch_predict_bq]
 
@@ -154,7 +152,7 @@ def batch_predict(
         gcs_input_uris=gcs_input_uri,
         gcs_output_uri_prefix=gcs_output_uri,
         model_display_name=model_display_name,
-        params=params
+        params=params,
     )
     print("Making batch prediction... ")
     # `response` is a async operation descriptor,
@@ -182,9 +180,7 @@ if __name__ == "__main__":
     predict_parser.add_argument("--model_display_name")
     predict_parser.add_argument("--file_path")
 
-    batch_predict_parser = subparsers.add_parser(
-        "batch_predict", help=predict.__doc__
-    )
+    batch_predict_parser = subparsers.add_parser("batch_predict", help=predict.__doc__)
     batch_predict_parser.add_argument("--model_display_name")
     batch_predict_parser.add_argument("--input_path")
     batch_predict_parser.add_argument("--output_path")
@@ -195,9 +191,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.command == "predict":
-        predict(
-            project_id, compute_region, args.model_display_name, args.file_path
-        )
+        predict(project_id, compute_region, args.model_display_name, args.file_path)
 
     if args.command == "batch_predict":
         batch_predict(

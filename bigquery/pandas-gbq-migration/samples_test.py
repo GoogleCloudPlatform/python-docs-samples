@@ -46,10 +46,10 @@ def test_client_library_query():
     df = client.query(sql).to_dataframe()
 
     # Run a Standard SQL query with the project set explicitly
-    project_id = 'your-project-id'
+    project_id = "your-project-id"
     # [END bigquery_migration_client_library_query]
     assert len(df) > 0
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     # [START bigquery_migration_client_library_query]
     df = client.query(sql, project=project_id).to_dataframe()
     # [END bigquery_migration_client_library_query]
@@ -68,15 +68,15 @@ def test_pandas_gbq_query():
     """
 
     # Run a Standard SQL query using the environment's default project
-    df = pandas.read_gbq(sql, dialect='standard')
+    df = pandas.read_gbq(sql, dialect="standard")
 
     # Run a Standard SQL query with the project set explicitly
-    project_id = 'your-project-id'
+    project_id = "your-project-id"
     # [END bigquery_migration_pandas_gbq_query]
     assert len(df) > 0
-    project_id = os.environ['GOOGLE_CLOUD_PROJECT']
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     # [START bigquery_migration_pandas_gbq_query]
-    df = pandas.read_gbq(sql, project_id=project_id, dialect='standard')
+    df = pandas.read_gbq(sql, project_id=project_id, dialect="standard")
     # [END bigquery_migration_pandas_gbq_query]
     assert len(df) > 0
 
@@ -104,7 +104,7 @@ def test_pandas_gbq_query_bqstorage():
     sql = "SELECT * FROM `bigquery-public-data.irs_990.irs_990_2012`"
 
     # Use the BigQuery Storage API to download results more quickly.
-    df = pandas.read_gbq(sql, dialect='standard', use_bqstorage_api=True)
+    df = pandas.read_gbq(sql, dialect="standard", use_bqstorage_api=True)
     # [END bigquery_migration_pandas_gbq_query_bqstorage]
     assert len(df) > 0
 
@@ -138,7 +138,7 @@ def test_pandas_gbq_legacy_query():
         LIMIT 100
     """
 
-    df = pandas.read_gbq(sql, dialect='legacy')
+    df = pandas.read_gbq(sql, dialect="legacy")
     # [END bigquery_migration_pandas_gbq_query_legacy]
     assert len(df) > 0
 
@@ -156,8 +156,8 @@ def test_client_library_query_with_parameters():
     """
     query_config = bigquery.QueryJobConfig(
         query_parameters=[
-            bigquery.ScalarQueryParameter('state', 'STRING', 'TX'),
-            bigquery.ScalarQueryParameter('limit', 'INTEGER', 100)
+            bigquery.ScalarQueryParameter("state", "STRING", "TX"),
+            bigquery.ScalarQueryParameter("limit", "INTEGER", 100),
         ]
     )
 
@@ -177,20 +177,20 @@ def test_pandas_gbq_query_with_parameters():
         LIMIT @limit
     """
     query_config = {
-        'query': {
-            'parameterMode': 'NAMED',
-            'queryParameters': [
+        "query": {
+            "parameterMode": "NAMED",
+            "queryParameters": [
                 {
-                    'name': 'state',
-                    'parameterType': {'type': 'STRING'},
-                    'parameterValue': {'value': 'TX'}
+                    "name": "state",
+                    "parameterType": {"type": "STRING"},
+                    "parameterValue": {"value": "TX"},
                 },
                 {
-                    'name': 'limit',
-                    'parameterType': {'type': 'INTEGER'},
-                    'parameterValue': {'value': 100}
-                }
-            ]
+                    "name": "limit",
+                    "parameterType": {"type": "INTEGER"},
+                    "parameterValue": {"value": 100},
+                },
+            ],
         }
     }
 
@@ -206,33 +206,30 @@ def test_client_library_upload_from_dataframe(temp_dataset):
 
     df = pandas.DataFrame(
         {
-            'my_string': ['a', 'b', 'c'],
-            'my_int64': [1, 2, 3],
-            'my_float64': [4.0, 5.0, 6.0],
-            'my_timestamp': [
+            "my_string": ["a", "b", "c"],
+            "my_int64": [1, 2, 3],
+            "my_float64": [4.0, 5.0, 6.0],
+            "my_timestamp": [
                 pandas.Timestamp("1998-09-04T16:03:14"),
                 pandas.Timestamp("2010-09-13T12:03:45"),
-                pandas.Timestamp("2015-10-02T16:00:00")
+                pandas.Timestamp("2015-10-02T16:00:00"),
             ],
         }
     )
     client = bigquery.Client()
-    table_id = 'my_dataset.new_table'
+    table_id = "my_dataset.new_table"
     # [END bigquery_migration_client_library_upload_from_dataframe]
-    table_id = (
-        temp_dataset.dataset_id
-        + ".test_client_library_upload_from_dataframe"
-    )
+    table_id = temp_dataset.dataset_id + ".test_client_library_upload_from_dataframe"
     # [START bigquery_migration_client_library_upload_from_dataframe]
     # Since string columns use the "object" dtype, pass in a (partial) schema
     # to ensure the correct BigQuery data type.
-    job_config = bigquery.LoadJobConfig(schema=[
-        bigquery.SchemaField("my_string", "STRING"),
-    ])
-
-    job = client.load_table_from_dataframe(
-        df, table_id, job_config=job_config
+    job_config = bigquery.LoadJobConfig(
+        schema=[
+            bigquery.SchemaField("my_string", "STRING"),
+        ]
     )
+
+    job = client.load_table_from_dataframe(df, table_id, job_config=job_config)
 
     # Wait for the load job to complete.
     job.result()
@@ -244,27 +241,25 @@ def test_client_library_upload_from_dataframe(temp_dataset):
 
 def test_pandas_gbq_upload_from_dataframe(temp_dataset):
     from google.cloud import bigquery
+
     # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
     import pandas
 
     df = pandas.DataFrame(
         {
-            'my_string': ['a', 'b', 'c'],
-            'my_int64': [1, 2, 3],
-            'my_float64': [4.0, 5.0, 6.0],
-            'my_timestamp': [
+            "my_string": ["a", "b", "c"],
+            "my_int64": [1, 2, 3],
+            "my_float64": [4.0, 5.0, 6.0],
+            "my_timestamp": [
                 pandas.Timestamp("1998-09-04T16:03:14"),
                 pandas.Timestamp("2010-09-13T12:03:45"),
-                pandas.Timestamp("2015-10-02T16:00:00")
+                pandas.Timestamp("2015-10-02T16:00:00"),
             ],
         }
     )
-    table_id = 'my_dataset.new_table'
+    table_id = "my_dataset.new_table"
     # [END bigquery_migration_pandas_gbq_upload_from_dataframe]
-    table_id = (
-        temp_dataset.dataset_id
-        + ".test_pandas_gbq_upload_from_dataframe"
-    )
+    table_id = temp_dataset.dataset_id + ".test_pandas_gbq_upload_from_dataframe"
     # [START bigquery_migration_pandas_gbq_upload_from_dataframe]
 
     df.to_gbq(table_id)

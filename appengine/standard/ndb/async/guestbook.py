@@ -38,13 +38,13 @@ class Message(ndb.Model):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        if self.request.path == '/guestbook':
-            if self.request.get('async'):
+        if self.request.path == "/guestbook":
+            if self.request.get("async"):
                 self.get_guestbook_async()
             else:
                 self.get_guestbook_sync()
-        elif self.request.path == '/messages':
-            if self.request.get('async'):
+        elif self.request.path == "/messages":
+            if self.request.get("async"):
                 self.get_messages_async()
             else:
                 self.get_messages_sync()
@@ -56,8 +56,11 @@ class MainPage(webapp2.RequestHandler):
         recent_entries = qry.fetch(10)  # I/O action 2
 
         # ...render HTML based on this data...
-        self.response.out.write('<html><body>{}</body></html>'.format(''.join(
-            '<p>{}</p>'.format(entry.content) for entry in recent_entries)))
+        self.response.out.write(
+            "<html><body>{}</body></html>".format(
+                "".join("<p>{}</p>".format(entry.content) for entry in recent_entries)
+            )
+        )
 
         return acct, qry
 
@@ -70,8 +73,11 @@ class MainPage(webapp2.RequestHandler):
         recent_entries = recent_entries_future.get_result()  # Complete #2
 
         # ...render HTML based on this data...
-        self.response.out.write('<html><body>{}</body></html>'.format(''.join(
-            '<p>{}</p>'.format(entry.content) for entry in recent_entries)))
+        self.response.out.write(
+            "<html><body>{}</body></html>".format(
+                "".join("<p>{}</p>".format(entry.content) for entry in recent_entries)
+            )
+        )
 
         return acct, recent_entries
 
@@ -79,23 +85,26 @@ class MainPage(webapp2.RequestHandler):
         qry = Message.query().order(-Message.when)
         for msg in qry.fetch(20):
             acct = msg.author.get()
-            self.response.out.write(
-                '<p>On {}, {} wrote:'.format(msg.when, acct.nick()))
-            self.response.out.write('<p>{}'.format(msg.text))
+            self.response.out.write("<p>On {}, {} wrote:".format(msg.when, acct.nick()))
+            self.response.out.write("<p>{}".format(msg.text))
 
     def get_messages_async(self):
         @ndb.tasklet
         def callback(msg):
             acct = yield msg.author.get_async()
-            raise ndb.Return('On {}, {} wrote:\n{}'.format(
-                msg.when, acct.nick(), msg.text))
+            raise ndb.Return(
+                "On {}, {} wrote:\n{}".format(msg.when, acct.nick(), msg.text)
+            )
 
         qry = Message.query().order(-Message.when)
         outputs = qry.map(callback, limit=20)
         for output in outputs:
-            self.response.out.write('<p>{}</p>'.format(output))
+            self.response.out.write("<p>{}</p>".format(output))
 
 
-app = webapp2.WSGIApplication([
-    ('/.*', MainPage),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/.*", MainPage),
+    ],
+    debug=True,
+)

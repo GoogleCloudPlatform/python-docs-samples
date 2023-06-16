@@ -23,7 +23,7 @@ async def quickstart_new_instance():
     # The `project` parameter is optional and represents which project the client
     # will act on behalf of. If not supplied, the client falls back to the default
     # project inferred from the environment.
-    db = firestore.AsyncClient(project='my-project-id')
+    db = firestore.AsyncClient(project="my-project-id")
     # [END firestore_setup_client_create_async]
 
     return db
@@ -136,6 +136,7 @@ class City:
                 capital={self.capital}, \
                 regions={self.regions}\
             )"
+
 
 # [END firestore_data_custom_type_definition_async]
 

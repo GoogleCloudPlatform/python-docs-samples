@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets 
+# This is an ingredient file. It is not meant to be run directly. Check the samples/snippets
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
@@ -98,7 +98,9 @@ class CustomMachineType:
         if self._checked:
             return self.memory_mb > self.core_count * self.limits.max_mem_per_core
         else:
-            raise RuntimeError("You need to call _check_parameters() before calling _check_extra_memory()")
+            raise RuntimeError(
+                "You need to call _check_parameters() before calling _check_extra_memory()"
+            )
 
     def _check_parameters(self):
         """
@@ -208,4 +210,6 @@ class CustomMachineType:
         memory = int(memory)
 
         return cls(zone, cpu, memory, cores)
+
+
 # </INGREDIENT>

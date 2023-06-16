@@ -40,12 +40,12 @@ def _get_status(instance: compute_v1.Instance) -> compute_v1.Instance.Status:
 @pytest.fixture
 def compute_instance():
     instance_name = "test-instance-" + uuid.uuid4().hex[:10]
-    newest_debian = get_image_from_family(project="ubuntu-os-cloud", family="ubuntu-2004-lts")
+    newest_debian = get_image_from_family(
+        project="ubuntu-os-cloud", family="ubuntu-2004-lts"
+    )
     disk_type = f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 100, True, newest_debian.self_link)]
-    instance = create_instance(
-        PROJECT, INSTANCE_ZONE, instance_name, disks
-    )
+    instance = create_instance(PROJECT, INSTANCE_ZONE, instance_name, disks)
     yield instance
 
     delete_instance(PROJECT, INSTANCE_ZONE, instance_name)

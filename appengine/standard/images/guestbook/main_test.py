@@ -26,22 +26,20 @@ def app(testbed):
 
 def test_get(app):
     main.Greeting(
-        parent=main.guestbook_key('default_guestbook'),
-        author='123',
-        content='abc'
+        parent=main.guestbook_key("default_guestbook"), author="123", content="abc"
     ).put()
 
-    response = app.get('/')
+    response = app.get("/")
 
     # Let's check if the response is correct.
     assert response.status_int == 200
 
 
 def test_post(app):
-    with mock.patch('main.images') as mock_images:
-        mock_images.resize.return_value = 'asdf'
+    with mock.patch("main.images") as mock_images:
+        mock_images.resize.return_value = "asdf"
 
-        response = app.post('/sign', {'content': 'asdf'})
+        response = app.post("/sign", {"content": "asdf"})
         mock_images.resize.assert_called_once_with(mock.ANY, 32, 32)
 
         # Correct response is a redirect
@@ -49,30 +47,27 @@ def test_post(app):
 
 
 def test_img(app):
-    greeting = main.Greeting(
-        parent=main.guestbook_key('default_guestbook'),
-        id=123
-    )
-    greeting.author = 'asdf'
-    greeting.content = 'asdf'
-    greeting.avatar = b'123'
+    greeting = main.Greeting(parent=main.guestbook_key("default_guestbook"), id=123)
+    greeting.author = "asdf"
+    greeting.content = "asdf"
+    greeting.avatar = b"123"
     greeting.put()
 
-    response = app.get('/img?img_id=%s' % greeting.key.urlsafe())
+    response = app.get("/img?img_id=%s" % greeting.key.urlsafe())
 
     assert response.status_int == 200
 
 
 def test_img_missing(app):
     # Bogus image id, should get error
-    app.get('/img?img_id=123', status=500)
+    app.get("/img?img_id=123", status=500)
 
 
 def test_post_and_get(app):
-    with mock.patch('main.images') as mock_images:
-        mock_images.resize.return_value = 'asdf'
+    with mock.patch("main.images") as mock_images:
+        mock_images.resize.return_value = "asdf"
 
-        app.post('/sign', {'content': 'asdf'})
-        response = app.get('/')
+        app.post("/sign", {"content": "asdf"})
+        response = app.get("/")
 
         assert response.status_int == 200

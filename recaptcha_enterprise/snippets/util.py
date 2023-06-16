@@ -22,8 +22,8 @@ def get_hashed_account_id(account_id: str, key: str) -> str:
     salted_account_id = salt + account_id
 
     # Encode the key and salted message as bytes
-    key_bytes = bytes(key, 'utf-8')
-    salted_message_bytes = bytes(salted_account_id, 'utf-8')
+    key_bytes = bytes(key, "utf-8")
+    salted_message_bytes = bytes(salted_account_id, "utf-8")
 
     # Create an HMAC SHA-256 hash of the salted message using the key
     hashed = hmac.new(key_bytes, salted_message_bytes, hashlib.sha256)

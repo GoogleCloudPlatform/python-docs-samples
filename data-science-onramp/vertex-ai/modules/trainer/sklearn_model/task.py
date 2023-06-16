@@ -24,6 +24,7 @@ from sklearn.metrics import mean_absolute_error
 
 from trainer import utils
 from trainer.sklearn_model import model
+
 # [END aiplatform_sklearn_task_imports]
 
 
@@ -31,10 +32,7 @@ from trainer.sklearn_model import model
 def get_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--input-path",
-        type=str,
-        required=True,
-        help="path to input data"
+        "--input-path", type=str, required=True, help="path to input data"
     )
     parser.add_argument(
         "--degree",
@@ -53,22 +51,18 @@ def get_args() -> argparse.Namespace:
         default=os.getenv("AIP_MODEL_DIR"),
     )
     return parser.parse_args()
+
+
 # [END aiplatform_sklearn_task_args]
 
 
 # [START aiplatform_sklearn_task_fit]
-def fit_model(
-    input_path: str,
-    model_dir: str,
-    degree: int = 1,
-    alpha: int = 0
-) -> None:
+def fit_model(input_path: str, model_dir: str, degree: int = 1, alpha: int = 0) -> None:
     """Train, evaluate and save model given model configuration"""
     print(f"Fitting model with degree={args.degree} and alpha={args.alpha}")
 
     # Split datasets into training and testing
-    train_feature, eval_feature, train_target, eval_target = utils.load_data(
-        input_path)
+    train_feature, eval_feature, train_target, eval_target = utils.load_data(input_path)
 
     # Create sklearn pipeline for a polynomial model defined in model.py"""
     polynomial_model = model.polynomial_model(degree, alpha)
@@ -83,9 +77,9 @@ def fit_model(
     mae = mean_absolute_error(eval_target, pred_target)
 
     print(f"Done. Model had MAE={mae}")
-# [END aiplatform_sklearn_task_fit]
+    # [END aiplatform_sklearn_task_fit]
 
-# [START aiplatform_sklearn_task_export]
+    # [START aiplatform_sklearn_task_export]
     # Save model to GCS
     print("Saving model")
     matches = re.match("gs://(.*?)/(.*)", model_dir)
@@ -99,6 +93,8 @@ def fit_model(
     client = storage.Client()
     client.bucket(bucket).blob(blob_name).upload_from_filename(model_dump)
     print("Model saved")
+
+
 # [END aiplatform_sklearn_task_export]
 
 

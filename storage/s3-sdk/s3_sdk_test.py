@@ -69,7 +69,10 @@ def test_blob(test_bucket: storage.Bucket) -> storage.Blob:
 # Retry request because the created key may not be fully propagated for up
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
-def test_list_buckets(hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str], test_bucket: storage.Bucket) -> None:
+def test_list_buckets(
+    hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str],
+    test_bucket: storage.Bucket,
+) -> None:
     result = list_gcs_buckets.list_gcs_buckets(
         google_access_key_id=hmac_fixture[0].access_id,
         google_access_key_secret=hmac_fixture[1],
@@ -81,7 +84,9 @@ def test_list_buckets(hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str]
 # to 15s.
 @backoff.on_exception(backoff.constant, ClientError, interval=1, max_time=15)
 def test_list_blobs(
-    hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str], test_bucket: storage.Bucket, test_blob: storage.Blob
+    hmac_fixture: Tuple[storage.hmac_key.HMACKeyMetadata, str],
+    test_bucket: storage.Bucket,
+    test_blob: storage.Blob,
 ) -> None:
     result = list_gcs_objects.list_gcs_objects(
         google_access_key_id=hmac_fixture[0].access_id,

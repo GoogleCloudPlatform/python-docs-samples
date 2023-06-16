@@ -33,7 +33,14 @@ from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
 
 PROJECT = google.auth.default()[1]
-LOCATIONS = ("us-central1", "europe-north1", "europe-central2", "europe-west2", "us-east4", "europe-west1")
+LOCATIONS = (
+    "us-central1",
+    "europe-north1",
+    "europe-central2",
+    "europe-west2",
+    "us-east4",
+    "europe-west1",
+)
 LOCATION = random.choice(LOCATIONS)
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"

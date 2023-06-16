@@ -22,8 +22,14 @@ from google.cloud.storage_transfer_v1.types import transfer_types
 import aws_s3_compatible_source_request
 
 
-@backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,),
-                      max_time=60)
+@backoff.on_exception(
+    backoff.expo,
+    (
+        RetryError,
+        ServiceUnavailable,
+    ),
+    max_time=60,
+)
 def test_aws_s3_compatible_source_request(
     capsys,
     project_id: str,
@@ -31,9 +37,8 @@ def test_aws_s3_compatible_source_request(
     agent_pool_name: str,
     source_bucket: Bucket,
     posix_root_directory: str,
-    destination_bucket: Bucket
+    destination_bucket: Bucket,
 ) -> None:
-
     AuthMethod = transfer_types.S3CompatibleMetadata.AuthMethod
     NetworkProtocol = transfer_types.S3CompatibleMetadata.NetworkProtocol
     RequestModel = transfer_types.S3CompatibleMetadata.RequestModel
@@ -50,7 +55,7 @@ def test_aws_s3_compatible_source_request(
         endpoint=_API_ACCESS_ENDPOINT,
         protocol=NetworkProtocol.NETWORK_PROTOCOL_HTTPS,
         request_model=RequestModel.REQUEST_MODEL_VIRTUAL_HOSTED_STYLE,
-        auth_method=AuthMethod.AUTH_METHOD_AWS_SIGNATURE_V4
+        auth_method=AuthMethod.AUTH_METHOD_AWS_SIGNATURE_V4,
     )
 
     out, _ = capsys.readouterr()

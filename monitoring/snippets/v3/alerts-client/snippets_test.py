@@ -64,13 +64,15 @@ class PochanFixture:
         )
 
         # delete all existing policies older than 1 hour prior to testing
-        for policy in self.alert_policy_client.list_alert_policies(name=self.project_name):
-            seconds_since_creation = datetime.timestamp(datetime.utcnow())-datetime.timestamp(policy.creation_record.mutate_time)
+        for policy in self.alert_policy_client.list_alert_policies(
+            name=self.project_name
+        ):
+            seconds_since_creation = datetime.timestamp(
+                datetime.utcnow()
+            ) - datetime.timestamp(policy.creation_record.mutate_time)
             if seconds_since_creation > 3600:
                 try:
-                    self.alert_policy_client.delete_alert_policy(
-                        name=policy.name
-                    )
+                    self.alert_policy_client.delete_alert_policy(name=policy.name)
                 except NotFound:
                     print("Ignored NotFound when deleting a policy.")
 
@@ -157,7 +159,9 @@ def test_enable_alert_policies(capsys, pochan):
     # Having multiple projects will void these `sleep()` calls.
     # See also #3310
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, True, "name='{}'".format(pochan.alert_policy.name))
+    snippets.enable_alert_policies(
+        pochan.project_name, True, "name='{}'".format(pochan.alert_policy.name)
+    )
     out, _ = capsys.readouterr()
     assert (
         "Enabled {0}".format(pochan.project_name) in out
@@ -165,7 +169,9 @@ def test_enable_alert_policies(capsys, pochan):
     )
 
     time.sleep(2)
-    snippets.enable_alert_policies(pochan.project_name, False, "name='{}'".format(pochan.alert_policy.name))
+    snippets.enable_alert_policies(
+        pochan.project_name, False, "name='{}'".format(pochan.alert_policy.name)
+    )
     out, _ = capsys.readouterr()
     assert (
         "Disabled {}".format(pochan.project_name) in out

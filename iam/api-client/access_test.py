@@ -75,7 +75,9 @@ def test_modify_policy_add_role(
     test_call()
 
 
-def test_modify_policy_remove_member(test_member: str, capsys: pytest.LogCaptureFixture) -> None:
+def test_modify_policy_remove_member(
+    test_member: str, capsys: pytest.LogCaptureFixture
+) -> None:
     @retry(
         wait_exponential_multiplier=1000,
         wait_exponential_max=10000,

@@ -67,10 +67,16 @@ def main(user_key, ip_address, dryrun, directory=None):
     security_keys = profile.get("securityKeys")
 
     if security_keys is None:
-        print("The account you are using to authenticate does not have any security keys assigned to it.")
-        print("Please check your Application Default Credentials "
-              "(https://cloud.google.com/docs/authentication/application-default-credentials).")
-        print("More info about using security keys: https://cloud.google.com/compute/docs/oslogin/security-keys")
+        print(
+            "The account you are using to authenticate does not have any security keys assigned to it."
+        )
+        print(
+            "Please check your Application Default Credentials "
+            "(https://cloud.google.com/docs/authentication/application-default-credentials)."
+        )
+        print(
+            "More info about using security keys: https://cloud.google.com/compute/docs/oslogin/security-keys"
+        )
         return
 
     key_files = write_ssh_key_files(security_keys, directory)

@@ -58,4 +58,6 @@ def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
     # [END speech_python_migration_async_response]
 
     return response
+
+
 # [END speech_transcribe_async]

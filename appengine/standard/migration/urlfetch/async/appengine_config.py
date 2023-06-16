@@ -15,7 +15,7 @@
 from google.appengine.ext import vendor
 
 # Add any libraries installed in the "lib" folder.
-vendor.add('lib')
+vendor.add("lib")
 
 import requests_toolbelt.adapters.appengine  # noqa: E402
 

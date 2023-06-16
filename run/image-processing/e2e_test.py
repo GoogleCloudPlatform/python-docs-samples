@@ -38,7 +38,7 @@ TOPIC = f"image_proc_{SUFFIX}"
 @pytest.fixture
 def deployed_service(output_bucket):
     # Deploy image to Cloud Run
-    service_name = f'image-proc-{SUFFIX}'
+    service_name = f"image-proc-{SUFFIX}"
     subprocess.check_call(
         [
             "gcloud",
@@ -48,7 +48,7 @@ def deployed_service(output_bucket):
             "cloudbuild.yaml",
             "--project",
             PROJECT,
-            f"--substitutions=_SERVICE_NAME={service_name},_BLURRED_BUCKET_NAME={output_bucket.name}"
+            f"--substitutions=_SERVICE_NAME={service_name},_BLURRED_BUCKET_NAME={output_bucket.name}",
         ]
     )
 

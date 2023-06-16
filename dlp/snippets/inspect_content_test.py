@@ -15,6 +15,10 @@
 import os
 import time
 from typing import Iterator
+
+from unittest import mock
+from unittest.mock import MagicMock
+
 import uuid
 
 import backoff
@@ -481,6 +485,7 @@ def test_inspect_gcs_multiple_files(
         delete_dlp_job(out)
 
 
+@backoff.on_exception(backoff.expo, TimeoutError, max_time=60)
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_inspect_datastore(
     datastore_project: str,
@@ -503,11 +508,15 @@ def test_inspect_datastore(
         out, _ = capsys.readouterr()
         assert "Info type: EMAIL_ADDRESS" in out
         assert "Job name:" in out
+    except AssertionError as e:
+        if "No event received before the timeout" in str(e):
+            raise TimeoutError
+        raise e
     finally:
         delete_dlp_job(out)
 
 
-@pytest.mark.flaky(max_runs=2, min_passes=1)
+@backoff.on_exception(backoff.expo, TimeoutError, max_time=60)
 def test_inspect_datastore_no_results(
     datastore_project: str,
     topic_id: str,
@@ -529,6 +538,10 @@ def test_inspect_datastore_no_results(
         out, _ = capsys.readouterr()
         assert "No findings" in out
         assert "Job name:" in out
+    except AssertionError as e:
+        if "No event received before the timeout" in str(e):
+            raise TimeoutError
+        raise e
     finally:
         delete_dlp_job(out)
 
@@ -605,3 +618,46 @@ def test_inspect_gcs_with_sampling(
         assert "Job name:" in out
     finally:
         delete_dlp_job(out)
+
+
+@mock.patch("google.cloud.dlp_v2.DlpServiceClient")
+def test_inspect_data_to_hybrid_job_trigger(
+    dlp_client: MagicMock, capsys: pytest.CaptureFixture
+) -> None:
+    # Configure the mock DLP client and its behavior.
+    mock_dlp_instance = dlp_client.return_value
+
+    # Configure the mock ActivateJobTrigger DLP method and its behavior.
+    mock_dlp_instance.activate_job_trigger.return_value.name = "test_job"
+
+    # Configure the mock HybridInspectJobTrigger DLP method and its behavior.
+    mock_dlp_instance.hybrid_inspect_job_trigger.return_value = ""
+
+    # The string to inspect.
+    content_string = "My email is test@example.org"
+
+    # Configure the mock GetDlpJob DLP method and its behavior.
+    mock_job = mock_dlp_instance.get_dlp_job.return_value
+    mock_job.name = "test_job"
+    mock_job.inspect_details.result.processed_bytes = len(content_string)
+    mock_job.inspect_details.result.info_type_stats.info_type.name = "EMAIL_ADDRESS"
+    finding = mock_job.inspect_details.result.info_type_stats.info_type
+
+    mock_job.inspect_details.result.info_type_stats = [
+        MagicMock(info_type=finding, count=1),
+    ]
+
+    # Call the method.
+    inspect_content.inspect_data_to_hybrid_job_trigger(
+        GCLOUD_PROJECT,
+        "test_trigger_id",
+        content_string,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "Job name:" in out
+    assert "Info type: EMAIL_ADDRESS" in out
+
+    mock_dlp_instance.hybrid_inspect_job_trigger.assert_called_once()
+    mock_dlp_instance.activate_job_trigger.assert_called_once()
+    mock_dlp_instance.get_dlp_job.assert_called_once()

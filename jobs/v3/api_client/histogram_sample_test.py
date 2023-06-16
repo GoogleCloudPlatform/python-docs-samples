@@ -32,7 +32,7 @@ def test_histogram_sample(company_name, capsys):
     def eventually_consistent_test():
         histogram_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
-        assert re.search('COMPANY_ID', out)
-        assert re.search('someFieldName1', out)
+        assert re.search("COMPANY_ID", out)
+        assert re.search("someFieldName1", out)
 
     eventually_consistent_test()

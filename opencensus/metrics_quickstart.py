@@ -28,9 +28,8 @@ from opencensus.stats import view
 
 # A measure that represents task latency in ms.
 LATENCY_MS = measure.MeasureFloat(
-    "task_latency",
-    "The task latency in milliseconds",
-    "ms")
+    "task_latency", "The task latency in milliseconds", "ms"
+)
 
 # A view of the task latency measure that aggregates measurements according to
 # a histogram with predefined bucket boundaries. This aggregate is periodically
@@ -41,8 +40,8 @@ LATENCY_VIEW = view.View(
     [],
     LATENCY_MS,
     # Latency in buckets: [>=0ms, >=100ms, >=200ms, >=400ms, >=1s, >=2s, >=4s]
-    aggregation.DistributionAggregation(
-        [100.0, 200.0, 400.0, 1000.0, 2000.0, 4000.0]))
+    aggregation.DistributionAggregation([100.0, 200.0, 400.0, 1000.0, 2000.0, 4000.0]),
+)
 
 
 def main():
@@ -53,8 +52,7 @@ def main():
     # Create the Stackdriver stats exporter and start exporting metrics in the
     # background, once every 60 seconds by default.
     exporter = stats_exporter.new_stats_exporter()
-    print('Exporting stats to project "{}"'
-          .format(exporter.options.project_id))
+    print('Exporting stats to project "{}"'.format(exporter.options.project_id))
 
     # Register exporter to the view manager.
     stats.stats.view_manager.register_exporter(exporter)
@@ -74,7 +72,7 @@ def main():
     time.sleep(65)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
 
 # [END monitoring_opencensus_metrics_quickstart]

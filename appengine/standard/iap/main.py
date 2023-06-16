@@ -23,31 +23,31 @@ from google.appengine.api import users
 app = flask.Flask(__name__)
 
 
-@app.route('/')
+@app.route("/")
 def index():
     user = users.get_current_user()
     if user:
         logged_in = True
         nickname = user.nickname()
-        logout_url = users.create_logout_url('/')
+        logout_url = users.create_logout_url("/")
         login_url = None
     else:
         logged_in = False
         nickname = None
         logout_url = None
-        login_url = users.create_login_url('/')
+        login_url = users.create_login_url("/")
 
     template_values = {
-        'logged_in': logged_in,
-        'nickname': nickname,
-        'logout_url': logout_url,
-        'login_url': login_url,
+        "logged_in": logged_in,
+        "nickname": nickname,
+        "logout_url": logout_url,
+        "login_url": login_url,
     }
 
-    return flask.render_template('index.html', **template_values)
+    return flask.render_template("index.html", **template_values)
 
 
 # Fake status
-@app.route('/status')
+@app.route("/status")
 def status():
-    return 'Success'
+    return "Success"

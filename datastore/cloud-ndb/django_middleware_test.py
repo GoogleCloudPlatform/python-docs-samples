@@ -23,7 +23,6 @@ def test_ndb_django_middleware():
         # ndb.exceptions.ContextError if no context is set up.
         ndb.context.get_context()
 
-    wrapped_function = django_middleware.ndb_django_middleware(
-        fake_get_response)
+    wrapped_function = django_middleware.ndb_django_middleware(fake_get_response)
 
     wrapped_function(None)

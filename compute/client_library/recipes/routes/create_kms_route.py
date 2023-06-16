@@ -32,7 +32,10 @@
 
 # <INGREDIENT create_route />
 
-def create_route_to_windows_activation_host(project_id: str, network: str, route_name: str) -> compute_v1.Route:
+
+def create_route_to_windows_activation_host(
+    project_id: str, network: str, route_name: str
+) -> compute_v1.Route:
     """
     If you have Windows instances without external IP addresses,
     you must also enable Private Google Access so that instances
@@ -51,7 +54,13 @@ def create_route_to_windows_activation_host(project_id: str, network: str, route
     Returns:
         A new compute_v1.Route object.
     """
-    return create_route(project_id=project_id, network=network, route_name=route_name,
-                        destination_range='35.190.247.13/32',
-                        next_hop_gateway=f"projects/{project_id}/global/gateways/default-internet-gateway")
+    return create_route(
+        project_id=project_id,
+        network=network,
+        route_name=route_name,
+        destination_range="35.190.247.13/32",
+        next_hop_gateway=f"projects/{project_id}/global/gateways/default-internet-gateway",
+    )
+
+
 # </REGION compute_create_route_windows_activation>

@@ -24,28 +24,22 @@ with DAG(
     start_date=days_ago(1),
     schedule_interval="@once",
 ) as dag:
-    start = DummyOperator(
-        task_id='start'
-    )
+    start = DummyOperator(task_id="start")
 
     trigger_1 = TriggerDagRunOperator(
         task_id="dag_1",
         trigger_dag_id="dag-to-trigger",  # Ensure this equals the dag_id of the DAG to trigger
-        conf={"message": "Hello World"}
+        conf={"message": "Hello World"},
     )
     trigger_2 = TriggerDagRunOperator(
         task_id="dag_2",
         trigger_dag_id="dag-to-trigger",  # Ensure this equals the dag_id of the DAG to trigger
-        conf={"message": "Hello World"}
+        conf={"message": "Hello World"},
     )
 
-    some_other_task = DummyOperator(
-        task_id='some-other-task'
-    )
+    some_other_task = DummyOperator(task_id="some-other-task")
 
-    end = DummyOperator(
-        task_id='end'
-    )
+    end = DummyOperator(task_id="end")
 
     start >> trigger_1 >> some_other_task >> trigger_2 >> end
 # [END composer_relationship_parent_airflow_1]

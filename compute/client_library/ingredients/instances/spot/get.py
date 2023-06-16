@@ -34,6 +34,10 @@ def is_spot_vm(project_id: str, zone: str, instance_name: str) -> bool:
     instance = instance_client.get(
         project=project_id, zone=zone, instance=instance_name
     )
-    return instance.scheduling.provisioning_model == compute_v1.Scheduling.ProvisioningModel.SPOT.name
-# </INGREDIENT>
+    return (
+        instance.scheduling.provisioning_model
+        == compute_v1.Scheduling.ProvisioningModel.SPOT.name
+    )
 
+
+# </INGREDIENT>
