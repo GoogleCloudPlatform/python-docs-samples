@@ -16,21 +16,10 @@ from typing import Iterable
 from google.cloud import vmwareengine_v1
 
 
-def list_networks(
-    project_id: str, region: str
-) -> Iterable[vmwareengine_v1.VmwareEngineNetwork]:
-    """
-    Retrieves a list of VMWare Engine networks defined in given region.
-
-    Args:
-        project_id:
-        region:
-
-    Returns:
-        An iterable collection containing the VMWareEngineNetworks.
-    """
+def list_clusters(
+    project_id: str, zone: str, private_cloud: str
+) -> Iterable[vmwareengine_v1.Cluster]:
     client = vmwareengine_v1.VmwareEngineClient()
-
-    return client.list_vmware_engine_networks(
-        parent=f"projects/{project_id}/locations/{region}"
+    return client.list_clusters(
+        parent=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}"
     )

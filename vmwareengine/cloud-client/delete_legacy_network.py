@@ -25,7 +25,9 @@ def delete_legacy_network(project_id: str, region: str) -> None:
         region: region in which the legacy network is located in.
     """
     client = vmwareengine_v1.VmwareEngineClient()
-    client.delete_vmware_engine_network(name=f"projects/{project_id}/"
-                                             f"locations/{region}/"
-                                             f"vmwareEngineNetworks/{region}-default").result(timeout=300)
+    client.delete_vmware_engine_network(
+        name=f"projects/{project_id}/"
+        f"locations/{region}/"
+        f"vmwareEngineNetworks/{region}-default"
+    ).result(timeout=300)
     return

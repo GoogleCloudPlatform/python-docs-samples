@@ -22,13 +22,18 @@ from delete_legacy_network import delete_legacy_network
 from list_networks import list_networks
 
 PROJECT = google.auth.default()[1]
-TEST_REGION = 'us-central1'
+TEST_REGION = "us-central1"
 
 
 def test_network_lifecycle():
     for nl in list_networks(PROJECT, TEST_REGION):
-        if nl.name == "projects/mestiv-playground/locations/us-central1/vmwareEngineNetworks/us-central1-default":
-            pytest.fail(f"Can't run the test. The Legacy network in {TEST_REGION} already exists.")
+        if (
+            nl.name
+            == "projects/mestiv-playground/locations/us-central1/vmwareEngineNetworks/us-central1-default"
+        ):
+            pytest.fail(
+                f"Can't run the test. The Legacy network in {TEST_REGION} already exists."
+            )
 
     network = create_legacy_network(PROJECT, TEST_REGION)
 
@@ -36,7 +41,9 @@ def test_network_lifecycle():
         if nl.name == network.name:
             break
     else:
-        pytest.fail(f"The newly created network {network.name} wasn't found on the network list.")
+        pytest.fail(
+            f"The newly created network {network.name} wasn't found on the network list."
+        )
 
     delete_legacy_network(PROJECT, TEST_REGION)
 

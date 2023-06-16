@@ -16,7 +16,7 @@ from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def delete_private_cloud_by_full_name(cloud_name: str) -> operation.Operation:
+def cancel_private_cloud_deletion_by_full_name(cloud_name: str) -> operation.Operation:
     """
     Deletes VMWare Private Cloud.
 
@@ -26,14 +26,12 @@ def delete_private_cloud_by_full_name(cloud_name: str) -> operation.Operation:
             projects/{project_name}/locations/{zone}/privateClouds/{cloud}
     """
     client = vmwareengine_v1.VmwareEngineClient()
-    request = vmwareengine_v1.DeletePrivateCloudRequest()
-    request.force = True
-    request.delay_hours = 3
+    request = vmwareengine_v1.UndeletePrivateCloudRequest()
     request.name = cloud_name
-    return client.delete_private_cloud(request)
+    return client.undelete_private_cloud(request)
 
 
-def delete_private_cloud(
+def cancel_private_cloud_deletion(
     project_id: str, zone: str, cloud_name: str
 ) -> operation.Operation:
     """
@@ -44,6 +42,6 @@ def delete_private_cloud(
         zone: zone in which the private cloud is located in.
         cloud_name: name of the private cloud to be deleted.
     """
-    return delete_private_cloud_by_full_name(
+    return cancel_private_cloud_deletion_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"
     )

@@ -34,4 +34,6 @@ def list_locations(project_id: str) -> str:
     locations = client.list_locations(request)
     print(locations)
     return str(locations)
+
+
 # [END vmwareengine_list_locations]

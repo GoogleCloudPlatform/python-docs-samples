@@ -15,19 +15,22 @@
 from google.cloud import vmwareengine_v1
 
 
-def get_vcenter_credentials(project_id: str, zone: str, private_cloud: str) -> vmwareengine_v1.Credentials:
+def get_vcenter_credentials(
+    project_id: str, zone: str, private_cloud: str
+) -> vmwareengine_v1.Credentials:
     """
-        Retrieves VCenter credentials for a Private Cloud.
+    Retrieves VCenter credentials for a Private Cloud.
 
-        Args:
-            project_id:
-            zone:
-            private_cloud:
+    Args:
+        project_id:
+        zone:
+        private_cloud:
 
-        Returns:
-            A Credentials object.
-        """
+    Returns:
+        A Credentials object.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     credentials = client.show_vcenter_credentials(
-        private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}")
+        private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}"
+    )
     return credentials

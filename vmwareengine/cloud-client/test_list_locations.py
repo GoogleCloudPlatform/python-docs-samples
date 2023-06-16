@@ -21,4 +21,4 @@ PROJECT = google.auth.default()[1]
 
 def test_locations_list():
     locations = list_locations(PROJECT)
-    assert 'asia-northeast1' in locations
+    assert "asia-northeast1" in locations

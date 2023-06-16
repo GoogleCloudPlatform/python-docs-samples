@@ -12,12 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def create_private_cloud(project_id: str, zone: str, network_name: str, cloud_name: str, cluster_name: str) -> vmwareengine_v1.PrivateCloud():
+def create_private_cloud(
+    project_id: str, zone: str, network_name: str, cloud_name: str, cluster_name: str
+) -> operation.Operation:
     """
     Creates a new Private Cloud using VMWare Engine.
+
+    Creating a new Private Cloud takes a long time, even up to 2 hours.
 
     Args:
         project_id: name of the project you want to use.
@@ -36,7 +41,9 @@ def create_private_cloud(project_id: str, zone: str, network_name: str, cloud_na
     request.private_cloud_id = cloud_name
 
     request.private_cloud = vmwareengine_v1.PrivateCloud()
-    request.private_cloud.management_cluster = vmwareengine_v1.PrivateCloud.ManagementCluster()
+    request.private_cloud.management_cluster = (
+        vmwareengine_v1.PrivateCloud.ManagementCluster()
+    )
     request.private_cloud.management_cluster.cluster_id = cluster_name
     node_config = vmwareengine_v1.NodeTypeConfig()
     node_config.node_count = 3
@@ -48,5 +55,4 @@ def create_private_cloud(project_id: str, zone: str, network_name: str, cloud_na
     request.private_cloud.network_config.vmware_engine_network = network_name
     request.private_cloud.network_config.management_cidr = "192.168.0.0/24"
 
-    return client.create_private_cloud(request).result(timeout=3600)
-
+    return client.create_private_cloud(request)

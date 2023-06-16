@@ -15,7 +15,9 @@ from google.api_core.operation import Operation
 from google.cloud import vmwareengine_v1
 
 
-def create_legacy_network(project_id: str, region: str) -> vmwareengine_v1.VmwareEngineNetwork:
+def create_legacy_network(
+    project_id: str, region: str
+) -> vmwareengine_v1.VmwareEngineNetwork:
     """
     Creates a new legacy network.
 
@@ -34,5 +36,5 @@ def create_legacy_network(project_id: str, region: str) -> vmwareengine_v1.Vmwar
     network.description = "Legacy network created using gcloud vmware"
     network.type_ = vmwareengine_v1.VmwareEngineNetwork.Type.LEGACY
     request.vmware_engine_network = network
-    result = client.create_vmware_engine_network(request, timeout=20*60).result()
+    result = client.create_vmware_engine_network(request, timeout=20 * 60).result()
     return result

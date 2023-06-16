@@ -46,4 +46,6 @@ def get_operation(project_id: str, region: str, operation_id: str) -> Operation:
     Returns:
         Operation object with details.
     """
-    return get_operation_by_name(f"projects/{project_id}/locations/{region}/operations/{operation_id}")
+    return get_operation_by_name(
+        f"projects/{project_id}/locations/{region}/operations/{operation_id}"
+    )
