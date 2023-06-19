@@ -41,13 +41,8 @@ CHUNK = int(RATE / 10)  # 100ms
 class MicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
-    def __init__(
-            self: object,
-            rate: int = RATE,
-            chunk: int = CHUNK
-    ) -> None:
-        """The audio -- and generator -- is guaranteed to be on the main thread.
-        """
+    def __init__(self: object, rate: int = RATE, chunk: int = CHUNK) -> None:
+        """The audio -- and generator -- is guaranteed to be on the main thread."""
         self._rate = rate
         self._chunk = chunk
 
@@ -76,10 +71,10 @@ class MicrophoneStream:
         return self
 
     def __exit__(
-            self: object,
-            type: object,
-            value: object,
-            traceback: object,
+        self: object,
+        type: object,
+        value: object,
+        traceback: object,
     ) -> None:
         """Closes the stream, regardless of whether the connection was lost or not."""
         self._audio_stream.stop_stream()
@@ -91,11 +86,11 @@ class MicrophoneStream:
         self._audio_interface.terminate()
 
     def _fill_buffer(
-            self: object,
-            in_data: object,
-            frame_count: int,
-            time_info: object,
-            status_flags: object,
+        self: object,
+        in_data: object,
+        frame_count: int,
+        time_info: object,
+        status_flags: object,
     ) -> object:
         """Continuously collect data from the audio stream, into the buffer.
 

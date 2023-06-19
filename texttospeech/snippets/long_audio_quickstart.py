@@ -23,18 +23,23 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
 
     """
     # TODO(developer): Uncomment and set the following variables
-    # parent = 'YOUR_PROJECT_ID'
+    # project_id = 'YOUR_PROJECT_ID'
     # location = 'YOUR_LOCATION'
     # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
 
     client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
     input = texttospeech.SynthesisInput(
-        text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!")
+        text="Test input. Replace this with any text you want to synthesize, up to 1 million bytes long!"
+    )
 
-    audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.LINEAR16
+    )
 
-    voice = texttospeech.VoiceSelectionParams(language_code="en-US", name="en-US-Standard-A")
+    voice = texttospeech.VoiceSelectionParams(
+        language_code="en-US", name="en-US-Standard-A"
+    )
 
     parent = f"projects/{project_id}/locations/{location}"
 
@@ -50,4 +55,7 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
     # Set a deadline for your LRO to finish. 300 seconds is reasonable, but can be adjusted depending on the length of the input.
     # If the operation times out, that likely means there was an error. In that case, inspect the error, and try again.
     result = operation.result(timeout=300)
-    print("\nFinished processing, check your GCS bucket to find your audio file! Printing what should be an empty result: ", result)
+    print(
+        "\nFinished processing, check your GCS bucket to find your audio file! Printing what should be an empty result: ",
+        result,
+    )

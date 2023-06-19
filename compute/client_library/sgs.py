@@ -224,7 +224,6 @@ def render_recipe(recipe: str, ingredients: dict) -> str:
     output_file = []
     header_added = False
     for line in file_lines:
-
         if IMPORTS_FILL.search(line):
             output_file.append(import_lines)
         elif INGREDIENT_FILL.search(line):

@@ -86,7 +86,7 @@ def write_secret(secret_id: str, payload: str) -> str:
 
 
 def validate_environment(
-    cpix_client: clients.cpix_client.CpixClient
+    cpix_client: clients.cpix_client.CpixClient,
 ) -> Union[None, str]:
     """Validates the required environment variables are set
 

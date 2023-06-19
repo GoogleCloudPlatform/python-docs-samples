@@ -20,4 +20,3 @@
 
 # <INGREDIENT set_deprecation_status />
 # </REGION compute_images_set_deprecation_status>
-

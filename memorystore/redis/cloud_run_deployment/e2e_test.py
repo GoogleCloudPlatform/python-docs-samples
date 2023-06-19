@@ -35,21 +35,25 @@ MEMORYSTORE_REDIS_NAME = "static-test-instance"
 @pytest.fixture
 def redis_host():
     # Get the Redis instance's IP
-    redis_host = subprocess.run(
-        [
-            "gcloud",
-            "redis",
-            "instances",
-            "describe",
-            MEMORYSTORE_REDIS_NAME,
-            "--region=us-central1",
-            "--format=value(host)",
-            "--project",
-            PROJECT,
-        ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
+    redis_host = (
+        subprocess.run(
+            [
+                "gcloud",
+                "redis",
+                "instances",
+                "describe",
+                MEMORYSTORE_REDIS_NAME,
+                "--region=us-central1",
+                "--format=value(host)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
     yield redis_host
 
     # no deletion needs to happen, this is a "get" of a static instance
@@ -144,27 +148,35 @@ def deployed_service(container_image, redis_host):
 @pytest.fixture
 def service_url_auth_token(deployed_service):
     # Get Cloud Run service URL and auth token
-    service_url = subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "describe",
-            deployed_service,
-            "--platform=managed",
-            "--region=us-central1",
-            "--format=value(status.url)",
-            "--project",
-            PROJECT,
-        ],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
-    auth_token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"],
-        stdout=subprocess.PIPE,
-        check=True
-    ).stdout.strip().decode()
+    service_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                deployed_service,
+                "--platform=managed",
+                "--region=us-central1",
+                "--format=value(status.url)",
+                "--project",
+                PROJECT,
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+    auth_token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
     yield service_url, auth_token
 
@@ -175,10 +187,7 @@ def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
 
     req = request.Request(
-        service_url,
-        headers={
-            "Authorization": f"Bearer {auth_token}"
-        }
+        service_url, headers={"Authorization": f"Bearer {auth_token}"}
     )
 
     response = request.urlopen(req)

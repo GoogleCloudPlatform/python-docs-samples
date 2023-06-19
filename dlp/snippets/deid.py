@@ -854,7 +854,6 @@ def deidentify_with_date_shift(
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
     if context_field_id and key_name and wrapped_key:
-
         date_shift_config["context"] = {"name": context_field_id}
         date_shift_config["crypto_key"] = {
             "kms_wrapped": {
@@ -1702,7 +1701,6 @@ def deindentify_with_dictionary_replacement(
     info_types: List[str],
     word_list: List[str],
 ) -> None:
-
     """Uses the Data Loss Prevention API to de-identify sensitive data in a
     string by replacing each piece of detected sensitive data with a value
     that Cloud DLP randomly selects from a list of words that you provide.
@@ -1726,10 +1724,8 @@ def deindentify_with_dictionary_replacement(
                 {
                     "info_types": info_types,
                     "primitive_transformation": {
-                        "replace_dictionary_config": {
-                            "word_list": {"words": word_list}
-                        }
-                    }
+                        "replace_dictionary_config": {"word_list": {"words": word_list}}
+                    },
                 }
             ]
         }
@@ -1814,7 +1810,7 @@ def deidentify_table_suppress_row(
         {
             "field": {"name": condition_field},
             "operator": condition_operator,
-            "value": {"integer_value": condition_value}
+            "value": {"integer_value": condition_value},
         }
     ]
 
@@ -1824,9 +1820,7 @@ def deidentify_table_suppress_row(
             "record_suppressions": [
                 {
                     "condition": {
-                        "expressions": {
-                            "conditions": {"conditions": condition}
-                        }
+                        "expressions": {"conditions": {"conditions": condition}}
                     }
                 }
             ]
@@ -1838,11 +1832,8 @@ def deidentify_table_suppress_row(
 
     # Call the API.
     response = dlp.deidentify_content(
-        request={
-            "parent": parent,
-            "deidentify_config": deidentify_config,
-            "item": item
-        })
+        request={"parent": parent, "deidentify_config": deidentify_config, "item": item}
+    )
 
     # Print the result.
     print("Table after de-identification: {}".format(response.item.table))
@@ -1863,7 +1854,7 @@ def deidentify_table_with_crypto_hash(
     info_types: List[str],
     transient_key_name: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to de-identify sensitive data
+    """Uses the Data Loss Prevention API to de-identify sensitive data
     in a table using a cryptographic hash transformation.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -1883,9 +1874,7 @@ def deidentify_table_with_crypto_hash(
     headers = [{"name": val} for val in table_data["header"]]
     rows = []
     for row in table_data["rows"]:
-        rows.append(
-            {"values": [{"string_value": cell_val} for cell_val in row]}
-        )
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
 
@@ -1898,11 +1887,7 @@ def deidentify_table_with_crypto_hash(
 
     # Construct cryptographic hash configuration using the transient key
     # which will encrypt the data.
-    crypto_hash_config = {
-        "crypto_key": {
-            "transient": {"name": transient_key_name}
-        }
-    }
+    crypto_hash_config = {"crypto_key": {"transient": {"name": transient_key_name}}}
 
     # Specify the type of info the inspection will look for.
     inspect_config = {
@@ -1958,7 +1943,7 @@ def deidentify_table_with_multiple_crypto_hash(
     deid_fields_1: List[str],
     deid_fields_2: List[str],
 ) -> None:
-    """ Uses the Data Loss Prevention API to de-identify sensitive data
+    """Uses the Data Loss Prevention API to de-identify sensitive data
     in table using multiple transient cryptographic hash keys.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -1986,9 +1971,7 @@ def deidentify_table_with_multiple_crypto_hash(
     headers = [{"name": val} for val in table_data["header"]]
     rows = []
     for row in table_data["rows"]:
-        rows.append(
-            {"values": [{"string_value": cell_val} for cell_val in row]}
-        )
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
 
@@ -2001,16 +1984,8 @@ def deidentify_table_with_multiple_crypto_hash(
 
     # Construct cryptographic hash configurations using two transient keys
     # which will encrypt the data.
-    crypto_hash_config_1 = {
-        "crypto_key": {
-            "transient": {"name": transient_key_name_1}
-        }
-    }
-    crypto_hash_config_2 = {
-        "crypto_key": {
-            "transient": {"name": transient_key_name_2}
-        }
-    }
+    crypto_hash_config_1 = {"crypto_key": {"transient": {"name": transient_key_name_1}}}
+    crypto_hash_config_2 = {"crypto_key": {"transient": {"name": transient_key_name_2}}}
 
     # Prepare fields to be de-identified by converting list of strings
     # into list of dictionaries.
@@ -2043,7 +2018,7 @@ def deidentify_table_with_multiple_crypto_hash(
                                 },
                             }
                         ]
-                    }
+                    },
                 },
             ]
         }
@@ -2542,8 +2517,7 @@ if __name__ == "__main__":
     )
     table_row_suppress_parser.add_argument(
         "--condition_field",
-        help="A table Field within the record this condition is evaluated "
-        "against.",
+        help="A table Field within the record this condition is evaluated " "against.",
     )
     table_row_suppress_parser.add_argument(
         "--condition_operator",

@@ -32,7 +32,6 @@ with models.DAG(
     start_date=days_ago(1),
     tags=["example"],
 ) as dag:
-
     # [START composer_gke_create_cluster_airflow_1]
     # [START composer_gkeoperator_minconfig_airflow_1]
     # [START composer_gkeoperator_templateconfig_airflow_1]

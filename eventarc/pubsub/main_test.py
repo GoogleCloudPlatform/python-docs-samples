@@ -24,7 +24,7 @@ binary_headers = {
     "ce-id": str(uuid4),
     "ce-type": "com.pytest.sample.event",
     "ce-source": "<my-test-source>",
-    "ce-specversion": "1.0"
+    "ce-specversion": "1.0",
 }
 
 
@@ -35,37 +35,37 @@ def client():
 
 
 def test_empty_payload(client):
-    r = client.post('/', json='', headers=binary_headers)
+    r = client.post("/", json="", headers=binary_headers)
     assert r.status_code == 400
 
 
 def test_invalid_payload(client):
-    r = client.post('/', json={'nomessage': 'invalid'}, headers=binary_headers)
+    r = client.post("/", json={"nomessage": "invalid"}, headers=binary_headers)
     assert r.status_code == 400
 
 
 def test_invalid_mimetype(client):
-    r = client.post('/', json="{ message: true }", headers=binary_headers)
+    r = client.post("/", json="{ message: true }", headers=binary_headers)
     assert r.status_code == 400
 
 
 def test_minimally_valid_message(client, capsys):
-    r = client.post('/', json={'message': True}, headers=binary_headers)
+    r = client.post("/", json={"message": True}, headers=binary_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    ce_id = binary_headers['ce-id']
+    ce_id = binary_headers["ce-id"]
 
-    assert f'Hello, World! ID: {ce_id}' in out
+    assert f"Hello, World! ID: {ce_id}" in out
 
 
 def test_populated_message(client, capsys):
     name = str(uuid4())
     data = base64.b64encode(name.encode()).decode()
 
-    r = client.post('/', json={'message': {'data': data}}, headers=binary_headers)
+    r = client.post("/", json={"message": {"data": data}}, headers=binary_headers)
     assert r.status_code == 200
 
     out, _ = capsys.readouterr()
-    ce_id = binary_headers['ce-id']
-    assert f'Hello, {name}! ID: {ce_id}' in out
+    ce_id = binary_headers["ce-id"]
+    assert f"Hello, {name}! ID: {ce_id}" in out

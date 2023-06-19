@@ -39,9 +39,7 @@ def create_custom_instances_extra_mem(
     Returns:
         List of Instance objects.
     """
-    newest_debian = get_image_from_family(
-        project="debian-cloud", family="debian-10"
-    )
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
     # The core_count and memory values are not validated anywhere and can be rejected by the API.
@@ -69,4 +67,6 @@ def create_custom_instances_extra_mem(
         ),
     ]
     return instances
+
+
 # </INGREDIENT>

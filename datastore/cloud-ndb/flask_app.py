@@ -37,8 +37,10 @@ class Book(ndb.Model):
     title = ndb.StringProperty()
 
 
-@app.route('/')
+@app.route("/")
 def list_books():
     books = Book.query()
     return str([book.to_dict() for book in books])
+
+
 # [END ndb_flask]
