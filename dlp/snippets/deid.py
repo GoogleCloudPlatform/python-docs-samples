@@ -18,8 +18,6 @@ from __future__ import annotations
 
 import argparse
 
-from typing import List
-
 
 # [START dlp_deidentify_masking]
 from typing import List  # noqa: F811, E402
@@ -931,12 +929,14 @@ def deidentify_with_time_extract(
     input_csv_file: str,
     output_csv_file: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to extract time part
-        data from a table.
+    """ Uses the Data Loss Prevention API to deidentify dates in a CSV file through
+     time part extraction.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         date_fields: A list of (date) fields in CSV file to de-identify
-            through time extraction. Example: ['birth_date', 'register_date']
+            through time extraction. Example: ['birth_date', 'register_date'].
+            Date values in format: mm/DD/YYYY are considered as part of this
+            sample.
         input_csv_file: The path to the CSV file to deidentify. The first row
             of the file must specify column names, and all other rows must
             contain valid values.
@@ -955,11 +955,11 @@ def deidentify_with_time_extract(
     else:
         date_fields = []
 
-    f = []
+    csv_lines = []
     with open(input_csv_file) as csvfile:
         reader = csv.reader(csvfile)
         for row in reader:
-            f.append(row)
+            csv_lines.append(row)
 
     #  Helper function for converting CSV rows to Protobuf types
     def map_headers(header):
@@ -981,8 +981,8 @@ def deidentify_with_time_extract(
 
     # Using the helper functions, convert CSV rows to protobuf-compatible
     # dictionaries.
-    csv_headers = map(map_headers, f[0])
-    csv_rows = map(map_rows, f[1:])
+    csv_headers = map(map_headers, csv_lines[0])
+    csv_rows = map(map_rows, csv_lines[1:])
 
     # Construct the table dictionary.
     table = {"headers": csv_headers, "rows": csv_rows}
