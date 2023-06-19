@@ -70,6 +70,7 @@ assign_issues_by:
       - "api: texttospeech"
       - "api: translate"
       - "api: vision"
+      - "api: bigquery"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
