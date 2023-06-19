@@ -32,9 +32,11 @@ def test_custom_attribute_sample(create_data, capsys):
     def eventually_consistent_test():
         custom_attribute_sample.run_sample()
         out, _ = capsys.readouterr()
-        expected = ('.*matchingJobs.*job_with_custom_attributes.*\n'
-                    '.*matchingJobs.*job_with_custom_attributes.*\n'
-                    '.*matchingJobs.*job_with_custom_attributes.*\n')
+        expected = (
+            ".*matchingJobs.*job_with_custom_attributes.*\n"
+            ".*matchingJobs.*job_with_custom_attributes.*\n"
+            ".*matchingJobs.*job_with_custom_attributes.*\n"
+        )
         assert re.search(expected, out, re.DOTALL)
 
     eventually_consistent_test()

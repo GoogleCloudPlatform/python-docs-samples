@@ -23,9 +23,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_file_with_enhanced_model(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_with_enhanced_model(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_enhanced_model.transcribe_file_with_enhanced_model(
         "resources/commercial_mono.wav"
     )

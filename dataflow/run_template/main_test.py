@@ -58,9 +58,7 @@ def app():
 @pytest.fixture(scope="function")
 def dataflow_job_name(request):
     label = request.param
-    job_name = datetime.now().strftime(
-        f"{label}-%Y%m%d-%H%M%S-{uuid.uuid4().hex[:5]}"
-    )
+    job_name = datetime.now().strftime(f"{label}-%Y%m%d-%H%M%S-{uuid.uuid4().hex[:5]}")
 
     yield job_name
 

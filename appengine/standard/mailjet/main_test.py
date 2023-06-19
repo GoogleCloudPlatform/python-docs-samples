@@ -20,9 +20,9 @@ import responses
 
 @pytest.fixture
 def app(monkeypatch):
-    monkeypatch.setenv('MAILJET_API_KEY', 'apikey')
-    monkeypatch.setenv('MAILJET_API_SECRET', 'apisecret')
-    monkeypatch.setenv('MAILJET_SENDER', 'sender')
+    monkeypatch.setenv("MAILJET_API_KEY", "apikey")
+    monkeypatch.setenv("MAILJET_API_SECRET", "apisecret")
+    monkeypatch.setenv("MAILJET_SENDER", "sender")
 
     import main
 
@@ -31,7 +31,7 @@ def app(monkeypatch):
 
 
 def test_index(app):
-    r = app.get('/')
+    r = app.get("/")
     assert r.status_code == 200
 
 
@@ -39,15 +39,16 @@ def test_index(app):
 def test_send_email(app):
     responses.add(
         responses.POST,
-        re.compile(r'.*'),
+        re.compile(r".*"),
         body='{"test": "message"}',
-        content_type='application/json')
+        content_type="application/json",
+    )
 
-    r = app.post('/send/email', data={'to': 'user@example.com'})
+    r = app.post("/send/email", data={"to": "user@example.com"})
 
     assert r.status_code == 200
-    assert 'test' in r.data.decode('utf-8')
+    assert "test" in r.data.decode("utf-8")
 
     assert len(responses.calls) == 1
     request_body = responses.calls[0].request.body
-    assert 'user@example.com' in request_body
+    assert "user@example.com" in request_body

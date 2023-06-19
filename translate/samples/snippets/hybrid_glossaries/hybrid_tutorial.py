@@ -64,10 +64,10 @@ def pic_to_text(infile: str) -> str:
 
 # [START translate_hybrid_create_glossary]
 def create_glossary(
-        languages: list,
-        project_id: str,
-        glossary_name: str,
-        glossary_uri: str,
+    languages: list,
+    project_id: str,
+    glossary_name: str,
+    glossary_uri: str,
 ) -> str:
     """Creates a GCP glossary resource
     Assumes you've already manually uploaded a glossary to Cloud Storage
@@ -92,9 +92,7 @@ def create_glossary(
     name = client.glossary_path(project_id, location, glossary_name)
 
     # Set language codes
-    language_codes_set = translate.Glossary.LanguageCodesSet(
-        language_codes=languages
-    )
+    language_codes_set = translate.Glossary.LanguageCodesSet(language_codes=languages)
 
     gcs_source = translate.GcsSource(input_uri=glossary_uri)
 

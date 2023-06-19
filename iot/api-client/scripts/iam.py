@@ -32,26 +32,24 @@ def set_topic_policy(topic_name):
     policy = topic.get_iam_policy()
 
     # Add a group as publishers.
-    publishers = policy.get('roles/pubsub.publisher', [])
-    publishers.append(policy.service_account(
-            'cloud-iot@system.gserviceaccount.com'))
-    policy['roles/pubsub.publisher'] = publishers
+    publishers = policy.get("roles/pubsub.publisher", [])
+    publishers.append(policy.service_account("cloud-iot@system.gserviceaccount.com"))
+    policy["roles/pubsub.publisher"] = publishers
 
     # Set the policy
     topic.set_iam_policy(policy)
 
-    print(f'IAM policy for topic {topic.name} set.')
+    print(f"IAM policy for topic {topic.name} set.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
     subparsers = parser.add_argument(
-            dest='topic_name',
-            help='The PubSub topic to grant Cloud IoT Core access to')
+        dest="topic_name", help="The PubSub topic to grant Cloud IoT Core access to"
+    )
 
     args = parser.parse_args()
 

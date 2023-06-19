@@ -32,36 +32,33 @@ def app():
 
 
 def test_get(app):
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_int == 200
 
 
 def test_post(app):
-    http = HttpMockSequenceWithCredentials([
-        ({'status': '200'}, '')])
-    patch_http = mock.patch.object(httplib2, 'Http', lambda: http)
+    http = HttpMockSequenceWithCredentials([({"status": "200"}, "")])
+    patch_http = mock.patch.object(httplib2, "Http", lambda: http)
 
     with patch_http:
-        response = app.post('/', {
-            'recipient': 'jonwayne@google.com',
-            'submit': 'Send simple email'})
+        response = app.post(
+            "/", {"recipient": "jonwayne@google.com", "submit": "Send simple email"}
+        )
 
         assert response.status_int == 200
 
-    http = HttpMockSequenceWithCredentials([
-        ({'status': '200'}, '')])
+    http = HttpMockSequenceWithCredentials([({"status": "200"}, "")])
 
     with patch_http:
-        response = app.post('/', {
-            'recipient': 'jonwayne@google.com',
-            'submit': 'Send complex email'})
+        response = app.post(
+            "/", {"recipient": "jonwayne@google.com", "submit": "Send complex email"}
+        )
 
         assert response.status_int == 200
 
-    http = HttpMockSequenceWithCredentials([
-        ({'status': '500'}, 'Test error')])
+    http = HttpMockSequenceWithCredentials([({"status": "500"}, "Test error")])
 
     with patch_http, pytest.raises(Exception):
-        app.post('/', {
-            'recipient': 'jonwayne@google.com',
-            'submit': 'Send simple email'})
+        app.post(
+            "/", {"recipient": "jonwayne@google.com", "submit": "Send simple email"}
+        )

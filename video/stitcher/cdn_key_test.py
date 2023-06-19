@@ -51,7 +51,6 @@ updated_akamai_key = updated_cloud_cdn_private_key
 
 
 def test_cdn_key_operations(capsys: pytest.fixture) -> None:
-
     utils.delete_stale_cdn_keys(project_id, location)
 
     # Media CDN key tests

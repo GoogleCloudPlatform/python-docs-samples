@@ -23,7 +23,6 @@ PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_delete_feed(capsys, test_feed):
-
     quickstart_deletefeed.delete_feed(test_feed.name)
 
     out, _ = capsys.readouterr()

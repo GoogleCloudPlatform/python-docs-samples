@@ -653,10 +653,8 @@ def test_inspect_gcs_with_sampling(
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
 def test_inspect_data_to_hybrid_job_trigger(
-    dlp_client: MagicMock,
-    capsys: pytest.CaptureFixture
+    dlp_client: MagicMock, capsys: pytest.CaptureFixture
 ) -> None:
-
     # Configure the mock DLP client and its behavior.
     mock_dlp_instance = dlp_client.return_value
 

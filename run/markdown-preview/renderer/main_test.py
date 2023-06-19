@@ -30,9 +30,7 @@ def test_markdown_handler(client):
     assert r.status_code == 200
     assert "<p><strong>strong text</strong></p>" == r.data.decode()
 
-    data_input = (
-        '<a onblur="alert(secret)" href="http://www.google.com">Google</a>'
-    )
+    data_input = '<a onblur="alert(secret)" href="http://www.google.com">Google</a>'
     expect = '<p><a href="http://www.google.com">Google</a></p>'
     r = client.post("/", data=data_input)
     assert r.status_code == 200

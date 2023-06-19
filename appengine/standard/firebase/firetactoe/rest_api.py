@@ -25,8 +25,9 @@ from google.auth.transport.requests import AuthorizedSession
 import google.auth
 
 _FIREBASE_SCOPES = [
-    'https://www.googleapis.com/auth/firebase.database',
-    'https://www.googleapis.com/auth/userinfo.email']
+    "https://www.googleapis.com/auth/firebase.database",
+    "https://www.googleapis.com/auth/userinfo.email",
+]
 
 
 # Memoize the authorized session, to avoid fetching new access tokens
@@ -82,6 +83,8 @@ def firebase_post(path, value=None):
     """
     response, content = _get_session().post(path, body=value)
     return json.loads(content)
+
+
 # [END rest_writing_data]
 
 

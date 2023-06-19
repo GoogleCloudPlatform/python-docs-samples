@@ -34,7 +34,7 @@ def delete_recognizer(name: str) -> None:
 
 @Retry()
 def test_transcribe_streaming_voice_activity_events(
-    capsys: pytest.CaptureFixture
+    capsys: pytest.CaptureFixture,
 ) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 

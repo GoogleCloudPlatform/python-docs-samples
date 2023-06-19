@@ -64,4 +64,5 @@ def restrict_api_key_ios(project_id: str, key_id: str) -> Key:
     # Use response.key_string to authenticate.
     return response
 
+
 # [END apikeys_restrict_api_key_ios]

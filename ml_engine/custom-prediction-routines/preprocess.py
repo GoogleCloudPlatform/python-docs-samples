@@ -16,8 +16,7 @@ import numpy as np
 
 
 class ZeroCenterer(object):
-    """Stores means of each column of a matrix and uses them for preprocessing.
-    """
+    """Stores means of each column of a matrix and uses them for preprocessing."""
 
     def __init__(self):
         """On initialization, is not tied to any distribution."""

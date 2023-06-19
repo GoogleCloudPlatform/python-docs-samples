@@ -18,7 +18,7 @@ from google.cloud import speech_v1p1beta1 as speech
 
 
 def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
-    """ Transcribe a remote audio file with word level confidence.
+    """Transcribe a remote audio file with word level confidence.
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
@@ -41,7 +41,9 @@ def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
     audio = speech.RecognitionAudio(uri=gcs_uri)
 
     # Use non-blocking call for getting file transcription
-    response = client.long_running_recognize(config=config, audio=audio).result(timeout=300)
+    response = client.long_running_recognize(config=config, audio=audio).result(
+        timeout=300
+    )
 
     transcript_builder = []
     for i, result in enumerate(response.results):
@@ -55,9 +57,10 @@ def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
             )
         )
 
-    transcript = ''.join(transcript_builder)
+    transcript = "".join(transcript_builder)
     print(transcript)
 
     return transcript
+
 
 # [END speech_transcribe_word_level_confidence_gcs_beta]

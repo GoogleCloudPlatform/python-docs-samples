@@ -24,18 +24,19 @@ class EnvVarsTestCase(unittest.TestCase):
         self.testbed = testbed.Testbed()
         self.testbed.activate()
         self.testbed.setup_env(
-            app_id='your-app-id',
-            my_config_setting='example',
-            overwrite=True)
+            app_id="your-app-id", my_config_setting="example", overwrite=True
+        )
 
     def tearDown(self):
         self.testbed.deactivate()
 
     def testEnvVars(self):
-        self.assertEqual(os.environ['APPLICATION_ID'], 'your-app-id')
-        self.assertEqual(os.environ['MY_CONFIG_SETTING'], 'example')
+        self.assertEqual(os.environ["APPLICATION_ID"], "your-app-id")
+        self.assertEqual(os.environ["MY_CONFIG_SETTING"], "example")
+
+
 # [END env_example]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()

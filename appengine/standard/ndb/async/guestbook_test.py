@@ -24,51 +24,51 @@ def app(testbed):
 
 
 def test_get_guestbook_sync(app, testbed, login):
-    guestbook.Account(id='123').put()
+    guestbook.Account(id="123").put()
     # Log the user in
-    login(id='123')
+    login(id="123")
 
     for i in range(11):
-        guestbook.Guestbook(content='Content {}'.format(i)).put()
+        guestbook.Guestbook(content="Content {}".format(i)).put()
 
-    response = app.get('/guestbook')
+    response = app.get("/guestbook")
 
     assert response.status_int == 200
-    assert 'Content 1' in response.body
+    assert "Content 1" in response.body
 
 
 def test_get_guestbook_async(app, testbed, login):
-    guestbook.Account(id='123').put()
+    guestbook.Account(id="123").put()
     # Log the user in
-    login(id='123')
+    login(id="123")
     for i in range(11):
-        guestbook.Guestbook(content='Content {}'.format(i)).put()
+        guestbook.Guestbook(content="Content {}".format(i)).put()
 
-    response = app.get('/guestbook?async=1')
+    response = app.get("/guestbook?async=1")
 
     assert response.status_int == 200
-    assert 'Content 1' in response.body
+    assert "Content 1" in response.body
 
 
 def test_get_messages_sync(app, testbed):
     for i in range(21):
-        account_key = guestbook.Account(nickname='Nick {}'.format(i)).put()
-        guestbook.Message(author=account_key, text='Text {}'.format(i)).put()
+        account_key = guestbook.Account(nickname="Nick {}".format(i)).put()
+        guestbook.Message(author=account_key, text="Text {}".format(i)).put()
 
-    response = app.get('/messages')
+    response = app.get("/messages")
 
     assert response.status_int == 200
-    assert 'Nick 1 wrote:' in response.body
-    assert '<p>Text 1' in response.body
+    assert "Nick 1 wrote:" in response.body
+    assert "<p>Text 1" in response.body
 
 
 def test_get_messages_async(app, testbed):
     for i in range(21):
-        account_key = guestbook.Account(nickname='Nick {}'.format(i)).put()
-        guestbook.Message(author=account_key, text='Text {}'.format(i)).put()
+        account_key = guestbook.Account(nickname="Nick {}".format(i)).put()
+        guestbook.Message(author=account_key, text="Text {}".format(i)).put()
 
-    response = app.get('/messages?async=1')
+    response = app.get("/messages?async=1")
 
     assert response.status_int == 200
-    assert 'Nick 1 wrote:' in response.body
-    assert '\nText 1' in response.body
+    assert "Nick 1 wrote:" in response.body
+    assert "\nText 1" in response.body

@@ -37,17 +37,19 @@ class FakeClient(cpix_client.CpixClient):
             information to be written to Secret Manager.
         """
         key_info = dict()
-        key_info['encryptionKeys'] = []
+        key_info["encryptionKeys"] = []
         for key_id in key_ids:
             fake_key = secrets.token_hex(16)
-            key_info['encryptionKeys'].append({
-                    'keyId': key_id.replace('-', ''),
-                    'key': fake_key,
-                    'keyUri': (
-                        f'https://storage.googleapis.com/bucket-name/{fake_key}.bin'
+            key_info["encryptionKeys"].append(
+                {
+                    "keyId": key_id.replace("-", ""),
+                    "key": fake_key,
+                    "keyUri": (
+                        f"https://storage.googleapis.com/bucket-name/{fake_key}.bin"
                     ),
-                    'iv': secrets.token_hex(16),
-                })
+                    "iv": secrets.token_hex(16),
+                }
+            )
         return key_info
 
     def required_env_vars(self) -> List[str]:

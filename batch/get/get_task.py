@@ -17,7 +17,9 @@
 from google.cloud import batch_v1
 
 
-def get_task(project_id: str, region: str, job_name: str, group_name: str, task_number: int) -> batch_v1.Task:
+def get_task(
+    project_id: str, region: str, job_name: str, group_name: str, task_number: int
+) -> batch_v1.Task:
     """
     Retrieve information about a Task.
 
@@ -33,6 +35,10 @@ def get_task(project_id: str, region: str, job_name: str, group_name: str, task_
     """
     client = batch_v1.BatchServiceClient()
 
-    return client.get_task(name=f"projects/{project_id}/locations/{region}/jobs/{job_name}"
-                                f"/taskGroups/{group_name}/tasks/{task_number}")
+    return client.get_task(
+        name=f"projects/{project_id}/locations/{region}/jobs/{job_name}"
+        f"/taskGroups/{group_name}/tasks/{task_number}"
+    )
+
+
 # [END batch_get_task]

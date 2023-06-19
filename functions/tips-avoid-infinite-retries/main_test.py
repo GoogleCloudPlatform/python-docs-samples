@@ -31,16 +31,16 @@ def app():
 def test_avoid_infinite_retries(capsys):
     now = datetime.now(timezone.utc)
 
-    with patch('main.datetime', wraps=datetime) as datetime_mock:
+    with patch("main.datetime", wraps=datetime) as datetime_mock:
         datetime_mock.now = Mock(return_value=now)
 
         old_context = UserDict()
         old_context.timestamp = (now - timedelta(seconds=15)).isoformat()
-        old_context.event_id = 'old_event_id'
+        old_context.event_id = "old_event_id"
 
         young_context = UserDict()
         young_context.timestamp = (now - timedelta(seconds=5)).isoformat()
-        young_context.event_id = 'young_event_id'
+        young_context.event_id = "young_event_id"
 
         main.avoid_infinite_retries(None, old_context)
         out, _ = capsys.readouterr()

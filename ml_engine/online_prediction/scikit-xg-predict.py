@@ -34,19 +34,20 @@ def predict_json(project, model, instances, version=None):
     # Create the AI Platform service object.
     # To authenticate set the environment variable
     # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-    service = googleapiclient.discovery.build('ml', 'v1')
-    name = f'projects/{project}/models/{model}'
+    service = googleapiclient.discovery.build("ml", "v1")
+    name = f"projects/{project}/models/{model}"
 
     if version is not None:
-        name += f'/versions/{version}'
+        name += f"/versions/{version}"
 
-    response = service.projects().predict(
-        name=name,
-        body={'instances': instances}
-    ).execute()
+    response = (
+        service.projects().predict(name=name, body={"instances": instances}).execute()
+    )
 
-    if 'error' in response:
-        raise RuntimeError(response['error'])
+    if "error" in response:
+        raise RuntimeError(response["error"])
 
-    return response['predictions']
+    return response["predictions"]
+
+
 # [END predict_json]

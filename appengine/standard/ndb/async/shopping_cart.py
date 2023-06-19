@@ -32,14 +32,17 @@ class CartItem(ndb.Model):
 
 class SpecialOffer(ndb.Model):
     inventory = ndb.KeyProperty(kind=InventoryItem)
+
+
 # [END models]
 
 
 def get_cart_plus_offers(acct):
     cart = CartItem.query(CartItem.account == acct.key).fetch()
     offers = SpecialOffer.query().fetch(10)
-    ndb.get_multi([item.inventory for item in cart] +
-                  [offer.inventory for offer in offers])
+    ndb.get_multi(
+        [item.inventory for item in cart] + [offer.inventory for offer in offers]
+    )
     return cart, offers
 
 
@@ -48,8 +51,9 @@ def get_cart_plus_offers_async(acct):
     offers_future = SpecialOffer.query().fetch_async(10)
     cart = cart_future.get_result()
     offers = offers_future.get_result()
-    ndb.get_multi([item.inventory for item in cart] +
-                  [offer.inventory for offer in offers])
+    ndb.get_multi(
+        [item.inventory for item in cart] + [offer.inventory for offer in offers]
+    )
     return cart, offers
 
 
@@ -72,6 +76,8 @@ def get_offers_tasklet(acct):
 def get_cart_plus_offers_tasklet(acct):
     cart, offers = yield get_cart_tasklet(acct), get_offers_tasklet(acct)
     raise ndb.Return((cart, offers))
+
+
 # [END cart_offers_tasklets]
 
 

@@ -46,7 +46,7 @@ def setup_test_env():
 
 
 def download_ca_cert(project, instance):
-    """ Download server CA cert"""
+    """Download server CA cert"""
     scopes = ["https://www.googleapis.com/auth/sqlservice.admin"]
     credentials, _ = default(scopes=scopes)
 
@@ -57,8 +57,10 @@ def download_ca_cert(project, instance):
     headers = {
         "Authorization": f"Bearer {credentials.token}",
     }
-    url = (f"{SQLADMIN_API_ENDPOINT}/sql/{SQLADMIN_API_VERSION}"
-           f"/projects/{project}/instances/{instance}/connectSettings")
+    url = (
+        f"{SQLADMIN_API_ENDPOINT}/sql/{SQLADMIN_API_VERSION}"
+        f"/projects/{project}/instances/{instance}/connectSettings"
+    )
 
     resp = requests.get(url, headers=headers)
     server_ca_cert = resp.json()["serverCaCert"]["cert"]

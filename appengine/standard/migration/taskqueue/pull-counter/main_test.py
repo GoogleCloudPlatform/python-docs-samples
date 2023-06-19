@@ -18,28 +18,23 @@ import uuid
 import main
 
 
-TEST_NAME = 'taskqueue-migration-' + str(uuid.uuid4())
-TEST_TASKS = {
-    'alpha': 2,
-    'beta': 1,
-    'gamma': 3
-}
+TEST_NAME = "taskqueue-migration-" + str(uuid.uuid4())
+TEST_TASKS = {"alpha": 2, "beta": 1, "gamma": 3}
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def subscription():
     # Setup - create unique topic and subscription
     project = main.project
-    topic_name = 'projects/{}/topics/{}'.format(project, TEST_NAME)
-    subscription_name = 'projects/{}/subscriptions/{}'.format(project, TEST_NAME)
+    topic_name = "projects/{}/topics/{}".format(project, TEST_NAME)
+    subscription_name = "projects/{}/subscriptions/{}".format(project, TEST_NAME)
 
     publisher = main.publisher
     publisher.create_topic(name=topic_name)
 
     subscriber = main.subscriber
     subscription = subscriber.create_subscription(
-        name=subscription_name,
-        topic=topic_name
+        name=subscription_name, topic=topic_name
     )
 
     yield subscription
@@ -49,7 +44,7 @@ def subscription():
     publisher.delete_topic(topic=topic_name)
 
 
-@pytest.fixture(scope='module')
+@pytest.fixture(scope="module")
 def entity_kind():
     yield TEST_NAME
 
@@ -73,10 +68,10 @@ def test_get_home_page(subscription, entity_kind):
     main.app.testing = True
     client = main.app.test_client()
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Counters' in r.data.decode('utf-8')
-    assert '<li>' not in r.data.decode('utf-8')     # List is empty
+    assert "Counters" in r.data.decode("utf-8")
+    assert "<li>" not in r.data.decode("utf-8")  # List is empty
 
     # Restore main globals
     main.topic = save_topic
@@ -110,21 +105,21 @@ def test_tasks(subscription, entity_kind):
     # Post tasks stage, queueing them up
     for task in TEST_TASKS:
         for i in range(TEST_TASKS[task]):
-            r = client.post('/', data={'key': task})
+            r = client.post("/", data={"key": task})
             assert r.status_code == 302
-            assert r.headers.get('location').count('/') == 3
+            assert r.headers.get("location").count("/") == 3
 
     # Trigger /_ah/start with terminating processing_tasks()
 
     save_processing_tasks = main.processing_tasks
     main.processing_tasks = dummy_terminator
-    r = client.get('/_ah/start')
+    r = client.get("/_ah/start")
     main.processing_tasks = save_processing_tasks
 
     # See if home page lists tasks having been processed
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    page = r.data.decode('utf-8')
+    page = r.data.decode("utf-8")
     for task in TEST_TASKS:
         assert task in page
         assert str(TEST_TASKS[task]) in page

@@ -143,7 +143,6 @@ with models.DAG(
         # secrets you specify in a Secret object do not exist in Kubernetes.
         secrets=[secret_env, secret_volume],
         cmds=["echo"],
-
         # env_vars allows you to specify environment variables for your
         # container to use. env_vars is templated.
         env_vars={
