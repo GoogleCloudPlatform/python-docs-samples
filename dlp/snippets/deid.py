@@ -1922,8 +1922,9 @@ import google.cloud.dlp  # noqa: F811, E402
 
 def deidentify_table_with_fpe(
     project: str,
-    table_data: Dict[str, Union[List[str], List[List[str]]]],
-    deid_content_list: List[str],
+    table_header: List[str],
+    table_rows: List[List[str]],
+    deid_field_names: List[str],
     key_name: str = None,
     wrapped_key: str = None,
     alphabet: str = None,
@@ -1933,8 +1934,9 @@ def deidentify_table_with_fpe(
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Dictionary representing table data.
-        deid_content_list: A list of fields in table to de-identify.
+        table_header: List of strings representing table field names.
+        table_rows: List of rows representing table data.
+        deid_field_names: A list of fields in table to de-identify.
         key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
             AES-256 key. Example:
             key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
@@ -1943,7 +1945,7 @@ def deidentify_table_with_fpe(
             should be encrypted using the Cloud KMS key specified by key_name.
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
-            rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+            rest/v2/projects.deidentifyTemplates#ffxcommonnativealphabet
     """
 
     # Instantiate a client.
@@ -1951,9 +1953,9 @@ def deidentify_table_with_fpe(
 
     # Construct the `table`. For more details on the table schema, please see
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
-    headers = [{"name": val} for val in table_data["header"]]
+    headers = [{"name": val} for val in table_header]
     rows = []
-    for row in table_data["rows"]:
+    for row in table_rows:
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
@@ -1962,7 +1964,7 @@ def deidentify_table_with_fpe(
     item = {"table": table}
 
     # Specify fields to be de-identified.
-    deid_content_list = [{"name": _i} for _i in deid_content_list]
+    deid_field_names = [{"name": _i} for _i in deid_field_names]
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -1984,7 +1986,7 @@ def deidentify_table_with_fpe(
                     "primitive_transformation": {
                         "crypto_replace_ffx_fpe_config": crypto_replace_ffx_fpe_config
                     },
-                    "fields": deid_content_list,
+                    "fields": deid_field_names,
                 }
             ]
         }
@@ -2017,8 +2019,9 @@ import google.cloud.dlp  # noqa: F811, E402
 
 def reidentify_table_with_fpe(
     project: str,
-    table_data: Dict[str, List[str]],
-    reid_content_list: List[str],
+    table_header: List[str],
+    table_rows: List[List[str]],
+    reid_field_names: List[str],
     key_name: str = None,
     wrapped_key: str = None,
     alphabet: str = None,
@@ -2028,8 +2031,9 @@ def reidentify_table_with_fpe(
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Json string representing table data.
-        reid_content_list: A list of fields in table to re-identify.
+        table_header: List of strings representing table field names.
+        table_rows: List of rows representing table data.
+        reid_field_names: A list of fields in table to re-identify.
         key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
             AES-256 key. Example:
             key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
@@ -2038,7 +2042,7 @@ def reidentify_table_with_fpe(
             should be encrypted using the Cloud KMS key specified by key_name.
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
-            rest/v2beta2/organizations.deidentifyTemplates#ffxcommonnativealphabet
+            rest/v2/projects.deidentifyTemplates#ffxcommonnativealphabet
     """
 
     # Instantiate a client.
@@ -2046,9 +2050,9 @@ def reidentify_table_with_fpe(
 
     # Construct the `table`. For more details on the table schema, please see
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
-    headers = [{"name": val} for val in table_data["header"]]
+    headers = [{"name": val} for val in table_header]
     rows = []
-    for row in table_data["rows"]:
+    for row in table_rows:
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
     table = {"headers": headers, "rows": rows}
 
@@ -2056,7 +2060,7 @@ def reidentify_table_with_fpe(
     item = {"table": table}
 
     # Specify fields to be re-identified/decrypted.
-    reid_content_list = [{"name": _i} for _i in reid_content_list]
+    reid_field_names = [{"name": _i} for _i in reid_field_names]
 
     # The wrapped key is base64-encoded, but the library expects a binary
     # string, so decode it here.
@@ -2078,7 +2082,7 @@ def reidentify_table_with_fpe(
                     "primitive_transformation": {
                         "crypto_replace_ffx_fpe_config": crypto_replace_ffx_fpe_config,
                     },
-                    "fields": reid_content_list,
+                    "fields": reid_field_names,
                 }
             ]
         }

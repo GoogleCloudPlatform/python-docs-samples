@@ -592,7 +592,8 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
 
     deid.deidentify_table_with_fpe(
         GCLOUD_PROJECT,
-        table_data,
+        table_data["header"],
+        table_data["rows"],
         ["employee_id"],
         alphabet='NUMERIC',
         wrapped_key=WRAPPED_KEY,
@@ -617,7 +618,8 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
 
     deid.reidentify_table_with_fpe(
         GCLOUD_PROJECT,
-        table_data,
+        table_data["header"],
+        table_data["rows"],
         ["employee_id"],
         alphabet='NUMERIC',
         wrapped_key=WRAPPED_KEY,
