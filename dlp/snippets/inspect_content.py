@@ -378,7 +378,7 @@ def inspect_column_values_w_custom_hotwords(
     }
 
     # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
+    parent = f"projects/{project}/locations/global"
 
     # Call the API
     response = dlp.inspect_content(
