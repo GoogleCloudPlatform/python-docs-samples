@@ -319,15 +319,17 @@ import google.cloud.dlp  # noqa: F811, E402
 
 def inspect_column_values_w_custom_hotwords(
     project: str,
-    table_data: Dict[str, Union[List[str], List[List[str]]]],
+    table_header: List[str],
+    table_rows: List[List[str]],
     info_types: List[str],
     custom_hotword: str,
 ) -> None:
     """Uses the Data Loss Prevention API to inspect table data using built-in
-    infoType detectors, excluding columns that match a custom hotword.
+    infoType detectors, excluding columns that match a custom hot-word.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_data: Dictionary representing table data.
+        table_header: List of strings representing table field names.
+        table_rows: List of rows representing table values.
         info_types: The infoType for which hot-word rule is applied.
         custom_hotword: The custom regular expression used for likelihood boosting.
     """
@@ -337,9 +339,9 @@ def inspect_column_values_w_custom_hotwords(
 
     # Construct the `table`. For more details on the table schema, please see
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
-    headers = [{"name": val} for val in table_data["header"]]
+    headers = [{"name": val} for val in table_header]
     rows = []
-    for row in table_data["rows"]:
+    for row in table_rows:
         rows.append(
             {"values": [{"string_value": cell_val} for cell_val in row]}
         )
@@ -1107,7 +1109,7 @@ def inspect_image_file(
         byte_item = {"type_": "IMAGE", "data": f.read()}
 
     # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
+    parent = f"projects/{project}/locations/global"
 
     # Call the API.
     response = dlp.inspect_content(
@@ -1697,8 +1699,18 @@ if __name__ == "__main__":
         default=default_project,
     )
     parser_table_hotword.add_argument(
-        "--table_data",
-        help="Dictionary representing a table.",
+        "--table_header",
+        help="List of strings representing table field names."
+             "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
+             "The method can be used to exclude matches from entire column"
+             '"Fake_Email_Address".',
+    )
+    parser_table_hotword.add_argument(
+        "--table_rows",
+        help="List of rows representing table values."
+             'Example: '
+             '"[["example1@example.org", "test1@example.com],'
+             '["example2@example.org", "test2@example.com]]"',
     )
     parser_table_hotword.add_argument(
         "--info_types",
@@ -2229,7 +2241,8 @@ if __name__ == "__main__":
     elif args.content == "table_w_custom_hotword":
         inspect_column_values_w_custom_hotwords(
             args.project,
-            args.table_data,
+            args.table_header,
+            args.table_rows,
             args.info_types,
             args.custom_hotword,
         )

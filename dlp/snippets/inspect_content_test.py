@@ -237,7 +237,8 @@ def test_inspect_column_values_w_custom_hotwords(capsys):
     }
     inspect_content.inspect_column_values_w_custom_hotwords(
         GCLOUD_PROJECT,
-        table_data,
+        table_data["header"],
+        table_data["rows"],
         ["US_SOCIAL_SECURITY_NUMBER"],
         "Fake Social Security Number",
     )
