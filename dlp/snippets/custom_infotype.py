@@ -574,25 +574,22 @@ def inspect_string_without_overlap(project: str, content_string: str) -> None:
 # [END dlp_inspect_string_without_overlap]
 
 
-# [START dlp_inspect_with_person_name_w_custom_hotword]
+# [START dlp_inspect_string_custom_hotword]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def inspect_with_person_name_w_custom_hotword(
+def inspect_string_w_custom_hotword(
     project: str, content_string: str, custom_hotword: str = "patient"
 ) -> None:
     """Uses the Data Loss Prevention API increase likelihood for matches on
-       PERSON_NAME if the user specified custom hotword is present. Only
+       PERSON_NAME if the user specified custom hot-word is present. Only
        includes findings with the increased likelihood by setting a minimum
        likelihood threshold of VERY_LIKELY.
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
         content_string: The string to inspect.
-        custom_hotword: The custom hotword used for likelihood boosting.
-
-    Returns:
-        None; the response from the API is printed to the terminal.
+        custom_hotword: The custom hot-word used for likelihood boosting.
     """
 
     # Instantiate a client.
@@ -644,7 +641,7 @@ def inspect_with_person_name_w_custom_hotword(
         print("No findings.")
 
 
-# [END dlp_inspect_with_person_name_w_custom_hotword]
+# [END dlp_inspect_string_custom_hotword]
 
 
 # [START dlp_inspect_string_multiple_rules]
