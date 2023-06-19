@@ -412,11 +412,11 @@ def inspect_string_custom_omit_overlap(project: str, content_string: str) -> Non
 
 # [END dlp_inspect_string_custom_omit_overlap]
 
-# [START dlp_omit_name_if_also_email]
+# [START dlp_inspect_string_omit_overlap]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def omit_name_if_also_email(
+def inspect_string_omit_overlap(
     project: str,
     content_string: str,
 ) -> None:
@@ -486,7 +486,7 @@ def omit_name_if_also_email(
         print("No findings.")
 
 
-# [END dlp_omit_name_if_also_email]
+# [END dlp_inspect_string_omit_overlap]
 
 
 # [START dlp_inspect_string_without_overlap]

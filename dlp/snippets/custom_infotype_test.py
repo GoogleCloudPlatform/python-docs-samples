@@ -76,8 +76,8 @@ def test_inspect_string_custom_omit_overlap(capsys: pytest.LogCaptureFixture) ->
     assert "John Doe" in out
 
 
-def test_omit_name_if_also_email(capsys: pytest.LogCaptureFixture) -> None:
-    custom_infotype.omit_name_if_also_email(GCLOUD_PROJECT, "alice@example.com")
+def test_inspect_string_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
+    custom_infotype.inspect_string_omit_overlap(GCLOUD_PROJECT, "alice@example.com")
 
     # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
     out, _ = capsys.readouterr()
