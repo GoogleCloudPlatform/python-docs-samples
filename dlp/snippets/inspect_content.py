@@ -323,9 +323,8 @@ def inspect_column_values_w_custom_hotwords(
     info_types: List[str],
     custom_hotword: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to inspect table data using builtin
-    infoType detector and to exclude entire column of data from inspection
-    results when matched with custom hot-word.
+    """Uses the Data Loss Prevention API to inspect table data using built-in
+    infoType detectors, excluding columns that match a custom hotword.
     Args:
         project: The Google Cloud project id to use as a parent resource.
         table_data: Dictionary representing table data.
