@@ -23,9 +23,16 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_snapshot>
-def create_snapshot(project_id: str, disk_name: str, snapshot_name: str, *,
-                    zone: str | None = None, region: str | None = None,
-                    location: str | None = None, disk_project_id: str | None = None) -> compute_v1.Snapshot:
+def create_snapshot(
+    project_id: str,
+    disk_name: str,
+    snapshot_name: str,
+    *,
+    zone: str | None = None,
+    region: str | None = None,
+    location: str | None = None,
+    disk_project_id: str | None = None,
+) -> compute_v1.Snapshot:
     """
     Create a snapshot of a disk.
 
@@ -52,7 +59,9 @@ def create_snapshot(project_id: str, disk_name: str, snapshot_name: str, *,
         The new snapshot instance.
     """
     if zone is None and region is None:
-        raise RuntimeError("You need to specify `zone` or `region` for this function to work.")
+        raise RuntimeError(
+            "You need to specify `zone` or `region` for this function to work."
+        )
     if zone is not None and region is not None:
         raise RuntimeError("You can't set both `zone` and `region` parameters.")
 
@@ -64,7 +73,9 @@ def create_snapshot(project_id: str, disk_name: str, snapshot_name: str, *,
         disk = disk_client.get(project=disk_project_id, zone=zone, disk=disk_name)
     else:
         regio_disk_client = compute_v1.RegionDisksClient()
-        disk = regio_disk_client.get(project=disk_project_id, region=region, disk=disk_name)
+        disk = regio_disk_client.get(
+            project=disk_project_id, region=region, disk=disk_name
+        )
 
     snapshot = compute_v1.Snapshot()
     snapshot.source_disk = disk.self_link
@@ -78,5 +89,6 @@ def create_snapshot(project_id: str, disk_name: str, snapshot_name: str, *,
     wait_for_extended_operation(operation, "snapshot creation")
 
     return snapshot_client.get(project=project_id, snapshot=snapshot_name)
+
 
 # </INGREDIENT>

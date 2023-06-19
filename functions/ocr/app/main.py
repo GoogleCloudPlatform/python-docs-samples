@@ -89,7 +89,7 @@ def detect_text(bucket: str, filename: str) -> None:
 
 # [END functions_ocr_detect]
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 # [START message_validatation_helper]
@@ -114,6 +114,8 @@ def validate_message(message: Dict[str, T], param: str) -> T:
             )
         )
     return var
+
+
 # [END message_validatation_helper]
 
 

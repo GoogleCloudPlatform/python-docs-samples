@@ -61,9 +61,7 @@ def sample_analyze_sentiment(gcs_content_uri):
     )
     # Get overall sentiment of the input document
     print(f"Document sentiment score: {response.document_sentiment.score}")
-    print(
-        f"Document sentiment magnitude: {response.document_sentiment.magnitude}"
-    )
+    print(f"Document sentiment magnitude: {response.document_sentiment.magnitude}")
     # Get sentiment for all sentences in the document
     for sentence in response.sentences:
         print(f"Sentence text: {sentence.text.content}")

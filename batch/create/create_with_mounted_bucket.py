@@ -16,7 +16,9 @@
 from google.cloud import batch_v1
 
 
-def create_script_job_with_bucket(project_id: str, region: str, job_name: str, bucket_name: str) -> batch_v1.Job:
+def create_script_job_with_bucket(
+    project_id: str, region: str, job_name: str, bucket_name: str
+) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
     a simple command on Cloud Compute instances.
@@ -45,7 +47,7 @@ def create_script_job_with_bucket(project_id: str, region: str, job_name: str, b
     gcs_bucket.remote_path = bucket_name
     gcs_volume = batch_v1.Volume()
     gcs_volume.gcs = gcs_bucket
-    gcs_volume.mount_path = '/mnt/share'
+    gcs_volume.mount_path = "/mnt/share"
     task.volumes = [gcs_volume]
 
     # We can specify what resources are requested by each task.
@@ -88,4 +90,6 @@ def create_script_job_with_bucket(project_id: str, region: str, job_name: str, b
     create_request.parent = f"projects/{project_id}/locations/{region}"
 
     return client.create_job(create_request)
+
+
 # [END batch_create_script_job_with_bucket]

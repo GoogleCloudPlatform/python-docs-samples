@@ -19,6 +19,6 @@ def test_index(testbed):
     import main
 
     app = main.app.test_client()
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_code == 200
-    assert 'Google' in response.data.decode('utf-8')
+    assert "Google" in response.data.decode("utf-8")

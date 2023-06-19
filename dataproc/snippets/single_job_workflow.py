@@ -69,7 +69,6 @@ def upload_pyspark_file(project, bucket_name, filename, spark_file):
 
 
 def run_workflow(dataproc, project, region, zone, bucket_name, filename, cluster_name):
-
     parent = f"projects/{project}/regions/{region}"
     zone_uri = "https://www.googleapis.com/compute/v1/projects/{}/zones/{}".format(
         project, zone
@@ -140,7 +139,6 @@ def main(
     create_new_cluster=True,
     global_region=True,
 ):
-
     # [START dataproc_get_workflow_template_client]
     if global_region:
         region = "global"

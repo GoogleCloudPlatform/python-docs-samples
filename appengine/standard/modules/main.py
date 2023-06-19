@@ -18,8 +18,10 @@ AppEngine modules and accessing other modules in the same project.
 """
 
 import urllib2
+
 # [START modules_import]
 from google.appengine.api import modules
+
 # [END modules_import]
 import webapp2
 
@@ -29,25 +31,27 @@ class GetModuleInfoHandler(webapp2.RequestHandler):
         # [START module_info]
         module = modules.get_current_module_name()
         instance_id = modules.get_current_instance_id()
-        self.response.write(
-            'module_id={}&instance_id={}'.format(module, instance_id))
+        self.response.write("module_id={}&instance_id={}".format(module, instance_id))
         # [END module_info]
 
 
 class GetBackendHandler(webapp2.RequestHandler):
     def get(self):
         # [START access_another_module]
-        backend_hostname = modules.get_hostname(module='my-backend')
+        backend_hostname = modules.get_hostname(module="my-backend")
         url = "http://{}/".format(backend_hostname)
         try:
             result = urllib2.urlopen(url).read()
-            self.response.write('Got response {}'.format(result))
+            self.response.write("Got response {}".format(result))
         except urllib2.URLError:
             pass
         # [END access_another_module]
 
 
-app = webapp2.WSGIApplication([
-    ('/', GetModuleInfoHandler),
-    ('/access_backend', GetBackendHandler),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/", GetModuleInfoHandler),
+        ("/access_backend", GetBackendHandler),
+    ],
+    debug=True,
+)

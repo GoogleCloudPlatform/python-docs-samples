@@ -26,7 +26,7 @@ def test_create_entity(testbed):
     snippets.create_entity()
     entities = my_models.MyModel.query().fetch()
     assert len(entities) == 1
-    assert entities[0].name == 'booh'
+    assert entities[0].name == "booh"
 
 
 def test_read_and_update_entity(testbed):
@@ -55,16 +55,13 @@ def test_query_entity(testbed):
 def test_create_columbus(testbed):
     entities = snippets.create_and_query_columbus()
     assert len(entities) == 1
-    assert entities[0].name == 'Christopher Columbus'
-    assert (entities[0].birth.first < entities[0].birth.last <
-            entities[0].death.first)
+    assert entities[0].name == "Christopher Columbus"
+    assert entities[0].birth.first < entities[0].birth.last < entities[0].death.first
 
 
 def test_long_integer_property(testbed):
     with pytest.raises(TypeError):
-        my_models.MyModel(
-            name='not integer test',
-            xyz=['not integer'])
+        my_models.MyModel(name="not integer test", xyz=["not integer"])
 
 
 def test_bounded_long_integer_property(testbed):
@@ -91,8 +88,10 @@ def test_maybe_fuzzy_date_property(testbed):
 
     two_types_of_dates = TestMaybeFuzzyDateProperty(
         first_date=my_models.FuzzyDate(
-            datetime.date(1984, 2, 27), datetime.date(1984, 2, 29)),
-        second_date=datetime.date(2015, 6, 27))
+            datetime.date(1984, 2, 27), datetime.date(1984, 2, 29)
+        ),
+        second_date=datetime.date(2015, 6, 27),
+    )
 
     assert isinstance(two_types_of_dates.first_date, my_models.FuzzyDate)
     assert isinstance(two_types_of_dates.second_date, my_models.FuzzyDate)

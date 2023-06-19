@@ -28,12 +28,11 @@ def company_name():
 
 @pytest.mark.flaky(max_runs=2, min_passes=1)
 def test_email_alert_search_sample(company_name, capsys):
-
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def eventually_consistent_test():
         email_alert_search_sample.run_sample(company_name)
         out, _ = capsys.readouterr()
-        expected = ('.*matchingJobs.*')
+        expected = ".*matchingJobs.*"
         assert re.search(expected, out)
 
     eventually_consistent_test()

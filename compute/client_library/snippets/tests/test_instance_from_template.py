@@ -37,7 +37,7 @@ def instance_template():
         "projects/debian-cloud/global/images/family/debian-11"
     )
     initialize_params.disk_size_gb = 25
-    initialize_params.disk_type = 'pd-balanced'
+    initialize_params.disk_type = "pd-balanced"
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     disk.boot = True

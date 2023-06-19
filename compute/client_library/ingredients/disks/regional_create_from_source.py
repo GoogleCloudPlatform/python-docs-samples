@@ -24,11 +24,16 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_regional_disk_from_disk>
-def create_regional_disk(project_id: str, region: str, replica_zones: Iterable[str],
-                         disk_name: str, disk_type: str,
-                         disk_size_gb: int,
-                         disk_link: str | None = None,
-                         snapshot_link: str | None = None) -> compute_v1.Disk:
+def create_regional_disk(
+    project_id: str,
+    region: str,
+    replica_zones: Iterable[str],
+    disk_name: str,
+    disk_type: str,
+    disk_size_gb: int,
+    disk_link: str | None = None,
+    snapshot_link: str | None = None,
+) -> compute_v1.Disk:
     """
     Creates a regional disk from an existing zonal disk in a given project.
 
@@ -62,9 +67,13 @@ def create_regional_disk(project_id: str, region: str, replica_zones: Iterable[s
     disk.type_ = disk_type
     disk.region = region
     disk.name = disk_name
-    operation = disk_client.insert(project=project_id, region=region, disk_resource=disk)
+    operation = disk_client.insert(
+        project=project_id, region=region, disk_resource=disk
+    )
 
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, region=region, disk=disk_name)
+
+
 # </INGREDIENT>

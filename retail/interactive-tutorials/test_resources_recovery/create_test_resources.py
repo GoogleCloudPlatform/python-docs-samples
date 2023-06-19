@@ -20,13 +20,17 @@ import time
 
 import google.auth
 from google.cloud import storage
-from google.cloud.retail import GcsSource, ImportErrorsConfig, \
-    ImportProductsRequest, ProductInputConfig
+from google.cloud.retail import (
+    GcsSource,
+    ImportErrorsConfig,
+    ImportProductsRequest,
+    ProductInputConfig,
+)
 from google.cloud.retail import ProductServiceClient
 from google.cloud.storage.bucket import Bucket
 
-products_bucket_name = os.environ['BUCKET_NAME']
-events_bucket_name = os.environ['EVENTS_BUCKET_NAME']
+products_bucket_name = os.environ["BUCKET_NAME"]
+events_bucket_name = os.environ["EVENTS_BUCKET_NAME"]
 project_id = google.auth.default()[1]
 
 product_resource_file = "../resources/products.json"
@@ -39,7 +43,7 @@ events_dataset = "user_events"
 events_table = "events"
 events_schema = "../resources/events_schema.json"
 
-object_name = re.search('resources/(.*?)$', product_resource_file).group(1)
+object_name = re.search("resources/(.*?)$", product_resource_file).group(1)
 default_catalog = f"projects/{project_id}/locations/global/catalogs/default_catalog/branches/default_branch"
 
 storage_client = storage.Client()
@@ -96,7 +100,9 @@ def get_import_products_gcs_request():
 
     import_request = ImportProductsRequest()
     import_request.parent = default_catalog
-    import_request.reconciliation_mode = ImportProductsRequest.ReconciliationMode.INCREMENTAL
+    import_request.reconciliation_mode = (
+        ImportProductsRequest.ReconciliationMode.INCREMENTAL
+    )
     import_request.input_config = input_config
     import_request.errors_config = errors_config
 
@@ -109,10 +115,8 @@ def get_import_products_gcs_request():
 def import_products_from_gcs():
     """Call the Retail API to import products"""
     import_gcs_request = get_import_products_gcs_request()
-    gcs_operation = ProductServiceClient().import_products(
-        import_gcs_request)
-    print(
-        f"Import operation is started: {gcs_operation.operation.name}")
+    gcs_operation = ProductServiceClient().import_products(import_gcs_request)
+    print(f"Import operation is started: {gcs_operation.operation.name}")
 
     while not gcs_operation.done():
         print("Please wait till operation is completed")
@@ -129,7 +133,8 @@ def import_products_from_gcs():
 
     print(
         "Wait 2 -5 minutes till products become indexed in the catalog,\
-after that they will be available for search")
+after that they will be available for search"
+    )
 
 
 def create_bq_dataset(dataset_name):
@@ -155,7 +160,9 @@ def create_bq_table(dataset, table_name, schema):
     """Create a BigQuery table"""
     print(f"Creating BigQuery table {table_name}")
     if table_name not in list_bq_tables(dataset):
-        create_table_command = f"bq mk --table {project_id}:{dataset}.{table_name} {schema}"
+        create_table_command = (
+            f"bq mk --table {project_id}:{dataset}.{table_name} {schema}"
+        )
         output = subprocess.check_output(shlex.split(create_table_command))
         print(output)
         print("table is created")
@@ -192,11 +199,11 @@ import_products_from_gcs()
 # Create a BigQuery table with products
 create_bq_dataset(product_dataset)
 create_bq_table(product_dataset, product_table, product_schema)
-upload_data_to_bq_table(product_dataset, product_table,
-                        product_resource_file, product_schema)
+upload_data_to_bq_table(
+    product_dataset, product_table, product_resource_file, product_schema
+)
 
 # Create a BigQuery table with user events
 create_bq_dataset(events_dataset)
 create_bq_table(events_dataset, events_table, events_schema)
-upload_data_to_bq_table(events_dataset, events_table, events_source_file,
-                        events_schema)
+upload_data_to_bq_table(events_dataset, events_table, events_source_file, events_schema)

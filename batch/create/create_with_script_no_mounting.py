@@ -84,4 +84,6 @@ def create_script_job(project_id: str, region: str, job_name: str) -> batch_v1.J
     create_request.parent = f"projects/{project_id}/locations/{region}"
 
     return client.create_job(create_request)
+
+
 # [END batch_create_script_job]

@@ -48,10 +48,12 @@ def get_client_id(project_id, location, composer_environment):
     environment_data = composer_response.json()
     composer_version = environment_data["config"]["softwareConfig"]["imageVersion"]
     if "composer-1" not in composer_version:
-        version_error = ("This script is intended to be used with Composer 1 environments. "
-                         "In Composer 2, the Airflow Webserver is not in the tenant project, "
-                         "so there is no tenant client ID. "
-                         "See https://cloud.google.com/composer/docs/composer-2/environment-architecture for more details.")
+        version_error = (
+            "This script is intended to be used with Composer 1 environments. "
+            "In Composer 2, the Airflow Webserver is not in the tenant project, "
+            "so there is no tenant client ID. "
+            "See https://cloud.google.com/composer/docs/composer-2/environment-architecture for more details."
+        )
         raise (RuntimeError(version_error))
     airflow_uri = environment_data["config"]["airflowUri"]
 

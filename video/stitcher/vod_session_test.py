@@ -34,7 +34,6 @@ ad_tag_uri = "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/extern
 
 
 def test_vod_session_operations(capsys: pytest.fixture) -> None:
-
     create_vod_session.create_vod_session(project_id, location, vod_uri, ad_tag_uri)
     out, _ = capsys.readouterr()
     session_name_prefix = f"projects/{project_number}/locations/{location}/vodSessions/"

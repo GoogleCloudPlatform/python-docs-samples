@@ -35,7 +35,7 @@ def set_acl(
     location: str,
     policy: dict[str, list[dict[str, Any]]],
     user_id: str,
-    document_id: str = ''
+    document_id: str = "",
 ) -> None:
     """Sets access control policies on project or document level.
 

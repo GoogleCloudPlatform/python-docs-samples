@@ -27,9 +27,9 @@ def path_to_key(datastore, path):
         /parent.ext/file.ext -> key(ext, parent, ext, file)
     """
     key_parts = []
-    path_parts = path.strip(u'/').split(u'/')
+    path_parts = path.strip("/").split("/")
     for n, x in enumerate(path_parts):
-        name, ext = x.rsplit('.', 1)
+        name, ext = x.rsplit(".", 1)
         key_parts.extend([ext, name])
 
     return datastore.key(*key_parts)
@@ -38,8 +38,8 @@ def path_to_key(datastore, path):
 def save_page(ds, page, content):
     with ds.transaction():
         now = datetime.datetime.now(tz=datetime.timezone.utc)
-        current_key = path_to_key(ds, '{}.page/current.revision'.format(page))
-        revision_key = path_to_key(ds, '{}.page/{}.revision'.format(page, now))
+        current_key = path_to_key(ds, "{}.page/current.revision".format(page))
+        revision_key = path_to_key(ds, "{}.page/{}.revision".format(page, now))
 
         if ds.get(revision_key):
             raise AssertionError("Revision %s already exists" % revision_key)
@@ -53,54 +53,53 @@ def save_page(ds, page, content):
         else:
             current = datastore.Entity(key=current_key)
 
-        current['content'] = content
+        current["content"] = content
 
         ds.put(current)
 
 
 def restore_revision(ds, page, revision):
-    save_page(ds, page, revision['content'])
+    save_page(ds, page, revision["content"])
 
 
 def list_pages(ds):
-    return ds.query(kind='page').fetch()
+    return ds.query(kind="page").fetch()
 
 
 def list_revisions(ds, page):
-    page_key = path_to_key(ds, '{}.page'.format(page))
-    return ds.query(kind='revision', ancestor=page_key).fetch()
+    page_key = path_to_key(ds, "{}.page".format(page))
+    return ds.query(kind="revision", ancestor=page_key).fetch()
 
 
 def main(project_id):
     ds = datastore.Client(project_id)
 
-    save_page(ds, 'page1', '1')
-    save_page(ds, 'page1', '2')
-    save_page(ds, 'page1', '3')
+    save_page(ds, "page1", "1")
+    save_page(ds, "page1", "2")
+    save_page(ds, "page1", "3")
 
-    print('Revisions for page1:')
+    print("Revisions for page1:")
     first_revision = None
-    for revision in list_revisions(ds, 'page1'):
+    for revision in list_revisions(ds, "page1"):
         if not first_revision:
             first_revision = revision
-        print("{}: {}".format(revision.key.name, revision['content']))
+        print("{}: {}".format(revision.key.name, revision["content"]))
 
-    print('restoring revision {}:'.format(first_revision.key.name))
-    restore_revision(ds, 'page1', first_revision)
+    print("restoring revision {}:".format(first_revision.key.name))
+    restore_revision(ds, "page1", first_revision)
 
-    print('Revisions for page1:')
-    for revision in list_revisions(ds, 'page1'):
-        print("{}: {}".format(revision.key.name, revision['content']))
+    print("Revisions for page1:")
+    for revision in list_revisions(ds, "page1"):
+        print("{}: {}".format(revision.key.name, revision["content"]))
 
-    print('Cleaning up')
-    ds.delete_multi([path_to_key(ds, 'page1.page')])
-    ds.delete_multi([x.key for x in list_revisions(ds, 'page1')])
+    print("Cleaning up")
+    ds.delete_multi([path_to_key(ds, "page1.page")])
+    ds.delete_multi([x.key for x in list_revisions(ds, "page1")])
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Demonstrates wiki data model.')
-    parser.add_argument('project_id', help='Your cloud project ID.')
+    parser = argparse.ArgumentParser(description="Demonstrates wiki data model.")
+    parser.add_argument("project_id", help="Your cloud project ID.")
 
     args = parser.parse_args()
 

@@ -19,8 +19,7 @@ import quickstart
 
 @pytest.mark.flaky
 def test_quickstart(capsys):
-
     quickstart.run_sample()
     out, _ = capsys.readouterr()
-    expected = 'Request Id:'
+    expected = "Request Id:"
     assert expected in out

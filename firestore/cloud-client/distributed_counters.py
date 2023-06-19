@@ -41,6 +41,7 @@ class Counter:
 
     def __init__(self, num_shards):
         self._num_shards = num_shards
+
     # [END firestore_solution_sharded_counter_custom_type]
 
     # [START firestore_solution_sharded_counter_create]
@@ -55,6 +56,7 @@ class Counter:
         for num in range(self._num_shards):
             shard = Shard()
             col_ref.document(str(num)).set(shard.to_dict())
+
     # [END firestore_solution_sharded_counter_create]
 
     # [START firestore_solution_sharded_counter_increment]
@@ -64,6 +66,7 @@ class Counter:
 
         shard_ref = doc_ref.collection("shards").document(str(doc_id))
         return shard_ref.update({"count": firestore.Increment(1)})
+
     # [END firestore_solution_sharded_counter_increment]
 
     # [START firestore_solution_sharded_counter_get]
@@ -74,4 +77,5 @@ class Counter:
         for shard in shards:
             total += shard.get().to_dict().get("count", 0)
         return total
+
     # [END firestore_solution_sharded_counter_get]

@@ -31,14 +31,16 @@ def retry_or_not(data, context):
     """
 
     # Retry based on a user-defined parameter
-    try_again = data.data.get('retry') is not None
+    try_again = data.data.get("retry") is not None
 
     try:
-        raise RuntimeError('I failed you')
+        raise RuntimeError("I failed you")
     except RuntimeError:
         error_client.report_exception()
         if try_again:
             raise  # Raise the exception and try again
         else:
-            pass   # Swallow the exception and don't retry
+            pass  # Swallow the exception and don't retry
+
+
 # [END functions_tips_retry]

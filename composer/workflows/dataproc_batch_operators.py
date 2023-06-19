@@ -32,8 +32,10 @@ import datetime
 
 from airflow import models
 from airflow.providers.google.cloud.operators.dataproc import (
-    DataprocCreateBatchOperator, DataprocDeleteBatchOperator, DataprocGetBatchOperator, DataprocListBatchesOperator
-
+    DataprocCreateBatchOperator,
+    DataprocDeleteBatchOperator,
+    DataprocGetBatchOperator,
+    DataprocListBatchesOperator,
 )
 from airflow.utils.dates import days_ago
 
@@ -47,15 +49,13 @@ DOCKER_IMAGE = "{{var.value.image_name}}"
 PYTHON_FILE_LOCATION = "gs://{{var.value.bucket_name }}/spark-job.py"
 # for e.g.  "gs//my-bucket/spark-job.py"
 # Start a single node Dataproc Cluster for viewing Persistent History of Spark jobs
-PHS_CLUSTER_PATH = \
-    "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
+PHS_CLUSTER_PATH = "projects/{{ var.value.project_id }}/regions/{{ var.value.region_name}}/clusters/{{ var.value.phs_cluster }}"
 # for e.g. projects/my-project/regions/my-region/clusters/my-cluster"
 SPARK_BIGQUERY_JAR_FILE = "gs://spark-lib/bigquery/spark-bigquery-latest_2.12.jar"
 # use this for those pyspark jobs that need a spark-bigquery connector
 # https://cloud.google.com/dataproc/docs/tutorials/bigquery-connector-spark-example
 # Start a Dataproc MetaStore Cluster
-METASTORE_SERVICE_LOCATION = \
-    "projects/{{var.value.project_id}}/locations/{{var.value.region_name}}/services/{{var.value.metastore_cluster }}"
+METASTORE_SERVICE_LOCATION = "projects/{{var.value.project_id}}/locations/{{var.value.region_name}}/services/{{var.value.metastore_cluster }}"
 # for e.g. projects/my-project/locations/my-region/services/my-cluster
 CUSTOM_CONTAINER = "us.gcr.io/{{var.value.project_id}}/{{ var.value.image_name}}"
 # for e.g. "us.gcr.io/my-project/quickstart-image",
@@ -65,14 +65,12 @@ default_args = {
     "start_date": days_ago(1),
     "project_id": PROJECT_ID,
     "region": REGION,
-
 }
 with models.DAG(
     "dataproc_batch_operators",  # The id you will see in the DAG airflow page
     default_args=default_args,  # The interval with which to schedule the DAG
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
-
     create_batch = DataprocCreateBatchOperator(
         task_id="batch_create",
         batch={
@@ -125,7 +123,7 @@ with models.DAG(
                     "spark_history_server_config": {
                         "dataproc_cluster": PHS_CLUSTER_PATH,
                     },
-                 },
+                },
             },
         },
         batch_id="dataproc-metastore",
@@ -153,14 +151,14 @@ with models.DAG(
             },
             "environment_config": {
                 "peripherals_config": {
-                     "spark_history_server_config": {
+                    "spark_history_server_config": {
                         "dataproc_cluster": PHS_CLUSTER_PATH,
-                     },
-                 },
+                    },
+                },
             },
             "runtime_config": {
-                    "container_image": CUSTOM_CONTAINER,
-                },
+                "container_image": CUSTOM_CONTAINER,
+            },
         },
         batch_id="batch-custom-container",
     )
