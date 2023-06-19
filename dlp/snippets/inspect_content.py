@@ -20,8 +20,6 @@ import argparse
 import json
 import os
 
-from typing import List
-
 # [START dlp_inspect_phone_number]
 import google.cloud.dlp
 
