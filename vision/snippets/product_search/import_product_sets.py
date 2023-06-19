@@ -25,6 +25,7 @@ import argparse
 
 # [START vision_product_search_tutorial_import]
 from google.cloud import vision
+
 # [END vision_product_search_tutorial_import]
 
 
@@ -43,52 +44,47 @@ def import_product_sets(project_id, location, gcs_uri):
     location_path = f"projects/{project_id}/locations/{location}"
 
     # Set the input configuration along with Google Cloud Storage URI
-    gcs_source = vision.ImportProductSetsGcsSource(
-        csv_file_uri=gcs_uri)
-    input_config = vision.ImportProductSetsInputConfig(
-        gcs_source=gcs_source)
+    gcs_source = vision.ImportProductSetsGcsSource(csv_file_uri=gcs_uri)
+    input_config = vision.ImportProductSetsInputConfig(gcs_source=gcs_source)
 
     # Import the product sets from the input URI.
     response = client.import_product_sets(
-        parent=location_path, input_config=input_config)
+        parent=location_path, input_config=input_config
+    )
 
-    print(f'Processing operation name: {response.operation.name}')
+    print(f"Processing operation name: {response.operation.name}")
     # synchronous check of operation status
     result = response.result()
-    print('Processing done.')
+    print("Processing done.")
 
     for i, status in enumerate(result.statuses):
-        print('Status of processing line {} of the csv: {}'.format(
-            i, status))
+        print("Status of processing line {} of the csv: {}".format(i, status))
         # Check the status of reference image
         # `0` is the code for OK in google.rpc.Code.
         if status.code == 0:
             reference_image = result.reference_images[i]
             print(reference_image)
         else:
-            print(f'Status code not OK: {status.message}')
+            print(f"Status code not OK: {status.message}")
+
+
 # [END vision_product_search_import_product_images]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
-    parser.add_argument(
-        '--project_id',
-        help='Project id.  Required',
-        required=True)
-    parser.add_argument(
-        '--location',
-        help='Compute region name',
-        default='us-west1')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    parser.add_argument("--project_id", help="Project id.  Required", required=True)
+    parser.add_argument("--location", help="Compute region name", default="us-west1")
 
     import_product_sets_parser = subparsers.add_parser(
-        'import_product_sets', help=import_product_sets.__doc__)
-    import_product_sets_parser.add_argument('gcs_uri')
+        "import_product_sets", help=import_product_sets.__doc__
+    )
+    import_product_sets_parser.add_argument("gcs_uri")
 
     args = parser.parse_args()
 
-    if args.command == 'import_product_sets':
+    if args.command == "import_product_sets":
         import_product_sets(args.project_id, args.location, args.gcs_uri)

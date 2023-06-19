@@ -41,7 +41,9 @@ def test_inspect_string_with_exclusion_regex(capsys: pytest.LogCaptureFixture) -
     assert "ironman" in out
 
 
-def test_inspect_string_with_exclusion_dict_substring(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_string_with_exclusion_dict_substring(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_with_exclusion_dict_substring(
         GCLOUD_PROJECT, "bob@example.com TEST@example.com TEST.com", ["TEST"]
     )
@@ -52,7 +54,9 @@ def test_inspect_string_with_exclusion_dict_substring(capsys: pytest.LogCaptureF
     assert "bob@example.com" in out
 
 
-def test_inspect_string_custom_excluding_substring(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_string_custom_excluding_substring(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_custom_excluding_substring(
         GCLOUD_PROJECT, "Danger, Jimmy | Wayne, Bruce", ["Jimmy"]
     )
@@ -91,7 +95,9 @@ def test_inspect_string_without_overlap(capsys: pytest.LogCaptureFixture) -> Non
     assert "example.org" not in out
 
 
-def test_inspect_with_person_name_w_custom_hotword(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_with_person_name_w_custom_hotword(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_with_person_name_w_custom_hotword(
         GCLOUD_PROJECT, "patient's name is John Doe.", "patient"
     )
@@ -101,7 +107,9 @@ def test_inspect_with_person_name_w_custom_hotword(capsys: pytest.LogCaptureFixt
     assert "Likelihood: 5" in out
 
 
-def test_inspect_string_multiple_rules_patient(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_string_multiple_rules_patient(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "patient name: Jane Doe"
     )
@@ -117,7 +125,9 @@ def test_inspect_string_multiple_rules_doctor(capsys: pytest.LogCaptureFixture) 
     assert "No findings" in out
 
 
-def test_inspect_string_multiple_rules_quasimodo(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_string_multiple_rules_quasimodo(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "patient name: quasimodo"
     )
@@ -126,7 +136,9 @@ def test_inspect_string_multiple_rules_quasimodo(capsys: pytest.LogCaptureFixtur
     assert "No findings" in out
 
 
-def test_inspect_string_multiple_rules_redacted(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_string_multiple_rules_redacted(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "name of patient: REDACTED"
     )
@@ -135,7 +147,9 @@ def test_inspect_string_multiple_rules_redacted(capsys: pytest.LogCaptureFixture
     assert "No findings" in out
 
 
-def test_inspect_with_medical_record_number_custom_regex_detector(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_with_medical_record_number_custom_regex_detector(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_with_medical_record_number_custom_regex_detector(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222"
     )
@@ -144,7 +158,9 @@ def test_inspect_with_medical_record_number_custom_regex_detector(capsys: pytest
     assert "Info type: C_MRN" in out
 
 
-def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
         GCLOUD_PROJECT, "just a number 444-5-22222"
     )
@@ -154,7 +170,9 @@ def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(capsys
     assert "Likelihood: 3" in out
 
 
-def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(capsys: pytest.LogCaptureFixture) -> None:
+def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222"
     )

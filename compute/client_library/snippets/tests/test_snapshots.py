@@ -25,17 +25,19 @@ from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
 
 PROJECT = google.auth.default()[1]
-ZONE = 'europe-west1-c'
+ZONE = "europe-west1-c"
 
 
 @pytest.fixture
 def test_disk():
-    debian_image = get_image_from_family('debian-cloud', 'debian-11')
+    debian_image = get_image_from_family("debian-cloud", "debian-11")
     test_disk_name = "test-disk-" + uuid.uuid4().hex[:10]
 
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
 
-    disk = create_disk_from_image(PROJECT, ZONE, test_disk_name, disk_type, 20, debian_image.self_link)
+    disk = create_disk_from_image(
+        PROJECT, ZONE, test_disk_name, disk_type, 20, debian_image.self_link
+    )
 
     yield disk
 
@@ -61,4 +63,6 @@ def test_snapshot_create_delete(test_disk):
     delete_snapshot(PROJECT, snapshot_name)
     for i_snapshot in list_snapshots(PROJECT):
         if i_snapshot.name == snapshot_name:
-            pytest.fail("Test snapshot found on snapshot list, while it should already be gone.")
+            pytest.fail(
+                "Test snapshot found on snapshot list, while it should already be gone."
+            )

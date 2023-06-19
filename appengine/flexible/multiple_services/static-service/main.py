@@ -17,30 +17,30 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@app.route('/hello')
+@app.route("/hello")
 def say_hello():
     """responds to request from frontend via gateway"""
-    return 'Static File Server says hello!'
+    return "Static File Server says hello!"
 
 
-@app.route('/')
+@app.route("/")
 def root():
     """serves index.html"""
-    return app.send_static_file('index.html')
+    return app.send_static_file("index.html")
 
 
-@app.route('/<path:path>')
+@app.route("/<path:path>")
 def static_file(path):
     """serves static files required by index.html"""
-    mimetype = ''
-    if '.' in path and path.split('.')[1] == 'css':
-        mimetype = 'text/css'
-    if '.' in path and path.split('.')[1] == 'js':
-        mimetype = 'application/javascript'
-    return app.send_static_file(path), 200, {'Content-Type': mimetype}
+    mimetype = ""
+    if "." in path and path.split(".")[1] == "css":
+        mimetype = "text/css"
+    if "." in path and path.split(".")[1] == "js":
+        mimetype = "application/javascript"
+    return app.send_static_file(path), 200, {"Content-Type": mimetype}
 
 
 if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8001, debug=True)
+    app.run(host="127.0.0.1", port=8001, debug=True)

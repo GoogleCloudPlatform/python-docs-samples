@@ -26,16 +26,20 @@ def hello_world(data, context):
          data (dict): The dictionary with data specific to the given event.
          context (google.cloud.functions.Context): The event metadata.
     """
-    print('Hello, stdout!')
+    print("Hello, stdout!")
+
+
 # [END functions_log_helloworld]
 
 
 # [START functions_log_stackdriver]
 def process_log_entry(data, context):
-    data_buffer = base64.b64decode(data['data'])
-    log_entry = json.loads(data_buffer)['protoPayload']
+    data_buffer = base64.b64decode(data["data"])
+    log_entry = json.loads(data_buffer)["protoPayload"]
 
     print(f"Method: {log_entry['methodName']}")
     print(f"Resource: {log_entry['resourceName']}")
     print(f"Initiator: {log_entry['authenticationInfo']['principalEmail']}")
+
+
 # [END functions_log_stackdriver]

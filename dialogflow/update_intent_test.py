@@ -49,7 +49,6 @@ def setup_teardown() -> None:
 
 
 def test_update_intent() -> None:
-
     # A new display name with an updated suffix
     new_display_name: str = f"fake_intent_{uuid.uuid4()}"
 

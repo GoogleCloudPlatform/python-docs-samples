@@ -20,9 +20,9 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def transcribe_streaming_v2(
-        project_id: str,
-        recognizer_id: str,
-        audio_file: str,
+    project_id: str,
+    recognizer_id: str,
+    audio_file: str,
 ) -> cloud_speech.StreamingRecognizeResponse:
     """Transcribes audio from audio file stream.
 
@@ -71,9 +71,7 @@ def transcribe_streaming_v2(
         recognizer=recognizer.name, streaming_config=streaming_config
     )
 
-    def requests(
-            config: cloud_speech.RecognitionConfig, audio: list
-    ) -> list:
+    def requests(config: cloud_speech.RecognitionConfig, audio: list) -> list:
         yield config
         yield from audio
 

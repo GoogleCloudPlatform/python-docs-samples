@@ -94,9 +94,7 @@ def transcribe_streaming_voice_activity_timeouts(
         recognizer=recognizer.name, streaming_config=streaming_config
     )
 
-    def requests(
-            config: cloud_speech.RecognitionConfig, audio: list
-    ) -> list:
+    def requests(config: cloud_speech.RecognitionConfig, audio: list) -> list:
         yield config
         for message in audio:
             sleep(0.5)

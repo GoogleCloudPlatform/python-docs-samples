@@ -42,4 +42,5 @@ def delete_api_key(project_id: str, key_id: str) -> None:
     result = client.delete_key(delete_key_request).result()
     print(f"Successfully deleted the API key: {result.name}")
 
+
 # [END apikeys_delete_api_key]

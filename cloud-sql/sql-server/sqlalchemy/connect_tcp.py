@@ -22,12 +22,14 @@ import sqlalchemy
 
 
 def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
-    """ Initializes a TCP connection pool for a Cloud SQL instance of SQL Server. """
+    """Initializes a TCP connection pool for a Cloud SQL instance of SQL Server."""
     # Note: Saving credentials in environment variables is convenient, but not
     # secure - consider a more secure solution such as
     # Cloud Secret Manager (https://cloud.google.com/secret-manager) to help
     # keep secrets safe.
-    db_host = os.environ["INSTANCE_HOST"]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
+    db_host = os.environ[
+        "INSTANCE_HOST"
+    ]  # e.g. '127.0.0.1' ('172.17.0.1' if deployed to GAE Flex)
     db_user = os.environ["DB_USER"]  # e.g. 'my-db-user'
     db_pass = os.environ["DB_PASS"]  # e.g. 'my-db-password'
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
@@ -47,7 +49,7 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     # This is a workaround for a known issue.
     if os.environ.get("DB_ROOT_CERT"):  # e.g. '/path/to/my/server-ca.pem'
         connect_args = {
-            "cafile" : os.environ["DB_ROOT_CERT"],
+            "cafile": os.environ["DB_ROOT_CERT"],
             "validate_host": False,
         }
 
@@ -75,19 +77,16 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
         # The total number of concurrent connections for your application will be
         # a total of pool_size and max_overflow.
         # [END cloud_sql_sqlserver_sqlalchemy_limit]
-
         # [START cloud_sql_sqlserver_sqlalchemy_backoff]
         # SQLAlchemy automatically uses delays between failed connection attempts,
         # but provides no arguments for configuration.
         # [END cloud_sql_sqlserver_sqlalchemy_backoff]
-
         # [START cloud_sql_sqlserver_sqlalchemy_timeout]
         # 'pool_timeout' is the maximum number of seconds to wait when retrieving a
         # new connection from the pool. After the specified amount of time, an
         # exception will be thrown.
         pool_timeout=30,  # 30 seconds
         # [END cloud_sql_sqlserver_sqlalchemy_timeout]
-
         # [START cloud_sql_sqlserver_sqlalchemy_lifetime]
         # 'pool_recycle' is the maximum number of seconds a connection can persist.
         # Connections that live longer than the specified amount of time will be
@@ -98,6 +97,7 @@ def connect_tcp_socket() -> sqlalchemy.engine.base.Engine:
     )
 
     return pool
+
 
 # [END cloud_sql_sqlserver_sqlalchemy_connect_tcp_sslcerts]
 # [END cloud_sql_sqlserver_sqlalchemy_sslcerts]

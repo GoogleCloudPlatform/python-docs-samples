@@ -38,7 +38,7 @@ def get_operation_sample(location: str, operation_name: str) -> None:
         operation = client.get_operation(request=request)
         # Print the Operation Information
         print(operation)
-    except (NotFound) as e:
+    except NotFound as e:
         print(e.message)
 
 

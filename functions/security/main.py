@@ -16,17 +16,16 @@
 import requests
 
 # TODO<developer>: set these values
-REGION = 'us-central1'
-PROJECT_ID = 'my-project'
-RECEIVING_FUNCTION = 'my-function'
+REGION = "us-central1"
+PROJECT_ID = "my-project"
+RECEIVING_FUNCTION = "my-function"
 
 # Constants for setting up metadata server request
 # See https://cloud.google.com/compute/docs/instances/verifying-instance-identity#request_signature
-function_url = f'https://{REGION}-{PROJECT_ID}.cloudfunctions.net/{RECEIVING_FUNCTION}'
-metadata_server_url = \
-    'http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience='
+function_url = f"https://{REGION}-{PROJECT_ID}.cloudfunctions.net/{RECEIVING_FUNCTION}"
+metadata_server_url = "http://metadata/computeMetadata/v1/instance/service-accounts/default/identity?audience="
 token_full_url = metadata_server_url + function_url
-token_headers = {'Metadata-Flavor': 'Google'}
+token_headers = {"Metadata-Flavor": "Google"}
 
 
 def calling_function(request):
@@ -35,8 +34,10 @@ def calling_function(request):
     jwt = token_response.text
 
     # Provide the token in the request to the receiving function
-    function_headers = {'Authorization': f'bearer {jwt}'}
+    function_headers = {"Authorization": f"bearer {jwt}"}
     function_response = requests.get(function_url, headers=function_headers)
 
     return function_response.text
+
+
 # [END functions_bearer_token]

@@ -52,7 +52,7 @@ def get_count(name):
 
 class DeferredCounterHandler(webapp2.RequestHandler):
     def post(self):
-        name = self.request.get('counter_name')
+        name = self.request.get("counter_name")
         update_counter(name)
 
 
@@ -60,33 +60,35 @@ class TaskQueueCounterHandler(webapp2.RequestHandler):
     """Queues two tasks to increment a counter in global namespace as well as
     the namespace is specified by the request, which is arbitrarily named
     'default' if not specified."""
-    def get(self, namespace='default'):
+
+    def get(self, namespace="default"):
         # Queue task to update global counter.
-        current_global_count = get_count('counter')
-        taskqueue.add(
-            url='/tasks/counter',
-            params={'counter_name': 'counter'})
+        current_global_count = get_count("counter")
+        taskqueue.add(url="/tasks/counter", params={"counter_name": "counter"})
 
         # Queue task to update counter in specified namespace.
         previous_namespace = namespace_manager.get_namespace()
         try:
             namespace_manager.set_namespace(namespace)
-            current_namespace_count = get_count('counter')
-            taskqueue.add(
-                url='/tasks/counter',
-                params={'counter_name': 'counter'})
+            current_namespace_count = get_count("counter")
+            taskqueue.add(url="/tasks/counter", params={"counter_name": "counter"})
         finally:
             namespace_manager.set_namespace(previous_namespace)
 
         self.response.write(
-            'Counters will be updated asyncronously.'
-            'Current values: Global: {}, Namespace {}: {}'.format(
-                current_global_count, namespace, current_namespace_count))
+            "Counters will be updated asyncronously."
+            "Current values: Global: {}, Namespace {}: {}".format(
+                current_global_count, namespace, current_namespace_count
+            )
+        )
 
 
-app = webapp2.WSGIApplication([
-    (r'/tasks/counter', DeferredCounterHandler),
-    (r'/taskqueue', TaskQueueCounterHandler),
-    (r'/taskqueue/(.*)', TaskQueueCounterHandler)
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        (r"/tasks/counter", DeferredCounterHandler),
+        (r"/taskqueue", TaskQueueCounterHandler),
+        (r"/taskqueue/(.*)", TaskQueueCounterHandler),
+    ],
+    debug=True,
+)
 # [END all]

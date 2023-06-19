@@ -48,19 +48,17 @@ def create_stored_infotype(
         "display_name": "GitHub usernames",
         "description": "Dictionary of GitHub usernames used in commits",
         "large_custom_dictionary": {
-            "output_path": {
-                "path": f"gs://{output_bucket_name}"
-            },
+            "output_path": {"path": f"gs://{output_bucket_name}"},
             # We can either use bigquery field or gcs file as a term list input option.
             "big_query_field": {
                 "table": {
                     "project_id": "bigquery-public-data",
                     "dataset_id": "samples",
-                    "table_id": "github_nested"
+                    "table_id": "github_nested",
                 },
                 "field": {"name": "actor"},
             },
-        }
+        },
     }
 
     # Convert the project id into a full resource id.
@@ -111,21 +109,15 @@ def update_stored_infotype(
     # Construct the stored infoType configuration dictionary.
     stored_info_type_config = {
         "large_custom_dictionary": {
-            "output_path": {
-                "path": f"gs://{output_bucket_name}"
-            },
-            "cloud_storage_file_set": {
-                "url": f"gs://{gcs_input_file_path}"
-            },
+            "output_path": {"path": f"gs://{output_bucket_name}"},
+            "cloud_storage_file_set": {"url": f"gs://{gcs_input_file_path}"},
         }
     }
 
     # Set mask to control which fields get updated. For more details, refer
     # https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
     # for constructing the field mask paths.
-    field_mask = {
-        "paths": ["large_custom_dictionary.cloud_storage_file_set.url"]
-    }
+    field_mask = {"paths": ["large_custom_dictionary.cloud_storage_file_set.url"]}
 
     # Convert the stored infoType id into a full resource id.
     stored_info_type_name = f"projects/{project}/storedInfoTypes/{stored_info_type_id}"

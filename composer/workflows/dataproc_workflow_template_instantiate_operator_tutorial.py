@@ -49,7 +49,6 @@ with models.DAG(
     # The interval with which to schedule the DAG
     schedule_interval=datetime.timedelta(days=1),  # Override to match your needs
 ) as dag:
-
     start_template_job = DataprocInstantiateWorkflowTemplateOperator(
         # The task id of your job
         task_id="dataproc_workflow_dag",

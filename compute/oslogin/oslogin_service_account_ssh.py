@@ -198,7 +198,6 @@ def main(
     Returns:
         The commands output.
     """
-
     # Create the OS Login API object.
     if oslogin is None:
         oslogin = oslogin_v1.OsLoginServiceClient()

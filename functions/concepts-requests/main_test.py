@@ -29,16 +29,18 @@ def app():
 
 @responses.activate
 def test_make_request_200(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'status': 'OK'}, status=200)
+    responses.add(
+        responses.GET, "http://example.com", json={"status": "OK"}, status=200
+    )
     with app.test_request_context():
         main.make_request(flask.request)
 
 
 @responses.activate
 def test_make_request_404(app):
-    responses.add(responses.GET, 'http://example.com',
-                  json={'error': 'not found'}, status=404)
+    responses.add(
+        responses.GET, "http://example.com", json={"error": "not found"}, status=404
+    )
     with app.test_request_context():
         with pytest.raises(requests.exceptions.HTTPError):
             main.make_request(flask.request)

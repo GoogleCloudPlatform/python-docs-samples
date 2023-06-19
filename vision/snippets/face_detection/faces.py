@@ -42,9 +42,7 @@ def detect_face(face_file, max_results=4):
     content = face_file.read()
     image = vision.Image(content=content)
 
-    return client.face_detection(
-        image=image, max_results=max_results
-    ).face_annotations
+    return client.face_detection(image=image, max_results=max_results).face_annotations
 
 
 # [END vision_face_detection_tutorial_send_request]
@@ -87,11 +85,7 @@ def highlight_faces(image, faces, output_filename):
 def main(input_filename, output_filename, max_results):
     with open(input_filename, "rb") as image:
         faces = detect_face(image, max_results)
-        print(
-            "Found {} face{}".format(
-                len(faces), "" if len(faces) == 1 else "s"
-            )
-        )
+        print("Found {} face{}".format(len(faces), "" if len(faces) == 1 else "s"))
 
         print(f"Writing to file {output_filename}")
         # Reset the file pointer, so we can read the file again
@@ -103,12 +97,8 @@ def main(input_filename, output_filename, max_results):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Detects faces in the given image."
-    )
-    parser.add_argument(
-        "input_image", help="the image you'd like to detect faces in."
-    )
+    parser = argparse.ArgumentParser(description="Detects faces in the given image.")
+    parser.add_argument("input_image", help="the image you'd like to detect faces in.")
     parser.add_argument(
         "--out",
         dest="output",

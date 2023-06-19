@@ -24,5 +24,7 @@ def list_files(request):
     root = path.dirname(path.abspath(__file__))
     children = os.listdir(root)
     files = [c for c in children if path.isfile(path.join(root, c))]
-    return f'Files: {files}'
+    return f"Files: {files}"
+
+
 # [END functions_concepts_filesystem]

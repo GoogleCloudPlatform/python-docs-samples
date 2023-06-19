@@ -85,34 +85,36 @@ def transfer_from_S3_compat_to_gcs(
     # The S3-compatible auth method
     # auth_method = AuthMethod.AUTH_METHOD_AWS_SIGNATURE_V4
 
-    transfer_job_request = storage_transfer.CreateTransferJobRequest({
-        'transfer_job': {
-            'project_id': project_id,
-            'description': description,
-            'status': storage_transfer.TransferJob.Status.ENABLED,
-            'transfer_spec': {
-                'source_agent_pool_name': source_agent_pool_name,
-                'aws_s3_compatible_data_source': {
-                    'region': region,
-                    's3_metadata': {
-                        'auth_method': auth_method,
-                        'protocol': protocol,
-                        'request_model': request_model
+    transfer_job_request = storage_transfer.CreateTransferJobRequest(
+        {
+            "transfer_job": {
+                "project_id": project_id,
+                "description": description,
+                "status": storage_transfer.TransferJob.Status.ENABLED,
+                "transfer_spec": {
+                    "source_agent_pool_name": source_agent_pool_name,
+                    "aws_s3_compatible_data_source": {
+                        "region": region,
+                        "s3_metadata": {
+                            "auth_method": auth_method,
+                            "protocol": protocol,
+                            "request_model": request_model,
+                        },
+                        "endpoint": endpoint,
+                        "bucket_name": source_bucket_name,
+                        "path": source_path,
                     },
-                    'endpoint': endpoint,
-                    'bucket_name': source_bucket_name,
-                    'path': source_path
+                    "gcs_data_sink": {
+                        "bucket_name": gcs_sink_bucket,
+                        "path": gcs_path,
+                    },
                 },
-                'gcs_data_sink': {
-                    'bucket_name': gcs_sink_bucket,
-                    'path': gcs_path,
-                }
             }
         }
-    })
+    )
 
     result = client.create_transfer_job(transfer_job_request)
-    print(f'Created transferJob: {result.name}')
+    print(f"Created transferJob: {result.name}")
 
 
 # [END storagetransfer_transfer_from_s3_compatible_source]
@@ -120,59 +122,66 @@ def transfer_from_S3_compat_to_gcs(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        '--project-id',
-        help='The ID of the Google Cloud Platform Project that owns the job',
-        required=True)
+        "--project-id",
+        help="The ID of the Google Cloud Platform Project that owns the job",
+        required=True,
+    )
     parser.add_argument(
-        '--description',
-        help='A useful description for your transfer job')
+        "--description", help="A useful description for your transfer job"
+    )
     parser.add_argument(
-        '--source-agent-pool-name',
-        default='',
-        help="The agent pool associated with the S3-compatible data source.")
+        "--source-agent-pool-name",
+        default="",
+        help="The agent pool associated with the S3-compatible data source.",
+    )
     parser.add_argument(
-        '--source-bucket-name',
+        "--source-bucket-name",
         default="my-bucket-name",
-        help="The S3 compatible bucket name to transfer data from")
+        help="The S3 compatible bucket name to transfer data from",
+    )
     parser.add_argument(
-        '--source-path',
+        "--source-path",
         default="path/to/data/",
-        help="The S3 compatible path (object prefix) to transfer data from")
+        help="The S3 compatible path (object prefix) to transfer data from",
+    )
     parser.add_argument(
-        '--gcs-sink-bucket',
+        "--gcs-sink-bucket",
         default="my-sink-bucket",
-        help="The ID of the GCS bucket to transfer data to")
+        help="The ID of the GCS bucket to transfer data to",
+    )
     parser.add_argument(
-        '--gcs-path',
+        "--gcs-path",
         default="path/to/data/",
-        help="The GCS path (object prefix) to transfer data to")
+        help="The GCS path (object prefix) to transfer data to",
+    )
     parser.add_argument(
-        '--region',
-        default='us-east-1',
-        help="The S3 region of the source bucket")
+        "--region", default="us-east-1", help="The S3 region of the source bucket"
+    )
     parser.add_argument(
-        '--endpoint',
-        default="us-east-1.example.com",
-        help="The S3-compatible endpoint")
+        "--endpoint", default="us-east-1.example.com", help="The S3-compatible endpoint"
+    )
     parser.add_argument(
-        '--protocol',
+        "--protocol",
         default=NetworkProtocol.NETWORK_PROTOCOL_HTTPS,
         type=int,
         help="The S3-compatible network protocol. "
         "See google.cloud.storage_transfer.\
-            S3CompatibleMetadata.NetworkProtocol")
+            S3CompatibleMetadata.NetworkProtocol",
+    )
     parser.add_argument(
-        '--request-model',
+        "--request-model",
         default=RequestModel.REQUEST_MODEL_VIRTUAL_HOSTED_STYLE,
         type=int,
         help="The S3-compatible request model. "
-        "See google.cloud.storage_transfer.S3CompatibleMetadata.RequestModel")
+        "See google.cloud.storage_transfer.S3CompatibleMetadata.RequestModel",
+    )
     parser.add_argument(
-        '--auth-method',
+        "--auth-method",
         default=AuthMethod.AUTH_METHOD_AWS_SIGNATURE_V4,
         type=int,
         help="The S3-compatible auth method. "
-        "See google.cloud.storage_transfer.S3CompatibleMetadata.AuthMethod")
+        "See google.cloud.storage_transfer.S3CompatibleMetadata.AuthMethod",
+    )
 
     args = parser.parse_args()
 

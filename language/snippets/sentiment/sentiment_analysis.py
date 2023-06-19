@@ -29,13 +29,9 @@ def print_result(annotations):
 
     for index, sentence in enumerate(annotations.sentences):
         sentence_sentiment = sentence.sentiment.score
-        print(
-            f"Sentence {index} has a sentiment score of {sentence_sentiment}"
-        )
+        print(f"Sentence {index} has a sentiment score of {sentence_sentiment}")
 
-    print(
-        f"Overall Sentiment: score of {score} with magnitude of {magnitude}"
-    )
+    print(f"Overall Sentiment: score of {score} with magnitude of {magnitude}")
     return 0
 
 

@@ -32,4 +32,6 @@ def delete_image(project_id: str, image_name: str) -> None:
     image_client = compute_v1.ImagesClient()
     operation = image_client.delete(project=project_id, image=image_name)
     wait_for_extended_operation(operation, "image deletion")
+
+
 # </INGREDIENT>

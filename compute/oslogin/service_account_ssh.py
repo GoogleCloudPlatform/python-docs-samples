@@ -199,7 +199,6 @@ def main(
     Returns:
         Output of the executed command.
     """
-
     # Create the OS Login API object.
     oslogin = oslogin or googleapiclient.discovery.build("oslogin", "v1")
 

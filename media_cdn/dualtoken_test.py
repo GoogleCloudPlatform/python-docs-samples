@@ -100,7 +100,9 @@ def test_sign_token_for_sha1_url_prefix(capsys: pytest.LogCaptureFixture) -> Non
 
 
 def test_sign_token_for_sha1_path_glob(capsys: pytest.LogCaptureFixture) -> None:
-    expected = "PathGlobs=/*~Expires=1663070400~hmac=c1c446eea24faa31392519f975fea7eefb945625"
+    expected = (
+        "PathGlobs=/*~Expires=1663070400~hmac=c1c446eea24faa31392519f975fea7eefb945625"
+    )
     result = dualtoken.sign_token(
         base64_key=b"g_SlMILiIWKqsC6Z2L7gy0sReDOqtSrJrE7CXNr5Nl8=",
         signature_algorithm="sha1",

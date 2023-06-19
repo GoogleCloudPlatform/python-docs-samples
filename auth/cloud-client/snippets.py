@@ -29,6 +29,8 @@ def implicit():
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+
+
 # [END auth_cloud_implicit]
 
 
@@ -38,12 +40,13 @@ def explicit():
 
     # Explicitly use service account credentials by specifying the private key
     # file.
-    storage_client = storage.Client.from_service_account_json(
-        'service_account.json')
+    storage_client = storage.Client.from_service_account_json("service_account.json")
 
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+
+
 # [END auth_cloud_explicit]
 
 
@@ -62,26 +65,29 @@ def explicit_compute_engine(project):
     # Make an authenticated API request
     buckets = list(storage_client.list_buckets())
     print(buckets)
+
+
 # [END auth_cloud_explicit_compute_engine]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
 
-    subparsers = parser.add_subparsers(dest='command')
-    subparsers.add_parser('implicit', help=implicit.__doc__)
-    subparsers.add_parser('explicit', help=explicit.__doc__)
+    subparsers = parser.add_subparsers(dest="command")
+    subparsers.add_parser("implicit", help=implicit.__doc__)
+    subparsers.add_parser("explicit", help=explicit.__doc__)
     explicit_gce_parser = subparsers.add_parser(
-        'explicit_compute_engine', help=explicit_compute_engine.__doc__)
-    explicit_gce_parser.add_argument('project')
+        "explicit_compute_engine", help=explicit_compute_engine.__doc__
+    )
+    explicit_gce_parser.add_argument("project")
 
     args = parser.parse_args()
 
-    if args.command == 'implicit':
+    if args.command == "implicit":
         implicit()
-    elif args.command == 'explicit':
+    elif args.command == "explicit":
         explicit()
-    elif args.command == 'explicit_compute_engine':
+    elif args.command == "explicit_compute_engine":
         explicit_compute_engine(args.project)

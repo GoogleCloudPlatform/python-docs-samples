@@ -18,7 +18,7 @@ from google.cloud import speech_v1p1beta1 as speech
 
 
 def transcribe_file_with_multilanguage_gcs(gcs_uri: str) -> str:
-    """ Transcribe a remote audio file with multi-language recognition
+    """Transcribe a remote audio file with multi-language recognition
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
@@ -44,7 +44,9 @@ def transcribe_file_with_multilanguage_gcs(gcs_uri: str) -> str:
     audio = speech.RecognitionAudio(uri=gcs_uri)
 
     # Use non-blocking call for getting file transcription
-    response = client.long_running_recognize(config=recognition_config, audio=audio).result(timeout=300)
+    response = client.long_running_recognize(
+        config=recognition_config, audio=audio
+    ).result(timeout=300)
 
     transcript_builder = []
     for i, result in enumerate(response.results):
@@ -53,9 +55,10 @@ def transcribe_file_with_multilanguage_gcs(gcs_uri: str) -> str:
         transcript_builder.append(f"First alternative of result {i}: {alternative}")
         transcript_builder.append(f"Transcript: {alternative.transcript}")
 
-    transcript = ''.join(transcript_builder)
+    transcript = "".join(transcript_builder)
     print(transcript)
 
     return transcript
+
 
 # [END speech_transcribe_multilanguage_gcs_beta]

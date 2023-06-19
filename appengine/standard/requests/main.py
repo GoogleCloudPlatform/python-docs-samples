@@ -30,37 +30,43 @@ class TimerHandler(webapp2.RequestHandler):
 
         try:
             time.sleep(70)
-            self.response.write('Completed.')
+            self.response.write("Completed.")
         except DeadlineExceededError:
             self.response.clear()
             self.response.set_status(500)
-            self.response.out.write(
-                'The request did not complete in time.')
+            self.response.out.write("The request did not complete in time.")
+
+
 # [END gae_python_request_timer]
 
 
 # [START gae_python_environment]
 class PrintEnvironmentHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
+        self.response.headers["Content-Type"] = "text/plain"
         for key, value in os.environ.iteritems():
-            self.response.out.write(
-                "{} = {}\n".format(key, value))
+            self.response.out.write("{} = {}\n".format(key, value))
+
+
 # [END gae_python_environment]
 
 
 # [START gae_python_request_ids]
 class RequestIdHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.headers['Content-Type'] = 'text/plain'
-        request_id = os.environ.get('REQUEST_LOG_ID')
-        self.response.write(
-            'REQUEST_LOG_ID={}'.format(request_id))
+        self.response.headers["Content-Type"] = "text/plain"
+        request_id = os.environ.get("REQUEST_LOG_ID")
+        self.response.write("REQUEST_LOG_ID={}".format(request_id))
+
+
 # [END gae_python_request_ids]
 
 
-app = webapp2.WSGIApplication([
-    ('/timer', TimerHandler),
-    ('/environment', PrintEnvironmentHandler),
-    ('/requestid', RequestIdHandler)
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/timer", TimerHandler),
+        ("/environment", PrintEnvironmentHandler),
+        ("/requestid", RequestIdHandler),
+    ],
+    debug=True,
+)

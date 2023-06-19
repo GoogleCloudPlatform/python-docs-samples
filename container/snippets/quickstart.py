@@ -41,7 +41,6 @@ def list_clusters(project_id: str, location: str) -> None:
 # [END gke_list_cluster]
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,

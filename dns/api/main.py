@@ -24,9 +24,12 @@ def create_zone(project_id, name, dns_name, description):
     zone = client.zone(
         name,  # examplezonename
         dns_name=dns_name,  # example.com.
-        description=description)
+        description=description,
+    )
     zone.create()
     return zone
+
+
 # [END create_zone]
 
 
@@ -40,6 +43,8 @@ def get_zone(project_id, name):
         return zone
     except NotFound:
         return None
+
+
 # [END get_zone]
 
 
@@ -48,6 +53,8 @@ def list_zones(project_id):
     client = dns.Client(project=project_id)
     zones = client.list_zones()
     return [zone.name for zone in zones]
+
+
 # [END list_zones]
 
 
@@ -56,6 +63,8 @@ def delete_zone(project_id, name):
     client = dns.Client(project=project_id)
     zone = client.zone(name)
     zone.delete()
+
+
 # [END delete_zone]
 
 
@@ -66,8 +75,12 @@ def list_resource_records(project_id, zone_name):
 
     records = zone.list_resource_record_sets()
 
-    return [(record.name, record.record_type, record.ttl, record.rrdatas)
-            for record in records]
+    return [
+        (record.name, record.record_type, record.ttl, record.rrdatas)
+        for record in records
+    ]
+
+
 # [END list_resource_records]
 
 
@@ -79,24 +92,24 @@ def list_changes(project_id, zone_name):
     changes = zone.list_changes()
 
     return [(change.started, change.status) for change in changes]
+
+
 # [END changes]
 
 
 def create_command(args):
     """Adds a zone with the given name, DNS name, and description."""
-    zone = create_zone(
-        args.project_id, args.name, args.dns_name, args.description)
-    print(f'Zone {zone.name} added.')
+    zone = create_zone(args.project_id, args.name, args.dns_name, args.description)
+    print(f"Zone {zone.name} added.")
 
 
 def get_command(args):
     """Gets a zone by name."""
     zone = get_zone(args.project_id, args.name)
     if not zone:
-        print('Zone not found.')
+        print("Zone not found.")
     else:
-        print('Zone: {}, {}, {}'.format(
-            zone.name, zone.dns_name, zone.description))
+        print("Zone: {}, {}, {}".format(zone.name, zone.dns_name, zone.description))
 
 
 def list_command(args):
@@ -107,7 +120,7 @@ def list_command(args):
 def delete_command(args):
     """Deletes a zone."""
     delete_zone(args.project_id, args.name)
-    print(f'Zone {args.name} deleted.')
+    print(f"Zone {args.name} deleted.")
 
 
 def list_resource_records_command(args):
@@ -124,40 +137,39 @@ def changes_command(args):
         print(change)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
 
-    parser.add_argument('--project-id', help='Your cloud project ID.')
+    parser.add_argument("--project-id", help="Your cloud project ID.")
 
-    create_parser = subparsers.add_parser(
-        'create', help=create_command.__doc__)
+    create_parser = subparsers.add_parser("create", help=create_command.__doc__)
     create_parser.set_defaults(func=create_command)
-    create_parser.add_argument('name', help='New zone name, e.g. "azonename".')
+    create_parser.add_argument("name", help='New zone name, e.g. "azonename".')
     create_parser.add_argument(
-        'dns_name', help='New zone dns name, e.g. "example.com."')
-    create_parser.add_argument('description', help='New zone description.')
+        "dns_name", help='New zone dns name, e.g. "example.com."'
+    )
+    create_parser.add_argument("description", help="New zone description.")
 
-    get_parser = subparsers.add_parser('get', help=get_command.__doc__)
-    get_parser.add_argument('name', help='Zone name, e.g. "azonename".')
+    get_parser = subparsers.add_parser("get", help=get_command.__doc__)
+    get_parser.add_argument("name", help='Zone name, e.g. "azonename".')
     get_parser.set_defaults(func=get_command)
 
-    list_parser = subparsers.add_parser('list', help=list_command.__doc__)
+    list_parser = subparsers.add_parser("list", help=list_command.__doc__)
     list_parser.set_defaults(func=list_command)
 
-    delete_parser = subparsers.add_parser(
-        'delete', help=delete_command.__doc__)
-    delete_parser.add_argument('name', help='Zone name, e.g. "azonename".')
+    delete_parser = subparsers.add_parser("delete", help=delete_command.__doc__)
+    delete_parser.add_argument("name", help='Zone name, e.g. "azonename".')
     delete_parser.set_defaults(func=delete_command)
 
     list_rr_parser = subparsers.add_parser(
-        'list-resource-records', help=list_resource_records_command.__doc__)
-    list_rr_parser.add_argument('name', help='Zone name, e.g. "azonename".')
+        "list-resource-records", help=list_resource_records_command.__doc__
+    )
+    list_rr_parser.add_argument("name", help='Zone name, e.g. "azonename".')
     list_rr_parser.set_defaults(func=list_resource_records_command)
 
-    changes_parser = subparsers.add_parser(
-        'changes', help=changes_command.__doc__)
-    changes_parser.add_argument('name', help='Zone name, e.g. "azonename".')
+    changes_parser = subparsers.add_parser("changes", help=changes_command.__doc__)
+    changes_parser.add_argument("name", help='Zone name, e.g. "azonename".')
     changes_parser.set_defaults(func=changes_command)
 
     args = parser.parse_args()

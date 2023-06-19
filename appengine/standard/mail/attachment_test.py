@@ -21,7 +21,8 @@ def test_send_mail(testbed):
     testbed.init_mail_stub()
     testbed.init_app_identity_stub()
     app = webtest.TestApp(attachment.app)
-    response = app.post('/attachment', upload_files=[
-        ('file', 'hello.txt', 'Good day!')])
+    response = app.post(
+        "/attachment", upload_files=[("file", "hello.txt", "Good day!")]
+    )
     assert response.status_int == 200
-    assert 'Sent hello.txt to Albert.' in response.body
+    assert "Sent hello.txt to Albert." in response.body

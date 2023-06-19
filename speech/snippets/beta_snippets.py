@@ -189,9 +189,7 @@ def transcribe_file_with_diarization() -> speech.RecognizeResponse:
 
     # Printing out the output:
     for word_info in words_info:
-        print(
-            f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}"
-        )
+        print(f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}")
 
     return result
     # [END speech_transcribe_diarization_beta]
