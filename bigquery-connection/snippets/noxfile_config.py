@@ -14,11 +14,11 @@
 
 # Default TEST_CONFIG_OVERRIDE for python repos.
 
-# You can copy this file into your directory, then it will be imported from
+# You can copy this file into your directory, then it will be inported from
 # the noxfile.py.
 
 # The source of truth:
-# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/noxfile_config.py
+# https://github.com/GoogleCloudPlatform/python-docs-samples/blob/master/noxfile_config.py
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
