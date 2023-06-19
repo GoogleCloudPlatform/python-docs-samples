@@ -28,15 +28,19 @@ def update_events_timestamp(json_file):
     print(day)
 
     # Read in the file
-    with open(json_file, 'r') as file:
+    with open(json_file, "r") as file:
         filedata = file.read()
 
     # Replace the target string  '"eventTime":"YYYY-mm-dd' with yesterday date
-    filedata = re.sub('\"eventTime\":\"([0-9]{4})-([0-9]{2})-([0-9]{2})',
-                      '\"eventTime\":\"' + day, filedata, flags=re.M)
+    filedata = re.sub(
+        '"eventTime":"([0-9]{4})-([0-9]{2})-([0-9]{2})',
+        '"eventTime":"' + day,
+        filedata,
+        flags=re.M,
+    )
 
     # Write the file out again
-    with open(json_file, 'w') as file:
+    with open(json_file, "w") as file:
         file.write(filedata)
     print(f"The {json_file} is updated")
 

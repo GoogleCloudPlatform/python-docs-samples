@@ -34,9 +34,7 @@ def delete_recognizer(name: str) -> None:
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_transcribe_silence_padding_timeouts(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
@@ -58,7 +56,7 @@ def test_transcribe_silence_padding_timeouts(
 
 @flaky(max_runs=3, min_passes=1)
 def test_transcribe_streaming_voice_activity_timeouts(
-    capsys: pytest.CaptureFixture
+    capsys: pytest.CaptureFixture,
 ) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 

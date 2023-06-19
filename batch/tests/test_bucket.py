@@ -24,7 +24,7 @@ from .test_basics import _test_body
 from ..create.create_with_mounted_bucket import create_script_job_with_bucket
 
 PROJECT = google.auth.default()[1]
-REGION = 'europe-north1'
+REGION = "europe-north1"
 
 TIMEOUT = 600  # 10 minutes
 

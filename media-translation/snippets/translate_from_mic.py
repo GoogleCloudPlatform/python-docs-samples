@@ -112,7 +112,6 @@ def listen_print_loop(responses):
         # Once the transcription settles, the response contains the
         # END_OF_SINGLE_UTTERANCE event.
         if response.speech_event_type == SpeechEventType.END_OF_SINGLE_UTTERANCE:
-
             print(f"\nFinal translation: {translation}")
             return 0
 

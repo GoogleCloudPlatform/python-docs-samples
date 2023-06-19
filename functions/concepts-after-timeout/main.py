@@ -20,10 +20,12 @@ import functions_framework
 
 @functions_framework.http
 def timeout(request):
-    print('Function running...')
+    print("Function running...")
     time.sleep(120)
 
     # May not execute if function's timeout is <2 minutes
-    print('Function completed!')
-    return 'Function completed!'
+    print("Function completed!")
+    return "Function completed!"
+
+
 # [END functions_concepts_after_timeout]

@@ -23,18 +23,16 @@ with DAG(dag_id="taskgroup_example", start_date=days_ago(1)) as dag:
     start = DummyOperator(task_id="start")
 
     with TaskGroup("taskgroup_1", tooltip="task group #1") as section_1:
-        task_1 = BashOperator(task_id="op-1", bash_command=':')
-        task_2 = BashOperator(task_id="op-2", bash_command=':')
+        task_1 = BashOperator(task_id="op-1", bash_command=":")
+        task_2 = BashOperator(task_id="op-2", bash_command=":")
 
     with TaskGroup("taskgroup_2", tooltip="task group #2") as section_2:
-        task_3 = BashOperator(task_id="op-3", bash_command=':')
-        task_4 = BashOperator(task_id="op-4", bash_command=':')
+        task_3 = BashOperator(task_id="op-3", bash_command=":")
+        task_4 = BashOperator(task_id="op-4", bash_command=":")
 
-    some_other_task = DummyOperator(
-        task_id='some-other-task'
-    )
+    some_other_task = DummyOperator(task_id="some-other-task")
 
-    end = DummyOperator(task_id='end')
+    end = DummyOperator(task_id="end")
 
     start >> section_1 >> some_other_task >> section_2 >> end
 # [END composer_taskgroup]

@@ -28,6 +28,6 @@ def app():
 def test_statelessness(app):
     with app.test_request_context():
         res = main.statelessness(flask.request)
-        assert res == 'Instance execution count: 1'
+        assert res == "Instance execution count: 1"
         res = main.statelessness(flask.request)
-        assert res == 'Instance execution count: 2'
+        assert res == "Instance execution count: 2"

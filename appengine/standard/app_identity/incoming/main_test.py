@@ -20,9 +20,7 @@ import main
 def test_app(testbed):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/', status=403)
+    response = app.get("/", status=403)
 
-    response = app.get('/', headers={
-        'X-Appengine-Inbound-Appid': 'other-app-id'
-    })
+    response = app.get("/", headers={"X-Appengine-Inbound-Appid": "other-app-id"})
     assert response.status_int == 200

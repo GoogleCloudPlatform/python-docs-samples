@@ -29,8 +29,8 @@ from google.cloud import speech
 
 # [START speech_transcribe_model_selection]
 def transcribe_model_selection(
-        speech_file: str,
-        model: str,
+    speech_file: str,
+    model: str,
 ) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     the selected model."""
@@ -57,13 +57,15 @@ def transcribe_model_selection(
         print(f"Transcript: {alternative.transcript}")
 
     return response
+
+
 # [END speech_transcribe_model_selection]
 
 
 # [START speech_transcribe_model_selection_gcs]
 def transcribe_model_selection_gcs(
-        gcs_uri: str,
-        model: str,
+    gcs_uri: str,
+    model: str,
 ) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously with
     the selected model."""
@@ -92,6 +94,8 @@ def transcribe_model_selection_gcs(
         print(f"Transcript: {alternative.transcript}")
 
     return response
+
+
 # [END speech_transcribe_model_selection_gcs]
 
 

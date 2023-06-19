@@ -66,9 +66,7 @@ class CpixClient(abc.ABC):
             secret.
         """
         client = secretmanager.SecretManagerServiceClient()
-        project_id = os.environ.get('PROJECT')
-        secret_name = (
-            f'projects/{project_id}/secrets/{secret_id}/versions/{version_id}'
-        )
+        project_id = os.environ.get("PROJECT")
+        secret_name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
         response = client.access_secret_version(name=secret_name)
-        return response.payload.data.decode().replace('\r\n', '\n')
+        return response.payload.data.decode().replace("\r\n", "\n")

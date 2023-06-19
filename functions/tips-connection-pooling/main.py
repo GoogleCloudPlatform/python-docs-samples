@@ -34,10 +34,12 @@ def connection_pooling(request):
     """
 
     # The URL to send the request to
-    url = 'http://example.com'
+    url = "http://example.com"
 
     # Process the request
     response = session.get(url)
     response.raise_for_status()
-    return 'Success!'
+    return "Success!"
+
+
 # [END functions_tips_connection_pooling]

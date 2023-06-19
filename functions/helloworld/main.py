@@ -15,6 +15,7 @@
 # [START functions_helloworld_http]
 # [START functions_http_content]
 from flask import escape
+
 # [START functions_http_method]
 # [START functions_helloworld_get]
 import functions_framework
@@ -41,7 +42,9 @@ def hello_get(request):
         Functions, see the `Writing HTTP functions` page.
         <https://cloud.google.com/functions/docs/writing/http#http_frameworks>
     """
-    return 'Hello World!'
+    return "Hello World!"
+
+
 # [END functions_helloworld_get]
 
 
@@ -60,13 +63,15 @@ def hello_http(request):
     request_json = request.get_json(silent=True)
     request_args = request.args
 
-    if request_json and 'name' in request_json:
-        name = request_json['name']
-    elif request_args and 'name' in request_args:
-        name = request_args['name']
+    if request_json and "name" in request_json:
+        name = request_json["name"]
+    elif request_args and "name" in request_args:
+        name = request_args["name"]
     else:
-        name = 'World'
-    return f'Hello {escape(name)}!'
+        name = "World"
+    return f"Hello {escape(name)}!"
+
+
 # [END functions_helloworld_http]
 
 
@@ -94,14 +99,20 @@ def hello_pubsub(event, context):
     """
     import base64
 
-    print("""This Function was triggered by messageId {} published at {} to {}
-    """.format(context.event_id, context.timestamp, context.resource["name"]))
+    print(
+        """This Function was triggered by messageId {} published at {} to {}
+    """.format(
+            context.event_id, context.timestamp, context.resource["name"]
+        )
+    )
 
-    if 'data' in event:
-        name = base64.b64decode(event['data']).decode('utf-8')
+    if "data" in event:
+        name = base64.b64decode(event["data"]).decode("utf-8")
     else:
-        name = 'World'
-    print(f'Hello {name}!')
+        name = "World"
+    print(f"Hello {name}!")
+
+
 # [END functions_helloworld_pubsub]
 
 
@@ -120,20 +131,22 @@ def hello_gcs(event, context):
         None; the output is written to Cloud Logging
     """
 
-    print(f'Event ID: {context.event_id}')
-    print(f'Event type: {context.event_type}')
-    print('Bucket: {}'.format(event['bucket']))
-    print('File: {}'.format(event['name']))
-    print('Metageneration: {}'.format(event['metageneration']))
-    print('Created: {}'.format(event['timeCreated']))
-    print('Updated: {}'.format(event['updated']))
+    print(f"Event ID: {context.event_id}")
+    print(f"Event type: {context.event_type}")
+    print("Bucket: {}".format(event["bucket"]))
+    print("File: {}".format(event["name"]))
+    print("Metageneration: {}".format(event["metageneration"]))
+    print("Created: {}".format(event["timeCreated"]))
+    print("Updated: {}".format(event["updated"]))
+
+
 # [END functions_helloworld_storage]
 
 
 # [START functions_http_content]
 @functions_framework.http
 def hello_content(request):
-    """ Responds to an HTTP request using data from the request body parsed
+    """Responds to an HTTP request using data from the request body parsed
     according to the "content-type" header.
     Args:
         request (flask.Request): The request object.
@@ -143,29 +156,31 @@ def hello_content(request):
         Response object using `make_response`
         <https://flask.palletsprojects.com/en/1.1.x/api/#flask.make_response>.
     """
-    content_type = request.headers['content-type']
-    if content_type == 'application/json':
+    content_type = request.headers["content-type"]
+    if content_type == "application/json":
         request_json = request.get_json(silent=True)
-        if request_json and 'name' in request_json:
-            name = request_json['name']
+        if request_json and "name" in request_json:
+            name = request_json["name"]
         else:
             raise ValueError("JSON is invalid, or missing a 'name' property")
-    elif content_type == 'application/octet-stream':
+    elif content_type == "application/octet-stream":
         name = request.data
-    elif content_type == 'text/plain':
+    elif content_type == "text/plain":
         name = request.data
-    elif content_type == 'application/x-www-form-urlencoded':
-        name = request.form.get('name')
+    elif content_type == "application/x-www-form-urlencoded":
+        name = request.form.get("name")
     else:
         raise ValueError(f"Unknown content type: {content_type}")
-    return f'Hello {escape(name)}!'
+    return f"Hello {escape(name)}!"
+
+
 # [END functions_http_content]
 
 
 # [START functions_http_method]
 @functions_framework.http
 def hello_method(request):
-    """ Responds to a GET request with "Hello world!". Forbids a PUT request.
+    """Responds to a GET request with "Hello world!". Forbids a PUT request.
     Args:
         request (flask.Request): The request object.
         <https://flask.palletsprojects.com/en/1.1.x/api/#incoming-request-data>
@@ -176,12 +191,14 @@ def hello_method(request):
     """
     from flask import abort
 
-    if request.method == 'GET':
-        return 'Hello World!'
-    elif request.method == 'PUT':
+    if request.method == "GET":
+        return "Hello World!"
+    elif request.method == "PUT":
         return abort(403)
     else:
         return abort(405)
+
+
 # [END functions_http_method]
 
 
@@ -192,16 +209,19 @@ def hello_error_1(request):
     # and WILL NOT show up in logs or
     # terminate the function.
     from google.cloud import error_reporting
+
     client = error_reporting.Client()
 
     try:
-        raise RuntimeError('I failed you')
+        raise RuntimeError("I failed you")
     except RuntimeError:
         client.report_exception()
 
     # This WILL be reported to Error Reporting,
     # and WILL terminate the function
-    raise RuntimeError('I failed you')
+    raise RuntimeError("I failed you")
+
+
 # [END functions_helloworld_error]
 
 
@@ -212,13 +232,17 @@ def hello_error_2(request):
     # Reporting, but will show up in logs.
     import logging
     import sys
-    print(RuntimeError('I failed you (print to stdout)'))
-    logging.warning(RuntimeError('I failed you (logging.warning)'))
-    logging.error(RuntimeError('I failed you (logging.error)'))
-    sys.stderr.write('I failed you (sys.stderr.write)\n')
+
+    print(RuntimeError("I failed you (print to stdout)"))
+    logging.warning(RuntimeError("I failed you (logging.warning)"))
+    logging.error(RuntimeError("I failed you (logging.error)"))
+    sys.stderr.write("I failed you (sys.stderr.write)\n")
 
     # This is considered a successful execution and WILL NOT be reported
     # to Error Reporting, but the status code (500) WILL be logged.
     from flask import abort
+
     return abort(500)
+
+
 # [END functions_helloworld_error]

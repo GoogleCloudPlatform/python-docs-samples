@@ -349,7 +349,6 @@ def project_name():
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description="Demonstrates AlertPolicy API operations."
     )

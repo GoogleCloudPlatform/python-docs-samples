@@ -31,9 +31,7 @@ def delete_recognizer(name: str) -> None:
 
 
 @Retry()
-def test_create_recognizer(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_create_recognizer(capsys: pytest.CaptureFixture) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer = create_recognizer.create_recognizer(

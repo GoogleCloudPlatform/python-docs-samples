@@ -189,10 +189,7 @@ def get_model(project_id, compute_region, model_display_name):
     return model
 
 
-def list_model_evaluations(
-    project_id, compute_region, model_display_name, filter=None
-):
-
+def list_model_evaluations(project_id, compute_region, model_display_name, filter=None):
     """List model evaluations."""
     result = []
     # [START automl_tables_list_model_evaluations]
@@ -228,9 +225,7 @@ def list_model_evaluations(
     return result
 
 
-def get_model_evaluation(
-    project_id, compute_region, model_id, model_evaluation_id
-):
+def get_model_evaluation(project_id, compute_region, model_id, model_evaluation_id):
     """Get model evaluation."""
     # [START automl_tables_get_model_evaluation]
     # TODO(developer): Uncomment and set the following variables
@@ -244,9 +239,7 @@ def get_model_evaluation(
     client = automl.TablesClient()
 
     # Get the full path of the model evaluation.
-    model_path = client.auto_ml_client.model_path(
-        project_id, compute_region, model_id
-    )
+    model_path = client.auto_ml_client.model_path(project_id, compute_region, model_id)
     model_evaluation_full_id = f"{model_path}/modelEvaluations/{model_evaluation_id}"
 
     # Get complete detail of the model evaluation.
@@ -259,9 +252,7 @@ def get_model_evaluation(
     return response
 
 
-def display_evaluation(
-    project_id, compute_region, model_display_name, filter=None
-):
+def display_evaluation(project_id, compute_region, model_display_name, filter=None):
     """Display evaluation."""
     # [START automl_tables_display_evaluation]
     # TODO(developer): Uncomment and set the following variables
@@ -322,14 +313,10 @@ def display_evaluation(
     regression_metrics = model_evaluation.regression_evaluation_metrics
     if str(regression_metrics):
         print("Model regression metrics:")
-        print(
-            f"Model RMSE: {regression_metrics.root_mean_squared_error}"
-        )
+        print(f"Model RMSE: {regression_metrics.root_mean_squared_error}")
         print(f"Model MAE: {regression_metrics.mean_absolute_error}")
         print(
-            "Model MAPE: {}".format(
-                regression_metrics.mean_absolute_percentage_error
-            )
+            "Model MAPE: {}".format(regression_metrics.mean_absolute_percentage_error)
         )
         print(f"Model R^2: {regression_metrics.r_squared}")
 
@@ -411,23 +398,17 @@ if __name__ == "__main__":
     )
     create_model_parser.add_argument("--dataset_display_name")
     create_model_parser.add_argument("--model_display_name")
-    create_model_parser.add_argument(
-        "--train_budget_milli_node_hours", type=int
-    )
+    create_model_parser.add_argument("--train_budget_milli_node_hours", type=int)
 
     get_operation_status_parser = subparsers.add_parser(
         "get_operation_status", help=get_operation_status.__doc__
     )
     get_operation_status_parser.add_argument("--operation_full_id")
 
-    list_models_parser = subparsers.add_parser(
-        "list_models", help=list_models.__doc__
-    )
+    list_models_parser = subparsers.add_parser("list_models", help=list_models.__doc__)
     list_models_parser.add_argument("--filter_")
 
-    get_model_parser = subparsers.add_parser(
-        "get_model", help=get_model.__doc__
-    )
+    get_model_parser = subparsers.add_parser("get_model", help=get_model.__doc__)
     get_model_parser.add_argument("--model_display_name")
 
     list_model_evaluations_parser = subparsers.add_parser(

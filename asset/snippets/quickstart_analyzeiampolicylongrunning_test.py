@@ -61,17 +61,20 @@ def dataset(bigquery_client):
 
     yield DATASET
 
-    bigquery_client.delete_dataset(
-        dataset_id, delete_contents=True, not_found_ok=False)
+    bigquery_client.delete_dataset(dataset_id, delete_contents=True, not_found_ok=False)
 
 
 def test_analyze_iam_policy_longrunning(analysis_bucket, dataset, capsys):
     dump_file_path = f"gs://{analysis_bucket}/analysis-dump.txt"
-    quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_gcs(PROJECT, dump_file_path)
+    quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_gcs(
+        PROJECT, dump_file_path
+    )
     out, _ = capsys.readouterr()
     assert "True" in out
 
     dataset_id = f"projects/{PROJECT}/datasets/{dataset}"
-    quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_bigquery(PROJECT, dataset_id, "analysis_")
+    quickstart_analyzeiampolicylongrunning.analyze_iam_policy_longrunning_bigquery(
+        PROJECT, dataset_id, "analysis_"
+    )
     out, _ = capsys.readouterr()
     assert "True" in out

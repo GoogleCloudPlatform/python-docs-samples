@@ -24,9 +24,9 @@ def set_variables(airflow_database):
     models.Variable.set("project_id", "example-project")
     models.Variable.set("gce_zone", "us-central1-f")
     yield
-    models.Variable.delete('bucket_path')
-    models.Variable.delete('project_id')
-    models.Variable.delete('gce_zone')
+    models.Variable.delete("bucket_path")
+    models.Variable.delete("project_id")
+    models.Variable.delete("gce_zone")
 
 
 def test_dag_import():

@@ -40,10 +40,9 @@ def app(testbed, monkeypatch, login):
 
     # Provide a test firebase config. The following will set the databaseURL
     # databaseURL: "http://firebase.com/test-db-url"
-    monkeypatch.setattr(
-        firetactoe, '_FIREBASE_CONFIG', '../firetactoe_test.py')
+    monkeypatch.setattr(firetactoe, "_FIREBASE_CONFIG", "../firetactoe_test.py")
 
-    login(id='38')
+    login(id="38")
 
     firetactoe.app.debug = True
     return webtest.TestApp(firetactoe.app)
@@ -53,15 +52,16 @@ def test_index_new_game(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
 
-        response = app.get('/')
+        response = app.get("/")
 
-        assert 'g=' in response.body
+        assert "g=" in response.body
         # Look for the unique game token
         assert re.search(
-            r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body)
+            r"initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'", response.body
+        )
 
         assert firetactoe.Game.query().count() == 1
 
@@ -78,23 +78,24 @@ def test_index_existing_game(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
 
-        userX = users.User('x@example.com', _user_id='123')
-        firetactoe.Game(id='razem', userX=userX).put()
+        userX = users.User("x@example.com", _user_id="123")
+        firetactoe.Game(id="razem", userX=userX).put()
 
-        response = app.get('/?g=razem')
+        response = app.get("/?g=razem")
 
-        assert 'g=' in response.body
+        assert "g=" in response.body
         # Look for the unique game token
         assert re.search(
-            r'initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'', response.body)
+            r"initGame[^\n]+\'[\w+/=]+\.[\w+/=]+\.[\w+/=]+\'", response.body
+        )
 
         assert firetactoe.Game.query().count() == 1
-        game = ndb.Key('Game', 'razem').get()
+        game = ndb.Key("Game", "razem").get()
         assert game is not None
-        assert game.userO.user_id() == '38'
+        assert game.userO.user_id() == "38"
 
         auth_session.assert_called_once_with(
             mock.ANY,  # AuthorizedSession object
@@ -109,12 +110,12 @@ def test_index_nonexisting_game(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
 
-        firetactoe.Game(id='razem', userX=users.get_current_user()).put()
+        firetactoe.Game(id="razem", userX=users.get_current_user()).put()
 
-        app.get('/?g=razemfrazem', status=404)
+        app.get("/?g=razemfrazem", status=404)
 
         assert not auth_session.called
 
@@ -123,11 +124,11 @@ def test_opened(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
-        firetactoe.Game(id='razem', userX=users.get_current_user()).put()
+        firetactoe.Game(id="razem", userX=users.get_current_user()).put()
 
-        app.post('/opened?g=razem', status=200)
+        app.post("/opened?g=razem", status=200)
 
         auth_session.assert_called_once_with(
             mock.ANY,  # AuthorizedSession object
@@ -142,14 +143,14 @@ def test_bad_move(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
 
         firetactoe.Game(
-            id='razem', userX=users.get_current_user(), board=9*' ',
-            moveX=True).put()
+            id="razem", userX=users.get_current_user(), board=9 * " ", moveX=True
+        ).put()
 
-        app.post('/move?g=razem', {'i': 10}, status=400)
+        app.post("/move?g=razem", {"i": 10}, status=400)
 
         assert not auth_session.called
 
@@ -158,17 +159,17 @@ def test_move(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
 
         firetactoe.Game(
-            id='razem', userX=users.get_current_user(), board=9*' ',
-            moveX=True).put()
+            id="razem", userX=users.get_current_user(), board=9 * " ", moveX=True
+        ).put()
 
-        app.post('/move?g=razem', {'i': 0}, status=200)
+        app.post("/move?g=razem", {"i": 0}, status=200)
 
-        game = ndb.Key('Game', 'razem').get()
-        assert game.board == 'X' + (8 * ' ')
+        game = ndb.Key("Game", "razem").get()
+        assert game.board == "X" + (8 * " ")
 
         auth_session.assert_called_once_with(
             mock.ANY,  # AuthorizedSession object
@@ -183,11 +184,11 @@ def test_delete(app, monkeypatch):
     with mock.patch(
         "google.auth.transport.requests.AuthorizedSession.request", autospec=True
     ) as auth_session:
-        data = {'access_token': '123'}
+        data = {"access_token": "123"}
         auth_session.return_value = MockResponse(data, http_client.OK)
-        firetactoe.Game(id='razem', userX=users.get_current_user()).put()
+        firetactoe.Game(id="razem", userX=users.get_current_user()).put()
 
-        app.post('/delete?g=razem', status=200)
+        app.post("/delete?g=razem", status=200)
 
         auth_session.assert_called_once_with(
             mock.ANY,  # AuthorizedSession object

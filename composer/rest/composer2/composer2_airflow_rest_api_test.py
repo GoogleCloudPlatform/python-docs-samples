@@ -66,7 +66,9 @@ def insufficient_permissions_response() -> None:
         yield
 
 
-def test_trigger_dag_insufficient_permissions(insufficient_permissions_response: None) -> None:
+def test_trigger_dag_insufficient_permissions(
+    insufficient_permissions_response: None,
+) -> None:
     with pytest.raises(
         requests.HTTPError,
         match="You do not have a permission to perform this operation.",

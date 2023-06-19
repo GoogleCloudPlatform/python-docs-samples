@@ -38,7 +38,6 @@ def list_clusters(dataproc, project, region):
 
 
 def main(project_id, region):
-
     if region == "global":
         # Use the default gRPC global endpoints.
         dataproc_cluster_client = dataproc_v1.ClusterControllerClient()

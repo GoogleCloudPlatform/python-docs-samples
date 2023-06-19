@@ -24,8 +24,13 @@ import google.auth
 
 from google.cloud import bigquery
 from google.cloud import storage
-from google.cloud.retail import ProductDetail, PurgeUserEventsRequest, \
-    UserEvent, UserEventServiceClient, WriteUserEventRequest
+from google.cloud.retail import (
+    ProductDetail,
+    PurgeUserEventsRequest,
+    UserEvent,
+    UserEventServiceClient,
+    WriteUserEventRequest,
+)
 from google.cloud.retail_v2 import Product
 
 from google.protobuf.timestamp_pb2 import Timestamp
@@ -40,7 +45,7 @@ def get_user_event(visitor_id):
     timestamp.seconds = int(datetime.datetime.now().timestamp())
 
     product = Product()
-    product.id = 'test_id'
+    product.id = "test_id"
 
     product_detail = ProductDetail()
     product_detail.product = product
@@ -60,8 +65,7 @@ def write_user_event(visitor_id):
     write_user_event_request = WriteUserEventRequest()
     write_user_event_request.user_event = get_user_event(visitor_id)
     write_user_event_request.parent = default_catalog
-    user_event = UserEventServiceClient().write_user_event(
-        write_user_event_request)
+    user_event = UserEventServiceClient().write_user_event(write_user_event_request)
     print("---the user event is written---")
     print(user_event)
     return user_event
@@ -74,7 +78,8 @@ def purge_user_event(visitor_id):
     purge_user_event_request.parent = default_catalog
     purge_user_event_request.force = True
     purge_operation = UserEventServiceClient().purge_user_events(
-        purge_user_event_request)
+        purge_user_event_request
+    )
 
     print("---the purge operation was started:----")
     print(purge_operation.operation.name)
@@ -83,7 +88,7 @@ def purge_user_event(visitor_id):
 def get_project_id():
     get_project_command = "gcloud config get-value project --format json"
     config = subprocess.check_output(shlex.split(get_project_command))
-    project_id = re.search('\"(.*?)\"', str(config)).group(1)
+    project_id = re.search('"(.*?)"', str(config)).group(1)
     return project_id
 
 
@@ -99,7 +104,8 @@ def create_bucket(bucket_name: str):
         bucket.storage_class = "STANDARD"
         new_bucket = storage_client.create_bucket(bucket, location="us")
         print(
-            f"Created bucket {new_bucket.name} in {new_bucket.location} with storage class {new_bucket.storage_class}")
+            f"Created bucket {new_bucket.name} in {new_bucket.location} with storage class {new_bucket.storage_class}"
+        )
         return new_bucket
 
 
@@ -136,12 +142,10 @@ def upload_blob(bucket_name, source_file_name):
     print(f"Uploading data from {source_file_name} to the bucket {bucket_name}")
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
-    object_name = re.search('resources/(.*?)$', source_file_name).group(1)
+    object_name = re.search("resources/(.*?)$", source_file_name).group(1)
     blob = bucket.blob(object_name)
     blob.upload_from_filename(source_file_name)
-    print(
-        f"File {source_file_name} uploaded to {object_name}."
-    )
+    print(f"File {source_file_name} uploaded to {object_name}.")
 
 
 def create_bq_dataset(dataset_name):
@@ -194,10 +198,9 @@ def upload_data_to_bq_table(dataset, table_name, source, schema_file_path):
     with open(schema_file_path, "rb") as schema:
         schema_dict = json.load(schema)
     job_config = bigquery.LoadJobConfig(
-        source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON,
-        schema=schema_dict)
+        source_format=bigquery.SourceFormat.NEWLINE_DELIMITED_JSON, schema=schema_dict
+    )
     with open(source, "rb") as source_file:
-        job = bq.load_table_from_file(source_file, full_table_id,
-                                      job_config=job_config)
+        job = bq.load_table_from_file(source_file, full_table_id, job_config=job_config)
     job.result()  # Waits for the job to complete.
     print("data was uploaded")

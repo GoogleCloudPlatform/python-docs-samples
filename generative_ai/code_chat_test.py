@@ -21,4 +21,4 @@ import code_chat
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_code_chat() -> None:
     content = code_chat.write_a_function(temperature=0).text
-    assert 'def min(a, b):' in content
+    assert "def min(a, b):" in content

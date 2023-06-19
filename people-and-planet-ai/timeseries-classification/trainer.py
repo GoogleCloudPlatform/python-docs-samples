@@ -191,7 +191,6 @@ def run(
     checkpoint_dir: str,
     tensorboard_dir: str,
 ) -> None:
-
     # For this sample we are using a mirrored distribution strategy,
     # which consists of a single machine with multiple GPUs.
     #   https://blog.tensorflow.org/2020/12/getting-started-with-distributed-tensorflow-on-gcp.html

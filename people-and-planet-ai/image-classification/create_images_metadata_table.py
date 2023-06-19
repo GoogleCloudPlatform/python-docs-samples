@@ -95,7 +95,7 @@ def run(
 
 
 def get_images_metadata(metadata_url: str) -> Iterable[dict[str, str]]:
-    """Returns an iterable of {'category', 'file_name'} dicts. """
+    """Returns an iterable of {'category', 'file_name'} dicts."""
     content = requests.get(metadata_url).content
     with zipfile.ZipFile(io.BytesIO(content)) as zf:
         filename = os.path.splitext(os.path.basename(metadata_url))[0]

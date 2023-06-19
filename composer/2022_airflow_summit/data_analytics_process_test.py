@@ -56,9 +56,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
 
     BATCH_ID = f"summit-dag-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
-        "runtime_config": {
-            "version": "1.1"
-        },
+        "runtime_config": {"version": "1.1"},
         "pyspark_batch": {
             "main_python_file_uri": PROCESSING_PYTHON_FILE,
             "args": [

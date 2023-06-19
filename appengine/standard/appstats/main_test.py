@@ -19,4 +19,4 @@ import main
 
 def test_app(testbed):
     app = webtest.TestApp(main.app)
-    app.get('/')
+    app.get("/")

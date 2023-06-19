@@ -27,7 +27,6 @@ from google.cloud import language_v1
 
 
 def sample_analyze_sentiment(content):
-
     client = language_v1.LanguageServiceClient()
 
     # content = 'Your text to analyze, e.g. Hello, world!'
