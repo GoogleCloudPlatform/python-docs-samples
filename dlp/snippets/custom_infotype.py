@@ -799,11 +799,11 @@ def inspect_data_with_custom_regex_detector(
 # [END dlp_inspect_custom_regex]
 
 
-# [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
+# [START dlp_inspect_hotword_rule]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def inspect_with_medical_record_number_w_custom_hotwords(
+def inspect_data_w_custom_hotwords(
     project: str,
     content_string: str,
 ) -> None:
@@ -876,4 +876,4 @@ def inspect_with_medical_record_number_w_custom_hotwords(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_w_custom_hotwords]
+# [END dlp_inspect_hotword_rule]

@@ -161,7 +161,7 @@ def test_inspect_data_with_custom_regex_detector(
 def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
     capsys: pytest.LogCaptureFixture,
 ) -> None:
-    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+    custom_infotype.inspect_data_w_custom_hotwords(
         GCLOUD_PROJECT, "just a number 444-5-22222"
     )
 
@@ -173,7 +173,7 @@ def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
 def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(
     capsys: pytest.LogCaptureFixture,
 ) -> None:
-    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+    custom_infotype.inspect_data_w_custom_hotwords(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222"
     )
 
