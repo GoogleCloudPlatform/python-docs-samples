@@ -736,11 +736,11 @@ def inspect_string_multiple_rules(project: str, content_string: str) -> None:
 # [END dlp_inspect_string_multiple_rules]
 
 
-# [START dlp_inspect_with_medical_record_number_custom_regex_detector]
+# [START dlp_inspect_custom_regex]
 import google.cloud.dlp  # noqa: E402, F811
 
 
-def inspect_with_medical_record_number_custom_regex_detector(
+def inspect_data_with_custom_regex_detector(
     project: str,
     content_string: str,
 ) -> None:
@@ -796,7 +796,7 @@ def inspect_with_medical_record_number_custom_regex_detector(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_custom_regex_detector]
+# [END dlp_inspect_custom_regex]
 
 
 # [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
