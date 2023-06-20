@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # [START bigquery_migration_create_workflow]
 def create_migration_workflow(
     gcs_input_path: str, gcs_output_path: str, project_id: str
