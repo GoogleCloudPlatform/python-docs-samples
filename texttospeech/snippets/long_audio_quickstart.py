@@ -23,7 +23,7 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
 
     """
     # TODO(developer): Uncomment and set the following variables
-    # parent = 'YOUR_PROJECT_ID'
+    # project_id = 'YOUR_PROJECT_ID'
     # location = 'YOUR_LOCATION'
     # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
 
