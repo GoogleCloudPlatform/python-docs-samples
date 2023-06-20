@@ -32,17 +32,15 @@ KNOWLEDGE_TYPE = "FAQ"
 CONTENT_URI = "https://cloud.google.com/storage/docs/faq"
 
 CREATE_DOCUMENT_OPERATION = test_utils.create_mock_create_document_operation(
-        DOCUMENT_DISPLAY_NAME,
-        KNOWLEDGE_BASE_ID,
-        MIME_TYPE,
-        [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
-        CONTENT_URI,
-    )
+    DOCUMENT_DISPLAY_NAME,
+    KNOWLEDGE_BASE_ID,
+    MIME_TYPE,
+    [getattr(dialogflow.Document.KnowledgeType, KNOWLEDGE_TYPE)],
+    CONTENT_URI,
+)
 
 
-def test_create_document(
-    capsys: pytest.CaptureFixture[str]
-):
+def test_create_document(capsys: pytest.CaptureFixture[str]):
     with mock.patch(
         "google.cloud.dialogflow_v2beta1.DocumentsClient.create_document",
         CREATE_DOCUMENT_OPERATION,

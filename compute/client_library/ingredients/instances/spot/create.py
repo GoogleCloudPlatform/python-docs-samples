@@ -21,7 +21,9 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_spot_instance>
-def create_spot_instance(project_id: str, zone: str, instance_name: str) -> compute_v1.Instance:
+def create_spot_instance(
+    project_id: str, zone: str, instance_name: str
+) -> compute_v1.Instance:
     """
     Create a new Spot VM instance with Debian 10 operating system.
 
@@ -33,11 +35,11 @@ def create_spot_instance(project_id: str, zone: str, instance_name: str) -> comp
     Returns:
         Instance object.
     """
-    newest_debian = get_image_from_family(
-        project="debian-cloud", family="debian-11"
-    )
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-11")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link)]
     instance = create_instance(project_id, zone, instance_name, disks, spot=True)
     return instance
+
+
 # </INGREDIENT>

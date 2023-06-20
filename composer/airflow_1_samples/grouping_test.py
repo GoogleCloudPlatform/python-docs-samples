@@ -24,4 +24,5 @@ def test_dag_import():
     """
 
     from . import grouping as module
+
     internal_unit_testing.assert_has_valid_dag(module)

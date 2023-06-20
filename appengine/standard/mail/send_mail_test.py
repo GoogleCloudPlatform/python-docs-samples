@@ -21,6 +21,6 @@ def test_send_mail(testbed):
     testbed.init_mail_stub()
     testbed.init_app_identity_stub()
     app = webtest.TestApp(send_mail.app)
-    response = app.get('/send_mail')
+    response = app.get("/send_mail")
     assert response.status_int == 200
-    assert 'Sent an email to Albert.' in response.body
+    assert "Sent an email to Albert." in response.body

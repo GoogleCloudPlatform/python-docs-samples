@@ -28,4 +28,4 @@ def app():
 def test_list_files(app):
     with app.test_request_context():
         res = main.list_files(flask.request)
-        assert 'main.py' in res
+        assert "main.py" in res

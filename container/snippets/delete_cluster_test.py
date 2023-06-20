@@ -30,7 +30,6 @@ CLUSTER_NAME = f"py-container-repo-test-{uuid.uuid4().hex[:10]}"
 
 @pytest.fixture(autouse=True)
 def setup_and_tear_down() -> None:
-
     # create a cluster to be deleted
     client = gke.ClusterManagerClient()
     cluster_location = client.common_location_path(PROJECT_ID, ZONE)

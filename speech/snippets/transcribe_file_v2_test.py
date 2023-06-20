@@ -33,9 +33,7 @@ def delete_recognizer(name: str) -> None:
     client.delete_recognizer(request=request)
 
 
-def test_transcribe_file_v2(
-    capsys: pytest.CaptureFixture
-) -> None:
+def test_transcribe_file_v2(capsys: pytest.CaptureFixture) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

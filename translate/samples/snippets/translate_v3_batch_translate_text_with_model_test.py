@@ -38,14 +38,16 @@ def bucket() -> storage.Bucket:
 
 
 def test_batch_translate_text_with_model(
-        capsys: pytest.LogCaptureFixture,
-        bucket: storage.Bucket,
+    capsys: pytest.LogCaptureFixture,
+    bucket: storage.Bucket,
 ) -> None:
-    response = translate_v3_batch_translate_text_with_model.batch_translate_text_with_model(
-        "gs://cloud-samples-data/translation/custom_model_text.txt",
-        f"gs://{bucket.name}/translation/BATCH_TRANSLATION_MODEL_OUTPUT/",
-        PROJECT_ID,
-        MODEL_ID,
+    response = (
+        translate_v3_batch_translate_text_with_model.batch_translate_text_with_model(
+            "gs://cloud-samples-data/translation/custom_model_text.txt",
+            f"gs://{bucket.name}/translation/BATCH_TRANSLATION_MODEL_OUTPUT/",
+            PROJECT_ID,
+            MODEL_ID,
+        )
     )
     out, _ = capsys.readouterr()
     assert "Total Characters: 15" in out

@@ -52,4 +52,5 @@ def create_api_key(project_id: str, suffix: str) -> Key:
     # To restrict the usage of this API key, use the value in "response.name".
     return response
 
+
 # [END apikeys_create_api_key]

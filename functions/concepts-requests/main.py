@@ -31,10 +31,12 @@ def make_request(request):
     import requests
 
     # The URL to send the request to
-    url = 'http://example.com'
+    url = "http://example.com"
 
     # Process the request
     response = requests.get(url)
     response.raise_for_status()
-    return 'Success!'
+    return "Success!"
+
+
 # [END functions_concepts_requests]

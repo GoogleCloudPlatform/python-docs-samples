@@ -47,8 +47,10 @@ def test_render_handler_errors(client):
 
 def test_missing_upstream_url(client):
     del os.environ["EDITOR_UPSTREAM_RENDER_URL"]
-    r = client.post("/render",
-                    data=json.dumps({"data": "**strong text**"}),
-                    headers={"Content-Type": "application/json"})
+    r = client.post(
+        "/render",
+        data=json.dumps({"data": "**strong text**"}),
+        headers={"Content-Type": "application/json"},
+    )
     assert r.status_code == 500
     assert "EDITOR_UPSTREAM_RENDER_URL missing" in r.data.decode()

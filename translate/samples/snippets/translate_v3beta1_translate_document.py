@@ -17,8 +17,8 @@ from google.cloud import translate_v3beta1 as translate
 
 
 def translate_document(
-        project_id: str,
-        file_path: str,
+    project_id: str,
+    file_path: str,
 ) -> translate.TranslationServiceClient:
     """Translates a document.
 
@@ -58,7 +58,11 @@ def translate_document(
 
     # If not provided in the TranslationRequest, the translated file will only be returned through a byte-stream
     # and its output mime type will be the same as the input file's mime type
-    print(f"Response: Detected Language Code - {response.document_translation.detected_language_code}")
+    print(
+        f"Response: Detected Language Code - {response.document_translation.detected_language_code}"
+    )
 
     return response
+
+
 # [END translate_v3beta1_translate_document]

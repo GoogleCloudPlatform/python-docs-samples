@@ -24,7 +24,6 @@ from google.cloud import speech
 
 
 def run_quickstart() -> speech.RecognizeResponse:
-
     # Instantiates a client
     # [START speech_python_migration_client]
     client = speech.SpeechClient()

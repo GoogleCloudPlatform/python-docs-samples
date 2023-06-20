@@ -25,8 +25,7 @@ import transfer_check_apiary
 
 
 @pytest.fixture()
-def transfer_job(
-        project_id: str, source_bucket: Bucket, destination_bucket: Bucket):
+def transfer_job(project_id: str, source_bucket: Bucket, destination_bucket: Bucket):
     # Create job
     client = storage_transfer.StorageTransferServiceClient()
     transfer_job = {
@@ -34,41 +33,33 @@ def transfer_job(
         "status": "ENABLED",
         "project_id": project_id,
         "schedule": {
-            "schedule_start_date": {
-                "day": 1, "month": 1, "year": 2000},
-            "start_time_of_day": {
-                "hours": 0, "minutes": 0, "seconds": 0},
+            "schedule_start_date": {"day": 1, "month": 1, "year": 2000},
+            "start_time_of_day": {"hours": 0, "minutes": 0, "seconds": 0},
         },
         "transfer_spec": {
-            "gcs_data_source": {
-                "bucket_name": source_bucket.name},
-            "gcs_data_sink": {
-                "bucket_name": destination_bucket.name},
+            "gcs_data_source": {"bucket_name": source_bucket.name},
+            "gcs_data_sink": {"bucket_name": destination_bucket.name},
             "object_conditions": {
-                'min_time_elapsed_since_last_modification': Duration(
+                "min_time_elapsed_since_last_modification": Duration(
                     seconds=2592000  # 30 days
                 )
             },
-            "transfer_options": {
-                "delete_objects_from_source_after_transfer": True},
+            "transfer_options": {"delete_objects_from_source_after_transfer": True},
         },
     }
     result = client.create_transfer_job({"transfer_job": transfer_job})
-    client.run_transfer_job({
-        'job_name': result.name,
-        'project_id': project_id
-    })
+    client.run_transfer_job({"job_name": result.name, "project_id": project_id})
 
     yield result.name
 
     # Remove job
-    client.update_transfer_job({
-        "job_name": result.name,
-        "project_id": project_id,
-        "transfer_job": {
-            "status": storage_transfer.TransferJob.Status.DELETED
+    client.update_transfer_job(
+        {
+            "job_name": result.name,
+            "project_id": project_id,
+            "transfer_job": {"status": storage_transfer.TransferJob.Status.DELETED},
         }
-    })
+    )
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
@@ -76,7 +67,7 @@ def test_transfer_check(capsys, project_id: str, transfer_job: str):
     transfer_check.transfer_check(project_id, transfer_job)
 
     out, _ = capsys.readouterr()
-    normalized_name = transfer_job.replace('/', '-')
+    normalized_name = transfer_job.replace("/", "-")
 
     # This sample isn't really meant to do anything, just check that it ran
     # without any issues while listing `transferOperations`
@@ -88,7 +79,7 @@ def test_transfer_check_apiary(capsys, project_id: str, transfer_job: str):
     transfer_check_apiary.main(project_id, transfer_job)
 
     out, _ = capsys.readouterr()
-    normalized_name = transfer_job.replace('/', '-')
+    normalized_name = transfer_job.replace("/", "-")
 
     # This sample isn't really meant to do anything, just check that it ran
     # without any issues while listing `transferOperations`

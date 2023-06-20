@@ -39,4 +39,6 @@ def create_model(
 
     print(f"Training operation name: {response.operation.name}")
     print("Training started...")
+
+
 # [END automl_video_object_tracking_create_model_beta]

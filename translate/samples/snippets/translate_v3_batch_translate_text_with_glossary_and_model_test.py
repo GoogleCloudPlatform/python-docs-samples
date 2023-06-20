@@ -38,8 +38,8 @@ def bucket() -> storage.Bucket:
 
 
 def test_batch_translate_text_with_glossary_and_model(
-        capsys: pytest.LogCaptureFixture,
-        bucket: storage.Bucket,
+    capsys: pytest.LogCaptureFixture,
+    bucket: storage.Bucket,
 ) -> None:
     response = translate_v3_batch_translate_text_with_glossary_and_model.batch_translate_text_with_glossary_and_model(
         "gs://cloud-samples-data/translation/text_with_custom_model_and_glossary.txt",

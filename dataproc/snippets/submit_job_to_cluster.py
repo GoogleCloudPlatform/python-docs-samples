@@ -71,8 +71,10 @@ def download_output(project, cluster_id, output_bucket, job_id):
     print("Downloading output file.")
     client = storage.Client(project=project)
     bucket = client.get_bucket(output_bucket)
-    output_blob = "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
-        cluster_id, job_id
+    output_blob = (
+        "google-cloud-dataproc-metainfo/{}/jobs/{}/driveroutput.000000000".format(
+            cluster_id, job_id
+        )
     )
     return bucket.blob(output_blob).download_as_bytes().decode("utf-8")
 
@@ -102,12 +104,12 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
 
     print(f"Cluster created successfully: {result.cluster_name}")
 
-# [END dataproc_create_cluster]
+    # [END dataproc_create_cluster]
 
     spark_file, spark_filename = get_pyspark_file(pyspark_file)
     upload_pyspark_file(project_id, gcs_bucket, spark_filename, spark_file)
 
-# [START dataproc_submit_job]
+    # [START dataproc_submit_job]
     # Create the job client.
     job_client = dataproc_v1.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
@@ -132,7 +134,8 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
         storage.Client()
         .get_bucket(matches.group(1))
         .blob(f"{matches.group(2)}.000000000")
-        .download_as_bytes().decode("utf-8")
+        .download_as_bytes()
+        .decode("utf-8")
     )
 
     print(f"Job finished successfully: {output}\r\n")
@@ -150,6 +153,8 @@ def quickstart(project_id, region, cluster_name, gcs_bucket, pyspark_file):
     operation.result()
 
     print(f"Cluster {cluster_name} successfully deleted.")
+
+
 # [END dataproc_delete_cluster]
 
 
@@ -186,5 +191,11 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    quickstart(args.project_id, args.region, args.cluster_name, args.gcs_bucket, args.pyspark_file)
+    quickstart(
+        args.project_id,
+        args.region,
+        args.cluster_name,
+        args.gcs_bucket,
+        args.pyspark_file,
+    )
 # [END dataproc_quickstart]

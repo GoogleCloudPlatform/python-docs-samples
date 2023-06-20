@@ -19,6 +19,6 @@ import main
 
 def test_app(testbed):
     app = webtest.TestApp(main.app)
-    response = app.get('/')
+    response = app.get("/")
     assert response.status_int == 200
-    assert 'Verified: True' in response.text
+    assert "Verified: True" in response.text

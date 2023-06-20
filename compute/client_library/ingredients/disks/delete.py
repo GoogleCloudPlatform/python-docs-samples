@@ -32,4 +32,6 @@ def delete_disk(project_id: str, zone: str, disk_name: str) -> None:
     disk_client = compute_v1.DisksClient()
     operation = disk_client.delete(project=project_id, zone=zone, disk=disk_name)
     wait_for_extended_operation(operation, "disk deletion")
+
+
 # </INGREDIENT>

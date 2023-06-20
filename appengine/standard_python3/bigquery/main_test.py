@@ -45,9 +45,7 @@ def test_results(flask_client, monkeypatch):
 
     monkeypatch.setattr(main.bigquery.Client, "get_job", fake_get_job)
 
-    r = flask_client.get(
-        "/results?project_id=123&job_id=456&location=my_location"
-    )
+    r = flask_client.get("/results?project_id=123&job_id=456&location=my_location")
     response_body = r.data.decode("utf-8")
 
     assert r.status_code == 200

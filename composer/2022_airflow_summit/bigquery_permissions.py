@@ -18,20 +18,16 @@ from airflow.models import DAG
 from airflow.providers.google.cloud.operators.bigquery import BigQueryCheckOperator
 
 
-DATASET = 'airflow-summit-2022-data.holiday_weather'
-TABLE = 'holidays'
+DATASET = "airflow-summit-2022-data.holiday_weather"
+TABLE = "holidays"
 
-default_args = {
-    'start_date': datetime(2022, 4, 1),
-    'retry_delay': timedelta(seconds=1)
-}
+default_args = {"start_date": datetime(2022, 4, 1), "retry_delay": timedelta(seconds=1)}
 
-with DAG('bigquery_permissions',
-         default_args=default_args,
-         schedule_interval=None) as dag:
-
+with DAG(
+    "bigquery_permissions", default_args=default_args, schedule_interval=None
+) as dag:
     check_count = BigQueryCheckOperator(
         task_id="check_count",
-        sql=f'SELECT COUNT(*) FROM {DATASET}.{TABLE}',
+        sql=f"SELECT COUNT(*) FROM {DATASET}.{TABLE}",
         use_legacy_sql=False,
     )

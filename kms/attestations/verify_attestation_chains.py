@@ -36,14 +36,14 @@ import requests
 
 ATTESTATION_SIGNATURE_LEN = 256
 
-MANUFACTURER_CERT_URL = 'https://www.marvell.com/content/dam/marvell/en/public-collateral/security-solutions/liquid_security_certificate.zip'
+MANUFACTURER_CERT_URL = "https://www.marvell.com/content/dam/marvell/en/public-collateral/security-solutions/liquid_security_certificate.zip"
 
 # <Name(C=US,ST=California,L=San Jose,O=Cavium\, Inc.,OU=LiquidSecurity,CN=localca.liquidsecurity.cavium.com)>
 MANUFACTURER_CERT_SUBJECT_BYTES = (
-    b'0\x81\x911\x0b0\t\x06\x03U\x04\x06\x13\x02US1\x130\x11\x06\x03U\x04\x08'
-    b'\x0c\nCalifornia1\x110\x0f\x06\x03U\x04\x07\x0c\x08San Jose1\x150\x13\x06'
-    b'\x03U\x04\n\x0c\x0cCavium, Inc.1\x170\x15\x06\x03U\x04\x0b\x0c\x0e'
-    b'LiquidSecurity1*0(\x06\x03U\x04\x03\x0c!localca.liquidsecurity.cavium.com'
+    b"0\x81\x911\x0b0\t\x06\x03U\x04\x06\x13\x02US1\x130\x11\x06\x03U\x04\x08"
+    b"\x0c\nCalifornia1\x110\x0f\x06\x03U\x04\x07\x0c\x08San Jose1\x150\x13\x06"
+    b"\x03U\x04\n\x0c\x0cCavium, Inc.1\x170\x15\x06\x03U\x04\x0b\x0c\x0e"
+    b"LiquidSecurity1*0(\x06\x03U\x04\x03\x0c!localca.liquidsecurity.cavium.com"
 )
 
 # The owner root cert can be obtained from
@@ -134,14 +134,15 @@ def get_manufacturer_root_certificate():
     resp = requests.get(MANUFACTURER_CERT_URL)
     tmp_file = io.BytesIO(resp.content)
     zip_file = zipfile.ZipFile(tmp_file)
-    with zip_file.open('liquid_security_certificate.crt') as f:
+    with zip_file.open("liquid_security_certificate.crt") as f:
         return x509.load_pem_x509_certificate(f.read(), backends.default_backend())
 
 
 def get_owner_root_certificate():
     """Gets the owner root certificate."""
     return x509.load_pem_x509_certificate(
-        OWNER_ROOT_CERT_PEM.encode('utf-8'), backends.default_backend())
+        OWNER_ROOT_CERT_PEM.encode("utf-8"), backends.default_backend()
+    )
 
 
 def verify_certificate(signing_cert, issued_cert):
@@ -158,19 +159,19 @@ def verify_certificate(signing_cert, issued_cert):
     if signing_cert.subject != issued_cert.issuer:
         return False
     try:
-        signing_cert.public_key().verify(issued_cert.signature,
-                                         issued_cert.tbs_certificate_bytes,
-                                         padding.PKCS1v15(),
-                                         issued_cert.signature_hash_algorithm)
+        signing_cert.public_key().verify(
+            issued_cert.signature,
+            issued_cert.tbs_certificate_bytes,
+            padding.PKCS1v15(),
+            issued_cert.signature_hash_algorithm,
+        )
         return True
     except exceptions.InvalidSignature:
         return False
     return False
 
 
-def get_issued_certificate(issuer_cert,
-                           untrusted_certs,
-                           predicate=lambda _: True):
+def get_issued_certificate(issuer_cert, untrusted_certs, predicate=lambda _: True):
     """Finds an issued certificates issued by an issuer certificate.
 
     The issued certificate is removed from the set of untrusted certificates.
@@ -204,8 +205,7 @@ def verify_attestation(cert, attestation):
     data = attestation[:-ATTESTATION_SIGNATURE_LEN]
     signature = attestation[-ATTESTATION_SIGNATURE_LEN:]
     try:
-        cert.public_key().verify(signature, data, padding.PKCS1v15(),
-                                 hashes.SHA256())
+        cert.public_key().verify(signature, data, padding.PKCS1v15(), hashes.SHA256())
         return True
     except exceptions.InvalidSignature:
         return False
@@ -223,14 +223,17 @@ def verify(certs_file, attestation_file):
         True if the certificate chains are valid.
     """
     mfr_root_cert = get_manufacturer_root_certificate()
-    if (mfr_root_cert.subject.public_bytes(backends.default_backend()) !=
-            MANUFACTURER_CERT_SUBJECT_BYTES):
+    if (
+        mfr_root_cert.subject.public_bytes(backends.default_backend())
+        != MANUFACTURER_CERT_SUBJECT_BYTES
+    ):
         return False
 
     untrusted_certs_pem = pem.parse_file(certs_file)
     untrusted_certs = {
         x509.load_pem_x509_certificate(
-            str(cert_pem).encode('utf-8'), backends.default_backend())
+            str(cert_pem).encode("utf-8"), backends.default_backend()
+        )
         for cert_pem in untrusted_certs_pem
     }
 
@@ -238,60 +241,63 @@ def verify(certs_file, attestation_file):
     mfr_card_cert = get_issued_certificate(mfr_root_cert, untrusted_certs)
     mfr_partition_cert = get_issued_certificate(mfr_card_cert, untrusted_certs)
     if not mfr_card_cert or not mfr_partition_cert:
-        print('Invalid HSM manufacturer certificate chain.')
+        print("Invalid HSM manufacturer certificate chain.")
         return False
-    print('Successfully built HSM manufacturer certificate chain.')
+    print("Successfully built HSM manufacturer certificate chain.")
 
     owner_root_cert = get_owner_root_certificate()
 
     # Build the owner card certificate chain.
     def _check_card_pub_key(cert):
         cert_pub_key_bytes = cert.public_key().public_bytes(
-            serialization.Encoding.DER,
-            serialization.PublicFormat.SubjectPublicKeyInfo)
+            serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo
+        )
         mfr_card_pub_key_bytes = mfr_card_cert.public_key().public_bytes(
-            serialization.Encoding.DER,
-            serialization.PublicFormat.SubjectPublicKeyInfo)
+            serialization.Encoding.DER, serialization.PublicFormat.SubjectPublicKeyInfo
+        )
         return cert_pub_key_bytes == mfr_card_pub_key_bytes
 
     owner_card_cert = get_issued_certificate(
-        owner_root_cert, untrusted_certs, predicate=_check_card_pub_key)
+        owner_root_cert, untrusted_certs, predicate=_check_card_pub_key
+    )
 
     # Build the owner partition certificate chain.
     def _check_partition_pub_key(cert):
         cert_pub_key_bytes = cert.public_key().public_bytes(
-            serialization.Encoding.PEM,
-            serialization.PublicFormat.SubjectPublicKeyInfo)
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+        )
         mfr_partition_pub_key_bytes = mfr_partition_cert.public_key().public_bytes(
-            serialization.Encoding.PEM,
-            serialization.PublicFormat.SubjectPublicKeyInfo)
+            serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo
+        )
         return cert_pub_key_bytes == mfr_partition_pub_key_bytes
 
     owner_partition_cert = get_issued_certificate(
-        owner_root_cert, untrusted_certs, predicate=_check_partition_pub_key)
+        owner_root_cert, untrusted_certs, predicate=_check_partition_pub_key
+    )
 
     if not owner_card_cert or not owner_partition_cert or untrusted_certs:
-        print('Invalid HSM owner certificate chain.')
+        print("Invalid HSM owner certificate chain.")
         return False
-    print('Successfully built HSM owner certificate chain.')
+    print("Successfully built HSM owner certificate chain.")
 
-    with gzip.open(attestation_file, 'rb') as f:
+    with gzip.open(attestation_file, "rb") as f:
         attestation = f.read()
-        return (verify_attestation(mfr_partition_cert, attestation) and
-                verify_attestation(owner_partition_cert, attestation))
+        return verify_attestation(
+            mfr_partition_cert, attestation
+        ) and verify_attestation(owner_partition_cert, attestation)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument(
-        '--certificates', help='The certificate chains filename.')
-    parser.add_argument('--attestation', help='The attestation filename.')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("--certificates", help="The certificate chains filename.")
+    parser.add_argument("--attestation", help="The attestation filename.")
 
     args = parser.parse_args()
 
     if verify(args.certificates, args.attestation):
-        print('The attestation has been verified.')
+        print("The attestation has been verified.")
     else:
-        print('The attestation could not be verified.')
+        print("The attestation could not be verified.")
 # [END kms_verify_chains]

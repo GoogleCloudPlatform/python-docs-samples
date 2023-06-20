@@ -21,11 +21,7 @@ from google.cloud import compute_v1
 
 # <INGREDIENT attach_disk>
 def attach_disk(
-        project_id: str,
-        zone: str,
-        instance_name: str,
-        disk_link: str,
-        mode: str
+    project_id: str, zone: str, instance_name: str, disk_link: str, mode: str
 ) -> None:
     """
     Attaches a non-boot persistent disk to a specified compute instance. The disk might be zonal or regional.
@@ -59,4 +55,6 @@ def attach_disk(
     operation = instances_client.attach_disk(request)
 
     wait_for_extended_operation(operation, "disk attachement")
+
+
 # </INGREDIENT>

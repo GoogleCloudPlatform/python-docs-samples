@@ -24,6 +24,7 @@ import main
 
 # flake8: noqa
 
+
 class TestGCFPyOCRSample:
     @mock.patch.object(main, "publisher")
     @mock.patch.object(main, "translate_client")

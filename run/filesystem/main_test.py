@@ -58,7 +58,7 @@ def test_file_access(client):
 
 
 def test_no_file_access(client):
-    full_path = os.path.join(mnt_dir, 'not-a-file')
+    full_path = os.path.join(mnt_dir, "not-a-file")
     r = client.get(full_path)
 
     assert r.status_code == 404

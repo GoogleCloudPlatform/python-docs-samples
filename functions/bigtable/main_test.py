@@ -22,9 +22,9 @@ from requests import Request
 
 import main
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-BIGTABLE_INSTANCE = os.environ['BIGTABLE_INSTANCE']
-TABLE_ID_PREFIX = 'mobile-time-series-{}'
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+BIGTABLE_INSTANCE = os.environ["BIGTABLE_INSTANCE"]
+TABLE_ID_PREFIX = "mobile-time-series-{}"
 
 
 @pytest.fixture(scope="module", autouse=True)
@@ -37,12 +37,12 @@ def table_id():
     if table.exists():
         table.delete()
 
-    table.create(column_families={'stats_summary': None})
+    table.create(column_families={"stats_summary": None})
 
     timestamp = datetime.datetime(2019, 5, 1)
     rows = [
         table.direct_row("phone#4c410523#20190501"),
-        table.direct_row("phone#4c410523#20190502")
+        table.direct_row("phone#4c410523#20190502"),
     ]
 
     rows[0].set_cell("stats_summary", "os_build", "PQ2A.190405.003", timestamp)
@@ -56,12 +56,14 @@ def table_id():
 
 
 def test_main(table_id):
-    request = Request('GET', headers={
-      'instance_id': BIGTABLE_INSTANCE,
-      'table_id': table_id
-    })
+    request = Request(
+        "GET", headers={"instance_id": BIGTABLE_INSTANCE, "table_id": table_id}
+    )
 
     response = main.bigtable_read_data(request)
 
-    assert """Rowkey: phone#4c410523#20190501, os_build: PQ2A.190405.003
-Rowkey: phone#4c410523#20190502, os_build: PQ2A.190405.004""" in response
+    assert (
+        """Rowkey: phone#4c410523#20190501, os_build: PQ2A.190405.003
+Rowkey: phone#4c410523#20190502, os_build: PQ2A.190405.004"""
+        in response
+    )
