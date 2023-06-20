@@ -28,7 +28,6 @@ ce_attributes = {
     "source": "<my-test-source>",
     "specversion": "1.0",
     "subject": "test-bucket",
-
 }
 
 
@@ -36,6 +35,7 @@ ce_attributes = {
 def client():
     main.app.testing = True
     return main.app.test_client()
+
 
 def test_endpoint(client):
     event = CloudEvent(ce_attributes, dict())
@@ -45,4 +45,3 @@ def test_endpoint(client):
     r = client.post("/", headers=headers, data=body)
     assert r.status_code == 200
     assert "Detected change in Cloud Storage bucket: test-bucket" in r.text
-
