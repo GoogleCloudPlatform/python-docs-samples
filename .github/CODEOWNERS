@@ -100,6 +100,7 @@
 /bigquery-connection/**/*              @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
 /bigquery-datatransfer/**/*            @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
 /bigquery-migration/**/*               @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
+/bigquery-reservation/**/*             @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @GoogleCloudPlatform/healthcare-life-sciences @GoogleCloudPlatform/python-samples-reviewers
