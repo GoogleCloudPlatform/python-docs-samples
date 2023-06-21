@@ -928,7 +928,7 @@ def deidentify_with_time_extract(
     input_csv_file: str,
     output_csv_file: str,
 ) -> None:
-    """Uses the Data Loss Prevention API to deidentify dates in a CSV file through
+    """ Uses the Data Loss Prevention API to deidentify dates in a CSV file through
      time part extraction.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -968,7 +968,9 @@ def deidentify_with_time_extract(
         try:
             date = datetime.strptime(value, "%m/%d/%Y")
             return {
-                "date_value": {"year": date.year, "month": date.month, "day": date.day}
+                "date_value": {
+                    "year": date.year, "month": date.month, "day": date.day
+                }
             }
         except ValueError:
             return {"string_value": value}
@@ -993,7 +995,9 @@ def deidentify_with_time_extract(
             "field_transformations": [
                 {
                     "primitive_transformation": {
-                        "time_part_config": {"part_to_extract": "YEAR"}
+                        "time_part_config": {
+                            "part_to_extract": "YEAR"
+                        }
                     },
                     "fields": date_fields,
                 }
@@ -2262,14 +2266,14 @@ if __name__ == "__main__":
     time_extract_parser.add_argument(
         "input_csv_file",
         help="The path to the CSV file to deidentify. The first row of the "
-        "file must specify column names, and all other rows must contain "
-        "valid values.",
+             "file must specify column names, and all other rows must contain "
+             "valid values.",
     )
     time_extract_parser.add_argument(
         "date_fields",
         nargs="+",
         help="The list of date fields in the CSV file to de-identify. Example: "
-        "['birth_date', 'register_date']",
+             "['birth_date', 'register_date']",
     )
     time_extract_parser.add_argument(
         "output_csv_file", help="The path to save the time-extracted data."

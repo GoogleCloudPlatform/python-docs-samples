@@ -230,9 +230,7 @@ def test_deidentify_with_date_shift_using_context_field(
     assert "Successful" in out
 
 
-def test_deidentify_with_time_extract(
-    tempdir: TextIO, capsys: pytest.CaptureFixture
-) -> None:
+def test_deidentify_with_time_extract(tempdir: TextIO, capsys: pytest.CaptureFixture) -> None:
     output_filepath = os.path.join(str(tempdir), "year-extracted.csv")
 
     deid.deidentify_with_time_extract(
