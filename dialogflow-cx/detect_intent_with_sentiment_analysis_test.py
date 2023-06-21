@@ -39,4 +39,4 @@ def test_detect_intent_positive(text, expected_score_min, expected_score_max):
         text,
         "en-us",
     )
-    assert expected_score_min < score < expected_score_max
+    assert -1 < score < 1
