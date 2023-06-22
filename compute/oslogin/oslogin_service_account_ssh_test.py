@@ -216,7 +216,7 @@ def oslogin_instance(oslogin_service_account):
     client.delete(project=PROJECT, zone=ZONE, instance=instance.name).result()
 
 
-def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
+def test_oslogin_ssh(oslogin_instance, oslogin_service_account):
     account = f'users/{oslogin_service_account["name"]}'
     oslogin_client = oslogin_v1.OsLoginServiceClient(
         credentials=oslogin_service_account["credentials"]
@@ -226,7 +226,7 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
 
     try:
         with _create_firewall():
-            main(
+            out = main(
                 "uname -a",
                 PROJECT,
                 account=account,
@@ -236,7 +236,6 @@ def test_oslogin_ssh(oslogin_instance, oslogin_service_account, capsys):
                 oslogin=oslogin_client,
             )
 
-        out, _ = capsys.readouterr()
         assert_value = f"Linux {TEST_ID}"
         assert assert_value in out
     except (AssertionError, subprocess.TimeoutExpired) as err:

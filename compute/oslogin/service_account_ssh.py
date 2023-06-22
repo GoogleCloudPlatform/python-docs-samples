@@ -25,6 +25,7 @@ import argparse
 import logging
 import subprocess
 import time
+from typing import List, Optional
 import uuid
 
 from google.auth.exceptions import RefreshError
@@ -41,8 +42,26 @@ HEADERS = {"Metadata-Flavor": "Google"}
 
 
 # [START run_command_local]
-def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
-    """Execute an external command (wrapper for Python subprocess)."""
+def execute(
+    cmd: List[str],
+    cwd: Optional[str] = None,
+    capture_output: bool = False,
+    env: Optional[dict] = None,
+    raise_errors: bool = True,
+) -> (int, str):
+    """
+    Execute an external command (wrapper for Python subprocess).
+
+    Args:
+        cmd: command to be executed, presented as list of strings.
+        cwd: directory where you want to execute the command.
+        capture_output: do you want to capture the commands output?
+        env: environmental variables to be used for command execution.
+        raise_errors: should errors of the executed command be raised as exception?
+
+    Returns:
+        A tuple containing the return code of the command and its output.
+    """
     logging.info(f"Executing command: {str(cmd)}")
     stdout = subprocess.PIPE if capture_output else None
     process = subprocess.Popen(cmd, cwd=cwd, env=env, stdout=stdout)
@@ -63,8 +82,24 @@ def execute(cmd, cwd=None, capture_output=False, env=None, raise_errors=True):
 
 
 # [START create_key]
-def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
-    """Generate an SSH key pair and apply it to the specified account."""
+def create_ssh_key(
+    oslogin: googleapiclient.discovery.Resource,
+    account: str,
+    private_key_file: Optional[str] = None,
+    expire_time: int = 300,
+) -> str:
+    """
+    Generate an SSH key pair and apply it to the specified account.
+
+    Args:
+        oslogin: the OSLogin resource object, needed to communicate with API.
+        account: name of the account to be used.
+        private_key_file: path at which the private key file will be stored.
+        expire_time: expiration time of the SSH key (is seconds).
+
+    Returns:
+        Path to the private SSH key file.mypy
+    """
     private_key_file = private_key_file or "/tmp/key-" + str(uuid.uuid4())
     execute(["ssh-keygen", "-t", "rsa", "-N", "", "-f", private_key_file])
 
@@ -98,8 +133,19 @@ def create_ssh_key(oslogin, account, private_key_file=None, expire_time=300):
 
 
 # [START run_command_remote]
-def run_ssh(cmd, private_key_file, username, hostname):
-    """Run a command on a remote system."""
+def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> List[str]:
+    """
+    Run a command on a remote system.
+
+    Args:
+        cmd: the command to be run on remote system.
+        private_key_file: private SSH key to use for authentication.
+        username: username on the remote system.
+        hostname: name of the remote system.
+
+    Returns:
+        A list of strings representing the commands output.
+    """
     ssh_command = [
         "ssh",
         "-i",
@@ -110,7 +156,11 @@ def run_ssh(cmd, private_key_file, username, hostname):
         cmd,
     ]
     ssh = subprocess.Popen(
-        ssh_command, shell=False, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        ssh_command,
+        shell=False,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
     )
     result = ssh.stdout.readlines()
     return result if result else ssh.stderr.readlines()
@@ -121,10 +171,34 @@ def run_ssh(cmd, private_key_file, username, hostname):
 
 # [START main]
 def main(
-    cmd, project, instance=None, zone=None, oslogin=None, account=None, hostname=None
-):
-    """Run a command on a remote system."""
+    cmd: str,
+    project: str,
+    instance: Optional[str] = None,
+    zone: Optional[str] = None,
+    oslogin: Optional[googleapiclient.discovery.Resource] = None,
+    account: Optional[str] = None,
+    hostname: Optional[str] = None,
+) -> List[str]:
+    """
+    Run a command on a remote system.
 
+    This method will first create a new SSH key and then use it to
+    execute a specified command over SSH on remote machine.
+
+    The generated SSH key will be safely deleted at the end.
+
+    Args:
+        cmd: command to execute on remote host.
+        project: name of the project that the remote host resides in.
+        instance: name of the remote host.
+        zone: zone in which the remote host can be found.
+        oslogin: the OSLogin client to be used. New one will be created if left as None.
+        account: name of the account to be used
+        hostname: hostname of the remote system.
+
+    Returns:
+        Output of the executed command.
+    """
     # Create the OS Login API object.
     oslogin = oslogin or googleapiclient.discovery.build("oslogin", "v1")
 
@@ -164,12 +238,14 @@ def main(
     # Print the command line output from the remote instance.
     # Use .rstrip() rather than end='' for Python 2 compatability.
     for line in result:
-        print(line.decode("utf-8").rstrip("\n\r"))
+        print(line.rstrip("\n\r"))
 
     # Shred the private key and delete the pair.
     execute(["shred", private_key_file])
     execute(["rm", private_key_file])
     execute(["rm", private_key_file + ".pub"])
+
+    return result
 
 
 if __name__ == "__main__":
