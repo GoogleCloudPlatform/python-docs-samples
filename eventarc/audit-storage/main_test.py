@@ -11,20 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import copy
 
 from uuid import uuid4
+
+from cloudevents.conversion import to_binary
+from cloudevents.http import CloudEvent
 
 import pytest
 
 import main
 
 
-binary_headers = {
-    "ce-id": str(uuid4),
-    "ce-type": "com.pytest.sample.event",
-    "ce-source": "<my-test-source>",
-    "ce-specversion": "1.0",
+ce_attributes = {
+    "id": str(uuid4),
+    "type": "com.pytest.sample.event",
+    "source": "<my-test-source>",
+    "specversion": "1.0",
+    "subject": "test-bucket",
 }
 
 
@@ -34,14 +37,11 @@ def client():
     return main.app.test_client()
 
 
-def test_endpoint(client, capsys):
-    test_headers = copy.copy(binary_headers)
-    test_headers["Ce-Subject"] = "test-subject"
+def test_endpoint(client):
+    event = CloudEvent(ce_attributes, dict())
 
-    r = client.post("/", headers=test_headers)
+    headers, body = to_binary(event)
+
+    r = client.post("/", headers=headers, data=body)
     assert r.status_code == 200
-
-    out, _ = capsys.readouterr()
-    assert (
-        f"Detected change in Cloud Storage bucket: {test_headers['Ce-Subject']}" in out
-    )
+    assert "Detected change in Cloud Storage bucket: test-bucket" in r.text
