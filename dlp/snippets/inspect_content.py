@@ -305,7 +305,7 @@ def inspect_table(
 
 
 # [START dlp_inspect_column_values_w_custom_hotwords]
-from typing import Dict, List, Union  # noqa: E402, I100
+from typing import List  # noqa: E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
