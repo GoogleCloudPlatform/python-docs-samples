@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_delete_private_cloud]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -47,3 +48,4 @@ def delete_private_cloud(
     return delete_private_cloud_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"
     )
+# [END vmwareengine_delete_private_cloud]

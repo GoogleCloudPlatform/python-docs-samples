@@ -11,15 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+# [START vmwareengine_list_clusters]
 from typing import Iterable
 
 from google.cloud import vmwareengine_v1
 
 
 def list_clusters(
-    project_id: str, zone: str, private_cloud: str
+    project_id: str, zone: str, private_cloud_name: str
 ) -> Iterable[vmwareengine_v1.Cluster]:
+    """
+    Retrieves a list of cluster in private cloud.
+    
+    Args:
+        project_id: name of the project hosting the private cloud.
+        zone: zone in which the private cloud is located.
+        private_cloud_name: name of the cloud of which you want to list cluster.
+    """
     client = vmwareengine_v1.VmwareEngineClient()
     return client.list_clusters(
-        parent=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}"
+        parent=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud_name}"
     )
+# [END vmwareengine_list_clusters]

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START vmwareengine_delete_legacy_network]
 from google.cloud import vmwareengine_v1
 
 
@@ -31,3 +31,4 @@ def delete_legacy_network(project_id: str, region: str) -> None:
         f"vmwareEngineNetworks/{region}-default"
     ).result(timeout=300)
     return
+# [END vmwareengine_delete_legacy_network]

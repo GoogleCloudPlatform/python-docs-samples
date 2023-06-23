@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START vmwareengine_list_networks]
 from typing import Iterable
 
 from google.cloud import vmwareengine_v1
@@ -23,8 +24,8 @@ def list_networks(
     Retrieves a list of VMWare Engine networks defined in given region.
 
     Args:
-        project_id:
-        region:
+        project_id: name of the project you want to use.
+        region: name of the region for which you want to list networks.
 
     Returns:
         An iterable collection containing the VMWareEngineNetworks.
@@ -34,3 +35,4 @@ def list_networks(
     return client.list_vmware_engine_networks(
         parent=f"projects/{project_id}/locations/{region}"
     )
+# [END vmwareengine_list_networks]

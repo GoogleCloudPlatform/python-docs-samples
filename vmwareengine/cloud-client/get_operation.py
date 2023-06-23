@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START vmwareengine_get_operation]
 from google.cloud import vmwareengine_v1
 from google.longrunning.operations_pb2 import GetOperationRequest
 from google.api_core.operation import Operation
@@ -23,7 +23,8 @@ def get_operation_by_name(operation_name: str) -> Operation:
     Retrieve detailed information about an operation.
 
     Args:
-        operation_name:
+        operation_name: name identifying an operation you want to check.
+            Expected format: projects/{project_id}/locations/{region}/operations/{operation_id}
 
     Returns:
         Operation object with details.
@@ -39,9 +40,9 @@ def get_operation(project_id: str, region: str, operation_id: str) -> Operation:
     Retrieve detailed information about an operation.
 
     Args:
-        project_id:
-        region:
-        operation_id:
+        project_id: name of the project running the operation.
+        region: name of the region in which the operation is running.
+        operation_id: identifier of the operation.
 
     Returns:
         Operation object with details.
@@ -49,3 +50,4 @@ def get_operation(project_id: str, region: str, operation_id: str) -> Operation:
     return get_operation_by_name(
         f"projects/{project_id}/locations/{region}/operations/{operation_id}"
     )
+# [END vmwareengine_get_operation]

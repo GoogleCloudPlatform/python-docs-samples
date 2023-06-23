@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_update_policy]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -41,3 +42,4 @@ def update_network_policy(project_id: str, region: str) -> operation.Operation:
     request.network_policy = network_policy
 
     return client.update_network_policy(request)
+# [END vmwareengine_update_policy]

@@ -12,25 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_get_vcenter_credentials]
 from google.cloud import vmwareengine_v1
 
 
 def get_vcenter_credentials(
-    project_id: str, zone: str, private_cloud: str
+    project_id: str, zone: str, private_cloud_name: str
 ) -> vmwareengine_v1.Credentials:
     """
     Retrieves VCenter credentials for a Private Cloud.
 
     Args:
-        project_id:
-        zone:
-        private_cloud:
+        project_id: name of the project hosting the private cloud.
+        zone: name of the zone hosting the private cloud.
+        private_cloud_name: name of the private cloud.
 
     Returns:
         A Credentials object.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     credentials = client.show_vcenter_credentials(
-        private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud}"
+        private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud_name}"
     )
     return credentials
+# [END vmwareengine_get_vcenter_credentials]

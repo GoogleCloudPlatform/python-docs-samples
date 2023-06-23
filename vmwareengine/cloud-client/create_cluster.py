@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_create_cluster]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -56,3 +57,4 @@ def create_cluster(
     request.cluster.node_type_configs["standard-72"].node_count = node_count
 
     return client.create_cluster(request)
+# [END vmwareengine_create_cluster]

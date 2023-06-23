@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_update_cluster]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -53,3 +54,4 @@ def update_cluster(
     request.cluster.node_type_configs["standard-72"].node_count = node_count
     request.update_mask = "nodeTypeConfigs.*.nodeCount"
     return client.update_cluster(request)
+# [END vmwareengine_update_cluster]

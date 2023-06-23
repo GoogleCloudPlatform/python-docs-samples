@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import uuid
-
+from unittest import mock
 import pytest
 
 import google.auth
@@ -23,28 +23,34 @@ from delete_legacy_network import delete_legacy_network
 from delete_private_cloud import delete_private_cloud_by_full_name
 from list_networks import list_networks
 
-PROJECT = google.auth.default()[1]
-REGION = "asia-northeast1"
 
-
-@pytest.fixture
-def legacy_network():
-    for network in list_networks(PROJECT, REGION):
-        if (
-            network.name
-            == f"projects/{PROJECT}/locations/{REGION}/vmwareEngineNetworks/{REGION}-default"
-        ):
-            yield network
-            # We don't want to delete a network that's already there
-            break
-    else:
-        yield create_legacy_network(PROJECT, REGION)
-        delete_legacy_network(PROJECT, REGION)
-
-
-def test_private_cloud_crud(legacy_network):
+@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+def test_private_cloud_create(mock_client_class):
+    mock_client = mock_client_class.return_value
     cloud_name = "test-cloud-" + uuid.uuid4().hex[:6]
-    cloud = create_private_cloud(
-        PROJECT, f"{REGION}-a", legacy_network.name, cloud_name, "management-cluster"
-    ).result()
-    delete_private_cloud_by_full_name(cloud.name)
+    region = "rege"
+    create_private_cloud(
+        "projekto", "regiono", "networko", cloud_name, "management-cluster"
+    )
+
+    mock_client.create_private_cloud.assert_called_once()
+    assert len(mock_client.create_private_cloud.call_args.args) == 1
+    assert len(mock_client.create_private_cloud.call_args.kwargs) == 0
+    request = mock_client.create_private_cloud.call_args.args[0]
+
+    assert request.private_cloud.management_cluster.cluster_id == "management-cluster"
+    assert request.parent == f"projects/projekto/locations/regiono"
+    assert request.private_cloud.network_config.vmware_engine_network == "networko"
+
+
+@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+def test_delete_cloud_create(mock_client_class):
+    mock_client = mock_client_class.return_value
+
+    delete_private_cloud_by_full_name("the_full_name_of_the_cloud")
+
+    mock_client.delete_private_cloud.assert_called_once()
+    assert len(mock_client.delete_private_cloud.call_args.args) == 1
+    assert len(mock_client.delete_private_cloud.call_args.kwargs) == 0
+    request = mock_client.delete_private_cloud.call_args.args[0]
+    assert request.name == "the_full_name_of_the_cloud"

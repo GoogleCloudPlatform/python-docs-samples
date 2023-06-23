@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_create_private_cloud]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -56,3 +57,4 @@ def create_private_cloud(
     request.private_cloud.network_config.management_cidr = "192.168.0.0/24"
 
     return client.create_private_cloud(request)
+# [END vmwareengine_create_private_cloud]

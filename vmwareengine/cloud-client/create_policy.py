@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_create_policy]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -44,3 +45,4 @@ def create_network_policy(project_id: str, region: str, ip_range: str) -> operat
     request.network_policy_id = f"{region}-default"
 
     return client.create_network_policy(request)
+# [END vmwareengine_create_policy]

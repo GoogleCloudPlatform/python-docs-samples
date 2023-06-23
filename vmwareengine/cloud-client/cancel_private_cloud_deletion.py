@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_cancel_cloud_deletion]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -24,6 +25,9 @@ def cancel_private_cloud_deletion_by_full_name(cloud_name: str) -> operation.Ope
         cloud_name: identifier of the Private Cloud you want to delete.
             Expected format:
             projects/{project_name}/locations/{zone}/privateClouds/{cloud}
+
+    Returns:
+        An Operation object related to canceling cluster deletion operation.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.UndeletePrivateCloudRequest()
@@ -41,7 +45,11 @@ def cancel_private_cloud_deletion(
         project_id: name of the project hosting the private cloud.
         zone: zone in which the private cloud is located in.
         cloud_name: name of the private cloud to be deleted.
+
+    Returns:
+        An Operation object related to canceling cluster deletion operation.
     """
     return cancel_private_cloud_deletion_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"
     )
+# [END vmwareengine_cancel_cloud_deletion]

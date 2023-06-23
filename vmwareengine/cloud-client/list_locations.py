@@ -23,7 +23,7 @@ def list_locations(project_id: str) -> str:
     Prints a list of available locations for use in VMWare Engine.
 
     Args:
-        project_id:
+        project_id: name of the project you want to use.
 
     Returns:
         String containing the list of all available locations.

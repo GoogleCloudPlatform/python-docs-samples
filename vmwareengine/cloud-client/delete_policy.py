@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START vmwareengine_delete_policy]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
@@ -29,3 +30,4 @@ def delete_network_policy(project_id: str, region: str) -> operation.Operation:
     """
     client = vmwareengine_v1.VmwareEngineClient()
     return client.delete_network_policy(name=f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default")
+# [END vmwareengine_delete_policy]
