@@ -34,7 +34,9 @@ def update_network_policy(project_id: str, region: str) -> operation.Operation:
     request = vmwareengine_v1.UpdateNetworkPolicyRequest()
     request.update_mask = "internetAccess.enabled,externalIp.enabled"
     network_policy = vmwareengine_v1.NetworkPolicy()
-    network_policy.name = f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default"
+    network_policy.name = (
+        f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default"
+    )
     network_policy.vmware_engine_network = f"projects/{project_id}/locations/{region}/vmwareEngineNetworks/{region}-default"
     network_policy.internet_access.enabled = False
     network_policy.external_ip.enabled = False
@@ -42,4 +44,6 @@ def update_network_policy(project_id: str, region: str) -> operation.Operation:
     request.network_policy = network_policy
 
     return client.update_network_policy(request)
+
+
 # [END vmwareengine_update_policy]

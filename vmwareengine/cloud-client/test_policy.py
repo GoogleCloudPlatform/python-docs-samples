@@ -21,7 +21,7 @@ from delete_policy import delete_network_policy
 from update_policy import update_network_policy
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_create_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -35,7 +35,7 @@ def test_create_policy(mock_client_class):
     assert request.network_policy.edge_services_cidr == "1.2.3.4/26"
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_delete_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -44,11 +44,11 @@ def test_delete_policy(mock_client_class):
     mock_client.delete_network_policy.assert_called_once()
     assert len(mock_client.delete_network_policy.call_args.args) == 0
     assert len(mock_client.delete_network_policy.call_args.kwargs) == 1
-    name = mock_client.delete_network_policy.call_args.kwargs['name']
+    name = mock_client.delete_network_policy.call_args.kwargs["name"]
     assert name == "projects/projakt/locations/regiom/networkPolicies/regiom-default"
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_update_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -58,4 +58,7 @@ def test_update_policy(mock_client_class):
     assert len(mock_client.update_network_policy.call_args.args) == 1
     request = mock_client.update_network_policy.call_args.args[0]
     assert isinstance(request, vmwareengine_v1.UpdateNetworkPolicyRequest)
-    assert request.network_policy.name == "projects/project/locations/regiono/networkPolicies/regiono-default"
+    assert (
+        request.network_policy.name
+        == "projects/project/locations/regiono/networkPolicies/regiono-default"
+    )

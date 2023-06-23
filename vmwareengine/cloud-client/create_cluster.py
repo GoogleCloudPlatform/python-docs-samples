@@ -57,4 +57,6 @@ def create_cluster(
     request.cluster.node_type_configs["standard-72"].node_count = node_count
 
     return client.create_cluster(request)
+
+
 # [END vmwareengine_create_cluster]

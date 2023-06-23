@@ -17,7 +17,9 @@ from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def create_network_policy(project_id: str, region: str, ip_range: str) -> operation.Operation:
+def create_network_policy(
+    project_id: str, region: str, ip_range: str
+) -> operation.Operation:
     """
     Creates a new network policy in a given network.
 
@@ -45,4 +47,6 @@ def create_network_policy(project_id: str, region: str, ip_range: str) -> operat
     request.network_policy_id = f"{region}-default"
 
     return client.create_network_policy(request)
+
+
 # [END vmwareengine_create_policy]

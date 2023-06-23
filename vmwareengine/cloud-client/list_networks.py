@@ -35,4 +35,6 @@ def list_networks(
     return client.list_vmware_engine_networks(
         parent=f"projects/{project_id}/locations/{region}"
     )
+
+
 # [END vmwareengine_list_networks]

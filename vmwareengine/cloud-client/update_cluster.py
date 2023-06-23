@@ -54,4 +54,6 @@ def update_cluster(
     request.cluster.node_type_configs["standard-72"].node_count = node_count
     request.update_mask = "nodeTypeConfigs.*.nodeCount"
     return client.update_cluster(request)
+
+
 # [END vmwareengine_update_cluster]

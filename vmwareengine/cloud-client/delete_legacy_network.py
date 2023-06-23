@@ -31,4 +31,6 @@ def delete_legacy_network(project_id: str, region: str) -> None:
         f"vmwareEngineNetworks/{region}-default"
     ).result(timeout=300)
     return
+
+
 # [END vmwareengine_delete_legacy_network]

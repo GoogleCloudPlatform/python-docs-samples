@@ -23,7 +23,7 @@ def list_clusters(
 ) -> Iterable[vmwareengine_v1.Cluster]:
     """
     Retrieves a list of cluster in private cloud.
-    
+
     Args:
         project_id: name of the project hosting the private cloud.
         zone: zone in which the private cloud is located.
@@ -33,4 +33,6 @@ def list_clusters(
     return client.list_clusters(
         parent=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud_name}"
     )
+
+
 # [END vmwareengine_list_clusters]

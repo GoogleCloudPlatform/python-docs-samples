@@ -39,4 +39,6 @@ def create_legacy_network(
     request.vmware_engine_network = network
     result = client.create_vmware_engine_network(request, timeout=20 * 60).result()
     return result
+
+
 # [END vmwareengine_create_legacy_network]

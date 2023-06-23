@@ -19,7 +19,6 @@ import google.auth
 from nsx_credentials import get_nsx_credentials
 from vcenter_credentials import get_vcenter_credentials
 
-
 PROJECT = google.auth.default()[1]
 REGION = os.getenv("VMWARE_REGION", "asia-northeast1")
 CLOUD_NAME = os.getenv("VMWARE_PRIVATE_CLOUD", "test-cloud-469e53")

@@ -41,4 +41,6 @@ def delete_cluster(
         f"/clusters/{cluster_name}"
     )
     return client.delete_cluster(request)
+
+
 # [END vmwareengine_delete_cluster]

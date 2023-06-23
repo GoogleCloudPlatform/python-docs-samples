@@ -29,5 +29,9 @@ def delete_network_policy(project_id: str, region: str) -> operation.Operation:
         Operation object. You can use .result() to wait for it to finish.
     """
     client = vmwareengine_v1.VmwareEngineClient()
-    return client.delete_network_policy(name=f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default")
+    return client.delete_network_policy(
+        name=f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default"
+    )
+
+
 # [END vmwareengine_delete_policy]

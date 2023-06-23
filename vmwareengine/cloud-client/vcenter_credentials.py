@@ -35,4 +35,6 @@ def get_vcenter_credentials(
         private_cloud=f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud_name}"
     )
     return credentials
+
+
 # [END vmwareengine_get_vcenter_credentials]

@@ -11,24 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import uuid
 from unittest import mock
-import pytest
+import uuid
 
-import google.auth
-
-from create_legacy_network import create_legacy_network
 from create_private_cloud import create_private_cloud
-from delete_legacy_network import delete_legacy_network
 from delete_private_cloud import delete_private_cloud_by_full_name
-from list_networks import list_networks
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_private_cloud_create(mock_client_class):
     mock_client = mock_client_class.return_value
     cloud_name = "test-cloud-" + uuid.uuid4().hex[:6]
-    region = "rege"
     create_private_cloud(
         "projekto", "regiono", "networko", cloud_name, "management-cluster"
     )
@@ -39,11 +32,11 @@ def test_private_cloud_create(mock_client_class):
     request = mock_client.create_private_cloud.call_args.args[0]
 
     assert request.private_cloud.management_cluster.cluster_id == "management-cluster"
-    assert request.parent == f"projects/projekto/locations/regiono"
+    assert request.parent == "projects/projekto/locations/regiono"
     assert request.private_cloud.network_config.vmware_engine_network == "networko"
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_delete_cloud_create(mock_client_class):
     mock_client = mock_client_class.return_value
 

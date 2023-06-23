@@ -48,4 +48,6 @@ def delete_private_cloud(
     return delete_private_cloud_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"
     )
+
+
 # [END vmwareengine_delete_private_cloud]

@@ -22,39 +22,44 @@ from delete_cluster import delete_cluster
 from update_cluster import update_cluster
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_create_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
 
-    create_cluster('project11', 'zone43', 'my-cloud', 'my-cluuuster', 99)
+    create_cluster("project11", "zone43", "my-cloud", "my-cluuuster", 99)
 
     mock_client.create_cluster.assert_called_once()
     assert len(mock_client.create_cluster.call_args.args) == 1
     assert len(mock_client.create_cluster.call_args.kwargs) == 0
     request = mock_client.create_cluster.call_args.args[0]
     assert isinstance(request, vmwareengine_v1.CreateClusterRequest)
-    assert request.parent == "projects/project11/locations/zone43/privateClouds/my-cloud"
+    assert (
+        request.parent == "projects/project11/locations/zone43/privateClouds/my-cloud"
+    )
     assert request.cluster.name == "my-cluuuster"
     assert request.cluster.node_type_configs["standard-72"].node_count == 99
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_create_custom_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
 
-    create_custom_cluster('project121', 'zone433', 'my_cloud', 'my_cluuuster', 98, 7)
+    create_custom_cluster("project121", "zone433", "my_cloud", "my_cluuuster", 98, 7)
 
     mock_client.create_cluster.assert_called_once()
     assert len(mock_client.create_cluster.call_args.args) == 1
     assert len(mock_client.create_cluster.call_args.kwargs) == 0
     request = mock_client.create_cluster.call_args.args[0]
     assert isinstance(request, vmwareengine_v1.CreateClusterRequest)
-    assert request.parent == "projects/project121/locations/zone433/privateClouds/my_cloud"
+    assert (
+        request.parent == "projects/project121/locations/zone433/privateClouds/my_cloud"
+    )
     assert request.cluster.name == "my_cluuuster"
     assert request.cluster.node_type_configs["standard-72"].node_count == 98
     assert request.cluster.node_type_configs["standard-72"].custom_core_count == 7
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_delete_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -65,10 +70,13 @@ def test_delete_cluster(mock_client_class):
     assert len(mock_client.delete_cluster.call_args.kwargs) == 0
     request = mock_client.delete_cluster.call_args.args[0]
     assert isinstance(request, vmwareengine_v1.DeleteClusterRequest)
-    assert request.name == "projects/projojo/locations/zona-2/privateClouds/my_cloud<3/clusters/the_clusterino"
+    assert (
+        request.name
+        == "projects/projojo/locations/zona-2/privateClouds/my_cloud<3/clusters/the_clusterino"
+    )
 
 
-@mock.patch('google.cloud.vmwareengine_v1.VmwareEngineClient')
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_update_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -79,6 +87,8 @@ def test_update_cluster(mock_client_class):
     assert len(mock_client.update_cluster.call_args.kwargs) == 0
     request = mock_client.update_cluster.call_args.args[0]
     assert isinstance(request, vmwareengine_v1.UpdateClusterRequest)
-    assert request.cluster.name == "projects/projojo/locations/zona-2/privateClouds/my_cloud<3/clusters/the_clusterino"
+    assert (
+        request.cluster.name
+        == "projects/projojo/locations/zona-2/privateClouds/my_cloud<3/clusters/the_clusterino"
+    )
     assert request.cluster.node_type_configs["standard-72"].node_count == 66
-

@@ -61,4 +61,6 @@ def create_custom_cluster(
     request.cluster.node_type_configs["standard-72"].custom_core_count = core_count
 
     return client.create_cluster(request)
+
+
 # [END vmwareengine_create_custom_cluster]

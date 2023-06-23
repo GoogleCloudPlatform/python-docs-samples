@@ -52,4 +52,6 @@ def cancel_private_cloud_deletion(
     return cancel_private_cloud_deletion_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"
     )
+
+
 # [END vmwareengine_cancel_cloud_deletion]
