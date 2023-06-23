@@ -29,7 +29,7 @@ def tuning(
     location: str,
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
-) -> None:
+) -> TextGenerationModel:
     """Tune a new model, based on a prompt-response data.
 
     "training_data" can be either the GCS URI of a file formatted in JSONL format
@@ -56,6 +56,7 @@ def tuning(
     model.tune_model(
         training_data=training_data,
         # Optional:
+        model_display_name="your_tuned_model",
         train_steps=train_steps,
         tuning_job_location="europe-west4",  # Only supported in europe-west4 for Public Preview
         tuned_model_location=location,
