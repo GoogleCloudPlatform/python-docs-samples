@@ -20,22 +20,19 @@ import requests
 app = Flask(__name__)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=["POST"])
 def make_request():
-    url = request.form['url']
+    url = request.form["url"]
     token = id_token.fetch_id_token(reqs.Request(), url)
 
-    resp = requests.get(
-        url,
-        headers={'Authorization': f'Bearer {token}'}
-    )
+    resp = requests.get(url, headers={"Authorization": f"Bearer {token}"})
 
-    message = f'Response when calling {url}:\n\n'
+    message = f"Response when calling {url}:\n\n"
     message += resp.text
 
-    return message, 200, {'Content-type': 'text/plain'}
+    return message, 200, {"Content-type": "text/plain"}

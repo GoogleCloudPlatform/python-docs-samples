@@ -20,12 +20,22 @@ from google.cloud.storage import Bucket
 import posix_to_posix_request
 
 
-@backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,), max_time=60)
+@backoff.on_exception(
+    backoff.expo,
+    (
+        RetryError,
+        ServiceUnavailable,
+    ),
+    max_time=60,
+)
 def test_posix_to_posix_request(
-        capsys, project_id: str, job_description_unique: str,
-        agent_pool_name: str, posix_root_directory: str,
-        intermediate_bucket: Bucket):
-
+    capsys,
+    project_id: str,
+    job_description_unique: str,
+    agent_pool_name: str,
+    posix_root_directory: str,
+    intermediate_bucket: Bucket,
+):
     # The agent pool associated with the POSIX data source.
     # Defaults to 'projects/{project_id}/agentPools/transfer_service_default'
     # source_agent_pool_name = 'projects/my-project/agentPools/my-agent'
@@ -50,7 +60,7 @@ def test_posix_to_posix_request(
         sink_agent_pool_name=agent_pool_name,
         root_directory=posix_root_directory,
         destination_directory=posix_root_directory,
-        intermediate_bucket=intermediate_bucket.name
+        intermediate_bucket=intermediate_bucket.name,
     )
 
     out, _ = capsys.readouterr()

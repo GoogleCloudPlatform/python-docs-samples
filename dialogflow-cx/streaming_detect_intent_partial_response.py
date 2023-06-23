@@ -54,7 +54,6 @@ def streaming_detect_intent_partial_response(
     sample_rate_hertz,
     language_code,
 ):
-
     client_options = None
     if location != "global":
         api_endpoint = f"{location}-dialogflow.googleapis.com:443"

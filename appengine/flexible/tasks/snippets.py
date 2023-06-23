@@ -28,21 +28,14 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
     parent = f"projects/{project}/locations/{location}"
 
     queue_blue = {
-        'name': client.queue_path(project, location, queue_blue_name),
-        'rate_limits': {
-            'max_dispatches_per_second': 5
-        },
-        'app_engine_routing_override': {
-            'version': 'v2',
-            'service': 'task-module'
-        }
+        "name": client.queue_path(project, location, queue_blue_name),
+        "rate_limits": {"max_dispatches_per_second": 5},
+        "app_engine_routing_override": {"version": "v2", "service": "task-module"},
     }
 
     queue_red = {
-        'name': client.queue_path(project, location, queue_red_name),
-        'rate_limits': {
-            'max_dispatches_per_second': 1
-        }
+        "name": client.queue_path(project, location, queue_red_name),
+        "rate_limits": {"max_dispatches_per_second": 1},
     }
 
     queues = [queue_blue, queue_red]
@@ -89,19 +82,17 @@ def create_task(project, location, queue):
     parent = client.queue_path(project, location, queue)
 
     task = {
-        'app_engine_http_request': {
-            'http_method': tasks.HttpMethod.POST,
-            'relative_uri': '/update_counter',
-            'app_engine_routing': {
-                'service': 'worker'
-            },
-            'body': str(amount).encode()
+        "app_engine_http_request": {
+            "http_method": tasks.HttpMethod.POST,
+            "relative_uri": "/update_counter",
+            "app_engine_routing": {"service": "worker"},
+            "body": str(amount).encode(),
         }
     }
 
     response = client.create_task(parent=parent, task=task)
     eta = response.schedule_time.strftime("%m/%d/%Y, %H:%M:%S")
-    print(f'Task {response.name} enqueued, ETA {eta}.')
+    print(f"Task {response.name} enqueued, ETA {eta}.")
     # [END cloud_tasks_taskqueues_new_task]
     return response
 
@@ -109,6 +100,7 @@ def create_task(project, location, queue):
 def create_tasks_with_data(project, location, queue):
     # [START cloud_tasks_taskqueues_passing_data]
     import json
+
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -119,26 +111,20 @@ def create_tasks_with_data(project, location, queue):
     parent = client.queue_path(project, location, queue)
 
     task1 = {
-        'app_engine_http_request': {
-            'http_method': tasks.HttpMethod.POST,
-            'relative_uri': '/update_counter?key=blue',
-            'app_engine_routing': {
-                'service': 'worker'
-            }
+        "app_engine_http_request": {
+            "http_method": tasks.HttpMethod.POST,
+            "relative_uri": "/update_counter?key=blue",
+            "app_engine_routing": {"service": "worker"},
         }
     }
 
     task2 = {
-        'app_engine_http_request': {
-            'http_method': tasks.HttpMethod.POST,
-            'relative_uri': '/update_counter',
-            'app_engine_routing': {
-                'service': 'worker'
-            },
-            'headers': {
-                'Content-Type': 'application/json'
-            },
-            'body': json.dumps({'key': 'blue'}).encode()
+        "app_engine_http_request": {
+            "http_method": tasks.HttpMethod.POST,
+            "relative_uri": "/update_counter",
+            "app_engine_routing": {"service": "worker"},
+            "headers": {"Content-Type": "application/json"},
+            "body": json.dumps({"key": "blue"}).encode(),
         }
     }
 
@@ -163,11 +149,11 @@ def create_task_with_name(project, location, queue, task_name):
     parent = client.queue_path(project, location, queue)
 
     task = {
-        'name': client.task_path(project, location, queue, task_name),
-        'app_engine_http_request': {
-            'http_method': tasks.HttpMethod.GET,
-            'relative_uri': '/url/path'
-        }
+        "name": client.task_path(project, location, queue, task_name),
+        "app_engine_http_request": {
+            "http_method": tasks.HttpMethod.GET,
+            "relative_uri": "/url/path",
+        },
     }
     response = client.create_task(parent=parent, task=task)
     print(response)
@@ -184,7 +170,7 @@ def delete_task(project, location, queue):
     # location = 'us- central1'
     # queue = 'queue1'
 
-    task_path = client.task_path(project, location, queue, 'foo')
+    task_path = client.task_path(project, location, queue, "foo")
     response = client.delete_task(name=task_path)
     # [END cloud_tasks_taskqueues_deleting_tasks]
     return response
@@ -251,17 +237,12 @@ def retry_task(project, location, fooqueue, barqueue, bazqueue):
     parent = f"projects/{project}/locations/{location}"
 
     max_retry = duration_pb2.Duration()
-    max_retry.seconds = 2*60*60*24
+    max_retry.seconds = 2 * 60 * 60 * 24
 
     foo = {
-        'name': client.queue_path(project, location, fooqueue),
-        'rate_limits': {
-            'max_dispatches_per_second': 1
-        },
-        'retry_config': {
-            'max_attempts': 7,
-            'max_retry_duration': max_retry
-        }
+        "name": client.queue_path(project, location, fooqueue),
+        "rate_limits": {"max_dispatches_per_second": 1},
+        "retry_config": {"max_attempts": 7, "max_retry_duration": max_retry},
     }
 
     min = duration_pb2.Duration()
@@ -271,28 +252,16 @@ def retry_task(project, location, fooqueue, barqueue, bazqueue):
     max.seconds = 200
 
     bar = {
-        'name': client.queue_path(project, location, barqueue),
-        'rate_limits': {
-            'max_dispatches_per_second': 1
-        },
-        'retry_config': {
-            'min_backoff': min,
-            'max_backoff': max,
-            'max_doublings': 0
-        }
+        "name": client.queue_path(project, location, barqueue),
+        "rate_limits": {"max_dispatches_per_second": 1},
+        "retry_config": {"min_backoff": min, "max_backoff": max, "max_doublings": 0},
     }
 
     max.seconds = 300
     baz = {
-        'name': client.queue_path(project, location, bazqueue),
-        'rate_limits': {
-            'max_dispatches_per_second': 1
-        },
-        'retry_config': {
-            'min_backoff': min,
-            'max_backoff': max,
-            'max_doublings': 3
-        }
+        "name": client.queue_path(project, location, bazqueue),
+        "rate_limits": {"max_dispatches_per_second": 1},
+        "retry_config": {"min_backoff": min, "max_backoff": max, "max_doublings": 3},
     }
 
     queues = [foo, bar, baz]

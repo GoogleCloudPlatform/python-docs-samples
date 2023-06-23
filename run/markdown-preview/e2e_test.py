@@ -177,7 +177,7 @@ def renderer_service_url_auth_token(renderer_deployed_service):
                 renderer_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=\"value(status.url)\"",
+                '--format="value(status.url)"',
                 "--project",
                 PROJECT,
             ]
@@ -186,11 +186,7 @@ def renderer_service_url_auth_token(renderer_deployed_service):
         .decode()
     )
     renderer_auth_token = (
-        run_shell_command(
-            ["gcloud", "auth", "print-identity-token"]
-        )
-        .strip()
-        .decode()
+        run_shell_command(["gcloud", "auth", "print-identity-token"]).strip().decode()
     )
 
     yield renderer_service_url, renderer_auth_token
@@ -250,7 +246,7 @@ def editor_service_url_auth_token(editor_deployed_service):
                 editor_deployed_service,
                 "--platform=managed",
                 "--region=us-central1",
-                "--format=\"value(status.url)\"",
+                '--format="value(status.url)"',
                 "--project",
                 PROJECT,
             ]
@@ -259,11 +255,7 @@ def editor_service_url_auth_token(editor_deployed_service):
         .decode()
     )
     editor_auth_token = (
-        run_shell_command(
-            ["gcloud", "auth", "print-identity-token"]
-        )
-        .strip()
-        .decode()
+        run_shell_command(["gcloud", "auth", "print-identity-token"]).strip().decode()
     )
 
     yield editor_service_url, editor_auth_token

@@ -18,11 +18,11 @@ from google.appengine.api import search
 
 
 def simple_search(index):
-    index.search('rose water')
+    index.search("rose water")
 
 
 def search_date(index):
-    index.search('1776-07-04')
+    index.search("1776-07-04")
 
 
 def search_terms(index):
@@ -34,35 +34,37 @@ def create_document():
     document = search.Document(
         # Setting the doc_id is optional. If omitted, the search service will
         # create an identifier.
-        doc_id='PA6-5000',
+        doc_id="PA6-5000",
         fields=[
-            search.TextField(name='customer', value='Joe Jackson'),
-            search.HtmlField(
-                name='comment', value='this is <em>marked up</em> text'),
-            search.NumberField(name='number_of_visits', value=7),
-            search.DateField(name='last_visit', value=datetime.now()),
+            search.TextField(name="customer", value="Joe Jackson"),
+            search.HtmlField(name="comment", value="this is <em>marked up</em> text"),
+            search.NumberField(name="number_of_visits", value=7),
+            search.DateField(name="last_visit", value=datetime.now()),
             search.DateField(
-                name='birthday', value=datetime(year=1960, month=6, day=19)),
+                name="birthday", value=datetime(year=1960, month=6, day=19)
+            ),
             search.GeoField(
-                name='home_location', value=search.GeoPoint(37.619, -122.37))
-        ])
+                name="home_location", value=search.GeoPoint(37.619, -122.37)
+            ),
+        ],
+    )
     return document
 
 
 def add_document_to_index(document):
-    index = search.Index('products')
+    index = search.Index("products")
     index.put(document)
 
 
 def add_document_and_get_doc_id(documents):
-    index = search.Index('products')
+    index = search.Index("products")
     results = index.put(documents)
     document_ids = [document.id for document in results]
     return document_ids
 
 
 def get_document_by_id():
-    index = search.Index('products')
+    index = search.Index("products")
 
     # Get a single document by ID.
     document = index.get("AZ125")
@@ -74,8 +76,8 @@ def get_document_by_id():
 
 
 def query_index():
-    index = search.Index('products')
-    query_string = 'product: piano AND price < 5000'
+    index = search.Index("products")
+    query_string = "product: piano AND price < 5000"
 
     results = index.search(query_string)
 
@@ -89,10 +91,7 @@ def delete_all_in_index(index):
     while True:
         # Use ids_only to get the list of document IDs in the index without
         # the overhead of getting the entire document.
-        document_ids = [
-            document.doc_id
-            for document
-            in index.get_range(ids_only=True)]
+        document_ids = [document.doc_id for document in index.get_range(ids_only=True)]
 
         # If no IDs were returned, we've deleted everything.
         if not document_ids:
@@ -103,39 +102,40 @@ def delete_all_in_index(index):
 
 
 def async_query(index):
-    futures = [index.search_async('foo'), index.search_async('bar')]
+    futures = [index.search_async("foo"), index.search_async("bar")]
     results = [future.get_result() for future in futures]
     return results
 
 
 def query_options():
-    index = search.Index('products')
+    index = search.Index("products")
     query_string = "product: piano AND price < 5000"
 
     # Create sort options to sort on price and brand.
     sort_price = search.SortExpression(
-        expression='price',
-        direction=search.SortExpression.DESCENDING,
-        default_value=0)
+        expression="price", direction=search.SortExpression.DESCENDING, default_value=0
+    )
     sort_brand = search.SortExpression(
-        expression='brand',
-        direction=search.SortExpression.DESCENDING,
-        default_value="")
+        expression="brand", direction=search.SortExpression.DESCENDING, default_value=""
+    )
     sort_options = search.SortOptions(expressions=[sort_price, sort_brand])
 
     # Create field expressions to add new fields to the scored documents.
     price_per_note_expression = search.FieldExpression(
-        name='price_per_note', expression='price/88')
+        name="price_per_note", expression="price/88"
+    )
     ivory_expression = search.FieldExpression(
-        name='ivory', expression='snippet("ivory", summary, 120)')
+        name="ivory", expression='snippet("ivory", summary, 120)'
+    )
 
     # Create query options using the sort options and expressions created
     # above.
     query_options = search.QueryOptions(
         limit=25,
-        returned_fields=['model', 'price', 'description'],
+        returned_fields=["model", "price", "description"],
         returned_expressions=[price_per_note_expression, ivory_expression],
-        sort_options=sort_options)
+        sort_options=sort_options,
+    )
 
     # Build the Query and run the search
     query = search.Query(query_string=query_string, options=query_options)
@@ -230,39 +230,46 @@ def saving_and_restoring_cursor(cursor):
 
 def add_faceted_document(index):
     document = search.Document(
-        doc_id='doc1',
-        fields=[
-            search.AtomField(name='name', value='x86')],
+        doc_id="doc1",
+        fields=[search.AtomField(name="name", value="x86")],
         facets=[
-            search.AtomFacet(name='type', value='computer'),
-            search.NumberFacet(name='ram_size_gb', value=8)])
+            search.AtomFacet(name="type", value="computer"),
+            search.NumberFacet(name="ram_size_gb", value=8),
+        ],
+    )
 
     index.put(document)
 
 
 def facet_discovery(index):
     # Create the query and enable facet discovery.
-    query = search.Query('name:x86', enable_facet_discovery=True)
+    query = search.Query("name:x86", enable_facet_discovery=True)
     results = index.search(query)
 
     for facet in results.facets:
-        print('facet {}.'.format(facet.name))
+        print("facet {}.".format(facet.name))
         for value in facet.values:
-            print('{}: count={}, refinement_token={}'.format(
-                value.label, value.count, value.refinement_token))
+            print(
+                "{}: count={}, refinement_token={}".format(
+                    value.label, value.count, value.refinement_token
+                )
+            )
 
 
 def facet_by_name(index):
     # Create the query and specify to only return the "type" and "ram_size_gb"
     # facets.
-    query = search.Query('name:x86', return_facets=['type', 'ram_size_gb'])
+    query = search.Query("name:x86", return_facets=["type", "ram_size_gb"])
     results = index.search(query)
 
     for facet in results.facets:
-        print('facet {}'.format(facet.name))
+        print("facet {}".format(facet.name))
         for value in facet.values:
-            print('{}: count={}, refinement_token={}'.format(
-                value.label, value.count, value.refinement_token))
+            print(
+                "{}: count={}, refinement_token={}".format(
+                    value.label, value.count, value.refinement_token
+                )
+            )
 
 
 def facet_by_name_and_value(index):
@@ -270,18 +277,26 @@ def facet_by_name_and_value(index):
     # "computer" and "printer" and the "ram_size_gb" facet with value in the
     # ranges [0,4), [4, 8), and [8, max].
     query = search.Query(
-        'name:x86',
+        "name:x86",
         return_facets=[
-            search.FacetRequest('type', values=['computer', 'printer']),
-            search.FacetRequest('ram_size_gb', ranges=[
-                search.FacetRange(end=4),
-                search.FacetRange(start=4, end=8),
-                search.FacetRange(start=8)])
-        ])
+            search.FacetRequest("type", values=["computer", "printer"]),
+            search.FacetRequest(
+                "ram_size_gb",
+                ranges=[
+                    search.FacetRange(end=4),
+                    search.FacetRange(start=4, end=8),
+                    search.FacetRange(start=8),
+                ],
+            ),
+        ],
+    )
 
     results = index.search(query)
     for facet in results.facets:
-        print('facet {}'.format(facet.name))
+        print("facet {}".format(facet.name))
         for value in facet.values:
-            print('{}: count={}, refinement_token={}'.format(
-                value.label, value.count, value.refinement_token))
+            print(
+                "{}: count={}, refinement_token={}".format(
+                    value.label, value.count, value.refinement_token
+                )
+            )

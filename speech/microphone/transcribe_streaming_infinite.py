@@ -58,9 +58,9 @@ class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
     def __init__(
-            self: object,
-            rate: int,
-            chunk_size: int,
+        self: object,
+        rate: int,
+        chunk_size: int,
     ) -> None:
         """Creates a resumable microphone stream.
 
@@ -111,10 +111,10 @@ class ResumableMicrophoneStream:
         return self
 
     def __exit__(
-            self: object,
-            type: object,
-            value: object,
-            traceback: object,
+        self: object,
+        type: object,
+        value: object,
+        traceback: object,
     ) -> object:
         """Closes the stream and releases resources.
 
@@ -135,10 +135,10 @@ class ResumableMicrophoneStream:
         self._audio_interface.terminate()
 
     def _fill_buffer(
-            self: object,
-            in_data: object,
-            *args: object,
-            **kwargs: object,
+        self: object,
+        in_data: object,
+        *args: object,
+        **kwargs: object,
     ) -> object:
         """Continuously collect data from the audio stream, into the buffer.
 
@@ -166,11 +166,9 @@ class ResumableMicrophoneStream:
             data = []
 
             if self.new_stream and self.last_audio_input:
-
                 chunk_time = STREAMING_LIMIT / len(self.last_audio_input)
 
                 if chunk_time != 0:
-
                     if self.bridging_offset < 0:
                         self.bridging_offset = 0
 
@@ -216,10 +214,7 @@ class ResumableMicrophoneStream:
             yield b"".join(data)
 
 
-def listen_print_loop(
-        responses: object,
-        stream: object
-) -> object:
+def listen_print_loop(responses: object, stream: object) -> object:
     """Iterates through server responses and prints them.
 
     The responses passed is a generator that will block until a response
@@ -242,7 +237,6 @@ def listen_print_loop(
         The transcript of the result
     """
     for response in responses:
-
         if get_current_time() - stream.start_time > STREAMING_LIMIT:
             stream.start_time = get_current_time()
             break
@@ -277,7 +271,6 @@ def listen_print_loop(
         # line, so subsequent lines will overwrite them.
 
         if result.is_final:
-
             sys.stdout.write(GREEN)
             sys.stdout.write("\033[K")
             sys.stdout.write(str(corrected_time) + ": " + transcript + "\n")
@@ -324,7 +317,6 @@ def main() -> None:
     sys.stdout.write("=====================================================\n")
 
     with mic_manager as stream:
-
         while not stream.closed:
             sys.stdout.write(YELLOW)
             sys.stdout.write(
@@ -358,7 +350,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-
     main()
 
 # [END speech_transcribe_infinite_streaming]

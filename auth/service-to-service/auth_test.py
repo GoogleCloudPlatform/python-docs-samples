@@ -27,80 +27,103 @@ import pytest
 def services():
     # Unique suffix to create distinct service names
     suffix = uuid.uuid4().hex
-    project = os.environ['GOOGLE_CLOUD_PROJECT']
+    project = os.environ["GOOGLE_CLOUD_PROJECT"]
 
     # Deploy hello-world Cloud Run Service from
     # https://github.com/GoogleCloudPlatform/cloud-run-hello
     subprocess.run(
         [
-            "gcloud", "run", "deploy", f"helloworld-{suffix}",
-            "--project", project,
+            "gcloud",
+            "run",
+            "deploy",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
             "--image=gcr.io/cloudrun/hello",
             "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
             "--quiet",
-        ], check=True
+        ],
+        check=True,
     )
 
     # Get the URL for the hello-world service
     endpoint = subprocess.run(
         [
-            "gcloud", "run", "services", "describe", f"helloworld-{suffix}",
-            "--project", project,
+            "gcloud",
+            "run",
+            "services",
+            "describe",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
             "--platform=managed",
             "--region=us-central1",
             "--format=value(status.url)",
         ],
         stdout=subprocess.PIPE,
-        check=True
+        check=True,
     ).stdout.strip()
 
     # Deploy function for service-to-service authentication
     subprocess.run(
         [
-            "gcloud", "functions", "deploy", f"helloworld-{suffix}",
-            "--project", project,
+            "gcloud",
+            "functions",
+            "deploy",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
             "--runtime=python38",
             "--region=us-central1",
             "--trigger-http",
             "--no-allow-unauthenticated",
             "--entry-point=get_authorized",
-            f"--set-env-vars=URL={endpoint.decode()}"
+            f"--set-env-vars=URL={endpoint.decode()}",
         ],
-        check=True
-        )
+        check=True,
+    )
 
     function_url = (
-        f"https://us-central1-{project}.cloudfunctions.net/helloworld-{suffix}")
+        f"https://us-central1-{project}.cloudfunctions.net/helloworld-{suffix}"
+    )
 
     token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE,
-        check=True
+        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
     ).stdout.strip()
 
     yield function_url, token
 
     subprocess.run(
         [
-            "gcloud", "run", "services", "delete", f"helloworld-{suffix}",
-            "--project", project,
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
             "--async",
             "--platform=managed",
             "--region=us-central1",
             "--quiet",
-         ],
-        check=True
+        ],
+        check=True,
     )
 
     subprocess.run(
         [
-            "gcloud", "functions", "delete", f"helloworld-{suffix}",
-            "--project", project,
+            "gcloud",
+            "functions",
+            "delete",
+            f"helloworld-{suffix}",
+            "--project",
+            project,
             "--region=us-central1",
             "--quiet",
-         ],
-        check=True
+        ],
+        check=True,
     )
 
 

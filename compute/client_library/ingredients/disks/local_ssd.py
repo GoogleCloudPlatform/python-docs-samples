@@ -38,4 +38,6 @@ def local_ssd_disk(zone: str) -> compute_v1.AttachedDisk():
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     return disk
+
+
 # </INGREDIENT>

@@ -25,7 +25,7 @@ import create_client_apiary
 
 @pytest.fixture()
 def job_filter(project_id: str):
-    yield json.dumps({'project_id': project_id})
+    yield json.dumps({"project_id": project_id})
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
@@ -35,7 +35,7 @@ def test_create_client(job_filter: str):
     # a simple test to prove a usable client has been created.
     # The output isn't relevant - just that a valid API call can be made.
     # We expect an error to be raised if this operation fails.
-    client.list_transfer_jobs({'filter': job_filter, 'page_size': 1})
+    client.list_transfer_jobs({"filter": job_filter, "page_size": 1})
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
@@ -45,6 +45,4 @@ def test_create_client_apiary(job_filter: str):
     # a simple test to prove a usable client has been created.
     # The output isn't relevant - just that a valid API call can be made.
     # We expect an error to be raised if this operation fails.
-    client.transferJobs().list(
-        filter=job_filter,
-        pageSize=1).execute()
+    client.transferJobs().list(filter=job_filter, pageSize=1).execute()

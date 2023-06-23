@@ -38,7 +38,6 @@ def translate_from_file(file_path="path/to/your/file"):
     )
 
     def request_generator(config, audio_file_path):
-
         # The first request contains the configuration.
         # Note that audio_content is explicitly set to None.
         yield mediatranslation.StreamingTranslateSpeechRequest(streaming_config=config)

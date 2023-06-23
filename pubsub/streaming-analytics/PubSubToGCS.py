@@ -18,7 +18,16 @@ from datetime import datetime
 import logging
 import random
 
-from apache_beam import DoFn, GroupByKey, io, ParDo, Pipeline, PTransform, WindowInto, WithKeys
+from apache_beam import (
+    DoFn,
+    GroupByKey,
+    io,
+    ParDo,
+    Pipeline,
+    PTransform,
+    WindowInto,
+    WithKeys,
+)
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.transforms.window import FixedWindows
 

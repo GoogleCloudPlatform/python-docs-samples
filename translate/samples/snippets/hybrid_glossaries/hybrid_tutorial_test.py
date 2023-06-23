@@ -16,9 +16,9 @@ import os
 import sys
 import uuid
 
-import pytest # noqa: I100
+import pytest  # noqa: I100
 
-import hybrid_tutorial
+import hybrid_tutorial  # noqa: I100
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -46,7 +46,9 @@ def test_create_and_delete_glossary() -> None:
     glossary_uri = "gs://cloud-samples-data/translation/bistro_glossary.csv"
 
     # create_glossary will raise an exception if creation fails
-    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(
+        languages, PROJECT_ID, glossary_name, glossary_uri
+    )
 
     # Delete glossary so that future tests will pass
     # delete_glossary will raise an exception if deletion fails
@@ -61,22 +63,24 @@ def test_create_and_delete_glossary() -> None:
 
 
 def test_translate_standard() -> None:
-
     expected_text = "Good morning"
 
     # attempt to create glossary, fails if it already exists
     languages = ["fr", "en"]
     glossary_name = "bistro-glossary"
     glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
-    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(
+        languages, PROJECT_ID, glossary_name, glossary_uri
+    )
 
-    text = hybrid_tutorial.translate_text("Bonjour", "fr", "en", PROJECT_ID, created_glossary_name)
+    text = hybrid_tutorial.translate_text(
+        "Bonjour", "fr", "en", PROJECT_ID, created_glossary_name
+    )
 
     assert text == expected_text
 
 
 def test_translate_glossary() -> None:
-
     expected_text = "I eat goat cheese"
     input_text = "Je mange du chevre"
 
@@ -84,9 +88,13 @@ def test_translate_glossary() -> None:
     languages = ["fr", "en"]
     glossary_name = "bistro-glossary"
     glossary_uri = f"gs://cloud-samples-data/translation/{glossary_name}.csv"
-    created_glossary_name = hybrid_tutorial.create_glossary(languages, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = hybrid_tutorial.create_glossary(
+        languages, PROJECT_ID, glossary_name, glossary_uri
+    )
 
-    text = hybrid_tutorial.translate_text(input_text, "fr", "en", PROJECT_ID, created_glossary_name)
+    text = hybrid_tutorial.translate_text(
+        input_text, "fr", "en", PROJECT_ID, created_glossary_name
+    )
 
     assert text == expected_text
 

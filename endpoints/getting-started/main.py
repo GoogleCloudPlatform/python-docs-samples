@@ -36,45 +36,47 @@ def _base64_decode(encoded_str):
     # Add paddings manually if necessary.
     num_missed_paddings = 4 - len(encoded_str) % 4
     if num_missed_paddings != 4:
-        encoded_str += b'=' * num_missed_paddings
-    return base64.b64decode(encoded_str).decode('utf-8')
+        encoded_str += b"=" * num_missed_paddings
+    return base64.b64decode(encoded_str).decode("utf-8")
 
 
-@app.route('/echo', methods=['POST'])
+@app.route("/echo", methods=["POST"])
 def echo():
     """Simple echo service."""
-    message = request.get_json().get('message', '')
-    return jsonify({'message': message})
+    message = request.get_json().get("message", "")
+    return jsonify({"message": message})
 
 
 # [START endpoints_auth_info_backend]
 def auth_info():
     """Retrieves the authenication information from Google Cloud Endpoints."""
-    encoded_info = request.headers.get('X-Endpoint-API-UserInfo', None)
+    encoded_info = request.headers.get("X-Endpoint-API-UserInfo", None)
 
     if encoded_info:
         info_json = _base64_decode(encoded_info)
         user_info = json.loads(info_json)
     else:
-        user_info = {'id': 'anonymous'}
+        user_info = {"id": "anonymous"}
 
     return jsonify(user_info)
+
+
 # [END endpoints_auth_info_backend]
 
 
-@app.route('/auth/info/googlejwt', methods=['GET'])
+@app.route("/auth/info/googlejwt", methods=["GET"])
 def auth_info_google_jwt():
     """Auth info with Google signed JWT."""
     return auth_info()
 
 
-@app.route('/auth/info/googleidtoken', methods=['GET'])
+@app.route("/auth/info/googleidtoken", methods=["GET"])
 def auth_info_google_id_token():
     """Auth info with Google ID token."""
     return auth_info()
 
 
-@app.route('/auth/info/firebase', methods=['GET'])
+@app.route("/auth/info/firebase", methods=["GET"])
 @cross_origin(send_wildcard=True)
 def auth_info_firebase():
     """Auth info with Firebase auth."""
@@ -84,15 +86,15 @@ def auth_info_firebase():
 @app.errorhandler(http_client.INTERNAL_SERVER_ERROR)
 def unexpected_error(e):
     """Handle exceptions by returning swagger-compliant json."""
-    logging.exception('An error occured while processing the request.')
-    response = jsonify({
-        'code': http_client.INTERNAL_SERVER_ERROR,
-        'message': f'Exception: {e}'})
+    logging.exception("An error occured while processing the request.")
+    response = jsonify(
+        {"code": http_client.INTERNAL_SERVER_ERROR, "message": f"Exception: {e}"}
+    )
     response.status_code = http_client.INTERNAL_SERVER_ERROR
     return response
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

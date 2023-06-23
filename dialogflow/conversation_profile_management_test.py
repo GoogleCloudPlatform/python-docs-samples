@@ -33,7 +33,9 @@ CONVERSATION_PROFILE_NAME = f"conversationProfiles/{CONVERSATION_PROFILE_DISPLAY
 def mock_conversation():
     yield mock.MagicMock(
         return_value=test_utils.create_mock_conversation(
-            CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME))
+            CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME
+        )
+    )
 
 
 @pytest.fixture(scope="function")
@@ -41,7 +43,10 @@ def mock_conversation_list():
     yield mock.MagicMock(
         return_value=[
             test_utils.create_mock_conversation(
-                CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME)])
+                CONVERSATION_PROFILE_DISPLAY_NAME, CONVERSATION_PROFILE_NAME
+            )
+        ]
+    )
 
 
 def test_create_conversation_profile(capsys, mock_conversation, mock_conversation_list):

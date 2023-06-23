@@ -21,14 +21,14 @@ def test_index():
     main.app.testing = True
     client = main.app.test_client()
 
-    if os.environ.get('CLOUD_STORAGE_BUCKET') is None:
-        os.environ['CLOUD_STORAGE_BUCKET'] = "python-docs-samples-tests-public"
-    os.environ['BLOB_NAME'] = 'storage-migration-test-blob-{}'.format(uuid.uuid4().hex)
+    if os.environ.get("CLOUD_STORAGE_BUCKET") is None:
+        os.environ["CLOUD_STORAGE_BUCKET"] = "python-docs-samples-tests-public"
+    os.environ["BLOB_NAME"] = "storage-migration-test-blob-{}".format(uuid.uuid4().hex)
 
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
-    assert 'Downloaded text matches uploaded text' in r.data.decode('utf-8')
+    assert "Downloaded text matches uploaded text" in r.data.decode("utf-8")
 
-    blob_name = os.environ['BLOB_NAME']
+    blob_name = os.environ["BLOB_NAME"]
 
-    assert 'Blob {} deleted.'.format(blob_name) in r.data.decode('utf-8')
+    assert "Blob {} deleted.".format(blob_name) in r.data.decode("utf-8")

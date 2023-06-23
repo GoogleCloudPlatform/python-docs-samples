@@ -412,11 +412,11 @@ def inspect_string_custom_omit_overlap(project: str, content_string: str) -> Non
 
 # [END dlp_inspect_string_custom_omit_overlap]
 
-# [START dlp_omit_name_if_also_email]
+# [START dlp_inspect_string_omit_overlap]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def omit_name_if_also_email(
+def inspect_string_omit_overlap(
     project: str,
     content_string: str,
 ) -> None:
@@ -486,7 +486,7 @@ def omit_name_if_also_email(
         print("No findings.")
 
 
-# [END dlp_omit_name_if_also_email]
+# [END dlp_inspect_string_omit_overlap]
 
 
 # [START dlp_inspect_string_without_overlap]
@@ -574,25 +574,22 @@ def inspect_string_without_overlap(project: str, content_string: str) -> None:
 # [END dlp_inspect_string_without_overlap]
 
 
-# [START dlp_inspect_with_person_name_w_custom_hotword]
+# [START dlp_inspect_string_custom_hotword]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def inspect_with_person_name_w_custom_hotword(
+def inspect_string_w_custom_hotword(
     project: str, content_string: str, custom_hotword: str = "patient"
 ) -> None:
     """Uses the Data Loss Prevention API increase likelihood for matches on
-       PERSON_NAME if the user specified custom hotword is present. Only
+       PERSON_NAME if the user specified custom hot-word is present. Only
        includes findings with the increased likelihood by setting a minimum
        likelihood threshold of VERY_LIKELY.
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
         content_string: The string to inspect.
-        custom_hotword: The custom hotword used for likelihood boosting.
-
-    Returns:
-        None; the response from the API is printed to the terminal.
+        custom_hotword: The custom hot-word used for likelihood boosting.
     """
 
     # Instantiate a client.
@@ -644,7 +641,7 @@ def inspect_with_person_name_w_custom_hotword(
         print("No findings.")
 
 
-# [END dlp_inspect_with_person_name_w_custom_hotword]
+# [END dlp_inspect_string_custom_hotword]
 
 
 # [START dlp_inspect_string_multiple_rules]
@@ -736,11 +733,11 @@ def inspect_string_multiple_rules(project: str, content_string: str) -> None:
 # [END dlp_inspect_string_multiple_rules]
 
 
-# [START dlp_inspect_with_medical_record_number_custom_regex_detector]
+# [START dlp_inspect_custom_regex]
 import google.cloud.dlp  # noqa: E402, F811
 
 
-def inspect_with_medical_record_number_custom_regex_detector(
+def inspect_data_with_custom_regex_detector(
     project: str,
     content_string: str,
 ) -> None:
@@ -796,14 +793,14 @@ def inspect_with_medical_record_number_custom_regex_detector(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_custom_regex_detector]
+# [END dlp_inspect_custom_regex]
 
 
-# [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
+# [START dlp_inspect_hotword_rule]
 import google.cloud.dlp  # noqa: F811, E402
 
 
-def inspect_with_medical_record_number_w_custom_hotwords(
+def inspect_data_w_custom_hotwords(
     project: str,
     content_string: str,
 ) -> None:
@@ -876,4 +873,4 @@ def inspect_with_medical_record_number_w_custom_hotwords(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_w_custom_hotwords]
+# [END dlp_inspect_hotword_rule]

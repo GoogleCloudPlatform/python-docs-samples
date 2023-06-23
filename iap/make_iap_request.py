@@ -20,7 +20,7 @@ from google.oauth2 import id_token
 import requests
 
 
-def make_iap_request(url, client_id, method='GET', **kwargs):
+def make_iap_request(url, client_id, method="GET", **kwargs):
     """Makes a request to an application protected by Identity-Aware Proxy.
 
     Args:
@@ -36,8 +36,8 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
       The page body, or raises an exception if the page couldn't be retrieved.
     """
     # Set the default timeout, if missing
-    if 'timeout' not in kwargs:
-        kwargs['timeout'] = 90
+    if "timeout" not in kwargs:
+        kwargs["timeout"] = 90
 
     # Obtain an OpenID Connect (OIDC) token from metadata server or using service
     # account.
@@ -47,17 +47,24 @@ def make_iap_request(url, client_id, method='GET', **kwargs):
     # Authorization header containing "Bearer " followed by a
     # Google-issued OpenID Connect token for the service account.
     resp = requests.request(
-        method, url,
-        headers={'Authorization': 'Bearer {}'.format(
-            open_id_connect_token)}, **kwargs)
+        method,
+        url,
+        headers={"Authorization": "Bearer {}".format(open_id_connect_token)},
+        **kwargs
+    )
     if resp.status_code == 403:
-        raise Exception('Service account does not have permission to '
-                        'access the IAP-protected application.')
+        raise Exception(
+            "Service account does not have permission to "
+            "access the IAP-protected application."
+        )
     elif resp.status_code != 200:
         raise Exception(
-            'Bad response from application: {!r} / {!r} / {!r}'.format(
-                resp.status_code, resp.headers, resp.text))
+            "Bad response from application: {!r} / {!r} / {!r}".format(
+                resp.status_code, resp.headers, resp.text
+            )
+        )
     else:
         return resp.text
+
 
 # [END iap_make_request]

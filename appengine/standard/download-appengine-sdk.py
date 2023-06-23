@@ -31,11 +31,10 @@ elif sys.version_info[0] == 3:
 
 
 SDK_RELEASES_URL = (
-    'https://www.googleapis.com/storage/v1/b/appengine-sdks/o?prefix=featured')
-PYTHON_RELEASE_RE = re.compile(
-    r'featured/google_appengine_(\d+?)\.(\d+?)\.(\d+?)\.zip')
-SDK_RELEASE_RE = re.compile(
-    r'release: \"(\d+?)\.(\d+?)\.(\d+?)\"')
+    "https://www.googleapis.com/storage/v1/b/appengine-sdks/o?prefix=featured"
+)
+PYTHON_RELEASE_RE = re.compile(r"featured/google_appengine_(\d+?)\.(\d+?)\.(\d+?)\.zip")
+SDK_RELEASE_RE = re.compile(r"release: \"(\d+?)\.(\d+?)\.(\d+?)\"")
 
 
 def get_gae_versions():
@@ -44,7 +43,7 @@ def get_gae_versions():
     r = requests.get(SDK_RELEASES_URL)
     r.raise_for_status()
 
-    releases = r.json().get('items', {})
+    releases = r.json().get("items", {})
 
     # We only care about the Python releases, which all are in the format
     # "featured/google_appengine_{version}.zip". We'll extract the version
@@ -52,13 +51,14 @@ def get_gae_versions():
     # URL.
     versions_and_urls = []
     for release in releases:
-        match = PYTHON_RELEASE_RE.match(release['name'])
+        match = PYTHON_RELEASE_RE.match(release["name"])
 
         if not match:
             continue
 
         versions_and_urls.append(
-            ([int(x) for x in match.groups()], release['mediaLink']))
+            ([int(x) for x in match.groups()], release["mediaLink"])
+        )
 
     return sorted(versions_and_urls, key=lambda x: x[0])
 
@@ -66,19 +66,18 @@ def get_gae_versions():
 def is_existing_up_to_date(destination, latest_version):
     """Returns False if there is no existing install or if the existing install
     is out of date. Otherwise, returns True."""
-    version_path = os.path.join(
-        destination, 'google_appengine', 'VERSION')
+    version_path = os.path.join(destination, "google_appengine", "VERSION")
 
     if not os.path.exists(version_path):
         return False
 
-    with open(version_path, 'r') as f:
+    with open(version_path, "r") as f:
         version_line = f.readline()
 
         match = SDK_RELEASE_RE.match(version_line)
 
         if not match:
-            print('Unable to parse version from:', version_line)
+            print("Unable to parse version from:", version_line)
             return False
 
         version = [int(x) for x in match.groups()]
@@ -105,17 +104,16 @@ def extract_zip(zip, destination):
 def fixup_version(destination, version):
     """Newer releases of the SDK do not have the version number set correctly
     in the VERSION file. Fix it up."""
-    version_path = os.path.join(
-        destination, 'google_appengine', 'VERSION')
+    version_path = os.path.join(destination, "google_appengine", "VERSION")
 
-    with open(version_path, 'r') as f:
+    with open(version_path, "r") as f:
         version_data = f.read()
 
     version_data = version_data.replace(
-        'release: "0.0.0"',
-        'release: "{}"'.format('.'.join(str(x) for x in version)))
+        'release: "0.0.0"', 'release: "{}"'.format(".".join(str(x) for x in version))
+    )
 
-    with open(version_path, 'w') as f:
+    with open(version_path, "w") as f:
         f.write(version_data)
 
 
@@ -130,32 +128,36 @@ def download_command(destination):
     for version in latest_two_versions:
         if is_existing_up_to_date(destination, version[0]):
             print(
-                'App Engine SDK already exists and is up to date '
-                'at {}.'.format(destination))
+                "App Engine SDK already exists and is up to date "
+                "at {}.".format(destination)
+            )
             return
 
         try:
-            print('Downloading App Engine SDK {}'.format(
-                '.'.join([str(x) for x in version[0]])))
+            print(
+                "Downloading App Engine SDK {}".format(
+                    ".".join([str(x) for x in version[0]])
+                )
+            )
             zip = download_sdk(version[1])
             version_number = version[0]
             break
         except Exception as e:
-            print('Failed to download: {}'.format(e))
+            print("Failed to download: {}".format(e))
             continue
 
     if not zip:
         return
 
-    print('Extracting SDK to {}'.format(destination))
+    print("Extracting SDK to {}".format(destination))
 
     extract_zip(zip, destination)
     fixup_version(destination, version_number)
 
-    print('App Engine SDK installed.')
+    print("App Engine SDK installed.")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("download-appengine-sdk.py dest")
         sys.exit(1)

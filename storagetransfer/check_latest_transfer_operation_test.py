@@ -32,23 +32,18 @@ def transfer_job(project_id: str, source_bucket: Bucket, destination_bucket: Buc
         "status": "ENABLED",
         "project_id": project_id,
         "schedule": {
-            "schedule_start_date": {
-                "day": 1, "month": 1, "year": 2000},
-            "start_time_of_day": {
-                "hours": 0, "minutes": 0, "seconds": 0},
+            "schedule_start_date": {"day": 1, "month": 1, "year": 2000},
+            "start_time_of_day": {"hours": 0, "minutes": 0, "seconds": 0},
         },
         "transfer_spec": {
-            "gcs_data_source": {
-                "bucket_name": source_bucket.name},
-            "gcs_data_sink": {
-                "bucket_name": destination_bucket.name},
+            "gcs_data_source": {"bucket_name": source_bucket.name},
+            "gcs_data_sink": {"bucket_name": destination_bucket.name},
             "object_conditions": {
-                'min_time_elapsed_since_last_modification': Duration(
+                "min_time_elapsed_since_last_modification": Duration(
                     seconds=2592000  # 30 days
                 )
             },
-            "transfer_options": {
-                "delete_objects_from_source_after_transfer": True},
+            "transfer_options": {"delete_objects_from_source_after_transfer": True},
         },
     }
 
@@ -76,8 +71,7 @@ def transfer_job(project_id: str, source_bucket: Bucket, destination_bucket: Buc
 
 
 @backoff.on_exception(backoff.expo, (RetryError,), max_time=60)
-def test_latest_transfer_operation(
-        capsys, project_id: str, transfer_job: str):
+def test_latest_transfer_operation(capsys, project_id: str, transfer_job: str):
     check_latest_transfer_operation.check_latest_transfer_operation(
         project_id, transfer_job
     )
@@ -88,8 +82,7 @@ def test_latest_transfer_operation(
 
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
-def test_latest_transfer_operation_apiary(
-        capsys, project_id: str, transfer_job: str):
+def test_latest_transfer_operation_apiary(capsys, project_id: str, transfer_job: str):
     check_latest_transfer_operation_apiary.check_latest_transfer_operation(
         project_id, transfer_job
     )

@@ -28,28 +28,28 @@ class Response(messages.Message):
 
 
 # [START endpoints_multiclass]
-api_collection = endpoints.api(name='library', version='v1.0')
+api_collection = endpoints.api(name="library", version="v1.0")
 
 
-@api_collection.api_class(resource_name='shelves')
+@api_collection.api_class(resource_name="shelves")
 class Shelves(remote.Service):
-
     @endpoints.method(Request, Response)
     def list(self, request):
         return Response()
 
 
 # [START endpoints_books]
-@api_collection.api_class(resource_name='books', path='books')
+@api_collection.api_class(resource_name="books", path="books")
 class Books(remote.Service):
-
-    @endpoints.method(Request, Response, path='bookmark')
+    @endpoints.method(Request, Response, path="bookmark")
     def get_bookmark(self, request):
         return Response()
 
     @endpoints.method(Request, Response)
     def best_sellers_list(self, request):
         return Response()
+
+
 # [END endpoints_books]
 # [END endpoints_multiclass]
 

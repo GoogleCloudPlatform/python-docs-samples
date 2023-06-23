@@ -40,6 +40,8 @@ def detect_language(text: str) -> dict:
     print("Language: {}".format(result["language"]))
 
     return result
+
+
 # [END translate_detect_language]
 
 
@@ -56,6 +58,8 @@ def list_languages() -> dict:
         print("{name} ({language})".format(**language))
 
     return results
+
+
 # [END translate_list_codes]
 
 
@@ -76,15 +80,13 @@ def list_languages_with_target(target: str) -> dict:
         print("{name} ({language})".format(**language))
 
     return results
+
+
 # [END translate_list_language_names]
 
 
 # [START translate_text_with_model]
-def translate_text_with_model(
-        target: str,
-        text: str,
-        model: str = "nmt"
-) -> dict:
+def translate_text_with_model(target: str, text: str, model: str = "nmt") -> dict:
     """Translates text into the target language.
 
     Make sure your project is allowlisted.
@@ -108,6 +110,8 @@ def translate_text_with_model(
     print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
     return result
+
+
 # [END translate_text_with_model]
 
 
@@ -134,6 +138,8 @@ def translate_text(target: str, text: str) -> dict:
     print("Detected source language: {}".format(result["detectedSourceLanguage"]))
 
     return result
+
+
 # [END translate_translate_text]
 
 

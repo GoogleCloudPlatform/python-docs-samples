@@ -21,4 +21,3 @@
 # <INGREDIENT create_kms_encrypted_disk />
 
 # </REGION compute_create_kms_encrypted_disk>
-

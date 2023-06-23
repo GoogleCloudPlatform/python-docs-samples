@@ -36,8 +36,7 @@ from google.cloud import vision
 
 
 # [START vision_product_search_create_product_set]
-def create_product_set(
-        project_id, location, product_set_id, product_set_display_name):
+def create_product_set(project_id, location, product_set_id, product_set_display_name):
     """Create a product set.
     Args:
         project_id: Id of the project.
@@ -51,17 +50,17 @@ def create_product_set(
     location_path = f"projects/{project_id}/locations/{location}"
 
     # Create a product set with the product set specification in the region.
-    product_set = vision.ProductSet(
-            display_name=product_set_display_name)
+    product_set = vision.ProductSet(display_name=product_set_display_name)
 
     # The response is the product set with `name` populated.
     response = client.create_product_set(
-        parent=location_path,
-        product_set=product_set,
-        product_set_id=product_set_id)
+        parent=location_path, product_set=product_set, product_set_id=product_set_id
+    )
 
     # Display the product set information.
-    print(f'Product set name: {response.name}')
+    print(f"Product set name: {response.name}")
+
+
 # [END vision_product_search_create_product_set]
 
 
@@ -82,11 +81,13 @@ def list_product_sets(project_id, location):
 
     # Display the product set information.
     for product_set in product_sets:
-        print(f'Product set name: {product_set.name}')
-        print('Product set id: {}'.format(product_set.name.split('/')[-1]))
-        print(f'Product set display name: {product_set.display_name}')
-        print('Product set index time: ')
+        print(f"Product set name: {product_set.name}")
+        print("Product set id: {}".format(product_set.name.split("/")[-1]))
+        print(f"Product set display name: {product_set.display_name}")
+        print("Product set index time: ")
         print(product_set.index_time)
+
+
 # [END vision_product_search_list_product_sets]
 
 
@@ -102,18 +103,20 @@ def get_product_set(project_id, location, product_set_id):
 
     # Get the full path of the product set.
     product_set_path = client.product_set_path(
-        project=project_id, location=location,
-        product_set=product_set_id)
+        project=project_id, location=location, product_set=product_set_id
+    )
 
     # Get complete detail of the product set.
     product_set = client.get_product_set(name=product_set_path)
 
     # Display the product set information.
-    print(f'Product set name: {product_set.name}')
-    print('Product set id: {}'.format(product_set.name.split('/')[-1]))
-    print(f'Product set display name: {product_set.display_name}')
-    print('Product set index time: ')
+    print(f"Product set name: {product_set.name}")
+    print("Product set id: {}".format(product_set.name.split("/")[-1]))
+    print(f"Product set display name: {product_set.display_name}")
+    print("Product set index time: ")
     print(product_set.index_time)
+
+
 # [END vision_product_search_get_product_set]
 
 
@@ -129,55 +132,57 @@ def delete_product_set(project_id, location, product_set_id):
 
     # Get the full path of the product set.
     product_set_path = client.product_set_path(
-        project=project_id, location=location,
-        product_set=product_set_id)
+        project=project_id, location=location, product_set=product_set_id
+    )
 
     # Delete the product set.
     client.delete_product_set(name=product_set_path)
-    print('Product set deleted.')
+    print("Product set deleted.")
+
+
 # [END vision_product_search_delete_product_set]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter)
-    subparsers = parser.add_subparsers(dest='command')
-    parser.add_argument(
-        '--project_id',
-        help='Project id.  Required',
-        required=True)
-    parser.add_argument(
-        '--location',
-        help='Compute region name',
-        default='us-west1')
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    subparsers = parser.add_subparsers(dest="command")
+    parser.add_argument("--project_id", help="Project id.  Required", required=True)
+    parser.add_argument("--location", help="Compute region name", default="us-west1")
 
     create_product_set_parser = subparsers.add_parser(
-        'create_product_set', help=create_product_set.__doc__)
-    create_product_set_parser.add_argument('product_set_id')
-    create_product_set_parser.add_argument('product_set_display_name')
+        "create_product_set", help=create_product_set.__doc__
+    )
+    create_product_set_parser.add_argument("product_set_id")
+    create_product_set_parser.add_argument("product_set_display_name")
 
     list_product_sets_parser = subparsers.add_parser(
-        'list_product_sets', help=list_product_sets.__doc__)
+        "list_product_sets", help=list_product_sets.__doc__
+    )
 
     get_product_set_parser = subparsers.add_parser(
-        'get_product_set', help=get_product_set.__doc__)
-    get_product_set_parser.add_argument('product_set_id')
+        "get_product_set", help=get_product_set.__doc__
+    )
+    get_product_set_parser.add_argument("product_set_id")
 
     delete_product_set_parser = subparsers.add_parser(
-        'delete_product_set', help=delete_product_set.__doc__)
-    delete_product_set_parser.add_argument('product_set_id')
+        "delete_product_set", help=delete_product_set.__doc__
+    )
+    delete_product_set_parser.add_argument("product_set_id")
 
     args = parser.parse_args()
 
-    if args.command == 'create_product_set':
+    if args.command == "create_product_set":
         create_product_set(
-            args.project_id, args.location, args.product_set_id,
-            args.product_set_display_name)
-    elif args.command == 'list_product_sets':
+            args.project_id,
+            args.location,
+            args.product_set_id,
+            args.product_set_display_name,
+        )
+    elif args.command == "list_product_sets":
         list_product_sets(args.project_id, args.location)
-    elif args.command == 'get_product_set':
+    elif args.command == "get_product_set":
         get_product_set(args.project_id, args.location, args.product_set_id)
-    elif args.command == 'delete_product_set':
-        delete_product_set(
-            args.project_id, args.location, args.product_set_id)
+    elif args.command == "delete_product_set":
+        delete_product_set(args.project_id, args.location, args.product_set_id)

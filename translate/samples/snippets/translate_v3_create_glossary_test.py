@@ -36,7 +36,10 @@ def test_create_glossary(capsys: pytest.LogCaptureFixture) -> None:
             PROJECT_ID, GLOSSARY_INPUT_URI, glossary_id
         )
         out, _ = capsys.readouterr()
-        assert "gs://cloud-samples-data/translation/glossary_ja.csv" in result.input_config.gcs_source.input_uri
+        assert (
+            "gs://cloud-samples-data/translation/glossary_ja.csv"
+            in result.input_config.gcs_source.input_uri
+        )
     finally:
         # cleanup
         @backoff.on_exception(

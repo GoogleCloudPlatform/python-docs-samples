@@ -24,20 +24,31 @@ import aws_request
 import aws_request_apiary
 
 
-@backoff.on_exception(backoff.expo, (RetryError, ServiceUnavailable,),
-                      max_time=60)
+@backoff.on_exception(
+    backoff.expo,
+    (
+        RetryError,
+        ServiceUnavailable,
+    ),
+    max_time=60,
+)
 def test_aws_request(
-        capsys, project_id: str, aws_source_bucket: str,
-        aws_access_key_id: str, aws_secret_access_key: str,
-        destination_bucket: Bucket, job_description_unique: str):
-
+    capsys,
+    project_id: str,
+    aws_source_bucket: str,
+    aws_access_key_id: str,
+    aws_secret_access_key: str,
+    destination_bucket: Bucket,
+    job_description_unique: str,
+):
     aws_request.create_one_time_aws_transfer(
         project_id=project_id,
         description=job_description_unique,
         source_bucket=aws_source_bucket,
         aws_access_key_id=aws_access_key_id,
         aws_secret_access_key=aws_secret_access_key,
-        sink_bucket=destination_bucket.name)
+        sink_bucket=destination_bucket.name,
+    )
 
     out, _ = capsys.readouterr()
 
@@ -47,9 +58,14 @@ def test_aws_request(
 
 @backoff.on_exception(backoff.expo, (HttpError,), max_time=60)
 def test_aws_request_apiary(
-        capsys, project_id: str, aws_source_bucket: str,
-        aws_access_key_id: str, aws_secret_access_key: str,
-        destination_bucket: Bucket, job_description_unique: str):
+    capsys,
+    project_id: str,
+    aws_source_bucket: str,
+    aws_access_key_id: str,
+    aws_secret_access_key: str,
+    destination_bucket: Bucket,
+    job_description_unique: str,
+):
     aws_request_apiary.main(
         description=job_description_unique,
         project_id=project_id,
@@ -58,7 +74,7 @@ def test_aws_request_apiary(
         source_bucket=aws_source_bucket,
         access_key_id=aws_access_key_id,
         secret_access_key=aws_secret_access_key,
-        sink_bucket=destination_bucket.name
+        sink_bucket=destination_bucket.name,
     )
 
     out, _ = capsys.readouterr()

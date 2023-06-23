@@ -71,6 +71,7 @@ assign_issues_by:
       - "api: texttospeech"
       - "api: translate"
       - "api: vision"
+      - "api: bigquery"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
@@ -161,6 +162,10 @@ assign_issues_by:
       - "api: auth"
     to:
       - arithmetic1728
+  - labels:
+      - "api: appengine"
+    to:
+      - jinglundong
 
 
 ###
@@ -169,7 +174,6 @@ assign_issues_by:
 assign_prs_by:
   # DEE teams
   - labels:
-      - "api: appengine"
       - "api: cloudbuild"
       - "api: cloudscheduler"
       - "api: cloudtasks"
@@ -220,6 +224,7 @@ assign_prs_by:
       - "api: speech"
       - "api: talent"
       - "api: texttospeech"
+      - "api: transcoder"
       - "api: translate"
       - "api: vision"
     to:
@@ -304,6 +309,7 @@ assign_prs_by:
       - GoogleCloudPlatform/cloud-retail-team
   - labels:
       - "api: cloudmedia"
+      - "api: videostitcher"
     to:
       - GoogleCloudPlatform/cloud-media-team
 
@@ -312,7 +318,10 @@ assign_prs_by:
       - "api: auth"
     to:
       - arithmetic1728
-
+  - labels:
+      - "api: appengine"
+    to:
+      - jinglundong
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 
