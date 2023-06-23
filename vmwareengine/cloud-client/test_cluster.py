@@ -29,6 +29,7 @@ def test_create_cluster(mock_client_class):
     create_cluster("project11", "zone43", "my-cloud", "my-cluuuster", 99)
 
     mock_client.create_cluster.assert_called_once()
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", mock_client.create_cluster.call_args.args)
     assert len(mock_client.create_cluster.call_args.args) == 1
     assert len(mock_client.create_cluster.call_args.kwargs) == 0
     request = mock_client.create_cluster.call_args.args[0]
