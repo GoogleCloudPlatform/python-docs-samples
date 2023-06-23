@@ -12,25 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-import google.auth
+from unittest import mock
 
 from nsx_credentials import get_nsx_credentials
 from vcenter_credentials import get_vcenter_credentials
 
-PROJECT = google.auth.default()[1]
-REGION = os.getenv("VMWARE_REGION", "asia-northeast1")
-CLOUD_NAME = os.getenv("VMWARE_PRIVATE_CLOUD", "test-cloud-469e53")
+
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
+def test_vcredentials(mock_client_class):
+    mock_client = mock_client_class.return_value
+    get_vcenter_credentials("p2", "rrr", "cname")
+
+    mock_client.show_vcenter_credentials.assert_called_once()
+    assert len(mock_client.show_vcenter_credentials.call_args.kwargs) == 1
+    name = mock_client.show_vcenter_credentials.call_args.kwargs["private_cloud"]
+    assert name == "projects/p2/locations/rrr/privateClouds/cname"
 
 
-def test_vcredentials():
-    credentials = get_vcenter_credentials(PROJECT, f"{REGION}-a", CLOUD_NAME)
-    assert credentials.username
-    assert credentials.password
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
+def test_nsx_credentials(mock_client_class):
+    mock_client = mock_client_class.return_value
+    get_nsx_credentials("p3", "rrrr", "cname")
 
-
-def test_nsx_credentials():
-    credentials = get_nsx_credentials(PROJECT, f"{REGION}-a", CLOUD_NAME)
-    assert credentials.username
-    assert credentials.password
+    mock_client.show_nsx_credentials.assert_called_once()
+    assert len(mock_client.show_nsx_credentials.call_args.kwargs) == 1
+    name = mock_client.show_nsx_credentials.call_args.kwargs["private_cloud"]
+    assert name == "projects/p3/locations/rrrr/privateClouds/cname"

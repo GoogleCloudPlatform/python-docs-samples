@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from google.api_core.operation import Operation
+
 # [START vmwareengine_get_operation]
 from google.cloud import vmwareengine_v1
 from google.longrunning.operations_pb2 import GetOperationRequest
