@@ -2027,10 +2027,7 @@ if __name__ == "__main__":
             include_quote=args.include_quote,
         )
     elif args.content == "phone_number":
-        inspect_phone_number(
-            args.project,
-            args.content_string
-        )
+        inspect_phone_number(args.project, args.content_string)
     elif args.content == "table":
         inspect_table(
             args.project,
