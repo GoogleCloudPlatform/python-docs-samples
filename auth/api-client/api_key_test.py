@@ -61,9 +61,7 @@ def get_mock_sentiment_response() -> MagicMock:
     return mock.MagicMock(return_value=response)
 
 
-@backoff.on_exception(backoff.expo,
-                      Exception,
-                      max_tries=3)
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture) -> None:
     with mock.patch(
         "google.cloud.language_v1.LanguageServiceClient.analyze_sentiment",
