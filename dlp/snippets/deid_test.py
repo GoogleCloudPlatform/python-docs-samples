@@ -585,8 +585,8 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
         "header": ["employee_id", "date", "compensation"],
         "rows": [
             ["11111", "2015", "$10"],
-            ["11111", "2016", "$20"],
-            ["22222", "2016", "$15"],
+            ["22222", "2016", "$20"],
+            ["33333", "2016", "$15"],
         ]
     }
 
