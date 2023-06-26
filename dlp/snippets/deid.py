@@ -2042,7 +2042,7 @@ def deidentify_table_with_multiple_crypto_hash(
 
 # [START dlp_deidentify_table_fpe]
 import base64  # noqa: F811, E402, I100
-from typing import Dict, List, Union  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -2139,7 +2139,7 @@ def deidentify_table_with_fpe(
 
 # [START dlp_reidentify_table_fpe]
 import base64  # noqa: F811, E402, I100
-from typing import Dict, List, Union  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
 
