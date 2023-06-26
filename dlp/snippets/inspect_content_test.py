@@ -205,7 +205,7 @@ def test_inspect_string(capsys: pytest.CaptureFixture) -> None:
     assert "Info type: EMAIL_ADDRESS" in out
 
 
-def test_inspect_string_augment_infotype(capsys):
+def test_inspect_string_augment_infotype(capsys: pytest.CaptureFixture) -> None:
     inspect_content.inspect_string_augment_infotype(
         GCLOUD_PROJECT,
         "My Name is : quasimodo",
