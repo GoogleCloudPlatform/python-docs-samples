@@ -400,6 +400,23 @@ def test_deidentify_table_bucketing(capsys: pytest.CaptureFixture) -> None:
     assert 'string_value: "70:80"' in out
 
 
+def test_deidentify_table_primitive_bucketing(capsys: pytest.CaptureFixture) -> None:
+
+    deid.deidentify_table_primitive_bucketing(
+        GCLOUD_PROJECT,
+        TABLE_DATA["header"],
+        TABLE_DATA["rows"],
+        "happiness_score",
+        [0, 25, 75],
+        [25, 75, 100],
+        ["Low", "Medium", "High"],
+    )
+
+    out, _ = capsys.readouterr()
+    assert "string_value: \"High\"" in out
+    assert "string_value: \"Low\"" in out
+
+
 def test_deidentify_table_condition_replace_with_info_types(
     capsys: pytest.CaptureFixture,
 ) -> None:
