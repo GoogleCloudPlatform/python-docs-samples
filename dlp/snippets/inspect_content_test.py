@@ -205,6 +205,18 @@ def test_inspect_string(capsys: pytest.CaptureFixture) -> None:
     assert "Info type: EMAIL_ADDRESS" in out
 
 
+def test_inspect_string_augment_infotype(capsys):
+    inspect_content.inspect_string_augment_infotype(
+        GCLOUD_PROJECT,
+        "My Name is : quasimodo",
+        "PERSON_NAME",
+        ["quasimodo"],
+    )
+    out, _ = capsys.readouterr()
+    assert "Quote: quasimodo" in out
+    assert "Info type: PERSON_NAME" in out
+
+
 def test_inspect_table(capsys: pytest.CaptureFixture) -> None:
     test_tabular_data = {
         "header": ["email", "phone number"],
