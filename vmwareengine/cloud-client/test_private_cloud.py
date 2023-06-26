@@ -27,9 +27,9 @@ def test_private_cloud_create(mock_client_class):
     )
 
     mock_client.create_private_cloud.assert_called_once()
-    assert len(mock_client.create_private_cloud.call_args.args) == 1
-    assert len(mock_client.create_private_cloud.call_args.kwargs) == 0
-    request = mock_client.create_private_cloud.call_args.args[0]
+    assert len(mock_client.create_private_cloud.call_args[0]) == 1
+    assert len(mock_client.create_private_cloud.call_args[1]) == 0
+    request = mock_client.create_private_cloud.call_args[0][0]
 
     assert request.private_cloud.management_cluster.cluster_id == "management-cluster"
     assert request.parent == "projects/projekto/locations/regiono"
@@ -43,7 +43,7 @@ def test_delete_cloud_create(mock_client_class):
     delete_private_cloud_by_full_name("the_full_name_of_the_cloud")
 
     mock_client.delete_private_cloud.assert_called_once()
-    assert len(mock_client.delete_private_cloud.call_args.args) == 1
-    assert len(mock_client.delete_private_cloud.call_args.kwargs) == 0
-    request = mock_client.delete_private_cloud.call_args.args[0]
+    assert len(mock_client.delete_private_cloud.call_args[0]) == 1
+    assert len(mock_client.delete_private_cloud.call_args[1]) == 0
+    request = mock_client.delete_private_cloud.call_args[0][0]
     assert request.name == "the_full_name_of_the_cloud"

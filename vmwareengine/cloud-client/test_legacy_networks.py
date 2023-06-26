@@ -31,8 +31,8 @@ def test_network_create(mock_client_class):
     network = create_legacy_network("proooject", "around_here")
     assert network is network_mock
     mock_client.create_vmware_engine_network.assert_called_once()
-    assert len(mock_client.create_vmware_engine_network.call_args.args) == 1
-    request = mock_client.create_vmware_engine_network.call_args.args[0]
+    assert len(mock_client.create_vmware_engine_network.call_args[0]) == 1
+    request = mock_client.create_vmware_engine_network.call_args[0][0]
     assert request.parent == "projects/proooject/locations/around_here"
     assert request.vmware_engine_network_id == "around_here-default"
     assert (

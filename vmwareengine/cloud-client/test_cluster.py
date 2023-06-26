@@ -29,10 +29,10 @@ def test_create_cluster(mock_client_class):
     create_cluster("project11", "zone43", "my-cloud", "my-cluuuster", 99)
 
     mock_client.create_cluster.assert_called_once()
-    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", list(mock_client.create_cluster.call_args.args))
-    assert len(mock_client.create_cluster.call_args.args) == 1
-    assert len(mock_client.create_cluster.call_args.kwargs) == 0
-    request = mock_client.create_cluster.call_args.args[0]
+    print("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA", list(mock_client.create_cluster.call_args[0]))
+    assert len(mock_client.create_cluster.call_args[0]) == 1
+    assert len(mock_client.create_cluster.call_args[1]) == 0
+    request = mock_client.create_cluster.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.CreateClusterRequest)
     assert (
         request.parent == "projects/project11/locations/zone43/privateClouds/my-cloud"
@@ -48,9 +48,9 @@ def test_create_custom_cluster(mock_client_class):
     create_custom_cluster("project121", "zone433", "my_cloud", "my_cluuuster", 98, 7)
 
     mock_client.create_cluster.assert_called_once()
-    assert len(mock_client.create_cluster.call_args.args) == 1
-    assert len(mock_client.create_cluster.call_args.kwargs) == 0
-    request = mock_client.create_cluster.call_args.args[0]
+    assert len(mock_client.create_cluster.call_args[0]) == 1
+    assert len(mock_client.create_cluster.call_args[1]) == 0
+    request = mock_client.create_cluster.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.CreateClusterRequest)
     assert (
         request.parent == "projects/project121/locations/zone433/privateClouds/my_cloud"
@@ -67,9 +67,9 @@ def test_delete_cluster(mock_client_class):
     delete_cluster("projojo", "zona-2", "my_cloud<3", "the_clusterino")
 
     mock_client.delete_cluster.assert_called_once()
-    assert len(mock_client.delete_cluster.call_args.args) == 1
-    assert len(mock_client.delete_cluster.call_args.kwargs) == 0
-    request = mock_client.delete_cluster.call_args.args[0]
+    assert len(mock_client.delete_cluster.call_args[0]) == 1
+    assert len(mock_client.delete_cluster.call_args[1]) == 0
+    request = mock_client.delete_cluster.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.DeleteClusterRequest)
     assert (
         request.name
@@ -84,9 +84,9 @@ def test_update_cluster(mock_client_class):
     update_cluster("projojo", "zona-2", "my_cloud<3", "the_clusterino", 66)
 
     mock_client.update_cluster.assert_called_once()
-    assert len(mock_client.update_cluster.call_args.args) == 1
-    assert len(mock_client.update_cluster.call_args.kwargs) == 0
-    request = mock_client.update_cluster.call_args.args[0]
+    assert len(mock_client.update_cluster.call_args[0]) == 1
+    assert len(mock_client.update_cluster.call_args[1]) == 0
+    request = mock_client.update_cluster.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.UpdateClusterRequest)
     assert (
         request.cluster.name

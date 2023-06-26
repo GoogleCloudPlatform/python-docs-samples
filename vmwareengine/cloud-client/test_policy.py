@@ -28,8 +28,8 @@ def test_create_policy(mock_client_class):
     create_network_policy("pro", "reg", "1.2.3.4/26")
 
     mock_client.create_network_policy.assert_called_once()
-    assert len(mock_client.create_network_policy.call_args.args) == 1
-    request = mock_client.create_network_policy.call_args.args[0]
+    assert len(mock_client.create_network_policy.call_args[0]) == 1
+    request = mock_client.create_network_policy.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.CreateNetworkPolicyRequest)
     assert request.parent == "projects/pro/locations/reg"
     assert request.network_policy.edge_services_cidr == "1.2.3.4/26"
@@ -42,9 +42,9 @@ def test_delete_policy(mock_client_class):
     delete_network_policy("projakt", "regiom")
 
     mock_client.delete_network_policy.assert_called_once()
-    assert len(mock_client.delete_network_policy.call_args.args) == 0
-    assert len(mock_client.delete_network_policy.call_args.kwargs) == 1
-    name = mock_client.delete_network_policy.call_args.kwargs["name"]
+    assert len(mock_client.delete_network_policy.call_args[0]) == 0
+    assert len(mock_client.delete_network_policy.call_args[1]) == 1
+    name = mock_client.delete_network_policy.call_args[1]["name"]
     assert name == "projects/projakt/locations/regiom/networkPolicies/regiom-default"
 
 
@@ -55,8 +55,8 @@ def test_update_policy(mock_client_class):
     update_network_policy("project", "regiono")
 
     mock_client.update_network_policy.assert_called_once()
-    assert len(mock_client.update_network_policy.call_args.args) == 1
-    request = mock_client.update_network_policy.call_args.args[0]
+    assert len(mock_client.update_network_policy.call_args[0]) == 1
+    request = mock_client.update_network_policy.call_args[0][0]
     assert isinstance(request, vmwareengine_v1.UpdateNetworkPolicyRequest)
     assert (
         request.network_policy.name
