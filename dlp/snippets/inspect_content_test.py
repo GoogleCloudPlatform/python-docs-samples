@@ -180,10 +180,10 @@ def bigquery_project() -> Iterator[str]:
     cleanup()
 
 
-def test_inspect_string_basic(capsys: pytest.CaptureFixture) -> None:
+def test_inspect_phone_number(capsys: pytest.CaptureFixture) -> None:
     test_string = "String with a phone number: 234-555-6789"
 
-    inspect_content.inspect_string_basic(GCLOUD_PROJECT, test_string)
+    inspect_content.inspect_phone_number(GCLOUD_PROJECT, test_string)
 
     out, _ = capsys.readouterr()
     assert "Info type: PHONE_NUMBER" in out

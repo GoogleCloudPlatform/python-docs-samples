@@ -91,7 +91,7 @@ def create_inspect_template(
 # [END dlp_create_inspect_template]
 
 
-# [START dlp_list_templates]
+# [START dlp_list_inspect_templates]
 import google.cloud.dlp  # noqa: E402, F811
 
 
@@ -132,7 +132,7 @@ def list_inspect_templates(project: str) -> None:
         )
 
 
-# [END dlp_list_templates]
+# [END dlp_list_inspect_templates]
 
 
 # [START dlp_delete_inspect_template]

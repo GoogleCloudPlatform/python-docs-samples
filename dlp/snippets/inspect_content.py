@@ -20,25 +20,18 @@ import argparse
 import json
 import os
 
-from typing import List
-
-# [START dlp_inspect_string_basic]
+# [START dlp_inspect_phone_number]
 import google.cloud.dlp
 
 
-def inspect_string_basic(
+def inspect_phone_number(
     project: str,
     content_string: str,
-    info_types: List[str] = ["PHONE_NUMBER"],
 ) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        content_string: The string to inspect.
-        info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API.
-    Returns:
-        None; the response from the API is printed to the terminal.
+        content_string: The string to inspect phone number from.
     """
 
     # Instantiate a client.
@@ -46,7 +39,7 @@ def inspect_string_basic(
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    info_types = [{"name": info_type} for info_type in info_types]
+    info_types = [{"name": "PHONE_NUMBER"}]
 
     # Construct the configuration dictionary.
     inspect_config = {
@@ -75,7 +68,7 @@ def inspect_string_basic(
         print("No findings.")
 
 
-# [END dlp_inspect_string_basic]
+# [END dlp_inspect_phone_number]
 
 
 # [START dlp_inspect_string]
@@ -1416,6 +1409,20 @@ if __name__ == "__main__":
     )
     subparsers.required = True
 
+    parser_phone_number = subparsers.add_parser(
+        "phone_number",
+        help="Inspect phone number in a string.",
+    )
+    parser_phone_number.add_argument(
+        "content_string",
+        help="The string to inspect phone number from.",
+    )
+    parser_phone_number.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+
     parser_string = subparsers.add_parser("string", help="Inspect a string.")
     parser_string.add_argument("item", help="The string to inspect.")
     parser_string.add_argument(
@@ -2019,6 +2026,8 @@ if __name__ == "__main__":
             max_findings=args.max_findings,
             include_quote=args.include_quote,
         )
+    elif args.content == "phone_number":
+        inspect_phone_number(args.project, args.content_string)
     elif args.content == "table":
         inspect_table(
             args.project,
