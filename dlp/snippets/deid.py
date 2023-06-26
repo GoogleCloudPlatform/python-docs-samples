@@ -2232,7 +2232,6 @@ def reidentify_table_with_fpe(
 
 # [END dlp_reidentify_table_fpe]
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(
@@ -2792,11 +2791,15 @@ if __name__ == "__main__":
         help="The Google Cloud project id to use as a parent resource.",
     )
     table_fpe_parser.add_argument(
-        "table_data",
-        help="Json string representing table data",
+        "table_header",
+        help="List of strings representing table field names.",
     )
     table_fpe_parser.add_argument(
-        "deid_content_list",
+        "table_rows",
+        help="List of rows representing table data",
+    )
+    table_fpe_parser.add_argument(
+        "deid_field_names",
         help="A list of fields in table to de-identify.",
     )
     table_fpe_parser.add_argument(
@@ -2831,11 +2834,15 @@ if __name__ == "__main__":
         help="The Google Cloud project id to use as a parent resource.",
     )
     reid_table_fpe_parser.add_argument(
-        "table_data",
-        help="Json string representing table data.",
+        "table_header",
+        help="List of strings representing table field names.",
     )
     reid_table_fpe_parser.add_argument(
-        "reid_content_list",
+        "table_rows",
+        help="List of rows representing table data",
+    )
+    reid_table_fpe_parser.add_argument(
+        "reid_field_names",
         help="A list of fields in table to re-identify.",
     )
     reid_table_fpe_parser.add_argument(
@@ -3006,8 +3013,9 @@ if __name__ == "__main__":
     elif args.content == "deid_table_fpe":
         deidentify_table_with_fpe(
             args.project,
-            args.table_data,
-            args.deid_content_list,
+            args.table_header,
+            args.table_rows,
+            args.deid_field_names,
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
             alphabet=args.alphabet,
@@ -3015,8 +3023,9 @@ if __name__ == "__main__":
     elif args.content == "reid_table_fpe":
         reidentify_table_with_fpe(
             args.project,
-            args.table_data,
-            args.reid_content_list,
+            args.table_header,
+            args.table_rows,
+            args.reid_field_names,
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
             alphabet=args.alphabet,
