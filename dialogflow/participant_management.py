@@ -68,59 +68,60 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
         participant=participant_path, text_input=text_input
     )
     print("AnalyzeContent Response:")
-    print("Reply Text: {}".format(response.reply_text))
-
+    print(f"Reply Text: {response.reply_text}")
+    print(f"Response: {response.human_agent_suggestion_results}")
+    # assert response.human_agent_suggestion_results=="test"
     for suggestion_result in response.human_agent_suggestion_results:
         if suggestion_result.error is not None:
-            print("Error: {}".format(suggestion_result.error.message))
+            print(f"Error: {suggestion_result.error.message}")
         if suggestion_result.suggest_articles_response:
             for answer in suggestion_result.suggest_articles_response.article_answers:
-                print("Article Suggestion Answer: {}".format(answer.title))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Article Suggestion Answer: {answer.title}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_faq_answers_response:
             for answer in suggestion_result.suggest_faq_answers_response.faq_answers:
-                print("Faq Answer: {}".format(answer.answer))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Faq Answer: {answer.answer}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_smart_replies_response:
             for (
                 answer
             ) in suggestion_result.suggest_smart_replies_response.smart_reply_answers:
-                print("Smart Reply: {}".format(answer.reply))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Smart Reply: {answer.reply}")
+                print(f"Answer Record: {answer.answer_record}")
 
     for suggestion_result in response.end_user_suggestion_results:
         if suggestion_result.error:
             print("Error: {}".format(suggestion_result.error.message))
         if suggestion_result.suggest_articles_response:
             for answer in suggestion_result.suggest_articles_response.article_answers:
-                print("Article Suggestion Answer: {}".format(answer.title))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Article Suggestion Answer: {answer.title}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_faq_answers_response:
             for answer in suggestion_result.suggest_faq_answers_response.faq_answers:
-                print("Faq Answer: {}".format(answer.answer))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Faq Answer: {answer.answer}")
+                print(f"Answer Record: {answer.answer_record}")
         if suggestion_result.suggest_smart_replies_response:
             for (
                 answer
             ) in suggestion_result.suggest_smart_replies_response.smart_reply_answers:
-                print("Smart Reply: {}".format(answer.reply))
-                print("Answer Record: {}".format(answer.answer_record))
+                print(f"Smart Reply: {answer.reply}")
+                print(f"Answer Record: {answer.answer_record}")
 
     return response
 
 
 # [END dialogflow_analyze_content_text]
 
-# [START dialogflow_analyze_content_audio]
-def analyze_content_audio(
-    conversation_id, participant_id, audio_file_path
-):
+
+# [START dialogflow_analyze_content_audio_stream]
+def analyze_content_audio_stream(conversation_id, participant_id, audio_file_path):
     """Analyze audio content for END_USER with audio files.
 
     Args:
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
-        audio_file_path: audio file in wav/mp3 format contains utterances of END_USER."""
+        audio_file_path: audio file in wav/mp3 format contains utterances of END_USER.
+    """
 
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
@@ -140,7 +141,6 @@ def analyze_content_audio(
     # Generates requests based on the audio files. Will by default use the first channel as
     # END_USER, and second channel as HUMAN_AGENT.
     def request_generator(audio_config, audio_file_path):
-
         # The first request contains the configuration.
         yield dialogflow.StreamingAnalyzeContentRequest(
             participant=participant_path, audio_config=audio_config

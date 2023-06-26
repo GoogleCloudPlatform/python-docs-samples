@@ -17,11 +17,20 @@ from google.cloud import translate_v3 as translate
 
 
 def delete_glossary(
-    project_id="YOUR_PROJECT_ID",
-    glossary_id="YOUR_GLOSSARY_ID",
-    timeout=180,
-):
-    """Delete a specific glossary based on the glossary ID."""
+    project_id: str = "YOUR_PROJECT_ID",
+    glossary_id: str = "YOUR_GLOSSARY_ID",
+    timeout: int = 180,
+) -> translate.Glossary:
+    """Delete a specific glossary based on the glossary ID.
+
+    Args:
+        project_id: The ID of the GCP project that owns the glossary.
+        glossary_id: The ID of the glossary to delete.
+        timeout: The timeout for this request.
+
+    Returns:
+        The glossary that was deleted.
+    """
     client = translate.TranslationServiceClient()
 
     name = client.glossary_path(project_id, "us-central1", glossary_id)
@@ -29,6 +38,8 @@ def delete_glossary(
     operation = client.delete_glossary(name=name)
     result = operation.result(timeout)
     print(f"Deleted: {result.name}")
+
+    return result
 
 
 # [END translate_v3_delete_glossary]

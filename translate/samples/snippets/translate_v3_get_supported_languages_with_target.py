@@ -16,9 +16,17 @@
 from google.cloud import translate
 
 
-def get_supported_languages_with_target(project_id="YOUR_PROJECT_ID"):
-    """Listing supported languages with target language name."""
+def get_supported_languages_with_target(
+    project_id: str = "YOUR_PROJECT_ID",
+) -> translate.SupportedLanguages:
+    """Listing supported languages with target language name.
 
+    Args:
+        project_id: Your Google Cloud project ID.
+
+    Returns:
+        Supported languages.
+    """
     client = translate.TranslationServiceClient()
 
     location = "global"
@@ -33,6 +41,8 @@ def get_supported_languages_with_target(project_id="YOUR_PROJECT_ID"):
     for language in response.languages:
         print(f"Language Code: {language.language_code}")
         print(f"Display Name: {language.display_name}")
+
+    return response
 
 
 # [END translate_v3_get_supported_languages_for_target]

@@ -20,20 +20,21 @@ from flaky import flaky
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+import pytest
 
 import transcribe_streaming_voice_activity_timeouts
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_transcribe_silence_padding_timeouts(capsys):
+def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())
@@ -54,7 +55,9 @@ def test_transcribe_silence_padding_timeouts(capsys):
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_transcribe_streaming_voice_activity_timeouts(capsys):
+def test_transcribe_streaming_voice_activity_timeouts(
+    capsys: pytest.CaptureFixture,
+) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

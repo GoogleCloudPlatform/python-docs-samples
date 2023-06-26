@@ -97,7 +97,6 @@ def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
 
 @pytest.fixture
 def deployed_service() -> str:
-
     substitutions = [
         f"_SERVICE={SERVICE},"
         f"_PLATFORM={PLATFORM},"
@@ -178,7 +177,7 @@ def service_url_auth_token(deployed_service: str) -> Iterator[tuple[str, str]]:
                 "--region",
                 REGION,
                 "--format",
-                "\"value(status.url)\"",
+                '"value(status.url)"',
                 "--project",
                 GOOGLE_CLOUD_PROJECT,
             ]

@@ -20,35 +20,36 @@ from flask import Flask, make_response
 # [START imports]
 from requests_futures.sessions import FuturesSession
 from time import sleep
+
 # [END imports]
 
 
-TIMEOUT = 10    # Wait this many seconds for background calls to finish
+TIMEOUT = 10  # Wait this many seconds for background calls to finish
 app = Flask(__name__)
 
 
-@app.route('/')     # Fetch and return remote page asynchronously
+@app.route("/")  # Fetch and return remote page asynchronously
 def get_async():
     # [START requests_get]
     session = FuturesSession()
-    url = 'http://www.google.com/humans.txt'
+    url = "http://www.google.com/humans.txt"
 
     rpc = session.get(url)
 
     # ... do other things ...
 
     resp = make_response(rpc.result().text)
-    resp.headers['Content-type'] = 'text/plain'
+    resp.headers["Content-type"] = "text/plain"
     return resp
     # [END requests_get]
 
 
-@app.route('/callback')     # Fetch and return remote pages using callback
+@app.route("/callback")  # Fetch and return remote pages using callback
 def get_callback():
     global response_text
     global counter
 
-    response_text = ''
+    response_text = ""
     counter = 0
 
     def cb(resp, *args, **kwargs):
@@ -59,22 +60,23 @@ def get_callback():
             return  # ignore intermediate redirection responses
 
         counter += 1
-        response_text += 'Response number {} is {} bytes from {}\n'.format(
-            counter, len(resp.text), resp.url)
+        response_text += "Response number {} is {} bytes from {}\n".format(
+            counter, len(resp.text), resp.url
+        )
 
     session = FuturesSession()
     urls = [
-        'https://google.com/',
-        'https://www.google.com/humans.txt',
-        'https://www.github.com',
-        'https://www.travis-ci.org'
+        "https://google.com/",
+        "https://www.google.com/humans.txt",
+        "https://www.github.com",
+        "https://www.travis-ci.org",
     ]
 
-    futures = [session.get(url, hooks={'response': cb}) for url in urls]
+    futures = [session.get(url, hooks={"response": cb}) for url in urls]
 
     # No wait functionality in requests_futures, so check every second to
     # see if all callbacks are done, up to TIMEOUT seconds
-    for elapsed_time in range(TIMEOUT+1):
+    for elapsed_time in range(TIMEOUT + 1):
         all_done = True
         for future in futures:
             if not future.done():
@@ -85,15 +87,22 @@ def get_callback():
         sleep(1)
 
     resp = make_response(response_text)
-    resp.headers['Content-type'] = 'text/plain'
+    resp.headers["Content-type"] = "text/plain"
     return resp
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
+    logging.exception("An error occurred during a request.")
+    return (
+        """
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
-    """.format(e), 500
+    """.format(
+            e
+        ),
+        500,
+    )
+
+
 # [END app]

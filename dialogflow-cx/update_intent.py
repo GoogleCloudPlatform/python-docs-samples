@@ -18,7 +18,6 @@ from google.protobuf import field_mask_pb2
 
 
 def update_intent(project_id, agent_id, intent_id, location, displayName):
-
     intents_client = IntentsClient()
 
     intent_name = intents_client.intent_path(project_id, location, agent_id, intent_id)

@@ -1,4 +1,4 @@
-# Copyright Google Inc. All rights reserved.
+# Copyright 2016 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,17 +19,17 @@ import webtest
 def test_index(testbed, login):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/')
-    assert 'Login' in response.body
+    response = app.get("/")
+    assert "Login" in response.body
 
     login()
-    response = app.get('/')
-    assert 'Logout' in response.body
-    assert 'user@example.com' in response.body
+    response = app.get("/")
+    assert "Logout" in response.body
+    assert "user@example.com" in response.body
 
 
 def test_status(testbed):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/status')
-    assert 'Success' in response.body
+    response = app.get("/status")
+    assert "Success" in response.body

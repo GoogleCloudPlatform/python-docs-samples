@@ -14,12 +14,14 @@
 
 import os
 
+import pytest
+
 import custom_infotype
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def test_inspect_string_with_exclusion_dict(capsys):
+def test_inspect_string_with_exclusion_dict(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_with_exclusion_dict(
         GCLOUD_PROJECT, "gary@example.com, example@example.com", ["example@example.com"]
     )
@@ -29,7 +31,7 @@ def test_inspect_string_with_exclusion_dict(capsys):
     assert "gary@example.com" in out
 
 
-def test_inspect_string_with_exclusion_regex(capsys):
+def test_inspect_string_with_exclusion_regex(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_with_exclusion_regex(
         GCLOUD_PROJECT, "alice@example.com, ironman@avengers.net", ".+@example.com"
     )
@@ -39,7 +41,9 @@ def test_inspect_string_with_exclusion_regex(capsys):
     assert "ironman" in out
 
 
-def test_inspect_string_with_exclusion_dict_substring(capsys):
+def test_inspect_string_with_exclusion_dict_substring(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_with_exclusion_dict_substring(
         GCLOUD_PROJECT, "bob@example.com TEST@example.com TEST.com", ["TEST"]
     )
@@ -50,7 +54,9 @@ def test_inspect_string_with_exclusion_dict_substring(capsys):
     assert "bob@example.com" in out
 
 
-def test_inspect_string_custom_excluding_substring(capsys):
+def test_inspect_string_custom_excluding_substring(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_custom_excluding_substring(
         GCLOUD_PROJECT, "Danger, Jimmy | Wayne, Bruce", ["Jimmy"]
     )
@@ -60,7 +66,7 @@ def test_inspect_string_custom_excluding_substring(capsys):
     assert "Danger, Jimmy" not in out
 
 
-def test_inspect_string_custom_omit_overlap(capsys):
+def test_inspect_string_custom_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_custom_omit_overlap(
         GCLOUD_PROJECT, "Larry Page and John Doe"
     )
@@ -70,8 +76,8 @@ def test_inspect_string_custom_omit_overlap(capsys):
     assert "John Doe" in out
 
 
-def test_omit_name_if_also_email(capsys):
-    custom_infotype.omit_name_if_also_email(GCLOUD_PROJECT, "alice@example.com")
+def test_inspect_string_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
+    custom_infotype.inspect_string_omit_overlap(GCLOUD_PROJECT, "alice@example.com")
 
     # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
     out, _ = capsys.readouterr()
@@ -79,7 +85,7 @@ def test_omit_name_if_also_email(capsys):
     assert "Info type: PERSON_NAME" not in out
 
 
-def test_inspect_string_without_overlap(capsys):
+def test_inspect_string_without_overlap(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_without_overlap(
         GCLOUD_PROJECT, "example.com is a domain, james@example.org is an email."
     )
@@ -89,8 +95,10 @@ def test_inspect_string_without_overlap(capsys):
     assert "example.org" not in out
 
 
-def test_inspect_with_person_name_w_custom_hotword(capsys):
-    custom_infotype.inspect_with_person_name_w_custom_hotword(
+def test_inspect_string_w_custom_hotword(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
+    custom_infotype.inspect_string_w_custom_hotword(
         GCLOUD_PROJECT, "patient's name is John Doe.", "patient"
     )
 
@@ -99,7 +107,9 @@ def test_inspect_with_person_name_w_custom_hotword(capsys):
     assert "Likelihood: 5" in out
 
 
-def test_inspect_string_multiple_rules_patient(capsys):
+def test_inspect_string_multiple_rules_patient(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "patient name: Jane Doe"
     )
@@ -108,14 +118,16 @@ def test_inspect_string_multiple_rules_patient(capsys):
     assert "Likelihood: 4" in out
 
 
-def test_inspect_string_multiple_rules_doctor(capsys):
+def test_inspect_string_multiple_rules_doctor(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_multiple_rules(GCLOUD_PROJECT, "doctor: Jane Doe")
 
     out, _ = capsys.readouterr()
     assert "No findings" in out
 
 
-def test_inspect_string_multiple_rules_quasimodo(capsys):
+def test_inspect_string_multiple_rules_quasimodo(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "patient name: quasimodo"
     )
@@ -124,7 +136,9 @@ def test_inspect_string_multiple_rules_quasimodo(capsys):
     assert "No findings" in out
 
 
-def test_inspect_string_multiple_rules_redacted(capsys):
+def test_inspect_string_multiple_rules_redacted(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
     custom_infotype.inspect_string_multiple_rules(
         GCLOUD_PROJECT, "name of patient: REDACTED"
     )
@@ -133,8 +147,10 @@ def test_inspect_string_multiple_rules_redacted(capsys):
     assert "No findings" in out
 
 
-def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
-    custom_infotype.inspect_with_medical_record_number_custom_regex_detector(
+def test_inspect_data_with_custom_regex_detector(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
+    custom_infotype.inspect_data_with_custom_regex_detector(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222"
     )
 
@@ -142,8 +158,10 @@ def test_inspect_with_medical_record_number_custom_regex_detector(capsys):
     assert "Info type: C_MRN" in out
 
 
-def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(capsys):
-    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
+    custom_infotype.inspect_data_w_custom_hotwords(
         GCLOUD_PROJECT, "just a number 444-5-22222"
     )
 
@@ -152,8 +170,10 @@ def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(capsys
     assert "Likelihood: 3" in out
 
 
-def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(capsys):
-    custom_infotype.inspect_with_medical_record_number_w_custom_hotwords(
+def test_inspect_with_medical_record_number_w_custom_hotwords_has_hotwords(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
+    custom_infotype.inspect_data_w_custom_hotwords(
         GCLOUD_PROJECT, "Patients MRN 444-5-22222"
     )
 

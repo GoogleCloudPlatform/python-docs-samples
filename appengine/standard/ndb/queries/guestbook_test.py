@@ -28,33 +28,29 @@ def app(testbed):
 
 def test_main(app):
     # Add a greeting to find
-    guestbook.Greeting(
-        content='Hello world',
-        parent=ndb.Key('Book', 'brane3')).put()
+    guestbook.Greeting(content="Hello world", parent=ndb.Key("Book", "brane3")).put()
 
     # Add a greeting to not find.
-    guestbook.Greeting(
-        content='Flat sheet',
-        parent=ndb.Key('Book', 'brane2')).put()
+    guestbook.Greeting(content="Flat sheet", parent=ndb.Key("Book", "brane2")).put()
 
-    response = app.get('/?guestbook_name=brane3')
+    response = app.get("/?guestbook_name=brane3")
 
     assert response.status_int == 200
-    assert 'Hello world' in response.body
-    assert 'Flat sheet' not in response.body
+    assert "Hello world" in response.body
+    assert "Flat sheet" not in response.body
 
 
 def test_list(app):
     # Add greetings to find
     for i in range(11):
-        guestbook.Greeting(content='Greeting {}'.format(i)).put()
+        guestbook.Greeting(content="Greeting {}".format(i)).put()
 
-    response = app.get('/list')
+    response = app.get("/list")
     assert response.status_int == 200
 
-    assert 'Greeting 0' in response.body
-    assert 'Greeting 9' in response.body
-    assert 'Greeting 10' not in response.body
+    assert "Greeting 0" in response.body
+    assert "Greeting 9" in response.body
+    assert "Greeting 10" not in response.body
 
     next_page = re.search(r'href="([^"]+)"', response.body).group(1)
     assert next_page is not None
@@ -62,6 +58,6 @@ def test_list(app):
     response = app.get(next_page)
     assert response.status_int == 200
 
-    assert 'Greeting 0' not in response.body
-    assert 'Greeting 10' in response.body
-    assert 'More' not in response.body
+    assert "Greeting 0" not in response.body
+    assert "Greeting 10" in response.body
+    assert "More" not in response.body

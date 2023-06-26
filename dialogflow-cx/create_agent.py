@@ -21,7 +21,6 @@ from google.cloud.dialogflowcx_v3.types.agent import Agent
 
 
 def create_agent(project_id, display_name):
-
     parent = "projects/" + project_id + "/locations/global"
 
     agents_client = AgentsClient()

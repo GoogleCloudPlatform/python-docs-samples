@@ -19,7 +19,21 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
+def transcribe_streaming_v2(
+    project_id: str,
+    recognizer_id: str,
+    audio_file: str,
+) -> cloud_speech.StreamingRecognizeResponse:
+    """Transcribes audio from audio file stream.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer to use.
+        audio_file: The path to the audio file to transcribe.
+
+    Returns:
+        The response from the transcribe method.
+    """
     # Instantiates a client
     client = SpeechClient()
 
@@ -57,7 +71,7 @@ def transcribe_streaming_v2(project_id, recognizer_id, audio_file):
         recognizer=recognizer.name, streaming_config=streaming_config
     )
 
-    def requests(config, audio):
+    def requests(config: cloud_speech.RecognitionConfig, audio: list) -> list:
         yield config
         yield from audio
 

@@ -34,4 +34,6 @@ def list_jobs(project_id: str, region: str) -> Iterable[batch_v1.Job]:
     client = batch_v1.BatchServiceClient()
 
     return client.list_jobs(parent=f"projects/{project_id}/locations/{region}")
+
+
 # [END batch_list_jobs]

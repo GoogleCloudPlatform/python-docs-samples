@@ -33,7 +33,6 @@ with models.DAG(
     start_date=days_ago(1),
     tags=["example"],
 ) as dag:
-
     # [START composer_gke_create_cluster]
     # [START composer_gkeoperator_minconfig]
     # [START composer_gkeoperator_templateconfig]

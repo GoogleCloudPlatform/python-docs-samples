@@ -20,4 +20,5 @@ from google.cloud import storage_transfer
 def create_transfer_client():
     return storage_transfer.StorageTransferServiceClient()
 
+
 # [END storagetransfer_create_transfer_client]

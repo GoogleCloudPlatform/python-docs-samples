@@ -14,6 +14,7 @@
 
 # This file contains code samples that demonstrate how to update IAM deny policies.
 
+
 # [START iam_update_deny_policy]
 def update_deny_policy(project_id: str, policy_id: str, etag: str) -> None:
     from google.cloud import iam_v2

@@ -33,13 +33,13 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 # [START translate_hybrid_vision]
-def pic_to_text(infile):
+def pic_to_text(infile: str) -> str:
     """Detects text in an image file
 
-    ARGS
+    Args:
     infile: path to image file
 
-    RETURNS
+    Returns:
     String of text detected in image
     """
 
@@ -63,18 +63,23 @@ def pic_to_text(infile):
 
 
 # [START translate_hybrid_create_glossary]
-def create_glossary(languages, project_id, glossary_name, glossary_uri):
+def create_glossary(
+    languages: list,
+    project_id: str,
+    glossary_name: str,
+    glossary_uri: str,
+) -> str:
     """Creates a GCP glossary resource
     Assumes you've already manually uploaded a glossary to Cloud Storage
 
-    ARGS
+    Args:
     languages: list of languages in the glossary
     project_id: GCP project id
     glossary_name: name you want to give this glossary resource
     glossary_uri: the uri of the glossary you uploaded to Cloud Storage
 
-    RETURNS
-    nothing
+    Returns:
+    name of the created or existing glossary
     """
 
     # Instantiates a client
@@ -87,9 +92,7 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
     name = client.glossary_path(project_id, location, glossary_name)
 
     # Set language codes
-    language_codes_set = translate.Glossary.LanguageCodesSet(
-        language_codes=languages
-    )
+    language_codes_set = translate.Glossary.LanguageCodesSet(language_codes=languages)
 
     gcs_source = translate.GcsSource(input_uri=glossary_uri)
 
@@ -115,16 +118,22 @@ def create_glossary(languages, project_id, glossary_name, glossary_uri):
             + glossary_name
             + " already exists. No new glossary was created."
         )
+
+    return glossary_name
     # [END translate_hybrid_create_glossary]
 
 
 # [START translate_hybrid_translate]
 def translate_text(
-    text, source_language_code, target_language_code, project_id, glossary_name
-):
+    text: str,
+    source_language_code: str,
+    target_language_code: str,
+    project_id: str,
+    glossary_name: str,
+) -> str:
     """Translates text to a given language using a glossary
 
-    ARGS
+    Args:
     text: String of text to translate
     source_language_code: language of input text
     target_language_code: language of output text
@@ -132,7 +141,7 @@ def translate_text(
     glossary_name: name you gave your project's glossary
         resource when you created it
 
-    RETURNS
+    Return:
     String of translated text
     """
 
@@ -165,16 +174,17 @@ def translate_text(
 
 
 # [START translate_hybrid_tts]
-def text_to_speech(text, outfile):
+def text_to_speech(text: str, outfile: str) -> str:
     """Converts plaintext to SSML and
     generates synthetic audio from SSML
 
-    ARGS
+    Args:
+
     text: text to synthesize
     outfile: filename to use to store synthetic audio
 
-    RETURNS
-    nothing
+    Returns:
+    String of synthesized audio
     """
 
     # Replace special characters with HTML Ampersand Character Codes
@@ -220,11 +230,21 @@ def text_to_speech(text, outfile):
         out.write(response.audio_content)
         print("Audio content written to file " + outfile)
     # [END translate_hybrid_tts]
+    return outfile
 
 
 # [START translate_hybrid_integration]
-def main():
+def main() -> None:
+    """This method is called when the tutorial is run in the Google Cloud
+    Translation API. It creates a glossary, translates text to
+    French, and speaks the translated text.
 
+    Args:
+    None
+
+    Returns:
+    None
+    """
     # Photo from which to extract text
     infile = "resources/example.png"
     # Name of file that will hold synthetic speech
@@ -239,13 +259,15 @@ def main():
     # uri of .csv file uploaded to Cloud Storage
     glossary_uri = "gs://cloud-samples-data/translation/bistro_glossary.csv"
 
-    create_glossary(glossary_langs, PROJECT_ID, glossary_name, glossary_uri)
+    created_glossary_name = create_glossary(
+        glossary_langs, PROJECT_ID, glossary_name, glossary_uri
+    )
 
     # photo -> detected text
     text_to_translate = pic_to_text(infile)
     # detected text -> translated text
     text_to_speak = translate_text(
-        text_to_translate, "fr", "en", PROJECT_ID, glossary_name
+        text_to_translate, "fr", "en", PROJECT_ID, created_glossary_name
     )
     # translated text -> synthetic audio
     text_to_speech(text_to_speak, outfile)

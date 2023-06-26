@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START speech_context_classes]
+from google.cloud import speech
 
-def transcribe_context_classes(storage_uri):
+
+def transcribe_context_classes(storage_uri: str) -> speech.RecognizeResponse:
     """Provides "hints" to the speech recognizer to
-    favor specific classes of words in the results."""
-    # [START speech_context_classes]
-    from google.cloud import speech
+    favor specific classes of words in the results.
 
+    Args:
+        storage_uri: The URI of the audio file to transcribe.
+
+    Returns:
+        The transcript of the audio file.
+    """
     client = speech.SpeechClient()
 
     # storage_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.wav'
@@ -46,4 +53,6 @@ def transcribe_context_classes(storage_uri):
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response
     # [END speech_context_classes]

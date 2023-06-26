@@ -18,15 +18,15 @@ and recognition metadata.
 Example usage:
     python transcribe_enhanced_model.py resources/commercial_mono.wav
 """
+# [START speech_transcribe_enhanced_model]
 
 import argparse
 
+from google.cloud import speech
 
-def transcribe_file_with_enhanced_model(path):
+
+def transcribe_file_with_enhanced_model(path: str) -> speech.RecognizeResponse:
     """Transcribe the given audio file using an enhanced model."""
-    # [START speech_transcribe_enhanced_model]
-
-    from google.cloud import speech
 
     client = speech.SpeechClient()
 
@@ -51,6 +51,8 @@ def transcribe_file_with_enhanced_model(path):
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response
     # [END speech_transcribe_enhanced_model]
 
 

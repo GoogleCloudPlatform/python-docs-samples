@@ -17,11 +17,17 @@ This file contains sample code that uses the Data Loss Prevention API to create
 custom infoType detectors to refine scan results.
 """
 
-
 # [START dlp_inspect_string_with_exclusion_dict]
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_string_with_exclusion_dict(
-    project, content_string, exclusion_list=["example@example.com"]
-):
+    project: str,
+    content_string: str,
+    exclusion_list: List[str] = ["example@example.com"],
+) -> None:
     """Inspects the provided text, avoiding matches specified in the exclusion list
 
     Uses the Data Loss Prevention API to omit matches on EMAIL_ADDRESS if they are
@@ -35,9 +41,6 @@ def inspect_string_with_exclusion_dict(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -95,9 +98,12 @@ def inspect_string_with_exclusion_dict(
 
 
 # [START dlp_inspect_string_with_exclusion_regex]
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_string_with_exclusion_regex(
-    project, content_string, exclusion_regex=".+@example.com"
-):
+    project: str, content_string: str, exclusion_regex: str = ".+@example.com"
+) -> None:
     """Inspects the provided text, avoiding matches specified in the exclusion regex
 
     Uses the Data Loss Prevention API to omit matches on EMAIL_ADDRESS if they match
@@ -111,9 +117,6 @@ def inspect_string_with_exclusion_regex(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -171,9 +174,14 @@ def inspect_string_with_exclusion_regex(
 
 
 # [START dlp_inspect_string_with_exclusion_dict_substring]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_string_with_exclusion_dict_substring(
-    project, content_string, exclusion_list=["TEST"]
-):
+    project: str, content_string: str, exclusion_list: List[str] = ["TEST"]
+) -> None:
     """Inspects the provided text, avoiding matches that contain excluded tokens
 
     Uses the Data Loss Prevention API to omit matches if they include tokens
@@ -187,9 +195,6 @@ def inspect_string_with_exclusion_dict_substring(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -247,9 +252,14 @@ def inspect_string_with_exclusion_dict_substring(
 
 
 # [START dlp_inspect_string_custom_excluding_substring]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
 def inspect_string_custom_excluding_substring(
-    project, content_string, exclusion_list=["jimmy"]
-):
+    project: str, content_string: str, exclusion_list: List[str] = ["jimmy"]
+) -> None:
     """Inspects the provided text with a custom detector, avoiding matches on specific tokens
 
     Uses the Data Loss Prevention API to omit matches on a custom detector
@@ -263,9 +273,6 @@ def inspect_string_custom_excluding_substring(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -326,7 +333,10 @@ def inspect_string_custom_excluding_substring(
 
 
 # [START dlp_inspect_string_custom_omit_overlap]
-def inspect_string_custom_omit_overlap(project, content_string):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_string_custom_omit_overlap(project: str, content_string: str) -> None:
     """Matches PERSON_NAME and a custom detector,
     but if they overlap only matches the custom detector
 
@@ -340,9 +350,6 @@ def inspect_string_custom_omit_overlap(project, content_string):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -405,12 +412,14 @@ def inspect_string_custom_omit_overlap(project, content_string):
 
 # [END dlp_inspect_string_custom_omit_overlap]
 
+# [START dlp_inspect_string_omit_overlap]
+import google.cloud.dlp  # noqa: F811, E402
 
-# [START dlp_omit_name_if_also_email]
-def omit_name_if_also_email(
-    project,
-    content_string,
-):
+
+def inspect_string_omit_overlap(
+    project: str,
+    content_string: str,
+) -> None:
     """Matches PERSON_NAME and EMAIL_ADDRESS, but not both.
 
     Uses the Data Loss Prevention API omit matches on PERSON_NAME if the
@@ -423,9 +432,6 @@ def omit_name_if_also_email(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -480,11 +486,14 @@ def omit_name_if_also_email(
         print("No findings.")
 
 
-# [END dlp_omit_name_if_also_email]
+# [END dlp_inspect_string_omit_overlap]
 
 
 # [START dlp_inspect_string_without_overlap]
-def inspect_string_without_overlap(project, content_string):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_string_without_overlap(project: str, content_string: str) -> None:
     """Matches EMAIL_ADDRESS and DOMAIN_NAME, but DOMAIN_NAME is omitted
     if it overlaps with EMAIL_ADDRESS
 
@@ -498,9 +507,6 @@ def inspect_string_without_overlap(project, content_string):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -568,26 +574,23 @@ def inspect_string_without_overlap(project, content_string):
 # [END dlp_inspect_string_without_overlap]
 
 
-# [START dlp_inspect_with_person_name_w_custom_hotword]
-def inspect_with_person_name_w_custom_hotword(
-    project, content_string, custom_hotword="patient"
-):
+# [START dlp_inspect_string_custom_hotword]
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_string_w_custom_hotword(
+    project: str, content_string: str, custom_hotword: str = "patient"
+) -> None:
     """Uses the Data Loss Prevention API increase likelihood for matches on
-       PERSON_NAME if the user specified custom hotword is present. Only
+       PERSON_NAME if the user specified custom hot-word is present. Only
        includes findings with the increased likelihood by setting a minimum
        likelihood threshold of VERY_LIKELY.
 
     Args:
         project: The Google Cloud project id to use as a parent resource.
         content_string: The string to inspect.
-        custom_hotword: The custom hotword used for likelihood boosting.
-
-    Returns:
-        None; the response from the API is printed to the terminal.
+        custom_hotword: The custom hot-word used for likelihood boosting.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -638,11 +641,14 @@ def inspect_with_person_name_w_custom_hotword(
         print("No findings.")
 
 
-# [END dlp_inspect_with_person_name_w_custom_hotword]
+# [END dlp_inspect_string_custom_hotword]
 
 
 # [START dlp_inspect_string_multiple_rules]
-def inspect_string_multiple_rules(project, content_string):
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_string_multiple_rules(project: str, content_string: str) -> None:
     """Uses the Data Loss Prevention API to modify likelihood for matches on
        PERSON_NAME combining multiple hotword and exclusion rules.
 
@@ -653,9 +659,6 @@ def inspect_string_multiple_rules(project, content_string):
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -730,11 +733,14 @@ def inspect_string_multiple_rules(project, content_string):
 # [END dlp_inspect_string_multiple_rules]
 
 
-# [START dlp_inspect_with_medical_record_number_custom_regex_detector]
-def inspect_with_medical_record_number_custom_regex_detector(
-    project,
-    content_string,
-):
+# [START dlp_inspect_custom_regex]
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def inspect_data_with_custom_regex_detector(
+    project: str,
+    content_string: str,
+) -> None:
     """Uses the Data Loss Prevention API to analyze string with medical record
        number custom regex detector
 
@@ -745,9 +751,6 @@ def inspect_with_medical_record_number_custom_regex_detector(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -790,14 +793,17 @@ def inspect_with_medical_record_number_custom_regex_detector(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_custom_regex_detector]
+# [END dlp_inspect_custom_regex]
 
 
-# [START dlp_inspect_with_medical_record_number_w_custom_hotwords]
-def inspect_with_medical_record_number_w_custom_hotwords(
-    project,
-    content_string,
-):
+# [START dlp_inspect_hotword_rule]
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_data_w_custom_hotwords(
+    project: str,
+    content_string: str,
+) -> None:
     """Uses the Data Loss Prevention API to analyze string with medical record
        number custom regex detector, with custom hotwords rules to boost finding
        certainty under some circumstances.
@@ -809,9 +815,6 @@ def inspect_with_medical_record_number_w_custom_hotwords(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library.
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -870,4 +873,4 @@ def inspect_with_medical_record_number_w_custom_hotwords(
         print("No findings.")
 
 
-# [END dlp_inspect_with_medical_record_number_w_custom_hotwords]
+# [END dlp_inspect_hotword_rule]

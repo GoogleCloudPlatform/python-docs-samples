@@ -1,4 +1,5 @@
-# Copyright 2015, Google, Inc.
+# Copyright 2015 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -17,7 +18,7 @@ import pytest
 
 from blog import main
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.mark.flaky

@@ -17,7 +17,6 @@ import data_catalog_ptm_create_taxonomy
 
 
 def test_create_taxonomy(capsys, project_id: str, random_taxonomy_display_name: str):
-
     data_catalog_ptm_create_taxonomy.create_taxonomy(
         project_id=project_id,
         location_id="us",

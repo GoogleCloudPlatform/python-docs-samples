@@ -93,11 +93,7 @@ def encrypt_and_insert_data(
     # Using a with statement ensures that the connection is always released
     # back into the pool at the end of statement (even if an error occurs)
     with db.connect() as conn:
-        conn.execute(
-            stmt,
-            time_cast=time_cast,
-            team=team,
-            voter_email=encrypted_email)
+        conn.execute(stmt, time_cast=time_cast, team=team, voter_email=encrypted_email)
     print(f"Vote successfully cast for '{team}' at time {time_cast}!")
 
 

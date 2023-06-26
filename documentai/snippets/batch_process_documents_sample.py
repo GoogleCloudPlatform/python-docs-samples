@@ -14,6 +14,7 @@
 
 
 # [START documentai_batch_process_document]
+# [START documentai_batch_process_documents_processor_version]
 import re
 from typing import Optional
 
@@ -24,13 +25,16 @@ from google.cloud import documentai  # type: ignore
 from google.cloud import storage
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id = 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' # Create processor before running sample
+# project_id = "YOUR_PROJECT_ID"
+# location = "YOUR_PROCESSOR_LOCATION" # Format is "us" or "eu"
+# processor_id = "YOUR_PROCESSOR_ID" # Create processor before running sample
+# gcs_output_uri = "YOUR_OUTPUT_URI" # Must end with a trailing slash `/`. Format: gs://bucket/directory/subdirectory/
+# processor_version_id = "YOUR_PROCESSOR_VERSION_ID" # Optional. Example: pretrained-ocr-v1.0-2020-09-23
+
+# TODO(developer): You must specify either `gcs_input_uri` and `mime_type` or `gcs_input_prefix`
 # gcs_input_uri = "YOUR_INPUT_URI" # Format: gs://bucket/directory/file.pdf
 # input_mime_type = "application/pdf"
-# gcs_output_bucket = "YOUR_OUTPUT_BUCKET_NAME" # Format: gs://bucket
-# gcs_output_uri_prefix = "YOUR_OUTPUT_URI_PREFIX" # Format: directory/subdirectory/
+# gcs_input_prefix = "YOUR_INPUT_URI_PREFIX" # Format: gs://bucket/directory/
 # field_mask = "text,entities,pages.pageNumber"  # Optional. The fields to return in the Document object.
 
 
@@ -38,48 +42,50 @@ def batch_process_documents(
     project_id: str,
     location: str,
     processor_id: str,
-    gcs_input_uri: str,
-    input_mime_type: str,
-    gcs_output_bucket: str,
-    gcs_output_uri_prefix: str,
+    gcs_output_uri: str,
+    processor_version_id: Optional[str] = None,
+    gcs_input_uri: Optional[str] = None,
+    input_mime_type: Optional[str] = None,
+    gcs_input_prefix: Optional[str] = None,
     field_mask: Optional[str] = None,
     timeout: int = 400,
 ) -> None:
-
-    # You must set the api_endpoint if you use a location other than 'us'.
+    # You must set the `api_endpoint` if you use a location other than "us".
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
 
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
-    gcs_document = documentai.GcsDocument(
-        gcs_uri=gcs_input_uri, mime_type=input_mime_type
-    )
-
-    # Load GCS Input URI into a List of document files
-    gcs_documents = documentai.GcsDocuments(documents=[gcs_document])
-    input_config = documentai.BatchDocumentsInputConfig(gcs_documents=gcs_documents)
-
-    # NOTE: Alternatively, specify a GCS URI Prefix to process an entire directory
-    #
-    # gcs_input_uri = "gs://bucket/directory/"
-    # gcs_prefix = documentai.GcsPrefix(gcs_uri_prefix=gcs_input_uri)
-    # input_config = documentai.BatchDocumentsInputConfig(gcs_prefix=gcs_prefix)
-    #
+    if gcs_input_uri:
+        # Specify specific GCS URIs to process individual documents
+        gcs_document = documentai.GcsDocument(
+            gcs_uri=gcs_input_uri, mime_type=input_mime_type
+        )
+        # Load GCS Input URI into a List of document files
+        gcs_documents = documentai.GcsDocuments(documents=[gcs_document])
+        input_config = documentai.BatchDocumentsInputConfig(gcs_documents=gcs_documents)
+    else:
+        # Specify a GCS URI Prefix to process an entire directory
+        gcs_prefix = documentai.GcsPrefix(gcs_uri_prefix=gcs_input_prefix)
+        input_config = documentai.BatchDocumentsInputConfig(gcs_prefix=gcs_prefix)
 
     # Cloud Storage URI for the Output Directory
-    # This must end with a trailing forward slash `/`
-    destination_uri = f"{gcs_output_bucket}/{gcs_output_uri_prefix}"
-
     gcs_output_config = documentai.DocumentOutputConfig.GcsOutputConfig(
-        gcs_uri=destination_uri, field_mask=field_mask
+        gcs_uri=gcs_output_uri, field_mask=field_mask
     )
 
     # Where to write results
     output_config = documentai.DocumentOutputConfig(gcs_output_config=gcs_output_config)
 
-    # The full resource name of the processor, e.g.:
-    # projects/project_id/locations/location/processor/processor_id
-    name = client.processor_path(project_id, location, processor_id)
+    if processor_version_id:
+        # The full resource name of the processor version, e.g.:
+        # projects/{project_id}/locations/{location}/processors/{processor_id}/processorVersions/{processor_version_id}
+        name = client.processor_version_path(
+            project_id, location, processor_id, processor_version_id
+        )
+    else:
+        # The full resource name of the processor, e.g.:
+        # projects/{project_id}/locations/{location}/processors/{processor_id}
+        name = client.processor_path(project_id, location, processor_id)
 
     request = documentai.BatchProcessRequest(
         name=name,
@@ -92,7 +98,7 @@ def batch_process_documents(
 
     # Continually polls the operation until it is complete.
     # This could take some time for larger files
-    # Format: projects/PROJECT_NUMBER/locations/LOCATION/operations/OPERATION_ID
+    # Format: projects/{project_id}/locations/{location}/operations/{operation_id}
     try:
         print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result(timeout=timeout)
@@ -118,7 +124,7 @@ def batch_process_documents(
 
     print("Output files:")
     # One process per Input Document
-    for process in metadata.individual_process_statuses:
+    for process in list(metadata.individual_process_statuses):
         # output_gcs_destination format: gs://BUCKET/PREFIX/OPERATION_NUMBER/INPUT_FILE_NUMBER/
         # The Cloud Storage API requires the bucket name and URI prefix separately
         matches = re.match(r"gs://(.*?)/(.*)", process.output_gcs_destination)
@@ -137,7 +143,7 @@ def batch_process_documents(
         # Document AI may output multiple JSON files per source file
         for blob in output_blobs:
             # Document AI should only output JSON files to GCS
-            if ".json" not in blob.name:
+            if blob.content_type != "application/json":
                 print(
                     f"Skipping non-supported file: {blob.name} - Mimetype: {blob.content_type}"
                 )
@@ -157,4 +163,5 @@ def batch_process_documents(
             print(document.text)
 
 
+# [END documentai_batch_process_documents_processor_version]
 # [END documentai_batch_process_document]

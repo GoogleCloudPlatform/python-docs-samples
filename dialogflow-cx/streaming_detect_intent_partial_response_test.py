@@ -31,7 +31,6 @@ AUDIO = f"{DIRNAME}/{AUDIO_PATH}"
 
 
 def test_streaming_detect_intent_partial_response(capsys):
-
     encoding = "AUDIO_ENCODING_LINEAR_16"
     sample_rate_hertz = 24000
 

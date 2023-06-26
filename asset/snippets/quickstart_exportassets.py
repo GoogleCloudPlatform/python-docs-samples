@@ -29,17 +29,12 @@ def export_assets(project_id, dump_file_path, content_type=None):
     parent = f"projects/{project_id}"
     output_config = asset_v1.OutputConfig()
     output_config.gcs_destination.uri = dump_file_path
-    request_options = {
-        "parent": parent,
-        "output_config": output_config
-    }
+    request_options = {"parent": parent, "output_config": output_config}
 
     if content_type is not None:
         request_options["content_type"] = content_type
 
-    response = client.export_assets(
-        request=request_options
-    )
+    response = client.export_assets(request=request_options)
     print(response.result())
     # [END asset_quickstart_export_assets]
 
@@ -63,15 +58,14 @@ def export_assets_bigquery(project_id, dataset, table, content_type):
         request={
             "parent": parent,
             "content_type": content_type,
-            "output_config": output_config
-            }
+            "output_config": output_config,
+        }
     )
     print(response.result())
     # [END asset_quickstart_export_assets_bigquery]
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

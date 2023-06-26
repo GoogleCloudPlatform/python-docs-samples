@@ -22,14 +22,14 @@ def sentiment_analysis(temperature: float = 0.2) -> None:
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 5,      # Token limit determines the maximum amount of text output.
-        "top_p": 0,                  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 1,                  # A top_k of 1 means the selected token is the most probable among all tokens.
+        "max_output_tokens": 5,  # Token limit determines the maximum amount of text output.
+        "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
     model = TextGenerationModel.from_pretrained("text-bison@001")
     response = model.predict(
-      '''I had to compare two versions of Hamlet for my Shakespeare class and \
+        """I had to compare two versions of Hamlet for my Shakespeare class and \
 unfortunately I picked this version. Everything from the acting (the actors \
 deliver most of their lines directly to the camera) to the camera shots (all \
 medium or close up shots...no scenery shots and very little back ground in the \
@@ -65,9 +65,11 @@ Classify the sentiment of the message: negative
 
 Tweet: The Pixel 7 Pro, is too big to fit in my jeans pocket, so I bought \
 new jeans.
-Classify the sentiment of the message: ''', **parameters)
+Classify the sentiment of the message: """,
+        **parameters,
+    )
     print(f"Response from Model: {response.text}")
-# [END aiplatform_sdk_sentiment_analysis]
+    # [END aiplatform_sdk_sentiment_analysis]
 
     return response
 

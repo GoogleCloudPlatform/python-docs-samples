@@ -20,8 +20,8 @@ from google.cloud import documentai  # type: ignore
 from google.longrunning.operations_pb2 import ListOperationsRequest  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_id = 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
+# project_id = "YOUR_PROJECT_ID"
+# location = "YOUR_PROCESSOR_LOCATION"  # Format is "us" or "eu"
 
 # Create filter in https://google.aip.dev/160 syntax
 # For full options, refer to:
@@ -32,13 +32,14 @@ from google.longrunning.operations_pb2 import ListOperationsRequest  # type: ign
 # operations_filter = "TYPE=BATCH_PROCESS_DOCUMENTS AND STATE=RUNNING"
 
 
-def list_operations_sample(project_id: str, location: str, operations_filter: str) -> None:
-    # You must set the api_endpoint if you use a location other than 'us'.
+def list_operations_sample(
+    project_id: str, location: str, operations_filter: str
+) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
-
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
-    # Format: projects/project_id/locations/location
+    # Format: `projects/{project_id}/locations/{location}`
     name = client.common_location_path(project=project_id, location=location)
     request = ListOperationsRequest(
         name=f"{name}/operations",

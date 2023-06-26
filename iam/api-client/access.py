@@ -165,9 +165,7 @@ def main() -> None:
     modify_member_parser.add_argument("member")
 
     # Modify: add role
-    modify_role_parser = subparsers.add_parser(
-        "modify_role", help=get_policy.__doc__
-    )
+    modify_role_parser = subparsers.add_parser("modify_role", help=get_policy.__doc__)
     modify_role_parser.add_argument("project_id")
     modify_role_parser.add_argument("project_id")
     modify_role_parser.add_argument("role")

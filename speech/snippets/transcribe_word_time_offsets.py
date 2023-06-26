@@ -22,11 +22,14 @@ Example usage:
 
 import argparse
 
+from google.cloud import speech
 
-def transcribe_file_with_word_time_offsets(speech_file):
+
+def transcribe_file_with_word_time_offsets(
+    speech_file: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously and output the word time
     offsets."""
-    from google.cloud import speech
 
     client = speech.SpeechClient()
 
@@ -56,9 +59,13 @@ def transcribe_file_with_word_time_offsets(speech_file):
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
 
+    return response
+
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
-def transcribe_gcs_with_word_time_offsets(gcs_uri):
+def transcribe_gcs_with_word_time_offsets(
+    gcs_uri: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously and output the word time
     offsets."""
     from google.cloud import speech
@@ -91,6 +98,8 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
             print(
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
+
+    return result
 
 
 # [END speech_transcribe_async_word_time_offsets_gcs]
