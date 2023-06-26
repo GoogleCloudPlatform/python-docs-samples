@@ -44,7 +44,7 @@ def receive_authorized_get_request(request):
         auth_type, creds = auth_header.split(" ", 1)
 
         if auth_type.lower() == "bearer":
-            claims = jwt.decode(creds, verify=False)
+            claims = jwt.decode(creds)
             return f"Hello, {claims['email']}!\n"
 
         else:
