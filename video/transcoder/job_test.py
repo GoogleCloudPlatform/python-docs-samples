@@ -89,8 +89,8 @@ output_uri_for_periodic_spritesheet = (
 output_uri_for_concat = f"gs://{output_bucket_name}/test-output-concat/"
 
 preset = "preset/web-hd"
-job_succeeded_state = "ProcessingState.SUCCEEDED"
-job_running_state = "ProcessingState.RUNNING"
+job_succeeded_state = "SUCCEEDED"
+job_running_state = "RUNNING"
 
 
 @pytest.fixture(scope="module")
