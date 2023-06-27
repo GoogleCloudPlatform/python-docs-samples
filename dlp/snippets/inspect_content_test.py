@@ -232,8 +232,8 @@ def test_inspect_column_values_w_custom_hotwords(capsys):
         "rows": [
             ["111-11-1111", "222-22-2222"],
             ["987-23-1234", "333-33-3333"],
-            ["678-12-0909", "444-44-4444"]
-        ]
+            ["678-12-0909", "444-44-4444"],
+        ],
     }
     inspect_content.inspect_column_values_w_custom_hotwords(
         GCLOUD_PROJECT,
