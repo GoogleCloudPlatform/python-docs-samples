@@ -33,13 +33,17 @@ def index():
 
     # Gets the GCS bucket name from the CloudEvent data
     # Example: "storage.googleapis.com/projects/_/buckets/my-bucket"
-    storage_obj = StorageObjectData(event.data)
-    gcs_object = os.path.join(storage_obj.bucket, storage_obj.name)
-    update_time = storage_obj.updated
-    return (
-        f"Cloud Storage object changed: {gcs_object}" + f" updated at {update_time}",
-        200,
-    )
+    try:
+        storage_obj = StorageObjectData(event.data)
+        gcs_object = os.path.join(storage_obj.bucket, storage_obj.name)
+        update_time = storage_obj.updated
+        return (
+            f"Cloud Storage object changed: {gcs_object}"
+            + f" updated at {update_time}",
+            200,
+        )
+    except ValueError as e:
+        return (f"Failed to parse event data: {e}", 400)
 
 
 # [END eventarc_storage_cloudevent_handler]
