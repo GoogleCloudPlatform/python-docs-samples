@@ -335,9 +335,7 @@ def inspect_column_values_w_custom_hotwords(
     headers = [{"name": val} for val in table_header]
     rows = []
     for row in table_rows:
-        rows.append(
-            {"values": [{"string_value": cell_val} for cell_val in row]}
-        )
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
     table = {"headers": headers, "rows": rows}
 
     # Construct the `item` for table to be inspected.
@@ -396,6 +394,7 @@ def inspect_column_values_w_custom_hotwords(
             print("Likelihood: {}".format(finding.likelihood))
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_column_values_w_custom_hotwords]
 
@@ -1122,6 +1121,7 @@ def inspect_image_file(
     else:
         print("No findings.")
 
+
 # [END dlp_inspect_image_file]
 
 
@@ -1698,7 +1698,7 @@ if __name__ == "__main__":
     parser_table_hotword = subparsers.add_parser(
         "table_w_custom_hotword",
         help="Inspect a table and exclude column values when matched "
-             "with custom hot-word.",
+        "with custom hot-word.",
     )
     parser_table_hotword.add_argument(
         "--project",
@@ -1708,23 +1708,23 @@ if __name__ == "__main__":
     parser_table_hotword.add_argument(
         "--table_header",
         help="List of strings representing table field names."
-             "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
-             "The method can be used to exclude matches from entire column"
-             '"Fake_Email_Address".',
+        "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
+        "The method can be used to exclude matches from entire column"
+        '"Fake_Email_Address".',
     )
     parser_table_hotword.add_argument(
         "--table_rows",
         help="List of rows representing table values."
-             'Example: '
-             '"[["example1@example.org", "test1@example.com],'
-             '["example2@example.org", "test2@example.com]]"',
+        "Example: "
+        '"[["example1@example.org", "test1@example.com],'
+        '["example2@example.org", "test2@example.com]]"',
     )
     parser_table_hotword.add_argument(
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser_table_hotword.add_argument(
         "custom_hotword",
@@ -2104,11 +2104,13 @@ if __name__ == "__main__":
         help="The Google Cloud project id to use as a parent resource.",
         default=default_project,
     )
-    parser_image_default_infotypes.add_argument("filename", help="The path to the file to inspect.")
+    parser_image_default_infotypes.add_argument(
+        "filename", help="The path to the file to inspect."
+    )
     parser_image_default_infotypes.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
-             "information in the results.",
+        "information in the results.",
         default=True,
     )
 
