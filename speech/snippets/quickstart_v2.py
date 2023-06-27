@@ -21,33 +21,24 @@ from google.cloud.speech_v2.types import cloud_speech
 
 def quickstart_v2(
     project_id: str,
-    recognizer_id: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file."""
     # Instantiates a client
     client = SpeechClient()
 
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_long"
-        ),
-    )
-
-    # Creates a Recognizer
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
-
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         content = f.read()
 
-    config = cloud_speech.RecognitionConfig(auto_decoding_config={})
+    config = cloud_speech.RecognitionConfig(
+        auto_decoding_config={}, language_codes=["en-US"], model="latest_long"
+    )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=recognizer.name, config=config, content=content
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        config=config,
+        content=content,
     )
 
     # Transcribes the audio into text
