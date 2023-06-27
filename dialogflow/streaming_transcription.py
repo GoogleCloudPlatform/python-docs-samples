@@ -43,8 +43,8 @@ from six.moves import queue
 import conversation_management
 import participant_management
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-CONVERSATION_PROFILE_ID = os.getenv('CONVERSATION_PROFILE')
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+CONVERSATION_PROFILE_ID = os.getenv("CONVERSATION_PROFILE")
 
 # Audio recording parameters
 SAMPLE_RATE = 16000
@@ -52,7 +52,7 @@ CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
 RESTART_TIMEOUT = 160  # seconds
 MAX_LOOKBACK = 3  # seconds
 
-YELLOW = '\033[0;33m'
+YELLOW = "\033[0;33m"
 
 
 class ResumableMicrophoneStream:
@@ -88,12 +88,10 @@ class ResumableMicrophoneStream:
         )
 
     def __enter__(self):
-
         self.closed = False
         return self
 
     def __exit__(self, type, value, traceback):
-
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
@@ -117,20 +115,21 @@ class ResumableMicrophoneStream:
             # Flip the bit of is_final so it can continue stream.
             self.is_final = False
             total_processed_time = self.last_start_time + self.is_final_offset
-            processed_bytes_length = int(
-                total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
+            processed_bytes_length = (
+                int(total_processed_time * SAMPLE_RATE * 16 / 8) / 1000
+            )
             self.last_start_time = total_processed_time
             # Send out bytes stored in self.audio_input_chunks that is after the
             # processed_bytes_length.
-            if (processed_bytes_length != 0):
-                audio_bytes = b''.join(self.audio_input_chunks)
+            if processed_bytes_length != 0:
+                audio_bytes = b"".join(self.audio_input_chunks)
                 # Lookback for unprocessed audio data.
                 need_to_process_length = min(
                     int(len(audio_bytes) - processed_bytes_length),
-                    int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8))
+                    int(MAX_LOOKBACK * SAMPLE_RATE * 16 / 8),
+                )
                 # Note that you need to explicitly use `int` type for substring.
-                need_to_process_bytes = audio_bytes[(-1)
-                                                    * need_to_process_length:]
+                need_to_process_bytes = audio_bytes[(-1) * need_to_process_length :]
                 yield need_to_process_bytes
 
             while not self.closed and not self.is_final:
@@ -156,7 +155,7 @@ class ResumableMicrophoneStream:
                         break
                 self.audio_input_chunks.extend(data)
                 if data:
-                    yield b''.join(data)
+                    yield b"".join(data)
         finally:
             print("Stop generator")
 
@@ -165,29 +164,30 @@ def main():
     """start bidirectional streaming from microphone input to Dialogflow API"""
     # Create conversation.
     conversation = conversation_management.create_conversation(
-        project_id=PROJECT_ID, conversation_profile_id=CONVERSATION_PROFILE_ID)
+        project_id=PROJECT_ID, conversation_profile_id=CONVERSATION_PROFILE_ID
+    )
 
-    conversation_id = conversation.name.split('conversations/')[1].rstrip()
+    conversation_id = conversation.name.split("conversations/")[1].rstrip()
 
     # Create end user participant.
     end_user = participant_management.create_participant(
-        project_id=PROJECT_ID, conversation_id=conversation_id, role='END_USER')
+        project_id=PROJECT_ID, conversation_id=conversation_id, role="END_USER"
+    )
     participant_id = end_user.name.split("participants/")[1].rstrip()
 
     mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
     print(mic_manager.chunk_size)
     sys.stdout.write(YELLOW)
     sys.stdout.write('\nListening, say "Quit" or "Exit" to stop.\n\n')
-    sys.stdout.write('End (ms)       Transcript Results/Status\n')
-    sys.stdout.write('=====================================================\n')
+    sys.stdout.write("End (ms)       Transcript Results/Status\n")
+    sys.stdout.write("=====================================================\n")
 
     with mic_manager as stream:
         while not stream.closed:
             terminate = False
             while not terminate:
                 try:
-                    print("New Streaming Analyze Request: {}".format(
-                        stream.restart_counter))
+                    print(f"New Streaming Analyze Request: {stream.restart_counter}")
                     stream.restart_counter += 1
                     # Send request to streaming and get response.
                     responses = participant_management.analyze_content_audio_stream(
@@ -196,8 +196,9 @@ def main():
                         sample_rate_herz=SAMPLE_RATE,
                         stream=stream,
                         timeout=RESTART_TIMEOUT,
-                        language_code='en-US',
-                        single_utterance=False)
+                        language_code="en-US",
+                        single_utterance=False,
+                    )
 
                     # Now, print the final transcription responses to user.
                     for response in responses:
@@ -209,27 +210,28 @@ def main():
                             # to the beginning of audio stream.
                             offset = response.recognition_result.speech_end_offset
                             stream.is_final_offset = int(
-                                offset.seconds * 1000 + offset.microseconds / 1000)
+                                offset.seconds * 1000 + offset.microseconds / 1000
+                            )
                             transcript = response.recognition_result.transcript
                             # Half-close the stream with gRPC (in Python just stop yielding requests)
                             stream.is_final = True
                             # Exit recognition if any of the transcribed phrase could be
                             # one of our keywords.
-                            if re.search(r'\b(exit|quit)\b', transcript, re.I):
+                            if re.search(r"\b(exit|quit)\b", transcript, re.I):
                                 sys.stdout.write(YELLOW)
-                                sys.stdout.write('Exiting...\n')
+                                sys.stdout.write("Exiting...\n")
                                 terminate = True
                                 stream.closed = True
                                 break
                 except DeadlineExceeded:
-                    print('Deadline Exceeded, restarting.')
+                    print("Deadline Exceeded, restarting.")
 
             if terminate:
                 conversation_management.complete_conversation(
-                    project_id=PROJECT_ID, conversation_id=conversation_id)
+                    project_id=PROJECT_ID, conversation_id=conversation_id
+                )
                 break
 
 
-if __name__ == '__main__':
-
+if __name__ == "__main__":
     main()
