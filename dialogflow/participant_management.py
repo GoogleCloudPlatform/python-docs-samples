@@ -181,12 +181,12 @@ def analyze_content_audio(conversation_id, participant_id, audio_file_path):
 
 # [START dialogflow_analyze_content_audio_stream]
 def analyze_content_audio_stream(
-    conversation_id,
-    participant_id,
-    sample_rate_herz,
+    conversation_id: str,
+    participant_id: str,
+    sample_rate_herz: int,
     stream,
-    timeout,
-    language_code,
+    timeout: int,
+    language_code: str,
     single_utterance=False,
 ):
     """Stream audio streams to Dialogflow and receive transcripts and
