@@ -23,7 +23,7 @@ ROLES = ["HUMAN_AGENT", "AUTOMATED_AGENT", "END_USER"]
 
 
 # [START dialogflow_create_participant]
-def create_participant(project_id, conversation_id, role):
+def create_participant(project_id: str, conversation_id: str, role: str):
     """Creates a participant in a given conversation.
 
     Args:
@@ -50,7 +50,9 @@ def create_participant(project_id, conversation_id, role):
 
 
 # [START dialogflow_analyze_content_text]
-def analyze_content_text(project_id, conversation_id, participant_id, text):
+def analyze_content_text(
+    project_id: str, conversation_id: str, participant_id: str, text: str
+):
     """Analyze text message content from a participant.
 
     Args:
@@ -113,7 +115,9 @@ def analyze_content_text(project_id, conversation_id, participant_id, text):
 
 
 # [START dialogflow_analyze_content_audio]
-def analyze_content_audio(conversation_id, participant_id, audio_file_path):
+def analyze_content_audio(
+    conversation_id: str, participant_id: str, audio_file_path: str
+):
     """Analyze audio content for END_USER with audio files.
 
     Args:
