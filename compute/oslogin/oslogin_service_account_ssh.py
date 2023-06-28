@@ -25,6 +25,7 @@ from __future__ import annotations
 import argparse
 import subprocess
 import time
+from typing import Optional
 import uuid
 
 from google.cloud import oslogin_v1
@@ -39,10 +40,10 @@ HEADERS = {"Metadata-Flavor": "Google"}
 
 def execute(
     cmd: list[str],
-    cwd: str | None = None,
-    capture_output: bool | None = False,
-    env: dict | None = None,
-    raise_errors: bool | None = True,
+    cwd: Optional[str] = None,
+    capture_output: bool = False,
+    env: Optional[dict] = None,
+    raise_errors: bool = True,
 ) -> tuple[int, str]:
     """
     Run an external command (wrapper for Python subprocess).
@@ -125,13 +126,13 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
     Runs a command on a remote system.
 
     Args:
-        cmd: Command to be run.
-        private_key_file: Private SSH key to be used for authentication.
-        username: Username to be used for authentication.
-        hostname: Hostname of the machine you want to run the command on.
+        cmd: command to be run.
+        private_key_file: private SSH key to be used for authentication.
+        username: username to be used for authentication.
+        hostname: hostname of the machine you want to run the command on.
 
     Returns:
-        Output of the run command.
+        Output of the executed command.
     """
     ssh_command = [
         "ssh",
@@ -174,16 +175,29 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> st
 
 
 def main(
-    cmd,
+    cmd: str,
     project: str,
-    instance: str | None = None,
-    zone: str | None = None,
-    account: str | None = None,
-    hostname: str | None = None,
-    oslogin: oslogin_v1.OsLoginServiceClient | None = None,
-) -> None:
-    """Runs a command on a remote system."""
+    instance: Optional[str] = None,
+    zone: Optional[str] = None,
+    account: Optional[str] = None,
+    hostname: Optional[str] = None,
+    oslogin: Optional[oslogin_v1.OsLoginServiceClient] = None,
+) -> str:
+    """
+    Runs a command on a remote system.
 
+    Args:
+        cmd: command to be executed on the remote host.
+        project: name of the project in which te remote instance is hosted.
+        instance: name of the remote system instance.
+        zone: zone in which the remote system resides. I.e. us-west3-a
+        account: account to be used for authentication.
+        hostname: hostname of the remote system.
+        oslogin: OSLogin service client object. If not provided, a new client will be created.
+
+    Returns:
+        The commands output.
+    """
     # Create the OS Login API object.
     if oslogin is None:
         oslogin = oslogin_v1.OsLoginServiceClient()
@@ -214,6 +228,7 @@ def main(
 
         # Print the command line output from the remote instance.
         print(result)
+        return result
     finally:
         # Shred the private key and delete the pair.
         execute(["shred", private_key_file])

@@ -29,7 +29,7 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["term_list.txt"]
-STORED_INFO_TYPE_ID = "github-usernames"
+STORED_INFO_TYPE_ID = "github-usernames" + UNIQUE_STRING
 
 DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
