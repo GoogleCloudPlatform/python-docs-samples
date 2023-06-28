@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import base64
 import os
 import shutil
 import tempfile
@@ -613,7 +613,7 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
         table_data["rows"],
         ["employee_id"],
         alphabet='NUMERIC',
-        wrapped_key=WRAPPED_KEY,
+        wrapped_key=base64.b64decode(WRAPPED_KEY),
         key_name=KEY_NAME,
     )
 
