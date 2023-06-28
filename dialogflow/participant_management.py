@@ -167,11 +167,13 @@ def analyze_content_audio(conversation_id, participant_id, audio_file_path):
     )
     requests = request_generator(audio_config, audio_file_path)
     responses = client.streaming_analyze_content(requests=requests)
+    results = [response for response in responses]
     print("=" * 20)
-    for response in responses:
-        print(f'Transcript: "{response.message.content}".')
+    for result in results:
+        print(f'Transcript: "{result.message.content}".')
 
     print("=" * 20)
+    return results
 
 
 # [END dialogflow_analyze_content_audio]
@@ -194,9 +196,10 @@ def analyze_content_audio_stream(
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
         sample_rate_herz: herz rate of the sample.
-        stream: the stream to process.
+        stream: the stream to process. It should have generator() method to
+          yield input_audio.
         timeout: the timeout of one stream.
-        language_code: the language code of the audio
+        language_code: the language code of the audio. Example: en-US
         single_utterance: whether to use single_utterance.
     """
     credentials, project_id = google.auth.default()
