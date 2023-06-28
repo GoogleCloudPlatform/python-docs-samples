@@ -42,7 +42,7 @@ def get_job_state(project_id, location, job_id):
     name = f"projects/{project_id}/locations/{location}/jobs/{job_id}"
     response = client.get_job(name=name)
 
-    print(f"Job state: {str(response.state)}")
+    print(f"Job state: {str(response.state.name)}")
     return response
 
 
