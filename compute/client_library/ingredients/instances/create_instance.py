@@ -125,13 +125,15 @@ def create_instance(
         instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.preemptible = True
 
+    instance.scheduling = compute_v1.Scheduling()
     if spot:
         # Set the Spot VM setting
-        instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.provisioning_model = (
             compute_v1.Scheduling.ProvisioningModel.SPOT.name
         )
         instance.scheduling.instance_termination_action = instance_termination_action
+    else:
+        instance.scheduling.on_host_maintenance = "TERMINATE"
 
     if custom_hostname is not None:
         # Set the custom hostname for the instance
