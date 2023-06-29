@@ -2067,7 +2067,7 @@ def deidentify_table_with_fpe(
             AES-256 key. Example:
             key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
             keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
-        wrapped_key: The decrypted ('wrapped') AES-256 key to use. This key
+        wrapped_key: The decrypted ('wrapped', in bytes) AES-256 key to use. This key
             should be encrypted using the Cloud KMS key specified by key_name.
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
@@ -2133,7 +2133,6 @@ def deidentify_table_with_fpe(
 
 
 # [START dlp_reidentify_table_fpe]
-import base64  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402, I100
 
 import google.cloud.dlp  # noqa: F811, E402
@@ -2145,7 +2144,7 @@ def reidentify_table_with_fpe(
     table_rows: List[List[str]],
     reid_field_names: List[str],
     key_name: str = None,
-    wrapped_key: str = None,
+    wrapped_key: bytes = None,
     alphabet: str = None,
 ) -> None:
     """Uses the Data Loss Prevention API to re-identify sensitive data in a
@@ -2160,7 +2159,7 @@ def reidentify_table_with_fpe(
             AES-256 key. Example:
             key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
             keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
-        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
+        wrapped_key: The decrypted ('wrapped', in bytes) AES-256 key to use. This key
             should be encrypted using the Cloud KMS key specified by key_name.
         alphabet: The set of characters to replace sensitive ones with. For
             more information, see https://cloud.google.com/dlp/docs/reference/
@@ -2183,10 +2182,6 @@ def reidentify_table_with_fpe(
 
     # Specify fields to be re-identified/decrypted.
     reid_field_names = [{"name": _i} for _i in reid_field_names]
-
-    # The wrapped key is base64-encoded, but the library expects a binary
-    # string, so decode it here.
-    wrapped_key = base64.b64decode(wrapped_key)
 
     # Construct FPE configuration dictionary
     crypto_replace_ffx_fpe_config = {
@@ -2800,13 +2795,13 @@ if __name__ == "__main__":
     table_fpe_parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     table_fpe_parser.add_argument(
         "wrapped_key",
-        help="The decrypted ('wrapped') AES-256 key to use. This key should "
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
              "be encrypted using the Cloud KMS key specified by key_name.",
     )
     table_fpe_parser.add_argument(
@@ -2814,9 +2809,9 @@ if __name__ == "__main__":
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
 
     reid_table_fpe_parser = subparsers.add_parser(
@@ -2843,23 +2838,23 @@ if __name__ == "__main__":
     reid_table_fpe_parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     reid_table_fpe_parser.add_argument(
         "wrapped_key",
         help="The encrypted ('wrapped') AES-256 key to use. This key should "
-             "be encrypted using the Cloud KMS key specified by key_name.",
+        "be encrypted using the Cloud KMS key specified by key_name.",
     )
     reid_table_fpe_parser.add_argument(
         "-a",
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
 
     args = parser.parse_args()
@@ -3021,7 +3016,7 @@ if __name__ == "__main__":
             args.table_header,
             args.table_rows,
             args.reid_field_names,
-            wrapped_key=args.wrapped_key,
+            wrapped_key=base64.b64decode(args.wrapped_key),
             key_name=args.key_name,
             alphabet=args.alphabet,
         )

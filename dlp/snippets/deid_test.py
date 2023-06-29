@@ -639,7 +639,7 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
         table_data["rows"],
         ["employee_id"],
         alphabet='NUMERIC',
-        wrapped_key=WRAPPED_KEY,
+        wrapped_key=base64.b64decode(WRAPPED_KEY),
         key_name=KEY_NAME,
     )
 
