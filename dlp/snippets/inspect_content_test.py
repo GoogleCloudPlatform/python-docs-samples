@@ -238,6 +238,28 @@ def test_inspect_table(capsys: pytest.CaptureFixture) -> None:
     assert "Info type: EMAIL_ADDRESS" in out
 
 
+def test_inspect_column_values_w_custom_hotwords(capsys):
+    table_data = {
+        "header": ["Fake Social Security Number", "Real Social Security Number"],
+        "rows": [
+            ["111-11-1111", "222-22-2222"],
+            ["987-23-1234", "333-33-3333"],
+            ["678-12-0909", "444-44-4444"],
+        ],
+    }
+    inspect_content.inspect_column_values_w_custom_hotwords(
+        GCLOUD_PROJECT,
+        table_data["header"],
+        table_data["rows"],
+        ["US_SOCIAL_SECURITY_NUMBER"],
+        "Fake Social Security Number",
+    )
+    out, _ = capsys.readouterr()
+    assert "Info type: US_SOCIAL_SECURITY_NUMBER" in out
+    assert "222-22-2222" in out
+    assert "111-11-1111" not in out
+
+
 def test_inspect_string_with_custom_info_types(capsys: pytest.CaptureFixture) -> None:
     test_string = "My name is Gary Smith and my email is gary@example.com"
     dictionaries = ["Gary Smith"]
@@ -336,6 +358,16 @@ def test_inspect_image_file_all_infotypes(capsys: pytest.CaptureFixture) -> None
     test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
 
     inspect_content.inspect_image_file_all_infotypes(GCLOUD_PROJECT, test_filepath)
+
+    out, _ = capsys.readouterr()
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Info type: EMAIL_ADDRESS" in out
+
+
+def test_inspect_image_file_default_infotypes(capsys: pytest.CaptureFixture) -> None:
+    test_filepath = os.path.join(RESOURCE_DIRECTORY, "test.png")
+
+    inspect_content.inspect_image_file(GCLOUD_PROJECT, test_filepath)
 
     out, _ = capsys.readouterr()
     assert "Info type: PHONE_NUMBER" in out
