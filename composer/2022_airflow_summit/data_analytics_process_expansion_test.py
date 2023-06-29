@@ -31,7 +31,7 @@ import pytest
 # GCP Project
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 TEST_ID = uuid.uuid4()
-DATAPROC_REGION = "northamerica-northeast1"
+DATAPROC_REGION = "us-central1"
 
 
 # Google Cloud Storage constants
@@ -75,9 +75,7 @@ def test_dataproc_batch(test_bucket, bq_dataset):
 
     BATCH_ID = f"summit-dag-expansion-test-{TEST_ID}"  # Dataproc serverless only allows lowercase characters
     BATCH_CONFIG = {
-        "runtime_config": {
-            "version": "1.1"
-        },
+        "runtime_config": {"version": "1.1"},
         "pyspark_batch": {
             "main_python_file_uri": PROCESSING_PYTHON_FILE,
             "args": [

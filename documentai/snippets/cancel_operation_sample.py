@@ -16,30 +16,24 @@
 # [START documentai_cancel_operation]
 
 from google.api_core.client_options import ClientOptions
-from google.api_core.exceptions import FailedPrecondition
-from google.api_core.exceptions import NotFound
-from google.cloud import documentai
-from google.longrunning.operations_pb2 import CancelOperationRequest
+from google.cloud import documentai  # type: ignore
+from google.longrunning.operations_pb2 import CancelOperationRequest  # type: ignore
 
 # TODO(developer): Uncomment these variables before running the sample.
-# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# operation_name = 'YOUR_OPERATION_NAME' # Format is 'projects/project_id/locations/location/operations/operation_id'
+# location = "YOUR_PROCESSOR_LOCATION"  # Format is "us" or "eu"
+# operation_name = "YOUR_OPERATION_NAME"  # Format is "projects/{project_id}/locations/{location}/operations/{operation_id}"
 
 
-def cancel_operation_sample(location: str, operation_name: str):
-    # You must set the api_endpoint if you use a location other than 'us'.
+def cancel_operation_sample(location: str, operation_name: str) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
-
     client = documentai.DocumentProcessorServiceClient(client_options=opts)
 
     request = CancelOperationRequest(name=operation_name)
 
     # Make CancelOperation request
-    try:
-        client.cancel_operation(request=request)
-        print(f"Operation {operation_name} cancelled")
-    except (FailedPrecondition, NotFound) as e:
-        print(e.message)
+    client.cancel_operation(request=request)
+    print(f"Operation {operation_name} cancelled")
 
 
 # [END documentai_cancel_operation]

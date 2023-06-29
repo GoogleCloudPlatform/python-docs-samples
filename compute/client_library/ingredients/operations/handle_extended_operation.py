@@ -16,6 +16,8 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
+from __future__ import annotations
+
 import sys
 from typing import Any
 
@@ -24,9 +26,8 @@ from google.api_core.extended_operation import ExtendedOperation
 
 # <INGREDIENT wait_for_extended_operation>
 def wait_for_extended_operation(
-        operation: ExtendedOperation,
-        verbose_name: str = "operation",
-        timeout: int = 300) -> Any:
+    operation: ExtendedOperation, verbose_name: str = "operation", timeout: int = 300
+) -> Any:
     """
     Waits for the extended (long-running) operation to complete.
 
@@ -56,8 +57,11 @@ def wait_for_extended_operation(
     result = operation.result(timeout=timeout)
 
     if operation.error_code:
-        print(f"Error during {verbose_name}: [Code: {operation.error_code}]: {operation.error_message}",
-              file=sys.stderr, flush=True)
+        print(
+            f"Error during {verbose_name}: [Code: {operation.error_code}]: {operation.error_message}",
+            file=sys.stderr,
+            flush=True,
+        )
         print(f"Operation ID: {operation.name}", file=sys.stderr, flush=True)
         raise operation.exception() or RuntimeError(operation.error_message)
 
@@ -67,4 +71,6 @@ def wait_for_extended_operation(
             print(f" - {warning.code}: {warning.message}", file=sys.stderr, flush=True)
 
     return result
+
+
 # </INGREDIENT>

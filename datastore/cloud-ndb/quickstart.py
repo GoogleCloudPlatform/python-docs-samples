@@ -32,6 +32,8 @@ def list_books():
         books = Book.query()
         for book in books:
             print(book.to_dict())
+
+
 # [END ndb_context_usage]
 
 

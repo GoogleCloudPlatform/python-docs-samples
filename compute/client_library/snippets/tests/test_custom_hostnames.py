@@ -36,7 +36,7 @@ def autodelete_instance_name():
 
 @pytest.fixture
 def random_hostname():
-    yield "instance.{}.hostname".format(random.randint(0, 2 ** 10))
+    yield "instance.{}.hostname".format(random.randint(0, 2**10))
 
 
 def test_custom_hostname(autodelete_instance_name, random_hostname):

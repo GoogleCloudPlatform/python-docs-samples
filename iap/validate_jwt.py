@@ -39,10 +39,14 @@ def validate_iap_jwt(iap_jwt, expected_audience):
 
     try:
         decoded_jwt = id_token.verify_token(
-            iap_jwt, requests.Request(), audience=expected_audience,
-            certs_url='https://www.gstatic.com/iap/verify/public_key')
-        return (decoded_jwt['sub'], decoded_jwt['email'], '')
+            iap_jwt,
+            requests.Request(),
+            audience=expected_audience,
+            certs_url="https://www.gstatic.com/iap/verify/public_key",
+        )
+        return (decoded_jwt["sub"], decoded_jwt["email"], "")
     except Exception as e:
-        return (None, None, '**ERROR: JWT validation error {}**'.format(e))
+        return (None, None, f"**ERROR: JWT validation error {e}**")
+
 
 # [END iap_validate_jwt]

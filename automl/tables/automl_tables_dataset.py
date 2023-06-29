@@ -41,13 +41,13 @@ def create_dataset(project_id, compute_region, dataset_display_name):
     dataset = client.create_dataset(dataset_display_name)
 
     # Display the dataset information.
-    print("Dataset name: {}".format(dataset.name))
+    print(f"Dataset name: {dataset.name}")
     print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print("Dataset display name: {}".format(dataset.display_name))
+    print(f"Dataset display name: {dataset.display_name}")
     print("Dataset metadata:")
-    print("\t{}".format(dataset.tables_dataset_metadata))
-    print("Dataset example count: {}".format(dataset.example_count))
-    print("Dataset create time: {}".format(dataset.create_time))
+    print(f"\t{dataset.tables_dataset_metadata}")
+    print(f"Dataset example count: {dataset.example_count}")
+    print(f"Dataset create time: {dataset.create_time}")
 
     # [END automl_tables_create_dataset]
 
@@ -73,37 +73,27 @@ def list_datasets(project_id, compute_region, filter=None):
     print("List of datasets:")
     for dataset in response:
         # Display the dataset information.
-        print("Dataset name: {}".format(dataset.name))
+        print(f"Dataset name: {dataset.name}")
         print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-        print("Dataset display name: {}".format(dataset.display_name))
+        print(f"Dataset display name: {dataset.display_name}")
         metadata = dataset.tables_dataset_metadata
         print(
-            "Dataset primary table spec id: {}".format(
-                metadata.primary_table_spec_id
-            )
+            "Dataset primary table spec id: {}".format(metadata.primary_table_spec_id)
         )
         print(
-            "Dataset target column spec id: {}".format(
-                metadata.target_column_spec_id
-            )
+            "Dataset target column spec id: {}".format(metadata.target_column_spec_id)
         )
         print(
-            "Dataset target column spec id: {}".format(
-                metadata.target_column_spec_id
-            )
+            "Dataset target column spec id: {}".format(metadata.target_column_spec_id)
         )
         print(
-            "Dataset weight column spec id: {}".format(
-                metadata.weight_column_spec_id
-            )
+            "Dataset weight column spec id: {}".format(metadata.weight_column_spec_id)
         )
         print(
-            "Dataset ml use column spec id: {}".format(
-                metadata.ml_use_column_spec_id
-            )
+            "Dataset ml use column spec id: {}".format(metadata.ml_use_column_spec_id)
         )
-        print("Dataset example count: {}".format(dataset.example_count))
-        print("Dataset create time: {}".format(dataset.create_time))
+        print(f"Dataset example count: {dataset.example_count}")
+        print(f"Dataset create time: {dataset.create_time}")
         print("\n")
 
         # [END automl_tables_list_datasets]
@@ -127,13 +117,13 @@ def get_dataset(project_id, compute_region, dataset_display_name):
     dataset = client.get_dataset(dataset_display_name=dataset_display_name)
 
     # Display the dataset information.
-    print("Dataset name: {}".format(dataset.name))
+    print(f"Dataset name: {dataset.name}")
     print("Dataset id: {}".format(dataset.name.split("/")[-1]))
-    print("Dataset display name: {}".format(dataset.display_name))
+    print(f"Dataset display name: {dataset.display_name}")
     print("Dataset metadata:")
-    print("\t{}".format(dataset.tables_dataset_metadata))
-    print("Dataset example count: {}".format(dataset.example_count))
-    print("Dataset create time: {}".format(dataset.create_time))
+    print(f"\t{dataset.tables_dataset_metadata}")
+    print(f"Dataset example count: {dataset.example_count}")
+    print(f"Dataset create time: {dataset.create_time}")
 
     return dataset
 
@@ -166,7 +156,7 @@ def import_data(project_id, compute_region, dataset_display_name, path):
 
     print("Processing import...")
     # synchronous check of operation status.
-    print("Data imported. {}".format(response.result()))
+    print(f"Data imported. {response.result()}")
 
     # [END automl_tables_import_data]
 
@@ -197,19 +187,19 @@ def update_dataset(
             dataset_display_name=dataset_display_name,
             column_spec_display_name=target_column_spec_name,
         )
-        print("Target column updated. {}".format(response))
+        print(f"Target column updated. {response}")
     if weight_column_spec_name is not None:
         response = client.set_weight_column(
             dataset_display_name=dataset_display_name,
             column_spec_display_name=weight_column_spec_name,
         )
-        print("Weight column updated. {}".format(response))
+        print(f"Weight column updated. {response}")
     if test_train_column_spec_name is not None:
         response = client.set_test_train_column(
             dataset_display_name=dataset_display_name,
             column_spec_display_name=test_train_column_spec_name,
         )
-        print("Test/train column updated. {}".format(response))
+        print(f"Test/train column updated. {response}")
 
 
 def delete_dataset(project_id, compute_region, dataset_display_name):
@@ -228,7 +218,7 @@ def delete_dataset(project_id, compute_region, dataset_display_name):
     response = client.delete_dataset(dataset_display_name=dataset_display_name)
 
     # synchronous check of operation status.
-    print("Dataset deleted. {}".format(response.result()))
+    print(f"Dataset deleted. {response.result()}")
     # [END automl_tables_delete_dataset]
 
 
@@ -249,14 +239,10 @@ if __name__ == "__main__":
     )
     list_datasets_parser.add_argument("--filter_")
 
-    get_dataset_parser = subparsers.add_parser(
-        "get_dataset", help=get_dataset.__doc__
-    )
+    get_dataset_parser = subparsers.add_parser("get_dataset", help=get_dataset.__doc__)
     get_dataset_parser.add_argument("--dataset_display_name")
 
-    import_data_parser = subparsers.add_parser(
-        "import_data", help=import_data.__doc__
-    )
+    import_data_parser = subparsers.add_parser("import_data", help=import_data.__doc__)
     import_data_parser.add_argument("--dataset_display_name")
     import_data_parser.add_argument("--path")
 
@@ -284,9 +270,7 @@ if __name__ == "__main__":
     if args.command == "get_dataset":
         get_dataset(project_id, compute_region, args.dataset_display_name)
     if args.command == "import_data":
-        import_data(
-            project_id, compute_region, args.dataset_display_name, args.path
-        )
+        import_data(project_id, compute_region, args.dataset_display_name, args.path)
     if args.command == "update_dataset":
         update_dataset(
             project_id,

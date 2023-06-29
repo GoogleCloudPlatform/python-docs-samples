@@ -24,43 +24,40 @@ def app(testbed):
     return webtest.TestApp(xmpp.app)
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_chat(xmpp_mock, app):
-    app.post('/_ah/xmpp/message/chat/', {
-        'from': 'sender@example.com',
-        'to': 'recipient@example.com',
-        'body': 'hello',
-    })
+    app.post(
+        "/_ah/xmpp/message/chat/",
+        {
+            "from": "sender@example.com",
+            "to": "recipient@example.com",
+            "body": "hello",
+        },
+    )
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_subscribe(xmpp_mock, app):
-    app.post('/_ah/xmpp/subscribe')
+    app.post("/_ah/xmpp/subscribe")
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_check_presence(xmpp_mock, app):
-
-    app.post('/_ah/xmpp/presence/available', {
-        'from': 'sender@example.com'
-    })
+    app.post("/_ah/xmpp/presence/available", {"from": "sender@example.com"})
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_send_presence(xmpp_mock, app):
-    app.post('/send_presence', {
-        'jid': 'node@domain/resource'
-    })
+    app.post("/send_presence", {"jid": "node@domain/resource"})
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_error(xmpp_mock, app):
-    app.post('/_ah/xmpp/error/', {
-        'from': 'sender@example.com',
-        'stanza': 'hello world'
-    })
+    app.post(
+        "/_ah/xmpp/error/", {"from": "sender@example.com", "stanza": "hello world"}
+    )
 
 
-@mock.patch('xmpp.xmpp')
+@mock.patch("xmpp.xmpp")
 def test_send_chat(xmpp_mock, app):
-    app.post('/send_chat')
+    app.post("/send_chat")

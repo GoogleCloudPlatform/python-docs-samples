@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import datetime
 import logging
 import os
-from typing import Dict
 
 from flask import Flask, render_template, request, Response
 import sqlalchemy
@@ -87,17 +88,19 @@ def render_index() -> str:
 
 @app.route("/votes", methods=["POST"])
 def cast_vote() -> Response:
-    team = request.form['team']
+    team = request.form["team"]
     return save_vote(db, team)
 
 
-def get_index_context(db: sqlalchemy.engine.base.Engine) -> Dict:
+def get_index_context(db: sqlalchemy.engine.base.Engine) -> dict:
     votes = []
     with db.connect() as conn:
         # Execute the query and fetch all results
-        recent_votes = conn.execute(sqlalchemy.text(
-            "SELECT TOP(5) candidate, time_cast FROM votes ORDER BY time_cast DESC"
-        )).fetchall()
+        recent_votes = conn.execute(
+            sqlalchemy.text(
+                "SELECT TOP(5) candidate, time_cast FROM votes ORDER BY time_cast DESC"
+            )
+        ).fetchall()
         # Convert the results into a list of dicts representing votes
         for row in recent_votes:
             votes.append({"candidate": row[0], "time_cast": row[1]})
@@ -152,8 +155,7 @@ def save_vote(db: sqlalchemy.engine.base.Engine, team: str) -> Response:
     # [END cloud_sql_sqlserver_sqlalchemy_connection]
 
     return Response(
-        status=200,
-        response=f"Vote successfully cast for '{team}' at time {time_cast}!"
+        status=200, response=f"Vote successfully cast for '{team}' at time {time_cast}!"
     )
 
 

@@ -17,8 +17,9 @@
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
 
+from __future__ import annotations
+
 import re
-from typing import List
 import warnings
 
 from google.cloud import compute_v1
@@ -29,14 +30,14 @@ def create_instance(
     project_id: str,
     zone: str,
     instance_name: str,
-    disks: List[compute_v1.AttachedDisk],
+    disks: list[compute_v1.AttachedDisk],
     machine_type: str = "n1-standard-1",
     network_link: str = "global/networks/default",
     subnetwork_link: str = None,
     internal_ip: str = None,
     external_access: bool = False,
     external_ipv4: str = None,
-    accelerators: List[compute_v1.AcceleratorConfig] = None,
+    accelerators: list[compute_v1.AcceleratorConfig] = None,
     preemptible: bool = False,
     spot: bool = False,
     instance_termination_action: str = "STOP",
@@ -87,7 +88,7 @@ def create_instance(
 
     # Use the network interface provided in the network_link argument.
     network_interface = compute_v1.NetworkInterface()
-    network_interface.name = network_link
+    network_interface.network = network_link
     if subnetwork_link:
         network_interface.subnetwork = subnetwork_link
 
@@ -102,7 +103,6 @@ def create_instance(
         if external_ipv4:
             access.nat_i_p = external_ipv4
         network_interface.access_configs = [access]
-
 
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
@@ -119,14 +119,18 @@ def create_instance(
 
     if preemptible:
         # Set the preemptible setting
-        warnings.warn("Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning)
+        warnings.warn(
+            "Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning
+        )
         instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.preemptible = True
 
     if spot:
         # Set the Spot VM setting
         instance.scheduling = compute_v1.Scheduling()
-        instance.scheduling.provisioning_model = compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        instance.scheduling.provisioning_model = (
+            compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        )
         instance.scheduling.instance_termination_action = instance_termination_action
 
     if custom_hostname is not None:
@@ -152,4 +156,6 @@ def create_instance(
 
     print(f"Instance {instance_name} created.")
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
+
+
 # </INGREDIENT>

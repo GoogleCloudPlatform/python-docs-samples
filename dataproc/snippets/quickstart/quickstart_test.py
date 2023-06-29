@@ -25,7 +25,7 @@ import quickstart
 
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-REGION = "us-central1"
+REGION = "northamerica-northeast1"
 
 JOB_FILE_NAME = "sum.py"
 SORT_CODE = (
@@ -101,7 +101,7 @@ def test_quickstart(capsys, staging_bucket_name):
             PROJECT_ID,
             REGION,
             cluster_name,
-            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME)
+            "gs://{}/{}".format(staging_bucket_name, JOB_FILE_NAME),
         )
         out, _ = capsys.readouterr()
 

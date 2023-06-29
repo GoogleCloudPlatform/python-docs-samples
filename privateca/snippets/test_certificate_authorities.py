@@ -55,8 +55,8 @@ def backoff_expo_wrapper():
 
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
-def test_create_certificate(capsys: typing.Any) -> None:
-    CA_POOL_NAME = generate_name()
+def test_create_certificate(capsys: typing.Any, ca_pool_autodelete_name) -> None:
+    CA_POOL_NAME = ca_pool_autodelete_name
     CA_NAME = generate_name()
 
     create_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
@@ -70,9 +70,6 @@ def test_create_certificate(capsys: typing.Any) -> None:
         f'Operation result: name: "projects/{PROJECT}/locations/{LOCATION}/caPools/{CA_POOL_NAME}/certificateAuthorities/{CA_NAME}"',
         out,
     )
-
-    delete_certificate_authority(PROJECT, LOCATION, CA_POOL_NAME, CA_NAME)
-    delete_ca_pool(PROJECT, LOCATION, CA_POOL_NAME)
 
 
 def test_enable_and_disable_certificate_authority(

@@ -29,7 +29,7 @@ def create_feed(project_id, feed_id, asset_names, topic, content_type):
     # TODO content_type ="Content type of the feed"
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
     feed = asset_v1.Feed()
     feed.asset_names.extend(asset_names)
     feed.feed_output_config.pubsub_destination.topic = topic
@@ -37,7 +37,7 @@ def create_feed(project_id, feed_id, asset_names, topic, content_type):
     response = client.create_feed(
         request={"parent": parent, "feed_id": feed_id, "feed": feed}
     )
-    print("feed: {}".format(response))
+    print(f"feed: {response}")
     # [END asset_quickstart_create_feed]
     return response
 
@@ -52,4 +52,6 @@ if __name__ == "__main__":
     parser.add_argument("topic", help="Topic name of the feed")
     parser.add_argument("content_type", help="Content type of the feed")
     args = parser.parse_args()
-    create_feed(args.project_id, args.feed_id, args.asset_names, args.topic, args.content_type)
+    create_feed(
+        args.project_id, args.feed_id, args.asset_names, args.topic, args.content_type
+    )

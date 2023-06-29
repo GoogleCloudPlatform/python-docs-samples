@@ -12,12 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 from cloudevents.http import CloudEvent
+import pytest
 
 import main
 
 
-def test_functions_eventsource_storage(capsys):
+def test_functions_eventsource_storage(capsys: pytest.LogCaptureFixture) -> None:
     attributes = {
         "id": "5e9f24a",
         "type": "google.cloud.storage.object.v1.finalized",
@@ -35,13 +37,21 @@ def test_functions_eventsource_storage(capsys):
 
     event = CloudEvent(attributes, data)
 
-    main.hello_gcs(event)
+    (
+        event_id,
+        event_type,
+        bucket,
+        name,
+        metageneration,
+        timeCreated,
+        updated,
+    ) = main.hello_gcs(event)
 
     out, _ = capsys.readouterr()
-    assert "Event ID: 5e9f24a" in out
-    assert "Event type: google.cloud.storage.object.v1.finalized" in out
-    assert "Bucket: test_bucket_for_storage" in out
-    assert "File: new_blob_uploaded" in out
-    assert "Metageneration: 1" in out
-    assert "Created: 2021-10-10 00:00:00.000000Z" in out
-    assert "Updated: 2021-11-11 00:00:00.000000Z" in out
+    assert "5e9f24a" in event_id
+    assert "google.cloud.storage.object.v1.finalized" in event_type
+    assert "test_bucket_for_storage" in bucket
+    assert "new_blob_uploaded" in name
+    assert metageneration == 1
+    assert "2021-10-10 00:00:00.000000Z" in timeCreated
+    assert "2021-11-11 00:00:00.000000Z" in updated

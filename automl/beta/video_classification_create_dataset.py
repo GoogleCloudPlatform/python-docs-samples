@@ -36,11 +36,13 @@ def create_dataset(
     created_dataset = client.create_dataset(parent=project_location, dataset=dataset)
 
     # Display the dataset information
-    print("Dataset name: {}".format(created_dataset.name))
+    print(f"Dataset name: {created_dataset.name}")
 
     # To get the dataset id, you have to parse it out of the `name` field.
     # As dataset Ids are required for other methods.
     # Name Form:
     #    `projects/{project_id}/locations/{location_id}/datasets/{dataset_id}`
     print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
+
+
 # [END automl_video_classification_create_dataset_beta]

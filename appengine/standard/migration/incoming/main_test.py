@@ -21,7 +21,7 @@ def test_get():
     app = webtest.TestApp(main.app)
 
     try:
-        response = app.get('/')
+        response = app.get("/")
         assert response.status_int == 403
     except webtest.app.AppError as e:
-        assert '403 Forbidden' in str(e)
+        assert "403 Forbidden" in str(e)

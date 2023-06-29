@@ -28,55 +28,57 @@ client = ndb.Client()
 # [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
+
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-# [END greeting]
+    # [END greeting]
 
-# [START query]
+    # [START query]
     with client.context():
+
         @classmethod
         def query_book(cls, ancestor_key):
             return cls.query(ancestor=ancestor_key).order(-cls.date)
 
 
-@app.route('/', methods=['GET'])
+@app.route("/", methods=["GET"])
 def display_guestbook():
-    guestbook_name = request.args.get('guestbook_name', '')
-    print('GET guestbook name is {}'.format(guestbook_name))
+    guestbook_name = request.args.get("guestbook_name", "")
+    print("GET guestbook name is {}".format(guestbook_name))
     with client.context():
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
-# [END query]
+    # [END query]
 
     greeting_blockquotes = [greeting.content for greeting in greetings]
     return render_template(
-            'index.html',
-            greeting_blockquotes=greeting_blockquotes,
-            guestbook_name=guestbook_name
-        )
+        "index.html",
+        greeting_blockquotes=greeting_blockquotes,
+        guestbook_name=guestbook_name,
+    )
 
 
 # [START submit]
-@app.route('/sign', methods=['POST'])
+@app.route("/sign", methods=["POST"])
 def update_guestbook():
     # We set the parent key on each 'Greeting' to ensure each guestbook's
     # greetings are in the same entity group.
-    guestbook_name = request.form.get('guestbook_name', '')
-    print('Guestbook name from the form: {}'.format(guestbook_name))
+    guestbook_name = request.form.get("guestbook_name", "")
+    print("Guestbook name from the form: {}".format(guestbook_name))
 
     with client.context():
-        print('Guestbook name from the URL: {}'.format(guestbook_name))
+        print("Guestbook name from the URL: {}".format(guestbook_name))
         greeting = Greeting(
-                parent=ndb.Key("Book", guestbook_name or "*notitle*"),
-                content=request.form.get('content', None)
-            )
+            parent=ndb.Key("Book", guestbook_name or "*notitle*"),
+            content=request.form.get("content", None),
+        )
         greeting.put()
-# [END submit]
+    # [END submit]
 
-    return redirect('/?' + urlencode({'guestbook_name': guestbook_name}))
+    return redirect("/?" + urlencode({"guestbook_name": guestbook_name}))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)
 # [END all]

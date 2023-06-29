@@ -20,6 +20,6 @@ import main
 def test_blobreader(testbed, login):
     app = webtest.TestApp(main.app)
 
-    response = app.get('/blobreader')
+    response = app.get("/blobreader")
 
-    assert 'abcde\nabc\nabcde\n' in response
+    assert "abcde\nabc\nabcde\n" in response

@@ -13,7 +13,30 @@
 
 
 # [START kms_verify_asymmetric_signature_ec]
-def verify_asymmetric_ec(project_id, location_id, key_ring_id, key_id, version_id, message, signature):
+# Import hashlib.
+import hashlib
+
+# Import cryptographic helpers from the cryptography package.
+from cryptography.exceptions import InvalidSignature
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric import utils
+
+# Import the client library.
+from google.cloud import kms
+
+
+def verify_asymmetric_ec(
+    project_id: str,
+    location_id: str,
+    key_ring_id: str,
+    key_id: str,
+    version_id: str,
+    message: str,
+    signature: str,
+) -> bool:
     """
     Verify the signature of an message signed with an asymmetric EC key.
 
@@ -31,32 +54,22 @@ def verify_asymmetric_ec(project_id, location_id, key_ring_id, key_id, version_i
 
     """
 
-    # Import the client library.
-    from google.cloud import kms
-
-    # Import cryptographic helpers from the cryptography package.
-    from cryptography.exceptions import InvalidSignature
-    from cryptography.hazmat.backends import default_backend
-    from cryptography.hazmat.primitives import hashes, serialization
-    from cryptography.hazmat.primitives.asymmetric import ec, utils
-
-    # Import hashlib.
-    import hashlib
-
     # Convert the message to bytes.
-    message_bytes = message.encode('utf-8')
+    message_bytes = message.encode("utf-8")
 
     # Create the client.
     client = kms.KeyManagementServiceClient()
 
     # Build the key version name.
-    key_version_name = client.crypto_key_version_path(project_id, location_id, key_ring_id, key_id, version_id)
+    key_version_name = client.crypto_key_version_path(
+        project_id, location_id, key_ring_id, key_id, version_id
+    )
 
     # Get the public key.
-    public_key = client.get_public_key(request={'name': key_version_name})
+    public_key = client.get_public_key(request={"name": key_version_name})
 
     # Extract and parse the public key as a PEM-encoded EC key.
-    pem = public_key.pem.encode('utf-8')
+    pem = public_key.pem.encode("utf-8")
     ec_key = serialization.load_pem_public_key(pem, default_backend())
     hash_ = hashlib.sha256(message_bytes).digest()
 
@@ -64,9 +77,11 @@ def verify_asymmetric_ec(project_id, location_id, key_ring_id, key_id, version_i
     try:
         sha256 = hashes.SHA256()
         ec_key.verify(signature, hash_, ec.ECDSA(utils.Prehashed(sha256)))
-        print('Signature verified')
+        print("Signature verified")
         return True
     except InvalidSignature:
-        print('Signature failed to verify')
+        print("Signature failed to verify")
         return False
+
+
 # [END kms_verify_asymmetric_signature_ec]

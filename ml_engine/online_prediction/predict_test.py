@@ -19,15 +19,12 @@ import pytest
 
 import predict
 
-MODEL = 'census'
-JSON_VERSION = 'v2json'
-PROJECT = 'python-docs-samples-tests'
-CONF_KEY = u'confidence'
-PRED_KEY = u'predictions'
-EXPECTED_OUTPUT = {
-    CONF_KEY: 0.7760370969772339,
-    PRED_KEY: u' <=50K'
-}
+MODEL = "census"
+JSON_VERSION = "v2json"
+PROJECT = "python-docs-samples-tests"
+CONF_KEY = "confidence"
+PRED_KEY = "predictions"
+EXPECTED_OUTPUT = {CONF_KEY: 0.7760370969772339, PRED_KEY: " <=50K"}
 CONFIDENCE_EPSILON = 1e-4
 
 # Raise the socket timeout. The requests involved in the sample can take
@@ -35,14 +32,13 @@ CONFIDENCE_EPSILON = 1e-4
 socket.setdefaulttimeout(60)
 
 
-with open('resources/census_test_data.json') as f:
+with open("resources/census_test_data.json") as f:
     JSON = json.load(f)
 
 
 @pytest.mark.flaky
 def test_predict_json():
-    result = predict.predict_json(
-        PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
+    result = predict.predict_json(PROJECT, MODEL, [JSON, JSON], version=JSON_VERSION)
     # Result contains two identical predictions
     assert len(result) == 2 and result[0] == result[1]
     # Each prediction has `confidence` and `predictions`
@@ -56,5 +52,4 @@ def test_predict_json():
 @pytest.mark.flaky
 def test_predict_json_error():
     with pytest.raises(RuntimeError):
-        predict.predict_json(
-            PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)
+        predict.predict_json(PROJECT, MODEL, [{"foo": "bar"}], version=JSON_VERSION)

@@ -27,14 +27,14 @@ def app():
 
 
 def test_retry_or_not():
-    with patch('main.error_client') as error_client_mock:
+    with patch("main.error_client") as error_client_mock:
         error_client_mock.report_exception = MagicMock()
 
         event = Mock(data={})
         main.retry_or_not(event, None)
         assert error_client_mock.report_exception.call_count == 1
 
-        event.data = {'retry': True}
+        event.data = {"retry": True}
         with pytest.raises(RuntimeError):
             main.retry_or_not(event, None)
 

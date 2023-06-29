@@ -44,13 +44,14 @@ def create_jwt(project_id, private_key_file, algorithm):
         # The time the token was issued.
         "iat": datetime.datetime.now(tz=datetime.timezone.utc),
         # Token expiration time.
-        "exp": datetime.datetime.now(tz=datetime.timezone.utc) + datetime.timedelta(minutes=60),
+        "exp": datetime.datetime.now(tz=datetime.timezone.utc)
+        + datetime.timedelta(minutes=60),
         # The audience field should always be set to the GCP project id.
         "aud": project_id,
     }
 
     # Read the private key file.
-    with open(private_key_file, "r") as f:
+    with open(private_key_file) as f:
         private_key = f.read()
 
     print(
@@ -80,7 +81,7 @@ def publish_message(
     jwt_token,
 ):
     headers = {
-        "authorization": "Bearer {}".format(jwt_token),
+        "authorization": f"Bearer {jwt_token}",
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
@@ -102,8 +103,8 @@ def publish_message(
     resp = requests.post(publish_url, data=json.dumps(body), headers=headers)
 
     if resp.status_code != 200:
-        print("Response came back {}, retrying".format(resp.status_code))
-        raise AssertionError("Not OK response: {}".format(resp.status_code))
+        print(f"Response came back {resp.status_code}, retrying")
+        raise AssertionError(f"Not OK response: {resp.status_code}")
 
     return resp
 
@@ -126,7 +127,7 @@ def get_config(
     jwt_token,
 ):
     headers = {
-        "authorization": "Bearer {}".format(jwt_token),
+        "authorization": f"Bearer {jwt_token}",
         "content-type": "application/json",
         "cache-control": "no-cache",
     }
@@ -140,8 +141,8 @@ def get_config(
     resp = requests.get(config_url, headers=headers)
 
     if resp.status_code != 200:
-        print("Error getting config: {}, retrying".format(resp.status_code))
-        raise AssertionError("Not OK response: {}".format(resp.status_code))
+        print(f"Error getting config: {resp.status_code}, retrying")
+        raise AssertionError(f"Not OK response: {resp.status_code}")
 
     return resp
 
@@ -229,7 +230,9 @@ def main():
 
     # Publish num_messages mesages to the HTTP bridge once per second.
     for i in range(1, args.num_messages + 1):
-        seconds_since_issue = (datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat).seconds
+        seconds_since_issue = (
+            datetime.datetime.now(tz=datetime.timezone.utc) - jwt_iat
+        ).seconds
         if seconds_since_issue > 60 * jwt_exp_mins:
             print("Refreshing token after {}s").format(seconds_since_issue)
             jwt_token = create_jwt(
@@ -237,9 +240,9 @@ def main():
             )
             jwt_iat = datetime.datetime.now(tz=datetime.timezone.utc)
 
-        payload = "{}/{}-payload-{}".format(args.registry_id, args.device_id, i)
+        payload = f"{args.registry_id}/{args.device_id}-payload-{i}"
 
-        print("Publishing message {}/{}: '{}'".format(i, args.num_messages, payload))
+        print(f"Publishing message {i}/{args.num_messages}: '{payload}'")
 
         resp = publish_message(
             payload,

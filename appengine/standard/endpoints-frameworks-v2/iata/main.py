@@ -22,12 +22,11 @@ from endpoints import messages
 from endpoints import remote
 
 from data import AIRPORTS
+
 # [END endpoints_iata_imports]
 
 # [START endpoints_iata_messages]
-IATA_RESOURCE = endpoints.ResourceContainer(
-    iata=messages.StringField(1, required=True)
-)
+IATA_RESOURCE = endpoints.ResourceContainer(iata=messages.StringField(1, required=True))
 
 
 class Airport(messages.Message):
@@ -36,25 +35,27 @@ class Airport(messages.Message):
 
 
 IATA_AIRPORT_RESOURCE = endpoints.ResourceContainer(
-    Airport,
-    iata=messages.StringField(1, required=True)
+    Airport, iata=messages.StringField(1, required=True)
 )
 
 
 class AirportList(messages.Message):
     airports = messages.MessageField(Airport, 1, repeated=True)
+
+
 # [END endpoints_iata_messages]
 
 
 # [START endpoints_iata_api]
-@endpoints.api(name='iata', version='v1')
+@endpoints.api(name="iata", version="v1")
 class IataApi(remote.Service):
     @endpoints.method(
         IATA_RESOURCE,
         Airport,
-        path='airport/{iata}',
-        http_method='GET',
-        name='get_airport')
+        path="airport/{iata}",
+        http_method="GET",
+        name="get_airport",
+    )
     def get_airport(self, request):
         if request.iata not in AIRPORTS:
             raise endpoints.NotFoundException()
@@ -63,23 +64,25 @@ class IataApi(remote.Service):
     @endpoints.method(
         message_types.VoidMessage,
         AirportList,
-        path='airports',
-        http_method='GET',
-        name='list_airports')
+        path="airports",
+        http_method="GET",
+        name="list_airports",
+    )
     def list_airports(self, request):
         codes = AIRPORTS.keys()
         codes.sort()
-        return AirportList(airports=[
-          Airport(iata=iata, name=AIRPORTS[iata]) for iata in codes
-        ])
+        return AirportList(
+            airports=[Airport(iata=iata, name=AIRPORTS[iata]) for iata in codes]
+        )
 
     @endpoints.method(
         IATA_RESOURCE,
         message_types.VoidMessage,
-        path='airport/{iata}',
-        http_method='DELETE',
-        name='delete_airport',
-        api_key_required=True)
+        path="airport/{iata}",
+        http_method="DELETE",
+        name="delete_airport",
+        api_key_required=True,
+    )
     def delete_airport(self, request):
         if request.iata not in AIRPORTS:
             raise endpoints.NotFoundException()
@@ -89,10 +92,11 @@ class IataApi(remote.Service):
     @endpoints.method(
         Airport,
         Airport,
-        path='airport',
-        http_method='POST',
-        name='create_airport',
-        api_key_required=True)
+        path="airport",
+        http_method="POST",
+        name="create_airport",
+        api_key_required=True,
+    )
     def create_airport(self, request):
         if request.iata in AIRPORTS:
             raise endpoints.BadRequestException()
@@ -102,15 +106,18 @@ class IataApi(remote.Service):
     @endpoints.method(
         IATA_AIRPORT_RESOURCE,
         Airport,
-        path='airport/{iata}',
-        http_method='POST',
-        name='update_airport',
-        api_key_required=True)
+        path="airport/{iata}",
+        http_method="POST",
+        name="update_airport",
+        api_key_required=True,
+    )
     def update_airport(self, request):
         if request.iata not in AIRPORTS:
             raise endpoints.BadRequestException()
         AIRPORTS[request.iata] = request.name
         return Airport(iata=request.iata, name=AIRPORTS[request.iata])
+
+
 # [END endpoints_iata_api]
 
 

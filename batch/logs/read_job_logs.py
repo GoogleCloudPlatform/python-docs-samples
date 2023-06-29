@@ -14,6 +14,8 @@
 
 
 # [START batch_job_logs]
+from __future__ import annotations
+
 from typing import NoReturn
 
 from google.cloud import batch_v1
@@ -35,5 +37,6 @@ def print_job_logs(project_id: str, job: batch_v1.Job) -> NoReturn:
 
     for log_entry in logger.list_entries(filter_=f"labels.job_uid={job.uid}"):
         print(log_entry.payload)
+
 
 # [END batch_job_logs]

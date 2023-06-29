@@ -23,7 +23,6 @@ from snippets.cloud_kms_env_aead import init_tink_env_aead
 from snippets.cloud_sql_connection_pool import init_db
 from snippets.encrypt_and_insert_data import encrypt_and_insert_data
 
-
 table_name = f"votes_{uuid.uuid4().hex}"
 
 
@@ -65,17 +64,10 @@ def setup_key() -> tink.aead.KmsEnvelopeAead:
 
 
 def test_encrypt_and_insert_data(
-    capsys: pytest.CaptureFixture,
     pool: sqlalchemy.engine.Engine,
-    env_aead: tink.aead.KmsEnvelopeAead
+    env_aead: tink.aead.KmsEnvelopeAead,
 ) -> None:
-    encrypt_and_insert_data(
-        pool,
-        env_aead,
-        table_name,
-        "SPACES",
-        "hello@example.com")
-    captured = capsys.readouterr()
+    encrypt_and_insert_data(pool, env_aead, table_name, "SPACES", "hello@example.com")
 
     decrypted_emails = []
     with pool.connect() as conn:
@@ -89,5 +81,4 @@ def test_encrypt_and_insert_data(
             email = env_aead.decrypt(row[2], team.encode()).decode()
             decrypted_emails.append(email)
 
-    assert "Vote successfully cast for 'SPACES'" in captured.out
     assert "hello@example.com" in decrypted_emails

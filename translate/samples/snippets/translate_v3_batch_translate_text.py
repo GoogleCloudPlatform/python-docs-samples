@@ -17,12 +17,22 @@ from google.cloud import translate
 
 
 def batch_translate_text(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID",
-    timeout=180,
-):
-    """Translates a batch of texts on GCS and stores the result in a GCS location."""
+    input_uri: str = "gs://YOUR_BUCKET_ID/path/to/your/file.txt",
+    output_uri: str = "gs://YOUR_BUCKET_ID/path/to/save/results/",
+    project_id: str = "YOUR_PROJECT_ID",
+    timeout: int = 180,
+) -> translate.TranslateTextResponse:
+    """Translates a batch of texts on GCS and stores the result in a GCS location.
+
+    Args:
+        input_uri: The input URI of the texts to be translated.
+        output_uri: The output URI of the translated texts.
+        project_id: The ID of the project that owns the destination bucket.
+        timeout: The timeout for this batch translation operation.
+
+    Returns:
+        The translated texts.
+    """
 
     client = translate.TranslationServiceClient()
 
@@ -52,8 +62,10 @@ def batch_translate_text(
     print("Waiting for operation to complete...")
     response = operation.result(timeout)
 
-    print("Total Characters: {}".format(response.total_characters))
-    print("Translated Characters: {}".format(response.translated_characters))
+    print(f"Total Characters: {response.total_characters}")
+    print(f"Translated Characters: {response.translated_characters}")
+
+    return response
 
 
 # [END translate_v3_batch_translate_text]

@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
+from unittest import mock
+
 import pytest
 
 import pubsub_publisher
@@ -60,7 +61,9 @@ def test_request_with_none():
 
 def test_content_not_found(dump_request_no_message):
     output = "Message content not found! Use 'message' key to specify"
-    assert pubsub_publisher.pubsub_publisher(dump_request_no_message) == output, f"The function didn't return '{output}'"
+    assert (
+        pubsub_publisher.pubsub_publisher(dump_request_no_message) == output
+    ), f"The function didn't return '{output}'"
 
 
 @mock.patch("pubsub_publisher.pubsub_v1.PublisherClient.publish")

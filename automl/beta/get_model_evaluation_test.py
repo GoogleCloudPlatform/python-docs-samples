@@ -27,21 +27,16 @@ MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 def model_evaluation_id():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-    request = automl.ListModelEvaluationsRequest(
-        parent=model_full_id,
-        filter=""
-    )
+    request = automl.ListModelEvaluationsRequest(parent=model_full_id, filter="")
     evaluations = client.list_model_evaluations(request=request)
     evaluation = next(iter(evaluations))
-    model_evaluation_id = evaluation.name.split(
-        "{}/modelEvaluations/".format(MODEL_ID)
-    )[1].split("\n")[0]
+    model_evaluation_id = evaluation.name.split(f"{MODEL_ID}/modelEvaluations/")[
+        1
+    ].split("\n")[0]
     yield model_evaluation_id
 
 
 def test_get_model_evaluation(capsys, model_evaluation_id):
-    get_model_evaluation.get_model_evaluation(
-        PROJECT_ID, MODEL_ID, model_evaluation_id
-    )
+    get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, model_evaluation_id)
     out, _ = capsys.readouterr()
     assert "Model evaluation name: " in out

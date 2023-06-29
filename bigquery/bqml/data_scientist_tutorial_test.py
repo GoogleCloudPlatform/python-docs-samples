@@ -16,6 +16,7 @@ import uuid
 
 # [START bqml_data_scientist_tutorial_import_and_client]
 from google.cloud import bigquery
+
 # [END bqml_data_scientist_tutorial_import_and_client]
 import pytest
 
@@ -25,8 +26,8 @@ client = bigquery.Client()
 # We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
-dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
-full_dataset_id = "{}.{}".format(client.project, dataset_id)
+dataset_id = f"bqml_tutorial_{str(uuid.uuid4().hex)}"
+full_dataset_id = f"{client.project}.{dataset_id}"
 # [END bqml_data_scientist_tutorial_import_and_client]
 
 
@@ -39,7 +40,7 @@ def delete_dataset():
 def test_data_scientist_tutorial(delete_dataset):
     # [START bqml_data_scientist_tutorial_create_dataset]
     dataset = bigquery.Dataset(full_dataset_id)
-    dataset.location = 'US'
+    dataset.location = "US"
     client.create_dataset(dataset)
     # [END bqml_data_scientist_tutorial_create_dataset]
 
@@ -57,7 +58,9 @@ def test_data_scientist_tutorial(delete_dataset):
             `bigquery-public-data.google_analytics_sample.ga_sessions_*`
         WHERE
             _TABLE_SUFFIX BETWEEN '20160801' AND '20170630'
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_create_model]
@@ -68,7 +71,9 @@ def test_data_scientist_tutorial(delete_dataset):
         *
         FROM
         ML.TRAINING_INFO(MODEL `{}.sample_model`)
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_get_training_statistics]
@@ -88,7 +93,9 @@ def test_data_scientist_tutorial(delete_dataset):
                 `bigquery-public-data.google_analytics_sample.ga_sessions_*`
             WHERE
                 _TABLE_SUFFIX BETWEEN '20170701' AND '20170801'))
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_evaluate_model]
@@ -111,7 +118,9 @@ def test_data_scientist_tutorial(delete_dataset):
             GROUP BY country
             ORDER BY total_predicted_purchases DESC
             LIMIT 10
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_predict_transactions]
@@ -135,7 +144,9 @@ def test_data_scientist_tutorial(delete_dataset):
             GROUP BY fullVisitorId
             ORDER BY total_predicted_purchases DESC
             LIMIT 10
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_data_scientist_tutorial_predict_purchases]

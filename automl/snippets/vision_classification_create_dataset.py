@@ -40,11 +40,13 @@ def create_dataset(project_id, display_name):
     )
 
     # Create a dataset with the dataset metadata in the region.
-    response = client.create_dataset(parent=project_location, dataset=dataset, timeout=300)
+    response = client.create_dataset(
+        parent=project_location, dataset=dataset, timeout=300
+    )
 
     created_dataset = response.result()
 
     # Display the dataset information
-    print("Dataset name: {}".format(created_dataset.name))
+    print(f"Dataset name: {created_dataset.name}")
     print("Dataset id: {}".format(created_dataset.name.split("/")[-1]))
     # [END automl_vision_classification_create_dataset]

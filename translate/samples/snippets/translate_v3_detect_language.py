@@ -16,9 +16,17 @@
 from google.cloud import translate
 
 
-def detect_language(project_id="YOUR_PROJECT_ID"):
-    """Detecting the language of a text string."""
+def detect_language(
+    project_id: str = "YOUR_PROJECT_ID",
+) -> translate.DetectLanguageResponse:
+    """Detecting the language of a text string.
 
+    Args:
+        project_id: The GCP project ID.
+
+    Returns:
+        The detected language of the text.
+    """
     client = translate.TranslationServiceClient()
 
     location = "global"
@@ -37,9 +45,11 @@ def detect_language(project_id="YOUR_PROJECT_ID"):
     # The most probable language is first.
     for language in response.languages:
         # The language detected
-        print("Language code: {}".format(language.language_code))
+        print(f"Language code: {language.language_code}")
         # Confidence of detection result for this language
-        print("Confidence: {}".format(language.confidence))
+        print(f"Confidence: {language.confidence}")
+
+    return response
 
 
 # [END translate_v3_detect_language]

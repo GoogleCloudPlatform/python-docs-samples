@@ -12,7 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import render_template, Response
+from flask import render_template, Request, Response
+
+import functions_framework
 
 from app import get_index_context, init_connection_pool, migrate_db, save_vote
 
@@ -24,7 +26,16 @@ db = init_connection_pool()
 migrate_db(db)
 
 
-def votes(request):
+@functions_framework.http
+def votes(request: Request) -> Response:
+    """Handles HTTP requests to our application.
+
+    Args:
+        request: a Flask request object.
+
+    Returns:
+        Flask HTTP Response to the client.
+    """
     if request.method == "GET":
         context = get_index_context(db)
         return render_template("index.html", **context)

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from io import BytesIO
 import os
 import uuid
 
@@ -20,7 +21,6 @@ import flask.testing
 from google.cloud import storage
 import pytest
 import requests
-from six import BytesIO
 
 import main
 
@@ -32,7 +32,7 @@ def client() -> flask.testing.FlaskClient:
 
 
 def test_index(client: flask.testing.FlaskClient) -> None:
-    r = client.get('/')
+    r = client.get("/")
     assert r.status_code == 200
 
 
@@ -50,17 +50,12 @@ def test_upload(client: flask.testing.FlaskClient, blob_name: str) -> None:
     # Upload a simple file
     file_content = b"This is some test content."
 
-    r = client.post(
-        '/upload',
-        data={
-            'file': (BytesIO(file_content), blob_name)
-        }
-    )
+    r = client.post("/upload", data={"file": (BytesIO(file_content), blob_name)})
 
     assert r.status_code == 200
 
     # The app should return the public cloud storage URL for the uploaded
     # file. Download and verify it.
-    cloud_storage_url = r.data.decode('utf-8')
+    cloud_storage_url = r.data.decode("utf-8")
     r = requests.get(cloud_storage_url)
-    assert r.text.encode('utf-8') == file_content
+    assert r.text.encode("utf-8") == file_content

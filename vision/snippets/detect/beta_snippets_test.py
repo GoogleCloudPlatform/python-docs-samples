@@ -17,73 +17,74 @@ import uuid
 
 import beta_snippets
 
-RESOURCES = os.path.join(os.path.dirname(__file__), 'resources')
-GCS_ROOT = 'gs://cloud-samples-data/vision/'
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+GCS_ROOT = "gs://cloud-samples-data/vision/"
 
-BUCKET = os.environ['CLOUD_STORAGE_BUCKET']
-OUTPUT_PREFIX = 'TEST_OUTPUT_{}'.format(uuid.uuid4())
-GCS_DESTINATION_URI = 'gs://{}/{}/'.format(BUCKET, OUTPUT_PREFIX)
+BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
+OUTPUT_PREFIX = f"TEST_OUTPUT_{uuid.uuid4()}"
+GCS_DESTINATION_URI = f"gs://{BUCKET}/{OUTPUT_PREFIX}/"
 
 
 def test_localize_objects(capsys):
-    path = os.path.join(RESOURCES, 'puppies.jpg')
+    path = os.path.join(RESOURCES, "puppies.jpg")
 
     beta_snippets.localize_objects(path)
 
     out, _ = capsys.readouterr()
-    assert 'Dog' in out
+    assert "Dog" in out
 
 
 def test_localize_objects_uri(capsys):
-    uri = GCS_ROOT + 'puppies.jpg'
+    uri = GCS_ROOT + "puppies.jpg"
 
     beta_snippets.localize_objects_uri(uri)
 
     out, _ = capsys.readouterr()
-    assert 'Dog' in out
+    assert "Dog" in out
 
 
 def test_handwritten_ocr(capsys):
-    path = os.path.join(RESOURCES, 'handwritten.jpg')
+    path = os.path.join(RESOURCES, "handwritten.jpg")
 
     beta_snippets.detect_handwritten_ocr(path)
 
     out, _ = capsys.readouterr()
-    assert 'Cloud Vision API' in out
+    assert "Cloud Vision API" in out
 
 
 def test_handwritten_ocr_uri(capsys):
-    uri = GCS_ROOT + 'handwritten.jpg'
+    uri = GCS_ROOT + "handwritten.jpg"
 
     beta_snippets.detect_handwritten_ocr_uri(uri)
 
     out, _ = capsys.readouterr()
-    assert 'Cloud Vision API' in out
+    assert "Cloud Vision API" in out
 
 
 def test_detect_batch_annotate_files(capsys):
-    file_name = os.path.join(RESOURCES, 'kafka.pdf')
+    file_name = os.path.join(RESOURCES, "kafka.pdf")
     beta_snippets.detect_batch_annotate_files(file_name)
     out, _ = capsys.readouterr()
-    assert 'Symbol: a' in out
-    assert 'Word text: evenings' in out
+    assert "Symbol: a" in out
+    assert "Word text: evenings" in out
 
 
 def test_detect_batch_annotate_files_uri(capsys):
-    gcs_uri = GCS_ROOT + 'document_understanding/kafka.pdf'
+    gcs_uri = GCS_ROOT + "document_understanding/kafka.pdf"
     beta_snippets.detect_batch_annotate_files_uri(gcs_uri)
     out, _ = capsys.readouterr()
-    assert 'Symbol' in out
-    assert 'Word text' in out
+    assert "Symbol" in out
+    assert "Word text" in out
 
 
 def test_async_batch_annotate_images(capsys):
-    gcs_uri = GCS_ROOT + 'landmark/eiffel_tower.jpg'
+    gcs_uri = GCS_ROOT + "landmark/eiffel_tower.jpg"
     beta_snippets.async_batch_annotate_images_uri(gcs_uri, GCS_DESTINATION_URI)
     out, _ = capsys.readouterr()
     assert 'description: "Tower"' in out
 
     from google.cloud import storage
+
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(BUCKET)
     if len(list(bucket.list_blobs(prefix=OUTPUT_PREFIX))) > 0:

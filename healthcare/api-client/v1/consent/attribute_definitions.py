@@ -70,7 +70,7 @@ def create_resource_attribute_definition(
     )
 
     response = request.execute()
-    print("Created RESOURCE attribute definition: {}".format(response))
+    print(f"Created RESOURCE attribute definition: {response}")
 
     return response
 
@@ -136,7 +136,7 @@ def create_request_attribute_definition(
     )
 
     response = request.execute()
-    print("Created REQUEST attribute definition: {}".format(response))
+    print(f"Created REQUEST attribute definition: {response}")
 
     return response
 
@@ -189,7 +189,7 @@ def get_attribute_definition(
     )
 
     response = request.execute()
-    print("Got attribute definition: {}".format(attribute_definition_id))
+    print(f"Got attribute definition: {attribute_definition_id}")
     return response
 
 
@@ -197,7 +197,9 @@ def get_attribute_definition(
 
 
 # [START healthcare_list_attribute_definitions]
-def list_attribute_definitions(project_id: str, location: str, dataset_id: str, consent_store_id: str):
+def list_attribute_definitions(
+    project_id: str, location: str, dataset_id: str, consent_store_id: str
+):
     """Lists the attribute definitions in the given consent store.
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/consent
     before running the sample."""
@@ -348,7 +350,7 @@ def delete_attribute_definition(
     )
 
     response = request.execute()
-    print("Deleted attribute definition: {}".format(attribute_definition_id))
+    print(f"Deleted attribute definition: {attribute_definition_id}")
     return response
 
 

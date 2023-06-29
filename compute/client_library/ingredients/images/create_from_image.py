@@ -17,16 +17,22 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional, Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT create_image_from_image>
-def create_image_from_image(project_id: str, source_image_name: str, image_name: str,
-                            source_project_id: Optional[str] = None,
-                            guest_os_features: Optional[Iterable[str]] = None,
-                            storage_location: Optional[str] = None) -> compute_v1.Image:
+def create_image_from_image(
+    project_id: str,
+    source_image_name: str,
+    image_name: str,
+    source_project_id: str | None = None,
+    guest_os_features: Iterable[str] | None = None,
+    storage_location: str | None = None,
+) -> compute_v1.Image:
     """
     Creates a copy of another image.
 
@@ -59,11 +65,15 @@ def create_image_from_image(project_id: str, source_image_name: str, image_name:
         image.storage_locations = [storage_location]
 
     if guest_os_features:
-        image.guest_os_features = [compute_v1.GuestOsFeature(type_=feature) for feature in guest_os_features]
+        image.guest_os_features = [
+            compute_v1.GuestOsFeature(type_=feature) for feature in guest_os_features
+        ]
 
     operation = image_client.insert(project=project_id, image_resource=image)
 
     wait_for_extended_operation(operation, "image creation from image")
 
     return image_client.get(project=project_id, image=image_name)
+
+
 # </INGREDIENT>

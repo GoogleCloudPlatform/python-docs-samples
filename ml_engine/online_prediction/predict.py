@@ -19,6 +19,7 @@ import json
 
 # [START import_libraries]
 import googleapiclient.discovery
+
 # [END import_libraries]
 
 
@@ -26,7 +27,7 @@ import googleapiclient.discovery
 # Create the AI Platform service object.
 # To authenticate set the environment variable
 # GOOGLE_APPLICATION_CREDENTIALS=<path_to_service_account_file>
-service = googleapiclient.discovery.build('ml', 'v1')
+service = googleapiclient.discovery.build("ml", "v1")
 
 
 def predict_json(project, model, instances, version=None):
@@ -44,20 +45,21 @@ def predict_json(project, model, instances, version=None):
         Mapping[str: any]: dictionary of prediction results defined by the
             model.
     """
-    name = 'projects/{}/models/{}'.format(project, model)
+    name = f"projects/{project}/models/{model}"
 
     if version is not None:
-        name += '/versions/{}'.format(version)
+        name += f"/versions/{version}"
 
-    response = service.projects().predict(
-        name=name,
-        body={'instances': instances}
-    ).execute()
+    response = (
+        service.projects().predict(name=name, body={"instances": instances}).execute()
+    )
 
-    if 'error' in response:
-        raise RuntimeError(response['error'])
+    if "error" in response:
+        raise RuntimeError(response["error"])
 
-    return response['predictions']
+    return response["predictions"]
+
+
 # [END predict_json]
 
 
@@ -72,33 +74,23 @@ def main(project, model, version=None):
         if not isinstance(user_input, list):
             user_input = [user_input]
         try:
-            result = predict_json(
-                project, model, user_input, version=version)
+            result = predict_json(project, model, user_input, version=version)
         except RuntimeError as err:
             print(str(err))
         else:
             print(result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        '--project',
-        help='Project in which the model is deployed',
+        "--project",
+        help="Project in which the model is deployed",
         type=str,
-        required=True
+        required=True,
     )
-    parser.add_argument(
-        '--model',
-        help='Model name',
-        type=str,
-        required=True
-    )
-    parser.add_argument(
-        '--version',
-        help='Name of the version.',
-        type=str
-    )
+    parser.add_argument("--model", help="Model name", type=str, required=True)
+    parser.add_argument("--version", help="Name of the version.", type=str)
     args = parser.parse_args()
     main(
         args.project,

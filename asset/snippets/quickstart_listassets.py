@@ -29,7 +29,7 @@ def list_assets(project_id, asset_types, page_size, content_type):
     # 1000 (both inclusively)'
     # TODO content_type ="Content type to list"
 
-    project_resource = "projects/{}".format(project_id)
+    project_resource = f"projects/{project_id}"
     client = asset_v1.AssetServiceClient()
 
     # Call ListAssets v1 to list assets.
@@ -69,4 +69,6 @@ if __name__ == "__main__":
 
     asset_type_list = args.asset_types.split(",")
 
-    list_assets(args.project_id, asset_type_list, int(args.page_size), args.content_type)
+    list_assets(
+        args.project_id, asset_type_list, int(args.page_size), args.content_type
+    )

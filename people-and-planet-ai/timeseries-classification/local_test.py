@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import subprocess
 import tempfile
 from unittest import mock
 
@@ -21,7 +22,6 @@ import pandas as pd
 import pytest
 import tensorflow as tf
 
-import create_datasets
 import data_utils
 import predict
 import trainer
@@ -79,13 +79,15 @@ def test_e2e_local() -> None:
         checkpoint_dir = os.path.join(temp_dir, "checkpoints")
 
         # Create the dataset TFRecord files.
-        create_datasets.run(
-            raw_data_dir="test_data",
-            raw_labels_dir="test_data",
-            train_data_dir=train_data_dir,
-            eval_data_dir=eval_data_dir,
-            train_eval_split=[80, 20],
-        )
+        cmd = [
+            "python",
+            "create_datasets.py",
+            "--raw-data-dir=test_data",
+            "--raw-labels-dir=test_data",
+            f"--train-data-dir={train_data_dir}",
+            f"--eval-data-dir={eval_data_dir}",
+        ]
+        subprocess.run(cmd, check=True)
         assert os.listdir(train_data_dir), "no training files found"
         assert os.listdir(eval_data_dir), "no evaluation files found"
 

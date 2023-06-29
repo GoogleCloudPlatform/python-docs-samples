@@ -13,12 +13,16 @@
 #  limitations under the License.
 
 # [START batch_list_tasks]
-from typing import Iterable
+from __future__ import annotations
+
+from collections.abc import Iterable
 
 from google.cloud import batch_v1
 
 
-def list_tasks(project_id: str, region: str, job_name: str, group_name: str) -> Iterable[batch_v1.Task]:
+def list_tasks(
+    project_id: str, region: str, job_name: str, group_name: str
+) -> Iterable[batch_v1.Task]:
     """
     Get a list of all jobs defined in given region.
 
@@ -33,5 +37,9 @@ def list_tasks(project_id: str, region: str, job_name: str, group_name: str) -> 
     """
     client = batch_v1.BatchServiceClient()
 
-    return client.list_tasks(parent=f"projects/{project_id}/locations/{region}/jobs/{job_name}/taskGroups/{group_name}")
+    return client.list_tasks(
+        parent=f"projects/{project_id}/locations/{region}/jobs/{job_name}/taskGroups/{group_name}"
+    )
+
+
 # [END batch_list_tasks]

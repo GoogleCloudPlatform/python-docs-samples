@@ -27,7 +27,8 @@ import webapp2
 
 
 JINJA_ENV = jinja2.Environment(
-    loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+    loader=jinja2.FileSystemLoader(os.path.dirname(__file__))
+)
 
 
 class Counter(ndb.Model):
@@ -36,17 +37,18 @@ class Counter(ndb.Model):
 
 class CounterHandler(webapp2.RequestHandler):
     def get(self):
-        template_values = {'counters': Counter.query()}
-        counter_template = JINJA_ENV.get_template('counter.html')
+        template_values = {"counters": Counter.query()}
+        counter_template = JINJA_ENV.get_template("counter.html")
         self.response.out.write(counter_template.render(template_values))
 
     # [START adding_task]
     def post(self):
-        key = self.request.get('key')
+        key = self.request.get("key")
         if key:
-            queue = taskqueue.Queue('pullq')
-            queue.add(taskqueue.Task(payload='', method='PULL', tag=key))
-        self.redirect('/')
+            queue = taskqueue.Queue("pullq")
+            queue.add(taskqueue.Task(payload="", method="PULL", tag=key))
+        self.redirect("/")
+
     # [END adding_task]
 
 
@@ -60,12 +62,14 @@ def update_counter(key, tasks):
 class CounterWorker(webapp2.RequestHandler):
     def get(self):
         """Indefinitely fetch tasks and update the datastore."""
-        queue = taskqueue.Queue('pullq')
+        queue = taskqueue.Queue("pullq")
         while True:
             try:
                 tasks = queue.lease_tasks_by_tag(3600, 1000, deadline=60)
-            except (taskqueue.TransientError,
-                    apiproxy_errors.DeadlineExceededError) as e:
+            except (
+                taskqueue.TransientError,
+                apiproxy_errors.DeadlineExceededError,
+            ) as e:
                 logging.exception(e)
                 time.sleep(1)
                 continue
@@ -84,8 +88,7 @@ class CounterWorker(webapp2.RequestHandler):
             time.sleep(1)
 
 
-app = webapp2.WSGIApplication([
-    ('/', CounterHandler),
-    ('/_ah/start', CounterWorker)
-], debug=True)
+app = webapp2.WSGIApplication(
+    [("/", CounterHandler), ("/_ah/start", CounterWorker)], debug=True
+)
 # [END all]

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from datetime import datetime, timedelta
 import logging
 import os
@@ -338,7 +340,6 @@ def test_predict(
     service_url: str,
     identity_token: str,
 ) -> None:
-
     # Test point
     prediction_data = get_prediction_data(
         -84.80529, 39.11613, "2021-10-01", "2021-10-31"

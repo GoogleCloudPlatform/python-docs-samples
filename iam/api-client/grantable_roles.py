@@ -17,37 +17,42 @@
 import argparse
 import os
 
-from google.oauth2 import service_account
-import googleapiclient.discovery
+from google.oauth2 import service_account  # type: ignore
+import googleapiclient.discovery  # type: ignore
 
 credentials = service_account.Credentials.from_service_account_file(
-    filename=os.environ['GOOGLE_APPLICATION_CREDENTIALS'],
-    scopes=['https://www.googleapis.com/auth/cloud-platform'])
-service = googleapiclient.discovery.build(
-    'iam', 'v1', credentials=credentials)
+    filename=os.environ["GOOGLE_APPLICATION_CREDENTIALS"],
+    scopes=["https://www.googleapis.com/auth/cloud-platform"],
+)
+service = googleapiclient.discovery.build("iam", "v1", credentials=credentials)
 
 
 # [START iam_view_grantable_roles]
-def view_grantable_roles(full_resource_name):
-    roles = service.roles().queryGrantableRoles(body={
-        'fullResourceName': full_resource_name
-    }).execute()
+def view_grantable_roles(full_resource_name: str) -> None:
+    roles = (
+        service.roles()
+        .queryGrantableRoles(body={"fullResourceName": full_resource_name})
+        .execute()
+    )
 
-    for role in roles['roles']:
-        if 'title' in role:
-            print('Title: ' + role['title'])
-        print('Name: ' + role['name'])
-        if 'description' in role:
-            print('Description: ' + role['description'])
-        print(' ')
+    for role in roles["roles"]:
+        if "title" in role:
+            print("Title: " + role["title"])
+        print("Name: " + role["name"])
+        if "description" in role:
+            print("Description: " + role["description"])
+        print(" ")
+
+
 # [END iam_view_grantable_roles]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'full_resource_name',
-        help='The full name of the resource to query grantable roles for.')
+        "full_resource_name",
+        help="The full name of the resource to query grantable roles for.",
+    )
 
     args = parser.parse_args()
     view_grantable_roles(args.full_resource_name)

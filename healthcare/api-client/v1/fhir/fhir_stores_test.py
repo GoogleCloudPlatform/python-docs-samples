@@ -32,15 +32,15 @@ import fhir_stores  # noqa
 location = "us-central1"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-dataset_id = "test_dataset_{}".format(uuid.uuid4())
-fhir_store_id = "test_fhir_store-{}".format(uuid.uuid4())
+dataset_id = f"test_dataset_{uuid.uuid4()}"
+fhir_store_id = f"test_fhir_store-{uuid.uuid4()}"
 version = "R4"
 
 gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 source_file_name = "Patient.json"
 resource_file = os.path.join(RESOURCES, source_file_name)
-import_object = "{}/{}".format(gcs_uri, source_file_name)
+import_object = f"{gcs_uri}/{source_file_name}"
 
 
 BACKOFF_MAX_TIME = 750
@@ -50,8 +50,6 @@ client = discovery.build("healthcare", "v1")
 
 class OperationNotComplete(Exception):
     """Operation is not yet complete"""
-
-    pass
 
 
 @retry.Retry(predicate=retry.if_exception_type(OperationNotComplete))
@@ -86,7 +84,7 @@ def test_dataset():
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
-                print("Got exception {} while deleting dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while deleting dataset")
             else:
                 raise
 
@@ -106,9 +104,7 @@ def test_fhir_store():
             # likely the first request failed on the client side, but
             # the creation suceeded on the server side.
             if err.resp.status == 409:
-                print(
-                    "Got exception {} while creating FHIR store".format(err.resp.status)
-                )
+                print(f"Got exception {err.resp.status} while creating FHIR store")
             else:
                 raise
 
@@ -129,9 +125,7 @@ def test_fhir_store():
             # if we try to delete a FHIR store when the parent dataset
             # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
-                print(
-                    "Got exception {} while deleting FHIR store".format(err.resp.status)
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 
@@ -155,9 +149,7 @@ def crud_fhir_store_id():
             # if we try to delete a FHIR store when the parent dataset
             # doesn't exist, the server will return a 403.
             if err.resp.status == 404 or err.resp.status == 403:
-                print(
-                    "Got exception {} while deleting FHIR store".format(err.resp.status)
-                )
+                print(f"Got exception {err.resp.status} while deleting FHIR store")
             else:
                 raise
 
@@ -179,7 +171,7 @@ def blob():
             # the create going through on the server side but
             # failing on the client.
             if err.resp.status == 409:
-                print("Got exception {} while creating dataset".format(err.resp.status))
+                print(f"Got exception {err.resp.status} while creating dataset")
             else:
                 raise
 

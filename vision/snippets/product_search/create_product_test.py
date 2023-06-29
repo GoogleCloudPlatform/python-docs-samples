@@ -20,12 +20,12 @@ import pytest
 from product_management import create_product, delete_product, list_products
 
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-LOCATION = 'us-west1'
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = "us-west1"
 
-PRODUCT_DISPLAY_NAME = 'fake_product_display_name_for_testing'
-PRODUCT_CATEGORY = 'homegoods'
-PRODUCT_ID = 'test_{}'.format(uuid.uuid4())
+PRODUCT_DISPLAY_NAME = "fake_product_display_name_for_testing"
+PRODUCT_CATEGORY = "homegoods"
+PRODUCT_ID = f"test_{uuid.uuid4()}"
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -38,8 +38,8 @@ def teardown():
 
 def test_create_product(capsys):
     create_product(
-        PROJECT_ID, LOCATION, PRODUCT_ID,
-        PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY)
+        PROJECT_ID, LOCATION, PRODUCT_ID, PRODUCT_DISPLAY_NAME, PRODUCT_CATEGORY
+    )
     list_products(PROJECT_ID, LOCATION)
     out, _ = capsys.readouterr()
     assert PRODUCT_ID in out

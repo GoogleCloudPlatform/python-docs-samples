@@ -45,7 +45,7 @@ def test_event(test_topic, test_registry_id, test_device_id, capsys):  # noqa
     )
 
     sub_topic = "events"
-    mqtt_topic = "/devices/{}/{}".format(test_device_id, sub_topic)
+    mqtt_topic = f"/devices/{test_device_id}/{sub_topic}"
 
     client = cloudiot_mqtt_example.get_client(
         project_id,
@@ -78,7 +78,7 @@ def test_state(test_topic, test_registry_id, test_device_id, capsys):  # noqa
     )
 
     sub_topic = "state"
-    mqtt_topic = "/devices/{}/{}".format(test_device_id, sub_topic)
+    mqtt_topic = f"/devices/{test_device_id}/{sub_topic}"
 
     client = cloudiot_mqtt_example.get_client(
         project_id,
@@ -135,7 +135,7 @@ def test_config(test_topic, test_registry_id, test_device_id, capsys):  # noqa
 
     out, _ = capsys.readouterr()
     assert "Received message" in out
-    assert "/devices/{}/config".format(test_device_id) in out
+    assert f"/devices/{test_device_id}/config" in out
 
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
@@ -180,7 +180,8 @@ def test_receive_command(test_registry_id, test_device_id, capsys):  # noqa
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_gateway_listen_for_bound_device_configs(
-    test_topic, test_registry_id, device_and_gateways, capsys):  # noqa
+    test_topic, test_registry_id, device_and_gateways, capsys  # noqa
+):
     (device_id, gateway_id, _) = device_and_gateways
 
     # Setup for listening for config messages
@@ -213,7 +214,8 @@ def test_gateway_listen_for_bound_device_configs(
 
 @pytest.mark.flaky(max_runs=5, min_passes=1)
 def test_gateway_send_data_for_device(
-    test_topic, test_registry_id, device_and_gateways, capsys):  # noqa
+    test_topic, test_registry_id, device_and_gateways, capsys  # noqa
+):
     (device_id, gateway_id, _) = device_and_gateways
 
     # Setup for listening for config messages
@@ -245,7 +247,8 @@ def test_gateway_send_data_for_device(
 
 
 def test_gateway_trigger_error_topic(
-    test_topic, test_registry_id, device_and_gateways, capsys):  # noqa
+    test_topic, test_registry_id, device_and_gateways, capsys  # noqa
+):
     (device_id, _, gateway_id) = device_and_gateways
 
     # Setup for listening for config messages

@@ -16,7 +16,8 @@
 # folder for complete code samples that are ready to be used.
 # Disabling flake8 for the ingredients file, as it would fail F821 - undefined name check.
 # flake8: noqa
-from typing import Optional
+from __future__ import annotations
+
 
 from google.api_core.exceptions import BadRequest
 from google.cloud import compute_v1
@@ -24,14 +25,14 @@ from google.cloud import compute_v1
 
 # <INGREDIENT create_kms_encrypted_disk>
 def create_kms_encrypted_disk(
-        project_id: str,
-        zone: str,
-        disk_name: str,
-        disk_type: str,
-        disk_size_gb: int,
-        kms_key_name: str,
-        disk_link: Optional[str] = None,
-        image_link: Optional[str] = None
+    project_id: str,
+    zone: str,
+    disk_name: str,
+    disk_type: str,
+    disk_size_gb: int,
+    kms_key_name: str,
+    disk_link: str | None = None,
+    image_link: str | None = None,
 ) -> compute_v1.Disk:
     """
     Creates a zonal disk in a project. If you do not provide values for disk_link or image_link,
@@ -75,16 +76,20 @@ def create_kms_encrypted_disk(
     disk.disk_encryption_key = compute_v1.CustomerEncryptionKey()
     disk.disk_encryption_key.kms_key_name = kms_key_name
     try:
-        operation = disk_client.insert(project=project_id, zone=zone, disk_resource=disk)
+        operation = disk_client.insert(
+            project=project_id, zone=zone, disk_resource=disk
+        )
     except BadRequest as err:
         if "Permission 'cloudkms.cryptoKeyVersions.useToEncrypt' denied" in err.message:
-            print(f"Please provide the cloudkms.cryptoKeyEncrypterDecrypter role to"
-                  f"service-{project_id}@compute-system.iam.gserviceaccount.com")
+            print(
+                f"Please provide the cloudkms.cryptoKeyEncrypterDecrypter role to"
+                f"service-{project_id}@compute-system.iam.gserviceaccount.com"
+            )
         raise err
-
 
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
 
 # </INGREDIENT>

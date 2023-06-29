@@ -27,7 +27,15 @@ from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import SimpleSpanProcessor
 
 
-def initialize_tracer(project_id):
+def initialize_tracer(project_id: str) -> TracerProvider:
+    """Creates OpenTelemetry tracer provider with Cloud Trace exporter
+
+    Args:
+        project_id: Google Cloud project id where to send traces
+
+    Returns:
+        instance of the OpenTelemetry tracer
+    """
     trace.set_tracer_provider(TracerProvider())
     cloud_trace_exporter = CloudTraceSpanExporter(project_id)
     trace.get_tracer_provider().add_span_processor(

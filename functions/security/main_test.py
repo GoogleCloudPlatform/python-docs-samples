@@ -12,26 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from unittest import mock
+
 import flask
-import mock
 
 import main
 
 
-class Response(object):
-    def __init__(self, text=u''):
+class Response:
+    def __init__(self, text=""):
         self.text = text
 
 
 @mock.patch("main.requests")
 def test_functions_bearer_token_should_run(requestsMock):
-    requestsMock.get.side_effect = [
-        Response(u'some-token'),
-        Response(u'function-done')
-    ]
+    requestsMock.get.side_effect = [Response("some-token"), Response("function-done")]
 
     res = main.calling_function(flask.request)
 
     second_headers = requestsMock.get.call_args_list[0][1]
-    assert second_headers == {'headers': {'Metadata-Flavor': 'Google'}}
-    assert res == 'function-done'
+    assert second_headers == {"headers": {"Metadata-Flavor": "Google"}}
+    assert res == "function-done"

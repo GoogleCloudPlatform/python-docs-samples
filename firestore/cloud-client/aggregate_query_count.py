@@ -42,4 +42,6 @@ def create_count_query(project_id: str) -> None:
     for result in results:
         print(f"Alias of results from query: {result[0].alias}")
         print(f"Number of results from query: {result[0].value}")
+
+
 # [END firestore_count_query]

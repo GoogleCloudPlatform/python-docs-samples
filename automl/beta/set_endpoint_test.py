@@ -17,7 +17,7 @@ import os
 import set_endpoint
 
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def test_set_endpoint(capsys):
@@ -25,4 +25,4 @@ def test_set_endpoint(capsys):
 
     out, _ = capsys.readouterr()
     # Look for the display name
-    assert 'do_not_delete_me' in out
+    assert "do_not_delete_me" in out

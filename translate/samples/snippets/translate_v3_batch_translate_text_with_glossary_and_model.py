@@ -17,14 +17,22 @@ from google.cloud import translate
 
 
 def batch_translate_text_with_glossary_and_model(
-    input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.txt",
-    output_uri="gs://YOUR_BUCKET_ID/path/to/save/results/",
-    project_id="YOUR_PROJECT_ID",
-    model_id="YOUR_MODEL_ID",
-    glossary_id="YOUR_GLOSSARY_ID",
-):
-    """
-    Batch translate text with Glossary and Translation model
+    input_uri: str,
+    output_uri: str,
+    project_id: str,
+    model_id: str,
+    glossary_id: str,
+) -> translate.TranslateTextResponse:
+    """Batch translate text with Glossary and Translation model.
+    Args:
+        input_uri: The input text to be translated.
+        output_uri: The output text to be translated.
+        project_id: The ID of the GCP project that owns the model.
+        model_id: The ID of the model
+        glossary_id: The ID of the glossary
+
+    Returns:
+        The translated text.
     """
 
     client = translate.TranslationServiceClient()
@@ -70,8 +78,10 @@ def batch_translate_text_with_glossary_and_model(
     response = operation.result()
 
     # Display the translation for each input text provided
-    print("Total Characters: {}".format(response.total_characters))
-    print("Translated Characters: {}".format(response.translated_characters))
+    print(f"Total Characters: {response.total_characters}")
+    print(f"Translated Characters: {response.translated_characters}")
+
+    return response
 
 
 # [END translate_v3_batch_translate_text_with_glossary_and_model]

@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import io
 import os
 import uuid
 
 # [START bqml_ncaa_tutorial_import_and_client]
 from google.cloud import bigquery
+
 # [END bqml_ncaa_tutorial_import_and_client]
 import pytest
 
@@ -26,14 +26,13 @@ client = bigquery.Client()
 # We use a unique dataset ID for this example to avoid collisions with
 # other invocations of this tutorial.  In practice, you could leverage
 # a persistent dataset and not create/destroy it with each invocation.
-dataset_id = "bqml_tutorial_{}".format(str(uuid.uuid4().hex))
-full_dataset_id = "{}.{}".format(client.project, dataset_id)
+dataset_id = f"bqml_tutorial_{str(uuid.uuid4().hex)}"
+full_dataset_id = f"{client.project}.{dataset_id}"
 # [END bqml_ncaa_tutorial_import_and_client]
 
 
 @pytest.fixture
 def delete_dataset():
-
     yield
     client.delete_dataset(full_dataset_id, delete_contents=True)
 
@@ -41,19 +40,18 @@ def delete_dataset():
 def test_ncaa_tutorial(delete_dataset):
     # [START bqml_ncaa_tutorial_create_dataset]
     dataset = bigquery.Dataset(full_dataset_id)
-    dataset.location = 'US'
+    dataset.location = "US"
     client.create_dataset(dataset)
     # [END bqml_ncaa_tutorial_create_dataset]
 
     # Create the tables used by the tutorial
     # Note: the queries are saved to a file. This should be updated to use the
     # saved queries once the library supports running saved queries.
-    query_files = ['feature_input_query.sql', 'training_data_query.sql']
-    resources_directory = os.path.join(os.path.dirname(__file__), 'resources')
+    query_files = ["feature_input_query.sql", "training_data_query.sql"]
+    resources_directory = os.path.join(os.path.dirname(__file__), "resources")
     for fname in query_files:
-        query_filepath = os.path.join(
-            resources_directory, fname)
-        sql = io.open(query_filepath, 'r', encoding='utf-8').read().format(dataset_id)
+        query_filepath = os.path.join(resources_directory, fname)
+        sql = open(query_filepath, encoding="utf-8").read().format(dataset_id)
         client.query(sql).result()
 
     # [START bqml_ncaa_tutorial_create_model]
@@ -73,7 +71,9 @@ def test_ncaa_tutorial(delete_dataset):
         WHERE
             # remove the game to predict
             game_id != 'f1063e80-23c7-486b-9a5e-faa52beb2d83'
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_create_model]
@@ -84,7 +84,9 @@ def test_ncaa_tutorial(delete_dataset):
             *
         FROM
             ML.TRAINING_INFO(MODEL `{}.ncaa_model`)
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_get_training_statistics]
@@ -102,7 +104,9 @@ def test_ncaa_tutorial(delete_dataset):
         FROM
             ML.EVALUATE(MODEL `{0}.ncaa_model`,
                 TABLE eval_table)
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_evaluate_model]
@@ -135,7 +139,9 @@ def test_ncaa_tutorial(delete_dataset):
                 game_to_predict) AS truth
         ON
             predict.game_id = truth.game_id
-    """.format(dataset_id)
+    """.format(
+        dataset_id
+    )
     df = client.query(sql).to_dataframe()
     print(df)
     # [END bqml_ncaa_tutorial_predict_outcomes]

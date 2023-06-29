@@ -13,31 +13,32 @@
 # limitations under the License.
 
 import os
+from unittest import mock
 
 import google.auth
-import mock
 
 import snippets
 
 
 def test_implicit():
-    snippets.implicit(os.environ['GOOGLE_CLOUD_PROJECT'])
+    snippets.implicit(os.environ["GOOGLE_CLOUD_PROJECT"])
 
 
 def test_explicit():
-    with open(os.environ['GOOGLE_APPLICATION_CREDENTIALS']) as creds_file:
+    with open(os.environ["GOOGLE_APPLICATION_CREDENTIALS"]) as creds_file:
         creds_file_data = creds_file.read()
 
     open_mock = mock.mock_open(read_data=creds_file_data)
 
-    with mock.patch('io.open', open_mock):
-        snippets.explicit(os.environ['GOOGLE_CLOUD_PROJECT'])
+    with mock.patch("io.open", open_mock):
+        snippets.explicit(os.environ["GOOGLE_CLOUD_PROJECT"])
 
 
 def test_explicit_compute_engine():
     adc, project = google.auth.default()
     credentials_patch = mock.patch(
-        'google.auth.compute_engine.Credentials', return_value=adc)
+        "google.auth.compute_engine.Credentials", return_value=adc
+    )
 
     with credentials_patch:
         snippets.explicit_compute_engine(project)
@@ -46,7 +47,8 @@ def test_explicit_compute_engine():
 def test_explicit_app_engine():
     adc, project = google.auth.default()
     credentials_patch = mock.patch(
-        'google.auth.app_engine.Credentials', return_value=adc)
+        "google.auth.app_engine.Credentials", return_value=adc
+    )
 
     with credentials_patch:
         snippets.explicit_app_engine(project)

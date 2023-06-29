@@ -19,12 +19,12 @@ import main
 
 
 def test_print_name():
-    name = 'test'
-    data = {'name': name}
+    name = "test"
+    data = {"name": name}
     req = Mock(get_json=Mock(return_value=data), args=data)
 
     # Call tested function
-    assert main.hello_http(req) == 'Hello {}!'.format(name)
+    assert main.hello_http(req) == f"Hello {name}!"
 
 
 def test_print_hello_world():
@@ -32,5 +32,7 @@ def test_print_hello_world():
     req = Mock(get_json=Mock(return_value=data), args=data)
 
     # Call tested function
-    assert main.hello_http(req) == 'Hello World!'
+    assert main.hello_http(req) == "Hello World!"
+
+
 # [END functions_http_unit_test]

@@ -25,38 +25,32 @@ from google.cloud import compute_v1
 import main
 
 
-INSTANCE_PROJECT = os.getenv('GCLOUD_PROJECT')
-INSTANCE_ZONE = os.getenv('FUNCTIONS_COMPUTE_ZONE')
-INSTANCE_NAME = os.getenv('FUNCTIONS_COMPUTE_INSTANCE')
+INSTANCE_PROJECT = os.getenv("GCLOUD_PROJECT")
+INSTANCE_ZONE = os.getenv("FUNCTIONS_COMPUTE_ZONE")
+INSTANCE_NAME = os.getenv("FUNCTIONS_COMPUTE_INSTANCE")
 
 instances_client = compute_v1.InstancesClient()
 
 # Avoid race conditions from parallel multi-Python-version CI builds
-PYTHON_VERSION = os.getenv('RUN_TESTS_SESSION', '').replace('.', '')
+PYTHON_VERSION = os.getenv("RUN_TESTS_SESSION", "").replace(".", "")
 if PYTHON_VERSION:
-    INSTANCE_NAME += f'-{PYTHON_VERSION}'
+    INSTANCE_NAME += f"-{PYTHON_VERSION}"
 
 
 def test_functions_label_gce_instance_should_set_label():
-    example_subject = 'compute.googleapis.com/'
+    example_subject = "compute.googleapis.com/"
 
-    example_subject += f'projects/{INSTANCE_PROJECT}/'
-    example_subject += f'zones/{INSTANCE_ZONE}/'
-    example_subject += f'instances/{INSTANCE_NAME}'
+    example_subject += f"projects/{INSTANCE_PROJECT}/"
+    example_subject += f"zones/{INSTANCE_ZONE}/"
+    example_subject += f"instances/{INSTANCE_NAME}"
 
-    example_email = f'{uuid.uuid4().hex}@example.com'
+    example_email = f"{uuid.uuid4().hex}@example.com"
 
-    attributes = {
-        'type': '',
-        'source': '',
-        'subject': example_subject
-    }
+    attributes = {"type": "", "source": "", "subject": example_subject}
 
     data = {
-        'protoPayload': {
-            'authenticationInfo': {
-                'principalEmail': example_email
-            },
+        "protoPayload": {
+            "authenticationInfo": {"principalEmail": example_email},
         }
     }
 
@@ -69,15 +63,13 @@ def test_functions_label_gce_instance_should_set_label():
     @backoff.on_exception(backoff.expo, AssertionError, max_time=120)
     def run_assertions():
         # Get labeled instance
-        expected_label = re.sub('\\W', '_', example_email)
+        expected_label = re.sub("\\W", "_", example_email)
         labels = instances_client.get(
-            project=INSTANCE_PROJECT,
-            zone=INSTANCE_ZONE,
-            instance=INSTANCE_NAME
+            project=INSTANCE_PROJECT, zone=INSTANCE_ZONE, instance=INSTANCE_NAME
         ).labels
 
         # Check that instance was labelled
-        assert 'creator' in labels
-        assert labels.get('creator') == expected_label
+        assert "creator" in labels
+        assert labels.get("creator") == expected_label
 
     run_assertions()

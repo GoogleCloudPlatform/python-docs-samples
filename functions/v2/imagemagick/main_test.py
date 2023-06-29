@@ -13,21 +13,16 @@
 # limitations under the License.
 
 from collections import UserDict
+from unittest.mock import MagicMock, patch
 import uuid
-
-from mock import MagicMock, patch
 
 import main
 
 
-@patch('main.__blur_image')
-@patch('main.vision_client')
-@patch('main.storage_client')
-def test_process_offensive_image(
-  storage_client,
-  vision_client,
-  __blur_image,
-  capsys):
+@patch("main.__blur_image")
+@patch("main.vision_client")
+@patch("main.storage_client")
+def test_process_offensive_image(storage_client, vision_client, __blur_image, capsys):
     result = UserDict()
     result.safe_search_annotation = UserDict()
     result.safe_search_annotation.adult = 5
@@ -37,27 +32,20 @@ def test_process_offensive_image(
     filename = str(uuid.uuid4())
 
     event = MagicMock()
-    event.data = {
-      'bucket': 'my-bucket',
-      'name': filename
-    }
+    event.data = {"bucket": "my-bucket", "name": filename}
 
     main.blur_offensive_images(event)
 
     out, _ = capsys.readouterr()
-    assert 'Analyzing %s.' % filename in out
-    assert 'The image %s was detected as inappropriate.' % filename in out
+    assert "Analyzing %s." % filename in out
+    assert "The image %s was detected as inappropriate." % filename in out
     assert main.__blur_image.called
 
 
-@patch('main.__blur_image')
-@patch('main.vision_client')
-@patch('main.storage_client')
-def test_process_safe_image(
-  storage_client,
-  vision_client,
-  __blur_image,
-  capsys):
+@patch("main.__blur_image")
+@patch("main.vision_client")
+@patch("main.storage_client")
+def test_process_safe_image(storage_client, vision_client, __blur_image, capsys):
     result = UserDict()
     result.safe_search_annotation = UserDict()
     result.safe_search_annotation.adult = 1
@@ -67,26 +55,23 @@ def test_process_safe_image(
     filename = str(uuid.uuid4())
 
     event = MagicMock()
-    event.data = {
-      'bucket': 'my-bucket',
-      'name': filename
-    }
+    event.data = {"bucket": "my-bucket", "name": filename}
 
     main.blur_offensive_images(event)
 
     out, _ = capsys.readouterr()
 
-    assert 'Analyzing %s.' % filename in out
-    assert 'The image %s was detected as OK.' % filename in out
+    assert "Analyzing %s." % filename in out
+    assert "The image %s was detected as OK." % filename in out
     assert __blur_image.called is False
 
 
-@patch('main.os')
-@patch('main.Image')
-@patch('main.storage_client')
+@patch("main.os")
+@patch("main.Image")
+@patch("main.storage_client")
 def test_blur_image(storage_client, image_mock, os_mock, capsys):
     filename = str(uuid.uuid4())
-    blur_bucket = 'blurred-bucket-' + str(uuid.uuid4())
+    blur_bucket = "blurred-bucket-" + str(uuid.uuid4())
 
     os_mock.remove = MagicMock()
     os_mock.path = MagicMock()
@@ -107,8 +92,8 @@ def test_blur_image(storage_client, image_mock, os_mock, capsys):
 
     out, _ = capsys.readouterr()
 
-    assert f'Image {filename} was downloaded to' in out
-    assert f'Image {filename} was blurred.' in out
-    assert f'Blurred image uploaded to: gs://{blur_bucket}/{filename}' in out
+    assert f"Image {filename} was downloaded to" in out
+    assert f"Image {filename} was blurred." in out
+    assert f"Blurred image uploaded to: gs://{blur_bucket}/{filename}" in out
     assert os_mock.remove.called
     assert image_mock.resize.called

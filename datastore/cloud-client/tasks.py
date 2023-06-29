@@ -11,9 +11,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 import argparse
 import datetime
-from typing import Union
 
 # [START datastore_add_entity]
 # [START datastore_build_service]
@@ -63,7 +64,7 @@ def add_task(client: datastore.Client, description: str):
 
 
 # [START datastore_update_entity]
-def mark_done(client: datastore.Client, task_id: Union[str, int]):
+def mark_done(client: datastore.Client, task_id: str | int):
     with client.transaction():
         # Create a key for an entity of kind "Task", and with the supplied
         # `task_id` as its Id
@@ -98,7 +99,7 @@ def list_tasks(client: datastore.Client):
 
 
 # [START datastore_delete_entity]
-def delete_task(client: datastore.Client, task_id: Union[str, int]):
+def delete_task(client: datastore.Client, task_id: str | int):
     # Create a key for an entity of kind "Task", and with the supplied
     # `task_id` as its Id
     key = client.key("Task", task_id)

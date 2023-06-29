@@ -30,7 +30,6 @@ output_dataset = "ekg_entity_reconciliation"
 
 
 def test_create_entity_reconciliation_job(capsys):
-
     try:
         create_entity_reconciliation_job_sample.create_entity_reconciliation_job_sample(
             project_id=project_id,
@@ -41,7 +40,7 @@ def test_create_entity_reconciliation_job(capsys):
             entity_type=entity_type,
             output_dataset=output_dataset,
         )
-    except (ResourceExhausted) as e:
+    except ResourceExhausted as e:
         # Quota for simultaneous jobs is 2
         print(e.message)
 

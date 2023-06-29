@@ -29,8 +29,9 @@ def create_token_aws(project_number: str, pool_id: str, provider_id: str) -> Non
         url="https://sts.amazonaws.com/?Action=GetCallerIdentity&Version=2011-06-15",
         headers={
             "Host": "sts.amazonaws.com",
-            "x-goog-cloud-target-resource": f"//iam.googleapis.com/projects/{project_number}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}"
-        })
+            "x-goog-cloud-target-resource": f"//iam.googleapis.com/projects/{project_number}/locations/global/workloadIdentityPools/{pool_id}/providers/{provider_id}",
+        },
+    )
 
     # Set the session credentials and Sign the request.
     # get_credentials loads the required credentials as environment variables.
@@ -39,11 +40,7 @@ def create_token_aws(project_number: str, pool_id: str, provider_id: str) -> Non
     SigV4Auth(boto3.Session().get_credentials(), "sts", "us-east-1").add_auth(request)
 
     # Create token from signed request.
-    token = {
-        "url": request.url,
-        "method": request.method,
-        "headers": []
-    }
+    token = {"url": request.url, "method": request.method, "headers": []}
     for key, value in request.headers.items():
         token["headers"].append({"key": key, "value": value})
 
@@ -52,7 +49,7 @@ def create_token_aws(project_number: str, pool_id: str, provider_id: str) -> Non
     print("URL encoded token:\n%s" % urllib.parse.quote(json.dumps(token)))
 
 
-def main():
+def main() -> None:
     # TODO(Developer): Replace the below credentials.
     # project_number: Google Project number (not the project id)
     project_number = "my-project-number"

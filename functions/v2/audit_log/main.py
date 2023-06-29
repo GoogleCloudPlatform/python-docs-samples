@@ -27,7 +27,7 @@ def hello_auditlog(cloud_event):
 
     # Print out the CloudEvent's (optional) `subject` property
     # See https://github.com/cloudevents/spec/blob/v1.0.1/spec.md#subject
-    if 'subject' in cloud_event:
+    if "subject" in cloud_event:
         # CloudEvent objects don't support `get` operations.
         # Use the `in` operator to verify `subject` is present.
         print(f"Subject: {cloud_event['subject']}")
@@ -40,7 +40,9 @@ def hello_auditlog(cloud_event):
     if payload:
         print(f"API method: {payload.get('methodName')}")
         print(f"Resource name: {payload.get('resourceName')}")
-        print(f"Principal: {payload.get('authenticationInfo', dict()).get('principalEmail')}")
+        print(
+            f"Principal: {payload.get('authenticationInfo', dict()).get('principalEmail')}"
+        )
 
 
 # [END functions_log_cloudevent]

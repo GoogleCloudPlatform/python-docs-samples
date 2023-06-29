@@ -151,21 +151,25 @@ outside the scope of PEP 8, such as the “too many arguments” or “too many
 local variables” warnings.
 
 The use of [Black](https://pypi.org/project/black/) to standardize code
-formatting and simplify diffs is recommended, but optional.
+formatting and simplify diffs is recommended.
 
 The default noxfile has `blacken` session for convenience. Here are
 some examples.
 
 If you have pyenv configured:
+
 ```sh
 nox -s blacken
 ```
 
 If you only have docker:
-```
+
+```sh
 cd proj_directory
 ../scripts/run_tests_local.sh . blacken
 ```
+
+Owlbot is an automated tool that will run the `blacken` session automatically on new pull requests.
 
 In addition to the syntax guidelines covered in PEP 8, samples should strive
 to follow the Pythonic philosophy outlined in the
@@ -535,7 +539,7 @@ encrypted_disk_name = f'test-disk-{uuid.uuid4().hex[:5]}'
 ```
 
 All temporary resources should be explicitly deleted when testing is
-complete. Use pytest's fixture for cleaning up these resouces instead
+complete. Use pytest's fixture for cleaning up these resources instead
 of doing it in test itself.
 
 We recommend using `finally` to ensure that resource deletion occurs even if there is an error on creation. For example, this fixture creates a Dataproc cluster and tears it down regardless of errors during creation.
@@ -620,8 +624,32 @@ All the RPCs are inevitably flaky. It can fail for many reasons. The
 `google-cloud` Python client retries requests automatically for most
 cases.
 
-The old api-client doesn't retry automatically, so consider using
-[`backoff`](https://pypi.org/project/backoff/) for retrying. Here is a
+The old api-client doesn't retry automatically, so consider using the Google API Core [`@retry.Retry()`](https://googleapis.dev/python/google-api-core/latest/retry.html) decorator. By default, it will retry [transient errors](https://googleapis.dev/python/google-api-core/latest/retry.html#google.api_core.retry.if_transient_error). Here is an [example](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/4718999884dedcbbf7f3b45c8a9867b644b965da/speech/snippets/quickstart_v2_test.py#L34):
+
+```python
+from google.api_core.retry import Retry
+
+@Retry()
+def test_quickstart_v2() -> None:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+    recognizer_id = "recognizer-" + str(uuid4())
+    response = quickstart_v2.quickstart_v2(
+        project_id, recognizer_id, os.path.join(RESOURCES, "audio.wav")
+    )
+
+    assert re.search(
+        r"how old is the Brooklyn Bridge",
+        response.results[0].alternatives[0].transcript,
+        re.DOTALL | re.I,
+    )
+
+    delete_recognizer(
+        f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
+    )
+```
+
+While `@Retry` is preferred, [`backoff`](https://pypi.org/project/backoff/) also supports retrying. Here is a
 simple example:
 
 ```python

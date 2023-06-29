@@ -1,15 +1,15 @@
 #!/usr/bin/env python
 
-# Copyright (C) 2013 Google Inc.
+# Copyright 2013 Google LLC
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
+# Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#            http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
+# distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
@@ -28,13 +28,11 @@ import os
 import re
 
 
-REPO_ROOT = os.path.abspath(os.path.join(
-    os.path.dirname(__file__),
-    '..'))
-DOC_SITE_ROOT = 'https://cloud.google.com'
+REPO_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+DOC_SITE_ROOT = "https://cloud.google.com"
 AUTO_DOC_LINK_EXP = re.compile(
-    r'<!-- auto-doc-link -->.*?<!-- end-auto-doc-link -->\n',
-    re.DOTALL)
+    r"<!-- auto-doc-link -->.*?<!-- end-auto-doc-link -->\n", re.DOTALL
+)
 
 
 def invert_docs_link_map(docs_links):
@@ -83,7 +81,7 @@ def linkify(docs):
 
 
 def replace_contents(file_path, regex, new_content):
-    with open(file_path, 'r+') as f:
+    with open(file_path, "r+") as f:
         content = f.read()
         content = regex.sub(new_content, content)
         f.seek(0)
@@ -94,8 +92,7 @@ def get_readme_path(file_path):
     """Gets the readme for an associated sample file, basically just the
     README.md in the same directory."""
     dir = os.path.dirname(file_path)
-    readme = os.path.join(
-        REPO_ROOT, dir, 'README.md')
+    readme = os.path.join(REPO_ROOT, dir, "README.md")
     return readme
 
 
@@ -108,7 +105,9 @@ These samples are used on the following documentation page:
 > {}
 
 <!-- end-auto-doc-link -->
-""".format(links.pop())
+""".format(
+            links.pop()
+        )
     else:
         return """<!-- auto-doc-link -->
 These samples are used on the following documentation pages:
@@ -117,24 +116,23 @@ These samples are used on the following documentation pages:
 {}
 
 <!-- end-auto-doc-link -->
-""".format('\n'.join(['* {}'.format(x) for x in links]))
+""".format(
+            "\n".join(["* {}".format(x) for x in links])
+        )
 
 
 def update_readme(readme_path, docs):
     if not os.path.exists(readme_path):
-        print('{} doesn\'t exist'.format(readme_path))
+        print("{} doesn't exist".format(readme_path))
         return
-    replace_contents(
-        readme_path,
-        AUTO_DOC_LINK_EXP,
-        generate_doc_link_statement(docs))
-    print('Updated {}'.format(readme_path))
+    replace_contents(readme_path, AUTO_DOC_LINK_EXP, generate_doc_link_statement(docs))
+    print("Updated {}".format(readme_path))
 
 
 def main():
-    docs_links = json.load(open(
-        os.path.join(
-            REPO_ROOT, 'scripts', 'resources', 'docs-links.json'), 'r'))
+    docs_links = json.load(
+        open(os.path.join(REPO_ROOT, "scripts", "resources", "docs-links.json"), "r")
+    )
     files_to_docs = invert_docs_link_map(docs_links)
     readmes_to_docs = collect_docs_for_readmes(files_to_docs)
 
@@ -142,5 +140,5 @@ def main():
         update_readme(readme, docs)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

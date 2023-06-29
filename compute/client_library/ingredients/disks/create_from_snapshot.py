@@ -22,7 +22,14 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_disk_from_snapshot>
-def create_disk_from_snapshot(project_id: str, zone: str, disk_name: str, disk_type: str, disk_size_gb: int, snapshot_link: str) -> compute_v1.Disk:
+def create_disk_from_snapshot(
+    project_id: str,
+    zone: str,
+    disk_name: str,
+    disk_type: str,
+    disk_size_gb: int,
+    snapshot_link: str,
+) -> compute_v1.Disk:
     """
     Creates a new disk in a project in given zone.
 
@@ -52,4 +59,6 @@ def create_disk_from_snapshot(project_id: str, zone: str, disk_name: str, disk_t
     wait_for_extended_operation(operation, "disk creation")
 
     return disk_client.get(project=project_id, zone=zone, disk=disk_name)
+
+
 # </INGREDIENT>

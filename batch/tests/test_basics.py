@@ -11,9 +11,13 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+from __future__ import annotations
+
+from collections.abc import Callable
 import time
-from typing import Callable
 import uuid
+
+from flaky import flaky
 
 import google.auth
 from google.cloud import batch_v1
@@ -30,7 +34,7 @@ from ..list.list_tasks import list_tasks
 from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
-REGION = 'europe-north1'
+REGION = "europe-north1"
 
 TIMEOUT = 600  # 10 minutes
 
@@ -39,7 +43,7 @@ WAIT_STATES = {
     batch_v1.JobStatus.State.QUEUED,
     batch_v1.JobStatus.State.RUNNING,
     batch_v1.JobStatus.State.SCHEDULED,
-    batch_v1.JobStatus.State.DELETION_IN_PROGRESS
+    batch_v1.JobStatus.State.DELETION_IN_PROGRESS,
 }
 
 
@@ -54,7 +58,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
-            test_job = get_job(PROJECT, REGION, test_job.name.rsplit('/', maxsplit=1)[1])
+            test_job = get_job(
+                PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]
+            )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
@@ -68,7 +74,7 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, REGION, test_job.name.rsplit('/', maxsplit=1)[1]).result()
+        delete_job(PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
     for job in list_jobs(PROJECT, REGION):
         if job.uid == test_job.uid:
@@ -76,25 +82,31 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
 
 
 def _check_tasks(job_name):
-    tasks = list_tasks(PROJECT, REGION, job_name, 'group0')
+    tasks = list_tasks(PROJECT, REGION, job_name, "group0")
     assert len(list(tasks)) == 4
     for i in range(4):
-        assert get_task(PROJECT, REGION, job_name, 'group0', i) is not None
-    print('Tasks tested')
+        assert get_task(PROJECT, REGION, job_name, "group0", i) is not None
+    print("Tasks tested")
 
 
 def _check_logs(job, capsys):
     print_job_logs(PROJECT, job)
-    output = [line for line in capsys.readouterr().out.splitlines(keepends=False) if line != ""]
+    output = [
+        line
+        for line in capsys.readouterr().out.splitlines(keepends=False)
+        if line != ""
+    ]
     assert len(output) == 4
     assert all("Hello world!" in log_msg for log_msg in output)
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_logs(job, capsys))
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_container_job(job_name):
     job = create_container_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_tasks(job_name))

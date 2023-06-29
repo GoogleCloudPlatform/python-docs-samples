@@ -25,24 +25,23 @@ def analyze_iam_policy(project_id):
     # TODO project_id = 'Your Google Cloud Project ID'
 
     client = asset_v1.AssetServiceClient()
-    parent = "projects/{}".format(project_id)
+    parent = f"projects/{project_id}"
 
     # Build analysis query
     analysis_query = asset_v1.IamPolicyAnalysisQuery()
     analysis_query.scope = parent
-    analysis_query.resource_selector.full_resource_name = f"//cloudresourcemanager.googleapis.com/{parent}"
+    analysis_query.resource_selector.full_resource_name = (
+        f"//cloudresourcemanager.googleapis.com/{parent}"
+    )
     analysis_query.options.expand_groups = True
     analysis_query.options.output_group_edges = True
 
-    response = client.analyze_iam_policy(
-        request={"analysis_query": analysis_query}
-    )
+    response = client.analyze_iam_policy(request={"analysis_query": analysis_query})
     print(response)
     # [END asset_quickstart_analyze_iam_policy]
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )

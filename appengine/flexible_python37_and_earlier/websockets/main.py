@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from __future__ import print_function
 
 # [START gae_flex_websockets_app]
 from flask import Flask, render_template
@@ -23,7 +22,7 @@ app = Flask(__name__)
 sockets = Sockets(app)
 
 
-@sockets.route('/chat')
+@sockets.route("/chat")
 def chat_socket(ws):
     while not ws.closed:
         message = ws.receive()
@@ -35,19 +34,23 @@ def chat_socket(ws):
         clients = ws.handler.server.clients.values()
         for client in clients:
             client.ws.send(message)
+
+
 # [END gae_flex_websockets_app]
 
 
-@app.route('/')
+@app.route("/")
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-if __name__ == '__main__':
-    print("""
+if __name__ == "__main__":
+    print(
+        """
 This can not be run directly because the Flask development server does not
 support web sockets. Instead, use gunicorn:
 
 gunicorn -b 127.0.0.1:8080 -k flask_sockets.worker main:app
 
-""")
+"""
+    )

@@ -19,32 +19,29 @@ import main
 
 @pytest.fixture
 def app(testbed):
-    main.app.config['TESTING'] = True
+    main.app.config["TESTING"] = True
     return main.app.test_client()
 
 
 def test_index(app):
-    rv = app.get('/')
-    assert 'Permanent note page' in rv.data
-    assert rv.status == '200 OK'
+    rv = app.get("/")
+    assert "Permanent note page" in rv.data
+    assert rv.status == "200 OK"
 
 
 def test_post(app):
-    rv = app.post('/add', data=dict(
-        note_title='Title',
-        note_text='Text'
-    ), follow_redirects=True)
-    assert rv.status == '200 OK'
+    rv = app.post(
+        "/add", data=dict(note_title="Title", note_text="Text"), follow_redirects=True
+    )
+    assert rv.status == "200 OK"
 
 
 def test_there(app):
-    rv = app.post('/add', data=dict(
-        note_title='Title',
-        note_text='New'
-    ), follow_redirects=True)
-    rv = app.post('/add', data=dict(
-        note_title='Title',
-        note_text='There'
-    ), follow_redirects=True)
-    assert 'Already there' in rv.data
-    assert rv.status == '200 OK'
+    rv = app.post(
+        "/add", data=dict(note_title="Title", note_text="New"), follow_redirects=True
+    )
+    rv = app.post(
+        "/add", data=dict(note_title="Title", note_text="There"), follow_redirects=True
+    )
+    assert "Already there" in rv.data
+    assert rv.status == "200 OK"

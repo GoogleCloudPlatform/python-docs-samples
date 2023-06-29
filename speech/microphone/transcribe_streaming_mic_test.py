@@ -17,19 +17,27 @@ import re
 import threading
 import time
 
-import mock
+from unittest import mock
+
+import pytest
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-class MockPyAudio(object):
-    def __init__(self, audio_filename):
+class MockPyAudio:
+    def __init__(self: object, audio_filename: str) -> None:
         self.audio_filename = audio_filename
 
-    def __call__(self, *args):
+    def __call__(self: object, *args: object) -> object:
         return self
 
-    def open(self, stream_callback, rate, *args, **kwargs):
+    def open(
+        self: object,
+        stream_callback: object,
+        rate: int,
+        *args: object,
+        **kwargs: object
+    ) -> object:
         self.rate = rate
         self.closed = threading.Event()
         self.stream_thread = threading.Thread(
@@ -39,16 +47,22 @@ class MockPyAudio(object):
         self.stream_thread.start()
         return self
 
-    def close(self):
+    def close(self: object) -> None:
         self.closed.set()
 
-    def stop_stream(self):
+    def stop_stream(self: object) -> None:
         pass
 
-    def terminate(self):
+    def terminate(self: object) -> None:
         pass
 
-    def stream_audio(self, audio_filename, callback, closed, num_frames=512):
+    def stream_audio(
+        self: object,
+        audio_filename: str,
+        callback: object,
+        closed: object,
+        num_frames: int = 512,
+    ) -> None:
         with open(audio_filename, "rb") as audio_file:
             while not closed.is_set():
                 # Approximate realtime by sleeping for the appropriate time for
@@ -64,7 +78,7 @@ class MockPyAudio(object):
     "sys.modules",
     pyaudio=mock.MagicMock(PyAudio=MockPyAudio(os.path.join(RESOURCES, "quit.raw"))),
 )
-def test_main(capsys):
+def test_main(capsys: pytest.CaptureFixture) -> None:
     import transcribe_streaming_mic
 
     transcribe_streaming_mic.main()

@@ -23,52 +23,72 @@ app = Flask(__name__)
 
 
 def is_ipv6(addr):
-    """Checks if a given address is an IPv6 address."""
+    """Checks if a given address is an IPv6 address.
+
+    Args:
+        addr: An IP address object.
+
+    Returns:
+        True if addr is an IPv6 address, or False otherwise.
+    """
     try:
         socket.inet_pton(socket.AF_INET6, addr)
         return True
-    except socket.error:
+    except OSError:
         return False
 
 
 # [START example]
-@app.route('/')
+@app.route("/")
 def index():
-    instance_id = os.environ.get('GAE_INSTANCE', '1')
+    """Serves the content of a file that was stored on disk.
+
+    The instance's external address is first stored on the disk as a tmp
+    file, and subsequently read. That value is then formatted and served
+    on the endpoint.
+
+    Returns:
+        A formatted string with the GAE instance ID and the content of the
+        seen.txt file.
+    """
+    instance_id = os.environ.get("GAE_INSTANCE", "1")
 
     user_ip = request.remote_addr
 
     # Keep only the first two octets of the IP address.
     if is_ipv6(user_ip):
-        user_ip = ':'.join(user_ip.split(':')[:2])
+        user_ip = ":".join(user_ip.split(":")[:2])
     else:
-        user_ip = '.'.join(user_ip.split('.')[:2])
+        user_ip = ".".join(user_ip.split(".")[:2])
 
-    with open('/tmp/seen.txt', 'a') as f:
-        f.write('{}\n'.format(user_ip))
+    with open("/tmp/seen.txt", "a") as f:
+        f.write(f"{user_ip}\n")
 
-    with open('/tmp/seen.txt', 'r') as f:
+    with open("/tmp/seen.txt") as f:
         seen = f.read()
 
-    output = """
-Instance: {}
-Seen:
-{}""".format(instance_id, seen)
+    output = f"Instance: {instance_id}\nSeen:{seen}"
+    return output, 200, {"Content-Type": "text/plain; charset=utf-8"}
 
-    return output, 200, {'Content-Type': 'text/plain; charset=utf-8'}
+
 # [END example]
 
 
 @app.errorhandler(500)
 def server_error(e):
-    logging.exception('An error occurred during a request.')
-    return """
-    An internal error occurred: <pre>{}</pre>
-    See logs for full stacktrace.
-    """.format(e), 500
+    """Serves a formatted message on-error.
+
+    Returns:
+        The error message and a code 500 status.
+    """
+    logging.exception("An error occurred during a request.")
+    return (
+        f"An internal error occurred: <pre>{e}</pre><br>See logs for full stacktrace.",
+        500,
+    )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
-    app.run(host='127.0.0.1', port=8080, debug=True)
+    app.run(host="127.0.0.1", port=8080, debug=True)

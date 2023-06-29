@@ -38,8 +38,8 @@ def verify_signature(data, signature, x509_certificate):
     # to extract the public key from it manually.
     # This code is based on https://github.com/google/oauth2client/blob/master
     # /oauth2client/_pycrypto_crypt.py
-    pem_lines = x509_certificate.replace(b' ', b'').split()
-    cert_der = base64.urlsafe_b64decode(b''.join(pem_lines[1:-1]))
+    pem_lines = x509_certificate.replace(b" ", b"").split()
+    cert_der = base64.urlsafe_b64decode(b"".join(pem_lines[1:-1]))
     cert_seq = DerSequence()
     cert_seq.decode(cert_der)
     tbs_seq = DerSequence()
@@ -66,19 +66,16 @@ def verify_signed_by_app(data, signature):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        message = 'Hello, world!'
+        message = "Hello, world!"
         signing_key_name, signature = app_identity.sign_blob(message)
         verified = verify_signed_by_app(message, signature)
 
-        self.response.content_type = 'text/plain'
-        self.response.write('Message: {}\n'.format(message))
-        self.response.write(
-            'Signature: {}\n'.format(base64.b64encode(signature)))
-        self.response.write('Verified: {}\n'.format(verified))
+        self.response.content_type = "text/plain"
+        self.response.write("Message: {}\n".format(message))
+        self.response.write("Signature: {}\n".format(base64.b64encode(signature)))
+        self.response.write("Verified: {}\n".format(verified))
 
 
-app = webapp2.WSGIApplication([
-    ('/', MainPage)
-], debug=True)
+app = webapp2.WSGIApplication([("/", MainPage)], debug=True)
 
 # [END gae_python_app_identity_signing]

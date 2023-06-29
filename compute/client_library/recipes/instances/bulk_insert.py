@@ -23,8 +23,9 @@
 # <INGREDIENT bulk_insert_instance />
 
 
-def create_five_instances(project_id: str, zone: str, template_name: str,
-                          name_pattern: str):
+def create_five_instances(
+    project_id: str, zone: str, template_name: str, name_pattern: str
+):
     """
     Create five instances of an instance template.
 
@@ -37,4 +38,6 @@ def create_five_instances(project_id: str, zone: str, template_name: str,
     template = get_instance_template(project_id, template_name)
     instances = bulk_insert_instance(project_id, zone, template, 5, name_pattern)
     return instances
+
+
 # </REGION compute_instances_bulk_insert>

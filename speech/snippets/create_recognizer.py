@@ -18,7 +18,7 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def create_recognizer(project_id, recognizer_id):
+def create_recognizer(project_id: str, recognizer_id: str) -> cloud_speech.Recognizer:
     # Instantiates a client
     client = SpeechClient()
 

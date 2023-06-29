@@ -19,13 +19,12 @@ Example usage:
 """
 
 # [START mediatranslation_translate_from_mic]
-from __future__ import division
 
 import itertools
+import queue
 
 from google.cloud import mediatranslation as media
 import pyaudio
-from six.moves import queue
 
 # Audio recording parameters
 RATE = 16000
@@ -113,14 +112,13 @@ def listen_print_loop(responses):
         # Once the transcription settles, the response contains the
         # END_OF_SINGLE_UTTERANCE event.
         if response.speech_event_type == SpeechEventType.END_OF_SINGLE_UTTERANCE:
-
-            print("\nFinal translation: {0}".format(translation))
+            print(f"\nFinal translation: {translation}")
             return 0
 
         result = response.result
         translation = result.text_translation_result.translation
 
-        print("\nPartial translation: {0}".format(translation))
+        print(f"\nPartial translation: {translation}")
 
 
 def do_translation_loop():

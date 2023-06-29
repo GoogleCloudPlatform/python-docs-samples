@@ -21,10 +21,10 @@ def delete_dataset(project_id="YOUR_PROJECT_ID", dataset_id="YOUR_DATASET_ID"):
     """Delete a dataset."""
     client = automl.AutoMlClient()
     # Get the full path of the dataset
-    dataset_full_id = client.dataset_path(
-        project_id, "us-central1", dataset_id
-    )
+    dataset_full_id = client.dataset_path(project_id, "us-central1", dataset_id)
     response = client.delete_dataset(name=dataset_full_id)
 
-    print("Dataset deleted. {}".format(response.result()))
+    print(f"Dataset deleted. {response.result()}")
+
+
 # [END automl_delete_dataset_beta]

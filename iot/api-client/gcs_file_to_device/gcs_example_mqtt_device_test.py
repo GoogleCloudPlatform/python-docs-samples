@@ -46,7 +46,4 @@ def test_download_blob(test_blob, capsys):
         device.download_blob(gcs_bucket, test_blob.name, destination_file_name)
 
         out, _ = capsys.readouterr()
-        assert (
-            "Config {} downloaded to {}.".format(test_blob.name, destination_file_name)
-            in out
-        )
+        assert f"Config {test_blob.name} downloaded to {destination_file_name}." in out

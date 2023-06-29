@@ -29,13 +29,9 @@ def print_result(annotations):
 
     for index, sentence in enumerate(annotations.sentences):
         sentence_sentiment = sentence.sentiment.score
-        print(
-            "Sentence {} has a sentiment score of {}".format(index, sentence_sentiment)
-        )
+        print(f"Sentence {index} has a sentiment score of {sentence_sentiment}")
 
-    print(
-        "Overall Sentiment: score of {} with magnitude of {}".format(score, magnitude)
-    )
+    print(f"Overall Sentiment: score of {score} with magnitude of {magnitude}")
     return 0
 
 
@@ -47,7 +43,7 @@ def analyze(movie_review_filename):
     """Run a sentiment analysis request on text within a passed filename."""
     client = language_v1.LanguageServiceClient()
 
-    with open(movie_review_filename, "r") as review_file:
+    with open(movie_review_filename) as review_file:
         # Instantiates a plain text document.
         content = review_file.read()
 

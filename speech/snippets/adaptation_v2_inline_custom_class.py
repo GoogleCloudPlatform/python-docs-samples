@@ -14,13 +14,26 @@
 
 
 # [START speech_adaptation_v2_inline_custom_class]
-import io
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
+def adaptation_v2_inline_custom_class(
+    project_id: str,
+    recognizer_id: str,
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribe audio file using inline custom class
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer.
+        audio_file: The audio file to transcribe.
+
+    Returns:
+        The response from the recognizer.
+    """
     # Instantiates a client
     client = SpeechClient()
 
@@ -37,7 +50,7 @@ def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # Build inline phrase set to produce a more accurate transcript
@@ -63,7 +76,7 @@ def adaptation_v2_inline_custom_class(project_id, recognizer_id, audio_file):
     response = client.recognize(request=request)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
 

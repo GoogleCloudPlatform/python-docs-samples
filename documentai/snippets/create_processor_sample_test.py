@@ -13,11 +13,13 @@
 # limitations under the License.
 #
 
+# flake8: noqa
+
 import os
+from unittest import mock
 from uuid import uuid4
 
 from documentai.snippets import create_processor_sample
-import mock
 
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]

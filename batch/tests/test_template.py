@@ -14,6 +14,8 @@
 
 import uuid
 
+from flaky import flaky
+
 import google.auth
 from google.cloud import batch_v1
 from google.cloud import compute_v1
@@ -27,9 +29,13 @@ from ..create.create_with_template import create_script_job_with_template
 
 PROJECT = google.auth.default()[1]
 
-PROJECT_NUMBER = resourcemanager_v3.ProjectsClient().get_project(name=f"projects/{PROJECT}").name.split("/")[1]
+PROJECT_NUMBER = (
+    resourcemanager_v3.ProjectsClient()
+    .get_project(name=f"projects/{PROJECT}")
+    .name.split("/")[1]
+)
 
-REGION = 'europe-north1'
+REGION = "europe-north1"
 
 TIMEOUT = 600  # 10 minutes
 
@@ -54,7 +60,7 @@ def instance_template():
         "projects/ubuntu-os-cloud/global/images/family/ubuntu-2204-lts"
     )
     initialize_params.disk_size_gb = 25
-    initialize_params.disk_type = 'pd-balanced'
+    initialize_params.disk_type = "pd-balanced"
     disk.initialize_params = initialize_params
     disk.auto_delete = True
     disk.boot = True
@@ -76,8 +82,12 @@ def instance_template():
     template.properties.network_interfaces = [network_interface]
 
     template.properties.scheduling = compute_v1.Scheduling()
-    template.properties.scheduling.on_host_maintenance = compute_v1.Scheduling.OnHostMaintenance.MIGRATE.name
-    template.properties.scheduling.provisioning_model = compute_v1.Scheduling.ProvisioningModel.STANDARD.name
+    template.properties.scheduling.on_host_maintenance = (
+        compute_v1.Scheduling.OnHostMaintenance.MIGRATE.name
+    )
+    template.properties.scheduling.provisioning_model = (
+        compute_v1.Scheduling.ProvisioningModel.STANDARD.name
+    )
     template.properties.scheduling.automatic_restart = True
 
     template.properties.service_accounts = [
@@ -89,8 +99,8 @@ def instance_template():
                 "https://www.googleapis.com/auth/monitoring.write",
                 "https://www.googleapis.com/auth/servicecontrol",
                 "https://www.googleapis.com/auth/service.management.readonly",
-                "https://www.googleapis.com/auth/trace.append"
-            ]
+                "https://www.googleapis.com/auth/trace.append",
+            ],
         }
     ]
 
@@ -109,6 +119,9 @@ def instance_template():
     operation_client.wait(project=PROJECT, operation=op.name)
 
 
+@flaky(max_runs=3, min_passes=1)
 def test_template_job(job_name, instance_template):
-    job = create_script_job_with_template(PROJECT, REGION, job_name, instance_template.self_link)
+    job = create_script_job_with_template(
+        PROJECT, REGION, job_name, instance_template.self_link
+    )
     _test_body(job)

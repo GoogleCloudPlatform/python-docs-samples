@@ -13,8 +13,11 @@
 # limitations under the License.
 
 import os
+from typing import Iterator
 import uuid
 
+import google.cloud.dlp
+import google.cloud.storage
 import pytest
 
 import jobs
@@ -24,13 +27,47 @@ TEST_COLUMN_NAME = "zip_code"
 TEST_TABLE_PROJECT_ID = "bigquery-public-data"
 TEST_DATASET_ID = "san_francisco"
 TEST_TABLE_ID = "bikeshare_trips"
-test_job_id = "test-job-{}".format(uuid.uuid4())
+UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
+TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCE_FILE_NAMES = ["test.txt", "test.png", "harmless.txt", "accounts.txt"]
+test_job_id = f"test-job-{uuid.uuid4()}"
 
 
 @pytest.fixture(scope="module")
-def test_job_name():
-    import google.cloud.dlp
+def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
+    # Creates a GCS bucket, uploads files required for the test, and tears down
+    # the entire bucket afterwards.
 
+    client = google.cloud.storage.Client()
+    try:
+        bucket = client.get_bucket(TEST_BUCKET_NAME)
+    except google.cloud.exceptions.NotFound:
+        bucket = client.create_bucket(TEST_BUCKET_NAME)
+
+    # Upload the blobs and keep track of them in a list.
+    blobs = []
+    for name in RESOURCE_FILE_NAMES:
+        path = os.path.join(RESOURCE_DIRECTORY, name)
+        blob = bucket.blob(name)
+        blob.upload_from_filename(path)
+        blobs.append(blob)
+    # Yield the object to the test; lines after this execute as a teardown.
+    yield bucket
+
+    # Delete the files.
+    for blob in blobs:
+        try:
+            blob.delete()
+        except google.cloud.exceptions.NotFound:
+            print("Issue during teardown, missing blob")
+
+    # Attempt to delete the bucket; this will only work if it is empty.
+    bucket.delete()
+
+
+@pytest.fixture(scope="module")
+def test_job_name() -> Iterator[str]:
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
     parent = f"projects/{GCLOUD_PROJECT}"
@@ -62,14 +99,16 @@ def test_job_name():
         print("Issue during teardown, missing job")
 
 
-def test_list_dlp_jobs(test_job_name, capsys):
+def test_list_dlp_jobs(test_job_name: str, capsys: pytest.CaptureFixture) -> None:
     jobs.list_dlp_jobs(GCLOUD_PROJECT)
 
     out, _ = capsys.readouterr()
     assert test_job_name not in out
 
 
-def test_list_dlp_jobs_with_filter(test_job_name, capsys):
+def test_list_dlp_jobs_with_filter(
+    test_job_name: str, capsys: pytest.CaptureFixture
+) -> None:
     jobs.list_dlp_jobs(
         GCLOUD_PROJECT,
         filter_string="state=RUNNING OR state=DONE",
@@ -80,12 +119,36 @@ def test_list_dlp_jobs_with_filter(test_job_name, capsys):
     assert test_job_name in out
 
 
-def test_list_dlp_jobs_with_job_type(test_job_name, capsys):
+def test_list_dlp_jobs_with_job_type(
+    test_job_name: str, capsys: pytest.CaptureFixture
+) -> None:
     jobs.list_dlp_jobs(GCLOUD_PROJECT, job_type="INSPECT_JOB")
 
     out, _ = capsys.readouterr()
     assert test_job_name not in out  # job created is a risk analysis job
 
 
-def test_delete_dlp_job(test_job_name, capsys):
+def test_delete_dlp_job(test_job_name: str) -> None:
     jobs.delete_dlp_job(GCLOUD_PROJECT, test_job_name)
+
+
+def test_create_dlp_job(
+    bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
+) -> None:
+    jobs.create_dlp_job(
+        GCLOUD_PROJECT,
+        bucket.name,
+        ["EMAIL_ADDRESS", "CREDIT_CARD_NUMBER"],
+        job_id=test_job_id,
+    )
+    out, _ = capsys.readouterr()
+    assert test_job_id in out
+
+    job_name = f"i-{test_job_id}"
+
+    jobs.get_dlp_job(GCLOUD_PROJECT, job_name)
+
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    jobs.delete_dlp_job(GCLOUD_PROJECT, job_name)

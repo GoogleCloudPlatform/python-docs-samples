@@ -35,4 +35,6 @@ def suspend_instance(project_id: str, zone: str, instance_name: str) -> None:
     )
 
     wait_for_extended_operation(operation, "suspend instance")
+
+
 # </INGREDIENT>

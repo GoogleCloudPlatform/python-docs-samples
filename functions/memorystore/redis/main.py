@@ -19,14 +19,15 @@ import os
 import functions_framework
 import redis
 
-redis_host = os.environ.get('REDISHOST', 'localhost')
-redis_port = int(os.environ.get('REDISPORT', 6379))
+redis_host = os.environ.get("REDISHOST", "localhost")
+redis_port = int(os.environ.get("REDISPORT", 6379))
 redis_client = redis.StrictRedis(host=redis_host, port=redis_port)
 
 
 @functions_framework.http
 def visit_count(request):
-    value = redis_client.incr('visits', 1)
-    return 'Visit count: {}'.format(value)
+    value = redis_client.incr("visits", 1)
+    return f"Visit count: {value}"
+
 
 # [END functions_memorystore_redis]

@@ -32,4 +32,6 @@ def delete_regional_disk(project_id: str, region: str, disk_name: str) -> None:
     disk_client = compute_v1.RegionDisksClient()
     operation = disk_client.delete(project=project_id, region=region, disk=disk_name)
     wait_for_extended_operation(operation, "regional disk deletion")
+
+
 # </INGREDIENT>

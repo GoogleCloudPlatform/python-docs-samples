@@ -1,4 +1,5 @@
 from __future__ import print_function
+
 # Copyright 2016 Google Inc. All rights reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,37 +21,45 @@ import webapp2
 
 def send_example_mail(sender_address, email_thread_id):
     # [START send_mail]
-    mail.send_mail(sender=sender_address,
-                   to="Albert Johnson <Albert.Johnson@example.com>",
-                   subject="An example email",
-                   body="""
+    mail.send_mail(
+        sender=sender_address,
+        to="Albert Johnson <Albert.Johnson@example.com>",
+        subject="An example email",
+        body="""
 The email references a given email thread id.
 
 The example.com Team
 """,
-                   headers={"References": email_thread_id})
+        headers={"References": email_thread_id},
+    )
     # [END send_mail]
 
 
 class SendMailHandler(webapp2.RequestHandler):
     def get(self):
-        self.response.content_type = 'text/html'
-        self.response.write("""<html><body><form method="POST">
+        self.response.content_type = "text/html"
+        self.response.write(
+            """<html><body><form method="POST">
           Enter an email thread id: <input name="thread_id">
           <input type=submit>
-        </form></body></html>""")
+        </form></body></html>"""
+        )
 
     def post(self):
         print(repr(self.request.POST))
-        id = self.request.POST['thread_id']
-        send_example_mail('example@{}.appspotmail.com'.format(
-            app_identity.get_application_id()), id)
-        self.response.content_type = 'text/plain'
+        id = self.request.POST["thread_id"]
+        send_example_mail(
+            "example@{}.appspotmail.com".format(app_identity.get_application_id()), id
+        )
+        self.response.content_type = "text/plain"
         self.response.write(
-            'Sent an email to Albert with Reference header set to {}.'
-            .format(id))
+            "Sent an email to Albert with Reference header set to {}.".format(id)
+        )
 
 
-app = webapp2.WSGIApplication([
-    ('/header', SendMailHandler),
-], debug=True)
+app = webapp2.WSGIApplication(
+    [
+        ("/header", SendMailHandler),
+    ],
+    debug=True,
+)

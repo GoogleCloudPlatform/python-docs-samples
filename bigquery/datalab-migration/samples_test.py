@@ -29,7 +29,7 @@ context = google.datalab.Context.default()
 context.set_project_id(PROJECT_ID)
 
 
-@pytest.fixture(scope='session')
+@pytest.fixture(scope="session")
 def ipython_interactive():
     config = tools.default_config()
     config.TerminalInteractiveShell.simple_prompt = True
@@ -40,6 +40,7 @@ def ipython_interactive():
 @pytest.fixture
 def to_delete():
     from google.cloud import bigquery
+
     client = bigquery.Client()
     doomed = []
     yield doomed
@@ -56,15 +57,16 @@ def _set_up_ipython(extension):
 
 def _strip_region_tags(sample_text):
     """Remove blank lines and region tags from sample text"""
-    magic_lines = [line for line in sample_text.split('\n')
-                   if len(line) > 0 and '# [' not in line]
-    return '\n'.join(magic_lines)
+    magic_lines = [
+        line for line in sample_text.split("\n") if len(line) > 0 and "# [" not in line
+    ]
+    return "\n".join(magic_lines)
 
 
 def test_datalab_query_magic(ipython_interactive):
     import google.datalab.bigquery as bq
 
-    ip = _set_up_ipython('google.datalab.kernel')
+    ip = _set_up_ipython("google.datalab.kernel")
 
     sample = """
     # [START bigquery_migration_datalab_query_magic]
@@ -88,7 +90,7 @@ def test_datalab_query_magic(ipython_interactive):
 def test_client_library_query_magic(ipython_interactive):
     import pandas
 
-    ip = _set_up_ipython('google.cloud.bigquery')
+    ip = _set_up_ipython("google.cloud.bigquery")
 
     sample = """
     # [START bigquery_migration_client_library_query_magic]
@@ -109,7 +111,7 @@ def test_client_library_query_magic(ipython_interactive):
 
 @pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_query_magic_results_variable(ipython_interactive):
-    ip = _set_up_ipython('google.datalab.kernel')
+    ip = _set_up_ipython("google.datalab.kernel")
 
     sample = """
     # [START bigquery_migration_datalab_query_magic_define_query]
@@ -138,7 +140,7 @@ def test_datalab_query_magic_results_variable(ipython_interactive):
 
 
 def test_client_library_query_magic_results_variable(ipython_interactive):
-    ip = _set_up_ipython('google.cloud.bigquery')
+    ip = _set_up_ipython("google.cloud.bigquery")
 
     sample = """
     # [START bigquery_migration_client_library_query_magic_results_variable]
@@ -159,7 +161,7 @@ def test_client_library_query_magic_results_variable(ipython_interactive):
 
 @pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_list_tables_magic(ipython_interactive):
-    ip = _set_up_ipython('google.datalab.kernel')
+    ip = _set_up_ipython("google.datalab.kernel")
 
     sample = """
     # [START bigquery_migration_datalab_list_tables_magic]
@@ -211,26 +213,25 @@ def test_datalab_load_table_from_gcs_csv(to_delete):
     import google.datalab.bigquery as bq
 
     # Create the dataset
-    dataset_id = 'import_sample'
+    dataset_id = "import_sample"
     # [END bigquery_migration_datalab_load_table_from_gcs_csv]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f"test_dataset_{int(time.time() * 1000)}"
     to_delete.append(dataset_id)
     # [START bigquery_migration_datalab_load_table_from_gcs_csv]
     bq.Dataset(dataset_id).create()
 
     # Create the table
     schema = [
-        {'name': 'name', 'type': 'STRING'},
-        {'name': 'post_abbr', 'type': 'STRING'},
+        {"name": "name", "type": "STRING"},
+        {"name": "post_abbr", "type": "STRING"},
     ]
-    table = bq.Table(
-        '{}.us_states'.format(dataset_id)).create(schema=schema)
+    table = bq.Table(f"{dataset_id}.us_states").create(schema=schema)
     table.load(
-        'gs://cloud-samples-data/bigquery/us-states/us-states.csv',
-        mode='append',
-        source_format='csv',
-        csv_options=bq.CSVOptions(skip_leading_rows=1)
+        "gs://cloud-samples-data/bigquery/us-states/us-states.csv",
+        mode="append",
+        source_format="csv",
+        csv_options=bq.CSVOptions(skip_leading_rows=1),
     )  # Waits for the job to complete
     # [END bigquery_migration_datalab_load_table_from_gcs_csv]
 
@@ -241,13 +242,13 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     # [START bigquery_migration_client_library_load_table_from_gcs_csv]
     from google.cloud import bigquery
 
-    client = bigquery.Client(location='US')
+    client = bigquery.Client(location="US")
 
     # Create the dataset
-    dataset_id = 'import_sample'
+    dataset_id = "import_sample"
     # [END bigquery_migration_client_library_load_table_from_gcs_csv]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f"test_dataset_{int(time.time() * 1000)}"
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_gcs_csv]
     dataset = client.create_dataset(dataset_id)
@@ -255,28 +256,29 @@ def test_client_library_load_table_from_gcs_csv(to_delete):
     # Create the table
     job_config = bigquery.LoadJobConfig(
         schema=[
-            bigquery.SchemaField('name', 'STRING'),
-            bigquery.SchemaField('post_abbr', 'STRING')
+            bigquery.SchemaField("name", "STRING"),
+            bigquery.SchemaField("post_abbr", "STRING"),
         ],
         skip_leading_rows=1,
         # The source format defaults to CSV, so the line below is optional.
-        source_format=bigquery.SourceFormat.CSV
+        source_format=bigquery.SourceFormat.CSV,
     )
     load_job = client.load_table_from_uri(
-        'gs://cloud-samples-data/bigquery/us-states/us-states.csv',
-        dataset.table('us_states'),
-        job_config=job_config
+        "gs://cloud-samples-data/bigquery/us-states/us-states.csv",
+        dataset.table("us_states"),
+        job_config=job_config,
     )
     load_job.result()  # Waits for table load to complete.
     # [END bigquery_migration_client_library_load_table_from_gcs_csv]
 
-    table = client.get_table(dataset.table('us_states'))
+    table = client.get_table(dataset.table("us_states"))
     assert table.num_rows == 50
 
 
 @pytest.mark.skip("datalab is deprecated, remove tests in sept 2023")
 def test_datalab_load_table_from_dataframe(to_delete):
-    """ Wrap test with retries to handle transient errors """
+    """Wrap test with retries to handle transient errors"""
+
     @Retry()
     def datalab_load_table_from_dataframe(to_delete):
         # [START bigquery_migration_datalab_load_table_from_dataframe]
@@ -284,27 +286,28 @@ def test_datalab_load_table_from_dataframe(to_delete):
         import pandas
 
         # Create the dataset
-        dataset_id = 'import_sample'
+        dataset_id = "import_sample"
         # [END bigquery_migration_datalab_load_table_from_dataframe]
         # Use unique dataset ID to avoid collisions when running tests
-        dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+        dataset_id = f"test_dataset_{int(time.time() * 1000)}"
         to_delete.append(dataset_id)
         # [START bigquery_migration_datalab_load_table_from_dataframe]
         bq.Dataset(dataset_id).create()
 
         # Create the table and load the data
-        dataframe = pandas.DataFrame([
-            {'title': 'The Meaning of Life', 'release_year': 1983},
-            {'title': 'Monty Python and the Holy Grail', 'release_year': 1975},
-            {'title': 'Life of Brian', 'release_year': 1979},
-            {
-                'title': 'And Now for Something Completely Different',
-                'release_year': 1971
-            },
-        ])
+        dataframe = pandas.DataFrame(
+            [
+                {"title": "The Meaning of Life", "release_year": 1983},
+                {"title": "Monty Python and the Holy Grail", "release_year": 1975},
+                {"title": "Life of Brian", "release_year": 1979},
+                {
+                    "title": "And Now for Something Completely Different",
+                    "release_year": 1971,
+                },
+            ]
+        )
         schema = bq.Schema.from_data(dataframe)
-        table = bq.Table(
-            '{}.monty_python'.format(dataset_id)).create(schema=schema)
+        table = bq.Table(f"{dataset_id}.monty_python").create(schema=schema)
         table.insert(dataframe)  # Starts steaming insert of data
         # [END bigquery_migration_datalab_load_table_from_dataframe]
         # The Datalab library uses tabledata().insertAll() to load data from
@@ -313,6 +316,7 @@ def test_datalab_load_table_from_dataframe(to_delete):
         # rows in the destination table after the job is run. If errors are
         # encountered during the insertion, this test will fail.
         # See https://cloud.google.com/bigquery/streaming-data-into-bigquery
+
     datalab_load_table_from_dataframe(to_delete)
 
 
@@ -321,27 +325,29 @@ def test_client_library_load_table_from_dataframe(to_delete):
     import pandas
     from google.cloud import bigquery
 
-    client = bigquery.Client(location='US')
+    client = bigquery.Client(location="US")
 
-    dataset_id = 'import_sample'
+    dataset_id = "import_sample"
     # [END bigquery_migration_client_library_load_table_from_dataframe]
     # Use unique dataset ID to avoid collisions when running tests
-    dataset_id = 'test_dataset_{}'.format(int(time.time() * 1000))
+    dataset_id = f"test_dataset_{int(time.time() * 1000)}"
     to_delete.append(dataset_id)
     # [START bigquery_migration_client_library_load_table_from_dataframe]
     dataset = client.create_dataset(dataset_id)
 
     # Create the table and load the data
-    dataframe = pandas.DataFrame([
-        {'title': 'The Meaning of Life', 'release_year': 1983},
-        {'title': 'Monty Python and the Holy Grail', 'release_year': 1975},
-        {'title': 'Life of Brian', 'release_year': 1979},
-        {
-            'title': 'And Now for Something Completely Different',
-            'release_year': 1971
-        },
-    ])
-    table_ref = dataset.table('monty_python')
+    dataframe = pandas.DataFrame(
+        [
+            {"title": "The Meaning of Life", "release_year": 1983},
+            {"title": "Monty Python and the Holy Grail", "release_year": 1975},
+            {"title": "Life of Brian", "release_year": 1979},
+            {
+                "title": "And Now for Something Completely Different",
+                "release_year": 1971,
+            },
+        ]
+    )
+    table_ref = dataset.table("monty_python")
     load_job = client.load_table_from_dataframe(dataframe, table_ref)
     load_job.result()  # Waits for table load to complete.
     # [END bigquery_migration_client_library_load_table_from_dataframe]

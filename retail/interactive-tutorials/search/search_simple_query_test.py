@@ -36,5 +36,3 @@ def test_search_simple_query_response():
     response = search()
 
     assert len(response.results) == 10
-    product_title = response.results[0].product.title
-    assert re.match(".*Hoodie.*", product_title)

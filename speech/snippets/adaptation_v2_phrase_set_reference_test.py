@@ -16,7 +16,7 @@ import os
 import re
 from uuid import uuid4
 
-from google.api_core.retry import Retry
+import backoff
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
@@ -25,20 +25,20 @@ import adaptation_v2_phrase_set_reference
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name):
+def delete_recognizer(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(name=name)
     client.delete_recognizer(request=request)
 
 
-def delete_phrase_set(name):
+def delete_phrase_set(name: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeletePhraseSetRequest(name=name)
     client.delete_phrase_set(request=request)
 
 
-@Retry()
-def test_adaptation_v2_phrase_set_reference(capsys):
+@backoff.on_exception(backoff.expo, Exception, max_time=120)
+def test_adaptation_v2_phrase_set_reference() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     recognizer_id = "recognizer-" + str(uuid4())

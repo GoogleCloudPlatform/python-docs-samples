@@ -12,16 +12,24 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # flake8: noqa
-from typing import Iterable, Optional
+from __future__ import annotations
+
+from collections.abc import Iterable
 import uuid
 
 from google.cloud import compute_v1
 
 
 # <INGREDIENT bulk_insert_instance>
-def bulk_insert_instance(project_id: str, zone: str, template: compute_v1.InstanceTemplate,
-                         count: int, name_pattern: str, min_count: Optional[int] = None,
-                         labels: Optional[dict] = None) -> Iterable[compute_v1.Instance]:
+def bulk_insert_instance(
+    project_id: str,
+    zone: str,
+    template: compute_v1.InstanceTemplate,
+    count: int,
+    name_pattern: str,
+    min_count: int | None = None,
+    labels: dict | None = None,
+) -> Iterable[compute_v1.Instance]:
     """
     Create multiple VMs based on an Instance Template. The newly created instances will
     be returned as a list and will share a label with key `bulk_batch` and a random
@@ -63,7 +71,7 @@ def bulk_insert_instance(project_id: str, zone: str, template: compute_v1.Instan
     if not labels:
         labels = {}
 
-    labels['bulk_batch'] = uuid.uuid4().hex
+    labels["bulk_batch"] = uuid.uuid4().hex
     instance_prop = compute_v1.InstanceProperties()
     instance_prop.labels = labels
     bulk_insert_resource.instance_properties = instance_prop
@@ -79,12 +87,16 @@ def bulk_insert_instance(project_id: str, zone: str, template: compute_v1.Instan
     try:
         wait_for_extended_operation(operation, "bulk instance creation")
     except Exception as err:
-        err.bulk_batch_id = labels['bulk_batch']
+        err.bulk_batch_id = labels["bulk_batch"]
         raise err
 
     list_req = compute_v1.ListInstancesRequest()
     list_req.project = project_id
     list_req.zone = zone
-    list_req.filter = " AND ".join(f"labels.{key}:{value}" for key, value in labels.items())
+    list_req.filter = " AND ".join(
+        f"labels.{key}:{value}" for key, value in labels.items()
+    )
     return client.list(list_req)
+
+
 # </INGREDIENT>

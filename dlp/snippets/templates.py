@@ -14,22 +14,26 @@
 
 """Sample app that sets up Data Loss Prevention API inspect templates."""
 
-from __future__ import print_function
-
 import argparse
 import os
+from typing import List
 
 
 # [START dlp_create_inspect_template]
+from typing import Optional  # noqa: I100, E402
+
+import google.cloud.dlp
+
+
 def create_inspect_template(
-    project,
-    info_types,
-    template_id=None,
-    display_name=None,
-    min_likelihood=None,
-    max_findings=None,
-    include_quote=None,
-):
+    project: str,
+    info_types: List[str],
+    template_id: Optional[str] = None,
+    display_name: Optional[str] = None,
+    min_likelihood: Optional[int] = None,
+    max_findings: Optional[int] = None,
+    include_quote: Optional[bool] = None,
+) -> None:
     """Creates a Data Loss Prevention API inspect template.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -47,9 +51,6 @@ def create_inspect_template(
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -84,23 +85,23 @@ def create_inspect_template(
         }
     )
 
-    print("Successfully created template {}".format(response.name))
+    print(f"Successfully created template {response.name}")
 
 
 # [END dlp_create_inspect_template]
 
 
-# [START dlp_list_templates]
-def list_inspect_templates(project):
+# [START dlp_list_inspect_templates]
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def list_inspect_templates(project: str) -> None:
     """Lists all Data Loss Prevention API inspect templates.
     Args:
         project: The Google Cloud project id to use as a parent resource.
     Returns:
         None; the response from the API is printed to the terminal.
     """
-
-    # Import the client library
-    import google.cloud.dlp
 
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
@@ -112,18 +113,18 @@ def list_inspect_templates(project):
     response = dlp.list_inspect_templates(request={"parent": parent})
 
     for template in response:
-        print("Template {}:".format(template.name))
+        print(f"Template {template.name}:")
         if template.display_name:
-            print("  Display Name: {}".format(template.display_name))
-        print("  Created: {}".format(template.create_time))
-        print("  Updated: {}".format(template.update_time))
+            print(f"  Display Name: {template.display_name}")
+        print(f"  Created: {template.create_time}")
+        print(f"  Updated: {template.update_time}")
 
         config = template.inspect_config
         print(
             "  InfoTypes: {}".format(", ".join([it.name for it in config.info_types]))
         )
-        print("  Minimum likelihood: {}".format(config.min_likelihood))
-        print("  Include quotes: {}".format(config.include_quote))
+        print(f"  Minimum likelihood: {config.min_likelihood}")
+        print(f"  Include quotes: {config.include_quote}")
         print(
             "  Max findings per request: {}".format(
                 config.limits.max_findings_per_request
@@ -131,11 +132,14 @@ def list_inspect_templates(project):
         )
 
 
-# [END dlp_list_templates]
+# [END dlp_list_inspect_templates]
 
 
 # [START dlp_delete_inspect_template]
-def delete_inspect_template(project, template_id):
+import google.cloud.dlp  # noqa: E402, F811
+
+
+def delete_inspect_template(project: str, template_id: str) -> None:
     """Deletes a Data Loss Prevention API template.
     Args:
         project: The id of the Google Cloud project which owns the template.
@@ -144,9 +148,6 @@ def delete_inspect_template(project, template_id):
         None; the response from the API is printed to the terminal.
     """
 
-    # Import the client library
-    import google.cloud.dlp
-
     # Instantiate a client.
     dlp = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -154,12 +155,12 @@ def delete_inspect_template(project, template_id):
     parent = f"projects/{project}"
 
     # Combine the template id with the parent id.
-    template_resource = "{}/inspectTemplates/{}".format(parent, template_id)
+    template_resource = f"{parent}/inspectTemplates/{template_id}"
 
     # Call the API.
     dlp.delete_inspect_template(request={"name": template_resource})
 
-    print("Template {} successfully deleted.".format(template_resource))
+    print(f"Template {template_resource} successfully deleted.")
 
 
 # [END dlp_delete_inspect_template]

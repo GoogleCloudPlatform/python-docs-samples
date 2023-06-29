@@ -16,6 +16,7 @@ import os
 import re
 
 from google.api_core.retry import Retry
+import pytest
 
 import transcribe
 
@@ -23,7 +24,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
-def test_transcribe_file(capsys):
+def test_transcribe_file(capsys: pytest.CaptureFixture) -> None:
     transcribe.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
     out, err = capsys.readouterr()
 
@@ -31,7 +32,7 @@ def test_transcribe_file(capsys):
 
 
 @Retry()
-def test_transcribe_gcs(capsys):
+def test_transcribe_gcs(capsys: pytest.CaptureFixture) -> None:
     transcribe.transcribe_gcs("gs://python-docs-samples-tests/speech/audio.flac")
     out, err = capsys.readouterr()
 

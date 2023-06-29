@@ -14,15 +14,28 @@
 
 
 # [START speech_adaptation_v2_phrase_set_reference]
-import io
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_phrase_set_reference(
-    project_id, recognizer_id, phrase_set_id, audio_file
-):
+    project_id: str,
+    recognizer_id: str,
+    phrase_set_id: str,
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribe audio files using a PhraseSet.
+
+    Args:
+        project_id: The GCP project ID.
+        recognizer_id: The ID of the recognizer to use.
+        phrase_set_id: The ID of the PhraseSet to use.
+        audio_file: The path to the audio file to transcribe.
+
+    Returns:
+        The response from the recognize call.
+    """
     # Instantiates a client
     client = SpeechClient()
 
@@ -39,7 +52,7 @@ def adaptation_v2_phrase_set_reference(
     recognizer = operation.result()
 
     # Reads a file as bytes
-    with io.open(audio_file, "rb") as f:
+    with open(audio_file, "rb") as f:
         content = f.read()
 
     # Create a persistent PhraseSet to reference in a recognition request
@@ -72,7 +85,7 @@ def adaptation_v2_phrase_set_reference(
     response = client.recognize(request=request)
 
     for result in response.results:
-        print("Transcript: {}".format(result.alternatives[0].transcript))
+        print(f"Transcript: {result.alternatives[0].transcript}")
 
     return response
 

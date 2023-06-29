@@ -18,7 +18,7 @@ import random
 from google.cloud import firestore
 
 
-class Shard(object):
+class Shard:
     """
     A shard is a distributed counter. Each shard can support being incremented
     once per second. Multiple shards are needed within a Counter to allow
@@ -32,7 +32,7 @@ class Shard(object):
         return {"count": self._count}
 
 
-class Counter(object):
+class Counter:
     """
     A counter stores a collection of shards which are
     summed to return a total count. This allows for more
@@ -41,6 +41,7 @@ class Counter(object):
 
     def __init__(self, num_shards):
         self._num_shards = num_shards
+
     # [END firestore_solution_sharded_counter_custom_type]
 
     # [START firestore_solution_sharded_counter_create]
@@ -55,6 +56,7 @@ class Counter(object):
         for num in range(self._num_shards):
             shard = Shard()
             col_ref.document(str(num)).set(shard.to_dict())
+
     # [END firestore_solution_sharded_counter_create]
 
     # [START firestore_solution_sharded_counter_increment]
@@ -64,6 +66,7 @@ class Counter(object):
 
         shard_ref = doc_ref.collection("shards").document(str(doc_id))
         return shard_ref.update({"count": firestore.Increment(1)})
+
     # [END firestore_solution_sharded_counter_increment]
 
     # [START firestore_solution_sharded_counter_get]
@@ -74,4 +77,5 @@ class Counter(object):
         for shard in shards:
             total += shard.get().to_dict().get("count", 0)
         return total
+
     # [END firestore_solution_sharded_counter_get]

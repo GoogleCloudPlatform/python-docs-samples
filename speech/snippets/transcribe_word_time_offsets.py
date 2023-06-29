@@ -21,17 +21,19 @@ Example usage:
 """
 
 import argparse
-import io
+
+from google.cloud import speech
 
 
-def transcribe_file_with_word_time_offsets(speech_file):
+def transcribe_file_with_word_time_offsets(
+    speech_file: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously and output the word time
     offsets."""
-    from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    with io.open(speech_file, "rb") as audio_file:
+    with open(speech_file, "rb") as audio_file:
         content = audio_file.read()
 
     audio = speech.RecognitionAudio(content=content)
@@ -46,7 +48,7 @@ def transcribe_file_with_word_time_offsets(speech_file):
 
     for result in response.results:
         alternative = result.alternatives[0]
-        print("Transcript: {}".format(alternative.transcript))
+        print(f"Transcript: {alternative.transcript}")
 
         for word_info in alternative.words:
             word = word_info.word
@@ -57,9 +59,13 @@ def transcribe_file_with_word_time_offsets(speech_file):
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
 
+    return response
+
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
-def transcribe_gcs_with_word_time_offsets(gcs_uri):
+def transcribe_gcs_with_word_time_offsets(
+    gcs_uri: str,
+) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously and output the word time
     offsets."""
     from google.cloud import speech
@@ -81,8 +87,8 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
 
     for result in result.results:
         alternative = result.alternatives[0]
-        print("Transcript: {}".format(alternative.transcript))
-        print("Confidence: {}".format(alternative.confidence))
+        print(f"Transcript: {alternative.transcript}")
+        print(f"Confidence: {alternative.confidence}")
 
         for word_info in alternative.words:
             word = word_info.word
@@ -92,6 +98,8 @@ def transcribe_gcs_with_word_time_offsets(gcs_uri):
             print(
                 f"Word: {word}, start_time: {start_time.total_seconds()}, end_time: {end_time.total_seconds()}"
             )
+
+    return result
 
 
 # [END speech_transcribe_async_word_time_offsets_gcs]

@@ -1,4 +1,4 @@
-# Copyright 202 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,40 +28,40 @@ TEST_VALUES = {
 }
 
 
-@patch('main.query_for_data', return_value='data')
+@patch("main.query_for_data", return_value="data")
 def test_get_data_not_present(query_fn, testbed):
     try:
-        main.client.set(KEY_PREFIX + 'counter', '0', 9000)
+        main.client.set(KEY_PREFIX + "counter", "0", 9000)
     except redis.RedisError:
-        pytest.skip('Redis is unavailable')
+        pytest.skip("Redis is unavailable")
 
-    data = main.get_data(KEY_PREFIX + 'key')
+    data = main.get_data(KEY_PREFIX + "key")
     query_fn.assert_called_once_with()
-    assert data == 'data'
-    assert 'data' == main.client.get(KEY_PREFIX + 'key')
-    main.client.delete(KEY_PREFIX + 'key')
+    assert data == "data"
+    assert "data" == main.client.get(KEY_PREFIX + "key")
+    main.client.delete(KEY_PREFIX + "key")
 
 
-@patch('main.query_for_data', return_value='data')
+@patch("main.query_for_data", return_value="data")
 def test_get_data_present(query_fn, testbed):
     try:
-        main.client.set(KEY_PREFIX + 'key', 'data', 9000)
+        main.client.set(KEY_PREFIX + "key", "data", 9000)
     except Exception:
-        pytest.skip('Redis is unavailable')
+        pytest.skip("Redis is unavailable")
 
     data = main.get_data()
     query_fn.assert_not_called()
-    assert data == 'data'
-    main.client.delete(KEY_PREFIX + 'key')
+    assert data == "data"
+    main.client.delete(KEY_PREFIX + "key")
 
 
 def test_add_values(testbed):
     try:
-        main.client.set(KEY_PREFIX + 'counter', '0', 9000)
+        main.client.set(KEY_PREFIX + "counter", "0", 9000)
     except Exception:
-        pytest.skip('Redis is unavailable')
+        pytest.skip("Redis is unavailable")
 
     main.add_values(TEST_VALUES)
     for key, value in TEST_VALUES.iteritems():
         assert main.client.get(key) == value
-    assert main.client.get(KEY_PREFIX + 'counter') == 3
+    assert main.client.get(KEY_PREFIX + "counter") == 3
