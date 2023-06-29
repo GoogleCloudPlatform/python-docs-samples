@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl
 import pytest
 
@@ -36,6 +37,7 @@ def setup():
         response.result()
 
 
+@Retry()
 def test_vision_classification_predict(capsys):
     file_path = "resources/test.png"
     vision_classification_predict.predict(PROJECT_ID, MODEL_ID, file_path)
