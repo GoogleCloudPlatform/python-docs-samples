@@ -1,2 +1,2 @@
-pytest==7.0.1
+pytest==7.4.0
 google-cloud-pubsub==2.17.0
