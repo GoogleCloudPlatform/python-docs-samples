@@ -19,7 +19,8 @@ for Cloud Run or Cloud Functions
 
 # [START cloudrun_service_to_service_receive]
 
-from google.auth import jwt
+from google.oauth2 import id_token
+from google.auth.transport import requests
 
 
 def receive_authorized_get_request(request):
@@ -38,7 +39,7 @@ def receive_authorized_get_request(request):
         auth_type, creds = auth_header.split(" ", 1)
 
         if auth_type.lower() == "bearer":
-            claims = jwt.decode(creds)
+            claims = id_token.verify_token(creds, requests.Request())
             return f"Hello, {claims['email']}!\n"
 
         else:
