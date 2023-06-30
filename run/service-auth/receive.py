@@ -19,8 +19,8 @@ for Cloud Run or Cloud Functions
 
 # [START cloudrun_service_to_service_receive]
 
-from google.oauth2 import id_token
 from google.auth.transport import requests
+from google.oauth2 import id_token
 
 
 def receive_authorized_get_request(request):
