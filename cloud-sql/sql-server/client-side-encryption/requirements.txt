@@ -1,4 +1,4 @@
-SQLAlchemy==2.0.15
+SQLAlchemy==2.0.17
 python-tds==1.12.0
 sqlalchemy-pytds==1.0.0
 tink==1.7.0
