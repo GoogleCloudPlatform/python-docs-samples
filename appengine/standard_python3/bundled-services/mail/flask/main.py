@@ -14,7 +14,7 @@
 
 import os
 
-from flask import Flask, request, escape
+from flask import escape, Flask, request
 from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
 
@@ -74,7 +74,7 @@ def send_mail():
 # [START gae_mail_handler_bounce_flask]
 @app.route("/_ah/bounce", methods=["POST"])
 def receive_bounce():
-    bounce_message = escape(mail.BounceNotification(dict(request.form.lists())))
+    bounce_message = mail.BounceNotification(dict(request.form.lists()))
 
     # Do something with the message
     print("Bounce original: ", bounce_message.original)
@@ -89,10 +89,10 @@ def receive_bounce():
 # [START gae_mail_handler_receive_flask]
 @app.route("/_ah/mail/<path>", methods=["POST"])
 def receive_mail(path):
-    message = escape(mail.InboundEmailMessage(request.get_data()))
+    message = mail.InboundEmailMessage(request.get_data())
 
     # Do something with the message
-    print(f"Received greeting for {message.to} at {message.date} from {message.sender}")
+    print(f"Received greeting for {escape(message.to)} at {escape(message.date)} from {escape(message.sender)}")
     for content_type, payload in message.bodies("text/plain"):
         print(f"Text/plain body: {payload.decode()}")
         break
