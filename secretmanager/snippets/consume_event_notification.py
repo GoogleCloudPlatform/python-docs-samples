@@ -16,10 +16,10 @@
 sample code for consuming an event notification in a cloud function.
 """
 
+# [START secretmanager_consume_event_notification]
 import base64
 
 
-# [START secretmanager_consume_event_notification]
 def consume_event_notification(event: dict, unused_context: None) -> str:
     """
     consume_event_notification demonstrates how to consume and process a
