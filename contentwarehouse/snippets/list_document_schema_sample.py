@@ -48,9 +48,13 @@ def sample_list_document_schemas(project_number: str, location: str) -> None:
     page_result = document_schema_client.list_document_schemas(request=request)
 
     # Print response
+    responses = []
     print("Document Schemas:")
     for response in page_result:
         print(response)
+        responses.append(response)
+
+    return responses
 
 
 # [END contentwarehouse_list_document_schemas]

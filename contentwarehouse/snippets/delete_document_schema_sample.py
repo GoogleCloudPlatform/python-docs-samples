@@ -33,6 +33,8 @@ def sample_delete_document_schema(
         project_number: Google Cloud project number.
         location: Google Cloud project location.
         document_schema_id: Unique identifier for document schema
+    Returns:
+        None, if operation is successful
     """
     # Create a client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
@@ -53,8 +55,7 @@ def sample_delete_document_schema(
     # Make the request
     response = document_schema_client.delete_document_schema(request=request)
 
-    # Print response
-    print("Document Schema Deleted:", response)
+    return response
 
 
 # [END contentwarehouse_delete_document_schema]

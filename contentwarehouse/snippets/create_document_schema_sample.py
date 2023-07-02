@@ -29,6 +29,8 @@ def sample_create_document_schema(project_number: str, location: str) -> None:
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
+    Returns:
+        Response object.
     """
     # Create a Schema Service client.
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
@@ -57,6 +59,8 @@ def sample_create_document_schema(project_number: str, location: str) -> None:
 
     # Print response
     print("Document Schema Created:", response)
+
+    return response
 
 
 # [END contentwarehouse_create_document_schema]

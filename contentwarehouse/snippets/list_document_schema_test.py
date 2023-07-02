@@ -18,19 +18,17 @@ import os
 from contentwarehouse.snippets import list_document_schema_sample
 from contentwarehouse.snippets import test_utilities
 
-import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 
 
-def test_list_document_schemas(capsys: pytest.CaptureFixture) -> None:
+def test_list_document_schemas() -> None:
     project_number = test_utilities.get_project_number(project_id)
 
-    list_document_schema_sample.sample_list_document_schemas(
+    response = list_document_schema_sample.sample_list_document_schemas(
         project_number=project_number, location=location
     )
 
-    out, _ = capsys.readouterr()
-
-    assert "Document Schemas" in out
+    for schema in response:
+        assert "display_name" in schema

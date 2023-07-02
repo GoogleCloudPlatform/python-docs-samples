@@ -33,6 +33,8 @@ def sample_get_document_schema(
         project_number: Google Cloud project number.
         location: Google Cloud project location.
         document_schema_id: Unique identifier for document schema
+    Returns:
+        Response object.
     """
     # Create a Schema Service client.
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
@@ -55,6 +57,8 @@ def sample_get_document_schema(
 
     # Handle the response
     print("Document Schema:", response)
+
+    return response
 
 
 # [END contentwarehouse_get_document_schema]
