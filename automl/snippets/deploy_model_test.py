@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 import pytest
 
 import deploy_model
@@ -22,6 +23,7 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 MODEL_ID = "TRL0000000000000000000"
 
 
+@Retry()
 @pytest.mark.slow
 def test_deploy_model(capsys):
     # As model deployment can take a long time, instead try to deploy a

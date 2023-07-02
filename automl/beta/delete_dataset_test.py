@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -39,6 +40,7 @@ def dataset_id():
     yield dataset_id
 
 
+@Retry()
 def test_delete_dataset(capsys, dataset_id):
     # delete dataset
     delete_dataset.delete_dataset(PROJECT_ID, dataset_id)
