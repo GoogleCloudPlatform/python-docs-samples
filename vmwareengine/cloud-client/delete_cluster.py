@@ -23,7 +23,7 @@ def delete_cluster(
     """
     Delete a cluster from private cloud.
 
-    Deleting a cluster might take a long time.
+    Deleting a cluster is a long running operation.
 
     Args:
         project_id: name of the project you want to use.

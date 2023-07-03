@@ -19,15 +19,15 @@ from google.cloud import vmwareengine_v1
 
 def cancel_private_cloud_deletion_by_full_name(cloud_name: str) -> operation.Operation:
     """
-    Deletes VMWare Private Cloud.
+    Cancels in progress deletion of VMWare Private Cloud.
 
     Args:
-        cloud_name: identifier of the Private Cloud you want to delete.
+        cloud_name: identifier of the Private Cloud you want to cancel deletion for.
             Expected format:
             projects/{project_name}/locations/{zone}/privateClouds/{cloud}
 
     Returns:
-        An Operation object related to canceling cluster deletion operation.
+        An Operation object related to canceling private cloud deletion operation.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.UndeletePrivateCloudRequest()
@@ -39,15 +39,15 @@ def cancel_private_cloud_deletion(
     project_id: str, zone: str, cloud_name: str
 ) -> operation.Operation:
     """
-    Deletes VMWare Private Cloud.
+    Cancels in progress deletion of deletion of VMWare Private Cloud.
 
     Args:
         project_id: name of the project hosting the private cloud.
         zone: zone in which the private cloud is located in.
-        cloud_name: name of the private cloud to be deleted.
+        cloud_name: name of the private cloud to cancel deletion for.
 
     Returns:
-        An Operation object related to canceling cluster deletion operation.
+        An Operation object related to canceling private cloud deletion operation.
     """
     return cancel_private_cloud_deletion_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"

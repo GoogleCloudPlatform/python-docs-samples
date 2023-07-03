@@ -25,9 +25,9 @@ def update_cluster(
     node_count: int,
 ) -> operation.Operation:
     """
-    Modify a number of nodes in a cluster in a private cloud.
+    Modify the number of nodes in a cluster in a private cloud.
 
-    Modifying a cluster is a slow operation. Might take well over 15 minutes.
+    Modifying a cluster is a long running operation and it might take over 15 minutes.
 
     Args:
         project_id: name of the project you want to use.
@@ -37,7 +37,7 @@ def update_cluster(
         node_count: desired number of nodes in the cluster.
 
     Returns:
-        An Operation object related to started cluster modification operation.
+        An Operation object related to cluster modification operation.
     """
     if node_count < 3:
         raise RuntimeError("Cluster needs to have at least 3 nodes")

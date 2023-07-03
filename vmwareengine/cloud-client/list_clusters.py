@@ -22,7 +22,7 @@ def list_clusters(
     project_id: str, zone: str, private_cloud_name: str
 ) -> Iterable[vmwareengine_v1.Cluster]:
     """
-    Retrieves a list of cluster in private cloud.
+    Retrieves a list of clusters in private cloud.
 
     Args:
         project_id: name of the project hosting the private cloud.
