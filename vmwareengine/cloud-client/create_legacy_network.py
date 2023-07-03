@@ -34,7 +34,9 @@ def create_legacy_network(
     request.parent = f"projects/{project_id}/locations/{region}"
     request.vmware_engine_network_id = f"{region}-default"
     network = vmwareengine_v1.VmwareEngineNetwork()
-    network.description = "Legacy network created using vmwareengine_v1.VmwareEngineNetwork"
+    network.description = (
+        "Legacy network created using vmwareengine_v1.VmwareEngineNetwork"
+    )
     network.type_ = vmwareengine_v1.VmwareEngineNetwork.Type.LEGACY
     request.vmware_engine_network = network
     result = client.create_vmware_engine_network(request, timeout=20 * 60).result()
