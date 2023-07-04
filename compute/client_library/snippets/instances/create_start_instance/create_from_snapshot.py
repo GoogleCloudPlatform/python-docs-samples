@@ -178,7 +178,7 @@ def create_instance(
 
     # Use the network interface provided in the network_link argument.
     network_interface = compute_v1.NetworkInterface()
-    network_interface.name = network_link
+    network_interface.network = network_link
     if subnetwork_link:
         network_interface.subnetwork = subnetwork_link
 
