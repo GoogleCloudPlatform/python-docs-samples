@@ -37,7 +37,9 @@ def create_network_policy(
         ValueError if the provided ip_range doesn't end with /26.
     """
     if not ip_range.endswith("/26"):
-        raise ValueError("The ip_range needs to be an RFC 1918 CIDR block with a '/26' suffix")
+        raise ValueError(
+            "The ip_range needs to be an RFC 1918 CIDR block with a '/26' suffix"
+        )
 
     network_policy = vmwareengine_v1.NetworkPolicy()
     network_policy.vmware_engine_network = f"projects/{project_id}/locations/{region}/vmwareEngineNetworks/{region}-default"

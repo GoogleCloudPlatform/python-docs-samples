@@ -19,6 +19,7 @@ from google.cloud import vmwareengine_v1
 DEFAULT_MANAGEMENT_CIDR = "192.168.0.0/24"
 DEFAULT_NODE_COUNT = 3
 
+
 def create_private_cloud(
     project_id: str, zone: str, network_name: str, cloud_name: str, cluster_name: str
 ) -> operation.Operation:

@@ -67,7 +67,9 @@ def test_create_custom_cluster(mock_client_class):
 
 def test_create_custom_cluster_value_error():
     with pytest.raises(ValueError):
-        create_custom_cluster("bad_project", "badzone", "bad_cloud", "bad_cluster", 2, 3)
+        create_custom_cluster(
+            "bad_project", "badzone", "bad_cloud", "bad_cluster", 2, 3
+        )
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")

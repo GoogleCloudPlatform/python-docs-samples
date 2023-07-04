@@ -17,6 +17,7 @@ from google.cloud import vmwareengine_v1
 
 TIMEOUT = 1200  # 20 minutes
 
+
 def create_legacy_network(
     project_id: str, region: str
 ) -> vmwareengine_v1.VmwareEngineNetwork:

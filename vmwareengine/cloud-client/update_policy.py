@@ -17,7 +17,9 @@ from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def update_network_policy(project_id: str, region: str, internet_access: bool, external_ip: bool) -> operation.Operation:
+def update_network_policy(
+    project_id: str, region: str, internet_access: bool, external_ip: bool
+) -> operation.Operation:
     """
     Creates a new network policy in a given network.
 
