@@ -28,6 +28,9 @@ def list_clusters(
         project_id: name of the project hosting the private cloud.
         zone: zone in which the private cloud is located.
         private_cloud_name: name of the cloud of which you want to list cluster.
+
+    Returns:
+        An iterable collection of Cluster objects.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     return client.list_clusters(

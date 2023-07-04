@@ -27,25 +27,30 @@ def create_network_policy(
         project_id: name of the project you want to use.
         region: name of the region you want to use. I.e. "us-central1"
         ip_range: the CIDR range to use for internet access and external IP access gateways,
-            in CIDR notation. An RFC 1918 CIDR block with a "/26" prefix is required.
+            in CIDR notation. An RFC 1918 CIDR block with a "/26" suffix is required.
 
     Returns:
         An operation object representing the started operation. You can call its .result() method to wait for
         it to finish.
+
+    Raises:
+        ValueError if the provided ip_range doesn't end with /26.
     """
-    assert ip_range.endswith("/26")
-    client = vmwareengine_v1.VmwareEngineClient()
-    request = vmwareengine_v1.CreateNetworkPolicyRequest()
+    if not ip_range.endswith("/26"):
+        raise ValueError("The ip_range needs to be an RFC 1918 CIDR block with a '/26' suffix")
+
     network_policy = vmwareengine_v1.NetworkPolicy()
     network_policy.vmware_engine_network = f"projects/{project_id}/locations/{region}/vmwareEngineNetworks/{region}-default"
     network_policy.edge_services_cidr = ip_range
     network_policy.internet_access.enabled = True
     network_policy.external_ip.enabled = True
 
+    request = vmwareengine_v1.CreateNetworkPolicyRequest()
     request.network_policy = network_policy
     request.parent = f"projects/{project_id}/locations/{region}"
     request.network_policy_id = f"{region}-default"
 
+    client = vmwareengine_v1.VmwareEngineClient()
     return client.create_network_policy(request)
 
 

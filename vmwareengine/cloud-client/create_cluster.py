@@ -34,15 +34,17 @@ def create_cluster(
         zone: region in which your private cloud is located.
         private_cloud_name: name of the private cloud hosting the new cluster.
         cluster_name: name of the new cluster.
-        node_count: number of nodes in the new cluster.
+        node_count: number of nodes in the new cluster. (Must be >= 3)
 
     Returns:
         An Operation object related to started cluster creation operation.
+
+    Raises:
+        ValueError in case an incorrect number of nodes is provided.
     """
     if node_count < 3:
-        raise RuntimeError("Cluster needs to have at least 3 nodes")
+        raise ValueError("Cluster needs to have at least 3 nodes")
 
-    client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.CreateClusterRequest()
     request.parent = (
         f"projects/{project_id}/locations/{zone}/privateClouds/{private_cloud_name}"
@@ -51,11 +53,13 @@ def create_cluster(
     request.cluster = vmwareengine_v1.Cluster()
     request.cluster.name = cluster_name
 
+    # Currently standard-72 is the only supported node type.
     request.cluster.node_type_configs = {
         "standard-72": vmwareengine_v1.NodeTypeConfig()
     }
     request.cluster.node_type_configs["standard-72"].node_count = node_count
 
+    client = vmwareengine_v1.VmwareEngineClient()
     return client.create_cluster(request)
 
 

@@ -14,12 +14,13 @@
 
 from unittest import mock
 
+import pytest
 from google.cloud import vmwareengine_v1
 
 from create_cluster import create_cluster
 from create_custom_cluster import create_custom_cluster
 from delete_cluster import delete_cluster
-from update_cluster import update_cluster
+from update_cluster import update_cluster_node_count
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
@@ -40,6 +41,11 @@ def test_create_cluster(mock_client_class):
     assert request.cluster.node_type_configs["standard-72"].node_count == 99
 
 
+def test_create_cluster_value_error():
+    with pytest.raises(ValueError):
+        create_cluster("bad_project", "badzone", "bad_cloud", "bad_cluster", 2)
+
+
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_create_custom_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
@@ -57,6 +63,11 @@ def test_create_custom_cluster(mock_client_class):
     assert request.cluster.name == "my_cluuuster"
     assert request.cluster.node_type_configs["standard-72"].node_count == 98
     assert request.cluster.node_type_configs["standard-72"].custom_core_count == 7
+
+
+def test_create_custom_cluster_value_error():
+    with pytest.raises(ValueError):
+        create_custom_cluster("bad_project", "badzone", "bad_cloud", "bad_cluster", 2, 3)
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
@@ -80,7 +91,7 @@ def test_delete_cluster(mock_client_class):
 def test_update_cluster(mock_client_class):
     mock_client = mock_client_class.return_value
 
-    update_cluster("projojo", "zona-2", "my_cloud<3", "the_clusterino", 66)
+    update_cluster_node_count("projojo", "zona-2", "my_cloud<3", "the_clusterino", 66)
 
     mock_client.update_cluster.assert_called_once()
     assert len(mock_client.update_cluster.call_args[0]) == 1

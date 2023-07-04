@@ -25,6 +25,9 @@ def delete_private_cloud_by_full_name(cloud_name: str) -> operation.Operation:
         cloud_name: identifier of the Private Cloud you want to delete.
             Expected format:
             projects/{project_name}/locations/{zone}/privateClouds/{cloud}
+
+    Returns:
+        An Operation object related to started private cloud deletion operation.
     """
     client = vmwareengine_v1.VmwareEngineClient()
     request = vmwareengine_v1.DeletePrivateCloudRequest()
@@ -44,6 +47,9 @@ def delete_private_cloud(
         project_id: name of the project hosting the private cloud.
         zone: zone in which the private cloud is located in.
         cloud_name: name of the private cloud to be deleted.
+
+    Returns:
+        An Operation object related to started private cloud deletion operation.
     """
     return delete_private_cloud_by_full_name(
         f"projects/{project_id}/locations/{zone}/privateClouds/{cloud_name}"

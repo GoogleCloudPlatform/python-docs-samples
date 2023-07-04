@@ -17,13 +17,15 @@ from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def update_network_policy(project_id: str, region: str) -> operation.Operation:
+def update_network_policy(project_id: str, region: str, internet_access: bool, external_ip: bool) -> operation.Operation:
     """
     Creates a new network policy in a given network.
 
     Args:
         project_id: name of the project you want to use.
         region: name of the region you want to use. I.e. "us-central1"
+        internet_access: should internet access be allowed.
+        external_ip: should external IP addresses be assigned.
 
     Returns:
         An operation object representing the started operation. You can call its .result() method to wait for
@@ -38,8 +40,8 @@ def update_network_policy(project_id: str, region: str) -> operation.Operation:
         f"projects/{project_id}/locations/{region}/networkPolicies/{region}-default"
     )
     network_policy.vmware_engine_network = f"projects/{project_id}/locations/{region}/vmwareEngineNetworks/{region}-default"
-    network_policy.internet_access.enabled = False
-    network_policy.external_ip.enabled = False
+    network_policy.internet_access.enabled = internet_access
+    network_policy.external_ip.enabled = external_ip
 
     request.network_policy = network_policy
 

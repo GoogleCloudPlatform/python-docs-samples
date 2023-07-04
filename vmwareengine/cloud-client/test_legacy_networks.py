@@ -41,7 +41,7 @@ def test_network_create(mock_client_class):
     )
     assert (
         request.vmware_engine_network.description
-        == "Legacy network created using gcloud vmware"
+        == "Legacy network created using vmwareengine_v1.VmwareEngineNetwork"
     )
 
 

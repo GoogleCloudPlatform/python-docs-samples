@@ -14,6 +14,7 @@
 
 from unittest import mock
 
+import pytest
 from google.cloud import vmwareengine_v1
 
 from create_policy import create_network_policy
@@ -36,6 +37,12 @@ def test_create_policy(mock_client_class):
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
+def test_create_policy_value_error(mock_client_class):
+    with pytest.raises(ValueError):
+        create_network_policy("pro", "reg", "1.2.3.4/24")
+
+
+@mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_delete_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
@@ -52,7 +59,7 @@ def test_delete_policy(mock_client_class):
 def test_update_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
-    update_network_policy("project", "regiono")
+    update_network_policy("project", "regiono", True, False)
 
     mock_client.update_network_policy.assert_called_once()
     assert len(mock_client.update_network_policy.call_args[0]) == 1
@@ -62,3 +69,5 @@ def test_update_policy(mock_client_class):
         request.network_policy.name
         == "projects/project/locations/regiono/networkPolicies/regiono-default"
     )
+    assert request.network_policy.external_ip.enabled is False
+    assert request.network_policy.internet_access.enabled is True

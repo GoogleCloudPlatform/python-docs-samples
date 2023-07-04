@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START vmwareengine_update_cluster]
+# [START vmwareengine_update_cluster_node_count]
 from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def update_cluster(
+def update_cluster_node_count(
     project_id: str,
     zone: str,
     private_cloud_name: str,
@@ -27,11 +27,11 @@ def update_cluster(
     """
     Modify the number of nodes in a cluster in a private cloud.
 
-    Modifying a cluster is a long running operation and it might take over 15 minutes.
+    Modifying a cluster is a long-running operation and it might take over 15 minutes.
 
     Args:
         project_id: name of the project you want to use.
-        zone: region in which your private cloud is located.
+        zone: zone in which your private cloud is located.
         private_cloud_name: name of the private cloud hosting the cluster.
         cluster_name: name of the cluster.
         node_count: desired number of nodes in the cluster.
@@ -56,4 +56,4 @@ def update_cluster(
     return client.update_cluster(request)
 
 
-# [END vmwareengine_update_cluster]
+# [END vmwareengine_update_cluster_node_count]

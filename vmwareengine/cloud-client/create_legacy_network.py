@@ -15,6 +15,7 @@
 # [START vmwareengine_create_legacy_network]
 from google.cloud import vmwareengine_v1
 
+TIMEOUT = 1200  # 20 minutes
 
 def create_legacy_network(
     project_id: str, region: str
@@ -29,17 +30,20 @@ def create_legacy_network(
     Returns:
         The newly created VmwareEngineNetwork object.
     """
-    client = vmwareengine_v1.VmwareEngineClient()
-    request = vmwareengine_v1.CreateVmwareEngineNetworkRequest()
-    request.parent = f"projects/{project_id}/locations/{region}"
-    request.vmware_engine_network_id = f"{region}-default"
     network = vmwareengine_v1.VmwareEngineNetwork()
     network.description = (
         "Legacy network created using vmwareengine_v1.VmwareEngineNetwork"
     )
     network.type_ = vmwareengine_v1.VmwareEngineNetwork.Type.LEGACY
+
+    request = vmwareengine_v1.CreateVmwareEngineNetworkRequest()
+    request.parent = f"projects/{project_id}/locations/{region}"
+    request.vmware_engine_network_id = f"{region}-default"
     request.vmware_engine_network = network
-    result = client.create_vmware_engine_network(request, timeout=20 * 60).result()
+
+    client = vmwareengine_v1.VmwareEngineClient()
+    result = client.create_vmware_engine_network(request, timeout=TIMEOUT).result()
+
     return result
 
 
