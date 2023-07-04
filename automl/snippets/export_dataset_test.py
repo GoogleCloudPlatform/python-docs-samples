@@ -15,6 +15,8 @@
 import datetime
 import os
 
+from google.api_core.retry import Retry
+
 import export_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
@@ -23,6 +25,7 @@ PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S"
 DATASET_ID = "TEN0000000000000000000"
 
 
+@Retry()
 def test_export_dataset(capsys):
     # As exporting a dataset can take a long time and only one operation can be
     # run on a dataset at once. Try to export a nonexistent dataset and confirm

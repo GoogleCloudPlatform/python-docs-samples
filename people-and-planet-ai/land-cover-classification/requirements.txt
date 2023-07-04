@@ -1,6 +1,6 @@
 # Requirements to run the notebooks.
 apache-beam[gcp]==2.46.0
-earthengine-api==0.1.355
+earthengine-api==0.1.358
 folium==0.14.0
 google-cloud-aiplatform==1.25.0
 imageio==2.29.0

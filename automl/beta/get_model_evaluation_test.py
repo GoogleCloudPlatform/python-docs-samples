@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -36,6 +37,7 @@ def model_evaluation_id():
     yield model_evaluation_id
 
 
+@Retry()
 def test_get_model_evaluation(capsys, model_evaluation_id):
     get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, model_evaluation_id)
     out, _ = capsys.readouterr()
