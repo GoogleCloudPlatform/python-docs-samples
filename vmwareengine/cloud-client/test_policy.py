@@ -14,8 +14,8 @@
 
 from unittest import mock
 
-import pytest
 from google.cloud import vmwareengine_v1
+import pytest
 
 from create_policy import create_network_policy
 from delete_policy import delete_network_policy

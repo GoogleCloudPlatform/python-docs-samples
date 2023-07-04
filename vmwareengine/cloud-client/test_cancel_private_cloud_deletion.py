@@ -17,7 +17,8 @@ from unittest import mock
 from google.cloud import vmwareengine_v1
 
 from cancel_private_cloud_deletion import cancel_private_cloud_deletion
-from cancel_private_cloud_deletion import cancel_private_cloud_deletion_by_full_name
+from cancel_private_cloud_deletion import \
+    cancel_private_cloud_deletion_by_full_name
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")

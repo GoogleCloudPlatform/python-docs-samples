@@ -14,8 +14,8 @@
 
 from unittest import mock
 
-import pytest
 from google.cloud import vmwareengine_v1
+import pytest
 
 from create_cluster import create_cluster
 from create_custom_cluster import create_custom_cluster
