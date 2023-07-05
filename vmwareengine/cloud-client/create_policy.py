@@ -18,7 +18,11 @@ from google.cloud import vmwareengine_v1
 
 
 def create_network_policy(
-    project_id: str, region: str, ip_range: str
+    project_id: str,
+    region: str,
+    ip_range: str,
+    internet_access: bool,
+    external_ip: bool,
 ) -> operation.Operation:
     """
     Creates a new network policy in a given network.
@@ -28,6 +32,8 @@ def create_network_policy(
         region: name of the region you want to use. I.e. "us-central1"
         ip_range: the CIDR range to use for internet access and external IP access gateways,
             in CIDR notation. An RFC 1918 CIDR block with a "/26" suffix is required.
+        internet_access: should internet access be allowed.
+        external_ip: should external IP addresses be assigned.
 
     Returns:
         An operation object representing the started operation. You can call its .result() method to wait for
@@ -44,8 +50,8 @@ def create_network_policy(
     network_policy = vmwareengine_v1.NetworkPolicy()
     network_policy.vmware_engine_network = f"projects/{project_id}/locations/{region}/vmwareEngineNetworks/{region}-default"
     network_policy.edge_services_cidr = ip_range
-    network_policy.internet_access.enabled = True
-    network_policy.external_ip.enabled = True
+    network_policy.internet_access.enabled = internet_access
+    network_policy.external_ip.enabled = external_ip
 
     request = vmwareengine_v1.CreateNetworkPolicyRequest()
     request.network_policy = network_policy

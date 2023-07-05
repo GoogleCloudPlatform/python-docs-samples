@@ -25,7 +25,7 @@ def update_network_policy(
 
     Args:
         project_id: name of the project you want to use.
-        region: name of the region you want to use. I.e. "us-central1"
+        region: name of the region you want to use. I.e. "us-central1".
         internet_access: should internet access be allowed.
         external_ip: should external IP addresses be assigned.
 

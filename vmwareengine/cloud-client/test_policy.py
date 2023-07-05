@@ -26,7 +26,7 @@ from update_policy import update_network_policy
 def test_create_policy(mock_client_class):
     mock_client = mock_client_class.return_value
 
-    create_network_policy("pro", "reg", "1.2.3.4/26")
+    create_network_policy("pro", "reg", "1.2.3.4/26", False, True)
 
     mock_client.create_network_policy.assert_called_once()
     assert len(mock_client.create_network_policy.call_args[0]) == 1
@@ -34,12 +34,14 @@ def test_create_policy(mock_client_class):
     assert isinstance(request, vmwareengine_v1.CreateNetworkPolicyRequest)
     assert request.parent == "projects/pro/locations/reg"
     assert request.network_policy.edge_services_cidr == "1.2.3.4/26"
+    assert request.network_policy.external_ip.enabled is True
+    assert request.network_policy.internet_access.enabled is False
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")
 def test_create_policy_value_error(mock_client_class):
     with pytest.raises(ValueError):
-        create_network_policy("pro", "reg", "1.2.3.4/24")
+        create_network_policy("pro", "reg", "1.2.3.4/24", False, False)
 
 
 @mock.patch("google.cloud.vmwareengine_v1.VmwareEngineClient")

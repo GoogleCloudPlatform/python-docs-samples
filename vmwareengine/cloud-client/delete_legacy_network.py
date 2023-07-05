@@ -13,24 +13,27 @@
 # limitations under the License.
 
 # [START vmwareengine_delete_legacy_network]
+from google.api_core import operation
 from google.cloud import vmwareengine_v1
 
 
-def delete_legacy_network(project_id: str, region: str) -> None:
+def delete_legacy_network(project_id: str, region: str) -> operation.Operation:
     """
     Deletes a legacy VMWare Network.
 
     Args:
         project_id: name of the project hosting the network.
         region: region in which the legacy network is located in.
+
+    Returns:
+        An Operation object related to started network deletion operation.
     """
     client = vmwareengine_v1.VmwareEngineClient()
-    client.delete_vmware_engine_network(
+    return client.delete_vmware_engine_network(
         name=f"projects/{project_id}/"
         f"locations/{region}/"
         f"vmwareEngineNetworks/{region}-default"
-    ).result(timeout=300)
-    return
+    )
 
 
 # [END vmwareengine_delete_legacy_network]
