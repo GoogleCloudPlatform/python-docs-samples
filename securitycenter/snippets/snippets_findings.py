@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Examples of working with source and findings in Cloud Security Command Center."""
+"""Examples of working with source and findings in Security Command Center."""
 
 
 def create_source(organization_id):
@@ -136,12 +136,14 @@ def list_source(organization_id):
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
-    # organization_id is the numeric ID of the organization. e.g.:
-    # organization_id = "111122222444"
-    org_name = f"organizations/{organization_id}"
+    # parent must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     # Call the API and print out each existing source.
-    for i, source in enumerate(client.list_sources(request={"parent": org_name})):
+    for i, source in enumerate(client.list_sources(request={"parent": parent})):
         print(i, source)
     # [END securitycenter_list_sources]
     return i
@@ -364,12 +366,14 @@ def list_all_findings(organization_id):
     # Create a client.
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization. e.g.:
-    # organization_id = "111122222444"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
-    all_sources = f"{org_name}/sources/-"
+    all_sources = f"{parent}/sources/-"
     finding_result_iterator = client.list_findings(request={"parent": all_sources})
     for i, finding_result in enumerate(finding_result_iterator):
         print(
@@ -391,9 +395,12 @@ def list_filtered_findings(source_name):
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
-    # source_name = "organizations/111122222444/sources/1234"
+    # source_name = f"{parent}/sources/{source_id}"
+    # where,
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
     finding_result_iterator = client.list_findings(
@@ -423,9 +430,12 @@ def list_findings_at_time(source_name):
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
-    # source_name = "organizations/111122222444/sources/1234"
+    # source_name = f"{parent}/sources/{source_id}"
+    # where
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
     five_days_ago = str(datetime.now() - timedelta(days=5))
@@ -474,12 +484,14 @@ def group_all_findings(organization_id):
     # Create a client.
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization. e.g.:
-    # organization_id = "111122222444"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
     # The "sources/-" suffix lists findings across all sources.  You
     # also use a specific source_name instead.
-    all_sources = f"{org_name}/sources/-"
+    all_sources = f"{parent}/sources/-"
     group_result_iterator = client.group_findings(
         request={"parent": all_sources, "group_by": "category"}
     )
@@ -501,8 +513,12 @@ def group_filtered_findings(source_name):
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
+    # source_name = "{parent}/sources/{source_id}"
+    # where,
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # source_name = "organizations/111122222444/sources/1234"
 
     group_result_iterator = client.group_findings(
@@ -533,8 +549,12 @@ def group_findings_at_time(source_name):
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
+    # source_name = "{parent}/sources/{source_id}"
+    # where,
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # source_name = "organizations/111122222444/sources/1234"
 
     # Group findings as of yesterday.
@@ -564,8 +584,12 @@ def group_findings_and_changes(source_name):
     # source_name is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
+    # source_name = "{parent}/sources/{source_id}"
+    # where,
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # source_name = "organizations/111122222444/sources/1234"
 
     # List assets and their state change the last 30 days
