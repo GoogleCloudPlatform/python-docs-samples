@@ -21,6 +21,7 @@ import google.cloud.dlp_v2
 import pytest
 
 import deid
+import deid_table
 
 HARMFUL_STRING = "My SSN is 372819127"
 HARMLESS_STRING = "My favorite color is blue"
@@ -607,7 +608,7 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
         ]
     }
 
-    deid.deidentify_table_with_fpe(
+    deid_table.deidentify_table_with_fpe(
         GCLOUD_PROJECT,
         table_data["header"],
         table_data["rows"],
@@ -633,7 +634,7 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
     for i in range(total_rows):
         table_data['rows'][i][deid_col_id - 1] = deid_emp_ids[i]
 
-    deid.reidentify_table_with_fpe(
+    deid_table.reidentify_table_with_fpe(
         GCLOUD_PROJECT,
         table_data["header"],
         table_data["rows"],
