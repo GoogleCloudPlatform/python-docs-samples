@@ -136,7 +136,7 @@ def list_source(organization_id):
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
-    # parent must be in one of the following formats:
+    # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
     #   "folders/{folder_id}"
