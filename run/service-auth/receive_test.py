@@ -19,6 +19,7 @@ import os
 import subprocess
 from urllib import error, request
 import uuid
+import time
 
 import pytest
 
@@ -42,7 +43,7 @@ def services():
             "--source",
             ".",
             "--region=us-central1",
-            "--no-allow-unauthenticated",
+            "--allow-unauthenticated",
             "--quiet",
         ],
         check=True,
@@ -58,7 +59,6 @@ def services():
             service_name,
             "--project",
             project,
-            "--platform=managed",
             "--region=us-central1",
             "--format=value(status.url)",
         ],
@@ -72,42 +72,38 @@ def services():
 
     yield endpoint_url, token
 
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "delete",
-            service_name,
-            "--project",
-            project,
-            "--async",
-            "--platform=managed",
-            "--region=us-central1",
-            "--quiet",
-        ],
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "run",
+    #         "services",
+    #         "delete",
+    #         service_name,
+    #         "--project",
+    #         project,
+    #         "--async",
+    #         "--region=us-central1",
+    #         "--quiet",
+    #     ],
+    #     check=True,
+    # )
 
 
 def test_auth(services):
     url = services[0].decode()
     token = services[1].decode()
 
-    req = request.Request(url, headers={"Authorization": f"Bearer {token}"})
-
-    response = request.urlopen(req)
-    assert response.status == 200
-    assert "Hello" in response.read().decode()
-    assert "anonymous" not in response.read().decode()
-
-
-def test_noauth(services):
-    url = services[0].decode()
-
     req = request.Request(url)
-
     try:
         _ = request.urlopen(req)
     except error.HTTPError as e:
         assert e.code == 403
+
+    req = request.Request(url, headers={"Authorization": f"Bearer {token}"})
+
+    response = request.urlopen(req)
+    status = response.status
+
+    assert response.status == 200
+    assert "Hello" in response.read().decode()
+    assert "anonymous" not in response.read().decode()
