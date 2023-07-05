@@ -171,7 +171,7 @@ def group_filtered_assets(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
+    # 'organization_id' is the numeric ID of the organization.
     # organization_id = "1234567777"
     org_name = f"organizations/{organization_id}"
 
@@ -204,7 +204,7 @@ def group_assets_by_changes(organization_id):
 
     duration = timedelta(days=5)
 
-    # parent must be in one of the following formats:
+    # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
     #   "folders/{folder_id}"

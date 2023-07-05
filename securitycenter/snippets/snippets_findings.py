@@ -47,7 +47,7 @@ def get_source(source_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -71,7 +71,7 @@ def update_source(source_name):
     # Field mask to only update the display name.
     field_mask = field_mask_pb2.FieldMask(paths=["display_name"])
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -97,7 +97,7 @@ def add_user_to_source(source_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -136,7 +136,7 @@ def list_source(organization_id):
 
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
-    # parent must be in one of the following formats:
+    # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
     #   "folders/{folder_id}"
@@ -163,7 +163,7 @@ def create_finding(source_name, finding_id):
     # Use the current time as the finding "event time".
     event_time = datetime.datetime.now(tz=datetime.timezone.utc)
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -203,7 +203,7 @@ def create_finding_with_source_properties(source_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -261,7 +261,7 @@ def update_finding(source_name):
     # event_time on the original finding.
     event_time = datetime.datetime.now(tz=datetime.timezone.utc)
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -295,7 +295,7 @@ def update_finding_state(source_name):
 
     # Create a client.
     client = securitycenter.SecurityCenterClient()
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -323,7 +323,7 @@ def trouble_shoot(source_name):
 
     # Create a client.
     client = securitycenter.SecurityCenterClient()
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -392,11 +392,10 @@ def list_filtered_findings(source_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = f"{parent}/sources/{source_id}"
-    # where,
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
@@ -427,11 +426,10 @@ def list_findings_at_time(source_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = f"{parent}/sources/{source_id}"
-    # where
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
@@ -463,7 +461,7 @@ def get_iam_policy(source_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "organizations/{organization_id}/sources/{source_id}"
@@ -510,11 +508,10 @@ def group_filtered_findings(source_name):
     # Create a client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "{parent}/sources/{source_id}"
-    # where,
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
@@ -546,11 +543,10 @@ def group_findings_at_time(source_name):
     # Create a client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "{parent}/sources/{source_id}"
-    # where,
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
@@ -581,11 +577,10 @@ def group_findings_and_changes(source_name):
     # Create a client.
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "{parent}/sources/{source_id}"
-    # where,
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"

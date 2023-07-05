@@ -25,7 +25,7 @@ def add_to_asset(asset_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # asset_name is the resource path for an asset that exists in SCC.
+    # 'asset_name' is the resource path for an asset that exists in SCC.
     # Specify the value of 'asset_name' in one of the following formats:
     #   f"organizations/{org_id}/assets/{asset_id}"
     #   f"projects/{project_id}/assets/{asset_id}"
@@ -60,7 +60,7 @@ def clear_from_asset(asset_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # asset_name is the resource path for an asset that exists in SCC.
+    # 'asset_name' is the resource path for an asset that exists in SCC.
     # Specify the value of 'asset_name' in one of the following formats:
     #   f"organizations/{org_id}/assets/{asset_id}"
     #   f"projects/{project_id}/assets/{asset_id}"
@@ -94,7 +94,7 @@ def delete_and_update_marks(asset_name):
     from google.protobuf import field_mask_pb2
 
     client = securitycenter.SecurityCenterClient()
-    # asset_name is the resource path for an asset that exists in SCC.
+    # 'asset_name' is the resource path for an asset that exists in SCC.
     # Specify the value of 'asset_name' in one of the following formats:
     #   f"organizations/{org_id}/assets/{asset_id}"
     #   f"projects/{project_id}/assets/{asset_id}"
@@ -123,7 +123,7 @@ def add_to_finding(finding_name):
     from google.protobuf import field_mask_pb2
 
     client = securitycenter.SecurityCenterClient()
-    # finding_name is the resource path for a finding that exists in SCC.
+    # 'finding_name' is the resource path for a finding that exists in SCC.
     # Specify the value of 'asset_name' in one of the following formats:
     #   f"organizations/{org_id}/assets/{asset_id}"
     #   f"projects/{project_id}/assets/{asset_id}"
@@ -157,7 +157,7 @@ def list_assets_with_query_marks(organization_id, asset_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # parent must be in one of the following formats:
+    # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
     #   "folders/{folder_id}"
@@ -184,11 +184,10 @@ def list_findings_with_query_marks(source_name, finding_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
     # source_name = "{parent}/sources/{source_id}"
-    # where,
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
