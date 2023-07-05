@@ -19,7 +19,6 @@ import os
 import subprocess
 from urllib import error, request
 import uuid
-import time
 
 import pytest
 
@@ -100,10 +99,7 @@ def test_auth(services):
         assert e.code == 403
 
     req = request.Request(url, headers={"Authorization": f"Bearer {token}"})
-
     response = request.urlopen(req)
-    status = response.status
-
     assert response.status == 200
     assert "Hello" in response.read().decode()
     assert "anonymous" not in response.read().decode()
