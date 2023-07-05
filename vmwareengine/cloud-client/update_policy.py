@@ -21,7 +21,7 @@ def update_network_policy(
     project_id: str, region: str, internet_access: bool, external_ip: bool
 ) -> operation.Operation:
     """
-    Creates a new network policy in a given network.
+    Updates a network policy in a given network.
 
     Args:
         project_id: name of the project you want to use.
