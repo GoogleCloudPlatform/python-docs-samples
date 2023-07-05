@@ -13,6 +13,7 @@
 # limitations under the License.
 import base64
 import os
+
 import pytest
 
 import deid_table
