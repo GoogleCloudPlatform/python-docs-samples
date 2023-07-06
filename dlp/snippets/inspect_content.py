@@ -303,6 +303,102 @@ def inspect_table(
 
 # [END dlp_inspect_table]
 
+
+# [START dlp_inspect_column_values_w_custom_hotwords]
+from typing import List  # noqa: E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_column_values_w_custom_hotwords(
+    project: str,
+    table_header: List[str],
+    table_rows: List[List[str]],
+    info_types: List[str],
+    custom_hotword: str,
+) -> None:
+    """Uses the Data Loss Prevention API to inspect table data using built-in
+    infoType detectors, excluding columns that match a custom hot-word.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_header: List of strings representing table field names.
+        table_rows: List of rows representing table values.
+        info_types: The infoType for which hot-word rule is applied.
+        custom_hotword: The custom regular expression used for likelihood boosting.
+    """
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_header]
+    rows = []
+    for row in table_rows:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table to be inspected.
+    item = {"table": table}
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct a rule set with caller provided hot-word, with a likelihood
+    # boost to VERY_UNLIKELY when the hot-word are present
+    hotword_rule = {
+        "hotword_regex": {"pattern": custom_hotword},
+        "likelihood_adjustment": {
+            "fixed_likelihood": google.cloud.dlp_v2.Likelihood.VERY_UNLIKELY
+        },
+        "proximity": {"window_before": 1},
+    }
+
+    rule_set = [
+        {
+            "info_types": info_types,
+            "rules": [{"hotword_rule": hotword_rule}],
+        }
+    ]
+
+    # Construct the configuration dictionary, which defines the entire inspect content task.
+    inspect_config = {
+        "info_types": info_types,
+        "rule_set": rule_set,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.POSSIBLE,
+        "include_quote": True,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}/locations/global"
+
+    # Call the API
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            try:
+                if finding.quote:
+                    print("Quote: {}".format(finding.quote))
+            except AttributeError:
+                pass
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_column_values_w_custom_hotwords]
+
+
 # [START dlp_inspect_file]
 import mimetypes  # noqa: I100, E402
 from typing import Optional  # noqa: I100, E402
@@ -967,6 +1063,66 @@ def inspect_image_file_all_infotypes(
 
 
 # [END dlp_inspect_image_all_infotypes]
+
+
+# [START dlp_inspect_image_file]
+import google.cloud.dlp  # noqa: F811, E402, I100
+
+
+def inspect_image_file(
+    project: str,
+    filename: str,
+    include_quote: bool = True,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze strings for
+    protected data in image file.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = ["PHONE_NUMBER", "EMAIL_ADDRESS", "CREDIT_CARD_NUMBER"]
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration for the Inspect request.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": include_quote,
+    }
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": "IMAGE", "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}/locations/global"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Parse the response and process results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Quote: {}".format(finding.quote))
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_image_file]
 
 
 # [START dlp_inspect_image_listed_infotypes]
@@ -1853,6 +2009,42 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_table_hotword = subparsers.add_parser(
+        "table_w_custom_hotword",
+        help="Inspect a table and exclude column values when matched "
+        "with custom hot-word.",
+    )
+    parser_table_hotword.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_table_hotword.add_argument(
+        "--table_header",
+        help="List of strings representing table field names."
+        "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
+        "The method can be used to exclude matches from entire column"
+        '"Fake_Email_Address".',
+    )
+    parser_table_hotword.add_argument(
+        "--table_rows",
+        help="List of rows representing table values."
+        "Example: "
+        '"[["example1@example.org", "test1@example.com],'
+        '["example2@example.org", "test2@example.com]]"',
+    )
+    parser_table_hotword.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    parser_table_hotword.add_argument(
+        "custom_hotword",
+        help="The custom regular expression used for likelihood boosting.",
+    )
+
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
     parser_file.add_argument("filename", help="The path to the file to inspect.")
     parser_file.add_argument(
@@ -2218,6 +2410,24 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_image_default_infotypes = subparsers.add_parser(
+        "image_default_infotypes", help="Inspect a local file with default info types."
+    )
+    parser_image_default_infotypes.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_default_infotypes.add_argument(
+        "filename", help="The path to the file to inspect."
+    )
+    parser_image_default_infotypes.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+        "information in the results.",
+        default=True,
+    )
+
     parser_image_infotypes = subparsers.add_parser(
         "image_listed_infotypes", help="Inspect a local file with listed info types."
     )
@@ -2422,10 +2632,7 @@ if __name__ == "__main__":
             include_quote=args.include_quote,
         )
     elif args.content == "phone_number":
-        inspect_phone_number(
-            args.project,
-            args.content_string
-        )
+        inspect_phone_number(args.project, args.content_string)
     elif args.content == "table":
         inspect_table(
             args.project,
@@ -2436,6 +2643,14 @@ if __name__ == "__main__":
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote,
+        )
+    elif args.content == "table_w_custom_hotword":
+        inspect_column_values_w_custom_hotwords(
+            args.project,
+            args.table_header,
+            args.table_rows,
+            args.info_types,
+            args.custom_hotword,
         )
     elif args.content == "file":
         inspect_file(
@@ -2518,6 +2733,12 @@ if __name__ == "__main__":
 
     elif args.content == "image_all_infotypes":
         inspect_image_file_all_infotypes(
+            args.project,
+            args.filename,
+            include_quote=args.include_quote,
+        )
+    elif args.content == "image_default_infotypes":
+        inspect_image_file(
             args.project,
             args.filename,
             include_quote=args.include_quote,
