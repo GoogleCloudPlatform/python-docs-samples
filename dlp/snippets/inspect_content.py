@@ -1597,7 +1597,7 @@ def inspect_gcs_send_to_scc(
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
-    url = "gs://{}".format(bucket)
+    url = f"gs://{bucket}"
     storage_config = {
         "cloud_storage_options": {
             "file_set": {
