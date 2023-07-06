@@ -71,21 +71,21 @@ def services():
 
     yield endpoint_url, token
 
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "run",
-    #         "services",
-    #         "delete",
-    #         service_name,
-    #         "--project",
-    #         project,
-    #         "--async",
-    #         "--region=us-central1",
-    #         "--quiet",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name,
+            "--project",
+            project,
+            "--async",
+            "--region=us-central1",
+            "--quiet",
+        ],
+        check=True,
+    )
 
 
 def test_auth(services):
