@@ -39,6 +39,7 @@ assign_issues_by:
       - "api: recaptchaenterprise"
       - "api: secretmanager"
       - "api: securitycenter"
+      - "api: vmwareengine"
     to:
       - GoogleCloudPlatform/dee-infra
   - labels:

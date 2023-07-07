@@ -37,6 +37,7 @@
 /recaptcha_enterprise/demosite/**/*    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/vmwareengine/**/*                     @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /webrisk/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 
 # DEE Platform Ops (DEEPO)
