@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,16 +15,16 @@
 
 import argparse
 
-# [START speech_quickstart_v2]
+# [START speech_transcribe_multichannel_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def quickstart_v2(
+def transcribe_multichannel_v2(
     project_id: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file."""
+    """Transcribe a multi-channel audio file."""
     # Instantiates a client
     client = SpeechClient()
 
@@ -33,7 +33,12 @@ def quickstart_v2(
         content = f.read()
 
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, language_codes=["en-US"], model="latest_long"
+        auto_decoding_config={},
+        language_codes=["en-US"],
+        model="latest_long",
+        features=cloud_speech.RecognitionFeatures(
+            multi_channel_mode=cloud_speech.RecognitionFeatures.MultiChannelMode.SEPARATE_RECOGNITION_PER_CHANNEL,
+        ),
     )
 
     request = cloud_speech.RecognizeRequest(
@@ -47,11 +52,12 @@ def quickstart_v2(
 
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
+        print(f"Channel tag: {result.channel_tag}")
 
     return response
 
 
-# [END speech_quickstart_v2]
+# [END speech_transcribe_multichannel_v2]
 
 
 if __name__ == "__main__":
@@ -61,4 +67,4 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="GCP Project ID")
     parser.add_argument("audio_file", help="Audio file to stream")
     args = parser.parse_args()
-    quickstart_v2(args.project_id, args.audio_file)
+    transcribe_multichannel_v2(args.project_id, args.audio_file)

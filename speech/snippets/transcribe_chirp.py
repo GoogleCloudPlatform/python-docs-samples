@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,29 +15,34 @@
 
 import argparse
 
-# [START speech_quickstart_v2]
+# [START speech_transcribe_chirp]
+from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def quickstart_v2(
+def transcribe_chirp(
     project_id: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file."""
+    """Transcribe an audio file using Chirp."""
     # Instantiates a client
-    client = SpeechClient()
+    client = SpeechClient(
+        client_options=ClientOptions(
+            api_endpoint="us-central1-speech.googleapis.com",
+        )
+    )
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         content = f.read()
 
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, language_codes=["en-US"], model="latest_long"
+        auto_decoding_config={}, language_codes=["en-US"], model="chirp"
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{project_id}/locations/us-central1/recognizers/_",
         config=config,
         content=content,
     )
@@ -51,7 +56,7 @@ def quickstart_v2(
     return response
 
 
-# [END speech_quickstart_v2]
+# [END speech_transcribe_chirp]
 
 
 if __name__ == "__main__":
@@ -61,4 +66,4 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="GCP Project ID")
     parser.add_argument("audio_file", help="Audio file to stream")
     args = parser.parse_args()
-    quickstart_v2(args.project_id, args.audio_file)
+    transcribe_chirp(args.project_id, args.audio_file)

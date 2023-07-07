@@ -14,11 +14,9 @@
 
 import os
 import re
-from uuid import uuid4
 
 from flaky import flaky
 
-from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 import pytest
 
@@ -27,20 +25,12 @@ import transcribe_streaming_voice_activity_timeouts
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name: str) -> None:
-    client = SpeechClient()
-    request = cloud_speech.DeleteRecognizerRequest(name=name)
-    client.delete_recognizer(request=request)
-
-
 @flaky(max_runs=3, min_passes=1)
 def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    recognizer_id = "recognizer-" + str(uuid4())
     responses = transcribe_streaming_voice_activity_timeouts.transcribe_streaming_voice_activity_timeouts(
         project_id,
-        recognizer_id,
         1,
         5,
         os.path.join(RESOURCES, "audio_silence_padding.wav"),
@@ -49,10 +39,6 @@ def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> N
     # This assert doesn't seem deterministic. We should consider removing or changing.
     assert len(responses) == 0
 
-    delete_recognizer(
-        f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
-    )
-
 
 @flaky(max_runs=3, min_passes=1)
 def test_transcribe_streaming_voice_activity_timeouts(
@@ -60,10 +46,8 @@ def test_transcribe_streaming_voice_activity_timeouts(
 ) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    recognizer_id = "recognizer-" + str(uuid4())
     responses = transcribe_streaming_voice_activity_timeouts.transcribe_streaming_voice_activity_timeouts(
         project_id,
-        recognizer_id,
         5,
         1,
         os.path.join(RESOURCES, "audio_silence_padding.wav"),
@@ -87,8 +71,4 @@ def test_transcribe_streaming_voice_activity_timeouts(
         r"how old is the Brooklyn Bridge",
         transcript,
         re.DOTALL | re.I,
-    )
-
-    delete_recognizer(
-        f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
     )
