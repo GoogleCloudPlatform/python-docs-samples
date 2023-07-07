@@ -92,7 +92,9 @@ def receive_mail(path):
     message = mail.InboundEmailMessage(request.get_data())
 
     # Do something with the message
-    print(f"Received greeting for {escape(message.to)} at {escape(message.date)} from {escape(message.sender)}")
+    print(
+        f"Received greeting for {escape(message.to)} at {escape(message.date)} from {escape(message.sender)}"
+    )
     for content_type, payload in message.bodies("text/plain"):
         print(f"Text/plain body: {payload.decode()}")
         break
