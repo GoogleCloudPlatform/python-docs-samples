@@ -15,8 +15,6 @@
 
 import os
 
-from typing import Any
-
 from contentwarehouse.snippets import create_document_schema_sample
 from contentwarehouse.snippets import delete_document_schema_sample
 from contentwarehouse.snippets import get_document_schema_sample
@@ -29,7 +27,7 @@ location = "us"
 
 
 @pytest.mark.dependency(name="create")
-def test_create_document_schema(request: Any) -> None:
+def test_create_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
     response = create_document_schema_sample.sample_create_document_schema(
@@ -44,7 +42,7 @@ def test_create_document_schema(request: Any) -> None:
 
 
 @pytest.mark.dependency(name="get", depends=['create'])
-def test_get_document_schema(request: Any) -> None:
+def test_get_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
     document_schema_id = request.config.cache.get("document_schema_id", None)
@@ -59,7 +57,7 @@ def test_get_document_schema(request: Any) -> None:
 
 
 @pytest.mark.dependency(name="delete", depends=['get'])
-def test_delete_document_schema(request: Any) -> None:
+def test_delete_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
     document_schema_id = request.config.cache.get("document_schema_id", None)
