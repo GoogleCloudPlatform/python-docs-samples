@@ -68,11 +68,11 @@
 /notebooks/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /optimization/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /people-and-planet-ai/**/*             @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/speech/**/*                           @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/speech/**/*                           @GoogleCloudPlatform/cloud-speech-eng @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /video/transcoder/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/bigquery-connection/**/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/bigquery-connection/**/*              @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 
 # Cloud SDK Databases & Data Analytics teams
 # ---* Cloud Native DB
