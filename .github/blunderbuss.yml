@@ -70,7 +70,6 @@ assign_issues_by:
       - "api: texttospeech"
       - "api: translate"
       - "api: vision"
-      - "api: bigquery"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
@@ -102,6 +101,10 @@ assign_issues_by:
       - "api: composer"
     to:
       - GoogleCloudPlatform/cloud-dpes-composer
+  - labels:
+      - "api: bigquery"
+    to:
+      - GoogleCloudPlatform/api-bigquery
 
   # AppEco individuals
   - labels:
