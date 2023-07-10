@@ -72,7 +72,6 @@
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /video/transcoder/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
-/bigquery-connection/**/*              @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
 
 # Cloud SDK Databases & Data Analytics teams
 # ---* Cloud Native DB
@@ -98,6 +97,7 @@
 /bigquery/**/*                         @chalmerlowe @GoogleCloudPlatform/python-samples-reviewers
 /bigquery/remote_function/**/*         @autoerr @GoogleCloudPlatform/python-samples-reviewers
 /cloud-media-livestream/**/*           @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
+/bigquery-connection/**/*              @GoogleCloudPlatform/api-bigquery @GoogleCloudPlatform/python-samples-reviewers
 /dlp/**/*                              @GoogleCloudPlatform/googleapis-dlp @GoogleCloudPlatform/python-samples-reviewers
 /functions/spanner/*                   @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/functions-framework-google @GoogleCloudPlatform/python-samples-reviewers
 /healthcare/**/*                       @GoogleCloudPlatform/healthcare-life-sciences @GoogleCloudPlatform/python-samples-reviewers
