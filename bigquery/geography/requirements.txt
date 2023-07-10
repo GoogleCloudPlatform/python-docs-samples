@@ -12,8 +12,8 @@ geojson==3.0.1
 geopandas===0.10.2; python_version == '3.7'
 geopandas==0.13.0; python_version >= '3.8'
 google-api-core==2.11.0
-google-auth==2.19.0
-google-cloud-bigquery==3.10.0
+google-auth==2.19.1
+google-cloud-bigquery==3.11.0
 google-cloud-bigquery-storage==2.20.0
 google-cloud-core==2.3.2
 google-crc32c==1.5.0
@@ -40,6 +40,6 @@ requests==2.31.0
 rsa==4.9
 Shapely==2.0.1
 six==1.16.0
-typing-extensions==4.6.2
+typing-extensions==4.6.3
 typing-inspect==0.9.0
 urllib3==1.26.15
