@@ -21,7 +21,7 @@ import pytest
 
 import transcribe_streaming_voice_activity_events
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
@@ -31,7 +31,7 @@ def test_transcribe_streaming_voice_activity_events(
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     responses = transcribe_streaming_voice_activity_events.transcribe_streaming_voice_activity_events(
-        project_id, os.path.join(RESOURCES, "audio.wav")
+        project_id, os.path.join(_RESOURCES, "audio.wav")
     )
 
     transcript = ""

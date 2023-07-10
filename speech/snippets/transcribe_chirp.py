@@ -38,7 +38,9 @@ def transcribe_chirp(
         content = f.read()
 
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, language_codes=["en-US"], model="chirp"
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["en-US"],
+        model="chirp",
     )
 
     request = cloud_speech.RecognizeRequest(

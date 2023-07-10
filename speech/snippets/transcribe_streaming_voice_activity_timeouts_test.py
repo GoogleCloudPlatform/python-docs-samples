@@ -22,7 +22,7 @@ import pytest
 
 import transcribe_streaming_voice_activity_timeouts
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @flaky(max_runs=3, min_passes=1)
@@ -33,7 +33,7 @@ def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> N
         project_id,
         1,
         5,
-        os.path.join(RESOURCES, "audio_silence_padding.wav"),
+        os.path.join(_RESOURCES, "audio_silence_padding.wav"),
     )
 
     # This assert doesn't seem deterministic. We should consider removing or changing.
@@ -50,7 +50,7 @@ def test_transcribe_streaming_voice_activity_timeouts(
         project_id,
         5,
         1,
-        os.path.join(RESOURCES, "audio_silence_padding.wav"),
+        os.path.join(_RESOURCES, "audio_silence_padding.wav"),
     )
     transcript = ""
     for response in responses:

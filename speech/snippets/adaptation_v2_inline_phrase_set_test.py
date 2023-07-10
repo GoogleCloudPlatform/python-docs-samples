@@ -19,7 +19,7 @@ from google.api_core.retry import Retry
 
 import adaptation_v2_inline_phrase_set
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
@@ -27,7 +27,7 @@ def test_adaptation_v2_inline_phrase_set() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set(
-        project_id, os.path.join(RESOURCES, "fair.wav")
+        project_id, os.path.join(_RESOURCES, "fair.wav")
     )
 
     assert re.search(

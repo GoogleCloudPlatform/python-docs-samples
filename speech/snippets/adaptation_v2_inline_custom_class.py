@@ -52,7 +52,7 @@ def adaptation_v2_inline_custom_class(
         custom_classes=[custom_class],
     )
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={},
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
         language_codes=["en-US"],
         model="latest_short",

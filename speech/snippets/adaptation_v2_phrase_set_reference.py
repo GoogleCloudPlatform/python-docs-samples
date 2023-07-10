@@ -61,7 +61,7 @@ def adaptation_v2_phrase_set_reference(
         ]
     )
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={},
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
         language_codes=["en-US"],
         model="latest_short",

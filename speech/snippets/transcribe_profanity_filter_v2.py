@@ -33,7 +33,7 @@ def transcribe_profanity_filter_v2(
         content = f.read()
 
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={},
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
         model="latest_long",
         features=cloud_speech.RecognitionFeatures(

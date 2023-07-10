@@ -19,7 +19,7 @@ from google.api_core.retry import Retry
 
 import transcribe_multichannel_v2
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
@@ -27,7 +27,7 @@ def test_transcribe_multichannel_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     response = transcribe_multichannel_v2.transcribe_multichannel_v2(
-        project_id, os.path.join(RESOURCES, "two_channel_16k.wav")
+        project_id, os.path.join(_RESOURCES, "two_channel_16k.wav")
     )
 
     assert re.search(

@@ -50,7 +50,9 @@ def transcribe_streaming_voice_activity_events(
     )
 
     recognition_config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, language_codes=["en-US"], model="latest_long"
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["en-US"],
+        model="latest_long",
     )
 
     # Sets the flag to enable voice activity events

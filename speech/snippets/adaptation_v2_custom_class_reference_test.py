@@ -22,7 +22,7 @@ from google.cloud.speech_v2.types import cloud_speech
 
 import adaptation_v2_custom_class_reference
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def delete_phrase_set(name: str) -> None:
@@ -48,7 +48,7 @@ def test_adaptation_v2_custom_class_reference() -> None:
             project_id,
             phrase_set_id,
             custom_class_id,
-            os.path.join(RESOURCES, "fair.wav"),
+            os.path.join(_RESOURCES, "fair.wav"),
         )
     )
 

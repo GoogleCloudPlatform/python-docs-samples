@@ -19,7 +19,7 @@ from google.api_core.retry import Retry
 
 import transcribe_model_selection_v2
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
@@ -27,7 +27,7 @@ def test_transcribe_model_selection_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     response = transcribe_model_selection_v2.transcribe_model_selection_v2(
-        project_id, "latest_long", os.path.join(RESOURCES, "audio.wav")
+        project_id, "latest_long", os.path.join(_RESOURCES, "audio.wav")
     )
 
     assert re.search(
