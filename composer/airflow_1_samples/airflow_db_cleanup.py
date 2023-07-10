@@ -209,34 +209,6 @@ try:
 except Exception as e:
     logging.error(e)
 
-# Check for celery executor
-airflow_executor = str(conf.get("core", "executor"))
-logging.info("Airflow Executor: " + str(airflow_executor))
-if (airflow_executor == "CeleryExecutor"):
-    logging.info("Including Celery Modules")
-    try:
-        from celery.backends.database.models import Task, TaskSet
-        DATABASE_OBJECTS.extend(({
-            "airflow_db_model": Task,
-            "age_check_column": Task.date_done,
-            "keep_last": False,
-            "keep_last_filters": None,
-            "keep_last_group_by": None,
-            "do_not_delete_by_dag_id": True
-        }, {
-            "airflow_db_model": TaskSet,
-            "age_check_column": TaskSet.date_done,
-            "keep_last": False,
-            "keep_last_filters": None,
-            "keep_last_group_by": None,
-            "do_not_delete_by_dag_id": True
-        }))
-
-    except Exception as e:
-        logging.error(e)
-
-session = settings.Session()
-
 default_args = {
     "owner": DAG_OWNER_NAME,
     "depends_on_past": False,
