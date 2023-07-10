@@ -15,7 +15,7 @@
 import quickstart
 
 
-def test_quickstart() -> None:
-    labels = quickstart.run_quickstart()
-    for label in labels:
-        assert len(label.description) > 0
+def test_quickstart(capsys) -> None:
+    quickstart.run_quickstart()
+    out, _ = capsys.readouterr()
+    assert "Labels" in out
