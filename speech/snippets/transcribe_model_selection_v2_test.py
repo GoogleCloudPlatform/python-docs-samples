@@ -27,7 +27,7 @@ def test_transcribe_model_selection_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     response = transcribe_model_selection_v2.transcribe_model_selection_v2(
-        project_id, "latest_long", os.path.join(_RESOURCES, "audio.wav")
+        project_id, "long", os.path.join(_RESOURCES, "audio.wav")
     )
 
     assert re.search(

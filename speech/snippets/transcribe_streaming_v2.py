@@ -53,7 +53,7 @@ def transcribe_streaming_v2(
     recognition_config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
-        model="latest_long",
+        model="long",
     )
     streaming_config = cloud_speech.StreamingRecognitionConfig(
         config=recognition_config
