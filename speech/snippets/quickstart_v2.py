@@ -13,8 +13,9 @@
 # limitations under the License.
 
 
-# [START speech_quickstart_v2]
+import argparse
 
+# [START speech_quickstart_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
@@ -32,7 +33,9 @@ def quickstart_v2(
         content = f.read()
 
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, language_codes=["en-US"], model="latest_long"
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["en-US"],
+        model="latest_long",
     )
 
     request = cloud_speech.RecognizeRequest(
@@ -54,4 +57,10 @@ def quickstart_v2(
 
 
 if __name__ == "__main__":
-    quickstart_v2()
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    quickstart_v2(args.project_id, args.audio_file)

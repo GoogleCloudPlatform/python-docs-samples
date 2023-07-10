@@ -19,7 +19,7 @@ from google.api_core.retry import Retry
 
 import quickstart_v2
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
@@ -27,7 +27,7 @@ def test_quickstart_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     response = quickstart_v2.quickstart_v2(
-        project_id, os.path.join(RESOURCES, "audio.wav")
+        project_id, os.path.join(_RESOURCES, "audio.wav")
     )
 
     assert re.search(

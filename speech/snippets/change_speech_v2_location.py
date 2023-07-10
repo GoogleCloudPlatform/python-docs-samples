@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,26 +15,28 @@
 
 import argparse
 
-# [START speech_transcribe_gcs_v2]
+# [START speech_change_speech_v2_location]
+from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_gcs_v2(
+def change_speech_v2_location(
     project_id: str,
-    gcs_uri: str,
+    location: str,
+    audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribes audio from a Google Cloud Storage URI.
+    """Transcribe an audio file in a specific region."""
+    # Instantiates a client to a regionalized Speech endpoint.
+    client = SpeechClient(
+        client_options=ClientOptions(
+            api_endpoint=f"{location}-speech.googleapis.com",
+        )
+    )
 
-    Args:
-        project_id: The GCP project ID.
-        gcs_uri: The Google Cloud Storage URI.
-
-    Returns:
-        The RecognizeResponse.
-    """
-    # Instantiates a client
-    client = SpeechClient()
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -43,9 +45,9 @@ def transcribe_gcs_v2(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{project_id}/locations/{location}/recognizers/_",
         config=config,
-        uri=gcs_uri,
+        content=content,
     )
 
     # Transcribes the audio into text
@@ -57,7 +59,7 @@ def transcribe_gcs_v2(
     return response
 
 
-# [END speech_transcribe_gcs_v2]
+# [END speech_change_speech_v2_location]
 
 
 if __name__ == "__main__":
@@ -65,6 +67,7 @@ if __name__ == "__main__":
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("gcs_uri", help="URI to GCS file")
+    parser.add_argument("location", help="The GCP region to which to connect")
+    parser.add_argument("audio_file", help="Audio file to stream")
     args = parser.parse_args()
-    transcribe_gcs_v2(args.project_id, args.gcs_uri)
+    change_speech_v2_location(args.project_id, args.location, args.audio_file)
