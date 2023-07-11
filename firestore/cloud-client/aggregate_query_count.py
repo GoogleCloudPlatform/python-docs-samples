@@ -21,6 +21,7 @@ See https://cloud.google.com/python/docs/reference/firestore/latest before runni
 # [START firestore_count_query]
 from google.cloud import firestore
 from google.cloud.firestore_v1 import aggregation
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 
 def create_count_query(project_id: str) -> None:
@@ -32,7 +33,7 @@ def create_count_query(project_id: str) -> None:
     client = firestore.Client(project=project_id)
 
     collection_ref = client.collection("users")
-    query = collection_ref.where("born", ">", 1800)
+    query = collection_ref.where(filter=FieldFilter("born", ">", 1800))
     aggregate_query = aggregation.AggregationQuery(query)
 
     # `alias` to provides a key for accessing the aggregate query results
