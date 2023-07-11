@@ -487,8 +487,8 @@ def compound_query_valid_multi_clause():
 
     denver_query = cities_ref.where(filter=FieldFilter("state", "==", "CO")).where(filter=FieldFilter("name", "==", "Denver"))
     large_us_cities_query = cities_ref.where(filter=FieldFilter("state", "==", "CA")).where(
-        filter=FieldFilter("population", ">", 1000000
-    ))
+        filter=FieldFilter("population", ">", 1000000)
+    )
     # [END firestore_query_filter_compound_multi_eq]
     print(denver_query)
     print(large_us_cities_query)
