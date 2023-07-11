@@ -141,7 +141,7 @@ To run this sample:
                             samples/tree/main/healthcare/api-client/v1/datasets
                             before running the sample.
 
-    optional arguments:
+    options:
       -h, --help            show this help message and exit
       --project_id PROJECT_ID
                             GCP project name
