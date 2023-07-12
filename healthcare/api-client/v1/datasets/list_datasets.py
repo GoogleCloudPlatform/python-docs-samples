@@ -1,4 +1,4 @@
-# Copyright 2018 Google Inc. All Rights Reserved.
+# Copyright 2018 Google LLC All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,9 +37,9 @@ def list_datasets(project_id: str, location: str) -> List[Dict[str, str]]:
     Returns:
       A list of Dataset resources.
     """
+    # Imports HttpError from the Google Python API client errors module.
     # Imports the Google API Discovery Service.
     from googleapiclient import discovery
-    # Imports HttpError from the Google Python API client errors module.
     from googleapiclient.errors import HttpError
 
     api_version = "v1"
