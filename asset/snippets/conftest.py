@@ -18,8 +18,7 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import InternalServerError
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 from google.cloud import pubsub_v1
 import pytest
 
@@ -63,7 +62,9 @@ def test_feed(test_topic):
     feed_id = f"feed-{uuid.uuid4().hex}"
     asset_name = f"assets-{uuid.uuid4().hex}"
 
-    @backoff.on_exception(backoff.expo, InternalServerError, max_time=60)
+    @backoff.on_exception(
+        backoff.expo, (InternalServerError, ServiceUnavailable), max_time=60
+    )
     def create_feed():
         return quickstart_createfeed.create_feed(
             PROJECT,
