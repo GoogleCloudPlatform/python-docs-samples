@@ -46,4 +46,6 @@ def run_quickstart() -> vision.EntityAnnotation:
         print(label.description)
 
     return labels
+
+
 # [END vision_quickstart]
