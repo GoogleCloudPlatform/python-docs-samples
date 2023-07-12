@@ -35,7 +35,7 @@ def transcribe_auto_punctuation_v2(
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
-        model="latest_long",
+        model="long",
         features=cloud_speech.RecognitionFeatures(
             enable_automatic_punctuation=True,
         ),

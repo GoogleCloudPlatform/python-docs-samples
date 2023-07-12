@@ -27,9 +27,7 @@ def create_recognizer(project_id: str, recognizer_id: str) -> cloud_speech.Recog
     request = cloud_speech.CreateRecognizerRequest(
         parent=f"projects/{project_id}/locations/global",
         recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_long"
-        ),
+        recognizer=cloud_speech.Recognizer(language_codes=["en-US"], model="long"),
     )
 
     operation = client.create_recognizer(request=request)

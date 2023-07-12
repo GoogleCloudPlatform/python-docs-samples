@@ -35,7 +35,7 @@ def transcribe_multichannel_v2(
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
-        model="latest_long",
+        model="long",
         features=cloud_speech.RecognitionFeatures(
             multi_channel_mode=cloud_speech.RecognitionFeatures.MultiChannelMode.SEPARATE_RECOGNITION_PER_CHANNEL,
         ),
