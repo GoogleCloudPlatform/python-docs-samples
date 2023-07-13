@@ -39,7 +39,6 @@ def retry_if_server_exception(exception):
 
 
 @pytest.fixture(scope="module")
-@pytest.fixture(scope="module")
 def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=60)
     def create():
