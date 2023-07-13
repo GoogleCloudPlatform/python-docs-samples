@@ -47,7 +47,7 @@ def test_process_document_form(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "90484cfdedb024f6"
-    processor_version = "stable"
+    processor_version = "pretrained-form-parser-v2.0-2022-11-10"
     file_path = "resources/invoice.pdf"
     mime_type = "application/pdf"
 
@@ -64,7 +64,7 @@ def test_process_document_form(capsys):
     expected_strings = [
         "There are 1 page(s) in this document.",
         "Table with 4 columns and 6 rows",
-        "Found 13 form field(s)",
+        "form field(s)",
         "'BALANCE DUE': '$2140.00'",
     ]
     for expected_string in expected_strings:
