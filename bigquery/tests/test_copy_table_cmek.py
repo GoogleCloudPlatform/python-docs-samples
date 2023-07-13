@@ -23,8 +23,6 @@ def test_copy_table_cmek(
     table_with_data_id: str,
     kms_key_name: str,
 ) -> None:
-    pytest.skip("b/210907595: copy fails for shakespeare table")
-
     copy_table_cmek.copy_table_cmek(random_table_id, table_with_data_id, kms_key_name)
     out, err = capsys.readouterr()
     assert "A copy of the table created" in out
