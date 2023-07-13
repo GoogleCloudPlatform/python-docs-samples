@@ -150,7 +150,7 @@ def test_end_to_end(service_url_auth_token, deployed_service):
     # Test that the service is responding
     retry_strategy = Retry(
         total=3,
-        status_forcelist=[400, 401, 403, 500, 502, 503, 504],
+        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
         allowed_methods=["GET", "POST"],
         backoff_factor=3,
     )
