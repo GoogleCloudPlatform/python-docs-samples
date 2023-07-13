@@ -206,7 +206,7 @@ def sign_path_component(url_prefix: str, filename: str, key_name: str,
 
     digest = ed25519.Ed25519PrivateKey.from_private_bytes(
         decoded_key).sign(policy.encode('utf-8'))
-    signature = base64.urlsafe_b64encode(digest).decode('utf-8')
+    signature = base64.base64_encoder(digest).decode('utf-8')
 
     signed_url = u'{policy}&Signature={signature}/{filename}'.format(
         policy=policy,
