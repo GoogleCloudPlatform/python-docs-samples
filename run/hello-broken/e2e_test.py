@@ -46,7 +46,7 @@ def container_image():
         ]
     )
 
-    time.sleep(15)    # Sometimes responds 404 before really ready
+    time.sleep(15)  # Sometimes responds 404 before really ready
     yield IMAGE_NAME
 
     # Delete container image
