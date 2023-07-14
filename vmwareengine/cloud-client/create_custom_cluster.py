@@ -29,7 +29,7 @@ def create_custom_cluster(
     Create a new cluster with custom number of cores in its nodes
     in a private cloud.
 
-    Creation of a new cluster is a long-running operation and it might take well over 15 minutes.
+    Creation of a new cluster is a long-running operation and it may take over an hour.
 
     Args:
         project_id: name of the project you want to use.
