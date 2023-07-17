@@ -51,7 +51,7 @@ def googlechatbot(req: ChatRequest) -> ChatResponse:
     imageUrl = req.message["sender"]["avatarUrl"]
 
     cardHeader = {
-        "title": "Hello %s!" % displayName,
+        "title": f"Hello {displayName}!",
     }
 
     avatarWidget = {
