@@ -26,7 +26,7 @@ def create_private_cloud(
     """
     Creates a new Private Cloud using VMWare Engine.
 
-    Creating a new Private Cloud is a long-running operation and it might take up to 2 hours.
+    Creating a new Private Cloud is a long-running operation and it may take over an hour.
 
     Args:
         project_id: name of the project you want to use.

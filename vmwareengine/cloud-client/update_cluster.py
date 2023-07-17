@@ -27,7 +27,7 @@ def update_cluster_node_count(
     """
     Modify the number of nodes in a cluster in a private cloud.
 
-    Modifying a cluster is a long-running operation and it might take over 15 minutes.
+    Modifying a cluster is a long-running operation and it may take over an hour.
 
     Args:
         project_id: name of the project you want to use.
