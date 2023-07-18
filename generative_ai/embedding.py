@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
-from vertexai.preview.language_models import TextEmbeddingModel
+from vertexai.language_models import TextEmbeddingModel
 
 
 def text_embedding() -> None:

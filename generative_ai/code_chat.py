@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_chat]
-from vertexai.preview.language_models import CodeChatModel
+from vertexai.language_models import CodeChatModel
 
 
 def write_a_function(temperature: float = 0.5) -> object:

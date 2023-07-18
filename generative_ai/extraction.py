@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_extraction]
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 
 def extractive_question_answering(temperature: float = 0.2) -> None:

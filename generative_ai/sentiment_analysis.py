@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_sentiment_analysis]
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 
 def sentiment_analysis(temperature: float = 0.2) -> None:

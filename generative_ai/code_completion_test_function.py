@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_completion_test_function]
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.language_models import CodeGenerationModel
 
 
 def complete_test_function(temperature: float = 0.2) -> object:
