@@ -18,11 +18,13 @@
 # pylint: disable=too-many-return-statements
 
 from datetime import date
+import json
+import sys
 from typing import List
 from unittest.mock import MagicMock
 
 import pytest
-from google.cloud import storage
+from google.cloud import logging_v2, storage
 
 import main
 
@@ -33,13 +35,15 @@ TEST_BUCKET_NAME = f'gs://{TEST_BUCKET}'
 
 def _setup_environment(task_index: int = 0, task_count: int = 1,
                        start_date: str = '01/01/0001', end_date: str = '01/01/0001',
-                       log_id: str = TEST_LOG_ID, storage_bucket: str = TEST_BUCKET):
+                       log_id: str = TEST_LOG_ID, storage_bucket: str = TEST_BUCKET,
+                       max_size: int = 0) -> None:
     main.LOG_ID = log_id
     main.BUCKET_NAME = storage_bucket
     main.TASK_INDEX = task_index
     main.TASK_COUNT = task_count
     main.START_DATE = start_date
     main.END_DATE = end_date
+    main.LOGS_MAX_SIZE_BYTES = max_size
 
 
 @pytest.mark.parametrize(
@@ -65,7 +69,7 @@ def _setup_environment(task_index: int = 0, task_count: int = 1,
          'multi year range'
          ])
 def test_calc_import_range(start_date: str, end_date: str, task_index: int, task_count: int,
-                           expected_first_day: date, expected_last_day: date):
+                           expected_first_day: date, expected_last_day: date) -> None:
     _setup_environment(task_index=task_index, task_count=task_count,
                        start_date=start_date, end_date=end_date)
 
@@ -179,7 +183,7 @@ TEST_FILES_MAR_2003 = [
 ]
 
 
-def _args_based_list_blobs_return(*_args, **kwargs):
+def _args_based_list_blobs_return(*_args, **kwargs) -> List[str]:
     if kwargs['prefix'] == f'{TEST_LOG_ID}/2001/06/':
         print('TEST_FILES_JUN_2001')
         return TEST_FILES_JUN_2001
@@ -217,9 +221,9 @@ def _args_based_list_blobs_return(*_args, **kwargs):
                         *TEST_FILES_MAY_2002,
                         *TEST_FILES_JAN_2003,
                         *TEST_FILES_FEB_2003[:-2]]]),
-     ])
-#    ids=['simple one month range', 'subrange of one month', 'cross year range'])
-def test_list_log_files(first_day: str, last_day: str, expected_paths: List):
+     ],
+    ids=['simple one month range', 'subrange of one month', 'cross year range'])
+def test_list_log_files(first_day: str, last_day: str, expected_paths: List) -> None:
     _setup_environment()
 
     mocked_client = MagicMock(spec=storage.Client)
@@ -229,3 +233,67 @@ def test_list_log_files(first_day: str, last_day: str, expected_paths: List):
     paths = main.list_log_files(first_day, last_day, mocked_client)
 
     assert set(paths) == set(expected_paths)
+
+
+TEST_LOG_FILES = ['file1.json', 'file2.json', 'file3.json', 'file4.json']
+TEST_CONTENT = {
+    'file1.json':
+        '{"file": "1", "line": "1"}\n{"file": "1", "line": "2"}\n{"file": "1", "line": "3"}',
+    'file2.json':
+        '{"file": "2", "line": "1"}\n{"file": "2", "line": "2"}',
+    'file3.json':
+        '{"file": "3", "line": "1"}\n{"file": "3", "line": "2"}\n\
+         {"file": "3", "line": "3"}\n{"file": "3", "line": "4"}',
+    'file4.json': '{"file": "4", "line": "1"}',
+}
+# note that all log entries are of same size (expected 184 bytes)
+TEST_LOG_SIZE = sys.getsizeof(json.loads(TEST_CONTENT['file4.json']))
+
+
+def _args_based_blob_return(*args, **_kwargs) -> str:
+    mock = MagicMock(spec=storage.Blob)
+    mock.download_as_string = MagicMock(return_value=TEST_CONTENT.get(args[0]))
+    return mock
+
+
+def _calc_args_size(*args):
+    size = 0
+    if args and args[0] and isinstance(args[0][0], list):
+        for arg in args[0][0]:
+            size += sys.getsizeof(arg)
+    return size
+
+
+@pytest.mark.parametrize(
+    'log_files, max_size, expected_writes',
+    [(TEST_LOG_FILES, 1 * 1024 * 1024, [(10*TEST_LOG_SIZE)]),
+     (TEST_LOG_FILES[:2], (TEST_LOG_SIZE + 10), [TEST_LOG_SIZE, TEST_LOG_SIZE,
+                                                 TEST_LOG_SIZE, TEST_LOG_SIZE,
+                                                 TEST_LOG_SIZE]),
+     (TEST_LOG_FILES[:3], (4*TEST_LOG_SIZE + 10), [4*TEST_LOG_SIZE,
+                                                   4*TEST_LOG_SIZE,
+                                                   TEST_LOG_SIZE]),
+     ],
+    ids=['read all, write once',
+         'read file, write many times',
+         'read many files, write fewer times',
+         ])
+def test_import_logs(log_files: List[str], max_size: int, expected_writes: List[int]) -> None:
+    _setup_environment(max_size=max_size)
+    mocked_storage_client = MagicMock(spec=storage.Client)
+    mocked_bucket = MagicMock(spec=storage.Bucket)
+    mocked_storage_client.bucket = MagicMock(return_value=mocked_bucket)
+    mocked_bucket.blob = MagicMock(side_effect=_args_based_blob_return)
+    mocked_logging_client = MagicMock(spec=logging_v2.Client)
+    mocked_logging_client.logging_api = MagicMock()
+    mocked_write_entries = mocked_logging_client.logging_api.write_entries = MagicMock()
+
+    main.import_logs(log_files, mocked_storage_client, mocked_logging_client)
+
+    assert mocked_bucket.blob.call_count == len(log_files), \
+        f'expected {len(log_files)} reads, got {mocked_bucket.blob.call_count}'
+    assert len(mocked_write_entries.call_args_list) == len(expected_writes), \
+        f'expected {len(expected_writes)} writes, got {len(mocked_write_entries.call_args_list)}'
+    for write_call, expected_size in zip(mocked_write_entries.call_args_list, expected_writes):
+        assert _calc_args_size(write_call.args) == expected_size, \
+            f'expected write size {expected_size}, got {_calc_args_size(write_call.args)}'

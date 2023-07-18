@@ -27,7 +27,7 @@ from google.cloud import storage, logging_v2
 
 
 # Logging limits (https://cloud.google.com/logging/quotas#api-limits)
-LOGS_MAX_SIZE_BYTES = (9 * 1024 * 1024)  # < 10MB
+LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
 
 # Read Cloud Run environment variables
 TASK_INDEX = int(os.getenv("CLOUD_RUN_TASK_INDEX", "0"))
@@ -148,7 +148,7 @@ def import_logs(log_files: List,
             if total_size + size >= LOGS_MAX_SIZE_BYTES:
                 _write_logs(logs, logging_client)
                 total_size, logs = 0, []
-            total_size += log
+            total_size += size
             logs.append(log)
     if logs:
         _write_logs(logs, logging_client)
