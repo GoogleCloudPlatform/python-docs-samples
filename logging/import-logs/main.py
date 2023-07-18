@@ -47,6 +47,7 @@ START_DATE = getenv_date("START_DATE")
 END_DATE = getenv_date("END_DATE")
 LOG_ID = os.getenv("LOG_ID")
 BUCKET_NAME = os.getenv("STORAGE_BUCKET_NAME")
+PROJECT_ID = os.getenv("PROJECT_ID")
 
 
 def eprint(*objects, **kwargs):
@@ -175,7 +176,8 @@ def main() -> None:
 
     storage_client = storage.Client()
     log_files = list_log_files(start_date, end_date, storage_client)
-    logging_client = logging_v2.Client()
+    logging_client = logging_v2.Client(
+        project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
     import_logs(log_files, storage_client, logging_client)
 
 

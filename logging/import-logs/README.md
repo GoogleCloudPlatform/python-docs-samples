@@ -1,50 +1,79 @@
 # Import Logs from Cloud Storage
 
-<!--
-# # Build
+This directory contains an opinionated implementation of the Import Logs
+solution that imports logs that were previously exported to Cloud Storage back
+to Cloud Logging.
 
-* Set an environment variable with your GCP Project ID:
+You can find more information about the scenario and instructions to run the
+solution in documentation[^1].
 
-```
-export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
-```
+[^1]: Link to documentation will be provided shortly.
 
-* Use a [Buildpack](https://github.com/GoogleCloudPlatform/buildpacks) to build the container:
+## Requirements
 
-```sh
-gcloud builds submit --pack image=gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
-```
+You have to grant the following permissions to a service account that you will
+use with your solution:
+* [Storage Object Viewer][r1] permissions to the storage bucket with exported
+  logs
+* [Log Writer][r2] permissions to write the logs
 
-## Run Locally
+The service account can be the Compute Engine default [service account][sa] in
+the project or it can be a custom service that will be used to run the solution. 
 
-```sh
-docker run --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
+[r1]: https://cloud.google.com/iam/docs/understanding-roles#storage.objectViewer
+[r2]: https://cloud.google.com/iam/docs/understanding-roles#logging.logWriter
+[sa]: https://cloud.google.com/compute/docs/access/service-accounts#default_service_account
 
-# With environment variables 
-docker run --rm -e FAIL_RATE=0.9 -e SLEEP_MS=1000 gcr.io/${GOOGLE_CLOUD_PROJECT}/logger-job
-```
+## Launch
 
-## Test
+The solution runs on [Cloud Run][run] as a job. The following parameters are
+recommended when importing a low volume of logs:
 
-```sh
-pytest
-```
+| Parameter | Value |
+|---|---|
+| Image URI | TBD[^3] |
+| CPUs | `2` |
+| Memory | `2Gi` |
+| Task timeout | `60m` |
+| Number of tasks | `1` (it is default number) |
 
-_Note: you may need to install `pytest` using `pip install pytest`._
+The input arguments for the solution are set using environment variables that
+have to be configured when a new Cloud Run job for the solution is created:
 
-## Create a Job
+| Environment variable | Value |
+|---|---|
+| START_DATE | A string in format `MM/DD/YYY` that defines the first day of the import range |
+| END_DATE | A string in format `MM/DD/YYY` that defines the last day of the import range |
+| LOG_ID | A string that identifies the particular log to be imported. See [documentation][logid] for more details. |
+| STORAGE_BUCKET_NAME | A name of the storage bucket where the exported logs are stored. |
 
-```
-gcloud alpha run jobs create job-quickstart \
-  --image=gcr.io/$PROJECT_ID/logger-job \
-  --tasks 50 \
-  --set-env-vars=SLEEP_MS=10000 \
-  --set-env-vars=FAIL_RATE=0.5 \
-  --max-retries 10
-```
+Read documentation[^2] for more information about Cloud Run job setup. 
 
-## Run the Job
-```
-gcloud alpha run jobs run job-quickstart
-```
--->
+[run]: https://cloud.google.com/run/
+[^2]: Link to documentation will be provided shortly.
+[^3]: URI will be provided shortly
+[logid]: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS-table
+
+### Build
+
+The solution uses a pre-built image. Use the following commands to build your custom image:
+
+1. [Install Google Cloud CLI](https://cloud.google.com/sdk/docs/install)
+1. Clone the repo:
+   ```bash
+   git clone https://github.com/GoogleCloudPlatform/python-docs-samples/
+   ```
+1. Open the directory with this solution
+   ```bash
+   cd python-docs-samples/logging/import-logs
+   ```
+1. Build the image and store it in the artifact registry in the project with project ID = `PROJECT_ID` 
+  ```bash
+  gcloud builds submit --pack image=gcr.io/PROJECT_ID/import-logs-solution
+  ```
+  This commands [builds a container image][build] using buildpacks.
+
+> Note:
+> Running `gcloud` command may require authentication.
+
+[build]: https://cloud.google.com/docs/buildpacks/build-application
