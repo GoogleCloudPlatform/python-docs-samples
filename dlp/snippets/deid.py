@@ -1352,7 +1352,7 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_primitive_bucketing]
-import google.cloud.dlp  # noqa: F811, E402
+import google.cloud.dlp  # noqa: F811, E402, I100
 
 
 def deidentify_table_primitive_bucketing(
