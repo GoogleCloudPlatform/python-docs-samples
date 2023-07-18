@@ -15,6 +15,7 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=broad-exception-caught
 
+import json
 import math
 import os
 import sys
@@ -26,7 +27,7 @@ from google.cloud import storage, logging_v2
 
 
 # Logging limits (https://cloud.google.com/logging/quotas#api-limits)
-MAX_SIZE_LOG_WRITE_REQUEST = (10 * 1024 * 1024)  # 10MB
+LOGS_MAX_SIZE_BYTES = (9 * 1024 * 1024)  # < 10MB
 
 # Read Cloud Run environment variables
 TASK_INDEX = int(os.getenv("CLOUD_RUN_TASK_INDEX", "0"))
@@ -123,10 +124,34 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
     return paths
 
 
-def import_logs(log_files: List, storage_client: storage.Client) -> None:
+def _read_logs(path: str, bucket: storage.Bucket) -> List[str]:
+    blob = bucket.blob(path)
+    contents = blob.download_as_string()
+    return contents.splitlines()
+
+
+def _write_logs(logs: List[dict], client: logging_v2.Client) -> None:
+    client.logging_api.write_entries(logs)
+
+
+def import_logs(log_files: List,
+                storage_client: storage.Client,
+                logging_client: logging_v2.Client) -> None:
     """Iterates through log files to write log entries in batched mode"""
-    # use https://github.com/googleapis/python-storage/blob/main/samples/snippets/storage_download_into_memory.py
-    logging_client = logging_v2.Client()
+    total_size, logs = 0, []
+    bucket = storage_client.bucket(BUCKET_NAME)
+    for file_path in log_files:
+        data = _read_logs(file_path, bucket)
+        for entry in data:
+            log = json.loads(entry)
+            size = sys.getsizeof(log)
+            if total_size + size >= LOGS_MAX_SIZE_BYTES:
+                _write_logs(logs, logging_client)
+                total_size, logs = 0, []
+            total_size += log
+            logs.append(log)
+    if logs:
+        _write_logs(logs, logging_client)
 
 
 def main() -> None:
@@ -150,7 +175,8 @@ def main() -> None:
 
     storage_client = storage.Client()
     log_files = list_log_files(start_date, end_date, storage_client)
-    import_logs(log_files, storage_client)
+    logging_client = logging_v2.Client()
+    import_logs(log_files, storage_client, logging_client)
 
 
 # Start script
