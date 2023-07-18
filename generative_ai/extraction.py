@@ -21,7 +21,7 @@ def extractive_question_answering(
         temperature: float,
         project_id: str,
         location: str,
-):
+) -> str:
     """Extractive Question Answering with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
@@ -75,7 +75,7 @@ A:""",
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_extraction]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ def text_summarization(
         temperature: float,
         project_id: str,
         location: str,
-):
+) -> str:
     """Summarization Example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
@@ -71,7 +71,7 @@ Summary:
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_summarization]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

@@ -21,7 +21,7 @@ def interview(
         temperature: float,
         project_id: str,
         location: str,
-):
+) -> str:
     """Ideation example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
@@ -41,7 +41,7 @@ def interview(
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_ideation]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

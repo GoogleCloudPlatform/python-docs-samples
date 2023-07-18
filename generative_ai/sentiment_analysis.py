@@ -21,7 +21,7 @@ def sentiment_analysis(
         temperature: float,
         project_id: str,
         location: str,
-):
+) -> str:
     """Sentiment analysis example with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
@@ -77,7 +77,7 @@ Classify the sentiment of the message: """,
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_sentiment_analysis]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":
