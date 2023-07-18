@@ -15,14 +15,16 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=broad-exception-caught
 
+from datetime import date, timedelta
 import json
 import math
 import os
 import sys
-from typing import List, Tuple
-from datetime import date, timedelta
 
-from google.cloud import storage, logging_v2
+from typing import List, Tuple, TypedDict
+
+from google.cloud import logging_v2, storage
+
 # from google.cloud import logging
 
 
@@ -50,7 +52,7 @@ BUCKET_NAME = os.getenv("STORAGE_BUCKET_NAME")
 PROJECT_ID = os.getenv("PROJECT_ID")
 
 
-def eprint(*objects, **kwargs):
+def eprint(*objects: str, **kwargs: TypedDict) -> None:
     """Prints objects to stderr"""
     print(*objects, file=sys.stderr, **kwargs)
 
@@ -62,7 +64,7 @@ def _day(blob_name: str) -> int:
     """
     # calculated in function to allow test to set LOG_ID
     offset = len(LOG_ID) + 1 + 4 + 1 + 2 + 1
-    return int(blob_name[offset:offset+2])
+    return int(blob_name[offset: offset + 2])
 
 
 def calc_import_range() -> Tuple[date, date]:
@@ -100,11 +102,14 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
     if first_day.year == last_day.year and first_day.month == last_day.month:
         file_prefix = f"{LOG_ID}/{first_day.year:04}/{first_day.month:02}/"
         blobs = client.list_blobs(f"gs://{BUCKET_NAME}", prefix=file_prefix)
-        paths = [b.name for b in blobs if _day(b.name) >= first_day.day
-                 and _day(b.name) <= last_day.day]
+        paths = [
+            b.name
+            for b in blobs
+            if _day(b.name) >= first_day.day and _day(b.name) <= last_day.day
+        ]
         return paths
 
-    print('DEBUG: skip special case')
+    print("DEBUG: skip special case")
 
     # collect all log file paths in first month and filter those for early days
     file_prefix = f"{LOG_ID}/{first_day.year:04}/{first_day.month:02}/"
@@ -115,9 +120,11 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
     blobs = client.list_blobs(f"gs://{BUCKET_NAME}", prefix=file_prefix)
     paths.extend([b.name for b in blobs if _day(b.name) <= last_day.day])
     # process all paths in between
-    for year in range(first_day.year, last_day.year+1):
-        for month in range(first_day.month+1 if year == first_day.year else 1,
-                           last_day.month if year == last_day.year else 13):
+    for year in range(first_day.year, last_day.year + 1):
+        for month in range(
+            first_day.month + 1 if year == first_day.year else 1,
+            last_day.month if year == last_day.year else 13,
+        ):
             file_prefix = f"{LOG_ID}/{year:04}/{month:02}/"
             blobs = client.list_blobs(
                 f"gs://{BUCKET_NAME}", prefix=file_prefix)
@@ -135,9 +142,9 @@ def _write_logs(logs: List[dict], client: logging_v2.Client) -> None:
     client.logging_api.write_entries(logs)
 
 
-def import_logs(log_files: List,
-                storage_client: storage.Client,
-                logging_client: logging_v2.Client) -> None:
+def import_logs(
+    log_files: List, storage_client: storage.Client, logging_client: logging_v2.Client
+) -> None:
     """Iterates through log files to write log entries in batched mode"""
     total_size, logs = 0, []
     bucket = storage_client.bucket(BUCKET_NAME)
@@ -168,16 +175,18 @@ def main() -> None:
     start_date, end_date = calc_import_range()
 
     if end_date > start_date:
-        print(
-            f"Task #{(TASK_INDEX+1)} has no work to do")
+        print(f"Task #{(TASK_INDEX+1)} has no work to do")
         sys.exit(0)
     print(
-        f"Task #{(TASK_INDEX+1)} starts importing logs from {start_date} to {end_date}")
+        f"Task #{(TASK_INDEX+1)} starts importing logs from {start_date} to {end_date}"
+    )
 
     storage_client = storage.Client()
     log_files = list_log_files(start_date, end_date, storage_client)
-    logging_client = logging_v2.Client(
-        project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
+    logging_client = (
+        logging_v2.Client(
+            project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
+    )
     import_logs(log_files, storage_client, logging_client)
 
 
