@@ -20,12 +20,7 @@ import chat
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_science_tutoring() -> None:
-    content = chat.science_tutoring(temperature=0).text
-    assert "Mercury" in content
-    assert "Venus" in content
-    assert "Earth" in content
-    assert "Mars" in content
-    assert "Jupiter" in content
-    assert "Saturn" in content
-    assert "Uranus" in content
-    assert "Neptune" in content
+    assert (
+        "There are eight planets in the solar system."
+        == chat.science_tutoring(temperature=0).text
+    )

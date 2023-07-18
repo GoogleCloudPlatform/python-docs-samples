@@ -57,7 +57,7 @@ def gcloud_cli(command):
 
 
 # Wait for app to initialize
-@backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=5)
+@backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_time=300)
 def wait_for_app(url):
     r = requests.get(url)
     r.raise_for_status()

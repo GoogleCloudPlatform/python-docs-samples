@@ -14,38 +14,24 @@
 
 import os
 import re
-from uuid import uuid4
 
 from google.api_core.retry import Retry
-from google.cloud.speech_v2 import SpeechClient
-from google.cloud.speech_v2.types import cloud_speech
 
 import quickstart_v2
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-
-
-def delete_recognizer(name: str) -> None:
-    client = SpeechClient()
-    request = cloud_speech.DeleteRecognizerRequest(name=name)
-    client.delete_recognizer(request=request)
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
 def test_quickstart_v2() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    recognizer_id = "recognizer-" + str(uuid4())
     response = quickstart_v2.quickstart_v2(
-        project_id, recognizer_id, os.path.join(RESOURCES, "audio.wav")
+        project_id, os.path.join(_RESOURCES, "audio.wav")
     )
 
     assert re.search(
         r"how old is the Brooklyn Bridge",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
-    )
-
-    delete_recognizer(
-        f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
     )

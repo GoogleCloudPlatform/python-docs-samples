@@ -24,7 +24,10 @@ app = Flask(__name__)
 @app.route("/")
 def main():
     """Example route for receiving authorized requests."""
-    return receive_authorized_get_request(request)
+    try:
+        return receive_authorized_get_request(request)
+    except Exception as e:
+        return f"Error verifying ID token: {e}"
 
 
 if __name__ == "__main__":

@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl
 import pytest
 
@@ -35,6 +36,7 @@ def verify_model_state():
         response.result()
 
 
+@Retry()
 def test_text_classification_predict(capsys, verify_model_state):
     verify_model_state
     text = "Fruit and nut flavour"

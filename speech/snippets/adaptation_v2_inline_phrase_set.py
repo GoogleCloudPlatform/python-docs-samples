@@ -13,31 +13,19 @@
 # limitations under the License.
 
 
-# [START speech_adaptation_v2_inline_phrase_set]
+import argparse
 
+# [START speech_adaptation_v2_inline_phrase_set]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_inline_phrase_set(
     project_id: str,
-    recognizer_id: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
     # Instantiates a client
     client = SpeechClient()
-
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_short"
-        ),
-    )
-
-    # Creates a Recognizer
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -53,11 +41,16 @@ def adaptation_v2_inline_phrase_set(
         ]
     )
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, adaptation=adaptation
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        adaptation=adaptation,
+        language_codes=["en-US"],
+        model="short",
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=recognizer.name, config=config, content=content
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        config=config,
+        content=content,
     )
 
     # Transcribes the audio into text
@@ -73,4 +66,13 @@ def adaptation_v2_inline_phrase_set(
 
 
 if __name__ == "__main__":
-    adaptation_v2_inline_phrase_set()
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    adaptation_v2_inline_phrase_set(
+        args.project_id,
+        args.audio_file,
+    )

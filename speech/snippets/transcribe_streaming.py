@@ -69,7 +69,6 @@ def transcribe_streaming(stream_file: str) -> speech.RecognitionConfig:
                 print(f"Confidence: {alternative.confidence}")
                 print(f"Transcript: {alternative.transcript}")
 
-    return response
     # [END speech_python_migration_streaming_response]
 
 

@@ -23,19 +23,15 @@ from google.cloud import documentai  # type: ignore
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_PROCESSOR_LOCATION"  # Format is "us" or "eu"
-# processor_display_name = "YOUR_PROCESSOR_DISPLAY_NAME" # Must be unique per project, e.g.: "My Processor"
-# processor_type = "YOUR_PROCESSOR_TYPE" # Use `fetch_processor_types()` to get available processor types
 # file_path = "/path/to/local/pdf"
-# mime_type = "application/pdf"  # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+# processor_display_name = "YOUR_PROCESSOR_DISPLAY_NAME" # Must be unique per project, e.g.: "My Processor"
 
 
 def quickstart(
     project_id: str,
     location: str,
-    processor_display_name: str,
-    processor_type: str,
     file_path: str,
-    mime_type: str,
+    processor_display_name: str = "My Processor",
 ):
     # You must set the `api_endpoint`if you use a location other than "us".
     opts = ClientOptions(api_endpoint=f"{location}-documentai.googleapis.com")
@@ -50,7 +46,8 @@ def quickstart(
     processor = client.create_processor(
         parent=parent,
         processor=documentai.Processor(
-            display_name=processor_display_name, type_=processor_type
+            type_="OCR_PROCESSOR",  # Refer to https://cloud.google.com/document-ai/docs/create-processor for how to get available processor types
+            display_name=processor_display_name,
         ),
     )
 
@@ -62,7 +59,10 @@ def quickstart(
         image_content = image.read()
 
     # Load binary data
-    raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
+    raw_document = documentai.RawDocument(
+        content=image_content,
+        mime_type="application/pdf",  # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+    )
 
     # Configure the process request
     # `processor.name` is the full resource name of the processor, e.g.:

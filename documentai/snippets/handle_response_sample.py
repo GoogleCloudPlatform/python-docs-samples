@@ -142,7 +142,7 @@ def process_document_form_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
-) -> None:
+) -> documentai.Document:
     # Online processing request to Document AI
     document = process_document(
         project_id, location, processor_id, processor_version, file_path, mime_type
@@ -162,9 +162,9 @@ def process_document_form_sample(
 
         print(f"\nFound {len(page.tables)} table(s):")
         for table in page.tables:
-            num_collumns = len(table.header_rows[0].cells)
+            num_columns = len(table.header_rows[0].cells)
             num_rows = len(table.body_rows)
-            print(f"Table with {num_collumns} columns and {num_rows} rows:")
+            print(f"Table with {num_columns} columns and {num_rows} rows:")
 
             # Print header rows
             print("Columns:")
@@ -178,6 +178,8 @@ def process_document_form_sample(
             name = layout_to_text(field.field_name, text)
             value = layout_to_text(field.field_value, text)
             print(f"    * {repr(name.strip())}: {repr(value.strip())}")
+
+    return document
 
 
 def print_table_rows(
