@@ -1352,40 +1352,16 @@ def deidentify_table_bucketing(
 
 
 # [START dlp_deidentify_table_primitive_bucketing]
-from typing import List  # noqa: F811, E402, I100
-
 import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_table_primitive_bucketing(
     project: str,
-    table_header: List[str],
-    table_rows: List[List[str]],
-    deid_field_name: str,
-    bucketing_lower_values: List[int],
-    bucketing_upper_values: List[int],
-    bucket_labels: List[str],
 ) -> None:
     """ Uses the Data Loss Prevention API to de-identify sensitive data in
     a table by replacing them with generalized bucket labels.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        table_header: List of strings representing table field names.
-        table_rows: List of rows representing table data.
-        deid_field_name: Field name in table to de-identify.
-        bucketing_lower_values: List of lower bound range values for each bucket.
-        bucketing_upper_values: List of upper bound range values for each bucket.
-        bucket_labels: List of replacement string values for each bucket.
-
-    Example:
-        >> $ python deid.py deid_table_primitive_bucketing \
-        '{"header": ["email", "phone number", "age"],
-        "rows": [["robertfrost@xyz.com", "4232342345", "21"],
-        ["johndoe@pqr.com", "4253458383", "68"]]}' \
-        "age" [0, 25, 75] [25, 75, 100] ["Low", "Medium", "High"]
-        >>  '{"header": ["email", "phone number", "age"],
-            "rows": [["robertfrost@xyz.com", "4232342345", "Low"],
-            ["johndoe@pqr.com", "4253458383", "Medium"]]}'
     """
 
     # Instantiate a client.
@@ -1394,11 +1370,22 @@ def deidentify_table_primitive_bucketing(
     # Convert the project id into a full resource id.
     parent = f"projects/{project}"
 
+    # Dictionary representing table to de-identify.
+    # The table can also be taken as input to the function.
+    table_to_deid = {
+        "header": ["age", "patient", "happiness_score"],
+        "rows": [
+            ["101", "Charles Dickens", "95"],
+            ["22", "Jane Austen", "21"],
+            ["90", "Mark Twain", "75"],
+        ],
+    }
+
     # Construct the `table`. For more details on the table schema, please see
     # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
-    headers = [{"name": val} for val in table_header]
+    headers = [{"name": val} for val in table_to_deid["header"]]
     rows = []
-    for row in table_rows:
+    for row in table_to_deid["rows"]:
         rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
 
     table = {"headers": headers, "rows": rows}
@@ -1407,16 +1394,18 @@ def deidentify_table_primitive_bucketing(
     item = {"table": table}
 
     # Construct generalised bucket configuration.
-    buckets_config = [{"min_": {"integer_value": bucketing_lower_values[_i]},
-                       "max_": {"integer_value": bucketing_upper_values[_i]},
-                       "replacement_value": {"string_value": bucket_labels[_i]}} for _i in range(len(bucket_labels))]
+    buckets_config = [
+        {"min_": {"integer_value": 0}, "max_": {"integer_value": 25}, "replacement_value": {"string_value": "Low"}},
+        {"min_": {"integer_value": 25}, "max_": {"integer_value": 75}, "replacement_value": {"string_value": "Medium"}},
+        {"min_": {"integer_value": 75}, "max_": {"integer_value": 100}, "replacement_value": {"string_value": "High"}},
+    ]
 
     # Construct de-identify configuration that groups values in a table field and replace those with bucket labels.
     deidentify_config = {
         "record_transformations": {
             "field_transformations": [
                 {
-                    "fields": [{"name": deid_field_name}],
+                    "fields": [{"name": "happiness_score"}],
                     "primitive_transformation": {
                         "bucketing_config": {"buckets": buckets_config}
                     }
@@ -2470,30 +2459,6 @@ if __name__ == "__main__":
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
     )
-    table_primitive_bucketing_parser.add_argument(
-        "--table_header",
-        help="List of strings representing table field names.",
-    )
-    table_primitive_bucketing_parser.add_argument(
-        "--table_rows",
-        help="List of rows representing table data.",
-    )
-    table_primitive_bucketing_parser.add_argument(
-        "--deid_field_name",
-        help="Field name in table to de-identify."
-    )
-    table_primitive_bucketing_parser.add_argument(
-        "--bucketing_lower_values",
-        help="List of lower bound range values for each bucket",
-    )
-    table_primitive_bucketing_parser.add_argument(
-        "--bucketing_upper_values",
-        help="List of upper bound range values for each bucket",
-    )
-    table_primitive_bucketing_parser.add_argument(
-        "--bucket_labels",
-        help="List of replacement string values for each bucket.",
-    )
 
     table_condition_replace_parser = subparsers.add_parser(
         "deid_table_condition_replace",
@@ -2797,12 +2762,6 @@ if __name__ == "__main__":
     elif args.content == "deid_table_primitive_bucketing":
         deidentify_table_primitive_bucketing(
             args.project,
-            args.table_header,
-            args.table_rows,
-            args.deid_field_name,
-            args.bucketing_lower_values,
-            args.bucketing_upper_values,
-            args.bucket_labels,
         )
     elif args.content == "deid_table_condition_replace":
         deidentify_table_condition_replace_with_info_types(

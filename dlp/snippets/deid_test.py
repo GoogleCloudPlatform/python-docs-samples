@@ -404,12 +404,6 @@ def test_deidentify_table_primitive_bucketing(capsys: pytest.CaptureFixture) -> 
 
     deid.deidentify_table_primitive_bucketing(
         GCLOUD_PROJECT,
-        TABLE_DATA["header"],
-        TABLE_DATA["rows"],
-        "happiness_score",
-        [0, 25, 75],
-        [25, 75, 100],
-        ["Low", "Medium", "High"],
     )
 
     out, _ = capsys.readouterr()
