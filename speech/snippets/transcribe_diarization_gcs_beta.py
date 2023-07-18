@@ -17,11 +17,14 @@
 from google.cloud import speech
 
 
-def transcribe_diarization_gcs_beta(gcs_uri: str):
-    """ Transcribe a remote audio file (stored in Google Cloud Storage) using speaker diarization.
+def transcribe_diarization_gcs_beta(gcs_uri: str) -> bool:
+    """Transcribe a remote audio file (stored in Google Cloud Storage) using speaker diarization.
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
+
+    Returns:
+        True if the operation successfully completed, False otherwise.
     """
 
     client = speech.SpeechClient()
@@ -46,7 +49,9 @@ def transcribe_diarization_gcs_beta(gcs_uri: str):
     )
 
     # Use non-blocking call for getting file transcription
-    response = client.long_running_recognize(config=recognition_config, audio=audio).result(timeout=300)
+    response = client.long_running_recognize(
+        config=recognition_config, audio=audio
+    ).result(timeout=300)
 
     # The transcript within each result is separate and sequential per result.
     # However, the words list within an alternative includes all the words
@@ -57,9 +62,8 @@ def transcribe_diarization_gcs_beta(gcs_uri: str):
 
     # Print the output
     for word_info in words_info:
-        print(
-            f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}"
-        )
+        print(f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}")
     return True
+
 
 # [END speech_transcribe_diarization_gcs_beta]

@@ -14,15 +14,18 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import set_endpoint
 
 
-PROJECT_ID = os.environ['GOOGLE_CLOUD_PROJECT']
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
+@Retry()
 def test_set_endpoint(capsys):
     set_endpoint.set_endpoint(PROJECT_ID)
 
     out, _ = capsys.readouterr()
     # Look for the display name
-    assert 'do_not_delete_me' in out
+    assert "do_not_delete_me" in out

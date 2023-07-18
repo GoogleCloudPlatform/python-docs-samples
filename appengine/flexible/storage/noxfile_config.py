@@ -38,7 +38,5 @@ TEST_CONFIG_OVERRIDE = {
     "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {
-        "CLOUD_STORAGE_BUCKET": "python-docs-samples-tests-public"
-    },
+    "envs": {"CLOUD_STORAGE_BUCKET": "python-docs-samples-tests-public"},
 }

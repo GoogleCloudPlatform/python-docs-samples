@@ -36,4 +36,6 @@ def list_images(project_id: str) -> Iterable[compute_v1.Image]:
     """
     image_client = compute_v1.ImagesClient()
     return image_client.list(project=project_id)
+
+
 # </INGREDIENT>

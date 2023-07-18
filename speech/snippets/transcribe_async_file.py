@@ -18,10 +18,11 @@ batch processing.
 
 
 # [START speech_transcribe_async]
-def transcribe_file(speech_file):
-    """Transcribe the given audio file asynchronously."""
-    from google.cloud import speech
+from google.cloud import speech
 
+
+def transcribe_file(speech_file: str) -> speech.RecognizeResponse:
+    """Transcribe the given audio file asynchronously."""
     client = speech.SpeechClient()
 
     # [START speech_python_migration_async_request]
@@ -55,6 +56,8 @@ def transcribe_file(speech_file):
         print(f"Transcript: {result.alternatives[0].transcript}")
         print(f"Confidence: {result.alternatives[0].confidence}")
     # [END speech_python_migration_async_response]
+
+    return response
 
 
 # [END speech_transcribe_async]

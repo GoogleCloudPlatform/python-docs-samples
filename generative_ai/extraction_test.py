@@ -21,4 +21,4 @@ import extraction
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_extractive_question_answering() -> None:
     content = extraction.extractive_question_answering(temperature=0).text
-    assert content == 'Reduced moist tropical vegetation cover.'
+    assert content == "Reduced moist tropical vegetation cover in the basin."

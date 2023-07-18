@@ -21,4 +21,3 @@
 # <INGREDIENT delete_regional_disk />
 
 # </REGION compute_regional_disk_delete>
-

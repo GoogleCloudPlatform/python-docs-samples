@@ -38,7 +38,9 @@ from six.moves import urllib
 
 
 # [START mediacdn_sign_url]
-def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+def sign_url(
+    url: str, key_name: str, base64_key: str, expiration_time: datetime.datetime
+) -> str:
     """Gets the Signed URL string for the specified URL and configuration.
 
     Args:
@@ -53,32 +55,42 @@ def sign_url(url: str, key_name: str, base64_key: str, expiration_time: datetime
     """
     stripped_url = url.strip()
     parsed_url = urllib.parse.urlsplit(stripped_url)
-    query_params = urllib.parse.parse_qs(
-        parsed_url.query, keep_blank_values=True)
+    query_params = urllib.parse.parse_qs(parsed_url.query, keep_blank_values=True)
     epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    url_pattern = u'{url}{separator}Expires={expires}&KeyName={key_name}'
+    url_pattern = "{url}{separator}Expires={expires}&KeyName={key_name}"
 
     url_to_sign = url_pattern.format(
-            url=stripped_url,
-            separator='&' if query_params else '?',
-            expires=expiration_timestamp,
-            key_name=key_name)
+        url=stripped_url,
+        separator="&" if query_params else "?",
+        expires=expiration_timestamp,
+        key_name=key_name,
+    )
 
-    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
-        decoded_key).sign(url_to_sign.encode('utf-8'))
-    signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-    signed_url = u'{url}&Signature={signature}'.format(
-            url=url_to_sign, signature=signature)
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
+        url_to_sign.encode("utf-8")
+    )
+    signature = base64.urlsafe_b64encode(digest).decode("utf-8")
+    signed_url = "{url}&Signature={signature}".format(
+        url=url_to_sign, signature=signature
+    )
 
     return signed_url
+
+
 # [END mediacdn_sign_url]
 
 
 # [START mediacdn_sign_url_prefix]
-def sign_url_prefix(url: str, url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+def sign_url_prefix(
+    url: str,
+    url_prefix: str,
+    key_name: str,
+    base64_key: str,
+    expiration_time: datetime.datetime,
+) -> str:
     """Gets the Signed URL string for the specified URL prefix and configuration.
 
     Args:
@@ -94,34 +106,43 @@ def sign_url_prefix(url: str, url_prefix: str, key_name: str, base64_key: str, e
     """
     stripped_url = url.strip()
     parsed_url = urllib.parse.urlsplit(stripped_url)
-    query_params = urllib.parse.parse_qs(
-        parsed_url.query, keep_blank_values=True)
+    query_params = urllib.parse.parse_qs(parsed_url.query, keep_blank_values=True)
     encoded_url_prefix = base64.urlsafe_b64encode(
-            url_prefix.strip().encode('utf-8')).decode('utf-8')
+        url_prefix.strip().encode("utf-8")
+    ).decode("utf-8")
     epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    policy_pattern = u'URLPrefix={encoded_url_prefix}&Expires={expires}&KeyName={key_name}'
+    policy_pattern = (
+        "URLPrefix={encoded_url_prefix}&Expires={expires}&KeyName={key_name}"
+    )
     policy = policy_pattern.format(
-            encoded_url_prefix=encoded_url_prefix,
-            expires=expiration_timestamp,
-            key_name=key_name)
+        encoded_url_prefix=encoded_url_prefix,
+        expires=expiration_timestamp,
+        key_name=key_name,
+    )
 
-    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
-        decoded_key).sign(policy.encode('utf-8'))
-    signature = base64.urlsafe_b64encode(digest).decode('utf-8')
-    signed_url = u'{url}{separator}{policy}&Signature={signature}'.format(
-            url=stripped_url,
-            separator='&' if query_params else '?',
-            policy=policy,
-            signature=signature)
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
+        policy.encode("utf-8")
+    )
+    signature = base64.urlsafe_b64encode(digest).decode("utf-8")
+    signed_url = "{url}{separator}{policy}&Signature={signature}".format(
+        url=stripped_url,
+        separator="&" if query_params else "?",
+        policy=policy,
+        signature=signature,
+    )
     return signed_url
+
+
 # [END mediacdn_sign_url_prefix]
 
 
 # [START mediacdn_sign_cookie]
-def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime) -> str:
+def sign_cookie(
+    url_prefix: str, key_name: str, base64_key: str, expiration_time: datetime.datetime
+) -> str:
     """Gets the Signed cookie value for the specified URL prefix and configuration.
 
     Args:
@@ -134,22 +155,30 @@ def sign_cookie(url_prefix: str, key_name: str, base64_key: str, expiration_time
         Returns the Edge-Cache-Cookie value based on the specified configuration.
     """
     encoded_url_prefix = base64.urlsafe_b64encode(
-            url_prefix.strip().encode('utf-8')).decode('utf-8')
+        url_prefix.strip().encode("utf-8")
+    ).decode("utf-8")
     epoch = datetime.datetime.utcfromtimestamp(0)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
-    policy_pattern = u'URLPrefix={encoded_url_prefix}:Expires={expires}:KeyName={key_name}'
+    policy_pattern = (
+        "URLPrefix={encoded_url_prefix}:Expires={expires}:KeyName={key_name}"
+    )
     policy = policy_pattern.format(
-            encoded_url_prefix=encoded_url_prefix,
-            expires=expiration_timestamp,
-            key_name=key_name)
+        encoded_url_prefix=encoded_url_prefix,
+        expires=expiration_timestamp,
+        key_name=key_name,
+    )
 
-    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
-        decoded_key).sign(policy.encode('utf-8'))
-    signature = base64.urlsafe_b64encode(digest).decode('utf-8')
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
+        policy.encode("utf-8")
+    )
+    signature = base64.urlsafe_b64encode(digest).decode("utf-8")
 
-    signed_policy = u'Edge-Cache-Cookie={policy}:Signature={signature}'.format(
-            policy=policy, signature=signature)
+    signed_policy = "Edge-Cache-Cookie={policy}:Signature={signature}".format(
+        policy=policy, signature=signature
+    )
     return signed_policy
+
+
 # [END mediacdn_sign_cookie]

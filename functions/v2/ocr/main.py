@@ -64,6 +64,8 @@ def process_image(cloud_event: CloudEvent) -> None:
     detect_text(bucket, filename)
 
     print(f"File {filename} processed.")
+
+
 # [END functions_ocr_process]
 
 
@@ -121,6 +123,8 @@ def detect_text(bucket: str, filename: str) -> None:
     # Wait for each publish request to be completed before exiting
     for future in futures:
         future.result()
+
+
 # [END functions_ocr_detect]
 
 
@@ -172,6 +176,8 @@ def translate_text(cloud_event: CloudEvent) -> None:
     topic_path = publisher.topic_path(project_id, topic_name)
     future = publisher.publish(topic_path, data=message_data)
     future.result()  # Wait for operation to complete
+
+
 # [END functions_ocr_translate]
 
 
@@ -215,4 +221,6 @@ def save_result(cloud_event: CloudEvent) -> None:
     blob.upload_from_string(text)
 
     print("File saved.")
+
+
 # [END functions_ocr_save]

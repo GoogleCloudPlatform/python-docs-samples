@@ -39,11 +39,14 @@ class MainHandler(BaseHandler):
         template and Javascript.
         """
 
-        context = dict(message=gettext('Hello World from Python code!'))
-        template = self.jinja2_env.get_template('index.jinja2')
+        context = dict(message=gettext("Hello World from Python code!"))
+        template = self.jinja2_env.get_template("index.jinja2")
         self.response.out.write(template.render(context))
 
 
-application = webapp2.WSGIApplication([
-    ('/', MainHandler),
-], debug=True)
+application = webapp2.WSGIApplication(
+    [
+        ("/", MainHandler),
+    ],
+    debug=True,
+)

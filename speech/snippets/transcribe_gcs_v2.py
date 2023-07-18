@@ -13,31 +13,39 @@
 # limitations under the License.
 
 
+import argparse
+
 # [START speech_transcribe_gcs_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
+def transcribe_gcs_v2(
+    project_id: str,
+    gcs_uri: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribes audio from a Google Cloud Storage URI.
+
+    Args:
+        project_id: The GCP project ID.
+        gcs_uri: The Google Cloud Storage URI.
+
+    Returns:
+        The RecognizeResponse.
+    """
     # Instantiates a client
     client = SpeechClient()
 
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_long"
-        ),
+    config = cloud_speech.RecognitionConfig(
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["en-US"],
+        model="long",
     )
 
-    # Creates a Recognizer
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
-
-    config = cloud_speech.RecognitionConfig(auto_decoding_config={})
-
     request = cloud_speech.RecognizeRequest(
-        recognizer=recognizer.name, config=config, uri=gcs_uri
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        config=config,
+        uri=gcs_uri,
     )
 
     # Transcribes the audio into text
@@ -53,4 +61,10 @@ def transcribe_gcs_v2(project_id, recognizer_id, gcs_uri):
 
 
 if __name__ == "__main__":
-    transcribe_gcs_v2()
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("gcs_uri", help="URI to GCS file")
+    args = parser.parse_args()
+    transcribe_gcs_v2(args.project_id, args.gcs_uri)

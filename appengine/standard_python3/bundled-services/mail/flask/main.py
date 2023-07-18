@@ -14,7 +14,7 @@
 
 import os
 
-from flask import Flask, request
+from flask import escape, Flask, request
 from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
 
@@ -51,7 +51,7 @@ def home_page():
 def send_mail():
     project_id = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
-    address = request.form.get("email")
+    address = escape(request.form.get("email"))
     if address is None:
         print("Error: missing email address")
         return "Error: Missing email address", 400
@@ -61,7 +61,7 @@ def send_mail():
             sender=f"demo-app@{project_id}.appspotmail.com",
             to=address,
             subject="App Engine Outgoing Email",
-            body=request.form.get("body"),
+            body=escape(request.form.get("body")),
         )
     except Exception as e:
         print(f"Sending mail to {address} failed with exception {e}.")
@@ -92,7 +92,9 @@ def receive_mail(path):
     message = mail.InboundEmailMessage(request.get_data())
 
     # Do something with the message
-    print(f"Received greeting for {message.to} at {message.date} from {message.sender}")
+    print(
+        f"Received greeting for {escape(message.to)} at {escape(message.date)} from {escape(message.sender)}"
+    )
     for content_type, payload in message.bodies("text/plain"):
         print(f"Text/plain body: {payload.decode()}")
         break

@@ -14,12 +14,15 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import vision_classification_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 DATASET_ID = "ICN000000000000000000"
 
 
+@Retry()
 def test_vision_classification_create_model(capsys):
     try:
         vision_classification_create_model.create_model(

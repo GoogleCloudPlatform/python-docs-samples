@@ -19,7 +19,7 @@ import internal_unit_testing
 import pytest
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def local_deps():
     """Add local directory to the PYTHONPATH to allow absolute imports.
 
@@ -39,4 +39,5 @@ def test_dag_import():
     docs: https://airflow.incubator.apache.org/tutorial.html#testing
     """
     from . import use_local_deps as module
+
     internal_unit_testing.assert_has_valid_dag(module)

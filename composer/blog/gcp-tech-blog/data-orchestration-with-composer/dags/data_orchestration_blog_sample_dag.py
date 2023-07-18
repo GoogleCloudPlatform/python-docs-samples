@@ -63,7 +63,6 @@ with models.DAG(
     start_date=days_ago(1),
     default_args={"on_failure_callback": on_failure_callback},
 ) as dag:
-
     validate_file_exists = GCSObjectExistenceSensor(
         task_id="validate_file_exists", bucket=BUCKET_NAME, object=DATA_FILE_NAME
     )

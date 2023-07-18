@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -27,21 +28,17 @@ MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 def model_evaluation_id():
     client = automl.AutoMlClient()
     model_full_id = client.model_path(PROJECT_ID, "us-central1", MODEL_ID)
-    request = automl.ListModelEvaluationsRequest(
-        parent=model_full_id,
-        filter=""
-    )
+    request = automl.ListModelEvaluationsRequest(parent=model_full_id, filter="")
     evaluations = client.list_model_evaluations(request=request)
     evaluation = next(iter(evaluations))
-    model_evaluation_id = evaluation.name.split(
-        f"{MODEL_ID}/modelEvaluations/"
-    )[1].split("\n")[0]
+    model_evaluation_id = evaluation.name.split(f"{MODEL_ID}/modelEvaluations/")[
+        1
+    ].split("\n")[0]
     yield model_evaluation_id
 
 
+@Retry()
 def test_get_model_evaluation(capsys, model_evaluation_id):
-    get_model_evaluation.get_model_evaluation(
-        PROJECT_ID, MODEL_ID, model_evaluation_id
-    )
+    get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, model_evaluation_id)
     out, _ = capsys.readouterr()
     assert "Model evaluation name: " in out

@@ -100,7 +100,9 @@ def test_sign_token_for_sha1_url_prefix(capsys: pytest.LogCaptureFixture) -> Non
 
 
 def test_sign_token_for_sha1_path_glob(capsys: pytest.LogCaptureFixture) -> None:
-    expected = "PathGlobs=/*~Expires=1663070400~hmac=c1c446eea24faa31392519f975fea7eefb945625"
+    expected = (
+        "PathGlobs=/*~Expires=1663070400~hmac=c1c446eea24faa31392519f975fea7eefb945625"
+    )
     result = dualtoken.sign_token(
         base64_key=b"g_SlMILiIWKqsC6Z2L7gy0sReDOqtSrJrE7CXNr5Nl8=",
         signature_algorithm="sha1",
@@ -201,4 +203,15 @@ def test_sign_token_for_sha256_all_params(capsys: pytest.LogCaptureFixture) -> N
         headers=headers,
         ip_ranges=ipRanges,
     )
+    assert result == expected
+
+
+def test_sign_path_component() -> None:
+    expected = "https://example.com/edge-cache-token=Expires=1663070400&KeyName=test-key&Signature=2hvmMKXW_e0bY3ViJNDSgoXDGvNj2L-UYTseTgtj96Va0S4FYxehka1k4hzWo2_87B9zqr_Ne4MMEdRfHUMUBw==/test-filename"
+    result = dualtoken.sign_path_component(
+        url_prefix="https://example.com/",
+        filename='test-filename',
+        key_name='test-key',
+        base64_key=b"g_SlMILiIWKqsC6Z2L7gy0sReDOqtSrJrE7CXNr5Nl8=",
+        expiration_time=expiresTime)
     assert result == expected

@@ -9,8 +9,9 @@ allowedLicenses:
 
 ignoreFiles:
   - "**/requirements.txt"
-  - "**/requirements-test.txt"
   - "**/requirements-composer.txt"
+  - "**/requirements-dev.txt"
+  - "**/requirements-test.txt"
   - "**/__init__.py"
   - "**/constraints.txt"
   - "**/constraints-test.txt"
@@ -23,6 +24,7 @@ ignoreFiles:
   - "dlp/snippets/resources/accounts.txt"
   - "dlp/snippets/resources/harmless.txt"
   - "dlp/snippets/resources/test.txt"
+  - "dlp/snippets/resources/term_list.txt"
 
 ignoreLicenseYear: true
 

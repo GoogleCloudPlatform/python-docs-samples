@@ -62,9 +62,10 @@ Bd7Bwm5ZX3cOSz9SSseJKxEvD3lYUIF9w7gOeuifEpq2cfdT/VoiSL4GdN9wQ84R
 -----END CERTIFICATE-----"""
 
 TEST_MANUFACTURER_SUBJECT_BYTES = (
-    b'0r1\x0b0\t\x06\x03U\x04\x06\x13\x02AU1\x130\x11\x06\x03U\x04\x08\x0c\n'
-    b'Some-State1!0\x1f\x06\x03U\x04\n\x0c\x18Internet Widgits Pty Ltd1+0)\x06'
-    b'\x03U\x04\x03\x0c"Test Manufacturer Root Certificate')
+    b"0r1\x0b0\t\x06\x03U\x04\x06\x13\x02AU1\x130\x11\x06\x03U\x04\x08\x0c\n"
+    b"Some-State1!0\x1f\x06\x03U\x04\n\x0c\x18Internet Widgits Pty Ltd1+0)\x06"
+    b'\x03U\x04\x03\x0c"Test Manufacturer Root Certificate'
+)
 
 # The manufacturer certificate chain can be generated using the manufacturer
 # root and card certificates, the manufacturer and card keys, and the card and
@@ -208,47 +209,50 @@ RZh2a6rJjlnErdcLx/+5ojsCjbElfluJvsToc+iCcwut6FKcPg==
 # For instructions on downloading attestations from Cloud HSM, refer to:
 # https://cloud.google.com/kms/docs/attest-key#downloading_the_attestation_statement
 TEST_ATTESTATION = (
-    b'\x1f\x8b\x08\x08\xb9\xe37`\x00\x03attestation.dat\x00\x01\x08\x01\xf7'
-    b'\xfecontent\n>\xede\xeb\xd3\x9d\x9e\x8e*\xa2\xf4\x04i\xec\x10lI\xa1\xc5'
-    b'\xd6\x0c\xfd\x1a^T\x1f&>f\xb2\xae}UD\xf1\xbaW\xcf\xec\xc5\x10\x86s\x92A'
+    b"\x1f\x8b\x08\x08\xb9\xe37`\x00\x03attestation.dat\x00\x01\x08\x01\xf7"
+    b"\xfecontent\n>\xede\xeb\xd3\x9d\x9e\x8e*\xa2\xf4\x04i\xec\x10lI\xa1\xc5"
+    b"\xd6\x0c\xfd\x1a^T\x1f&>f\xb2\xae}UD\xf1\xbaW\xcf\xec\xc5\x10\x86s\x92A"
     b'\xa1E\xc3\xf9=8/\xe5\xf4y\xf1\xa4H\xb1"\x08\xe7\x1a\xd1[\xc2\xb1CCO\x82'
-    b'\xe7-\xbd-=u\x15\x9a=\x1b\x98\xec\xb6\x1d\xc0\xd2\xf7\xcb\x99g\xdd\xed'
-    b'\xba\xcb\x9bK\xc7\xd8[\xd9\xf8?K\x0f\xd5\xaaO\xd4R0\xf6>\x18\xb2F\x13 '
-    b'\xedi\xedV\xdc\x1bR-j\x85\xe3\xd5\x92\x9a\x9dU4\xc8\x13\xa10\xbbg\xee'
-    b'\xa3R\x8a\xcf\x88\x91p\xde\x9c\xe1\x82\xcd\x8a>\xa0\x1c\xf2\xb5\xb2\xb2'
-    b'\x91.Z\t\xc8a{\x896\x03+|\x8b\xa0\xb7\x16\xe8E\xca\x0c+\x17)\xd4\xd2s'
-    b'\x96\xfen\xa9\xf7\xa2\x1eW\xd3\xbd\n\x16\x12\xea8\xaa\x85xJ\x13d\xe5\x85'
-    b'\xdd\xe6\xca\x82;qw\xbe\x8fa\xb7\xeb\x06L\xd2\\pb\x0b\xbf\x9bj\xcc\xb0'
-    b'\x92\xf2\x81v\x1c\xa0\xa3?{~\x8e\xc1O\x1a\xc9\x7f\x9cCH\x1d\xef\x85\xe1'
-    b'\xeb\xa5\x08\x01\x00\x00')
+    b"\xe7-\xbd-=u\x15\x9a=\x1b\x98\xec\xb6\x1d\xc0\xd2\xf7\xcb\x99g\xdd\xed"
+    b"\xba\xcb\x9bK\xc7\xd8[\xd9\xf8?K\x0f\xd5\xaaO\xd4R0\xf6>\x18\xb2F\x13 "
+    b"\xedi\xedV\xdc\x1bR-j\x85\xe3\xd5\x92\x9a\x9dU4\xc8\x13\xa10\xbbg\xee"
+    b"\xa3R\x8a\xcf\x88\x91p\xde\x9c\xe1\x82\xcd\x8a>\xa0\x1c\xf2\xb5\xb2\xb2"
+    b"\x91.Z\t\xc8a{\x896\x03+|\x8b\xa0\xb7\x16\xe8E\xca\x0c+\x17)\xd4\xd2s"
+    b"\x96\xfen\xa9\xf7\xa2\x1eW\xd3\xbd\n\x16\x12\xea8\xaa\x85xJ\x13d\xe5\x85"
+    b"\xdd\xe6\xca\x82;qw\xbe\x8fa\xb7\xeb\x06L\xd2\\pb\x0b\xbf\x9bj\xcc\xb0"
+    b"\x92\xf2\x81v\x1c\xa0\xa3?{~\x8e\xc1O\x1a\xc9\x7f\x9cCH\x1d\xef\x85\xe1"
+    b"\xeb\xa5\x08\x01\x00\x00"
+)
 
 
 def test_verify_certificate():
-    signing_cert = x509.load_pem_x509_certificate(TEST_OWNER_ROOT,
-                                                  backends.default_backend())
-    issued_cert = x509.load_pem_x509_certificate(TEST_OWNER_PARTITION_CHAIN,
-                                                 backends.default_backend())
-    assert verify_attestation_chains.verify_certificate(signing_cert,
-                                                        issued_cert)
+    signing_cert = x509.load_pem_x509_certificate(
+        TEST_OWNER_ROOT, backends.default_backend()
+    )
+    issued_cert = x509.load_pem_x509_certificate(
+        TEST_OWNER_PARTITION_CHAIN, backends.default_backend()
+    )
+    assert verify_attestation_chains.verify_certificate(signing_cert, issued_cert)
 
 
 def test_verify_certificate_fail():
-    signing_cert = x509.load_pem_x509_certificate(TEST_OWNER_ROOT,
-                                                  backends.default_backend())
-    issued_cert = x509.load_pem_x509_certificate(TEST_MANUFACTURER_ROOT,
-                                                 backends.default_backend())
-    assert not verify_attestation_chains.verify_certificate(signing_cert,
-                                                            issued_cert)
+    signing_cert = x509.load_pem_x509_certificate(
+        TEST_OWNER_ROOT, backends.default_backend()
+    )
+    issued_cert = x509.load_pem_x509_certificate(
+        TEST_MANUFACTURER_ROOT, backends.default_backend()
+    )
+    assert not verify_attestation_chains.verify_certificate(signing_cert, issued_cert)
 
 
 def get_test_manufacturer_root():
-    return x509.load_pem_x509_certificate(TEST_MANUFACTURER_ROOT,
-                                          backends.default_backend())
+    return x509.load_pem_x509_certificate(
+        TEST_MANUFACTURER_ROOT, backends.default_backend()
+    )
 
 
 def get_test_owner_root():
-    return x509.load_pem_x509_certificate(TEST_OWNER_ROOT,
-                                          backends.default_backend())
+    return x509.load_pem_x509_certificate(TEST_OWNER_ROOT, backends.default_backend())
 
 
 def make_temporary_file(contents):
@@ -266,56 +270,64 @@ def make_temporary_file(contents):
     return temp_file.name
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def test_data():
     mfr_root = make_temporary_file(TEST_MANUFACTURER_ROOT)
     mfr_chain = make_temporary_file(TEST_MANUFACTURER_CHAIN)
     owner_root = make_temporary_file(TEST_OWNER_ROOT)
     owner_card_chain = make_temporary_file(TEST_OWNER_CARD_CHAIN)
     owner_partition_chain = make_temporary_file(TEST_OWNER_PARTITION_CHAIN)
-    cert_chains = make_temporary_file(b'\n'.join([
-        TEST_MANUFACTURER_CHAIN,
-        TEST_OWNER_CARD_CHAIN,
-        TEST_OWNER_PARTITION_CHAIN
-    ]))
+    cert_chains = make_temporary_file(
+        b"\n".join(
+            [TEST_MANUFACTURER_CHAIN, TEST_OWNER_CARD_CHAIN, TEST_OWNER_PARTITION_CHAIN]
+        )
+    )
     attestation = make_temporary_file(TEST_ATTESTATION)
 
     param = {
-        'mfr_root': mfr_root,
-        'mfr_chain': mfr_chain,
-        'owner_root': owner_root,
-        'owner_card_chain': owner_card_chain,
-        'owner_partition_chain': owner_partition_chain,
-        'cert_chains': cert_chains,
-        'attestation': attestation
+        "mfr_root": mfr_root,
+        "mfr_chain": mfr_chain,
+        "owner_root": owner_root,
+        "owner_card_chain": owner_card_chain,
+        "owner_partition_chain": owner_partition_chain,
+        "cert_chains": cert_chains,
+        "attestation": attestation,
     }
     yield param
 
 
 def test_verify(monkeypatch, test_data):
-    monkeypatch.setattr(verify_attestation_chains,
-                        'MANUFACTURER_CERT_SUBJECT_BYTES',
-                        TEST_MANUFACTURER_SUBJECT_BYTES)
-    monkeypatch.setattr(verify_attestation_chains,
-                        'get_manufacturer_root_certificate',
-                        get_test_manufacturer_root)
-    monkeypatch.setattr(verify_attestation_chains,
-                        'get_owner_root_certificate',
-                        get_test_owner_root)
-    assert verify_attestation_chains.verify(test_data['cert_chains'],
-                                            test_data['attestation'])
+    monkeypatch.setattr(
+        verify_attestation_chains,
+        "MANUFACTURER_CERT_SUBJECT_BYTES",
+        TEST_MANUFACTURER_SUBJECT_BYTES,
+    )
+    monkeypatch.setattr(
+        verify_attestation_chains,
+        "get_manufacturer_root_certificate",
+        get_test_manufacturer_root,
+    )
+    monkeypatch.setattr(
+        verify_attestation_chains, "get_owner_root_certificate", get_test_owner_root
+    )
+    assert verify_attestation_chains.verify(
+        test_data["cert_chains"], test_data["attestation"]
+    )
 
 
 def test_verify_invalid_mfr_root_fails(monkeypatch, test_data):
-    monkeypatch.setattr(verify_attestation_chains,
-                        'MANUFACTURER_CERT_SUBJECT_BYTES',
-                        b'invalid')
-    monkeypatch.setattr(verify_attestation_chains,
-                        'get_manufacturer_root_certificate',
-                        get_test_owner_root)
-    monkeypatch.setattr(verify_attestation_chains,
-                        'get_owner_root_certificate',
-                        get_test_owner_root)
+    monkeypatch.setattr(
+        verify_attestation_chains, "MANUFACTURER_CERT_SUBJECT_BYTES", b"invalid"
+    )
+    monkeypatch.setattr(
+        verify_attestation_chains,
+        "get_manufacturer_root_certificate",
+        get_test_owner_root,
+    )
+    monkeypatch.setattr(
+        verify_attestation_chains, "get_owner_root_certificate", get_test_owner_root
+    )
 
-    assert not verify_attestation_chains.verify(test_data['cert_chains'],
-                                                test_data['attestation'])
+    assert not verify_attestation_chains.verify(
+        test_data["cert_chains"], test_data["attestation"]
+    )

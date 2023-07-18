@@ -21,6 +21,6 @@ def test_app(testbed, login):
     app = webtest.TestApp(main.app)
 
     login()
-    response = app.get('/')
+    response = app.get("/")
 
-    assert '/_ah/upload' in response
+    assert "/_ah/upload" in response

@@ -22,8 +22,9 @@ import pytest
 
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
-from ..instances.create_start_instance.create_windows_instance import \
-    get_image_from_family
+from ..instances.create_start_instance.create_windows_instance import (
+    get_image_from_family,
+)
 
 PROJECT = google.auth.default()[1]
 ZONE = "europe-west1-c"

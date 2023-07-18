@@ -88,7 +88,7 @@ def create_instance(
 
     # Use the network interface provided in the network_link argument.
     network_interface = compute_v1.NetworkInterface()
-    network_interface.name = network_link
+    network_interface.network = network_link
     if subnetwork_link:
         network_interface.subnetwork = subnetwork_link
 
@@ -104,7 +104,6 @@ def create_instance(
             access.nat_i_p = external_ipv4
         network_interface.access_configs = [access]
 
-
     # Collect information into the Instance object.
     instance = compute_v1.Instance()
     instance.network_interfaces = [network_interface]
@@ -115,19 +114,24 @@ def create_instance(
     else:
         instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
 
+    instance.scheduling = compute_v1.Scheduling()
     if accelerators:
         instance.guest_accelerators = accelerators
+        instance.scheduling.on_host_maintenance = compute_v1.Scheduling.OnHostMaintenance.TERMINATE.name
 
     if preemptible:
         # Set the preemptible setting
-        warnings.warn("Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning)
+        warnings.warn(
+            "Preemptible VMs are being replaced by Spot VMs.", DeprecationWarning
+        )
         instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.preemptible = True
-
+    
     if spot:
         # Set the Spot VM setting
-        instance.scheduling = compute_v1.Scheduling()
-        instance.scheduling.provisioning_model = compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        instance.scheduling.provisioning_model = (
+            compute_v1.Scheduling.ProvisioningModel.SPOT.name
+        )
         instance.scheduling.instance_termination_action = instance_termination_action
 
     if custom_hostname is not None:
@@ -153,4 +157,6 @@ def create_instance(
 
     print(f"Instance {instance_name} created.")
     return instance_client.get(project=project_id, zone=zone, instance=instance_name)
+
+
 # </INGREDIENT>

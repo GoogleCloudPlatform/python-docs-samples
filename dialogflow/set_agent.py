@@ -18,7 +18,6 @@ import google.protobuf.field_mask_pb2
 
 
 def set_agent(project_id, display_name):
-
     agents_client = AgentsClient()
 
     parent = agents_client.common_project_path(project_id)
@@ -31,7 +30,7 @@ def set_agent(project_id, display_name):
     )
 
     update_mask = google.protobuf.field_mask_pb2.FieldMask()
-    update_mask.FromJsonString('displayName,defaultLanguageCode,timeZone')
+    update_mask.FromJsonString("displayName,defaultLanguageCode,timeZone")
 
     request = SetAgentRequest(
         agent=agent,
@@ -39,4 +38,6 @@ def set_agent(project_id, display_name):
     )
 
     return agents_client.set_agent(request=request)
+
+
 # [END dialogflow_set_agent_sample]

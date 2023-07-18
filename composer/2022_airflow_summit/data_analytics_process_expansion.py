@@ -75,7 +75,9 @@ if __name__ == "__main__":
 
     # Extract the year of each date and rename it as YEAR
     # This will allow us to merge the data based on the years they are created instead of date
-    df = df.withColumn("DATE", functions.year(df.DATE)).withColumnRenamed("DATE", "YEAR")
+    df = df.withColumn("DATE", functions.year(df.DATE)).withColumnRenamed(
+        "DATE", "YEAR"
+    )
 
     # Each year's arithmetic mean of precipitation
     prcp_mean_df = (
@@ -102,7 +104,9 @@ if __name__ == "__main__":
     annual_df = df.where(df.STATE.isin(states_near_phx))
 
     # Inverse Distance Weighting algorithm (DWA)
-    @functions.pandas_udf("YEAR integer, VALUE double", functions.PandasUDFType.GROUPED_MAP)
+    @functions.pandas_udf(
+        "YEAR integer, VALUE double", functions.PandasUDFType.GROUPED_MAP
+    )
     def phx_dw_compute(year: tuple, df: pd.DataFrame) -> pd.DataFrame:
         # This adjusts the rainfall / snowfall in Phoenix for a given year using Inverse Distance Weighting
         # based on each weather station's distance to Phoenix. The closer a station is to Phoenix, the higher
@@ -132,8 +136,7 @@ if __name__ == "__main__":
         PHX_LONGITUDE = -112.0740
 
         inverse_distance_factors = 1.0 / (
-            (PHX_LATITUDE - df.LATITUDE) ** 2 +
-            (PHX_LONGITUDE - df.LONGITUDE) ** 2
+            (PHX_LATITUDE - df.LATITUDE) ** 2 + (PHX_LONGITUDE - df.LONGITUDE) ** 2
         )
 
         # Calculate each station's weight

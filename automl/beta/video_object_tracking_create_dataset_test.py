@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -30,19 +31,16 @@ def teardown():
 
     # Delete the created dataset
     client = automl.AutoMlClient()
-    dataset_full_id = client.dataset_path(
-        PROJECT_ID, "us-central1", DATASET_ID
-    )
+    dataset_full_id = client.dataset_path(PROJECT_ID, "us-central1", DATASET_ID)
     response = client.delete_dataset(name=dataset_full_id)
     response.result()
 
 
+@Retry()
 def test_video_classification_create_dataset(capsys):
     # create dataset
     dataset_name = f"test_{uuid.uuid4()}".replace("-", "")[:32]
-    video_object_tracking_create_dataset.create_dataset(
-        PROJECT_ID, dataset_name
-    )
+    video_object_tracking_create_dataset.create_dataset(PROJECT_ID, dataset_name)
     out, _ = capsys.readouterr()
     assert "Dataset id: " in out
 

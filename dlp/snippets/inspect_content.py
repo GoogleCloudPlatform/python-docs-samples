@@ -20,25 +20,18 @@ import argparse
 import json
 import os
 
-from typing import List
-
-# [START dlp_inspect_string_basic]
+# [START dlp_inspect_phone_number]
 import google.cloud.dlp
 
 
-def inspect_string_basic(
+def inspect_phone_number(
     project: str,
     content_string: str,
-    info_types: List[str] = ["PHONE_NUMBER"],
 ) -> None:
     """Uses the Data Loss Prevention API to analyze strings for protected data.
     Args:
         project: The Google Cloud project id to use as a parent resource.
-        content_string: The string to inspect.
-        info_types: A list of strings representing info types to look for.
-            A full list of info type categories can be fetched from the API.
-    Returns:
-        None; the response from the API is printed to the terminal.
+        content_string: The string to inspect phone number from.
     """
 
     # Instantiate a client.
@@ -46,7 +39,7 @@ def inspect_string_basic(
 
     # Prepare info_types by converting the list of strings into a list of
     # dictionaries (protos are also accepted).
-    info_types = [{"name": info_type} for info_type in info_types]
+    info_types = [{"name": "PHONE_NUMBER"}]
 
     # Construct the configuration dictionary.
     inspect_config = {
@@ -75,7 +68,7 @@ def inspect_string_basic(
         print("No findings.")
 
 
-# [END dlp_inspect_string_basic]
+# [END dlp_inspect_phone_number]
 
 
 # [START dlp_inspect_string]
@@ -309,6 +302,102 @@ def inspect_table(
 
 
 # [END dlp_inspect_table]
+
+
+# [START dlp_inspect_column_values_w_custom_hotwords]
+from typing import List  # noqa: E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_column_values_w_custom_hotwords(
+    project: str,
+    table_header: List[str],
+    table_rows: List[List[str]],
+    info_types: List[str],
+    custom_hotword: str,
+) -> None:
+    """Uses the Data Loss Prevention API to inspect table data using built-in
+    infoType detectors, excluding columns that match a custom hot-word.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        table_header: List of strings representing table field names.
+        table_rows: List of rows representing table values.
+        info_types: The infoType for which hot-word rule is applied.
+        custom_hotword: The custom regular expression used for likelihood boosting.
+    """
+
+    # Instantiate a client
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_header]
+    rows = []
+    for row in table_rows:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table to be inspected.
+    item = {"table": table}
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct a rule set with caller provided hot-word, with a likelihood
+    # boost to VERY_UNLIKELY when the hot-word are present
+    hotword_rule = {
+        "hotword_regex": {"pattern": custom_hotword},
+        "likelihood_adjustment": {
+            "fixed_likelihood": google.cloud.dlp_v2.Likelihood.VERY_UNLIKELY
+        },
+        "proximity": {"window_before": 1},
+    }
+
+    rule_set = [
+        {
+            "info_types": info_types,
+            "rules": [{"hotword_rule": hotword_rule}],
+        }
+    ]
+
+    # Construct the configuration dictionary, which defines the entire inspect content task.
+    inspect_config = {
+        "info_types": info_types,
+        "rule_set": rule_set,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.POSSIBLE,
+        "include_quote": True,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}/locations/global"
+
+    # Call the API
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print out the results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            try:
+                if finding.quote:
+                    print("Quote: {}".format(finding.quote))
+            except AttributeError:
+                pass
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_column_values_w_custom_hotwords]
+
 
 # [START dlp_inspect_file]
 import mimetypes  # noqa: I100, E402
@@ -976,6 +1065,66 @@ def inspect_image_file_all_infotypes(
 # [END dlp_inspect_image_all_infotypes]
 
 
+# [START dlp_inspect_image_file]
+import google.cloud.dlp  # noqa: F811, E402, I100
+
+
+def inspect_image_file(
+    project: str,
+    filename: str,
+    include_quote: bool = True,
+) -> None:
+    """Uses the Data Loss Prevention API to analyze strings for
+    protected data in image file.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        filename: The path to the file to inspect.
+        include_quote: Boolean for whether to display a quote of the detected
+            information in the results.
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = ["PHONE_NUMBER", "EMAIL_ADDRESS", "CREDIT_CARD_NUMBER"]
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration for the Inspect request.
+    inspect_config = {
+        "info_types": info_types,
+        "include_quote": include_quote,
+    }
+
+    # Construct the byte_item, containing the image file's byte data.
+    with open(filename, mode="rb") as f:
+        byte_item = {"type_": "IMAGE", "data": f.read()}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}/locations/global"
+
+    # Call the API.
+    response = dlp.inspect_content(
+        request={
+            "parent": parent,
+            "inspect_config": inspect_config,
+            "item": {"byte_item": byte_item},
+        }
+    )
+
+    # Parse the response and process results.
+    if response.result.findings:
+        for finding in response.result.findings:
+            print("Quote: {}".format(finding.quote))
+            print("Info type: {}".format(finding.info_type.name))
+            print("Likelihood: {}".format(finding.likelihood))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_image_file]
+
+
 # [START dlp_inspect_image_listed_infotypes]
 import google.cloud.dlp  # noqa: F811, E402
 
@@ -1234,7 +1383,7 @@ def inspect_gcs_with_sampling(
 
     # Setting default file types as CSV files
     if not file_types:
-        file_types = ['CSV']
+        file_types = ["CSV"]
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
     url = "gs://{}/*".format(bucket)
@@ -1244,7 +1393,7 @@ def inspect_gcs_with_sampling(
             "bytes_limit_per_file": 200,
             "file_types": file_types,
             "files_limit_percent": 90,
-            "sample_method": 'RANDOM_START',
+            "sample_method": "RANDOM_START",
         }
     }
 
@@ -1317,7 +1466,408 @@ def inspect_gcs_with_sampling(
             "subscription provided is subscribed to the topic provided."
         )
 
+
 # [END dlp_inspect_gcs_with_sampling]
+
+
+# [START dlp_inspect_send_data_to_hybrid_job_trigger]
+import time  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_data_to_hybrid_job_trigger(
+    project: str,
+    trigger_id: str,
+    content_string: str,
+) -> None:
+    """
+    Uses the Data Loss Prevention API to inspect sensitive information
+    using Hybrid jobs trigger that scans payloads of data sent from
+    virtually any source and stores findings in Google Cloud.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        trigger_id: The job trigger identifier for hybrid job trigger.
+        content_string: The string to inspect.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Construct the `item` to inspect.
+    item = {"value": content_string}
+
+    # Construct the container details that contains metadata to be
+    # associated with the content. For more details, please refer to
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/Container
+    container_details = {
+        "full_path": "10.0.0.2:logs1:app1",
+        "relative_path": "app1",
+        "root_path": "10.0.0.2:logs1",
+        "type_": "logging_sys",
+        "version": "1.2",
+    }
+
+    # Construct hybrid inspection configuration.
+    hybrid_config = {
+        "item": item,
+        "finding_details": {
+            "container_details": container_details,
+            "labels": {
+                "env": "prod",
+                "appointment-bookings-comments": "",
+            },
+        },
+    }
+
+    # Convert the trigger id into a full resource id.
+    trigger_id = f"projects/{project}/jobTriggers/{trigger_id}"
+
+    # Activate the job trigger.
+    dlp_job = dlp.activate_job_trigger(request={"name": trigger_id})
+
+    # Call the API.
+    dlp.hybrid_inspect_job_trigger(
+        request={
+            "name": trigger_id,
+            "hybrid_item": hybrid_config,
+        }
+    )
+
+    # Get inspection job details.
+    job = dlp.get_dlp_job(request={"name": dlp_job.name})
+
+    # Wait for dlp job to get finished.
+    while job.inspect_details.result.processed_bytes <= 0:
+        time.sleep(5)
+        job = dlp.get_dlp_job(request={"name": dlp_job.name})
+
+    # Print the results.
+    print(f"Job name: {dlp_job.name}")
+    if job.inspect_details.result.info_type_stats:
+        for finding in job.inspect_details.result.info_type_stats:
+            print(
+                "Info type: {}; Count: {}".format(finding.info_type.name, finding.count)
+            )
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_send_data_to_hybrid_job_trigger]
+
+
+# [START dlp_inspect_gcs_send_to_scc]
+import time  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_gcs_send_to_scc(
+    project: str,
+    bucket: str,
+    info_types: List[str],
+    max_findings: int = 100,
+) -> None:
+    """
+    Uses the Data Loss Prevention API to inspect Google Cloud Storage
+    data and send the results to Google Security Command Center.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        bucket: The name of the GCS bucket containing the file, as a string.
+        info_types: A list of strings representing infoTypes to inspect for.
+            A full list of infoType categories can be fetched from the API.
+        max_findings: The maximum number of findings to report; 0 = no maximum.
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary.
+    inspect_config = {
+        "info_types": info_types,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
+        "limits": {
+            "max_findings_per_request": max_findings
+        },
+        "include_quote": True,
+    }
+
+    # Construct a cloud_storage_options dictionary with the bucket's URL.
+    url = f"gs://{bucket}"
+    storage_config = {
+        "cloud_storage_options": {
+            "file_set": {
+                "url": url
+            }
+        }
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"publish_summary_to_cscc": {}}]
+
+    # Construct the job definition.
+    job = {
+        "inspect_config": inspect_config,
+        "storage_config": storage_config,
+        "actions": actions,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.create_dlp_job(
+        request={
+            "parent": parent,
+            "inspect_job": job,
+        }
+    )
+    print("Inspection Job started : {}".format(response.name))
+
+    job_name = response.name
+
+    # Waiting for maximum 15 minutes for the job to get complete.
+    no_of_attempts = 30
+    while no_of_attempts > 0:
+        # Get the DLP job status.
+        job = dlp.get_dlp_job(request={"name": job_name})
+        # Check if the job has completed.
+        if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
+            break
+        elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
+            print('Job Failed, Please check the configuration.')
+            return
+
+        # Sleep for a short duration before checking the job status again.
+        time.sleep(30)
+        no_of_attempts -= 1
+
+    # Print out the results.
+    print(f"Job name: {job.name}")
+    result = job.inspect_details.result
+    print("Processed Bytes: ", result.processed_bytes)
+    if result.info_type_stats:
+        for stats in result.info_type_stats:
+            print("Info type: {}".format(stats.info_type.name))
+            print("Count: {}".format(stats.count))
+    else:
+        print("No findings.")
+
+# [END dlp_inspect_gcs_send_to_scc]
+
+
+# [START dlp_inspect_datastore_send_to_scc]
+import time  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_datastore_send_to_scc(
+    project: str,
+    datastore_project: str,
+    kind: str,
+    info_types: List[str],
+    namespace_id: str = None,
+    max_findings: int = 100,
+) -> None:
+
+    """
+    Uses the Data Loss Prevention API to inspect Datastore data and
+    send the results to Google Security Command Center.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        datastore_project: The Google Cloud project id of the target Datastore.
+        kind: The kind of the Datastore entity to inspect, e.g. 'Person'.
+        info_types: A list of strings representing infoTypes to inspect for.
+            A full list of infoType categories can be fetched from the API.
+        namespace_id: The namespace of the Datastore document, if applicable.
+        max_findings: The maximum number of findings to report; 0 = no maximum
+
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary.
+    inspect_config = {
+        "info_types": info_types,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
+        "limits": {"max_findings_per_request": max_findings},
+        "include_quote": True,
+    }
+
+    # Construct a cloud_storage_options dictionary with datastore options.
+    storage_config = {
+        "datastore_options": {
+            "partition_id": {
+                "project_id": datastore_project,
+                "namespace_id": namespace_id,
+            },
+            "kind": {"name": kind}
+        }
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"publish_summary_to_cscc": {}}]
+
+    # Construct the job definition.
+    job = {
+        "inspect_config": inspect_config,
+        "storage_config": storage_config,
+        "actions": actions,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.create_dlp_job(
+        request={
+            "parent": parent,
+            "inspect_job": job,
+        }
+    )
+    print("Inspection Job started : {}".format(response.name))
+
+    job_name = response.name
+
+    # Waiting for a maximum of 15 minutes for the job to get complete.
+    no_of_attempts = 30
+    while no_of_attempts > 0:
+        # Get the DLP job status.
+        job = dlp.get_dlp_job(request={"name": job_name})
+        # Check if the job has completed.
+        if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
+            break
+        elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
+            print('Job Failed, Please check the configuration.')
+            return
+
+        # Sleep for a short duration before checking the job status again.
+        time.sleep(30)
+        no_of_attempts -= 1
+
+    # Print out the results.
+    print(f"Job name: {job.name}")
+    result = job.inspect_details.result
+    if result.info_type_stats:
+        for stats in result.info_type_stats:
+            print("Info type: {}".format(stats.info_type.name))
+            print("Count: {}".format(stats.count))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_datastore_send_to_scc]
+
+# [START dlp_inspect_bigquery_send_to_scc]
+import time  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def inspect_bigquery_send_to_scc(
+    project: str,
+    info_types: List[str],
+    max_findings: int = 100,
+) -> None:
+
+    """
+    Uses the Data Loss Prevention API to inspect public bigquery dataset
+    and send the results to Google Security Command Center.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        info_types: A list of strings representing infoTypes to inspect for.
+            A full list of infoType categories can be fetched from the API.
+        max_findings: The maximum number of findings to report; 0 = no maximum
+    """
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Construct the configuration dictionary.
+    inspect_config = {
+        "info_types": info_types,
+        "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
+        "limits": {"max_findings_per_request": max_findings},
+        "include_quote": True,
+    }
+
+    # Construct a Cloud Storage Options dictionary with the big query options.
+    storage_config = {
+        "big_query_options": {
+            "table_reference": {
+                "project_id": "bigquery-public-data",
+                "dataset_id": "usa_names",
+                "table_id": "usa_1910_current",
+            }
+        }
+    }
+
+    # Tell the API where to send a notification when the job is complete.
+    actions = [{"publish_summary_to_cscc": {}}]
+
+    # Construct the job definition.
+    job = {
+        "inspect_config": inspect_config,
+        "storage_config": storage_config,
+        "actions": actions,
+    }
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.create_dlp_job(
+        request={
+            "parent": parent,
+            "inspect_job": job,
+        }
+    )
+    print("Inspection Job started : {}".format(response.name))
+
+    job_name = response.name
+
+    # Waiting for a maximum of 15 minutes for the job to get complete.
+    no_of_attempts = 30
+    while no_of_attempts > 0:
+        # Get the DLP job status.
+        job = dlp.get_dlp_job(request={"name": job_name})
+        # Check if the job has completed.
+        if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
+            break
+        elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
+            print('Job Failed, Please check the configuration.')
+            return
+
+        # Sleep for a short duration before checking the job status again.
+        time.sleep(30)
+        no_of_attempts -= 1
+
+    # Print out the results.
+    print(f"Job name: {job.name}")
+    result = job.inspect_details.result
+    if result.info_type_stats:
+        for stats in result.info_type_stats:
+            print("Info type: {}".format(stats.info_type.name))
+            print("Count: {}".format(stats.count))
+    else:
+        print("No findings.")
+
+
+# [END dlp_inspect_bigquery_send_to_scc]
 
 
 if __name__ == "__main__":
@@ -1328,6 +1878,20 @@ if __name__ == "__main__":
         dest="content", help="Select how to submit content to the API."
     )
     subparsers.required = True
+
+    parser_phone_number = subparsers.add_parser(
+        "phone_number",
+        help="Inspect phone number in a string.",
+    )
+    parser_phone_number.add_argument(
+        "content_string",
+        help="The string to inspect phone number from.",
+    )
+    parser_phone_number.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
 
     parser_string = subparsers.add_parser("string", help="Inspect a string.")
     parser_string.add_argument("item", help="The string to inspect.")
@@ -1443,6 +2007,42 @@ if __name__ == "__main__":
         help="A boolean for whether to display a quote of the detected "
         "information in the results.",
         default=True,
+    )
+
+    parser_table_hotword = subparsers.add_parser(
+        "table_w_custom_hotword",
+        help="Inspect a table and exclude column values when matched "
+        "with custom hot-word.",
+    )
+    parser_table_hotword.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_table_hotword.add_argument(
+        "--table_header",
+        help="List of strings representing table field names."
+        "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
+        "The method can be used to exclude matches from entire column"
+        '"Fake_Email_Address".',
+    )
+    parser_table_hotword.add_argument(
+        "--table_rows",
+        help="List of rows representing table values."
+        "Example: "
+        '"[["example1@example.org", "test1@example.com],'
+        '["example2@example.org", "test2@example.com]]"',
+    )
+    parser_table_hotword.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    parser_table_hotword.add_argument(
+        "custom_hotword",
+        help="The custom regular expression used for likelihood boosting.",
     )
 
     parser_file = subparsers.add_parser("file", help="Inspect a local file.")
@@ -1810,6 +2410,24 @@ if __name__ == "__main__":
         default=True,
     )
 
+    parser_image_default_infotypes = subparsers.add_parser(
+        "image_default_infotypes", help="Inspect a local file with default info types."
+    )
+    parser_image_default_infotypes.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_image_default_infotypes.add_argument(
+        "filename", help="The path to the file to inspect."
+    )
+    parser_image_default_infotypes.add_argument(
+        "--include_quote",
+        help="A Boolean for whether to display a quote of the detected"
+        "information in the results.",
+        default=True,
+    )
+
     parser_image_infotypes = subparsers.add_parser(
         "image_listed_infotypes", help="Inspect a local file with listed info types."
     )
@@ -1874,7 +2492,7 @@ if __name__ == "__main__":
         "--file_types",
         help="List of extensions of the files in the bucket to inspect, "
         "e.g. ['CSV']",
-        default=['CSV'],
+        default=["CSV"],
     )
     parser_gcs_with_sampling.add_argument(
         "--min_likelihood",
@@ -1902,6 +2520,104 @@ if __name__ == "__main__":
         default=300,
     )
 
+    parser_hybrid_job_trigger = subparsers.add_parser(
+        "hybrid_job_trigger",
+        help="Inspect sensitive information from virtually any source.",
+    )
+    parser_hybrid_job_trigger.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_hybrid_job_trigger.add_argument(
+        "--trigger_id",
+        help="The job trigger identifier for hybrid job trigger.",
+    )
+    parser_hybrid_job_trigger.add_argument(
+        "content_string", help="The string to inspect."
+    )
+
+    parser_gcs_scc = subparsers.add_parser(
+        "gcs_send_scc",
+        help="Inspect gcs data and send results to SCC.",
+    )
+    parser_gcs_scc.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_gcs_scc.add_argument(
+        "bucket",
+        help="The name of the GCS bucket containing the files to inspect.",
+    )
+    parser_gcs_scc.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing infoTypes to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+    )
+    parser_gcs_scc.add_argument(
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
+
+    parser_datastore_scc = subparsers.add_parser(
+        "datastore_send_scc",
+        help="Inspect datastore and send results to SCC.",
+    )
+    parser_datastore_scc.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_datastore_scc.add_argument(
+        "datastore_project",
+        help="The Google Cloud project id of the target Datastore.",
+    )
+    parser_datastore_scc.add_argument(
+        "kind",
+        help='The kind of the Datastore entity to inspect, e.g. "Person".',
+    )
+    parser_datastore_scc.add_argument(
+        "--namespace_id", help="The Datastore namespace to use, if applicable."
+    )
+    parser_datastore_scc.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing infoTypes to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+    )
+    parser_datastore_scc.add_argument(
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
+
+    parser_bigquery_scc = subparsers.add_parser(
+        "bigquery_send_scc",
+        help="Inspect datastore and send results to SCC.",
+    )
+    parser_bigquery_scc.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_bigquery_scc.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing infoTypes to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+    )
+    parser_bigquery_scc.add_argument(
+        "--max_findings",
+        type=int,
+        help="The maximum number of findings to report; 0 = no maximum.",
+    )
+
     args = parser.parse_args()
 
     if args.content == "string":
@@ -1915,6 +2631,8 @@ if __name__ == "__main__":
             max_findings=args.max_findings,
             include_quote=args.include_quote,
         )
+    elif args.content == "phone_number":
+        inspect_phone_number(args.project, args.content_string)
     elif args.content == "table":
         inspect_table(
             args.project,
@@ -1925,6 +2643,14 @@ if __name__ == "__main__":
             min_likelihood=args.min_likelihood,
             max_findings=args.max_findings,
             include_quote=args.include_quote,
+        )
+    elif args.content == "table_w_custom_hotword":
+        inspect_column_values_w_custom_hotwords(
+            args.project,
+            args.table_header,
+            args.table_rows,
+            args.info_types,
+            args.custom_hotword,
         )
     elif args.content == "file":
         inspect_file(
@@ -2011,10 +2737,44 @@ if __name__ == "__main__":
             args.filename,
             include_quote=args.include_quote,
         )
+    elif args.content == "image_default_infotypes":
+        inspect_image_file(
+            args.project,
+            args.filename,
+            include_quote=args.include_quote,
+        )
     elif args.content == "image_listed_infotypes":
         inspect_image_file_listed_infotypes(
             args.project,
             args.filename,
             args.info_types,
             include_quote=args.include_quote,
+        )
+    elif args.content == "hybrid_job_trigger":
+        inspect_data_to_hybrid_job_trigger(
+            args.project,
+            args.trigger_id,
+            args.content_string,
+        )
+    elif args.content == "gcs_send_scc":
+        inspect_gcs_send_to_scc(
+            args.project,
+            args.bucket,
+            args.info_types,
+            max_findings=args.max_findings,
+        )
+    elif args.contect == "datastore_send_scc":
+        inspect_datastore_send_to_scc(
+            args.project,
+            args.datastore_project,
+            args.kind,
+            args.info_types,
+            args.namespace_id,
+            args.max_findings,
+        )
+    elif args.content == "bigquery_send_scc":
+        inspect_bigquery_send_to_scc(
+            args.project,
+            args.info_types,
+            args.max_findings,
         )

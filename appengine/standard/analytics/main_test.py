@@ -20,7 +20,7 @@ import responses
 
 @pytest.fixture
 def app(monkeypatch, testbed):
-    monkeypatch.setenv('GA_TRACKING_ID', '1234')
+    monkeypatch.setenv("GA_TRACKING_ID", "1234")
 
     import main
 
@@ -31,17 +31,15 @@ def app(monkeypatch, testbed):
 @responses.activate
 def test_tracking(app):
     responses.add(
-        responses.POST,
-        re.compile(r'.*'),
-        body='{}',
-        content_type='application/json')
+        responses.POST, re.compile(r".*"), body="{}", content_type="application/json"
+    )
 
-    r = app.get('/')
+    r = app.get("/")
 
     assert r.status_code == 200
-    assert 'Event tracked' in r.data.decode('utf-8')
+    assert "Event tracked" in r.data.decode("utf-8")
 
     assert len(responses.calls) == 1
     request_body = responses.calls[0].request.body
-    assert 'tid=1234' in request_body
-    assert 'ea=test+action' in request_body
+    assert "tid=1234" in request_body
+    assert "ea=test+action" in request_body

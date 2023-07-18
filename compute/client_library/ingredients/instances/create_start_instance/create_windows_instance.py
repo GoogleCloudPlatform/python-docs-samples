@@ -23,10 +23,15 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT create_windows_instance>
-def create_windows_instance(project_id: str, zone: str, instance_name: str,
-                            machine_type: str, source_image_family: str = "windows-2022",
-                            network_link: str = "global/networks/default",
-                            subnetwork_link: str | None = None) -> compute_v1.Instance:
+def create_windows_instance(
+    project_id: str,
+    zone: str,
+    instance_name: str,
+    machine_type: str,
+    source_image_family: str = "windows-2022",
+    network_link: str = "global/networks/default",
+    subnetwork_link: str | None = None,
+) -> compute_v1.Instance:
     """
     Creates a new Windows Server instance that has only an internal IP address.
 
@@ -52,7 +57,7 @@ def create_windows_instance(project_id: str, zone: str, instance_name: str,
         Instance object.
     """
     if subnetwork_link is None:
-        subnetwork_link = f'regions/{zone}/subnetworks/default'
+        subnetwork_link = f"regions/{zone}/subnetworks/default"
 
     base_image = get_image_from_family(
         project="windows-cloud", family=source_image_family
@@ -79,4 +84,6 @@ def create_windows_instance(project_id: str, zone: str, instance_name: str,
         external_access=True,  # Set this to False to disable external IP for your instance
     )
     return instance
+
+
 # </INGREDIENT>

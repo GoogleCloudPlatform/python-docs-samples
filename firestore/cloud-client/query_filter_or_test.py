@@ -20,17 +20,17 @@ import pytest
 
 from query_filter_or import query_or_composite_filter
 
-os.environ['GOOGLE_CLOUD_PROJECT'] = os.environ['FIRESTORE_PROJECT']
-PROJECT_ID = os.environ['FIRESTORE_PROJECT']
+os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
+PROJECT_ID = os.environ["FIRESTORE_PROJECT"]
 
 
 @pytest.fixture(scope="module")
 def data():
     return {
-            'aturing': {'birthYear': 1912},
-            'cbabbage': {'birthYear': 1791},
-            'ghopper': {'birthYear': 1906},
-            'alovelace': {'birthYear': 1815},
+        "aturing": {"birthYear": 1912},
+        "cbabbage": {"birthYear": 1791},
+        "ghopper": {"birthYear": 1906},
+        "alovelace": {"birthYear": 1815},
     }
 
 
@@ -57,7 +57,7 @@ def delete_document_collection(data, collection):
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_query_or_composite_filter(capsys, data):
     client = firestore.Client(project=PROJECT_ID)
-    collection = client.collection('users')
+    collection = client.collection("users")
 
     try:
         create_document_collection(data, collection)
@@ -66,4 +66,4 @@ def test_query_or_composite_filter(capsys, data):
         delete_document_collection(data, collection)
 
     out, _ = capsys.readouterr()
-    assert 'aturing' in out
+    assert "aturing" in out

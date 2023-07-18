@@ -14,6 +14,8 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import import_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
@@ -21,6 +23,7 @@ BUCKET_ID = f"{PROJECT_ID}-lcm"
 DATASET_ID = "VCN0000000000000000000"
 
 
+@Retry()
 def test_import_dataset(capsys):
     # As importing a dataset can take a long time and only four operations can
     # be run on a dataset at once. Try to import into a nonexistent dataset and
@@ -31,8 +34,7 @@ def test_import_dataset(capsys):
         import_dataset.import_dataset(PROJECT_ID, DATASET_ID, data)
         out, _ = capsys.readouterr()
         assert (
-            "The Dataset doesn't exist or is inaccessible for use with AutoMl."
-            in out
+            "The Dataset doesn't exist or is inaccessible for use with AutoMl." in out
         )
     except Exception as e:
         assert (

@@ -28,8 +28,10 @@ Example usage:
 
 import argparse
 
+from google.cloud import speech_v1p1beta1 as speech
 
-def transcribe_file_with_enhanced_model():
+
+def transcribe_file_with_enhanced_model() -> speech.RecognizeResponse:
     """Transcribe the given audio file using an enhanced model."""
     # [START speech_transcribe_enhanced_model_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -58,10 +60,12 @@ def transcribe_file_with_enhanced_model():
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_enhanced_model_beta]
 
 
-def transcribe_file_with_metadata():
+def transcribe_file_with_metadata() -> speech.RecognizeResponse:
     """Send a request that includes recognition metadata."""
     # [START speech_transcribe_recognition_metadata_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -107,10 +111,12 @@ def transcribe_file_with_metadata():
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_recognition_metadata_beta]
 
 
-def transcribe_file_with_auto_punctuation():
+def transcribe_file_with_auto_punctuation() -> speech.RecognizeResponse:
     """Transcribe the given audio file with auto punctuation enabled."""
     # [START speech_transcribe_auto_punctuation_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -138,10 +144,12 @@ def transcribe_file_with_auto_punctuation():
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_auto_punctuation_beta]
 
 
-def transcribe_file_with_diarization():
+def transcribe_file_with_diarization() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with diarization."""
     # [START speech_transcribe_diarization_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -181,13 +189,13 @@ def transcribe_file_with_diarization():
 
     # Printing out the output:
     for word_info in words_info:
-        print(
-            f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}"
-        )
+        print(f"word: '{word_info.word}', speaker_tag: {word_info.speaker_tag}")
+
+    return result
     # [END speech_transcribe_diarization_beta]
 
 
-def transcribe_file_with_multichannel():
+def transcribe_file_with_multichannel() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     multi channel."""
     # [START speech_transcribe_multichannel_beta]
@@ -218,10 +226,12 @@ def transcribe_file_with_multichannel():
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
         print(f"Channel Tag: {result.channel_tag}")
+
+    return response.results
     # [END speech_transcribe_multichannel_beta]
 
 
-def transcribe_file_with_multilanguage():
+def transcribe_file_with_multilanguage() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     multi language."""
     # [START speech_transcribe_multilanguage_beta]
@@ -254,10 +264,12 @@ def transcribe_file_with_multilanguage():
         print("-" * 20)
         print(f"First alternative of result {i}: {alternative}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_multilanguage_beta]
 
 
-def transcribe_file_with_word_level_confidence():
+def transcribe_file_with_word_level_confidence() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with
     word level confidence."""
     # [START speech_transcribe_word_level_confidence_beta]
@@ -291,10 +303,12 @@ def transcribe_file_with_word_level_confidence():
                 alternative.words[0].word, alternative.words[0].confidence
             )
         )
+
+    return response.results
     # [END speech_transcribe_word_level_confidence_beta]
 
 
-def transcribe_file_with_spoken_punctuation_end_emojis():
+def transcribe_file_with_spoken_punctuation_end_emojis() -> speech.RecognizeResponse:
     """Transcribe the given audio file with spoken punctuation and emojis enabled."""
     # [START speech_transcribe_spoken_punctuation_emojis_beta]
     from google.cloud import speech_v1p1beta1 as speech
@@ -325,6 +339,8 @@ def transcribe_file_with_spoken_punctuation_end_emojis():
         print("-" * 20)
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
+
+    return response.results
     # [END speech_transcribe_spoken_punctuation_emojis_beta]
 
 

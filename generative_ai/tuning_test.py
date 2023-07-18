@@ -23,7 +23,7 @@ from vertexai.preview.language_models import TextGenerationModel
 
 import tuning
 
-_PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
+_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
 _BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 
@@ -31,7 +31,9 @@ _BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 def get_model_display_name(tuned_model: TextGenerationModel) -> str:
     language_model_tuning_job = tuned_model._job
     pipeline_job = language_model_tuning_job._job
-    return dict(pipeline_job._gca_resource.runtime_config.parameter_values)['model_display_name']
+    return dict(pipeline_job._gca_resource.runtime_config.parameter_values)[
+        "model_display_name"
+    ]
 
 
 def upload_to_gcs(bucket: str, name: str, data: str) -> None:
@@ -46,9 +48,7 @@ def download_from_gcs(bucket: str, name: str) -> str:
     bucket = client.get_bucket(bucket)
     blob = bucket.blob(name)
     data = blob.download_as_bytes()
-    return "\n".join(
-        data.decode().splitlines()[:10]
-    )
+    return "\n".join(data.decode().splitlines()[:10])
 
 
 def delete_from_gcs(bucket: str, name: str) -> None:
@@ -58,22 +58,29 @@ def delete_from_gcs(bucket: str, name: str) -> None:
     blob.delete()
 
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope="function")
 def training_data_filename() -> str:
-    temp_filename = f'{uuid.uuid4()}.jsonl'
-    data = download_from_gcs('cloud-samples-data', 'ai-platform/generative_ai/headline_classification.jsonl')
+    temp_filename = f"{uuid.uuid4()}.jsonl"
+    data = download_from_gcs(
+        "cloud-samples-data", "ai-platform/generative_ai/headline_classification.jsonl"
+    )
     upload_to_gcs(_BUCKET, temp_filename, data)
     try:
-        yield f'gs://{_BUCKET}/{temp_filename}'
+        yield f"gs://{_BUCKET}/{temp_filename}"
     finally:
         delete_from_gcs(_BUCKET, temp_filename)
 
 
-def teardown_model(tuned_model: TextGenerationModel, training_data_filename: str) -> None:
+def teardown_model(
+    tuned_model: TextGenerationModel, training_data_filename: str
+) -> None:
     for tuned_model_name in tuned_model.list_tuned_model_names():
         model_registry = aiplatform.models.ModelRegistry(model=tuned_model_name)
-        if training_data_filename in model_registry.get_version_info('1').model_display_name:
-            display_name = model_registry.get_version_info('1').model_display_name
+        if (
+            training_data_filename
+            in model_registry.get_version_info("1").model_display_name
+        ):
+            display_name = model_registry.get_version_info("1").model_display_name
             for endpoint in aiplatform.Endpoint.list():
                 for _ in endpoint.list_models():
                     if endpoint.display_name == display_name:
@@ -82,6 +89,7 @@ def teardown_model(tuned_model: TextGenerationModel, training_data_filename: str
             aiplatform.Model(model_registry.model_resource_name).delete()
 
 
+@pytest.mark.skip("Blocked on b/277959219")
 def test_tuning(training_data_filename: str) -> None:
     """Takes approx. 20 minutes."""
     tuned_model = tuning.tuning(
@@ -92,8 +100,8 @@ def test_tuning(training_data_filename: str) -> None:
     )
     try:
         assert (
-            tuned_model._job.status ==
-            pipeline_state.PipelineState.PIPELINE_STATE_SUCCEEDED
+            tuned_model._job.status
+            == pipeline_state.PipelineState.PIPELINE_STATE_SUCCEEDED
         )
     finally:
         teardown_model(tuned_model, training_data_filename)

@@ -18,7 +18,7 @@ from google.appengine.ext import ndb
 import webapp2
 
 
-COUNTER_KEY = 'default counter'
+COUNTER_KEY = "default counter"
 
 
 class Counter(ndb.Model):
@@ -27,7 +27,7 @@ class Counter(ndb.Model):
 
 class UpdateCounterHandler(webapp2.RequestHandler):
     def post(self):
-        amount = int(self.request.get('amount'))
+        amount = int(self.request.get("amount"))
 
         # This task should run at most once per second because of the datastore
         # transaction write throughput.
@@ -40,7 +40,5 @@ class UpdateCounterHandler(webapp2.RequestHandler):
         update_counter()
 
 
-app = webapp2.WSGIApplication([
-    ('/update_counter', UpdateCounterHandler)
-], debug=True)
+app = webapp2.WSGIApplication([("/update_counter", UpdateCounterHandler)], debug=True)
 # [END all]

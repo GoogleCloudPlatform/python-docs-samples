@@ -22,10 +22,10 @@ import pytest
 
 import main
 
-PROJECT = os.environ['GOOGLE_CLOUD_PROJECT']
-TEST_ZONE_NAME = 'test-zone' + str(uuid.uuid4())
-TEST_ZONE_DNS_NAME = 'theadora.is.'
-TEST_ZONE_DESCRIPTION = 'Test zone'
+PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+TEST_ZONE_NAME = "test-zone" + str(uuid.uuid4())
+TEST_ZONE_DNS_NAME = "theadora.is."
+TEST_ZONE_DESCRIPTION = "Test zone"
 
 
 def delay_rerun(*args):
@@ -65,10 +65,8 @@ def zone(client):
 @pytest.mark.flaky
 def test_create_zone(client):
     zone = main.create_zone(
-        PROJECT,
-        TEST_ZONE_NAME,
-        TEST_ZONE_DNS_NAME,
-        TEST_ZONE_DESCRIPTION)
+        PROJECT, TEST_ZONE_NAME, TEST_ZONE_DNS_NAME, TEST_ZONE_DESCRIPTION
+    )
 
     assert zone.name == TEST_ZONE_NAME
     assert zone.dns_name == TEST_ZONE_DNS_NAME

@@ -29,7 +29,6 @@ CLUSTER_NAME = f"py-container-repo-test-{uuid.uuid4().hex[:10]}"
 
 @pytest.fixture(autouse=True)
 def setup_and_tear_down() -> None:
-
     # nohing to setup here
 
     # run the tests here

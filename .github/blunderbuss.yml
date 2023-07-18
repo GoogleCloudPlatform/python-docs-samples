@@ -39,6 +39,7 @@ assign_issues_by:
       - "api: recaptchaenterprise"
       - "api: secretmanager"
       - "api: securitycenter"
+      - "api: vmwareengine"
     to:
       - GoogleCloudPlatform/dee-infra
   - labels:
@@ -65,7 +66,6 @@ assign_issues_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: speech"
       - "api: talent"
       - "api: texttospeech"
       - "api: translate"
@@ -101,6 +101,10 @@ assign_issues_by:
       - "api: composer"
     to:
       - GoogleCloudPlatform/cloud-dpes-composer
+  - labels:
+      - "api: bigquery"
+    to:
+      - GoogleCloudPlatform/api-bigquery
 
   # AppEco individuals
   - labels:
@@ -154,12 +158,21 @@ assign_issues_by:
       - "api: cloudmedia"
     to:
       - GoogleCloudPlatform/cloud-media-team
+  - labels:
+      - "api: speech"
+    to:
+      - GoogleCloudPlatform/cloud-speech-eng
+      - GoogleCloudPlatform/dee-data-ai
 
   # Self-service individuals
   - labels:
       - "api: auth"
     to:
       - arithmetic1728
+  - labels:
+      - "api: appengine"
+    to:
+      - jinglundong
 
 
 ###
@@ -168,7 +181,6 @@ assign_issues_by:
 assign_prs_by:
   # DEE teams
   - labels:
-      - "api: appengine"
       - "api: cloudbuild"
       - "api: cloudscheduler"
       - "api: cloudtasks"
@@ -216,9 +228,9 @@ assign_prs_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: speech"
       - "api: talent"
       - "api: texttospeech"
+      - "api: transcoder"
       - "api: translate"
       - "api: vision"
     to:
@@ -303,15 +315,24 @@ assign_prs_by:
       - GoogleCloudPlatform/cloud-retail-team
   - labels:
       - "api: cloudmedia"
+      - "api: videostitcher"
     to:
       - GoogleCloudPlatform/cloud-media-team
+  - labels:
+      - "api: speech"
+    to:
+      - GoogleCloudPlatform/cloud-speech-eng
+      - GoogleCloudPlatform/dee-data-ai
 
   # Self-service individuals
   - labels:
       - "api: auth"
     to:
       - arithmetic1728
-
+  - labels:
+      - "api: appengine"
+    to:
+      - jinglundong
 assign_issues:
   - GoogleCloudPlatform/python-samples-owners
 

@@ -16,18 +16,14 @@ import os
 
 # To add services insert key value pair of the name of the service and
 # the port you want it to run on when running locally
-SERVICES = {
-    'default': 8000,
-    'static': 8001
-}
+SERVICES = {"default": 8000, "static": 8001}
 
 
 def init_app(app):
     # The GAE_INSTANCE environment variable will be set when deployed to GAE.
-    gae_instance = os.environ.get(
-        'GAE_INSTANCE', os.environ.get('GAE_MODULE_INSTANCE'))
-    environment = 'production' if gae_instance is not None else 'development'
-    app.config['SERVICE_MAP'] = map_services(environment)
+    gae_instance = os.environ.get("GAE_INSTANCE", os.environ.get("GAE_MODULE_INSTANCE"))
+    environment = "production" if gae_instance is not None else "development"
+    app.config["SERVICE_MAP"] = map_services(environment)
 
 
 def map_services(environment):
@@ -35,23 +31,23 @@ def map_services(environment):
     or when deployed."""
     url_map = {}
     for service, local_port in SERVICES.items():
-        if environment == 'production':
+        if environment == "production":
             url_map[service] = production_url(service)
-        if environment == 'development':
+        if environment == "development":
             url_map[service] = local_url(local_port)
     return url_map
 
 
 def production_url(service_name):
     """Generates url for a service when deployed to App Engine."""
-    project_id = os.getenv('GOOGLE_CLOUD_PROJECT')
-    project_url = f'{project_id}.appspot.com'
-    if service_name == 'default':
-        return f'https://{project_url}'
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    project_url = f"{project_id}.appspot.com"
+    if service_name == "default":
+        return f"https://{project_url}"
     else:
-        return f'https://{service_name}-dot-{project_url}'
+        return f"https://{service_name}-dot-{project_url}"
 
 
 def local_url(port):
     """Generates url for a service when running locally"""
-    return f'http://localhost:{str(port)}'
+    return f"http://localhost:{str(port)}"

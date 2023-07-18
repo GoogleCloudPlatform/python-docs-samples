@@ -33,5 +33,9 @@ def delete_job(project_id: str, region: str, job_name: str) -> Operation:
     """
     client = batch_v1.BatchServiceClient()
 
-    return client.delete_job(name=f"projects/{project_id}/locations/{region}/jobs/{job_name}")
+    return client.delete_job(
+        name=f"projects/{project_id}/locations/{region}/jobs/{job_name}"
+    )
+
+
 # [END batch_delete_job]

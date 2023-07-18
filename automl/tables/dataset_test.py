@@ -18,7 +18,7 @@ import random
 import string
 import time
 
-from google.api_core import exceptions
+from google.api_core import exceptions, retry
 import pytest
 
 import automl_tables_dataset
@@ -27,8 +27,7 @@ import automl_tables_dataset
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 STATIC_DATASET = "do_not_delete_this_table_python"
-GCS_DATASET = ("gs://python-docs-samples-tests-automl-tables-test"
-               "/bank-marketing.csv")
+GCS_DATASET = "gs://python-docs-samples-tests-automl-tables-test" "/bank-marketing.csv"
 
 ID = "{rand}_{time}".format(
     rand="".join(
@@ -64,6 +63,7 @@ def ensure_dataset_ready():
     return dataset
 
 
+@retry.Retry()
 @pytest.mark.slow
 def test_dataset_create_import_delete(capsys):
     name = _id("d_cr_dl")
@@ -82,6 +82,7 @@ def test_dataset_create_import_delete(capsys):
         automl_tables_dataset.get_dataset(PROJECT, REGION, name)
 
 
+@retry.Retry()
 def test_dataset_update(capsys):
     dataset = ensure_dataset_ready()
     automl_tables_dataset.update_dataset(
@@ -97,6 +98,7 @@ def test_dataset_update(capsys):
     assert "Weight column updated." in out
 
 
+@retry.Retry()
 def test_list_datasets():
     ensure_dataset_ready()
     assert (

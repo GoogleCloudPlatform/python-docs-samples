@@ -22,10 +22,7 @@ from google.cloud import compute_v1
 
 # <INGREDIENT change_machine_type>
 def change_machine_type(
-        project_id: str,
-        zone: str,
-        instance_name: str,
-        new_machine_type: str
+    project_id: str, zone: str, instance_name: str, new_machine_type: str
 ) -> None:
     """
     Changes the machine type of VM. The VM needs to be in the 'TERMINATED' state for this operation to be successful.
@@ -42,11 +39,15 @@ def change_machine_type(
     instance = client.get(project=project_id, zone=zone, instance=instance_name)
 
     if instance.status != compute_v1.Instance.Status.TERMINATED.name:
-        raise RuntimeError(f"Only machines in TERMINATED state can have their machine type changed. "
-                           f"{instance.name} is in {instance.status}({instance.status_message}) state.")
+        raise RuntimeError(
+            f"Only machines in TERMINATED state can have their machine type changed. "
+            f"{instance.name} is in {instance.status}({instance.status_message}) state."
+        )
 
     machine_type = compute_v1.InstancesSetMachineTypeRequest()
-    machine_type.machine_type = f"projects/{project_id}/zones/{zone}/machineTypes/{new_machine_type}"
+    machine_type.machine_type = (
+        f"projects/{project_id}/zones/{zone}/machineTypes/{new_machine_type}"
+    )
     operation = client.set_machine_type(
         project=project_id,
         zone=zone,
@@ -55,4 +56,6 @@ def change_machine_type(
     )
 
     wait_for_extended_operation(operation, "changing machine type")
+
+
 # </INGREDIENT>

@@ -17,13 +17,10 @@ from airflow import DAG
 from airflow.operators.dummy import DummyOperator
 from airflow.utils.dates import days_ago
 
-DAG_NAME = 'dag-to-trigger'
+DAG_NAME = "dag-to-trigger"
 
-args = {'owner': 'airflow', 'start_date': days_ago(1), 'schedule_interval': "None"}
+args = {"owner": "airflow", "start_date": days_ago(1), "schedule_interval": "None"}
 
 with DAG(dag_id=DAG_NAME, default_args=args) as dag:
-
-    dag_task = DummyOperator(
-        task_id='dag-task'
-    )
+    dag_task = DummyOperator(task_id="dag-task")
 # [END composer_relationship_child]
