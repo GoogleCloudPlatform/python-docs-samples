@@ -102,9 +102,6 @@ Here's a table showing the minimum requirements to run an inference pipeline.
 export MODEL_NAME="google/flan-t5-xl"
 export MACHINE_TYPE="n2-highmem-2"
 
-export MODEL_NAME="google/flan-t5-base"
-export MACHINE_TYPE="n2-standard-2"
-
 python main.py \
   --messages-topic="$MESSAGES_TOPIC" \
   --responses-topic="$RESPONSES_TOPIC" \
@@ -115,7 +112,8 @@ python main.py \
   --temp_location="gs://$BUCKET/temp" \
   --region="$LOCATION" \
   --machine_type="$MACHINE_TYPE" \
-  --requirements_file="requirements.txt"
+  --requirements_file="requirements.txt" \
+  --requirements_cache="skip"
 ```
 
 ## What's next?
