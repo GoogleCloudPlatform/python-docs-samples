@@ -29,5 +29,5 @@ def test_science_tutoring() -> None:
     assert (
         "There are eight planets in the solar system."
         == chat.science_tutoring(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
+            temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
     )
