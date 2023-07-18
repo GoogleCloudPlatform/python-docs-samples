@@ -13,12 +13,18 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_generation_function]
+import vertexai
 from vertexai.language_models import CodeGenerationModel
 
 
-def generate_a_function(temperature: float = 0.5) -> object:
+def generate_a_function(
+        temperature: float,
+        project_id: str,
+        location: str,
+) -> str:
     """Example of using Code Generation to write a function."""
 
+    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -33,7 +39,7 @@ def generate_a_function(temperature: float = 0.5) -> object:
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_code_generation_function]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

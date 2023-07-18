@@ -31,5 +31,5 @@ A direct implication is that it is impossible to "beat the market" consistently 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_summarization() -> None:
     content = summarization.text_summarization(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION).text
+        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
     assert content == expected_response

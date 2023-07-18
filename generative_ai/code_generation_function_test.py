@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import code_generation_function
 
 
+_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+_LOCATION = "us-central1"
+
+
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_code_generation_function() -> None:
-    content = code_generation_function.generate_a_function(temperature=0).text
+    content = code_generation_function.generate_a_function(
+        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
     assert "leap year" in content

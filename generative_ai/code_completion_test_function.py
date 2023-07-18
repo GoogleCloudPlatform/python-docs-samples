@@ -13,12 +13,18 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_completion_test_function]
+import vertexai
 from vertexai.language_models import CodeGenerationModel
 
 
-def complete_test_function(temperature: float = 0.2) -> object:
+def complete_test_function(
+        temperature: float,
+        project_id: str,
+        location: str,
+) -> str:
     """Example of using Code Completion to complete a test function."""
 
+    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -37,7 +43,7 @@ def complete_test_function(temperature: float = 0.2) -> object:
 
     # [END aiplatform_sdk_code_completion_test_function]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":
