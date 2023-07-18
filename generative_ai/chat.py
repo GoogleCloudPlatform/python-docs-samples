@@ -13,18 +13,12 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_chat]
-import vertexai
-from vertexai.language_models import ChatModel, InputOutputTextPair
+from vertexai.preview.language_models import ChatModel, InputOutputTextPair
 
 
-def science_tutoring(
-        temperature: float,
-        project_id: str,
-        location: str,
-) -> str:
-    """Chat with a Large Lanuage Model for Science Tutoring"""
+def science_tutoring(temperature: float = 0.2) -> None:
+    chat_model = ChatModel.from_pretrained("chat-bison@001")
 
-    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -33,7 +27,6 @@ def science_tutoring(
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    chat_model = ChatModel.from_pretrained("chat-bison@001")
     chat = chat_model.start_chat(
         context="My name is Miles. You are an astronomer, knowledgeable about the solar system.",
         examples=[
@@ -50,7 +43,7 @@ def science_tutoring(
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_chat]
 
-    return response.text
+    return response
 
 
 if __name__ == "__main__":

@@ -15,18 +15,12 @@
 # [START aiplatform_sdk_code_generation_unittest]
 import textwrap
 
-import vertexai
-from vertexai.language_models import CodeGenerationModel
+from vertexai.preview.language_models import CodeGenerationModel
 
 
-def generate_unittest(
-        temperature: float,
-        project_id: str,
-        location: str,
-) -> str:
+def generate_unittest(temperature: float = 0.5) -> object:
     """Example of using Code Generation to write a unit test."""
 
-    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -57,7 +51,7 @@ def generate_unittest(
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_code_generation_unittest]
 
-    return response.text
+    return response
 
 
 if __name__ == "__main__":

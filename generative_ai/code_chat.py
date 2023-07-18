@@ -13,18 +13,12 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_chat]
-import vertexai
-from vertexai.language_models import CodeChatModel
+from vertexai.preview.language_models import CodeChatModel
 
 
-def write_a_function(
-        temperature: float,
-        project_id: str,
-        location: str,
-) -> str:
+def write_a_function(temperature: float = 0.5) -> object:
     """Example of using Code Chat Model to write a function."""
 
-    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -40,7 +34,7 @@ def write_a_function(
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_code_chat]
 
-    return response.text
+    return response
 
 
 if __name__ == "__main__":

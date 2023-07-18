@@ -12,20 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import code_completion_test_function
 
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_code_completion_test_function() -> None:
-    content = code_completion_test_function.complete_test_function(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
+    content = code_completion_test_function.complete_test_function(temperature=0).text
     assert "-> None:" in content
