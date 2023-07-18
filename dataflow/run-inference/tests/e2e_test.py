@@ -41,7 +41,8 @@ import pytest
 import main
 
 MODEL_NAME = "google/flan-t5-small"
-MACHINE_TYPE = "n2-standard-2"
+VERTEX_MACHINE_TYPE = "e2-standard-4"
+DATAFLOW_MACHINE_TYPE = "n2-highmem-2"
 
 
 @pytest.fixture(scope="session")
@@ -73,7 +74,7 @@ def state_dict_path() -> str:
     print(f"state_dict_path: {filename}")
     conftest.run_cmd(
         "python",
-        "load-state-dict.py",
+        "download_model.py",
         "local",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path={filename}",
@@ -108,8 +109,10 @@ def dataflow_job(
         f"--project={project}",
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
-        f"--machine_type={MACHINE_TYPE}",
+        f"--machine_type={DATAFLOW_MACHINE_TYPE}",
         "--requirements_file=requirements.txt",
+        "--requirements_cache=skip",
+        "--experiments=use_sibling_sdk_workers",
     )
 
     # Get the job ID.
@@ -131,7 +134,7 @@ def test_load_state_dict_vertex(
 ) -> None:
     conftest.run_cmd(
         "python",
-        "load-state-dict.py",
+        "download_model.py",
         "vertex",
         f"--model-name={MODEL_NAME}",
         f"--state-dict-path=gs://{bucket_name}/temp/state_dict_vertex.pt",
@@ -139,6 +142,7 @@ def test_load_state_dict_vertex(
         f"--project={project}",
         f"--bucket={bucket_name}",
         f"--location={location}",
+        f"--machine-type={VERTEX_MACHINE_TYPE}",
     )
 
 
@@ -147,7 +151,7 @@ def test_pipeline_local(state_dict_path: str) -> None:
         responses = (
             pipeline
             | "Create" >> TestStream().add_elements(["Hello!"])
-            | "Ask LLM" >> main.AskLanguageModel(MODEL_NAME, state_dict_path)
+            | "Ask LLM" >> main.AskModel(MODEL_NAME, state_dict_path)
         )
         assert_that(responses, is_not_empty(), "responses is not empty")
 

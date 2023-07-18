@@ -58,40 +58,41 @@ def get_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> st
     return tokenizer.decode(output_tokens, skip_special_tokens=True)
 
 
-@beam.ptransform_fn
-def AskLanguageModel(
-    pcollection: beam.PCollection[str],
-    model_name: str,
-    state_dict_path: str,
-    max_response_tokens: int = MAX_RESPONSE_TOKENS,
-) -> beam.PCollection[str]:
-    """Asks an LLM a prompt message.
+class AskModel(beam.PTransform):
+    """Asks an LLM a prompt message and gets its responses.
 
-    Args:
-        pcollection: Input PCollection of messages for the model.
+    Attributes:
         model_name: HuggingFace model name compatible with AutoModelForSeq2SeqLM.
         state_dict_path: File path to the model's state_dict, can be in Cloud Storage.
         max_response_tokens: Maximum number of tokens for the model to generate.
-
-    Returns: A PCollection with the model's responses.
     """
-    model_handler = PytorchModelHandlerTensor(
-        state_dict_path=state_dict_path,
-        model_class=AutoModelForSeq2SeqLM.from_config,
-        model_params={"config": AutoConfig.from_pretrained(model_name)},
-        inference_fn=make_tensor_model_fn("generate"),
-    )
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    return (
-        pcollection
-        | "To tensors" >> beam.Map(to_tensors, tokenizer)
-        | "RunInference"
-        >> RunInference(
-            model_handler,
-            inference_args={"max_new_tokens": max_response_tokens},
+
+    def __init__(
+        self,
+        model_name: str,
+        state_dict_path: str,
+        max_response_tokens: int = MAX_RESPONSE_TOKENS,
+    ) -> None:
+        self.model_handler = PytorchModelHandlerTensor(
+            state_dict_path=state_dict_path,
+            model_class=AutoModelForSeq2SeqLM.from_config,
+            model_params={"config": AutoConfig.from_pretrained(model_name)},
+            inference_fn=make_tensor_model_fn("generate"),
         )
-        | "Get response" >> beam.Map(get_response, tokenizer)
-    )
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        self.max_response_tokens = max_response_tokens
+
+    def expand(self, pcollection: beam.PCollection[str]) -> beam.PCollection[str]:
+        return (
+            pcollection
+            | "To tensors" >> beam.Map(to_tensors, self.tokenizer)
+            | "RunInference"
+            >> RunInference(
+                self.model_handler,
+                inference_args={"max_new_tokens": self.max_response_tokens},
+            )
+            | "Get response" >> beam.Map(get_response, self.tokenizer)
+        )
 
 
 if __name__ == "__main__":
@@ -124,16 +125,17 @@ if __name__ == "__main__":
     beam_options = PipelineOptions(
         beam_args,
         save_main_session=True,
-        streaming=True,
         pickle_library="cloudpickle",
+        streaming=True,
     )
 
+    simple_name = args.model_name.split("/")[-1]
     pipeline = beam.Pipeline(options=beam_options)
     _ = (
         pipeline
         | "Read from Pub/Sub" >> beam.io.ReadFromPubSub(args.messages_topic)
         | "Decode bytes" >> beam.Map(lambda msg: msg.decode("utf-8"))
-        | "Ask LLM" >> AskLanguageModel(args.model_name, args.state_dict_path)
+        | f"Ask {simple_name}" >> AskModel(args.model_name, args.state_dict_path)
         | "Encode bytes" >> beam.Map(lambda msg: msg.encode("utf-8"))
         | "Write to Pub/Sub" >> beam.io.WriteToPubSub(args.responses_topic)
     )
