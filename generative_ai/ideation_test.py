@@ -39,5 +39,6 @@ interview_expected_response = """1. What is your experience with project managem
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_interview() -> None:
     content = ideation.interview(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
+        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
+    )
     assert content == interview_expected_response

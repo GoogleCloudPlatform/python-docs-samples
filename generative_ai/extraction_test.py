@@ -27,5 +27,6 @@ _LOCATION = "us-central1"
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_extractive_question_answering() -> None:
     content = extraction.extractive_question_answering(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
+        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
+    )
     assert content == "Reduced moist tropical vegetation cover in the basin."

@@ -27,5 +27,6 @@ _LOCATION = "us-central1"
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_sentiment_analysis() -> None:
     content = sentiment_analysis.sentiment_analysis(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION)
+        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
+    )
     assert content is not None

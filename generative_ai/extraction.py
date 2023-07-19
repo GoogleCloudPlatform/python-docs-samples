@@ -18,9 +18,9 @@ from vertexai.language_models import TextGenerationModel
 
 
 def extractive_question_answering(
-        temperature: float,
-        project_id: str,
-        location: str,
+    temperature: float,
+    project_id: str,
+    location: str,
 ) -> str:
     """Extractive Question Answering with a Large Language Model."""
 

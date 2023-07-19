@@ -18,9 +18,9 @@ from vertexai.language_models import TextGenerationModel
 
 
 def sentiment_analysis(
-        temperature: float,
-        project_id: str,
-        location: str,
+    temperature: float,
+    project_id: str,
+    location: str,
 ) -> str:
     """Sentiment analysis example with a Large Language Model."""
 

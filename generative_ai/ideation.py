@@ -18,9 +18,9 @@ from vertexai.language_models import TextGenerationModel
 
 
 def interview(
-        temperature: float,
-        project_id: str,
-        location: str,
+    temperature: float,
+    project_id: str,
+    location: str,
 ) -> str:
     """Ideation example with a Large Language Model"""
 

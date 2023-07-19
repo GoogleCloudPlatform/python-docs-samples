@@ -18,9 +18,9 @@ from vertexai.language_models import TextGenerationModel
 
 
 def text_summarization(
-        temperature: float,
-        project_id: str,
-        location: str,
+    temperature: float,
+    project_id: str,
+    location: str,
 ) -> str:
     """Summarization Example with a Large Language Model"""
 
