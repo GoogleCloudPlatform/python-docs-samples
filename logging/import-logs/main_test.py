@@ -20,17 +20,13 @@
 from datetime import date
 import json
 import sys
-from typing import List, Tuple
+from typing import List, Tuple, TypedDict
 from unittest.mock import MagicMock
 
 from google.cloud import logging_v2, storage
 import pytest
 
 import main
-if sys.version_info >= (3, 8):
-    from typing import TypedDict
-else:
-    from typing_extensions import TypedDict
 
 TEST_LOG_ID = "test-log"
 TEST_BUCKET = "test-bucket"

@@ -21,13 +21,9 @@ import math
 import os
 import sys
 
-from typing import List, Tuple
+from typing import List, Tuple, TypedDict
 
 from google.cloud import logging_v2, storage
-if sys.version_info >= (3, 8):
-    from typing import TypedDict
-else:
-    from typing_extensions import TypedDict
 
 # Logging limits (https://cloud.google.com/logging/quotas#api-limits)
 LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
