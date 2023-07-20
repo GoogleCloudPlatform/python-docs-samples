@@ -87,6 +87,10 @@ python download_model.py vertex \
 
 To run the pipeline in Dataflow, the model must fit into memory along with the rest of the memory used by each worker.
 
+We use `--experiments="no_use_multiple_sdk_containers"` to make sure there's only one process per worker.
+This ensures the model is only loaded once per worker, and we won't run out of memory.
+`RunInference` shares the same model with multiple threads, so we don't have to limit the number of threads.
+
 The following table shows the recommended machine types to run an inference pipeline.
 
 | Model name             | Machine type    | VM Memory |
@@ -115,8 +119,12 @@ python main.py \
   --machine_type="$MACHINE_TYPE" \
   --requirements_file="requirements.txt" \
   --requirements_cache="skip" \
-  --experiments="use_sibling_sdk_workers"
+  --experiments="use_sibling_sdk_workers" \
+  --experiments="no_use_multiple_sdk_containers"
 ```
+
+> 💡 This pipeline is running with CPUs only.
+> Larger models require more time to process each request, so you might want to enable GPUs.
 
 ## What's next?
 
