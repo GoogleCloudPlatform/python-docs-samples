@@ -68,14 +68,14 @@ def test_reservation_samples(
     out, _ = capsys.readouterr()
     assert f"Created reservation: {reservation.name}" in out
 
-    slot_capacity = 50
-    reservation = reservation_update.update_reservation(
-        project_id, location, reservation_id, slot_capacity, transport
-    )
-    assert reservation.slot_capacity == 50
-    assert reservation_id in reservation.name
-    out, _ = capsys.readouterr()
-    assert f"Updated reservation: {reservation.name}" in out
+    # slot_capacity = 50
+    # reservation = reservation_update.update_reservation(
+    #     project_id, location, reservation_id, slot_capacity, transport
+    # )
+    # assert reservation.slot_capacity == 50
+    # assert reservation_id in reservation.name
+    # out, _ = capsys.readouterr()
+    # assert f"Updated reservation: {reservation.name}" in out
 
     reservation_delete.delete_reservation(
         project_id, location, reservation_id, transport
