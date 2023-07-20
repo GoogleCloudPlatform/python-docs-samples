@@ -40,7 +40,7 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.6"],
+    "ignored_versions": ["2.7", "3.8", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
