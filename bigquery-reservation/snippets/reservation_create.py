@@ -67,7 +67,9 @@ def create_reservation(
 
     parent = reservation_client.common_location_path(project_id, location)
 
-    reservation = reservation_types.Reservation(slot_capacity=slot_capacity)
+    reservation = reservation_types.Reservation(
+        slot_capacity=slot_capacity, edition=reservation_types.Edition.ENTERPRISE
+    )
     reservation = reservation_client.create_reservation(
         parent=parent,
         reservation=reservation,
