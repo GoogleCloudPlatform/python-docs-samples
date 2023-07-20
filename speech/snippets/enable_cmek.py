@@ -1,10 +1,10 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -15,33 +15,36 @@
 
 import argparse
 
-# [START speech_create_recognizer]
+# [START speech_enable_cmek]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def create_recognizer(project_id: str, recognizer_id: str) -> cloud_speech.Recognizer:
+def enable_cmek(
+    project_id: str,
+    kms_key_name: str,
+) -> cloud_speech.RecognizeResponse:
+    """Enable CMEK in a project and region."""
     # Instantiates a client
     client = SpeechClient()
 
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            default_recognition_config=cloud_speech.RecognitionConfig(
-                language_codes=["en-US"], model="long"
-            ),
+    request = cloud_speech.UpdateConfigRequest(
+        config=cloud_speech.Config(
+            name=f"projects/{project_id}/locations/global/config",
+            kms_key_name=kms_key_name,
         ),
+        update_mask={"paths": ["kms_key_name"]},
     )
 
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
+    # Updates the KMS key for the project and region.
+    response = client.update_config(request=request)
 
-    print("Created Recognizer:", recognizer.name)
-    return recognizer
+    print(f"Updated KMS key: {response.kms_key_name}")
+
+    return response
 
 
-# [END speech_create_recognizer]
+# [END speech_enable_cmek]
 
 
 if __name__ == "__main__":
@@ -49,6 +52,6 @@ if __name__ == "__main__":
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("recognizer_id", help="ID for the recognizer to create")
+    parser.add_argument("kms_key_name", help="Resource path of a KMS key")
     args = parser.parse_args()
-    create_recognizer()
+    enable_cmek(args.project_id, args.kms_key_name)
