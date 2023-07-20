@@ -17,7 +17,7 @@ from google.cloud.bigquery_reservation_v1.services import reservation_service
 import pytest
 import test_utils.prefixer
 
-from . import reservation_create, reservation_delete, reservation_update
+from . import reservation_create, reservation_delete
 
 # Reservation IDs are limited to 64 characters.
 reservation_prefixer = test_utils.prefixer.Prefixer(
@@ -67,6 +67,9 @@ def test_reservation_samples(
     assert reservation_id in reservation.name
     out, _ = capsys.readouterr()
     assert f"Created reservation: {reservation.name}" in out
+
+    # The test for reservation_update is skipped for now, since without
+    # capacity commitment we cannot decrease the capacity within one hour.
 
     # slot_capacity = 50
     # reservation = reservation_update.update_reservation(
