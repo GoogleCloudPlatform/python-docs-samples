@@ -76,7 +76,9 @@ def list_all_findings(source_name) -> ListFindingsPager:
     return client.list_findings(request={"parent": source_name})
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_get_mute_rule(capsys: CaptureFixture, mute_rule):
     snippets_mute_config.get_mute_rule(
         f"projects/{PROJECT_ID}/muteConfigs/{mute_rule.get('create')}"
@@ -86,7 +88,9 @@ def test_get_mute_rule(capsys: CaptureFixture, mute_rule):
     assert re.search(mute_rule.get("create"), out)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_list_mute_rules(capsys: CaptureFixture, mute_rule):
     snippets_mute_config.list_mute_rules(f"projects/{PROJECT_ID}")
     out, _ = capsys.readouterr()
@@ -94,7 +98,9 @@ def test_list_mute_rules(capsys: CaptureFixture, mute_rule):
     assert re.search(mute_rule.get("update"), out)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_update_mute_rule(capsys: CaptureFixture, mute_rule):
     snippets_mute_config.update_mute_rule(
         f"projects/{PROJECT_ID}/muteConfigs/{mute_rule.get('update')}"
@@ -106,7 +112,9 @@ def test_update_mute_rule(capsys: CaptureFixture, mute_rule):
     assert re.search("Updated mute config description", out)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_set_mute_finding(capsys: CaptureFixture, finding):
     finding_path = finding.get("finding1")
     snippets_mute_config.set_mute_finding(finding_path)
@@ -114,7 +122,9 @@ def test_set_mute_finding(capsys: CaptureFixture, finding):
     assert re.search("Mute value for the finding: MUTED", out)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_set_unmute_finding(capsys: CaptureFixture, finding):
     finding_path = finding.get("finding1")
     snippets_mute_config.set_unmute_finding(finding_path)
@@ -122,7 +132,9 @@ def test_set_unmute_finding(capsys: CaptureFixture, finding):
     assert re.search("Mute value for the finding: UNMUTED", out)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_bulk_mute_findings(capsys: CaptureFixture, finding):
     # Mute findings that belong to this project.
     snippets_mute_config.bulk_mute_findings(

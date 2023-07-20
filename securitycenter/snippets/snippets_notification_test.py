@@ -110,7 +110,9 @@ def deleted_notification_config():
     return created_notification_config
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_create_notification_config():
     created_notification_config = (
         snippets_notification_configs.create_notification_config(
@@ -122,14 +124,18 @@ def test_create_notification_config():
     cleanup_notification_config(CREATE_CONFIG_ID)
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_delete_notification_config(deleted_notification_config):
     assert snippets_notification_configs.delete_notification_config(
         f"organizations/{ORG_ID}", DELETE_CONFIG_ID
     )
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_get_notification_config(new_notification_config_for_get):
     retrieved_config = snippets_notification_configs.get_notification_config(
         f"organizations/{ORG_ID}", GET_CONFIG_ID
@@ -137,7 +143,9 @@ def test_get_notification_config(new_notification_config_for_get):
     assert retrieved_config is not None
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_list_notification_configs():
     iterator = snippets_notification_configs.list_notification_configs(
         f"organizations/{ORG_ID}"
@@ -145,7 +153,9 @@ def test_list_notification_configs():
     assert iterator is not None
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_update_notification_config(new_notification_config_for_update):
     updated_config = snippets_notification_configs.update_notification_config(
         f"organizations/{ORG_ID}", UPDATE_CONFIG_ID, PUBSUB_TOPIC
