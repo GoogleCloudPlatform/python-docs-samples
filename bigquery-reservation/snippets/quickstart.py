@@ -24,27 +24,7 @@ def main(
     # Constructs the client for interacting with the service.
     client = bigquery_reservation_v1.ReservationServiceClient(transport=transport)
 
-    report_capacity_commitments(client, project_id, location)
     report_reservations(client, project_id, location)
-
-
-def report_capacity_commitments(
-    client: bigquery_reservation_v1.ReservationServiceClient,
-    project_id: str,
-    location: str,
-) -> None:
-    """Prints details and summary information about capacity commitments for
-    a given admin project and location.
-    """
-    print(f"Capacity commitments in project {project_id} in location {location}")
-    req = bigquery_reservation_v1.ListCapacityCommitmentsRequest(
-        parent=client.common_location_path(project_id, location)
-    )
-    total_commitments = 0
-    for commitment in client.list_capacity_commitments(request=req):
-        print(f"\tCommitment {commitment.name} in state {commitment.state}")
-        total_commitments = total_commitments + 1
-    print(f"\n{total_commitments} commitments processed.")
 
 
 def report_reservations(
