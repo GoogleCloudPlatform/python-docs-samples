@@ -15,7 +15,6 @@
 import os
 
 from google.cloud.bigquery_reservation_v1.services import reservation_service
-from google.cloud.bigquery_reservation_v1.types import reservation as reservation_types
 import pytest
 
 
