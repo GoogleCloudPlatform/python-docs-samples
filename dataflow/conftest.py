@@ -30,7 +30,7 @@ import uuid
 from google.api_core import retry
 import pytest
 
-TIMEOUT = 30 * 60  # 30 minutes (in seconds)
+TIMEOUT_SEC = 30 * 60  # 30 minutes (in seconds)
 
 
 @pytest.fixture(scope="session")
@@ -157,7 +157,7 @@ def pubsub_publish(topic_path: str, messages: list[str]) -> None:
         print(f"- {repr(msg)}")
 
 
-@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT)
+@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT_SEC)
 def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
     from google.cloud import pubsub
 
@@ -182,7 +182,7 @@ def dataflow_job_url(project: str, location: str, job_id: str) -> str:
     return f"https://console.cloud.google.com/dataflow/jobs/{location}/{job_id}?project={project}"
 
 
-@retry.Retry(retry.if_exception_type(LookupError), timeout=TIMEOUT)
+@retry.Retry(retry.if_exception_type(LookupError), timeout=TIMEOUT_SEC)
 def dataflow_find_job_by_name(project: str, location: str, job_name: str) -> str:
     from google.cloud import dataflow_v1beta3 as dataflow
 
@@ -198,7 +198,7 @@ def dataflow_find_job_by_name(project: str, location: str, job_name: str) -> str
     raise LookupError(f"dataflow_find_job_by_name job name not found: {job_name}")
 
 
-@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT)
+@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT_SEC)
 def dataflow_wait_until_running(project: str, location: str, job_id: str) -> str:
     from google.cloud import dataflow_v1beta3 as dataflow
     from google.cloud.dataflow_v1beta3.types import JobView, JobState
@@ -258,7 +258,7 @@ def dataflow_cancel_job(project: str, location: str, job_id: str) -> None:
     print(response)
 
 
-@retry.Retry(retry.if_exception_type(AssertionError), timeout=TIMEOUT)
+@retry.Retry(retry.if_exception_type(AssertionError), timeout=TIMEOUT_SEC)
 def wait_until(condition: Callable[[], bool], message: str) -> None:
     assert condition(), message
 
@@ -296,7 +296,7 @@ REGION = "us-central1"
 
 POLL_INTERVAL_SEC = 60  # 1 minute in seconds
 LIST_PAGE_SIZE = 100
-TIMEOUT = 30 * 60  # 30 minutes in seconds
+TIMEOUT_SEC = 30 * 60  # 30 minutes in seconds
 
 HYPHEN_NAME_RE = re.compile(r"[^\w\d-]+")
 UNDERSCORE_NAME_RE = re.compile(r"[^\w\d_]+")
@@ -322,7 +322,7 @@ class Utils:
     @staticmethod
     def wait_until(
         is_done: Callable[[], bool],
-        timeout_sec: int = TIMEOUT,
+        timeout_sec: int = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> bool:
         for _ in range(0, timeout_sec, poll_interval_sec):
@@ -656,7 +656,7 @@ class Utils:
         project: str = PROJECT,
         region: str = REGION,
         target_states: set[str] = {"JOB_STATE_DONE"},
-        timeout_sec: int = TIMEOUT,
+        timeout_sec: int = TIMEOUT_SEC,
         poll_interval_sec: int = POLL_INTERVAL_SEC,
     ) -> str | None:
         """For a list of all the valid states:

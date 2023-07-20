@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Runs a streaming RunInference LLM pipeline."""
+"""Runs a streaming RunInference Language Model pipeline."""
 
 from __future__ import annotations
 
@@ -37,20 +37,20 @@ def to_tensors(input_text: str, tokenizer: PreTrainedTokenizer) -> torch.Tensor:
     """Encodes input text into token tensors.
 
     Args:
-        input_text: Input text for the LLM model.
-        tokenizer: Tokenizer for the LLM model.
+        input_text: Input text for the language model.
+        tokenizer: Tokenizer for the language model.
 
     Returns: Tokenized input tokens.
     """
     return tokenizer(input_text, return_tensors="pt").input_ids[0]
 
 
-def get_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> str:
+def decode_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> str:
     """Decodes output token tensors into text.
 
     Args:
         result: Prediction results from the RunInference transform.
-        tokenizer: Tokenizer for the LLM model.
+        tokenizer: Tokenizer for the language model.
 
     Returns: The model's response as text.
     """
@@ -59,7 +59,7 @@ def get_response(result: PredictionResult, tokenizer: PreTrainedTokenizer) -> st
 
 
 class AskModel(beam.PTransform):
-    """Asks an LLM a prompt message and gets its responses.
+    """Asks an language model a prompt message and gets its responses.
 
     Attributes:
         model_name: HuggingFace model name compatible with AutoModelForSeq2SeqLM.
@@ -91,7 +91,7 @@ class AskModel(beam.PTransform):
                 self.model_handler,
                 inference_args={"max_new_tokens": self.max_response_tokens},
             )
-            | "Get response" >> beam.Map(get_response, self.tokenizer)
+            | "Get response" >> beam.Map(decode_response, self.tokenizer)
         )
 
 
@@ -124,7 +124,6 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     beam_options = PipelineOptions(
         beam_args,
-        save_main_session=True,
         pickle_library="cloudpickle",
         streaming=True,
     )

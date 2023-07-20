@@ -150,7 +150,7 @@ def test_load_state_dict_vertex(
 def test_pipeline_local(state_dict_path: str) -> None:
     num_messages = 10
     requests = ["Hello!"] * num_messages
-    responses = ["Response"] * num_messages
+    expected = ["Response"] * num_messages
     with TestPipeline() as pipeline:
         responses = (
             pipeline
@@ -158,7 +158,7 @@ def test_pipeline_local(state_dict_path: str) -> None:
             | "Ask LLM" >> main.AskModel(MODEL_NAME, state_dict_path)
             | "Make constants" >> beam.Map(lambda _: "Response")
         )
-        assert_that(responses, equal_to(responses))
+        assert_that(responses, equal_to(expected))
 
 
 def test_pipeline_dataflow(

@@ -33,7 +33,7 @@ gcloud pubsub topics create $RESPONSES_TOPIC
 
 LLMs can be **very large** models. Make sure the VMs you choose have enough memory to load them.
 Larger models generally give better results, but require more memory and can be slower to run on CPUs.
-You can add GPUs if you need faster responses.
+You can [add GPUs](https://cloud.google.com/dataflow/docs/concepts/gpu-support) if you need faster responses.
 
 | Model                                   | Parameters | Memory needed |
 |-----------------------------------------|-----------:|--------------:|
