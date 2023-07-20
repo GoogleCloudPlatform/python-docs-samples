@@ -31,10 +31,11 @@ from __future__ import annotations
 
 from collections.abc import Callable, Iterator
 
+import apache_beam as beam
 from apache_beam.testing.test_pipeline import TestPipeline
 from apache_beam.testing.test_stream import TestStream
 from apache_beam.testing.util import assert_that
-from apache_beam.testing.util import is_not_empty
+from apache_beam.testing.util import equal_to
 import conftest  # python-docs-samples/dataflow/conftest.py
 import pytest
 
@@ -147,13 +148,17 @@ def test_load_state_dict_vertex(
 
 
 def test_pipeline_local(state_dict_path: str) -> None:
+    num_messages = 10
+    requests = ["Hello!"] * num_messages
+    responses = ["Response"] * num_messages
     with TestPipeline() as pipeline:
         responses = (
             pipeline
-            | "Create" >> TestStream().add_elements(["Hello!"])
+            | "Create" >> TestStream().add_elements(requests)
             | "Ask LLM" >> main.AskModel(MODEL_NAME, state_dict_path)
+            | "Make constants" >> beam.Map(lambda _: "Response")
         )
-        assert_that(responses, is_not_empty(), "responses is not empty")
+        assert_that(responses, equal_to(responses))
 
 
 def test_pipeline_dataflow(
