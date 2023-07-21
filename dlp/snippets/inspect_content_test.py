@@ -208,12 +208,12 @@ def test_inspect_string(capsys: pytest.CaptureFixture) -> None:
 def test_inspect_string_augment_infotype(capsys: pytest.CaptureFixture) -> None:
     inspect_content.inspect_string_augment_infotype(
         GCLOUD_PROJECT,
-        "My Name is : quasimodo",
+        "The patient's name is Quasimodo",
         "PERSON_NAME",
         ["quasimodo"],
     )
     out, _ = capsys.readouterr()
-    assert "Quote: quasimodo" in out
+    assert "Quote: Quasimodo" in out
     assert "Info type: PERSON_NAME" in out
 
 
