@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,37 +13,44 @@
 # limitations under the License.
 
 import os
+import re
 from uuid import uuid4
 
-from google.api_core.retry import Retry
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 import pytest
 
-import create_recognizer
+import transcribe_override_recognizer
+
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
-def delete_recognizer(name: str) -> None:
+def delete_recognizer(project_id: str, recognizer_id: str) -> None:
     client = SpeechClient()
-    request = cloud_speech.DeleteRecognizerRequest(name=name)
+    request = cloud_speech.DeleteRecognizerRequest(
+        name=f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
+    )
     client.delete_recognizer(request=request)
 
 
-@Retry()
-def test_create_recognizer(
+def test_transcribe_override_recognizer(
     capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
 ) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
     def cleanup():
-        delete_recognizer(
-            f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
-        )
+        delete_recognizer(project_id, recognizer_id)
 
     request.addfinalizer(cleanup)
 
-    recognizer = create_recognizer.create_recognizer(project_id, recognizer_id)
+    response = transcribe_override_recognizer.transcribe_override_recognizer(
+        project_id, recognizer_id, os.path.join(_RESOURCES, "audio.wav")
+    )
 
-    assert recognizer_id in recognizer.name
+    assert re.search(
+        r"How old is the Brooklyn Bridge?",
+        response.results[0].alternatives[0].transcript,
+        re.DOTALL | re.I,
+    )
