@@ -32,7 +32,7 @@ def transcribe_batch_multiple_files_v2(
     """Transcribes audio from a Google Cloud Storage URI.
 
     Args:
-        project_id: The GCP project ID.
+        project_id: The Google Cloud project ID.
         gcs_uris: The Google Cloud Storage URIs to transcribe.
         gcs_output_path: The Cloud Storage URI to which to write the transcript.
 
