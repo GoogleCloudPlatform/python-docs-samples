@@ -27,7 +27,7 @@ def transcribe_batch_dynamic_batching_v2(
     """Transcribes audio from a Google Cloud Storage URI.
 
     Args:
-        project_id: The GCP project ID.
+        project_id: The Google Cloud project ID.
         gcs_uri: The Google Cloud Storage URI.
 
     Returns:
