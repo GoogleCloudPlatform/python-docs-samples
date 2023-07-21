@@ -34,9 +34,16 @@ def delete_recognizer(project_id: str, recognizer_id: str) -> None:
     client.delete_recognizer(request=request)
 
 
-def test_transcribe_feature_in_recognizer(capsys: pytest.CaptureFixture) -> None:
+def test_transcribe_feature_in_recognizer(
+    capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
+) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
+
+    def cleanup():
+        delete_recognizer(project_id, recognizer_id)
+
+    request.addfinalizer(cleanup)
 
     response = transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
         project_id, recognizer_id, os.path.join(_RESOURCES, "audio.wav")
@@ -47,5 +54,3 @@ def test_transcribe_feature_in_recognizer(capsys: pytest.CaptureFixture) -> None
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )
-
-    delete_recognizer(project_id, recognizer_id)

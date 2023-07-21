@@ -29,16 +29,14 @@ _TEST_AUDIO_FILE_PATH = "gs://cloud-samples-data/speech/audio.flac"
 _GCS_BUCKET_OBJECT_RE = r"gs://([^/]+)/(.*)"
 
 
-def create_gcs_bucket() -> str:
+@pytest.fixture
+def gcs_bucket() -> str:
     client = storage.Client()
     bucket = client.bucket("speech-samples-" + str(uuid4()))
     new_bucket = client.create_bucket(bucket, location="us")
-    return new_bucket.name
 
+    yield new_bucket.name
 
-def delete_gcs_bucket(bucket_name: str) -> None:
-    client = storage.Client()
-    bucket = client.bucket(bucket_name)
     bucket.delete(force=True)
 
 
@@ -54,13 +52,13 @@ def get_gcs_object(gcs_path: str) -> cloud_speech.BatchRecognizeResults:
 
 
 @flaky(max_runs=10, min_passes=1)
-def test_transcribe_batch_multiple_files_v2(capsys: pytest.CaptureFixture) -> None:
+def test_transcribe_batch_multiple_files_v2(
+    gcs_bucket: pytest.FixtureRequest, capsys: pytest.CaptureFixture
+) -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    bucket_name = create_gcs_bucket()
-
     response = transcribe_batch_multiple_files_v2.transcribe_batch_multiple_files_v2(
-        project_id, [_TEST_AUDIO_FILE_PATH], f"gs://{bucket_name}"
+        project_id, [_TEST_AUDIO_FILE_PATH], f"gs://{gcs_bucket}"
     )
 
     results = get_gcs_object(response.results[_TEST_AUDIO_FILE_PATH].uri)
@@ -70,5 +68,3 @@ def test_transcribe_batch_multiple_files_v2(capsys: pytest.CaptureFixture) -> No
         results.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )
-
-    delete_gcs_bucket(bucket_name)
