@@ -48,9 +48,10 @@ def transcribe_batch_multiple_files_v2(
         model="long",
     )
 
-    files = []
-    for uri in gcs_uris:
-        files.append(cloud_speech.BatchRecognizeFileMetadata(uri=uri))
+    files = [
+        cloud_speech.BatchRecognizeFileMetadata(uri=uri)
+        for uri in gcs_uris
+    ]
 
     request = cloud_speech.BatchRecognizeRequest(
         recognizer=f"projects/{project_id}/locations/global/recognizers/_",
