@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl
 import pytest
 
@@ -23,6 +24,7 @@ PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 MODEL_ID = os.environ["ENTITY_EXTRACTION_MODEL_ID"]
 
 
+@Retry()
 @pytest.fixture(scope="function")
 def model_evaluation_id():
     client = automl.AutoMlClient()
@@ -37,6 +39,7 @@ def model_evaluation_id():
     yield model_evaluation_id
 
 
+@Retry()
 def test_get_model_evaluation(capsys, model_evaluation_id):
     get_model_evaluation.get_model_evaluation(PROJECT_ID, MODEL_ID, model_evaluation_id)
     out, _ = capsys.readouterr()

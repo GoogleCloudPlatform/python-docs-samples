@@ -18,6 +18,7 @@ from time import sleep
 
 from google.api_core.client_options import ClientOptions
 from google.cloud import firestore
+from google.cloud.firestore_v1.base_query import FieldFilter
 
 
 def quickstart_new_instance():
@@ -238,7 +239,11 @@ def get_simple_query():
     db = firestore.Client()
     # [START firestore_data_query]
     # Note: Use of CollectionRef stream() is prefered to get()
-    docs = db.collection("cities").where("capital", "==", True).stream()
+    docs = (
+        db.collection("cities")
+        .where(filter=FieldFilter("capital", "==", True))
+        .stream()
+    )
 
     for doc in docs:
         print(f"{doc.id} => {doc.to_dict()}")
@@ -250,7 +255,9 @@ def array_contains_filter():
     # [START firestore_query_filter_array_contains]
     cities_ref = db.collection("cities")
 
-    query = cities_ref.where("regions", "array_contains", "west_coast")
+    query = cities_ref.where(
+        filter=FieldFilter("regions", "array_contains", "west_coast")
+    )
     # [END firestore_query_filter_array_contains]
     docs = query.stream()
     for doc in docs:
@@ -451,7 +458,7 @@ def compound_query_example():
     cities_ref = db.collection("cities")
 
     # Create a query against the collection
-    query_ref = cities_ref.where("state", "==", "CA")
+    query_ref = cities_ref.where(filter=FieldFilter("state", "==", "CA"))
     # [END firestore_query_filter_eq_string]
 
     return query_ref
@@ -462,7 +469,7 @@ def compound_query_simple():
     # [START firestore_query_filter_eq_boolean]
     cities_ref = db.collection("cities")
 
-    query = cities_ref.where("capital", "==", True)
+    query = cities_ref.where(filter=FieldFilter("capital", "==", True))
     # [END firestore_query_filter_eq_boolean]
 
     print(query)
@@ -473,9 +480,9 @@ def compound_query_single_clause():
     # [START firestore_query_filter_single_examples]
     cities_ref = db.collection("cities")
 
-    cities_ref.where("state", "==", "CA")
-    cities_ref.where("population", "<", 1000000)
-    cities_ref.where("name", ">=", "San Francisco")
+    cities_ref.where(filter=FieldFilter("state", "==", "CA"))
+    cities_ref.where(filter=FieldFilter("population", "<", 1000000))
+    cities_ref.where(filter=FieldFilter("name", ">=", "San Francisco"))
     # [END firestore_query_filter_single_examples]
 
 
@@ -484,10 +491,12 @@ def compound_query_valid_multi_clause():
     # [START firestore_query_filter_compound_multi_eq]
     cities_ref = db.collection("cities")
 
-    denver_query = cities_ref.where("state", "==", "CO").where("name", "==", "Denver")
-    large_us_cities_query = cities_ref.where("state", "==", "CA").where(
-        "population", ">", 1000000
+    denver_query = cities_ref.where(filter=FieldFilter("state", "==", "CO")).where(
+        filter=FieldFilter("name", "==", "Denver")
     )
+    large_us_cities_query = cities_ref.where(
+        filter=FieldFilter("state", "==", "CA")
+    ).where(filter=FieldFilter("population", ">", 1000000))
     # [END firestore_query_filter_compound_multi_eq]
     print(denver_query)
     print(large_us_cities_query)
@@ -497,7 +506,9 @@ def compound_query_valid_single_field():
     db = firestore.Client()
     # [START firestore_query_filter_range_valid]
     cities_ref = db.collection("cities")
-    cities_ref.where("state", ">=", "CA").where("state", "<=", "IN")
+    cities_ref.where(filter=FieldFilter("state", ">=", "CA")).where(
+        filter=FieldFilter("state", "<=", "IN")
+    )
     # [END firestore_query_filter_range_valid]
 
 
@@ -505,7 +516,9 @@ def compound_query_invalid_multi_field():
     db = firestore.Client()
     # [START firestore_query_filter_range_invalid]
     cities_ref = db.collection("cities")
-    cities_ref.where("state", ">=", "CA").where("population", ">=", 1000000)
+    cities_ref.where(filter=FieldFilter("state", ">=", "CA")).where(
+        filter=FieldFilter("population", ">=", 1000000)
+    )
     # [END firestore_query_filter_range_invalid]
 
 
@@ -540,7 +553,11 @@ def order_where_limit():
     db = firestore.Client()
     # [START firestore_query_order_limit_field_valid]
     cities_ref = db.collection("cities")
-    query = cities_ref.where("population", ">", 2500000).order_by("population").limit(2)
+    query = (
+        cities_ref.where(filter=FieldFilter("population", ">", 2500000))
+        .order_by("population")
+        .limit(2)
+    )
     results = query.stream()
     # [END firestore_query_order_limit_field_valid]
     print(results)
@@ -560,7 +577,9 @@ def order_where_valid():
     db = firestore.Client()
     # [START firestore_query_order_with_filter]
     cities_ref = db.collection("cities")
-    query = cities_ref.where("population", ">", 2500000).order_by("population")
+    query = cities_ref.where(filter=FieldFilter("population", ">", 2500000)).order_by(
+        "population"
+    )
     results = query.stream()
     # [END firestore_query_order_with_filter]
     print(results)
@@ -570,7 +589,9 @@ def order_where_invalid():
     db = firestore.Client()
     # [START firestore_query_order_field_invalid]
     cities_ref = db.collection("cities")
-    query = cities_ref.where("population", ">", 2500000).order_by("country")
+    query = cities_ref.where(filter=FieldFilter("population", ">", 2500000)).order_by(
+        "country"
+    )
     results = query.stream()
     # [END firestore_query_order_field_invalid]
     print(results)
@@ -689,7 +710,7 @@ def listen_multiple():
             print(f"{doc.id}")
         callback_done.set()
 
-    col_query = db.collection("cities").where("state", "==", "CA")
+    col_query = db.collection("cities").where(filter=FieldFilter("state", "==", "CA"))
 
     # Watch the collection query
     query_watch = col_query.on_snapshot(on_snapshot)
@@ -729,7 +750,7 @@ def listen_for_changes():
                 print(f"Removed city: {change.document.id}")
                 delete_done.set()
 
-    col_query = db.collection("cities").where("state", "==", "CA")
+    col_query = db.collection("cities").where(filter=FieldFilter("state", "==", "CA"))
 
     # Watch the collection query
     query_watch = col_query.on_snapshot(on_snapshot)
@@ -853,7 +874,9 @@ def collection_group_query(db):
     # [END firestore_query_collection_group_dataset]
 
     # [START firestore_query_collection_group_filter_eq]
-    museums = db.collection_group("landmarks").where("type", "==", "museum")
+    museums = db.collection_group("landmarks").where(
+        filter=FieldFilter("type", "==", "museum")
+    )
     docs = museums.stream()
     for doc in docs:
         print(f"{doc.id} => {doc.to_dict()}")
@@ -866,7 +889,9 @@ def array_contains_any_queries(db):
     cities_ref = db.collection("cities")
 
     query = cities_ref.where(
-        "regions", "array_contains_any", ["west_coast", "east_coast"]
+        filter=FieldFilter(
+            "regions", "array_contains_any", ["west_coast", "east_coast"]
+        )
     )
     return query
     # [END firestore_query_filter_array_contains_any]
@@ -876,7 +901,7 @@ def in_query_without_array(db):
     # [START firestore_query_filter_in]
     cities_ref = db.collection("cities")
 
-    query = cities_ref.where("country", "in", ["USA", "Japan"])
+    query = cities_ref.where(filter=FieldFilter("country", "in", ["USA", "Japan"]))
     return query
     # [END firestore_query_filter_in]
 
@@ -885,7 +910,9 @@ def in_query_with_array(db):
     # [START firestore_query_filter_in_with_array]
     cities_ref = db.collection("cities")
 
-    query = cities_ref.where("regions", "in", [["west_coast"], ["east_coast"]])
+    query = cities_ref.where(
+        filter=FieldFilter("regions", "in", [["west_coast"], ["east_coast"]])
+    )
     return query
     # [END firestore_query_filter_in_with_array]
 

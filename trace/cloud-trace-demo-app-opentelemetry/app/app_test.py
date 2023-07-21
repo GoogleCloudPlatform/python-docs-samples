@@ -15,8 +15,7 @@
 A sample app demonstrating Google Cloud Trace
 """
 import os
-
-import mock
+from unittest import mock
 
 import app
 

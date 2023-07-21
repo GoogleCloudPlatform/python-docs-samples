@@ -2588,6 +2588,7 @@ if __name__ == "__main__":
         "deid_fields_2",
         help="List of column names in table to de-identify using transient_key_name_2.",
     )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":

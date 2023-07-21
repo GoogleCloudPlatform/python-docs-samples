@@ -252,8 +252,12 @@ def create_instance(
     else:
         instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
 
+    instance.scheduling = compute_v1.Scheduling()
     if accelerators:
         instance.guest_accelerators = accelerators
+        instance.scheduling.on_host_maintenance = (
+            compute_v1.Scheduling.OnHostMaintenance.TERMINATE.name
+        )
 
     if preemptible:
         # Set the preemptible setting
@@ -265,7 +269,6 @@ def create_instance(
 
     if spot:
         # Set the Spot VM setting
-        instance.scheduling = compute_v1.Scheduling()
         instance.scheduling.provisioning_model = (
             compute_v1.Scheduling.ProvisioningModel.SPOT.name
         )

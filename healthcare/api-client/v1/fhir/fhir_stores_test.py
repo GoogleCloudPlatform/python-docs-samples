@@ -25,7 +25,8 @@ import pytest
 
 # Add datasets for bootstrapping datasets for testing
 sys.path.append(os.path.join(os.path.dirname(__file__), "..", "datasets"))  # noqa
-import datasets  # noqa
+from create_dataset import create_dataset  # noqa
+from delete_dataset import delete_dataset  # noqa
 import fhir_stores  # noqa
 
 
@@ -69,7 +70,7 @@ def wait_for_operation(operation_name: str):
 
 @pytest.fixture(scope="module")
 def test_dataset():
-    operation = datasets.create_dataset(project_id, location, dataset_id)
+    operation = create_dataset(project_id, location, dataset_id)
 
     # Wait for the dataset to be created
     wait_for_operation(operation["name"])
@@ -80,7 +81,7 @@ def test_dataset():
     @backoff.on_exception(backoff.expo, HttpError, max_time=BACKOFF_MAX_TIME)
     def clean_up():
         try:
-            datasets.delete_dataset(project_id, location, dataset_id)
+            delete_dataset(project_id, location, dataset_id)
         except HttpError as err:
             # The API returns 403 when the dataset doesn't exist.
             if err.resp.status == 404 or err.resp.status == 403:
