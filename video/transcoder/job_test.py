@@ -23,6 +23,7 @@ import pytest
 
 import create_job_from_ad_hoc
 import create_job_from_preset
+import create_job_from_preset_batch_mode
 import create_job_from_template
 import create_job_template
 import create_job_with_animated_overlay
@@ -61,6 +62,9 @@ captions_uri = f"gs://{input_bucket_name}{test_captions_file_name}"
 subtitles1_uri = f"gs://{input_bucket_name}{test_subtitles1_file_name}"
 subtitles2_uri = f"gs://{input_bucket_name}{test_subtitles2_file_name}"
 output_uri_for_preset = f"gs://{output_bucket_name}/test-output-preset/"
+output_uri_for_preset_batch_mode = (
+    f"gs://{output_bucket_name}/test-output-preset-batch-mode/"
+)
 output_uri_for_template = f"gs://{output_bucket_name}/test-output-template/"
 output_uri_for_adhoc = f"gs://{output_bucket_name}/test-output-adhoc/"
 output_uri_for_static_overlay = f"gs://{output_bucket_name}/test-output-static-overlay/"
@@ -105,6 +109,36 @@ def test_bucket():
 def test_create_job_from_preset(capsys, test_bucket):
     create_job_from_preset.create_job_from_preset(
         project_id, location, input_uri, output_uri_for_preset, preset
+    )
+    out, _ = capsys.readouterr()
+    job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
+    assert job_name_prefix in out
+
+    str_slice = out.split("/")
+    job_id = str_slice[len(str_slice) - 1].rstrip("\n")
+    job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
+    assert job_name in out
+
+    get_job.get_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    time.sleep(30)
+
+    _assert_job_state_succeeded_or_running(capsys, job_id)
+
+    list_jobs.list_jobs(project_id, location)
+    out, _ = capsys.readouterr()
+    assert job_name in out
+
+    delete_job.delete_job(project_id, location, job_id)
+    out, _ = capsys.readouterr()
+    assert "Deleted job" in out
+
+
+def test_create_job_from_preset_batch_mode(capsys, test_bucket):
+    create_job_from_preset_batch_mode.create_job_from_preset_batch_mode(
+        project_id, location, input_uri, output_uri_for_preset_batch_mode, preset
     )
     out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
