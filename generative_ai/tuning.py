@@ -28,7 +28,7 @@ def tuning(
     project_id: str,
     location: str,
     training_data: pd.DataFrame | str,
-    train_steps: int = 10,
+    train_steps: int = 300,
 ) -> None:
     """Tune a new model, based on a prompt-response data.
 
