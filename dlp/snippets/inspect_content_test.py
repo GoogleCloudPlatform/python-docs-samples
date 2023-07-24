@@ -697,18 +697,18 @@ def test_inspect_data_to_hybrid_job_trigger(
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
 def test_inspect_gcs_send_to_scc(
-    dlp_client: MagicMock,
-    capsys: pytest.CaptureFixture
+    dlp_client: MagicMock, capsys: pytest.CaptureFixture
 ) -> None:
-
     # Configure the mock DLP client and its behavior.
     mock_dlp_instance = dlp_client.return_value
     # Configure the mock CreateDlpJob DLP method and its behavior.
-    mock_dlp_instance.create_dlp_job.return_value.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_dlp_instance.create_dlp_job.return_value.name = (
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
+    )
 
     # Configure the mock GetDlpJob DLP method and its behavior.
     mock_job = mock_dlp_instance.get_dlp_job.return_value
-    mock_job.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_job.name = f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
     mock_job.state = google.cloud.dlp_v2.DlpJob.JobState.DONE
 
     file = open(os.path.join(RESOURCE_DIRECTORY, "test.txt"), "r")
@@ -742,18 +742,18 @@ def test_inspect_gcs_send_to_scc(
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
 def test_inspect_bigquery_send_to_scc(
-    dlp_client: MagicMock,
-    capsys: pytest.CaptureFixture
+    dlp_client: MagicMock, capsys: pytest.CaptureFixture
 ) -> None:
-
     # Configure the mock DLP client and its behavior.
     mock_dlp_instance = dlp_client.return_value
     # Configure the mock CreateDlpJob DLP method and its behavior.
-    mock_dlp_instance.create_dlp_job.return_value.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_dlp_instance.create_dlp_job.return_value.name = (
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
+    )
 
     # Configure the mock GetDlpJob DLP method and its behavior.
     mock_job = mock_dlp_instance.get_dlp_job.return_value
-    mock_job.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_job.name = f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
 
     mock_job.state = google.cloud.dlp_v2.DlpJob.JobState.DONE
 
@@ -779,17 +779,18 @@ def test_inspect_bigquery_send_to_scc(
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
 def test_inspect_datastore_send_to_scc(
-    dlp_client: MagicMock,
-    capsys: pytest.CaptureFixture
+    dlp_client: MagicMock, capsys: pytest.CaptureFixture
 ) -> None:
     # Configure the mock DLP client and its behavior.
     mock_dlp_instance = dlp_client.return_value
     # Configure the mock CreateDlpJob DLP method and its behavior.
-    mock_dlp_instance.create_dlp_job.return_value.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_dlp_instance.create_dlp_job.return_value.name = (
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
+    )
 
     # Configure the mock GetDlpJob DLP method and its behavior.
     mock_job = mock_dlp_instance.get_dlp_job.return_value
-    mock_job.name = f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job'
+    mock_job.name = f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job"
     mock_job.state = google.cloud.dlp_v2.DlpJob.JobState.DONE
 
     mock_job.inspect_details.result.info_type_stats.info_type.name = "EMAIL_ADDRESS"

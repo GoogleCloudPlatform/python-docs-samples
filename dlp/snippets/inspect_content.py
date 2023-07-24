@@ -1590,21 +1590,13 @@ def inspect_gcs_send_to_scc(
     inspect_config = {
         "info_types": info_types,
         "min_likelihood": google.cloud.dlp_v2.Likelihood.UNLIKELY,
-        "limits": {
-            "max_findings_per_request": max_findings
-        },
+        "limits": {"max_findings_per_request": max_findings},
         "include_quote": True,
     }
 
     # Construct a cloud_storage_options dictionary with the bucket's URL.
     url = f"gs://{bucket}"
-    storage_config = {
-        "cloud_storage_options": {
-            "file_set": {
-                "url": url
-            }
-        }
-    }
+    storage_config = {"cloud_storage_options": {"file_set": {"url": url}}}
 
     # Tell the API where to send a notification when the job is complete.
     actions = [{"publish_summary_to_cscc": {}}]
@@ -1639,7 +1631,7 @@ def inspect_gcs_send_to_scc(
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
         elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
-            print('Job Failed, Please check the configuration.')
+            print("Job Failed, Please check the configuration.")
             return
 
         # Sleep for a short duration before checking the job status again.
@@ -1656,6 +1648,7 @@ def inspect_gcs_send_to_scc(
             print("Count: {}".format(stats.count))
     else:
         print("No findings.")
+
 
 # [END dlp_inspect_gcs_send_to_scc]
 
@@ -1675,7 +1668,6 @@ def inspect_datastore_send_to_scc(
     namespace_id: str = None,
     max_findings: int = 100,
 ) -> None:
-
     """
     Uses the Data Loss Prevention API to inspect Datastore data and
     send the results to Google Security Command Center.
@@ -1711,7 +1703,7 @@ def inspect_datastore_send_to_scc(
                 "project_id": datastore_project,
                 "namespace_id": namespace_id,
             },
-            "kind": {"name": kind}
+            "kind": {"name": kind},
         }
     }
 
@@ -1748,7 +1740,7 @@ def inspect_datastore_send_to_scc(
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
         elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
-            print('Job Failed, Please check the configuration.')
+            print("Job Failed, Please check the configuration.")
             return
 
         # Sleep for a short duration before checking the job status again.
@@ -1780,7 +1772,6 @@ def inspect_bigquery_send_to_scc(
     info_types: List[str],
     max_findings: int = 100,
 ) -> None:
-
     """
     Uses the Data Loss Prevention API to inspect public bigquery dataset
     and send the results to Google Security Command Center.
@@ -1849,7 +1840,7 @@ def inspect_bigquery_send_to_scc(
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
         elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
-            print('Job Failed, Please check the configuration.')
+            print("Job Failed, Please check the configuration.")
             return
 
         # Sleep for a short duration before checking the job status again.
