@@ -30,14 +30,23 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def create_job_from_ad_hoc(project_id, location, input_uri, output_uri):
+def create_job_from_ad_hoc(
+    project_id: str,
+    location: str,
+    input_uri: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration.
 
     Args:
         project_id: The GCP project ID.
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
-        output_uri: Uri of the video output folder in the Cloud Storage bucket."""
+        output_uri: Uri of the video output folder in the Cloud Storage bucket.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

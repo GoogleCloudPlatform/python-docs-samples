@@ -30,13 +30,21 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def create_job_template(project_id, location, template_id):
+def create_job_template(
+    project_id: str,
+    location: str,
+    template_id: str,
+) -> transcoder_v1.types.resources.JobTemplate:
     """Creates a job template.
 
     Args:
         project_id: The GCP project ID.
         location: The location to store this template in.
-        template_id: The user-defined template ID."""
+        template_id: The user-defined template ID.
+
+    Returns:
+        The job template resource.
+    """
 
     client = TranscoderServiceClient()
 
