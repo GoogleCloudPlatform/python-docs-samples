@@ -109,17 +109,16 @@ def test_bucket() -> None:
 def test_create_job_from_preset(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_from_preset.create_job_from_preset(
+    response = create_job_from_preset.create_job_from_preset(
         project_id, location, input_uri, output_uri_for_preset, preset
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -128,29 +127,27 @@ def test_create_job_from_preset(
 
     _assert_job_state_succeeded_or_running(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
+    response = list_jobs.list_jobs(project_id, location)
     out, _ = capsys.readouterr()
     assert job_name in out
 
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_from_preset_batch_mode(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_from_preset_batch_mode.create_job_from_preset_batch_mode(
+    response = create_job_from_preset_batch_mode.create_job_from_preset_batch_mode(
         project_id, location, input_uri, output_uri_for_preset_batch_mode, preset
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -163,9 +160,8 @@ def test_create_job_from_preset_batch_mode(
     out, _ = capsys.readouterr()
     assert job_name in out
 
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_from_template(
@@ -175,21 +171,21 @@ def test_create_job_from_template(
         f"projects/{project_number}/locations/{location}/jobTemplates/{template_id}"
     )
 
-    create_job_template.create_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert job_template_name in out
+    response = create_job_template.create_job_template(
+        project_id, location, template_id
+    )
+    assert job_template_name in response.name
 
-    create_job_from_template.create_job_from_template(
+    response = create_job_from_template.create_job_from_template(
         project_id, location, input_uri, output_uri_for_template, template_id
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -202,29 +198,28 @@ def test_create_job_from_template(
     out, _ = capsys.readouterr()
     assert job_name in out
 
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
-    delete_job_template.delete_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job template" in out
+    response = delete_job_template.delete_job_template(
+        project_id, location, template_id
+    )
+    assert response is None
 
 
 def test_create_job_from_ad_hoc(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_from_ad_hoc.create_job_from_ad_hoc(
+    response = create_job_from_ad_hoc.create_job_from_ad_hoc(
         project_id, location, input_uri, output_uri_for_adhoc
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -237,29 +232,27 @@ def test_create_job_from_ad_hoc(
     out, _ = capsys.readouterr()
     assert job_name in out
 
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_static_overlay(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_static_overlay.create_job_with_static_overlay(
+    response = create_job_with_static_overlay.create_job_with_static_overlay(
         project_id,
         location,
         input_uri,
         overlay_image_uri,
         output_uri_for_static_overlay,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -268,33 +261,27 @@ def test_create_job_with_static_overlay(
 
     _assert_job_state_succeeded(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_animated_overlay(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_animated_overlay.create_job_with_animated_overlay(
+    response = create_job_with_animated_overlay.create_job_with_animated_overlay(
         project_id,
         location,
         input_uri,
         overlay_image_uri,
         output_uri_for_animated_overlay,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -303,32 +290,26 @@ def test_create_job_with_animated_overlay(
 
     _assert_job_state_succeeded(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_set_number_spritesheet(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_set_number_images_spritesheet.create_job_with_set_number_images_spritesheet(
+    response = create_job_with_set_number_images_spritesheet.create_job_with_set_number_images_spritesheet(
         project_id,
         location,
         input_uri,
         output_uri_for_set_number_spritesheet,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -351,32 +332,26 @@ def test_create_job_with_set_number_spritesheet(
         + spritesheet_file_suffix,
     )
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_periodic_spritesheet(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_periodic_images_spritesheet.create_job_with_periodic_images_spritesheet(
+    response = create_job_with_periodic_images_spritesheet.create_job_with_periodic_images_spritesheet(
         project_id,
         location,
         input_uri,
         output_uri_for_periodic_spritesheet,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -399,19 +374,14 @@ def test_create_job_with_periodic_spritesheet(
         + spritesheet_file_suffix,
     )
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_concatenated_inputs(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_concatenated_inputs.create_job_with_concatenated_inputs(
+    response = create_job_with_concatenated_inputs.create_job_with_concatenated_inputs(
         project_id,
         location,
         concat1_uri,
@@ -422,14 +392,13 @@ def test_create_job_with_concatenated_inputs(
         "15s",
         output_uri_for_concat,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -438,33 +407,27 @@ def test_create_job_with_concatenated_inputs(
 
     _assert_job_state_succeeded(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_embedded_captions(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_embedded_captions.create_job_with_embedded_captions(
+    response = create_job_with_embedded_captions.create_job_with_embedded_captions(
         project_id,
         location,
         input_uri,
         captions_uri,
         output_uri_for_embedded_captions,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -473,19 +436,14 @@ def test_create_job_with_embedded_captions(
 
     _assert_job_state_succeeded(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 def test_create_job_with_standalone_captions(
     capsys: pytest.fixture, test_bucket: pytest.fixture
 ) -> None:
-    create_job_with_standalone_captions.create_job_with_standalone_captions(
+    response = create_job_with_standalone_captions.create_job_with_standalone_captions(
         project_id,
         location,
         input_uri,
@@ -493,14 +451,13 @@ def test_create_job_with_standalone_captions(
         subtitles2_uri,
         output_uri_for_standalone_captions,
     )
-    out, _ = capsys.readouterr()
     job_name_prefix = f"projects/{project_number}/locations/{location}/jobs/"
-    assert job_name_prefix in out
+    assert job_name_prefix in response.name
 
-    str_slice = out.split("/")
+    str_slice = response.name.split("/")
     job_id = str_slice[len(str_slice) - 1].rstrip("\n")
     job_name = f"projects/{project_number}/locations/{location}/jobs/{job_id}"
-    assert job_name in out
+    assert job_name in response.name
 
     response = get_job.get_job(project_id, location, job_id)
     assert job_name in response.name
@@ -509,13 +466,8 @@ def test_create_job_with_standalone_captions(
 
     _assert_job_state_succeeded(capsys, job_id)
 
-    list_jobs.list_jobs(project_id, location)
-    out, _ = capsys.readouterr()
-    assert job_name in out
-
-    delete_job.delete_job(project_id, location, job_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job" in out
+    response = delete_job.delete_job(project_id, location, job_id)
+    assert response is None
 
 
 # Retrying up to 10 mins. This function checks if the job completed

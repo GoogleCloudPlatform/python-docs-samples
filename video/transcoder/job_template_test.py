@@ -55,6 +55,7 @@ def test_template_operations(capsys: pytest.fixture) -> None:
     out, _ = capsys.readouterr()
     assert job_template_name in out
 
-    delete_job_template.delete_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job template" in out
+    response = delete_job_template.delete_job_template(
+        project_id, location, template_id
+    )
+    assert response is None
