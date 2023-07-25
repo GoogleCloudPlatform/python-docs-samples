@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Transcoder sample for creating a job based on a job template.
+"""Google Cloud Transcoder sample for creating a job in batch mode based on a
+    job preset.
 
 Example usage:
-    python create_job_from_template.py --project_id <project-id> --location <location> --input_uri <uri> --output_uri <uri> --template_id <template-id>
+    python create_job_from_preset_batch_mode.py --project_id <project-id> --location <location> --input_uri <uri> --output_uri <uri> [--preset <preset>]
 """
 
-# [START transcoder_create_job_from_template]
+# [START transcoder_create_job_from_preset_batch_mode]
 
 import argparse
 
@@ -30,21 +31,21 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def create_job_from_template(
+def create_job_from_preset_batch_mode(
     project_id: str,
     location: str,
     input_uri: str,
     output_uri: str,
-    template_id: str,
+    preset: str,
 ) -> transcoder_v1.types.resources.Job:
-    """Creates a job based on a job template.
+    """Creates a job in batch mode based on a job preset.
 
     Args:
         project_id: The GCP project ID.
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
         output_uri: Uri of the video output folder in the Cloud Storage bucket.
-        template_id: The user-defined template ID.
+        preset: The preset template (for example, 'preset/web-hd').
 
     Returns:
         The job resource.
@@ -56,14 +57,16 @@ def create_job_from_template(
     job = transcoder_v1.types.Job()
     job.input_uri = input_uri
     job.output_uri = output_uri
-    job.template_id = template_id
+    job.template_id = preset
+    job.mode = transcoder_v1.types.Job.ProcessingMode.PROCESSING_MODE_BATCH
+    job.batch_mode_priority = 10
 
     response = client.create_job(parent=parent, job=job)
     print(f"Job: {response.name}")
     return response
 
 
-# [END transcoder_create_job_from_template]
+# [END transcoder_create_job_from_preset_batch_mode]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -84,15 +87,15 @@ if __name__ == "__main__":
         required=True,
     )
     parser.add_argument(
-        "--template_id",
-        help="The job template ID. The template must be located in the same location as the job.",
-        required=True,
+        "--preset",
+        help="The preset template (for example, 'preset/web-hd').",
+        default="preset/web-hd",
     )
     args = parser.parse_args()
-    create_job_from_template(
+    create_job_from_preset_batch_mode(
         args.project_id,
         args.location,
         args.input_uri,
         args.output_uri,
-        args.template_id,
+        args.preset,
     )
