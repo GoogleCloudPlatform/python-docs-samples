@@ -65,6 +65,8 @@ spec:
             secretKeyRef:
               name: <YOUR-DB-SECRET>
               key: database
+      # If you are using the Python Connector (recommended), you can
+      # remove cloud-sql-proxy (everything below this line)
       - name: cloud-sql-proxy
         # This uses the latest version of the Cloud SQL proxy
         # It is recommended to use a specific version for production environments.
