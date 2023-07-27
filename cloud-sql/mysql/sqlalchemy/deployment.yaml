@@ -40,16 +40,17 @@ spec:
           value: "8080"
         # This project uses environment variables to determine
         # how you would like to run your application
-        # To use the Python connector (recommended) - use INSTANCE_CONNECTION_NAME (proj:region:instance)
+        # To use the Python Connector (recommended) - use INSTANCE_CONNECTION_NAME (proj:region:instance)
         # To use TCP - Setting INSTANCE_HOST will use TCP (e.g., 127.0.0.1)
         # To use Unix, use INSTANCE_UNIX_SOCKET (e.g., /cloudsql/proj:region:instance)
         - name: INSTANCE_HOST
           value: "127.0.0.1"
         - name: DB_PORT
           value: "3306"
-        # To use Automatic IAM Authentication (recommended)
-        # use DB_IAM_USER instead of DB_USER
-        # you may also remove the DB_PASS environment variable
+        # For Automatic IAM Authentication with the Python Connector
+        # use DB_IAM_USER instead of DB_USER (recommended)
+        # You may also remove the DB_PASS environment variable if
+        # you use Automatic IAM Authentication
         - name: DB_USER
           valueFrom:
             secretKeyRef:
