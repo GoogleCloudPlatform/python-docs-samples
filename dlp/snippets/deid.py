@@ -313,6 +313,97 @@ def deidentify_with_fpe(
 # [END dlp_deidentify_fpe]
 
 
+# [START dlp_reidentify_text_fpe]
+import base64  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def reidentify_text_with_fpe(
+    project: str,
+    input_str: str,
+    key_name: str = None,
+    wrapped_key: str = None,
+) -> None:
+    """
+    Uses the Data Loss Prevention API to re-identify sensitive data in a
+    string using Format Preserving Encryption (FPE).
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        input_str: The string to re-identify (will be treated as text).
+        key_name: The name of the Cloud KMS key used to encrypt ('wrap') the
+            AES-256 key. Example:
+            key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/
+            keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'
+        wrapped_key: The encrypted ('wrapped') AES-256 key to use. This key
+            should be encrypted using the Cloud KMS key specified by key_name.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # The wrapped key is base64-encoded, but the library expects a binary
+    # string, so decode it here.
+    wrapped_key = base64.b64decode(wrapped_key)
+
+    # Specify the type of info the inspection will re-identify.
+    # This must use the same custom infoType that was used as a
+    # surrogate during the initial encryption.
+    surrogate_info_type = {"name": "PHONE_NUMBER"}
+
+    # Construct FPE configuration dictionary
+    crypto_replace_ffx_fpe_config = {
+        "crypto_key": {
+            "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name}
+        },
+        "common_alphabet": 'NUMERIC',
+        "surrogate_info_type": surrogate_info_type,
+    }
+
+    # Construct re-identify configuration dictionary
+    reidentify_config = {
+        "info_type_transformations": {
+            "transformations": [
+                {
+                    "primitive_transformation": {
+                        "crypto_replace_ffx_fpe_config": crypto_replace_ffx_fpe_config,
+                    },
+                    "info_types": [surrogate_info_type],
+                }
+            ]
+        }
+    }
+
+    # Construct inspect configuration dictionary
+    inspect_config = {
+        "custom_info_types": [
+            {"info_type": surrogate_info_type, "surrogate_type": {}}
+        ]
+    }
+
+    # Construct the `item`.
+    item = {"value": input_str}
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API.
+    response = dlp.reidentify_content(
+        request={
+            "parent": parent,
+            "reidentify_config": reidentify_config,
+            "inspect_config": inspect_config,
+            "item": item,
+        }
+    )
+
+    # Print results
+    print(f"Text after re-identification: {response.item.value}")
+
+
+# [END dlp_reidentify_text_fpe]
+
+
 # [START dlp_deidentify_deterministic]
 import base64  # noqa: F811, E402, I100
 from typing import List  # noqa: F811, E402
@@ -2232,6 +2323,32 @@ if __name__ == "__main__":
         "in your dataset otherwise.",
     )
 
+    reid_basic_parser = subparsers.add_parser(
+        "reid_text_fpe",
+        help="Re-identify sensitive data in a string using Format Preserving "
+             "Encryption (FPE).",
+    )
+    reid_basic_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    reid_basic_parser.add_argument(
+        "item",
+        help="The string to re-identify. " "Example: string = 'My SSN is 372819127'",
+    )
+    reid_basic_parser.add_argument(
+        "key_name",
+        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
+    reid_basic_parser.add_argument(
+        "wrapped_key",
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
+        "be encrypted using the Cloud KMS key specified by key_name.",
+    )
+
     reid_parser = subparsers.add_parser(
         "reid_fpe",
         help="Reidentify sensitive data in a string using Format Preserving "
@@ -2702,6 +2819,13 @@ if __name__ == "__main__":
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
             surrogate_type=args.surrogate_type,
+        )
+    elif args.content == "reid_text_fpe":
+        reidentify_text_with_fpe(
+            args.project,
+            args.item,
+            wrapped_key=args.wrapped_key,
+            key_name=args.key_name,
         )
     elif args.content == "reid_fpe":
         reidentify_with_fpe(

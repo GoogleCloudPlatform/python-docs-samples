@@ -188,6 +188,23 @@ def test_deidentify_with_fpe_ignores_insensitive_data(
     assert HARMLESS_STRING in out
 
 
+def test_reidentify_text_with_fpe(capsys: pytest.CaptureFixture) -> None:
+
+    labeled_fpe_string = "My phone number is PHONE_NUMBER(10):9617256398"
+
+    deid.reidentify_text_with_fpe(
+        GCLOUD_PROJECT,
+        labeled_fpe_string,
+        wrapped_key=WRAPPED_KEY,
+        key_name=KEY_NAME,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "PHONE_NUMBER" not in out
+    assert "9617256398" not in out
+
+
 def test_deidentify_with_date_shift(
     tempdir: TextIO, capsys: pytest.CaptureFixture
 ) -> None:
