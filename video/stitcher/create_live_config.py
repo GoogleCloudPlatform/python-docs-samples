@@ -39,7 +39,7 @@ def create_live_config(
     live_stream_uri: str,
     ad_tag_uri: str,
     slate_id: str,
-) -> str:
+) -> stitcher_v1.types.LiveConfig:
     """Creates a live config.
     Args:
         project_id: The GCP project ID.
@@ -49,6 +49,9 @@ def create_live_config(
                     manifest (.mpd) file or an M3U playlist manifest (.m3u8) file.
         ad_tag_uri: Uri of the ad tag.
         slate_id: The user-defined slate ID of the default slate to use when no slates are specified in an ad break's message.
+
+    Returns:
+        The live config resource.
     """
 
     client = VideoStitcherServiceClient()
@@ -60,6 +63,7 @@ def create_live_config(
         source_uri=live_stream_uri,
         ad_tag_uri=ad_tag_uri,
         ad_tracking="SERVER",
+        stitching_policy="CUT_CURRENT",
         default_slate=default_slate,
     )
 

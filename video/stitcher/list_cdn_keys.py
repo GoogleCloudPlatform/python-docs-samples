@@ -24,15 +24,20 @@ Example usage:
 import argparse
 
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
+    pagers,
     VideoStitcherServiceClient,
 )
 
 
-def list_cdn_keys(project_id: str, location: str) -> str:
+def list_cdn_keys(project_id: str, location: str) -> pagers.ListCdnKeysPager:
     """Lists all CDN keys in a location.
     Args:
         project_id: The GCP project ID.
-        location: The location of the CDN keys."""
+        location: The location of the CDN keys.
+
+    Returns:
+        An iterable object containing CDN key resources.
+    """
 
     client = VideoStitcherServiceClient()
 
