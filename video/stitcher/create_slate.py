@@ -31,13 +31,18 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 )
 
 
-def create_slate(project_id: str, location: str, slate_id: str, slate_uri: str) -> str:
+def create_slate(
+    project_id: str, location: str, slate_id: str, slate_uri: str
+) -> stitcher_v1.types.Slate:
     """Creates a slate.
     Args:
         project_id: The GCP project ID.
         location: The location in which to create the slate.
         slate_id: The user-defined slate ID.
         slate_uri: Uri of the video slate; must be an MP4 video with at least one audio track.
+
+    Returns:
+        The slate resource.
     """
 
     client = VideoStitcherServiceClient()

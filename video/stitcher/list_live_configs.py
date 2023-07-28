@@ -24,15 +24,20 @@ Example usage:
 import argparse
 
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
+    pagers,
     VideoStitcherServiceClient,
 )
 
 
-def list_live_configs(project_id: str, location: str) -> str:
+def list_live_configs(project_id: str, location: str) -> pagers.ListLiveConfigsPager:
     """Lists all live configs in a location.
     Args:
         project_id: The GCP project ID.
-        location: The location of the live configs."""
+        location: The location of the live configs.
+
+    Returns:
+        An iterable object containing live config resources.
+    """
 
     client = VideoStitcherServiceClient()
 
