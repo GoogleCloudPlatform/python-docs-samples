@@ -63,6 +63,7 @@ def create_live_config(
         source_uri=live_stream_uri,
         ad_tag_uri=ad_tag_uri,
         ad_tracking="SERVER",
+        stitching_policy="CUT_CURRENT",
         default_slate=default_slate,
     )
 
