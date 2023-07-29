@@ -13,12 +13,18 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_sentiment_analysis]
-from vertexai.preview.language_models import TextGenerationModel
+import vertexai
+from vertexai.language_models import TextGenerationModel
 
 
-def sentiment_analysis(temperature: float = 0.2) -> None:
+def sentiment_analysis(
+    temperature: float,
+    project_id: str,
+    location: str,
+) -> str:
     """Sentiment analysis example with a Large Language Model."""
 
+    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -27,7 +33,7 @@ def sentiment_analysis(temperature: float = 0.2) -> None:
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("google/text-bison@001")
     response = model.predict(
         """I had to compare two versions of Hamlet for my Shakespeare class and \
 unfortunately I picked this version. Everything from the acting (the actors \
@@ -71,7 +77,7 @@ Classify the sentiment of the message: """,
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_sentiment_analysis]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

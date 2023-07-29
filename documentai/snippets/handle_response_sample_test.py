@@ -24,7 +24,7 @@ def test_process_document_ocr(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "52a38e080c1a7296"
-    processor_version = "rc"
+    processor_version = "pretrained-ocr-v1.0-2020-09-23"
     file_path = "resources/handwritten_form.pdf"
     mime_type = "application/pdf"
 
@@ -43,15 +43,15 @@ def test_process_document_ocr(capsys):
     assert "FakeDoc" in out
 
 
-def test_process_document_form(capsys):
+def test_process_document_form():
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "90484cfdedb024f6"
-    processor_version = "stable"
+    processor_version = "pretrained-form-parser-v2.0-2022-11-10"
     file_path = "resources/invoice.pdf"
     mime_type = "application/pdf"
 
-    handle_response_sample.process_document_form_sample(
+    document = handle_response_sample.process_document_form_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
@@ -59,27 +59,22 @@ def test_process_document_form(capsys):
         file_path=file_path,
         mime_type=mime_type,
     )
-    out, _ = capsys.readouterr()
 
-    expected_strings = [
-        "There are 1 page(s) in this document.",
-        "Table with 4 columns and 6 rows",
-        "Found 13 form field(s)",
-        "'BALANCE DUE': '$2140.00'",
-    ]
-    for expected_string in expected_strings:
-        assert expected_string in out
+    assert len(document.pages) == 1
+    assert len(document.pages[0].tables[0].header_rows[0].cells) == 4
+    assert len(document.pages[0].tables[0].body_rows) == 6
+    assert len(document.entities) > 0
 
 
 def test_process_document_quality(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-    processor_id = "7fcb597c523721b3"
-    processor_version = "stable"
+    processor_id = "52a38e080c1a7296"
+    processor_version = "pretrained-ocr-v1.0-2020-09-23"
     poor_quality_file_path = "resources/document_quality_poor.pdf"
     mime_type = "application/pdf"
 
-    handle_response_sample.process_document_quality_sample(
+    handle_response_sample.process_document_ocr_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
@@ -90,8 +85,8 @@ def test_process_document_quality(capsys):
     out, _ = capsys.readouterr()
 
     expected_strings = [
-        "Page 1 has a quality score of",
-        "defect_blurry score of 9",
+        "Quality score",
+        "defect_blurry",
         "defect_noisy",
     ]
     for expected_string in expected_strings:

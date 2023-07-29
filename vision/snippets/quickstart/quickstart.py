@@ -15,7 +15,6 @@
 # limitations under the License.
 
 # [START vision_quickstart]
-import os
 
 # Imports the Google Cloud client library
 # [START vision_python_migration_import]
@@ -32,14 +31,11 @@ def run_quickstart() -> vision.EntityAnnotation:
     client = vision.ImageAnnotatorClient()
     # [END vision_python_migration_client]
 
-    # The name of the image file to annotate
-    file_name = os.path.abspath("resources/wakeupcat.jpg")
+    # The URI of the image file to annotate
+    file_uri = "gs://cloud-samples-data/vision/label/wakeupcat.jpg"
 
-    # Loads the image into memory
-    with open(file_name, "rb") as image_file:
-        content = image_file.read()
-
-    image = vision.Image(content=content)
+    image = vision.Image()
+    image.source.image_uri = file_uri
 
     # Performs label detection on the image file
     response = client.label_detection(image=image)
@@ -51,8 +47,5 @@ def run_quickstart() -> vision.EntityAnnotation:
 
     return labels
 
-
-if __name__ == "__main__":
-    run_quickstart()
 
 # [END vision_quickstart]

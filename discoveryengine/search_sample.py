@@ -46,8 +46,7 @@ def search_sample(
     )
 
     request = discoveryengine.SearchRequest(
-        serving_config=serving_config,
-        query=search_query,
+        serving_config=serving_config, query=search_query, page_size=10
     )
     response = client.search(request)
     for result in response.results:

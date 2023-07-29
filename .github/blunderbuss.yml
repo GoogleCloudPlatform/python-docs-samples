@@ -39,6 +39,7 @@ assign_issues_by:
       - "api: recaptchaenterprise"
       - "api: secretmanager"
       - "api: securitycenter"
+      - "api: vmwareengine"
     to:
       - GoogleCloudPlatform/dee-infra
   - labels:
@@ -65,12 +66,10 @@ assign_issues_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: speech"
       - "api: talent"
       - "api: texttospeech"
       - "api: translate"
       - "api: vision"
-      - "api: bigquery"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
@@ -102,6 +101,10 @@ assign_issues_by:
       - "api: composer"
     to:
       - GoogleCloudPlatform/cloud-dpes-composer
+  - labels:
+      - "api: bigquery"
+    to:
+      - GoogleCloudPlatform/api-bigquery
 
   # AppEco individuals
   - labels:
@@ -155,6 +158,11 @@ assign_issues_by:
       - "api: cloudmedia"
     to:
       - GoogleCloudPlatform/cloud-media-team
+  - labels:
+      - "api: speech"
+    to:
+      - GoogleCloudPlatform/cloud-speech-eng
+      - GoogleCloudPlatform/dee-data-ai
 
   # Self-service individuals
   - labels:
@@ -220,7 +228,6 @@ assign_prs_by:
       - "api: ml"
       - "api: notebooks"
       - "api: optimization"
-      - "api: speech"
       - "api: talent"
       - "api: texttospeech"
       - "api: transcoder"
@@ -311,6 +318,11 @@ assign_prs_by:
       - "api: videostitcher"
     to:
       - GoogleCloudPlatform/cloud-media-team
+  - labels:
+      - "api: speech"
+    to:
+      - GoogleCloudPlatform/cloud-speech-eng
+      - GoogleCloudPlatform/dee-data-ai
 
   # Self-service individuals
   - labels:

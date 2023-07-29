@@ -24,17 +24,22 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import stitcher_v1
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
 
 
-def get_slate(project_id: str, location: str, slate_id: str) -> str:
+def get_slate(project_id: str, location: str, slate_id: str) -> stitcher_v1.types.Slate:
     """Gets a slate.
     Args:
         project_id: The GCP project ID.
         location: The location of the slate.
-        slate_id: The user-defined slate ID."""
+        slate_id: The user-defined slate ID.
+
+    Returns:
+        The slate resource.
+    """
 
     client = VideoStitcherServiceClient()
 

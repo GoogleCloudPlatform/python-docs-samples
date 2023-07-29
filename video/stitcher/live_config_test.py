@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.protobuf import empty_pb2 as empty
 from google.protobuf import timestamp_pb2
 import pytest
 
@@ -53,9 +54,8 @@ def test_live_config_operations(capsys: pytest.fixture) -> None:
 
     slate_name = f"projects/{project_id}/locations/{location}/slates/{slate_id}"
 
-    create_slate.create_slate(project_id, location, slate_id, slate_uri)
-    out, _ = capsys.readouterr()
-    assert slate_name in out
+    response = create_slate.create_slate(project_id, location, slate_id, slate_uri)
+    assert slate_name in response.name
 
     live_config_name = (
         f"projects/{project_id}/locations/{location}/liveConfigs/{live_config_id}"
@@ -63,26 +63,24 @@ def test_live_config_operations(capsys: pytest.fixture) -> None:
 
     # Tests
 
-    create_live_config.create_live_config(
+    response = create_live_config.create_live_config(
         project_id, location, live_config_id, live_stream_uri, ad_tag_uri, slate_id
     )
-    out, _ = capsys.readouterr()
-    assert live_config_name in out
+    assert live_config_name in response.name
 
     list_live_configs.list_live_configs(project_id, location)
     out, _ = capsys.readouterr()
     assert live_config_name in out
 
-    get_live_config.get_live_config(project_id, location, live_config_id)
-    out, _ = capsys.readouterr()
-    assert live_config_name in out
+    response = get_live_config.get_live_config(project_id, location, live_config_id)
+    assert live_config_name in response.name
 
-    delete_live_config.delete_live_config(project_id, location, live_config_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted live config" in out
+    response = delete_live_config.delete_live_config(
+        project_id, location, live_config_id
+    )
+    assert response == empty.Empty()
 
     # Clean up slate as it is no longer needed
 
-    delete_slate.delete_slate(project_id, location, slate_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted slate" in out
+    response = delete_slate.delete_slate(project_id, location, slate_id)
+    assert response == empty.Empty()

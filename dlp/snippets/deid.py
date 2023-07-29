@@ -1351,6 +1351,83 @@ def deidentify_table_bucketing(
 # [END dlp_deidentify_table_bucketing]
 
 
+# [START dlp_deidentify_table_primitive_bucketing]
+import google.cloud.dlp  # noqa: F811, E402, I100
+
+
+def deidentify_table_primitive_bucketing(
+    project: str,
+) -> None:
+    """ Uses the Data Loss Prevention API to de-identify sensitive data in
+    a table by replacing them with generalized bucket labels.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Dictionary representing table to de-identify.
+    # The table can also be taken as input to the function.
+    table_to_deid = {
+        "header": ["age", "patient", "happiness_score"],
+        "rows": [
+            ["101", "Charles Dickens", "95"],
+            ["22", "Jane Austen", "21"],
+            ["90", "Mark Twain", "75"],
+        ],
+    }
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_to_deid["header"]]
+    rows = []
+    for row in table_to_deid["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table to de-identify.
+    item = {"table": table}
+
+    # Construct generalised bucket configuration.
+    buckets_config = [
+        {"min_": {"integer_value": 0}, "max_": {"integer_value": 25}, "replacement_value": {"string_value": "Low"}},
+        {"min_": {"integer_value": 25}, "max_": {"integer_value": 75}, "replacement_value": {"string_value": "Medium"}},
+        {"min_": {"integer_value": 75}, "max_": {"integer_value": 100}, "replacement_value": {"string_value": "High"}},
+    ]
+
+    # Construct de-identify configuration that groups values in a table field and replace those with bucket labels.
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "fields": [{"name": "happiness_score"}],
+                    "primitive_transformation": {
+                        "bucketing_config": {"buckets": buckets_config}
+                    }
+                }
+            ]
+        }
+    }
+
+    # Call the API to deidentify table data through primitive bucketing.
+    response = dlp.deidentify_content(request={
+        "parent": parent,
+        "deidentify_config": deidentify_config,
+        "item": item,
+    })
+
+    # Print the results.
+    print("Table after de-identification: {}".format(response.item.table))
+
+
+# [END dlp_deidentify_table_primitive_bucketing]
+
+
 # [START dlp_deidentify_table_condition_infotypes]
 from typing import Dict, List, Union  # noqa: F811, E402, I100
 
@@ -2373,6 +2450,16 @@ if __name__ == "__main__":
         help="Upper bound value of buckets.",
     )
 
+    table_primitive_bucketing_parser = subparsers.add_parser(
+        "deid_table_primitive_bucketing",
+        help="De-identify sensitive data in a table by replacing them "
+        "with generalized bucket labels.",
+    )
+    table_primitive_bucketing_parser.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+
     table_condition_replace_parser = subparsers.add_parser(
         "deid_table_condition_replace",
         help="De-identify sensitive data in a table by replacing "
@@ -2588,6 +2675,7 @@ if __name__ == "__main__":
         "deid_fields_2",
         help="List of column names in table to de-identify using transient_key_name_2.",
     )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2671,6 +2759,10 @@ if __name__ == "__main__":
             args.bucket_size,
             args.bucketing_lower_bound,
             args.bucketing_upper_bound,
+        )
+    elif args.content == "deid_table_primitive_bucketing":
+        deidentify_table_primitive_bucketing(
+            args.project,
         )
     elif args.content == "deid_table_condition_replace":
         deidentify_table_condition_replace_with_info_types(

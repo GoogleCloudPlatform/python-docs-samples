@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 import shutil
 import tempfile
@@ -398,6 +397,17 @@ def test_deidentify_table_bucketing(capsys: pytest.CaptureFixture) -> None:
     assert 'string_value: "90:100"' in out
     assert 'string_value: "20:30"' in out
     assert 'string_value: "70:80"' in out
+
+
+def test_deidentify_table_primitive_bucketing(capsys: pytest.CaptureFixture) -> None:
+
+    deid.deidentify_table_primitive_bucketing(
+        GCLOUD_PROJECT,
+    )
+
+    out, _ = capsys.readouterr()
+    assert "string_value: \"High\"" in out
+    assert "string_value: \"Low\"" in out
 
 
 def test_deidentify_table_condition_replace_with_info_types(

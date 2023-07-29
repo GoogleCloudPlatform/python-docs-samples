@@ -15,13 +15,12 @@
 
 # [START documentai_process_ocr_document]
 # [START documentai_process_form_document]
-# [START documentai_process_quality_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
-from typing import Sequence
+from typing import Optional, Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai  # type: ignore
+from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -34,7 +33,6 @@ from google.cloud import documentai  # type: ignore
 
 # [END documentai_process_ocr_document]
 # [END documentai_process_form_document]
-# [END documentai_process_quality_document]
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
 
@@ -48,9 +46,25 @@ def process_document_ocr_sample(
     file_path: str,
     mime_type: str,
 ) -> None:
+    # Optional: Additional configurations for Document OCR Processor.
+    # For more information: https://cloud.google.com/document-ai/docs/document-ocr
+    process_options = documentai.ProcessOptions(
+        ocr_config=documentai.OcrConfig(
+            compute_style_info=True,
+            enable_native_pdf_parsing=True,
+            enable_image_quality_scores=True,
+            enable_symbol=True,
+        )
+    )
     # Online processing request to Document AI
     document = process_document(
-        project_id, location, processor_id, processor_version, file_path, mime_type
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        process_options=process_options,
     )
 
     text = document.text
@@ -61,14 +75,20 @@ def process_document_ocr_sample(
         print(f"Page {page.page_number}:")
         print_page_dimensions(page.dimension)
         print_detected_langauges(page.detected_languages)
-        print_paragraphs(page.paragraphs, text)
+
         print_blocks(page.blocks, text)
+        print_paragraphs(page.paragraphs, text)
         print_lines(page.lines, text)
         print_tokens(page.tokens, text)
 
-        # Currently supported in version `pretrained-ocr-v1.1-2022-09-12`
+        if page.symbols:
+            print_symbols(page.symbols, text)
+
         if page.image_quality_scores:
             print_image_quality_scores(page.image_quality_scores)
+
+    if document.text_styles:
+        print_styles(document.text_styles, text)
 
 
 def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None:
@@ -81,8 +101,15 @@ def print_detected_langauges(
 ) -> None:
     print("    Detected languages:")
     for lang in detected_languages:
-        code = lang.language_code
-        print(f"        {code} ({lang.confidence:.1%} confidence)")
+        print(f"        {lang.language_code} ({lang.confidence:.1%} confidence)")
+
+
+def print_blocks(blocks: Sequence[documentai.Document.Page.Block], text: str) -> None:
+    print(f"    {len(blocks)} blocks detected:")
+    first_block_text = layout_to_text(blocks[0].layout, text)
+    print(f"        First text block: {repr(first_block_text)}")
+    last_block_text = layout_to_text(blocks[-1].layout, text)
+    print(f"        Last text block: {repr(last_block_text)}")
 
 
 def print_paragraphs(
@@ -93,14 +120,6 @@ def print_paragraphs(
     print(f"        First paragraph text: {repr(first_paragraph_text)}")
     last_paragraph_text = layout_to_text(paragraphs[-1].layout, text)
     print(f"        Last paragraph text: {repr(last_paragraph_text)}")
-
-
-def print_blocks(blocks: Sequence[documentai.Document.Page.Block], text: str) -> None:
-    print(f"    {len(blocks)} blocks detected:")
-    first_block_text = layout_to_text(blocks[0].layout, text)
-    print(f"        First text block: {repr(first_block_text)}")
-    last_block_text = layout_to_text(blocks[-1].layout, text)
-    print(f"        Last text block: {repr(last_block_text)}")
 
 
 def print_lines(lines: Sequence[documentai.Document.Page.Line], text: str) -> None:
@@ -123,6 +142,16 @@ def print_tokens(tokens: Sequence[documentai.Document.Page.Token], text: str) ->
     print(f"        Last token break type: {repr(last_token_break_type)}")
 
 
+def print_symbols(
+    symbols: Sequence[documentai.Document.Page.Symbol], text: str
+) -> None:
+    print(f"    {len(symbols)} symbols detected:")
+    first_symbol_text = layout_to_text(symbols[0].layout, text)
+    print(f"        First symbol text: {repr(first_symbol_text)}")
+    last_symbol_text = layout_to_text(symbols[-1].layout, text)
+    print(f"        Last symbol text: {repr(last_symbol_text)}")
+
+
 def print_image_quality_scores(
     image_quality_scores: documentai.Document.Page.ImageQualityScores,
 ) -> None:
@@ -131,6 +160,19 @@ def print_image_quality_scores(
 
     for detected_defect in image_quality_scores.detected_defects:
         print(f"        {detected_defect.type_}: {detected_defect.confidence:.1%}")
+
+
+def print_styles(styles: Sequence[documentai.Document.Style], text: str) -> None:
+    print(f"    {len(styles)} styles detected:")
+    first_style_text = layout_to_text(styles[0].layout, text)
+    print(f"        First style text: {repr(first_style_text)}")
+    print(f"           Color: {styles[0].color}")
+    print(f"           Background Color: {styles[0].background_color}")
+    print(f"           Font Weight: {styles[0].font_weight}")
+    print(f"           Text Style: {styles[0].text_style}")
+    print(f"           Text Decoration: {styles[0].text_decoration}")
+    print(f"           Font Size: {styles[0].font_size.size}{styles[0].font_size.unit}")
+    print(f"           Font Family: {styles[0].font_family}")
 
 
 # [END documentai_process_ocr_document]
@@ -142,7 +184,7 @@ def process_document_form_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
-) -> None:
+) -> documentai.Document:
     # Online processing request to Document AI
     document = process_document(
         project_id, location, processor_id, processor_version, file_path, mime_type
@@ -162,9 +204,9 @@ def process_document_form_sample(
 
         print(f"\nFound {len(page.tables)} table(s):")
         for table in page.tables:
-            num_collumns = len(table.header_rows[0].cells)
+            num_columns = len(table.header_rows[0].cells)
             num_rows = len(table.body_rows)
-            print(f"Table with {num_collumns} columns and {num_rows} rows:")
+            print(f"Table with {num_columns} columns and {num_rows} rows:")
 
             # Print header rows
             print("Columns:")
@@ -179,6 +221,18 @@ def process_document_form_sample(
             value = layout_to_text(field.field_value, text)
             print(f"    * {repr(name.strip())}: {repr(value.strip())}")
 
+    # Supported in version `pretrained-form-parser-v2.0-2022-11-10` and later.
+    # For more information: https://cloud.google.com/document-ai/docs/form-parser
+    if document.entities:
+        print(f"Found {len(document.entities)} generic entities:")
+        for entity in document.entities:
+            print_entity(entity)
+            # Print Nested Entities
+            for prop in entity.properties:
+                print_entity(prop)
+
+    return document
+
 
 def print_table_rows(
     table_rows: Sequence[documentai.Document.Page.Table.TableRow], text: str
@@ -192,37 +246,6 @@ def print_table_rows(
 
 
 # [END documentai_process_form_document]
-# [START documentai_process_quality_document]
-def process_document_quality_sample(
-    project_id: str,
-    location: str,
-    processor_id: str,
-    processor_version: str,
-    file_path: str,
-    mime_type: str,
-) -> None:
-    # Online processing request to Document AI
-    document = process_document(
-        project_id, location, processor_id, processor_version, file_path, mime_type
-    )
-
-    # Read the quality-specific information from the output from the
-    # Intelligent Document Quality Processor:
-    # https://cloud.google.com/document-ai/docs/processors-list#processor_doc-quality-processor
-    # OCR and other data is also present in the quality processor's response.
-    # Please see the OCR and other samples for how to parse other data in the
-    # response.
-    for entity in document.entities:
-        conf_percent = f"{entity.confidence:.1%}"
-        page_num = str(int(entity.page_anchor.page_refs[0].page) + 1)
-        print(f"\nPage {page_num} has a quality score of {conf_percent}")
-
-        for prop in entity.properties:
-            conf_percent = f"{prop.confidence:.1%}"
-            print(f"    * {prop.type_} score of {conf_percent}")
-
-
-# [END documentai_process_quality_document]
 
 
 # [START documentai_process_specialized_document]
@@ -239,8 +262,7 @@ def process_document_specialized_sample(
         project_id, location, processor_id, processor_version, file_path, mime_type
     )
 
-    # Extract entities from a specialized document
-    # Most specalized processors follow a similar pattern.
+    # Print extracted entities from entity extraction processor output.
     # For a complete list of processors see:
     # https://cloud.google.com/document-ai/docs/processors-list
     #
@@ -255,6 +277,7 @@ def process_document_specialized_sample(
             print_entity(prop)
 
 
+# [START documentai_process_form_document]
 def print_entity(entity: documentai.Document.Entity) -> None:
     # Fields detected. For a full list of fields for each processor see
     # the processor documentation:
@@ -272,6 +295,7 @@ def print_entity(entity: documentai.Document.Entity) -> None:
         print(f"    * Normalized Value: {repr(normalized_value)}")
 
 
+# [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
 
 
@@ -314,14 +338,11 @@ def page_refs_to_string(
     page_refs: Sequence[documentai.Document.PageAnchor.PageRef],
 ) -> str:
     """Converts a page ref to a string describing the page or page range."""
-    if len(page_refs) == 1:
-        num = str(int(page_refs[0].page) + 1)
-        return f"page {num} is"
-
-    nums = ""
-    for page_ref in page_refs:
-        nums += f"{int(page_ref.page) + 1}, "
-    return f"pages {nums[:-2]} are"
+    pages = [str(int(page_ref.page) + 1) for page_ref in page_refs]
+    if len(pages) == 1:
+        return f"page {pages[0]} is"
+    else:
+        return f"pages {', '.join(pages)} are"
 
 
 # [END documentai_process_splitter_document]
@@ -329,7 +350,6 @@ def page_refs_to_string(
 
 # [START documentai_process_ocr_document]
 # [START documentai_process_form_document]
-# [START documentai_process_quality_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
 def process_document(
@@ -339,6 +359,7 @@ def process_document(
     processor_version: str,
     file_path: str,
     mime_type: str,
+    process_options: Optional[documentai.ProcessOptions] = None,
 ) -> documentai.Document:
     # You must set the `api_endpoint` if you use a location other than "us".
     client = documentai.DocumentProcessorServiceClient(
@@ -362,6 +383,8 @@ def process_document(
     request = documentai.ProcessRequest(
         name=name,
         raw_document=documentai.RawDocument(content=image_content, mime_type=mime_type),
+        # Only supported for Document OCR processor
+        process_options=process_options,
     )
 
     result = client.process_document(request=request)
@@ -371,7 +394,6 @@ def process_document(
     return result.document
 
 
-# [END documentai_process_quality_document]
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
 def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
@@ -380,14 +402,12 @@ def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
     offsets in the entirety of the document"s text. This function converts
     offsets to a string.
     """
-    response = ""
     # If a text segment spans several lines, it will
     # be stored in different text segments.
-    for segment in layout.text_anchor.text_segments:
-        start_index = int(segment.start_index)
-        end_index = int(segment.end_index)
-        response += text[start_index:end_index]
-    return response
+    return "".join(
+        text[int(segment.start_index) : int(segment.end_index)]
+        for segment in layout.text_anchor.text_segments
+    )
 
 
 # [END documentai_process_form_document]
