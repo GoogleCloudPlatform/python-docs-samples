@@ -81,8 +81,8 @@
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 # ---* Infra DB
-/cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
-/cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-dpes @GoogleCloudPlatform/python-samples-reviewers
+/cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers
+/cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers
 
 # Self-service
 # ---* Shared with DEE Teams
