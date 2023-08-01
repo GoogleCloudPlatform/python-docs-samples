@@ -90,6 +90,11 @@ export PATH="${HOME}/.local/bin:${PATH}"
 # upgrade pip when needed
 pip install --upgrade pip
 
+# Install virtualenv in version 20.21, since version 20.22 no longer supports Python 2.7
+if [[ "${RUN_TESTS_SESSION}" == "py-2.7" ]]; then
+  pip install --user -q virtualenv==20.21
+fi
+
 # install nox for testing
 pip install --user -q nox
 
