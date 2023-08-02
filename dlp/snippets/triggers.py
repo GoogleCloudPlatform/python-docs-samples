@@ -165,7 +165,7 @@ def update_trigger(
     info_types: List[str],
     trigger_id: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to update an existing job trigger.
+    """Uses the Data Loss Prevention API to update an existing job trigger.
     Args:
         project: The Google Cloud project id to use as a parent resource
         info_types: A list of strings representing infoTypes to update trigger with.
@@ -202,8 +202,10 @@ def update_trigger(
             "name": trigger_name,
             "job_trigger": job_trigger,
             "update_mask": {
-                "paths": ["inspect_job.inspect_config.info_types",
-                          "inspect_job.inspect_config.min_likelihood"]
+                "paths": [
+                    "inspect_job.inspect_config.info_types",
+                    "inspect_job.inspect_config.min_likelihood",
+                ]
             },
         }
     )
@@ -340,8 +342,8 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
 
     parser_delete = subparsers.add_parser("delete", help="Delete a trigger.")

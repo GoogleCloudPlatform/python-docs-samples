@@ -1358,7 +1358,7 @@ import google.cloud.dlp  # noqa: F811, E402, I100
 def deidentify_table_primitive_bucketing(
     project: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to de-identify sensitive data in
+    """Uses the Data Loss Prevention API to de-identify sensitive data in
     a table by replacing them with generalized bucket labels.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -1395,9 +1395,21 @@ def deidentify_table_primitive_bucketing(
 
     # Construct generalised bucket configuration.
     buckets_config = [
-        {"min_": {"integer_value": 0}, "max_": {"integer_value": 25}, "replacement_value": {"string_value": "Low"}},
-        {"min_": {"integer_value": 25}, "max_": {"integer_value": 75}, "replacement_value": {"string_value": "Medium"}},
-        {"min_": {"integer_value": 75}, "max_": {"integer_value": 100}, "replacement_value": {"string_value": "High"}},
+        {
+            "min_": {"integer_value": 0},
+            "max_": {"integer_value": 25},
+            "replacement_value": {"string_value": "Low"},
+        },
+        {
+            "min_": {"integer_value": 25},
+            "max_": {"integer_value": 75},
+            "replacement_value": {"string_value": "Medium"},
+        },
+        {
+            "min_": {"integer_value": 75},
+            "max_": {"integer_value": 100},
+            "replacement_value": {"string_value": "High"},
+        },
     ]
 
     # Construct de-identify configuration that groups values in a table field and replace those with bucket labels.
@@ -1408,18 +1420,20 @@ def deidentify_table_primitive_bucketing(
                     "fields": [{"name": "happiness_score"}],
                     "primitive_transformation": {
                         "bucketing_config": {"buckets": buckets_config}
-                    }
+                    },
                 }
             ]
         }
     }
 
     # Call the API to deidentify table data through primitive bucketing.
-    response = dlp.deidentify_content(request={
-        "parent": parent,
-        "deidentify_config": deidentify_config,
-        "item": item,
-    })
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item,
+        }
+    )
 
     # Print the results.
     print("Table after de-identification: {}".format(response.item.table))
