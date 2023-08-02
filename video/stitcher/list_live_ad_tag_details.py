@@ -26,16 +26,23 @@ Example usage:
 import argparse
 
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
+    pagers,
     VideoStitcherServiceClient,
 )
 
 
-def list_live_ad_tag_details(project_id: str, location: str, session_id: str) -> str:
+def list_live_ad_tag_details(
+    project_id: str, location: str, session_id: str
+) -> pagers.ListLiveAdTagDetailsPager:
     """Lists the ad tag details for the specified live session.
     Args:
         project_id: The GCP project ID.
         location: The location of the session.
-        session_id: The ID of the live session."""
+        session_id: The ID of the live session.
+
+    Returns:
+        An iterable object containing live ad tag details resources.
+    """
 
     client = VideoStitcherServiceClient()
 

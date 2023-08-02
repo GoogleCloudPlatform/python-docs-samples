@@ -24,17 +24,24 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import stitcher_v1
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
 
 
-def get_cdn_key(project_id: str, location: str, cdn_key_id: str) -> str:
+def get_cdn_key(
+    project_id: str, location: str, cdn_key_id: str
+) -> stitcher_v1.types.CdnKey:
     """Gets a CDN key.
     Args:
         project_id: The GCP project ID.
         location: The location of the CDN key.
-        cdn_key_id: The user-defined CDN key ID."""
+        cdn_key_id: The user-defined CDN key ID.
+
+    Returns:
+        The CDN key resource.
+    """
 
     client = VideoStitcherServiceClient()
 

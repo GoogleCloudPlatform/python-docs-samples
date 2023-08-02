@@ -24,17 +24,24 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import stitcher_v1
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
 
 
-def get_live_config(project_id: str, location: str, live_config_id: str) -> str:
+def get_live_config(
+    project_id: str, location: str, live_config_id: str
+) -> stitcher_v1.types.LiveConfig:
     """Gets a live config.
     Args:
         project_id: The GCP project ID.
         location: The location of the live config.
-        live_config_id: The user-defined live config ID."""
+        live_config_id: The user-defined live config ID.
+
+    Returns:
+        The live config resource.
+    """
 
     client = VideoStitcherServiceClient()
 

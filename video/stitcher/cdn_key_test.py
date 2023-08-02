@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.protobuf import empty_pb2 as empty
 from google.protobuf import timestamp_pb2
 import pytest
 
@@ -55,7 +56,7 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
 
     # Media CDN key tests
 
-    create_cdn_key.create_cdn_key(
+    response = create_cdn_key.create_cdn_key(
         project_id,
         location,
         media_cdn_key_id,
@@ -64,8 +65,7 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
         media_cdn_private_key,
         False,
     )
-    out, _ = capsys.readouterr()
-    assert media_cdn_key_id in out
+    assert media_cdn_key_id in response.name
 
     list_cdn_keys.list_cdn_keys(project_id, location)
     out, _ = capsys.readouterr()
@@ -82,21 +82,18 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
         updated_media_cdn_private_key,
         False,
     )
-    out, _ = capsys.readouterr()
-    assert media_cdn_key_id in out
+    assert media_cdn_key_id in response.name
     assert updated_hostname in response.hostname
 
-    get_cdn_key.get_cdn_key(project_id, location, media_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert media_cdn_key_id in out
+    response = get_cdn_key.get_cdn_key(project_id, location, media_cdn_key_id)
+    assert media_cdn_key_id in response.name
 
-    delete_cdn_key.delete_cdn_key(project_id, location, media_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted CDN key" in out
+    response = delete_cdn_key.delete_cdn_key(project_id, location, media_cdn_key_id)
+    assert response == empty.Empty()
 
     # Cloud CDN key tests
 
-    create_cdn_key.create_cdn_key(
+    response = create_cdn_key.create_cdn_key(
         project_id,
         location,
         cloud_cdn_key_id,
@@ -105,8 +102,7 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
         cloud_cdn_private_key,
         True,
     )
-    out, _ = capsys.readouterr()
-    assert cloud_cdn_key_id in out
+    assert cloud_cdn_key_id in response.name
 
     list_cdn_keys.list_cdn_keys(project_id, location)
     out, _ = capsys.readouterr()
@@ -123,29 +119,25 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
         updated_cloud_cdn_private_key,
         True,
     )
-    out, _ = capsys.readouterr()
-    assert cloud_cdn_key_id in out
+    assert cloud_cdn_key_id in response.name
     assert updated_hostname in response.hostname
 
-    get_cdn_key.get_cdn_key(project_id, location, cloud_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert cloud_cdn_key_id in out
+    response = get_cdn_key.get_cdn_key(project_id, location, cloud_cdn_key_id)
+    assert cloud_cdn_key_id in response.name
 
-    delete_cdn_key.delete_cdn_key(project_id, location, cloud_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted CDN key" in out
+    response = delete_cdn_key.delete_cdn_key(project_id, location, cloud_cdn_key_id)
+    assert response == empty.Empty()
 
     # Akamai CDN key tests
 
-    create_cdn_key_akamai.create_cdn_key_akamai(
+    response = create_cdn_key_akamai.create_cdn_key_akamai(
         project_id,
         location,
         akamai_cdn_key_id,
         hostname,
         akamai_key,
     )
-    out, _ = capsys.readouterr()
-    assert akamai_cdn_key_id in out
+    assert akamai_cdn_key_id in response.name
 
     list_cdn_keys.list_cdn_keys(project_id, location)
     out, _ = capsys.readouterr()
@@ -160,14 +152,11 @@ def test_cdn_key_operations(capsys: pytest.fixture) -> None:
         updated_hostname,
         updated_akamai_key,
     )
-    out, _ = capsys.readouterr()
-    assert akamai_cdn_key_id in out
+    assert akamai_cdn_key_id in response.name
     assert updated_hostname in response.hostname
 
-    get_cdn_key.get_cdn_key(project_id, location, akamai_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert akamai_cdn_key_id in out
+    response = get_cdn_key.get_cdn_key(project_id, location, akamai_cdn_key_id)
+    assert akamai_cdn_key_id in response.name
 
-    delete_cdn_key.delete_cdn_key(project_id, location, akamai_cdn_key_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted CDN key" in out
+    response = delete_cdn_key.delete_cdn_key(project_id, location, akamai_cdn_key_id)
+    assert response == empty.Empty()

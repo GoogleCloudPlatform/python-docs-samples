@@ -24,18 +24,25 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import stitcher_v1
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
 
 
-def get_live_session(project_id: str, location: str, session_id: str) -> str:
+def get_live_session(
+    project_id: str, location: str, session_id: str
+) -> stitcher_v1.types.LiveSession:
     """Gets a live session. Live sessions are ephemeral resources that expire
     after a few minutes.
     Args:
         project_id: The GCP project ID.
         location: The location of the session.
-        session_id: The ID of the live session."""
+        session_id: The ID of the live session.
+
+    Returns:
+        The live session resource.
+    """
 
     client = VideoStitcherServiceClient()
 
