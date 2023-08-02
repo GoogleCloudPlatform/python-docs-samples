@@ -22,7 +22,7 @@ import pytest
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
 document_query_text = "document"
-user_id = "user:dmoonat@google.com"
+user_id = "user:xxxx@example.com"
 
 
 def test_search_documents(capsys: pytest.CaptureFixture) -> None:
