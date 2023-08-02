@@ -42,8 +42,7 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 
 # Deploy to Cloud Run
-gcloud run deploy helloworld \
---image gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
+gcloud run deploy helloworld --source .
 ```
 
 
