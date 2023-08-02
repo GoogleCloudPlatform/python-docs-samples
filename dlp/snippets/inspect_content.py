@@ -201,9 +201,7 @@ def inspect_string_augment_infotype(
     custom_info_types = [
         {
             "info_type": {"name": info_type},
-            "dictionary": {
-                "word_list": {"words": word_list}
-            },
+            "dictionary": {"word_list": {"words": word_list}},
         }
     ]
 
