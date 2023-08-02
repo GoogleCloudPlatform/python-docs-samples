@@ -9,14 +9,22 @@ This sample shows how to deploy a Hello World application to Cloud Run.
 
 ## Build
 
+* Set an environment variable with your GCP Project ID:
+
 ```
-docker build --tag helloworld:python .
+export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
+```
+
+* Use a [Buildpack](https://github.com/GoogleCloudPlatform/buildpacks) to build the container:
+
+```sh
+gcloud builds submit --pack image=gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
 ```
 
 ## Run Locally
 
-```
-docker run --rm -p 9090:8080 -e PORT=8080 helloworld:python
+```sh
+docker run --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
 ```
 
 ## Test
@@ -32,9 +40,6 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 ```sh
 # Set an environment variable with your GCP Project ID
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
-
-# Submit a build using Google Cloud Build
-gcloud builds submit --tag gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld
 
 # Deploy to Cloud Run
 gcloud run deploy helloworld \
