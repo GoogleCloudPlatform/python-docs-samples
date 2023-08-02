@@ -31,7 +31,7 @@ def test_search_documents(capsys: pytest.CaptureFixture) -> None:
         project_number=project_number,
         location=location,
         document_query_text=document_query_text,
-        user_id=user_id
+        user_id=user_id,
     )
     out, _ = capsys.readouterr()
 

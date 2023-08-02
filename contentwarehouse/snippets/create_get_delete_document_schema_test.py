@@ -36,12 +36,12 @@ def test_create_document_schema(request: pytest.fixture) -> None:
 
     assert "display_name" in response
 
-    document_schema_id = response.name.split('/')[-1]
+    document_schema_id = response.name.split("/")[-1]
 
     request.config.cache.set("document_schema_id", document_schema_id)
 
 
-@pytest.mark.dependency(name="get", depends=['create'])
+@pytest.mark.dependency(name="get", depends=["create"])
 def test_get_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
@@ -56,7 +56,7 @@ def test_get_document_schema(request: pytest.fixture) -> None:
     assert "display_name" in response
 
 
-@pytest.mark.dependency(name="delete", depends=['get'])
+@pytest.mark.dependency(name="delete", depends=["get"])
 def test_delete_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
 
