@@ -52,7 +52,9 @@ def search_documents_sample(
         histogram_query='count("DocumentSchemaId")'
     )
 
-    request_metadata = {"user_info": {"id": user_id}}
+    request_metadata = contentwarehouse.RequestMetadata(
+        user_info=contentwarehouse.UserInfo(id=user_id)
+    )
 
     # Define request
     request = contentwarehouse.SearchDocumentsRequest(
