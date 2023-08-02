@@ -31,7 +31,9 @@ def consume_event_notification(event: dict, unused_context: None) -> str:
     event_type = event["attributes"]["eventType"]
     secret_id = event["attributes"]["secretId"]
     secret_metadata = base64.b64decode(event["data"]).decode("utf-8")
-    event_notification = f"Received {event_type} for {secret_id}. New metadata: {secret_metadata}"
+    event_notification = (
+        f"Received {event_type} for {secret_id}. New metadata: {secret_metadata}"
+    )
     print(event_notification)
     return event_notification
 
