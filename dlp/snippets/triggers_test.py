@@ -63,7 +63,7 @@ def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     bucket.delete()
 
 
-def test_create_list_and_delete_trigger(
+def test_create_list_update_and_delete_trigger(
     bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
 ) -> None:
     try:
@@ -98,6 +98,16 @@ def test_create_list_and_delete_trigger(
 
     out, _ = capsys.readouterr()
     assert TEST_TRIGGER_ID in out
+
+    triggers.update_trigger(
+        GCLOUD_PROJECT,
+        ["US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER"],
+        TEST_TRIGGER_ID,
+    )
+
+    out, _ = capsys.readouterr()
+    assert TEST_TRIGGER_ID in out
+    assert "US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER" in out
 
     triggers.delete_trigger(GCLOUD_PROJECT, TEST_TRIGGER_ID)
 

@@ -25,9 +25,11 @@ def add_to_asset(asset_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # asset_name is the resource path for an asset that exists in CSCC.
-    # Its format is "organization/{organization_id}/assets/{asset_id}
-    # e.g.:
+    # 'asset_name' is the resource path for an asset that exists in SCC.
+    # Specify the value of 'asset_name' in one of the following formats:
+    #   f"organizations/{org_id}/assets/{asset_id}"
+    #   f"projects/{project_id}/assets/{asset_id}"
+    #   f"folders/{folder_id}/assets/{asset_id}"
     # asset_name = organizations/123123342/assets/12312321
     marks_name = f"{asset_name}/securityMarks"
 
@@ -58,9 +60,11 @@ def clear_from_asset(asset_name):
     # Create a new client.
     client = securitycenter.SecurityCenterClient()
 
-    # asset_name is the resource path for an asset that exists in CSCC.
-    # Its format is "organization/{organization_id}/assets/{asset_id}
-    # e.g.:
+    # 'asset_name' is the resource path for an asset that exists in SCC.
+    # Specify the value of 'asset_name' in one of the following formats:
+    #   f"organizations/{org_id}/assets/{asset_id}"
+    #   f"projects/{project_id}/assets/{asset_id}"
+    #   f"folders/{folder_id}/assets/{asset_id}"
     # asset_name = organizations/123123342/assets/12312321
     marks_name = f"{asset_name}/securityMarks"
 
@@ -90,9 +94,11 @@ def delete_and_update_marks(asset_name):
     from google.protobuf import field_mask_pb2
 
     client = securitycenter.SecurityCenterClient()
-    # asset_name is the resource path for an asset that exists in CSCC.
-    # Its format is "organization/{organization_id}/assets/{asset_id}
-    # e.g.:
+    # 'asset_name' is the resource path for an asset that exists in SCC.
+    # Specify the value of 'asset_name' in one of the following formats:
+    #   f"organizations/{org_id}/assets/{asset_id}"
+    #   f"projects/{project_id}/assets/{asset_id}"
+    #   f"folders/{folder_id}/assets/{asset_id}"
     # asset_name = organizations/123123342/assets/12312321
     marks_name = f"{asset_name}/securityMarks"
 
@@ -117,10 +123,11 @@ def add_to_finding(finding_name):
     from google.protobuf import field_mask_pb2
 
     client = securitycenter.SecurityCenterClient()
-    # finding_name is the resource path for a finding that exists in CSCC.
-    # Its format is
-    # "organizations/{org_id}/sources/{source_id}/findings/{finding_id}"
-    # e.g.:
+    # 'finding_name' is the resource path for a finding that exists in SCC.
+    # Specify the value of 'asset_name' in one of the following formats:
+    #   f"organizations/{org_id}/assets/{asset_id}"
+    #   f"projects/{project_id}/assets/{asset_id}"
+    #   f"folders/{folder_id}/assets/{asset_id}"
     # finding_name = "organizations/1112/sources/1234/findings/findingid"
     finding_marks_name = f"{finding_name}/securityMarks"
 
@@ -150,19 +157,16 @@ def list_assets_with_query_marks(organization_id, asset_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id=1234567777
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     marks_filter = 'security_marks.marks.key_a = "value_a"'
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        request={"parent": org_name, "filter": marks_filter}
-    )
-
-    # Call the API and print results.
-    asset_iterator = client.list_assets(
-        request={"parent": org_name, "filter": marks_filter}
+        request={"parent": parent, "filter": marks_filter}
     )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
@@ -180,11 +184,14 @@ def list_findings_with_query_marks(source_name, finding_name):
 
     client = securitycenter.SecurityCenterClient()
 
-    # source_name is the resource path for a source that has been
+    # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
-    # source_name = "organizations/{organization_id}/sources/{source_id}"
-    # e.g.:
+    # source_name = "{parent}/sources/{source_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
     # source_name = "organizations/111122222444/sources/1234"
     marks_filter = 'NOT security_marks.marks.finding_key_a="value_a"'
 

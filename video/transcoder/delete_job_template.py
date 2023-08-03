@@ -29,7 +29,11 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def delete_job_template(project_id, location, template_id):
+def delete_job_template(
+    project_id: str,
+    location: str,
+    template_id: str,
+) -> None:
     """Deletes a job template.
 
     Args:

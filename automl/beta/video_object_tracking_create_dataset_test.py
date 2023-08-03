@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -35,6 +36,7 @@ def teardown():
     response.result()
 
 
+@Retry()
 def test_video_classification_create_dataset(capsys):
     # create dataset
     dataset_name = f"test_{uuid.uuid4()}".replace("-", "")[:32]

@@ -19,13 +19,22 @@ import os
 import auth
 
 
-def get_authorized(request):
+def get_authorized(req):
     # Makes an authenticated request to URL set in environment variables
+    # The req parameter is provided by Cloud Functions, but is not used here.
     try:
         url = os.environ.get("URL")
         response = auth.make_authorized_get_request(url, url)
-        return response
+        return response.decode()
 
     except Exception as e:
         print(e)
         return str(e)
+
+
+# When the sample is run standalone, it makes the request using application
+# default credentials and displays the result.
+if __name__ == "__main__":
+    result = get_authorized(None)
+
+    print(f"Result text is:\n{result}")

@@ -15,6 +15,7 @@
 import os
 import uuid
 
+from google.protobuf import empty_pb2 as empty
 from google.protobuf import timestamp_pb2
 import pytest
 
@@ -47,9 +48,8 @@ def test_slate_operations(capsys: pytest.fixture) -> None:
         f"projects/{project_id}/locations/{location}/slates/{slate_id}"
     )
 
-    create_slate.create_slate(project_id, location, slate_id, slate_uri)
-    out, _ = capsys.readouterr()
-    assert slate_name_project_id in out
+    response = create_slate.create_slate(project_id, location, slate_id, slate_uri)
+    assert slate_name_project_id in response.name
 
     list_slates.list_slates(project_id, location)
     out, _ = capsys.readouterr()
@@ -58,14 +58,11 @@ def test_slate_operations(capsys: pytest.fixture) -> None:
     response = update_slate.update_slate(
         project_id, location, slate_id, updated_slate_uri
     )
-    out, _ = capsys.readouterr()
-    assert slate_name_project_id in out
+    assert slate_name_project_id in response.name
     assert updated_slate_uri in response.uri
 
-    get_slate.get_slate(project_id, location, slate_id)
-    out, _ = capsys.readouterr()
-    assert slate_name_project_id in out
+    response = get_slate.get_slate(project_id, location, slate_id)
+    assert slate_name_project_id in response.name
 
-    delete_slate.delete_slate(project_id, location, slate_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted slate" in out
+    response = delete_slate.delete_slate(project_id, location, slate_id)
+    assert response == empty.Empty()

@@ -914,6 +914,133 @@ def deidentify_with_date_shift(
 # [END dlp_deidentify_date_shift]
 
 
+# [START dlp_deidentify_time_extract]
+import csv  # noqa: F811, E402, I100
+from datetime import datetime  # noqa: F811, E402, I100
+from typing import List  # noqa: F811, E402
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def deidentify_with_time_extract(
+    project: str,
+    date_fields: List[str],
+    input_csv_file: str,
+    output_csv_file: str,
+) -> None:
+    """Uses the Data Loss Prevention API to deidentify dates in a CSV file through
+     time part extraction.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+        date_fields: A list of (date) fields in CSV file to de-identify
+            through time extraction. Example: ['birth_date', 'register_date'].
+            Date values in format: mm/DD/YYYY are considered as part of this
+            sample.
+        input_csv_file: The path to the CSV file to deidentify. The first row
+            of the file must specify column names, and all other rows must
+            contain valid values.
+        output_csv_file: The output file path to save the time extracted data.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert date field list to Protobuf type.
+    def map_fields(field):
+        return {"name": field}
+
+    if date_fields:
+        date_fields = map(map_fields, date_fields)
+    else:
+        date_fields = []
+
+    csv_lines = []
+    with open(input_csv_file) as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            csv_lines.append(row)
+
+    #  Helper function for converting CSV rows to Protobuf types
+    def map_headers(header):
+        return {"name": header}
+
+    def map_data(value):
+        try:
+            date = datetime.strptime(value, "%m/%d/%Y")
+            return {
+                "date_value": {"year": date.year, "month": date.month, "day": date.day}
+            }
+        except ValueError:
+            return {"string_value": value}
+
+    def map_rows(row):
+        return {"values": map(map_data, row)}
+
+    # Using the helper functions, convert CSV rows to protobuf-compatible
+    # dictionaries.
+    csv_headers = map(map_headers, csv_lines[0])
+    csv_rows = map(map_rows, csv_lines[1:])
+
+    # Construct the table dictionary.
+    table = {"headers": csv_headers, "rows": csv_rows}
+
+    # Construct the `item` for table to de-identify.
+    item = {"table": table}
+
+    # Construct deidentify configuration dictionary.
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "primitive_transformation": {
+                        "time_part_config": {"part_to_extract": "YEAR"}
+                    },
+                    "fields": date_fields,
+                }
+            ]
+        }
+    }
+
+    # Write to CSV helper methods.
+    def write_header(header):
+        return header.name
+
+    def write_data(data):
+        return data.string_value or "{}/{}/{}".format(
+            data.date_value.month,
+            data.date_value.day,
+            data.date_value.year,
+        )
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Call the API
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item,
+        }
+    )
+
+    # Print the result.
+    print("Table after de-identification: {}".format(response.item.table))
+
+    # Write results to CSV file.
+    with open(output_csv_file, "w") as csvfile:
+        write_file = csv.writer(csvfile, delimiter=",")
+        write_file.writerow(map(write_header, response.item.table.headers))
+        for row in response.item.table.rows:
+            write_file.writerow(map(write_data, row.values))
+
+    # Print status.
+    print(f"Successfully saved date-extracted output to {output_csv_file}")
+
+
+# [END dlp_deidentify_time_extract]
+
+
 # [START dlp_deidentify_replace_infotype]
 from typing import List  # noqa: F811, E402, I100
 
@@ -1222,6 +1349,97 @@ def deidentify_table_bucketing(
 
 
 # [END dlp_deidentify_table_bucketing]
+
+
+# [START dlp_deidentify_table_primitive_bucketing]
+import google.cloud.dlp  # noqa: F811, E402, I100
+
+
+def deidentify_table_primitive_bucketing(
+    project: str,
+) -> None:
+    """Uses the Data Loss Prevention API to de-identify sensitive data in
+    a table by replacing them with generalized bucket labels.
+    Args:
+        project: The Google Cloud project id to use as a parent resource.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Convert the project id into a full resource id.
+    parent = f"projects/{project}"
+
+    # Dictionary representing table to de-identify.
+    # The table can also be taken as input to the function.
+    table_to_deid = {
+        "header": ["age", "patient", "happiness_score"],
+        "rows": [
+            ["101", "Charles Dickens", "95"],
+            ["22", "Jane Austen", "21"],
+            ["90", "Mark Twain", "75"],
+        ],
+    }
+
+    # Construct the `table`. For more details on the table schema, please see
+    # https://cloud.google.com/dlp/docs/reference/rest/v2/ContentItem#Table
+    headers = [{"name": val} for val in table_to_deid["header"]]
+    rows = []
+    for row in table_to_deid["rows"]:
+        rows.append({"values": [{"string_value": cell_val} for cell_val in row]})
+
+    table = {"headers": headers, "rows": rows}
+
+    # Construct the `item` for table to de-identify.
+    item = {"table": table}
+
+    # Construct generalised bucket configuration.
+    buckets_config = [
+        {
+            "min_": {"integer_value": 0},
+            "max_": {"integer_value": 25},
+            "replacement_value": {"string_value": "Low"},
+        },
+        {
+            "min_": {"integer_value": 25},
+            "max_": {"integer_value": 75},
+            "replacement_value": {"string_value": "Medium"},
+        },
+        {
+            "min_": {"integer_value": 75},
+            "max_": {"integer_value": 100},
+            "replacement_value": {"string_value": "High"},
+        },
+    ]
+
+    # Construct de-identify configuration that groups values in a table field and replace those with bucket labels.
+    deidentify_config = {
+        "record_transformations": {
+            "field_transformations": [
+                {
+                    "fields": [{"name": "happiness_score"}],
+                    "primitive_transformation": {
+                        "bucketing_config": {"buckets": buckets_config}
+                    },
+                }
+            ]
+        }
+    }
+
+    # Call the API to deidentify table data through primitive bucketing.
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item,
+        }
+    )
+
+    # Print the results.
+    print("Table after de-identification: {}".format(response.item.table))
+
+
+# [END dlp_deidentify_table_primitive_bucketing]
 
 
 # [START dlp_deidentify_table_condition_infotypes]
@@ -2124,6 +2342,30 @@ if __name__ == "__main__":
         "key_name.",
     )
 
+    time_extract_parser = subparsers.add_parser(
+        "deid_time_extract",
+        help="Deidentify dates in a CSV file by extracting a date part.",
+    )
+    time_extract_parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    time_extract_parser.add_argument(
+        "input_csv_file",
+        help="The path to the CSV file to deidentify. The first row of the "
+        "file must specify column names, and all other rows must contain "
+        "valid values.",
+    )
+    time_extract_parser.add_argument(
+        "date_fields",
+        nargs="+",
+        help="The list of date fields in the CSV file to de-identify. Example: "
+        "['birth_date', 'register_date']",
+    )
+    time_extract_parser.add_argument(
+        "output_csv_file", help="The path to save the time-extracted data."
+    )
+
     replace_with_infotype_parser = subparsers.add_parser(
         "replace_with_infotype",
         help="Deidentify sensitive data in a string by replacing it with the "
@@ -2220,6 +2462,16 @@ if __name__ == "__main__":
     table_bucketing_parser.add_argument(
         "--bucketing_upper_bound",
         help="Upper bound value of buckets.",
+    )
+
+    table_primitive_bucketing_parser = subparsers.add_parser(
+        "deid_table_primitive_bucketing",
+        help="De-identify sensitive data in a table by replacing them "
+        "with generalized bucket labels.",
+    )
+    table_primitive_bucketing_parser.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
     )
 
     table_condition_replace_parser = subparsers.add_parser(
@@ -2437,6 +2689,7 @@ if __name__ == "__main__":
         "deid_fields_2",
         help="List of column names in table to de-identify using transient_key_name_2.",
     )
+
     args = parser.parse_args()
 
     if args.content == "deid_mask":
@@ -2485,6 +2738,13 @@ if __name__ == "__main__":
             wrapped_key=args.wrapped_key,
             key_name=args.key_name,
         )
+    elif args.content == "deid_time_extract":
+        deidentify_with_time_extract(
+            args.project,
+            date_fields=args.date_fields,
+            input_csv_file=args.input_csv_file,
+            output_csv_file=args.output_csv_file,
+        )
     elif args.content == "replace_with_infotype":
         deidentify_with_replace_infotype(
             args.project,
@@ -2513,6 +2773,10 @@ if __name__ == "__main__":
             args.bucket_size,
             args.bucketing_lower_bound,
             args.bucketing_upper_bound,
+        )
+    elif args.content == "deid_table_primitive_bucketing":
+        deidentify_table_primitive_bucketing(
+            args.project,
         )
     elif args.content == "deid_table_condition_replace":
         deidentify_table_condition_replace_with_info_types(

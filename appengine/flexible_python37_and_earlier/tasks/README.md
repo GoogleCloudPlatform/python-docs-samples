@@ -34,7 +34,7 @@ To set up authentication, please refer to our
 
 To install the dependencies for this sample, use the following command:
 
-```
+```sh
 pip install -r requirements.txt
 ```
 
@@ -42,33 +42,22 @@ This sample uses the common protos in the [googleapis](https://github.com/google
 repository. For more info, see
 [Protocol Buffer Basics](https://developers.google.com/protocol-buffers/docs/pythontutorial).
 
-## Creating a queue
-
-To create a queue using the Cloud SDK, use the following gcloud command:
-
-```
-gcloud tasks queues create my-appengine-queue
-```
-
-Note: A newly created queue will route to the default App Engine service and
-version unless configured to do otherwise.
-
 ## Deploying the App Engine App
 
 Deploy the App Engine app with gcloud:
 
 * To deploy to the Standard environment:
-  ```
+  ```sh
   gcloud app deploy app.yaml
   ```
 * To deploy to the Flexible environment:
-  ```
+  ```sh
   gcloud app deploy app.flexible.yaml
   ```
 
 Verify the index page is serving:
 
-```
+```sh
 gcloud app browse
 ```
 
@@ -76,9 +65,20 @@ The App Engine app serves as a target for the push requests. It has an
 endpoint `/example_task_handler` that reads the payload (i.e., the request body)
 of the HTTP POST request and logs it. The log output can be viewed with:
 
-```
+```sh
 gcloud app logs read
 ```
+
+## Creating a queue
+
+To create a queue using the Cloud SDK, use the following gcloud command:
+
+```sh
+gcloud tasks queues create my-appengine-queue
+```
+
+Note: A newly created queue will route to the default App Engine service and
+version unless configured to do otherwise.
 
 ## Run the Sample Using the Command Line
 
@@ -86,14 +86,14 @@ Set environment variables:
 
 First, your project ID:
 
-```
+```sh
 export PROJECT_ID=my-project-id
 ```
 
 Then the queue ID, as specified at queue creation time. Queue IDs already
 created can be listed with `gcloud tasks queues list`.
 
-```
+```sh
 export QUEUE_ID=my-appengine-queue
 ```
 
@@ -103,13 +103,20 @@ the "name" value (for instance, if the name is
 "projects/my-project/locations/us-central1/queues/my-appengine-queue", then the
 location is "us-central1").
 
-```
+```sh
 export LOCATION_ID=us-central1
 ```
+
 ### Using App Engine Queues
+
 Running the sample will create a task, targeted at the `/example_task_handler`
 endpoint, with a payload specified:
 
-```
+> **Note**
+> Please update
+> [create_app_engine_queue_task.py](./create_app_engine_queue_task.py) before running the following
+> command.
+
+```sh
 python create_app_engine_queue_task.py --project=$PROJECT_ID --queue=$QUEUE_ID --location=$LOCATION_ID --payload=hello
 ```

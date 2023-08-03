@@ -24,18 +24,27 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import transcoder_v1
 from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
 
-def get_job_template(project_id, location, template_id):
+def get_job_template(
+    project_id: str,
+    location: str,
+    template_id: str,
+) -> transcoder_v1.types.resources.JobTemplate:
     """Gets a job template.
 
     Args:
         project_id: The GCP project ID.
         location: The location of the template.
-        template_id: The user-defined template ID."""
+        template_id: The user-defined template ID.
+
+    Returns:
+        The job template resource.
+    """
 
     client = TranscoderServiceClient()
 

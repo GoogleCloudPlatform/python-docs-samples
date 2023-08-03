@@ -13,12 +13,18 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_ideation]
-from vertexai.preview.language_models import TextGenerationModel
+import vertexai
+from vertexai.language_models import TextGenerationModel
 
 
-def interview(temperature: float = 0.2) -> None:
+def interview(
+    temperature: float,
+    project_id: str,
+    location: str,
+) -> str:
     """Ideation example with a Large Language Model"""
 
+    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -35,7 +41,7 @@ def interview(temperature: float = 0.2) -> None:
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_ideation]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

@@ -13,15 +13,15 @@
 # limitations under the License.
 
 
-# [START speech_adaptation_v2_custom_class_reference]
+import argparse
 
+# [START speech_adaptation_v2_custom_class_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_custom_class_reference(
     project_id: str,
-    recognizer_id: str,
     phrase_set_id: str,
     custom_class_id: str,
     audio_file: str,
@@ -30,7 +30,6 @@ def adaptation_v2_custom_class_reference(
 
     Args:
         project_id: The GCP project ID.
-        recognizer_id: The ID of the recognizer to use.
         phrase_set_id: The ID of the phrase set to use.
         custom_class_id: The ID of the custom class to use.
         audio_file: The audio file to transcribe.
@@ -40,18 +39,6 @@ def adaptation_v2_custom_class_reference(
     """
     # Instantiates a client
     client = SpeechClient()
-
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_short"
-        ),
-    )
-
-    # Creates a Recognizer
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -88,11 +75,16 @@ def adaptation_v2_custom_class_reference(
         ]
     )
     config = cloud_speech.RecognitionConfig(
-        auto_decoding_config={}, adaptation=adaptation
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        adaptation=adaptation,
+        language_codes=["en-US"],
+        model="short",
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=recognizer.name, config=config, content=content
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        config=config,
+        content=content,
     )
 
     # Transcribes the audio into text
@@ -108,4 +100,14 @@ def adaptation_v2_custom_class_reference(
 
 
 if __name__ == "__main__":
-    adaptation_v2_custom_class_reference()
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("phrase_set_id", help="ID for the phrase set to create")
+    parser.add_argument("custom_class_id", help="ID for the custom class to create")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    adaptation_v2_custom_class_reference(
+        args.project_id, args.phrase_set_id, args.custom_class_id, args.audio_file
+    )

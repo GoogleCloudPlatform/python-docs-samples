@@ -18,6 +18,7 @@
 
 import os
 import subprocess
+import time
 from urllib import request
 import uuid
 
@@ -45,6 +46,7 @@ def container_image():
         ]
     )
 
+    time.sleep(15)  # Sometimes responds 404 before really ready
     yield IMAGE_NAME
 
     # Delete container image

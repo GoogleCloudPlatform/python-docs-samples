@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 import shutil
 import tempfile
@@ -230,6 +229,23 @@ def test_deidentify_with_date_shift_using_context_field(
     assert "Successful" in out
 
 
+def test_deidentify_with_time_extract(
+    tempdir: TextIO, capsys: pytest.CaptureFixture
+) -> None:
+    output_filepath = os.path.join(str(tempdir), "year-extracted.csv")
+
+    deid.deidentify_with_time_extract(
+        GCLOUD_PROJECT,
+        input_csv_file=CSV_FILE,
+        output_csv_file=output_filepath,
+        date_fields=DATE_FIELDS,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "Successful" in out
+
+
 def test_reidentify_with_fpe(capsys: pytest.CaptureFixture) -> None:
     labeled_fpe_string = "My SSN is SSN_TOKEN(9):731997681"
 
@@ -381,6 +397,16 @@ def test_deidentify_table_bucketing(capsys: pytest.CaptureFixture) -> None:
     assert 'string_value: "90:100"' in out
     assert 'string_value: "20:30"' in out
     assert 'string_value: "70:80"' in out
+
+
+def test_deidentify_table_primitive_bucketing(capsys: pytest.CaptureFixture) -> None:
+    deid.deidentify_table_primitive_bucketing(
+        GCLOUD_PROJECT,
+    )
+
+    out, _ = capsys.readouterr()
+    assert 'string_value: "High"' in out
+    assert 'string_value: "Low"' in out
 
 
 def test_deidentify_table_condition_replace_with_info_types(

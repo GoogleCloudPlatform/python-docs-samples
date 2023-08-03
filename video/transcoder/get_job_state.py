@@ -24,25 +24,34 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import transcoder_v1
 from google.cloud.video.transcoder_v1.services.transcoder_service import (
     TranscoderServiceClient,
 )
 
 
-def get_job_state(project_id, location, job_id):
+def get_job_state(
+    project_id: str,
+    location: str,
+    job_id: str,
+) -> transcoder_v1.types.resources.Job:
     """Gets a job's state.
 
     Args:
         project_id: The GCP project ID.
         location: The location this job is in.
-        job_id: The job ID."""
+        job_id: The job ID.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 
     name = f"projects/{project_id}/locations/{location}/jobs/{job_id}"
     response = client.get_job(name=name)
 
-    print(f"Job state: {str(response.state)}")
+    print(f"Job state: {str(response.state.name)}")
     return response
 
 

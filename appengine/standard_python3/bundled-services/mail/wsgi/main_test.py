@@ -56,7 +56,7 @@ def gcloud_cli(command):
     raise Exception(output.stderr)
 
 
-@backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_tries=6)
+@backoff.on_exception(backoff.expo, requests.exceptions.HTTPError, max_time=300)
 def get_with_retries(url):
     r = requests.get(url)
     r.raise_for_status()

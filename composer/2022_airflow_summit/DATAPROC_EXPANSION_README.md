@@ -3,6 +3,7 @@
 ## Data in this directory
 * [`ghcnd-stations.txt`](./ghcnd-stations.txt) is a freely available dataset about weather stations used in [US government climate data](https://www.ncei.noaa.gov/access/metadata/landing-page/bin/iso?id=gov.noaa.ncdc:C00861). A direct download link can be found at that linked site.
 * [`ghcn-stations-processed.csv`](./ghcn-stations-processed.csv) is generated from the `ghcnd-stations.txt` text file. To generate this file yourself, run `python data_processing_helper.py` from this directory
+* [`holidays.csv`](.holidays.csv) is derived from data found on the [US Open Government Federal Holiday Webpage](https://www.opm.gov/about-us/open-government/Data/Apps/Holidays/Index.aspx). It was converted from iCalendar format to CSV following instructions found in [this blog post](https://medium.com/@leah.e.cole/how-to-use-python-to-turn-icalendar-data-into-a-csv-of-dates-93d95926231d).
 
 
 ## Prerequisites

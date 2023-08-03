@@ -22,13 +22,7 @@ from google.cloud.speech_v2.types import cloud_speech
 
 import adaptation_v2_phrase_set_reference
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-
-
-def delete_recognizer(name: str) -> None:
-    client = SpeechClient()
-    request = cloud_speech.DeleteRecognizerRequest(name=name)
-    client.delete_recognizer(request=request)
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def delete_phrase_set(name: str) -> None:
@@ -41,20 +35,15 @@ def delete_phrase_set(name: str) -> None:
 def test_adaptation_v2_phrase_set_reference() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    recognizer_id = "recognizer-" + str(uuid4())
     phrase_set_id = "phrase-set-" + str(uuid4())
     response = adaptation_v2_phrase_set_reference.adaptation_v2_phrase_set_reference(
-        project_id, recognizer_id, phrase_set_id, os.path.join(RESOURCES, "fair.wav")
+        project_id, phrase_set_id, os.path.join(_RESOURCES, "fair.wav")
     )
 
     assert re.search(
         r"the word is fare",
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
-    )
-
-    delete_recognizer(
-        f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
     )
 
     delete_phrase_set(

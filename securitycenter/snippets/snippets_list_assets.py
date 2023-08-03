@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-""" Examples of listing assets in Cloud Security Command Center."""
+""" Examples of listing assets in Security Command Center."""
 
 
 def list_all_assets(organization_id):
@@ -24,12 +24,14 @@ def list_all_assets(organization_id):
     from google.cloud import securitycenter
 
     client = securitycenter.SecurityCenterClient()
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     # Call the API and print results.
-    asset_iterator = client.list_assets(request={"parent": org_name})
+    asset_iterator = client.list_assets(request={"parent": parent})
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
     # [END securitycenter_list_all_assets]
@@ -44,9 +46,11 @@ def list_assets_with_filters(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     project_filter = (
         "security_center_properties.resource_type="
@@ -54,7 +58,7 @@ def list_assets_with_filters(organization_id):
     )
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        request={"parent": org_name, "filter": project_filter}
+        request={"parent": parent, "filter": project_filter}
     )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
@@ -72,9 +76,11 @@ def list_assets_with_filters_and_read_time(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     project_filter = (
         "security_center_properties.resource_type="
@@ -86,7 +92,7 @@ def list_assets_with_filters_and_read_time(organization_id):
 
     # Call the API and print results.
     asset_iterator = client.list_assets(
-        request={"parent": org_name, "filter": project_filter, "read_time": read_time}
+        request={"parent": parent, "filter": project_filter, "read_time": read_time}
     )
     for i, asset_result in enumerate(asset_iterator):
         print(i, asset_result)
@@ -104,9 +110,11 @@ def list_point_in_time_changes(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
     project_filter = (
         "security_center_properties.resource_type="
         + '"google.cloud.resourcemanager.Project"'
@@ -118,7 +126,7 @@ def list_point_in_time_changes(organization_id):
     # Call the API and print results.
     asset_iterator = client.list_assets(
         request={
-            "parent": org_name,
+            "parent": parent,
             "filter": project_filter,
             "compare_duration": compare_delta,
         }
@@ -138,14 +146,16 @@ def group_assets(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
 
     group_by_type = "security_center_properties.resource_type"
 
     result_iterator = client.group_assets(
-        request={"parent": org_name, "group_by": group_by_type}
+        request={"parent": parent, "group_by": group_by_type}
     )
     for i, result in enumerate(result_iterator):
         print((i + 1), result)
@@ -161,7 +171,7 @@ def group_filtered_assets(organization_id):
 
     client = securitycenter.SecurityCenterClient()
 
-    # organization_id is the numeric ID of the organization.
+    # 'organization_id' is the numeric ID of the organization.
     # organization_id = "1234567777"
     org_name = f"organizations/{organization_id}"
 
@@ -170,6 +180,8 @@ def group_filtered_assets(organization_id):
         "security_center_properties.resource_type="
         + '"google.cloud.resourcemanager.Project"'
     )
+    # You can also use a project/ folder as a parent resource and filter assets in them
+    # respectively.
     result_iterator = client.group_assets(
         request={"parent": org_name, "group_by": group_by_type, "filter": only_projects}
     )
@@ -192,12 +204,14 @@ def group_assets_by_changes(organization_id):
 
     duration = timedelta(days=5)
 
-    # organization_id is the numeric ID of the organization.
-    # organization_id = "1234567777"
-    org_name = f"organizations/{organization_id}"
+    # 'parent' must be in one of the following formats:
+    #   "organizations/{organization_id}"
+    #   "projects/{project_id}"
+    #   "folders/{folder_id}"
+    parent = f"organizations/{organization_id}"
     result_iterator = client.group_assets(
         request={
-            "parent": org_name,
+            "parent": parent,
             "group_by": "state_change",
             "compare_duration": duration,
         }

@@ -37,14 +37,18 @@ def create_cdn_key_akamai(
     cdn_key_id: str,
     hostname: str,
     akamai_token_key: str,
-) -> str:
+) -> stitcher_v1.types.CdnKey:
     """Creates an Akamai CDN key.
     Args:
         project_id: The GCP project ID.
         location: The location in which to create the CDN key.
         cdn_key_id: The user-defined CDN key ID.
         hostname: The hostname to which this CDN key applies.
-        akamai_token_key: A base64-encoded string token key."""
+        akamai_token_key: A base64-encoded string token key.
+
+    Returns:
+        The CDN key resource.
+    """
 
     client = VideoStitcherServiceClient()
 
