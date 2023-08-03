@@ -30,7 +30,13 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def create_job_from_template(project_id, location, input_uri, output_uri, template_id):
+def create_job_from_template(
+    project_id: str,
+    location: str,
+    input_uri: str,
+    output_uri: str,
+    template_id: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on a job template.
 
     Args:
@@ -38,7 +44,11 @@ def create_job_from_template(project_id, location, input_uri, output_uri, templa
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
         output_uri: Uri of the video output folder in the Cloud Storage bucket.
-        template_id: The user-defined template ID."""
+        template_id: The user-defined template ID.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

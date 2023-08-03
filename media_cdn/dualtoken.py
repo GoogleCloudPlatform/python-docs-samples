@@ -173,3 +173,52 @@ def sign_token(
 
 
 # [END mediacdn_dualtoken_sign_token]
+
+
+# [START mediacdn_dualtoken_sign_path_component]
+def sign_path_component(
+    url_prefix: str,
+    filename: str,
+    key_name: str,
+    base64_key: str,
+    expiration_time: datetime.datetime,
+) -> str:
+    """Gets the Signed URL string for the specified URL prefix and configuration.
+
+    Args:
+        url_prefix: URL Prefix to sign as a string.
+        filename: The filename of the sample request
+        key_name: The name of the signing key as a string.
+        base64_key: The signing key as a base64 encoded string.
+        expiration_time: Expiration time as a UTC datetime object with timezone.
+
+    Returns:
+        Returns the Signed URL appended with the query parameters based on the
+        specified URL prefix and configuration.
+    """
+
+    expiration_duration = expiration_time.astimezone(
+        tz=datetime.timezone.utc
+    ) - datetime.datetime.fromtimestamp(0, tz=datetime.timezone.utc)
+    decoded_key = base64.urlsafe_b64decode(base64_key)
+
+    policy_pattern = "{url_prefix}edge-cache-token=Expires={expires}&KeyName={key_name}"
+    policy = policy_pattern.format(
+        url_prefix=url_prefix,
+        expires=int(expiration_duration.total_seconds()),
+        key_name=key_name,
+    )
+
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
+        policy.encode("utf-8")
+    )
+    signature = base64.urlsafe_b64encode(digest).decode("utf-8")
+
+    signed_url = "{policy}&Signature={signature}/{filename}".format(
+        policy=policy, signature=signature, filename=filename
+    )
+
+    return signed_url
+
+
+# [END mediacdn_dualtoken_sign_path_component]

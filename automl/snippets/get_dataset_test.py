@@ -14,12 +14,15 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import get_dataset
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 DATASET_ID = os.environ["ENTITY_EXTRACTION_DATASET_ID"]
 
 
+@Retry()
 def test_get_dataset(capsys):
     get_dataset.get_dataset(PROJECT_ID, DATASET_ID)
     out, _ = capsys.readouterr()

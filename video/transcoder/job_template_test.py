@@ -16,6 +16,7 @@ import os
 import uuid
 
 from google.api_core.exceptions import NotFound
+import pytest
 
 import create_job_template
 import delete_job_template
@@ -28,7 +29,7 @@ project_number = os.environ["GOOGLE_CLOUD_PROJECT_NUMBER"]
 template_id = f"my-python-test-template-{uuid.uuid4()}"
 
 
-def test_template_operations(capsys):
+def test_template_operations(capsys: pytest.fixture) -> None:
     # Enable the following API on the test project:
     # *   Transcoder API
 
@@ -42,18 +43,19 @@ def test_template_operations(capsys):
         print(f"Ignoring NotFound, details: {e}")
     out, _ = capsys.readouterr()
 
-    create_job_template.create_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert job_template_name in out
+    response = create_job_template.create_job_template(
+        project_id, location, template_id
+    )
+    assert job_template_name in response.name
 
-    get_job_template.get_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert job_template_name in out
+    response = get_job_template.get_job_template(project_id, location, template_id)
+    assert job_template_name in response.name
 
     list_job_templates.list_job_templates(project_id, location)
     out, _ = capsys.readouterr()
     assert job_template_name in out
 
-    delete_job_template.delete_job_template(project_id, location, template_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted job template" in out
+    response = delete_job_template.delete_job_template(
+        project_id, location, template_id
+    )
+    assert response is None

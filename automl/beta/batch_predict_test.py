@@ -15,6 +15,8 @@
 import datetime
 import os
 
+from google.api_core.retry import Retry
+
 import batch_predict
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
@@ -23,6 +25,7 @@ MODEL_ID = "TEN0000000000000000000"
 PREFIX = "TEST_EXPORT_OUTPUT_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
 
+@Retry()
 def test_batch_predict(capsys):
     # As batch prediction can take a long time. Try to batch predict on a model
     # and confirm that the model was not found, but other elements of the

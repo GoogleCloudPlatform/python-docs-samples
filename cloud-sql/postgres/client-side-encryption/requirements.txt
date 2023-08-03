@@ -1,3 +1,3 @@
-SQLAlchemy==2.0.15
-pg8000==1.29.6
+SQLAlchemy==2.0.17
+pg8000==1.29.8
 tink==1.7.0

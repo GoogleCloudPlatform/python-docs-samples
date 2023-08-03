@@ -13,12 +13,18 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_extraction]
-from vertexai.preview.language_models import TextGenerationModel
+import vertexai
+from vertexai.language_models import TextGenerationModel
 
 
-def extractive_question_answering(temperature: float = 0.2) -> None:
+def extractive_question_answering(
+    temperature: float,
+    project_id: str,
+    location: str,
+) -> str:
     """Extractive Question Answering with a Large Language Model."""
 
+    vertexai.init(project=project_id, location=location)
     # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
@@ -69,7 +75,7 @@ A:""",
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_extraction]
 
-    return response
+    return response.text
 
 
 if __name__ == "__main__":

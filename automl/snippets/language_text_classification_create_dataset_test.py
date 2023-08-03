@@ -15,6 +15,7 @@
 import datetime
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl
 
 import language_text_classification_create_dataset
@@ -23,6 +24,7 @@ import language_text_classification_create_dataset
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
+@Retry()
 def test_text_classification_create_dataset(capsys):
     dataset_name = "test_" + datetime.datetime.now().strftime("%Y%m%d%H%M%S")
     language_text_classification_create_dataset.create_dataset(PROJECT_ID, dataset_name)

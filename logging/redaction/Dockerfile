@@ -1,5 +1,5 @@
 # From apache/beam_python3.9_sdk:2.43.0
-FROM apache/beam_python3.9_sdk@sha256:f06aadabd5cfaa4a329d6ea1b23c8e1c3a38b3c06356911968bd6dc964e41b98
+FROM apache/beam_python3.9_sdk@sha256:015dc70d239475fc8e193e1c55c54b89d1ca9e771e05aadec1037f2f13fbdbbb
 
 # Install google-cloud-logging package that is missing in Beam SDK
 COPY requirements.txt /tmp

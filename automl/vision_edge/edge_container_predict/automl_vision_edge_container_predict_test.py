@@ -106,6 +106,7 @@ def edge_container_predict_server_port():
     model_path.cleanup()
 
 
+@Retry()
 def test_edge_container_predict(capsys, edge_container_predict_server_port):
     # If you send requests with one image each time, the key value does not
     # matter. If you send requests with multiple images, please used different

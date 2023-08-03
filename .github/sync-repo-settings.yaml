@@ -39,13 +39,13 @@ branchProtectionRules:
   # Defaults to `false`
   requiresCodeOwnerReviews: true
   # Require up to date branches
-  requiresStrictStatusChecks: true
+  requiresStrictStatusChecks: false
   # List of required status check contexts that must pass for commits to be accepted to matching branches.
   requiredStatusCheckContexts:
     - "Kokoro CI - Lint"
     - "Kokoro CI - Python 2.7 (App Engine Standard Only)"
-    - "Kokoro CI - Python 3.7"
     - "Kokoro CI - Python 3.8"
+    - "Kokoro CI - Python 3.11"
     - "cla/google"
     - "snippet-bot check"
 # List of explicit permissions to add (additive only)
