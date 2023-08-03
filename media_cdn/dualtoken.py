@@ -15,6 +15,7 @@
 # limitations under the License.
 
 # [START mediacdn_dualtoken_sign_token]
+# [START mediacdn_dualtoken_sign_path_component]
 import base64
 import datetime
 import hashlib
@@ -22,7 +23,7 @@ import hmac
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
-
+# [END mediacdn_dualtoken_sign_path_component]
 def base64_encoder(value: bytes) -> str:
     """
     Returns a base64-encoded string compatible with Media CDN.
