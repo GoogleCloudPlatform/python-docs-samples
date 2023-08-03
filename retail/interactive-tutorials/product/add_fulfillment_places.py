@@ -62,7 +62,10 @@ async def add_places(product_name: str):
     )
     # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
     try:
-        await operation.result()
+        while not operation.done():
+            print("---please wait till operation is done---")
+            time.sleep(30)
+        print("---add fulfillment places operation is done---")
     except GoogleAPICallError:
         pass
 
