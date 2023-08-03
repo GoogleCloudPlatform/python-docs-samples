@@ -58,9 +58,7 @@ def get_add_fulfillment_request(
 async def add_places(product_name: str):
     print("------add fulfillment places-----")
     add_fulfillment_request = get_add_fulfillment_request(product_name, "store2")
-    operation = await ProductServiceAsyncClient().add_fulfillment_places(
-        add_fulfillment_request
-    )
+    operation = ProductServicClient().add_fulfillment_places(add_fulfillment_request)
     # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
     try:
         while not operation.done():
