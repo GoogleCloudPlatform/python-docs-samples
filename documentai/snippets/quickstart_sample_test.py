@@ -26,9 +26,7 @@ from google.cloud import documentai  # type: ignore
 location = "us"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 processor_display_name = f"test-processor-{uuid4()}"
-processor_type = "OCR_PROCESSOR"
 file_path = "resources/invoice.pdf"
-mime_type = "application/pdf"
 
 
 def test_quickstart(capsys):
@@ -36,9 +34,7 @@ def test_quickstart(capsys):
         project_id=project_id,
         location=location,
         processor_display_name=processor_display_name,
-        processor_type=processor_type,
         file_path=file_path,
-        mime_type=mime_type,
     )
     out, _ = capsys.readouterr()
 

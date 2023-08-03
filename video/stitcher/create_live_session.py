@@ -31,13 +31,19 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 )
 
 
-def create_live_session(project_id: str, location: str, live_config_id: str) -> str:
+def create_live_session(
+    project_id: str, location: str, live_config_id: str
+) -> stitcher_v1.types.LiveSession:
     """Creates a live session. Live sessions are ephemeral resources that expire
     after a few minutes.
     Args:
         project_id: The GCP project ID.
         location: The location in which to create the session.
-        live_config_id: The user-defined live config ID."""
+        live_config_id: The user-defined live config ID.
+
+    Returns:
+        The live session resource.
+    """
 
     client = VideoStitcherServiceClient()
 

@@ -40,7 +40,7 @@ def create_cdn_key(
     key_name: str,
     private_key: str,
     is_cloud_cdn: bool,
-) -> str:
+) -> stitcher_v1.types.CdnKey:
     """Creates a Cloud CDN or Media CDN key.
     Args:
         project_id: The GCP project ID.
@@ -54,6 +54,9 @@ def create_cdn_key(
                      See https://cloud.google.com/video-stitcher/docs/how-to/managing-cdn-keys#create-private-key-media-cdn
                      for more information. For a Cloud CDN key, this is a base64-encoded string secret.
         is_cloud_cdn: If true, create a Cloud CDN key. If false, create a Media CDN key.
+
+    Returns:
+        The CDN key resource.
     """
 
     client = VideoStitcherServiceClient()

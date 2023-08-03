@@ -27,9 +27,10 @@ import argparse
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
+from google.protobuf import empty_pb2 as empty
 
 
-def delete_cdn_key(project_id: str, location: str, cdn_key_id: str) -> str:
+def delete_cdn_key(project_id: str, location: str, cdn_key_id: str) -> empty.Empty:
     """Deletes a CDN key.
     Args:
         project_id: The GCP project ID.

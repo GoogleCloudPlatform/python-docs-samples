@@ -26,6 +26,7 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import stitcher_v1
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
@@ -33,13 +34,17 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 
 def get_live_ad_tag_detail(
     project_id: str, location: str, session_id: str, ad_tag_detail_id: str
-) -> str:
+) -> stitcher_v1.types.LiveAdTagDetail:
     """Gets the specified ad tag detail for a live session.
     Args:
         project_id: The GCP project ID.
         location: The location of the session.
         session_id: The ID of the live session.
-        ad_tag_detail_id: The ID of the ad tag details."""
+        ad_tag_detail_id: The ID of the ad tag details.
+
+    Returns:
+        The live ad tag detail resource.
+    """
 
     client = VideoStitcherServiceClient()
 

@@ -39,7 +39,7 @@ def cancel_private_cloud_deletion(
     project_id: str, zone: str, cloud_name: str
 ) -> operation.Operation:
     """
-    Cancels in progress deletion of deletion of VMWare Private Cloud.
+    Cancels in progress deletion of VMWare Private Cloud.
 
     Args:
         project_id: name of the project hosting the private cloud.
