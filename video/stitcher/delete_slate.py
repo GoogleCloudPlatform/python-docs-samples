@@ -27,9 +27,10 @@ import argparse
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
+from google.protobuf import empty_pb2 as empty
 
 
-def delete_slate(project_id: str, location: str, slate_id: str) -> str:
+def delete_slate(project_id: str, location: str, slate_id: str) -> empty.Empty:
     """Deletes a slate.
     Args:
         project_id: The GCP project ID.

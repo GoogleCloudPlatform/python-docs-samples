@@ -1521,32 +1521,6 @@ if __name__ == "__main__":
         "in your dataset otherwise.",
     )
 
-    reid_basic_parser = subparsers.add_parser(
-        "reid_text_fpe",
-        help="Re-identify sensitive data in a string using Format Preserving "
-             "Encryption (FPE).",
-    )
-    reid_basic_parser.add_argument(
-        "project",
-        help="The Google Cloud project id to use as a parent resource.",
-    )
-    reid_basic_parser.add_argument(
-        "item",
-        help="The string to re-identify. " "Example: string = 'My SSN is 372819127'",
-    )
-    reid_basic_parser.add_argument(
-        "key_name",
-        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-        "AES-256 key. Example: "
-        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
-    )
-    reid_basic_parser.add_argument(
-        "wrapped_key",
-        help="The encrypted ('wrapped') AES-256 key to use. This key should "
-        "be encrypted using the Cloud KMS key specified by key_name.",
-    )
-
     reid_parser = subparsers.add_parser(
         "reid_fpe",
         help="Reidentify sensitive data in a string using Format Preserving "

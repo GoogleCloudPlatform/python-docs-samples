@@ -39,14 +39,16 @@ TABLE_DATA = {
 }
 
 
-def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture) -> None:
+def test_deidentify_and_reidentify_table_with_fpe(
+    capsys: pytest.CaptureFixture,
+) -> None:
     table_data = {
         "header": ["employee_id", "date", "compensation"],
         "rows": [
             ["11111", "2015", "$10"],
             ["22222", "2016", "$20"],
             ["33333", "2016", "$15"],
-        ]
+        ],
     }
 
     deid_table.deidentify_table_with_fpe(
@@ -54,7 +56,7 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
         table_data["header"],
         table_data["rows"],
         ["employee_id"],
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
         wrapped_key=base64.b64decode(WRAPPED_KEY),
         key_name=KEY_NAME,
     )
@@ -66,21 +68,23 @@ def test_deidentify_and_reidentify_table_with_fpe(capsys: pytest.CaptureFixture)
     response = out.split(":")[1:]
 
     deid_col_id = response.index(' "employee_id"\n}\nheaders {\n  name')
-    total_columns = len(table_data['header'])
-    total_rows = len(table_data['rows'][0])
+    total_columns = len(table_data["header"])
+    total_rows = len(table_data["rows"][0])
 
-    deid_emp_ids = [response[i].split("\n")[0][2:-1] for i in
-                    range(deid_col_id + total_columns, len(response), total_columns)]
+    deid_emp_ids = [
+        response[i].split("\n")[0][2:-1]
+        for i in range(deid_col_id + total_columns, len(response), total_columns)
+    ]
 
     for i in range(total_rows):
-        table_data['rows'][i][deid_col_id - 1] = deid_emp_ids[i]
+        table_data["rows"][i][deid_col_id - 1] = deid_emp_ids[i]
 
     deid_table.reidentify_table_with_fpe(
         GCLOUD_PROJECT,
         table_data["header"],
         table_data["rows"],
         ["employee_id"],
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
         wrapped_key=base64.b64decode(WRAPPED_KEY),
         key_name=KEY_NAME,
     )
