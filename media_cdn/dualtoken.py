@@ -23,7 +23,7 @@ import hmac
 
 import cryptography.hazmat.primitives.asymmetric.ed25519 as ed25519
 
-# [END mediacdn_dualtoken_sign_path_component]
+
 def base64_encoder(value: bytes) -> str:
     """
     Returns a base64-encoded string compatible with Media CDN.
@@ -36,6 +36,7 @@ def base64_encoder(value: bytes) -> str:
     return encoded_str.rstrip("=")
 
 
+# [END mediacdn_dualtoken_sign_path_component]
 def sign_token(
     base64_key: bytes,
     signature_algorithm: str,
@@ -171,8 +172,6 @@ def sign_token(
             "Input Missing Error: `signature_algorithm` can only be one of `sha1`, `sha256` or `ed25519`"
         )
     return "~".join(tokens)
-
-
 # [END mediacdn_dualtoken_sign_token]
 
 
@@ -210,15 +209,14 @@ def sign_path_component(
         key_name=key_name,
     )
 
-    digest = ed25519.Ed25519PrivateKey.from_private_bytes(
-        decoded_key).sign(policy.encode('utf-8'))
-    signature = base64.base64_encoder(digest).decode('utf-8')
+    digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
+        policy.encode("utf-8")
+    )
+    signature = base64_encoder(digest)
 
     signed_url = "{policy}&Signature={signature}/{filename}".format(
         policy=policy, signature=signature, filename=filename
     )
 
     return signed_url
-
-
 # [END mediacdn_dualtoken_sign_path_component]

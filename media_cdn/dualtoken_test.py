@@ -207,7 +207,7 @@ def test_sign_token_for_sha256_all_params(capsys: pytest.LogCaptureFixture) -> N
 
 
 def test_sign_path_component() -> None:
-    expected = "https://example.com/edge-cache-token=Expires=1663070400&KeyName=test-key&Signature=2hvmMKXW_e0bY3ViJNDSgoXDGvNj2L-UYTseTgtj96Va0S4FYxehka1k4hzWo2_87B9zqr_Ne4MMEdRfHUMUBw==/test-filename"
+    expected = "https://example.com/edge-cache-token=Expires=1663070400&KeyName=test-key&Signature=2hvmMKXW_e0bY3ViJNDSgoXDGvNj2L-UYTseTgtj96Va0S4FYxehka1k4hzWo2_87B9zqr_Ne4MMEdRfHUMUBw/test-filename"
     result = dualtoken.sign_path_component(
         url_prefix="https://example.com/",
         filename="test-filename",
