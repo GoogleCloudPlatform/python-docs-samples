@@ -57,4 +57,5 @@ def test_functions_eventsource_storage(capsys: pytest.LogCaptureFixture) -> None
     assert "2021-10-10 00:00:00.000000Z" in timeCreated
     assert "2021-11-11 00:00:00.000000Z" in updated
 
+
 # [END functions_cloudevent_storage_unit_test]
