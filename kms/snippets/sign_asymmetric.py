@@ -31,7 +31,7 @@ def sign_asymmetric(
     message: str,
 ) -> kms.AsymmetricSignResponse:
     """
-    Sign a message using the public key part of an asymmetric key.
+    Sign a message using the private key part of an asymmetric key.
 
     Args:
         project_id (string): Google Cloud project ID (e.g. 'my-project').

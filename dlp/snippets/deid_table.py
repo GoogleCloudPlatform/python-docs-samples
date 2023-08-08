@@ -99,11 +99,8 @@ def deidentify_table_with_fpe(
 
     # Call the API.
     response = dlp.deidentify_content(
-        request={
-            "parent": parent,
-            "deidentify_config": deidentify_config,
-            "item": item
-        })
+        request={"parent": parent, "deidentify_config": deidentify_config, "item": item}
+    )
 
     # Print out results.
     print(f"Table after de-identification: {response.item.table}")
@@ -194,7 +191,8 @@ def reidentify_table_with_fpe(
             "parent": parent,
             "reidentify_config": reidentify_config,
             "item": item,
-        })
+        }
+    )
 
     # Print out results.
     print("Table after re-identification: {}".format(response.item.table))
@@ -212,7 +210,7 @@ if __name__ == "__main__":
     table_fpe_parser = subparsers.add_parser(
         "deid_table_fpe",
         help="Deidentify sensitive data in a string using Format Preserving "
-             "Encryption (FPE).",
+        "Encryption (FPE).",
     )
     table_fpe_parser.add_argument(
         "project",
@@ -233,29 +231,29 @@ if __name__ == "__main__":
     table_fpe_parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     table_fpe_parser.add_argument(
         "wrapped_key",
         help="The encrypted ('wrapped') AES-256 key to use. This key should "
-             "be encrypted using the Cloud KMS key specified by key_name.",
+        "be encrypted using the Cloud KMS key specified by key_name.",
     )
     table_fpe_parser.add_argument(
         "-a",
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
 
     reid_table_fpe_parser = subparsers.add_parser(
         "reid_table_fpe",
         help="Re-identify sensitive data in a table using Format Preserving "
-             "Encryption (FPE).",
+        "Encryption (FPE).",
     )
     reid_table_fpe_parser.add_argument(
         "project",
@@ -276,23 +274,23 @@ if __name__ == "__main__":
     reid_table_fpe_parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     reid_table_fpe_parser.add_argument(
         "wrapped_key",
         help="The encrypted ('wrapped') AES-256 key to use. This key should "
-             "be encrypted using the Cloud KMS key specified by key_name.",
+        "be encrypted using the Cloud KMS key specified by key_name.",
     )
     reid_table_fpe_parser.add_argument(
         "-a",
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
 
     args = parser.parse_args()

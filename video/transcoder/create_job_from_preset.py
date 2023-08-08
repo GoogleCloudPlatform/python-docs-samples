@@ -30,7 +30,13 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 )
 
 
-def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
+def create_job_from_preset(
+    project_id: str,
+    location: str,
+    input_uri: str,
+    output_uri: str,
+    preset: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on a job preset.
 
     Args:
@@ -38,7 +44,11 @@ def create_job_from_preset(project_id, location, input_uri, output_uri, preset):
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
         output_uri: Uri of the video output folder in the Cloud Storage bucket.
-        preset: The preset template (for example, 'preset/web-hd')."""
+        preset: The preset template (for example, 'preset/web-hd').
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

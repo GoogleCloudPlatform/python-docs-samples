@@ -32,12 +32,12 @@ from google.cloud.video.transcoder_v1.services.transcoder_service import (
 
 
 def create_job_with_embedded_captions(
-    project_id,
-    location,
-    input_video_uri,
-    input_captions_uri,
-    output_uri,
-):
+    project_id: str,
+    location: str,
+    input_video_uri: str,
+    input_captions_uri: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration that embeds closed captions in the output video.
 
     Args:
@@ -48,7 +48,11 @@ def create_job_with_embedded_captions(
         input_captions_uri (str): Uri of the input captions file in the Cloud
           Storage bucket.
         output_uri (str): Uri of the video output folder in the Cloud Storage
-          bucket."""
+          bucket.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

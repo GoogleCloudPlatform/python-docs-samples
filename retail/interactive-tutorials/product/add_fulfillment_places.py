@@ -17,10 +17,11 @@
 import asyncio
 import random
 import string
+import time
 
 from google.api_core.exceptions import GoogleAPICallError
 import google.auth
-from google.cloud.retail import AddFulfillmentPlacesRequest, ProductServiceAsyncClient
+from google.cloud.retail import AddFulfillmentPlacesRequest, ProductServiceClient
 
 from setup_product.setup_cleanup import create_product, delete_product, get_product
 
@@ -57,12 +58,13 @@ def get_add_fulfillment_request(
 async def add_places(product_name: str):
     print("------add fulfillment places-----")
     add_fulfillment_request = get_add_fulfillment_request(product_name, "store2")
-    operation = await ProductServiceAsyncClient().add_fulfillment_places(
-        add_fulfillment_request
-    )
+    operation = ProductServiceClient().add_fulfillment_places(add_fulfillment_request)
     # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
     try:
-        await operation.result()
+        while not operation.done():
+            print("---please wait till operation is done---")
+            time.sleep(30)
+        print("---add fulfillment places operation is done---")
     except GoogleAPICallError:
         pass
 

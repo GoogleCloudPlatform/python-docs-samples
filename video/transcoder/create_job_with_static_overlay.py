@@ -32,8 +32,12 @@ from google.protobuf import duration_pb2 as duration
 
 
 def create_job_with_static_overlay(
-    project_id, location, input_uri, overlay_image_uri, output_uri
-):
+    project_id: str,
+    location: str,
+    input_uri: str,
+    overlay_image_uri: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration that includes a static image overlay.
 
     Args:
@@ -41,7 +45,11 @@ def create_job_with_static_overlay(
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
         overlay_image_uri: Uri of the image for the overlay in the Cloud Storage bucket.
-        output_uri: Uri of the video output folder in the Cloud Storage bucket."""
+        output_uri: Uri of the video output folder in the Cloud Storage bucket.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 
