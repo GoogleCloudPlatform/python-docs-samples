@@ -31,13 +31,18 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 from google.protobuf import field_mask_pb2 as field_mask
 
 
-def update_slate(project_id: str, location: str, slate_id: str, slate_uri: str) -> str:
+def update_slate(
+    project_id: str, location: str, slate_id: str, slate_uri: str
+) -> stitcher_v1.types.Slate:
     """Updates a slate.
     Args:
         project_id: The GCP project ID.
         location: The location of the slate.
         slate_id: The existing slate's ID.
         slate_uri: Updated uri of the video slate; must be an MP4 video with at least one audio track.
+
+    Returns:
+        The slate resource.
     """
 
     client = VideoStitcherServiceClient()

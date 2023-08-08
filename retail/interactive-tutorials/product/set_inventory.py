@@ -17,6 +17,7 @@
 import asyncio
 import random
 import string
+import time
 
 from google.api_core.exceptions import GoogleAPICallError
 import google.auth
@@ -24,7 +25,7 @@ from google.cloud.retail import (
     FulfillmentInfo,
     PriceInfo,
     Product,
-    ProductServiceAsyncClient,
+    ProductServiceClient,
     SetInventoryRequest,
 )
 from google.protobuf.field_mask_pb2 import FieldMask
@@ -86,14 +87,17 @@ def get_set_inventory_request(product_name: str) -> SetInventoryRequest:
 # set inventory to product
 def set_inventory(product_name: str):
     set_inventory_request = get_set_inventory_request(product_name)
-    return ProductServiceAsyncClient().set_inventory(set_inventory_request)
+    return ProductServiceClient().set_inventory(set_inventory_request)
 
 
 async def set_inventory_and_remove_product(product_name: str):
-    operation = await set_inventory(product_name)
+    operation = set_inventory(product_name)
     # This operation doesn't have result or errors. So GoogleAPICallError will be raised.
     try:
-        await operation.result()
+        while not operation.done():
+            print("---please wait till operation is done---")
+            time.sleep(30)
+        print("---set inventory operation is done---")
     except GoogleAPICallError:
         pass
 

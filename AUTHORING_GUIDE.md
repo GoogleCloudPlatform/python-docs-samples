@@ -923,7 +923,7 @@ Add the new environment variables to the `envs` dictionary.
 ```py
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,

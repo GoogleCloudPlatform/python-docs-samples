@@ -32,15 +32,22 @@ from google.protobuf import duration_pb2 as duration
 
 
 def create_job_with_periodic_images_spritesheet(
-    project_id, location, input_uri, output_uri
-):
+    project_id: str,
+    location: str,
+    input_uri: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration that generates two spritesheets.
 
     Args:
         project_id: The GCP project ID.
         location: The location to start the job in.
         input_uri: Uri of the video in the Cloud Storage bucket.
-        output_uri: Uri of the video output folder in the Cloud Storage bucket."""
+        output_uri: Uri of the video output folder in the Cloud Storage bucket.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

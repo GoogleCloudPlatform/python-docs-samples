@@ -146,12 +146,79 @@ def list_triggers(project: str) -> None:
         if trigger.display_name:
             print(f"  Display Name: {trigger.display_name}")
         if trigger.description:
-            print(f"  Description: {trigger.discription}")
+            print(f"  Description: {trigger.description}")
         print(f"  Status: {trigger.status}")
         print(f"  Error count: {len(trigger.errors)}")
 
 
 # [END dlp_list_triggers]
+
+
+# [START dlp_update_trigger]
+from typing import List  # noqa: F811, E402, I100
+
+import google.cloud.dlp  # noqa: F811, E402
+
+
+def update_trigger(
+    project: str,
+    info_types: List[str],
+    trigger_id: str,
+) -> None:
+    """Uses the Data Loss Prevention API to update an existing job trigger.
+    Args:
+        project: The Google Cloud project id to use as a parent resource
+        info_types: A list of strings representing infoTypes to update trigger with.
+            A full list of infoType categories can be fetched from the API.
+        trigger_id: The id of job trigger which needs to be updated.
+    """
+
+    # Instantiate a client.
+    dlp = google.cloud.dlp_v2.DlpServiceClient()
+
+    # Prepare info_types by converting the list of strings into a list of
+    # dictionaries.
+    info_types = [{"name": info_type} for info_type in info_types]
+
+    # Specify fields of the jobTrigger resource to be updated when the
+    # job trigger is modified.
+    job_trigger = {
+        "inspect_job": {
+            "inspect_config": {
+                "info_types": info_types,
+                "min_likelihood": google.cloud.dlp_v2.Likelihood.LIKELY,
+            }
+        }
+    }
+
+    # Convert the project id into a full resource id.
+    trigger_name = f"projects/{project}/jobTriggers/{trigger_id}"
+
+    # Call the API.
+    # Refer https://protobuf.dev/reference/protobuf/google.protobuf/#field-mask
+    # for constructing the field mask paths.
+    response = dlp.update_job_trigger(
+        request={
+            "name": trigger_name,
+            "job_trigger": job_trigger,
+            "update_mask": {
+                "paths": [
+                    "inspect_job.inspect_config.info_types",
+                    "inspect_job.inspect_config.min_likelihood",
+                ]
+            },
+        }
+    )
+
+    # Print out the result.
+    print(f"Successfully updated trigger: {response.name}")
+    print(
+        f"Updated InfoType: {response.inspect_job.inspect_config.info_types[0].name}"
+        f" \nUpdates Likelihood: {response.inspect_job.inspect_config.min_likelihood}\n",
+    )
+
+
+# [END dlp_update_trigger]
 
 
 # [START dlp_delete_trigger]
@@ -258,6 +325,27 @@ if __name__ == "__main__":
         default=default_project,
     )
 
+    parser_update = subparsers.add_parser(
+        "update",
+        help="Update an existing job trigger.",
+    )
+    parser_update.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+        default=default_project,
+    )
+    parser_update.add_argument(
+        "--trigger_id",
+        help="The id of the trigger to be updated.",
+    )
+    parser_update.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+
     parser_delete = subparsers.add_parser("delete", help="Delete a trigger.")
     parser_delete.add_argument("trigger_id", help="The id of the trigger to delete.")
     parser_delete.add_argument(
@@ -285,3 +373,9 @@ if __name__ == "__main__":
         list_triggers(args.project)
     elif args.action == "delete":
         delete_trigger(args.project, args.trigger_id)
+    elif args.action == "update":
+        update_trigger(
+            args.project,
+            args.info_types,
+            args.trigger_id,
+        )
