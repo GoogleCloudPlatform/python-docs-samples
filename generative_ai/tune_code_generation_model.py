@@ -67,4 +67,4 @@ def tune_code_generation_model(
 
 
 if __name__ == "__main__":
-    tuning()
+    tune_code_generation_model()

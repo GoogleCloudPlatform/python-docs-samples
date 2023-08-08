@@ -32,4 +32,4 @@ def list_tuned_code_generation_models(
 
 
 if __name__ == "__main__":
-    list_tuned_models()
+    list_tuned_code_generation_models()
