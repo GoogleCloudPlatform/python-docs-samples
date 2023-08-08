@@ -24,15 +24,20 @@ Example usage:
 import argparse
 
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
+    pagers,
     VideoStitcherServiceClient,
 )
 
 
-def list_slates(project_id: str, location: str) -> str:
+def list_slates(project_id: str, location: str) -> pagers.ListSlatesPager:
     """Lists all slates in a location.
     Args:
         project_id: The GCP project ID.
-        location: The location of the slates."""
+        location: The location of the slates.
+
+    Returns:
+        An iterable object containing slate resources.
+    """
 
     client = VideoStitcherServiceClient()
 

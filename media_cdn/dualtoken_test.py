@@ -210,8 +210,9 @@ def test_sign_path_component() -> None:
     expected = "https://example.com/edge-cache-token=Expires=1663070400&KeyName=test-key&Signature=2hvmMKXW_e0bY3ViJNDSgoXDGvNj2L-UYTseTgtj96Va0S4FYxehka1k4hzWo2_87B9zqr_Ne4MMEdRfHUMUBw==/test-filename"
     result = dualtoken.sign_path_component(
         url_prefix="https://example.com/",
-        filename='test-filename',
-        key_name='test-key',
+        filename="test-filename",
+        key_name="test-key",
         base64_key=b"g_SlMILiIWKqsC6Z2L7gy0sReDOqtSrJrE7CXNr5Nl8=",
-        expiration_time=expiresTime)
+        expiration_time=expiresTime,
+    )
     assert result == expected
