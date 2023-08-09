@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_streaming_chat]
+# [START aiplatform_sdk_streaming_code]
 import datetime
 
 import vertexai
@@ -38,7 +38,7 @@ def streaming_prediction(
         print(datetime.datetime.now())
         print(response)
     print("End: ", datetime.datetime.now())
-    # [END aiplatform_sdk_streaming_chat]
+    # [END aiplatform_sdk_streaming_code]
 
     return responses
 
