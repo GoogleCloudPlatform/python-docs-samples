@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START functions_cloudevent_storage_unit_test]
 
 from cloudevents.http import CloudEvent
 import pytest
@@ -55,3 +56,6 @@ def test_functions_eventsource_storage(capsys: pytest.LogCaptureFixture) -> None
     assert metageneration == 1
     assert "2021-10-10 00:00:00.000000Z" in timeCreated
     assert "2021-11-11 00:00:00.000000Z" in updated
+
+
+# [END functions_cloudevent_storage_unit_test]
