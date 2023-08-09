@@ -19,7 +19,7 @@ from discoveryengine import search_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
-search_engine_id = "test-search-engine"
+search_engine_id = "test-search-engine_1689960780551"
 serving_config_id = "default_config"
 search_query = "Google"
 

@@ -33,7 +33,7 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 
 def create_vod_session(
     project_id: str, location: str, source_uri: str, ad_tag_uri: str
-) -> str:
+) -> stitcher_v1.types.VodSession:
     """Creates a VOD session. VOD sessions are ephemeral resources that expire
     after a few hours.
     Args:
@@ -41,7 +41,11 @@ def create_vod_session(
         location: The location in which to create the session.
         source_uri: Uri of the media to stitch; this URI must reference either an MPEG-DASH
                     manifest (.mpd) file or an M3U playlist manifest (.m3u8) file.
-        ad_tag_uri: Uri of the ad tag."""
+        ad_tag_uri: Uri of the ad tag.
+
+    Returns:
+        The VOD session resource.
+    """
 
     client = VideoStitcherServiceClient()
 

@@ -22,12 +22,11 @@ from google.cloud import contentwarehouse
 # project_number = 'YOUR_PROJECT_NUMBER'
 # location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
 # document_query_text = 'YOUR_DOCUMENT_QUERY'
+# user_id = 'user:YOUR_SERVICE_ACCOUNT_ID' # Format is "user:xxxx@example.com"
 
 
 def search_documents_sample(
-    project_number: str,
-    location: str,
-    document_query_text: str,
+    project_number: str, location: str, document_query_text: str, user_id: str
 ) -> None:
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
@@ -53,9 +52,14 @@ def search_documents_sample(
         histogram_query='count("DocumentSchemaId")'
     )
 
+    request_metadata = contentwarehouse.RequestMetadata(
+        user_info=contentwarehouse.UserInfo(id=user_id)
+    )
+
     # Define request
     request = contentwarehouse.SearchDocumentsRequest(
         parent=parent,
+        request_metadata=request_metadata,
         document_query=document_query,
         histogram_queries=[histogram_query],
     )

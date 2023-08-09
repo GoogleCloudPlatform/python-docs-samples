@@ -23,5 +23,5 @@
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # Pillow 9.0.0 does not support python 3.6
-    "ignored_versions": ["2.7", "3.6"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
 }

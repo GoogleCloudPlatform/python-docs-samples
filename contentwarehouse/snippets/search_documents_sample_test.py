@@ -22,6 +22,7 @@ import pytest
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"  # Format is 'us' or 'eu'
 document_query_text = "document"
+user_id = "user:xxxx@example.com"
 
 
 def test_search_documents(capsys: pytest.CaptureFixture) -> None:
@@ -30,6 +31,7 @@ def test_search_documents(capsys: pytest.CaptureFixture) -> None:
         project_number=project_number,
         location=location,
         document_query_text=document_query_text,
+        user_id=user_id,
     )
     out, _ = capsys.readouterr()
 

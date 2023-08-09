@@ -34,21 +34,21 @@ ad_tag_uri = "https://pubads.g.doubleclick.net/gampad/ads?iu=/21775744923/extern
 
 
 def test_vod_session_operations(capsys: pytest.fixture) -> None:
-    create_vod_session.create_vod_session(project_id, location, vod_uri, ad_tag_uri)
-    out, _ = capsys.readouterr()
+    request = create_vod_session.create_vod_session(
+        project_id, location, vod_uri, ad_tag_uri
+    )
     session_name_prefix = f"projects/{project_number}/locations/{location}/vodSessions/"
-    assert session_name_prefix in out
+    assert session_name_prefix in request.name
 
-    str_slice = out.split("/")
+    str_slice = request.name.split("/")
     session_id = str_slice[len(str_slice) - 1].rstrip("\n")
     session_name = (
         f"projects/{project_number}/locations/{location}/vodSessions/{session_id}"
     )
-    assert session_name in out
+    assert session_name in request.name
 
-    get_vod_session.get_vod_session(project_id, location, session_id)
-    out, _ = capsys.readouterr()
-    assert session_name in out
+    request = get_vod_session.get_vod_session(project_id, location, session_id)
+    assert session_name in request.name
 
     # No list or delete methods for VOD sessions
 
@@ -66,11 +66,10 @@ def test_vod_session_operations(capsys: pytest.fixture) -> None:
     ad_tag_details_name = f"projects/{project_number}/locations/{location}/vodSessions/{session_id}/vodAdTagDetails/{ad_tag_details_id}"
     assert ad_tag_details_name in out
 
-    get_vod_ad_tag_detail.get_vod_ad_tag_detail(
+    response = get_vod_ad_tag_detail.get_vod_ad_tag_detail(
         project_id, location, session_id, ad_tag_details_id
     )
-    out, _ = capsys.readouterr()
-    assert ad_tag_details_name in out
+    assert ad_tag_details_name in response.name
 
     # Stitch details
 
@@ -86,8 +85,7 @@ def test_vod_session_operations(capsys: pytest.fixture) -> None:
     stitch_details_name = f"projects/{project_number}/locations/{location}/vodSessions/{session_id}/vodStitchDetails/{stitch_details_id}"
     assert stitch_details_name in out
 
-    get_vod_stitch_detail.get_vod_stitch_detail(
+    response = get_vod_stitch_detail.get_vod_stitch_detail(
         project_id, location, session_id, stitch_details_id
     )
-    out, _ = capsys.readouterr()
-    assert stitch_details_name in out
+    assert stitch_details_name in response.name
