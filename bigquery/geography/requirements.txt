@@ -13,13 +13,13 @@ geopandas===0.10.2; python_version == '3.7'
 geopandas==0.13.2; python_version >= '3.8'
 google-api-core==2.11.1
 google-auth==2.22.0
-google-cloud-bigquery==3.11.3
+google-cloud-bigquery==3.11.4
 google-cloud-bigquery-storage==2.22.0
 google-cloud-core==2.3.3
 google-crc32c==1.5.0
 google-resumable-media==2.5.0
-googleapis-common-protos==1.59.1
-grpcio==1.56.0
+googleapis-common-protos==1.60.0
+grpcio==1.56.2
 idna==3.4
 libcst==1.0.1
 munch==4.0.0
@@ -32,7 +32,7 @@ pyarrow==12.0.1
 pyasn1==0.5.0
 pyasn1-modules==0.3.0
 pycparser==2.21
-pyparsing==3.1.0
+pyparsing==3.1.1
 python-dateutil==2.8.2
 pytz==2023.3
 PyYAML==6.0.1
