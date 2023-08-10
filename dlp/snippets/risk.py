@@ -388,7 +388,6 @@ import time  # noqa: I100,  F811, E402
 from typing import List  # noqa: E402, F811
 
 import google.cloud.dlp  # noqa: I100, F811, E402
-import google.cloud.pubsub  # noqa: I100, F811, E402
 
 
 def k_anonymity_with_entity_id(
@@ -482,9 +481,8 @@ def k_anonymity_with_entity_id(
             "risk_job": risk_job,
         }
     )
-    print("Inspection Job started : {}".format(response.name))
-
     job_name = response.name
+    print(f"Inspection Job started : {job_name}")
 
     # Waiting for a maximum of 15 minutes for the job to be completed.
     job = dlp.get_dlp_job(request={"name": job_name})
@@ -493,7 +491,7 @@ def k_anonymity_with_entity_id(
         # Check if the job has completed
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
-        elif job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
+        if job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
             print('Job Failed, Please check the configuration.')
             return
 
@@ -521,23 +519,12 @@ def k_anonymity_with_entity_id(
     for i, bucket in enumerate(histogram_buckets):
         print(f"Bucket {i}:")
         if bucket.equivalence_class_size_lower_bound:
-            print(
-                "   Bucket size range: [{}, {}]".format(
-                    bucket.equivalence_class_size_lower_bound,
-                    bucket.equivalence_class_size_upper_bound,
-                )
-            )
+            print(f"Bucket size range: [{bucket.equivalence_class_size_lower_bound}, "
+                  f"{bucket.equivalence_class_size_upper_bound}]"
+                  )
             for value_bucket in bucket.bucket_values:
-                print(
-                    "   Quasi-ID values: {}".format(
-                        get_values(value_bucket.quasi_ids_values[0])
-                    )
-                )
-                print(
-                    "   Class size: {}".format(
-                        value_bucket.equivalence_class_size
-                    )
-                )
+                print(f"Quasi-ID values: {get_values(value_bucket.quasi_ids_values[0])}")
+                print(f"Class size: {value_bucket.equivalence_class_size}")
         else:
             print("No findings.")
 
