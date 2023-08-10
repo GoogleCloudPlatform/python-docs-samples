@@ -387,7 +387,7 @@ def k_anonymity_analysis(
 import time  # noqa: I100,  F811, E402
 from typing import List  # noqa: E402, F811
 
-import google.cloud.dlp  # noqa: I100, F811, E402
+import google.cloud.dlp_v2  # noqa: I100, F811, E402
 
 
 def k_anonymity_with_entity_id(
