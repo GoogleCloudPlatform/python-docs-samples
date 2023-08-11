@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google Inc. All Rights Reserved.
+# Copyright 2023 Google Inc. All Rights Reserved.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,56 +14,53 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Live Stream sample for deleting an input.
+"""Google Cloud Live Stream sample for listing all assets in a location.
 Example usage:
-    python delete_input.py --project_id <project-id> --location <location> --input_id <input-id>
+    python list_assets.py --project_id <project-id> --location <location>
 """
 
-# [START livestream_delete_input]
+# [START livestream_list_assets]
 
 import argparse
 
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
+    pagers,
 )
-from google.protobuf import empty_pb2 as empty
 
 
-def delete_input(project_id: str, location: str, input_id: str) -> empty.Empty:
-    """Deletes an input.
+def list_assets(project_id: str, location: str) -> pagers.ListAssetsPager:
+    """Lists all assets in a location.
     Args:
         project_id: The GCP project ID.
-        location: The location of the input.
-        input_id: The user-defined input ID."""
+        location: The location of the assets."""
 
     client = LivestreamServiceClient()
 
-    name = f"projects/{project_id}/locations/{location}/inputs/{input_id}"
-    operation = client.delete_input(name=name)
-    response = operation.result(600)
-    print("Deleted input")
+    parent = f"projects/{project_id}/locations/{location}"
+    page_result = client.list_assets(parent=parent)
+    print("Assets:")
 
-    return response
+    responses = []
+    for response in page_result:
+        print(response.name)
+        responses.append(response)
+
+    return responses
 
 
-# [END livestream_delete_input]
+# [END livestream_list_assets]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
-        help="The location of the input.",
-        required=True,
-    )
-    parser.add_argument(
-        "--input_id",
-        help="The user-defined input ID.",
+        help="The location of the assets.",
         required=True,
     )
     args = parser.parse_args()
-    delete_input(
+    list_assets(
         args.project_id,
         args.location,
-        args.input_id,
     )

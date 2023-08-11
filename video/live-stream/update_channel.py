@@ -33,7 +33,7 @@ from google.protobuf import field_mask_pb2 as field_mask
 
 def update_channel(
     project_id: str, location: str, channel_id: str, input_id: str
-) -> str:
+) -> live_stream_v1.types.Channel:
     """Updates a channel.
     Args:
         project_id: The GCP project ID.

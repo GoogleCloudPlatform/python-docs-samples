@@ -16,6 +16,7 @@ import os
 import uuid
 
 from google.api_core.exceptions import FailedPrecondition, NotFound
+from google.protobuf import empty_pb2 as empty
 import pytest
 
 import create_channel
@@ -101,11 +102,10 @@ def test_channel_operations(capsys: pytest.fixture) -> None:
 
     # Tests
 
-    create_channel.create_channel(
+    response = create_channel.create_channel(
         project_name, location, channel_id, input_id, output_uri
     )
-    out, _ = capsys.readouterr()
-    assert channel_name_project_id in out
+    assert channel_name_project_id in response.name
 
     list_channels.list_channels(project_name, location)
     out, _ = capsys.readouterr()
@@ -114,14 +114,12 @@ def test_channel_operations(capsys: pytest.fixture) -> None:
     response = update_channel.update_channel(
         project_name, location, channel_id, updated_input_id
     )
-    out, _ = capsys.readouterr()
-    assert channel_name_project_id in out
+    assert channel_name_project_id in response.name
     for input_attachment in response.input_attachments:
         assert "updated-input" in input_attachment.key
 
-    get_channel.get_channel(project_name, location, channel_id)
-    out, _ = capsys.readouterr()
-    assert channel_name_project_id in out
+    response = get_channel.get_channel(project_name, location, channel_id)
+    assert channel_name_project_id in response.name
 
     start_channel.start_channel(project_name, location, channel_id)
     out, _ = capsys.readouterr()
@@ -131,15 +129,13 @@ def test_channel_operations(capsys: pytest.fixture) -> None:
     out, _ = capsys.readouterr()
     assert "Stopped channel" in out
 
-    delete_channel.delete_channel(project_name, location, channel_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted channel" in out
+    response = delete_channel.delete_channel(project_name, location, channel_id)
+    assert response == empty.Empty()
 
-    create_channel_with_backup_input.create_channel_with_backup_input(
+    response = create_channel_with_backup_input.create_channel_with_backup_input(
         project_name, location, channel_id, input_id, updated_input_id, output_uri
     )
-    out, _ = capsys.readouterr()
-    assert channel_name_project_id in out
+    assert channel_name_project_id in response.name
 
     # Clean up
 

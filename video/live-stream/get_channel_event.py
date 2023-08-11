@@ -24,6 +24,7 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import live_stream_v1
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
 )
@@ -31,7 +32,7 @@ from google.cloud.video.live_stream_v1.services.livestream_service import (
 
 def get_channel_event(
     project_id: str, location: str, channel_id: str, event_id: str
-) -> str:
+) -> live_stream_v1.types.Event:
     """Gets a channel.
     Args:
         project_id: The GCP project ID.

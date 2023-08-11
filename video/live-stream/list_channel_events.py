@@ -25,10 +25,13 @@ import argparse
 
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
+    pagers,
 )
 
 
-def list_channel_events(project_id: str, location: str, channel_id: str) -> list:
+def list_channel_events(
+    project_id: str, location: str, channel_id: str
+) -> pagers.ListEventsPager:
     """Lists all events for a channel.
     Args:
         project_id: The GCP project ID.

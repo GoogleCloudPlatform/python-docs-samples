@@ -35,7 +35,7 @@ from google.protobuf import duration_pb2 as duration
 
 def create_channel_event(
     project_id: str, location: str, channel_id: str, event_id: str
-) -> str:
+) -> live_stream_v1.types.Event:
     """Creates a channel event.
     Args:
         project_id: The GCP project ID.

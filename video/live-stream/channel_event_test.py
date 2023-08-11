@@ -41,9 +41,6 @@ def test_channel_event_operations(capsys: pytest.fixture) -> None:
 
     # Set up
 
-    channel_name_project_id = (
-        f"projects/{project_name}/locations/{location}/channels/{channel_id}"
-    )
     event_name_project_id = f"projects/{project_name}/locations/{location}/channels/{channel_id}/events/{event_id}"
 
     create_input.create_input(project_name, location, input_id)
@@ -51,43 +48,32 @@ def test_channel_event_operations(capsys: pytest.fixture) -> None:
     create_channel.create_channel(
         project_name, location, channel_id, input_id, output_uri
     )
-    out, _ = capsys.readouterr()
-    assert channel_name_project_id in out
 
     start_channel.start_channel(project_name, location, channel_id)
-    out, _ = capsys.readouterr()
-    assert "Started channel" in out
 
     # Tests
 
-    create_channel_event.create_channel_event(
+    response = create_channel_event.create_channel_event(
         project_name, location, channel_id, event_id
     )
-    out, _ = capsys.readouterr()
-    assert event_name_project_id in out
+    assert event_name_project_id in response.name
 
-    get_channel_event.get_channel_event(project_name, location, channel_id, event_id)
-    out, _ = capsys.readouterr()
-    assert event_name_project_id in out
+    response = get_channel_event.get_channel_event(
+        project_name, location, channel_id, event_id
+    )
+    assert event_name_project_id in response.name
 
     list_channel_events.list_channel_events(project_name, location, channel_id)
     out, _ = capsys.readouterr()
     assert event_name_project_id in out
 
-    delete_channel_event.delete_channel_event(
+    response = delete_channel_event.delete_channel_event(
         project_name, location, channel_id, event_id
     )
-    out, _ = capsys.readouterr()
-    assert "Deleted channel event" in out
+    assert response is None
 
     # Clean up
 
     stop_channel.stop_channel(project_name, location, channel_id)
-    out, _ = capsys.readouterr()
-    assert "Stopped channel" in out
-
     delete_channel.delete_channel(project_name, location, channel_id)
-    out, _ = capsys.readouterr()
-    assert "Deleted channel" in out
-
     delete_input.delete_input(project_name, location, input_id)

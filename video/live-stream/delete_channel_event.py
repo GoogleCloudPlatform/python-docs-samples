@@ -42,8 +42,10 @@ def delete_channel_event(
     client = LivestreamServiceClient()
 
     name = f"projects/{project_id}/locations/{location}/channels/{channel_id}/events/{event_id}"
-    client.delete_event(name=name)
+    response = client.delete_event(name=name)
     print("Deleted channel event")
+
+    return response
 
 
 # [END livestream_delete_channel_event]

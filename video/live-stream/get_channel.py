@@ -23,12 +23,15 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import live_stream_v1
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
 )
 
 
-def get_channel(project_id: str, location: str, channel_id: str) -> str:
+def get_channel(
+    project_id: str, location: str, channel_id: str
+) -> live_stream_v1.types.Channel:
     """Gets a channel.
     Args:
         project_id: The GCP project ID.

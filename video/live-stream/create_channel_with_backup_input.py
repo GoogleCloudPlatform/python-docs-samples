@@ -42,7 +42,7 @@ def create_channel_with_backup_input(
     primary_input_id: str,
     backup_input_id: str,
     output_uri: str,
-) -> str:
+) -> live_stream_v1.types.Channel:
     """Creates a channel.
     Args:
         project_id: The GCP project ID.

@@ -23,12 +23,15 @@ Example usage:
 
 import argparse
 
+from google.cloud.video import live_stream_v1
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
 )
 
 
-def stop_channel(project_id: str, location: str, channel_id: str) -> None:
+def stop_channel(
+    project_id: str, location: str, channel_id: str
+) -> live_stream_v1.types.ChannelOperationResponse:
     """Stops a channel.
     Args:
         project_id: The GCP project ID.
@@ -39,8 +42,10 @@ def stop_channel(project_id: str, location: str, channel_id: str) -> None:
 
     name = f"projects/{project_id}/locations/{location}/channels/{channel_id}"
     operation = client.stop_channel(name=name)
-    operation.result(600)
+    response = operation.result(600)
     print("Stopped channel")
+
+    return response
 
 
 # [END livestream_stop_channel]
