@@ -410,7 +410,9 @@ def k_anonymity_with_entity_id(
             is stored.
         source_dataset_id: The id of the dataset to inspect.
         source_table_id: The id of the table to inspect.
-        entity_id: It enables you to accurately determine k-anonymity.
+        entity_id: The column name of the table that enables accurately determining k-anonymity
+         in the common scenario wherein several rows of dataset correspond to the same sensitive
+         information.
         quasi_ids: A set of columns that form a composite key.
         output_table_project_id: The Google Cloud project id where the output BigQuery table
             is stored.
@@ -952,7 +954,8 @@ if __name__ == "__main__":
     )
     k_anonymity_entity_parser.add_argument(
         "entity_id",
-        help="It enables you to accurately determine k-anonymity.",
+        help="The column name of the table that enables accurately "
+        "determining k-anonymity",
     )
     k_anonymity_entity_parser.add_argument(
         "quasi_ids",
