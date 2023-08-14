@@ -146,11 +146,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/healthcare-life-sciences
   - labels:
-      - "api: iot"
-      - "api: cloudiot"
-    to:
-      - GoogleCloudPlatform/api-iot
-  - labels:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
@@ -304,11 +299,6 @@ assign_prs_by:
       - "api: healthcare"
     to:
       - GoogleCloudPlatform/healthcare-life-sciences
-  - labels:
-      - "api: iot"
-      - "api: cloudiot"
-    to:
-      - GoogleCloudPlatform/api-iot
   - labels:
       - "api: retail"
     to:
