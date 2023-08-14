@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_streaming_chat]
+# [START aiplatform_streaming_chat]
 import datetime
 
 import vertexai
