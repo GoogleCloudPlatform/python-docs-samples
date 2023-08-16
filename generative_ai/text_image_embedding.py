@@ -13,7 +13,8 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_text_image_embedding]
-from google.cloud.aiplatform.private_preview.vision_models import ImageGenerationModel
+import vertexai
+from vertexai.vision_models import ImageGenerationModel
 
 
 def generate_image_from_text_and_image(
