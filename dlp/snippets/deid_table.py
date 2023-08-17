@@ -510,7 +510,7 @@ import google.cloud.dlp  # noqa: F811, E402, I100
 def deidentify_table_primitive_bucketing(
     project: str,
 ) -> None:
-    """ Uses the Data Loss Prevention API to de-identify sensitive data in
+    """Uses the Data Loss Prevention API to de-identify sensitive data in
     a table by replacing them with generalized bucket labels.
     Args:
         project: The Google Cloud project id to use as a parent resource.
@@ -547,9 +547,21 @@ def deidentify_table_primitive_bucketing(
 
     # Construct generalised bucket configuration.
     buckets_config = [
-        {"min_": {"integer_value": 0}, "max_": {"integer_value": 25}, "replacement_value": {"string_value": "Low"}},
-        {"min_": {"integer_value": 25}, "max_": {"integer_value": 75}, "replacement_value": {"string_value": "Medium"}},
-        {"min_": {"integer_value": 75}, "max_": {"integer_value": 100}, "replacement_value": {"string_value": "High"}},
+        {
+            "min_": {"integer_value": 0},
+            "max_": {"integer_value": 25},
+            "replacement_value": {"string_value": "Low"},
+        },
+        {
+            "min_": {"integer_value": 25},
+            "max_": {"integer_value": 75},
+            "replacement_value": {"string_value": "Medium"},
+        },
+        {
+            "min_": {"integer_value": 75},
+            "max_": {"integer_value": 100},
+            "replacement_value": {"string_value": "High"},
+        },
     ]
 
     # Construct de-identify configuration that groups values in a table field and replace those with bucket labels.
@@ -560,18 +572,20 @@ def deidentify_table_primitive_bucketing(
                     "fields": [{"name": "happiness_score"}],
                     "primitive_transformation": {
                         "bucketing_config": {"buckets": buckets_config}
-                    }
+                    },
                 }
             ]
         }
     }
 
     # Call the API to deidentify table data through primitive bucketing.
-    response = dlp.deidentify_content(request={
-        "parent": parent,
-        "deidentify_config": deidentify_config,
-        "item": item,
-    })
+    response = dlp.deidentify_content(
+        request={
+            "parent": parent,
+            "deidentify_config": deidentify_config,
+            "item": item,
+        }
+    )
 
     # Print the results.
     print("Table after de-identification: {}".format(response.item.table))
@@ -1097,7 +1111,7 @@ if __name__ == "__main__":
     crypto_hash_parser = subparsers.add_parser(
         "deid_table_crypto_hash",
         help="De-identify sensitive data in a table using a cryptographic "
-             "hash transformation.",
+        "hash transformation.",
     )
     crypto_hash_parser.add_argument(
         "project",
@@ -1111,8 +1125,8 @@ if __name__ == "__main__":
         "--info_types",
         action="append",
         help="Strings representing infoTypes to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     crypto_hash_parser.add_argument(
         "transient_key_name",
@@ -1122,7 +1136,7 @@ if __name__ == "__main__":
     multiple_crypto_hash_parser = subparsers.add_parser(
         "deid_table_multiple_crypto_hash",
         help="De-identify sensitive data in a table using multiple transient "
-             "cryptographic hash keys.",
+        "cryptographic hash keys.",
     )
     multiple_crypto_hash_parser.add_argument(
         "project",
@@ -1136,8 +1150,8 @@ if __name__ == "__main__":
         "--info_types",
         action="append",
         help="Strings representing infoTypes to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     multiple_crypto_hash_parser.add_argument(
         "transient_key_name_1",
@@ -1299,7 +1313,7 @@ if __name__ == "__main__":
     table_row_suppress_parser = subparsers.add_parser(
         "deid_table_row_suppress",
         help="De-identify sensitive data in a table by suppressing "
-             "entire row/s based on a condition.",
+        "entire row/s based on a condition.",
     )
     table_row_suppress_parser.add_argument(
         "project",
@@ -1316,9 +1330,9 @@ if __name__ == "__main__":
     table_row_suppress_parser.add_argument(
         "--condition_operator",
         help="Operator used to compare the field or infoType to the value. "
-             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
-             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
-             "EXISTS.",
+        "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+        "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+        "EXISTS.",
     )
     table_row_suppress_parser.add_argument(
         "--condition_value",
