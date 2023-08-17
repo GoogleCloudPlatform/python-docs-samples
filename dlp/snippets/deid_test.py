@@ -181,7 +181,6 @@ def test_deidentify_with_fpe_ignores_insensitive_data(
 
 
 def test_reidentify_text_with_fpe(capsys: pytest.CaptureFixture) -> None:
-
     labeled_fpe_string = "My phone number is PHONE_NUMBER(10):9617256398"
 
     deid.reidentify_text_with_fpe(

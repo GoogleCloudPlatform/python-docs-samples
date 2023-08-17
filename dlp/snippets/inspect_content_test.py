@@ -449,14 +449,13 @@ def test_inspect_gcs_file(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         1,
     )
@@ -487,14 +486,13 @@ def test_inspect_gcs_file_with_custom_info_types(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         1,
     )
@@ -531,14 +529,13 @@ def test_inspect_gcs_file_no_results(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
     )
 
     inspect_content.inspect_gcs_file(
@@ -567,14 +564,13 @@ def test_inspect_gcs_image_file(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         1,
     )
@@ -604,14 +600,13 @@ def test_inspect_gcs_multiple_files(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         random.randint(0, 1000),
     )
@@ -642,14 +637,13 @@ def test_inspect_gcs_with_sampling(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         random.randint(0, 1000),
     )
@@ -686,7 +680,7 @@ def test_inspect_datastore(
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         random.randint(0, 1000),
     )
@@ -746,14 +740,13 @@ def test_inspect_bigquery(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "EMAIL_ADDRESS",
         random.randint(0, 1000),
     )
@@ -786,14 +779,13 @@ def test_inspect_bigquery_with_sampling(
     dlp_client: MagicMock,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     # Mock DLP client and subscriber client along with their behavior
     mock_dlp_instance = dlp_client.return_value
     mock_subscriber_instance = subscriber_client.return_value
     mock_job_and_subscriber(
         mock_dlp_instance,
         mock_subscriber_instance,
-        f'projects/{GCLOUD_PROJECT}/dlpJobs/test_job',
+        f"projects/{GCLOUD_PROJECT}/dlpJobs/test_job",
         "PERSON_NAME",
         random.randint(0, 1000),
     )
