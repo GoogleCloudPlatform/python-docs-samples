@@ -27,7 +27,7 @@ def streaming_prediction(
 
     vertexai.init(project=project_id, location=location)
 
-    code_model = CodeGenerationModel.from_pretrained("chat-bison")
+    code_model = CodeGenerationModel.from_pretrained("code-bison")
     code = code_model.start_chat()
 
     print("Start: ", datetime.datetime.now())
