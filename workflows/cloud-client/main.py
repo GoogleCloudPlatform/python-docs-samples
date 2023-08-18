@@ -36,7 +36,7 @@ def execute_workflow(
     Returns:
         The execution response.
     """
-    # [START workflows_api_quickstart_client_libraries] 
+    # [START workflows_api_quickstart_client_libraries]
     # Set up API clients.
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
@@ -68,4 +68,6 @@ def execute_workflow(
             print(f"Execution results: {execution.result}")
             return execution
     # [END workflows_api_quickstart_execution]
+
+
 # [END workflows_api_quickstart]
