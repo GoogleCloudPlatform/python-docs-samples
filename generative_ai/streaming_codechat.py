@@ -16,7 +16,7 @@
 import datetime
 
 import vertexai
-from vertexai.preview.language_models import CodeChatModel
+from vertexai.language_models import CodeChatModel
 
 
 def streaming_prediction(

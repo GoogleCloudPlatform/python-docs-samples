@@ -16,7 +16,7 @@
 import datetime
 
 import vertexai
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 
 def streaming_prediction(
