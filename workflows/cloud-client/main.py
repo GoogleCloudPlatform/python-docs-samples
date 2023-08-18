@@ -36,11 +36,12 @@ def execute_workflow(
     Returns:
         The execution response.
     """
-
+    # [START workflows_api_quickstart_client_libraries] 
     # Set up API clients.
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
-
+    # [END workflows_api_quickstart_client_libraries]
+    # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project, location, workflow)
 
@@ -66,6 +67,5 @@ def execute_workflow(
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
             return execution
-
-
+    # [END workflows_api_quickstart_execution]
 # [END workflows_api_quickstart]
