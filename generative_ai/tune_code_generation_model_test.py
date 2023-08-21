@@ -17,7 +17,6 @@ import uuid
 
 from google.cloud import aiplatform
 from google.cloud import storage
-from google.cloud.aiplatform.compat.types import pipeline_state
 import pytest
 from vertexai.preview.language_models import TextGenerationModel
 
@@ -98,10 +97,4 @@ def test_tuning_code_generation_model(training_data_filename: str) -> None:
         location=_LOCATION,
         train_steps=1,
     )
-    try:
-        assert (
-            tuned_model._job.status
-            == pipeline_state.PipelineState.PIPELINE_STATE_SUCCEEDED
-        )
-    finally:
-        teardown_model(tuned_model, training_data_filename)
+    teardown_model(tuned_model, training_data_filename)

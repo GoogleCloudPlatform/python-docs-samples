@@ -53,17 +53,16 @@ def tune_code_generation_model(
     vertexai.init(project=project_id, location=location, credentials=credentials)
     model = CodeGenerationModel.from_pretrained("code-bison@001")
 
-    model.tune_model(
+    tuning_job = model.tune_model(
         training_data=training_data,
         # Optional:
         train_steps=train_steps,
         tuning_job_location="europe-west4",
         tuned_model_location=location,
     )
-
-    print(model._job.status)
+    tuned_model = tuning_job.get_tuned_model()
     # [END aiplatform_sdk_tune_code_generation_model]
-    return model
+    return tuned_model
 
 
 if __name__ == "__main__":

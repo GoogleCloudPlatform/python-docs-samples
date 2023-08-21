@@ -55,7 +55,7 @@ def tuning(
     vertexai.init(project=project_id, location=location, credentials=credentials)
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
-    model.tune_model(
+    tuning_job = model.tune_model(
         training_data=training_data,
         # Optional:
         model_display_name=model_display_name,
@@ -63,10 +63,9 @@ def tuning(
         tuning_job_location="europe-west4",
         tuned_model_location=location,
     )
-
-    print(model._job.status)
+    tuned_model = tuning_job.get_tuned_model()
     # [END aiplatform_sdk_tuning]
-    return model
+    return tuned_model
 
 
 if __name__ == "__main__":
