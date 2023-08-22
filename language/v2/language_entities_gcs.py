@@ -27,7 +27,7 @@
 from google.cloud import language_v2
 
 
-def sample_analyze_entities(gcs_content_uri):
+def sample_analyze_entities(gcs_content_uri: str) -> None:
     """
     Analyzes Entities in text file stored in Cloud Storage.
 

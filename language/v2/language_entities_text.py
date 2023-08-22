@@ -27,7 +27,7 @@
 from google.cloud import language_v2
 
 
-def sample_analyze_entities(text_content):
+def sample_analyze_entities(text_content: str) -> None:
     """
     Analyzes Entities in a String
 
