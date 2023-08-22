@@ -356,7 +356,7 @@ def reidentify_text_with_fpe(
         "crypto_key": {
             "kms_wrapped": {"wrapped_key": wrapped_key, "crypto_key_name": key_name}
         },
-        "common_alphabet": 'NUMERIC',
+        "common_alphabet": "NUMERIC",
         "surrogate_info_type": surrogate_info_type,
     }
 
@@ -376,9 +376,7 @@ def reidentify_text_with_fpe(
 
     # Construct inspect configuration dictionary
     inspect_config = {
-        "custom_info_types": [
-            {"info_type": surrogate_info_type, "surrogate_type": {}}
-        ]
+        "custom_info_types": [{"info_type": surrogate_info_type, "surrogate_type": {}}]
     }
 
     # Construct the `item`.
