@@ -39,7 +39,7 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
     client = language_v2.LanguageServiceClient()
 
     # Available types: PLAIN_TEXT, HTML
-    type_ = language_v2.Document.Type.PLAIN_TEXT
+    document_type_in_plain_text = language_v2.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
@@ -47,11 +47,12 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
     language_code = "en"
     document = {
         "gcs_content_uri": gcs_content_uri,
-        "type_": type_,
+        "type_": document_type_in_plain_text,
         "language_code": language_code,
     }
 
-    # Available values: NONE, UTF8, UTF16, UTF32
+    # Available values: NONE, UTF8, UTF16, UTF32.
+    # See https://cloud.google.com/natural-language/docs/reference/rest/v2/EncodingType.
     encoding_type = language_v2.EncodingType.UTF8
 
     response = client.analyze_entities(
@@ -61,7 +62,8 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
     for entity in response.entities:
         print(f"Representative name for the entity: {entity.name}")
 
-        # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al
+        # Get entity type, e.g. PERSON, LOCATION, ADDRESS, NUMBER, et al.
+        # See https://cloud.google.com/natural-language/docs/reference/rest/v2/Entity#type.
         print(f"Entity type: {language_v2.Entity.Type(entity.type_).name}")
 
         # Loop over the metadata associated with entity.
