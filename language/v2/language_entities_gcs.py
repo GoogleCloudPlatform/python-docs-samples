@@ -58,7 +58,6 @@ def sample_analyze_entities(gcs_content_uri):
         request={"document": document, "encoding_type": encoding_type}
     )
 
-    # Loop through entitites returned from the API
     for entity in response.entities:
         print(f"Representative name for the entity: {entity.name}")
 

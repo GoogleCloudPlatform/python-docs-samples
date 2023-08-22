@@ -29,15 +29,13 @@ from google.cloud import language_v2
 
 def sample_analyze_entities(text_content):
     """
-    Analyzing Entities in a String
+    Analyzes Entities in a String
 
     Args:
-      text_content The text content to analyze
+      text_content: The text content to analyze
     """
 
     client = language_v2.LanguageServiceClient()
-
-    # text_content = 'California is a state.'
 
     # Available types: PLAIN_TEXT, HTML
     type_ = language_v2.Document.Type.PLAIN_TEXT
@@ -55,7 +53,6 @@ def sample_analyze_entities(text_content):
         request={"document": document, "encoding_type": encoding_type}
     )
 
-    # Loop through entitites returned from the API
     for entity in response.entities:
         print(f"Representative name for the entity: {entity.name}")
 
