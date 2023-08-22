@@ -32,13 +32,11 @@ def sample_analyze_entities(gcs_content_uri):
     Analyzes Entities in text file stored in Cloud Storage.
 
     Args:
-      gcs_content_uri Google Cloud Storage URI where the file content is located.
+      gcs_content_uri: Google Cloud Storage URI where the file content is located.
       e.g. gs://[Your Bucket]/[Path to File]
     """
 
     client = language_v2.LanguageServiceClient()
-
-    # gcs_content_uri = 'gs://cloud-samples-data/language/entity.txt'
 
     # Available types: PLAIN_TEXT, HTML
     type_ = language_v2.Document.Type.PLAIN_TEXT
