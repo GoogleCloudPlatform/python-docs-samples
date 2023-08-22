@@ -2716,6 +2716,13 @@ if __name__ == "__main__":
         )
     elif args.content == "phone_number":
         inspect_phone_number(args.project, args.content_string)
+    elif args.content == "augment_infotype":
+        inspect_string_augment_infotype(
+            args.project,
+            args.input_str,
+            args.info_type,
+            args.word_list,
+        )
     elif args.content == "table":
         inspect_table(
             args.project,

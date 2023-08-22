@@ -147,6 +147,7 @@ def inspect_with_stored_infotype(
     stored_info_type_id: str,
     content_string: str,
 ) -> None:
+
     """Uses the Data Loss Prevention API to inspect/scan content using stored
     infoType.
     Args:
@@ -167,7 +168,7 @@ def inspect_with_stored_infotype(
             "info_type": {"name": "STORED_TYPE"},
             "stored_type": {
                 "name": stored_type_name,
-            },
+            }
         }
     ]
 
@@ -200,7 +201,6 @@ def inspect_with_stored_infotype(
             print("Likelihood: {}".format(finding.likelihood))
     else:
         print("No findings.")
-
 
 # [END dlp_inspect_with_stored_infotype]
 
