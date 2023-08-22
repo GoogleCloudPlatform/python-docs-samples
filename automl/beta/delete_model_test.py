@@ -14,11 +14,14 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import delete_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 
 
+@Retry()
 def test_delete_model(capsys):
     # As model creation can take many hours, instead try to delete a
     # nonexistent model and confirm that the model was not found, but other

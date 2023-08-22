@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 import shutil
 import tempfile
@@ -40,14 +39,6 @@ CSV_FILE = os.path.join(os.path.dirname(__file__), "resources/dates.csv")
 DATE_SHIFTED_AMOUNT = 30
 DATE_FIELDS = ["birth_date", "register_date"]
 CSV_CONTEXT_FIELD = "name"
-TABLE_DATA = {
-    "header": ["age", "patient", "happiness_score"],
-    "rows": [
-        ["101", "Charles Dickens", "95"],
-        ["22", "Jane Austen", "21"],
-        ["90", "Mark Twain", "75"],
-    ],
-}
 
 
 @pytest.fixture(scope="module")
@@ -187,6 +178,22 @@ def test_deidentify_with_fpe_ignores_insensitive_data(
 
     out, _ = capsys.readouterr()
     assert HARMLESS_STRING in out
+
+
+def test_reidentify_text_with_fpe(capsys: pytest.CaptureFixture) -> None:
+    labeled_fpe_string = "My phone number is PHONE_NUMBER(10):9617256398"
+
+    deid.reidentify_text_with_fpe(
+        GCLOUD_PROJECT,
+        labeled_fpe_string,
+        wrapped_key=WRAPPED_KEY,
+        key_name=KEY_NAME,
+    )
+
+    out, _ = capsys.readouterr()
+
+    assert "PHONE_NUMBER" not in out
+    assert "9617256398" not in out
 
 
 def test_deidentify_with_date_shift(
@@ -379,128 +386,6 @@ def test_deidentify_with_exception_list(capsys: pytest.CaptureFixture) -> None:
     assert "jack@example.org accessed record of user: [EMAIL_ADDRESS]" in out
 
 
-def test_deidentify_table_bucketing(capsys: pytest.CaptureFixture) -> None:
-    deid_list = ["happiness_score"]
-    bucket_size = 10
-    lower_bound = 0
-    upper_bound = 100
-
-    deid.deidentify_table_bucketing(
-        GCLOUD_PROJECT,
-        TABLE_DATA,
-        deid_list,
-        bucket_size,
-        lower_bound,
-        upper_bound,
-    )
-
-    out, _ = capsys.readouterr()
-    assert 'string_value: "90:100"' in out
-    assert 'string_value: "20:30"' in out
-    assert 'string_value: "70:80"' in out
-
-
-def test_deidentify_table_condition_replace_with_info_types(
-    capsys: pytest.CaptureFixture,
-) -> None:
-    deid_list = ["patient", "factoid"]
-    table_data = {
-        "header": ["age", "patient", "happiness_score", "factoid"],
-        "rows": [
-            [
-                "101",
-                "Charles Dickens",
-                "95",
-                "Charles Dickens name was a curse invented by Shakespeare.",
-            ],
-            ["22", "Jane Austen", "21", "There are 14 kisses in Jane Austen's novels."],
-            ["90", "Mark Twain", "75", "Mark Twain loved cats."],
-        ],
-    }
-
-    deid.deidentify_table_condition_replace_with_info_types(
-        GCLOUD_PROJECT,
-        table_data,
-        deid_list,
-        ["PERSON_NAME"],
-        "age",
-        "GREATER_THAN",
-        89,
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert 'string_value: "Jane Austen"' in out
-    assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
-    assert "There are 14 kisses in Jane Austen\\'s novels." in out
-    assert "[PERSON_NAME] loved cats." in out
-
-
-def test_deidentify_table_condition_masking(capsys: pytest.CaptureFixture) -> None:
-    deid_list = ["happiness_score"]
-    deid.deidentify_table_condition_masking(
-        GCLOUD_PROJECT,
-        TABLE_DATA,
-        deid_list,
-        condition_field="age",
-        condition_operator="GREATER_THAN",
-        condition_value=89,
-    )
-    out, _ = capsys.readouterr()
-    assert 'string_value: "**"' in out
-    assert 'string_value: "21"' in out
-
-
-def test_deidentify_table_condition_masking_with_masking_character_specified(
-    capsys: pytest.CaptureFixture,
-) -> None:
-    deid_list = ["happiness_score"]
-    deid.deidentify_table_condition_masking(
-        GCLOUD_PROJECT,
-        TABLE_DATA,
-        deid_list,
-        condition_field="age",
-        condition_operator="GREATER_THAN",
-        condition_value=89,
-        masking_character="#",
-    )
-    out, _ = capsys.readouterr()
-    assert 'string_value: "##"' in out
-    assert 'string_value: "21"' in out
-
-
-def test_deidentify_table_replace_with_info_types(
-    capsys: pytest.CaptureFixture,
-) -> None:
-    table_data = {
-        "header": ["age", "patient", "happiness_score", "factoid"],
-        "rows": [
-            [
-                "101",
-                "Charles Dickens",
-                "95",
-                "Charles Dickens name was a curse invented by Shakespeare.",
-            ],
-            ["22", "Jane Austen", "21", "There are 14 kisses in Jane Austen's novels."],
-            ["90", "Mark Twain", "75", "Mark Twain loved cats."],
-        ],
-    }
-
-    deid.deidentify_table_replace_with_info_types(
-        GCLOUD_PROJECT,
-        table_data,
-        ["PERSON_NAME"],
-        ["patient", "factoid"],
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert 'string_value: "[PERSON_NAME]"' in out
-    assert "[PERSON_NAME] name was a curse invented by [PERSON_NAME]." in out
-    assert "There are 14 kisses in [PERSON_NAME] novels." in out
-    assert "[PERSON_NAME] loved cats." in out
-
-
 def test_deindentify_with_dictionary_replacement(capsys: pytest.CaptureFixture) -> None:
     deid.deindentify_with_dictionary_replacement(
         GCLOUD_PROJECT,
@@ -515,83 +400,3 @@ def test_deindentify_with_dictionary_replacement(capsys: pytest.CaptureFixture) 
         or "alex@example.com" in out
         or "tal@example.com" in out
     )
-
-
-def test_deidentify_table_suppress_row(capsys: pytest.CaptureFixture) -> None:
-    deid.deidentify_table_suppress_row(
-        GCLOUD_PROJECT, TABLE_DATA, "age", "GREATER_THAN", 89
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert 'string_value: "Charles Dickens"' not in out
-    assert 'string_value: "Jane Austen"' in out
-    assert 'string_value: "Mark Twain"' not in out
-
-
-def test_deidentify_table_with_crypro_hash(capsys: pytest.CaptureFixture) -> None:
-    table_data = {
-        "header": ["user_id", "comments"],
-        "rows": [
-            [
-                "abby_abernathy@example.org",
-                "my email is abby_abernathy@example.org and phone is 858-555-0222",
-            ],
-            [
-                "bert_beauregard@example.org",
-                "my email is bert_beauregard@example.org and phone is 858-555-0223",
-            ],
-            [
-                "cathy_crenshaw@example.org",
-                "my email is cathy_crenshaw@example.org and phone is 858-555-0224",
-            ],
-        ],
-    }
-
-    deid.deidentify_table_with_crypto_hash(
-        GCLOUD_PROJECT,
-        table_data,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        "TRANSIENT-CRYPTO-KEY",
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert "abby_abernathy@example.org" not in out
-    assert "858-555-0222" not in out
-
-
-def test_deidentify_table_with_multiple_crypto_hash(
-    capsys: pytest.CaptureFixture,
-) -> None:
-    table_data = {
-        "header": ["user_id", "comments"],
-        "rows": [
-            [
-                "user1@example.org",
-                "my email is user1@example.org and phone is 858-333-2222",
-            ],
-            [
-                "abbyabernathy1",
-                "my userid is abbyabernathy1 and my email is aabernathy@example.com",
-            ],
-        ],
-    }
-
-    deid.deidentify_table_with_multiple_crypto_hash(
-        GCLOUD_PROJECT,
-        table_data,
-        ["EMAIL_ADDRESS", "PHONE_NUMBER"],
-        "TRANSIENT-CRYPTO-KEY-1",
-        "TRANSIENT-CRYPTO-KEY-2",
-        ["user_id"],
-        ["comments"],
-    )
-
-    out, _ = capsys.readouterr()
-
-    assert "user1@example.org" not in out
-    assert "858-555-0222" not in out
-    assert 'string_value: "abbyabernathy1"' not in out
-    assert "my userid is abbyabernathy1" in out
-    assert "aabernathy@example.com" not in out

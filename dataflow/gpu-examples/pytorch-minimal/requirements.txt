@@ -1,2 +1,2 @@
 apache-beam[gcp]==2.48.0
-triton==2.0.0
+triton==2.0.0.post1

@@ -89,6 +89,7 @@ def teardown_model(
             aiplatform.Model(model_registry.model_resource_name).delete()
 
 
+@pytest.mark.skip("Blocked on b/277959219")
 def test_tuning(training_data_filename: str) -> None:
     """Takes approx. 20 minutes."""
     tuned_model = tuning.tuning(

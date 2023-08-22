@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_classify_news_items]
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 
 def classify_news_items(temperature: float = 0.2) -> None:

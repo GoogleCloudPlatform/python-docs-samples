@@ -117,7 +117,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.7.16 3.8.16 3.9.16 3.10.9 3.11.1; do \
+  && for PYTHON_VERSION in 2.7.18 3.7.17 3.8.17 3.9.17 3.10.12 3.11.4; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \

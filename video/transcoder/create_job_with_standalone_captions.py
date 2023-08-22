@@ -33,13 +33,13 @@ from google.protobuf import duration_pb2 as duration
 
 
 def create_job_with_standalone_captions(
-    project_id,
-    location,
-    input_video_uri,
-    input_subtitles1_uri,
-    input_subtitles2_uri,
-    output_uri,
-):
+    project_id: str,
+    location: str,
+    input_video_uri: str,
+    input_subtitles1_uri: str,
+    input_subtitles2_uri: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration that can use subtitles from a standalone file.
 
     Args:
@@ -52,7 +52,11 @@ def create_job_with_standalone_captions(
         input_subtitles2_uri (str): Uri of an input subtitles file in the Cloud
           Storage bucket.
         output_uri (str): Uri of the video output folder in the Cloud Storage
-          bucket."""
+          bucket.
+
+    Returns:
+        The job resource.
+    """
 
     client = TranscoderServiceClient()
 

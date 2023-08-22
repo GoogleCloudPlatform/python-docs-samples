@@ -25,7 +25,6 @@ from google.protobuf import duration_pb2  # type: ignore
 
 def transcribe_streaming_voice_activity_timeouts(
     project_id: str,
-    recognizer_id: str,
     speech_start_timeout: int,
     speech_end_timeout: int,
     audio_file: str,
@@ -34,7 +33,6 @@ def transcribe_streaming_voice_activity_timeouts(
 
     Args:
         project_id: The GCP project ID to use.
-        recognizer_id: The ID of the recognizer to use.
         speech_start_timeout: The timeout in seconds for speech start.
         speech_end_timeout: The timeout in seconds for speech end.
         audio_file: The audio file to transcribe.
@@ -44,18 +42,6 @@ def transcribe_streaming_voice_activity_timeouts(
     """
     # Instantiates a client
     client = SpeechClient()
-
-    request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
-        recognizer_id=recognizer_id,
-        recognizer=cloud_speech.Recognizer(
-            language_codes=["en-US"], model="latest_long"
-        ),
-    )
-
-    # Creates a Recognizer
-    operation = client.create_recognizer(request=request)
-    recognizer = operation.result()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -71,7 +57,11 @@ def transcribe_streaming_voice_activity_timeouts(
         cloud_speech.StreamingRecognizeRequest(audio=audio) for audio in stream
     )
 
-    recognition_config = cloud_speech.RecognitionConfig(auto_decoding_config={})
+    recognition_config = cloud_speech.RecognitionConfig(
+        auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
+        language_codes=["en-US"],
+        model="long",
+    )
 
     # Sets the flag to enable voice activity events and timeout
     speech_start_timeout = duration_pb2.Duration(seconds=speech_start_timeout)
@@ -91,7 +81,8 @@ def transcribe_streaming_voice_activity_timeouts(
     )
 
     config_request = cloud_speech.StreamingRecognizeRequest(
-        recognizer=recognizer.name, streaming_config=streaming_config
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        streaming_config=streaming_config,
     )
 
     def requests(config: cloud_speech.RecognitionConfig, audio: list) -> list:
@@ -131,17 +122,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument("project_id", help="project to create recognizer in")
-    parser.add_argument("recognizer_id", help="name of recognizer to create")
+    parser.add_argument("project_id", help="GCP Project ID")
     parser.add_argument(
-        "speech_start_timeout", help="timeout in seconds for speech start"
+        "speech_start_timeout", help="Timeout in seconds for speech start"
     )
-    parser.add_argument("speech_end_timeout", help="timeout in seconds for speech end")
-    parser.add_argument("audio_file", help="audio file to stream")
+    parser.add_argument("speech_end_timeout", help="Timeout in seconds for speech end")
+    parser.add_argument("audio_file", help="Audio file to stream")
     args = parser.parse_args()
     transcribe_streaming_voice_activity_timeouts(
         args.project_id,
-        args.recognizer_id,
         args.speech_start_timeout,
         args.speech_end_timeout,
         args.audio_file,

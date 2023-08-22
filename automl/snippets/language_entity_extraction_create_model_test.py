@@ -14,12 +14,15 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import language_entity_extraction_create_model
 
 PROJECT_ID = os.environ["AUTOML_PROJECT_ID"]
 DATASET_ID = "TEN0000000000000000000"
 
 
+@Retry()
 def test_entity_extraction_create_model(capsys):
     # As entity extraction does not let you cancel model creation, instead try
     # to create a model from a nonexistent dataset, but other elements of the

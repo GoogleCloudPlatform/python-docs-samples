@@ -11,8 +11,10 @@ versions.
 
 ## Deprecation notice
 
-This script has been deprecated and will be removed in the future. "Snapshots"
-are recommended tool to perform side-by-side upgrades of Cloud Composer
+This script has been deprecated and will be removed in the future. It is no
+longer updated or tested.
+
+"Snapshots" are recommended tool to perform side-by-side upgrades of Cloud Composer
 environments (https://cloud.google.com/composer/docs/save-load-snapshots).
 
 ## Prerequisites

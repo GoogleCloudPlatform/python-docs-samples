@@ -16,10 +16,10 @@
 sample code for consuming an event notification in a cloud function.
 """
 
+# [START secretmanager_consume_event_notification]
 import base64
 
 
-# [START secretmanager_consume_event_notification]
 def consume_event_notification(event: dict, unused_context: None) -> str:
     """
     consume_event_notification demonstrates how to consume and process a
@@ -31,7 +31,11 @@ def consume_event_notification(event: dict, unused_context: None) -> str:
     event_type = event["attributes"]["eventType"]
     secret_id = event["attributes"]["secretId"]
     secret_metadata = base64.b64decode(event["data"]).decode("utf-8")
-    return f"Received {event_type} for {secret_id}. New metadata: {secret_metadata}"
+    event_notification = (
+        f"Received {event_type} for {secret_id}. New metadata: {secret_metadata}"
+    )
+    print(event_notification)
+    return event_notification
 
 
 # [END secretmanager_consume_event_notification]

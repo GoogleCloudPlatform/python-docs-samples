@@ -25,16 +25,24 @@ Example usage:
 import argparse
 
 from google.cloud.video.transcoder_v1.services.transcoder_service import (
+    pagers,
     TranscoderServiceClient,
 )
 
 
-def list_job_templates(project_id, location):
+def list_job_templates(
+    project_id: str,
+    location: str,
+) -> pagers.ListJobTemplatesPager:
     """Lists all job templates in a location.
 
     Args:
         project_id: The GCP project ID.
-        location: The location of the templates."""
+        location: The location of the templates.
+
+    Returns:
+        An iterable object containing job template resources.
+    """
 
     client = TranscoderServiceClient()
 

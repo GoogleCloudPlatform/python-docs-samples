@@ -18,6 +18,7 @@ import os
 from typing import Generator
 import uuid
 
+from google.api_core.retry import Retry
 from google.cloud import tasks_v2
 import pytest
 
@@ -44,6 +45,7 @@ def test_queue() -> Generator[tasks_v2.Queue, None, None]:
     client.delete_queue(request={"name": queue.name})
 
 
+@Retry()
 def test_create_http_task(test_queue: tasks_v2.Queue) -> None:
     task = create_http_task.create_http_task(
         TEST_PROJECT_ID,

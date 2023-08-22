@@ -26,16 +26,23 @@ Example usage:
 import argparse
 
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
+    pagers,
     VideoStitcherServiceClient,
 )
 
 
-def list_vod_ad_tag_details(project_id: str, location: str, session_id: str) -> str:
+def list_vod_ad_tag_details(
+    project_id: str, location: str, session_id: str
+) -> pagers.ListVodAdTagDetailsPager:
     """Lists the ad tag details for the specified VOD session.
     Args:
         project_id: The GCP project ID.
         location: The location of the session.
-        session_id: The ID of the VOD session."""
+        session_id: The ID of the VOD session.
+
+    Returns:
+        An iterable object containing VOD ad tag details resources.
+    """
 
     client = VideoStitcherServiceClient()
 

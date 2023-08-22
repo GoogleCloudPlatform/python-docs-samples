@@ -35,16 +35,16 @@ from google.protobuf import duration_pb2 as duration
 
 
 def create_job_with_concatenated_inputs(
-    project_id,
-    location,
-    input1_uri,
-    start_time_input1,
-    end_time_input1,
-    input2_uri,
-    start_time_input2,
-    end_time_input2,
-    output_uri,
-):
+    project_id: str,
+    location: str,
+    input1_uri: str,
+    start_time_input1: str,
+    end_time_input1: str,
+    input2_uri: str,
+    start_time_input2: str,
+    end_time_input2: str,
+    output_uri: str,
+) -> transcoder_v1.types.resources.Job:
     """Creates a job based on an ad-hoc job configuration that concatenates two input videos.
 
     Args:
@@ -61,7 +61,11 @@ def create_job_with_concatenated_inputs(
         end_time_input2 (str): End time, in fractional seconds ending in 's'
           (e.g., '15s'), relative to the second input video timeline.
         output_uri (str): Uri of the video output folder in the Cloud Storage
-          bucket."""
+          bucket.
+
+    Returns:
+        The job resource.
+    """
 
     s1 = duration.Duration()
     s1.FromJsonString(start_time_input1)

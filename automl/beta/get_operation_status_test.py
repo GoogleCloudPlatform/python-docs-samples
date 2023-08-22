@@ -14,6 +14,7 @@
 
 import os
 
+from google.api_core.retry import Retry
 from google.cloud import automl_v1beta1 as automl
 import pytest
 
@@ -34,6 +35,7 @@ def operation_id():
     yield operation.name
 
 
+@Retry()
 def test_get_operation_status(capsys, operation_id):
     get_operation_status.get_operation_status(operation_id)
     out, _ = capsys.readouterr()

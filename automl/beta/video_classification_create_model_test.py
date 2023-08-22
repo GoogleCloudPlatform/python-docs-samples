@@ -14,6 +14,8 @@
 
 import os
 
+from google.api_core.retry import Retry
+
 import video_classification_create_model
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -21,6 +23,7 @@ DATASET_ID = "VCN00000000000000000"
 OPERATION_ID = None
 
 
+@Retry()
 def test_video_classification_create_model(capsys):
     try:
         video_classification_create_model.create_model(

@@ -27,9 +27,12 @@ import argparse
 from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
     VideoStitcherServiceClient,
 )
+from google.protobuf import empty_pb2 as empty
 
 
-def delete_live_config(project_id: str, location: str, live_config_id: str) -> str:
+def delete_live_config(
+    project_id: str, location: str, live_config_id: str
+) -> empty.Empty:
     """Deletes a live config.
     Args:
         project_id: The GCP project ID.
