@@ -23,18 +23,18 @@ import sys
 # isort: split
 # [START language_sentiment_text]
 
-from google.cloud import language_v2
+from google.cloud import language_v1
 
 
 def sample_analyze_sentiment(content):
-    client = language_v2.LanguageServiceClient()
+    client = language_v1.LanguageServiceClient()
 
     # content = 'Your text to analyze, e.g. Hello, world!'
 
     if isinstance(content, bytes):
         content = content.decode("utf-8")
 
-    type_ = language_v2.Document.Type.PLAIN_TEXT
+    type_ = language_v1.Document.Type.PLAIN_TEXT
     document = {"type_": type_, "content": content}
 
     response = client.analyze_sentiment(request={"document": document})
