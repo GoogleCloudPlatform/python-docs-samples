@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import time
 from typing import Iterator
 import uuid
 
@@ -73,7 +74,7 @@ def delete_stored_info_type(out: str) -> None:
             DLP_CLIENT.delete_stored_info_type(name=stored_info_type_id)
 
 
-def test_create_and_update_stored_infotype(
+def test_create_update_and_inspect_with_stored_infotype(
     bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
 ) -> None:
     out = ""
@@ -96,5 +97,17 @@ def test_create_and_update_stored_infotype(
         )
         out, _ = capsys.readouterr()
         assert stored_info_type_id in out
+
+        time.sleep(30)
+
+        stored_infotype.inspect_with_stored_infotype(
+            GCLOUD_PROJECT,
+            STORED_INFO_TYPE_ID,
+            "The commit was made by gary1998",
+        )
+        out, _ = capsys.readouterr()
+        assert "STORED_TYPE" in out
+        assert "Quote: gary1998" in out
+
     finally:
         delete_stored_info_type(out)
