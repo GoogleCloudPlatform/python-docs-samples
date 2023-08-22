@@ -24,8 +24,7 @@ _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
 
 
-expected_response = """efficient-market hypothesis"""
-
+expected_response = """The efficient-market hypothesis"""
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_summarization() -> None:
