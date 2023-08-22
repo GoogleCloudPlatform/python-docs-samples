@@ -27,6 +27,7 @@ credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform
 def tuning(
     project_id: str,
     location: str,
+    model_display_name: str,
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
 ) -> TextGenerationModel:
@@ -47,6 +48,7 @@ def tuning(
     Args:
       project_id: GCP Project ID, used to initialize vertexai
       location: GCP Region, used to initialize vertexai
+      model_display_name: Customized Tuned LLM model name.
       training_data: GCS URI of jsonl file or pandas dataframe of training data
       train_steps: Number of training steps to use when tuning the model.
     """
@@ -56,7 +58,7 @@ def tuning(
     model.tune_model(
         training_data=training_data,
         # Optional:
-        model_display_name="your_tuned_model",
+        model_display_name=model_display_name,
         train_steps=train_steps,
         tuning_job_location="europe-west4",  # Only supported in europe-west4 for Public Preview
         tuned_model_location=location,

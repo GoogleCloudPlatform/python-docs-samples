@@ -95,6 +95,7 @@ def test_tuning(training_data_filename: str) -> None:
         training_data=training_data_filename,
         project_id=_PROJECT_ID,
         location=_LOCATION,
+        model_display_name="YOUR_TUNED_MODEL",
         train_steps=1,
     )
     try:
