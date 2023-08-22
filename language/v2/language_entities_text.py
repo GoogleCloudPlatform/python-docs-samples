@@ -83,10 +83,10 @@ def sample_analyze_entities(text_content):
             # Get the probability score associated with the first mention of the entity in the (0, 1.0] range.
             print(f"Probability score: {mention.probability}")
 
-    # Get the language code of the text, which will be the same as
+    # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print(f"Language code of the text: {response.language_code}")
+    print(f"Language of the text: {response.language_code}")
 
 
 # [END language_entities_text]

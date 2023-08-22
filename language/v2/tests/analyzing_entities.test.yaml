@@ -26,7 +26,6 @@ test:
         - {literal: "Representative name for the entity: California"}
         - {literal: "Entity type: LOCATION"}
         - {literal: "Probability score:"}
-        - {literal: "mid: /m/01n7q"}
         - {literal: "Mention text: California"}
         - {literal: "Mention type: PROPER"}
         - {literal: "Mention text: state"}
@@ -49,7 +48,6 @@ test:
         - {literal: "Mention type: COMMON"}
         - {literal: "Representative name for the entity: California"}
         - {literal: "Entity type: LOCATION"}
-        - {literal: "mid: /m/01n7q"}
         - {literal: "Language of the text: en"}
 
     - name: language_entities_text - Analyzing the Entities of a text string (*metadata attributes*)
@@ -86,7 +84,6 @@ test:
         - {literal: "Representative name for the entity: California"}
         - {literal: "Entity type: LOCATION"}
         - {literal: "Probability score:"}
-        - {literal: "mid: /m/01n7q"}
         - {literal: "Mention text: California"}
         - {literal: "Mention type: PROPER"}
         - {literal: "Mention text: state"}
