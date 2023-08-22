@@ -80,9 +80,8 @@ def sample_analyze_entities(gcs_content_uri):
 
             # Get the mention type, e.g. PROPER for proper noun
             print(
-                "Mention type: {}".format(
-                    language_v2.EntityMention.Type(mention.type_).name
-                )
+                'Mention type:'
+                f' {language_v2.EntityMention.Type(mention.type_).name}'
             )
 
             # Get the probability score associated with the first mention of the entity in the (0, 1.0] range.
