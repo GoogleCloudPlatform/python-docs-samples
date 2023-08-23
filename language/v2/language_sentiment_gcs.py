@@ -70,7 +70,7 @@ def sample_analyze_sentiment(gcs_content_uri: str) -> None:
     # Get the language of the text, which will be the same as
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
-    print(f"Language of the text: {response.language}")
+    print(f"Language of the text: {response.language_code}")
 
 
 # [END language_sentiment_gcs]
