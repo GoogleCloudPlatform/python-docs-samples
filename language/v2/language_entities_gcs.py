@@ -33,7 +33,7 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
 
     Args:
       gcs_content_uri: Google Cloud Storage URI where the file content is located.
-      e.g. gs://[Your Bucket]/[Path to File]
+        e.g. gs://[Your Bucket]/[Path to File]
     """
 
     client = language_v2.LanguageServiceClient()
