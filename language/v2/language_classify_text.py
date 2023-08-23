@@ -27,9 +27,9 @@
 from google.cloud import language_v2
 
 
-def sample_classify_text(text_content):
+def sample_classify_text(text_content: str) -> None:
     """
-    Classifies Content in a String
+    Classifies Content in a string.
 
     Args:
       text_content: The text content to analyze.

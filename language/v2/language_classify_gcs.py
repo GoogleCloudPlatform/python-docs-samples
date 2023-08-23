@@ -29,7 +29,7 @@ from google.cloud import language_v2
 
 def sample_classify_text(gcs_content_uri: str) -> None:
     """
-    Classifies Content in text file stored in Cloud Storage
+    Classifies Content in text file stored in Cloud Storage.
 
     Args:
       gcs_content_uri: Google Cloud Storage URI where the file content is located.
