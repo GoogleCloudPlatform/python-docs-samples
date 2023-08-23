@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START storage_transfer_manager_download_chunks_concurrently]
 def download_chunks_concurrently(bucket_name, blob_name, filename, processes=8):
     """Download a single file in chunks, concurrently."""
 
@@ -40,3 +40,4 @@ def download_chunks_concurrently(bucket_name, blob_name, filename, processes=8):
     transfer_manager.download_chunks_concurrently(blob, filename, max_workers=processes)
 
     print("Downloaded {} to {}.".format(blob_name, filename))
+# [END storage_transfer_manager_download_chunks_concurrently]

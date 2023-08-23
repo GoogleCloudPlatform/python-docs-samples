@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START storage_transfer_manager_download_all_blobs]
 def download_all_blobs_with_transfer_manager(
     bucket_name, destination_directory="", processes=8
 ):
@@ -62,3 +62,4 @@ def download_all_blobs_with_transfer_manager(
             print("Failed to download {} due to exception: {}".format(name, result))
         else:
             print("Downloaded {} to {}.".format(name, destination_directory + name))
+# [END storage_transfer_manager_download_all_blobs]
