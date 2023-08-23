@@ -27,9 +27,11 @@ _LOCATION = "us-central1"
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_list_tuned_code_generation_models() -> None:
-    tuned_model_names = list_tuned_code_generation_models.list_tuned_code_generation_models(
-        _PROJECT_ID,
-        _LOCATION,
+    tuned_model_names = (
+        list_tuned_code_generation_models.list_tuned_code_generation_models(
+            _PROJECT_ID,
+            _LOCATION,
+        )
     )
     filtered_models_counter = 0
     for tuned_model_name in tuned_model_names:
