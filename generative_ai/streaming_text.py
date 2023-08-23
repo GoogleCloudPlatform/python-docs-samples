@@ -37,7 +37,7 @@ def streaming_prediction(
     print("End: ", datetime.datetime.now())
     # [END aiplatform_sdk_streaming_text]
 
-    return responses
+    return responses.text
 
 
 if __name__ == "__main__":

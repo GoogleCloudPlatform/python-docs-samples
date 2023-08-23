@@ -40,7 +40,7 @@ def streaming_prediction(
     print("End: ", datetime.datetime.now())
     # [END aiplatform_sdk_streaming_chat]
 
-    return responses
+    return "".join([x for x in responses])
 
 
 if __name__ == "__main__":
