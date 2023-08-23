@@ -196,13 +196,16 @@ except Exception as e:
 if AIRFLOW_VERSION < ["2", "4", "0"]:
     try:
         from airflow.models import RenderedTaskInstanceFields
-        DATABASE_OBJECTS.append({
-            "airflow_db_model": RenderedTaskInstanceFields,
-            "age_check_column": RenderedTaskInstanceFields.execution_date,
-            "keep_last": False,
-            "keep_last_filters": None,
-            "keep_last_group_by": None
-        })
+
+        DATABASE_OBJECTS.append(
+            {
+                "airflow_db_model": RenderedTaskInstanceFields,
+                "age_check_column": RenderedTaskInstanceFields.execution_date,
+                "keep_last": False,
+                "keep_last_filters": None,
+                "keep_last_group_by": None,
+            }
+        )
 
     except Exception as e:
         logging.error(e)
