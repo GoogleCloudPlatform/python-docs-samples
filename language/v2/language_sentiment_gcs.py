@@ -70,6 +70,4 @@ def sample_analyze_sentiment(
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     print(f"Language of the text: {response.language_code}")
-
-
 # [END language_sentiment_gcs]

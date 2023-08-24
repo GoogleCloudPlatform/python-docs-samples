@@ -88,6 +88,4 @@ def sample_analyze_entities(
     # the language specified in the request or, if not specified,
     # the automatically-detected language.
     print(f"Language of the text: {response.language_code}")
-
-
 # [END language_entities_gcs]

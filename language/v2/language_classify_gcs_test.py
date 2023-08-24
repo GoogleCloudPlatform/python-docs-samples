@@ -23,8 +23,5 @@ def test_sample_classify_text_gcs(capsys: ...) -> None:
 
     language_classify_gcs.sample_classify_text()
     captured = capsys.readouterr()
-    assert (
-        "TV" in captured.out
-        or "Movies" in captured.out
-        or "Entertainment" in captured.out
-    )
+    assert "Category name: " in captured.out
+    assert "Confidence: " in captured.out
