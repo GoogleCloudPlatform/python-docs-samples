@@ -13,21 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "language_entities_text")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
 
 # sample-metadata
 #   title: Analyzing Entities
 #   description: Analyzing Entities in a String
-#   usage: python3 samples/v2/language_entities_text.py [--text_content "California is a state."]
 
 # [START language_entities_text]
 from google.cloud import language_v2
 
 
-def sample_analyze_entities(text_content: str) -> None:
+def sample_analyze_entities(text_content: str = "California is a state.") -> None:
     """
     Analyzes Entities in a string.
 
@@ -77,10 +74,7 @@ def sample_analyze_entities(text_content: str) -> None:
             print(f"Mention text: {mention.text.content}")
 
             # Get the mention type, e.g. PROPER for proper noun
-            print(
-                "Mention type:"
-                f"{language_v2.EntityMention.Type(mention.type_).name}"
-            )
+            print(f"Mention type: {language_v2.EntityMention.Type(mention.type_).name}")
 
             # Get the probability score associated with the first mention of the entity in the (0, 1.0] range.
             print(f"Probability score: {mention.probability}")
@@ -92,17 +86,3 @@ def sample_analyze_entities(text_content: str) -> None:
 
 
 # [END language_entities_text]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--text_content", type=str, default="California is a state.")
-    args = parser.parse_args()
-
-    sample_analyze_entities(args.text_content)
-
-
-if __name__ == "__main__":
-    main()

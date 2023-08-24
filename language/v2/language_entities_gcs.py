@@ -13,21 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "language_entities_gcs")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
 
 # sample-metadata
 #   title: Analyzing Entities (GCS)
 #   description: Analyzing Entities in text file stored in Cloud Storage
-#   usage: python3 samples/v2/language_entities_gcs.py [--gcs_content_uri "gs://cloud-samples-data/language/entity.txt"]
 
 # [START language_entities_gcs]
 from google.cloud import language_v2
 
 
-def sample_analyze_entities(gcs_content_uri: str) -> None:
+def sample_analyze_entities(
+    gcs_content_uri: str = "gs://cloud-samples-data/language/entity.txt",
+) -> None:
     """
     Analyzes Entities in text file stored in Cloud Storage.
 
@@ -79,8 +78,7 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
 
             # Get the mention type, e.g. PROPER for proper noun
             print(
-                "Mention type:"
-                f" {language_v2.EntityMention.Type(mention.type_).name}"
+                "Mention type:" f" {language_v2.EntityMention.Type(mention.type_).name}"
             )
 
             # Get the probability score associated with the first mention of the entity in the (0, 1.0] range.
@@ -93,21 +91,3 @@ def sample_analyze_entities(gcs_content_uri: str) -> None:
 
 
 # [END language_entities_gcs]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--gcs_content_uri",
-        type=str,
-        default="gs://cloud-samples-data/language/entity.txt",
-    )
-    args = parser.parse_args()
-
-    sample_analyze_entities(args.gcs_content_uri)
-
-
-if __name__ == "__main__":
-    main()

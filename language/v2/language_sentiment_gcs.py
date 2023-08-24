@@ -13,21 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "language_sentiment_gcs")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
 
 # sample-metadata
 #   title: Analyzing Sentiment (GCS)
 #   description: Analyzing Sentiment in text file stored in Cloud Storage
-#   usage: python3 samples/v2/language_sentiment_gcs.py [--gcs_content_uri "gs://cloud-samples-data/language/sentiment-positive.txt"]
 
 # [START language_sentiment_gcs]
 from google.cloud import language_v2
 
 
-def sample_analyze_sentiment(gcs_content_uri: str) -> None:
+def sample_analyze_sentiment(
+    gcs_content_uri: str = "gs://cloud-samples-data/language/sentiment-positive.txt",
+) -> None:
     """
     Analyzes Sentiment in text file stored in Cloud Storage.
 
@@ -74,21 +73,3 @@ def sample_analyze_sentiment(gcs_content_uri: str) -> None:
 
 
 # [END language_sentiment_gcs]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--gcs_content_uri",
-        type=str,
-        default="gs://cloud-samples-data/language/sentiment-positive.txt",
-    )
-    args = parser.parse_args()
-
-    sample_analyze_sentiment(args.gcs_content_uri)
-
-
-if __name__ == "__main__":
-    main()

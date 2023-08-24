@@ -13,21 +13,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "language_classify_gcs")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
 
 # sample-metadata
 #   title: Classify Content (GCS)
 #   description: Classifying Content in text file stored in Cloud Storage
-#   usage: python3 samples/v2/language_classify_gcs.py [--gcs_content_uri "gs://cloud-samples-data/language/classify-entertainment.txt"]
 
 # [START language_classify_gcs]
 from google.cloud import language_v2
 
 
-def sample_classify_text(gcs_content_uri: str) -> None:
+def sample_classify_text(
+    gcs_content_uri: str = "gs://cloud-samples-data/language/classify-entertainment.txt",
+) -> None:
     """
     Classifies Content in text file stored in Cloud Storage.
 
@@ -64,21 +63,3 @@ def sample_classify_text(gcs_content_uri: str) -> None:
 
 
 # [END language_classify_gcs]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--gcs_content_uri",
-        type=str,
-        default="gs://cloud-samples-data/language/classify-entertainment.txt",
-    )
-    args = parser.parse_args()
-
-    sample_classify_text(args.gcs_content_uri)
-
-
-if __name__ == "__main__":
-    main()

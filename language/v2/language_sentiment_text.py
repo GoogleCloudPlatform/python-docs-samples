@@ -13,21 +13,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# DO NOT EDIT! This is a generated sample ("Request",  "language_sentiment_text")
-
 # To install the latest published package dependency, execute the following:
 #   pip install google-cloud-language
 
 # sample-metadata
 #   title: Analyzing Sentiment
 #   description: Analyzing Sentiment in a String
-#   usage: python3 samples/v2/language_sentiment_text.py [--text_content "I am so happy and joyful."]
 
 # [START language_sentiment_text]
 from google.cloud import language_v2
 
 
-def sample_analyze_sentiment(text_content: str) -> None:
+def sample_analyze_sentiment(text_content: str = "I am so happy and joyful.") -> None:
     """
     Analyzes Sentiment in a string.
 
@@ -75,17 +72,3 @@ def sample_analyze_sentiment(text_content: str) -> None:
 
 
 # [END language_sentiment_text]
-
-
-def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--text_content", type=str, default="I am so happy and joyful.")
-    args = parser.parse_args()
-
-    sample_analyze_sentiment(args.text_content)
-
-
-if __name__ == "__main__":
-    main()
