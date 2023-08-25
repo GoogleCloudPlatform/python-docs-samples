@@ -29,4 +29,4 @@ def test_streaming_prediction() -> None:
     responses = streaming_code.streaming_prediction(
         project_id=_PROJECT_ID, location=_LOCATION
     )
-    assert "def" in responses
+    assert "year" in responses
