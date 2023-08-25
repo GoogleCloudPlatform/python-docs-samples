@@ -26,10 +26,6 @@ def streaming_prediction(
     vertexai.init(project=project_id, location=location)
 
     code_generation_model = CodeGenerationModel.from_pretrained("code-bison@001")
-    parameters = {
-        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
-    }
 
     responses = code_generation_model.predict_streaming(
         prefix="Write a function that checks if a year is a leap year.",
