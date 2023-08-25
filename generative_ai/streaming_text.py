@@ -41,7 +41,7 @@ def streaming_prediction(
     for response in responses:
         print(response)
         results += str(response)
-    # [END aiplatform_sdk_streaming_text]
+    # [END aiplatform_streaming_text]
     return results
 
 

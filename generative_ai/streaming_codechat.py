@@ -21,7 +21,7 @@ def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Chat Example with a Large Language Model"""
+    """Streaming Code Chat Example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
 
@@ -39,7 +39,7 @@ def streaming_prediction(
     for response in responses:
         print(response)
         results += str(response)
-    # [END aiplatform_sdk_streaming_codechat]
+    # [END aiplatform_streaming_codechat]
     return results
 
 

@@ -52,7 +52,7 @@ def streaming_prediction(
     for response in responses:
         print(response)
         results += str(response)
-    # [END aiplatform_sdk_streaming_chat]
+    # [END aiplatform_streaming_chat]
     return results
 
 
