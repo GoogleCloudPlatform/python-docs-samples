@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_streaming_text]
-import datetime
-
 import vertexai
 from vertexai.language_models import TextGenerationModel
 
@@ -28,16 +26,23 @@ def streaming_prediction(
     vertexai.init(project=project_id, location=location)
 
     text_generation_model = TextGenerationModel.from_pretrained("text-bison")
+    parameters = {
+        "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
+        "top_p": 0.8,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
+    }
 
-    print("Start: ", datetime.datetime.now())
-    responses = text_generation_model.predict_streaming(prompt="Count to 100", max_output_tokens=1000)
+    responses = text_generation_model.predict_streaming(
+        prompt="Give me ten interview questions for the role of program manager.",
+        **parameters)
+
+    results = ""
     for response in responses:
-        print(datetime.datetime.now())
         print(response)
-    print("End: ", datetime.datetime.now())
+        results += str(response)
     # [END aiplatform_sdk_streaming_text]
-
-    return "".join([x for x in responses])
+    return results
 
 
 if __name__ == "__main__":

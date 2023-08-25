@@ -29,4 +29,4 @@ def test_streaming_prediction() -> None:
     responses = streaming_chat.streaming_prediction(
         project_id=_PROJECT_ID, location=_LOCATION
     )
-    assert "1, 2, 3" in responses
+    assert "Earth" in responses

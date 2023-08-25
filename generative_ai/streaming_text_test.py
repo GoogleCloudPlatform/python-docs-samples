@@ -29,4 +29,5 @@ def test_streaming_prediction() -> None:
     responses = streaming_text.streaming_prediction(
         project_id=_PROJECT_ID, location=_LOCATION
     )
-    assert "1. 2. 3. 4." in responses
+    print(responses)
+    assert "1." in responses

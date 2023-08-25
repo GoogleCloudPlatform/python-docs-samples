@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_streaming_code]
-import datetime
-
 import vertexai
 from vertexai.language_models import CodeGenerationModel
 
@@ -23,24 +21,29 @@ def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Chat Example with a Large Language Model"""
+    """Streaming Code Example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
 
-    code_model = CodeGenerationModel.from_pretrained("code-bison")
-    code = code_model.start_chat()
+    code_generation_model = CodeGenerationModel.from_pretrained("code-bison@001")
+    parameters = {
+        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
+    }
 
-    print("Start: ", datetime.datetime.now())
-    responses = code.send_message_streaming(
-        message="Write a function that checks if a year is a leap year.",
-        max_output_tokens=1000)
+    responses = code_generation_model.predict_streaming(
+        prefix="Write a function that checks if a year is a leap year.",
+        # Optional:
+        # max_output_tokens=1024,
+        # temperature=0.0,
+    )
+
+    results = ""
     for response in responses:
-        print(datetime.datetime.now())
         print(response)
-    print("End: ", datetime.datetime.now())
+        results += str(response)
     # [END aiplatform_sdk_streaming_code]
-
-    return "".join([x for x in responses])
+    return results
 
 
 if __name__ == "__main__":

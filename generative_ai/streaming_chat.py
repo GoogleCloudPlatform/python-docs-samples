@@ -13,10 +13,8 @@
 # limitations under the License.
 
 # [START aiplatform_streaming_chat]
-import datetime
-
 import vertexai
-from vertexai.language_models import ChatModel
+from vertexai.language_models import ChatModel, InputOutputTextPair
 
 
 def streaming_prediction(
@@ -28,19 +26,34 @@ def streaming_prediction(
     vertexai.init(project=project_id, location=location)
 
     chat_model = ChatModel.from_pretrained("chat-bison")
-    chat = chat_model.start_chat()
 
-    print("Start: ", datetime.datetime.now())
+    parameters = {
+        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
+        "top_p": 0.95,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
+        "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
+    }
+
+    chat = chat_model.start_chat(
+        context="My name is Miles. You are an astronomer, knowledgeable about the solar system.",
+        examples=[
+            InputOutputTextPair(
+                input_text="How many moons does Mars have?",
+                output_text="The planet Mars has two moons, Phobos and Deimos.",
+            ),
+        ],
+    )
+
     responses = chat.send_message_streaming(
-        message="Hello. How are you today? Please count to 99",
-        max_output_tokens=1000)
-    for response in responses:
-        print(datetime.datetime.now())
-        print(response)
-    print("End: ", datetime.datetime.now())
-    # [END aiplatform_sdk_streaming_chat]
+        message="How many planets are there in the solar system?",
+        **parameters)
 
-    return "".join([x for x in responses])
+    results = ""
+    for response in responses:
+        print(response)
+        results += str(response)
+    # [END aiplatform_sdk_streaming_chat]
+    return results
 
 
 if __name__ == "__main__":

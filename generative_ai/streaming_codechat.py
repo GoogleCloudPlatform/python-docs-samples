@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_streaming_codechat]
-import datetime
-
 import vertexai
 from vertexai.language_models import CodeChatModel
 
@@ -28,19 +26,21 @@ def streaming_prediction(
     vertexai.init(project=project_id, location=location)
 
     codechat_model = CodeChatModel.from_pretrained("codechat-bison")
+    parameters = {
+        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
+        "max_output_tokens": 1024,  # Token limit determines the maximum amount of text output.
+    }
     codechat = codechat_model.start_chat()
 
-    print("Start: ", datetime.datetime.now())
     responses = codechat.send_message_streaming(
-        message="Please help write a function to calculate the min of two numbers",
-        max_output_tokens=1000)
-    for response in responses:
-        print(datetime.datetime.now())
-        print(response)
-    print("End: ", datetime.datetime.now())
-    # [END aiplatform_sdk_streaming_codechat]
+        message="Please help write a function to calculate the min of two numbers", **parameters)
 
-    return "".join([x for x in responses])
+    results = ""
+    for response in responses:
+        print(response)
+        results += str(response)
+    # [END aiplatform_sdk_streaming_codechat]
+    return results
 
 
 if __name__ == "__main__":
