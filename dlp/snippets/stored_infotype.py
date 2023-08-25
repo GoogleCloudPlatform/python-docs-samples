@@ -138,73 +138,6 @@ def update_stored_infotype(
 # [END dlp_update_stored_infotype]
 
 
-# [START dlp_inspect_with_stored_infotype]
-import google.cloud.dlp  # noqa: F811, E402
-
-
-def inspect_with_stored_infotype(
-    project: str,
-    stored_info_type_id: str,
-    content_string: str,
-) -> None:
-
-    """Uses the Data Loss Prevention API to inspect/scan content using stored
-    infoType.
-    Args:
-        project: The Google Cloud project id to use as a parent resource.
-        content_string: The string to inspect.
-        stored_info_type_id: The identifier of stored infoType used to inspect.
-    """
-
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Convert stored infoType id into full resource id
-    stored_type_name = f"projects/{project}/storedInfoTypes/{stored_info_type_id}"
-
-    # Construct a custom info type dictionary using stored infoType.
-    custom_info_types = [
-        {
-            "info_type": {"name": "STORED_TYPE"},
-            "stored_type": {
-                "name": stored_type_name,
-            }
-        }
-    ]
-
-    # Construct the inspection configuration dictionary.
-    inspect_config = {
-        "custom_info_types": custom_info_types,
-        "include_quote": True,
-    }
-
-    # Construct the `item` to be inspected using stored infoType.
-    item = {"value": content_string}
-
-    # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
-
-    # Call the API.
-    response = dlp.inspect_content(
-        request={
-            "parent": parent,
-            "inspect_config": inspect_config,
-            "item": item,
-        }
-    )
-
-    # Print out the results.
-    if response.result.findings:
-        for finding in response.result.findings:
-            print("Quote: {}".format(finding.quote))
-            print("Info type: {}".format(finding.info_type.name))
-            print("Likelihood: {}".format(finding.likelihood))
-    else:
-        print("No findings.")
-
-# [END dlp_inspect_with_stored_infotype]
-
-
 if __name__ == "__main__":
     default_project = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
@@ -251,24 +184,6 @@ if __name__ == "__main__":
         "would store the created dictionary.",
     )
 
-    parser_inspect = subparsers.add_parser(
-        "inspect",
-        help="Inspects data using stored infoType.",
-    )
-    parser_inspect.add_argument(
-        "--project",
-        help="The Google Cloud project id to use as a parent resource.",
-        default=default_project,
-    )
-    parser_inspect.add_argument(
-        "stored_info_type_id",
-        help="The identifier for large custom dictionary.",
-    )
-    parser_inspect.add_argument(
-        "content_string",
-        help="The string to inspect.",
-    )
-
     args = parser.parse_args()
 
     if args.content == "create":
@@ -283,10 +198,4 @@ if __name__ == "__main__":
             args.stored_info_type_id,
             args.gcs_input_file_path,
             args.output_bucket_name,
-        )
-    elif args.content == "inspect":
-        inspect_with_stored_infotype(
-            args.project,
-            args.stored_info_type_id,
-            args.content_string,
         )
