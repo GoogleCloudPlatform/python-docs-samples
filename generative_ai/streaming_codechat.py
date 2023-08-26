@@ -33,7 +33,9 @@ def streaming_prediction(
     codechat = codechat_model.start_chat()
 
     responses = codechat.send_message_streaming(
-        message="Please help write a function to calculate the min of two numbers", **parameters)
+        message="Please help write a function to calculate the min of two numbers",
+        **parameters
+    )
 
     results = ""
     for response in responses:

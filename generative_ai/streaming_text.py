@@ -35,7 +35,8 @@ def streaming_prediction(
 
     responses = text_generation_model.predict_streaming(
         prompt="Give me ten interview questions for the role of program manager.",
-        **parameters)
+        **parameters
+    )
 
     results = ""
     for response in responses:
