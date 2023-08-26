@@ -57,8 +57,8 @@ def streaming_prediction(
 
     results = []
     for response in responses:
-            print(response)
-            results.append(str(response))
+        print(response)
+        results.append(str(response))
     # [END aiplatform_streaming_chat]
     results = "".join(results)
     return results
