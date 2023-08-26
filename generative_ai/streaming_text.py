@@ -38,11 +38,12 @@ def streaming_prediction(
         **parameters
     )
 
-    results = ""
+    results = []
     for response in responses:
-        print(response)
-        results += str(response)
+            print(response)
+            results.append(str(response))
     # [END aiplatform_streaming_text]
+    results = "\n".join(results)
     return results
 
 
