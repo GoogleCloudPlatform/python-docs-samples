@@ -14,18 +14,18 @@
 
 # [START aiplatform_streaming_codechat]
 import vertexai
-from vertexai.language_models import CodeChatModel
+from vertexai import language_models
 
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Code Chat Example with a Large Language Model"""
+    """Streaming Code Chat Example with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
 
-    codechat_model = CodeChatModel.from_pretrained("codechat-bison")
+    codechat_model = language_models.CodeChatModel.from_pretrained("codechat-bison")
     parameters = {
         "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 1024,  # Token limit determines the maximum amount of text output.

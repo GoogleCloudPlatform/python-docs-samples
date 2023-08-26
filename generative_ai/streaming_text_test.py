@@ -31,3 +31,6 @@ def test_streaming_prediction() -> None:
     )
     print(responses)
     assert "1." in responses
+    assert "?" in responses
+    assert "you" in responses
+    assert "do" in responses

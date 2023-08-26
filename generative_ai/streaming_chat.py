@@ -14,18 +14,18 @@
 
 # [START aiplatform_streaming_chat]
 import vertexai
-from vertexai.language_models import ChatModel, InputOutputTextPair
+from vertexai import language_models
 
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Chat Example with a Large Language Model"""
+    """Streaming Chat Example with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
 
-    chat_model = ChatModel.from_pretrained("chat-bison")
+    chat_model = language_models.ChatModel.from_pretrained("chat-bison")
 
     parameters = {
         "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
@@ -37,7 +37,7 @@ def streaming_prediction(
     chat = chat_model.start_chat(
         context="My name is Miles. You are an astronomer, knowledgeable about the solar system.",
         examples=[
-            InputOutputTextPair(
+            language_models.InputOutputTextPair(
                 input_text="How many moons does Mars have?",
                 output_text="The planet Mars has two moons, Phobos and Deimos.",
             ),
@@ -45,7 +45,8 @@ def streaming_prediction(
     )
 
     responses = chat.send_message_streaming(
-        message="How many planets are there in the solar system?", **parameters
+        message="How many planets are there in the solar system?",
+        **parameters
     )
 
     results = ""

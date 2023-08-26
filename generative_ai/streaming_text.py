@@ -14,18 +14,18 @@
 
 # [START aiplatform_streaming_text]
 import vertexai
-from vertexai.language_models import TextGenerationModel
+from vertexai import language_models
 
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Text Example with a Large Language Model"""
+    """Streaming Text Example with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
 
-    text_generation_model = TextGenerationModel.from_pretrained("text-bison")
+    text_generation_model = language_models.TextGenerationModel.from_pretrained("text-bison")
     parameters = {
         "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.

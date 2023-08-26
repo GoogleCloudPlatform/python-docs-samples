@@ -14,18 +14,18 @@
 
 # [START aiplatform_streaming_code]
 import vertexai
-from vertexai.language_models import CodeGenerationModel
+from vertexai import language_models
 
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
-    """Streaming Code Example with a Large Language Model"""
+    """Streaming Code Example with a Large Language Model."""
 
     vertexai.init(project=project_id, location=location)
 
-    code_generation_model = CodeGenerationModel.from_pretrained("code-bison")
+    code_generation_model = language_models.CodeGenerationModel.from_pretrained("code-bison")
     parameters = {
         "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
