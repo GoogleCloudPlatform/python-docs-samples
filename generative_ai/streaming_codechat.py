@@ -27,14 +27,16 @@ def streaming_prediction(
 
     codechat_model = language_models.CodeChatModel.from_pretrained("codechat-bison")
     parameters = {
-        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 1024,  # Token limit determines the maximum amount of text output.
+        # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.8,
+        # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 1024,
     }
     codechat = codechat_model.start_chat()
 
     responses = codechat.send_message_streaming(
         message="Please help write a function to calculate the min of two numbers",
-        **parameters
+        **parameters,
     )
 
     results = []
