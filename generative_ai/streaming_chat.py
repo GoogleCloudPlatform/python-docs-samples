@@ -45,8 +45,7 @@ def streaming_prediction(
     )
 
     responses = chat.send_message_streaming(
-        message="How many planets are there in the solar system?",
-        **parameters
+        message="How many planets are there in the solar system?", **parameters
     )
 
     results = ""

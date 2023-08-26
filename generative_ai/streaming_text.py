@@ -25,7 +25,9 @@ def streaming_prediction(
 
     vertexai.init(project=project_id, location=location)
 
-    text_generation_model = language_models.TextGenerationModel.from_pretrained("text-bison")
+    text_generation_model = language_models.TextGenerationModel.from_pretrained(
+        "text-bison"
+    )
     parameters = {
         "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
