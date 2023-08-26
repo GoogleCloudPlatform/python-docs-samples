@@ -28,10 +28,16 @@ def streaming_prediction(
     chat_model = language_models.ChatModel.from_pretrained("chat-bison")
 
     parameters = {
-        "temperature": 0.8,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
-        "top_p": 0.95,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
+        # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.8,
+        # Token limit determines the maximum amount of text output.
+        "max_output_tokens": 256,
+         # Tokens are selected from most probable to least until the
+         # sum of their probabilities equals the top_p value.
+        "top_p": 0.95,
+        # A top_k of 1 means the selected token is the most probable among
+        # all tokens.
+        "top_k": 40,
     }
 
     chat = chat_model.start_chat(
@@ -45,7 +51,8 @@ def streaming_prediction(
     )
 
     responses = chat.send_message_streaming(
-        message="How many planets are there in the solar system?", **parameters
+        message="How many planets are there in the solar system?",
+        **parameters,
     )
 
     results = ""
