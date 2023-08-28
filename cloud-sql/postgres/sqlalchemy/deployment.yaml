@@ -38,10 +38,19 @@ spec:
         env:
         - name: PORT
           value: "8080"
+        # This project uses environment variables to determine
+        # how you would like to run your application
+        # To use the Python Connector (recommended) - use INSTANCE_CONNECTION_NAME (proj:region:instance)
+        # To use TCP - Setting INSTANCE_HOST will use TCP (e.g., 127.0.0.1)
+        # To use Unix, use INSTANCE_UNIX_SOCKET (e.g., /cloudsql/proj:region:instance)
         - name: INSTANCE_HOST
           value: "127.0.0.1"
         - name: DB_PORT
-          value: "5432"  
+          value: "5432"
+        # For Automatic IAM Authentication with the Python Connector
+        # use DB_IAM_USER instead of DB_USER (recommended)
+        # You may also remove the DB_PASS environment variable if
+        # you use Automatic IAM Authentication
         - name: DB_USER
           valueFrom:
             secretKeyRef:
@@ -57,6 +66,8 @@ spec:
             secretKeyRef:
               name: <YOUR-DB-SECRET>
               key: database
+      # If you are using the Python Connector (recommended), you can
+      # remove cloud-sql-proxy (everything below this line)
       - name: cloud-sql-proxy
         # This uses the latest version of the Cloud SQL proxy
         # It is recommended to use a specific version for production environments.
@@ -66,6 +77,10 @@ spec:
           # If connecting from a VPC-native GKE cluster, you can use the
           # following flag to have the proxy connect over private IP
           # - "--private-ip"
+
+          # If you are not connecting with Automatic IAM, you can delete
+          # the following flag.
+          - "--auto-iam-authn"
 
           # tcp should be set to the port the proxy should listen on
           # and should match the DB_PORT value set above.
