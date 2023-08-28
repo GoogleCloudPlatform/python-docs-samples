@@ -13,10 +13,10 @@
 # limitations under the License.
 
 import os
-from typing import Iterator
+import unittest
 
 from unittest import mock
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, Mock
 
 import uuid
 
@@ -43,388 +43,484 @@ BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
 
-# Create new custom topic/subscription
-# We observe sometimes all the tests in this file fail. In a
-# hypothesis where DLP service somehow loses the connection to the
-# topic, now we use function scope for Pub/Sub fixtures.
-@pytest.fixture(scope="module")
-def topic_id() -> Iterator[str]:
-    # Creates a pubsub topic, and tears it down.
-    publisher = google.cloud.pubsub.PublisherClient()
-    topic_path = publisher.topic_path(GCLOUD_PROJECT, TOPIC_ID)
-    try:
-        publisher.create_topic(request={"name": topic_path})
-    except google.api_core.exceptions.AlreadyExists:
-        pass
+def mock_subscriber_client():
+    class MockSubscriberClient:
+        def subscription_path(self, project, subscription_id):
+            return f"projects/{project}/subscriptions/{subscription_id}"
 
-    yield TOPIC_ID
+        def subscribe(self, subscription_path, callback):
+            subscription = MockSubscription(callback)
+            return subscription
 
-    publisher.delete_topic(request={"topic": topic_path})
+    class MockSubscription:
+        def __init__(self, callback):
+            self.callback = callback
 
+        def result(self, timeout=None):
+            # Simulate the callback behavior here
+            message_mock = MagicMock()
+            message_mock.attributes = {"DlpJobName": "example_job"}
+            self.callback(message_mock)
 
-@pytest.fixture(scope="module")
-def subscription_id(topic_id: str) -> Iterator[str]:
-    # Subscribes to a topic.
-    subscriber = google.cloud.pubsub.SubscriberClient()
-    topic_path = subscriber.topic_path(GCLOUD_PROJECT, topic_id)
-    subscription_path = subscriber.subscription_path(GCLOUD_PROJECT, SUBSCRIPTION_ID)
-    try:
-        subscriber.create_subscription(
-            request={"name": subscription_path, "topic": topic_path}
-        )
-    except google.api_core.exceptions.AlreadyExists:
-        pass
+        def set_result(self, timeout=None):
+            return None
 
-    yield SUBSCRIPTION_ID
+    mock_subscriber = MockSubscriberClient()
 
-    subscriber.delete_subscription(request={"subscription": subscription_path})
+    return mock_subscriber
 
 
-@pytest.fixture(scope="module")
-def bigquery_project() -> Iterator[str]:
-    # Adds test Bigquery data, yields the project ID and then tears down.
+def mock_clients_for_numerical_risk():
+    class MockDlpClient:
+        def get_dlp_job(self, request):
+            # Simulate fetching DLP job results
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            # Simulate risk details and histogram
+            results = job_mock.risk_details.numerical_stats_result
+            results.min_value.integer_value = 1
+            results.max_value.integer_value = 100
+            results.quantile_values = [
+                MockResult(),
+                MockResult(),
+            ]
+            return job_mock
 
-    bigquery_client = google.cloud.bigquery.Client()
+        def create_dlp_job(self, request):
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            return job_mock
 
-    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
-    dataset = google.cloud.bigquery.Dataset(dataset_ref)
-    try:
-        dataset = bigquery_client.create_dataset(dataset)
-    except google.api_core.exceptions.Conflict:
-        dataset = bigquery_client.get_dataset(dataset)
-    table_ref = dataset_ref.table(BIGQUERY_TABLE_ID)
-    table = google.cloud.bigquery.Table(table_ref)
+    class MockResult:
+        def __init__(self):
+            self.integer_value = 27
 
-    harmful_table_ref = dataset_ref.table(BIGQUERY_HARMFUL_TABLE_ID)
-    harmful_table = google.cloud.bigquery.Table(harmful_table_ref)
+    mock_dlp = MockDlpClient()
+    dlp_mock = MagicMock(return_value=mock_dlp)
+    mock_subscriber = mock_subscriber_client()
 
-    table.schema = (
-        google.cloud.bigquery.SchemaField("Name", "STRING"),
-        google.cloud.bigquery.SchemaField("Comment", "STRING"),
-    )
-
-    harmful_table.schema = (
-        google.cloud.bigquery.SchemaField("Name", "STRING", "REQUIRED"),
-        google.cloud.bigquery.SchemaField("TelephoneNumber", "STRING", "REQUIRED"),
-        google.cloud.bigquery.SchemaField("Mystery", "STRING", "REQUIRED"),
-        google.cloud.bigquery.SchemaField("Age", "INTEGER", "REQUIRED"),
-        google.cloud.bigquery.SchemaField("Gender", "STRING"),
-        google.cloud.bigquery.SchemaField("RegionCode", "STRING"),
-    )
-
-    try:
-        table = bigquery_client.create_table(table)
-    except google.api_core.exceptions.Conflict:
-        table = bigquery_client.get_table(table)
-
-    try:
-        harmful_table = bigquery_client.create_table(harmful_table)
-    except google.api_core.exceptions.Conflict:
-        harmful_table = bigquery_client.get_table(harmful_table)
-
-    rows_to_insert = [("Gary Smith", "My email is gary@example.com")]
-    harmful_rows_to_insert = [
-        (
-            "Gandalf",
-            "(123) 456-7890",
-            "4231 5555 6781 9876",
-            27,
-            "Male",
-            "US",
-        ),
-        (
-            "Dumbledore",
-            "(313) 337-1337",
-            "6291 8765 1095 7629",
-            27,
-            "Male",
-            "US",
-        ),
-        ("Joe", "(452) 123-1234", "3782 2288 1166 3030", 35, "Male", "US"),
-        ("James", "(567) 890-1234", "8291 3627 8250 1234", 19, "Male", "US"),
-        (
-            "Marie",
-            "(452) 123-1234",
-            "8291 3627 8250 1234",
-            35,
-            "Female",
-            "US",
-        ),
-        (
-            "Carrie",
-            "(567) 890-1234",
-            "2253 5218 4251 4526",
-            35,
-            "Female",
-            "US",
-        ),
-    ]
-
-    bigquery_client.insert_rows(table, rows_to_insert)
-    bigquery_client.insert_rows(harmful_table, harmful_rows_to_insert)
-    yield GCLOUD_PROJECT
-
-    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+    return dlp_mock, mock_subscriber
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_numerical_risk_analysis(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.numerical_risk_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        NUMERIC_FIELD,
-        topic_id,
-        subscription_id,
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_numerical_risk()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.numerical_risk_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            NUMERIC_FIELD,
+            "topic_id",
+            "subscription_id",
+        )
 
     out, _ = capsys.readouterr()
     assert "Value Range:" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+def mock_clients_for_categorical_risk():
+    class MockDlpClient:
+        def get_dlp_job(self, request):
+            # Simulate fetching DLP job results
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            # Simulate risk details and histogram
+            job_mock.risk_details.categorical_stats_result.value_frequency_histogram_buckets = [
+                MockBucket(),
+                MockBucket(),
+            ]
+            return job_mock
+
+        def create_dlp_job(self, request):
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            return job_mock
+
+    class MockBucket:
+        def __init__(self):
+            self.value_frequency_lower_bound = 1
+            self.value_frequency_upper_bound = 5
+            self.bucket_size = 10
+            self.bucket_values = [MockValueBucket(), MockValueBucket()]
+
+    class MockValueBucket:
+        def __init__(self):
+            self.value = MockIntegerValue()
+            self.count = 6
+
+    class MockIntegerValue:
+        def __init__(self):
+            self.integer_value = 56
+
+    mock_dlp = MockDlpClient()
+    dlp_mock = MagicMock(return_value=mock_dlp)
+    mock_subscriber = mock_subscriber_client()
+
+    return dlp_mock, mock_subscriber
+
+
 def test_categorical_risk_analysis_on_string_field(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.categorical_risk_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        UNIQUE_FIELD,
-        topic_id,
-        subscription_id,
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_categorical_risk()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.categorical_risk_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            UNIQUE_FIELD,
+            "topic_id",
+            "subscription_id",
+        )
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_categorical_risk_analysis_on_number_field(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.categorical_risk_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        NUMERIC_FIELD,
-        topic_id,
-        subscription_id,
-    )
+
+    dlp_mock, mock_subscriber = mock_clients_for_categorical_risk()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.categorical_risk_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            NUMERIC_FIELD,
+            "topic_id",
+            "subscription_id",
+        )
 
     out, _ = capsys.readouterr()
     assert "Most common value occurs" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+def mock_clients_for_k_anonimity():
+    class MockDlpClient:
+        def get_dlp_job(self, request):
+            # Simulate fetching DLP job results
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            # Simulate risk details and histogram
+            job_mock.risk_details.k_anonymity_result.equivalence_class_histogram_buckets = [
+                MockBucket(),
+                MockBucket(),
+            ]
+            return job_mock
+
+        def create_dlp_job(self, request):
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            return job_mock
+
+    class MockBucket:
+        def __init__(self):
+            self.equivalence_class_size_lower_bound = 1
+            self.equivalence_class_size_upper_bound = 5
+            self.bucket_size = 10
+            self.bucket_values = [MockValueBucket(), MockValueBucket()]
+
+    class MockValueBucket:
+        def __init__(self):
+            self.quasi_ids_values = [MockQuasiId()]
+            self.equivalence_class_size = 3
+
+    class MockQuasiId:
+        def __init__(self):
+            self.value = "quasi_id_value"
+
+    mock_dlp = MockDlpClient()
+    dlp_mock = MagicMock(return_value=mock_dlp)
+    mock_subscriber = mock_subscriber_client()
+
+    return dlp_mock, mock_subscriber
+
+
 def test_k_anonymity_analysis_single_field(
-    topic_id: str,
-    subscription_id: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.k_anonymity_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        [NUMERIC_FIELD],
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_k_anonimity()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.k_anonymity_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            "topic_id",
+            "subscription_id",
+            [NUMERIC_FIELD],
+        )
 
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_multiple_fields(
-    topic_id: str,
-    subscription_id: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.k_anonymity_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        [NUMERIC_FIELD, REPEATED_FIELD],
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_k_anonimity()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.k_anonymity_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            "topic_id",
+            "subscription_id",
+            [NUMERIC_FIELD, REPEATED_FIELD],
+        )
 
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+def mock_clients_for_l_diversity():
+    class MockDlpClient:
+        def get_dlp_job(self, request):
+            # Simulate fetching DLP job results
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            # Simulate risk details and histogram
+            job_mock.risk_details.l_diversity_result.sensitive_value_frequency_histogram_buckets = [
+                MockBucket(),
+                MockBucket(),
+            ]
+            return job_mock
+
+        def create_dlp_job(self, request):
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            return job_mock
+
+    class MockBucket:
+        def __init__(self):
+            self.sensitive_value_frequency_lower_bound = 1
+            self.sensitive_value_frequency_upper_bound = 5
+            self.bucket_size = 10
+            self.bucket_values = [MockValueBucket(), MockValueBucket()]
+
+    class MockValueBucket:
+        def __init__(self):
+            self.quasi_ids_values = [MockQuasiId()]
+            self.top_sensitive_values = [MockSensitiveValues()]
+            self.equivalence_class_size = 1
+
+    class MockQuasiId:
+        def __init__(self):
+            self.value = "quasi_id_value"
+
+    class MockSensitiveValues:
+        def __init__(self):
+            self.value = "sensitive_value"
+            self.count = 6
+
+    mock_dlp = MockDlpClient()
+    dlp_mock = MagicMock(return_value=mock_dlp)
+    mock_subscriber = mock_subscriber_client()
+
+    return dlp_mock, mock_subscriber
+
+
 def test_l_diversity_analysis_single_field(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.l_diversity_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        UNIQUE_FIELD,
-        [NUMERIC_FIELD],
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_l_diversity()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.l_diversity_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            "topic_id",
+            "subscription_id",
+            UNIQUE_FIELD,
+            [NUMERIC_FIELD],
+        )
 
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Sensitive value" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_l_diversity_analysis_multiple_field(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.l_diversity_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        UNIQUE_FIELD,
-        [NUMERIC_FIELD, REPEATED_FIELD],
-    )
+    dlp_mock, mock_subscriber = mock_clients_for_l_diversity()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.l_diversity_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            "topic_id",
+            "subscription_id",
+            UNIQUE_FIELD,
+            [NUMERIC_FIELD, REPEATED_FIELD],
+        )
 
     out, _ = capsys.readouterr()
     assert "Quasi-ID values:" in out
     assert "Class size:" in out
     assert "Sensitive value" in out
     assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
 
 
-@pytest.mark.flaky(max_runs=3, min_passes=1)
+def mock_clients_for_k_map():
+    class MockDlpClient:
+        def get_dlp_job(self, request):
+            # Simulate fetching DLP job results
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            # Simulate risk details and histogram
+            job_mock.risk_details.k_map_estimation_result.k_map_estimation_histogram = [
+                MockBucket(),
+                MockBucket(),
+            ]
+            return job_mock
+
+        def create_dlp_job(self, request):
+            job_mock = Mock()
+            job_mock.name = "example_job"
+            return job_mock
+
+    class MockBucket:
+        def __init__(self):
+            self.min_anonymity = 1
+            self.max_anonymity = 5
+            self.bucket_size = 10
+            self.bucket_values = [MockValueBucket(), MockValueBucket()]
+
+    class MockValueBucket:
+        def __init__(self):
+            self.quasi_ids_values = [MockQuasiId()]
+            self.estimated_anonymity = 3
+
+    class MockQuasiId:
+        def __init__(self):
+            self.value = "quasi_id_value"
+
+    mock_dlp = MockDlpClient()
+    dlp_mock = MagicMock(return_value=mock_dlp)
+    mock_subscriber = mock_subscriber_client()
+
+    return dlp_mock, mock_subscriber
+
+
 def test_k_map_estimate_analysis_single_field(
-    topic_id: str,
-    subscription_id: str,
-    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    risk.k_map_estimate_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        [NUMERIC_FIELD],
-        ["AGE"],
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Anonymity range:" in out
-    assert "Size:" in out
-    assert "Values" in out
-    assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
-
-
-@pytest.mark.flaky(max_runs=5, min_passes=1)
-def test_k_map_estimate_analysis_multiple_field(
-    topic_id: str, subscription_id: str, capsys: pytest.CaptureFixture
-) -> None:
-    risk.k_map_estimate_analysis(
-        GCLOUD_PROJECT,
-        TABLE_PROJECT,
-        BIGQUERY_DATASET_ID,
-        BIGQUERY_HARMFUL_TABLE_ID,
-        topic_id,
-        subscription_id,
-        [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
-        ["AGE", "GENDER"],
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Anonymity range:" in out
-    assert "Size:" in out
-    assert "Values" in out
-    assert "Job name:" in out
-    for line in str(out).split("\n"):
-        if "Job name" in line:
-            job_name = line.split(":")[1].strip()
-            DLP_CLIENT.delete_dlp_job(name=job_name)
-
-
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_k_map_estimate_analysis_quasi_ids_info_types_equal(
-    topic_id: str, subscription_id: str
-) -> None:
-    with pytest.raises(ValueError):
+    dlp_mock, mock_subscriber = mock_clients_for_k_map()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
         risk.k_map_estimate_analysis(
             GCLOUD_PROJECT,
             TABLE_PROJECT,
             BIGQUERY_DATASET_ID,
             BIGQUERY_HARMFUL_TABLE_ID,
-            topic_id,
-            subscription_id,
-            [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
+            "topic_id",
+            "subscription_id",
+            [NUMERIC_FIELD],
             ["AGE"],
         )
+
+    out, _ = capsys.readouterr()
+    assert "Anonymity range:" in out
+    assert "Size:" in out
+    assert "Values" in out
+    assert "Job name:" in out
+
+
+def test_k_map_estimate_analysis_multiple_field(
+    capsys: pytest.CaptureFixture
+) -> None:
+    dlp_mock, mock_subscriber = mock_clients_for_k_map()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        risk.k_map_estimate_analysis(
+            GCLOUD_PROJECT,
+            TABLE_PROJECT,
+            BIGQUERY_DATASET_ID,
+            BIGQUERY_HARMFUL_TABLE_ID,
+            "topic_id",
+            "subscription_id",
+            [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
+            ["AGE", "GENDER"],
+        )
+
+    out, _ = capsys.readouterr()
+    assert "Anonymity range:" in out
+    assert "Size:" in out
+    assert "Values" in out
+    assert "Job name:" in out
+
+
+def test_k_map_estimate_analysis_quasi_ids_info_types_equal() -> None:
+    dlp_mock, mock_subscriber = mock_clients_for_k_map()
+    with unittest.mock.patch(
+        "google.cloud.pubsub.SubscriberClient", return_value=mock_subscriber
+    ), unittest.mock.patch(
+        "google.cloud.dlp_v2.DlpServiceClient", dlp_mock
+    ):
+        with pytest.raises(ValueError):
+            risk.k_map_estimate_analysis(
+                GCLOUD_PROJECT,
+                TABLE_PROJECT,
+                BIGQUERY_DATASET_ID,
+                BIGQUERY_HARMFUL_TABLE_ID,
+                "topic_id",
+                "subscription_id",
+                [NUMERIC_FIELD, STRING_BOOLEAN_FIELD],
+                ["AGE"],
+            )
 
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
