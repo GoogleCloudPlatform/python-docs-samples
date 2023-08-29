@@ -235,7 +235,7 @@ assign_prs_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-dpes
+      - GoogleCloudPlatform/infra-db-sdk
   - labels:
       - "api: bigtable"
       - "api: datastore"
