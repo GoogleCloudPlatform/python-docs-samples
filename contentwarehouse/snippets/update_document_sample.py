@@ -16,7 +16,7 @@
 
 # [START contentwarehouse_update_document]
 
-from google.cloud import contentwarehouse
+from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
 def sample_update_document(
@@ -26,7 +26,7 @@ def sample_update_document(
     document_schema_id: str,
     document_id: str,
     user_id: str,
-):
+) -> contentwarehouse.types.CreateDocumentResponse:
     """Updates a document.
 
     Args:

@@ -16,10 +16,10 @@
 
 # [START contentwarehouse_delete_document]
 
-from google.cloud import contentwarehouse
+from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
-def sample_delete_document(doc_name: str, user_id: str):
+def sample_delete_document(doc_name: str, user_id: str) -> None:
     """Deletes a document.
 
     Args:

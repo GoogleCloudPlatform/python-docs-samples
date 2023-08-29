@@ -16,10 +16,10 @@
 
 # [START contentwarehouse_get_document]
 
-from google.cloud import contentwarehouse
+from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
-def sample_get_document(doc_name: str, user_id: str):
+def sample_get_document(doc_name: str, user_id: str) -> contentwarehouse.types.Document:
     """Gets a document.
 
     Args:

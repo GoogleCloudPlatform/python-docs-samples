@@ -16,7 +16,7 @@
 
 # [START contentwarehouse_create_document]
 
-from google.cloud import contentwarehouse
+from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
 def sample_create_document(
@@ -27,7 +27,7 @@ def sample_create_document(
     document_schema_id: str,
     user_id: str,
     reference_id: str = "",
-):
+) -> contentwarehouse.types.CreateDocumentResponse:
     """Creates a document.
 
     Args:
