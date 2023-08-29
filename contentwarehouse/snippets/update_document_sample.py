@@ -20,48 +20,32 @@ from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
 def sample_update_document(
-    project_number: str,
-    location: str,
-    mime_type: str,
-    document_schema_id: str,
-    document_id: str,
-    user_id: str,
+    document_name: str,
+    document: contentwarehouse.types.Document,
+    user_id: str
 ) -> contentwarehouse.types.CreateDocumentResponse:
     """Updates a document.
 
     Args:
-        project_number: Google Cloud project number.
-        location: Google Cloud project location.
-        mime_type: Document format eg. PDF/DOCX etc.
-        document_schema_id: Unique identifier for document schema.
-        document_id: Unique identifier for document.
-        user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
+        document_name: Unique identifier for document.
+        document: Content warehouse Document object.
+        user_id: user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
     Returns:
         Response object.
     """
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
 
-    parent = client.common_location_path(project=project_number, location=location)
-
-    # Initialize request argument(s)
-    document = contentwarehouse.Document()
-    mimetype = {
-        "application/pdf": document.raw_document_file_type.RAW_DOCUMENT_FILE_TYPE_PDF
-    }
-    document.plain_text = "Updated Sample Invoice Document"
-    document.display_name = "Order Invoice"
-    document.raw_document_file_type = mimetype[mime_type]
-    document.document_schema_name = f"{parent}/documentSchemas/{document_schema_id}"
+    document.display_name = "Updated Order Invoice"
 
     request_metadata = contentwarehouse.RequestMetadata(
         user_info=contentwarehouse.UserInfo(id=user_id)
     )
 
     request = contentwarehouse.UpdateDocumentRequest(
-        name=f"{parent}/documents/{document_id}",
-        request_metadata=request_metadata,
+        name=document_name,
         document=document,
+        request_metadata=request_metadata
     )
 
     # Make the request
