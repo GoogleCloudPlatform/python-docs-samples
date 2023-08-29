@@ -1,0 +1,1 @@
+Cloud IoT Core was retired on August 16, 2023. After August 15, 2023, the documentation for IoT Core is no longer be available. See https://cloud.google.com/iot-core for a host of partner-led solutions, built on Google Cloud, that meet the needs of IoT customers.
