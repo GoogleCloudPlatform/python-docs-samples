@@ -27,6 +27,8 @@ def sample_delete_document(doc_name: str, user_id: str):
                     Format: 'projects/{project_number}/
                     locations/{location}/documents/{document_id}'.
         user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
+    Returns:
+        None, if operation is successful.
     """
 
     # Create a client
