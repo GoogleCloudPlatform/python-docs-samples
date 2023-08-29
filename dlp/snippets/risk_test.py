@@ -16,7 +16,7 @@ import os
 import unittest
 
 from unittest import mock
-from unittest.mock import MagicMock, Mock
+from unittest.mock import MagicMock
 
 import uuid
 
