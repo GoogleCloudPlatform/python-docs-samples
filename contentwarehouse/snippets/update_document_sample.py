@@ -20,12 +20,12 @@ from google.cloud import contentwarehouse
 
 
 def sample_update_document(
-    project_number: str, 
+    project_number: str,
     location: str,
-    mime_type:str,
+    mime_type: str,
     document_schema_id: str,
     document_id: str,
-    user_id: str
+    user_id: str,
 ):
     """Updates a document.
 
@@ -41,17 +41,17 @@ def sample_update_document(
     """
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
-    
-    parent = client.common_location_path(
-        project=project_number, location=location
-    )
+
+    parent = client.common_location_path(project=project_number, location=location)
 
     # Initialize request argument(s)
     document = contentwarehouse.Document()
-    mimeType = {"application/pdf": document.raw_document_file_type.RAW_DOCUMENT_FILE_TYPE_PDF}
+    mimetype = {
+        "application/pdf": document.raw_document_file_type.RAW_DOCUMENT_FILE_TYPE_PDF
+    }
     document.plain_text = "Updated Sample Invoice Document"
     document.display_name = "Order Invoice"
-    document.raw_document_file_type=mimeType[mime_type]
+    document.raw_document_file_type = mimetype[mime_type]
     document.document_schema_name = f"{parent}/documentSchemas/{document_schema_id}"
 
     request_metadata = contentwarehouse.RequestMetadata(
