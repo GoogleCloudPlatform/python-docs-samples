@@ -18,6 +18,7 @@
 
 from google.cloud import contentwarehouse
 
+
 def sample_create_document(
     project_number: str,
     location: str,
@@ -25,16 +26,16 @@ def sample_create_document(
     mime_type: str,
     document_schema_id: str,
     user_id: str,
-    reference_id: str = ""
+    reference_id: str = "",
 ):
     """Creates a document.
 
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
-        raw_doc_path: Raw document file in Cloud Storage path. 
+        raw_doc_path: Raw document file in Cloud Storage path.
         mime_type: Document format eg. PDF/DOCX etc.
-        document_schema_id: Unique identifier for document schema
+        document_schema_id: Unique identifier for document schema.
         user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
         reference_id: Identifier, must be unique per project and location.
     Returns:
@@ -43,16 +44,16 @@ def sample_create_document(
     # Create a Document Service client
     client = contentwarehouse.DocumentServiceClient()
 
-    parent = client.common_location_path(
-        project=project_number, location=location
-    )
+    parent = client.common_location_path(project=project_number, location=location)
 
     # Initialize request argument(s)
     document = contentwarehouse.Document()
-    mimetype = {"application/pdf": document.raw_document_file_type.RAW_DOCUMENT_FILE_TYPE_PDF}
-    document.plain_text = "Sample Order Invoice Document"
+    mimetype = {
+        "application/pdf": document.raw_document_file_type.RAW_DOCUMENT_FILE_TYPE_PDF
+    }
     document.raw_document_path = raw_doc_path
-    document.display_name = "Order Invoice1"
+    document.display_name = "Order Invoice"
+    document.plain_text = "Sample Invoice Document"
     document.raw_document_file_type = mimetype[mime_type]
     document.document_schema_name = f"{parent}/documentSchemas/{document_schema_id}"
     document.reference_id = reference_id
