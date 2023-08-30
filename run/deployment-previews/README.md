@@ -299,19 +299,20 @@ Now that all the groundwork is in place, create the new trigger.
 
     1. Click **Create Trigger**.
     1. Enter the following details:
-      *   Name: `preview-deploy`
-      *   Event: Pull Request
-      *   Source Repository: "<var>GITHUB_USER_NAME</var>/helloworld-python"
-      *   Base branch: `^main$`
-      *   Comment control: Required except for owners and collaborators -  As
-         the owner of the repo, previews will be automatically built on pull
-         requests you create. -  If you want to allow anyone to preview their
-         changes, read more about the [security
-         implications](https://cloud.google.com/build/docs/cloud-build-service-account)
-         of selecting "Not required".
-      *   Configuration: Cloud Build Configuration file
-      *   Cloud Build configuration file location: `cloudbuild-preview.yaml`
-    1. Click **Create**.
+      * Name: `preview-deploy`
+      * Event: Pull Request
+      * Source Repository: "<var>GITHUB_USER_NAME</var>/helloworld-python"
+      * Base branch: `^main$`
+      *   Comment control: Required except for owners and collaborators 
+          - As the owner of the repo, previews will be automatically built on
+          pull requests you create. 
+          - If you want to allow anyone to preview their changes, read more
+          about the [security
+          implications](https://cloud.google.com/build/docs/cloud-build-service-account)
+          of selecting "Not required".
+      *  Configuration: Cloud Build Configuration file
+      *  Cloud Build configuration file location: `cloudbuild-preview.yaml`
+    4. Click **Create**.
 
 
 ## Checking Success
