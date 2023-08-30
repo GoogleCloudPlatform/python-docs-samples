@@ -193,9 +193,7 @@ steps:
 1. Store the GitHub token in Secret Manager:
     1. In the Google Cloud console, go to the **Secret Manager** page.
 
-       <a href="https://console.cloud.google.com/security/secret-manager"
-           target="console" track-type="tutorial" track-name="consoleLink"
-           track-metadata-position="body" class="button button-primary">Go to
+       <a href="https://console.cloud.google.com/security/secret-manager">Go to
            the Secret Manager page</a>
 
     1. Click **Create Secret**.
@@ -203,14 +201,13 @@ steps:
       1. Name: `github_token`.
       1. Secret value: paste the token value you copied from GitHub.
     1. Click **Create Secret**.
+    
 1. Allow Cloud Build access to this secret:
     1. In a new browser tab, in the Google Cloud console, go to the **Cloud
        Build settings** page.
 
        <a
-           href="https://console.cloud.google.com/cloud-build/settings/service-account"
-           target="console" track-type="tutorial" track-name="consoleLink"
-           track-metadata-position="body" class="button button-primary">Go to
+           href="https://console.cloud.google.com/cloud-build/settings/service-account">Go to
            the Cloud Build settings page</a>
 
     1. Copy the value for "Service account email".
@@ -297,9 +294,7 @@ Now that all the groundwork is in place, create the new trigger.
    instructions](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#console)):
     1. In the Google Cloud console, go to the **Cloud Build triggers** page.
 
-       <a href="https://console.cloud.google.com/cloud-build/triggers"
-           target="console" track-type="tutorial" track-name="consoleLink"
-           track-metadata-position="body" class="button button-primary">Go to
+       <a href="https://console.cloud.google.com/cloud-build/triggers">Go to
            the Cloud Build triggers page</a>
 
     1. Click **Create Trigger**.
