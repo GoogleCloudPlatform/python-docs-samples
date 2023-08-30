@@ -115,7 +115,7 @@ instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-
     1. Click **Connect Repository**.
     1. Select **GitHub (Cloud Build GitHub App)** as the source, and step
     through the authentication and authorization dialogs.
-    1. Select the "<var>GITHUB_USER_NAME</var>/helloworld-python" repository.
+    1. Select the `GITHUB_USER_NAME/helloworld-python` repository.
     1. Click **Connect repository**.
     1. In "Create a trigger (optional)", click **Create a trigger**.
 1. Create a Cloud Build trigger ([full
@@ -124,7 +124,7 @@ instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-
     1. Enter in the following details:
         *   Name: `prod-deploy`
         *   Event: Push to Branch
-        *   Source Repository: "<var>GITHUB_USER_NAME</var>/helloworld-python"
+        *   Source Repository: `GITHUB_USER_NAME/helloworld-python`
         *   Source Branch: `^main$`
         *   Build Configuration: Cloud Build configuration file (yaml or json)
         *   Cloud Build configuration file location: `cloudbuild.yaml`
@@ -243,7 +243,7 @@ instructions below show both methods.
 
 
 * Configure Google Cloud CLI to use your project, replacing
-  <code><var>MYPROJECT</var></code> with your project ID:
+  `MYPROJET` with your project ID:
 
     ```
     export PROJECT_ID=MYPROJECT
@@ -301,7 +301,7 @@ Now that all the groundwork is in place, create the new trigger.
     1. Enter the following details:
       * Name: `preview-deploy`
       * Event: Pull Request
-      * Source Repository: "<var>GITHUB_USER_NAME</var>/helloworld-python"
+      * Source Repository: `GITHUB_USER_NAME/helloworld-python`
       * Base branch: `^main$`
       *   Comment control: Required except for owners and collaborators 
           - As the owner of the repo, previews will be automatically built on
