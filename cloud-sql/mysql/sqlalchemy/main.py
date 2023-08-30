@@ -20,10 +20,9 @@ from app import get_index_context, init_connection_pool, migrate_db, save_vote
 
 ############ TABS vs. SPACES App for Cloud Functions ############
 
-# initiate a connection pool to a Cloud SQL database
-db = init_connection_pool()
-# creates required 'votes' table in database (if it does not exist)
-migrate_db(db)
+# lazy global initialization
+# db connection must be established within request context
+db = None
 
 
 @functions_framework.http
@@ -36,6 +35,13 @@ def votes(request: Request) -> Response:
     Returns:
         Flask HTTP Response to the client.
     """
+    global db
+    # initialize db within request context
+    if not db:
+        # initiate a connection pool to a Cloud SQL database
+        db = init_connection_pool()
+        # creates required 'votes' table in database (if it does not exist)
+        migrate_db(db)
     if request.method == "GET":
         context = get_index_context(db)
         return render_template("index.html", **context)
