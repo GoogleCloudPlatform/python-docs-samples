@@ -20,7 +20,6 @@ that the previews themselves will be public, if obscure, URLs.
 *   Create a Cloud Build trigger to invoke builds on GitHub pull requests.
 
 
-
 ## Costs
 
 In this document, you use the following billable components of Google Cloud:
@@ -212,7 +211,6 @@ You can complete the following instructions using either
 machine if you have installed and configured `git` and Google Cloud CLI. The
 instructions below show both methods.
 
-TODO(glasnt0: cleanup)
 
 * Configure Google Cloud CLI to use your project, replacing <code><var>MYPROJECT</var></code>
   with your project ID:
@@ -224,24 +222,28 @@ TODO(glasnt0: cleanup)
 
     If using Cloud Shell, you may need to authorize Google Cloud CLI to make a
     Google Cloud API call. Click <b>Authorize</b> to allow this action to proceed.
+
 * Create a new container image:
 
-```
-git clone https://github.com/GoogleCloudPlatform/python-docs-samples
-cd python-docs-samples/
-gcloud builds submit --tag gcr.io/$PROJECT_ID/deployment-previews run/deployment-previews
-```
+    ```
+    git clone https://github.com/GoogleCloudPlatform/python-docs-samples
+    cd python-docs-samples/
+    gcloud builds submit --tag gcr.io/$PROJECT_ID/deployment-previews run/deployment-previews
+    ```
 
 * Confirm that the container has been created:
 
-```
-gcloud container images list
-```
+    ```
+    gcloud container images list
+    ```
+
 * Remove the cloned repository:
-```
-cd ..
-rm -rf python-docs-samples
-```
+
+    ```
+    cd ..
+    rm -rf python-docs-samples
+    ```
+
 ### Add the new Cloud Build configuration
 
 Your repository already has a `cloudbuild.yaml` file that is used on your main
@@ -251,7 +253,6 @@ branch. You will now create a new configuration for this new trigger.
     1. Name the new file `cloudbuild-preview.yaml`
     1. Copy the code into your new file: [cloudbuild-preview.yaml](/run/deployment-previews/cloudbuild-configurations/cloudbuild-preview.yaml)
 2. Commit the change to the main branch of your repository.
-
 
 ## Creating the secondary trigger
 
@@ -296,91 +297,92 @@ need to create a new pull request in order to test it.
     </figure>
 
     1. Make a change; for example, change "Hello" to "Greetings".
-    1. Select **Create a new branch for this commit and start a pull request**, then click **Propose change**.
-1. Create a [new pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) with this branch.
+    1. Select **Create a new branch for this commit and start a pull request**, 
+    then click **Propose change**.
+2. Create a [new pull request](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request) with this branch.
 
-  If the trigger is configured correctly, a new check is displayed soon after
-you create the pull request:
+    - If the trigger is configured correctly, a new check is displayed soon after
+    you create the pull request:  
 
-    <figure id="github-pending-check">
-      <img
-        src="images/deployment-previews-github-pending-check.png"
-        alt="Screenshot of the GitHub interface showing a pending check." />
-    </figure>
+  <figure id="github-pending-check">
+    <img
+      src="images/deployment-previews-github-pending-check.png"
+      alt="Screenshot of the GitHub interface showing a pending check." />
+  </figure>
 
-1. The name of the check is the name of the trigger and your project ID. Check on the progress of the build by clicking
+3. The name of the check is the name of the trigger and your project ID. Check on the progress of the build by clicking
 **Details** > **View more details on Google Cloud Build**.
 
-  If your trigger fails and you need to resubmit the build, or if you want to make
-another change to your pull request, you need to commit a change to the same
-branch. Each new commit on a pull request will trigger a new build.
+    - If your trigger fails and you need to resubmit the build, or if you want to make
+    another change to your pull request, you need to commit a change to the same
+    branch. Each new commit on a pull request will trigger a new build.
 
-1. After the trigger completes, a new status check named "*Deployment Preview*" is
+4. After the trigger completes, a new status check named "*Deployment Preview*" is
 displayed for the pull request. The icon displayed is your avatar because your
 account owns the token being used:
 
-    <figure id="github-completed-check">
-      <img
-        src="images/deployment-previews-github-completed-check.png"
-        alt="Screenshot of the GitHub interface showing a completed check." />
-    </figure>
+<figure id="github-completed-check">
+  <img
+    src="images/deployment-previews-github-completed-check.png"
+    alt="Screenshot of the GitHub interface showing a completed check." />
+</figure>
 
-1. Click **Details** to navigate to the preview. The URL shown is the same as
+5. Click **Details** to navigate to the preview. The URL shown is the same as
 your original service URL, but is prefixed with "pr-1---".
 
-  <figure id="preview-service">
-    <img
-      src="images/deployment-previews-preview-service.png"
-      alt="Screenshot of the preview deployed Cloud Run service, showing 'Greetings World!'." />
-  </figure>
+<figure id="preview-service">
+<img
+  src="images/deployment-previews-preview-service.png"
+  alt="Screenshot of the preview deployed Cloud Run service, showing 'Greetings World!'." />
+</figure>
 
-  Note that if you navigate to the original service URL, the original content
+  - Note that if you navigate to the original service URL, the original content
 is shown:
 
-    <figure id="deployed-service">
-      <img
-        src="images/deployment-previews-deployed-service.png"
-        alt="Screenshot of the originally deployed Cloud Run service, still showing 'Hello World!'." />
-    </figure>
+<figure id="deployed-service">
+  <img
+    src="images/deployment-previews-deployed-service.png"
+    alt="Screenshot of the originally deployed Cloud Run service, still showing 'Hello World!'." />
+</figure>
 
 
-1. [View the revision list for your service](https://cloud.google.com/run/docs/managing/revisions#viewing_the_list_of_revisions_for_a_service) to check the service state in Cloud Run: there are now two revisions serving traffic: the original and the preview:
+6. View the [revision list](https://cloud.google.com/run/docs/managing/revisions#viewing_the_list_of_revisions_for_a_service) for your service to check the service state in Cloud Run: there are now two revisions serving traffic: the original and the preview:
 
-    <figure id="revisions-two">
-      <img
-        src="images/deployment-previews-revisions-two.png"
-        alt="Screenshot of the Cloud Run console, with two active revisions." />
-    </figure>
+<figure id="revisions-two">
+  <img
+    src="images/deployment-previews-revisions-two.png"
+    alt="Screenshot of the Cloud Run console, with two active revisions." />
+</figure>
 
-1. Continue making changes to the pull request by adding new commits to
+7. Continue making changes to the pull request by adding new commits to
 the branch. Each time you commit, the `preview-deploy` trigger fires, creating a
 new revision of the service and making the revision available at the same URL:
 
-  <figure id="revisions-three">
-    <img
-      src="images/deployment-previews-revisions-three.png"
-      alt="Screenshot of the Cloud Run console, with three revisions." />
-  </figure>
+<figure id="revisions-three">
+  <img
+    src="images/deployment-previews-revisions-three.png"
+    alt="Screenshot of the Cloud Run console, with three revisions." />
+</figure>
 
-1. After you are ready to merge your changes, click **Merge Pull Request**. The
+8. After you are ready to merge your changes, click **Merge Pull Request**. The
 original `prod-deploy` trigger runs, and the changes from the pull request are
 reflected in the original URL:
 
-  <figure id="updated-service">
-    <img
-      src="images/deployment-previews-updated-service.png"
-      alt="Screenshot of the newly deployed Cloud Run service, showing 'Greetings World!'." />
-  </figure>
+<figure id="updated-service">
+  <img
+    src="images/deployment-previews-updated-service.png"
+    alt="Screenshot of the newly deployed Cloud Run service, showing 'Greetings World!'." />
+</figure>
 
-  The new revision serves 100% of the traffic at the main URL, but the pull
+  - The new revision serves 100% of the traffic at the main URL, but the pull
 request's preview URL is still attached to the most recent commit for that pull
 request, so the link will continue to work:
 
-  <figure id="revisions-four">
-    <img
-      src="images/deployment-previews-revisions-four.png"
-      alt="Screenshot of the Cloud Run console, with four revisions." />
-  </figure>
+<figure id="revisions-four">
+  <img
+    src="images/deployment-previews-revisions-four.png"
+    alt="Screenshot of the Cloud Run console, with four revisions." />
+</figure>
 
 ### Limitations
 
