@@ -18,7 +18,9 @@
 
 import os
 import subprocess
-from urllib import request
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 import uuid
 
 import pytest
@@ -143,19 +145,29 @@ def service_url_auth_token(deployed_service):
 def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
 
-    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20")
-    print(f"{service_url}{data}")
+    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(
+        " ", "%20")
+    print(f"{service_url}/{data}")
 
-    req = request.Request(
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(
         f"{service_url}/{data}",
         headers={
             "Authorization": f"Bearer {auth_token}",
         },
     )
+    assert response.status_code == 200
 
-    response = request.urlopen(req)
-    assert response.status == 200
-
-    body = response.read()
+    body = response.content.decode("UTF-8")
     # Response is a png
-    assert b"PNG" in body
+    assert "PNG" in body

@@ -153,11 +153,22 @@ def test_end_to_end(service_url_auth_token):
     assert "HTTP Error 500: Internal Server Error" in str(e.value)
 
     # Improved
-    req = request.Request(
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(
         f"{service_url}/improved", headers={"Authorization": f"Bearer {auth_token}"}
     )
-    response = request.urlopen(req)
-    assert response.status == 200
 
-    body = response.read()
-    assert "Hello World" == body.decode()
+    assert response.status_code == 200
+
+    body = response.content.decode("UTF-8")
+    assert "Hello World" == body
