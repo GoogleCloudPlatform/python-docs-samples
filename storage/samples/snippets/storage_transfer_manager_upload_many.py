@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storage_transfer_manager_upload_many_blobs]
+# [START storage_transfer_manager_upload_many]
 def upload_many_blobs_with_transfer_manager(
     bucket_name, filenames, source_directory="", processes=8
 ):
-    """Upload every file in a list to a bucket, concurrently in a thread pool.
+    """Upload every file in a list to a bucket, concurrently in a process pool.
 
     Each blob name is derived from the filename, not including the
     `source_directory` parameter. For complete control of the blob name for each
@@ -63,4 +63,4 @@ def upload_many_blobs_with_transfer_manager(
             print("Failed to upload {} due to exception: {}".format(name, result))
         else:
             print("Uploaded {} to {}.".format(name, bucket.name))
-# [END storage_transfer_manager_upload_many_blobs]
+# [END storage_transfer_manager_upload_many]

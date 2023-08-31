@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START storage_transfer_manager_download_all_blobs]
-def download_all_blobs_with_transfer_manager(
-    bucket_name, destination_directory="", processes=8
+# [START storage_transfer_manager_download_bucket]
+def download_bucket_with_transfer_manager(
+    bucket_name, destination_directory="", processes=8, max_results=1000
 ):
-    """Download all of the blobs in a bucket, concurrently in a thread pool.
+    """Download all of the blobs in a bucket, concurrently in a process pool.
 
     The filename of each blob once downloaded is derived from the blob name and
     the `destination_directory `parameter. For complete control of the filename
@@ -43,12 +43,21 @@ def download_all_blobs_with_transfer_manager(
     # some CPU and memory resources until finished.
     # processes=8
 
+    # The maximum number of results to fetch from bucket.list_blobs(). This
+    # sample code fetches all of the blobs up to max_results and queues them all
+    # for download at once. Though they will still be executed in batches up to
+    # the processes limit, queueing them all at once can be taxing on system
+    # memory if buckets are very large. Adjust max_results as needed for your
+    # system environment, or set it to None if you are sure the bucket is not
+    # too large to hold in memory easily.
+    # max_results=1000
+
     from google.cloud.storage import Client, transfer_manager
 
     storage_client = Client()
     bucket = storage_client.bucket(bucket_name)
 
-    blob_names = [blob.name for blob in bucket.list_blobs()]
+    blob_names = [blob.name for blob in bucket.list_blobs(max_results=max_results)]
 
     results = transfer_manager.download_many_to_path(
         bucket, blob_names, destination_directory=destination_directory, max_workers=processes
@@ -62,4 +71,4 @@ def download_all_blobs_with_transfer_manager(
             print("Failed to download {} due to exception: {}".format(name, result))
         else:
             print("Downloaded {} to {}.".format(name, destination_directory + name))
-# [END storage_transfer_manager_download_all_blobs]
+# [END storage_transfer_manager_download_bucket]

@@ -14,7 +14,7 @@
 
 # [START storage_transfer_manager_download_chunks_concurrently]
 def download_chunks_concurrently(bucket_name, blob_name, filename, processes=8):
-    """Download a single file in chunks, concurrently."""
+    """Download a single file in chunks, concurrently in a process pool."""
 
     # The ID of your GCS bucket
     # bucket_name = "your-bucket-name"
