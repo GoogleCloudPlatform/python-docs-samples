@@ -19,9 +19,10 @@
 import os
 import subprocess
 import requests
+import uuid
+
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-import uuid
 
 import pytest
 

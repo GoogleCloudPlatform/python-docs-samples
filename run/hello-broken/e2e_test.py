@@ -19,11 +19,12 @@
 import os
 import subprocess
 import time
-from urllib import request
 import requests
+import uuid
+
+from urllib import request
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
-import uuid
 
 import pytest
 
