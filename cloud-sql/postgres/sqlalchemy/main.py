@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import render_template, Request, Response
+import flask
 
 import functions_framework
 
@@ -26,7 +26,7 @@ db = None
 
 
 @functions_framework.http
-def votes(request: Request) -> Response:
+def votes(request: flask.Request) -> flask.Response:
     global db
     # initialize db within request context
     if not db:
@@ -36,13 +36,13 @@ def votes(request: Request) -> Response:
         migrate_db(db)
     if request.method == "GET":
         context = get_index_context(db)
-        return render_template("index.html", **context)
+        return flask.render_template("index.html", **context)
 
     if request.method == "POST":
         team = request.form["team"]
         return save_vote(db, team)
 
-    return Response(
+    return flask.Response(
         response="Invalid http request. Method not allowed, must be 'GET' or 'POST'",
         status=400,
     )
