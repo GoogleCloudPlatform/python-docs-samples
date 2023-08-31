@@ -145,8 +145,7 @@ def service_url_auth_token(deployed_service):
 def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
 
-    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(
-        " ", "%20")
+    data = "diagram.png?dot=digraph G { A -> {B, C, D} -> {F} }".replace(" ", "%20")
     print(f"{service_url}/{data}")
 
     retry_strategy = Retry(
