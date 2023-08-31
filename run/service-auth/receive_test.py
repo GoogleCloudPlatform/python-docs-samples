@@ -26,7 +26,6 @@ import pytest
 from requests.packages.urllib3.util.retry import Retry
 
 
-
 @pytest.fixture()
 def services():
     # Unique suffix to create distinct service names
