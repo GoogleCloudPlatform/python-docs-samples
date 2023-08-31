@@ -21,8 +21,8 @@ import subprocess
 import uuid
 
 import requests
-from requests.adapters import HTTPAdapter
 import pytest
+from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
 

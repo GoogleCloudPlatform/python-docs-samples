@@ -20,9 +20,9 @@ import subprocess
 from urllib import error, request
 import uuid
 
+import pytest
 import requests
 from requests.adapters import HTTPAdapter
-import pytest
 from requests.packages.urllib3.util.retry import Retry
 
 
