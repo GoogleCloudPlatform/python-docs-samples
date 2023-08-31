@@ -30,7 +30,7 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 raw_doc_path = "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
 mime_type = "application/pdf"
-user_id = "user:xxxx@example.com"
+user_id = os.environ["user_id"]
 reference_id = "001"
 
 
