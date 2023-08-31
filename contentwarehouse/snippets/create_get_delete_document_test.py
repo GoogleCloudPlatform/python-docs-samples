@@ -18,9 +18,11 @@ import os
 from contentwarehouse.snippets import create_document_sample
 from contentwarehouse.snippets import delete_document_sample
 from contentwarehouse.snippets import get_document_sample
+from contentwarehouse.snippets import update_document_sample
 from contentwarehouse.snippets import create_document_schema_sample
 from contentwarehouse.snippets import delete_document_schema_sample
 from contentwarehouse.snippets import test_utilities
+from google.cloud.contentwarehouse_v1.types import Document
 
 import pytest
 
@@ -28,7 +30,7 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 raw_doc_path = "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
 mime_type = "application/pdf"
-user_id = "user:dmoonat@google.com"
+user_id = "user:xxxx@example.com"
 reference_id = "001"
 
 
@@ -77,9 +79,33 @@ def test_get_document(request: pytest.fixture) -> None:
     )
 
     assert "name" in response
+    request.config.cache.set(
+        "document",
+        Document.to_json(
+            response,
+            including_default_value_fields=False,
+            preserving_proto_field_name=False,
+        ),
+    )
 
 
-@pytest.mark.dependency(name="delete_doc", depends=["get_doc"])
+@pytest.mark.dependency(name="update_doc", depends=["get_doc"])
+def test_update_document(request: pytest.fixture) -> None:
+    document_name = request.config.cache.get("document_name", None)
+    document_json = request.config.cache.get("document", None)
+
+    document = Document.from_json(document_json)
+
+    response = update_document_sample.sample_update_document(
+        document_name=document_name,
+        document=document,
+        user_id=user_id,
+    )
+
+    assert "document" in response
+
+
+@pytest.mark.dependency(name="delete_doc", depends=["update_doc"])
 def test_delete_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
 

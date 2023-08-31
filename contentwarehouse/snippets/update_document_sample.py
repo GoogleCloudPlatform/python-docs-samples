@@ -20,9 +20,7 @@ from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
 def sample_update_document(
-    document_name: str,
-    document: contentwarehouse.types.Document,
-    user_id: str
+    document_name: str, document: contentwarehouse.types.Document, user_id: str
 ) -> contentwarehouse.types.CreateDocumentResponse:
     """Updates a document.
 
@@ -43,9 +41,7 @@ def sample_update_document(
     )
 
     request = contentwarehouse.UpdateDocumentRequest(
-        name=document_name,
-        document=document,
-        request_metadata=request_metadata
+        name=document_name, document=document, request_metadata=request_metadata
     )
 
     # Make the request
