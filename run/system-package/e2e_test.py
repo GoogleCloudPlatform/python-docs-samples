@@ -18,13 +18,13 @@
 
 import os
 import subprocess
-import requests
 import uuid
 
+import requests
 from requests.adapters import HTTPAdapter
+import pytest
 from requests.packages.urllib3.util.retry import Retry
 
-import pytest
 
 # build container image + push w/ cloud build
 # deploy to cloud run

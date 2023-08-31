@@ -19,14 +19,14 @@
 import os
 import subprocess
 import time
-import requests
 import uuid
-
 from urllib import request
+
+import requests
 from requests.adapters import HTTPAdapter
+import pytest
 from requests.packages.urllib3.util.retry import Retry
 
-import pytest
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
