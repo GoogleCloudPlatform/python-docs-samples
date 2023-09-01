@@ -13,10 +13,12 @@
 # limitations under the License.
 
 import os
-import uuid
+
+from unittest import mock
 from unittest.mock import MagicMock
 
-import mock
+import uuid
+
 import pytest
 
 import stored_infotype
