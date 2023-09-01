@@ -1,4 +1,4 @@
-azure-storage-blob==12.16.0
+azure-storage-blob==12.17.0
 backoff==2.2.1; python_version < "3.7"
 backoff==2.2.1; python_version >= "3.7"
 boto3==1.26.150
