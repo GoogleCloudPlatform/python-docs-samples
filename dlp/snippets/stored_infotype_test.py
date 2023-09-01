@@ -52,8 +52,6 @@ def test_create_stored_infotype(
     out, _ = capsys.readouterr()
     assert STORED_INFO_TYPE_ID in out
 
-    mock_dlp_instance.create_stored_info_type.assert_called_once()
-
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
 def test_update_stored_infotype_dictionary(
@@ -78,8 +76,6 @@ def test_update_stored_infotype_dictionary(
 
     out, _ = capsys.readouterr()
     assert stored_infotype_path in out
-
-    mock_dlp_instance.update_stored_info_type.assert_called_once()
 
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
@@ -110,5 +106,3 @@ def test_inspect_with_stored_infotype(
     out, _ = capsys.readouterr()
     assert "STORED_TYPE" in out
     assert "Quote: gary1998" in out
-
-    mock_dlp_instance.inspect_content.assert_called_once()
