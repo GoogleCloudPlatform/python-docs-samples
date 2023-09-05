@@ -19,7 +19,6 @@
 import os
 import subprocess
 import time
-from urllib import request
 import uuid
 
 import pytest
