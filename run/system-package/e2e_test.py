@@ -168,6 +168,6 @@ def test_end_to_end(service_url_auth_token):
     )
     assert response.status_code == 200
 
-    body = response.content.decode("UTF-8")
+    body = response.content
     # Response is a png
-    assert "PNG" in body
+    assert b"PNG" in body
