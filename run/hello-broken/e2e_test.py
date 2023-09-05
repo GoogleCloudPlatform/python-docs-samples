@@ -148,13 +148,21 @@ def service_url_auth_token(deployed_service):
 def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
 
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[404],
+        allowed_methods=["GET"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    client = requests.session()
+    client.mount("https://", adapter)
+
     # Broken
-    with pytest.raises(Exception) as e:
-        req = request.Request(
-            service_url, headers={"Authorization": f"Bearer {auth_token}"}
-        )
-        request.urlopen(req)
-    assert "HTTP Error 500: Internal Server Error" in str(e.value)
+    response = client.get(
+        service_url, headers={"Authorization": f"Bearer {auth_token}"}
+    )
+    assert response.status_code == 500
 
     # Improved
     retry_strategy = Retry(
