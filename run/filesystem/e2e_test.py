@@ -148,4 +148,4 @@ def test_end_to_end(service_url_auth_token):
 
     date = datetime.datetime.utcnow()
     body = response.content.decode("UTF-8")
-    assert "{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}".format(dt=date) in body.decode()
+    assert "{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}".format(dt=date) in body
