@@ -19,7 +19,6 @@
 import datetime
 import os
 import subprocess
-from urllib import request
 import uuid
 
 import pytest
@@ -133,6 +132,8 @@ def test_end_to_end(service_url_auth_token):
         backoff_factor=3,
     )
     adapter = HTTPAdapter(max_retries=retry_strategy)
+    client = requests.session()
+    client.mount("https://", adapter)
 
     # Non mnt directory
     response = client.get(
