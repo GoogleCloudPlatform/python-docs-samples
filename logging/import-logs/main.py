@@ -15,7 +15,7 @@
 # pylint: disable=missing-module-docstring
 # pylint: disable=broad-exception-caught
 
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import json
 import math
 import os
@@ -38,7 +38,7 @@ def getenv_date(name: str) -> date:
     date_str = os.getenv(name)
     if not date_str:
         return None
-    return date.fromisoformat(date_str)
+    return datetime.strptime(date_str, "%m/%d/%Y").date()
 
 
 # Read import parameters' environment variables
@@ -88,6 +88,10 @@ def calc_import_range() -> Tuple[date, date]:
     return start_date, end_date
 
 
+def _prefix(_date: date) -> str:
+    return f"{LOG_ID}/{_date.year:04}/{_date.month:02}/"
+
+
 def list_log_files(first_day: date, last_day: date, client: storage.Client) -> List:
     """Load paths to all log files stored in Cloud Storage in between first and last days.
     For log organization hierarchy see
@@ -97,8 +101,8 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
 
     # collect paths for special case when first and last days are in the same month
     if first_day.year == last_day.year and first_day.month == last_day.month:
-        file_prefix = f"{LOG_ID}/{first_day.year:04}/{first_day.month:02}/"
-        blobs = client.list_blobs(f"gs://{BUCKET_NAME}", prefix=file_prefix)
+        blobs = client.list_blobs(
+            BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
         paths = [
             b.name
             for b in blobs
@@ -106,15 +110,12 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
         ]
         return paths
 
-    print("DEBUG: skip special case")
-
     # collect all log file paths in first month and filter those for early days
-    file_prefix = f"{LOG_ID}/{first_day.year:04}/{first_day.month:02}/"
-    blobs = client.list_blobs(f"gs://{BUCKET_NAME}", prefix=file_prefix)
+    blobs = client.list_blobs(
+        BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
     paths.extend([b.name for b in blobs if _day(b.name) >= first_day.day])
     # process all paths in last months
-    file_prefix = f"{LOG_ID}/{last_day.year:04}/{last_day.month:02}/"
-    blobs = client.list_blobs(f"gs://{BUCKET_NAME}", prefix=file_prefix)
+    blobs = client.list_blobs(BUCKET_NAME, prefix=_prefix(last_day))
     paths.extend([b.name for b in blobs if _day(b.name) <= last_day.day])
     # process all paths in between
     for year in range(first_day.year, last_day.year + 1):
@@ -122,9 +123,8 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
             first_day.month + 1 if year == first_day.year else 1,
             last_day.month if year == last_day.year else 13,
         ):
-            file_prefix = f"{LOG_ID}/{year:04}/{month:02}/"
             blobs = client.list_blobs(
-                f"gs://{BUCKET_NAME}", prefix=file_prefix)
+                BUCKET_NAME, prefix=_prefix(date(year=year, month=month)))
             paths.extend([b.name for b in blobs])
     return paths
 
@@ -171,7 +171,7 @@ def main() -> None:
 
     start_date, end_date = calc_import_range()
 
-    if end_date > start_date:
+    if start_date > end_date:
         print(f"Task #{(TASK_INDEX+1)} has no work to do")
         sys.exit(0)
     print(

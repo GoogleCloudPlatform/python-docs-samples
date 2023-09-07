@@ -19,8 +19,10 @@
 
 from datetime import date
 import json
+import os
 import sys
 from typing import List, Tuple, TypedDict
+from unittest import mock
 from unittest.mock import MagicMock
 
 from google.cloud import logging_v2, storage
@@ -94,8 +96,7 @@ def _setup_environment(
             date(2001, 1, 22),
             date(2001, 2, 1),
         ),
-        (date(2001, 5, 5), date(2002, 2, 2), 1,
-         2, date(2001, 9, 19), date(2002, 2, 2)),
+        (date(2001, 5, 5), date(2002, 2, 2), 1, 2, date(2001, 9, 19), date(2002, 2, 2)),
     ],
     ids=[
         "simple single range",
@@ -132,104 +133,61 @@ def test_calc_import_range(
 
 
 TEST_FILES_JUN_2001 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/03/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/06/04/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/06/04/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_JUL_2001 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/07/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/07/03/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_AUG_2001 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2001/08/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2001/08/03/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_MAY_2002 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2002/05/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2002/05/03/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_JAN_2003 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/01/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/01/03/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_FEB_2003 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/02/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/02/03/file2.json", bucket=TEST_BUCKET),
 ]
 TEST_FILES_MAR_2003 = [
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/01/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/01/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/02/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/02/file2.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/03/file1.json", bucket=TEST_BUCKET),
-    storage.Blob(
-        name=f"{TEST_LOG_ID}/2003/03/03/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/01/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/01/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/02/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/02/file2.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/03/file1.json", bucket=TEST_BUCKET),
+    storage.Blob(name=f"{TEST_LOG_ID}/2003/03/03/file2.json", bucket=TEST_BUCKET),
 ]
 
 
@@ -262,8 +220,7 @@ def _args_based_list_blobs_return(*_args: str, **kwargs: TypedDict) -> List[str]
 @pytest.mark.parametrize(
     "first_day, last_day, expected_paths",
     [
-        (date(2001, 6, 1), date(2001, 6, 30), [
-         f.name for f in TEST_FILES_JUN_2001]),
+        (date(2001, 6, 1), date(2001, 6, 30), [f.name for f in TEST_FILES_JUN_2001]),
         (
             date(2001, 6, 2),
             date(2001, 6, 3),
@@ -290,8 +247,7 @@ def test_list_log_files(first_day: str, last_day: str, expected_paths: List) -> 
     _setup_environment()
 
     mocked_client = MagicMock(spec=storage.Client)
-    mocked_client.list_blobs = MagicMock(
-        side_effect=_args_based_list_blobs_return)
+    mocked_client.list_blobs = MagicMock(side_effect=_args_based_list_blobs_return)
 
     paths = main.list_log_files(first_day, last_day, mocked_client)
 
@@ -331,8 +287,7 @@ def _calc_args_size(*args: Tuple) -> int:
         (
             TEST_LOG_FILES[:2],
             (TEST_LOG_SIZE + 10),
-            [TEST_LOG_SIZE, TEST_LOG_SIZE, TEST_LOG_SIZE,
-                TEST_LOG_SIZE, TEST_LOG_SIZE],
+            [TEST_LOG_SIZE, TEST_LOG_SIZE, TEST_LOG_SIZE, TEST_LOG_SIZE, TEST_LOG_SIZE],
         ),
         (
             TEST_LOG_FILES[:3],
@@ -372,3 +327,15 @@ def test_import_logs(
         assert (
             _calc_args_size(write_call.args) == expected_size
         ), f"expected write size {expected_size}, got {_calc_args_size(write_call.args)}"
+
+
+TEST_DATE_STR = "08/12/2023"
+
+
+@mock.patch.dict(os.environ, {"TEST_DATE": TEST_DATE_STR}, clear=True)
+def test_parse_date() -> None:
+    test_date = main.getenv_date("TEST_DATE")
+    test_date_str = test_date.strftime("%m/%d/%Y")
+    assert (
+        test_date_str == TEST_DATE_STR
+    ), f"expected {TEST_DATE_STR}, got {test_date_str}"

@@ -13,12 +13,13 @@ solution in documentation[^1].
 
 You have to grant the following permissions to a service account that you will
 use with your solution:
+
 * [Storage Object Viewer][r1] permissions to the storage bucket with exported
   logs
 * [Log Writer][r2] permissions to write the logs
 
 The service account can be the Compute Engine default [service account][sa] in
-the project or it can be a custom service that will be used to run the solution. 
+the project or it can be a custom service that will be used to run the solution.
 
 [r1]: https://cloud.google.com/iam/docs/understanding-roles#storage.objectViewer
 [r2]: https://cloud.google.com/iam/docs/understanding-roles#logging.logWriter
@@ -47,12 +48,12 @@ have to be configured when a new Cloud Run job for the solution is created:
 | LOG_ID | A string that identifies the particular log to be imported. See [documentation][logid] for more details. |
 | STORAGE_BUCKET_NAME | A name of the storage bucket where the exported logs are stored. |
 
-Read documentation[^2] for more information about Cloud Run job setup. 
+Read documentation[^2] for more information about Cloud Run job setup.
 
 [run]: https://cloud.google.com/run/
 [^2]: Link to documentation will be provided shortly.
 [^3]: URI will be provided shortly
-[logid]: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS-table
+[logid]: <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS-table>
 
 ### Build
 
@@ -60,20 +61,34 @@ The solution uses a pre-built image. Use the following commands to build your cu
 
 1. [Install Google Cloud CLI](https://cloud.google.com/sdk/docs/install)
 1. Clone the repo:
+
    ```bash
    git clone https://github.com/GoogleCloudPlatform/python-docs-samples/
    ```
+
 1. Open the directory with this solution
+
    ```bash
    cd python-docs-samples/logging/import-logs
    ```
-1. Build the image and store it in the artifact registry in the project with project ID = `PROJECT_ID` 
-  ```bash
-  gcloud builds submit --pack image=gcr.io/PROJECT_ID/import-logs-solution
-  ```
-  This commands [builds a container image][build] using buildpacks.
 
-> Note:
+1. Build a container image with a name `IMAGE_NAME` and store it in the artifact registry `REGISTRY` (in the US multi-region location)
+for the project ID `PROJECT_ID`:
+
+  ```bash
+  gcloud builds submit --pack image=us-docker.pkg.dev/PROJECT_ID/REGISTRY/IMAGE_NAME
+  ```
+
+  This commands [builds a container image][build] using buildpacks. Not that non-Google artifact registries are not currently supported.
+
+> [!Note]
 > Running `gcloud` command may require authentication.
 
 [build]: https://cloud.google.com/docs/buildpacks/build-application
+
+### Run tests with nox
+```
+nox -s lint
+nox -s py-3.9
+nox -s py-3.11
+```
