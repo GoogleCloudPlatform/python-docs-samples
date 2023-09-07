@@ -66,4 +66,5 @@ def index():
         200,
     )
 
+
 # [END eventarc_audit_iam_handler]

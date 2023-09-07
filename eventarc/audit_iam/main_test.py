@@ -16,9 +16,6 @@ from uuid import uuid4
 from cloudevents.conversion import to_binary
 from cloudevents.http import CloudEvent
 
-from google.events.cloud.audit import AuditLog, AuthenticationInfo, LogEntryData
-from google.protobuf.struct_pb2 import Struct, Value
-
 import pytest
 
 import main
