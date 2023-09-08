@@ -19,14 +19,29 @@ from datetime import date, datetime, timedelta
 import json
 import math
 import os
+import re
 import sys
 
 from typing import List, Tuple, TypedDict
 
+from google.api_core import exceptions
 from google.cloud import logging_v2, storage
 
 # Logging limits (https://cloud.google.com/logging/quotas#api-limits)
-LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
+_LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
+
+_RESERVED_LOG_IDS = ["cloudaudit.googleapis.com"]
+_LOGGER_NAME_TEMPLATE = re.compile(
+    r"""
+    (projects/)     # static prefix group (1)
+    ([^/]+)         # initial letter, wordchars group (2) for project ID
+    (/logs/)        # static midfix group (3)
+    (?P<name>[^/]+) # initial letter, wordchars group for LOG_ID
+""",
+    re.VERBOSE,
+)
+
+_LOG_ID_PREFIX = "_"  # allowed characters are r"[a-zA-Z_\-\.\/\\]
 
 # Read Cloud Run environment variables
 TASK_INDEX = int(os.getenv("CLOUD_RUN_TASK_INDEX", "0"))
@@ -124,7 +139,7 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
             last_day.month if year == last_day.year else 13,
         ):
             blobs = client.list_blobs(
-                BUCKET_NAME, prefix=_prefix(date(year=year, month=month)))
+                BUCKET_NAME, prefix=_prefix(date(year=year, month=month, day=1)))
             paths.extend([b.name for b in blobs])
     return paths
 
@@ -136,7 +151,29 @@ def _read_logs(path: str, bucket: storage.Bucket) -> List[str]:
 
 
 def _write_logs(logs: List[dict], client: logging_v2.Client) -> None:
-    client.logging_api.write_entries(logs)
+    try:
+        client.logging_api.write_entries(logs)
+    except exceptions.PermissionDenied as err2:
+        partialerrors = logging_v2.types.WriteLogEntriesPartialErrors()
+        for detail in err2.details:
+            if detail.Unpack(partialerrors):
+                # partialerrors.log_entry_errors is a dictionary
+                # keyed by the logs' zero-based index in the logs.
+                # consider implementing custom error handling
+                eprint(json.dumps(partialerrors.log_entry_errors))
+        raise
+
+
+def _patch_reserved_log_ids(log: dict) -> None:
+    """Replaces first character in LOG_ID with underscore for reserved LOG_ID prefixes"""
+    log_name = log.get("logName")
+    if log_name:
+        match = _LOGGER_NAME_TEMPLATE.match(log_name)
+        log_id = match.group("name")
+        if log_id and log_id.startswith(tuple(_RESERVED_LOG_IDS)):
+            log_name = _LOGGER_NAME_TEMPLATE.sub(
+                f'\\g<1>\\g<2>\\g<3>{_LOG_ID_PREFIX + log_id[1:]}', log_name)
+            log["logName"] = log_name
 
 
 def import_logs(
@@ -149,8 +186,9 @@ def import_logs(
         data = _read_logs(file_path, bucket)
         for entry in data:
             log = json.loads(entry)
+            _patch_reserved_log_ids(log)
             size = sys.getsizeof(log)
-            if total_size + size >= LOGS_MAX_SIZE_BYTES:
+            if total_size + size >= _LOGS_MAX_SIZE_BYTES:
                 _write_logs(logs, logging_client)
                 total_size, logs = 0, []
             total_size += size

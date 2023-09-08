@@ -50,7 +50,7 @@ def _setup_environment(
     main.TASK_COUNT = task_count
     main.START_DATE = start_date
     main.END_DATE = end_date
-    main.LOGS_MAX_SIZE_BYTES = max_size
+    main._LOGS_MAX_SIZE_BYTES = max_size
 
 
 @pytest.mark.parametrize(
@@ -267,9 +267,9 @@ TEST_LOG_SIZE = sys.getsizeof(json.loads(TEST_CONTENT["file4.json"]))
 
 
 def _args_based_blob_return(*args: Tuple, **_kwargs: TypedDict) -> str:
-    mock = MagicMock(spec=storage.Blob)
-    mock.download_as_string = MagicMock(return_value=TEST_CONTENT.get(args[0]))
-    return mock
+    mocked_blob = MagicMock(spec=storage.Blob)
+    mocked_blob.download_as_string = MagicMock(return_value=TEST_CONTENT.get(args[0]))
+    return mocked_blob
 
 
 def _calc_args_size(*args: Tuple) -> int:
@@ -297,7 +297,7 @@ def _calc_args_size(*args: Tuple) -> int:
     ],
     ids=[
         "read all, write once",
-        "read file, write many times",
+        "read few files, write many times",
         "read many files, write fewer times",
     ],
 )
