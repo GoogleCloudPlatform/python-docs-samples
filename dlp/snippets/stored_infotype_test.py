@@ -67,17 +67,10 @@ def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     bucket.delete(force=True)
 
 
-def delete_stored_info_type(out: str) -> None:
-    for line in str(out).split("\n"):
-        if "Updated stored infoType successfully" in line:
-            stored_info_type_id = line.split(":")[1].strip()
-            DLP_CLIENT.delete_stored_info_type(name=stored_info_type_id)
-
-
 def test_create_update_and_inspect_with_stored_infotype(
     bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
 ) -> None:
-    out = ""
+    stored_info_type_id = ""
     try:
         stored_infotype.create_stored_infotype(
             GCLOUD_PROJECT,
@@ -110,4 +103,4 @@ def test_create_update_and_inspect_with_stored_infotype(
         assert "Quote: gary1998" in out
 
     finally:
-        delete_stored_info_type(out)
+        DLP_CLIENT.delete_stored_info_type(name=stored_info_type_id)
