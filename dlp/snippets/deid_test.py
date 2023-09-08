@@ -15,8 +15,6 @@ import os
 import shutil
 import tempfile
 from typing import Iterator, TextIO
-from unittest import mock
-from unittest.mock import MagicMock
 
 import google.cloud.dlp_v2
 import pytest
