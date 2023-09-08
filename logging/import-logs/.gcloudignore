@@ -7,3 +7,5 @@ __pycache__
 venv/
 main_test.py
 requirements-test.txt
+noxfile_config.py
+retry.sh

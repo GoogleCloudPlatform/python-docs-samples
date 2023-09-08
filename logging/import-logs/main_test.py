@@ -50,7 +50,7 @@ def _setup_environment(
     main.TASK_COUNT = task_count
     main.START_DATE = start_date
     main.END_DATE = end_date
-    main._LOGS_MAX_SIZE_BYTES = max_size
+    main._LOGS_MAX_SIZE_BYTES = max_size # pylint: disable=protected-access
 
 
 @pytest.mark.parametrize(
