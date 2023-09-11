@@ -61,7 +61,4 @@ def test_endpoint(client, capsys):
         in r.text
     )
 
-    assert (
-        "by user@example.com"
-        in r.text
-    )
+    assert "by user@example.com" in r.text
