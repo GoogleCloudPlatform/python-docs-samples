@@ -34,6 +34,7 @@ def index():
     event = from_http(request.headers, request.get_data())
 
     # Extract the LogEntryData from the CloudEvent
+    # The LogEntryData type is described at https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry
     # re-serialize to json, to convert the json-style 'lowerCamelCase' names to the protobuf-style 'snake_case' equivalents.
     # ignore_unknown_fields is needed to skip the '@type' fields.
     log_entry = LogEntryData.from_json(

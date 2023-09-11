@@ -37,8 +37,8 @@ def client(request):
 
 def test_endpoint(client, capsys):
     rawobj = {
-        "@type": "....",
         "protoPayload": {
+            "@type": "....",
             "service_name": "iam.googleapis.com",
             "status": {
                 "code": 0,
@@ -58,5 +58,10 @@ def test_endpoint(client, capsys):
     r = client.post("/", headers=headers, data=body)
     assert (
         "New Service Account Key created for projects/-/serviceAccounts/service-account@"
+        in r.text
+    )
+
+    assert (
+        "by user@example.com"
         in r.text
     )
