@@ -30,7 +30,7 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
 RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
 RESOURCE_FILE_NAMES = ["term_list.txt"]
-STORED_INFO_TYPE_ID = "github-usernames" + UNIQUE_STRING
+STORED_INFO_TYPE_ID = "github-user-names" + UNIQUE_STRING
 
 DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -67,17 +67,10 @@ def bucket() -> Iterator[google.cloud.storage.bucket.Bucket]:
     bucket.delete(force=True)
 
 
-def delete_stored_info_type(out: str) -> None:
-    for line in str(out).split("\n"):
-        if "Updated stored infoType successfully" in line:
-            stored_info_type_id = line.split(":")[1].strip()
-            DLP_CLIENT.delete_stored_info_type(name=stored_info_type_id)
-
-
 def test_create_update_and_inspect_with_stored_infotype(
     bucket: google.cloud.storage.bucket.Bucket, capsys: pytest.CaptureFixture
 ) -> None:
-    out = ""
+    stored_info_type_id = ""
     try:
         stored_infotype.create_stored_infotype(
             GCLOUD_PROJECT,
@@ -110,4 +103,4 @@ def test_create_update_and_inspect_with_stored_infotype(
         assert "Quote: gary1998" in out
 
     finally:
-        delete_stored_info_type(out)
+        DLP_CLIENT.delete_stored_info_type(name=stored_info_type_id)
