@@ -39,12 +39,15 @@ def create_hl7v2_store(project_id, location, dataset_id, hl7v2_store_id):
         project_id, location, dataset_id
     )
 
+    # Use the V3 parser. Immutable after HL7v2 store creation.
+    body = {"parserConfig": {"version": "V3"}}
+
     request = (
         client.projects()
         .locations()
         .datasets()
         .hl7V2Stores()
-        .create(parent=hl7v2_store_parent, body={}, hl7V2StoreId=hl7v2_store_id)
+        .create(parent=hl7v2_store_parent, body=body, hl7V2StoreId=hl7v2_store_id)
     )
 
     response = request.execute()
