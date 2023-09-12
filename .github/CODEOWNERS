@@ -71,6 +71,7 @@
 /speech/**/*                           @GoogleCloudPlatform/cloud-speech-eng @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/videointelligence/**/*                @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /video/transcoder/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 
 # Cloud SDK Databases & Data Analytics teams
