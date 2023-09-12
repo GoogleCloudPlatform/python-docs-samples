@@ -287,7 +287,6 @@ def speech_transcription(path):
     # one video is processed.
     annotation_results = result.annotation_results[0]
     for speech_transcription in annotation_results.speech_transcriptions:
-
         # The number of alternatives for each transcription is limited by
         # SpeechTranscriptionConfig.max_alternatives.
         # Each alternative is a different possible transcription
@@ -363,7 +362,6 @@ def video_detect_text_gcs(input_uri):
 
 # [START video_detect_text]
 def video_detect_text(path):
-
     """Detect text in a local video."""
     video_client = videointelligence.VideoIntelligenceServiceClient()
     features = [videointelligence.Feature.TEXT_DETECTION]

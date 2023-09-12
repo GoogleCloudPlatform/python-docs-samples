@@ -18,7 +18,6 @@ from google.cloud import videointelligence
 
 
 def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
-
     client = videointelligence.VideoIntelligenceServiceClient()
 
     features = [videointelligence.Feature.LOGO_RECOGNITION]
@@ -46,7 +45,6 @@ def detect_logo_gcs(input_uri="gs://YOUR_BUCKET_ID/path/to/your/file.mp4"):
         # All logo tracks where the recognized logo appears. Each track corresponds
         # to one logo instance appearing in consecutive frames.
         for track in logo_recognition_annotation.tracks:
-
             # Video segment of a track.
             print(
                 "\n\tStart Time Offset : {}.{}".format(
