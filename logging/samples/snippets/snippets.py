@@ -38,7 +38,7 @@ def write_entry(logger_name):
     logger.log_text("Hello, world!")
 
     # Simple text log with severity.
-    logger.log_text("Goodbye, world!", severity="ERROR")
+    logger.log_text("Goodbye, world!", severity="WARNING")
 
     # Struct log. The struct can be any JSON-serializable dictionary.
     logger.log_struct(
@@ -46,7 +46,7 @@ def write_entry(logger_name):
             "name": "King Arthur",
             "quest": "Find the Holy Grail",
             "favorite_color": "Blue",
-        }
+        }, severity="INFO"
     )
 
     print("Wrote logs to {}.".format(logger.name))
