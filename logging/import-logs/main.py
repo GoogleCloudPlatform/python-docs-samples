@@ -76,7 +76,7 @@ def _day(blob_name: str) -> int:
     """
     # calculated in function to allow test to set LOG_ID
     offset = len(LOG_ID) + 1 + 4 + 1 + 2 + 1
-    return int(blob_name[offset: offset + 2])
+    return int(blob_name[offset : offset + 2])
 
 
 def calc_import_range() -> Tuple[date, date]:
@@ -117,7 +117,8 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
     # collect paths for special case when first and last days are in the same month
     if first_day.year == last_day.year and first_day.month == last_day.month:
         blobs = client.list_blobs(
-            BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
+            BUCKET_NAME, prefix=_prefix(first_day), delimiter=None
+        )
         paths = [
             b.name
             for b in blobs
@@ -126,8 +127,7 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
         return paths
 
     # collect all log file paths in first month and filter those for early days
-    blobs = client.list_blobs(
-        BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
+    blobs = client.list_blobs(BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
     paths.extend([b.name for b in blobs if _day(b.name) >= first_day.day])
     # process all paths in last months
     blobs = client.list_blobs(BUCKET_NAME, prefix=_prefix(last_day))
@@ -139,7 +139,8 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
             last_day.month if year == last_day.year else 13,
         ):
             blobs = client.list_blobs(
-                BUCKET_NAME, prefix=_prefix(date(year=year, month=month, day=1)))
+                BUCKET_NAME, prefix=_prefix(date(year=year, month=month, day=1))
+            )
             paths.extend([b.name for b in blobs])
     return paths
 
@@ -172,7 +173,8 @@ def _patch_reserved_log_ids(log: dict) -> None:
         log_id = match.group("name")
         if log_id and log_id.startswith(tuple(_RESERVED_LOG_IDS)):
             log_name = _LOGGER_NAME_TEMPLATE.sub(
-                f'\\g<1>\\g<2>\\g<3>{_LOG_ID_PREFIX + log_id[1:]}', log_name)
+                f"\\g<1>\\g<2>\\g<3>{_LOG_ID_PREFIX + log_id[1:]}", log_name
+            )
             log["logName"] = log_name
 
 
@@ -219,8 +221,7 @@ def main() -> None:
     storage_client = storage.Client()
     log_files = list_log_files(start_date, end_date, storage_client)
     logging_client = (
-        logging_v2.Client(
-            project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
+        logging_v2.Client(project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
     )
     import_logs(log_files, storage_client, logging_client)
 
