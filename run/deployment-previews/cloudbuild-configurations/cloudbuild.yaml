@@ -16,11 +16,21 @@
 steps:
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}",
+        ".",
+      ]
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}",
+      ]
 
   - id: "deploy prod service"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -36,7 +46,7 @@ steps:
         "${_REGION}",
         "--allow-unauthenticated",
         "--image",
-        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}",
       ]
 
   # Force the new revision to serve 100% of traffic.
@@ -59,4 +69,7 @@ steps:
 substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
 # [END cloudrun_deployment_preview_cloudbuild]
