@@ -29,7 +29,7 @@ In this tutorial, you use the following billable components of Google Cloud:
 * [Cloud Build](https://cloud.google.com/build)
 * [Cloud Run](https://cloud.google.com/run)
 * [Artifact Registry](https://cloud.google.com/artifact-registry)
-* [Secret Manager](https://cloud.google.com/)
+* [Secret Manager](https://cloud.google.com/secret-manager)
 
 To generate a cost estimate based on your projected usage, use the [pricing
 calculator](https://cloud.google.com/products/calculator).
