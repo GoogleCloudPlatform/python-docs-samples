@@ -203,7 +203,7 @@ steps:
       1. Secret value: paste the token value you copied from GitHub.
     1. Click **Create Secret**.
     
-1. Allow the service account access to this secret:
+1. Allow the service account access to this secret, replacing `MYPROJECT` with your project ID:
     1. In Secret Manager, and click on the **Permission** tab, and click
     **Grant Access**
         *   New Principals: `cloud-build-sa@MYPROJECT.iam.gserviceaccount.com`
