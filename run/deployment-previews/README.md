@@ -259,7 +259,7 @@ instructions below show both methods.
     ```
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples
     cd python-docs-samples/
-    gcloud builds submit --pack image=us-central1-docker.pkg.dev/$PROJECT_ID/containers/deployment-previews run/deployment-previews
+    gcloud builds submit --tag us-central1-docker.pkg.dev/$PROJECT_ID/containers/deployment-previews run/deployment-previews
     ```
 
 * Confirm that the container has been created:
