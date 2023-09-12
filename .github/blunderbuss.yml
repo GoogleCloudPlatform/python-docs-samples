@@ -228,6 +228,7 @@ assign_prs_by:
       - "api: transcoder"
       - "api: translate"
       - "api: vision"
+      - "api: videointelligence"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
