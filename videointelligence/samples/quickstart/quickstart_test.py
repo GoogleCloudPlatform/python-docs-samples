@@ -19,7 +19,6 @@ import pytest
 import quickstart
 
 
-@pytest.mark.slow
 def test_quickstart(capsys):
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()

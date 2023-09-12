@@ -69,7 +69,6 @@ def bucket():
     delete_bucket()
 
 
-@pytest.mark.slow
 def test_speech_transcription(capsys):
     beta_snippets.speech_transcription(
         "gs://python-docs-samples-tests/video/googlework_short.mp4", timeout=240
@@ -78,7 +77,6 @@ def test_speech_transcription(capsys):
     assert "cultural" in out
 
 
-@pytest.mark.slow
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_labels_streaming(capsys, video_path):
     beta_snippets.detect_labels_streaming(video_path)
@@ -87,7 +85,6 @@ def test_detect_labels_streaming(capsys, video_path):
     assert "cat" in out
 
 
-@pytest.mark.slow
 def test_detect_shot_change_streaming(capsys, video_path):
     beta_snippets.detect_shot_change_streaming(video_path)
 
@@ -96,7 +93,6 @@ def test_detect_shot_change_streaming(capsys, video_path):
 
 
 # Flaky ServiceUnavailable
-@pytest.mark.slow
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects_streaming(capsys, video_path):
     beta_snippets.track_objects_streaming(video_path)
@@ -105,7 +101,6 @@ def test_track_objects_streaming(capsys, video_path):
     assert "cat" in out
 
 
-@pytest.mark.slow
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_explicit_content_streaming(capsys, video_path):
     beta_snippets.detect_explicit_content_streaming(video_path)
@@ -114,7 +109,6 @@ def test_detect_explicit_content_streaming(capsys, video_path):
     assert "Time" in out
 
 
-@pytest.mark.slow
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     output_uri = "gs://{}".format(bucket.name)

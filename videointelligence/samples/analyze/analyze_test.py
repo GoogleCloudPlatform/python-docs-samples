@@ -37,28 +37,24 @@ POSSIBLE_TEXTS = [
 ]
 
 
-@pytest.mark.slow
 def test_analyze_shots(capsys):
     analyze.analyze_shots("gs://cloud-samples-data/video/gbikes_dinosaur.mp4")
     out, _ = capsys.readouterr()
     assert "Shot 1:" in out
 
 
-@pytest.mark.slow
 def test_analyze_labels(capsys):
     analyze.analyze_labels("gs://cloud-samples-data/video/cat.mp4")
     out, _ = capsys.readouterr()
     assert "label description: cat" in out
 
 
-@pytest.mark.slow
 def test_analyze_labels_file(capsys):
     analyze.analyze_labels_file("resources/googlework_tiny.mp4")
     out, _ = capsys.readouterr()
     assert "label description" in out
 
 
-@pytest.mark.slow
 def test_analyze_explicit_content(capsys):
     try_count = 0
     while try_count < 3:
@@ -75,7 +71,6 @@ def test_analyze_explicit_content(capsys):
         break
 
 
-@pytest.mark.slow
 def test_speech_transcription(capsys):
     analyze.speech_transcription("gs://cloud-samples-data/video/googlework_short.mp4")
     out, _ = capsys.readouterr()
