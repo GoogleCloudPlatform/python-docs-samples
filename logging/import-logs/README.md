@@ -43,8 +43,8 @@ have to be configured when a new Cloud Run job for the solution is created:
 
 | Environment variable | Value |
 |---|---|
-| START_DATE | A string in format `MM/DD/YYY` that defines the first day of the import range |
-| END_DATE | A string in format `MM/DD/YYY` that defines the last day of the import range |
+| START_DATE | A string in format `MM/DD/YYYY` that defines the first day of the import range |
+| END_DATE | A string in format `MM/DD/YYYY` that defines the last day of the import range |
 | LOG_ID | A string that identifies the particular log to be imported. See [documentation][logid] for more details. |
 | STORAGE_BUCKET_NAME | A name of the storage bucket where the exported logs are stored. |
 
@@ -87,8 +87,9 @@ for the project ID `PROJECT_ID`:
 [build]: https://cloud.google.com/docs/buildpacks/build-application
 
 ### Run tests with nox
-```
+
+```shell
 nox -s lint
-nox -s py-3.9
+nox -s py-3.8
 nox -s py-3.11
 ```
