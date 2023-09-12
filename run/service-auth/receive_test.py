@@ -21,6 +21,9 @@ from urllib import error, request
 import uuid
 
 import pytest
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 
 @pytest.fixture()
@@ -98,8 +101,19 @@ def test_auth(services):
     except error.HTTPError as e:
         assert e.code == 403
 
-    req = request.Request(url, headers={"Authorization": f"Bearer {token}"})
-    response = request.urlopen(req)
-    assert response.status == 200
-    assert "Hello" in response.read().decode()
-    assert "anonymous" not in response.read().decode()
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+
+    assert response.status_code == 200
+    assert "Hello" in response.content.decode("UTF-8")
+    assert "anonymous" not in response.content.decode("UTF-8")
