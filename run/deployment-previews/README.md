@@ -251,7 +251,6 @@ instructions below show both methods.
     gcloud artifacts repositories create containers \
       --location us-central1 \
       --repository-format "docker"
-
     ```
 
 * Create a new container image:
