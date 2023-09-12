@@ -69,7 +69,6 @@ def detect_logo(local_file_path="path/to/your/video.mp4"):
 
             # The object with timestamp and attributes per frame in the track.
             for timestamped_object in track.timestamped_objects:
-
                 # Normalized Bounding box in a frame, where the object is located.
                 normalized_bounding_box = timestamped_object.normalized_bounding_box
                 print("\n\t\tLeft : {}".format(normalized_bounding_box.left))

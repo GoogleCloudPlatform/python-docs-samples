@@ -79,7 +79,6 @@ def speech_transcription(input_uri, timeout=180):
     # one video is processed.
     annotation_results = result.annotation_results[0]
     for speech_transcription in annotation_results.speech_transcriptions:
-
         # The number of alternatives for each transcription is limited by
         # SpeechTranscriptionConfig.max_alternatives.
         # Each alternative is a different possible transcription
