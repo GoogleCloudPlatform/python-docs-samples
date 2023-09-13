@@ -26,11 +26,11 @@ from google.cloud import storage_transfer
 
 
 def create_event_driven_gcs_transfer(
-        project_id: str,
-        description: str,
-        source_bucket: str,
-        sink_bucket: str,
-        pubsub_id: str,
+    project_id: str,
+    description: str,
+    source_bucket: str,
+    sink_bucket: str,
+    pubsub_id: str,
 ):
     """Create an event driven transfer between two GCS buckets that tracks a PubSub subscription"""
 

@@ -205,8 +205,8 @@ def job_description_unique(project_id: str):
             break
 
     if (
-            transfer_job_to_delete
-            and transfer_job_to_delete.status != TransferJob.Status.DELETED
+        transfer_job_to_delete
+        and transfer_job_to_delete.status != TransferJob.Status.DELETED
     ):
         client.update_transfer_job(
             {
@@ -398,10 +398,10 @@ def sqs_queue_arn(secret_cache):
     """
     Yields an AWS SQS queue ARN. Deletes it afterwards.
     """
-    sqs = boto3.resource('sqs', **aws_key_pair(secret_cache), region_name="us-west-1")
+    sqs = boto3.resource("sqs", **aws_key_pair(secret_cache), region_name="us-west-1")
     queue_name = f"sqs-sts-queue-{uuid.uuid4()}"
     queue = sqs.create_queue(QueueName=queue_name)
 
-    yield queue.attributes['QueueArn']
+    yield queue.attributes["QueueArn"]
 
     queue.delete()

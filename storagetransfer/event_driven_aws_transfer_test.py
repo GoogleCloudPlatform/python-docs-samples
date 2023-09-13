@@ -23,20 +23,20 @@ import event_driven_aws_transfer
 @backoff.on_exception(
     backoff.expo,
     (
-            RetryError,
-            ServiceUnavailable,
+        RetryError,
+        ServiceUnavailable,
     ),
     max_time=60,
 )
 def test_event_driven_aws_transfer(
-        capsys,
-        project_id: str,
-        job_description_unique: str,
-        aws_source_bucket: str,
-        destination_bucket: Bucket,
-        sqs_queue_arn: str,
-        aws_access_key_id: str,
-        aws_secret_access_key: str,
+    capsys,
+    project_id: str,
+    job_description_unique: str,
+    aws_source_bucket: str,
+    destination_bucket: Bucket,
+    sqs_queue_arn: str,
+    aws_access_key_id: str,
+    aws_secret_access_key: str,
 ):
     event_driven_aws_transfer.create_event_driven_aws_transfer(
         project_id=project_id,
@@ -52,4 +52,3 @@ def test_event_driven_aws_transfer(
 
     # Ensure the transferJob has been created
     assert "Created transferJob:" in out
-

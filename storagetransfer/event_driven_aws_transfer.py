@@ -26,13 +26,13 @@ from google.cloud import storage_transfer
 
 
 def create_event_driven_aws_transfer(
-        project_id: str,
-        description: str,
-        source_s3_bucket: str,
-        sink_gcs_bucket: str,
-        sqs_queue_arn: str,
-        aws_access_key_id: str,
-        aws_secret_access_key: str,
+    project_id: str,
+    description: str,
+    source_s3_bucket: str,
+    sink_gcs_bucket: str,
+    sqs_queue_arn: str,
+    aws_access_key_id: str,
+    aws_secret_access_key: str,
 ):
     """Create an event driven transfer between two GCS buckets that tracks an AWS SQS queue"""
 
