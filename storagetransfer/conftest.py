@@ -22,7 +22,7 @@ import uuid
 
 from azure.storage.blob import BlobServiceClient, ContainerClient
 import boto3
-from google.cloud import secretmanager, storage, storage_transfer
+from google.cloud import pubsub_v1, secretmanager, storage, storage_transfer
 from google.cloud.storage_transfer import TransferJob
 
 import pytest
@@ -205,8 +205,8 @@ def job_description_unique(project_id: str):
             break
 
     if (
-        transfer_job_to_delete
-        and transfer_job_to_delete.status != TransferJob.Status.DELETED
+            transfer_job_to_delete
+            and transfer_job_to_delete.status != TransferJob.Status.DELETED
     ):
         client.update_transfer_job(
             {
@@ -367,3 +367,41 @@ def manifest_file(source_bucket: storage.Bucket):
 
     # use arbitrary path and name
     yield f"gs://{source_bucket.name}/test-manifest.csv"
+
+
+@pytest.fixture
+def pubsub_id(project_id: str):
+    """
+    Yields a pubsub subscription ID. Deletes it afterwards
+    """
+    publisher = pubsub_v1.PublisherClient()
+    topic_id = f"pubsub-sts-topic-{uuid.uuid4()}"
+    topic_path = publisher.topic_path(project_id, topic_id)
+    publisher.create_topic(request={"name": topic_path})
+
+    subscriber = pubsub_v1.SubscriberClient()
+    subscription_id = f"pubsub-sts-subscription-{uuid.uuid4()}"
+    subscription_path = subscriber.subscription_path(project_id, subscription_id)
+    subscription = subscriber.create_subscription(
+        request={"name": subscription_path, "topic": topic_path}
+    )
+
+    yield str(subscription.name)
+
+    subscriber.delete_subscription(request={"subscription": subscription_path})
+    subscriber.close()
+    publisher.delete_topic(request={"topic": topic_path})
+
+
+@pytest.fixture
+def sqs_queue_arn(secret_cache):
+    """
+    Yields an AWS SQS queue ARN. Deletes it afterwards.
+    """
+    sqs = boto3.resource('sqs', **aws_key_pair(secret_cache), region_name="us-west-1")
+    queue_name = f"sqs-sts-queue-{uuid.uuid4()}"
+    queue = sqs.create_queue(QueueName=queue_name)
+
+    yield queue.attributes['QueueArn']
+
+    queue.delete()
