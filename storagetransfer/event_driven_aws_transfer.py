@@ -20,7 +20,7 @@ Command-line sample that creates aan event driven transfer between two GCS bucke
 
 import argparse
 
-# [START storagetransfer_create_event_driven_gcs_transfer]
+# [START storagetransfer_create_event_driven_aws_transfer]
 
 from google.cloud import storage_transfer
 
