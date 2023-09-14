@@ -71,10 +71,9 @@ def crc32c(data: bytes) -> int:
         An int representing the CRC32C checksum of the provided bytes.
     """
     import crcmod  # type: ignore
-    import six  # type: ignore
 
     crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
-    return crc32c_fun(six.ensure_binary(data))
+    return crc32c_fun(bytes(data))
 
 
 # [END kms_get_public_key_jwk]
