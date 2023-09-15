@@ -20,7 +20,7 @@ For more information on authentication, refer to the
 1. Clone python-docs-samples repository and change directories to the sample directory
 you want to use.
 
-        $ git clone https://github.com/googleapis/python-video-live-stream.git
+        $ git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
 
 1. Install [pip](https://pip.pypa.io/) and
 [virtualenv](https://virtualenv.pypa.io/) if you do not already have them. You
