@@ -139,7 +139,7 @@ def deidentify_cloud_storage(
             break
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
             print('Job Failed, Please check the configuration.')
-            return
+            break
 
         # Sleep for a short duration before checking the job status again.
         time.sleep(30)
