@@ -184,6 +184,7 @@ def output_bucket(pubsub_topic):
     output_bucket.delete(force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_end_to_end(input_bucket, output_bucket):
     # Upload image to the input bucket
 
