@@ -43,7 +43,6 @@ output_uri = f"gs://{output_bucket_name}/channel-test/"
 
 
 def test_channel_operations(capsys: pytest.fixture) -> None:
-
     # Clean up old resources in the test project
     channel_responses = list_channels.list_channels(project_name, location)
 

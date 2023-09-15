@@ -38,7 +38,6 @@ output_uri = f"gs://{output_bucket_name}/channel-test/"
 
 
 def test_channel_event_operations(capsys: pytest.fixture) -> None:
-
     # Set up
 
     event_name_project_id = f"projects/{project_name}/locations/{location}/channels/{channel_id}/events/{event_id}"
