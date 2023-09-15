@@ -74,5 +74,6 @@ def test_deidentify_cloud_storage(
     assert "Processed Bytes" in out
     assert "Info type: EMAIL_ADDRESS" in out
 
-    mock_dlp_instance.create_dlp_job.assert_called_once()
-    mock_dlp_instance.get_dlp_job.assert_called_once()
+    create_job_args = mock_dlp_instance.create_dlp_job.call_args
+    mock_dlp_instance.create_dlp_job.assert_called_once_with(request=create_job_args.kwargs['request'])
+    mock_dlp_instance.get_dlp_job.assert_called_once_with(request={'name': test_job})
