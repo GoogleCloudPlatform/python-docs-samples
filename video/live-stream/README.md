@@ -17,7 +17,7 @@ For more information on authentication, refer to the
 
 ## Install Dependencies
 
-1. Clone python-video-live-stream and change directories to the sample directory
+1. Clone python-docs-samples repository and change directories to the sample directory
 you want to use.
 
         $ git clone https://github.com/googleapis/python-video-live-stream.git
