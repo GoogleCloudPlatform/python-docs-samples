@@ -106,7 +106,7 @@ def crc32c(data: bytes) -> int:
     import crcmod  # type: ignore
 
     crc32c_fun = crcmod.predefined.mkPredefinedCrcFun("crc-32c")
-    return crc32c_fun(bytes(data))
+    return crc32c_fun(data)
 
 
 # [END kms_sign_asymmetric]
