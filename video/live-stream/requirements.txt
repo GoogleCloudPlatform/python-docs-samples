@@ -1,3 +1,2 @@
-grpcio==1.41.1; python_version=="2.7"
-grpcio==1.57.0; python_version>"3.0"
+grpcio==1.57.0
 google-cloud-video-live-stream==1.5.1
