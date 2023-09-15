@@ -133,7 +133,7 @@ def deidentify_cloud_storage(
     job = dlp.get_dlp_job(request={"name": job_name})
     # Since the sleep time is kept as 30s, number of calls would be timeout/30.
     no_of_attempts = timeout//30
-    while True:
+    while no_of_attempts != 0:
         # Check if the job has completed.
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
