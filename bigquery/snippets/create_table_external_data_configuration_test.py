@@ -14,7 +14,7 @@
 
 import typing
 
-from .. import create_table_external_data_configuration
+import create_table_external_data_configuration
 
 if typing.TYPE_CHECKING:
     import pytest
