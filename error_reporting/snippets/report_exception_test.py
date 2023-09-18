@@ -18,7 +18,7 @@ import report_exception
 
 
 def test_error_sends():
-    report_exception.simulate_error()
+    report_exception.report_exception()
 
 
 def test_manual_error_sends():
