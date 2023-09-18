@@ -22,7 +22,7 @@ def report_exception():
 
     client = error_reporting.Client()
     try:
-        raise Exception('Something went wrong')
+        raise Exception("Something went wrong")
     except Exception:
         client.report_exception()
 
