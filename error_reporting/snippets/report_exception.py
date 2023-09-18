@@ -22,7 +22,6 @@ def report_exception():
 
     client = error_reporting.Client()
     try:
-        # simulate calling a method that's not defined
         raise Exception('Something went wrong')
     except Exception:
         client.report_exception()
