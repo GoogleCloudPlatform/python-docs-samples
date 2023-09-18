@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """
-Command-line sample that creates aan event driven transfer between two GCS buckets that tracks an AWS SQS queue.
+Command-line sample that creates an event driven transfer between two GCS buckets that tracks an AWS SQS queue.
 """
 
 import argparse
