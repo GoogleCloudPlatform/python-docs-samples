@@ -80,13 +80,16 @@ def _day(blob_name: str) -> int:
 
 
 def _is_valid_import_range() -> bool:
+    """Check the import range dates to ensure that
+    - start date is earlier than end date
+    - no dates in the range is older than 29 days
+    (for reason see https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp)
+    """
     if START_DATE > END_DATE:
         eprint("Start date of the import time range should be earlier than end date")
         return False
-    # avoid importing time range older than 29 days
-    today = date.today()
-    if (today - START_DATE).days > 29 or (today - END_DATE).days > 29:
-        eprint("Date range includes days older than 29 days from today.")
+    if (date.today() - START_DATE).days > 29:
+        eprint("Import range includes dates older than 29 days from today.")
         return False
     return True
 
