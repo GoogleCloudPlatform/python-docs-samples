@@ -18,6 +18,7 @@
 import os
 
 from documentai.snippets import handle_response_sample
+from documentai.snippets import handle_response_sample_v1beta3
 
 
 def test_process_document_ocr(capsys):
@@ -139,7 +140,7 @@ def test_process_document_quality(capsys):
         assert expected_string in out
 
 
-def test_process_document_specialized(capsys):
+def test_process_document_entity_extraction(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "feacd98c28866ede"
@@ -147,7 +148,7 @@ def test_process_document_specialized(capsys):
     file_path = "resources/us_driver_license.pdf"
     mime_type = "application/pdf"
 
-    handle_response_sample.process_document_specialized_sample(
+    handle_response_sample.process_document_entity_extraction_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
@@ -190,6 +191,31 @@ def test_process_document_splitter(capsys):
         "Found 8 subdocuments",
         "confident that pages 1, 2 are a subdocument",
         "confident that page 10 is a subdocument",
+    ]
+    for expected_string in expected_strings:
+        assert expected_string in out
+
+
+def test_process_document_summarizer(capsys):
+    location = "us"
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    processor_id = "feacd98c28866ede"
+    processor_version = "stable"
+    file_path = "resources/superconductivity.pdf"
+    mime_type = "application/pdf"
+
+    handle_response_sample_v1beta3.process_document_summarizer_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version=processor_version,
+        file_path=file_path,
+        mime_type=mime_type,
+    )
+    out, _ = capsys.readouterr()
+
+    expected_strings = [
+        "Superconductivity",
     ]
     for expected_string in expected_strings:
         assert expected_string in out
