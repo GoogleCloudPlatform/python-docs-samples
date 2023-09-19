@@ -17,7 +17,7 @@
 # pylint: disable=too-many-arguments
 # pylint: disable=too-many-return-statements
 
-from datetime import date
+from datetime import date, timedelta
 import json
 import os
 import sys
@@ -51,6 +51,34 @@ def _setup_environment(
     main.START_DATE = start_date
     main.END_DATE = end_date
     main._LOGS_MAX_SIZE_BYTES = max_size  # pylint: disable=protected-access
+
+
+@pytest.mark.parametrize(
+    "start_date, end_date, expected_validity",
+    [
+        (date.today() - timedelta(days=29), date.today() - timedelta(days=10), True),
+        (date.today() - timedelta(days=10), date.today() - timedelta(days=29), False),
+        (date.today() - timedelta(days=30), date.today(), False),
+        ("07/01/2023", "06/01/2023", False),
+    ],
+    ids=[
+        "valid range",
+        "invalid range: start later than end",
+        "invalid range: start older than 29 days",
+        "invalid range: end older than 29 days",
+    ],
+)
+def test_import_range_validation(
+    start_date: str, end_date: str, expected_validity: bool
+) -> None:
+    _setup_environment(
+        start_date=start_date,
+        end_date=end_date,
+    )
+    isvalid = main._is_valid_import_range()  # pylint: disable=protected-access
+    assert (
+        isvalid == expected_validity
+    ), f"import range ({start_date} -> {end_date}) validation failed: expected {expected_validity} and got {isvalid}"
 
 
 @pytest.mark.parametrize(

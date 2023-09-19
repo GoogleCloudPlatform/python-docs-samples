@@ -79,6 +79,21 @@ def _day(blob_name: str) -> int:
     return int(blob_name[offset : offset + 2])
 
 
+def _is_valid_import_range() -> bool:
+    """Check the import range dates to ensure that
+    - start date is earlier than end date
+    - no dates in the range is older than 29 days
+    (for reason see https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp)
+    """
+    if START_DATE > END_DATE:
+        eprint("Start date of the import time range should be earlier than end date")
+        return False
+    if (date.today() - START_DATE).days > 29:
+        eprint("Import range includes dates older than 29 days from today.")
+        return False
+    return True
+
+
 def calc_import_range() -> Tuple[date, date]:
     """Calculate import range for the task based on full import range and number of tasks"""
     if TASK_COUNT == 1:
@@ -201,12 +216,10 @@ def import_logs(
 
 def main() -> None:
     """Imports logs from Cloud Storage to Cloud Logging"""
-
     if not START_DATE or not END_DATE or not LOG_ID or not BUCKET_NAME:
         eprint("Missing some of required parameters")
         sys.exit(1)
-    if START_DATE > END_DATE:
-        eprint("Start date of the import time range should be earlier than end date")
+    if not _is_valid_import_range():
         sys.exit(1)
 
     start_date, end_date = calc_import_range()
