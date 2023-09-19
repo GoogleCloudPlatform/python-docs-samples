@@ -14,8 +14,6 @@
 #
 
 # [START genappbuilder_import_documents]
-from __future__ import annotations
-
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine
 
@@ -48,7 +46,7 @@ def import_documents_sample(
     )
 
     # Create a client
-    client = discoveryengine.SearchServiceClient(client_options=client_options)
+    client = discoveryengine.DocumentServiceClient(client_options=client_options)
 
     # The full resource name of the search engine branch.
     # e.g. projects/{project}/locations/{location}/dataStores/{data_store_id}/branches/{branch}

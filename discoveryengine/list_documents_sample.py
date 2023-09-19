@@ -34,7 +34,7 @@ def list_documents_sample(project_id: str, location: str, data_store_id: str) ->
     )
 
     # Create a client
-    client = discoveryengine.SearchServiceClient(client_options=client_options)
+    client = discoveryengine.DocumentServiceClient(client_options=client_options)
 
     # The full resource name of the search engine branch.
     # e.g. projects/{project}/locations/{location}/dataStores/{data_store_id}/branches/{branch}
