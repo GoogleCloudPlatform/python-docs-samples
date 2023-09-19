@@ -46,7 +46,8 @@ def write_entry(logger_name):
             "name": "King Arthur",
             "quest": "Find the Holy Grail",
             "favorite_color": "Blue",
-        }, severity="INFO"
+        },
+        severity="INFO",
     )
 
     print("Wrote logs to {}.".format(logger.name))
