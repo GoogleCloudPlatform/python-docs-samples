@@ -14,6 +14,8 @@
 #
 
 # [START genappbuilder_import_documents]
+from typing import Optional
+
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine
 
@@ -33,9 +35,9 @@ def import_documents_sample(
     project_id: str,
     location: str,
     data_store_id: str,
-    gcs_uri: str | None = None,
-    bigquery_dataset: str | None = None,
-    bigquery_table: str | None = None,
+    gcs_uri: Optional[str] = None,
+    bigquery_dataset: Optional[str] = None,
+    bigquery_table: Optional[str] = None,
 ) -> str:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
