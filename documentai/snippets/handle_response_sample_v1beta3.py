@@ -45,21 +45,21 @@ def process_document_summarizer_sample(
     process_options = documentai.ProcessOptions(
         schema_override=documentai.DocumentSchema(
             entity_types=[
-                documentai.EntityType(
+                documentai.DocumentSchema.EntityType(
                     name="summary_document_type",
                     base_types=["document"],
                     properties=[
-                        documentai.Property(
+                        documentai.DocumentSchema.EntityType.Property(
                             name="summary",
                             value_type="string",
-                            occurence_type=documentai.OccurenceType.REQUIRED_ONCE,
+                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
                             property_metadata=documentai.PropertyMetadata(
                                 field_extraction_metadata=documentai.FieldExtractionMetadata(
                                     summary_options=documentai.SummaryOptions(
                                         # For supported options, refer to:
                                         # https://cloud.google.com/document-ai/docs/reference/rest/v1beta3/projects.locations.processors.processorVersions#summaryoptions
-                                        length=documentai.Length.BRIEF,
-                                        format=documentai.Format.BULLETS,
+                                        length=documentai.SummaryOptions.Length.BRIEF,
+                                        format=documentai.SummaryOptions.Format.BULLETS,
                                     )
                                 )
                             ),
@@ -108,24 +108,24 @@ def process_document_custom_extractor_sample(
             display_name="CDE Schema",
             description="Document Schema for the CDE Processor",
             entity_types=[
-                documentai.EntityType(
+                documentai.DocumentSchema.EntityType(
                     name="custom_extraction_document_type",
                     base_types=["document"],
                     properties=[
-                        documentai.Property(
+                        documentai.DocumentSchema.EntityType.Property(
                             name="invoice_id",
                             value_type="string",
-                            occurence_type=documentai.OccurenceType.REQUIRED_ONCE,
+                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
                         ),
-                        documentai.Property(
+                        documentai.DocumentSchema.EntityType.Property(
                             name="notes",
                             value_type="string",
-                            occurence_type=documentai.OccurenceType.REQUIRED_ONCE,
+                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
                         ),
-                        documentai.Property(
+                        documentai.DocumentSchema.EntityType.Property(
                             name="terms",
                             value_type="string",
-                            occurence_type=documentai.OccurenceType.REQUIRED_ONCE,
+                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
                         ),
                     ],
                 )
