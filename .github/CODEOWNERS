@@ -71,6 +71,7 @@
 /speech/**/*                           @GoogleCloudPlatform/cloud-speech-eng @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/videointelligence/**/*                @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /video/transcoder/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 
 # Cloud SDK Databases & Data Analytics teams
@@ -106,6 +107,7 @@
 /healthcare/**/*                       @GoogleCloudPlatform/healthcare-life-sciences @GoogleCloudPlatform/python-samples-reviewers
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
+/video/live-stream/*                   @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 /video/stitcher/*                      @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 
 # Deprecated

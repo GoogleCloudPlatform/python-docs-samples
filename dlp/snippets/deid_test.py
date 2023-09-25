@@ -36,6 +36,7 @@ KEY_NAME = (
 )
 SURROGATE_TYPE = "SSN_TOKEN"
 CSV_FILE = os.path.join(os.path.dirname(__file__), "resources/dates.csv")
+TXT_FILE = os.path.join(os.path.dirname(__file__), "resources/test.txt")
 DATE_SHIFTED_AMOUNT = 30
 DATE_FIELDS = ["birth_date", "register_date"]
 CSV_CONTEXT_FIELD = "name"
