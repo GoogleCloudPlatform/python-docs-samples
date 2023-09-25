@@ -20,7 +20,7 @@
 from typing import Optional, Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai
+from google.cloud import documentai_v1beta3 as documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -47,7 +47,7 @@ def process_document_ocr_sample(
     mime_type: str,
 ) -> None:
     # Optional: Additional configurations for Document OCR Processor.
-    # For more information: https://cloud.google.com/document-ai/docs/document-ocr
+    # For more information: https://cloud.google.com/document-ai/docs/enterprise-document-ocr
     process_options = documentai.ProcessOptions(
         ocr_config=documentai.OcrConfig(
             enable_native_pdf_parsing=True,
@@ -56,7 +56,7 @@ def process_document_ocr_sample(
             # OCR Add Ons https://cloud.google.com/document-ai/docs/ocr-add-ons
             premium_features=documentai.OcrConfig.PremiumFeatures(
                 compute_style_info=True,
-                enable_math_ocr=True,
+                enable_math_ocr=False,  # Enable to use Math OCR Model
                 enable_selection_mark_detection=True,
             ),
         )
@@ -172,7 +172,7 @@ def print_image_quality_scores(
         print(f"        {detected_defect.type_}: {detected_defect.confidence:.1%}")
 
 
-def print_style_info(style_info: documentai.Document.StyleInfo) -> None:
+def print_style_info(style_info: documentai.Document.Page.Token.StyleInfo) -> None:
     """
     Only supported in version `pretrained-ocr-v2.0-2023-06-02`
     """
@@ -188,7 +188,7 @@ def print_style_info(style_info: documentai.Document.StyleInfo) -> None:
 
 
 def print_visual_elements(
-    visual_elements: Sequence[documentai.Document.VisualElement], text: str
+    visual_elements: Sequence[documentai.Document.Page.VisualElement], text: str
 ) -> None:
     """
     Only supported in version `pretrained-ocr-v2.0-2023-06-02`
