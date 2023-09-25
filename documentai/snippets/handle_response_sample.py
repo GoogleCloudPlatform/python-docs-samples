@@ -20,7 +20,7 @@
 from typing import Optional, Sequence
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai_v1beta3 as documentai
+from google.cloud import documentai
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
