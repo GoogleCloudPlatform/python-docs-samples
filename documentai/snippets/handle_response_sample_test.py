@@ -24,7 +24,7 @@ def test_process_document_ocr(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "52a38e080c1a7296"
-    processor_version = "pretrained-ocr-v1.0-2020-09-23"
+    processor_version = "pretrained-ocr-v2.0-2023-06-02"
     file_path = "resources/handwritten_form.pdf"
     mime_type = "application/pdf"
 
@@ -41,6 +41,46 @@ def test_process_document_ocr(capsys):
     assert "Page 1" in out
     assert "en" in out
     assert "FakeDoc" in out
+
+    # Document Quality
+    assert "Quality score" in out
+
+    # Font Detection
+    assert "Font Size" in out
+    assert "Handwritten: True" in out
+
+    # Math OCR
+    file_path = "resources/math.png"
+    mime_type = "image/png"
+
+    handle_response_sample.process_document_ocr_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version=processor_version,
+        file_path=file_path,
+        mime_type=mime_type,
+    )
+    out, _ = capsys.readouterr()
+
+    assert "math symbols" in out
+
+    file_path = "resources/checkbox.png"
+    mime_type = "image/png"
+
+    # Checkbox Detection
+    handle_response_sample.process_document_ocr_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version=processor_version,
+        file_path=file_path,
+        mime_type=mime_type,
+    )
+    out, _ = capsys.readouterr()
+
+    assert "unfilled_checkbox" in out
+    assert "filled_checkbox" in out
 
 
 def test_process_document_form():

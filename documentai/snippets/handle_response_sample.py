@@ -92,6 +92,9 @@ def process_document_ocr_sample(
         if page.image_quality_scores:
             print_image_quality_scores(page.image_quality_scores)
 
+        if page.visual_elements:
+            print_visual_elements(page.visual_elements, text)
+
 
 def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None:
     print(f"    Width: {str(dimension.width)}")
@@ -170,6 +173,9 @@ def print_image_quality_scores(
 
 
 def print_style_info(style_info: documentai.Document.StyleInfo) -> None:
+    """
+    Only supported in version `pretrained-ocr-v2.0-2023-06-02`
+    """
     print(f"           Font Size: {style_info.font_size}pt")
     print(f"           Font Type: {style_info.font_type}")
     print(f"           Bold: {style_info.bold}")
@@ -179,6 +185,26 @@ def print_style_info(style_info: documentai.Document.StyleInfo) -> None:
     print(
         f"           Text Color (RGBa): {style_info.text_color.red}, {style_info.text_color.green}, {style_info.text_color.blue}, {style_info.text_color.alpha}"
     )
+
+
+def print_visual_elements(
+    visual_elements: Sequence[documentai.Document.VisualElement], text: str
+) -> None:
+    """
+    Only supported in version `pretrained-ocr-v2.0-2023-06-02`
+    """
+    checkboxes = [x for x in visual_elements if "checkbox" in x.type]
+    math_symbols = [x for x in visual_elements if x.type == "math_formula"]
+
+    if checkboxes:
+        print(f"    {len(checkboxes)} checkboxes detected:")
+        print(f"        First checkbox: {repr(checkboxes[0].type)}")
+        print(f"        Last checkbox: {repr(checkboxes[-1].type)}")
+
+    if math_symbols:
+        print(f"    {len(math_symbols)} math symbols detected:")
+        first_math_symbol_text = layout_to_text(math_symbols[0].layout, text)
+        print(f"        First math symbol: {repr(first_math_symbol_text)}")
 
 
 # [END documentai_process_ocr_document]
