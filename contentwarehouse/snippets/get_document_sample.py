@@ -19,7 +19,9 @@
 from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
-def sample_get_document(document_name: str, user_id: str) -> contentwarehouse.types.Document:
+def sample_get_document(
+    document_name: str, user_id: str
+) -> contentwarehouse.types.Document:
     """Gets a document.
 
     Args:
