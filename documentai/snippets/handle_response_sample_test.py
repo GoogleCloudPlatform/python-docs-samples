@@ -20,7 +20,7 @@ from documentai.snippets import handle_response_sample
 
 def test_process_document_ocr(capsys):
     location = "us"
-    project_id = "python-docs-samples-tests"
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "52a38e080c1a7296"
     processor_version = "pretrained-ocr-v2.0-2023-06-02"
     file_path = "resources/handwritten_form.pdf"
