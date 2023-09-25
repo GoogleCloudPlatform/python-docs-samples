@@ -25,8 +25,10 @@ def sample_update_document(
     """Updates a document.
 
     Args:
-        document_name: Unique identifier for document.
-        document: Content warehouse Document object.
+        document_name: The resource name of the document.
+                    Format: 'projects/{project_number}/
+                    locations/{location}/documents/{document_id}'.
+        document: Document AI Warehouse Document object..
         user_id: user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
     Returns:
         Response object.

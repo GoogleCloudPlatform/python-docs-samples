@@ -19,11 +19,11 @@
 from google.cloud import contentwarehouse_v1 as contentwarehouse
 
 
-def sample_get_document(doc_name: str, user_id: str) -> contentwarehouse.types.Document:
+def sample_get_document(document_name: str, user_id: str) -> contentwarehouse.types.Document:
     """Gets a document.
 
     Args:
-        doc_name: The resource name of the document.
+        document_name: The resource name of the document.
                 Format: 'projects/{project_number}/
                 locations/{location}/documents/{document_id}'.
         user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
@@ -39,7 +39,7 @@ def sample_get_document(doc_name: str, user_id: str) -> contentwarehouse.types.D
 
     # Initialize request argument(s)
     request = contentwarehouse.GetDocumentRequest(
-        name=doc_name, request_metadata=request_metadata
+        name=document_name, request_metadata=request_metadata
     )
 
     # Make the request

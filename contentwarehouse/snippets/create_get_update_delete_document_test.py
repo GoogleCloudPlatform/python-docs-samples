@@ -28,8 +28,10 @@ import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
-raw_doc_path = "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
-mime_type = "application/pdf"
+raw_document_path = (
+    "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
+)
+raw_document_file_type = 1
 user_id = os.environ["user_id"]
 reference_id = "001"
 
@@ -58,8 +60,8 @@ def test_create_document(request: pytest.fixture) -> None:
     response = create_document_sample.sample_create_document(
         project_number=project_number,
         location=location,
-        raw_doc_path=raw_doc_path,
-        mime_type=mime_type,
+        raw_document_path=raw_document_path,
+        raw_document_file_type=raw_document_file_type,
         document_schema_id=document_schema_id,
         user_id=user_id,
         reference_id=reference_id,
@@ -75,7 +77,7 @@ def test_get_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
 
     response = get_document_sample.sample_get_document(
-        doc_name=document_name, user_id=user_id
+        document_name=document_name, user_id=user_id
     )
 
     assert "name" in response
@@ -110,7 +112,7 @@ def test_delete_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
 
     response = delete_document_sample.sample_delete_document(
-        doc_name=document_name, user_id=user_id
+        document_name=document_name, user_id=user_id
     )
 
     assert response is None
