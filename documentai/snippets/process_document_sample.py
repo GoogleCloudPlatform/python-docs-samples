@@ -62,9 +62,21 @@ def process_document_sample(
     # Load binary data
     raw_document = documentai.RawDocument(content=image_content, mime_type=mime_type)
 
+    # Optional: Additional configurations for processing.
+    # For more information: https://cloud.google.com/document-ai/docs/reference/rest/v1/ProcessOptions
+    process_options = documentai.ProcessOptions(
+        # Process only specific pages
+        individual_page_selector=documentai.ProcessOptions.IndividualPageSelector(
+            pages=[1]
+        )
+    )
+
     # Configure the process request
     request = documentai.ProcessRequest(
-        name=name, raw_document=raw_document, field_mask=field_mask
+        name=name,
+        raw_document=raw_document,
+        field_mask=field_mask,
+        process_options=process_options,
     )
 
     result = client.process_document(request=request)
