@@ -14,7 +14,6 @@
 
 
 # [START documentai_batch_process_document]
-# [START documentai_batch_process_documents_processor_version]
 import re
 from typing import Optional
 
@@ -163,5 +162,4 @@ def batch_process_documents(
             print(document.text)
 
 
-# [END documentai_batch_process_documents_processor_version]
 # [END documentai_batch_process_document]
