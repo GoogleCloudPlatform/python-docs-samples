@@ -20,9 +20,9 @@ from contentwarehouse.snippets import create_document_schema_sample
 from contentwarehouse.snippets import delete_document_sample
 from contentwarehouse.snippets import delete_document_schema_sample
 from contentwarehouse.snippets import get_document_sample
-from contentwarehouse.snippets import update_document_sample
 from contentwarehouse.snippets import test_utilities
-from google.cloud.contentwarehouse_v1.types import Document
+from contentwarehouse.snippets import update_document_sample
+from google.cloud.contentwarehouse import Document
 
 import pytest
 

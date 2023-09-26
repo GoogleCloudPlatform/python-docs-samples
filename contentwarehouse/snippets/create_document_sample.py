@@ -18,7 +18,7 @@
 
 from typing import Optional
 
-from google.cloud import contentwarehouse_v1 as contentwarehouse
+from google.cloud import contentwarehouse
 
 
 def sample_create_document(
@@ -29,15 +29,17 @@ def sample_create_document(
     document_schema_id: str,
     user_id: str,
     reference_id: Optional[str] = None,
-) -> contentwarehouse.types.CreateDocumentResponse:
+) -> contentwarehouse.CreateDocumentResponse:
     """Creates a document.
 
     Args:
         project_number: Google Cloud project number.
         location: Google Cloud project location.
         raw_document_path: Raw document file in Cloud Storage path.
-        raw_document_file_type: Document file type,
-                                reference:https://cloud.google.com/python/docs/reference/contentwarehouse/latest/google.cloud.contentwarehouse_v1.types.RawDocumentFileType.
+        raw_document_file_type: Document file type
+                                https://cloud.google.com/python/docs/
+                                reference/contentwarehouse/latest/
+                                google.cloud.contentwarehouse_v1.types.RawDocumentFileType.
         document_schema_id: Unique identifier for document schema.
         user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
         reference_id: Identifier, must be unique per project and location.
