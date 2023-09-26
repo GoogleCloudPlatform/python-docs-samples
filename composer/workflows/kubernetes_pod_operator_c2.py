@@ -78,14 +78,9 @@ with models.DAG(
         # Entrypoint of the container, if not specified the Docker container's
         # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
-        # The namespace to run within Kubernetes, default namespace is
-        # `default`. In Composer 1 there is the potential for
-        # the resource starvation of Airflow workers and scheduler
-        # within the Cloud Composer environment,
-        # the recommended solution is to increase the amount of nodes in order
-        # to satisfy the computing requirements. Alternatively, launching pods
-        # into a custom namespace will stop fighting over resources,
-        # and using Composer 2 will mean the environment will autoscale.
+        # The namespace to run within Kubernetes. In Composer 2 environments
+        # after December 2022, the default namespace is
+        # `composer-user-workloads`.
         namespace="composer-user-workloads",
         # Docker image specified. Defaults to hub.docker.com, but any fully
         # qualified URLs will point to a custom repository. Supports private
