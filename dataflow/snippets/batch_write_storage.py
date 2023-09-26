@@ -37,5 +37,6 @@ def write_to_cloud_storage():
         )
 # [END dataflow_batch_write_to_storage]
 
+
 if __name__ == "__main__":
     write_to_cloud_storage()
