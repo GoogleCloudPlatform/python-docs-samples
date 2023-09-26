@@ -41,10 +41,10 @@ def science_tutoring(temperature: float = 0.2) -> None:
         "How many planets are there in the solar system?", **parameters
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_chat]
 
     return response
 
 
 if __name__ == "__main__":
     science_tutoring()
+# [END aiplatform_sdk_chat]
