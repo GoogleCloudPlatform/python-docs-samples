@@ -401,7 +401,6 @@ def k_anonymity_with_entity_id(
     output_dataset_id: str,
     output_table_id: str,
 ) -> None:
-
     """Uses the Data Loss Prevention API to compute the k-anonymity using entity_id
         of a column set in a Google BigQuery table.
     Args:
@@ -447,21 +446,13 @@ def k_anonymity_with_entity_id(
     quasi_ids = map(map_fields, quasi_ids)
 
     # Tell the API where to send a notification when the job is complete.
-    actions = [
-        {
-            "save_findings": {
-                "output_config": {"table": dest_table}
-            }
-        }
-    ]
+    actions = [{"save_findings": {"output_config": {"table": dest_table}}}]
 
     # Configure the privacy metric to compute for re-identification risk analysis.
     # Specify the unique identifier in the source table for the k-anonymity analysis.
     privacy_metric = {
         "k_anonymity_config": {
-            "entity_id": {
-                "field": {"name": entity_id}
-            },
+            "entity_id": {"field": {"name": entity_id}},
             "quasi_ids": quasi_ids,
         }
     }
@@ -494,7 +485,7 @@ def k_anonymity_with_entity_id(
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
-            print('Job Failed, Please check the configuration.')
+            print("Job Failed, Please check the configuration.")
             return
 
         # Sleep for a short duration before checking the job status again
@@ -521,14 +512,18 @@ def k_anonymity_with_entity_id(
     for i, bucket in enumerate(histogram_buckets):
         print(f"Bucket {i}:")
         if bucket.equivalence_class_size_lower_bound:
-            print(f"Bucket size range: [{bucket.equivalence_class_size_lower_bound}, "
-                  f"{bucket.equivalence_class_size_upper_bound}]"
-                  )
+            print(
+                f"Bucket size range: [{bucket.equivalence_class_size_lower_bound}, "
+                f"{bucket.equivalence_class_size_upper_bound}]"
+            )
             for value_bucket in bucket.bucket_values:
-                print(f"Quasi-ID values: {get_values(value_bucket.quasi_ids_values[0])}")
+                print(
+                    f"Quasi-ID values: {get_values(value_bucket.quasi_ids_values[0])}"
+                )
                 print(f"Class size: {value_bucket.equivalence_class_size}")
         else:
             print("No findings.")
+
 
 # [END dlp_k_anonymity_with_entity_id]
 

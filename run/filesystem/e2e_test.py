@@ -19,10 +19,12 @@
 import datetime
 import os
 import subprocess
-from urllib import request
 import uuid
 
 import pytest
+import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
 
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex
@@ -122,19 +124,28 @@ def service_url_auth_token(deployed_service):
 
 def test_end_to_end(service_url_auth_token):
     service_url, auth_token = service_url_auth_token
+
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+    client = requests.session()
+    client.mount("https://", adapter)
+
     # Non mnt directory
-    req = request.Request(
+    response = client.get(
         service_url, headers={"Authorization": f"Bearer {auth_token}"}
     )
-    response = request.urlopen(req)
-    assert response.status == 200
+    assert response.status_code == 200
 
     # Mnt directory
     mnt_url = f"{service_url}/mnt/nfs/filestore"
-    req = request.Request(mnt_url, headers={"Authorization": f"Bearer {auth_token}"})
-    response = request.urlopen(req)
-    assert response.status == 200
+    response = client.get(mnt_url, headers={"Authorization": f"Bearer {auth_token}"})
+    assert response.status_code == 200
 
     date = datetime.datetime.utcnow()
-    body = response.read()
-    assert "{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}".format(dt=date) in body.decode()
+    body = response.content.decode("UTF-8")
+    assert "{dt:%a}-{dt:%b}-{dt:%d}-{dt:%H}".format(dt=date) in body
