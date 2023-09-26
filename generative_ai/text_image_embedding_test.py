@@ -20,5 +20,7 @@ import text_image_embedding
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_embedding() -> None:
-    images = text_image_embedding.generate_image_from_text_and_image(prompt="Ancient yellowed paper scroll")
+    images = text_image_embedding.generate_image_from_text_and_image(
+        prompt="Ancient yellowed paper scroll"
+    )
     assert images[0] is not None

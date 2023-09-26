@@ -17,13 +17,12 @@ from google.cloud.aiplatform.private_preview.vision_models import ImageGeneratio
 
 
 def generate_image_from_text(
-        prompt: str = "Google company logo",
+    prompt: str = "Google company logo",
 ) -> object:
     """Example of how to generate an image from a text prompt.
 
     Args:
-        temperature: The temperature of the text prompt.
-"""
+        temperature: The temperature of the text prompt."""
 
     model = ImageGenerationModel.from_pretrained("imagegeneration")
     images = model.generate_images(
@@ -34,7 +33,8 @@ def generate_image_from_text(
         width=1024,
         height=512,
         guidance_scale=20,
-        number_of_images=1,)
+        number_of_images=1,
+    )
 
     images[0].show()
     print(f"Response from Model: {images[0]}")

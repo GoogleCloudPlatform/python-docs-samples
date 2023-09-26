@@ -17,21 +17,18 @@ from google.cloud.aiplatform.private_preview.vision_models import ImageGeneratio
 
 
 def generate_image_from_text_and_image(
-        prompt: str = "Ancient yellowed paper scroll",
+    prompt: str = "Ancient yellowed paper scroll",
 ) -> object:
     """Example of how to generate an image from a text and an image.
 
     Args:
-        prompt: The prompt to generate an image from.
-"""
+        prompt: The prompt to generate an image from."""
 
     model = ImageGenerationModel.from_pretrained("imagegeneration")
     base_image = model.generate_images("Google company logo", seed=1)
     images = model.generate_images(
-        prompt=prompt,
-        seed=1,
-        base_image=base_image[0],
-        guidance_scale=20)
+        prompt=prompt, seed=1, base_image=base_image[0], guidance_scale=20
+    )
 
     images[0].show()
     print(f"Response from Model: {images[0]}")
