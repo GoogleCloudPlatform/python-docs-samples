@@ -65,9 +65,9 @@ def tuning(
     )
 
     print(model._job.status)
-    # [END aiplatform_sdk_tuning]
     return model
 
 
 if __name__ == "__main__":
     tuning()
+# [END aiplatform_sdk_tuning]

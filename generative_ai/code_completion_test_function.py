@@ -35,10 +35,9 @@ def complete_test_function(temperature: float = 0.2) -> object:
 
     print(f"Response from Model: {response.text}")
 
-    # [END aiplatform_sdk_code_completion_test_function]
-
     return response
 
 
 if __name__ == "__main__":
     complete_test_function()
+# [END aiplatform_sdk_code_completion_test_function]
