@@ -21,7 +21,7 @@ import os
 from flask import current_app, Flask, render_template, request
 from google.auth.transport import requests
 from google.cloud import pubsub_v1
-from google.oauth2 import id_token
+# from google.oauth2 import id_token
 
 
 app = Flask(__name__)
