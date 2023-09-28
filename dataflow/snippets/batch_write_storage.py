@@ -28,7 +28,6 @@ def write_to_cloud_storage():
     wordsList = ["1", "2", "3", "4"]
     options = MyOptions()
 
-    print("writing to " + options.output)
     with beam.Pipeline(options=options) as pipeline:
         (
             pipeline
