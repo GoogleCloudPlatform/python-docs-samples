@@ -25,7 +25,7 @@ def sample_create_document(
     project_number: str,
     location: str,
     raw_document_path: str,
-    raw_document_file_type: int,
+    raw_document_file_type: contentwarehouse.RawDocumentFileType,
     document_schema_id: str,
     user_id: str,
     reference_id: Optional[str] = None,
@@ -49,8 +49,6 @@ def sample_create_document(
     # Create a Document Service client
     client = contentwarehouse.DocumentServiceClient()
 
-    parent = client.common_location_path(project=project_number, location=location)
-
     # Get document schema name
     document_schema_name = client.document_schema_path(
         project=project_number, location=location, document_schema=document_schema_id
@@ -69,6 +67,8 @@ def sample_create_document(
     request_metadata = contentwarehouse.RequestMetadata(
         user_info=contentwarehouse.UserInfo(id=user_id)
     )
+
+    parent = client.common_location_path(project=project_number, location=location)
 
     request = contentwarehouse.CreateDocumentRequest(
         parent=parent,

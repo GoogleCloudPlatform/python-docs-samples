@@ -36,6 +36,10 @@ def sample_update_document(
     # Create a client
     client = contentwarehouse.DocumentServiceClient()
 
+    # Update document fields
+    # For fields which can be updated, refer
+    # https://cloud.google.com/python/docs/reference/contentwarehouse/
+    # latest/google.cloud.contentwarehouse_v1.types.Document
     document.display_name = "Updated Order Invoice"
 
     request_metadata = contentwarehouse.RequestMetadata(

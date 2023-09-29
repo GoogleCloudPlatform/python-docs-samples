@@ -22,6 +22,7 @@ from contentwarehouse.snippets import delete_document_schema_sample
 from contentwarehouse.snippets import get_document_sample
 from contentwarehouse.snippets import test_utilities
 from contentwarehouse.snippets import update_document_sample
+from google.cloud import contentwarehouse
 from google.cloud.contentwarehouse import Document
 
 import pytest
@@ -31,7 +32,7 @@ location = "us"
 raw_document_path = (
     "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
 )
-raw_document_file_type = 1
+raw_document_file_type = contentwarehouse.RawDocumentFileType.RAW_DOCUMENT_FILE_TYPE_PDF
 user_id = os.environ["user_id"]
 reference_id = "001"
 
