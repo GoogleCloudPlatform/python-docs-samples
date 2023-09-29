@@ -40,6 +40,26 @@ def process_document_summarizer_sample(
     file_path: str,
     mime_type: str,
 ) -> None:
+    # For supported options, refer to:
+    # https://cloud.google.com/document-ai/docs/reference/rest/v1beta3/projects.locations.processors.processorVersions#summaryoptions
+    summary_options = documentai.SummaryOptions(
+        length=documentai.SummaryOptions.Length.BRIEF,
+        format=documentai.SummaryOptions.Format.BULLETS,
+    )
+
+    properties = [
+        documentai.DocumentSchema.EntityType.Property(
+            name="summary",
+            value_type="string",
+            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
+            property_metadata=documentai.PropertyMetadata(
+                field_extraction_metadata=documentai.FieldExtractionMetadata(
+                    summary_options=summary_options
+                )
+            ),
+        )
+    ]
+
     # Optional: Request specific summarization format other than the default
     # for the processor version.
     process_options = documentai.ProcessOptions(
@@ -48,23 +68,7 @@ def process_document_summarizer_sample(
                 documentai.DocumentSchema.EntityType(
                     name="summary_document_type",
                     base_types=["document"],
-                    properties=[
-                        documentai.DocumentSchema.EntityType.Property(
-                            name="summary",
-                            value_type="string",
-                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
-                            property_metadata=documentai.PropertyMetadata(
-                                field_extraction_metadata=documentai.FieldExtractionMetadata(
-                                    summary_options=documentai.SummaryOptions(
-                                        # For supported options, refer to:
-                                        # https://cloud.google.com/document-ai/docs/reference/rest/v1beta3/projects.locations.processors.processorVersions#summaryoptions
-                                        length=documentai.SummaryOptions.Length.BRIEF,
-                                        format=documentai.SummaryOptions.Format.BULLETS,
-                                    )
-                                )
-                            ),
-                        )
-                    ],
+                    properties=properties,
                 )
             ]
         )
@@ -101,6 +105,24 @@ def process_document_custom_extractor_sample(
     file_path: str,
     mime_type: str,
 ) -> None:
+    # Entities to extract from Foundation Model CDE
+    properties = [
+        documentai.DocumentSchema.EntityType.Property(
+            name="invoice_id",
+            value_type="string",
+            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="notes",
+            value_type="string",
+            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="terms",
+            value_type="string",
+            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
+        ),
+    ]
     # Optional: For Generative AI processors, request different fields than the
     # schema for a processor version
     process_options = documentai.ProcessOptions(
@@ -111,23 +133,7 @@ def process_document_custom_extractor_sample(
                 documentai.DocumentSchema.EntityType(
                     name="custom_extraction_document_type",
                     base_types=["document"],
-                    properties=[
-                        documentai.DocumentSchema.EntityType.Property(
-                            name="invoice_id",
-                            value_type="string",
-                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
-                        ),
-                        documentai.DocumentSchema.EntityType.Property(
-                            name="notes",
-                            value_type="string",
-                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
-                        ),
-                        documentai.DocumentSchema.EntityType.Property(
-                            name="terms",
-                            value_type="string",
-                            occurence_type=documentai.DocumentSchema.EntityType.Property.OccurenceType.REQUIRED_ONCE,
-                        ),
-                    ],
+                    properties=properties,
                 )
             ],
         )
