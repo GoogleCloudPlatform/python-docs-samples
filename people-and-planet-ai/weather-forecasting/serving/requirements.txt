@@ -1,4 +1,4 @@
-Flask==2.2.2
+Flask==3.0.0
 gunicorn==20.1.0
 
 # Local packages.
