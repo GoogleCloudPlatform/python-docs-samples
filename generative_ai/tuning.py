@@ -16,12 +16,14 @@
 from __future__ import annotations
 
 
+from typing import Optional
+
+
 from google.auth import default
+from google.cloud import aiplatform
 import pandas as pd
 import vertexai
-from google.cloud import aiplatform
-from vertexai.preview.language_models import TuningEvaluationSpec
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.preview.language_models import TextGenerationModel, TuningEvaluationSpec
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
@@ -61,9 +63,9 @@ projects/PROJECT_ID/locations/LOCATION_ID/tensorboards/TENSORBOARD_INSTANCE_ID
 Note that this instance must be in the same region as your tuning job.
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
-    eval_spec = TuningEvaluationSpec(evaluation_data=eval_dataset)
+    eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
     eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
-    model = TextGenerationModel.from_pretrained("text-bison@001")    
+    model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
         training_data=training_data,

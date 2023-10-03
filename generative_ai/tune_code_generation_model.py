@@ -16,12 +16,15 @@
 from __future__ import annotations
 
 
+from typing import Optional
+
+
 from google.auth import default
+from google.cloud import aiplatform
 import pandas as pd
 import vertexai
-from google.cloud import aiplatform
-from vertexai.preview.language_models import TuningEvaluationSpec
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.preview.language_models import CodeGenerationModel, TuningEvaluationSpec
+
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
@@ -55,7 +58,7 @@ def tune_code_generation_model(
       train_steps: Number of training steps to use when tuning the model.
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
-    eval_spec = TuningEvaluationSpec(evaluation_data=eval_dataset)
+    eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
     eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
     model = CodeGenerationModel.from_pretrained("code-bison@001")
 
