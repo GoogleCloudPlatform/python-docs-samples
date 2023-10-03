@@ -39,4 +39,7 @@ def test_write_to_cloud_storage(setup_and_teardown):
     write_to_cloud_storage()
 
     blobs = list(storage_client.list_blobs(bucket_name))
+    # Ensure the pipeline wrote files to Cloud Storage
     assert blobs
+    for blob in blobs:
+        assert blob.name.endswith(".txt")
