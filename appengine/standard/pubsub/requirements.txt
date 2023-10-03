@@ -1,5 +1,6 @@
 Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
 google-api-python-client==1.12.11; python_version < '3.0'
+google-auth-httplib2==0.1.1; python_version < '3.0'
 Werkzeug==1.0.1; python_version < '3.0'
 Werkzeug==2.3.7; python_version > '3.0'
