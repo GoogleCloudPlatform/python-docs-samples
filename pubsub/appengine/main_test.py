@@ -16,18 +16,61 @@
 # or the PEM files when deploying your app.
 
 import base64
+import calendar
+import datetime
 import json
 import os
 
+from google.auth import crypt
+from google.auth import jwt
+from google.oauth2 import id_token
 import pytest
 
 import main
+
+
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+with open(os.path.join(DATA_DIR, "privatekey.pem"), "rb") as fh:
+    PRIVATE_KEY_BYTES = fh.read()
+
+with open(os.path.join(DATA_DIR, "public_cert.pem"), "rb") as fh:
+    PUBLIC_CERT_BYTES = fh.read()
 
 
 @pytest.fixture
 def client():
     main.app.testing = True
     return main.app.test_client()
+
+
+@pytest.fixture
+def signer():
+    return crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
+
+
+@pytest.fixture
+def fake_token(signer):
+    now = calendar.timegm(
+        datetime.datetime.now(tz=datetime.timezone.utc).utctimetuple()
+    )
+    payload = {
+        "aud": "example.com",
+        "azp": "1234567890",
+        "email": "pubsub@example.iam.gserviceaccount.com",
+        "email_verified": True,
+        "iat": now,
+        "exp": now + 3600,
+        "iss": "https://accounts.google.com",
+        "sub": "1234567890",
+    }
+    header = {"alg": "RS256", "kid": signer.key_id, "typ": "JWT"}
+    yield jwt.encode(signer, payload, header=header)
+
+
+def _verify_mocked_oauth2_token(token, request, audience):
+    claims = jwt.decode(token, certs=PUBLIC_CERT_BYTES, verify=True)
+    return claims
 
 
 def test_index(client):
@@ -40,7 +83,9 @@ def test_post_index(client):
     assert r.status_code == 200
 
 
-def test_push_endpoint(client, fake_token):
+def test_push_endpoint(monkeypatch, client, fake_token):
+    monkeypatch.setattr(id_token, "verify_oauth2_token", _verify_mocked_oauth2_token)
+
     url = (
         "/push-handlers/receive_messages?token="
         + os.environ["PUBSUB_VERIFICATION_TOKEN"]
