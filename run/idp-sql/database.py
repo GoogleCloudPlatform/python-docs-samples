@@ -38,7 +38,7 @@ def init_connection_engine() -> sqlalchemy.engine.base.Engine:
     Returns:
         A SQLAlchemy Engine instance.
     """
-    if os.getenv("TRAMPOLINE_CI", None):
+    if False: # os.getenv("TRAMPOLINE_CI", None):
         logger.info("Using NullPool for testing")
         db_config: dict[str, Any] = {"poolclass": NullPool}
     else:
