@@ -18,13 +18,14 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
-import base64
+
+from typing import Dict, List, Union
+
+import google.cloud.dlp
+from google.cloud.dlp_v2 import types
+
 
 # [START dlp_deidentify_table_condition_infotypes]
-from typing import Dict, List, Union  # noqa: F811, E402, I100
-
-import google.cloud.dlp  # noqa: F811, E402
-from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 
 def deidentify_table_condition_replace_with_info_types(
@@ -56,7 +57,7 @@ def deidentify_table_condition_replace_with_info_types(
        the response from the API is also printed to the terminal.
 
     Example:
-    >> $ python deid.py deid_table_condition_replace \
+    >> $ python deidentify_table_condition_infotypes.py \
     '{"header": ["email", "phone number", "age"],
     "rows": [["robertfrost@example.com", "4232342345", "45"],
     ["johndoe@example.com", "4253458383", "63"]]}' ["email"] \
@@ -140,3 +141,51 @@ def deidentify_table_condition_replace_with_info_types(
 # [END dlp_deidentify_table_condition_infotypes]
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "table_data",
+        help="Json string representing table data",
+    )
+    parser.add_argument(
+        "deid_content_list", help="A list of fields in table to de-identify."
+    )
+    parser.add_argument(
+        "--info_types",
+        nargs="+",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    parser.add_argument(
+        "--condition_field",
+        help="A table Field within the record this condition is evaluated " "against.",
+    )
+    parser.add_argument(
+        "--condition_operator",
+        help="Operator used to compare the field or infoType to the value. "
+             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+             "EXISTS.",
+    )
+    parser.add_argument(
+        "--condition_value",
+        help="Value to compare against. [Mandatory, except for ``EXISTS`` tests.].",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_condition_replace_with_info_types(
+        args.project,
+        args.table_data,
+        args.deid_content_list,
+        args.info_types,
+        condition_field=args.condition_field,
+        condition_operator=args.condition_operator,
+        condition_value=args.condition_value,
+    )

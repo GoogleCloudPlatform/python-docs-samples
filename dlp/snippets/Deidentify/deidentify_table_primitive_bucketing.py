@@ -18,10 +18,10 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
-import base64
+
+import google.cloud.dlp
 
 # [START dlp_deidentify_table_primitive_bucketing]
-import google.cloud.dlp  # noqa: F811, E402, I100
 
 
 def deidentify_table_primitive_bucketing(
@@ -105,9 +105,20 @@ def deidentify_table_primitive_bucketing(
     )
 
     # Print the results.
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
 
 # [END dlp_deidentify_table_primitive_bucketing]
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_primitive_bucketing(args.project)

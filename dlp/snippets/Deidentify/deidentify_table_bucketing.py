@@ -18,13 +18,14 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
-import base64
+
+from typing import Dict, List, Union
+
+import google.cloud.dlp
+from google.cloud.dlp_v2 import types
+
 
 # [START dlp_deidentify_table_bucketing]
-from typing import Dict, List, Union  # noqa: F811, E402, I100
-
-import google.cloud.dlp  # noqa: F811, E402
-from google.cloud.dlp_v2 import types  # noqa: F811, E402
 
 
 def deidentify_table_bucketing(
@@ -54,7 +55,7 @@ def deidentify_table_bucketing(
        the response from the API is also printed to the terminal.
 
     Example:
-    >> $ python deid.py deid_table_bucketing \
+    >> $ python deidentify_table_bucketing.py \
         '{"header": ["email", "phone number", "age"],
         "rows": [["robertfrost@example.com", "4232342345", "35"],
         ["johndoe@example.com", "4253458383", "68"]]}' \
@@ -121,3 +122,40 @@ def deidentify_table_bucketing(
 # [END dlp_deidentify_table_bucketing]
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "--project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "--table_data",
+        help="Json string representing table data",
+    )
+    parser.add_argument(
+        "--deid_content_list", help="A list of fields in table to de-identify."
+    )
+    parser.add_argument(
+        "--bucket_size",
+        help="Size of each bucket for fixed sized bucketing.",
+    )
+    parser.add_argument(
+        "--bucketing_lower_bound",
+        help="Lower bound value of buckets.",
+    )
+    parser.add_argument(
+        "--bucketing_upper_bound",
+        help="Upper bound value of buckets.",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_bucketing(
+        args.project,
+        args.table_data,
+        args.deid_content_list,
+        args.bucket_size,
+        args.bucketing_lower_bound,
+        args.bucketing_upper_bound,
+    )

@@ -18,12 +18,13 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
-import base64
+
+from typing import Dict, List, Union
+
+import google.cloud.dlp
+
 
 # [START dlp_deidentify_table_with_multiple_crypto_hash]
-from typing import Dict, List, Union  # noqa: F811, E402, I100
-
-import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_table_with_multiple_crypto_hash(
@@ -130,8 +131,54 @@ def deidentify_table_with_multiple_crypto_hash(
     )
 
     # Print the result.
-    print("Table after de-identification: {}".format(response.item.table))
+    print(f"Table after de-identification: {response.item.table}")
 
 
 # [END dlp_deidentify_table_with_multiple_crypto_hash]
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "table_data",
+        help="Dictionary representing table data",
+    )
+    parser.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing infoTypes to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    parser.add_argument(
+        "transient_key_name_1",
+        help="Name of the first transient crypto key used for encryption.",
+    )
+    parser.add_argument(
+        "transient_key_name_2",
+        help="Name of the second transient crypto key used for encryption.",
+    )
+    parser.add_argument(
+        "deid_fields_1",
+        help="List of column names in table to de-identify using transient_key_name_1.",
+    )
+    parser.add_argument(
+        "deid_fields_2",
+        help="List of column names in table to de-identify using transient_key_name_2.",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_with_multiple_crypto_hash(
+        args.project,
+        args.table_data,
+        args.info_types,
+        args.transient_key_name_1,
+        args.transient_key_name_2,
+        args.deid_fields_1,
+        args.deid_fields_2,
+    )

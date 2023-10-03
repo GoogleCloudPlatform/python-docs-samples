@@ -20,10 +20,12 @@ from __future__ import annotations
 import argparse
 import base64
 
-# [START dlp_deidentify_table_fpe]
-from typing import List  # noqa: F811, E402, I100
 
-import google.cloud.dlp  # noqa: F811, E402
+from typing import List
+
+import google.cloud.dlp
+
+# [START dlp_deidentify_table_fpe]
 
 
 def deidentify_table_with_fpe(
@@ -109,3 +111,55 @@ def deidentify_table_with_fpe(
 # [END dlp_deidentify_table_fpe]
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "table_header",
+        help="List of strings representing table field names.",
+    )
+    parser.add_argument(
+        "table_rows",
+        help="List of rows representing table data",
+    )
+    parser.add_argument(
+        "deid_field_names",
+        help="A list of fields in table to de-identify.",
+    )
+    parser.add_argument(
+        "key_name",
+        help="The name of the Cloud KMS key used to encrypt ('wrap') the "
+             "AES-256 key. Example: "
+             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+    )
+    parser.add_argument(
+        "wrapped_key",
+        help="The encrypted ('wrapped') AES-256 key to use. This key should "
+             "be encrypted using the Cloud KMS key specified by key_name.",
+    )
+    parser.add_argument(
+        "-a",
+        "--alphabet",
+        default="ALPHA_NUMERIC",
+        help="The set of characters to replace sensitive ones with. Commonly "
+             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_with_fpe(
+        args.project,
+        args.table_header,
+        args.table_rows,
+        args.deid_field_names,
+        wrapped_key=base64.b64decode(args.wrapped_key),
+        key_name=args.key_name,
+        alphabet=args.alphabet,
+    )

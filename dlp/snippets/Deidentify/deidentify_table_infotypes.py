@@ -18,12 +18,13 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
-import base64
+
+from typing import Dict, List, Union
+
+import google.cloud.dlp
+
 
 # [START dlp_deidentify_table_infotypes]
-from typing import Dict, List, Union  # noqa: F811, E402, I100
-
-import google.cloud.dlp  # noqa: F811, E402
 
 
 def deidentify_table_replace_with_info_types(
@@ -46,7 +47,7 @@ def deidentify_table_replace_with_info_types(
         None; the response from the API is printed to the terminal.
 
     Example:
-    >> $ python deid.py table_replace_with_infotype \
+    >> $ python deidentify_table_infotypes.py \
     '{
         "header": ["name", "email", "phone number"],
         "rows": [
@@ -124,3 +125,35 @@ def deidentify_table_replace_with_info_types(
 
 # [END dlp_deidentify_table_infotypes]
 
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "table_data",
+        help="Json string representing a table.",
+    )
+    parser.add_argument(
+        "--info_types",
+        action="append",
+        help="Strings representing info types to look for. A full list of "
+             "info categories and types is available from the API. Examples "
+             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+    )
+    parser.add_argument(
+        "deid_content_list",
+        help="A list of fields in table to de-identify.",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_replace_with_info_types(
+        args.project,
+        args.table_data,
+        args.info_types,
+        args.deid_content_list,
+    )

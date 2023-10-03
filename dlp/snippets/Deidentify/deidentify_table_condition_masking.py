@@ -20,11 +20,13 @@ from __future__ import annotations
 import argparse
 import base64
 
-# [START dlp_deidentify_table_condition_masking]
-from typing import Dict, List, Union  # noqa: F811, E402, I100
+from typing import Dict, List, Union
 
-import google.cloud.dlp  # noqa: F811, E402
-from google.cloud.dlp_v2 import types  # noqa: F811, E402
+import google.cloud.dlp
+from google.cloud.dlp_v2 import types
+
+
+# [START dlp_deidentify_table_condition_masking]
 
 
 def deidentify_table_condition_masking(
@@ -55,7 +57,7 @@ def deidentify_table_condition_masking(
         the response from the API is also printed to the terminal.
 
     Example:
-    >> $ python deid.py deid_table_condition_mask \
+    >> $ python deidentify_table_condition_masking.py \
     '{"header": ["email", "phone number", "age", "happiness_score"],
     "rows": [["robertfrost@example.com", "4232342345", "35", "21"],
     ["johndoe@example.com", "4253458383", "64", "34"]]}' \
@@ -129,3 +131,49 @@ def deidentify_table_condition_masking(
 # [END dlp_deidentify_table_condition_masking]
 
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+
+    parser.add_argument(
+        "project",
+        help="The Google Cloud project id to use as a parent resource.",
+    )
+    parser.add_argument(
+        "table_data",
+        help="Json string representing table data",
+    )
+    parser.add_argument(
+        "deid_content_list", help="A list of fields in table to de-identify."
+    )
+    parser.add_argument(
+        "--condition_field",
+        help="A table Field within the record this condition is evaluated " "against.",
+    )
+    parser.add_argument(
+        "--condition_operator",
+        help="Operator used to compare the field or infoType to the value. "
+             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+             "EXISTS.",
+    )
+    parser.add_argument(
+        "--condition_value",
+        help="Value to compare against. [Mandatory, except for ``EXISTS`` tests.].",
+    )
+    parser.add_argument(
+        "-m",
+        "--masking_character",
+        help="The character to mask matching sensitive data with.",
+    )
+
+    args = parser.parse_args()
+
+    deidentify_table_condition_masking(
+        args.project,
+        args.table_data,
+        args.deid_content_list,
+        condition_field=args.condition_field,
+        condition_operator=args.condition_operator,
+        condition_value=args.condition_value,
+        masking_character=args.masking_character,
+    )
