@@ -230,6 +230,165 @@ def count_query_with_stale_read(client):
     return [task1, task2, task3]
 
 
+def sum_query_on_kind(client):
+    # [START datastore_sum_aggregation_query_on_kind]
+    # Set up sample entities
+    # Use incomplete key to auto-generate ID
+    task1 = datastore.Entity(client.key("Task"))
+    task2 = datastore.Entity(client.key("Task"))
+    task3 = datastore.Entity(client.key("Task"))
+
+    task1["hours"] = 5
+    task2["hours"] = 3
+    task3["hours"] = 1
+
+    tasks = [task1, task2, task3]
+    client.put_multi(tasks)
+
+    # Execute sum aggregation query
+    all_tasks_query = client.query(kind="Task")
+    all_tasks_sum_query = client.aggregation_query(all_tasks_query).sum("hours")
+    query_result = all_tasks_sum_query.fetch()
+    for aggregation_results in query_result:
+        for aggregation in aggregation_results:
+            print(f"Total sum of hours in tasks is {aggregation.value}")
+    # [END datastore_sum_aggregation_query_on_kind]
+    return tasks
+
+
+def sum_query_property_filter(client):
+    # [START datastore_sum_aggregation_query_with_filters]
+    # Set up sample entities
+    # Use incomplete key to auto-generate ID
+    task1 = datastore.Entity(client.key("Task"))
+    task2 = datastore.Entity(client.key("Task"))
+    task3 = datastore.Entity(client.key("Task"))
+
+    task1["hours"] = 5
+    task2["hours"] = 3
+    task3["hours"] = 1
+
+    task1["done"] = True
+    task2["done"] = True
+    task3["done"] = False
+
+    tasks = [task1, task2, task3]
+    client.put_multi(tasks)
+
+    # Execute sum aggregation query with filters
+    completed_tasks = client.query(kind="Task").add_filter("done", "=", True)
+    completed_tasks_query = client.aggregation_query(query=completed_tasks).sum(
+        property_ref="hours",
+        alias="total_completed_sum_hours"
+    )
+
+    completed_query_result = completed_tasks_query.fetch()
+    for aggregation_results in completed_query_result:
+        for aggregation_result in aggregation_results:
+            if aggregation_result.alias == "total_completed_sum_hours":
+                print(f"Total sum of hours in completed tasks is {aggregation_result.value}")
+    # [END datastore_sum_aggregation_query_with_filters]
+    return tasks
+
+
+def avg_query_on_kind(client):
+    # [START datastore_avg_aggregation_query_on_kind]
+    # Set up sample entities
+    # Use incomplete key to auto-generate ID
+    task1 = datastore.Entity(client.key("Task"))
+    task2 = datastore.Entity(client.key("Task"))
+    task3 = datastore.Entity(client.key("Task"))
+
+    task1["hours"] = 5
+    task2["hours"] = 3
+    task3["hours"] = 1
+
+    tasks = [task1, task2, task3]
+    client.put_multi(tasks)
+
+    # Execute average aggregation query
+    all_tasks_query = client.query(kind="Task")
+    all_tasks_avg_query = client.aggregation_query(all_tasks_query).avg("hours")
+    query_result = all_tasks_avg_query.fetch()
+    for aggregation_results in query_result:
+        for aggregation in aggregation_results:
+            print(f"Total average of hours in tasks is {aggregation.value}")
+    # [END datastore_avg_aggregation_query_on_kind]
+    return tasks
+
+
+def avg_query_property_filter(client):
+    # [START datastore_avg_aggregation_query_with_filters]
+    # Set up sample entities
+    # Use incomplete key to auto-generate ID
+    task1 = datastore.Entity(client.key("Task"))
+    task2 = datastore.Entity(client.key("Task"))
+    task3 = datastore.Entity(client.key("Task"))
+
+    task1["hours"] = 5
+    task2["hours"] = 3
+    task3["hours"] = 1
+
+    task1["done"] = True
+    task2["done"] = True
+    task3["done"] = False
+
+    tasks = [task1, task2, task3]
+    client.put_multi(tasks)
+
+    # Execute average aggregation query with filters
+    completed_tasks = client.query(kind="Task").add_filter("done", "=", True)
+    completed_tasks_query = client.aggregation_query(query=completed_tasks).avg(
+        property_ref="hours",
+        alias="total_completed_avg_hours"
+    )
+
+    completed_query_result = completed_tasks_query.fetch()
+    for aggregation_results in completed_query_result:
+        for aggregation_result in aggregation_results:
+            if aggregation_result.alias == "total_completed_avg_hours":
+                print(f"Total average of hours in completed tasks is {aggregation_result.value}")
+    # [END datastore_avg_aggregation_query_with_filters]
+    return tasks
+
+
+def multiple_aggregations_query(client):
+    # [START datastore_multiple_aggregation_in_structured_query]
+    # Set up sample entities
+    # Use incomplete key to auto-generate ID
+    task1 = datastore.Entity(client.key("Task"))
+    task2 = datastore.Entity(client.key("Task"))
+    task3 = datastore.Entity(client.key("Task"))
+
+    task1["hours"] = 5
+    task2["hours"] = 3
+    task3["hours"] = 1
+
+    tasks = [task1, task2, task3]
+    client.put_multi(tasks)
+
+    # Execute query with multiple aggregations
+    all_tasks_query = client.query(kind="Task")
+    aggregation_query = client.aggregation_query(all_tasks_query)
+    # Add aggregations
+    aggregation_query.add_aggregations(
+        [
+            datastore.aggregation.CountAggregation(alias="count_aggregation"),
+            datastore.aggregation.SumAggregation(
+                property_ref="hours", alias="sum_aggregation"),
+            datastore.aggregation.AvgAggregation(
+                property_ref="hours", alias="avg_aggregation")
+        ]
+    )
+
+    query_result = aggregation_query.fetch()
+    for aggregation_results in query_result:
+        for aggregation in aggregation_results:
+            print(f"{aggregation.alias} value is {aggregation.value}")
+    # [END datastore_multiple_aggregation_in_structured_query]
+    return tasks
+
+
 def main(project_id):
     client = datastore.Client(project_id)
 
