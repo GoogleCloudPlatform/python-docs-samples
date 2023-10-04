@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import pytest
-
 import deidentify_replace_infotype as deid
+
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 

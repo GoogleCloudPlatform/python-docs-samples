@@ -14,9 +14,9 @@
 
 import os
 
-import pytest
-
 import deidentify_table_with_multiple_crypto_hash as deid
+
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 

@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import pytest
-
 import deidentify_replace as deid
+
+import pytest
 
 HARMFUL_STRING = "My SSN is 372819127"
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")

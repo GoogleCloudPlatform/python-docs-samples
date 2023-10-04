@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import pytest
-
 import deidentify_fpe as deid
+
+import pytest
 
 HARMFUL_STRING = "My SSN is 372819127"
 HARMLESS_STRING = "My favorite color is blue"

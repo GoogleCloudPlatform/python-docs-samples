@@ -14,10 +14,11 @@
 import base64
 import os
 
-import pytest
-
 import deidentify_table_fpe as deid
 import reidentify_table_fpe as reid
+
+import pytest
+
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 UNWRAPPED_KEY = "YWJjZGVmZ2hpamtsbW5vcA=="

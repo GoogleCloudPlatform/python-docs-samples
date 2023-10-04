@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import pytest
-
 import reidentify_free_text_with_fpe_using_surrogate as deid
+
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 UNWRAPPED_KEY = "YWJjZGVmZ2hpamtsbW5vcA=="

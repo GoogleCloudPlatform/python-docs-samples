@@ -17,6 +17,7 @@ import deidentify_redact as deid
 
 import pytest
 
+
 HARMFUL_STRING = "My SSN is 372819127"
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 

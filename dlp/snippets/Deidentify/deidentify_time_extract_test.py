@@ -16,9 +16,9 @@ import shutil
 import tempfile
 from typing import Iterator, TextIO
 
-import pytest
-
 import deidentify_time_extract as deid
+
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 CSV_FILE = os.path.join(os.path.dirname(__file__), "../resources/dates.csv")

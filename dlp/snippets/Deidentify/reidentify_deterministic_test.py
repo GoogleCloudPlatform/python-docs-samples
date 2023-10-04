@@ -13,10 +13,9 @@
 # limitations under the License.
 import os
 
-import pytest
-
 import reidentify_deterministic as deid
 
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (

@@ -17,9 +17,10 @@ import shutil
 import tempfile
 from typing import Iterator, TextIO
 
+import deidentify_date_shift as deid
+
 import pytest
 
-import deidentify_date_shift as deid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (

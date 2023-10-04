@@ -14,9 +14,9 @@
 import base64
 import os
 
-import pytest
-
 import deidentify_table_fpe as deid
+
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (
