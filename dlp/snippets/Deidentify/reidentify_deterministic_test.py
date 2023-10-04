@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import reidentify_deterministic as deid
-
 import pytest
+
+import reidentify_deterministic as reid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (
@@ -33,7 +33,7 @@ SURROGATE_TYPE = "SSN_TOKEN"
 def test_reidentify_with_deterministic(capsys: pytest.CaptureFixture) -> None:
     labeled_fpe_string = "My SSN is SSN_TOKEN(36):ATeRUd3WWnAHHFtjtl1bv+CT09FZ7hyqNas="
 
-    deid.reidentify_with_deterministic(
+    reid.reidentify_with_deterministic(
         GCLOUD_PROJECT,
         labeled_fpe_string,
         surrogate_type=SURROGATE_TYPE,

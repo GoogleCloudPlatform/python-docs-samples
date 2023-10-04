@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import reidentify_fpe as deid
-
 import pytest
+
+import reidentify_fpe as reid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (
@@ -33,7 +33,7 @@ SURROGATE_TYPE = "SSN_TOKEN"
 def test_reidentify_with_fpe(capsys: pytest.CaptureFixture) -> None:
     labeled_fpe_string = "My SSN is SSN_TOKEN(9):731997681"
 
-    deid.reidentify_with_fpe(
+    reid.reidentify_with_fpe(
         GCLOUD_PROJECT,
         labeled_fpe_string,
         surrogate_type=SURROGATE_TYPE,

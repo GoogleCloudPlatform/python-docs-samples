@@ -108,7 +108,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    
     deidentify_with_replace(
         args.project,
         args.item,

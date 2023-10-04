@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import reidentify_free_text_with_fpe_using_surrogate as deid
-
 import pytest
+
+import reidentify_free_text_with_fpe_using_surrogate as reid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 UNWRAPPED_KEY = "YWJjZGVmZ2hpamtsbW5vcA=="
@@ -26,7 +26,7 @@ def test_reidentify_free_text_with_fpe_using_surrogate(
 ) -> None:
     labeled_fpe_string = "My phone number is PHONE_TOKEN(10):9617256398"
 
-    deid.reidentify_free_text_with_fpe_using_surrogate(
+    reid.reidentify_free_text_with_fpe_using_surrogate(
         GCLOUD_PROJECT,
         labeled_fpe_string,
         surrogate_type="PHONE_TOKEN",

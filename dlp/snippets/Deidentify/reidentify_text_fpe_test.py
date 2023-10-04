@@ -13,9 +13,9 @@
 # limitations under the License.
 import os
 
-import reidentify_text_fpe as deid
-
 import pytest
+
+import reidentify_text_fpe as reid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 WRAPPED_KEY = (
@@ -32,7 +32,7 @@ KEY_NAME = (
 def test_reidentify_text_with_fpe(capsys: pytest.CaptureFixture) -> None:
     labeled_fpe_string = "My phone number is PHONE_NUMBER(10):9617256398"
 
-    deid.reidentify_text_with_fpe(
+    reid.reidentify_text_with_fpe(
         GCLOUD_PROJECT,
         labeled_fpe_string,
         wrapped_key=WRAPPED_KEY,
