@@ -4,4 +4,4 @@ apache-airflow[gcp]==1.10.15
 apache-airflow-backport-providers-google==2021.3.3
 apache-airflow-backport-providers-cncf-kubernetes==2021.3.3
 kubernetes==11.0.0
-scipy==1.4.1; python_version > '3.0'
+scipy==1.10.0; python_version > '3.0'
