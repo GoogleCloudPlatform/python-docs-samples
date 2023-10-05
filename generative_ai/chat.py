@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_chat]
-from vertexai.preview.language_models import ChatModel, InputOutputTextPair
+from vertexai.language_models import ChatModel, InputOutputTextPair
 
 
 def science_tutoring(temperature: float = 0.2) -> None:

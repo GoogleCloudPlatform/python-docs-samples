@@ -19,7 +19,7 @@ from __future__ import annotations
 from google.auth import default
 import pandas as pd
 import vertexai
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 

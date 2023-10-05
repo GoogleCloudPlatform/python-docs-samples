@@ -15,7 +15,7 @@
 # [START aiplatform_sdk_list_tuned_code_generation_models]
 
 import vertexai
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.language_models import CodeGenerationModel
 
 
 def list_tuned_code_generation_models(
