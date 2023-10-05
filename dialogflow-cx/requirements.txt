@@ -2,3 +2,4 @@ google-cloud-dialogflow-cx==1.21.0
 Flask==2.2.2
 python-dateutil==2.8.2
 functions-framework==3.3.0
+Werkzeug==2.3.7
