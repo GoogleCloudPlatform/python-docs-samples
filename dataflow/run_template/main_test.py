@@ -20,6 +20,7 @@
 from datetime import datetime
 import json
 import os
+from urllib.parse import urlencode
 import uuid
 
 import backoff
@@ -28,8 +29,6 @@ import flask
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pytest
-
-from urllib.parse import urlencode
 
 # Relative imports cannot be found when running in `nox`, but we still
 # try to import it for the autocomplete when writing the tests.
