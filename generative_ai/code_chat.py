@@ -17,7 +17,7 @@ from vertexai.preview.language_models import CodeChatModel
 
 
 def write_a_function(temperature: float = 0.5) -> object:
-    """Example of using Code Chat Model to write a function."""
+    """Example of using Codey for Code Chat Model to write a function."""
 
     # TODO developer - override these parameters as needed:
     parameters = {

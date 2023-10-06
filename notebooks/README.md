@@ -5,20 +5,20 @@ is a managed service that offers an integrated and secure JupyterLab
 environment for data scientists and machine learning developers to
 experiment, develop, and deploy models into production.
 
-This directory contains AI Platform Notebooks code samples and
+This directory contains code samples and
 tutorials. The tutorials are divided into 2 sections:
-- AI Platform Notebooks [API code samples](samples)
-- AI Platform Notebooks [tutorials](tutorials)
+- [API code samples](samples)
+- [tutorials](tutorials)
 
 ## Notebooks API
 
 In [this](samples) folder you will find Python code samples to interact
 with the
-[AI Platform Notebooks API](https://cloud.google.com/ai-platform/notebooks/docs/reference/rest)
+[API](https://cloud.google.com/ai-platform/notebooks/docs/reference/rest)
 
-## AI Platform Notebooks tutorials
+## Tutorials
 
-**Run in AI Platform Notebooks**
+**Run in Notebooks**
 
 1. Create a Notebook
    [instance](https://cloud.google.com/ai-platform/notebooks/docs#how-to)
