@@ -64,7 +64,6 @@ def index():
 
 
 # [START gae_standard_pubsub_auth_push]
-# [START push]
 @app.route("/push-handlers/receive_messages", methods=["POST"])
 def receive_messages_handler():
     # Verify that the request originates from the application.
@@ -107,8 +106,22 @@ def receive_messages_handler():
     return "OK", 200
 
 
-# [END push]
 # [END gae_standard_pubsub_auth_push]
+
+# [START push]
+@app.route("/pubsub/push", methods=["POST"])
+def receive_pubsub_messages_handler():
+    # Verify that the request originates from the application.
+    if request.args.get("token", "") != current_app.config["PUBSUB_VERIFICATION_TOKEN"]:
+        return "Invalid request", 400
+
+    envelope = json.loads(request.data.decode("utf-8"))
+    payload = base64.b64decode(envelope["message"]["data"])
+    MESSAGES.append(payload)
+    # Returning any 2xx status indicates successful receipt of the message.
+    return "OK", 200
+
+# [END push]
 
 
 @app.errorhandler(500)
