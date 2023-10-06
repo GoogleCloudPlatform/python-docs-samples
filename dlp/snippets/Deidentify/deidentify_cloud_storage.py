@@ -87,7 +87,7 @@ def deidentify_cloud_storage(
     }
 
     # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
+    parent = f"projects/{project}/locations/global"
 
     # Construct Transformation Configuration with de-identify Templates used
     # for transformation.
