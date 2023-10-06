@@ -142,5 +142,5 @@ def test_push_endpoint_errors(client):
     assert r.status_code == 400
 
     # invalid token
-    r = client.post("/pubsub/push")
+    r = client.post("/pubsub/push?token=bad")
     assert r.status_code == 400
