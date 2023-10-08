@@ -15,7 +15,7 @@
 # [START aiplatform_sdk_code_generation_unittest]
 import textwrap
 
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.language_models import CodeGenerationModel
 
 
 def generate_unittest(temperature: float = 0.5) -> object:
@@ -49,10 +49,10 @@ def generate_unittest(temperature: float = 0.5) -> object:
     )
 
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_code_generation_unittest]
 
     return response
 
 
 if __name__ == "__main__":
     generate_unittest()
+# [END aiplatform_sdk_code_generation_unittest]

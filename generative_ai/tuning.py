@@ -19,7 +19,7 @@ from __future__ import annotations
 from google.auth import default
 import pandas as pd
 import vertexai
-from vertexai.preview.language_models import TextGenerationModel
+from vertexai.language_models import TextGenerationModel
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
@@ -65,9 +65,9 @@ def tuning(
     )
 
     print(model._job.status)
-    # [END aiplatform_sdk_tuning]
     return model
 
 
 if __name__ == "__main__":
     tuning()
+# [END aiplatform_sdk_tuning]

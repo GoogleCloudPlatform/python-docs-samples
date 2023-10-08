@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_chat]
-from vertexai.preview.language_models import CodeChatModel
+from vertexai.language_models import CodeChatModel
 
 
 def write_a_function(temperature: float = 0.5) -> object:
@@ -32,10 +32,10 @@ def write_a_function(temperature: float = 0.5) -> object:
         "Please help write a function to calculate the min of two numbers", **parameters
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_code_chat]
 
     return response
 
 
 if __name__ == "__main__":
     write_a_function()
+# [END aiplatform_sdk_code_chat]

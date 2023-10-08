@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_code_generation_function]
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.language_models import CodeGenerationModel
 
 
 def generate_a_function(temperature: float = 0.5) -> object:
@@ -31,10 +31,10 @@ def generate_a_function(temperature: float = 0.5) -> object:
     )
 
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_code_generation_function]
 
     return response
 
 
 if __name__ == "__main__":
     generate_a_function()
+# [END aiplatform_sdk_code_generation_function]
