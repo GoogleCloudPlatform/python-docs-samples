@@ -14,7 +14,7 @@
 
 # [START storage_transfer_manager_download_bucket]
 def download_bucket_with_transfer_manager(
-    bucket_name, destination_directory="", processes=8, max_results=1000
+    bucket_name, destination_directory="", workers=8, max_results=1000
 ):
     """Download all of the blobs in a bucket, concurrently in a process pool.
 
@@ -40,8 +40,9 @@ def download_bucket_with_transfer_manager(
     # The maximum number of processes to use for the operation. The performance
     # impact of this value depends on the use case, but smaller files usually
     # benefit from a higher number of processes. Each additional process occupies
-    # some CPU and memory resources until finished.
-    # processes=8
+    # some CPU and memory resources until finished. Threads can be used instead
+    # of processes by passing `worker_type=transfer_manager.THREAD`.
+    # workers=8
 
     # The maximum number of results to fetch from bucket.list_blobs(). This
     # sample code fetches all of the blobs up to max_results and queues them all
@@ -60,7 +61,7 @@ def download_bucket_with_transfer_manager(
     blob_names = [blob.name for blob in bucket.list_blobs(max_results=max_results)]
 
     results = transfer_manager.download_many_to_path(
-        bucket, blob_names, destination_directory=destination_directory, max_workers=processes
+        bucket, blob_names, destination_directory=destination_directory, max_workers=workers
     )
 
     for name, result in zip(blob_names, results):

@@ -75,6 +75,7 @@ import storage_set_metadata
 import storage_transfer_manager_download_bucket
 import storage_transfer_manager_download_chunks_concurrently
 import storage_transfer_manager_download_many
+import storage_transfer_manager_upload_chunks_concurrently
 import storage_transfer_manager_upload_directory
 import storage_transfer_manager_upload_many
 import storage_upload_file
@@ -243,7 +244,10 @@ def test_upload_blob_with_kms(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
         storage_upload_with_kms_key.upload_blob_with_kms(
-            test_bucket.name, source_file.name, blob_name, KMS_KEY,
+            test_bucket.name,
+            source_file.name,
+            blob_name,
+            KMS_KEY,
         )
         bucket = storage.Client().bucket(test_bucket.name)
         kms_blob = bucket.get_blob(blob_name)
@@ -396,7 +400,10 @@ def test_move_blob(test_bucket_create, test_blob):
         print(f"test_move_blob not found in bucket {test_bucket_create.name}")
 
     storage_move_file.move_blob(
-        bucket.name, test_blob.name, test_bucket_create.name, "test_move_blob",
+        bucket.name,
+        test_blob.name,
+        test_bucket_create.name,
+        "test_move_blob",
     )
 
     assert test_bucket_create.get_blob("test_move_blob") is not None
@@ -412,7 +419,10 @@ def test_copy_blob(test_blob):
         pass
 
     storage_copy_file.copy_blob(
-        bucket.name, test_blob.name, bucket.name, "test_copy_blob",
+        bucket.name,
+        test_blob.name,
+        bucket.name,
+        "test_copy_blob",
     )
 
     assert bucket.get_blob("test_copy_blob") is not None
@@ -551,7 +561,10 @@ def test_define_bucket_website_configuration(test_bucket):
 def test_object_get_kms_key(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         storage_upload_with_kms_key.upload_blob_with_kms(
-            test_bucket.name, source_file.name, "test_upload_blob_encrypted", KMS_KEY,
+            test_bucket.name,
+            source_file.name,
+            "test_upload_blob_encrypted",
+            KMS_KEY,
         )
     kms_key = storage_object_get_kms_key.object_get_kms_key(
         test_bucket.name, "test_upload_blob_encrypted"
@@ -568,7 +581,10 @@ def test_storage_compose_file(test_bucket):
 
     with tempfile.NamedTemporaryFile() as dest_file:
         destination = storage_compose_file.compose_file(
-            test_bucket.name, source_files[0], source_files[1], dest_file.name,
+            test_bucket.name,
+            source_files[0],
+            source_files[1],
+            dest_file.name,
         )
         composed = destination.download_as_string()
 
@@ -608,7 +624,8 @@ def test_change_default_storage_class(test_bucket, capsys):
 
 def test_change_file_storage_class(test_blob, capsys):
     blob = storage_change_file_storage_class.change_file_storage_class(
-        test_blob.bucket.name, test_blob.name,
+        test_blob.bucket.name,
+        test_blob.name,
     )
     out, _ = capsys.readouterr()
     assert f"Blob {blob.name} in bucket {blob.bucket.name}" in out
@@ -694,7 +711,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
             test_bucket.name,
             BLOB_NAMES,
             source_directory="{}/".format(uploads),
-            processes=8,
+            workers=8,
         )
         out, _ = capsys.readouterr()
 
@@ -706,7 +723,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
         storage_transfer_manager_download_bucket.download_bucket_with_transfer_manager(
             test_bucket.name,
             destination_directory=os.path.join(downloads, ""),
-            processes=8,
+            workers=8,
             max_results=10000,
         )
         out, _ = capsys.readouterr()
@@ -720,7 +737,7 @@ def test_transfer_manager_snippets(test_bucket, capsys):
             test_bucket.name,
             blob_names=BLOB_NAMES,
             destination_directory=os.path.join(downloads, ""),
-            processes=8,
+            workers=8,
         )
         out, _ = capsys.readouterr()
 
@@ -763,9 +780,7 @@ def test_transfer_manager_download_chunks_concurrently(test_bucket, capsys):
     with tempfile.NamedTemporaryFile() as file:
         file.write(b"test")
 
-        storage_upload_file.upload_blob(
-            test_bucket.name, file.name, BLOB_NAME
-        )
+        storage_upload_file.upload_blob(test_bucket.name, file.name, BLOB_NAME)
 
     with tempfile.TemporaryDirectory() as downloads:
         # Download the file.
@@ -773,8 +788,26 @@ def test_transfer_manager_download_chunks_concurrently(test_bucket, capsys):
             test_bucket.name,
             BLOB_NAME,
             os.path.join(downloads, BLOB_NAME),
-            processes=8,
+            workers=8,
         )
         out, _ = capsys.readouterr()
 
-        assert "Downloaded {} to {}".format(BLOB_NAME, os.path.join(downloads, BLOB_NAME)) in out
+        assert (
+            "Downloaded {} to {}".format(BLOB_NAME, os.path.join(downloads, BLOB_NAME))
+            in out
+        )
+
+
+def test_transfer_manager_upload_chunks_concurrently(test_bucket, capsys):
+    BLOB_NAME = "test_file.txt"
+
+    with tempfile.NamedTemporaryFile() as file:
+        file.write(b"test")
+        file.flush()
+
+        storage_transfer_manager_upload_chunks_concurrently.upload_chunks_concurrently(
+            test_bucket.name, file.name, BLOB_NAME
+        )
+
+        out, _ = capsys.readouterr()
+        assert "File {} uploaded to {}".format(file.name, BLOB_NAME) in out

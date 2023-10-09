@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START storage_transfer_manager_upload_directory]
-def upload_directory_with_transfer_manager(bucket_name, source_directory, processes=8):
+def upload_directory_with_transfer_manager(bucket_name, source_directory, workers=8):
     """Upload every file in a directory, including all files in subdirectories.
 
     Each blob name is derived from the filename, not including the `directory`
@@ -33,8 +33,9 @@ def upload_directory_with_transfer_manager(bucket_name, source_directory, proces
     # The maximum number of processes to use for the operation. The performance
     # impact of this value depends on the use case, but smaller files usually
     # benefit from a higher number of processes. Each additional process occupies
-    # some CPU and memory resources until finished.
-    # processes=8
+    # some CPU and memory resources until finished. Threads can be used instead
+    # of processes by passing `worker_type=transfer_manager.THREAD`.
+    # workers=8
 
     from pathlib import Path
 
@@ -65,7 +66,7 @@ def upload_directory_with_transfer_manager(bucket_name, source_directory, proces
 
     # Start the upload.
     results = transfer_manager.upload_many_from_filenames(
-        bucket, string_paths, source_directory=source_directory, max_workers=processes
+        bucket, string_paths, source_directory=source_directory, max_workers=workers
     )
 
     for name, result in zip(string_paths, results):

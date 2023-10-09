@@ -14,7 +14,7 @@
 
 # [START storage_transfer_manager_download_many]
 def download_many_blobs_with_transfer_manager(
-    bucket_name, blob_names, destination_directory="", processes=8
+    bucket_name, blob_names, destination_directory="", workers=8
 ):
     """Download blobs in a list by name, concurrently in a process pool.
 
@@ -46,8 +46,9 @@ def download_many_blobs_with_transfer_manager(
     # The maximum number of processes to use for the operation. The performance
     # impact of this value depends on the use case, but smaller files usually
     # benefit from a higher number of processes. Each additional process occupies
-    # some CPU and memory resources until finished.
-    # processes=8
+    # some CPU and memory resources until finished. Threads can be used instead
+    # of processes by passing `worker_type=transfer_manager.THREAD`.
+    # workers=8
 
     from google.cloud.storage import Client, transfer_manager
 
@@ -55,7 +56,7 @@ def download_many_blobs_with_transfer_manager(
     bucket = storage_client.bucket(bucket_name)
 
     results = transfer_manager.download_many_to_path(
-        bucket, blob_names, destination_directory=destination_directory, max_workers=processes
+        bucket, blob_names, destination_directory=destination_directory, max_workers=workers
     )
 
     for name, result in zip(blob_names, results):
