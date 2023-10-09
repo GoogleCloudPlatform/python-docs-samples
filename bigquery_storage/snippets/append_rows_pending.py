@@ -39,7 +39,6 @@ def create_row_data(row_num: int, name: str):
 
 
 def append_rows_pending(project_id: str, dataset_id: str, table_id: str):
-
     """Create a write stream, write some sample data, and commit the stream."""
     write_client = bigquery_storage_v1.BigQueryWriteClient()
     parent = write_client.table_path(project_id, dataset_id, table_id)

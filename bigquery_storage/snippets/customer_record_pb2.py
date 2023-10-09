@@ -31,7 +31,6 @@ CustomerRecord = _reflection.GeneratedProtocolMessageType(
 _sym_db.RegisterMessage(CustomerRecord)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     _CUSTOMERRECORD._serialized_start = 25
     _CUSTOMERRECORD._serialized_end = 81

@@ -42,7 +42,6 @@ _sym_db.RegisterMessage(SampleData)
 _sym_db.RegisterMessage(SampleData.SampleStruct)
 
 if _descriptor._USE_C_DESCRIPTORS == False:
-
     DESCRIPTOR._options = None
     _SAMPLEDATA._serialized_start = 22
     _SAMPLEDATA._serialized_end = 447
