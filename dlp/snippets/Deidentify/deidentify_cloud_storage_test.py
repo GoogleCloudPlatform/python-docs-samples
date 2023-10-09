@@ -16,10 +16,10 @@ import os
 from unittest import mock
 from unittest.mock import MagicMock
 
+import deidentify_cloud_storage as deid
+
 import google.cloud.dlp_v2
 import pytest
-
-import deidentify_cloud_storage as deid
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 TXT_FILE = os.path.join(os.path.dirname(__file__), "../resources/test.txt")
