@@ -14,12 +14,14 @@
 
 # [START aiplatform_sdk_tuning]
 from __future__ import annotations
+from typing import Optional
 
 
 from google.auth import default
+from google.cloud import aiplatform
 import pandas as pd
 import vertexai
-from vertexai.language_models import TextGenerationModel
+from vertexai.language_models import TuningEvaluationSpec, TextGenerationModel
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
@@ -30,6 +32,8 @@ def tuning(
     model_display_name: str,
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
+    evaluation_dataset: Optional[str] = None,
+    tensorboard_instance_name: Optional[str] = None
 ) -> TextGenerationModel:
     """Tune a new model, based on a prompt-response data.
 
@@ -53,6 +57,8 @@ def tuning(
       train_steps: Number of training steps to use when tuning the model.
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
+    eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
+    eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
@@ -62,6 +68,7 @@ def tuning(
         train_steps=train_steps,
         tuning_job_location="europe-west4",
         tuned_model_location=location,
+        tuning_evaluation_spec=eval_spec,
     )
 
     print(model._job.status)
