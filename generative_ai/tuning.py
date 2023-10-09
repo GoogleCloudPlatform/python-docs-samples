@@ -14,6 +14,8 @@
 
 # [START aiplatform_sdk_tuning]
 from __future__ import annotations
+
+
 from typing import Optional
 
 
@@ -21,7 +23,9 @@ from google.auth import default
 from google.cloud import aiplatform
 import pandas as pd
 import vertexai
-from vertexai.language_models import TuningEvaluationSpec, TextGenerationModel
+from vertexai.language_models import TextGenerationModel
+from vertexai.preview.language_models import TuningEvaluationSpec
+
 
 credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
