@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def load_table_file(file_path: str, table_id: str) -> "bigquery.Table":
-
     # [START bigquery_load_from_file]
     from google.cloud import bigquery
 

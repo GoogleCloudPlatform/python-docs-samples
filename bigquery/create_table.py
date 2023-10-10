@@ -14,7 +14,6 @@
 
 
 def create_table(table_id: str) -> None:
-
     # [START bigquery_create_table]
     from google.cloud import bigquery
 

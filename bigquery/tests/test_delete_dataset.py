@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_delete_dataset(capsys: "pytest.CaptureFixture[str]", dataset_id: str) -> None:
-
     delete_dataset.delete_dataset(dataset_id)
     out, err = capsys.readouterr()
     assert "Deleted dataset '{}'.".format(dataset_id) in out

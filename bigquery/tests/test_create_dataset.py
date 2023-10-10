@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_create_dataset(
     capsys: "pytest.CaptureFixture[str]", random_dataset_id: str
 ) -> None:
-
     create_dataset.create_dataset(random_dataset_id)
     out, err = capsys.readouterr()
     assert "Created dataset {}".format(random_dataset_id) in out

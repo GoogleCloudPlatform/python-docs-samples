@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_query_script(capsys: "pytest.CaptureFixture[str]") -> None:
-
     query_script.query_script()
     out, _ = capsys.readouterr()
     assert "Script created 2 child jobs." in out

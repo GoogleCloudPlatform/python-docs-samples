@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_load_table_uri_orc(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str
 ) -> None:
-
     load_table_uri_orc.load_table_uri_orc(random_table_id)
     out, _ = capsys.readouterr()
     assert "Loaded 50 rows." in out

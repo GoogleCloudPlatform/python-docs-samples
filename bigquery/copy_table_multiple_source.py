@@ -16,7 +16,6 @@ from typing import Sequence
 
 
 def copy_table_multiple_source(dest_table_id: str, table_ids: Sequence[str]) -> None:
-
     # [START bigquery_copy_table_multiple_source]
 
     from google.cloud import bigquery

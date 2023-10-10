@@ -14,7 +14,6 @@
 
 
 def add_empty_column(table_id: str) -> None:
-
     # [START bigquery_add_empty_column]
     from google.cloud import bigquery
 

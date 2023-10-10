@@ -22,7 +22,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_query_no_cache(capsys: "pytest.CaptureFixture[str]") -> None:
-
     query_no_cache.query_no_cache()
     out, err = capsys.readouterr()
     assert re.search(r"(Row[\w(){}:', ]+)$", out)

@@ -14,7 +14,6 @@
 
 
 def update_table_require_partition_filter(table_id: str) -> None:
-
     # [START bigquery_update_table_require_partition_filter]
 
     from google.cloud import bigquery

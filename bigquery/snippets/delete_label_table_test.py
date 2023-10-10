@@ -24,7 +24,6 @@ def test_delete_label_table(
     capsys: "pytest.CaptureFixture[str]",
     table_id: str,
 ) -> None:
-
     table = delete_label_table.delete_label_table(table_id, "color")
 
     out, _ = capsys.readouterr()

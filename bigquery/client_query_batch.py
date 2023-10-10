@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def client_query_batch() -> "bigquery.QueryJob":
-
     # [START bigquery_query_batch]
     from google.cloud import bigquery
 

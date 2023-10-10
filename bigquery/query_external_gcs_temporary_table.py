@@ -14,7 +14,6 @@
 
 
 def query_external_gcs_temporary_table() -> None:
-
     # [START bigquery_query_external_gcs_temp]
     from google.cloud import bigquery
 

@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_query_external_gcs_temporary_table(
     capsys: "pytest.CaptureFixture[str]",
 ) -> None:
-
     query_external_gcs_temporary_table.query_external_gcs_temporary_table()
     out, err = capsys.readouterr()
     assert "There are 4 states with names starting with W." in out

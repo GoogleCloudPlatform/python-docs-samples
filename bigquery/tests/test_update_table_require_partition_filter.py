@@ -27,7 +27,6 @@ def test_update_table_require_partition_filter(
     random_table_id: str,
     client: bigquery.Client,
 ) -> None:
-
     # Make a partitioned table.
     schema = [bigquery.SchemaField("transaction_timestamp", "TIMESTAMP")]
     table = bigquery.Table(random_table_id, schema=schema)

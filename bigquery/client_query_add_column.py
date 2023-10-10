@@ -14,7 +14,6 @@
 
 
 def client_query_add_column(table_id: str) -> None:
-
     # [START bigquery_add_column_query_append]
     from google.cloud import bigquery
 

@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def query_to_arrow() -> "pyarrow.Table":
-
     # [START bigquery_query_to_arrow]
 
     from google.cloud import bigquery

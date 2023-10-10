@@ -14,7 +14,6 @@
 
 
 def query_external_sheets_temporary_table() -> None:
-
     # [START bigquery_query_external_sheets_temp]
     # [START bigquery_auth_drive_scope]
     from google.cloud import bigquery

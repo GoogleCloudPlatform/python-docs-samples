@@ -14,7 +14,6 @@
 
 
 def query_no_cache() -> None:
-
     # [START bigquery_query_no_cache]
     from google.cloud import bigquery
 

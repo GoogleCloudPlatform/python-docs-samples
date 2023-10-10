@@ -14,7 +14,6 @@
 
 
 def client_query() -> None:
-
     # [START bigquery_query]
 
     from google.cloud import bigquery

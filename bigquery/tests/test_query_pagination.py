@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_query_pagination(capsys: "pytest.CaptureFixture[str]") -> None:
-
     query_pagination.query_pagination()
     out, _ = capsys.readouterr()
     assert "The query data:" in out

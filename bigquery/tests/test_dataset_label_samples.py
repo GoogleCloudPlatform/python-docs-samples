@@ -25,7 +25,6 @@ if typing.TYPE_CHECKING:
 def test_dataset_label_samples(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str
 ) -> None:
-
     label_dataset.label_dataset(dataset_id)
     out, err = capsys.readouterr()
     assert "Labels added to {}".format(dataset_id) in out

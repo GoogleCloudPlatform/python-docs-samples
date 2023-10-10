@@ -27,7 +27,6 @@ def test_table_insert_rows(
     random_table_id: str,
     client: bigquery.Client,
 ) -> None:
-
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),

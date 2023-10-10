@@ -14,7 +14,6 @@
 
 
 def download_public_data() -> None:
-
     # [START bigquery_pandas_public_data]
 
     from google.cloud import bigquery

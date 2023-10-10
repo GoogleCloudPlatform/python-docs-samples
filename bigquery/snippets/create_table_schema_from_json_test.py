@@ -24,7 +24,6 @@ def test_create_table(
     capsys: "pytest.CaptureFixture[str]",
     random_table_id: str,
 ) -> None:
-
     create_table_schema_from_json.create_table(random_table_id)
 
     out, _ = capsys.readouterr()

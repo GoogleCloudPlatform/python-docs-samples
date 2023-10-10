@@ -14,7 +14,6 @@
 
 
 def dataset_exists(dataset_id: str) -> None:
-
     # [START bigquery_dataset_exists]
     from google.cloud import bigquery
     from google.cloud.exceptions import NotFound

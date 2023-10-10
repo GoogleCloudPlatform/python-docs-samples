@@ -24,7 +24,6 @@ def test_load_table(
     capsys: "pytest.CaptureFixture[str]",
     random_table_id: str,
 ) -> None:
-
     load_table_schema_from_json.load_table(random_table_id)
 
     out, _ = capsys.readouterr()

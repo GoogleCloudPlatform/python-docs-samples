@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_get_dataset(capsys: "pytest.CaptureFixture[str]", dataset_id: str) -> None:
-
     get_dataset.get_dataset(dataset_id)
     out, err = capsys.readouterr()
     assert dataset_id in out

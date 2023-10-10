@@ -14,7 +14,6 @@
 
 
 def download_public_data_sandbox() -> None:
-
     # [START bigquery_pandas_public_data_sandbox]
 
     from google.cloud import bigquery

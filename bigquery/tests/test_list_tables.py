@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_list_tables(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str, table_id: str
 ) -> None:
-
     list_tables.list_tables(dataset_id)
     out, err = capsys.readouterr()
     assert "Tables contained in '{}':".format(dataset_id) in out

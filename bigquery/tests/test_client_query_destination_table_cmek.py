@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_client_query_destination_table_cmek(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str, kms_key_name: str
 ) -> None:
-
     client_query_destination_table_cmek.client_query_destination_table_cmek(
         random_table_id, kms_key_name
     )

@@ -127,7 +127,6 @@ def update_view(override_values: Optional[Dict[str, str]] = None) -> "bigquery.T
 def grant_access(
     override_values: Optional[OverridesDict] = None,
 ) -> Tuple["bigquery.Dataset", "bigquery.Dataset"]:
-
     if override_values is None:
         override_values = {}
 

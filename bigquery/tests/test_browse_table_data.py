@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_browse_table_data(
     capsys: "pytest.CaptureFixture[str]", table_with_data_id: str
 ) -> None:
-
     browse_table_data.browse_table_data(table_with_data_id)
     out, err = capsys.readouterr()
     assert "Downloaded 164656 rows from table {}".format(table_with_data_id) in out

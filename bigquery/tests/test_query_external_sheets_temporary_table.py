@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_query_external_sheets_temporary_table(
     capsys: "pytest.CaptureFixture[str]",
 ) -> None:
-
     query_external_sheets_temporary_table.query_external_sheets_temporary_table()
     out, err = capsys.readouterr()
     assert "There are 2 states with names starting with W in the selected range." in out

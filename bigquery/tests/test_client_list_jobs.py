@@ -25,7 +25,6 @@ if typing.TYPE_CHECKING:
 def test_client_list_jobs(
     capsys: "pytest.CaptureFixture[str]", client: "bigquery.Client"
 ) -> None:
-
     job = create_job.create_job()
     client.cancel_job(job.job_id)
     job.cancel()

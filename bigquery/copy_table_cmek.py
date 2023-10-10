@@ -14,7 +14,6 @@
 
 
 def copy_table_cmek(dest_table_id: str, orig_table_id: str, kms_key_name: str) -> None:
-
     # [START bigquery_copy_table_cmek]
     from google.cloud import bigquery
 

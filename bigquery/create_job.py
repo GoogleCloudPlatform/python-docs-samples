@@ -20,7 +20,6 @@ if typing.TYPE_CHECKING:
 
 
 def create_job() -> "Union[LoadJob, CopyJob, ExtractJob, QueryJob]":
-
     # [START bigquery_create_job]
     from google.cloud import bigquery
 

@@ -24,7 +24,6 @@ def test_create_table(
     capsys: "pytest.CaptureFixture[str]",
     random_table_id: str,
 ) -> None:
-
     kms_key_name = (
         "projects/cloud-samples-tests/locations/us/keyRings/test/cryptoKeys/test"
     )

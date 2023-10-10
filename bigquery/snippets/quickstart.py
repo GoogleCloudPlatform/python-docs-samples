@@ -18,7 +18,6 @@ from typing import Dict, Optional
 
 
 def run_quickstart(override_values: Optional[Dict[str, str]] = None) -> None:
-
     if override_values is None:
         override_values = {}
 

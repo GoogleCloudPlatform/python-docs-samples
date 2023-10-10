@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_update_dataset_default_partition_expiration(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str
 ) -> None:
-
     ninety_days_ms = 90 * 24 * 60 * 60 * 1000  # in milliseconds
 
     update_dataset_default_partition_expiration.update_dataset_default_partition_expiration(

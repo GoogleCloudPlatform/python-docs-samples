@@ -25,7 +25,6 @@ if typing.TYPE_CHECKING:
 def test_get_table(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str, client: bigquery.Client
 ) -> None:
-
     schema = [
         bigquery.SchemaField("full_name", "STRING", mode="REQUIRED"),
         bigquery.SchemaField("age", "INTEGER", mode="REQUIRED"),

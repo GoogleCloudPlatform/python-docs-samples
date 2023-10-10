@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def load_table_clustered(table_id: str) -> "bigquery.Table":
-
     # [START bigquery_load_table_clustered]
     from google.cloud import bigquery
 

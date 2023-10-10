@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_add_empty_column(capsys: "pytest.CaptureFixture[str]", table_id: str) -> None:
-
     add_empty_column.add_empty_column(table_id)
     out, err = capsys.readouterr()
     assert "A new column has been added." in out

@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def update_routine(routine_id: str) -> "bigquery.Routine":
-
     # [START bigquery_update_routine]
 
     from google.cloud import bigquery

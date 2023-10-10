@@ -14,7 +14,6 @@
 
 
 def delete_routine(routine_id: str) -> None:
-
     # [START bigquery_delete_routine]
 
     from google.cloud import bigquery

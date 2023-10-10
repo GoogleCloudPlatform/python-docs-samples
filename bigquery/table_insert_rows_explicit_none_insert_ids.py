@@ -14,7 +14,6 @@
 
 
 def table_insert_rows_explicit_none_insert_ids(table_id: str) -> None:
-
     # [START bigquery_table_insert_rows_explicit_none_insert_ids]
     from google.cloud import bigquery
 

@@ -26,7 +26,6 @@ def test_load_table_clustered(
     random_table_id: str,
     client: "bigquery.Client",
 ) -> None:
-
     table = load_table_clustered.load_table_clustered(random_table_id)
 
     out, _ = capsys.readouterr()

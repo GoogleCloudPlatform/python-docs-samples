@@ -14,7 +14,6 @@
 
 
 def load_table_uri_autodetect_json(table_id: str) -> None:
-
     # [START bigquery_load_table_gcs_json_autodetect]
     from google.cloud import bigquery
 

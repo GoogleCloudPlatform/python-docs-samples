@@ -14,7 +14,6 @@
 
 
 def delete_table(table_id: str) -> None:
-
     # [START bigquery_delete_table]
 
     from google.cloud import bigquery

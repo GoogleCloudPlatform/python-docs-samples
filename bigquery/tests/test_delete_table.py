@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_delete_table(capsys: "pytest.CaptureFixture[str]", table_id: str) -> None:
-
     delete_table.delete_table(table_id)
     out, err = capsys.readouterr()
     assert "Deleted table '{}'.".format(table_id) in out

@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_update_dataset_default_table_expiration(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str
 ) -> None:
-
     one_day_ms = 24 * 60 * 60 * 1000  # in milliseconds
 
     update_dataset_default_table_expiration.update_dataset_default_table_expiration(

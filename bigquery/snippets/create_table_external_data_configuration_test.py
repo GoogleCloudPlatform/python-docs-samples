@@ -24,7 +24,6 @@ def test_create_table_external_data_configuration(
     capsys: "pytest.CaptureFixture[str]",
     random_table_id: str,
 ) -> None:
-
     create_table_external_data_configuration.create_table_external_data_configuration(
         random_table_id
     )

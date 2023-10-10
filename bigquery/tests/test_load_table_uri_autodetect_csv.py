@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_load_table_uri_autodetect_csv(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str
 ) -> None:
-
     load_table_uri_autodetect_csv.load_table_uri_autodetect_csv(random_table_id)
     out, err = capsys.readouterr()
     assert "Loaded 50 rows." in out

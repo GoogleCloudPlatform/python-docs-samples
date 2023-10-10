@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def client_query_dry_run() -> "bigquery.QueryJob":
-
     # [START bigquery_query_dry_run]
     from google.cloud import bigquery
 

@@ -43,7 +43,6 @@ def test_quickstart(
     client: bigquery.Client,
     datasets_to_delete: List[str],
 ) -> None:
-
     override_values = {
         "dataset_id": "my_new_dataset_{}".format(str(uuid.uuid4()).replace("-", "_")),
     }

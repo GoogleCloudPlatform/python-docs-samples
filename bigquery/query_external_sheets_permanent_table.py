@@ -14,7 +14,6 @@
 
 
 def query_external_sheets_permanent_table(dataset_id: str) -> None:
-
     # [START bigquery_query_external_sheets_perm]
     from google.cloud import bigquery
     import google.auth

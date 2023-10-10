@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_client_query_dry_run(capsys: "pytest.CaptureFixture[str]") -> None:
-
     query_job = client_query_dry_run.client_query_dry_run()
     out, err = capsys.readouterr()
     assert "This query will process" in out

@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_update_dataset_description(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str
 ) -> None:
-
     update_dataset_description.update_dataset_description(dataset_id)
     out, err = capsys.readouterr()
     assert "Updated description." in out

@@ -19,7 +19,6 @@ if typing.TYPE_CHECKING:
 
 
 def load_table_dataframe(table_id: str) -> "bigquery.Table":
-
     # [START bigquery_load_table_dataframe]
     import datetime
 

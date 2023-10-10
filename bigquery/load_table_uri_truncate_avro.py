@@ -14,7 +14,6 @@
 
 
 def load_table_uri_truncate_avro(table_id: str) -> None:
-
     # [START bigquery_load_table_gcs_avro_truncate]
     import io
 

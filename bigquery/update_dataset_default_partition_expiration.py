@@ -14,7 +14,6 @@
 
 
 def update_dataset_default_partition_expiration(dataset_id: str) -> None:
-
     # [START bigquery_update_dataset_partition_expiration]
 
     from google.cloud import bigquery

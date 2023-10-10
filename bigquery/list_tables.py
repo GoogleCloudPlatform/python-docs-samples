@@ -14,7 +14,6 @@
 
 
 def list_tables(dataset_id: str) -> None:
-
     # [START bigquery_list_tables]
 
     from google.cloud import bigquery

@@ -14,7 +14,6 @@
 
 
 def copy_table(source_table_id: str, destination_table_id: str) -> None:
-
     # [START bigquery_copy_table]
 
     from google.cloud import bigquery

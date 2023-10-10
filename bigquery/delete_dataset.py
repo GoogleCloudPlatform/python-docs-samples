@@ -14,7 +14,6 @@
 
 
 def delete_dataset(dataset_id: str) -> None:
-
     # [START bigquery_delete_dataset]
 
     from google.cloud import bigquery

@@ -14,7 +14,6 @@
 
 
 def query_pagination() -> None:
-
     # [START bigquery_query_pagination]
 
     from google.cloud import bigquery

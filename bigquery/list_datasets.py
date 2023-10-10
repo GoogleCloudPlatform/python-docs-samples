@@ -14,7 +14,6 @@
 
 
 def list_datasets() -> None:
-
     # [START bigquery_list_datasets]
 
     from google.cloud import bigquery

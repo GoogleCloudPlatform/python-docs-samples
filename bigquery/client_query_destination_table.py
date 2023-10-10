@@ -14,7 +14,6 @@
 
 
 def client_query_destination_table(table_id: str) -> None:
-
     # [START bigquery_query_destination_table]
     from google.cloud import bigquery
 

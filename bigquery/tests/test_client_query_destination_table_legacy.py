@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_client_query_destination_table_legacy(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str
 ) -> None:
-
     client_query_destination_table_legacy.client_query_destination_table_legacy(
         random_table_id
     )

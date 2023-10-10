@@ -31,7 +31,6 @@ def test_load_table_dataframe(
     client: "bigquery.Client",
     random_table_id: str,
 ) -> None:
-
     table = load_table_dataframe.load_table_dataframe(random_table_id)
     out, _ = capsys.readouterr()
     expected_column_names = [

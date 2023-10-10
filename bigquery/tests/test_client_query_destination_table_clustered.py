@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_client_query_destination_table_clustered(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str
 ) -> None:
-
     client_query_destination_table_clustered.client_query_destination_table_clustered(
         random_table_id
     )

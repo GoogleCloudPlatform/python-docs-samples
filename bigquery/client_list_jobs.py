@@ -14,7 +14,6 @@
 
 
 def client_list_jobs() -> None:
-
     # [START bigquery_list_jobs]
 
     from google.cloud import bigquery

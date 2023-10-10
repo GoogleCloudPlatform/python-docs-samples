@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_query_external_sheets_permanent_table(
     capsys: "pytest.CaptureFixture[str]", dataset_id: str
 ) -> None:
-
     query_external_sheets_permanent_table.query_external_sheets_permanent_table(
         dataset_id
     )

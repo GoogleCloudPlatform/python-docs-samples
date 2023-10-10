@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_client_query(capsys: "pytest.CaptureFixture[str]") -> None:
-
     client_query.client_query()
     out, err = capsys.readouterr()
     assert "The query data:" in out

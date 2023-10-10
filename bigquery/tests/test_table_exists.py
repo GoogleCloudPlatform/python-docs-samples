@@ -25,7 +25,6 @@ if typing.TYPE_CHECKING:
 def test_table_exists(
     capsys: "pytest.CaptureFixture[str]", random_table_id: str, client: bigquery.Client
 ) -> None:
-
     table_exists.table_exists(random_table_id)
     out, err = capsys.readouterr()
     assert "Table {} is not found.".format(random_table_id) in out

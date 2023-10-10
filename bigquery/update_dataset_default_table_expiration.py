@@ -14,7 +14,6 @@
 
 
 def update_dataset_default_table_expiration(dataset_id: str) -> None:
-
     # [START bigquery_update_dataset_expiration]
 
     from google.cloud import bigquery

@@ -14,7 +14,6 @@
 
 
 def list_routines(dataset_id: str) -> None:
-
     # [START bigquery_list_routines]
 
     from google.cloud import bigquery

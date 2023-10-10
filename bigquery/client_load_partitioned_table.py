@@ -14,7 +14,6 @@
 
 
 def client_load_partitioned_table(table_id: str) -> None:
-
     # [START bigquery_load_table_partitioned]
     from google.cloud import bigquery
 

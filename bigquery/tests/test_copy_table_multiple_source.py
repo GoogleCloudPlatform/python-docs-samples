@@ -29,7 +29,6 @@ def test_copy_table_multiple_source(
     random_dataset_id: str,
     client: bigquery.Client,
 ) -> None:
-
     dataset = bigquery.Dataset(random_dataset_id)
     dataset.location = "US"
     dataset = client.create_dataset(dataset)

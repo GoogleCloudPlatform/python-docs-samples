@@ -23,7 +23,6 @@ if typing.TYPE_CHECKING:
 def test_client_query_destination_table(
     capsys: "pytest.CaptureFixture[str]", table_id: str
 ) -> None:
-
     client_query_destination_table.client_query_destination_table(table_id)
     out, err = capsys.readouterr()
     assert "Query results loaded to the table {}".format(table_id) in out

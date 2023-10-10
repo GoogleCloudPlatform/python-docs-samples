@@ -14,7 +14,6 @@
 
 
 def create_dataset(dataset_id: str) -> None:
-
     # [START bigquery_create_dataset]
     from google.cloud import bigquery
 

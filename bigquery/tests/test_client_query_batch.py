@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_client_query_batch(capsys: "pytest.CaptureFixture[str]") -> None:
-
     job = client_query_batch.client_query_batch()
     out, err = capsys.readouterr()
     assert "Job {} is currently in state {}".format(job.job_id, job.state) in out

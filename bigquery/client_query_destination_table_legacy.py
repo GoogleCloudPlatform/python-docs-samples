@@ -14,7 +14,6 @@
 
 
 def client_query_destination_table_legacy(table_id: str) -> None:
-
     # [START bigquery_query_legacy_large_results]
     from google.cloud import bigquery
 

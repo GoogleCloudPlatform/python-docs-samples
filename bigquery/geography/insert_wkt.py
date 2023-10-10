@@ -18,7 +18,6 @@ from typing import Dict, Mapping, Optional, Sequence
 def insert_wkt(
     override_values: Optional[Mapping[str, str]] = None
 ) -> Sequence[Dict[str, object]]:
-
     if override_values is None:
         override_values = {}
 

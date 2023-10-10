@@ -21,7 +21,6 @@ if typing.TYPE_CHECKING:
 
 
 def test_client_query_w_positional_params(capsys: "pytest.CaptureFixture[str]") -> None:
-
     client_query_w_positional_params.client_query_w_positional_params()
     out, err = capsys.readouterr()
     assert "the" in out

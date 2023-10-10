@@ -14,7 +14,6 @@
 
 
 def label_dataset(dataset_id: str) -> None:
-
     # [START bigquery_label_dataset]
 
     from google.cloud import bigquery

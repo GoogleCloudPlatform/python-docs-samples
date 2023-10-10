@@ -24,7 +24,6 @@ def test_label_table(
     capsys: "pytest.CaptureFixture[str]",
     table_id: str,
 ) -> None:
-
     label_table.label_table(table_id)
 
     out, _ = capsys.readouterr()

@@ -14,7 +14,6 @@
 
 
 def create_routine_ddl(routine_id: str) -> None:
-
     # [START bigquery_create_routine_ddl]
 
     from google.cloud import bigquery

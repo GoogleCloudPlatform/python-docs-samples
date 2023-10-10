@@ -27,7 +27,6 @@ def test_dataset_exists(
     random_dataset_id: str,
     client: bigquery.Client,
 ) -> None:
-
     dataset_exists.dataset_exists(random_dataset_id)
     out, err = capsys.readouterr()
     assert "Dataset {} is not found".format(random_dataset_id) in out

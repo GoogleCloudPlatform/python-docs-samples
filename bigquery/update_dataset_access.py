@@ -14,7 +14,6 @@
 
 
 def update_dataset_access(dataset_id: str) -> None:
-
     # [START bigquery_update_dataset_access]
     from google.cloud import bigquery
 

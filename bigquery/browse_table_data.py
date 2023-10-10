@@ -14,7 +14,6 @@
 
 
 def browse_table_data(table_id: str) -> None:
-
     # [START bigquery_browse_table]
 
     from google.cloud import bigquery
