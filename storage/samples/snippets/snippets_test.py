@@ -213,6 +213,7 @@ def test_list_blobs_with_prefix(test_blob, capsys):
 def test_upload_blob(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
+        source_file.flush()
 
         storage_upload_file.upload_blob(
             test_bucket.name, source_file.name, "test_upload_blob"
@@ -243,6 +244,7 @@ def test_upload_blob_with_kms(test_bucket):
     blob_name = f"test_upload_with_kms_{uuid.uuid4().hex}"
     with tempfile.NamedTemporaryFile() as source_file:
         source_file.write(b"test")
+        source_file.flush()
         storage_upload_with_kms_key.upload_blob_with_kms(
             test_bucket.name,
             source_file.name,
@@ -779,6 +781,7 @@ def test_transfer_manager_download_chunks_concurrently(test_bucket, capsys):
 
     with tempfile.NamedTemporaryFile() as file:
         file.write(b"test")
+        file.flush()
 
         storage_upload_file.upload_blob(test_bucket.name, file.name, BLOB_NAME)
 
