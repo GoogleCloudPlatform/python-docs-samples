@@ -42,3 +42,11 @@ def test_explicit_compute_engine():
 
     with credentials_patch:
         snippets.explicit_compute_engine(project)
+
+
+def test_accesstoken_from_impersonated_credentials():
+    impersonated_service_account = "sa@project.service.gserviceaccount.com"
+    scope = "https://www.googleapis.com/auth/cloud-platform"
+    snippets.accesstoken_from_impersonated_credentials(
+        impersonated_service_account, scope
+    )
