@@ -33,36 +33,40 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
     # Create a client.
     client = tasks.CloudTasksClient()
 
+    # Create the HTTP Target for the queue. This property is required
+    # for an HTTP queue. For legacy reasons, this property is an object
+    # with multiple fields instead of a string containing a URI.
+
+    # Extract the various components of the URI provided by the caller
     parsedUri = urllib.parse.urlparse(uri)
-    parent = client.common_location_path(project, location)
-    queue = {
-        #"name": name,
-        "name": f"projects/{project}/locations/{location}/queues/{name}",
-        "http_target": {
-            "uri_override": {
-                #"scheme": parsedUri.scheme,
-                "host": parsedUri.hostname,
-            }
-        },
+
+    http_target = {
+        "uri_override": {
+            "host": parsedUri.hostname,
+            "uri_override_enforce_mode": 2, # ALWAYS use this endpoint
+        }
     }
-
-    uri_override = queue["http_target"]["uri_override"]
-
+    if parsedUri.scheme == "http":  # defaults to https
+        http_target["uri_override"]["scheme"] = 1
+    if parsedUri.port:
+        http_target["uri_override"]["port"] = f"{parsedUri.port}"
     if parsedUri.path:
-        uri_override["path_override"] = {"path": parsedUri.path}
-
+        http_target["uri_override"]["path_override"] = {"path": parsedUri.path}
     if parsedUri.query:
-        uri_override["query_override"] = {"query_params": parsedUri.query}
+        http_target["uri_override"]["query_override"] = {
+            "query_params": parsedUri.query
+        }
 
     # Use the client to send a CreateQueueRequest.
     return client.create_queue(
         tasks.CreateQueueRequest(
-            parent=parent,
-            queue=queue,
+            parent=client.common_location_path(project, location),
+            queue={
+                "name": f"projects/{project}/locations/{location}/queues/{name}",
+                "http_target": http_target,
+            },
         )
     )
-
-
 # [END cloud_tasks_create_http_queue]
 
 
@@ -76,8 +80,9 @@ def update_http_queue(queue: tasks.Queue, uri: str = "") -> tasks.Queue:
     Returns:
         The updated queue.
     """
-    
-    #TODO
+
+    # TODO
+
 
 # [END cloud_tasks_update_http_queue]
 
