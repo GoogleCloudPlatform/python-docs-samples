@@ -15,6 +15,7 @@
 import urllib
 
 from google.cloud import tasks_v2beta3 as tasks
+import google.protobuf
 
 
 # [START cloud_tasks_create_http_queue]
@@ -43,7 +44,7 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
     http_target = {
         "uri_override": {
             "host": parsedUri.hostname,
-            "uri_override_enforce_mode": 2, # ALWAYS use this endpoint
+            "uri_override_enforce_mode": 2,  # ALWAYS use this endpoint
         }
     }
     if parsedUri.scheme == "http":  # defaults to https
@@ -58,7 +59,7 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
         }
 
     # Use the client to send a CreateQueueRequest.
-    return client.create_queue(
+    queue = client.create_queue(
         tasks.CreateQueueRequest(
             parent=client.common_location_path(project, location),
             queue={
@@ -67,21 +68,63 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
             },
         )
     )
+
+    return queue
+
+
 # [END cloud_tasks_create_http_queue]
 
 
 # [START cloud_tasks_update_http_queue]
-def update_http_queue(queue: tasks.Queue, uri: str = "") -> tasks.Queue:
-    """Create an HTTP queue.
+def update_http_queue(
+    queue: tasks.Queue,
+    uri: str = "",
+    max_per_second: float = 0.0,
+    max_burst: int = 0,
+    max_concurrent: int = 0,
+    max_attempts: int = 0,
+) -> tasks.Queue:
+    """Update an HTTP queue with provided properties.
     Args:
         queue: The queue to update.
-        endpoint: The new HTTP endpoint's URI for all tasks in the queue
-
+        [TODO]
     Returns:
         The updated queue.
     """
 
-    # TODO
+    # Create a client.
+    client = tasks.CloudTasksClient()
+
+    update_mask = google.protobuf.field_mask_pb2.FieldMask(paths=[]) # Track which fields need to be updated
+
+    if uri:
+        parsedUri = urllib.parse.urlparse(uri)
+
+        http_target = {
+            "uri_override": {
+                "host": parsedUri.hostname,
+                "uri_override_enforce_mode": 2,  # ALWAYS use this endpoint
+            }
+        }
+        if parsedUri.scheme == "http":  # defaults to https
+            http_target["uri_override"]["scheme"] = 1
+        if parsedUri.port:
+            http_target["uri_override"]["port"] = f"{parsedUri.port}"
+        if parsedUri.path:
+            http_target["uri_override"]["path_override"] = {"path": parsedUri.path}
+        if parsedUri.query:
+            http_target["uri_override"]["query_override"] = {
+                "query_params": parsedUri.query
+            }
+
+        queue.http_target = http_target
+        update_mask.paths.append("http_target")
+
+        # TODO handle other updating properties
+
+    request = tasks.UpdateQueueRequest(queue=queue, update_mask=update_mask)
+    updated_queue = client.update_queue(request)
+    return updated_queue
 
 
 # [END cloud_tasks_update_http_queue]
