@@ -11,16 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-"""
-# Example external processing server - Client/Test File
-----
-This server does two things:
- When it gets request_headers, it replaces the Host header with service-extensions.com
-  and resets the path to /.
- When it gets response_headers, it adds a "hello: service-extensions" response header.
-"""
-
 from __future__ import print_function
 
 import threading
@@ -34,20 +24,28 @@ import service_pb2
 import service_pb2_grpc
 
 
-def get_request(end_of_stream: bool = False) -> service_pb2.HttpHeaders:
-    request_header = service_pb2.HttpHeaders(
+def get_request(end_of_stream: bool = False,
+                is_request_header: bool = True) -> service_pb2.HttpHeaders:
+    _headers = service_pb2.HttpHeaders(
         end_of_stream=end_of_stream,
     )
-    request = service_pb2.ProcessingRequest(
-        request_headers=request_header, async_mode=False
-    )
+    if is_request_header:
+        request = service_pb2.ProcessingRequest(
+            request_headers=_headers, async_mode=False
+        )
+    else:
+        request = service_pb2.ProcessingRequest(
+            response_headers=_headers, async_mode=False
+        )
     return request
 
 
 def get_requests_stream() -> service_pb2.HttpHeaders:
-    request = get_request(False)
+    request = get_request(end_of_stream=False, is_request_header=True)
     yield request
-    request = get_request(True)
+    request = get_request(end_of_stream=False, is_request_header=False)
+    yield request
+    request = get_request(end_of_stream=True)
     yield request
 
 
@@ -72,11 +70,15 @@ def test_server() -> None:
         with grpc.insecure_channel("0.0.0.0:8080") as channel:
             stub = service_pb2_grpc.ExternalProcessorStub(channel)
             for response in stub.Process(get_requests_stream()):
-                headers = response.request_headers.response.header_mutation
-                assert 'raw_value: "service-extensions.com"' in str(headers)
-                assert 'key: "host"' in str(headers)
+                str_message = str(response)
+                if 'request_headers' in str_message:
+                    assert 'raw_value: "service-extensions.com"' in str_message
+                    assert 'key: "host"' in str_message
+                elif 'response_headers' in str_message:
+                    assert 'raw_value: "service-extensions"' in str_message
+                    assert 'key: "hello"' in str_message
     except grpc._channel._MultiThreadedRendezvous:
-        raise Exception("SetUp Error: Server not ready!")
+        raise Exception("Setup Error: Server not ready!")
 
 
 @pytest.mark.usefixtures("setup_and_teardown")
@@ -86,4 +88,9 @@ def test_server_health_check() -> None:
         assert response.read() == b""
         assert response.getcode() == 200
     except urllib.error.URLError:
-        raise Exception("SetUp Error: Server not ready!")
+        raise Exception("Setup Error: Server not ready!")
+
+
+if __name__ == "__main__":
+    # Run the gRPC service
+    test_server()

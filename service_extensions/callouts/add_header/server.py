@@ -70,7 +70,6 @@ class CalloutProcessor(service_pb2_grpc.ExternalProcessorServicer):
         context: ServicerContext,
     ) -> Iterator[service_pb2.ProcessingResponse]:
         for request in request_iterator:
-            print(request)
             if request.HasField("response_headers"):
                 response_header_mutation = add_headers_mutation(
                     [("hello", "service-extensions")]
