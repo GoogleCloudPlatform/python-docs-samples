@@ -11,16 +11,17 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START serviceextension_add_header]
+# [START serviceextensions_add_header]
 """
 # Example external processing server
 ----
 This server does two things:
- When it gets request_headers, it replaces the Host header with service-extensions.com
-  and resets the path to /.
- When it gets response_headers, it adds a "hello: service-extensions" response header.
+* When it receives a `request_headers`, it replaces the Host header
+        with "host: service-extensions.com" and resets the path to /
+* When it receives a `response_headers`, it adds
+        a "hello: service-extensions" response header
 """
-# [START serviceextension_add_header_imports]
+# [START serviceextensions_add_header_imports]
 from concurrent import futures
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -41,14 +42,17 @@ EXT_PROC_INSECURE_PORT = 8080
 # Cloud health checks use this port.
 HEALTH_CHECK_PORT = 80
 
-# [END serviceextension_add_header_imports]
-# [START serviceextension_add_header_main]
-# Returns an ext_proc HeadersResponse for adding a list of headers.
-# clear_route_cache should be set to influence service selection for route
-# extensions.
+
+# [END serviceextensions_add_header_imports]
+# [START serviceextensions_add_header_main]
 def add_headers_mutation(
     headers: List[tuple[str, str]], clear_route_cache: bool = False
 ) -> service_pb2.HeadersResponse:
+    """
+    Returns an ext_proc HeadersResponse for adding a list of headers.
+    clear_route_cache should be set to influence service selection for route
+    extensions.
+    """
     response_header_mutation = service_pb2.HeadersResponse()
     response_header_mutation.response.header_mutation.set_headers.extend(
         [
@@ -69,6 +73,7 @@ class CalloutProcessor(service_pb2_grpc.ExternalProcessorServicer):
         request_iterator: Iterator[service_pb2.ProcessingRequest],
         context: ServicerContext,
     ) -> Iterator[service_pb2.ProcessingResponse]:
+        "Process the client request and add example headers"
         for request in request_iterator:
             if request.HasField("response_headers"):
                 response_header_mutation = add_headers_mutation(
@@ -89,11 +94,13 @@ class CalloutProcessor(service_pb2_grpc.ExternalProcessorServicer):
 
 class HealthCheckServer(BaseHTTPRequestHandler):
     def do_GET(self) -> None:
+        "Returns an empty page with 200 status code"
         self.send_response(200)
         self.end_headers()
 
 
 def serve() -> None:
+    "Run gRPC server and Health check server"
     health_server = HTTPServer(("0.0.0.0", HEALTH_CHECK_PORT), HealthCheckServer)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     service_pb2_grpc.add_ExternalProcessorServicer_to_server(CalloutProcessor(), server)
@@ -121,8 +128,8 @@ def serve() -> None:
         health_server.server_close()
 
 
-# [END serviceextension_add_header_main]
-# [END serviceextension_add_header]
+# [END serviceextensions_add_header_main]
+# [END serviceextensions_add_header]
 if __name__ == "__main__":
     # Run the gRPC service
     serve()

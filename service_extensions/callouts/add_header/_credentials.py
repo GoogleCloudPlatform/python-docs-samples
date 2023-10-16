@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Loading SSL credentials for gRPC Python authentication example."""
-# [START serviceextension_add_header_authentication]
+# [START serviceextensions_add_header_authentication]
 import os
 
 
@@ -25,4 +25,4 @@ def _load_credential_from_file(filepath: str) -> str:
 SERVER_CERTIFICATE = _load_credential_from_file("credentials/localhost.crt")
 SERVER_CERTIFICATE_KEY = _load_credential_from_file("credentials/localhost.key")
 ROOT_CERTIFICATE = _load_credential_from_file("credentials/root.crt")
-# [END serviceextension_add_header_authentication]
+# [END serviceextensions_add_header_authentication]
