@@ -27,8 +27,8 @@ ignoreFiles:
   - "dlp/snippets/resources/term_list.txt"
   - "service_extensions/callouts/add_header/service_pb2.py"
   - "service_extensions/callouts/add_header/service_pb2_grpc.py"
+  - "service_extensions/callouts/add_header/_credentials.py"
   - "service_extensions/callouts/add_header/protos/service.proto"
-  - "service_extensions/callouts/add_header/protos/_credentials.py"
 
 ignoreLicenseYear: true
 
