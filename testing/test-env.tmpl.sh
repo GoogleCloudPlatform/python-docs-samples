@@ -113,3 +113,6 @@ export CONNECTOR=
 # Dialogflow examples.
 export SMART_REPLY_MODEL=
 export SMART_REPLY_ALLOWLIST=
+
+# Datastore/Firestore
+export DATASTORE_DATABASE=
