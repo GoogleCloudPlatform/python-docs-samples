@@ -19,7 +19,7 @@ from vertexai.language_models import CodeGenerationModel
 
 
 def generate_unittest(temperature: float = 0.5) -> object:
-    """Example of using Code Generation to write a unit test."""
+    """Example of using Codey for Code Generation to write a unit test."""
 
     # TODO developer - override these parameters as needed:
     parameters = {

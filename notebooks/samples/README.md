@@ -1,4 +1,4 @@
-# AI Platform Notebooks API code samples
+# API code samples
 
 Sample command-line programs for interacting with the Notebooks API.
 

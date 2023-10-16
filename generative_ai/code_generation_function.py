@@ -17,7 +17,7 @@ from vertexai.language_models import CodeGenerationModel
 
 
 def generate_a_function(temperature: float = 0.5) -> object:
-    """Example of using Code Generation to write a function."""
+    """Example of using Codey for Code Generation to write a function."""
 
     # TODO developer - override these parameters as needed:
     parameters = {

@@ -17,7 +17,7 @@ from vertexai.language_models import CodeGenerationModel
 
 
 def complete_code_function(temperature: float = 0.2) -> object:
-    """Example of using Code Completion to complete a function."""
+    """Example of using Codey for Code Completion to complete a function."""
 
     # TODO developer - override these parameters as needed:
     parameters = {
