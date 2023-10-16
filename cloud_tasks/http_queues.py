@@ -120,13 +120,21 @@ def update_http_queue(
         queue.http_target = http_target
         update_mask.paths.append("http_target")
 
-        # TODO handle other updating properties
+    if max_per_second != 0.0:
+        queue.rate_limits.max_dispatches_per_second = max_per_second
+    if max_burst != 0:
+        queue.rate_limits.max_burst_size = max_burst
+    if max_concurrent != 0:
+        queue.rate_limits.max_concurrent_dispatches = max_concurrent
+    update_mask.paths.append("rate_limits")
+
+    if max_attempts != 0:
+        queue.retry_config.max_attempts = max_attempts
+    update_mask.paths.append("retry_config")
 
     request = tasks.UpdateQueueRequest(queue=queue, update_mask=update_mask)
     updated_queue = client.update_queue(request)
     return updated_queue
-
-
 # [END cloud_tasks_update_http_queue]
 
 
