@@ -15,43 +15,28 @@
 
 import os
 
-from discoveryengine import search_sample
+from discoveryengine import multi_turn_search_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-search_query = "Google"
+search_queries = ["What is Google?", "What was their revenue in 2021?"]
 
 
-def test_search():
+def test_multi_turn_search():
     location = "global"
-    data_store_id = "test-search-engine_1689960780551"
-    response = search_sample.search_sample(
+    data_store_id = "alphabet-earnings-reports_1697472013405"
+    responses = multi_turn_search_sample.multi_turn_search_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
-        search_query=search_query,
+        search_queries=search_queries,
     )
 
-    assert response
-    assert response.results
+    assert responses
 
-    for result in response.results:
-        assert result.document.name
+    for response in responses:
+        assert response.reply
+        assert response.conversation
+        assert response.search_results
 
-
-def test_search_eu_endpoint():
-    location = "eu"
-    data_store_id = "alphabet-earnings-reports-eu"
-    response = search_sample.search_sample(
-        project_id=project_id,
-        location=location,
-        data_store_id=data_store_id,
-        search_query=search_query,
-    )
-
-    assert response
-    assert response.summary
-    assert response.results
-
-    for result in response.results:
-        assert result.document
-        assert result.document.name
+        for result in response.search_results:
+            assert result.document.name

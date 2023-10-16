@@ -31,7 +31,7 @@ def multi_turn_search_sample(
     location: str,
     data_store_id: str,
     search_queries: List[str],
-) -> List[discoveryengine.SearchResponse]:
+) -> List[discoveryengine.ConverseConversationResponse]:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -54,6 +54,11 @@ def multi_turn_search_sample(
         ),
         conversation=discoveryengine.Conversation(),
     )
+
+    # [END genappbuilder_multi_turn_search]
+    # For testing only
+    responses: List[discoveryengine.ConverseConversationResponse] = []
+    # [START genappbuilder_multi_turn_search]
 
     for search_query in search_queries:
         # Add new message to Session
@@ -91,5 +96,7 @@ def multi_turn_search_sample(
             )
         print("\n\n")
 
+        # [END genappbuilder_multi_turn_search]
+        responses.append(response)
 
-# [END genappbuilder_multi_turn_search]
+    return responses
