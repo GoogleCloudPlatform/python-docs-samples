@@ -40,11 +40,11 @@ def increment_counter(request):
     # Use default URL and queue name, no task name, execute ASAP.
     deferred.defer(do_something_later, my_key, 10)
 
-    # Use default URL and queue name, no task name, execute after 10s.
-    deferred.defer(do_something_later, my_key, 10, _countdown=20)
+    # Use default URL and queue name, no task name, execute after 1 minute.
+    deferred.defer(do_something_later, my_key, 10, _countdown=60)
 
     # Providing non-default task queue arguments
-    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=40)
+    deferred.defer(do_something_later, my_key, 10, _url="/custom/path", _countdown=120)
 
     return HttpResponse("Deferred counter increment.")
 
