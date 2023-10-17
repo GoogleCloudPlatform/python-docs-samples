@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import urllib
-
-from google.cloud import tasks_v2beta3 as tasks
-import google.protobuf
-
 
 # [START cloud_tasks_create_http_queue]
+import urllib
+
+import google.protobuf
+from google.cloud import tasks_v2beta3 as tasks
+
+
 def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks.Queue:
     """Create an HTTP queue.
     Args:
@@ -76,6 +77,10 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
 
 
 # [START cloud_tasks_update_http_queue]
+import google.protobuf
+from google.cloud import tasks_v2beta3 as tasks
+
+
 def update_http_queue(
     queue: tasks.Queue,
     uri: str = "",
@@ -87,7 +92,11 @@ def update_http_queue(
     """Update an HTTP queue with provided properties.
     Args:
         queue: The queue to update.
-        [TODO]
+        uri: The new HTTP endpoint
+        max_per_second: the new maximum number of dispatches per second
+        max_burst: the new maximum burst size
+        max_concurrent: the new maximum number of concurrent dispatches
+        max_attempts: the new maximum number of retries attempted
     Returns:
         The updated queue.
     """
@@ -95,7 +104,9 @@ def update_http_queue(
     # Create a client.
     client = tasks.CloudTasksClient()
 
-    update_mask = google.protobuf.field_mask_pb2.FieldMask(paths=[]) # Track which fields need to be updated
+    update_mask = google.protobuf.field_mask_pb2.FieldMask(
+        paths=[]
+    )  # Track which fields need to be updated
 
     if uri:
         parsedUri = urllib.parse.urlparse(uri)
@@ -135,16 +146,84 @@ def update_http_queue(
     request = tasks.UpdateQueueRequest(queue=queue, update_mask=update_mask)
     updated_queue = client.update_queue(request)
     return updated_queue
+
+
 # [END cloud_tasks_update_http_queue]
 
 
 # [START cloud_tasks_delete_http_queue]
+from google.cloud import tasks_v2beta3 as tasks
+
+
+def delete_http_queue(
+    queue: tasks.Queue,
+) -> None:
+    """Delete an HTTP queue.
+    Args:
+        queue: The queue to delete.
+    Returns:
+        None.
+    """
+    client = tasks.CloudTasksClient()
+    client.delete_queue(name=queue.name)
+
+
 # [END cloud_tasks_delete_http_queue]
 
 
-# [START cloud_tasks_describe_http_queue]
-# [END cloud_tasks_describe_http_queue]
+# [START cloud_tasks_get_http_queue]
+from google.cloud import tasks_v2beta3 as tasks
+
+
+def get_http_queue(project: str, location: str, name: str) -> tasks.Queue:
+    """Get an HTTP queue.
+    Args:
+        project: The project ID containing the queue.
+        location: The location containing the queue.
+        name: The ID of the queue.
+
+    Returns:
+        The matching queue, or None if it does not exist.
+    """
+
+    client = tasks.CloudTasksClient()
+    return client.get_queue(
+        name=f"projects/{project}/locations/{location}/queues/{name}"
+    )
+
+
+# [END cloud_tasks_get_http_queue]
 
 
 # [START cloud_tasks_send_task_to_http_queue]
+import requests
+
+import google.auth
+from google.auth.transport.requests import Request
+
+
+def send_task_to_http_queue(
+    queue: tasks.Queue, body: str = "", headers: dict = {}
+) -> int:
+    """Send a task to an HTTP queue.
+    Args:
+        queue: The queue to delete.
+        body: the body of the task
+        headers: headers to set on the task
+    Returns:
+        The matching queue, or None if it does not exist.
+    """
+
+    # Use application default credentials if not supplied in a header
+    if "Authorization" not in headers:
+        credentials, _ = google.auth.default()
+        credentials.refresh(request=Request())
+        headers["Authorization"] = f"Bearer {credentials.token}"
+
+    endpoint = f"https://cloudtasks.googleapis.com/v2beta3/{queue.name}/tasks:buffer"
+    response = requests.post(endpoint, body, headers=headers)
+
+    return response.status_code
+
+
 # [END cloud_tasks_send_task_to_http_queue]
