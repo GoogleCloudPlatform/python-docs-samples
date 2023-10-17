@@ -19,13 +19,15 @@ import urllib.request
 import grpc
 import pytest
 
-from server import serve
+import server
 import service_pb2
 import service_pb2_grpc
 
 
-def get_request(end_of_stream: bool = False,
-                is_request_header: bool = True) -> service_pb2.HttpHeaders:
+def get_request(
+    end_of_stream: bool = False, is_request_header: bool = True
+) -> service_pb2.ProcessingRequest:
+    "Returns a ProcessingRequest"
     _headers = service_pb2.HttpHeaders(
         end_of_stream=end_of_stream,
     )
@@ -40,7 +42,7 @@ def get_request(end_of_stream: bool = False,
     return request
 
 
-def get_requests_stream() -> service_pb2.HttpHeaders:
+def get_requests_stream() -> service_pb2.ProcessingRequest:
     request = get_request(end_of_stream=False, is_request_header=True)
     yield request
     request = get_request(end_of_stream=False, is_request_header=False)
@@ -53,7 +55,7 @@ def get_requests_stream() -> service_pb2.HttpHeaders:
 def setup_and_teardown() -> None:
     try:
         # Start the server in a background thread
-        thread = threading.Thread(target=serve)
+        thread = threading.Thread(target=server.serve)
         thread.daemon = True
         thread.start()
         # Wait for the server to start
@@ -71,10 +73,10 @@ def test_server() -> None:
             stub = service_pb2_grpc.ExternalProcessorStub(channel)
             for response in stub.Process(get_requests_stream()):
                 str_message = str(response)
-                if 'request_headers' in str_message:
+                if "request_headers" in str_message:
                     assert 'raw_value: "service-extensions.com"' in str_message
                     assert 'key: "host"' in str_message
-                elif 'response_headers' in str_message:
+                elif "response_headers" in str_message:
                     assert 'raw_value: "service-extensions"' in str_message
                     assert 'key: "hello"' in str_message
     except grpc._channel._MultiThreadedRendezvous:

@@ -20,6 +20,8 @@ This server does two things:
         with "host: service-extensions.com" and resets the path to /
 * When it receives a `response_headers`, it adds
         a "hello: service-extensions" response header
+
+This server also has optional SSL authentication.
 """
 # [START serviceextensions_add_header_imports]
 from concurrent import futures
@@ -31,7 +33,6 @@ import grpc
 
 from grpc import ServicerContext
 
-import _credentials
 import service_pb2
 import service_pb2_grpc
 
@@ -41,6 +42,11 @@ EXT_PROC_SECURE_PORT = 443
 EXT_PROC_INSECURE_PORT = 8080
 # Cloud health checks use this port.
 HEALTH_CHECK_PORT = 80
+# Example SSL Credentials for gRPC server
+# PEM-encoded private key & PEM-encoded certificate chain
+SERVER_CERTIFICATE = open("ssl_creds/localhost.crt", "rb").read()
+SERVER_CERTIFICATE_KEY = open("ssl_creds/localhost.key", "rb").read()
+ROOT_CERTIFICATE = open("ssl_creds/root.crt", "rb").read()
 
 
 # [END serviceextensions_add_header_imports]
@@ -105,12 +111,9 @@ def serve() -> None:
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     service_pb2_grpc.add_ExternalProcessorServicer_to_server(CalloutProcessor(), server)
     server_credentials = grpc.ssl_server_credentials(
-        (
-            (
-                _credentials.SERVER_CERTIFICATE_KEY,
-                _credentials.SERVER_CERTIFICATE,
-            ),
-        )
+        private_key_certificate_chain_pairs=[
+            (SERVER_CERTIFICATE_KEY, SERVER_CERTIFICATE)
+        ]
     )
     server.add_secure_port("0.0.0.0:%d" % EXT_PROC_SECURE_PORT, server_credentials)
     server.add_insecure_port("0.0.0.0:%d" % EXT_PROC_INSECURE_PORT)
