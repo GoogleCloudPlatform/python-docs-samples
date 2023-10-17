@@ -27,7 +27,7 @@ This server also has optional SSL authentication.
 from concurrent import futures
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-from typing import Iterator, List
+from typing import Iterator, List, Tuple
 
 import grpc
 
@@ -52,7 +52,7 @@ ROOT_CERTIFICATE = open("ssl_creds/root.crt", "rb").read()
 # [END serviceextensions_add_header_imports]
 # [START serviceextensions_add_header_main]
 def add_headers_mutation(
-    headers: List[tuple[str, str]], clear_route_cache: bool = False
+    headers: List[Tuple[str, str]], clear_route_cache: bool = False
 ) -> service_pb2.HeadersResponse:
     """
     Returns an ext_proc HeadersResponse for adding a list of headers.
@@ -107,7 +107,7 @@ class HealthCheckServer(BaseHTTPRequestHandler):
 
 def serve() -> None:
     "Run gRPC server and Health check server"
-    health_server = HTTPServer(("0.0.0.0", HEALTH_CHECK_PORT), HealthCheckServer)
+    health_server = HTTPServer(("127.0.0.1", HEALTH_CHECK_PORT), HealthCheckServer)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     service_pb2_grpc.add_ExternalProcessorServicer_to_server(CalloutProcessor(), server)
     server_credentials = grpc.ssl_server_credentials(
@@ -115,8 +115,8 @@ def serve() -> None:
             (SERVER_CERTIFICATE_KEY, SERVER_CERTIFICATE)
         ]
     )
-    server.add_secure_port("0.0.0.0:%d" % EXT_PROC_SECURE_PORT, server_credentials)
-    server.add_insecure_port("0.0.0.0:%d" % EXT_PROC_INSECURE_PORT)
+    server.add_secure_port("127.0.0.1:%d" % EXT_PROC_SECURE_PORT, server_credentials)
+    server.add_insecure_port("127.0.0.1:%d" % EXT_PROC_INSECURE_PORT)
     server.start()
     print(
         "Server started, listening on %d and %d"

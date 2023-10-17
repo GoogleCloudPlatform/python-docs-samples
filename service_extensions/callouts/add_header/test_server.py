@@ -69,7 +69,7 @@ def setup_and_teardown() -> None:
 @pytest.mark.usefixtures("setup_and_teardown")
 def test_server() -> None:
     try:
-        with grpc.insecure_channel("0.0.0.0:8080") as channel:
+        with grpc.insecure_channel("127.0.0.1:8080") as channel:
             stub = service_pb2_grpc.ExternalProcessorStub(channel)
             for response in stub.Process(get_requests_stream()):
                 str_message = str(response)
@@ -86,7 +86,7 @@ def test_server() -> None:
 @pytest.mark.usefixtures("setup_and_teardown")
 def test_server_health_check() -> None:
     try:
-        response = urllib.request.urlopen("http://0.0.0.0:80")
+        response = urllib.request.urlopen("http://127.0.0.1:80")
         assert response.read() == b""
         assert response.getcode() == 200
     except urllib.error.URLError:
