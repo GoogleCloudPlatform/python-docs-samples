@@ -72,9 +72,9 @@ def tune_code_generation_model(
     )
 
     print(model._job.status)
-    # [END aiplatform_sdk_tune_code_generation_model]
     return model
 
 
 if __name__ == "__main__":
     tune_code_generation_model()
+# [END aiplatform_sdk_tune_code_generation_model]

@@ -73,10 +73,10 @@ A:""",
         **parameters,
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_extraction]
 
     return response.text
 
 
 if __name__ == "__main__":
     extractive_question_answering()
+# [END aiplatform_sdk_extraction]

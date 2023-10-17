@@ -23,9 +23,9 @@ def text_embedding() -> list:
     for embedding in embeddings:
         vector = embedding.values
         print(f"Length of Embedding Vector: {len(vector)}")
-    # [END aiplatform_sdk_embedding]
     return vector
 
 
 if __name__ == "__main__":
     text_embedding()
+# [END aiplatform_sdk_embedding]

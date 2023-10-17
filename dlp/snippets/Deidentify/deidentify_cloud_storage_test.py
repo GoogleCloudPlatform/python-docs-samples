@@ -16,13 +16,13 @@ import os
 from unittest import mock
 from unittest.mock import MagicMock
 
+import deidentify_cloud_storage as deid
+
 import google.cloud.dlp_v2
 import pytest
 
-import deid_cloud_storage
-
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-TXT_FILE = os.path.join(os.path.dirname(__file__), "resources/test.txt")
+TXT_FILE = os.path.join(os.path.dirname(__file__), "../resources/test.txt")
 
 
 @mock.patch("google.cloud.dlp_v2.DlpServiceClient")
@@ -57,7 +57,7 @@ def test_deidentify_cloud_storage(
         MagicMock(info_type=finding, count=1),
     ]
 
-    deid_cloud_storage.deidentify_cloud_storage(
+    deid.deidentify_cloud_storage(
         GCLOUD_PROJECT,
         "input_bucket",
         "output_bucket",
