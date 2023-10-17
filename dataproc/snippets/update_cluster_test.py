@@ -100,7 +100,9 @@ def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
     # means that we can retry on the AssertionError of an errored out cluster but not other
     # AssertionErrors, and it means we don't have to retry on an InvalidArgument that would occur in
     # update cluster if the cluster were in an error state
-    def test_update_cluster_inner(cluster_client: ClusterControllerClient, update_retries: int):
+    def test_update_cluster_inner(
+        cluster_client: ClusterControllerClient, update_retries: int
+    ):
         try:
             setup_cluster(cluster_client)
             request = GetClusterRequest(
@@ -121,15 +123,23 @@ def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
             )
             out, _ = capsys.readouterr()
             assert CLUSTER_NAME in out
-            assert new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES
+            assert (
+                new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES
+            )
         except AssertionError as e:
-            if update_retries < 3 and response.status.state == ClusterStatus.State.ERROR:
+            if (
+                update_retries < 3
+                and response.status.state == ClusterStatus.State.ERROR
+            ):
                 teardown_cluster(cluster_client)
-                test_update_cluster_inner(cluster_client=cluster_client, update_retries=update_retries+1)
+                test_update_cluster_inner(
+                    cluster_client=cluster_client, update_retries=update_retries + 1
+                )
             else:
                 # if we have exceeded the number of retries or the assertion error
                 # is not related to the cluster being in error, raise it
                 raise e
         finally:
             teardown_cluster(cluster_client)
+
     test_update_cluster_inner(cluster_client=cluster_client, update_retries=0)
