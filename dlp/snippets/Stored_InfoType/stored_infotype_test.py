@@ -17,12 +17,13 @@ import time
 from typing import Iterator
 import uuid
 
+import create_stored_infotype as create_si
+
 import google.api_core.exceptions
 import google.cloud.dlp_v2
 import google.cloud.exceptions
 import google.cloud.storage
 
-import create_stored_infotype as create_si
 import inspect_with_stored_infotype as inspect_si
 
 import pytest
