@@ -41,7 +41,7 @@ EXT_PROC_SECURE_PORT = 443
 # Backend services on Cloud Run use this port.
 EXT_PROC_INSECURE_PORT = 8080
 # Cloud health checks use this port.
-HEALTH_CHECK_PORT = 80
+HEALTH_CHECK_PORT = 8000
 # Example SSL Credentials for gRPC server
 # PEM-encoded private key & PEM-encoded certificate chain
 SERVER_CERTIFICATE = open("ssl_creds/localhost.crt", "rb").read()
@@ -107,7 +107,7 @@ class HealthCheckServer(BaseHTTPRequestHandler):
 
 def serve() -> None:
     "Run gRPC server and Health check server"
-    health_server = HTTPServer(("127.0.0.1", HEALTH_CHECK_PORT), HealthCheckServer)
+    health_server = HTTPServer(("0.0.0.0", HEALTH_CHECK_PORT), HealthCheckServer)
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=2))
     service_pb2_grpc.add_ExternalProcessorServicer_to_server(CalloutProcessor(), server)
     server_credentials = grpc.ssl_server_credentials(
@@ -115,8 +115,8 @@ def serve() -> None:
             (SERVER_CERTIFICATE_KEY, SERVER_CERTIFICATE)
         ]
     )
-    server.add_secure_port("127.0.0.1:%d" % EXT_PROC_SECURE_PORT, server_credentials)
-    server.add_insecure_port("127.0.0.1:%d" % EXT_PROC_INSECURE_PORT)
+    server.add_secure_port("0.0.0.0:%d" % EXT_PROC_SECURE_PORT, server_credentials)
+    server.add_insecure_port("0.0.0.0:%d" % EXT_PROC_INSECURE_PORT)
     server.start()
     print(
         "Server started, listening on %d and %d"

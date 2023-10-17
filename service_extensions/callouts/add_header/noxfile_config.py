@@ -35,7 +35,7 @@ TEST_CONFIG_OVERRIDE = {
     # If you need to use a specific version of pip,
     # change pip_version_override to the string representation
     # of the version number, for example, "20.2.4"
-    "pip_version_override": None,
+    "pip_version_override": "22.0.4",
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {},
