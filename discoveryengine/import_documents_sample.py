@@ -14,15 +14,15 @@
 #
 
 # [START genappbuilder_import_documents]
-from __future__ import annotations
+from typing import Optional
 
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_LOCATION" # Values: "global"
-# search_engine_id = "YOUR_SEARCH_ENGINE_ID"
+# data_store_id = "YOUR_DATA_STORE_ID"
 
 # Must specify either `gcs_uri` or (`bigquery_dataset` and `bigquery_table`)
 # Format: `gs://bucket/directory/object.json` or `gs://bucket/directory/*.json`
@@ -34,20 +34,28 @@ from google.cloud import discoveryengine
 def import_documents_sample(
     project_id: str,
     location: str,
-    search_engine_id: str,
-    gcs_uri: str | None = None,
-    bigquery_dataset: str | None = None,
-    bigquery_table: str | None = None,
+    data_store_id: str,
+    gcs_uri: Optional[str] = None,
+    bigquery_dataset: Optional[str] = None,
+    bigquery_table: Optional[str] = None,
 ) -> str:
+    #  For more information, refer to:
+    # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-discoveryengine.googleapis.com")
+        if location != "global"
+        else None
+    )
+
     # Create a client
-    client = discoveryengine.DocumentServiceClient()
+    client = discoveryengine.DocumentServiceClient(client_options=client_options)
 
     # The full resource name of the search engine branch.
-    # e.g. projects/{project}/locations/{location}/dataStores/{data_store}/branches/{branch}
+    # e.g. projects/{project}/locations/{location}/dataStores/{data_store_id}/branches/{branch}
     parent = client.branch_path(
         project=project_id,
         location=location,
-        data_store=search_engine_id,
+        data_store=data_store_id,
         branch="default_branch",
     )
 

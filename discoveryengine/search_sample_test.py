@@ -18,19 +18,40 @@ import os
 from discoveryengine import search_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "global"
-search_engine_id = "test-search-engine_1689960780551"
-serving_config_id = "default_config"
 search_query = "Google"
 
 
 def test_search():
+    location = "global"
+    data_store_id = "test-search-engine_1689960780551"
     response = search_sample.search_sample(
         project_id=project_id,
         location=location,
-        search_engine_id=search_engine_id,
-        serving_config_id=serving_config_id,
+        data_store_id=data_store_id,
         search_query=search_query,
     )
 
     assert response
+    assert response.results
+
+    for result in response.results:
+        assert result.document.name
+
+
+def test_search_eu_endpoint():
+    location = "eu"
+    data_store_id = "alphabet-earnings-reports-eu"
+    response = search_sample.search_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        search_query=search_query,
+    )
+
+    assert response
+    assert response.summary
+    assert response.results
+
+    for result in response.results:
+        assert result.document
+        assert result.document.name

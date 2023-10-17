@@ -47,13 +47,18 @@ def process_document_ocr_sample(
     mime_type: str,
 ) -> None:
     # Optional: Additional configurations for Document OCR Processor.
-    # For more information: https://cloud.google.com/document-ai/docs/document-ocr
+    # For more information: https://cloud.google.com/document-ai/docs/enterprise-document-ocr
     process_options = documentai.ProcessOptions(
         ocr_config=documentai.OcrConfig(
-            compute_style_info=True,
             enable_native_pdf_parsing=True,
             enable_image_quality_scores=True,
             enable_symbol=True,
+            # OCR Add Ons https://cloud.google.com/document-ai/docs/ocr-add-ons
+            premium_features=documentai.OcrConfig.PremiumFeatures(
+                compute_style_info=True,
+                enable_math_ocr=False,  # Enable to use Math OCR Model
+                enable_selection_mark_detection=True,
+            ),
         )
     )
     # Online processing request to Document AI
@@ -87,8 +92,8 @@ def process_document_ocr_sample(
         if page.image_quality_scores:
             print_image_quality_scores(page.image_quality_scores)
 
-    if document.text_styles:
-        print_styles(document.text_styles, text)
+        if page.visual_elements:
+            print_visual_elements(page.visual_elements, text)
 
 
 def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None:
@@ -136,10 +141,15 @@ def print_tokens(tokens: Sequence[documentai.Document.Page.Token], text: str) ->
     first_token_break_type = tokens[0].detected_break.type_.name
     print(f"        First token text: {repr(first_token_text)}")
     print(f"        First token break type: {repr(first_token_break_type)}")
+    if tokens[0].style_info:
+        print_style_info(tokens[0].style_info)
+
     last_token_text = layout_to_text(tokens[-1].layout, text)
     last_token_break_type = tokens[-1].detected_break.type_.name
     print(f"        Last token text: {repr(last_token_text)}")
     print(f"        Last token break type: {repr(last_token_break_type)}")
+    if tokens[-1].style_info:
+        print_style_info(tokens[-1].style_info)
 
 
 def print_symbols(
@@ -162,17 +172,39 @@ def print_image_quality_scores(
         print(f"        {detected_defect.type_}: {detected_defect.confidence:.1%}")
 
 
-def print_styles(styles: Sequence[documentai.Document.Style], text: str) -> None:
-    print(f"    {len(styles)} styles detected:")
-    first_style_text = layout_to_text(styles[0].layout, text)
-    print(f"        First style text: {repr(first_style_text)}")
-    print(f"           Color: {styles[0].color}")
-    print(f"           Background Color: {styles[0].background_color}")
-    print(f"           Font Weight: {styles[0].font_weight}")
-    print(f"           Text Style: {styles[0].text_style}")
-    print(f"           Text Decoration: {styles[0].text_decoration}")
-    print(f"           Font Size: {styles[0].font_size.size}{styles[0].font_size.unit}")
-    print(f"           Font Family: {styles[0].font_family}")
+def print_style_info(style_info: documentai.Document.Page.Token.StyleInfo) -> None:
+    """
+    Only supported in version `pretrained-ocr-v2.0-2023-06-02`
+    """
+    print(f"           Font Size: {style_info.font_size}pt")
+    print(f"           Font Type: {style_info.font_type}")
+    print(f"           Bold: {style_info.bold}")
+    print(f"           Italic: {style_info.italic}")
+    print(f"           Underlined: {style_info.underlined}")
+    print(f"           Handwritten: {style_info.handwritten}")
+    print(
+        f"           Text Color (RGBa): {style_info.text_color.red}, {style_info.text_color.green}, {style_info.text_color.blue}, {style_info.text_color.alpha}"
+    )
+
+
+def print_visual_elements(
+    visual_elements: Sequence[documentai.Document.Page.VisualElement], text: str
+) -> None:
+    """
+    Only supported in version `pretrained-ocr-v2.0-2023-06-02`
+    """
+    checkboxes = [x for x in visual_elements if "checkbox" in x.type]
+    math_symbols = [x for x in visual_elements if x.type == "math_formula"]
+
+    if checkboxes:
+        print(f"    {len(checkboxes)} checkboxes detected:")
+        print(f"        First checkbox: {repr(checkboxes[0].type)}")
+        print(f"        Last checkbox: {repr(checkboxes[-1].type)}")
+
+    if math_symbols:
+        print(f"    {len(math_symbols)} math symbols detected:")
+        first_math_symbol_text = layout_to_text(math_symbols[0].layout, text)
+        print(f"        First math symbol: {repr(first_math_symbol_text)}")
 
 
 # [END documentai_process_ocr_document]
@@ -249,7 +281,7 @@ def print_table_rows(
 
 
 # [START documentai_process_specialized_document]
-def process_document_specialized_sample(
+def process_document_entity_extraction_sample(
     project_id: str,
     location: str,
     processor_id: str,

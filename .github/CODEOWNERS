@@ -31,12 +31,13 @@
 /dns/**/*                              @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
-/media_cdn/**/*                        @justin-mp @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/media_cdn/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /privateca/**/*                        @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /recaptcha_enterprise/**/*             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /recaptcha_enterprise/demosite/**/*    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/recaptcha-customer-obsession-reviewers @GoogleCloudPlatform/python-samples-reviewers
 /secretmanager/**/*                    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
+/service_extensions/**/*               @GoogleCloudPlatform/service-extensions-samples-reviewers @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /vmwareengine/**/*                     @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 /webrisk/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers
 
@@ -71,6 +72,7 @@
 /speech/**/*                           @GoogleCloudPlatform/cloud-speech-eng @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /texttospeech/**/*                     @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /translate/**/*                        @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
+/videointelligence/**/*                @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 /video/transcoder/*                    @GoogleCloudPlatform/dee-data-ai @GoogleCloudPlatform/python-samples-reviewers
 
 # Cloud SDK Databases & Data Analytics teams
@@ -106,6 +108,7 @@
 /healthcare/**/*                       @GoogleCloudPlatform/healthcare-life-sciences @GoogleCloudPlatform/python-samples-reviewers
 /retail/**/*                           @GoogleCloudPlatform/cloud-retail-team @GoogleCloudPlatform/python-samples-reviewers
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers
+/video/live-stream/*                   @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 /video/stitcher/*                      @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers
 
 # Deprecated

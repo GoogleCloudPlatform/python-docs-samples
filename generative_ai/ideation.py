@@ -39,10 +39,10 @@ def interview(
         **parameters,
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_ideation]
 
     return response.text
 
 
 if __name__ == "__main__":
     interview()
+# [END aiplatform_sdk_ideation]

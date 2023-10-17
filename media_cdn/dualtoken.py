@@ -15,6 +15,7 @@
 # limitations under the License.
 
 # [START mediacdn_dualtoken_sign_token]
+# [START mediacdn_dualtoken_sign_path_component]
 import base64
 import datetime
 import hashlib
@@ -35,6 +36,7 @@ def base64_encoder(value: bytes) -> str:
     return encoded_str.rstrip("=")
 
 
+# [END mediacdn_dualtoken_sign_path_component]
 def sign_token(
     base64_key: bytes,
     signature_algorithm: str,
@@ -212,7 +214,7 @@ def sign_path_component(
     digest = ed25519.Ed25519PrivateKey.from_private_bytes(decoded_key).sign(
         policy.encode("utf-8")
     )
-    signature = base64.urlsafe_b64encode(digest).decode("utf-8")
+    signature = base64_encoder(digest)
 
     signed_url = "{policy}&Signature={signature}/{filename}".format(
         policy=policy, signature=signature, filename=filename
