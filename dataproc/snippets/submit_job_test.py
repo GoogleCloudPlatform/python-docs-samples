@@ -92,13 +92,17 @@ def teardown_cluster(cluster_client):
         print("Cluster already deleted")
 
 
-@backoff.on_exception(backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5)
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
+)
 def test_submit_job(capsys, cluster_client: ClusterControllerClient):
     # using this inner function instead of backoff to retry on an Error in the created cluster
     # means that we can retry on the AssertionError of an errored out cluster but not other
     # AssertionErrors, and it means we don't have to retry on an InvalidArgument that would occur in
     # update cluster if the cluster were in an error state
-    def test_submit_job_inner(cluster_client: ClusterControllerClient, submit_retries: int):
+    def test_submit_job_inner(
+        cluster_client: ClusterControllerClient, submit_retries: int
+    ):
         try:
             setup_cluster(cluster_client)
             request = GetClusterRequest(
@@ -113,13 +117,19 @@ def test_submit_job(capsys, cluster_client: ClusterControllerClient):
 
             assert "Job finished successfully" in out
         except AssertionError as e:
-            if submit_retries < 3 and response.status.state == ClusterStatus.State.ERROR:
+            if (
+                submit_retries < 3
+                and response.status.state == ClusterStatus.State.ERROR
+            ):
                 teardown_cluster(cluster_client)
-                test_submit_job_inner(cluster_client=cluster_client, submit_retries=submit_retries+1)
+                test_submit_job_inner(
+                    cluster_client=cluster_client, submit_retries=submit_retries + 1
+                )
             else:
                 # if we have exceeded the number of retries or the assertion error
                 # is not related to the cluster being in error, raise it
                 raise e
         finally:
             teardown_cluster(cluster_client)
+
     test_submit_job_inner(cluster_client=cluster_client, submit_retries=0)
