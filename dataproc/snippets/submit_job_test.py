@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample walks a user through updating the number of clusters using the Dataproc
-# client library.
 
 import os
 import uuid
