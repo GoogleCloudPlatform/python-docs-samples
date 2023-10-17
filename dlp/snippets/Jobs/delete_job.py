@@ -18,10 +18,10 @@ from __future__ import annotations
 
 import argparse
 
-import google.cloud.dlp
-
 
 # [START dlp_delete_job]
+
+import google.cloud.dlp
 
 
 def delete_dlp_job(project: str, job_name: str) -> None:

@@ -18,12 +18,12 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_list_jobs]
+
 from typing import Optional
 
 import google.cloud.dlp
-
-
-# [START dlp_list_jobs]
 
 
 def list_dlp_jobs(
