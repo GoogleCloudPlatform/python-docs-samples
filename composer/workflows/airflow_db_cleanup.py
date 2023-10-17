@@ -460,6 +460,7 @@ def cleanup_function(**context):
     finally:
         session.close()
 
+
 def cleanup_sessions():
     session = settings.Session()
 
@@ -474,6 +475,7 @@ def cleanup_sessions():
 
     session.commit()
     session.close()
+
 
 def analyze_db():
     session = settings.Session()
