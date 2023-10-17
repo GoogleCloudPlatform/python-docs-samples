@@ -38,7 +38,5 @@ TEST_CONFIG_OVERRIDE = {
     "pip_version_override": "22.0.4",
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {
-        "GRPC_VERBOSITY": "debug"
-    },
+    "envs": {"GRPC_VERBOSITY": "debug"},
 }
