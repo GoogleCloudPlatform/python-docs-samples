@@ -61,8 +61,8 @@ def tuning(
           train_steps: Number of training steps to use when tuning the model.
           evaluation_dataset: GCS URI of jsonl file of evaluation data.
           tensorboard_instance_name: The full name of the existing Vertex AI TensorBoard instance:
-    projects/PROJECT_ID/locations/LOCATION_ID/tensorboards/TENSORBOARD_INSTANCE_ID
-    Note that this instance must be in the same region as your tuning job.
+            projects/PROJECT_ID/locations/LOCATION_ID/tensorboards/TENSORBOARD_INSTANCE_ID
+            Note that this instance must be in the same region as your tuning job.
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
