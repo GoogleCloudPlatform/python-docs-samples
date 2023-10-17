@@ -37,7 +37,7 @@ import service_pb2
 import service_pb2_grpc
 
 # Backend services on GCE VMs, GKE and hybrid use this port.
-EXT_PROC_SECURE_PORT = 443
+EXT_PROC_SECURE_PORT = 8443
 # Backend services on Cloud Run use this port.
 EXT_PROC_INSECURE_PORT = 8080
 # Cloud health checks use this port.
