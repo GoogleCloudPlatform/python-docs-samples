@@ -1,0 +1,639 @@
+syntax = "proto3";
+
+package envoy.service.ext_proc.v3;
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/struct.proto";
+import "google/protobuf/wrappers.proto";
+
+option java_package = "io.envoyproxy.envoy.service.ext_proc.v3";
+option java_outer_classname = "ExternalProcessorProto";
+option java_multiple_files = true;
+
+// [#protodoc-title: External processing service]
+
+// A service that can access and modify HTTP requests and responses
+// as part of a filter chain.
+// The overall external processing protocol works like this:
+//
+// 1. Envoy sends to the service information about the HTTP request.
+// 2. The service sends back a ProcessingResponse message that directs Envoy
+//    to either stop processing, continue without it, or send it the
+//    next chunk of the message body.
+// 3. If so requested, Envoy sends the server chunks of the message body,
+//    or the entire body at once. In either case, the server sends back
+//    a ProcessingResponse after each message it receives.
+// 4. If so requested, Envoy sends the server the HTTP trailers,
+//    and the server sends back a ProcessingResponse.
+// 5. At this point, request processing is done, and we pick up again
+//    at step 1 when Envoy receives a response from the upstream server.
+// 6. At any point above, if the server closes the gRPC stream cleanly,
+//    then Envoy proceeds without consulting the server.
+// 7. At any point above, if the server closes the gRPC stream with an error,
+//    then Envoy returns a 500 error to the client, unless the filter
+//    was configured to ignore errors.
+//
+// In other words, the process is a request/response conversation, but
+// using a gRPC stream to make it easier for the server to
+// maintain state.
+
+service ExternalProcessor {
+  // This begins the bidirectional stream that Envoy will use to
+  // give the server control over what the filter does. The actual
+  // protocol is described by the ProcessingRequest and ProcessingResponse
+  // messages below.
+  rpc Process(stream ProcessingRequest) returns (stream ProcessingResponse) {}
+}
+
+// This represents the different types of messages that Envoy can send
+// to an external processing server.
+// [#next-free-field: 8]
+message ProcessingRequest {
+  // +
+  // whether the filter that sent this request is running in synchronous
+  // or asynchronous mode. The choice of synchronous or asynchronous mode
+  // can be set in the filter configuration, and defaults to false.
+  //
+  // * A value of ``false`` indicates that the server must respond
+  //   to this message by either sending back a matching ProcessingResponse
+  //   message, or by closing the stream.
+  // * A value of ``true`` indicates that the server must not respond to this
+  //   message, although it may still close the stream to indicate that no more
+  //   messages are needed.
+  //
+  bool async_mode = 1;
+
+  // Each request message will include one of the following sub-messages. Which
+  // ones are set for a particular HTTP request/response depend on the
+  // processing mode.
+  oneof request {
+    // Information about the HTTP request headers, as well as peer info and
+    // additional properties. Unless ``async_mode`` is ``true``, the server must
+    // send back a HeaderResponse message, an ImmediateResponse message, or
+    // close the stream.
+    HttpHeaders request_headers = 2;
+
+    // Information about the HTTP response headers, as well as peer info and
+    // additional properties. Unless ``async_mode`` is ``true``, the server must
+    // send back a HeaderResponse message or close the stream.
+    HttpHeaders response_headers = 3;
+
+    // A chunk of the HTTP request body. Unless ``async_mode`` is true, the
+    // server must send back a BodyResponse message, an ImmediateResponse
+    // message, or close the stream.
+    HttpBody request_body = 4;
+
+    // A chunk of the HTTP request body. Unless ``async_mode`` is ``true``, the
+    // server must send back a BodyResponse message or close the stream.
+    HttpBody response_body = 5;
+
+    // The HTTP trailers for the request path. Unless ``async_mode`` is
+    // ``true``, the server must send back a TrailerResponse message or close
+    // the stream.
+    //
+    // This message is only sent if the trailers processing mode is set to
+    // ``SEND``. If there are no trailers on the original downstream request,
+    // then this message will only be sent (with empty trailers waiting to be
+    // populated) if the processing mode is set before the request headers are
+    // sent, such as in the filter configuration.
+    HttpTrailers request_trailers = 6;
+
+    // The HTTP trailers for the response path. Unless ``async_mode`` is
+    // ``true``, the server must send back a TrailerResponse message or close
+    // the stream.
+    //
+    // This message is only sent if the trailers processing mode is set to
+    // ``SEND``. If there are no trailers on the original downstream request,
+    // then this message will only be sent (with empty trailers waiting to be
+    // populated) if the processing mode is set before the request headers are
+    // sent, such as in the filter configuration.
+    HttpTrailers response_trailers = 7;
+  }
+}
+
+// For every ProcessingRequest received by the server with the ``async_mode``
+// field set to false, the server must send back exactly one ProcessingResponse
+// message.
+// [#next-free-field: 11]
+message ProcessingResponse {
+  oneof response {
+    // The server must send back this message in response to a message with the
+    // ``request_headers`` field set.
+    HeadersResponse request_headers = 1;
+
+    // The server must send back this message in response to a message with the
+    // ``response_headers`` field set.
+    HeadersResponse response_headers = 2;
+
+    // The server must send back this message in response to a message with
+    // the ``request_body`` field set.
+    BodyResponse request_body = 3;
+
+    // The server must send back this message in response to a message with
+    // the ``response_body`` field set.
+    BodyResponse response_body = 4;
+
+    // The server must send back this message in response to a message with
+    // the ``request_trailers`` field set.
+    TrailersResponse request_trailers = 5;
+
+    // The server must send back this message in response to a message with
+    // the ``response_trailers`` field set.
+    TrailersResponse response_trailers = 6;
+
+    // If specified, attempt to create a locally generated response, send it
+    // downstream, and stop processing additional filters and ignore any
+    // additional messages received from the remote server for this request or
+    // response. If a response has already started -- for example, if this
+    // message is sent response to a ``response_body`` message -- then
+    // this will either ship the reply directly to the downstream codec,
+    // or reset the stream.
+    ImmediateResponse immediate_response = 7;
+  }
+
+  // [#not-implemented-hide:]
+  // Optional metadata that will be emitted as dynamic metadata to be consumed
+  // by the next filter. This metadata will be placed in the namespace
+  // ``envoy.filters.http.ext_proc``.
+  google.protobuf.Struct dynamic_metadata = 8;
+
+  // Override how parts of the HTTP request and response are processed
+  // for the duration of this particular request/response only. Servers
+  // may use this to intelligently control how requests are processed
+  // based on the headers and other metadata that they see.
+  // This field is only applicable when servers responding to the header
+  // requests. If it is set in the response to the body or trailer requests, it
+  // will be ignored by Envoy. It is also ignored by Envoy when the ext_proc
+  // filter config :ref:`allow_mode_override
+  // <envoy_v3_api_field_extensions.filters.http.ext_proc.v3.ExternalProcessor.allow_mode_override>`
+  // is set to false.
+  ProcessingMode mode_override = 9;
+
+  // When ext_proc server receives a request message, in case it needs more
+  // time to process the message, it sends back a ProcessingResponse message
+  // with a new timeout value. When Envoy receives this response message,
+  // it ignores other fields in the response, just stop the original timer,
+  // which has the timeout value specified in
+  // :ref:`message_timeout
+  // <envoy_v3_api_field_extensions.filters.http.ext_proc.v3.ExternalProcessor.message_timeout>`
+  // and start a new timer with this ``override_message_timeout`` value and keep
+  // the Envoy ext_proc filter state machine intact. Has to be >= 1ms and <=
+  // :ref:`max_message_timeout
+  // <envoy_v3_api_field_extensions.filters.http.ext_proc.v3.ExternalProcessor.max_message_timeout>`
+  // Such message can be sent at most once in a particular Envoy ext_proc filter
+  // processing state. To enable this API, one has to set
+  // ``max_message_timeout`` to a number >= 1ms.
+  google.protobuf.Duration override_message_timeout = 10;
+}
+
+// The following are messages that are sent to the server.
+
+// This message is sent to the external server when the HTTP request and
+// responses are first received.
+message HttpHeaders {
+  // The HTTP request headers. All header keys will be
+  // lower-cased, because HTTP header keys are case-insensitive.
+  // The ``headers`` encoding is based on the runtime guard
+  // envoy_reloadable_features_send_header_raw_value setting.
+  // When it is true, the header value is encoded in the
+  // :ref:`raw_value <envoy_v3_api_field_config.core.v3.HeaderValue.raw_value>`
+  // field. When it is false, the header value is encoded in the :ref:`value
+  // <envoy_v3_api_field_config.core.v3.HeaderValue.value>` field.
+  HeaderMap headers = 1;
+
+  // [#not-implemented-hide:]
+  // The values of properties selected by the ``request_attributes``
+  // or ``response_attributes`` list in the configuration. Each entry
+  // in the list is populated
+  // from the standard :ref:`attributes <arch_overview_attributes>`
+  // supported across Envoy.
+  map<string, google.protobuf.Struct> attributes = 2;
+
+  // If true, then there is no message body associated with this
+  // request or response.
+  bool end_of_stream = 3;
+}
+
+// This message contains the message body that Envoy sends to the external
+// server.
+message HttpBody {
+  bytes body = 1;
+
+  bool end_of_stream = 2;
+}
+
+// This message contains the trailers.
+message HttpTrailers {
+  // The ``trailers`` encoding is based on the runtime guard
+  // envoy_reloadable_features_send_header_raw_value setting.
+  // When it is true, the header value is encoded in the
+  // :ref:`raw_value <envoy_v3_api_field_config.core.v3.HeaderValue.raw_value>`
+  // field. When it is false, the header value is encoded in the :ref:`value
+  // <envoy_v3_api_field_config.core.v3.HeaderValue.value>` field.
+  HeaderMap trailers = 1;
+}
+
+// The following are messages that may be sent back by the server.
+
+// This message must be sent in response to an HttpHeaders message.
+message HeadersResponse {
+  CommonResponse response = 1;
+}
+
+// This message must be sent in response to an HttpTrailers message.
+message TrailersResponse {
+  // Instructions on how to manipulate the trailers
+  HeaderMutation header_mutation = 1;
+}
+
+// This message must be sent in response to an HttpBody message.
+message BodyResponse {
+  CommonResponse response = 1;
+}
+
+// This message contains common fields between header and body responses.
+// [#next-free-field: 6]
+message CommonResponse {
+  enum ResponseStatus {
+    // Apply the mutation instructions in this message to the
+    // request or response, and then continue processing the filter
+    // stream as normal. This is the default.
+    CONTINUE = 0;
+
+    // Apply the specified header mutation, replace the body with the body
+    // specified in the body mutation (if present), and do not send any
+    // further messages for this request or response even if the processing
+    // mode is configured to do so.
+    //
+    // When used in response to a request_headers or response_headers message,
+    // this status makes it possible to either completely replace the body
+    // while discarding the original body, or to add a body to a message that
+    // formerly did not have one.
+    //
+    // In other words, this response makes it possible to turn an HTTP GET
+    // into a POST, PUT, or PATCH.
+    CONTINUE_AND_REPLACE = 1;
+  }
+
+  // If set, provide additional direction on how the Envoy proxy should
+  // handle the rest of the HTTP filter chain.
+  ResponseStatus status = 1;
+
+  // Instructions on how to manipulate the headers. When responding to an
+  // HttpBody request, header mutations will only take effect if
+  // the current processing mode for the body is BUFFERED.
+  HeaderMutation header_mutation = 2;
+
+  // Replace the body of the last message sent to the remote server on this
+  // stream. If responding to an HttpBody request, simply replace or clear
+  // the body chunk that was sent with that request. Body mutations may take
+  // effect in response either to ``header`` or ``body`` messages. When it is
+  // in response to ``header`` messages, it only take effect if the
+  // :ref:`status
+  // <envoy_v3_api_field_service.ext_proc.v3.CommonResponse.status>` is set to
+  // CONTINUE_AND_REPLACE.
+  BodyMutation body_mutation = 3;
+
+  // [#not-implemented-hide:]
+  // Add new trailers to the message. This may be used when responding to either
+  // a HttpHeaders or HttpBody message, but only if this message is returned
+  // along with the CONTINUE_AND_REPLACE status.
+  // The ``trailers`` encoding is based on the runtime guard
+  // envoy_reloadable_features_send_header_raw_value setting.
+  // When it is true, the header value is encoded in the
+  // :ref:`raw_value <envoy_v3_api_field_config.core.v3.HeaderValue.raw_value>`
+  // field. When it is false, the header value is encoded in the :ref:`value
+  // <envoy_v3_api_field_config.core.v3.HeaderValue.value>` field.
+  HeaderMap trailers = 4;
+
+  // Clear the route cache for the current client request. This is necessary
+  // if the remote server modified headers that are used to calculate the route.
+  // This field is ignored in the response direction.
+  bool clear_route_cache = 5;
+}
+
+// This message causes the filter to attempt to create a locally
+// generated response, send it  downstream, stop processing
+// additional filters, and ignore any additional messages received
+// from the remote server for this request or response. If a response
+// has already started, then  this will either ship the reply directly
+// to the downstream codec, or reset the stream.
+// [#next-free-field: 6]
+message ImmediateResponse {
+  // The response code to return
+  HttpStatus status = 1;
+
+  // Apply changes to the default headers, which will include content-type.
+  HeaderMutation headers = 2;
+
+  // The message body to return with the response which is sent using the
+  // text/plain content type, or encoded in the grpc-message header.
+  string body = 3;
+
+  // If set, then include a gRPC status trailer.
+  GrpcStatus grpc_status = 4;
+
+  // A string detailing why this local reply was sent, which may be included
+  // in log and debug output (e.g. this populates the %RESPONSE_CODE_DETAILS%
+  // command operator field for use in access logging).
+  string details = 5;
+}
+
+// This message specifies a gRPC status for an ImmediateResponse message.
+message GrpcStatus {
+  // The actual gRPC status
+  uint32 status = 1;
+}
+
+// Change HTTP headers or trailers by appending, replacing, or removing
+// headers.
+message HeaderMutation {
+  // Add or replace HTTP headers. Attempts to set the value of
+  // any ``x-envoy`` header, and attempts to set the ``:method``,
+  // ``:authority``, ``:scheme``, or ``host`` headers will be ignored.
+  // The ``set_headers`` encoding is based on the runtime guard
+  // envoy_reloadable_features_send_header_raw_value setting.
+  // When it is true, the header value is encoded in the
+  // :ref:`raw_value <envoy_v3_api_field_config.core.v3.HeaderValue.raw_value>`
+  // field. When it is false, the header value is encoded in the :ref:`value
+  // <envoy_v3_api_field_config.core.v3.HeaderValue.value>` field.
+  repeated HeaderValueOption set_headers = 1;
+
+  // Remove these HTTP headers. Attempts to remove system headers --
+  // any header starting with ``:``, plus ``host`` -- will be ignored.
+  repeated string remove_headers = 2;
+}
+
+// Replace the entire message body chunk received in the corresponding
+// HttpBody message with this new body, or clear the body.
+message BodyMutation {
+  oneof mutation {
+    // The entire body to replace
+    bytes body = 1;
+
+    // Clear the corresponding body chunk
+    bool clear_body = 2;
+  }
+}
+
+// Wrapper for a set of headers.
+message HeaderMap {
+  repeated HeaderValue headers = 1;
+}
+
+// Header name/value pair.
+message HeaderValue {
+  // Header name.
+  string key = 1;
+
+  // Header value.
+  //
+  // The same :ref:`format specifier <config_access_log_format>` as used for
+  // :ref:`HTTP access logging <config_access_log>` applies here, however
+  // unknown header values are replaced with the empty string instead of ``-``.
+  // Header value is encoded as string. This does not work for non-utf8
+  // characters. Only one of ``value`` or ``raw_value`` can be set.
+  string value = 2;
+
+  // Header value is encoded as bytes which can support non-utf8 characters.
+  // Only one of ``value`` or ``raw_value`` can be set.
+  bytes raw_value = 3;
+}
+
+// Header name/value pair plus option to control append behavior.
+message HeaderValueOption {
+  // Describes the supported actions types for header append action.
+  enum HeaderAppendAction {
+    // This action will append the specified value to the existing values if the
+    // header already exists. If the header doesn't exist then this will add the
+    // header with specified key and value.
+    APPEND_IF_EXISTS_OR_ADD = 0;
+
+    // This action will add the header if it doesn't already exist. If the
+    // header already exists then this will be a no-op.
+    ADD_IF_ABSENT = 1;
+
+    // This action will overwrite the specified value by discarding any existing
+    // values if the header already exists. If the header doesn't exist then
+    // this will add the header with specified key and value.
+    OVERWRITE_IF_EXISTS_OR_ADD = 2;
+
+    // This action will overwrite the specified value by discarding any existing
+    // values if the header already exists. If the header doesn't exist then
+    // this will be no-op.
+    OVERWRITE_IF_EXISTS = 3;
+  }
+
+  // Header name/value pair that this option applies to.
+  HeaderValue header = 1;
+
+  // Should the value be appended? If true (default), the value is appended to
+  // existing values. Otherwise it replaces any existing values.
+  // This field is deprecated and please use
+  // :ref:`append_action
+  // <envoy_v3_api_field_config.core.v3.HeaderValueOption.append_action>` as
+  // replacement.
+  //
+  // .. note::
+  //   The :ref:`external authorization service
+  //   <envoy_v3_api_msg_service.auth.v3.CheckResponse>` and :ref:`external
+  //   processor service
+  //   <envoy_v3_api_msg_service.ext_proc.v3.ProcessingResponse>` have default
+  //   value (``false``) for this field.
+  google.protobuf.BoolValue append = 2 [deprecated = true];
+
+  // Describes the action taken to append/overwrite the given value for an
+  // existing header or to only add this header if it's absent. Value defaults
+  // to :ref:`APPEND_IF_EXISTS_OR_ADD
+  // <envoy_v3_api_enum_value_config.core.v3.HeaderValueOption.HeaderAppendAction.APPEND_IF_EXISTS_OR_ADD>`.
+  HeaderAppendAction append_action = 3;
+
+  // Is the header value allowed to be empty? If false (default), custom headers
+  // with empty values are dropped, otherwise they are added.
+  bool keep_empty_value = 4;
+}
+
+// This configuration describes which parts of an HTTP request and
+// response are sent to a remote server and how they are delivered.
+
+// [#next-free-field: 7]
+message ProcessingMode {
+  // Control how headers and trailers are handled
+  enum HeaderSendMode {
+    // The default HeaderSendMode depends on which part of the message is being
+    // processed. By default, request and response headers are sent,
+    // while trailers are skipped.
+    DEFAULT = 0;
+
+    // Send the header or trailer.
+    SEND = 1;
+
+    // Do not send the header or trailer.
+    SKIP = 2;
+  }
+
+  // Control how the request and response bodies are handled
+  enum BodySendMode {
+    // Do not send the body at all. This is the default.
+    NONE = 0;
+
+    // Stream the body to the server in pieces as they arrive at the
+    // proxy.
+    STREAMED = 1;
+
+    // Buffer the message body in memory and send the entire body at once.
+    // If the body exceeds the configured buffer limit, then the
+    // downstream system will receive an error.
+    BUFFERED = 2;
+
+    // Buffer the message body in memory and send the entire body in one
+    // chunk. If the body exceeds the configured buffer limit, then the body
+    // contents up to the buffer limit will be sent.
+    BUFFERED_PARTIAL = 3;
+  }
+
+  // How to handle the request header. Default is "SEND".
+  HeaderSendMode request_header_mode = 1;
+
+  // How to handle the response header. Default is "SEND".
+  HeaderSendMode response_header_mode = 2;
+
+  // How to handle the request body. Default is "NONE".
+  BodySendMode request_body_mode = 3;
+
+  // How do handle the response body. Default is "NONE".
+  BodySendMode response_body_mode = 4;
+
+  // How to handle the request trailers. Default is "SKIP".
+  HeaderSendMode request_trailer_mode = 5;
+
+  // How to handle the response trailers. Default is "SKIP".
+  HeaderSendMode response_trailer_mode = 6;
+}
+
+// HTTP response codes supported in Envoy.
+// For more details:
+// https://www.iana.org/assignments/http-status-codes/http-status-codes.xhtml
+enum StatusCode {
+  // Empty - This code not part of the HTTP status code specification, but it is
+  // needed for proto `enum` type.
+  Empty = 0;
+
+  Continue = 100;
+
+  OK = 200;
+
+  Created = 201;
+
+  Accepted = 202;
+
+  NonAuthoritativeInformation = 203;
+
+  NoContent = 204;
+
+  ResetContent = 205;
+
+  PartialContent = 206;
+
+  MultiStatus = 207;
+
+  AlreadyReported = 208;
+
+  IMUsed = 226;
+
+  MultipleChoices = 300;
+
+  MovedPermanently = 301;
+
+  Found = 302;
+
+  SeeOther = 303;
+
+  NotModified = 304;
+
+  UseProxy = 305;
+
+  TemporaryRedirect = 307;
+
+  PermanentRedirect = 308;
+
+  BadRequest = 400;
+
+  Unauthorized = 401;
+
+  PaymentRequired = 402;
+
+  Forbidden = 403;
+
+  NotFound = 404;
+
+  MethodNotAllowed = 405;
+
+  NotAcceptable = 406;
+
+  ProxyAuthenticationRequired = 407;
+
+  RequestTimeout = 408;
+
+  Conflict = 409;
+
+  Gone = 410;
+
+  LengthRequired = 411;
+
+  PreconditionFailed = 412;
+
+  PayloadTooLarge = 413;
+
+  URITooLong = 414;
+
+  UnsupportedMediaType = 415;
+
+  RangeNotSatisfiable = 416;
+
+  ExpectationFailed = 417;
+
+  MisdirectedRequest = 421;
+
+  UnprocessableEntity = 422;
+
+  Locked = 423;
+
+  FailedDependency = 424;
+
+  UpgradeRequired = 426;
+
+  PreconditionRequired = 428;
+
+  TooManyRequests = 429;
+
+  RequestHeaderFieldsTooLarge = 431;
+
+  InternalServerError = 500;
+
+  NotImplemented = 501;
+
+  BadGateway = 502;
+
+  ServiceUnavailable = 503;
+
+  GatewayTimeout = 504;
+
+  HTTPVersionNotSupported = 505;
+
+  VariantAlsoNegotiates = 506;
+
+  InsufficientStorage = 507;
+
+  LoopDetected = 508;
+
+  NotExtended = 510;
+
+  NetworkAuthenticationRequired = 511;
+}
+
+// HTTP status.
+message HttpStatus {
+  // Supplies HTTP response code.
+  StatusCode code = 1;
+}
