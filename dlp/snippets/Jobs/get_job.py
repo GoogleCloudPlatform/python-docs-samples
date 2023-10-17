@@ -48,7 +48,6 @@ def get_dlp_job(project: str, job_name: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    
     parser.add_argument(
         "project", help="The project id to use as a parent resource."
     )
