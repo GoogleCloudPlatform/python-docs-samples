@@ -42,10 +42,10 @@ class ExternalProcessorStub(object):
             channel: A grpc.Channel.
         """
         self.Process = channel.stream_stream(
-                '/envoy.service.ext_proc.v3.ExternalProcessor/Process',
-                request_serializer=service__pb2.ProcessingRequest.SerializeToString,
-                response_deserializer=service__pb2.ProcessingResponse.FromString,
-                )
+            "/envoy.service.ext_proc.v3.ExternalProcessor/Process",
+            request_serializer=service__pb2.ProcessingRequest.SerializeToString,
+            response_deserializer=service__pb2.ProcessingResponse.FromString,
+        )
 
 
 class ExternalProcessorServicer(object):
@@ -85,24 +85,25 @@ class ExternalProcessorServicer(object):
         messages below.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+        context.set_details("Method not implemented!")
+        raise NotImplementedError("Method not implemented!")
 
 
 def add_ExternalProcessorServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'Process': grpc.stream_stream_rpc_method_handler(
-                    servicer.Process,
-                    request_deserializer=service__pb2.ProcessingRequest.FromString,
-                    response_serializer=service__pb2.ProcessingResponse.SerializeToString,
-            ),
+        "Process": grpc.stream_stream_rpc_method_handler(
+            servicer.Process,
+            request_deserializer=service__pb2.ProcessingRequest.FromString,
+            response_serializer=service__pb2.ProcessingResponse.SerializeToString,
+        ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'envoy.service.ext_proc.v3.ExternalProcessor', rpc_method_handlers)
+        "envoy.service.ext_proc.v3.ExternalProcessor", rpc_method_handlers
+    )
     server.add_generic_rpc_handlers((generic_handler,))
 
 
- # This class is part of an EXPERIMENTAL API.
+# This class is part of an EXPERIMENTAL API.
 class ExternalProcessor(object):
     """[#protodoc-title: External processing service]
 
@@ -134,18 +135,30 @@ class ExternalProcessor(object):
     """
 
     @staticmethod
-    def Process(request_iterator,
+    def Process(
+        request_iterator,
+        target,
+        options=(),
+        channel_credentials=None,
+        call_credentials=None,
+        insecure=False,
+        compression=None,
+        wait_for_ready=None,
+        timeout=None,
+        metadata=None,
+    ):
+        return grpc.experimental.stream_stream(
+            request_iterator,
             target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.stream_stream(request_iterator, target, '/envoy.service.ext_proc.v3.ExternalProcessor/Process',
+            "/envoy.service.ext_proc.v3.ExternalProcessor/Process",
             service__pb2.ProcessingRequest.SerializeToString,
             service__pb2.ProcessingResponse.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+        )
