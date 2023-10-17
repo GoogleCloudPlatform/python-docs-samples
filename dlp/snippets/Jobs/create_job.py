@@ -18,10 +18,10 @@ from __future__ import annotations
 
 import argparse
 
-import google.cloud.dlp
-
 
 # [START dlp_create_job]
+
+import google.cloud.dlp
 
 
 def create_dlp_job(
