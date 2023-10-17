@@ -61,7 +61,7 @@ def multi_turn_search_sample(
     # [START genappbuilder_multi_turn_search]
 
     for search_query in search_queries:
-        # Add new message to Session
+        # Add new message to session
         request = discoveryengine.ConverseConversationRequest(
             name=conversation.name,
             query=discoveryengine.TextInput(input=search_query),
@@ -71,8 +71,6 @@ def multi_turn_search_sample(
                 data_store=data_store_id,
                 serving_config="default_config",
             ),
-            # Enable Safe Search for query
-            safe_search=True,
             # Options for the returned summary
             summary_spec=discoveryengine.SearchRequest.ContentSearchSpec.SummarySpec(
                 # Number of results to include in summary
