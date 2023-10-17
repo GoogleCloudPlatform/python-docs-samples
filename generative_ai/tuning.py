@@ -37,7 +37,7 @@ def tuning(
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
     evaluation_dataset: Optional[str] = None,
-    tensorboard_instance_name: Optional[str] = None
+    tensorboard_instance_name: Optional[str] = None,
 ) -> TextGenerationModel:
     """Tune a new model, based on a prompt-response data.
 
@@ -57,12 +57,18 @@ def tuning(
       project_id: GCP Project ID, used to initialize vertexai
       location: GCP Region, used to initialize vertexai
       model_display_name: Customized Tuned LLM model name.
-      training_data: GCS URI of jsonl file or pandas dataframe of training data
+      training_data: GCS URI of jsonl file or pandas dataframe of training data.
       train_steps: Number of training steps to use when tuning the model.
+      evaluation_dataset: GCS URI of jsonl file of evaluation data.
+      tensorboard_instance_name: The full name of the existing Vertex AI TensorBoard instance:
+        projects/PROJECT_ID/locations/LOCATION_ID/tensorboards/TENSORBOARD_INSTANCE_ID
+        Note that this instance must be in the same region as your tuning job.
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
-    eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
+    eval_spec.tensorboard = aiplatform.Tensorboard(
+        tensorboard_name=tensorboard_instance_name
+    )
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
@@ -76,6 +82,7 @@ def tuning(
     )
 
     print(model._job.status)
+
     return model
 
 
