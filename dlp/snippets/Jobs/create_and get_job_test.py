@@ -16,11 +16,11 @@ import os
 from typing import Iterator
 import uuid
 
-import google.cloud.storage
-
 import create_job
 import delete_job
 import get_job
+
+import google.cloud.storage
 
 import pytest
 

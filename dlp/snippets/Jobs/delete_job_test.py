@@ -16,9 +16,9 @@ import os
 from typing import Iterator
 import uuid
 
-import google.cloud.dlp
-
 import delete_job as jobs
+
+import google.cloud.dlp
 
 import pytest
 
