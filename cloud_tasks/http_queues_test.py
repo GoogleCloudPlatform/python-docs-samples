@@ -20,12 +20,15 @@ import google.auth
 
 import http_queues
 
+
 def test_httpq_lifecycle() -> None:
     # Use the default project and a random name for the test queue
     _, project = google.auth.default()
     name = uuid.uuid4().hex
 
-    q = http_queues.create_http_queue(project, "us-central1", name, "http://example.com/")
+    q = http_queues.create_http_queue(
+        project, "us-central1", name, "http://example.com/"
+    )
     assert q is not None
     assert q.http_target.uri_override is not None
     assert q.http_target.uri_override.host == "example.com"
