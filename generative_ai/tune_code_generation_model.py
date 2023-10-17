@@ -35,7 +35,7 @@ def tune_code_generation_model(
     training_data: pd.DataFrame | str,
     train_steps: int = 300,
     evaluation_dataset: Optional[str] = None,
-    tensorboard_instance_name: Optional[str] = None
+    tensorboard_instance_name: Optional[str] = None,
 ) -> None:
     """Tune a new model, based on a prompt-response data.
 
@@ -59,7 +59,9 @@ def tune_code_generation_model(
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
-    eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
+    eval_spec.tensorboard = aiplatform.Tensorboard(
+        tensorboard_name=tensorboard_instance_name
+    )
     model = CodeGenerationModel.from_pretrained("code-bison@001")
 
     model.tune_model(
