@@ -71,7 +71,7 @@ def update_stored_infotype(
     )
 
     # Print the result
-    print(f"Updated stored infoType successfully: {response.name}")
+    print(f"Updated stored infoType successfully: {response.name} ")
 
 
 # [END dlp_update_stored_infotype]
