@@ -84,7 +84,6 @@
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 # ---* Infra DB
 /cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers
-/cloud_tasks/**/*                      @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers
 
 # Self-service
 # ---* Shared with DEE Teams
@@ -92,6 +91,8 @@
 /composer/**/*                         @GoogleCloudPlatform/cloud-dpes-composer @GoogleCloudPlatform/python-samples-reviewers
 /pubsub/**/*                           @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
 /pubsublite/**/*                       @GoogleCloudPlatform/api-pubsub-and-pubsublite @GoogleCloudPlatform/python-samples-reviewers
+/cloud_tasks/**/*                      @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers
+
 # ---* Fully Eng Owned
 /appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes @GoogleCloudPlatform/python-samples-reviewers
 /appengine/standard_python3/spanner/*  @GoogleCloudPlatform/api-spanner-python @GoogleCloudPlatform/python-samples-reviewers
@@ -123,6 +124,7 @@
 /talent/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /vision/**/*                           @GoogleCloudPlatform/python-samples-reviewers
 /workflows/**/*                        @GoogleCloudPlatform/python-samples-reviewers
+
 
 # BEGIN - pending clarification
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers
