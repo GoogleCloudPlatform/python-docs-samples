@@ -59,7 +59,7 @@ def update_stored_infotype(
     field_mask = {"paths": ["large_custom_dictionary.cloud_storage_file_set.url"]}
 
     # Convert the stored infoType id into a full resource id.
-    stored_info_type_name = f"projects/{project}/storedInfoTypes/{stored_info_type_id}"
+    stored_info_type_name = f"projects/{project}/locations/global/storedInfoTypes/{stored_info_type_id}"
 
     # Call the API.
     response = dlp.update_stored_info_type(
@@ -71,7 +71,7 @@ def update_stored_infotype(
     )
 
     # Print the result
-    print(f"Updated stored infoType successfully: {response.name} ")
+    print(f"Updated stored infoType successfully: {response.name}")
 
 
 # [END dlp_update_stored_infotype]
