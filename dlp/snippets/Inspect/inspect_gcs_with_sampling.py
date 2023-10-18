@@ -20,7 +20,7 @@ import argparse
 
 # [START dlp_inspect_gcs_with_sampling]
 import threading
-from typing import List, Optional
+from typing import List
 
 import google.cloud.dlp
 import google.cloud.pubsub
