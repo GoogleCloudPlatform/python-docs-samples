@@ -19,7 +19,7 @@ import inspect_image_file as inspect_content
 import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "../resources")
 
 
 def test_inspect_image_file_default_infotypes(capsys: pytest.CaptureFixture) -> None:
