@@ -64,13 +64,17 @@ def iam_user() -> str:
 
 
 @retry.Retry()
-def retry_client_secret_path(client, project_id, secret_id):
+def retry_client_secret_path(
+    client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str
+):
     # Retry to avoid 503 error & flaky issues
     return client.secret_path(project_id, secret_id)
 
 
 @retry.Retry()
-def retry_client_create_secret(client, request):
+def retry_client_create_secret(
+    client: secretmanager.SecretManagerServiceClient, request: dict
+):
     # Retry to avoid 503 error & flaky issues
     return client.create_secret(request=request)
 
