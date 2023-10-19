@@ -29,4 +29,3 @@ def test_inspect_string_with_exclusion_dict(capsys: pytest.LogCaptureFixture) ->
     out, _ = capsys.readouterr()
     assert "example@example.com" not in out
     assert "gary@example.com" in out
-
