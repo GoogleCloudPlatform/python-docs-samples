@@ -35,6 +35,7 @@ REPEATED_FIELD = "Mystery"
 NUMERIC_FIELD = "Age"
 
 BIGQUERY_DATASET_ID = "dlp_test_dataset" + UNIQUE_STRING
+BIGQUERY_TABLE_ID = "dlp_test_table" + UNIQUE_STRING
 BIGQUERY_HARMFUL_TABLE_ID = "harmful" + UNIQUE_STRING
 DLP_CLIENT = google.cloud.dlp_v2.DlpServiceClient()
 
@@ -76,10 +77,98 @@ def subscription_id(topic_id: str) -> Iterator[str]:
     subscriber.delete_subscription(request={"subscription": subscription_path})
 
 
+@pytest.fixture(scope="module")
+def bigquery_project() -> Iterator[str]:
+    # Adds test Bigquery data, yields the project ID and then tears down.
+
+    bigquery_client = google.cloud.bigquery.Client()
+
+    dataset_ref = bigquery_client.dataset(BIGQUERY_DATASET_ID)
+    dataset = google.cloud.bigquery.Dataset(dataset_ref)
+    try:
+        dataset = bigquery_client.create_dataset(dataset)
+    except google.api_core.exceptions.Conflict:
+        dataset = bigquery_client.get_dataset(dataset)
+    table_ref = dataset_ref.table(BIGQUERY_TABLE_ID)
+    table = google.cloud.bigquery.Table(table_ref)
+
+    harmful_table_ref = dataset_ref.table(BIGQUERY_HARMFUL_TABLE_ID)
+    harmful_table = google.cloud.bigquery.Table(harmful_table_ref)
+
+    table.schema = (
+        google.cloud.bigquery.SchemaField("Name", "STRING"),
+        google.cloud.bigquery.SchemaField("Comment", "STRING"),
+    )
+
+    harmful_table.schema = (
+        google.cloud.bigquery.SchemaField("Name", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("TelephoneNumber", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Mystery", "STRING", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Age", "INTEGER", "REQUIRED"),
+        google.cloud.bigquery.SchemaField("Gender", "STRING"),
+        google.cloud.bigquery.SchemaField("RegionCode", "STRING"),
+    )
+
+    try:
+        table = bigquery_client.create_table(table)
+    except google.api_core.exceptions.Conflict:
+        table = bigquery_client.get_table(table)
+
+    try:
+        harmful_table = bigquery_client.create_table(harmful_table)
+    except google.api_core.exceptions.Conflict:
+        harmful_table = bigquery_client.get_table(harmful_table)
+
+    rows_to_insert = [("Gary Smith", "My email is gary@example.com")]
+    harmful_rows_to_insert = [
+        (
+            "Gandalf",
+            "(123) 456-7890",
+            "4231 5555 6781 9876",
+            27,
+            "Male",
+            "US",
+        ),
+        (
+            "Dumbledore",
+            "(313) 337-1337",
+            "6291 8765 1095 7629",
+            27,
+            "Male",
+            "US",
+        ),
+        ("Joe", "(452) 123-1234", "3782 2288 1166 3030", 35, "Male", "US"),
+        ("James", "(567) 890-1234", "8291 3627 8250 1234", 19, "Male", "US"),
+        (
+            "Marie",
+            "(452) 123-1234",
+            "8291 3627 8250 1234",
+            35,
+            "Female",
+            "US",
+        ),
+        (
+            "Carrie",
+            "(567) 890-1234",
+            "2253 5218 4251 4526",
+            35,
+            "Female",
+            "US",
+        ),
+    ]
+
+    bigquery_client.insert_rows(table, rows_to_insert)
+    bigquery_client.insert_rows(harmful_table, harmful_rows_to_insert)
+    yield GCLOUD_PROJECT
+
+    bigquery_client.delete_dataset(dataset_ref, delete_contents=True)
+
+
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_k_anonymity_analysis_single_field(
     topic_id: str,
     subscription_id: str,
+    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
     risk.k_anonymity_analysis(
@@ -106,6 +195,7 @@ def test_k_anonymity_analysis_single_field(
 def test_k_anonymity_analysis_multiple_fields(
     topic_id: str,
     subscription_id: str,
+    bigquery_project: str,
     capsys: pytest.CaptureFixture,
 ) -> None:
     risk.k_anonymity_analysis(
