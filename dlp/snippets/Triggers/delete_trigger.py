@@ -50,7 +50,6 @@ def delete_trigger(project: str, trigger_id: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-   
     parser.add_argument("trigger_id", help="The id of the trigger to delete.")
     parser.add_argument(
         "--project",
