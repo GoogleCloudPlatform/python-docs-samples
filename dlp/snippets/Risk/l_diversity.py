@@ -19,8 +19,8 @@ import argparse
 
 
 # [START dlp_l_diversity]
-from typing import List
 import concurrent.futures
+from typing import List
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types

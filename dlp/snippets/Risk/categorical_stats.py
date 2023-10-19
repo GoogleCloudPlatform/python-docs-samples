@@ -19,7 +19,6 @@ import argparse
 
 
 # [START dlp_categorical_stats]
-
 import concurrent.futures
 
 import google.cloud.dlp

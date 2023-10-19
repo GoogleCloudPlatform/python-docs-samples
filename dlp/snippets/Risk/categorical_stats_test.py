@@ -17,11 +17,11 @@ from typing import Iterator
 
 import uuid
 
+import categorical_stats as risk
+
 import google.cloud.bigquery
 import google.cloud.dlp_v2
 import google.cloud.pubsub
-
-import categorical_stats as risk
 
 import pytest
 

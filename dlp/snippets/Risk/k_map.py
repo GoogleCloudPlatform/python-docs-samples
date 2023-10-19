@@ -19,8 +19,8 @@ import argparse
 
 
 # [START dlp_k_map]
-from typing import List
 import concurrent.futures
+from typing import List
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
@@ -47,13 +47,12 @@ def k_map_estimate_analysis(
             is stored.
         dataset_id: The id of the dataset to inspect.
         table_id: The id of the table to inspect.
-        column_name: The name of the column to compute risk metrics for.
         topic_id: The name of the Pub/Sub topic to notify once the job
             completes.
         subscription_id: The name of the Pub/Sub subscription to use when
             listening for job completion notifications.
         quasi_ids: A set of columns that form a composite key and optionally
-            their reidentification distributions.
+            their re-identification distributions.
         info_types: Type of information of the quasi_id in order to provide a
             statistical model of population.
         region_code: The ISO 3166-1 region code that the data is representative
