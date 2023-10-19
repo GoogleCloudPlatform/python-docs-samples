@@ -11,10 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import list_info_types as metadata
 
 import pytest
-
-import list_info_types as metadata
 
 
 def test_fetch_info_types(capsys: pytest.CaptureFixture) -> None:
