@@ -14,7 +14,7 @@
 
 import pytest
 
-import metadata
+import list_info_types as metadata
 
 
 def test_fetch_info_types(capsys: pytest.CaptureFixture) -> None:
