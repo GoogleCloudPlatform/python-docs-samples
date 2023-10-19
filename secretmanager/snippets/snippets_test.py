@@ -63,14 +63,16 @@ def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
 
 
-def retry_wrapper(function, *args, **kwargs):
-    """Wrapper to use @retry.Retry decorator for function calls"""
+@retry.Retry()
+def retry_client_secret_path(client, project_id, secret_id):
+    # Retry to avoid 503 error & flaky issues
+    return client.secret_path(project_id, secret_id)
 
-    @retry.Retry
-    def retry_run():
-        return function(*args, **kwargs)
 
-    return retry_run()
+@retry.Retry()
+def retry_client_create_secret(client, request):
+    # Retry to avoid 503 error & flaky issues
+    return client.create_secret(request=request)
 
 
 @pytest.fixture()
@@ -80,8 +82,7 @@ def secret_id(
     secret_id = f"python-secret-{uuid.uuid4()}"
 
     yield secret_id
-
-    secret_path = retry_wrapper(client.secret_path, project_id, secret_id)
+    secret_path = retry_client_secret_path(client, project_id, secret_id)
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
@@ -99,8 +100,8 @@ def secret(
 
     parent = f"projects/{project_id}"
     time.sleep(5)
-    secret = retry_wrapper(
-        client.create_secret,
+    secret = retry_client_create_secret(
+        client,
         request={
             "parent": parent,
             "secret_id": secret_id,
