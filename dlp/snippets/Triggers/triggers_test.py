@@ -16,11 +16,12 @@ import os
 from typing import Iterator
 import uuid
 
+import create_trigger as ct
+import delete_trigger as dt
+
 import google.api_core.exceptions
 import google.cloud.storage
 
-import create_trigger as ct
-import delete_trigger as dt
 import list_triggers as lt
 
 import pytest
