@@ -15,11 +15,12 @@
 import os
 import uuid
 
+import create_inspect_template as ct
+import delete_inspect_template as dt
+
 import google.api_core.exceptions
 import google.cloud.storage
 
-import create_inspect_template as ct
-import delete_inspect_template as dt
 import list_inspect_templates as lt
 
 import pytest
