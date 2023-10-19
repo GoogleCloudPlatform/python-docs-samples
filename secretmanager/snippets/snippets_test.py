@@ -17,7 +17,7 @@ import time
 from typing import Iterator, Tuple
 import uuid
 
-from google.api_core import exceptions
+from google.api_core import exceptions, retry
 from google.cloud import secretmanager
 import pytest
 
@@ -63,6 +63,16 @@ def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
 
 
+def retry_wrapper(function, *args, **kwargs):
+    """Wrapper to use @retry.Retry decorator for function calls"""
+
+    @retry.Retry
+    def retry_run():
+        return function(*args, **kwargs)
+
+    return retry_run()
+
+
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
@@ -71,7 +81,7 @@ def secret_id(
 
     yield secret_id
 
-    secret_path = client.secret_path(project_id, secret_id)
+    secret_path = retry_wrapper(client.secret_path, project_id, secret_id)
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
@@ -89,12 +99,13 @@ def secret(
 
     parent = f"projects/{project_id}"
     time.sleep(5)
-    secret = client.create_secret(
+    secret = retry_wrapper(
+        client.create_secret,
         request={
             "parent": parent,
             "secret_id": secret_id,
             "secret": {"replication": {"automatic": {}}},
-        }
+        },
     )
 
     yield project_id, secret_id, secret.etag
