@@ -14,14 +14,14 @@
 
 import uuid
 
-import delete_http_queue
-
 import google.auth
-
 # HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
 
 import pytest
+
+import delete_http_queue
+
 
 HOST = "example.com"
 LOCATION = "us-central1"

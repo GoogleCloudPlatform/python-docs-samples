@@ -17,11 +17,11 @@ import subprocess
 import uuid
 
 import google.auth
-
 # HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
 
 import pytest
+
 import send_task_to_http_queue
 
 

@@ -14,14 +14,13 @@
 
 import uuid
 
-import get_http_queue
-
 import google.auth
-
 # HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
 
 import pytest
+
+import get_http_queue
 
 HOST = "example.com"
 LOCATION = "us-central1"

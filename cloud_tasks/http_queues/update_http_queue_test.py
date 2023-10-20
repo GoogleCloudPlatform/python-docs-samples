@@ -20,6 +20,7 @@ import google.auth
 from google.cloud import tasks_v2beta3 as tasks
 
 import pytest
+
 import update_http_queue
 
 

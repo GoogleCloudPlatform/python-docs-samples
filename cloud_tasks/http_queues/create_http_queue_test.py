@@ -14,12 +14,11 @@
 
 import uuid
 
-import create_http_queue
-
 import google.auth
-
 # HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
+
+import create_http_queue
 
 
 def test_create() -> None:
