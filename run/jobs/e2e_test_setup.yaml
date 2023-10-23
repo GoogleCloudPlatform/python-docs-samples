@@ -31,7 +31,7 @@ steps:
     # TODO: b/230113499 update gcloud version when available
     gcloud components install alpha --quiet
     
-    glcoud run jobs create ${_SERVICE} \
+    gcloud run jobs create ${_SERVICE} \
       --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
       --project ${PROJECT_ID} \
       --region ${_REGION} \
@@ -39,7 +39,7 @@ steps:
       --set-env-vars=SLEEP_MS=100 \
       --max-retries 0
 
-    ./retry.sh "glcoud run jobs execute ${_SERVICE} \
+    ./retry.sh "gcloud run jobs execute ${_SERVICE} \
       --project ${PROJECT_ID} \
       --region ${_REGION} \
       --wait"
