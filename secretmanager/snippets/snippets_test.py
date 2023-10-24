@@ -14,7 +14,7 @@
 import base64
 import os
 import time
-from typing import Iterator, Tuple
+from typing import Iterator, Optional, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
@@ -75,7 +75,8 @@ def retry_client_secret_path(
 
 @retry.Retry()
 def retry_client_create_secret(
-    client: secretmanager.SecretManagerServiceClient, request: dict
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
 ) -> secretmanager.Secret:
     # Retry to avoid 503 error & flaky issues
     return client.create_secret(request=request)
@@ -83,7 +84,8 @@ def retry_client_create_secret(
 
 @retry.Retry()
 def retry_client_access_secret_version(
-    client: secretmanager.SecretManagerServiceClient, request: dict
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
 ) -> secretmanager.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return client.access_secret_version(request=request)
@@ -91,7 +93,8 @@ def retry_client_access_secret_version(
 
 @retry.Retry()
 def retry_client_delete_secret(
-    client: secretmanager.SecretManagerServiceClient, request: dict
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
 ) -> None:
     # Retry to avoid 503 error & flaky issues
     return client.delete_secret(request=request)
@@ -99,7 +102,8 @@ def retry_client_delete_secret(
 
 @retry.Retry()
 def retry_client_add_secret_version(
-    client: secretmanager.SecretManagerServiceClient, request: dict
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
 ) -> secretmanager.SecretVersion:
     # Retry to avoid 503 error & flaky issues
     return client.add_secret_version(request=request)
