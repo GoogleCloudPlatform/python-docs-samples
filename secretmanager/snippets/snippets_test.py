@@ -65,7 +65,9 @@ def iam_user() -> str:
 
 @retry.Retry()
 def retry_client_secret_path(
-    client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
 ) -> str:
     # Retry to avoid 503 error & flaky issues
     return client.secret_path(project_id, secret_id)
@@ -79,6 +81,30 @@ def retry_client_create_secret(
     return client.create_secret(request=request)
 
 
+@retry.Retry()
+def retry_client_access_secret_version(
+    client: secretmanager.SecretManagerServiceClient, request: dict
+) -> secretmanager.AccessSecretVersionResponse:
+    # Retry to avoid 503 error & flaky issues
+    return client.access_secret_version(request=request)
+
+
+@retry.Retry()
+def retry_client_delete_secret(
+    client: secretmanager.SecretManagerServiceClient, request: dict
+) -> None:
+    # Retry to avoid 503 error & flaky issues
+    return client.delete_secret(request=request)
+
+
+@retry.Retry()
+def retry_client_add_secret_version(
+    client: secretmanager.SecretManagerServiceClient, request: dict
+) -> secretmanager.SecretVersion:
+    # Retry to avoid 503 error & flaky issues
+    return client.add_secret_version(request=request)
+
+
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
@@ -90,7 +116,7 @@ def secret_id(
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
-        client.delete_secret(request={"name": secret_path})
+        retry_client_delete_secret(client, request={"name": secret_path})
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
@@ -123,7 +149,7 @@ def secret_version(
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
-    parent = client.secret_path(project_id, secret_id)
+    parent = retry_client_create_secret(client, project_id, secret_id)
     payload = b"hello world!"
     time.sleep(5)
     version = client.add_secret_version(
@@ -190,7 +216,7 @@ def test_delete_secret(
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
-        client.access_secret_version(request={"name": name})
+        retry_client_access_secret_version(client, request={"name": name})
 
 
 def test_delete_secret_with_etag(
@@ -201,7 +227,7 @@ def test_delete_secret_with_etag(
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
-        client.access_secret_version(request={"name": name})
+        retry_client_access_secret_version(client, request={"name": name})
 
 
 def test_destroy_secret_version(
