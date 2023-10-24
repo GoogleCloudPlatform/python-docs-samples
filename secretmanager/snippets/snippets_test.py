@@ -85,7 +85,7 @@ def retry_client_create_secret(
 @retry.Retry()
 def retry_client_access_secret_version(
     client: secretmanager.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
+    request: Optional[Union[secretmanager.AccessSecretVersionRequest, dict]],
 ) -> secretmanager.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return client.access_secret_version(request=request)
@@ -94,7 +94,7 @@ def retry_client_access_secret_version(
 @retry.Retry()
 def retry_client_delete_secret(
     client: secretmanager.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
+    request: Optional[Union[secretmanager.DeleteSecretRequest, dict]],
 ) -> None:
     # Retry to avoid 503 error & flaky issues
     return client.delete_secret(request=request)
@@ -103,7 +103,7 @@ def retry_client_delete_secret(
 @retry.Retry()
 def retry_client_add_secret_version(
     client: secretmanager.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
+    request: Optional[Union[secretmanager.AddSecretVersionRequest, dict]],
 ) -> secretmanager.SecretVersion:
     # Retry to avoid 503 error & flaky issues
     return client.add_secret_version(request=request)
