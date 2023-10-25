@@ -108,7 +108,7 @@ def receive_messages_handler():
 
 # [END gae_standard_pubsub_auth_push]
 
-# [START push]
+# [START gae_standard_pubsub_push]
 @app.route("/pubsub/push", methods=["POST"])
 def receive_pubsub_messages_handler():
     # Verify that the request originates from the application.
@@ -121,7 +121,7 @@ def receive_pubsub_messages_handler():
     # Returning any 2xx status indicates successful receipt of the message.
     return "OK", 200
 
-# [END push]
+# [END gae_standard_pubsub_push]
 
 
 @app.errorhandler(500)
