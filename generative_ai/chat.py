@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_chat]
-from vertexai.preview.language_models import ChatModel, InputOutputTextPair
+from vertexai.language_models import ChatModel, InputOutputTextPair
 
 
 def science_tutoring(temperature: float = 0.2) -> None:
@@ -41,10 +41,10 @@ def science_tutoring(temperature: float = 0.2) -> None:
         "How many planets are there in the solar system?", **parameters
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_chat]
 
     return response
 
 
 if __name__ == "__main__":
     science_tutoring()
+# [END aiplatform_sdk_chat]

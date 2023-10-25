@@ -98,6 +98,8 @@ def test_tuning(training_data_filename: str) -> None:
         location=_LOCATION,
         model_display_name="YOUR_TUNED_MODEL",
         train_steps=1,
+        evaluation_dataset=training_data_filename,
+        tensorboard_instance_name="python-docs-samples-test",
     )
     try:
         assert (

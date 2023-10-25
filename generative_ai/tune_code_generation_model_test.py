@@ -97,6 +97,8 @@ def test_tuning_code_generation_model(training_data_filename: str) -> None:
         project_id=_PROJECT_ID,
         location=_LOCATION,
         train_steps=1,
+        evaluation_dataset=training_data_filename,
+        tensorboard_instance_name="python-docs-samples-test",
     )
     try:
         assert (

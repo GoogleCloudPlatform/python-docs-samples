@@ -27,9 +27,10 @@ def list_tuned_code_generation_models(
     model = CodeGenerationModel.from_pretrained("code-bison@001")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
-    # [END aiplatform_sdk_list_tuned_code_generation_models]
+
     return tuned_model_names
 
 
 if __name__ == "__main__":
     list_tuned_code_generation_models()
+# [END aiplatform_sdk_list_tuned_code_generation_models]
