@@ -12,13 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+import inspect_phone_number as inspect_content
+
 import pytest
 
-import metadata
+GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def test_fetch_info_types(capsys: pytest.CaptureFixture) -> None:
-    metadata.list_info_types()
+def test_inspect_phone_number(capsys: pytest.CaptureFixture) -> None:
+    test_string = "String with a phone number: 234-555-6789"
+
+    inspect_content.inspect_phone_number(GCLOUD_PROJECT, test_string)
 
     out, _ = capsys.readouterr()
-    assert "EMAIL_ADDRESS" in out
+    assert "Info type: PHONE_NUMBER" in out
+    assert "Quote: 234-555-6789" in out

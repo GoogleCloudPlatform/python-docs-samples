@@ -20,7 +20,7 @@ import argparse
 
 
 # [START dlp_list_info_types]
-from typing import Optional  # noqa: I100, E402
+from typing import Optional
 
 import google.cloud.dlp
 
@@ -31,7 +31,7 @@ def list_info_types(
     """List types of sensitive information within a category.
     Args:
         language_code: The BCP-47 language code to use, e.g. 'en-US'.
-        filter: An optional filter to only return info types supported by
+        result_filter: An optional filter to only return info types supported by
                 certain parts of the API. Defaults to "supported_by=INSPECT".
     Returns:
         None; the response from the API is printed to the terminal.
