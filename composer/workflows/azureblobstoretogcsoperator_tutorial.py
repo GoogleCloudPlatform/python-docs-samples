@@ -93,7 +93,6 @@ with models.DAG(
         object_name="holidays.csv",
         bucket_name=BUCKET_NAME,
         gzip=False,
-        delegate_to=None,
         impersonation_chain=None,
     )
 
