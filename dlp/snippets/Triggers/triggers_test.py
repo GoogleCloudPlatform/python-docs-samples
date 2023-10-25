@@ -18,14 +18,15 @@ import uuid
 
 import create_trigger as ct
 import delete_trigger as dt
-import list_triggers as lt
-import update_trigger as ut
 
 import google.api_core.exceptions
 import google.cloud.storage
 
+import list_triggers as lt
+
 import pytest
 
+import update_trigger as ut
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
