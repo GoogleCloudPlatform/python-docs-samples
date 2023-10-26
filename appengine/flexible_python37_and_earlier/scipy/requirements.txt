@@ -5,4 +5,4 @@ imageio==2.29.0
 numpy==1.21.6
 pillow==10.0.1
 scipy==1.7.3
-Werkzeug==2.3.7
+Werkzeug==3.0.1
