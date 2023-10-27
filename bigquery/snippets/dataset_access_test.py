@@ -14,8 +14,8 @@
 
 import typing
 
-import revoke_dataset_access
-import update_dataset_access
+import revoke_dataset_access  # type: ignore
+import update_dataset_access  # type: ignore
 
 if typing.TYPE_CHECKING:
     from google.cloud import bigquery

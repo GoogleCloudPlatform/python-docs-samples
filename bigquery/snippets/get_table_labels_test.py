@@ -16,7 +16,7 @@ import typing
 
 from google.cloud import bigquery
 
-import get_table_labels
+import get_table_labels  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

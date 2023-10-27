@@ -16,7 +16,7 @@ import typing
 
 from google.cloud import bigquery
 
-import delete_job
+import delete_job  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

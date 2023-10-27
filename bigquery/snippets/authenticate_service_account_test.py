@@ -17,7 +17,7 @@ from typing import Any
 
 import google.auth
 
-import authenticate_service_account
+import authenticate_service_account  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

@@ -14,7 +14,7 @@
 
 import typing
 
-import create_table_snapshot
+import create_table_snapshot  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

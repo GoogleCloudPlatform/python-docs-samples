@@ -14,7 +14,7 @@
 
 import typing
 
-import delete_label_table
+import delete_label_table  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

@@ -18,7 +18,7 @@ import uuid
 from google.cloud import bigquery
 import pytest
 
-import authorized_view_tutorial
+import authorized_view_tutorial  # type: ignore
 
 
 @pytest.fixture(scope="module")

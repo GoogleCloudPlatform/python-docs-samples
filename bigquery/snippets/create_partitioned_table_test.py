@@ -14,7 +14,7 @@
 
 import typing
 
-import create_partitioned_table
+import create_partitioned_table  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

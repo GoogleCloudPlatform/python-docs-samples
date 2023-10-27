@@ -14,7 +14,7 @@
 
 import typing
 
-import load_table_schema_from_json
+import load_table_schema_from_json  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

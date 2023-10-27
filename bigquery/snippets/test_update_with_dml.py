@@ -17,8 +17,8 @@ from typing import Iterator
 from google.cloud import bigquery
 import pytest
 
-from conftest import prefixer
-import update_with_dml
+from conftest import prefixer  # type: ignore
+import update_with_dml  # type: ignore
 
 
 @pytest.fixture

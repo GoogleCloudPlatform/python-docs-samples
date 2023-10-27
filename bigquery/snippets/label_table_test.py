@@ -14,7 +14,7 @@
 
 import typing
 
-import label_table
+import label_table  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

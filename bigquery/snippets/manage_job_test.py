@@ -15,8 +15,8 @@
 from google.cloud import bigquery
 import pytest
 
-import manage_job_cancel
-import manage_job_get
+import manage_job_cancel  # type: ignore
+import manage_job_get  # type: ignore
 
 
 def test_manage_job(capsys: pytest.CaptureFixture[str]) -> None:

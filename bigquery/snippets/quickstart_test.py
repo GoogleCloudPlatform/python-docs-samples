@@ -18,7 +18,7 @@ import uuid
 from google.cloud import bigquery
 import pytest
 
-import quickstart
+import quickstart  # type: ignore
 
 # Must match the dataset listed in quickstart.py (there's no easy way to
 # extract this).

@@ -16,7 +16,7 @@ import typing
 
 from google.cloud import bigquery
 
-import relax_column
+import relax_column  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

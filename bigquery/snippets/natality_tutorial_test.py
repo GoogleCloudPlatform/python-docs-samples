@@ -18,7 +18,7 @@ import uuid
 from google.cloud import bigquery
 import pytest
 
-import natality_tutorial
+import natality_tutorial  # type: ignore
 
 
 @pytest.fixture(scope="module")

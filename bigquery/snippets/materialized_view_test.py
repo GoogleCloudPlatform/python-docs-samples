@@ -20,7 +20,7 @@ from google.api_core import exceptions
 from google.cloud import bigquery
 import pytest
 
-import materialized_view
+import materialized_view  # type: ignore
 
 
 def temp_suffix() -> str:

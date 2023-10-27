@@ -19,7 +19,7 @@ import uuid
 from google.cloud import bigquery
 import pytest
 
-import view
+import view  # type: ignore
 
 
 def temp_suffix() -> str:

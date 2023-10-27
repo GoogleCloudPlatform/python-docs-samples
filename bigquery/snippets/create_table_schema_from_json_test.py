@@ -14,7 +14,7 @@
 
 import typing
 
-import create_table_schema_from_json
+import create_table_schema_from_json  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

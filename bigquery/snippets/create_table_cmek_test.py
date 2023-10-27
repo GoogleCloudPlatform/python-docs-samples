@@ -14,7 +14,7 @@
 
 import typing
 
-import create_table_cmek
+import create_table_cmek  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

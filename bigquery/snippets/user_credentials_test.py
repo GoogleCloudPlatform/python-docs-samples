@@ -19,7 +19,7 @@ import google.auth
 import mock
 import pytest
 
-from user_credentials import main
+from user_credentials import main  # type: ignore
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 

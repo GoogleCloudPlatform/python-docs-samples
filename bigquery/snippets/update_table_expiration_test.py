@@ -15,7 +15,7 @@
 import datetime
 import typing
 
-import update_table_expiration
+import update_table_expiration  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pathlib

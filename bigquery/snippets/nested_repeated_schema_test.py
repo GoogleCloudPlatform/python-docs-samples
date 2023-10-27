@@ -14,7 +14,7 @@
 
 import typing
 
-import nested_repeated_schema
+import nested_repeated_schema  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

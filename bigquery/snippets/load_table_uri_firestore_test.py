@@ -14,7 +14,7 @@
 
 import typing
 
-import load_table_uri_firestore
+import load_table_uri_firestore  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

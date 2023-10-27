@@ -14,7 +14,7 @@
 
 import typing
 
-import simple_app
+import simple_app  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pytest

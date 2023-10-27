@@ -14,7 +14,7 @@
 
 import typing
 
-import get_table_make_schema
+import get_table_make_schema  # type: ignore
 
 if typing.TYPE_CHECKING:
     import pathlib
