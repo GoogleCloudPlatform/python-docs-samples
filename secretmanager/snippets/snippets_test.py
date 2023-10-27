@@ -64,16 +64,6 @@ def iam_user() -> str:
 
 
 @retry.Retry()
-def retry_client_secret_path(
-    client: secretmanager.SecretManagerServiceClient,
-    project_id: str,
-    secret_id: str,
-) -> str:
-    # Retry to avoid 503 error & flaky issues
-    return client.secret_path(project_id, secret_id)
-
-
-@retry.Retry()
 def retry_client_create_secret(
     client: secretmanager.SecretManagerServiceClient,
     request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
@@ -116,7 +106,7 @@ def secret_id(
     secret_id = f"python-secret-{uuid.uuid4()}"
 
     yield secret_id
-    secret_path = retry_client_secret_path(client, project_id, secret_id)
+    secret_path = client.secret_path(project_id, secret_id)
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
@@ -153,7 +143,7 @@ def secret_version(
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
-    parent = retry_client_secret_path(client, project_id, secret_id)
+    parent = client.secret_path(project_id, secret_id)
     payload = b"hello world!"
     time.sleep(5)
     version = client.add_secret_version(
