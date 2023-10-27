@@ -153,7 +153,7 @@ def secret_version(
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
-    parent = retry_client_secret_path(client, secret_id)
+    parent = retry_client_secret_path(client, project_id, secret_id)
     payload = b"hello world!"
     time.sleep(5)
     version = client.add_secret_version(
