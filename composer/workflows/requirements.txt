@@ -1,11 +1,11 @@
 # be sure to update the constraints file to match
 # see https://airflow.apache.org/docs/apache-airflow/stable/installation/installing-from-pypi.html#constraints-files
-apache-airflow==2.5.3
-apache-airflow-providers-amazon==7.3.0
-apache-airflow-providers-apache-beam==4.3.0
-apache-airflow-providers-cncf-kubernetes==5.2.2
-apache-airflow-providers-google==8.11.0
-apache-airflow-providers-microsoft-azure==5.2.1
-google-cloud-dataform==0.2.0 # used in Dataform operators
+apache-airflow==2.6.3
+apache-airflow-providers-amazon==8.2.0
+apache-airflow-providers-apache-beam==5.1.1
+apache-airflow-providers-cncf-kubernetes==7.1.0
+apache-airflow-providers-google==10.2.0
+apache-airflow-providers-microsoft-azure==6.1.2
+google-cloud-dataform==0.5.2 # used in Dataform operators
 scipy==1.10.0; python_version > '3.0'
 
