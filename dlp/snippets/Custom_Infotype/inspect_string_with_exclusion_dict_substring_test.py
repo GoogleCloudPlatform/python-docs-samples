@@ -14,28 +14,21 @@
 
 import os
 
-import pytest
+import inspect_string_with_exclusion_dict_substring as custom_infotype
 
-import custom_infotype
+import pytest
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def test_inspect_string_with_exclusion_regex(capsys: pytest.LogCaptureFixture) -> None:
-    custom_infotype.inspect_string_with_exclusion_regex(
-        GCLOUD_PROJECT, "alice@example.com, ironman@avengers.net", ".+@example.com"
+def test_inspect_string_with_exclusion_dict_substring(
+    capsys: pytest.LogCaptureFixture,
+) -> None:
+    custom_infotype.inspect_string_with_exclusion_dict_substring(
+        GCLOUD_PROJECT, "bob@example.com TEST@example.com TEST.com", ["TEST"]
     )
 
     out, _ = capsys.readouterr()
-    assert "alice" not in out
-    assert "ironman" in out
-
-
-def test_inspect_string_without_overlap(capsys: pytest.LogCaptureFixture) -> None:
-    custom_infotype.inspect_string_without_overlap(
-        GCLOUD_PROJECT, "example.com is a domain, james@example.org is an email."
-    )
-
-    out, _ = capsys.readouterr()
-    assert "example.com" in out
-    assert "example.org" not in out
+    assert "TEST@example.com" not in out
+    assert "TEST.com" not in out
+    assert "bob@example.com" in out
