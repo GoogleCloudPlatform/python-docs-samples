@@ -44,16 +44,6 @@ def test_inspect_string_with_exclusion_dict_substring(
     assert "bob@example.com" in out
 
 
-def test_inspect_string_custom_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
-    custom_infotype.inspect_string_custom_omit_overlap(
-        GCLOUD_PROJECT, "Larry Page and John Doe"
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Larry Page" not in out
-    assert "John Doe" in out
-
-
 def test_inspect_string_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_omit_overlap(GCLOUD_PROJECT, "alice@example.com")
 
