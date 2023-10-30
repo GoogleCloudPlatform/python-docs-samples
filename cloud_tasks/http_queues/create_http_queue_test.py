@@ -25,7 +25,7 @@ import create_http_queue
 def test_create() -> None:
     # Use the default project and a random name for the test queue
     _, project = google.auth.default()
-    name = uuid.uuid4().hex
+    name = "tests-tasks-" + uuid.uuid4().hex
 
     q = create_http_queue.create_http_queue(
         project, "us-central1", name, "http://example.com/"

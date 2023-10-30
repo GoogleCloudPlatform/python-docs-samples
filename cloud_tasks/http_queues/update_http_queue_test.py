@@ -32,7 +32,7 @@ LOCATION = "us-central1"
 def q():
     # Use the default project and a random name for the test queue
     _, project = google.auth.default()
-    name = uuid.uuid4().hex
+    name = "tests-tasks-" + uuid.uuid4().hex
 
     http_target = {
         "uri_override": {

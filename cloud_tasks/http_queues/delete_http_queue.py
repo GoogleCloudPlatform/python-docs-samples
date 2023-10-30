@@ -14,6 +14,7 @@
 
 
 # [START cloud_tasks_delete_http_queue]
+# HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
 
 

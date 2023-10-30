@@ -52,11 +52,11 @@ def update_http_queue(
         http_target = {
             "uri_override": {
                 "host": parsedUri.hostname,
-                "uri_override_enforce_mode": 2,  # ALWAYS use this endpoint
+                "uri_override_enforce_mode": tasks.types.UriOverride.UriOverrideEnforceMode.ALWAYS,
             }
         }
         if parsedUri.scheme == "http":  # defaults to https
-            http_target["uri_override"]["scheme"] = 1
+            http_target["uri_override"]["scheme"] = tasks.types.UriOverride.Scheme.HTTP
         if parsedUri.port:
             http_target["uri_override"]["port"] = f"{parsedUri.port}"
         if parsedUri.path:
@@ -69,6 +69,7 @@ def update_http_queue(
         queue.http_target = http_target
         update_mask["paths"].append("http_target")
 
+    # Update values only if the arguments are not the default values.
     if max_per_second != 0.0:
         queue.rate_limits.max_dispatches_per_second = max_per_second
     if max_burst != 0:

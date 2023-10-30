@@ -1,2 +1,3 @@
 pytest==7.2.0
 google-auth==2.23.3
+google-api-core==2.12.0

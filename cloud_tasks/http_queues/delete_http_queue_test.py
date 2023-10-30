@@ -14,8 +14,8 @@
 
 import uuid
 
+from google.api_core.exceptions import NotFound
 import google.auth
-
 # HTTP Queues are currently in public beta
 from google.cloud import tasks_v2beta3 as tasks
 
@@ -32,7 +32,7 @@ LOCATION = "us-central1"
 def q():
     # Use the default project and a random name for the test queue
     _, project = google.auth.default()
-    name = uuid.uuid4().hex
+    name = "tests-tasks-" + uuid.uuid4().hex
 
     http_target = {
         "uri_override": {
@@ -58,7 +58,10 @@ def q():
     try:
         client.delete_queue(name=queue.name)
     except Exception as e:
-        print(f"Tried my best to clean up, but could not: {e}")
+        if type(e) == NotFound:  # It's still gone, anyway, so it's fine
+            pass
+        else:
+            print(f"Tried my best to clean up, but could not: {e}")
 
 
 def test_delete_http_queue(q) -> None:

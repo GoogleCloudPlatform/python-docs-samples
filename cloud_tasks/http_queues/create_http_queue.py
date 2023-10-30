@@ -45,11 +45,11 @@ def create_http_queue(project: str, location: str, name: str, uri: str) -> tasks
     http_target = {
         "uri_override": {
             "host": parsedUri.hostname,
-            "uri_override_enforce_mode": 2,  # ALWAYS use this endpoint
+            "uri_override_enforce_mode": tasks.types.UriOverride.UriOverrideEnforceMode.ALWAYS,
         }
     }
     if parsedUri.scheme == "http":  # defaults to https
-        http_target["uri_override"]["scheme"] = 1
+        http_target["uri_override"]["scheme"] = tasks.types.UriOverride.Scheme.HTTP
     if parsedUri.port:
         http_target["uri_override"]["port"] = f"{parsedUri.port}"
     if parsedUri.path:
