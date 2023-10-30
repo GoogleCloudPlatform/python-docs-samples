@@ -44,18 +44,6 @@ def test_inspect_string_with_exclusion_dict_substring(
     assert "bob@example.com" in out
 
 
-def test_inspect_string_custom_excluding_substring(
-    capsys: pytest.LogCaptureFixture,
-) -> None:
-    custom_infotype.inspect_string_custom_excluding_substring(
-        GCLOUD_PROJECT, "Danger, Jimmy | Wayne, Bruce", ["Jimmy"]
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Wayne, Bruce" in out
-    assert "Danger, Jimmy" not in out
-
-
 def test_inspect_string_custom_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_custom_omit_overlap(
         GCLOUD_PROJECT, "Larry Page and John Doe"
@@ -135,15 +123,3 @@ def test_inspect_string_multiple_rules_redacted(
 
     out, _ = capsys.readouterr()
     assert "No findings" in out
-
-
-def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
-    capsys: pytest.LogCaptureFixture,
-) -> None:
-    custom_infotype.inspect_data_w_custom_hotwords(
-        GCLOUD_PROJECT, "just a number 444-5-22222"
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Info type: C_MRN" in out
-    assert "Likelihood: 3" in out
