@@ -137,17 +137,6 @@ def test_inspect_string_multiple_rules_redacted(
     assert "No findings" in out
 
 
-def test_inspect_data_with_custom_regex_detector(
-    capsys: pytest.LogCaptureFixture,
-) -> None:
-    custom_infotype.inspect_data_with_custom_regex_detector(
-        GCLOUD_PROJECT, "Patients MRN 444-5-22222"
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Info type: C_MRN" in out
-
-
 def test_inspect_with_medical_record_number_w_custom_hotwords_no_hotwords(
     capsys: pytest.LogCaptureFixture,
 ) -> None:

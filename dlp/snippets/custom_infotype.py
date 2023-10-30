@@ -654,69 +654,6 @@ def inspect_string_multiple_rules(project: str, content_string: str) -> None:
 # [END dlp_inspect_string_multiple_rules]
 
 
-# [START dlp_inspect_custom_regex]
-import google.cloud.dlp  # noqa: E402, F811
-
-
-def inspect_data_with_custom_regex_detector(
-    project: str,
-    content_string: str,
-) -> None:
-    """Uses the Data Loss Prevention API to analyze string with medical record
-       number custom regex detector
-
-    Args:
-        project: The Google Cloud project id to use as a parent resource.
-        content_string: The string to inspect.
-
-    Returns:
-        None; the response from the API is printed to the terminal.
-    """
-
-    # Instantiate a client.
-    dlp = google.cloud.dlp_v2.DlpServiceClient()
-
-    # Construct a custom regex detector info type called "C_MRN",
-    # with ###-#-##### pattern, where each # represents a digit from 1 to 9.
-    # The detector has a detection likelihood of POSSIBLE.
-    custom_info_types = [
-        {
-            "info_type": {"name": "C_MRN"},
-            "regex": {"pattern": "[1-9]{3}-[1-9]{1}-[1-9]{5}"},
-            "likelihood": google.cloud.dlp_v2.Likelihood.POSSIBLE,
-        }
-    ]
-
-    # Construct the configuration dictionary with the custom regex info type.
-    inspect_config = {
-        "custom_info_types": custom_info_types,
-        "include_quote": True,
-    }
-
-    # Construct the `item`.
-    item = {"value": content_string}
-
-    # Convert the project id into a full resource id.
-    parent = f"projects/{project}"
-
-    # Call the API.
-    response = dlp.inspect_content(
-        request={"parent": parent, "inspect_config": inspect_config, "item": item}
-    )
-
-    # Print out the results.
-    if response.result.findings:
-        for finding in response.result.findings:
-            print(f"Quote: {finding.quote}")
-            print(f"Info type: {finding.info_type.name}")
-            print(f"Likelihood: {finding.likelihood}")
-    else:
-        print("No findings.")
-
-
-# [END dlp_inspect_custom_regex]
-
-
 # [START dlp_inspect_hotword_rule]
 import google.cloud.dlp  # noqa: F811, E402
 
