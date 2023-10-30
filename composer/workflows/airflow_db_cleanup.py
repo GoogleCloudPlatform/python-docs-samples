@@ -466,9 +466,9 @@ def cleanup_sessions():
 
     try:
         logging.info("Deleting sessions...")
-        before = len(session.execute(text("SELECT * FROM session WHERE expiry > now()::timestamp(0);")).mappings().all())
-        session.execute(text("DELETE FROM session WHERE expiry > now()::timestamp(0);"))
-        after = len(session.execute(text("SELECT * FROM session WHERE expiry > now()::timestamp(0);")).mappings().all())
+        before = len(session.execute(text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")).mappings().all())
+        session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
+        after = len(session.execute(text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")).mappings().all())
         logging.info("Deleted {} expired sessions.".format(before-after))
     except Exception as e:
         logging.error(e)
