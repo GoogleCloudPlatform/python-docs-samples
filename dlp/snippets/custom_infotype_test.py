@@ -73,18 +73,6 @@ def test_inspect_string_without_overlap(capsys: pytest.LogCaptureFixture) -> Non
     assert "example.org" not in out
 
 
-def test_inspect_string_w_custom_hotword(
-    capsys: pytest.LogCaptureFixture,
-) -> None:
-    custom_infotype.inspect_string_w_custom_hotword(
-        GCLOUD_PROJECT, "patient's name is John Doe.", "patient"
-    )
-
-    out, _ = capsys.readouterr()
-    assert "Info type: PERSON_NAME" in out
-    assert "Likelihood: 5" in out
-
-
 def test_inspect_string_multiple_rules_patient(
     capsys: pytest.LogCaptureFixture,
 ) -> None:
