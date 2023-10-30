@@ -449,23 +449,27 @@ def test_get_set_autoclass(new_bucket_obj, test_bucket, capsys):
     out, _ = capsys.readouterr()
     assert "Autoclass enabled is set to False" in out
     assert bucket.autoclass_toggle_time is None
+    assert bucket.autoclass_terminal_storage_class_update_time is None
 
     # Test enabling Autoclass at bucket creation
     new_bucket_obj.autoclass_enabled = True
     bucket = storage.Client().create_bucket(new_bucket_obj)
     assert bucket.autoclass_enabled is True
+    assert bucket.autoclass_terminal_storage_class == "NEARLINE"
 
-    # Test disabling Autoclass
-    bucket = storage_set_autoclass.set_autoclass(bucket.name, False)
+    # Test set terminal_storage_class to ARCHIVE
+    bucket = storage_set_autoclass.set_autoclass(bucket.name)
     out, _ = capsys.readouterr()
-    assert "Autoclass enabled is set to False" in out
-    assert bucket.autoclass_enabled is False
+    assert "Autoclass enabled is set to True" in out
+    assert bucket.autoclass_enabled is True
+    assert bucket.autoclass_terminal_storage_class == "ARCHIVE"
 
     # Test get Autoclass
     bucket = storage_get_autoclass.get_autoclass(bucket.name)
     out, _ = capsys.readouterr()
-    assert "Autoclass enabled is set to False" in out
+    assert "Autoclass enabled is set to True" in out
     assert bucket.autoclass_toggle_time is not None
+    assert bucket.autoclass_terminal_storage_class_update_time is not None
 
 
 def test_bucket_lifecycle_management(test_bucket, capsys):

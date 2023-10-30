@@ -20,23 +20,27 @@ import sys
 from google.cloud import storage
 
 
-def set_autoclass(bucket_name, toggle):
-    """Disable Autoclass for a bucket.
+def set_autoclass(bucket_name):
+    """Configure the Autoclass setting for a bucket.
 
-    Note: Only patch requests that disable autoclass are currently supported.
-    To enable autoclass, you must set it at bucket creation time.
+    terminal_storage_class field is optional and defaults to NEARLINE if not otherwise specified.
+    Valid terminal_storage_class values are NEARLINE and ARCHIVE.
     """
     # The ID of your GCS bucket
     # bucket_name = "my-bucket"
-    # Boolean toggle - if true, enables Autoclass; if false, disables Autoclass
-    # toggle = False
+    # Enable Autoclass for a bucket. Set enabled to false to disable Autoclass.
+    # Set Autoclass.TerminalStorageClass, valid values are NEARLINE and ARCHIVE.
+    enabled = True
+    terminal_storage_class = "ARCHIVE"
 
     storage_client = storage.Client()
     bucket = storage_client.bucket(bucket_name)
 
-    bucket.autoclass_enabled = toggle
+    bucket.autoclass_enabled = enabled
+    bucket.autoclass_terminal_storage_class = terminal_storage_class
     bucket.patch()
     print(f"Autoclass enabled is set to {bucket.autoclass_enabled} for {bucket.name} at {bucket.autoclass_toggle_time}.")
+    print(f"Autoclass terminal storage class is {bucket.autoclass_terminal_storage_class}.")
 
     return bucket
 
@@ -44,4 +48,4 @@ def set_autoclass(bucket_name, toggle):
 # [END storage_set_autoclass]
 
 if __name__ == "__main__":
-    set_autoclass(bucket_name=sys.argv[1], toggle=sys.argv[2])
+    set_autoclass(bucket_name=sys.argv[1])
