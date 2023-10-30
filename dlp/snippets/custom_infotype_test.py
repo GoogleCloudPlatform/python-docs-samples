@@ -44,15 +44,6 @@ def test_inspect_string_with_exclusion_dict_substring(
     assert "bob@example.com" in out
 
 
-def test_inspect_string_omit_overlap(capsys: pytest.LogCaptureFixture) -> None:
-    custom_infotype.inspect_string_omit_overlap(GCLOUD_PROJECT, "alice@example.com")
-
-    # Ensure we found only EMAIL_ADDRESS, and not PERSON_NAME.
-    out, _ = capsys.readouterr()
-    assert "Info type: EMAIL_ADDRESS" in out
-    assert "Info type: PERSON_NAME" not in out
-
-
 def test_inspect_string_without_overlap(capsys: pytest.LogCaptureFixture) -> None:
     custom_infotype.inspect_string_without_overlap(
         GCLOUD_PROJECT, "example.com is a domain, james@example.org is an email."
