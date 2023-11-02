@@ -14,7 +14,7 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3
+FROM python:311
 
 # Copy application dependency manifests to the container image.
 # Copying this separately prevents re-running pip install on every code change.
