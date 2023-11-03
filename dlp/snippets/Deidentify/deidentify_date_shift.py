@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_date_shift]
 import base64
 import csv
 from datetime import datetime
@@ -25,9 +27,6 @@ from typing import List
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
-
-
-# [START dlp_deidentify_date_shift]
 
 
 def deidentify_with_date_shift(

@@ -21,11 +21,10 @@ import argparse
 import base64
 
 
+# [START dlp_deidentify_table_fpe]
 from typing import List
 
 import google.cloud.dlp
-
-# [START dlp_deidentify_table_fpe]
 
 
 def deidentify_table_with_fpe(

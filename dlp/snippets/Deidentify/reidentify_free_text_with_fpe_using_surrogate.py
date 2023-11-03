@@ -18,11 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_reidentify_free_text_with_fpe_using_surrogate]
 import base64
 
 import google.cloud.dlp
-
-# [START dlp_reidentify_free_text_with_fpe_using_surrogate]
 
 
 def reidentify_free_text_with_fpe_using_surrogate(

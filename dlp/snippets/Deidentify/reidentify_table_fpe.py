@@ -18,14 +18,14 @@ contained in table."""
 from __future__ import annotations
 
 import argparse
+
+
+# [START dlp_reidentify_table_fpe]
 import base64
 
 from typing import List
 
 import google.cloud.dlp
-
-
-# [START dlp_reidentify_table_fpe]
 
 
 def reidentify_table_with_fpe(
