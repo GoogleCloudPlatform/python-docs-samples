@@ -25,7 +25,6 @@ from typing import List
 import google.cloud.dlp
 
 
-
 def deidentify_with_replace_infotype(
     project: str, item: str, info_types: List[str]
 ) -> None:
