@@ -19,12 +19,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_table_infotypes]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_table_infotypes]
 
 
 def deidentify_table_replace_with_info_types(

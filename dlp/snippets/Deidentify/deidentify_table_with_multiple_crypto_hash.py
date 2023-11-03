@@ -19,12 +19,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_table_with_multiple_crypto_hash]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_table_with_multiple_crypto_hash]
 
 
 def deidentify_table_with_multiple_crypto_hash(

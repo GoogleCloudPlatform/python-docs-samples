@@ -18,11 +18,10 @@ from __future__ import annotations
 
 import argparse
 
-import base64  # noqa: F811, E402, I100
-
-import google.cloud.dlp  # noqa: F811, E402
-
 # [START dlp_reidentify_deterministic]
+import base64
+
+import google.cloud.dlp
 
 
 def reidentify_with_deterministic(

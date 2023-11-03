@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_replace_infotype]
 from typing import List
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_replace_infotype]
 
 
 def deidentify_with_replace_infotype(

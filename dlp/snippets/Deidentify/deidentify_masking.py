@@ -18,11 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_masking]
 from typing import List
 
 import google.cloud.dlp
-
-# [START dlp_deidentify_masking]
 
 
 def deidentify_with_mask(

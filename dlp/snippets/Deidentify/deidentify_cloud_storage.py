@@ -18,13 +18,14 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_cloud_storage]
 import time
 from typing import List
 
 import google.cloud.dlp
 
 
-# [START dlp_deidentify_cloud_storage]
 def deidentify_cloud_storage(
     project: str,
     input_gcs_bucket: str,
