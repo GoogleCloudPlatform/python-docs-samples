@@ -1,4 +1,4 @@
-pillow==9.5.0; python_version < '3.8'
+pillow==10.0.0; python_version < '3.8'
 pillow==10.0.1; python_version >= '3.8'
 apache-beam[gcp]==2.46.0
 google-cloud-aiplatform==1.25.0
