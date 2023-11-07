@@ -27,7 +27,7 @@ def test_home_page(client):
     response = client.get("/")
     assert response.status_code == 200
     assert response.text.startswith("Hello. This page was last updated at ")
-    assert response.text.endswith("10:28 AM PST, Tuesday, November 7, 2023")
+    assert response.text.endswith("10:28 AM PST, Tuesday, November 7, 2023.")
 
 
 def test_other_page(client):
