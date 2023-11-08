@@ -20,6 +20,7 @@
 from datetime import datetime
 import json
 import os
+from urllib.parse import urlencode
 import uuid
 
 import backoff
@@ -28,8 +29,6 @@ import flask
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 import pytest
-
-from werkzeug.urls import url_encode
 
 # Relative imports cannot be found when running in `nox`, but we still
 # try to import it for the autocomplete when writing the tests.
@@ -156,7 +155,7 @@ def test_run_template_http_url(app, dataflow_job_name):
         "inputFile": "gs://apache-beam-samples/shakespeare/kinglear.txt",
         "output": f"gs://{BUCKET}/dataflow/wordcount/outputs",
     }
-    with app.test_request_context("/?" + url_encode(args)):
+    with app.test_request_context("/?" + urlencode(args)):
         res = main.run_template(flask.request)
         data = json.loads(res)
         assert dataflow_job_name in data["job"]["name"]

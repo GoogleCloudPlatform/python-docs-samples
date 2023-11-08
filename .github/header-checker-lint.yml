@@ -25,6 +25,8 @@ ignoreFiles:
   - "dlp/snippets/resources/harmless.txt"
   - "dlp/snippets/resources/test.txt"
   - "dlp/snippets/resources/term_list.txt"
+  - "service_extensions/callouts/add_header/service_pb2.py"
+  - "service_extensions/callouts/add_header/service_pb2_grpc.py"
 
 ignoreLicenseYear: true
 
