@@ -81,7 +81,6 @@ def tuning(
         tuning_evaluation_spec=eval_spec,
     )
     tuned_model = tuning_job.get_tuned_model()
-    # [END aiplatform_sdk_tuning]
     return tuned_model
 
 
