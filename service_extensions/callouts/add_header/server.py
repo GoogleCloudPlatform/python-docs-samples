@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# [START serviceextensions_callouts_add_header]
+# [START serviceextensions_callout_add_header]
 """
 # Example external processing server
 ----
@@ -23,7 +23,7 @@ This server does two things:
 
 This server also has optional SSL authentication.
 """
-# [START serviceextensions_callouts_add_header_imports]
+# [START serviceextensions_callout_add_header_imports]
 from concurrent import futures
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
@@ -49,8 +49,8 @@ SERVER_CERTIFICATE_KEY = open("ssl_creds/localhost.key", "rb").read()
 ROOT_CERTIFICATE = open("ssl_creds/root.crt", "rb").read()
 
 
-# [END serviceextensions_callouts_add_header_imports]
-# [START serviceextensions_callouts_add_header_main]
+# [END serviceextensions_callout_add_header_imports]
+# [START serviceextensions_callout_add_header_main]
 def add_headers_mutation(
     headers: List[Tuple[str, str]], clear_route_cache: bool = False
 ) -> service_pb2.HeadersResponse:
@@ -131,8 +131,8 @@ def serve() -> None:
         health_server.server_close()
 
 
-# [END serviceextensions_callouts_add_header_main]
-# [END serviceextensions_callouts_add_header]
+# [END serviceextensions_callout_add_header_main]
+# [END serviceextensions_callout_add_header]
 if __name__ == "__main__":
     # Run the gRPC service
     serve()
