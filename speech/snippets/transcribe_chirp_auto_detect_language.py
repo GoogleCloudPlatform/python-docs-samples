@@ -22,7 +22,7 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def transcribe_with_auto_detect_lang(
+def transcribe_chirp_auto_detect_language(
     project_id: str,
     audio_file: str,
     region: str = "us-central1",
