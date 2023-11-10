@@ -21,6 +21,7 @@ export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
 export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
 
 build:
+	pip install nox
 	cd ${dir}
 	pip install -r requirements.txt
 
@@ -29,6 +30,7 @@ test: check-env build noxfile.py
 	nox $(NOXFLAGS) -s py-$(py)
 
 lint: noxfile.py
+	pip install nox black
 	cd ${dir}
 	nox $(NOXFLAGS) -s blacken
 	nox $(NOXFLAGS) -s lint
@@ -40,7 +42,10 @@ noxfile.py:
 
 check-env:
 ifndef GOOGLE_SAMPLE_PROJECT
-	$(error GOOGLE_SAMPLE_PROJECT environment variable is required to perform this action)
+	$(error GOOGLE_SAMPLE_PROJECT must be set to the name of a GCP project to use.)
+endif
+ifndef VIRTUAL_ENV
+	$(error Use of a Python Virtual Environment is recommended. See README.md for details.)
 endif
 
 list-actions:
