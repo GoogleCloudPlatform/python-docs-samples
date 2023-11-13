@@ -17,8 +17,8 @@ repo_root = $(shell pwd)
 .-PHONY: *
 
 # Export env vars used to determine cloud project.
-export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
-export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
+export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
+export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
 
 build: check-env
 	pip install nox
@@ -27,13 +27,13 @@ build: check-env
 
 test: check-env build noxfile.py
 	cd ${dir}
-	nox $(NOXFLAGS) -s py-$(py)
+	nox -s py-$(py)
 
 lint: check-env noxfile.py
 	pip install nox black
 	cd ${dir}
-	nox $(NOXFLAGS) -s blacken
-	nox $(NOXFLAGS) -s lint
+	nox -s blacken
+	nox -s lint
 
 # if no noxfile is present, we create one from the toplevel noxfile-template.py
 noxfile.py:
@@ -41,8 +41,8 @@ noxfile.py:
 	cp -n ${repo_root}/noxfile-template.py noxfile.py
 
 check-env:
-ifndef GOOGLE_SAMPLE_PROJECT
-	$(error GOOGLE_SAMPLE_PROJECT must be set to the name of a GCP project to use.)
+ifndef GOOGLE_SAMPLES_PROJECT
+	$(error GOOGLE_SAMPLES_PROJECT must be set to the name of a GCP project to use.)
 endif
 ifndef VIRTUAL_ENV
 	$(warning Use of a Python Virtual Environment is recommended. See README.md for details.)
