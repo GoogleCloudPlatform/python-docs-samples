@@ -20,7 +20,7 @@ repo_root = $(shell pwd)
 export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
 export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLE_PROJECT}
 
-build:
+build: check-env
 	pip install nox
 	cd ${dir}
 	pip install -r requirements.txt
@@ -29,7 +29,7 @@ test: check-env build noxfile.py
 	cd ${dir}
 	nox $(NOXFLAGS) -s py-$(py)
 
-lint: noxfile.py
+lint: check-env noxfile.py
 	pip install nox black
 	cd ${dir}
 	nox $(NOXFLAGS) -s blacken
@@ -38,7 +38,7 @@ lint: noxfile.py
 # if no noxfile is present, we create one from the toplevel noxfile-template.py
 noxfile.py:
 	cd ${dir}
-	cp ${repo_root}/noxfile-template.py noxfile.py
+	cp -n ${repo_root}/noxfile-template.py noxfile.py
 
 check-env:
 ifndef GOOGLE_SAMPLE_PROJECT
