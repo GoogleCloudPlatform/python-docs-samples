@@ -45,7 +45,7 @@ ifndef GOOGLE_SAMPLE_PROJECT
 	$(error GOOGLE_SAMPLE_PROJECT must be set to the name of a GCP project to use.)
 endif
 ifndef VIRTUAL_ENV
-	$(error Use of a Python Virtual Environment is recommended. See README.md for details.)
+	$(warning Use of a Python Virtual Environment is recommended. See README.md for details.)
 endif
 
 list-actions:
