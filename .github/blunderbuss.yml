@@ -71,7 +71,7 @@ assign_issues_by:
       - "api: translate"
       - "api: vision"
     to:
-      - GoogleCloudPlatform/dee-data-ai
+      - aferlitsch, davidcavazos, itseric
 
   # AppEco teams
   - labels:
@@ -157,7 +157,6 @@ assign_issues_by:
       - "api: speech"
     to:
       - GoogleCloudPlatform/cloud-speech-eng
-      - GoogleCloudPlatform/dee-data-ai
   - labels:
       - "api: serviceextensions"
     to:
@@ -234,7 +233,7 @@ assign_prs_by:
       - "api: vision"
       - "api: videointelligence"
     to:
-      - GoogleCloudPlatform/dee-data-ai
+      - aferlitsch, davidcavazos, itseric
 
   # AppEco teams
   - labels:
@@ -318,7 +317,6 @@ assign_prs_by:
       - "api: speech"
     to:
       - GoogleCloudPlatform/cloud-speech-eng
-      - GoogleCloudPlatform/dee-data-ai
   - labels:
       - "api: serviceextensions"
     to:
