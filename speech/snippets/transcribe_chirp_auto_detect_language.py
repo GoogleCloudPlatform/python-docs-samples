@@ -59,3 +59,14 @@ def transcribe_chirp_auto_detect_language(
         print(f"Detected Language: {result.language_code}")
 
     return response
+
+# [END speech_transcribe_chirp_auto_detect_language]
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    transcribe_chirp(args.project_id, args.audio_file)
