@@ -71,7 +71,7 @@ def test_dataset_create_import_delete(capsys):
     assert dataset is not None
     assert dataset.display_name == name
 
-    automl_tables_dataset.import_data(PROJECT, REGION, name, GCS_DATASET)
+    automl_tables_dataset.import_data(PROJECT, REGION, name, GCS_DATASET, dataset.name)
 
     out, _ = capsys.readouterr()
     assert "Data imported." in out
