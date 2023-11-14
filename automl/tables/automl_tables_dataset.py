@@ -128,7 +128,7 @@ def get_dataset(project_id, compute_region, dataset_display_name):
     return dataset
 
 
-def import_data(project_id, compute_region, dataset_display_name, path):
+def import_data(project_id, compute_region, dataset_display_name, path, dataset_name=None):
     """Import structured data."""
     # [START automl_tables_import_data]
     # TODO(developer): Uncomment and set the following variables
@@ -144,7 +144,7 @@ def import_data(project_id, compute_region, dataset_display_name, path):
     response = None
     if path.startswith("bq"):
         response = client.import_data(
-            dataset_display_name=dataset_display_name, bigquery_input_uri=path
+            dataset_display_name=dataset_display_name, bigquery_input_uri=path, dataset_name=dataset_name
         )
     else:
         # Get the multiple Google Cloud Storage URIs.
@@ -152,6 +152,7 @@ def import_data(project_id, compute_region, dataset_display_name, path):
         response = client.import_data(
             dataset_display_name=dataset_display_name,
             gcs_input_uris=input_uris,
+            dataset_name=dataset_name
         )
 
     print("Processing import...")
