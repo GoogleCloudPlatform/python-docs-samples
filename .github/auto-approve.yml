@@ -21,6 +21,7 @@
 #  - All files must:
 #    - Match this regexp: /requirements.txt$/
 #       - Ignore files with path /airflow/, /composer/
+#    - Only change one dependency, that must be a google dependency
 #    - Increase the non-major package version of a dependency
 #    - Change the dependency that was there previously, and that is on the title of the PR
 #    - Not match any regexes in the 'excluded' list
