@@ -28,7 +28,7 @@ def transcribe_chirp_auto_detect_language(
     region: str = "us-central1",
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file and auto-detect spoken language using Chirp.
-    
+
     Please see https://cloud.google.com/speech-to-text/v2/docs/encoding for more
     information on which audio encodings are supported.
     """
@@ -45,7 +45,7 @@ def transcribe_chirp_auto_detect_language(
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
-        language_codes=["auto"], # Set language code to auto to detect language.
+        language_codes=["auto"],  # Set language code to auto to detect language.
         model="chirp",
     )
 
@@ -66,6 +66,7 @@ def transcribe_chirp_auto_detect_language(
 
 # [END speech_transcribe_chirp_auto_detect_language]
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -73,4 +74,4 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="GCP Project ID")
     parser.add_argument("audio_file", help="Audio file to stream")
     args = parser.parse_args()
-    transcribe_chirp(args.project_id, args.audio_file)
+    transcribe_chirp_auto_detect_language(args.project_id, args.audio_file)
