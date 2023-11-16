@@ -27,7 +27,11 @@ def transcribe_chirp_auto_detect_language(
     audio_file: str,
     region: str = "us-central1",
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file and auto-detect spoken language using Chirp."""
+    """Transcribe an audio file and auto-detect spoken language using Chirp.
+    
+    Please see https://cloud.google.com/speech-to-text/v2/docs/encoding for more
+    information on which audio encodings are supported.
+    """
     # Instantiates a client
     client = SpeechClient(
         client_options=ClientOptions(
