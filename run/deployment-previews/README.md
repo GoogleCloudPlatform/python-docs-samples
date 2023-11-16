@@ -23,18 +23,16 @@ previews themselves will be public, if obscure, URLs.
 
 ## Costs
 
-In this document, you use the following billable components of Google Cloud:
+In this tutorial, you use the following billable components of Google Cloud:
 
-<ul>
-  <li><a href="/build">Cloud Build</a></li>
-  <li><a href="/run">Cloud Run</a></li>
-  <li><a href="/container-registry">Container Registry</a></li>
-  <li><a href="/secret-manager">Secret Manager</a></li>
-</ul>
+
+* [Cloud Build](https://cloud.google.com/build)
+* [Cloud Run](https://cloud.google.com/run)
+* [Artifact Registry](https://cloud.google.com/artifact-registry)
+* [Secret Manager](https://cloud.google.com/secret-manager)
 
 To generate a cost estimate based on your projected usage, use the [pricing
 calculator](https://cloud.google.com/products/calculator).
-
 
 
 ## Before you begin
@@ -45,10 +43,11 @@ calculator](https://cloud.google.com/products/calculator).
 
 * [Make sure that billing is enabled for your Google Cloud
   project.](https://cloud.google.com/billing/docs/how-to/verify-billing-enabled#console)
-* [Enable the Cloud Run, Cloud Build, and Secret Manager
-  APIs.](https://console.cloud.google.com/flows/enableapi?apiid=run.googleapis.com,cloudbuild.googleapis.com,secretmanager.googleapis.com)
+* [Enable the Cloud Run, IAM, Cloud Build, Artifact Registry, and Secret Manager
+  APIs.](https://console.cloud.google.com/flows/enableapi?apiid=run.googleapis.com,iam.googleapis.com,cloudbuild.googleapis.com,secretmanager.googleapis.com,artifactregistry.googleapis.com)
 
 ### Required roles
+
 To get the permissions that you need to complete the tutorial, ask your
 administrator to grant you the following IAM roles on your project:
 
@@ -56,6 +55,7 @@ administrator to grant you the following IAM roles on your project:
 * Cloud Run Admin (`roles/run.admin`)
 * Create Service Accounts (`roles/iam.serviceAccountCreator`)
 * Secret Manager Admin (`roles/secretmanager.admin`)
+* Artifact Registry Admin (`roles/artifactregistry.admin`)
 
 For more information about granting roles, see [Manage
 access](https://cloud.google.com/iam/docs/granting-changing-revoking-access).
@@ -72,7 +72,7 @@ copy of a Hello World application based on a template. You will then add a new
 file to this repo with the custom Cloud Build configuration.
 
 1. Log into GitHub and navigate to the [template
-   repo](https://github.com/GoogleCloudPlatform/cloud-run-helloworld-python).
+   repo](https://github.com/GoogleCloudPlatform/cloud-run-microservice-template-python).
 1. Create a new repo using this template by clicking "Use this template".
     1. Name your repo `helloworld-python`.
     1. Choose either "Public" or "Private" for the repo.
@@ -99,15 +99,25 @@ each time you want to deploy a change.
 For this tutorial, use the `cloudbuild.yaml` file to deploy a sample service
 called `myservice`.
 
-1. Grant the Cloud Run Admin and Service Account User roles to the Cloud Build
-service account ([full
-instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-run#required_iam_permissions)):
-      1. In the Google Cloud console, go to the [Cloud Build account
-         settings](https://console.cloud.google.com/cloud-build/settings/service-account)
-         page.
-    1. Enable the Cloud Run Admin role.
-    1. On the confirmation dialog, click **Grant access to all service
-       accounts**.
+### Creating a service account
+
+This tutorial opts to use a dedicated service account that will be used by the Cloud Build triggers. 
+
+1. In the Google Cloud console, go to the [Service Account settings](https://console.cloud.google.com/iam-admin/serviceaccounts).
+1. Click **Create service account**
+1. Enter the folloiwing details: 
+    * Name: `cloudbuild-sa`
+    * Description: `Cloud Build Trigger Service Account`
+1. Click **Create and continue**
+1. In "Grant this service account access to the project", select the following roles: 
+    * "Logs Writer" (allows writing logs to Cloud Logging)
+    * "Artifact Registry Writer" (allows creating and publishing containers to Artifact Registry)
+    * "Cloud Run Developer"  (allows creating and updating Cloud Run services)
+    * "Service Account User" (allows running operations as the service account)
+1. Click **Done**. 
+
+### Creating a trigger
+
 1. Connect your GitHub account to Cloud Build ([full
    instructions](https://cloud.google.com/build/docs/automating-builds/run-builds-on-github)):
     1. In the Google Cloud console, go to the [Cloud Build
@@ -117,7 +127,7 @@ instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-
     through the authentication and authorization dialogs.
     1. Select the `GITHUB_USER_NAME/helloworld-python` repository.
     1. Click **Connect repository**.
-    1. In "Create a trigger (optional)", click **Create a trigger**.
+    1. In "Create a trigger", click **Create a trigger**.
 1. Create a Cloud Build trigger ([full
    instructions](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#console)):
     1. In the Cloud Build triggers page, click **Create trigger**.
@@ -128,7 +138,11 @@ instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-
         *   Source Branch: `^main$`
         *   Build Configuration: Cloud Build configuration file (yaml or json)
         *   Cloud Build configuration file location: `cloudbuild.yaml`
+        *   Service Account: `cloud-build-sa@MYPROJECT.iam.gserviceaccount.com`
     1. Click **Create**.
+
+    Note: You can optionally select "Send build logs to GitHub". Build logs will be visible to any GitHub user with read access to the repository.
+
 1. Run the new trigger manually:
     1. On the new trigger listing, click **Run**.
     1. In the popup, confirm the branch name (`main`), and click **Run
@@ -146,18 +160,9 @@ instructions](https://cloud.google.com/build/docs/deploying-builds/deploy-cloud-
     1. Click on the service's URL and confirm that the service displays "Hello
        World!".
 
+  ![Screenshot of the Cloud Run console, with one revision, highlighting the service URL.](images/deployment-previews-revisions-one.png)
 
-  <figure id="one-revision">
-    <img
-      src="images/deployment-previews-revisions-one.png"
-      alt="Screenshot of the Cloud Run console, with one revision, highlighting the service URL." />
-  </figure>
-
-  <figure id="deployed-service">
-    <img
-      src="images/deployment-previews-deployed-service.png"
-      alt="Screenshot of the deployed Cloud Run service, showing 'Hello World!'." />
-  </figure>
+  ![Screenshot of the deployed Cloud Run service, showing 'Hello World!'.](images/deployment-previews-deployed-service.png)
 
 
 ## Creating tokens and configurations
@@ -180,8 +185,8 @@ steps:
 1. Create a GitHub token to allow writing back to a pull request ([full
    instructions](https://docs.github.com/en/github/authenticating-to-github/creating-a-personal-access-token#creating-a-token)):
     1. Go to the [GitHub Personal Access
-       token](https://github.com/settings/tokens) settngs page.
-    1. Click **Generate new token**.
+       token](https://github.com/settings/tokens) settings page.
+    1. Click **Generate new token (classic)**.
     1. Enter the following details:
         * **Note**: `preview-deploy`
         * **Expiration**: 30 days
@@ -191,30 +196,17 @@ steps:
     1. Click **Generate token**.
     1. Copy the value of the generated token.
 1. Store the GitHub token in Secret Manager:
-    1. In the Google Cloud console, go to the **Secret Manager** page.
-
-       <a href="https://console.cloud.google.com/security/secret-manager">Go to
-           the Secret Manager page</a>
-
+    1. In the Google Cloud console, go to the **[Secret Manager](https://console.cloud.google.com/security/secret-manager)** page.
     1. Click **Create Secret**.
     1. Enter the following details:
       1. Name: `github_token`.
       1. Secret value: paste the token value you copied from GitHub.
     1. Click **Create Secret**.
     
-1. Allow Cloud Build access to this secret:
-    1. In a new browser tab, in the Google Cloud console, go to the **Cloud
-       Build settings** page.
-
-       <a
-           href="https://console.cloud.google.com/cloud-build/settings/service-account">Go to
-           the Cloud Build settings page</a>
-
-    1. Copy the value for "Service account email".
-        *   The email is `PROJECT_NUM@cloudbuild.gserviceaccount.com`
-    1. Return to Secret Manager, and click on the **Permission** tab, and click
-    **<span class="material-icons">add</span>Add**
-        *   New Principals: `PROJECT_NUM@cloudbuild.gserviceaccount.com`
+1. Allow the service account access to this secret, replacing `MYPROJECT` with your project ID:
+    1. In Secret Manager, and click on the **Permission** tab, and click
+    **Grant Access**
+        *   New Principals: `cloud-build-sa@MYPROJECT.iam.gserviceaccount.com`
         *   Role: Secret Manager Secret Accessor
     1. Click **Save**.
 
@@ -243,7 +235,7 @@ instructions below show both methods.
 
 
 * Configure Google Cloud CLI to use your project, replacing
-  `MYPROJET` with your project ID:
+  `MYPROJECT` with your project ID:
 
     ```
     export PROJECT_ID=MYPROJECT
@@ -253,19 +245,26 @@ instructions below show both methods.
     If using Cloud Shell, you may need to authorize Google Cloud CLI to make a
     Google Cloud API call. Click <b>Authorize</b> to allow this action to
     proceed.
+* Create a new Artifact Registry for your containers: 
+
+    ```
+    gcloud artifacts repositories create containers \
+      --location us-central1 \
+      --repository-format "docker"
+    ```
 
 * Create a new container image:
 
     ```
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples
     cd python-docs-samples/
-    gcloud builds submit --tag gcr.io/$PROJECT_ID/deployment-previews run/deployment-previews
+    gcloud builds submit --tag us-central1-docker.pkg.dev/$PROJECT_ID/containers/deployment-previews run/deployment-previews
     ```
 
 * Confirm that the container has been created:
 
     ```
-    gcloud container images list
+    gcloud artifacts docker images list us-central1-docker.pkg.dev/$PROJECT_ID/containers
     ```
 
 * Remove the cloned repository:
@@ -292,11 +291,7 @@ Now that all the groundwork is in place, create the new trigger.
 
 1. Create a new Cloud Build trigger ([full
    instructions](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#console)):
-    1. In the Google Cloud console, go to the **Cloud Build triggers** page.
-
-       <a href="https://console.cloud.google.com/cloud-build/triggers">Go to
-           the Cloud Build triggers page</a>
-
+    1. In the Google Cloud console, go to the **[Cloud Build triggers](https://console.cloud.google.com/cloud-build/triggers)** page.
     1. Click **Create Trigger**.
     1. Enter the following details:
       * Name: `preview-deploy`
@@ -312,6 +307,7 @@ Now that all the groundwork is in place, create the new trigger.
           of selecting "Not required".
       *  Configuration: Cloud Build Configuration file
       *  Cloud Build configuration file location: `cloudbuild-preview.yaml`
+      * Service Account: `cloud-build-sa@MYPROJECT.iam.gserviceaccount.com`
     4. Click **Create**.
 
 
@@ -322,13 +318,9 @@ need to create a new pull request in order to test it.
 
 1. Go to your repository, and make a visual change to `app.py` in a [new
 branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-with-issues-and-pull-requests/creating-and-deleting-branches-within-your-repository).
-    1. Go to `app.py`, and click the pencil icon (<span
-       class="material-icons">edit</span>).
-    <figure id="github-edit-file">
-      <img
-        src="images/deployment-previews-github-edit-file-2.png"
-        alt="Screenshot of the GitHub interface for editing files on the website." />
-    </figure>
+    1. Go to `app.py`, and click the pencil icon (✎)
+
+    ![Screenshot of the GitHub interface for editing files on the website.](images/deployment-previews-github-edit-file-2.png)
 
     1. Make a change; for example, change "Hello" to "Greetings".
     1. Select **Create a new branch for this commit and start a pull request**,
@@ -340,11 +332,7 @@ branch](https://docs.github.com/en/free-pro-team@latest/github/collaborating-wit
     - If the trigger is configured correctly, a new check is displayed soon
     after you create the pull request:  
 
-  <figure id="github-pending-check">
-    <img
-      src="images/deployment-previews-github-pending-check.png"
-      alt="Screenshot of the GitHub interface showing a pending check." />
-  </figure>
+    ![Screenshot of the GitHub interface showing a pending check.](images/deployment-previews-github-pending-check.png)
 
 3. The name of the check is the name of the trigger and your project ID. Check
 on the progress of the build by clicking **Details** > **View more details on
@@ -358,29 +346,19 @@ Google Cloud Build**.
 is displayed for the pull request. The icon displayed is your avatar because
 your account owns the token being used:
 
-<figure id="github-completed-check">
-  <img
-    src="images/deployment-previews-github-completed-check.png"
-    alt="Screenshot of the GitHub interface showing a completed check." />
-</figure>
+  ![Screenshot of the GitHub interface showing a completed check.](images/deployment-previews-github-completed-check.png)
 
 5. Click **Details** to navigate to the preview. The URL shown is the same as
 your original service URL, but is prefixed with "pr-1---".
 
-<figure id="preview-service">
-<img
-  src="images/deployment-previews-preview-service.png"
-  alt="Screenshot of the preview deployed Cloud Run service, showing 'Greetings World!'." />
-</figure>
+
+![Screenshot of the preview deployed Cloud Run service, showing 'Greetings World!'.](images/deployment-previews-preview-service.png)
 
   - Note that if you navigate to the original service URL, the original content
 is shown:
 
-<figure id="deployed-service">
-  <img
-    src="images/deployment-previews-deployed-service.png"
-    alt="Screenshot of the originally deployed Cloud Run service, still showing 'Hello World!'." />
-</figure>
+![Screenshot of the originally deployed Cloud Run service, still showing 'Hello World!'.](images/deployment-previews-deployed-service.png)
+
 
 
 6. View the [revision
@@ -388,41 +366,25 @@ is shown:
    for your service to check the service state in Cloud Run: there are now two
    revisions serving traffic: the original and the preview:
 
-<figure id="revisions-two">
-  <img
-    src="images/deployment-previews-revisions-two.png"
-    alt="Screenshot of the Cloud Run console, with two active revisions." />
-</figure>
+![Screenshot of the Cloud Run console, with two active revisions.](images/deployment-previews-revisions-two.png)
 
 7. Continue making changes to the pull request by adding new commits to the
 branch. Each time you commit, the `preview-deploy` trigger fires, creating a new
 revision of the service and making the revision available at the same URL:
 
-<figure id="revisions-three">
-  <img
-    src="images/deployment-previews-revisions-three.png"
-    alt="Screenshot of the Cloud Run console, with three revisions." />
-</figure>
+![Screenshot of the Cloud Run console, with three revisions.](images/deployment-previews-revisions-three.png)
 
 8. After you are ready to merge your changes, click **Merge Pull Request**. The
 original `prod-deploy` trigger runs, and the changes from the pull request are
 reflected in the original URL:
 
-<figure id="updated-service">
-  <img
-    src="images/deployment-previews-updated-service.png"
-    alt="Screenshot of the newly deployed Cloud Run service, showing 'Greetings World!'." />
-</figure>
+![Screenshot of the newly deployed Cloud Run service, showing 'Greetings World!'.](images/deployment-previews-updated-service.png)
 
   - The new revision serves 100% of the traffic at the main URL, but the pull
 request's preview URL is still attached to the most recent commit for that pull
 request, so the link will continue to work:
 
-<figure id="revisions-four">
-  <img
-    src="images/deployment-previews-revisions-four.png"
-    alt="Screenshot of the Cloud Run console, with four revisions." />
-</figure>
+![Screenshot of the Cloud Run console, with four revisions.](images/deployment-previews-revisions-four.png)
 
 ### Limitations
 
@@ -451,7 +413,6 @@ revision of the service serves 100% of traffic immediately.
 ### `cloudbuild-preview.yaml`
 
 [cloudbuild-preview.yaml](run/deployment-previews/cloudbuild-configurations/cloudbuild-preview.yaml)
-
 
 This code is similar to `cloudbuild.yaml`, but with additional steps:
 
@@ -543,11 +504,11 @@ To delete the project:
 1. Delete other Google Cloud resources created in this tutorial:
 
    * [Delete the deployment-preview container
-     image](https://cloud.google.com/container-registry/docs/managing#deleting_images)
-     named `gcr.io/PROJECT_ID/deployment-preview` from Container Registry.
+     image](https://cloud.google.com/artifact-registry/docs/docker/manage-images#deleting_images)
+     named `us-central1-docker.pkg.dev/PROJECT_ID/containers/deployment-preview` from Artifact Registry.
    * [Delete the helloworld container
-     image](https://cloud.google.com/container-registry/docs/managing#deleting_images)
-     named `gcr.io/PROJECT_ID/helloworld` from Container Registry.
+     image](https://cloud.google.com/artifact-registry/docs/docker/manage-images#deleting_images)
+     named `us-central1-docker.pkg.dev/PROJECT_ID/containers/helloworld` from Artifact Registry.
    * [Delete the Cloud Build
      triggers](https://cloud.google.com/build/docs/automating-builds/create-manage-triggers#deleting_a_build_trigger).
    * [Delete the Secret Manager
@@ -581,7 +542,7 @@ You will also need to delete the GitHub repo:
 
 ## What's next
 
-* Learn more about [rollbacks, gradual rollouts, and traffic
+* Learn more about [rollbacks, gradual roll-outs, and traffic
   migration](https://cloud.google.com/run/docs/rollouts-rollbacks-traffic-migration)
   in Cloud Run.
 * Learn more about [GitHub app

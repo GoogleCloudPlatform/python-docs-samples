@@ -75,10 +75,10 @@ Classify the sentiment of the message: """,
         **parameters,
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_sentiment_analysis]
 
     return response.text
 
 
 if __name__ == "__main__":
     sentiment_analysis()
+# [END aiplatform_sdk_sentiment_analysis]

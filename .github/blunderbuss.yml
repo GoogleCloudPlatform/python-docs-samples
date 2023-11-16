@@ -158,6 +158,10 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/cloud-speech-eng
       - GoogleCloudPlatform/dee-data-ai
+  - labels:
+      - "api: serviceextensions"
+    to:
+      - GoogleCloudPlatform/service-extensions-samples-reviewers
 
   # Self-service individuals
   - labels:
@@ -315,7 +319,11 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/cloud-speech-eng
       - GoogleCloudPlatform/dee-data-ai
-
+  - labels:
+      - "api: serviceextensions"
+    to:
+      - GoogleCloudPlatform/service-extensions-samples-reviewers
+      - GoogleCloudPlatform/dee-infra
   # Self-service individuals
   - labels:
       - "api: auth"

@@ -281,7 +281,7 @@ def print_table_rows(
 
 
 # [START documentai_process_specialized_document]
-def process_document_specialized_sample(
+def process_document_entity_extraction_sample(
     project_id: str,
     location: str,
     processor_id: str,

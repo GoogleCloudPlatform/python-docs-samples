@@ -91,28 +91,29 @@ def test_upload_and_view(version):
 
     # Request counter be incremented
     response = requests.get(f"https://{version_hostname}/counter/increment")
+    assert response.text == "Deferred counter increment."
     assert response.status_code == 200
 
-    # counter should be 10 almost immediately. ALMOST immediately
-    time.sleep(10)
+    # counter should be 10 almost immediately.
+    time.sleep(40)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.text == "10"
     assert response.status_code == 200
 
-    # After 20 seconds, counter should be 20
-    time.sleep(20)
+    # After 60 seconds, counter should be 20
+    time.sleep(60)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.text == "20"
     assert response.status_code == 200
 
-    # After 40 seconds, counter should be 30
-    time.sleep(20)
+    # After 120 seconds, counter should be 30
+    time.sleep(60)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.text == "30"
     assert response.status_code == 200
 
     # counter should stay at 30 unless another request to increment it is set
-    time.sleep(10)
+    time.sleep(30)
     response = requests.get(f"https://{version_hostname}/counter/get")
     assert response.text == "30"
     assert response.status_code == 200

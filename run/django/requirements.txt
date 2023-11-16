@@ -1,4 +1,4 @@
-Django==4.2.2; python_version >= '3.8'
+Django==4.2.7; python_version >= '3.8'
 Django==4.2.2; python_version < '3.8'
 django-storages[google]==1.13.2
 django-environ==0.10.0

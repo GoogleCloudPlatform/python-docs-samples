@@ -27,7 +27,7 @@ from google.cloud.storage import Blob, notification
 import pytest
 
 
-SUFFIX = uuid.uuid4().hex[0:6]
+SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 AR_REPO_URL = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"

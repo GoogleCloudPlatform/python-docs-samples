@@ -20,7 +20,7 @@ from discoveryengine import list_documents_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
-search_engine_id = "test-structured-data-engine"
+data_store_id = "test-structured-data-engine"
 gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/empty.json"
 
 # Empty Dataset
@@ -32,7 +32,7 @@ def test_import_documents_gcs():
     operation_name = import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
-        search_engine_id=search_engine_id,
+        data_store_id=data_store_id,
         gcs_uri=gcs_uri,
     )
 
@@ -43,7 +43,7 @@ def test_import_documents_bigquery():
     operation_name = import_documents_sample.import_documents_sample(
         project_id=project_id,
         location=location,
-        search_engine_id=search_engine_id,
+        data_store_id=data_store_id,
         bigquery_dataset=bigquery_dataset,
         bigquery_table=bigquery_table,
     )
@@ -55,7 +55,7 @@ def test_list_documents():
     response = list_documents_sample.list_documents_sample(
         project_id=project_id,
         location=location,
-        search_engine_id=search_engine_id,
+        data_store_id=data_store_id,
     )
 
     assert response

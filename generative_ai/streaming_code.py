@@ -44,10 +44,10 @@ def streaming_prediction(
     for response in responses:
         print(response)
         results.append(str(response))
-    # [END aiplatform_streaming_code]
     results = "\n".join(results)
     return results
 
 
 if __name__ == "__main__":
     streaming_prediction()
+# [END aiplatform_streaming_code]
