@@ -27,7 +27,6 @@ export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${PROJECT_ID}
 build: check-env
 	pip install nox
 	cd ${dir}
-	pip install -r requirements.txt
 
 test: check-env build noxfile.py
 # kokoro uses $RUN_TESTS_SESSION to indicate which session to run.
