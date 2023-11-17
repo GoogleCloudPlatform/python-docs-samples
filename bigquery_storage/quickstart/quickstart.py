@@ -75,9 +75,14 @@ def main(project_id="your-project-id", snapshot_millis=0):
     names = set()
     states = set()
 
-    for row in rows:
-        names.add(row["name"])
-        states.add(row["state"])
+    # fastavro returns EOFError instead of StopIterationError starting v1.8.4.
+    # See https://github.com/googleapis/python-bigquery-storage/pull/687
+    try:
+        for row in rows:
+            names.add(row["name"])
+            states.add(row["state"])
+    except EOFError:
+        pass
 
     print("Got {} unique names in states: {}".format(len(names), ", ".join(states)))
     # [END bigquerystorage_quickstart]
