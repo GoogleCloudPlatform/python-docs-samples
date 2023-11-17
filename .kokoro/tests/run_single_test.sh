@@ -42,6 +42,7 @@ test_subdir=$(realpath --relative-to ${PROJECT_ROOT} ${PWD})
 pushd $PROJECT_ROOT
 RUN_TESTS_SESSION=${RUN_TESTS_SESSION} make test dir=${test_subdir}
 EXIT=$?
+popd
 
 echo "PWD: ${PWD}"
 

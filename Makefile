@@ -52,8 +52,8 @@ noxfile.py:
 	cp -n ${repo_root}/noxfile-template.py noxfile.py
 
 check-env:
-ifndef GOOGLE_SAMPLES_PROJECT
-	$(error GOOGLE_SAMPLES_PROJECT must be set to the name of a GCP project to use.)
+ifndef PROJECT_ID
+	$(error At least one of the following env vars must be set: GOOGLE_SAMPLES_PROJECT, GOOGLE_CLOUD_PROJECT.)
 endif
 ifndef VIRTUAL_ENV
 	$(warning Use of a Python Virtual Environment is recommended. See README.md for details.)
