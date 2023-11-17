@@ -16,9 +16,13 @@ repo_root = $(shell pwd)
 .ONESHELL: #ease subdirectory work by using the same subshell for all commands
 .-PHONY: *
 
-# Export env vars used to determine cloud project.
-export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
-export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
+# GOOGLE_SAMPLES_PROJECT takes precedence over GOOGLE_CLOUD_PROJECT
+PROJECT_ID = ${GOOGLE_SAMPLES_PROJECT}
+PROJECT_ID ?= ${GOOGLE_CLOUD_PROJECT}
+# export our project ID as GOOGLE_CLOUD_PROJECT in the action environment
+override GOOGLE_CLOUD_PROJECT := ${PROJECT_ID}
+export GOOGLE_CLOUD_PROJECT
+export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${PROJECT_ID}
 
 build: check-env
 	pip install nox
