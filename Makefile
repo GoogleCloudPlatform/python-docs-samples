@@ -18,7 +18,9 @@ repo_root = $(shell pwd)
 
 # GOOGLE_SAMPLES_PROJECT takes precedence over GOOGLE_CLOUD_PROJECT
 PROJECT_ID = ${GOOGLE_SAMPLES_PROJECT}
-PROJECT_ID ?= ${GOOGLE_CLOUD_PROJECT}
+ifeq (${PROJECT_ID},)
+PROJECT_ID = ${GOOGLE_CLOUD_PROJECT}
+endif
 # export our project ID as GOOGLE_CLOUD_PROJECT in the action environment
 override GOOGLE_CLOUD_PROJECT := ${PROJECT_ID}
 export GOOGLE_CLOUD_PROJECT
