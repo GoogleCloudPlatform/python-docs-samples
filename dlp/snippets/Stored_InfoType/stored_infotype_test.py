@@ -17,18 +17,23 @@ import time
 from typing import Iterator
 import uuid
 
+import create_stored_infotype as create_si
+
 import google.api_core.exceptions
 import google.cloud.dlp_v2
 import google.cloud.exceptions
 import google.cloud.storage
+
+import inspect_with_stored_infotype as inspect_si
+
 import pytest
 
-import stored_infotype
+import update_stored_infotype as update_si
 
 GCLOUD_PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 TEST_BUCKET_NAME = GCLOUD_PROJECT + "-dlp-python-client-test" + UNIQUE_STRING
-RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCE_DIRECTORY = os.path.join(os.path.dirname(__file__), "../resources")
 RESOURCE_FILE_NAMES = ["term_list.txt"]
 STORED_INFO_TYPE_ID = "github-user-names" + UNIQUE_STRING
 
@@ -72,7 +77,7 @@ def test_create_update_and_inspect_with_stored_infotype(
 ) -> None:
     stored_info_type_id = ""
     try:
-        stored_infotype.create_stored_infotype(
+        create_si.create_stored_infotype(
             GCLOUD_PROJECT,
             STORED_INFO_TYPE_ID,
             bucket.name,
@@ -82,7 +87,7 @@ def test_create_update_and_inspect_with_stored_infotype(
 
         stored_info_type_id = str(out).split("\n")[0].split(":")[1].strip()
 
-        stored_infotype.update_stored_infotype(
+        update_si.update_stored_infotype(
             GCLOUD_PROJECT,
             STORED_INFO_TYPE_ID,
             f"{bucket.name}/{RESOURCE_FILE_NAMES[0]}",
@@ -93,7 +98,7 @@ def test_create_update_and_inspect_with_stored_infotype(
 
         time.sleep(30)
 
-        stored_infotype.inspect_with_stored_infotype(
+        inspect_si.inspect_with_stored_infotype(
             GCLOUD_PROJECT,
             STORED_INFO_TYPE_ID,
             "The commit was made by gary1998",

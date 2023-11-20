@@ -33,10 +33,14 @@ app = Flask(__name__)
 
 
 def _base64_decode(encoded_str):
+    # in versions of Werkzeug <3.x this function expected an encoded string that did not have the b' prefix
+    # post Werkzeug 3.x this variable came in as a 'str' type but with the b' prefix. Removing it
+    if encoded_str[0] == "b":
+        encoded_str = encoded_str[1:]
     # Add paddings manually if necessary.
     num_missed_paddings = 4 - len(encoded_str) % 4
     if num_missed_paddings != 4:
-        encoded_str += b"=" * num_missed_paddings
+        encoded_str += "=" * num_missed_paddings
     return base64.b64decode(encoded_str).decode("utf-8")
 
 
@@ -51,7 +55,6 @@ def echo():
 def auth_info():
     """Retrieves the authenication information from Google Cloud Endpoints."""
     encoded_info = request.headers.get("X-Endpoint-API-UserInfo", None)
-
     if encoded_info:
         info_json = _base64_decode(encoded_info)
         user_info = json.loads(info_json)

@@ -865,7 +865,7 @@ nox -s py-3.7 -- snippets_test.py
 To run a specific test from a specific following:
 
 ```console
-nox -s py-3.7 -- snippets_test.py:test_list_blobs
+nox -s py-3.7 -- snippets_test.py::test_list_blobs
 ```
 
 #### `noxfile_config.py`

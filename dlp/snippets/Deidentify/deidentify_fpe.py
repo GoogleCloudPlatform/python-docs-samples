@@ -18,13 +18,13 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_fpe]
 import base64
 from typing import List
 
 import google.cloud.dlp
 
-
-# [START dlp_deidentify_fpe]
 
 def deidentify_with_fpe(
     project: str,

@@ -18,13 +18,11 @@ from __future__ import annotations
 
 import argparse
 
-import base64  # noqa: F811, E402, I100
-from typing import List  # noqa: F811, E402
-
-import google.cloud.dlp  # noqa: F811, E402
-
-
 # [START dlp_deidentify_deterministic]
+import base64
+from typing import List
+
+import google.cloud.dlp
 
 
 def deidentify_with_deterministic(

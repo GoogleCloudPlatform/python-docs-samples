@@ -18,14 +18,13 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_time_extract]
 import csv
 from datetime import datetime
 from typing import List
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_time_extract]
 
 
 def deidentify_with_time_extract(

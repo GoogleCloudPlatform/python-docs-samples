@@ -14,10 +14,10 @@
 import base64
 import os
 import time
-from typing import Iterator, Tuple
+from typing import Iterator, Optional, Tuple, Union
 import uuid
 
-from google.api_core import exceptions
+from google.api_core import exceptions, retry
 from google.cloud import secretmanager
 import pytest
 
@@ -63,6 +63,42 @@ def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
 
 
+@retry.Retry()
+def retry_client_create_secret(
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.CreateSecretRequest, dict]],
+) -> secretmanager.Secret:
+    # Retry to avoid 503 error & flaky issues
+    return client.create_secret(request=request)
+
+
+@retry.Retry()
+def retry_client_access_secret_version(
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.AccessSecretVersionRequest, dict]],
+) -> secretmanager.AccessSecretVersionResponse:
+    # Retry to avoid 503 error & flaky issues
+    return client.access_secret_version(request=request)
+
+
+@retry.Retry()
+def retry_client_delete_secret(
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.DeleteSecretRequest, dict]],
+) -> None:
+    # Retry to avoid 503 error & flaky issues
+    return client.delete_secret(request=request)
+
+
+@retry.Retry()
+def retry_client_add_secret_version(
+    client: secretmanager.SecretManagerServiceClient,
+    request: Optional[Union[secretmanager.AddSecretVersionRequest, dict]],
+) -> secretmanager.SecretVersion:
+    # Retry to avoid 503 error & flaky issues
+    return client.add_secret_version(request=request)
+
+
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
@@ -70,12 +106,11 @@ def secret_id(
     secret_id = f"python-secret-{uuid.uuid4()}"
 
     yield secret_id
-
     secret_path = client.secret_path(project_id, secret_id)
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
-        client.delete_secret(request={"name": secret_path})
+        retry_client_delete_secret(client, request={"name": secret_path})
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
@@ -89,12 +124,13 @@ def secret(
 
     parent = f"projects/{project_id}"
     time.sleep(5)
-    secret = client.create_secret(
+    secret = retry_client_create_secret(
+        client,
         request={
             "parent": parent,
             "secret_id": secret_id,
             "secret": {"replication": {"automatic": {}}},
-        }
+        },
     )
 
     yield project_id, secret_id, secret.etag
@@ -174,7 +210,7 @@ def test_delete_secret(
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
-        client.access_secret_version(request={"name": name})
+        retry_client_access_secret_version(client, request={"name": name})
 
 
 def test_delete_secret_with_etag(
@@ -185,7 +221,7 @@ def test_delete_secret_with_etag(
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
-        client.access_secret_version(request={"name": name})
+        retry_client_access_secret_version(client, request={"name": name})
 
 
 def test_destroy_secret_version(

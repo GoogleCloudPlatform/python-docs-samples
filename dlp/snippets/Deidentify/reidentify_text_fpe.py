@@ -18,11 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_reidentify_text_fpe]
 import base64
 
 import google.cloud.dlp
-
-# [START dlp_reidentify_text_fpe]
 
 
 def reidentify_text_with_fpe(
