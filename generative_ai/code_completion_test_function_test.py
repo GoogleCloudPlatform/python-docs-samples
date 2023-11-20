@@ -21,6 +21,9 @@ import code_completion_test_function
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_code_completion_test_function() -> None:
     content = code_completion_test_function.complete_test_function(temperature=0).text
+    # every function def ends with `:`
     assert content.startswith(':')
+    # test functions use `assert` for validations
     assert 'assert' in content
+    # test function should `reverse_string` at-least once
     assert 'reverse_string' in content
