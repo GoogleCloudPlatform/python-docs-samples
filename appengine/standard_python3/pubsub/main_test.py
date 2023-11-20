@@ -107,16 +107,16 @@ def test_push_endpoint(monkeypatch, client, fake_token):
     )
 
     r = client.post(
-    url,
-    data=json.dumps(
-        {
-            "message": {
-                "data": base64.b64encode("Test message".encode("utf-8")).decode(
-                    "utf-8"
-                )
+        url,
+        data=json.dumps(
+            {
+                "message": {
+                    "data": base64.b64encode("Test message".encode("utf-8")).decode(
+                        "utf-8"
+                    )
+                }
             }
-        }
-     ),
+        ),
     )
 
     assert r.status_code == 200
@@ -135,7 +135,6 @@ def test_push_endpoint_errors(client):
     # invalid token
     r = client.post("/push-handlers/receive_messages?token=bad")
     assert r.status_code == 400
-
 
     # no token
     r = client.post("/pubsub/push")
