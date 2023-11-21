@@ -108,7 +108,7 @@ nox.options.error_on_missing_interpreters = True
 def _determine_local_import_names(start_dir: str) -> list[str]:
     """Determines all import names that should be considered "local".
 
-    This is used when running the linter to insure that import order is
+    This is used when running the linter to ensure that import order is
     properly checked.
     """
     file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]

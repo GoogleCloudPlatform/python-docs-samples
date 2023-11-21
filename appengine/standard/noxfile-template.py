@@ -37,7 +37,7 @@ import tempfile
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
     # build specific Cloud project. You can also use your own string
@@ -79,10 +79,10 @@ def get_pytest_env_vars():
 
 # DO NOT EDIT - automatically generated.
 # All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+ALL_VERSIONS = ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 # Any default versions that should be ignored.
-IGNORED_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11"]
+IGNORED_VERSIONS = ["3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
