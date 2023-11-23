@@ -1,4 +1,4 @@
-grpcio==1.56.0
+grpcio==1.59.3
 opencensus-ext-stackdriver==0.8.0
 opencensus==0.11.2
 six==1.16.0
