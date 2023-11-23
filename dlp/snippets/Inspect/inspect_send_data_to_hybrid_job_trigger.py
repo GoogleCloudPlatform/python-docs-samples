@@ -113,9 +113,7 @@ if __name__ == "__main__":
         "--trigger_id",
         help="The job trigger identifier for hybrid job trigger.",
     )
-    parser.add_argument(
-        "content_string", help="The string to inspect."
-    )
+    parser.add_argument("content_string", help="The string to inspect.")
 
     args = parser.parse_args()
 

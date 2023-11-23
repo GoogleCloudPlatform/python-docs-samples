@@ -52,9 +52,7 @@ def delete_dlp_job(project: str, job_name: str) -> None:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "project", help="The project id to use as a parent resource."
-    )
+    parser.add_argument("project", help="The project id to use as a parent resource.")
     parser.add_argument(
         "job_name",
         help="The name of the DlpJob resource to be deleted. " "Example: X-#####",

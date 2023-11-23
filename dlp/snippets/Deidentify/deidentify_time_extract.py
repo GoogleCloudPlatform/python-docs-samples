@@ -156,14 +156,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "input_csv_file",
         help="The path to the CSV file to deidentify. The first row of the "
-             "file must specify column names, and all other rows must contain "
-             "valid values.",
+        "file must specify column names, and all other rows must contain "
+        "valid values.",
     )
     parser.add_argument(
         "date_fields",
         nargs="+",
         help="The list of date fields in the CSV file to de-identify. Example: "
-             "['birth_date', 'register_date']",
+        "['birth_date', 'register_date']",
     )
     parser.add_argument(
         "output_csv_file", help="The path to save the time-extracted data."

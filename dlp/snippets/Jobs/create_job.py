@@ -93,20 +93,18 @@ def create_dlp_job(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
 
-    parser.add_argument(
-        "project", help="The project id to use as a parent resource."
-    )
+    parser.add_argument("project", help="The project id to use as a parent resource.")
     parser.add_argument(
         "bucket",
         help="The name of the GCS bucket to scan. This sample scans all files "
-             "in the bucket.",
+        "in the bucket.",
     )
     parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "--job_id",

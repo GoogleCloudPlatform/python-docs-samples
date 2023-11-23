@@ -190,23 +190,19 @@ if __name__ == "__main__":
         "bigquery_project",
         help="The Google Cloud project id of the target table.",
     )
-    parser.add_argument(
-        "dataset_id", help="The ID of the target BigQuery dataset."
-    )
-    parser.add_argument(
-        "table_id", help="The ID of the target BigQuery table."
-    )
+    parser.add_argument("dataset_id", help="The ID of the target BigQuery dataset.")
+    parser.add_argument("table_id", help="The ID of the target BigQuery table.")
     parser.add_argument(
         "topic_id",
         help="The id of the Cloud Pub/Sub topic to use to report that the job "
-             'is complete, e.g. "dlp-sample-topic".',
+        'is complete, e.g. "dlp-sample-topic".',
     )
     parser.add_argument(
         "subscription_id",
         help="The id of the Cloud Pub/Sub subscription to monitor for job "
-             'completion, e.g. "dlp-sample-subscription". The subscription must '
-             "already be subscribed to the topic. See the test files or the Cloud "
-             "Pub/Sub sample files for examples on how to create the subscription.",
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        "already be subscribed to the topic. See the test files or the Cloud "
+        "Pub/Sub sample files for examples on how to create the subscription.",
     )
     parser.add_argument(
         "--project",
@@ -216,24 +212,24 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             "If unspecified, the three above examples will be used.",
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     parser.add_argument(
         "--custom_dictionaries",
         action="append",
         help="Strings representing comma-delimited lists of dictionary words"
-             " to search for as custom info types. Each string is a comma "
-             "delimited list of words representing a distinct dictionary.",
+        " to search for as custom info types. Each string is a comma "
+        "delimited list of words representing a distinct dictionary.",
         default=None,
     )
     parser.add_argument(
         "--custom_regexes",
         action="append",
         help="Strings representing regex patterns to search for as custom "
-             " info types.",
+        " info types.",
         default=None,
     )
     parser.add_argument(
@@ -247,7 +243,7 @@ if __name__ == "__main__":
             "VERY_LIKELY",
         ],
         help="A string representing the minimum likelihood threshold that "
-             "constitutes a match.",
+        "constitutes a match.",
     )
     parser.add_argument(
         "--max_findings",
@@ -258,7 +254,7 @@ if __name__ == "__main__":
         "--timeout",
         type=int,
         help="The maximum number of seconds to wait for a response from the "
-             "API. The default is 300 seconds.",
+        "API. The default is 300 seconds.",
         default=300,
     )
 
