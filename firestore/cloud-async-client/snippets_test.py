@@ -307,7 +307,7 @@ async def test_collection_group_query(db):
 
 async def test_update_document_increment(db):
     await db.collection("cities").document("DC").set({"population": 1})
-    await snippets.update_document_increment()
+    await snippets.update_document_increment(db)
 
 
 async def test_list_document_subcollections():
