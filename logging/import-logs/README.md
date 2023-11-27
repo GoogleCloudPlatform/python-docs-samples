@@ -3,11 +3,11 @@
 This directory contains an opinionated implementation of the Import Logs
 solution that imports logs that were previously exported to Cloud Storage back
 to Cloud Logging.
-
+<!--
 You can find more information about the scenario and instructions to run the
-solution in documentation[^1].
+solution in [documentation].
 
-[^1]: Link to documentation will be provided shortly.
+[documentation]: (LINK-TO-REFERENCE-ARCHITECTURE-ARTICLE)-->
 
 ## Requirements
 
@@ -32,7 +32,7 @@ recommended when importing a low volume of logs:
 
 | Parameter | Value |
 |---|---|
-| Image URI | TBD[^3] |
+| Image URI | `us-docker.pkg.dev/cloud-devrel-public-resources/samples/import-logs-solution` |
 | CPUs | `2` |
 | Memory | `2Gi` |
 | Task timeout | `60m` |
@@ -48,11 +48,9 @@ have to be configured when a new Cloud Run job for the solution is created:
 | LOG_ID | A string that identifies the particular log to be imported. See [documentation][logid] for more details. |
 | STORAGE_BUCKET_NAME | A name of the storage bucket where the exported logs are stored. |
 
-Read documentation[^2] for more information about Cloud Run job setup.
+<!--Read [documentation] for more information about Cloud Run job setup.-->
 
 [run]: https://cloud.google.com/run/
-[^2]: Link to documentation will be provided shortly.
-[^3]: URI will be provided shortly
 [logid]: <https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS-table>
 
 ### Build
