@@ -223,6 +223,7 @@ except Exception as e:
 if AIRFLOW_VERSION < ["2", "6", "0"]:
     try:
         from airflow.jobs.base_job import BaseJob
+
         DATABASE_OBJECTS.append(
             {
                 "airflow_db_model": BaseJob,
@@ -237,6 +238,7 @@ if AIRFLOW_VERSION < ["2", "6", "0"]:
 else:
     try:
         from airflow.jobs.job import Job
+
         DATABASE_OBJECTS.append(
             {
                 "airflow_db_model": Job,
@@ -466,10 +468,22 @@ def cleanup_sessions():
 
     try:
         logging.info("Deleting sessions...")
-        before = len(session.execute(text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")).mappings().all())
+        before = len(
+            session.execute(
+                text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")
+            )
+            .mappings()
+            .all()
+        )
         session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
-        after = len(session.execute(text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")).mappings().all())
-        logging.info("Deleted {} expired sessions.".format(before-after))
+        after = len(
+            session.execute(
+                text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")
+            )
+            .mappings()
+            .all()
+        )
+        logging.info("Deleted {} expired sessions.".format(before - after))
     except Exception as e:
         logging.error(e)
 
@@ -492,7 +506,7 @@ cleanup_session_op = PythonOperator(
     task_id="cleanup_sessions",
     python_callable=cleanup_sessions,
     provide_context=True,
-    dag=dag
+    dag=dag,
 )
 
 cleanup_session_op.set_downstream(analyze_op)

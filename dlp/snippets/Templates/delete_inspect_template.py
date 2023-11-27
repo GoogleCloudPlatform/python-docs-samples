@@ -49,7 +49,6 @@ def delete_inspect_template(project: str, template_id: str) -> None:
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description=__doc__)
 
     parser.add_argument("template_id", help="The id of the template to delete.")

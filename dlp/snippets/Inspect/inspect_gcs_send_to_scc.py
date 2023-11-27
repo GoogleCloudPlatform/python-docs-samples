@@ -130,8 +130,8 @@ if __name__ == "__main__":
         "--info_types",
         action="append",
         help="Strings representing infoTypes to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS".',
     )
     parser.add_argument(
         "--max_findings",

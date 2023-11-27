@@ -93,7 +93,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "output_bucket_name",
         help="The name of the bucket in Google Cloud Storage that "
-             "would store the created dictionary.",
+        "would store the created dictionary.",
     )
 
     args = parser.parse_args()

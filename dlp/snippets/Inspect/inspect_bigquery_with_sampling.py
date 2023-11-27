@@ -120,7 +120,9 @@ def inspect_bigquery_table_with_sampling(
 
                 if job.inspect_details.result.info_type_stats:
                     for finding in job.inspect_details.result.info_type_stats:
-                        print(f"Info type: {finding.info_type.name}; Count: {finding.count}")
+                        print(
+                            f"Info type: {finding.info_type.name}; Count: {finding.count}"
+                        )
                 else:
                     print("No findings.")
 
@@ -154,14 +156,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "topic_id",
         help="The id of the Cloud Pub/Sub topic to use to report that the job "
-             'is complete, e.g. "dlp-sample-topic".',
+        'is complete, e.g. "dlp-sample-topic".',
     )
     parser.add_argument(
         "subscription_id",
         help="The id of the Cloud Pub/Sub subscription to monitor for job "
-             'completion, e.g. "dlp-sample-subscription". The subscription must '
-             "already be subscribed to the topic. See the test files or the Cloud "
-             "Pub/Sub sample files for examples on how to create the subscription.",
+        'completion, e.g. "dlp-sample-subscription". The subscription must '
+        "already be subscribed to the topic. See the test files or the Cloud "
+        "Pub/Sub sample files for examples on how to create the subscription.",
     )
     parser.add_argument(
         "--project",
@@ -178,7 +180,7 @@ if __name__ == "__main__":
             "VERY_LIKELY",
         ],
         help="A string representing the minimum likelihood threshold that "
-             "constitutes a match.",
+        "constitutes a match.",
     )
     parser.add_argument(
         "--max_findings",
@@ -189,7 +191,7 @@ if __name__ == "__main__":
         "--timeout",
         type=int,
         help="The maximum number of seconds to wait for a response from the "
-             "API. The default is 300 seconds.",
+        "API. The default is 300 seconds.",
         default=300,
     )
 

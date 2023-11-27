@@ -97,13 +97,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--info_type",
         help="A String representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "--word_list",
         help="List of words or phrases to be added to extend the behaviour "
-             "of built-in infoType.",
+        "of built-in infoType.",
     )
     args = parser.parse_args()
 

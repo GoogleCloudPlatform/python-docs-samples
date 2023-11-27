@@ -123,23 +123,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--table_header",
         help="List of strings representing table field names."
-             "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
-             "The method can be used to exclude matches from entire column"
-             '"Fake_Email_Address".',
+        "Example include '['Fake_Email_Address', 'Real_Email_Address]'. "
+        "The method can be used to exclude matches from entire column"
+        '"Fake_Email_Address".',
     )
     parser.add_argument(
         "--table_rows",
         help="List of rows representing table values."
-             "Example: "
-             '"[["example1@example.org", "test1@example.com],'
-             '["example2@example.org", "test2@example.com]]"',
+        "Example: "
+        '"[["example1@example.org", "test1@example.com],'
+        '["example2@example.org", "test2@example.com]]"',
     )
     parser.add_argument(
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "custom_hotword",

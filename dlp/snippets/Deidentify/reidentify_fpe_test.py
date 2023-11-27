@@ -39,7 +39,7 @@ def test_reidentify_with_fpe(capsys: pytest.CaptureFixture) -> None:
         surrogate_type=SURROGATE_TYPE,
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
     )
 
     out, _ = capsys.readouterr()

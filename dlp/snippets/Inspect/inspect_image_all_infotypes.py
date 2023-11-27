@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
-             "information in the results.",
+        "information in the results.",
         default=True,
     )
     args = parser.parse_args()
