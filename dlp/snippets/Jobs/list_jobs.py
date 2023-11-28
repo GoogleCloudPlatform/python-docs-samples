@@ -94,9 +94,7 @@ def list_dlp_jobs(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
 
-    parser.add_argument(
-        "project", help="The project id to use as a parent resource."
-    )
+    parser.add_argument("project", help="The project id to use as a parent resource.")
     parser.add_argument(
         "-f",
         "--filter",

@@ -138,9 +138,7 @@ if __name__ == "__main__":
         "table_project_id",
         help="The Google Cloud project id where the BigQuery table is stored.",
     )
-    parser.add_argument(
-        "dataset_id", help="The id of the dataset to inspect."
-    )
+    parser.add_argument("dataset_id", help="The id of the dataset to inspect.")
     parser.add_argument("table_id", help="The id of the table to inspect.")
     parser.add_argument(
         "column_name",
@@ -153,7 +151,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "subscription_id",
         help="The name of the Pub/Sub subscription to use when listening for"
-             "job completion notifications.",
+        "job completion notifications.",
     )
     parser.add_argument(
         "--timeout",

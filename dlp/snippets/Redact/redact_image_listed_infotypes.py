@@ -126,20 +126,20 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "--min_likelihood",
         help="A string representing the minimum likelihood threshold"
-             "that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED', "
-             "'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.",
+        "that constitutes a match. One of: 'LIKELIHOOD_UNSPECIFIED', "
+        "'VERY_UNLIKELY', 'UNLIKELY', 'POSSIBLE', 'LIKELY', 'VERY_LIKELY'.",
         default=None,
     )
     parser.add_argument(
         "--mime_type",
         help="The MIME type of the file. If not specified, the type is "
-             "inferred via the Python standard library's mimetypes module.",
+        "inferred via the Python standard library's mimetypes module.",
         default=None,
     )
 

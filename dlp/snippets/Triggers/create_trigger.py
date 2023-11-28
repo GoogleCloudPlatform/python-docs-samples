@@ -118,7 +118,6 @@ def create_trigger(
 
 
 if __name__ == "__main__":
-
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "bucket", help="The name of the GCS bucket containing the file."

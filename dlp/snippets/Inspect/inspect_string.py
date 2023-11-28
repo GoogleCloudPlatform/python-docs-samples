@@ -128,24 +128,24 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             "If unspecified, the three above examples will be used.",
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     parser.add_argument(
         "--custom_dictionaries",
         action="append",
         help="Strings representing comma-delimited lists of dictionary words"
-             " to search for as custom info types. Each string is a comma "
-             "delimited list of words representing a distinct dictionary.",
+        " to search for as custom info types. Each string is a comma "
+        "delimited list of words representing a distinct dictionary.",
         default=None,
     )
     parser.add_argument(
         "--custom_regexes",
         action="append",
         help="Strings representing regex patterns to search for as custom "
-             " info types.",
+        " info types.",
         default=None,
     )
     parser.add_argument(
@@ -159,7 +159,7 @@ if __name__ == "__main__":
             "VERY_LIKELY",
         ],
         help="A string representing the minimum likelihood threshold that "
-             "constitutes a match.",
+        "constitutes a match.",
     )
     parser.add_argument(
         "--max_findings",
@@ -170,7 +170,7 @@ if __name__ == "__main__":
         "--include_quote",
         type=bool,
         help="A boolean for whether to display a quote of the detected "
-             "information in the results.",
+        "information in the results.",
         default=True,
     )
     args = parser.parse_args()

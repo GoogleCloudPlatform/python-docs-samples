@@ -121,14 +121,14 @@ if __name__ == "__main__":
     parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     parser.add_argument(
         "wrapped_key",
         help="The encrypted ('wrapped') AES-256 key to use. This key should "
-             "be encrypted using the Cloud KMS key specified by key_name.",
+        "be encrypted using the Cloud KMS key specified by key_name.",
     )
 
     args = parser.parse_args()

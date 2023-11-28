@@ -33,7 +33,7 @@ def test_deidentify_free_text_with_fpe_using_surrogate(
         info_type="PHONE_NUMBER",
         surrogate_type="PHONE_TOKEN",
         unwrapped_key=UNWRAPPED_KEY,
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
     )
 
     out, _ = capsys.readouterr()

@@ -125,30 +125,30 @@ if __name__ == "__main__":
     parser.add_argument(
         "surrogate_type",
         help="The name of the surrogate custom info type to use. Only "
-             "necessary if you want to reverse the deidentification process. Can "
-             "be essentially any arbitrary string, as long as it doesn't appear "
-             "in your dataset otherwise.",
+        "necessary if you want to reverse the deidentification process. Can "
+        "be essentially any arbitrary string, as long as it doesn't appear "
+        "in your dataset otherwise.",
     )
     parser.add_argument(
         "key_name",
         help="The name of the Cloud KMS key used to encrypt ('wrap') the "
-             "AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     parser.add_argument(
         "wrapped_key",
         help="The encrypted ('wrapped') AES-256 key to use. This key should "
-             "be encrypted using the Cloud KMS key specified by key_name.",
+        "be encrypted using the Cloud KMS key specified by key_name.",
     )
     parser.add_argument(
         "-a",
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
 
     args = parser.parse_args()

@@ -91,20 +91,18 @@ if __name__ == "__main__":
         "--project",
         help="The Google Cloud project id to use as a parent resource.",
     )
-    parser.add_argument(
-        "filename", help="The path to the file to inspect."
-    )
+    parser.add_argument("filename", help="The path to the file to inspect.")
     parser.add_argument(
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "--include_quote",
         help="A Boolean for whether to display a quote of the detected"
-             "information in the results.",
+        "information in the results.",
         default=True,
     )
 

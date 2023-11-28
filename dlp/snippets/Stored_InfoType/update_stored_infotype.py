@@ -59,7 +59,9 @@ def update_stored_infotype(
     field_mask = {"paths": ["large_custom_dictionary.cloud_storage_file_set.url"]}
 
     # Convert the stored infoType id into a full resource id.
-    stored_info_type_name = f"projects/{project}/locations/global/storedInfoTypes/{stored_info_type_id}"
+    stored_info_type_name = (
+        f"projects/{project}/locations/global/storedInfoTypes/{stored_info_type_id}"
+    )
 
     # Call the API.
     response = dlp.update_stored_info_type(
@@ -91,12 +93,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "gcs_input_file_path",
         help="The url in the format <bucket>/<path_to_file> for the "
-             "location of the source term list.",
+        "location of the source term list.",
     )
     parser.add_argument(
         "output_bucket_name",
         help="The name of the bucket in Google Cloud Storage that "
-             "would store the created dictionary.",
+        "would store the created dictionary.",
     )
 
     args = parser.parse_args()

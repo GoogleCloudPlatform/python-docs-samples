@@ -186,7 +186,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "entity_id",
         help="The column name of the table that enables accurately "
-             "determining k-anonymity",
+        "determining k-anonymity",
     )
     parser.add_argument(
         "quasi_ids",
@@ -196,7 +196,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "output_table_project_id",
         help="The Google Cloud project id where the output BigQuery table "
-             "would be stored.",
+        "would be stored.",
     )
     parser.add_argument(
         "output_dataset_id",
