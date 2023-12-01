@@ -99,7 +99,10 @@ because the incoming log entries must not be older than default retention period
 To prevent such logs from being ignored the implementation returns errors if the timestamp is older than 29 days.
 To import the older logs you have to modified the [current] code by performing the following modifications:
 
-* remove the 29 day validation by commenting the [fencing condition][code1]
+* remove the 29 day validation by commenting the fencing condition in [lines 91-93][code1]:
+
+  <https://github.com/GoogleCloudPlatform/python-docs-samples/blob/95dd4f53ff96470a1f842d3134d56b017a85ac27/logging/import-logs/main.py#L91-L93>
+
 * in [`import_logs`][code2] add the following block after the call to [`_patch_reserved_log_ids`][code3]:
   
   ```python
