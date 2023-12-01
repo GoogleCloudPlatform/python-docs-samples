@@ -95,7 +95,7 @@
 
 # For practicing
 # ---* Use with codelabs to learn to submit samples
-/practice-folder/**/*                  @engelke
+/practice-folder/**/*                  engelke@google.com
 
 # ---* Fully Eng Owned
 /appengine/**/*                        @GoogleCloudPlatform/serverless-runtimes @GoogleCloudPlatform/python-samples-reviewers
