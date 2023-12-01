@@ -91,3 +91,33 @@ nox -s lint
 nox -s py-3.8
 nox -s py-3.11
 ```
+
+## Importing log entries with timestamps older than 30 days
+
+The import logs implementation does not currently support logs with the timestamp older than 30 days
+because the incoming log entries must not be older than default retention period (see [documentation][retention]).
+To prevent such logs from being ignored the implementation returns errors if the timestamp is older than 29 days.
+To import the older logs you have to modified the [current] code by performing the following modifications:
+
+* remove the 29 day validation by commenting the [fencing condition][code1]
+* in [`import_logs`][code2] add the following block after the call to [`_patch_reserved_log_ids`][code3]:
+  
+  ```python
+  log.labels['original_timestamp'] = log.timestamp
+  log.timestamp = None
+  ```
+
+  to keep the original timestamp as a user metadata labeled `original_timestamp` and to ingest the log entry using _current_ timestamp.
+
+> [!IMPORTANT]  
+>
+> 1. After this change the logs should be queried using the `timestamp` field.
+> 1. If the same log entry is imported multiple times, the query response may include more than one line.
+
+After applying the changes, [build](#build) a custom container image and use it when creating an import job.
+
+[retention]: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp
+[current]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/e2709a218072c86ec1a9b9101db45057ebfdbff0/logging/import-logs/main.py
+[code1]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/95dd4f53ff96470a1f842d3134d56b017a85ac27/logging/import-logs/main.py#L91-L93
+[code2]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/95dd4f53ff96470a1f842d3134d56b017a85ac27/logging/import-logs/main.py#L196
+[code3]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/95dd4f53ff96470a1f842d3134d56b017a85ac27/logging/import-logs/main.py#L206
