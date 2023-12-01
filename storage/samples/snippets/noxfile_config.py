@@ -67,6 +67,12 @@ def get_cloud_kms_key():
     if session == 'py-3.10':
         return ('projects/python-docs-samples-tests-310/locations/us/'
                 'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+    if session == 'py-3.11':
+        return ('projects/python-docs-samples-tests-311/locations/us/'
+                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+    if session == 'py-3.12':
+        return ('projects/python-docs-samples-tests-312/locations/us/'
+                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     return os.environ['CLOUD_KMS_KEY']
 
 
@@ -91,6 +97,8 @@ TEST_CONFIG_OVERRIDE = {
         # 'constraints/iam.disableServiceAccountKeyCreation' policy.
         # 2. The new projects buckets need to have universal permission model.
         # For those tests, we'll use the original project.
-        'MAIN_GOOGLE_CLOUD_PROJECT': 'python-docs-samples-tests'
+        'MAIN_GOOGLE_CLOUD_PROJECT': 'python-docs-samples-tests',
+        'MAIN_CLOUD_KMS_KEY': ('projects/python-docs-samples-tests/locations/us/'
+                               'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     },
 }
