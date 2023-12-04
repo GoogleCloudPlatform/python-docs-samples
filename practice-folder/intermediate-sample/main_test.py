@@ -14,9 +14,9 @@
 
 from uuid import uuid4
 
-import pytest
-
 from google.cloud import storage
+
+import pytest
 
 import main
 
