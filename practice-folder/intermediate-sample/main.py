@@ -15,7 +15,7 @@
 from google.cloud import storage
 
 
-def list_blobs(bucket_name: str) -> list[str]:
+def list_blobs(bucket_name: str) -> List[str]:
     """
     Returns a list of the names of the blobs in the bucket with the given name.
 
