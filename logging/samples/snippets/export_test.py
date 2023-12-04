@@ -34,7 +34,7 @@ def _random_id():
     )
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def example_sink():
     client = logging.Client()
 
