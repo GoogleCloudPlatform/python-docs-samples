@@ -2,5 +2,5 @@ Django==5.0; python_version >= "3.10"
 Django==4.2.8; python_version >= "3.8" and python_version < "3.10"
 Django==3.2.23; python_version < "3.8"
 django-environ==0.10.0
-psycopg2-binary==2.9.6
+psycopg2-binary==2.9.9
 google-cloud-secret-manager==2.16.1
