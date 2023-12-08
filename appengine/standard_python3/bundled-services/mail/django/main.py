@@ -14,12 +14,12 @@
 
 import os
 
+from google.appengine.api import mail, wrap_wsgi_app
+
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
-from django.urls import re_path
 from django.http import HttpResponse
-from google.appengine.api import mail
-from google.appengine.api import wrap_wsgi_app
+from django.urls import re_path
 
 
 def home_page(request):
