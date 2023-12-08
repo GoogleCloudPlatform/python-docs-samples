@@ -15,11 +15,10 @@
 import os
 
 from django.conf import settings
-from django.conf.urls import url
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
-from google.appengine.api import mail
-from google.appengine.api import wrap_wsgi_app
+from django.urls import re_path
+from google.appengine.api import mail, wrap_wsgi_app
 
 
 def home_page(request):
@@ -106,9 +105,9 @@ def receive_bounce(request):
 
 
 urlpatterns = [
-    url(r"^$", home_page),
-    url(r"^_ah/mail/.*$", receive_mail),
-    url(r"^_ah/bounce$", receive_bounce),
+    re_path(r"^$", home_page),
+    re_path(r"^_ah/mail/.*$", receive_mail),
+    re_path(r"^_ah/bounce$", receive_bounce),
 ]
 
 settings.configure(
