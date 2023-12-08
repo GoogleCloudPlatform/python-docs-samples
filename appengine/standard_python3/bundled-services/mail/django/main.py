@@ -15,8 +15,8 @@
 import os
 
 from django.conf import settings
-from django.urls import re_path
 from django.core.wsgi import get_wsgi_application
+from django.urls import re_path
 from django.http import HttpResponse
 from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
