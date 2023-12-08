@@ -14,11 +14,7 @@
 
 
 def client_query() -> None:
-    # TODO(swast): remove once docs in cloud.google.com have been updated to
-    # use samples/snippets/client_query.py
-
     # [START bigquery_query]
-
     from google.cloud import bigquery
 
     # Construct a BigQuery client object.
@@ -32,10 +28,10 @@ def client_query() -> None:
         ORDER BY total_people DESC
         LIMIT 20
     """
-    query_job = client.query(query)  # Make an API request.
+    rows = client.query_and_wait(query)  # Make an API request.
 
     print("The query data:")
-    for row in query_job:
+    for row in rows:
         # Row values can be accessed by field name or index.
         print("name={}, count={}".format(row[0], row["total_people"]))
     # [END bigquery_query]
