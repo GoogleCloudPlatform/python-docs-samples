@@ -77,7 +77,7 @@ def _is_valid_import_range() -> bool:
     if START_DATE > END_DATE:
         eprint("Start date of the import time range should be earlier than end date")
         return False
-    # comment the following 3 lines if you import range includes dates older than 29 days from now
+    # comment the following 3 lines if import range includes dates older than 29 days from now
     if (date.today() - START_DATE).days > 29:
         eprint("Import range includes dates older than 29 days from today.")
         return False

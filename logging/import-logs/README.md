@@ -129,4 +129,4 @@ After applying the changes, [build](#build) a custom container image and use it 
 [retention]: https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp
 [current]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/e2709a218072c86ec1a9b9101db45057ebfdbff0/logging/import-logs/main.py
 [code1]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/86f12a752a4171e137adaa855c7247be9d5d39a2/logging/import-logs/main.py#L81-L83
-[code2]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/86f12a752a4171e137adaa855c7247be9d5d39a2/logging/import-logs/main.py#L188-L189
+[code2]: https://github.com/GoogleCloudPlatform/python-docs-samples/blob/86f12a752a4171e137adaa855c7247be9d5d39a2/logging/import-logs/main.py#L186-L187
