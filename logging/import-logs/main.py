@@ -30,8 +30,8 @@ from google.cloud import logging_v2, storage
 _LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
 
 # Read Cloud Run environment variables
-TASK_INDEX = int(os.getenv('CLOUD_RUN_TASK_INDEX', '0'))
-TASK_COUNT = int(os.getenv('CLOUD_RUN_TASK_COUNT', '1'))
+TASK_INDEX = int(os.getenv("CLOUD_RUN_TASK_INDEX", "0"))
+TASK_COUNT = int(os.getenv("CLOUD_RUN_TASK_COUNT", "1"))
 
 
 def getenv_date(name: str) -> date:
@@ -39,15 +39,15 @@ def getenv_date(name: str) -> date:
     date_str = os.getenv(name)
     if not date_str:
         return None
-    return datetime.strptime(date_str, '%m/%d/%Y').date()
+    return datetime.strptime(date_str, "%m/%d/%Y").date()
 
 
 # Read import parameters' environment variables
-START_DATE = getenv_date('START_DATE')
-END_DATE = getenv_date('END_DATE')
-LOG_ID = os.getenv('LOG_ID')
-BUCKET_NAME = os.getenv('STORAGE_BUCKET_NAME')
-PROJECT_ID = os.getenv('PROJECT_ID')
+START_DATE = getenv_date("START_DATE")
+END_DATE = getenv_date("END_DATE")
+LOG_ID = os.getenv("LOG_ID")
+BUCKET_NAME = os.getenv("STORAGE_BUCKET_NAME")
+PROJECT_ID = os.getenv("PROJECT_ID")
 
 
 def eprint(*objects: str, **kwargs: TypedDict) -> None:
@@ -63,7 +63,7 @@ def _day(blob_name: str) -> int:
     """
     # calculated in function to allow test to set LOG_ID
     offset = len(LOG_ID) + 1 + 4 + 1 + 2 + 1
-    return int(blob_name[offset: offset + 2])
+    return int(blob_name[offset : offset + 2])
 
 
 def _is_valid_import_range() -> bool:
@@ -75,11 +75,11 @@ def _is_valid_import_range() -> bool:
      due to https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp
     """
     if START_DATE > END_DATE:
-        eprint('Start date of the import time range should be earlier than end date')
+        eprint("Start date of the import time range should be earlier than end date")
         return False
     # comment the following 3 lines if you import range includes dates older than 29 days from now
     if (date.today() - START_DATE).days > 29:
-        eprint('Import range includes dates older than 29 days from today.')
+        eprint("Import range includes dates older than 29 days from today.")
         return False
     return True
 
@@ -132,8 +132,7 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
         return paths
 
     # collect all log file paths in first month and filter those for early days
-    blobs = client.list_blobs(
-        BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
+    blobs = client.list_blobs(BUCKET_NAME, prefix=_prefix(first_day), delimiter=None)
     paths.extend([b.name for b in blobs if _day(b.name) >= first_day.day])
     # process all paths in last months
     blobs = client.list_blobs(BUCKET_NAME, prefix=_prefix(last_day))
@@ -145,8 +144,7 @@ def list_log_files(first_day: date, last_day: date, client: storage.Client) -> L
             last_day.month if year == last_day.year else 13,
         ):
             blobs = client.list_blobs(
-                BUCKET_NAME, prefix=_prefix(
-                    date(year=year, month=month, day=1))
+                BUCKET_NAME, prefix=_prefix(date(year=year, month=month, day=1))
             )
             paths.extend([b.name for b in blobs])
     return paths
@@ -167,7 +165,7 @@ def _write_logs(logs: List[dict], client: logging_v2.Client) -> None:
                 # partialerrors.log_entry_errors is a dictionary
                 # keyed by the logs' zero-based index in the logs.
                 # consider implementing custom error handling
-                eprint(f'{detail}')
+                eprint(f"{detail}")
         raise
 
 
@@ -177,13 +175,13 @@ def _patch_entry(log: dict, project_id: str) -> None:
     Save logName as a user label.
     Replace logName with the fixed value "projects/PROJECT_ID/logs/imported_logs"
     """
-    log_name = log.get('logName')
-    labels = log.get('labels')
-    log['logName'] = f'projects/{project_id}/logs/imported_logs'
+    log_name = log.get("logName")
+    labels = log.get("labels")
+    log["logName"] = f"projects/{project_id}/logs/imported_logs"
     if not labels:
         labels = dict()
-        log['labels'] = labels
-    labels['original_logName'] = log_name
+        log["labels"] = labels
+    labels["original_logName"] = log_name
     # uncomment the following 2 lines if import range includes dates older than 29 days from now
     # labels['original_timestamp'] = log['timestamp']
     # log['timestamp'] = None
@@ -213,7 +211,7 @@ def import_logs(
 def main() -> None:
     """Imports logs from Cloud Storage to Cloud Logging"""
     if not START_DATE or not END_DATE or not LOG_ID or not BUCKET_NAME:
-        eprint('Missing some of required parameters')
+        eprint("Missing some of required parameters")
         sys.exit(1)
     if not _is_valid_import_range():
         sys.exit(1)
@@ -221,25 +219,24 @@ def main() -> None:
     start_date, end_date = calc_import_range()
 
     if start_date > end_date:
-        print(f'Task #{(TASK_INDEX+1)} has no work to do')
+        print(f"Task #{(TASK_INDEX+1)} has no work to do")
         sys.exit(0)
     print(
-        f'Task #{(TASK_INDEX+1)} starts importing logs from {start_date} to {end_date}'
+        f"Task #{(TASK_INDEX+1)} starts importing logs from {start_date} to {end_date}"
     )
 
     storage_client = storage.Client()
     log_files = list_log_files(start_date, end_date, storage_client)
     logging_client = (
-        logging_v2.Client(
-            project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
+        logging_v2.Client(project=PROJECT_ID) if PROJECT_ID else logging_v2.Client()
     )
     import_logs(log_files, storage_client, logging_client)
 
 
 # Start script
-if __name__ == '__main__':
+if __name__ == "__main__":
     try:
         main()
     except Exception as err:
-        eprint(f'Task #{TASK_INDEX+1}, failed: {err}')
+        eprint(f"Task #{TASK_INDEX+1}, failed: {err}")
         sys.exit(1)
