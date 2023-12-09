@@ -183,8 +183,8 @@ def _patch_entry(log: dict, project_id: str) -> None:
         log["labels"] = labels
     labels["original_logName"] = log_name
     # uncomment the following 2 lines if import range includes dates older than 29 days from now
-    # labels['original_timestamp'] = log['timestamp']
-    # log['timestamp'] = None
+    # labels["original_timestamp"] = log["timestamp"]
+    # log["timestamp"] = None
 
 
 def import_logs(
