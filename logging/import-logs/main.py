@@ -59,7 +59,7 @@ def _day(blob_name: str) -> int:
     """Parse day number from Blob's path
 
     Use the known Blob path convention to parse the day part from the path.
-    The path convetion is <LOG_ID>/YYYY/MM/DD/<OBJECT_NAME>
+    The path convention is <LOG_ID>/YYYY/MM/DD/<OBJECT_NAME>
     """
     # calculated in function to allow test to set LOG_ID
     offset = len(LOG_ID) + 1 + 4 + 1 + 2 + 1
