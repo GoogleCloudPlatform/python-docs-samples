@@ -19,7 +19,6 @@ from datetime import date, datetime, timedelta
 import json
 import math
 import os
-import re
 import sys
 
 from typing import List, Tuple, TypedDict
@@ -29,19 +28,6 @@ from google.cloud import logging_v2, storage
 
 # Logging limits (https://cloud.google.com/logging/quotas#api-limits)
 _LOGS_MAX_SIZE_BYTES = 9 * 1024 * 1024  # < 10MB
-
-_RESERVED_LOG_IDS = ["cloudaudit.googleapis.com"]
-_LOGGER_NAME_TEMPLATE = re.compile(
-    r"""
-    (projects/)     # static prefix group (1)
-    ([^/]+)         # initial letter, wordchars group (2) for project ID
-    (/logs/)        # static midfix group (3)
-    (?P<name>[^/]+) # initial letter, wordchars group for LOG_ID
-""",
-    re.VERBOSE,
-)
-
-_LOG_ID_PREFIX = "_"  # allowed characters are r"[a-zA-Z_\-\.\/\\]
 
 # Read Cloud Run environment variables
 TASK_INDEX = int(os.getenv("CLOUD_RUN_TASK_INDEX", "0"))
@@ -70,9 +56,10 @@ def eprint(*objects: str, **kwargs: TypedDict) -> None:
 
 
 def _day(blob_name: str) -> int:
-    """Parse day number from Blob's name
-    using the following Blob name convention:
-    <LOG_ID>/YYYY/MM/DD/<OBJECT_NAME>
+    """Parse day number from Blob's path
+
+    Use the known Blob path convention to parse the day part from the path.
+    The path convention is <LOG_ID>/YYYY/MM/DD/<OBJECT_NAME>
     """
     # calculated in function to allow test to set LOG_ID
     offset = len(LOG_ID) + 1 + 4 + 1 + 2 + 1
@@ -80,14 +67,17 @@ def _day(blob_name: str) -> int:
 
 
 def _is_valid_import_range() -> bool:
-    """Check the import range dates to ensure that
+    """Validate the import date range
+
+    Checks the import range dates to ensure that
     - start date is earlier than end date
-    - no dates in the range is older than 29 days
-    (for reason see https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp)
+    - no dates in the range are older than 29 days
+     due to https://cloud.google.com/logging/docs/reference/v2/rest/v2/LogEntry#FIELDS.timestamp
     """
     if START_DATE > END_DATE:
         eprint("Start date of the import time range should be earlier than end date")
         return False
+    # comment the following 3 lines if import range includes dates older than 29 days from now
     if (date.today() - START_DATE).days > 29:
         eprint("Import range includes dates older than 29 days from today.")
         return False
@@ -170,27 +160,31 @@ def _write_logs(logs: List[dict], client: logging_v2.Client) -> None:
     try:
         client.logging_api.write_entries(logs)
     except exceptions.PermissionDenied as err2:
-        partialerrors = logging_v2.types.WriteLogEntriesPartialErrors()
         for detail in err2.details:
-            if detail.Unpack(partialerrors):
+            if isinstance(detail, logging_v2.types.WriteLogEntriesPartialErrors):
                 # partialerrors.log_entry_errors is a dictionary
                 # keyed by the logs' zero-based index in the logs.
                 # consider implementing custom error handling
-                eprint(json.dumps(partialerrors.log_entry_errors))
+                eprint(f"{detail}")
         raise
 
 
-def _patch_reserved_log_ids(log: dict) -> None:
-    """Replaces first character in LOG_ID with underscore for reserved LOG_ID prefixes"""
+def _patch_entry(log: dict, project_id: str) -> None:
+    """Modify entry fields to allow importing entry to destination project.
+
+    Save logName as a user label.
+    Replace logName with the fixed value "projects/PROJECT_ID/logs/imported_logs"
+    """
     log_name = log.get("logName")
-    if log_name:
-        match = _LOGGER_NAME_TEMPLATE.match(log_name)
-        log_id = match.group("name")
-        if log_id and log_id.startswith(tuple(_RESERVED_LOG_IDS)):
-            log_name = _LOGGER_NAME_TEMPLATE.sub(
-                f"\\g<1>\\g<2>\\g<3>{_LOG_ID_PREFIX + log_id[1:]}", log_name
-            )
-            log["logName"] = log_name
+    labels = log.get("labels")
+    log["logName"] = f"projects/{project_id}/logs/imported_logs"
+    if not labels:
+        labels = dict()
+        log["labels"] = labels
+    labels["original_logName"] = log_name
+    # uncomment the following 2 lines if import range includes dates older than 29 days from now
+    # labels["original_timestamp"] = log["timestamp"]
+    # log["timestamp"] = None
 
 
 def import_logs(
@@ -203,7 +197,7 @@ def import_logs(
         data = _read_logs(file_path, bucket)
         for entry in data:
             log = json.loads(entry)
-            _patch_reserved_log_ids(log)
+            _patch_entry(log, logging_client.project)
             size = sys.getsizeof(log)
             if total_size + size >= _LOGS_MAX_SIZE_BYTES:
                 _write_logs(logs, logging_client)
@@ -244,5 +238,5 @@ if __name__ == "__main__":
     try:
         main()
     except Exception as err:
-        eprint(f"Task #{TASK_INDEX}, failed: {str(err)}")
+        eprint(f"Task #{TASK_INDEX+1}, failed: {err}")
         sys.exit(1)
