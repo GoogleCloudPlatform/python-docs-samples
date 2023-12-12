@@ -33,7 +33,7 @@ raw_document_path = (
     "gs://cloud-samples-data/documentai/codelabs/warehouse/order-invoice.pdf"
 )
 raw_document_file_type = contentwarehouse.RawDocumentFileType.RAW_DOCUMENT_FILE_TYPE_PDF
-user_id = os.environ["user_id"]
+user_id = "user:xxxx@example.com"
 reference_id = "001"
 
 
