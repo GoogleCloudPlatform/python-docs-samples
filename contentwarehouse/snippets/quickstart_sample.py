@@ -26,8 +26,10 @@ from google.cloud import contentwarehouse
 
 def quickstart(project_number: str, location: str, user_id: str) -> None:
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient(

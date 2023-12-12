@@ -28,8 +28,10 @@ def update_document_schema(
     project_number: str, location: str, document_schema_id: str
 ) -> None:
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a Schema Service client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient(

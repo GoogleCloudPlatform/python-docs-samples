@@ -32,8 +32,10 @@ def sample_get_document(
         Response object
     """
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a client
     client = contentwarehouse.DocumentServiceClient(client_options=client_options)

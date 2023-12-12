@@ -37,8 +37,10 @@ def sample_delete_document_schema(
         None, if operation is successful
     """
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient(

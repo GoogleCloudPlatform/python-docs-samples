@@ -31,8 +31,10 @@ def sample_list_document_schemas(project_number: str, location: str) -> list:
         location: Google Cloud project location.
     """
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a client
     document_schema_client = contentwarehouse.DocumentSchemaServiceClient(

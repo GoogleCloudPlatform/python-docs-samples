@@ -30,8 +30,10 @@ def sample_delete_document(document_name: str, user_id: str, location: str) -> N
         None, if operation is successful.
     """
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a client
     client = contentwarehouse.DocumentServiceClient(client_options=client_options)

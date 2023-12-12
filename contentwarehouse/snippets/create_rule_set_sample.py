@@ -25,8 +25,10 @@ from google.cloud import contentwarehouse
 
 def create_rule_set(project_number: str, location: str) -> None:
     # You must set the `api_endpoint` if you use a location other than "us".
-    client_options = ClientOptions(
-        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-contentwarehouse.googleapis.com")
+        if location != "us"
+        else None
     )
     # Create a client
     client = contentwarehouse.RuleSetServiceClient(client_options=client_options)
