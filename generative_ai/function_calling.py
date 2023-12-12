@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_function_calling]
-import requests
 from vertexai.preview.generative_models import (
     FunctionDeclaration,
     GenerativeModel,
