@@ -16,6 +16,7 @@
 
 # [START contentwarehouse_set_acl]
 from typing import Any
+
 from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
