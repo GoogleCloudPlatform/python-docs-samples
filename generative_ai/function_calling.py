@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START aiplatform_function_calling]
-import requests
 from vertexai.preview.generative_models import (
     FunctionDeclaration,
     GenerativeModel,
@@ -55,4 +54,3 @@ print(response)
 # Print the part of the response that contains info about the function call
 print(response.candidates[0].content.parts[0].function_call)
 # [END aiplatform_function_calling]
-
