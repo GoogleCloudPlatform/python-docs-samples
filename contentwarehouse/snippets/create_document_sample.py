@@ -18,6 +18,7 @@
 
 from typing import Optional
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 
@@ -46,8 +47,13 @@ def sample_create_document(
     Returns:
         Response object.
     """
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
+
     # Create a Document Service client
-    client = contentwarehouse.DocumentServiceClient()
+    client = contentwarehouse.DocumentServiceClient(client_options=client_options)
 
     # Get document schema name
     document_schema_name = client.document_schema_path(

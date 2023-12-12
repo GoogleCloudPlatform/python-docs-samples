@@ -15,26 +15,29 @@
 
 
 # [START contentwarehouse_update_document]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 
 def sample_update_document(
-    document_name: str, document: contentwarehouse.Document, user_id: str
+    document_name: str, document: contentwarehouse.Document, user_id: str, location: str
 ) -> contentwarehouse.CreateDocumentResponse:
     """Updates a document.
 
     Args:
         document_name: The resource name of the document.
-                    Format: 'projects/{project_number}/
-                    locations/{location}/documents/{document_id}'.
+                    Format: "projects/{project_number}/locations/{location}/documents/{document_id}".
         document: Document AI Warehouse Document object..
         user_id: user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
     Returns:
         Response object.
     """
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a client
-    client = contentwarehouse.DocumentServiceClient()
+    client = contentwarehouse.DocumentServiceClient(client_options=client_options)
 
     # Update document fields
     # For fields which can be updated, refer

@@ -15,20 +15,26 @@
 
 
 # [START contentwarehouse_update_document_schema]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_number = "YOUR_PROJECT_NUMBER"
-# location = "us" # Format is 'us' or 'eu'
+# location = "us" # Format is "us" or "eu"
 # document_schema_id = "YOUR_SCHEMA_ID"
 
 
 def update_document_schema(
     project_number: str, location: str, document_schema_id: str
 ) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a Schema Service client
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}/documentSchemas/{document_schema_id}

@@ -13,20 +13,26 @@
 # limitations under the License.
 #
 
-
 # [START contentwarehouse_quickstart]
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_number = 'YOUR_PROJECT_NUMBER'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
-# user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
+# project_number = "YOUR_PROJECT_NUMBER"
+# location = "YOUR_PROJECT_LOCATION"  # Format is "us" or "eu"
+# user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
 
 
 def quickstart(project_number: str, location: str, user_id: str) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a Schema Service client
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
@@ -57,7 +63,9 @@ def quickstart(project_number: str, location: str, user_id: str) -> None:
     )
 
     # Create a Document Service client
-    document_client = contentwarehouse.DocumentServiceClient()
+    document_client = contentwarehouse.DocumentServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}

@@ -78,7 +78,7 @@ def test_get_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
 
     response = get_document_sample.sample_get_document(
-        document_name=document_name, user_id=user_id
+        document_name=document_name, user_id=user_id, location=location
     )
 
     assert "name" in response
@@ -103,6 +103,7 @@ def test_update_document(request: pytest.fixture) -> None:
         document_name=document_name,
         document=document,
         user_id=user_id,
+        location=location,
     )
 
     assert "document" in response
@@ -113,7 +114,7 @@ def test_delete_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
 
     response = delete_document_sample.sample_delete_document(
-        document_name=document_name, user_id=user_id
+        document_name=document_name, user_id=user_id, location=location
     )
 
     assert response is None

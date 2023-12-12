@@ -20,7 +20,7 @@ from contentwarehouse.snippets import test_utilities
 import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-location = "us"  # Format is 'us' or 'eu'
+location = "us"  # Format is "us" or "eu"
 user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
 
 

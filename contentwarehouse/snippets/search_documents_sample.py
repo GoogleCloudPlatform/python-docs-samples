@@ -15,21 +15,25 @@
 
 
 # [START contentwarehouse_search_documents]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_number = 'YOUR_PROJECT_NUMBER'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
-# document_query_text = 'YOUR_DOCUMENT_QUERY'
-# user_id = 'user:YOUR_SERVICE_ACCOUNT_ID' # Format is "user:xxxx@example.com"
+# project_number = "YOUR_PROJECT_NUMBER"
+# location = "YOUR_PROJECT_LOCATION" # Format is "us" or "eu"
+# document_query_text = "YOUR_DOCUMENT_QUERY"
+# user_id = "user:YOUR_SERVICE_ACCOUNT_ID" # Format is "user:xxxx@example.com"
 
 
 def search_documents_sample(
     project_number: str, location: str, document_query_text: str, user_id: str
 ) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a client
-    client = contentwarehouse.DocumentServiceClient()
+    client = contentwarehouse.DocumentServiceClient(client_options=client_options)
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
@@ -49,7 +53,7 @@ def search_documents_sample(
 
     # Histogram Query
     histogram_query = contentwarehouse.HistogramQuery(
-        histogram_query='count("DocumentSchemaId")'
+        histogram_query="count("DocumentSchemaId")"
     )
 
     request_metadata = contentwarehouse.RequestMetadata(

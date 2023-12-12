@@ -15,18 +15,15 @@
 
 
 # [START contentwarehouse_set_acl]
-
-from __future__ import annotations
-
 from typing import Any
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_number = 'YOUR_PROJECT_NUMBER'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
-# document_id = 'YOUR_DOCUMENT_ID'
-# user_id = 'user:YOUR_SERVICE_ACCOUNT_ID' # Format is "user:xxxx@example.com"
+# project_number = "YOUR_PROJECT_NUMBER"
+# location = "YOUR_PROJECT_LOCATION" # Format is "us" or "eu"
+# document_id = "YOUR_DOCUMENT_ID"
+# user_id = "user:YOUR_SERVICE_ACCOUNT_ID" # Format is "user:xxxx@example.com"
 # policy = "Policy in JSON format"
 
 
@@ -46,8 +43,12 @@ def set_acl(
         user_id: user:YOUR_SERVICE_ACCOUNT_ID.
         document_id: Record id in Document AI Warehouse.
     """
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a client
-    client = contentwarehouse.DocumentServiceClient()
+    client = contentwarehouse.DocumentServiceClient(client_options=client_options)
 
     # Initialize request argument(s)
     # Set document acl if document id is specified

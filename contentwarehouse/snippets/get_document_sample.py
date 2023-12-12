@@ -15,23 +15,28 @@
 
 
 # [START contentwarehouse_get_document]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 
-def sample_get_document(document_name: str, user_id: str) -> contentwarehouse.Document:
+def sample_get_document(
+    document_name: str, user_id: str, location: str
+) -> contentwarehouse.Document:
     """Gets a document.
 
     Args:
         document_name: The resource name of the document.
-                Format: 'projects/{project_number}/
-                locations/{location}/documents/{document_id}'.
-        user_id: user:YOUR_SERVICE_ACCOUNT_ID or user:USER_EMAIL.
+                Format: "projects/{project_number}/locations/{location}/documents/{document_id}".
+        user_id: "user:YOUR_SERVICE_ACCOUNT_ID" or "user:USER_EMAIL".
     Returns:
         Response object
     """
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a client
-    client = contentwarehouse.DocumentServiceClient()
+    client = contentwarehouse.DocumentServiceClient(client_options=client_options)
 
     request_metadata = contentwarehouse.RequestMetadata(
         user_info=contentwarehouse.UserInfo(id=user_id)

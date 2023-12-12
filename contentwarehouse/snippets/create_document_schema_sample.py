@@ -15,12 +15,12 @@
 
 
 # [START contentwarehouse_create_document_schema]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
-# project_number = 'YOUR_PROJECT_NUMBER'
-# location = 'YOUR_PROJECT_LOCATION' # Format is 'us' or 'eu'
+# project_number = "YOUR_PROJECT_NUMBER"
+# location = "YOUR_PROJECT_LOCATION" # Format is "us" or "eu"
 
 
 def sample_create_document_schema(project_number: str, location: str) -> None:
@@ -32,8 +32,14 @@ def sample_create_document_schema(project_number: str, location: str) -> None:
     Returns:
         Response object.
     """
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a Schema Service client.
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient(
+        client_options=client_options
+    )
 
     property_definition = contentwarehouse.PropertyDefinition(
         name="stock_symbol",  # Must be unique within a document schema (case insensitive)

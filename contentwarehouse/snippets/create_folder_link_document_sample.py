@@ -15,20 +15,26 @@
 
 
 # [START contentwarehouse_create_folder_link_document]
-
+from google.api_core.client_options import ClientOptions
 from google.cloud import contentwarehouse
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_number = "YOUR_PROJECT_NUMBER"
-# location = "us" # Format is 'us' or 'eu'
+# location = "us" # Format is "us" or "eu"
 # user_id = "user:xxxx@example.com" # Format is "user:xxxx@example.com"
 
 
 def create_folder(
     project_number: str, location: str, user_id: str
 ) -> contentwarehouse.Document:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a Schema Service client
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
@@ -51,7 +57,9 @@ def create_folder(
     )
 
     # Create a Document(Folder) Service client
-    folder_client = contentwarehouse.DocumentServiceClient()
+    folder_client = contentwarehouse.DocumentServiceClient(
+        client_options=client_options
+    )
 
     # Define Folder
     folder = contentwarehouse.Document(
@@ -81,8 +89,14 @@ def create_folder(
 def create_document(
     project_number: str, location: str, user_id: str
 ) -> contentwarehouse.Document:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Create a Schema Service client
-    document_schema_client = contentwarehouse.DocumentSchemaServiceClient()
+    document_schema_client = contentwarehouse.DocumentSchemaServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
@@ -113,7 +127,9 @@ def create_document(
     )
 
     # Create a Document Service client
-    document_client = contentwarehouse.DocumentServiceClient()
+    document_client = contentwarehouse.DocumentServiceClient(
+        client_options=client_options
+    )
 
     # The full resource name of the location, e.g.:
     # projects/{project_number}/locations/{location}
@@ -131,7 +147,7 @@ def create_document(
     document = contentwarehouse.Document(
         display_name="My Test Document",
         document_schema_name=document_schema.name,
-        plain_text="This is a sample of a document's text.",
+        plain_text="This is a sample of a document"s text.",
         properties=[document_property],
     )
 
@@ -157,6 +173,10 @@ def create_document(
 def create_folder_link_document(
     project_number: str, location: str, user_id: str
 ) -> None:
+    # You must set the `api_endpoint` if you use a location other than "us".
+    client_options = ClientOptions(
+        api_endpoint=f"{location}-contentwarehouse.googleapis.com"
+    )
     # Function call to create a folder
     folder = create_folder(project_number, location, user_id)
 
@@ -164,7 +184,9 @@ def create_folder_link_document(
     document = create_document(project_number, location, user_id)
 
     # Create a Link Service client
-    link_client = contentwarehouse.DocumentLinkServiceClient()
+    link_client = contentwarehouse.DocumentLinkServiceClient(
+        client_options=client_options
+    )
 
     # Initialize request argument(s)
     link = contentwarehouse.DocumentLink(
