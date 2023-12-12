@@ -53,7 +53,7 @@ def search_documents_sample(
 
     # Histogram Query
     histogram_query = contentwarehouse.HistogramQuery(
-        histogram_query="count("DocumentSchemaId")"
+        histogram_query="count('DocumentSchemaId')"
     )
 
     request_metadata = contentwarehouse.RequestMetadata(

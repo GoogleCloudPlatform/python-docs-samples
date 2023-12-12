@@ -147,7 +147,7 @@ def create_document(
     document = contentwarehouse.Document(
         display_name="My Test Document",
         document_schema_name=document_schema.name,
-        plain_text="This is a sample of a document"s text.",
+        plain_text="This is a sample of a document's text.",
         properties=[document_property],
     )
 
