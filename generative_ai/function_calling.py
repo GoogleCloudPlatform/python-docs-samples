@@ -55,4 +55,3 @@ print(response)
 # Print the part of the response that contains info about the function call
 print(response.candidates[0].content.parts[0].function_call)
 # [END aiplatform_function_calling]
-
