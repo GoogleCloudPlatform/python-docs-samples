@@ -20,14 +20,14 @@
 # [END aiplatform_gemini_guide_step1]
 
 
-def generate_text(project_id, location):
+def generate_text(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_guide_step2]
     # Initialize Vertex AI
     import vertexai
 
-    # TODO(developer): Update and un-comment below line
+    # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    location = "us-central1"
+    # location = "us-central1"
 
     vertexai.init(project=project_id, location=location)
     # [END aiplatform_gemini_guide_step2]
