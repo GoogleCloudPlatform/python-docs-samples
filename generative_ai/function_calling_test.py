@@ -25,8 +25,6 @@ _LOCATION = "us-central1"
 
 
 function_expected_responses = [
-    "candidates",
-    "content"
     "function_call",
     "get_current_weather",
     "args",
