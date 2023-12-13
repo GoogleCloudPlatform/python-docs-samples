@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def chat_text_example(project_id: str, location: str) -> None:
+def chat_text_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat]
     import vertexai
     from vertexai.preview.generative_models import GenerativeModel
@@ -42,7 +42,7 @@ def chat_text_example(project_id: str, location: str) -> None:
     return get_chat_response("Hello")
 
 
-def chat_stream_example(project_id: str, location: str) -> None:
+def chat_stream_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat_stream]
     import vertexai
     from vertexai.preview.generative_models import GenerativeModel

@@ -42,7 +42,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     response = model.generate_content(
         [landmark1, "city: Rome, Landmark: the Colosseum",
          landmark2, "city: Beijing, Landmark: Forbidden City",
-         landmark3,]
+         landmark3, ]
     )
     print(response)
     # [END aiplatform_gemini_single_turn_multi_image]
