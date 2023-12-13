@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_guide]
+# [START aiplatform_gemini_get_started]
 # [START aiplatform_gemini_guide_step1]
 # TODO(developer): Vertex AI SDK - uncomment below & run
 # pip3 install --upgrade --user google-cloud-aiplatform
@@ -54,4 +54,4 @@ def generate_text(project_id, location):
     # [END aiplatform_gemini_guide_step5]
     return response.text
 
-# [END aiplatform_gemini_guide]
+# [END aiplatform_gemini_get_started]
