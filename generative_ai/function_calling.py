@@ -50,8 +50,7 @@ def generate_function_call(prompt: str) -> str:
     )
 
     return str(response)
-
+# [END aiplatform_function_calling]
 
 if __name__ == "__main__":
     generate_function_call("What is the weather like in Boston?")
-# [END aiplatform_function_calling]
