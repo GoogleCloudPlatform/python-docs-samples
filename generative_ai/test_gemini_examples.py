@@ -85,16 +85,17 @@ def test_gemini_single_turn_video_example() -> None:
     text = gemini_single_turn_video_example.generate_text(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert "sky" in text
+    assert "zoo" in text
+    assert "tiger" in text
 
 
 def test_gemini_chat_example() -> None:
     text = gemini_chat_example.chat_text_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert "ai" in text
+    assert ("hi" in text) or ("hello" in text)
 
     text = gemini_chat_example.chat_stream_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert "ai" in text
+    assert ("hi" in text) or ("hello" in text)

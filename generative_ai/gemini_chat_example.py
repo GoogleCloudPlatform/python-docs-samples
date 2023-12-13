@@ -39,7 +39,7 @@ def chat_text_example(project_id: str, location: str) -> str:
     prompt = "Why does it appear when it rains?"
     print(get_chat_response(chat, prompt))
     # [END aiplatform_gemini_multiturn_chat]
-    return get_chat_response("Hello")
+    return get_chat_response(chat, "Hello")
 
 
 def chat_stream_example(project_id: str, location: str) -> str:
@@ -70,4 +70,4 @@ def chat_stream_example(project_id: str, location: str) -> str:
     prompt = "Why does it appear when it rains?"
     print(get_chat_response(chat, prompt))
     # [END aiplatform_gemini_multiturn_chat_stream]
-    return get_chat_response("Hello")
+    return get_chat_response(chat, "Hello")
