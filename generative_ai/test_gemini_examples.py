@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+
 import vertexai
 
 import gemini_chat_example

@@ -16,7 +16,7 @@
 def chat_text_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat]
     import vertexai
-    from vertexai.preview.generative_models import GenerativeModel
+    from vertexai.preview.generative_models import GenerativeModel, ChatSession
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -26,7 +26,7 @@ def chat_text_example(project_id: str, location: str) -> str:
     model = GenerativeModel("gemini-pro")
     chat = model.start_chat()
 
-    def get_chat_response(chat: "ChatSession", prompt: str) -> str:
+    def get_chat_response(chat: ChatSession, prompt: str) -> str:
         response = chat.send_message(prompt)
         return response.text
 
@@ -45,7 +45,7 @@ def chat_text_example(project_id: str, location: str) -> str:
 def chat_stream_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat_stream]
     import vertexai
-    from vertexai.preview.generative_models import GenerativeModel
+    from vertexai.preview.generative_models import GenerativeModel, ChatSession
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -54,7 +54,7 @@ def chat_stream_example(project_id: str, location: str) -> str:
     model = GenerativeModel("gemini-pro")
     chat = model.start_chat()
 
-    def get_chat_response(chat: "ChatSession", prompt: str) -> str:
+    def get_chat_response(chat: ChatSession, prompt: str) -> str:
         text_response = []
         responses = chat.send_message(prompt, stream=True)
         for chunk in responses:
