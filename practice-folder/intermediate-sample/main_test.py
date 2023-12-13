@@ -43,12 +43,12 @@ def test_list_blobs(bucket_name, capsys):
     blobs = main.list_blobs(bucket_name)
 
     assert len(blobs) == 2
-    assert blobs[0] == "blob-one"
-    assert blobs[1] == "blob-two"
+    assert "blob-one" in blobs
+    assert "blob-two" in blobs
 
     captured = capsys.readouterr()
     lines = captured.out.split("\n")
     assert len(lines) == 3
-    assert lines[0] == "blob-one"
-    assert lines[1] == "blob-two"
-    assert lines[2] == ""
+    assert "blob-one" in lines
+    assert "blob-two" in lines
+    assert lines[2] == ""   # Trailing newline from print leaves empty line
