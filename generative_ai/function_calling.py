@@ -12,45 +12,48 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_function_calling]
+# [START aiplatform_gemini_function_calling]
 from vertexai.preview.generative_models import (
     FunctionDeclaration,
     GenerativeModel,
     Tool,
 )
 
-# Load the Vertex AI Gemini API to use function calling
-model = GenerativeModel("gemini-pro")
 
-# Specify a function declaration and parameters for an API request
-get_current_weather_func = FunctionDeclaration(
-    name="get_current_weather",
-    description="Get the current weather in a given location",
-    # Function parameters are specified in OpenAPI JSON schema format
-    parameters={
-        "type": "object",
-        "properties": {"location": {"type": "string", "description": "Location"}},
-    },
-)
+def generate_function_call(prompt: str) -> str:
+    # Load the Vertex AI Gemini API to use function calling
+    model = GenerativeModel("gemini-pro")
 
-# Define a tool that includes the above get_current_weather_func
-weather_tool = Tool(
-    function_declarations=[get_current_weather_func],
-)
+    # Specify a function declaration and parameters for an API request
+    get_current_weather_func = FunctionDeclaration(
+        name="get_current_weather",
+        description="Get the current weather in a given location",
+        # Function parameters are specified in OpenAPI JSON schema format
+        parameters={
+            "type": "object",
+            "properties": {"location": {"type": "string", "description": "Location"}},
+        },
+    )
 
-# Prompt to ask the model about weather, which will invoke the Tool
-prompt = "What is the weather like in Boston?"
+    # Define a tool that includes the above get_current_weather_func
+    weather_tool = Tool(
+        function_declarations=[get_current_weather_func],
+    )
 
-# Instruct the model to generate content using the Tool that you just created:
-response = model.generate_content(
-    prompt,
-    generation_config={"temperature": 0},
-    tools=[weather_tool],
-)
+    # Prompt to ask the model about weather, which will invoke the Tool
+    prompt = prompt
 
-# Print the entire response
-print(response)
+    # Instruct the model to generate content using the Tool that you just created:
+    response = model.generate_content(
+        prompt,
+        generation_config={"temperature": 0},
+        tools=[weather_tool],
+    )
 
-# Print the part of the response that contains info about the function call
-print(response.candidates[0].content.parts[0].function_call)
-# [END aiplatform_function_calling]
+    return str(response)
+
+
+# [END aiplatform_gemini_function_calling]
+
+if __name__ == "__main__":
+    generate_function_call("What is the weather like in Boston?")
