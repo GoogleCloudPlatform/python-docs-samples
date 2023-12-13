@@ -51,4 +51,4 @@ def test_list_blobs(bucket_name, capsys):
     assert len(lines) == 3
     assert "blob-one" in lines
     assert "blob-two" in lines
-    assert lines[2] == ""   # Trailing newline from print leaves empty line
+    assert lines[2] == ""  # Trailing newline from print leaves empty line
