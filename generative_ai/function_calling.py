@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_function_calling]
+# [START aiplatform_gemini_function_calling]
 from vertexai.preview.generative_models import (
     FunctionDeclaration,
     GenerativeModel,
@@ -53,7 +53,7 @@ def generate_function_call(prompt: str) -> str:
     return str(response)
 
 
-# [END aiplatform_function_calling]
+# [END aiplatform_gemini_function_calling]
 
 if __name__ == "__main__":
     generate_function_call("What is the weather like in Boston?")
