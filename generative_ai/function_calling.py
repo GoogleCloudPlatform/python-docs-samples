@@ -51,6 +51,8 @@ def generate_function_call(prompt: str) -> str:
     )
 
     return str(response)
+
+
 # [END aiplatform_function_calling]
 
 if __name__ == "__main__":
