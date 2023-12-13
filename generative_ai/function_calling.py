@@ -19,6 +19,7 @@ from vertexai.preview.generative_models import (
     Tool,
 )
 
+
 def generate_function_call(prompt: str) -> str:
     # Load the Vertex AI Gemini API to use function calling
     model = GenerativeModel("gemini-pro")
