@@ -63,7 +63,7 @@ def test_gemini_pro_config_example() -> None:
         # clean-up
         os.remove(fname)
     else:
-        raise Exception('File(scones.jpg) not found!')
+        raise Exception("File(scones.jpg) not found!")
 
 
 def test_gemini_multi_image_example() -> None:

@@ -26,7 +26,9 @@ def generate_text(project_id: str, location: str) -> None:
     model = GenerativeModel(model_name="gemini-pro-vision")
 
     # Load example image
-    image_url = "https://storage.googleapis.com/generativeai-downloads/images/scones.jpg"
+    image_url = (
+        "https://storage.googleapis.com/generativeai-downloads/images/scones.jpg"
+    )
     image_content = Part.from_uri(image_url, "image/jpeg")
 
     # Query the model

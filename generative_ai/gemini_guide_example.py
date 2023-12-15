@@ -54,4 +54,5 @@ def generate_text(project_id: str, location: str) -> str:
     # [END aiplatform_gemini_guide_step5]
     return response.text
 
+
 # [END aiplatform_gemini_get_started]
