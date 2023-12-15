@@ -14,12 +14,13 @@
 
 # [START aiplatform_gemini_pro_config_example_parent]
 import base64
+
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Part
 
 
 # [START aiplatform_gemini_pro_config_example]
-def generate_text(project_id, location):
+def generate_text(project_id: str, location: str) -> None:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
