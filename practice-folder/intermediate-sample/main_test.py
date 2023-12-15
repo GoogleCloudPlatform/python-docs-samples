@@ -48,7 +48,8 @@ def test_list_blobs(bucket_name, capsys):
 
     captured = capsys.readouterr()
     lines = captured.out.split("\n")
-    assert len(lines) == 3
+    assert len(lines) == 4
     assert "blob-one" in lines
     assert "blob-two" in lines
-    assert lines[2] == ""  # Trailing newline from print leaves empty line
+    assert lines[2] == f"There are 2 blobs in {bucket_name}."
+    assert lines[-1] == ""  # Trailing newline from print leaves empty line

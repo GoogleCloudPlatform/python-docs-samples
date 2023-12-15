@@ -30,5 +30,6 @@ def list_blobs(bucket_name):
         name = blob.name
         blob_names.append(name)
         print(name)
+    print(f"There are {len(blob_names)} blobs in {bucket_name}.")
 
     return blob_names
