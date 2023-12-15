@@ -20,6 +20,8 @@ import gemini_chat_example
 import gemini_count_token_example
 import gemini_guide_example
 import gemini_multi_image_example
+import gemini_pro_basic_example
+import gemini_pro_config_example
 import gemini_safety_config_example
 import gemini_single_turn_video_example
 
@@ -35,6 +37,33 @@ def test_gemini_guide_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert "scones" in text
+
+
+def test_gemini_pro_basic_example() -> None:
+    text = gemini_pro_basic_example.generate_text(PROJECT_ID, LOCATION)
+    text = text.lower()
+    assert len(text) > 0
+    assert "recipe" in text or "ingredients" in text or "table" in text
+
+
+def test_gemini_pro_config_example() -> None:
+    import urllib.request
+
+    #  download the image
+    fname = "scones.jpg"
+    url = "https://storage.googleapis.com/generativeai-downloads/images/scones.jpg"
+    urllib.request.urlretrieve(url, fname)
+
+    if os.path.isfile(fname):
+        text = gemini_pro_config_example.generate_text(PROJECT_ID, LOCATION)
+        text = text.lower()
+        assert len(text) > 0
+        assert "recipe" in text or "table" in text
+
+        # clean-up
+        os.remove(fname)
+    else:
+        raise Exception('File(scones.jpg) not found!')
 
 
 def test_gemini_multi_image_example() -> None:
