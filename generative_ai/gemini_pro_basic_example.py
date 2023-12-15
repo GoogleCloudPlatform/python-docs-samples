@@ -12,12 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_pro_example_parent]
+# [START aiplatform_gemini_pro_basic_image_example_parent]
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Part
 
 
-# [START aiplatform_gemini_pro_basic_example]
+# [START aiplatform_gemini_pro_basic_image_example]
 def generate_text(project_id: str, location: str) -> None:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
@@ -36,5 +36,5 @@ def generate_text(project_id: str, location: str) -> None:
     return response.text
 
 
-# [START aiplatform_gemini_pro_basic_example]
-# [END aiplatform_gemini_pro_example_parent]
+# [END aiplatform_gemini_pro_basic_image_example]
+# [END aiplatform_gemini_pro_basic_image_example_parent]
