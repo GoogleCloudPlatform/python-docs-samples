@@ -27,7 +27,7 @@ def generate_text(project_id: str, location: str) -> None:
 
     # Load example image
     image_url = (
-        "https://storage.googleapis.com/generativeai-downloads/images/scones.jpg"
+        "gs://generativeai-downloads/images/scones.jpg"
     )
     image_content = Part.from_uri(image_url, "image/jpeg")
 
