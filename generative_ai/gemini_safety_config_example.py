@@ -57,7 +57,7 @@ if __name__ == "__main__":
     import base64
 
     file_name = "scones.jpg"
-    if os.path(file_name):
+    if os.path.isfile(file_name):
         base64_image_data = base64.b64encode(open(file_name, "rb").read()).decode(
             "utf-8"
         )
