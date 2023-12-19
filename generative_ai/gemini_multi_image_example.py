@@ -33,15 +33,9 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
         return Image.from_bytes(image_bytes)
 
     # Load images from Cloud Storage URI
-    landmark1 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
-    )
-    landmark2 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark2.png"
-    )
-    landmark3 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark3.png"
-    )
+    landmark1 = load_image_from_url("https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark1.png")
+    landmark2 = load_image_from_url("https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark2.png")
+    landmark3 = load_image_from_url("https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark3.png")
 
     # Pass multimodal prompt
     model = GenerativeModel("gemini-pro-vision")
