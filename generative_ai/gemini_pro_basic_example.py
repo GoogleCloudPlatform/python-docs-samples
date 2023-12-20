@@ -12,33 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_get_started]
-# TODO(developer): Vertex AI SDK - uncomment below & run
-# pip3 install --upgrade --user google-cloud-aiplatform
-# gcloud auth application-default login
-
+# [START aiplatform_gemini_pro_example]
 import vertexai
 from vertexai.preview.generative_models import GenerativeModel, Part
 
 
-def generate_text(project_id: str, location: str) -> str:
+def generate_text(project_id: str, location: str) -> None:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
+
     # Load the model
-    multimodal_model = GenerativeModel("gemini-pro-vision")
+    model = GenerativeModel(model_name="gemini-pro-vision")
+
+    # Load example image
+    image_url = "gs://generativeai-downloads/images/scones.jpg"
+    image_content = Part.from_uri(image_url, "image/jpeg")
+
     # Query the model
-    response = multimodal_model.generate_content(
-        [
-            # Add an example image
-            Part.from_uri(
-                "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
-            ),
-            # Add an example query
-            "what is shown in this image?",
-        ]
-    )
+    response = model.generate_content([image_content, "what is this image?"])
     print(response)
+
     return response.text
 
 
-# [END aiplatform_gemini_get_started]
+# [END aiplatform_gemini_pro_example]

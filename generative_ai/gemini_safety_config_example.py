@@ -50,10 +50,3 @@ def generate_text(project_id: str, location: str, image: str) -> str:
 
 
 # [END aiplatform_gemini_safety_settings]
-
-
-# if __name__ == '__main__':
-# import base64
-# base64_image_data = base64.b64encode(open('scones.jpg', 'rb').read()).decode("utf-8")
-# image = generative_models.Part.from_data(data=base64.b64decode(base64_image_data), mime_type="image/png")
-# generate_text(image)
