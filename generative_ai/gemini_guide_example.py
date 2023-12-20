@@ -13,45 +13,36 @@
 # limitations under the License.
 
 # [START aiplatform_gemini_get_started]
-# [START aiplatform_gemini_guide_step1]
 # TODO(developer): Vertex AI SDK - uncomment below & run
 # pip3 install --upgrade --user google-cloud-aiplatform
 # gcloud auth application-default login
-# [END aiplatform_gemini_guide_step1]
+
+import vertexai
+from vertexai.preview.generative_models import GenerativeModel, Part
 
 
 def generate_text(project_id: str, location: str) -> str:
-    # [START aiplatform_gemini_guide_step2]
     # Initialize Vertex AI
-    import vertexai
-
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # location = "us-central1"
-
     vertexai.init(project=project_id, location=location)
-    # [END aiplatform_gemini_guide_step2]
-
-    # [START aiplatform_gemini_guide_step3]
-    from vertexai.preview.generative_models import GenerativeModel, Part
-
-    # [END aiplatform_gemini_guide_step3]
-
-    # [START aiplatform_gemini_guide_step4]
+    # Load the model
     multimodal_model = GenerativeModel("gemini-pro-vision")
-    # [END aiplatform_gemini_guide_step4]
-
-    # [START aiplatform_gemini_guide_step5]
+    # Query the model
     response = multimodal_model.generate_content(
         [
-            "what is shown in this image?",
+            # Add an example image
             Part.from_uri(
                 "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
             ),
+            # Add an example query
+            "what is shown in this image?",
         ]
     )
     print(response)
-    # [END aiplatform_gemini_guide_step5]
     return response.text
 
+
+# TODO(developer): Update PROJECT_ID value and un-comment below lines
+# project_id = "PROJECT_ID"
+# location = "us-central1"
+# generate_text(project_id, location)
 # [END aiplatform_gemini_get_started]

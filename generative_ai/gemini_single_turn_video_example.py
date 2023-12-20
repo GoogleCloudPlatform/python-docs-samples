@@ -27,10 +27,10 @@ def generate_text(project_id: str, location: str) -> str:
     # Generate text
     response = vision_model.generate_content(
         [
-            "What is in the video?",
             Part.from_uri(
                 "gs://cloud-samples-data/video/animals.mp4", mime_type="video/mp4"
             ),
+            "What is in the video?",
         ]
     )
     print(response)
