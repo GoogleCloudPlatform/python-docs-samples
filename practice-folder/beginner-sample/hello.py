@@ -19,7 +19,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    last_updated = "10:27 PM PST, Friday, December 1, 2023"
+    last_updated = "11:30 PM PST, Tuesday, December 19, 2023"
     return f"Hello. This page was last updated at {last_updated}."
 
 
