@@ -38,9 +38,7 @@ def generate_text(project_id: str, location: str) -> None:
 
     # Generate text
     response = model.generate_content(
-        ["what is this image", image_content],
-        generation_config=config,
-    )
+        [image_content, "what is this image"], generation_config=config)
     print(response.text)
     return response.text
 

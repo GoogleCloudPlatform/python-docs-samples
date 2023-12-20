@@ -30,7 +30,7 @@ def generate_text(project_id: str, location: str) -> None:
     image_content = Part.from_uri(image_url, "image/jpeg")
 
     # Query the model
-    response = model.generate_content(["what is recipe in image:", image_content])
+    response = model.generate_content([image_content, "what is recipe in image:"])
     print(response)
 
     return response.text
