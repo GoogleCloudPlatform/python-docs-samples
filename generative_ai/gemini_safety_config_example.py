@@ -48,5 +48,5 @@ def generate_text(project_id: str, location: str, image: str) -> str:
         text_responses.append(response.text)
     return "".join(text_responses)
 
-  
+
 # [END aiplatform_gemini_safety_settings]
