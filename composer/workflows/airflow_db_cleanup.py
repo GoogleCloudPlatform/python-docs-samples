@@ -109,7 +109,7 @@ DATABASE_OBJECTS = [
     },
     {
         "airflow_db_model": TaskInstance,
-        "age_check_column": TaskInstance.execution_date
+        "age_check_column": TaskInstance.start_date
         if AIRFLOW_VERSION < ["2", "2", "0"]
         else TaskInstance.start_date,
         "keep_last": False,
