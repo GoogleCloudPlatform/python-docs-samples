@@ -2,7 +2,7 @@
 name: Feature request
 about: Let us know how we can make things better.
 title: ''
-labels: 'priority: p3, triage me, type: feature request'
+labels: ''
 assignees: ''
 
 ---
