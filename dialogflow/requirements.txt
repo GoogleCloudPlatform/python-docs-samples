@@ -1,6 +1,6 @@
 google-cloud-dialogflow==2.22.0
 Flask==2.2.5
-pyaudio==0.2.13
+pyaudio==0.2.14
 termcolor==2.3.0
 functions-framework==3.3.0
 Werkzeug==3.0.1
