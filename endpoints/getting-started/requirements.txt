@@ -2,7 +2,7 @@ Flask==3.0.0
 flask-cors==4.0.0
 gunicorn==20.1.0
 six==1.16.0
-pyyaml==6.0
+pyyaml==6.0.1
 requests==2.31.0
 google-auth==2.19.1
 google-auth-oauthlib==1.0.0
