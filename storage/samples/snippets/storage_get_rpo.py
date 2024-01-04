@@ -25,7 +25,6 @@ For more information, see README.md.
 # [START storage_get_rpo]
 
 from google.cloud import storage
-from google.cloud.storage.constants import RPO_DEFAULT
 
 
 def get_rpo(bucket_name):
@@ -34,9 +33,7 @@ def get_rpo(bucket_name):
     # bucket_name = "my-bucket"
 
     storage_client = storage.Client()
-    bucket = storage_client.bucket(bucket_name)
-
-    bucket.rpo = RPO_DEFAULT
+    bucket = storage_client.get_bucket(bucket_name)
     rpo = bucket.rpo
 
     print(f"RPO for {bucket.name} is {rpo}.")
