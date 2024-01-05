@@ -59,7 +59,7 @@ def write_to_pubsub(argv=None):
         )
 
     print('Pipeline ran successfully.')
-# END [dataflow_pubsub_write_with_attributes]
+# [END dataflow_pubsub_write_with_attributes]
 
 
 if __name__ == "__main__":
