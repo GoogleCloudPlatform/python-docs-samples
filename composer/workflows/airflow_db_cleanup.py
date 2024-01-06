@@ -109,7 +109,7 @@ DATABASE_OBJECTS = [
     },
     {
         "airflow_db_model": TaskInstance,
-        "age_check_column": TaskInstance.execution_date
+        "age_check_column": TaskInstance.start_date
         if AIRFLOW_VERSION < ["2", "2", "0"]
         else TaskInstance.start_date,
         "keep_last": False,
@@ -174,7 +174,7 @@ try:
     DATABASE_OBJECTS.append(
         {
             "airflow_db_model": TaskFail,
-            "age_check_column": TaskFail.execution_date,
+            "age_check_column": TaskFail.start_date,
             "keep_last": False,
             "keep_last_filters": None,
             "keep_last_group_by": None,
