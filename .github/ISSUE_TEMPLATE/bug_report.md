@@ -2,7 +2,7 @@
 name: Bug report
 about: Please let us know which issues you are having.
 title: ''
-labels: 'priority: p2, triage me, type: bug'
+labels: ''
 assignees: ''
 
 ---
