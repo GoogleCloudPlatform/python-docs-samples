@@ -15,9 +15,9 @@
 
 import os
 import sys
+import time
 import uuid
 
-from _pytest.capture import CaptureFixture
 from google.cloud import pubsub_v1
 
 import pytest
@@ -26,22 +26,65 @@ from ..write_pubsub import write_to_pubsub
 
 
 topic_id = f'test-topic-{uuid.uuid4()}'
+subscription_id = f'{topic_id}-sub'
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 publisher = pubsub_v1.PublisherClient()
+subscriber = pubsub_v1.SubscriberClient()
+
+NUM_MESSAGES = 4
+TIMEOUT = 60 * 5
 
 
 @pytest.fixture(scope="function")
 def setup_and_teardown():
     topic_path = publisher.topic_path(project_id, topic_id)
+    subscription_path = subscriber.subscription_path(project_id, subscription_id)
+
     try:
         publisher.create_topic(request={"name": topic_path})
+        subscriber.create_subscription(
+            request={"name": subscription_path, "topic": topic_path}
+        )
         yield
     finally:
+        subscriber.delete_subscription(
+            request={"subscription": subscription_path})
         publisher.delete_topic(request={"topic": topic_path})
 
 
-def test_write_to_pubsub(setup_and_teardown, capsys: CaptureFixture[str]):
+def read_messages():
+    received_messages = []
+    ack_ids = []
+
+    # Read messages from Pub/Sub. It might be necessary to read multiple
+    # batches, Use a timeout value to avoid potentially looping forever.
+    start_time = time.time()
+    while time.time() - start_time <= TIMEOUT:
+        # Pull messages from Pub/Sub.
+        subscription_path = subscriber.subscription_path(project_id, subscription_id)
+        response = subscriber.pull(
+            request={"subscription": subscription_path, "max_messages": NUM_MESSAGES}
+        )
+        received_messages.append(response.received_messages)
+
+        for received_message in response.received_messages:
+            ack_ids.append(received_message.ack_id)
+
+        # Acknowledge the received messages so they will not be sent again.
+        subscriber.acknowledge(
+            request={"subscription": subscription_path, "ack_ids": ack_ids}
+        )
+
+        if (len(received_messages) >= NUM_MESSAGES):
+            break
+
+        time.sleep(5)
+
+    return received_messages
+
+
+def test_write_to_pubsub(setup_and_teardown):
     sys.argv = [
         '',
         '--streaming',
@@ -50,5 +93,7 @@ def test_write_to_pubsub(setup_and_teardown, capsys: CaptureFixture[str]):
     ]
     write_to_pubsub()
 
-    out, _ = capsys.readouterr()
-    assert 'Pipeline ran successfully' in out
+    # Read from Pub/Sub to verify the pipeline successfully wrote messages.
+    # Duplicate reads are possible.
+    messages = read_messages()
+    assert (len(messages) >= NUM_MESSAGES)
