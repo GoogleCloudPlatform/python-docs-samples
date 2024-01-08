@@ -3,5 +3,5 @@ SQLAlchemy==2.0.17
 pg8000==1.29.8
 gunicorn==20.1.0
 firebase-admin==6.2.0
-structlog==23.1.0
+structlog==24.1.0
 urllib3<2.0.0 #https://stackoverflow.com/questions/76175361/firebase-authentication-httpresponse-object-has-no-attribute-strict-status
