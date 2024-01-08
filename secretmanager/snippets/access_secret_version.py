@@ -33,6 +33,7 @@ def access_secret_version(
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager
+    import google_crc32c
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
