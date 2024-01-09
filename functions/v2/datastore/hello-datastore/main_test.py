@@ -21,11 +21,11 @@ import main
 def test_hello_datastore(capsys):
     old_entity = datastore.EntityResult(
         entity=datastore.Entity(
-           properties={"name":datastore.Value(string_value="Old Test Name")}),
+           properties={"name": datastore.Value(string_value="Old Test Name")}),
     )
     new_entity = datastore.EntityResult(
         entity=datastore.Entity(
-           properties={"name":datastore.Value(string_value="New Test Name")}),
+           properties={"name": datastore.Value(string_value="New Test Name")}),
     )
 
     datastore_payload = datastore.EntityEventData(
@@ -52,4 +52,3 @@ def test_hello_datastore(capsys):
     assert datastore_payload.old_value.__str__() in out
     assert "\nNew value:" in out
     assert datastore_payload.value.__str__() in out
-
