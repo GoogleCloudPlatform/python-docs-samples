@@ -20,7 +20,7 @@ steps:
       [
         "build",
         "-t",
-        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
         ".",
       ]
 
@@ -29,7 +29,7 @@ steps:
     args:
       [
         "push",
-        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
       ]
 
   - id: "deploy revision with tag"
@@ -45,14 +45,14 @@ steps:
         "--region",
         "${_REGION}",
         "--image",
-        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}:${_PR_NUMBER}-${SHORT_SHA}",
         "--tag",
         "pr-${_PR_NUMBER}",
         "--no-traffic",
       ]
 
   - id: "link revision on pull request"
-    name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
+    name: "us-central1-docker.pkg.dev/$PROJECT_ID/containers/deployment-previews" # our custom builder
     secretEnv: ["GITHUB_TOKEN"]
     args:
       [
@@ -66,7 +66,7 @@ steps:
         "--pull-request",
         "${_PR_NUMBER}",
         "--repo-name",
-        "${_GITHUB_REPO}",
+        "${REPO_FULL_NAME}",
         "--commit-sha",
         "${SHORT_SHA}",
       ]
@@ -74,10 +74,10 @@ steps:
 substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
-  _GITHUB_REPO: $(pull_request.head.repo.full_name)
 
 options:
   dynamicSubstitutions: true
+  logging: CLOUD_LOGGING_ONLY
 
 availableSecrets:
   secretManager:

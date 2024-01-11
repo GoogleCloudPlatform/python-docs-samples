@@ -13,11 +13,9 @@
 # limitations under the License.
 
 # [START genappbuilder_list_operations]
-from __future__ import annotations
-
+from typing import Optional
 
 from google.cloud import discoveryengine
-
 from google.longrunning import operations_pb2
 
 # TODO(developer): Uncomment these variables before running the sample.
@@ -33,7 +31,7 @@ def list_operations_sample(
     project_id: str,
     location: str,
     search_engine_id: str,
-    operations_filter: str | None = None,
+    operations_filter: Optional[str] = None,
 ) -> operations_pb2.ListOperationsResponse:
     # Create a client
     client = discoveryengine.DocumentServiceClient()

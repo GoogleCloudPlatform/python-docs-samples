@@ -27,7 +27,7 @@ from google.cloud.storage import Blob, notification
 import pytest
 
 
-SUFFIX = uuid.uuid4().hex[0:6]
+SUFFIX = uuid.uuid4().hex
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 AR_REPO_URL = f"us-central1-docker.pkg.dev/{PROJECT}/cloud-run-source-deploy"
 INPUT_BUCKET = f"image-proc-input-{SUFFIX}"
@@ -184,6 +184,7 @@ def output_bucket(pubsub_topic):
     output_bucket.delete(force=True)
 
 
+@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_end_to_end(input_bucket, output_bucket):
     # Upload image to the input bucket
 

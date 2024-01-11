@@ -1,0 +1,14 @@
+{
+  "name": "Getting started Python flex template",
+  "description": "An example flex template for Python.",
+  "parameters": [
+    {
+      "name": "output",
+      "label": "Output destination",
+      "helpText": "The path and filename prefix for writing output files. Example: gs://your-bucket/your-path",
+      "regexes": [
+        "^gs:\\/\\/[^\\n\\r]+$"
+      ]
+    }
+  ]
+}

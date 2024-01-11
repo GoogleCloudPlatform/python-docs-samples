@@ -16,11 +16,21 @@
 steps:
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
+    args:
+      [
+        "build",
+        "-t",
+        "us-central1-docker.pkg.dev/${PROJECT_ID}/containers/${_SERVICE_NAME}",
+        ".",
+      ]
 
   - id: "push image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
+    args:
+      [
+        "push",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}",
+      ]
 
   - id: "deploy prod service"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -36,7 +46,7 @@ steps:
         "${_REGION}",
         "--allow-unauthenticated",
         "--image",
-        "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}",
+        "us-central1-docker.pkg.dev/$PROJECT_ID/containers/${_SERVICE_NAME}",
       ]
 
   # Force the new revision to serve 100% of traffic.
@@ -58,7 +68,7 @@ steps:
 
   # Cleanup tags against closed pull requests
   - id: "clean up old tag"
-    name: "gcr.io/${PROJECT_ID}/deployment-previews" # our custom builder
+    name: "us-central1-docker.pkg.dev/${PROJECT_ID}/containers/deployment-previews" # our custom builder
     secretEnv: ["GITHUB_TOKEN"]
     args:
       [
@@ -70,16 +80,16 @@ steps:
         "--service",
         "${_SERVICE_NAME}",
         "--repo-name",
-        "${_GITHUB_OWNER}/${REPO_NAME}",
+        "${REPO_FULL_NAME}",
       ]
 
 substitutions:
   _SERVICE_NAME: myservice
   _REGION: us-central1
-  _GITHUB_OWNER: $(push.repository.owner.name)
 
 options:
   dynamicSubstitutions: true
+  logging: CLOUD_LOGGING_ONLY
 
 availableSecrets:
   secretManager:

@@ -1,0 +1,8 @@
+{
+    "name": "logging-manual",
+    "env": {
+        "GOOGLE_CLOUD_PROJECT": {
+            "description": "the project you selected or created"
+        }
+    }
+}

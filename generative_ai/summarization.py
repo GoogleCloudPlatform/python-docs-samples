@@ -69,10 +69,10 @@ Summary:
         **parameters,
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_summarization]
 
     return response.text
 
 
 if __name__ == "__main__":
     text_summarization()
+# [END aiplatform_sdk_summarization]

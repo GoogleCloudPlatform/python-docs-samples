@@ -17,7 +17,6 @@
 from time import sleep
 
 from google.cloud import discoveryengine
-
 from google.longrunning import operations_pb2
 
 # TODO(developer): Uncomment these variables before running the sample.

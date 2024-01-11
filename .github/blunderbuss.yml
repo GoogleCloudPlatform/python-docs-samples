@@ -146,11 +146,6 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/healthcare-life-sciences
   - labels:
-      - "api: iot"
-      - "api: cloudiot"
-    to:
-      - GoogleCloudPlatform/api-iot
-  - labels:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
@@ -163,6 +158,10 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/cloud-speech-eng
       - GoogleCloudPlatform/dee-data-ai
+  - labels:
+      - "api: serviceextensions"
+    to:
+      - GoogleCloudPlatform/service-extensions-samples-reviewers
 
   # Self-service individuals
   - labels:
@@ -233,6 +232,7 @@ assign_prs_by:
       - "api: transcoder"
       - "api: translate"
       - "api: vision"
+      - "api: videointelligence"
     to:
       - GoogleCloudPlatform/dee-data-ai
 
@@ -240,7 +240,7 @@ assign_prs_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-dpes
+      - GoogleCloudPlatform/infra-db-sdk
   - labels:
       - "api: bigtable"
       - "api: datastore"
@@ -305,17 +305,13 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/healthcare-life-sciences
   - labels:
-      - "api: iot"
-      - "api: cloudiot"
-    to:
-      - GoogleCloudPlatform/api-iot
-  - labels:
       - "api: retail"
     to:
       - GoogleCloudPlatform/cloud-retail-team
   - labels:
       - "api: cloudmedia"
       - "api: videostitcher"
+      - "api: videolivestream"
     to:
       - GoogleCloudPlatform/cloud-media-team
   - labels:
@@ -323,7 +319,11 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/cloud-speech-eng
       - GoogleCloudPlatform/dee-data-ai
-
+  - labels:
+      - "api: serviceextensions"
+    to:
+      - GoogleCloudPlatform/service-extensions-samples-reviewers
+      - GoogleCloudPlatform/dee-infra
   # Self-service individuals
   - labels:
       - "api: auth"

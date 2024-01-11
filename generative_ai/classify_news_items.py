@@ -58,10 +58,10 @@ The answer is:
     )
 
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_classify_news_items]
 
     return response
 
 
 if __name__ == "__main__":
     classify_news_items()
+# [END aiplatform_sdk_classify_news_items]

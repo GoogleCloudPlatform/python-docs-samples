@@ -53,7 +53,6 @@ import os
 
 import airflow
 from airflow import settings
-from airflow.jobs.base_job import BaseJob
 from airflow.models import (
     DAG,
     DagModel,
@@ -69,7 +68,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import and_, func
+from sqlalchemy import and_, func, text
 from sqlalchemy.exc import ProgrammingError
 from sqlalchemy.orm import load_only
 
@@ -102,13 +101,6 @@ ENABLE_DELETE = True
 # want to skip.
 DATABASE_OBJECTS = [
     {
-        "airflow_db_model": BaseJob,
-        "age_check_column": BaseJob.latest_heartbeat,
-        "keep_last": False,
-        "keep_last_filters": None,
-        "keep_last_group_by": None,
-    },
-    {
         "airflow_db_model": DagRun,
         "age_check_column": DagRun.execution_date,
         "keep_last": True,
@@ -117,7 +109,7 @@ DATABASE_OBJECTS = [
     },
     {
         "airflow_db_model": TaskInstance,
-        "age_check_column": TaskInstance.execution_date
+        "age_check_column": TaskInstance.start_date
         if AIRFLOW_VERSION < ["2", "2", "0"]
         else TaskInstance.start_date,
         "keep_last": False,
@@ -182,7 +174,7 @@ try:
     DATABASE_OBJECTS.append(
         {
             "airflow_db_model": TaskFail,
-            "age_check_column": TaskFail.execution_date,
+            "age_check_column": TaskFail.start_date,
             "keep_last": False,
             "keep_last_filters": None,
             "keep_last_group_by": None,
@@ -196,13 +188,16 @@ except Exception as e:
 if AIRFLOW_VERSION < ["2", "4", "0"]:
     try:
         from airflow.models import RenderedTaskInstanceFields
-        DATABASE_OBJECTS.append({
-            "airflow_db_model": RenderedTaskInstanceFields,
-            "age_check_column": RenderedTaskInstanceFields.execution_date,
-            "keep_last": False,
-            "keep_last_filters": None,
-            "keep_last_group_by": None
-        })
+
+        DATABASE_OBJECTS.append(
+            {
+                "airflow_db_model": RenderedTaskInstanceFields,
+                "age_check_column": RenderedTaskInstanceFields.execution_date,
+                "keep_last": False,
+                "keep_last_filters": None,
+                "keep_last_group_by": None,
+            }
+        )
 
     except Exception as e:
         logging.error(e)
@@ -224,6 +219,37 @@ try:
 
 except Exception as e:
     logging.error(e)
+
+if AIRFLOW_VERSION < ["2", "6", "0"]:
+    try:
+        from airflow.jobs.base_job import BaseJob
+
+        DATABASE_OBJECTS.append(
+            {
+                "airflow_db_model": BaseJob,
+                "age_check_column": BaseJob.latest_heartbeat,
+                "keep_last": False,
+                "keep_last_filters": None,
+                "keep_last_group_by": None,
+            }
+        )
+    except Exception as e:
+        logging.error(e)
+else:
+    try:
+        from airflow.jobs.job import Job
+
+        DATABASE_OBJECTS.append(
+            {
+                "airflow_db_model": Job,
+                "age_check_column": Job.latest_heartbeat,
+                "keep_last": False,
+                "keep_last_filters": None,
+                "keep_last_group_by": None,
+            }
+        )
+    except Exception as e:
+        logging.error(e)
 
 default_args = {
     "owner": DAG_OWNER_NAME,
@@ -437,15 +463,53 @@ def cleanup_function(**context):
         session.close()
 
 
+def cleanup_sessions():
+    session = settings.Session()
+
+    try:
+        logging.info("Deleting sessions...")
+        before = len(
+            session.execute(
+                text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")
+            )
+            .mappings()
+            .all()
+        )
+        session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
+        after = len(
+            session.execute(
+                text("SELECT * FROM session WHERE expiry < now()::timestamp(0);")
+            )
+            .mappings()
+            .all()
+        )
+        logging.info("Deleted {} expired sessions.".format(before - after))
+    except Exception as e:
+        logging.error(e)
+
+    session.commit()
+    session.close()
+
+
 def analyze_db():
     session = settings.Session()
     session.execute("ANALYZE")
     session.commit()
+    session.close()
 
 
 analyze_op = PythonOperator(
     task_id="analyze_query", python_callable=analyze_db, provide_context=True, dag=dag
 )
+
+cleanup_session_op = PythonOperator(
+    task_id="cleanup_sessions",
+    python_callable=cleanup_sessions,
+    provide_context=True,
+    dag=dag,
+)
+
+cleanup_session_op.set_downstream(analyze_op)
 
 for db_object in DATABASE_OBJECTS:
     cleanup_op = PythonOperator(
