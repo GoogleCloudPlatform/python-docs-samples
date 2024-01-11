@@ -1,4 +1,1 @@
-pytest==7.0.1
-google-events==0.7.0
-google-api-core==2.11.1
-google-cloud-datastore==2.19.0
+pytest==7.4.4
