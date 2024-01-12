@@ -14,8 +14,8 @@
 #  limitations under the License.
 
 import os
-import sys
 import time
+from unittest.mock import patch
 import uuid
 
 from google.cloud import pubsub_v1
@@ -37,7 +37,7 @@ TIMEOUT = 60 * 5
 
 
 @pytest.fixture(scope="function")
-def setup_and_teardown():
+def setup_and_teardown() -> None:
     topic_path = publisher.topic_path(project_id, topic_id)
     subscription_path = subscriber.subscription_path(project_id, subscription_id)
 
@@ -53,7 +53,7 @@ def setup_and_teardown():
         publisher.delete_topic(request={"topic": topic_path})
 
 
-def read_messages():
+def read_messages() -> None:
     received_messages = []
     ack_ids = []
 
@@ -84,16 +84,13 @@ def read_messages():
     return received_messages
 
 
-def test_write_to_pubsub(setup_and_teardown):
-    sys.argv = [
-        '',
-        '--streaming',
-        f'--project={project_id}',
-        f'--topic={topic_id}'
-    ]
-    write_to_pubsub()
+def test_write_to_pubsub(setup_and_teardown: None) -> None:
+    with patch("sys.argv", [
+        "", '--streaming', f'--project={project_id}', f'--topic={topic_id}'
+    ]):
+        write_to_pubsub()
 
-    # Read from Pub/Sub to verify the pipeline successfully wrote messages.
-    # Duplicate reads are possible.
-    messages = read_messages()
-    assert (len(messages) >= NUM_MESSAGES)
+        # Read from Pub/Sub to verify the pipeline successfully wrote messages.
+        # Duplicate reads are possible.
+        messages = read_messages()
+        assert (len(messages) >= NUM_MESSAGES)

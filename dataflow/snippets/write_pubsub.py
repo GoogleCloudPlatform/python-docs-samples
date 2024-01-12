@@ -13,30 +13,37 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START dataflow_pubsub_write_with_attributes]
+# [START dataflow_pubsub_write_with_attributes]i
+import argparse
+from typing import Any, Dict, List, Self
+
 import apache_beam as beam
 from apache_beam.io import PubsubMessage
 from apache_beam.io import WriteToPubSub
 from apache_beam.options.pipeline_options import PipelineOptions
 
 
-def item_to_message(item):
-    attributes = {}
-    attributes['buyer'] = item['name']
-    attributes['timestamp'] = str(item['ts'])
+def item_to_message(item: Dict[str, Any]) -> PubsubMessage:
+    attributes = {
+        'buyer': item['name'],
+        'timestamp': str(item['ts'])
+    }
     data = bytes(item['product'], 'utf-8')
 
     return PubsubMessage(data=data, attributes=attributes)
 
 
-def write_to_pubsub(argv=None):
+def write_to_pubsub(argv: List[str] = None) -> None:
 
-    # Parse the pipeline options passed into the application.
+    # Parse the pipeline options passed into the application. Example:
+    #     --project=$PROJECT_ID --topic=$TOPIC_NAME --streaming
+    # For more information, see
+    # https://beam.apache.org/documentation/programming-guide/#configuring-pipeline-options
     class MyOptions(PipelineOptions):
         @classmethod
         # Define custom pipeline options that specify the project ID and Pub/Sub
         # topic.
-        def _add_argparse_args(cls, parser):
+        def _add_argparse_args(cls: Self, parser: argparse.ArgumentParser) -> None:
             parser.add_argument("--project", required=True)
             parser.add_argument("--topic", required=True)
 
@@ -48,14 +55,14 @@ def write_to_pubsub(argv=None):
     ]
     options = MyOptions()
 
-    topic_path = f'projects/{options.project}/topics/{options.topic}'
-
     with beam.Pipeline(options=options) as pipeline:
         (
             pipeline
             | "Create elements" >> beam.Create(example_data)
             | "Convert to Pub/Sub messages" >> beam.Map(item_to_message)
-            | WriteToPubSub(topic=topic_path, with_attributes=True)
+            | WriteToPubSub(
+                  topic=f'projects/{options.project}/topics/{options.topic}',
+                  with_attributes=True)
         )
 
     print('Pipeline ran successfully.')

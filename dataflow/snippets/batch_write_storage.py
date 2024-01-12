@@ -14,17 +14,20 @@
 #  limitations under the License.
 
 # [START dataflow_batch_write_to_storage]
+import argparse
+from typing import List, Self
+
 import apache_beam as beam
 from apache_beam.io.textio import WriteToText
 from apache_beam.options.pipeline_options import PipelineOptions
 
 
-def write_to_cloud_storage(argv=None):
+def write_to_cloud_storage(argv : List[str] = None) -> None:
     # Parse the pipeline options passed into the application.
     class MyOptions(PipelineOptions):
         @classmethod
         # Define a custom pipeline option that specfies the Cloud Storage bucket.
-        def _add_argparse_args(cls, parser):
+        def _add_argparse_args(cls: Self, parser: argparse.ArgumentParser) -> None:
             parser.add_argument("--output", required=True)
 
     wordsList = ["1", "2", "3", "4"]
