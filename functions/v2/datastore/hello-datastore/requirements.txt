@@ -1,0 +1,6 @@
+functions-framework==3.5.0
+google-events==0.11.0
+google-cloud-datastore==2.19.0
+google-api-core==2.15.0
+protobuf==4.25.2
+cloudevents==1.10.1

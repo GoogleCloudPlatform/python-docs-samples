@@ -1,5 +1,5 @@
 Flask==2.1.0
-SQLAlchemy==2.0.17
+SQLAlchemy==2.0.24
 PyMySQL==1.1.0
 gunicorn==20.1.0
 cloud-sql-python-connector==1.2.4

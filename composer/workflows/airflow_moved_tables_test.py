@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# https://peps.python.org/pep-0621
-[project]
-name = "weather-model"
-version = "1.0.0"
-dependencies = [
-    "datasets==2.13.1",
-    "torch==1.13.1",  # make sure this matches the `container_uri` in `notebooks/3-training.ipynb`
-    "transformers==4.36.0",
-]
 
-[project.scripts]
-weather-trainer = "weather.trainer:main"
+import internal_unit_testing
+
+
+def test_dag_import(airflow_database):
+    """Test that the DAG file can be successfully imported.
+
+    This tests that the DAG can be parsed, but does not run it in an Airflow
+    environment. This is a recommended confidence check by the official Airflow
+    docs: https://airflow.incubator.apache.org/tutorial.html#testing
+    """
+    from . import airflow_moved_tables as module
+
+    internal_unit_testing.assert_has_valid_dag(module)
