@@ -15,12 +15,14 @@
 
 # [START dataflow_pubsub_write_with_attributes]i
 import argparse
-from typing import Any, Dict, List, Self
+from typing import Any, Dict, List
 
 import apache_beam as beam
 from apache_beam.io import PubsubMessage
 from apache_beam.io import WriteToPubSub
 from apache_beam.options.pipeline_options import PipelineOptions
+
+from typing_extensions import Self
 
 
 def item_to_message(item: Dict[str, Any]) -> PubsubMessage:

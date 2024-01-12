@@ -15,12 +15,13 @@
 
 # [START dataflow_batch_write_to_storage]
 import argparse
-from typing import List, Self
+from typing import List
 
 import apache_beam as beam
 from apache_beam.io.textio import WriteToText
 from apache_beam.options.pipeline_options import PipelineOptions
 
+from typing_extensions import Self
 
 def write_to_cloud_storage(argv : List[str] = None) -> None:
     # Parse the pipeline options passed into the application.
