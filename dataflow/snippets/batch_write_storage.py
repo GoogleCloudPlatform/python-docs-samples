@@ -23,6 +23,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 
 from typing_extensions import Self
 
+
 def write_to_cloud_storage(argv : List[str] = None) -> None:
     # Parse the pipeline options passed into the application.
     class MyOptions(PipelineOptions):
