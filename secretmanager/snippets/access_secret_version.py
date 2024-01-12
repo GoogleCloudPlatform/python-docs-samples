@@ -18,8 +18,11 @@ command line application and sample code for accessing a secret version.
 
 import argparse
 
-
 # [START secretmanager_access_secret_version]
+from google.cloud import secretmanager
+import google_crc32c
+
+
 def access_secret_version(
     project_id: str, secret_id: str, version_id: str
 ) -> secretmanager.AccessSecretVersionResponse:
@@ -27,10 +30,6 @@ def access_secret_version(
     Access the payload for the given secret version if one exists. The version
     can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
-    import google_crc32c
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
