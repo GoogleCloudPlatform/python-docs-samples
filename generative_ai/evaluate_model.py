@@ -14,11 +14,15 @@
 
 # [START aiplatform_evaluate_model]
 
+from google.auth import default
 import vertexai
 from vertexai.preview.language_models import (
     EvaluationTextClassificationSpec,
     TextGenerationModel,
 )
+
+# Set credentials for the pipeline components used in the evaluation task
+credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
 
 def evaluate_model(
@@ -27,7 +31,7 @@ def evaluate_model(
 ) -> object:
     """Evaluate the performance of a generative AI model."""
 
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=project_id, location=location, credentials=credentials)
 
     # Create a reference to a generative AI model
     model = TextGenerationModel.from_pretrained("text-bison@001")
