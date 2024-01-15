@@ -64,9 +64,8 @@ def create_image_from_disk(
     disk = disk_client.get(project=project_id, zone=zone, disk=source_disk_name)
 
     for disk_user in disk.users:
-        instance_name = disk_user.split("/")[-1]
         instance = instance_client.get(
-            project=project_id, zone=zone, instance=instance_name
+            project=project_id, zone=zone, instance=disk_user
         )
         if instance.status in STOPPED_MACHINE_STATUS:
             continue
