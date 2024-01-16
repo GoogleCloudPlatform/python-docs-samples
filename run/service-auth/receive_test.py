@@ -66,7 +66,7 @@ def services():
         ],
         stdout=subprocess.PIPE,
         check=True,
-    ).stdout.strip()
+    ).stdout.strip().decode()
 
     token = subprocess.run(
         ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
@@ -92,8 +92,8 @@ def services():
 
 
 def test_auth(services):
-    url = services[0].decode()
-    token = services[1].decode()
+    url = services[0]
+    token = services[1]
 
     req = request.Request(url)
     try:
