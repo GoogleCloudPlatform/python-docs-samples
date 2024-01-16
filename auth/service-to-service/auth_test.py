@@ -39,7 +39,7 @@ def services():
             f"helloworld-{suffix}",
             "--project",
             project,
-            "--image=gcr.io/cloudrun/hello",
+            "--image=us-docker.pkg.dev/cloudrun/container/hello",
             "--platform=managed",
             "--region=us-central1",
             "--no-allow-unauthenticated",
