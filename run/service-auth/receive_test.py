@@ -70,7 +70,7 @@ def services():
 
     token = subprocess.run(
         ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
+    ).stdout.strip().decode()
 
     yield endpoint_url, token
 
