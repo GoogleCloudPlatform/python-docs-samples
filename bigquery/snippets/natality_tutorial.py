@@ -83,8 +83,7 @@ def run_natality_tutorial(override_values: Optional[Dict[str, str]] = None) -> N
     """
 
     # Run the query.
-    query_job = client.query(query, job_config=job_config)
-    query_job.result()  # Waits for the query to finish
+    client.query_and_wait(query, job_config=job_config)  # Waits for the query to finish
     # [END bigquery_query_natality_tutorial]
 
 

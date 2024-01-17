@@ -174,7 +174,7 @@ def model_id(client: bigquery.Client, dataset_id: str) -> str:
         model_id
     )
 
-    client.query(sql).result()
+    client.query_and_wait(sql)
     return model_id
 
 

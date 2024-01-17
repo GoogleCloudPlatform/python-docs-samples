@@ -36,14 +36,13 @@ def client_query_add_column(table_id: str) -> None:
     )
 
     # Start the query, passing in the extra configuration.
-    query_job = client.query(
+    client.query_and_wait(
         # In this example, the existing table contains only the 'full_name' and
         # 'age' columns, while the results of this query will contain an
         # additional 'favorite_color' column.
         'SELECT "Timmy" as full_name, 85 as age, "Blue" as favorite_color;',
         job_config=job_config,
-    )  # Make an API request.
-    query_job.result()  # Wait for the job to complete.
+    )  # Make an API request and wait for job to complete.
 
     # Checks the updated length of the schema.
     table = client.get_table(table_id)  # Make an API request.

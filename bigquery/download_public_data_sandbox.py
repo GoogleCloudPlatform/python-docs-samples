@@ -27,7 +27,9 @@ def download_public_data_sandbox() -> None:
     query_string = "SELECT * FROM `bigquery-public-data.usa_names.usa_1910_current`"
 
     # Use the BigQuery Storage API to speed-up downloads of large tables.
-    dataframe = client.query(query_string).to_dataframe(create_bqstorage_client=True)
+    dataframe = client.query_and_wait(query_string).to_dataframe(
+        create_bqstorage_client=True
+    )
 
     print(dataframe.info())
     # [END bigquery_pandas_public_data_sandbox]

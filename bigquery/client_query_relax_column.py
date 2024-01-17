@@ -39,13 +39,12 @@ def client_query_relax_column(table_id: str) -> None:
     )
 
     # Start the query, passing in the extra configuration.
-    query_job = client.query(
+    client.query_and_wait(
         # In this example, the existing table contains 'full_name' and 'age' as
         # required columns, but the query results will omit the second column.
         'SELECT "Beyonce" as full_name;',
         job_config=job_config,
-    )  # Make an API request.
-    query_job.result()  # Wait for the job to complete.
+    )  # Make an API request and wait for job to complete
 
     # Checks the updated number of required fields.
     table = client.get_table(table_id)  # Make an API request.

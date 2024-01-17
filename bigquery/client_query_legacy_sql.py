@@ -29,10 +29,12 @@ def client_query_legacy_sql() -> None:
     # Set use_legacy_sql to True to use legacy SQL syntax.
     job_config = bigquery.QueryJobConfig(use_legacy_sql=True)
 
-    # Start the query, passing in the extra configuration.
-    query_job = client.query(query, job_config=job_config)  # Make an API request.
+    # Start the query and waits for query job to complete, passing in the extra configuration.
+    results = client.query_and_wait(
+        query, job_config=job_config
+    )  # Make an API request.
 
     print("The query data:")
-    for row in query_job:
+    for row in results:
         print(row)
     # [END bigquery_query_legacy]

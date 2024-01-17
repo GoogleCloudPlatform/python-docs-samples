@@ -27,7 +27,7 @@ def query_stackoverflow() -> None:
     client = bigquery.Client()
     # [END bigquery_simple_app_client]
     # [START bigquery_simple_app_query]
-    query_job = client.query(
+    results = client.query_and_wait(
         """
         SELECT
           CONCAT(
@@ -38,9 +38,7 @@ def query_stackoverflow() -> None:
         WHERE tags like '%google-bigquery%'
         ORDER BY view_count DESC
         LIMIT 10"""
-    )
-
-    results = query_job.result()  # Waits for job to complete.
+    )  # Waits for job to complete.
     # [END bigquery_simple_app_query]
 
     # [START bigquery_simple_app_print]

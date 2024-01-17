@@ -31,8 +31,9 @@ def client_query_destination_table_clustered(table_id: str) -> None:
     )
 
     # Start the query, passing in the extra configuration.
-    query_job = client.query(sql, job_config=job_config)  # Make an API request.
-    query_job.result()  # Wait for the job to complete.
+    client.query_and_wait(
+        sql, job_config=job_config
+    )  # Make an API request and wait for job to complete.
 
     table = client.get_table(table_id)  # Make an API request.
     if table.clustering_fields == cluster_fields:

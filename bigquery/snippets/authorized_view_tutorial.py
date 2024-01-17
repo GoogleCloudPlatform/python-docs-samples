@@ -62,15 +62,13 @@ def run_authorized_view_tutorial(
         FROM `bigquery-public-data.github_repos.commits`
         LIMIT 1000
     """
-    query_job = client.query(
+    client.query_and_wait(
         sql,
         # Location must match that of the dataset(s) referenced in the query
         # and of the destination table.
         location="US",
         job_config=job_config,
-    )  # API request - starts the query
-
-    query_job.result()  # Waits for the query to finish
+    )  # API request - starts the query and waits for query to finish
     # [END bigquery_avt_create_source_table]
 
     # Create a separate dataset to store your view
