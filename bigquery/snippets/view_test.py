@@ -20,6 +20,7 @@ from google.cloud import bigquery
 import pytest
 
 import view  # type: ignore
+from conftest import prefixer  # type: ignore
 
 
 def temp_suffix() -> str:
@@ -53,7 +54,7 @@ def view_id(bigquery_client: bigquery.Client, view_dataset_id: str) -> Iterator[
 def source_dataset_id(
     bigquery_client: bigquery.Client, project_id: str
 ) -> Iterator[str]:
-    dataset_id = f"{project_id}.view_{temp_suffix()}"
+    dataset_id = f"{prefixer.create_prefix()}_view"
     bigquery_client.create_dataset(dataset_id)
     yield dataset_id
     bigquery_client.delete_dataset(dataset_id, delete_contents=True)

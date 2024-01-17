@@ -21,6 +21,7 @@ from google.cloud import bigquery
 import pytest
 
 import materialized_view  # type: ignore
+from conftest import prefixer  # type: ignore
 
 
 def temp_suffix() -> str:
@@ -37,7 +38,7 @@ def bigquery_client_patch(
 
 @pytest.fixture(scope="module")
 def dataset_id(bigquery_client: bigquery.Client) -> Iterator[str]:
-    dataset_id = f"mvdataset_{temp_suffix()}"
+    dataset_id = f"{prefixer.create_prefix()}_materialized_view"
     bigquery_client.create_dataset(dataset_id)
     yield dataset_id
     bigquery_client.delete_dataset(dataset_id, delete_contents=True)

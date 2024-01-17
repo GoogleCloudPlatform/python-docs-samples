@@ -13,12 +13,12 @@
 # limitations under the License.
 
 from typing import Iterator, List
-import uuid
 
 from google.cloud import bigquery
 import pytest
 
 import natality_tutorial  # type: ignore
+from conftest import prefixer  # type: ignore
 
 
 @pytest.fixture(scope="module")
@@ -37,11 +37,7 @@ def datasets_to_delete(client: bigquery.Client) -> Iterator[List[str]]:
 def test_natality_tutorial(
     client: bigquery.Client, datasets_to_delete: List[str]
 ) -> None:
-    override_values = {
-        "dataset_id": "natality_regression_{}".format(
-            str(uuid.uuid4()).replace("-", "_")
-        ),
-    }
+    override_values = {"dataset_id": f"{prefixer.create_prefix()}_natality_tutorial"}
     datasets_to_delete.append(override_values["dataset_id"])
 
     natality_tutorial.run_natality_tutorial(override_values)

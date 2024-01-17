@@ -13,12 +13,12 @@
 # limitations under the License.
 
 from typing import Iterator, List
-import uuid
 
 from google.cloud import bigquery
 import pytest
 
 import authorized_view_tutorial  # type: ignore
+from conftest import prefixer  # type: ignore
 
 
 @pytest.fixture(scope="module")
@@ -38,12 +38,8 @@ def test_authorized_view_tutorial(
     client: bigquery.Client, datasets_to_delete: List[str]
 ) -> None:
     override_values = {
-        "source_dataset_id": "github_source_data_{}".format(
-            str(uuid.uuid4()).replace("-", "_")
-        ),
-        "shared_dataset_id": "shared_views_{}".format(
-            str(uuid.uuid4()).replace("-", "_")
-        ),
+        "source_dataset_id": f"{prefixer.create_prefix()}_authorized_view_tutorial",
+        "shared_dataset_id": f"{prefixer.create_prefix()}_authorized_view_tutorial_shared_views",
     }
     source_dataset_ref = "{}.{}".format(
         client.project, override_values["source_dataset_id"]
