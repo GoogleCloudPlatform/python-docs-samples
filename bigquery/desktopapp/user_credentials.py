@@ -61,10 +61,10 @@ def main(project: str) -> None:
     WHERE name = 'William'
     GROUP BY name;
     """
-    query_job = client.query(query_string)
+    results = client.query_and_wait(query_string)
 
     # Print the results.
-    for row in query_job.result():  # Wait for the job to complete.
+    for row in results:  # Wait for the job to complete.
         print("{}: {}".format(row["name"], row["total"]))
     # [END bigquery_auth_user_query]
 
