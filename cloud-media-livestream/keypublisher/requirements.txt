@@ -4,7 +4,7 @@ functions-framework==3.1.0
 google-cloud-secret-manager==2.12.1
 lxml==4.9.3
 pycryptodome==3.19.1
-pyOpenSSL==23.2.0
+pyOpenSSL==24.0.0
 requests==2.31.0
 signxml==3.2.0
 pytest==7.3.1
