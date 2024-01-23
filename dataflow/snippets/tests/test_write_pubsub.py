@@ -85,9 +85,8 @@ def read_messages() -> None:
 
 
 def test_write_to_pubsub(setup_and_teardown: None) -> None:
-    with patch("sys.argv", [
-        "", '--streaming', f'--project={project_id}', f'--topic={topic_id}'
-    ]):
+    topic_path = publisher.topic_path(project_id, topic_id)
+    with patch("sys.argv", ["", '--streaming', f'--topic={topic_path}']):
         write_to_pubsub()
 
         # Read from Pub/Sub to verify the pipeline successfully wrote messages.

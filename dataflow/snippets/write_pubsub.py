@@ -13,7 +13,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START dataflow_pubsub_write_with_attributes]i
+# [START dataflow_pubsub_write_with_attributes]
 import argparse
 from typing import Any, Dict, List
 
@@ -26,6 +26,8 @@ from typing_extensions import Self
 
 
 def item_to_message(item: Dict[str, Any]) -> PubsubMessage:
+    from apache_beam.io import PubsubMessage
+
     attributes = {
         'buyer': item['name'],
         'timestamp': str(item['ts'])
@@ -38,15 +40,13 @@ def item_to_message(item: Dict[str, Any]) -> PubsubMessage:
 def write_to_pubsub(argv: List[str] = None) -> None:
 
     # Parse the pipeline options passed into the application. Example:
-    #     --project=$PROJECT_ID --topic=$TOPIC_NAME --streaming
+    #     --topic=$TOPIC_PATH --streaming
     # For more information, see
     # https://beam.apache.org/documentation/programming-guide/#configuring-pipeline-options
     class MyOptions(PipelineOptions):
         @classmethod
-        # Define custom pipeline options that specify the project ID and Pub/Sub
-        # topic.
+        # Define a custom pipeline option to specify the Pub/Sub topic.
         def _add_argparse_args(cls: Self, parser: argparse.ArgumentParser) -> None:
-            parser.add_argument("--project", required=True)
             parser.add_argument("--topic", required=True)
 
     example_data = [
@@ -63,7 +63,7 @@ def write_to_pubsub(argv: List[str] = None) -> None:
             | "Create elements" >> beam.Create(example_data)
             | "Convert to Pub/Sub messages" >> beam.Map(item_to_message)
             | WriteToPubSub(
-                  topic=f'projects/{options.project}/topics/{options.topic}',
+                  topic=options.topic,
                   with_attributes=True)
         )
 
