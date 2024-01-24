@@ -26,6 +26,10 @@ from typing_extensions import Self
 
 
 def item_to_message(item: Dict[str, Any]) -> PubsubMessage:
+    # Re-import needed types. When using the Dataflow runner, this
+    # function executes on a worker, where the global namespace is not
+    # available. For more information, see:
+    # https://cloud.google.com/dataflow/docs/guides/common-errors#name-error
     from apache_beam.io import PubsubMessage
 
     attributes = {
