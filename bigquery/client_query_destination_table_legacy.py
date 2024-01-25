@@ -36,8 +36,9 @@ def client_query_destination_table_legacy(table_id: str) -> None:
     """
 
     # Start the query, passing in the extra configuration.
-    query_job = client.query(sql, job_config=job_config)  # Make an API request.
-    query_job.result()  # Wait for the job to complete.
+    client.query_and_wait(
+        sql, job_config=job_config
+    )  # Make an API request and wait for the query to finish.
 
     print("Query results loaded to the table {}".format(table_id))
     # [END bigquery_query_legacy_large_results]
