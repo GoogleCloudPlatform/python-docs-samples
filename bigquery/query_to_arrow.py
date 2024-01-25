@@ -44,8 +44,8 @@ def query_to_arrow() -> "pyarrow.Table":
     FROM races r
     CROSS JOIN UNNEST(r.participants) as participant;
     """
-    query_job = client.query(sql)
-    arrow_table = query_job.to_arrow()  # Make an API request.
+    results = client.query_and_wait(sql)
+    arrow_table = results.to_arrow()  # Make an API request.
 
     print(
         "Downloaded {} rows, {} columns.".format(
