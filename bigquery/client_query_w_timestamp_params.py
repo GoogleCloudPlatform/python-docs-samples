@@ -32,8 +32,10 @@ def client_query_w_timestamp_params() -> None:
             )
         ]
     )
-    query_job = client.query(query, job_config=job_config)  # Make an API request.
+    results = client.query_and_wait(
+        query, job_config=job_config
+    )  # Make an API request.
 
-    for row in query_job:
+    for row in results:
         print(row)
     # [END bigquery_query_params_timestamps]
