@@ -38,8 +38,8 @@ def query_external_gcs_temporary_table() -> None:
     # Example query to find states starting with 'W'.
     sql = 'SELECT * FROM `{}` WHERE name LIKE "W%"'.format(table_id)
 
-    query_job = client.query(sql, job_config=job_config)  # Make an API request.
+    results = client.query_and_wait(sql, job_config=job_config)  # Make an API request.
 
-    w_states = list(query_job)  # Wait for the job to complete.
+    w_states = list(results)  # Wait for the job to complete.
     print("There are {} states with names starting with W.".format(len(w_states)))
     # [END bigquery_query_external_gcs_temp]
