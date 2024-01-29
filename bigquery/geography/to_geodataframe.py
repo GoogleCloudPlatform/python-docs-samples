@@ -33,6 +33,6 @@ def get_austin_service_requests_as_geography() -> "pandas.DataFrame":
         LIMIT 10
     """
 
-    df = client.query(sql).to_geodataframe()
+    df = client.query_and_wait(sql).to_geodataframe()
     # [END bigquery_query_results_geodataframe]
     return df
