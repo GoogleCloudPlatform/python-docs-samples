@@ -68,7 +68,6 @@ class MicrophoneStream:
 
         self.closed = False
 
-        # print("Microphone stream opened.")
         return self
 
     def __exit__(
