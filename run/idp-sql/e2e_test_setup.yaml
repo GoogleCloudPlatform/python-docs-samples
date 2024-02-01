@@ -42,40 +42,21 @@ steps:
         --data-file=postgres-secrets.json" \
         "gcloud secrets describe ${_SERVICE}-secrets"
 
-- id: 'Build Container Image'
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: '/bin/bash'
-  args:
-    - '-c'
-    - |
-      ./retry.sh "docker build -t gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} ."
-
-- id: 'Push Container Image'
-  name: 'gcr.io/cloud-builders/docker'
-  entrypoint: '/bin/bash'
-  args:
-    - '-c'
-    - |
-      ./retry.sh "docker push gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}"
-
 - id: 'Deploy to Cloud Run'
   name: 'gcr.io/cloud-builders/gcloud:latest'
   entrypoint: /bin/bash
   args:
   - '-c'
   - |
-    ./retry.sh "gcloud beta run deploy ${_SERVICE} \
+    ./retry.sh "gcloud run deploy ${_SERVICE} \
       --project $PROJECT_ID \
-      --image gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} \
+      --source . \
       --allow-unauthenticated \
       --region ${_REGION} \
       --platform ${_PLATFORM} \
       --add-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
       --update-secrets CLOUD_SQL_CREDENTIALS_SECRET=${_SERVICE}-secrets:latest \
       --update-env-vars TRAMPOLINE_CI=kokoro"
-
-images:
-- gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}
 
 substitutions:
   _SERVICE: idp-sql

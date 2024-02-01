@@ -26,8 +26,8 @@ steps:
       ./retry.sh "gcloud secrets describe ${_SERVICE}-secrets" \
         "gcloud secrets delete ${_SERVICE}-secrets --quiet --project $PROJECT_ID"
 
-      ./retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
-        "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
+      ./retry.sh "gcloud container images describe ${_REGION}-docker/pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/${_SERVICE}:${_VERSION}" \
+        "gcloud artifacts docker images delete ${_REGION}-docker/pkg.dev/${_PROJECT_ID}/${_REPOSITORY}/${_SERVICE}:${_VERSION} --quiet"
 
       WAIT=30 ./retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
         "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
@@ -39,3 +39,4 @@ substitutions:
   _PLATFORM: managed
   _DB_NAME: idp-sql
   _DB_INSTANCE: idp-sql-instance
+  _REPOSITORY: cloud-run-source-deploy
