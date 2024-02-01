@@ -68,6 +68,7 @@ class MicrophoneStream:
 
         self.closed = False
 
+        # print("Microphone stream opened.")
         return self
 
     def __exit__(
@@ -197,7 +198,7 @@ def listen_print_loop(responses: object) -> str:
 
             num_chars_printed = 0
 
-        return transcript
+    return transcript
 
 
 def main() -> None:
