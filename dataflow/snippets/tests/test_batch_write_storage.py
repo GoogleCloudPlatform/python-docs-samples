@@ -26,7 +26,7 @@ storage_client = storage.Client()
 
 
 @pytest.fixture(scope="function")
-def setup_and_teardown():
+def setup_and_teardown() -> None:
     try:
         bucket = storage_client.create_bucket(bucket_name)
         yield
@@ -34,7 +34,7 @@ def setup_and_teardown():
         bucket.delete(force=True)
 
 
-def test_write_to_cloud_storage(setup_and_teardown):
+def test_write_to_cloud_storage(setup_and_teardown: None) -> None:
     sys.argv = ['', f'--output=gs://{bucket_name}/output/out-']
     write_to_cloud_storage()
 
