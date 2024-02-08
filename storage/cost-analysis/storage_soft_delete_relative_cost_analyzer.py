@@ -22,7 +22,7 @@ the storage/v2/deleted_bytes metric with the existing storage/v2/total_byte_seco
 metric.
 
 Relative cost of each bucket = ('soft delete retention duration' 
-                                 × 'deleted bytes' / 'total bytes' ) 
+                                 × 'deleted bytes' / 'total bytes seconds' ) 
                                  x 'cost of storing in storage class' 
                                  x 'ratio of storage class'.
 """
