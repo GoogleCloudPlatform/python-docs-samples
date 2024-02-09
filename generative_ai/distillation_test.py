@@ -92,7 +92,7 @@ def teardown_model(
 def test_distill_model(training_data_filename: str) -> None:
     """Takes approx. 60 minutes."""
     student_model = distillation.distill_model(
-        training_data=training_data_filename,
+        dataset=training_data_filename,
         project_id=_PROJECT_ID,
         location=_LOCATION,
         train_steps=1,

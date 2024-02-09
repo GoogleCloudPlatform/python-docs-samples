@@ -40,8 +40,8 @@ def distill_model(
     Args:
       project_id: GCP Project ID, used to initialize vertexai
       location: GCP Region, used to initialize vertexai
-      dataset: GCS URI of jsonl file
-      teacher_model: Name of the teacher model
+      dataset: GCS URI of jsonl file.
+      teacher_model: Name of the teacher model.
       train_steps: Number of training steps to use when tuning the model.
       evaluation_dataset: GCS URI of jsonl file of evaluation data.
     """
