@@ -33,8 +33,10 @@ def client_query_w_named_params() -> None:
             bigquery.ScalarQueryParameter("min_word_count", "INT64", 250),
         ]
     )
-    query_job = client.query(query, job_config=job_config)  # Make an API request.
+    results = client.query_and_wait(
+        query, job_config=job_config
+    )  # Make an API request.
 
-    for row in query_job:
+    for row in results:
         print("{}: \t{}".format(row.word, row.word_count))
     # [END bigquery_query_params_named]
