@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google LLC. All Rights Reserved.
+# Copyright 2024 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the 'License');
 # you may not use this file except in compliance with the License.
@@ -27,14 +27,15 @@ Relative cost of each bucket = ('soft delete retention duration'
                                  x 'ratio of storage class'.
 """
 
-import argparse
-import json
-import google.cloud.monitoring_v3 as monitoring_client
-
 # [START storage_soft_delete_relative_cost]
 
+import argparse
+import json
+from typing import Dict, List
+import google.cloud.monitoring_v3 as monitoring_client
 
-def get_relative_cost(storage_class):
+
+def get_relative_cost(storage_class: str) -> float:
     """Retrieves the relative cost for a given storage class and location.
 
     Args:
@@ -50,12 +51,16 @@ def get_relative_cost(storage_class):
         "COLDLINE": 0.007 / 0.023,
         "ARCHIVE": 0.0025 / 0.023
     }
-    return relative_cost.get(storage_class)
+
+    return relative_cost.get(storage_class, 1.0)
 
 
 def get_soft_delete_cost(
-    project_name, soft_delete_window, agg_days, lookback_days
-):
+    project_name: str,
+    soft_delete_window: int,
+    agg_days: int,
+    lookback_days: int
+) -> Dict[str, List[Dict[str, float]]]:
     """Calculates soft delete costs for buckets in a Google Cloud project.
 
     Args:
@@ -91,13 +96,13 @@ def get_soft_delete_cost(
 
 
 def calculate_soft_delete_costs(
-    project_name,
-    query_client,
-    soft_delete_window,
-    storage_ratios_by_bucket,
-    agg_days,
-    lookback_days,
-):
+    project_name: str,
+    query_client: monitoring_client.QueryServiceClient,
+    soft_delete_window: int,
+    storage_ratios_by_bucket: Dict[str, float],
+    agg_days: int,
+    lookback_days: int,
+) -> Dict[str, List[Dict[str, float]]]:
     """Calculates the relative cost of enabling soft delete for each bucket in a
        project for certain time frame in secs.
 
@@ -132,31 +137,45 @@ def calculate_soft_delete_costs(
                     """,
         )
     )
-    buckets = {}
+    buckets: Dict[str, List[Dict[str, float]]] = {}
+    missing_distribution_storage_class = []
     for data_point in soft_deleted_bytes_time.time_series_data:
         bucket_name = data_point.label_values[0].string_value
         storage_class = data_point.label_values[1].string_value
-        # Location can be included to have more efficient calculations.
+        # To include location-based cost analysis:
+        # 1. Uncomment the line below:
         # location = data_point.label_values[2].string_value
+        # 2. Update how you calculate 'relative_storage_class_cost' to factor in location
         soft_delete_ratio = data_point.point_data[0].values[0].double_value
+        distribution_storage_class = bucket_name + " - " + storage_class
         storage_class_ratio = storage_ratios_by_bucket.get(
-            bucket_name + " - " + storage_class
-        )
+            distribution_storage_class)
+        if storage_class_ratio is None:
+            missing_distribution_storage_class.append(
+                distribution_storage_class)
         buckets.setdefault(bucket_name, []).append({
-            "storage_class": storage_class,
+            # Include storage class and location data for additional plotting dimensions.
+            # "storage_class": storage_class,
             # 'location': location,
             "soft_delete_ratio": soft_delete_ratio,
-            # Pre-calculated ratio
             "storage_class_ratio": storage_class_ratio,
             "relative_storage_class_cost": get_relative_cost(storage_class)
         })
+
+    if missing_distribution_storage_class:
+        print("Missing storage class for following buckets:",
+              missing_distribution_storage_class)
+        raise ValueError("Cannot proceed with missing storage class ratios.")
 
     return buckets
 
 
 def get_storage_class_ratio(
-    project_name, query_client, agg_days, lookback_days
-):
+    project_name: str,
+    query_client: monitoring_client.QueryServiceClient,
+    agg_days: int,
+    lookback_days: int,
+) -> Dict[str, float]:
     """Calculates storage class ratios for each bucket in a project.
 
     This information helps determine the relative cost contribution of each
@@ -204,13 +223,13 @@ def get_storage_class_ratio(
 
 
 def soft_delete_relative_cost_analyzer(
-    project_name,
-    cost_threshold=0,
-    soft_delete_window=604800,
-    agg_days=30,
-    lookback_days=360,
-    list_buckets=False,
-):
+    project_name: str,
+    cost_threshold: float = 0.0,
+    soft_delete_window: int = 604800,
+    agg_days: int = 30,
+    lookback_days: int = 360,
+    list_buckets: bool = False,
+) -> str | Dict[str, float]:  # Note potential string output
     """Identifies buckets exceeding the relative cost threshold for enabling soft delete.
 
     Args:
@@ -228,11 +247,11 @@ def soft_delete_relative_cost_analyzer(
         *or* a space-separated string of bucket names.
     """
 
-    buckets = {}
+    buckets: Dict[str, float] = {}
     for bucket_name, storage_sources in get_soft_delete_cost(
         project_name, soft_delete_window, agg_days, lookback_days
     ).items():
-        bucket_cost = 0
+        bucket_cost = 0.0
         for storage_source in storage_sources:
             bucket_cost += (
                 storage_source["soft_delete_ratio"]
@@ -248,7 +267,7 @@ def soft_delete_relative_cost_analyzer(
         return json.dumps(buckets, indent=2)  # JSON output
 
 
-def soft_delete_relative_cost_analyzer_main():
+def soft_delete_relative_cost_analyzer_main() -> None:
     # Sample run: python storage_soft_delete_relative_cost_analyzer.py <Project Name>
     parser = argparse.ArgumentParser(
         description="Analyze and manage Google Cloud Storage soft-delete costs."
@@ -259,7 +278,7 @@ def soft_delete_relative_cost_analyzer_main():
     parser.add_argument(
         "--cost_threshold",
         type=float,
-        default=0,
+        default=0.0,
         help="Relative Cost threshold.",
     )
     parser.add_argument(
