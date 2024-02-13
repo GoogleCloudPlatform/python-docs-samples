@@ -15,8 +15,8 @@
 import os
 
 import backoff
-from google.api_core.exceptions import ServerError
 from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import ServerError
 from google.api_core.exceptions import ServiceUnavailable
 import pytest
 
@@ -51,7 +51,10 @@ def write_time_series() -> None:
     try:
         write()
     except ServerError:
-        pytest.skip("Failed to prepare test fixture due to Internal server error. Not our fault ¯\_(ツ)_/¯")
+        #
+        pytest.skip(
+            "Failed to prepare test fixture due to Internal server error. Not our fault 🤷"
+        )
 
     yield
 
