@@ -15,7 +15,7 @@
 import os
 
 import backoff
-from google.api_core.exceptions import InternalServerError
+from google.api_core.exceptions import ServerError
 from google.api_core.exceptions import NotFound
 from google.api_core.exceptions import ServiceUnavailable
 import pytest
@@ -44,11 +44,15 @@ def custom_metric_descriptor() -> None:
 
 @pytest.fixture(scope="module")
 def write_time_series() -> None:
-    @backoff.on_exception(backoff.expo, InternalServerError, max_time=120)
+    @backoff.on_exception(backoff.expo, ServerError, max_time=120)
     def write():
         snippets.write_time_series(PROJECT_ID)
 
-    write()
+    try:
+        write()
+    except ServerError:
+        pytest.skip("Failed to prepare test fixture due to Internal server error. Not our fault ¯\_(ツ)_/¯")
+
     yield
 
 
