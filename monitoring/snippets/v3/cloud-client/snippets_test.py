@@ -75,7 +75,7 @@ def test_get_delete_metric_descriptor(custom_metric_descriptor) -> None:
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
 def test_list_metric_descriptors() -> None:
     result = snippets.list_metric_descriptors(PROJECT_ID)
-    assert any(item.type == "logging.googleapis.com/byte_count" for item in result)
+    assert any(str(item.type) == "logging.googleapis.com/byte_count" for item in result)
 
 
 @backoff.on_exception(backoff.expo, (ServiceUnavailable), max_tries=3)
