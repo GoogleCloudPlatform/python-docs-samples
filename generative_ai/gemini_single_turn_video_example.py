@@ -16,7 +16,7 @@
 # [START aiplatform_gemini_single_turn_video]
 import vertexai
 
-from vertexai.preview.generative_models import GenerativeModel, Part
+from vertexai.generative_models import GenerativeModel, Part
 
 
 def generate_text(project_id: str, location: str) -> str:

@@ -15,7 +15,7 @@
 import vertexai
 
 # [START aiplatform_gemini_safety_settings]
-from vertexai.preview import generative_models
+from vertexai import generative_models
 
 
 def generate_text(project_id: str, location: str, image: str) -> str:
