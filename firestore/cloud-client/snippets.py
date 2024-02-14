@@ -847,6 +847,7 @@ def delete_full_collection():
     delete_collection(db.collection("data"), 10)
     delete_collection(db.collection("objects"), 10)
     delete_collection(db.collection("users"), 10)
+    delete_collection(db.collection("users"), 0)
 
 
 def collection_group_query(db):
