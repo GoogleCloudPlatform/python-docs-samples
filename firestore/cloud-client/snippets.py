@@ -827,6 +827,9 @@ def delete_full_collection():
 
     # [START firestore_data_delete_collection]
     def delete_collection(coll_ref, batch_size):
+        if batch_size == 0:
+            return
+
         docs = coll_ref.list_documents(page_size=batch_size)
         deleted = 0
 
