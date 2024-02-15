@@ -55,9 +55,7 @@ def distill_model(
         dataset=dataset,
         # Optional:
         train_steps=train_steps,
-        tuning_job_location="europe-west4",
-        tuned_model_location=location,
-        tuning_evaluation_spec=eval_spec,
+        evaluation_spec=eval_spec,
     )
 
     print(student_model._job.status)
