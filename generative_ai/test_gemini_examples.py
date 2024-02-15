@@ -107,7 +107,9 @@ def test_gemini_safety_config_example() -> None:
     text = gemini_safety_config_example.generate_text(PROJECT_ID, LOCATION, image)
     text = text.lower()
     assert len(text) > 0
-    assert any([_ in text for _ in ("scone", "blueberry", "coffee,", "flower", "table")])
+    assert any(
+        [_ in text for _ in ("scone", "blueberry", "coffee,", "flower", "table")]
+    )
 
 
 def test_gemini_single_turn_video_example() -> None:
