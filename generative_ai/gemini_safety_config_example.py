@@ -15,7 +15,7 @@
 import vertexai
 
 # [START aiplatform_gemini_safety_settings]
-from vertexai.preview import generative_models
+from vertexai import generative_models
 
 
 def generate_text(project_id: str, location: str, image: str) -> str:
@@ -23,7 +23,7 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = generative_models.GenerativeModel("gemini-pro-vision")
+    model = generative_models.GenerativeModel("gemini-1.0-pro-vision")
 
     # Generation config
     config = {"max_output_tokens": 2048, "temperature": 0.4, "top_p": 1, "top_k": 32}

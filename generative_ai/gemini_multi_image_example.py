@@ -23,7 +23,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     import http.client
     import typing
     import urllib.request
-    from vertexai.preview.generative_models import GenerativeModel, Image
+    from vertexai.generative_models import GenerativeModel, Image
 
     # create helper function
     def load_image_from_url(image_url: str) -> Image:
@@ -44,7 +44,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     )
 
     # Pass multimodal prompt
-    model = GenerativeModel("gemini-pro-vision")
+    model = GenerativeModel("gemini-1.0-pro-vision")
     response = model.generate_content(
         [
             landmark1,

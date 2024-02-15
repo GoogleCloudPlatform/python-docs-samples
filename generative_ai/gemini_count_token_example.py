@@ -15,7 +15,7 @@
 
 # [START aiplatform_gemini_token_count]
 import vertexai
-from vertexai.preview.generative_models import GenerativeModel
+from vertexai.generative_models import GenerativeModel
 
 
 def generate_text(project_id: str, location: str) -> str:
@@ -23,7 +23,7 @@ def generate_text(project_id: str, location: str) -> str:
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
 
     # prompt tokens count
     print(model.count_tokens("why is sky blue?"))
