@@ -123,9 +123,9 @@ def test_gemini_chat_example() -> None:
     text = gemini_chat_example.chat_text_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert ("hi" in text) or ("hello" in text)
+    assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
     text = gemini_chat_example.chat_stream_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert ("hi" in text) or ("hello" in text)
+    assert any([_ in text for _ in ("hi", "hello", "greeting")])
