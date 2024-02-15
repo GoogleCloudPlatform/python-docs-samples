@@ -18,14 +18,14 @@
 # gcloud auth application-default login
 
 import vertexai
-from vertexai.preview.generative_models import GenerativeModel, Part
+from vertexai.generative_models import GenerativeModel, Part
 
 
 def generate_text(project_id: str, location: str) -> str:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
     # Load the model
-    multimodal_model = GenerativeModel("gemini-pro-vision")
+    multimodal_model = GenerativeModel("gemini-1.0-pro-vision")
     # Query the model
     response = multimodal_model.generate_content(
         [

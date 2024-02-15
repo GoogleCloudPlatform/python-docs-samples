@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_gemini_function_calling]
-from vertexai.preview.generative_models import (
+from vertexai.generative_models import (
     FunctionDeclaration,
     GenerativeModel,
     Tool,
@@ -22,7 +22,7 @@ from vertexai.preview.generative_models import (
 
 def generate_function_call(prompt: str) -> str:
     # Load the Vertex AI Gemini API to use function calling
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
 
     # Specify a function declaration and parameters for an API request
     get_current_weather_func = FunctionDeclaration(
@@ -56,4 +56,4 @@ def generate_function_call(prompt: str) -> str:
 # [END aiplatform_gemini_function_calling]
 
 if __name__ == "__main__":
-    generate_function_call("What is the weather like in Boston?")
+    print(generate_function_call("What is the weather like in Boston?"))

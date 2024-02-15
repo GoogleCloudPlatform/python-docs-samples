@@ -16,14 +16,14 @@
 def chat_text_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat]
     import vertexai
-    from vertexai.preview.generative_models import GenerativeModel, ChatSession
+    from vertexai.generative_models import GenerativeModel, ChatSession
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # location = "us-central1"
     vertexai.init(project=project_id, location=location)
 
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:
@@ -45,13 +45,13 @@ def chat_text_example(project_id: str, location: str) -> str:
 def chat_stream_example(project_id: str, location: str) -> str:
     # [START aiplatform_gemini_multiturn_chat_stream]
     import vertexai
-    from vertexai.preview.generative_models import GenerativeModel, ChatSession
+    from vertexai.generative_models import GenerativeModel, ChatSession
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # location = "us-central1"
     vertexai.init(project=project_id, location=location)
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:

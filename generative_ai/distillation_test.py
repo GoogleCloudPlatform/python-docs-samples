@@ -95,7 +95,7 @@ def test_distill_model(training_data_filename: str) -> None:
         dataset=training_data_filename,
         project_id=_PROJECT_ID,
         location=_LOCATION,
-        teacher_model='text-unicorn@001',
+        teacher_model="text-unicorn@001",
         train_steps=1,
         evaluation_dataset=training_data_filename,
     )

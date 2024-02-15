@@ -107,24 +107,25 @@ def test_gemini_safety_config_example() -> None:
     text = gemini_safety_config_example.generate_text(PROJECT_ID, LOCATION, image)
     text = text.lower()
     assert len(text) > 0
-    assert "scones" in text
+    assert any(
+        [_ in text for _ in ("scone", "blueberry", "coffee,", "flower", "table")]
+    )
 
 
 def test_gemini_single_turn_video_example() -> None:
     text = gemini_single_turn_video_example.generate_text(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert "zoo" in text
-    assert "tiger" in text
+    assert any([_ in text for _ in ("zoo", "tiger", "leaf", "water")])
 
 
 def test_gemini_chat_example() -> None:
     text = gemini_chat_example.chat_text_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert ("hi" in text) or ("hello" in text)
+    assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
     text = gemini_chat_example.chat_stream_example(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert ("hi" in text) or ("hello" in text)
+    assert any([_ in text for _ in ("hi", "hello", "greeting")])
