@@ -23,7 +23,7 @@ def chat_text_example(project_id: str, location: str) -> str:
     # location = "us-central1"
     vertexai.init(project=project_id, location=location)
 
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:
@@ -51,7 +51,7 @@ def chat_stream_example(project_id: str, location: str) -> str:
     # project_id = "PROJECT_ID"
     # location = "us-central1"
     vertexai.init(project=project_id, location=location)
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:

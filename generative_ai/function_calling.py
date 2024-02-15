@@ -22,7 +22,7 @@ from vertexai.generative_models import (
 
 def generate_function_call(prompt: str) -> str:
     # Load the Vertex AI Gemini API to use function calling
-    model = GenerativeModel("gemini-pro")
+    model = GenerativeModel("gemini-1.0-pro")
 
     # Specify a function declaration and parameters for an API request
     get_current_weather_func = FunctionDeclaration(

@@ -23,7 +23,7 @@ def generate_text(project_id: str, location: str) -> str:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
     # Load the model
-    vision_model = GenerativeModel("gemini-pro-vision")
+    vision_model = GenerativeModel("gemini-1.0-pro-vision")
     # Generate text
     response = vision_model.generate_content(
         [

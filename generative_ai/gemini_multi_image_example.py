@@ -44,7 +44,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     )
 
     # Pass multimodal prompt
-    model = GenerativeModel("gemini-pro-vision")
+    model = GenerativeModel("gemini-1.0-pro-vision")
     response = model.generate_content(
         [
             landmark1,

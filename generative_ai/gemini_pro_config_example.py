@@ -24,7 +24,7 @@ def generate_text(project_id: str, location: str) -> None:
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = GenerativeModel("gemini-pro-vision")
+    model = GenerativeModel("gemini-1.0-pro-vision")
 
     # Load example image from local storage
     encoded_image = base64.b64encode(open("scones.jpg", "rb").read()).decode("utf-8")
