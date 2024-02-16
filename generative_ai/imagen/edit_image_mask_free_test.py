@@ -20,10 +20,11 @@ from google.api_core.exceptions import ResourceExhausted
 import edit_image_mask_free
 
 
+_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
-_INPUT_FILE = "test_resources/cat.png"
-_OUTPUT_FILE = "test_resources/dog.png"
+_INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
+_OUTPUT_FILE = os.path.join(_RESOURCES, "dog.png")
 _PROMPT = "a dog"
 
 
