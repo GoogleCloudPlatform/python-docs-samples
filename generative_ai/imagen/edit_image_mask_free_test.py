@@ -15,8 +15,9 @@
 import os
 
 import backoff
-import edit_image_mask_free
 from google.api_core.exceptions import ResourceExhausted
+
+import edit_image_mask_free
 
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
