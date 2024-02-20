@@ -335,8 +335,9 @@ def soft_delete_relative_cost_analyzer_main() -> None:
             "To remove soft-delete policy from the listed buckets run:\n"
             # Capture output
             "python storage_soft_delete_relative_cost_analyzer.py"
-            " [your-project-name] --[OTHER_OPTIONS] --list > list_of_buckets.txt"
-            "cat list_of_buckets.txt | gcloud storage buckets update -I --clear-soft-delete",
+            " [your-project-name] --[OTHER_OPTIONS] --list > list_of_buckets.txt \n"
+            "cat list_of_buckets.txt | gcloud storage buckets update -I "
+            "--clear-soft-delete",
             response,
         )
         return
