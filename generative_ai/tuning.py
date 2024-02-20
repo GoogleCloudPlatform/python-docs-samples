@@ -37,7 +37,7 @@ def tuning(
     training_data: pd.DataFrame | str,
     train_steps: int = 10,
     evaluation_dataset: Optional[str] = None,
-    tensorboard_instance_name: Optional[str] = None
+    tensorboard_instance_name: Optional[str] = None,
 ) -> TextGenerationModel:
     """Tune a new model, based on a prompt-response data.
 
@@ -62,7 +62,9 @@ def tuning(
     """
     vertexai.init(project=project_id, location=location, credentials=credentials)
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
-    eval_spec.tensorboard = aiplatform.Tensorboard(tensorboard_name=tensorboard_instance_name)
+    eval_spec.tensorboard = aiplatform.Tensorboard(
+        tensorboard_name=tensorboard_instance_name
+    )
     model = TextGenerationModel.from_pretrained("text-bison@001")
 
     model.tune_model(
