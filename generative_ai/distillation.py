@@ -50,18 +50,15 @@ def distill_model(
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
 
     student_model = TextGenerationModel.from_pretrained("text-bison@002")
-    student_model.distill_from(
+    distillation_job = student_model.distill_from(
         teacher_model=teacher_model,
         dataset=dataset,
         # Optional:
         train_steps=train_steps,
-        tuning_job_location="europe-west4",
-        tuned_model_location=location,
-        tuning_evaluation_spec=eval_spec,
+        evaluation_spec=eval_spec,
     )
 
-    print(student_model._job.status)
-    return student_model
+    return distillation_job
 
 
 if __name__ == "__main__":
