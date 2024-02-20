@@ -43,10 +43,13 @@ Note: In this sample, if setting cost_threshold 0.15 would spotlight buckets whe
 To disable soft-delete for buckets flagged by the script, follow these steps:
 
 ```code-block::bash
-# 1. Run the analyzer to generate a list of buckets exceeding your cost threshold:
+# 1. Authenticate (if needed): If you're not already authenticated or prefer a specific account, run:
+gcloud auth application-default login
+
+# 2. Run the analyzer to generate a list of buckets exceeding your cost threshold:
 python storage_soft_delete_relative_cost_analyzer.py [your-project-name] --[OTHER_OPTIONS] --list=True > list_of_buckets.txt
 
-# 2. Update the buckets using the generated list:
+# 3. Update the buckets using the generated list:
 cat list_of_buckets.txt | gcloud storage buckets update -I --clear-soft-delete
 
 ```
