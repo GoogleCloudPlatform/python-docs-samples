@@ -34,7 +34,7 @@ _Note: you may need to install `pytest` using `pip install pytest`._
 ## Create a Job
 
 ```
-gcloud alpha run jobs create job-quickstart \
+gcloud run jobs create job-quickstart \
   --image=gcr.io/$PROJECT_ID/logger-job \
   --tasks 50 \
   --set-env-vars=SLEEP_MS=10000 \
@@ -44,5 +44,5 @@ gcloud alpha run jobs create job-quickstart \
 
 ## Run the Job
 ```
-gcloud alpha run jobs run job-quickstart
+gcloud run jobs run job-quickstart
 ```

@@ -18,13 +18,14 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_cloud_storage]
 import time
 from typing import List
 
 import google.cloud.dlp
 
 
-# [START dlp_deidentify_cloud_storage]
 def deidentify_cloud_storage(
     project: str,
     input_gcs_bucket: str,
@@ -66,17 +67,11 @@ def deidentify_cloud_storage(
     # Construct the configuration dictionary.
     # Specify the type of info the inspection will look for.
     # See https://cloud.google.com/dlp/docs/infotypes-reference for complete list of info types.
-    inspect_config = {
-        "info_types": [{"name": info_type} for info_type in info_types]
-    }
+    inspect_config = {"info_types": [{"name": info_type} for info_type in info_types]}
 
     # Construct cloud_storage_options dictionary with the bucket's URL.
     storage_config = {
-        "cloud_storage_options": {
-            "file_set": {
-                "url": f"gs://{input_gcs_bucket}"
-            }
-        }
+        "cloud_storage_options": {"file_set": {"url": f"gs://{input_gcs_bucket}"}}
     }
 
     # Specify the big query table to store the transformation details.
@@ -103,9 +98,7 @@ def deidentify_cloud_storage(
             "deidentify": {
                 "cloud_storage_output": f"gs://{output_gcs_bucket}",
                 "transformation_config": transformation_config,
-                "transformation_details_storage_config": {
-                    "table": big_query_table
-                },
+                "transformation_details_storage_config": {"table": big_query_table},
                 "file_types_to_transform": ["IMAGE", "CSV", "TEXT_FILE"],
             }
         }
@@ -132,13 +125,13 @@ def deidentify_cloud_storage(
     # Waiting for the job to get completed.
     job = dlp.get_dlp_job(request={"name": job_name})
     # Since the sleep time is kept as 30s, number of calls would be timeout/30.
-    no_of_attempts = timeout//30
+    no_of_attempts = timeout // 30
     while no_of_attempts != 0:
         # Check if the job has completed.
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.DONE:
             break
         if job.state == google.cloud.dlp_v2.DlpJob.JobState.FAILED:
-            print('Job Failed, Please check the configuration.')
+            print("Job Failed, Please check the configuration.")
             break
 
         # Sleep for a short duration before checking the job status again.
@@ -178,8 +171,8 @@ if __name__ == "__main__":
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "input_gcs_bucket",
@@ -188,12 +181,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "output_gcs_bucket",
         help="The name of google cloud storage bucket where "
-             "de-identified files would be stored.",
+        "de-identified files would be stored.",
     )
     parser.add_argument(
         "deid_template_id",
         help="The name of the de-identify template for unstructured "
-             "and structured files.",
+        "and structured files.",
     )
     parser.add_argument(
         "structured_deid_template_id",
@@ -206,12 +199,12 @@ if __name__ == "__main__":
     parser.add_argument(
         "dataset_id",
         help="The identifier of the BigQuery dataset where transformation "
-             "details would be stored.",
+        "details would be stored.",
     )
     parser.add_argument(
         "table_id",
         help="The identifier of the BigQuery table where transformation "
-             "details would be stored.",
+        "details would be stored.",
     )
     parser.add_argument(
         "timeout",

@@ -1,12 +1,12 @@
-cryptography==41.0.4
-Flask==2.2.2
+cryptography==41.0.6
+Flask==2.2.5
 functions-framework==3.1.0
 google-cloud-secret-manager==2.12.1
-lxml==4.9.2
-pycryptodome==3.18.0
+lxml==4.9.3
+pycryptodome==3.19.1
 pyOpenSSL==23.2.0
 requests==2.31.0
 signxml==3.2.0
 pytest==7.3.1
 pytest-mock==3.10.0
-Werkzeug==2.3.7
+Werkzeug==3.0.1

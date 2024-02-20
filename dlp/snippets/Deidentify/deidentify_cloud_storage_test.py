@@ -61,7 +61,7 @@ def test_deidentify_cloud_storage(
         GCLOUD_PROJECT,
         "input_bucket",
         "output_bucket",
-        ['EMAIL_ADDRESS', 'PERSON_NAME', 'PHONE_NUMBER'],
+        ["EMAIL_ADDRESS", "PERSON_NAME", "PHONE_NUMBER"],
         "deidentify_template_name",
         "structured_deidentify_template_name",
         "image_redaction_template_name",
@@ -75,5 +75,7 @@ def test_deidentify_cloud_storage(
     assert "Info type: EMAIL_ADDRESS" in out
 
     create_job_args = mock_dlp_instance.create_dlp_job.call_args
-    mock_dlp_instance.create_dlp_job.assert_called_once_with(request=create_job_args.kwargs['request'])
-    mock_dlp_instance.get_dlp_job.assert_called_once_with(request={'name': test_job})
+    mock_dlp_instance.create_dlp_job.assert_called_once_with(
+        request=create_job_args.kwargs["request"]
+    )
+    mock_dlp_instance.get_dlp_job.assert_called_once_with(request={"name": test_job})

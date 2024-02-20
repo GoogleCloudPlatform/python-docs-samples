@@ -33,6 +33,7 @@ import main
 TEST_LOG_ID = "test-log"
 TEST_BUCKET = "test-bucket"
 TEST_BUCKET_NAME = f"gs://{TEST_BUCKET}"
+TEST_PROJECT_ID = "test-project-id"
 
 
 def _setup_environment(
@@ -339,6 +340,7 @@ def test_import_logs(
     mocked_bucket.blob = MagicMock(side_effect=_args_based_blob_return)
     mocked_logging_client = MagicMock(spec=logging_v2.Client)
     mocked_logging_client.logging_api = MagicMock()
+    mocked_logging_client.project = TEST_PROJECT_ID
     mocked_write_entries = mocked_logging_client.logging_api.write_entries = MagicMock()
 
     main.import_logs(log_files, mocked_storage_client, mocked_logging_client)

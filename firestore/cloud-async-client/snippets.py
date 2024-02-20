@@ -788,7 +788,7 @@ async def update_document_increment(db):
     # [START firestore_data_set_numeric_increment_async]
     washington_ref = db.collection("cities").document("DC")
 
-    washington_ref.update({"population": firestore.Increment(50)})
+    await washington_ref.update({"population": firestore.Increment(50)})
     # [END firestore_data_set_numeric_increment_async]
 
 

@@ -19,13 +19,12 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_table_condition_masking]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
-
-
-# [START dlp_deidentify_table_condition_masking]
 
 
 def deidentify_table_condition_masking(
@@ -151,9 +150,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--condition_operator",
         help="Operator used to compare the field or infoType to the value. "
-             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
-             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
-             "EXISTS.",
+        "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+        "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+        "EXISTS.",
     )
     parser.add_argument(
         "--condition_value",

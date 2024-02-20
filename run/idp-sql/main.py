@@ -26,9 +26,8 @@ from middleware import jwt_authenticated, logger
 app = Flask(__name__, static_folder="static", static_url_path="")
 
 
-@app.before_first_request
-def create_table() -> None:
-    """Initialize database connection and table on startup."""
+"""Initialize database connection and table on startup."""
+with app.app_context():
     database.create_tables()
 
 

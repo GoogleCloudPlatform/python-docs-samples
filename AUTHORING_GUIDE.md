@@ -865,7 +865,7 @@ nox -s py-3.7 -- snippets_test.py
 To run a specific test from a specific following:
 
 ```console
-nox -s py-3.7 -- snippets_test.py:test_list_blobs
+nox -s py-3.7 -- snippets_test.py::test_list_blobs
 ```
 
 #### `noxfile_config.py`
@@ -923,7 +923,7 @@ Add the new environment variables to the `envs` dictionary.
 ```py
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,

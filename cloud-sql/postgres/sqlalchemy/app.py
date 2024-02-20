@@ -81,12 +81,13 @@ db = None
 # init_db lazily instantiates a database connection pool. Users of Cloud Run or
 # App Engine may wish to skip this lazy instantiation and connect as soon
 # as the function is loaded. This is primarily to help testing.
-@app.before_first_request
+@app.before_request
 def init_db() -> sqlalchemy.engine.base.Engine:
     """Initiates connection to database and its structure."""
     global db
-    db = init_connection_pool()
-    migrate_db(db)
+    if db is None:
+        db = init_connection_pool()
+        migrate_db(db)
 
 
 @app.route("/", methods=["GET"])

@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_replace_infotype]
 from typing import List
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_replace_infotype]
 
 
 def deidentify_with_replace_infotype(
@@ -81,9 +80,9 @@ if __name__ == "__main__":
         "--info_types",
         action="append",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             "If unspecified, the three above examples will be used.",
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     parser.add_argument(
@@ -93,7 +92,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "item",
         help="The string to deidentify."
-             "Example: 'My credit card is 4242 4242 4242 4242'",
+        "Example: 'My credit card is 4242 4242 4242 4242'",
     )
 
     args = parser.parse_args()

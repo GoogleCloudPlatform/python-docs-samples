@@ -19,13 +19,11 @@ from __future__ import annotations
 
 import argparse
 
+# [START dlp_deidentify_table_condition_infotypes]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
-
-
-# [START dlp_deidentify_table_condition_infotypes]
 
 
 def deidentify_table_condition_replace_with_info_types(
@@ -159,8 +157,8 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "--condition_field",
@@ -169,9 +167,9 @@ if __name__ == "__main__":
     parser.add_argument(
         "--condition_operator",
         help="Operator used to compare the field or infoType to the value. "
-             "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
-             "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
-             "EXISTS.",
+        "One of: RELATIONAL_OPERATOR_UNSPECIFIED, EQUAL_TO, NOT_EQUAL_TO, "
+        "GREATER_THAN, LESS_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN_OR_EQUALS, "
+        "EXISTS.",
     )
     parser.add_argument(
         "--condition_value",

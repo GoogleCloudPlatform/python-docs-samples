@@ -40,7 +40,7 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
@@ -88,7 +88,7 @@ def get_pytest_env_vars() -> dict[str, str]:
 
 
 # All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.8", "3.9", "3.10", "3.11"]
+ALL_VERSIONS = ["2.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
@@ -108,7 +108,7 @@ nox.options.error_on_missing_interpreters = True
 def _determine_local_import_names(start_dir: str) -> list[str]:
     """Determines all import names that should be considered "local".
 
-    This is used when running the linter to insure that import order is
+    This is used when running the linter to ensure that import order is
     properly checked.
     """
     file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]
