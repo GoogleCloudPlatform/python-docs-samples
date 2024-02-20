@@ -468,7 +468,9 @@ def cleanup_sessions():
 
     try:
         logging.info("Deleting sessions...")
-        count_statement = "SELECT COUNT(*) AS cnt FROM session WHERE expiry < now()::timestamp(0);"
+        count_statement = (
+            "SELECT COUNT(*) AS cnt FROM session WHERE expiry < now()::timestamp(0);"
+        )
         before = session.execute(text(count_statement)).one_or_none()["cnt"]
         session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
         after = session.execute(text(count_statement)).one_or_none()["cnt"]
