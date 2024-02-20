@@ -88,6 +88,7 @@ def teardown_model(
                         endpoint.delete()
             aiplatform.Model(model_registry.model_resource_name).delete()
 
+
 @pytest.mark.skip("Blocked on b/277959219")
 def test_distill_model(training_data_filename: str) -> None:
     """Takes approx. 60 minutes."""
