@@ -16,7 +16,7 @@ import os
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import generative_ai.multimodal_embedding_image as multimodal_embedding_image
+import multimodal_embedding_image
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"

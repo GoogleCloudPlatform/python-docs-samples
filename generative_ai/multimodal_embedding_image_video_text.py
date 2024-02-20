@@ -69,7 +69,9 @@ def get_image_video_text_embeddings(
     # Video Embeddings are segmented based on the video_segment_config.
     print("Video Embeddings:")
     for video_embedding in embeddings.video_embeddings:
-        print(f"Video Segment: {video_embedding.start_offset_sec} - {video_embedding.end_offset_sec}"))
+        print(
+            f"Video Segment: {video_embedding.start_offset_sec} - {video_embedding.end_offset_sec}"
+        )
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
