@@ -14,16 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Identifies buckets with relative increase in cost on enabling the soft-delete.
+"""Identifies buckets with relative increase in cost on enabling the soft-delete.
 
 The relative increase in cost of using soft delete is calculated by combining
-the storage/v2/deleted_bytes metric with the existing storage/v2/total_byte_seconds
+the storage/v2/deleted_bytes metric with the existing
+storage/v2/total_byte_seconds
 metric.
 
-Relative cost of each bucket = ('soft delete retention duration' 
-                                 × 'deleted bytes' / 'total bytes seconds' ) 
-                                 x 'cost of storing in storage class' 
+Relative cost of each bucket = ('soft delete retention duration'
+                                 × 'deleted bytes' / 'total bytes seconds' )
+                                 x 'cost of storing in storage class'
                                  x 'ratio of storage class'.
 """
 
@@ -49,7 +49,7 @@ def get_relative_cost(storage_class: str) -> float:
         "STANDARD": 0.023 / 0.023,
         "NEARLINE": 0.013 / 0.023,
         "COLDLINE": 0.007 / 0.023,
-        "ARCHIVE": 0.0025 / 0.023
+        "ARCHIVE": 0.0025 / 0.023,
     }
 
     return relative_cost.get(storage_class, 1.0)
@@ -59,7 +59,7 @@ def get_soft_delete_cost(
     project_name: str,
     soft_delete_window: int,
     agg_days: int,
-    lookback_days: int
+    lookback_days: int,
 ) -> Dict[str, List[Dict[str, float]]]:
     """Calculates soft delete costs for buckets in a Google Cloud project.
 
@@ -124,19 +124,25 @@ def calculate_soft_delete_costs(
         monitoring_client.QueryTimeSeriesRequest(
             name=f"projects/{project_name}",
             query=f"""
-                    {{
-                    fetch gcs_bucket :: storage.googleapis.com/storage/v2/deleted_bytes
-                    | group_by [resource.bucket_name, metric.storage_class, resource.location], window(), .sum;
-                    fetch gcs_bucket :: storage.googleapis.com/storage/v2/total_byte_seconds
-                    | group_by [resource.bucket_name, metric.storage_class, resource.location], window(), .sum
-                    }}
-                    | ratio # Calculate ratios of deleted btyes to total bytes seconds
-                    | value val(0) * {soft_delete_window}\'s\'
-                    | every {agg_days}d
-                    | within {lookback_days}d
+                    {{  # Fetch 1: Soft-deleted (bytes seconds)
+                        fetch gcs_bucket :: storage.googleapis.com/storage/v2/deleted_bytes
+                        | value val(0) * {soft_delete_window}\'s\'  # Multiply by soft delete window
+                        | group_by [resource.bucket_name, metric.storage_class], window(), .sum;
+
+                        # Fetch 2: Total byte-seconds (active objects)
+                        fetch gcs_bucket :: storage.googleapis.com/storage/v2/total_byte_seconds 
+                        | filter metric.type != 'soft-deleted-object'
+                        | group_by [resource.bucket_name, metric.storage_class], window(1d), .mean  # Daily average
+                        | group_by [resource.bucket_name, metric.storage_class], window(), .sum  # Total over window
+
+                    }}  # End query definition
+                    | every {agg_days}d  # Aggregate over larger time intervals
+                    | within {lookback_days}d  # Limit data range for analysis
+                    | ratio  # Calculate ratio (soft-deleted (bytes seconds)/ total (bytes seconds))
                     """,
         )
     )
+
     buckets: Dict[str, List[Dict[str, float]]] = {}
     missing_distribution_storage_class = []
     for data_point in soft_deleted_bytes_time.time_series_data:
@@ -149,7 +155,8 @@ def calculate_soft_delete_costs(
         soft_delete_ratio = data_point.point_data[0].values[0].double_value
         distribution_storage_class = bucket_name + " - " + storage_class
         storage_class_ratio = storage_ratios_by_bucket.get(
-            distribution_storage_class)
+            distribution_storage_class
+        )
         if storage_class_ratio is None:
             missing_distribution_storage_class.append(
                 distribution_storage_class)
@@ -159,12 +166,14 @@ def calculate_soft_delete_costs(
             # 'location': location,
             "soft_delete_ratio": soft_delete_ratio,
             "storage_class_ratio": storage_class_ratio,
-            "relative_storage_class_cost": get_relative_cost(storage_class)
+            "relative_storage_class_cost": get_relative_cost(storage_class),
         })
 
     if missing_distribution_storage_class:
-        print("Missing storage class for following buckets:",
-              missing_distribution_storage_class)
+        print(
+            "Missing storage class for following buckets:",
+            missing_distribution_storage_class,
+        )
         raise ValueError("Cannot proceed with missing storage class ratios.")
 
     return buckets
@@ -321,14 +330,14 @@ def soft_delete_relative_cost_analyzer_main() -> None:
         args.lookback_days,
         args.list,
     )
-    if (not args.list):
+    if not args.list:
         print(
             "To remove soft-delete policy from the listed buckets run:\n"
             # Capture output
-            "python storage_soft_delete_relative_cost_analyzer.py [your-project-name] --[OTHER_OPTIONS] --list >"
-            " list_of_buckets.txt\n"
-            "cat list_of_buckets.txt | gcloud storage buckets update -I"
-            " --clear-soft-delete\n",
+            "python storage_soft_delete_relative_cost_analyzer.py"
+            " [your-project-name] --[OTHER_OPTIONS] --list >"
+            " list_of_buckets.txt\ncat list_of_buckets.txt | gcloud storage buckets"
+            " update -I --clear-soft-delete\n",
             "\nThe buckets with approximate costs for soft delete:\n",
             response,
         )

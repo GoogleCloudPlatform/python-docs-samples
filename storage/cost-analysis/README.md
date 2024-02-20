@@ -34,10 +34,10 @@ NOTE: Due to the specific functionality related to Google Cloud APIs, this guide
 * `--lookback_days` - (Optional, default=360): Time window (in days) for considering the how old the bucket to be.
 * `--list` - (Optional, default=False): Produces a simple list of bucket names.
 
-Note: In this sample, cost_threshold 0.15 would spotlight buckets where enabling soft delete might increase costs by over 15%.
+Note: In this sample, if setting cost_threshold 0.15 would spotlight buckets where enabling soft delete might increase costs by over 15%.
 
 ``` code-block:: bash
-    $ python storage_soft_delete_relative_cost_analyzer.py my-project-name  
+    $ python storage_soft_delete_relative_cost_analyzer.py [your-project-name] 
 ```
 
 To disable soft-delete for buckets flagged by the script, follow these steps:
