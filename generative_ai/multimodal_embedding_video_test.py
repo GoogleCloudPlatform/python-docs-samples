@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,16 +11,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import text_image_embedding
+import generative_ai.multimodal_embedding_video as multimodal_embedding_video
+
+_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+_LOCATION = "us-central1"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_text_embedding() -> None:
-    images = text_image_embedding.generate_image_from_text_and_image(
-        prompt="Ancient yellowed paper scroll"
+def test_multimodal_embedding_video() -> None:
+    embeddings = multimodal_embedding_video.get_video_embeddings(
+        project_id=_PROJECT_ID,
+        location=_LOCATION,
+        video_path="gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4",
+        contextual_text="Cars on Highway",
     )
-    assert images[0] is not None
+    assert embeddings is not None
+    assert embeddings.video_embeddings is not None
+    assert embeddings.text_embedding is not None
