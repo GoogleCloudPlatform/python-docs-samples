@@ -32,6 +32,7 @@ def get_image_video_text_embeddings(
     video_path: str,
     contextual_text: Optional[str] = None,
     dimension: Optional[int] = 1408,
+    video_segment_config: Optional[VideoSegmentConfig] = None,
 ) -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image, video, and text.
 
@@ -43,6 +44,8 @@ def get_image_video_text_embeddings(
         contextual_text: Text to generate embeddings for.
         dimension: Dimension for the returned embeddings.
             https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
+        video_segment_config: Define specific segments to generate embeddings for.
+            https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
 
     vertexai.init(project=project_id, location=location)
@@ -50,11 +53,6 @@ def get_image_video_text_embeddings(
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
     image = Image.load_from_file(image_path)
     video = Video.load_from_file(video_path)
-
-    # Optional: To define specific segments to generate embeddings for.
-    video_segment_config = VideoSegmentConfig(
-        start_offset_sec=0, end_offset_sec=120, interval_sec=16
-    )
 
     embeddings = model.get_embeddings(
         image=image,
