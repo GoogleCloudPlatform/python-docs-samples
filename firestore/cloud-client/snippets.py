@@ -451,6 +451,33 @@ def update_data_batch():
     # [END firestore_data_batch_writes]
 
 
+def update_data_bulk():
+    db = firestore.Client()
+    # [START firestore_data_bulk_writes]
+    from google.cloud import firestore_v1
+
+    batch = firestore_v1.BulkWriteBatch(db)
+
+    # Set the data for NYC
+    nyc_ref = db.collection("cities").document("NYC")
+    batch.set(nyc_ref, {"name": "New York City"})
+
+    # Update the population for SF
+    sf_ref = db.collection("cities").document("SF")
+    batch.update(sf_ref, {"population": 1000000})
+
+    # Delete DEN
+    den_ref = db.collection("cities").document("DEN")
+    batch.delete(den_ref)
+
+    # Finalize the batch of writes.
+    batch.commit()
+    for result in batch.write_results:
+        print(result)
+    # [END firestore_data_bulk_writes]
+    return batch.write_results
+
+
 def compound_query_example():
     db = firestore.Client()
     # [START firestore_query_filter_eq_string]
