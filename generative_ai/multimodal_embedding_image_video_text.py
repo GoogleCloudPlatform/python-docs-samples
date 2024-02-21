@@ -31,7 +31,7 @@ def get_image_video_text_embeddings(
     image_path: str,
     video_path: str,
     contextual_text: Optional[str] = None,
-    dimensions: Optional[int] = 1408,
+    dimension: Optional[int] = 1408,
 ) -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image, video, and text.
 
@@ -41,7 +41,7 @@ def get_image_video_text_embeddings(
         image_path: Path to image (local or Google Cloud Storage) to generate embeddings for.
         video_path: Path to video (local or Google Cloud Storage) to generate embeddings for.
         contextual_text: Text to generate embeddings for.
-        dimensions: Dimensions for the returned embeddings.
+        dimension: Dimension for the returned embeddings.
             https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
     """
 
@@ -61,7 +61,7 @@ def get_image_video_text_embeddings(
         video=video,
         video_segment_config=video_segment_config,
         contextual_text=contextual_text,
-        dimensions=dimensions,
+        dimension=dimension,
     )
 
     print(f"Image Embedding: {embeddings.image_embedding}")

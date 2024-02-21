@@ -28,7 +28,7 @@ def test_multimodal_embedding_image() -> None:
         project_id=_PROJECT_ID,
         location=_LOCATION,
         image_path="gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png",
-        prompt="Colosseum",
+        contextual_text="Colosseum",
     )
     assert embeddings is not None
     assert embeddings.image_embedding is not None

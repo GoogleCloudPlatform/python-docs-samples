@@ -28,7 +28,7 @@ def get_image_embeddings(
     location: str,
     image_path: str,
     contextual_text: Optional[str] = None,
-    dimensions: int = 1408,
+    dimension: int = 1408,
 ) -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image and text.
 
@@ -37,7 +37,7 @@ def get_image_embeddings(
         location: Google Cloud Region, used to initialize vertexai
         image_path: Path to image (local or Google Cloud Storage) to generate embeddings for.
         contextual_text: Text to generate embeddings for.
-        dimensions: Dimensions for the returned embeddings.
+        dimension: Dimension for the returned embeddings.
             https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
     """
 
@@ -49,7 +49,7 @@ def get_image_embeddings(
     embeddings = model.get_embeddings(
         image=image,
         contextual_text=contextual_text,
-        dimensions=dimensions,
+        dimension=dimension,
     )
     print(f"Image Embedding: {embeddings.image_embedding}")
     print(f"Text Embedding: {embeddings.text_embedding}")
