@@ -34,7 +34,7 @@ def evaluate_model(
     vertexai.init(project=project_id, location=location, credentials=credentials)
 
     # Create a reference to a generative AI model
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
 
     # Define the evaluation specification for a text classification task
     task_spec = EvaluationTextClassificationSpec(

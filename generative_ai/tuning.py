@@ -69,7 +69,7 @@ def tuning(
     eval_spec.tensorboard = aiplatform.Tensorboard(
         tensorboard_name=tensorboard_instance_name
     )
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
 
     model.tune_model(
         training_data=training_data,

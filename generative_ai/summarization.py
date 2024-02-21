@@ -33,7 +33,7 @@ def text_summarization(
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         """Provide a summary with about two sentences for the following article:
 The efficient-market hypothesis (EMH) is a hypothesis in financial \

@@ -25,7 +25,7 @@ def list_tuned_models(
     """List tuned models."""
 
     vertexai.init(project=project_id, location=location)
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
 
