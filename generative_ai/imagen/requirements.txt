@@ -1,3 +1,0 @@
-pillow==9.5.0; python_version < '3.8'
-pillow==10.0.1; python_version >= '3.8'
-google-cloud-aiplatform[pipelines]==1.42.0
