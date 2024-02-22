@@ -33,7 +33,7 @@ def sentiment_analysis(
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         """I had to compare two versions of Hamlet for my Shakespeare class and \
 unfortunately I picked this version. Everything from the acting (the actors \
