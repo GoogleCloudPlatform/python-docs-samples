@@ -26,7 +26,6 @@ _LOCATION = "us-central1"
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_grounding() -> None:
-
     data_store_id = "test-search-engine_1689960780551"
     response = grounding.grounding(
         project_id=_PROJECT_ID,
