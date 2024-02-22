@@ -33,7 +33,7 @@ def interview(
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         "Give me ten interview questions for the role of program manager.",
         **parameters,

@@ -27,7 +27,7 @@ def classify_news_items(temperature: float = 0.2) -> None:
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         """What is the topic for a given news headline?
 - business

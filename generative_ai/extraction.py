@@ -33,7 +33,7 @@ def extractive_question_answering(
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         """Background: There is evidence that there have been significant changes \
 in Amazon rainforest vegetation over the last 21,000 years through the Last \
