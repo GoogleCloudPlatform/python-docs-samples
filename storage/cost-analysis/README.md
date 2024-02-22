@@ -29,7 +29,7 @@ NOTE: Due to the specific functionality related to Google Cloud APIs, this guide
 **Command-Line Arguments**
 * `project_name` - (**Required**): Specifies your GCP project name.
 * `--cost_threshold` - (Optional, default=0): Sets a relative cost threshold.
-* `--soft_delete_window` - (Optional, default= 604800 (i.e. 7 days)): Time window (in seconds) for considering soft-deleted objects..
+* `--soft_delete_window` - (Optional, default= 604800.0 (i.e. 7 days)): Time window (in seconds) for considering soft-deleted objects..
 * `--agg_days` - (Optional, default=30): The period over which to combine and aggregate results.
 * `--lookback_days` - (Optional, default=360): Time window (in days) for considering the how old the bucket to be.
 * `--list` - (Optional, default=False): Produces a simple list of bucket names.
