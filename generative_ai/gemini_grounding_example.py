@@ -16,12 +16,17 @@
 from typing import Optional
 
 import vertexai
-from vertexai.preview.generative_models import GenerativeModel, Tool, grounding
+from vertexai.preview.generative_models import (
+    GenerativeModel,
+    GenerationResponse,
+    Tool,
+    grounding,
+)
 
 
 def generate_text_with_grounding(
     project_id: str, location: str, data_store_path: Optional[str] = None
-):
+) -> GenerationResponse:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 

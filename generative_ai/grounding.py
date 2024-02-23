@@ -13,10 +13,10 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_grounding]
-from typing import Optional
+from typing import Any, Optional
 
 import vertexai
-from vertexai.language_models import TextGenerationModel, ChatModel, GroundingSource
+from vertexai.language_models import GroundingSource, TextGenerationModel
 
 
 def grounding(
@@ -24,7 +24,7 @@ def grounding(
     location: str,
     data_store_location: Optional[str],
     data_store_id: Optional[str],
-):
+) -> Any:
     """Grounding example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)

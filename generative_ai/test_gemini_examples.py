@@ -133,7 +133,11 @@ def test_gemini_chat_example() -> None:
 
 
 def test_gemini_grounding_example() -> None:
+    # Test Vertex AI Search Grounding
+    # Unable to test Google Search grounding due to allowlist restrictions.
+    data_store_id = "test-search-engine_1689960780551"
+    data_store_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/dataStores/{data_store_id}"
     response = gemini_grounding_example.generate_text_with_grounding(
-        PROJECT_ID, LOCATION
+        PROJECT_ID, LOCATION, data_store_path=data_store_path
     )
     assert response
