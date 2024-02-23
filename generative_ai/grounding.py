@@ -16,7 +16,11 @@
 from typing import Any, Optional
 
 import vertexai
-from vertexai.language_models import GroundingSource, TextGenerationModel
+from vertexai.language_models import (
+    GroundingSource,
+    TextGenerationModel,
+    TextGenerationResponse,
+)
 
 
 def grounding(
@@ -24,7 +28,7 @@ def grounding(
     location: str,
     data_store_location: Optional[str],
     data_store_id: Optional[str],
-) -> Any:
+) -> TextGenerationResponse:
     """Grounding example with a Large Language Model"""
 
     vertexai.init(project=project_id, location=location)
@@ -55,10 +59,10 @@ def grounding(
     )
     print(f"Response from Model: {response.text}")
     print(f"Grounding Metadata: {response.grounding_metadata}")
+    # [END aiplatform_sdk_grounding]
 
     return response
 
 
 if __name__ == "__main__":
     grounding()
-# [END aiplatform_sdk_grounding]
