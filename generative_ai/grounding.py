@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_grounding]
-from typing import Any, Optional
+from typing import Optional
 
 import vertexai
 from vertexai.language_models import (
