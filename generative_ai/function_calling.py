@@ -13,14 +13,20 @@
 # limitations under the License.
 
 # [START aiplatform_gemini_function_calling]
+import vertexai
 from vertexai.generative_models import (
+    Content,
     FunctionDeclaration,
     GenerativeModel,
+    Part,
     Tool,
 )
 
 
-def generate_function_call(prompt: str) -> str:
+def generate_function_call(prompt: str, project_id: str, location: str) -> str:
+    # Initialize Vertex AI
+    vertexai.init(project=project_id, location=location)
+
     # Load the Vertex AI Gemini API to use function calling
     model = GenerativeModel("gemini-1.0-pro")
 
@@ -40,20 +46,65 @@ def generate_function_call(prompt: str) -> str:
         function_declarations=[get_current_weather_func],
     )
 
-    # Prompt to ask the model about weather, which will invoke the Tool
-    prompt = prompt
-
-    # Instruct the model to generate content using the Tool that you just created:
-    response = model.generate_content(
+    # Send a prompt and instruct the model to generate content using the Tool that you just created
+    response_fc = model.generate_content(
         prompt,
         generation_config={"temperature": 0},
         tools=[weather_tool],
     )
 
-    return str(response)
+    # Transform the structured data response into a Python dictionary
+    params = {}
+    for key, value in (
+        response_fc.candidates[0].content.parts[0].function_call.args.items()
+    ):
+        params[key] = value
+    params
+
+    # This is where you would make an API request to fetch the current weather.
+    # Here we'll use synthetic data to simulate a response payload from an external API.
+    api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
+                   "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
+
+    # Return the API response to Gemini so it can generate a model response or request another function call
+    response = model.generate_content(
+        [
+            Content(
+                role="user",
+                parts=[
+                    Part.from_text(prompt),
+                ],
+            ),
+            Content(
+                role="function",
+                parts=[
+                    Part.from_dict(
+                        {
+                            "function_call": {
+                                "name": "get_current_weather",
+                            }
+                        }
+                    )
+                ],
+            ),
+            Content(
+                role="function",
+                parts=[
+                    Part.from_function_response(
+                        name="get_current_weather",
+                        response={
+                            "content": api_response,
+                        },
+                    )
+                ],
+            ),
+        ],
+        tools=[weather_tool],
+    )
+    # Get the model summary response
+    summary = response.candidates[0].content.parts[0].text
+
+    return summary, response, response_fc, params
 
 
 # [END aiplatform_gemini_function_calling]
-
-if __name__ == "__main__":
-    print(generate_function_call("What is the weather like in Boston?"))
