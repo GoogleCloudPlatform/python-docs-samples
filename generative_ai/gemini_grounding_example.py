@@ -19,8 +19,8 @@ import vertexai
 from vertexai.preview.generative_models import (
     GenerativeModel,
     GenerationResponse,
-    Tool,
     grounding,
+    Tool,
 )
 
 
