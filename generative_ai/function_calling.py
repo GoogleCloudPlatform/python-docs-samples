@@ -53,7 +53,16 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
         tools=[weather_tool],
     )
 
-    # This is where you would make an API request to fetch the current weather.
+    # Transform the structured data response into a Python dictionary
+    function_name = response_fc.candidates[0].content.parts[0].function_call.name
+    parameters = {}
+    for key, value in (
+        response_fc.candidates[0].content.parts[0].function_call.args.items()
+    ):
+        parameters[key] = value
+    parameters
+
+    # This is where you would use the function_name and parameters to make an API request to fetch the current weather.
     # Here we'll use synthetic data to simulate a response payload from an external API.
     api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
                    "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
