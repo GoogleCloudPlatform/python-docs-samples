@@ -77,10 +77,11 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     responses_function_call.append(response)
 
     # Check the function name that the model responded with, and make an API call to an external system
-    if (response.candidates[0].content.parts[0].function_call.name == "get_product_sku"):
-
+    if response.candidates[0].content.parts[0].function_call.name == "get_product_sku":
         # Extract the arguments to use in your API call
-        product_name = response.candidates[0].content.parts[0].function_call.args["product_name"]
+        product_name = (
+            response.candidates[0].content.parts[0].function_call.args["product_name"]
+        )
 
         # Here you can use your preferred method to make an API request to retrieve the product SKU, as in:
         # api_response = requests.post(product_api_url, data={"product_name": product_name})
@@ -110,10 +111,14 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     responses_function_call.append(response)
 
     # Check the function name that the model responded with, and make an API call to an external system
-    if (response.candidates[0].content.parts[0].function_call.name == "get_store_location"):
-
+    if (
+        response.candidates[0].content.parts[0].function_call.name
+        == "get_store_location"
+    ):
         # Extract the arguments to use in your API call
-        location = response.candidates[0].content.parts[0].function_call.args["location"]
+        location = (
+            response.candidates[0].content.parts[0].function_call.args["location"]
+        )
 
         # Here you can use your preferred method to make an API request to retrieve store location closest to the user, as in:
         # api_response = requests.post(store_api_url, data={"location": location})
