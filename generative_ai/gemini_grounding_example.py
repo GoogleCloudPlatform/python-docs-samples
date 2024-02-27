@@ -17,8 +17,8 @@ from typing import Optional
 
 import vertexai
 from vertexai.preview.generative_models import (
-    GenerativeModel,
     GenerationResponse,
+    GenerativeModel,
     grounding,
     Tool,
 )
