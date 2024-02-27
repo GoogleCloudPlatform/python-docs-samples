@@ -26,7 +26,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     prompts = []
     summaries = []
     responses = []
-    responses_fc = []
+    responses_function_call = []
 
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
@@ -54,6 +54,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
         },
     )
 
+    # Define a tool that includes the above functions
     retail_tool = Tool(
         function_declarations=[
             get_product_info_func,
@@ -71,13 +72,21 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
 
     # Send a prompt for the first conversation turn that should invoke the get_product_sku function
     prompt = "Do you have the Pixel 8 Pro in stock?"
-    response_fc = chat.send_message(prompt)
+    response = chat.send_message(prompt)
     prompts.append(prompt)
-    responses_fc.append(response_fc)
+    responses_function_call.append(response)
 
-    # Here you would make an API request to an external system to retrieve the product SKU.
-    # We'll use mock data to simulate an external API response.
-    api_response = {"sku": "GA04834-US", "in_stock": "yes"}
+    # Check the function name that the model responded with, and make an API call to an external system
+    if (response.candidates[0].content.parts[0].function_call.name == "get_product_sku"):
+
+        # Extract the arguments to use in your API call
+        product_name = response.candidates[0].content.parts[0].function_call.args["product_name"]
+
+        # Here you can use your preferred method to make an API request to retrieve the product SKU, as in:
+        # api_response = requests.post(product_api_url, data={"product_name": product_name})
+
+        # In this example, we'll use synthetic data to simulate a response payload from an external API
+        api_response = {"sku": "GA04834-US", "in_stock": "yes"}
 
     # Return the API response to Gemini so it can generate a model response or request another function call
     response = chat.send_message(
@@ -96,13 +105,21 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
 
     # Send a prompt for the second conversation turn that should invoke the get_store_location function
     prompt = "Is there a store in Mountain View, CA that I can visit to try it out?"
-    response_fc = chat.send_message(prompt)
+    response = chat.send_message(prompt)
     prompts.append(prompt)
-    responses_fc.append(response_fc)
+    responses_function_call.append(response)
 
-    # Here you would make an API request to retrieve the store location closest to the user.
-    # We'll use mock data to simulate an external API response.
-    api_response = {"store": "2000 N Shoreline Blvd, Mountain View, CA 94043, US"}
+    # Check the function name that the model responded with, and make an API call to an external system
+    if (response.candidates[0].content.parts[0].function_call.name == "get_store_location"):
+
+        # Extract the arguments to use in your API call
+        location = response.candidates[0].content.parts[0].function_call.args["location"]
+
+        # Here you can use your preferred method to make an API request to retrieve store location closest to the user, as in:
+        # api_response = requests.post(store_api_url, data={"location": location})
+
+        # In this example, we'll use synthetic data to simulate a response payload from an external API
+        api_response = {"store": "2000 N Shoreline Blvd, Mountain View, CA 94043, US"}
 
     # Return the API response to Gemini so it can generate a model response or request another function call
     response = chat.send_message(
@@ -119,7 +136,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     summary = response.candidates[0].content.parts[0].text
     summaries.append(summary)
 
-    return prompts, summaries, responses, responses_fc
+    return prompts, summaries, responses, responses_function_call
 
 
 # [END aiplatform_gemini_function_calling_chat]
