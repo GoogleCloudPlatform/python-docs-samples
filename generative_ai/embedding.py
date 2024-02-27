@@ -26,6 +26,6 @@ def text_embedding() -> list:
     return vector
 
 
+# [END aiplatform_sdk_embedding]
 if __name__ == "__main__":
     text_embedding()
-# [END aiplatform_sdk_embedding]

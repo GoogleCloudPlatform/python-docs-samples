@@ -54,6 +54,5 @@ def generate_function_call(prompt: str) -> str:
 
 
 # [END aiplatform_gemini_function_calling]
-
 if __name__ == "__main__":
     print(generate_function_call("What is the weather like in Boston?"))
