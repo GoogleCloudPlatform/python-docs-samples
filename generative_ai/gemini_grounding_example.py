@@ -31,7 +31,7 @@ def generate_text_with_grounding(
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = GenerativeModel(model_name="gemini-pro-vision")
+    model = GenerativeModel(model_name="gemini-1.0-pro")
 
     # Create Tool for grounding
     if data_store_path:
