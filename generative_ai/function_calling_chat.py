@@ -48,6 +48,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     get_store_location_func = FunctionDeclaration(
         name="get_store_location",
         description="Get the location of the closest store",
+        # Function parameters are specified in OpenAPI JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},
@@ -82,6 +83,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
         product_name = (
             response.candidates[0].content.parts[0].function_call.args["product_name"]
         )
+        product_name
 
         # Here you can use your preferred method to make an API request to retrieve the product SKU, as in:
         # api_response = requests.post(product_api_url, data={"product_name": product_name})
@@ -119,6 +121,7 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
         location = (
             response.candidates[0].content.parts[0].function_call.args["location"]
         )
+        location
 
         # Here you can use your preferred method to make an API request to retrieve store location closest to the user, as in:
         # api_response = requests.post(store_api_url, data={"location": location})
