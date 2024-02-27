@@ -26,7 +26,7 @@ processor_version_id = "pretrained-ocr-v1.0-2020-09-23"
 
 
 def test_get_processor_version(capsys):
-    get_processor_version_sample.get_processor_version_sample(
+    processor_version = get_processor_version_sample.get_processor_version_sample(
         project_id=project_id,
         location=location,
         processor_id=processor_id,
@@ -36,4 +36,5 @@ def test_get_processor_version(capsys):
 
     assert "Processor Version: pretrained-ocr" in out
     assert "Display Name: Google Stable" in out
-    assert "DEPLOYED" in out
+    assert "DEPLOYED" == processor_version.state
+    # assert "DEPLOYED" in out
