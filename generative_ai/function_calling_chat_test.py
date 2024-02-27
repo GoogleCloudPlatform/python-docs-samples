@@ -28,46 +28,18 @@ summaries_expected = [
     "Pixel 8 Pro",
     "stock",
     "SKU",
+    "GA04834-US",
     "store",
     "Mountain View",
     "address",
     "2000 N Shoreline Blvd",
 ]
 
-responses_expected = [
-    "candidates",
-    "content",
-    "role",
-    "model",
-    "parts",
-    "GA04834-US",
-    "2000 N Shoreline Blvd",
-]
-
-responses_fc_expected = [
-    "function_call",
-    "get_product_sku",
-    "get_store_location",
-    "args",
-    "fields",
-    "product_name",
-    "Pixel 8 Pro",
-    "location",
-    "Mountain View",
-]
-
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_chat() -> None:
-    (
-        _,
-        summaries,
-        responses,
-        responses_fc,
-    ) = function_calling_chat.generate_function_call_chat(
+    prompts, summaries = function_calling_chat.generate_function_call_chat(
         project_id=_PROJECT_ID,
         location=_LOCATION,
     )
     assert all(x in str(summaries) for x in summaries_expected)
-    assert all(x in str(responses) for x in responses_expected)
-    assert all(x in str(responses_fc) for x in responses_fc_expected)

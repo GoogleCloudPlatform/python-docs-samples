@@ -25,8 +25,6 @@ from vertexai.generative_models import (
 def generate_function_call_chat(project_id: str, location: str) -> str:
     prompts = []
     summaries = []
-    responses = []
-    responses_function_call = []
 
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
@@ -75,7 +73,6 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     prompt = "Do you have the Pixel 8 Pro in stock?"
     response = chat.send_message(prompt)
     prompts.append(prompt)
-    responses_function_call.append(response)
 
     # Check the function name that the model responded with, and make an API call to an external system
     if response.candidates[0].content.parts[0].function_call.name == "get_product_sku":
@@ -100,7 +97,6 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
             },
         ),
     )
-    responses.append(response)
 
     # Extract the text from the summary response
     summary = response.candidates[0].content.parts[0].text
@@ -110,7 +106,6 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
     prompt = "Is there a store in Mountain View, CA that I can visit to try it out?"
     response = chat.send_message(prompt)
     prompts.append(prompt)
-    responses_function_call.append(response)
 
     # Check the function name that the model responded with, and make an API call to an external system
     if (
@@ -138,13 +133,12 @@ def generate_function_call_chat(project_id: str, location: str) -> str:
             },
         ),
     )
-    responses.append(response)
 
     # Extract the text from the summary response
     summary = response.candidates[0].content.parts[0].text
     summaries.append(summary)
 
-    return prompts, summaries, responses, responses_function_call
+    return prompts, summaries
 
 
 # [END aiplatform_gemini_function_calling_chat]
