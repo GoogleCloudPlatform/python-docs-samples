@@ -47,25 +47,24 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
     )
 
     # Send a prompt and instruct the model to generate content using the Tool that you just created
-    response_fc = model.generate_content(
+    response = model.generate_content(
         prompt,
         generation_config={"temperature": 0},
         tools=[weather_tool],
     )
 
-    # Transform the structured data response into a Python dictionary
-    function_name = response_fc.candidates[0].content.parts[0].function_call.name
-    parameters = {}
-    for key, value in (
-        response_fc.candidates[0].content.parts[0].function_call.args.items()
-    ):
-        parameters[key] = value
-    parameters
+    # Check the function name that the model responded with, and make an API call to an external system
+    if response.candidates[0].content.parts[0].function_call.name == "get_current_weather":
 
-    # This is where you would use the function_name and parameters to make an API request to fetch the current weather.
-    # Here we'll use synthetic data to simulate a response payload from an external API.
-    api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
-                   "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
+        # Extract the arguments to use in your API call
+        location = response.candidates[0].content.parts[0].function_call.args["location"]
+
+        # Here you can use your preferred method to make an API request to fetch the current weather, for example:
+        # api_response = requests.post(weather_api_url, data={"location": location})
+
+        # In this example, we'll use synthetic data to simulate a response payload from an external API
+        api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
+                        "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
 
     # Return the API response to Gemini so it can generate a model response or request another function call
     response = model.generate_content(
@@ -105,7 +104,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
     # Get the model summary response
     summary = response.candidates[0].content.parts[0].text
 
-    return summary, response, response_fc
+    return summary, response
 
 
 # [END aiplatform_gemini_function_calling]

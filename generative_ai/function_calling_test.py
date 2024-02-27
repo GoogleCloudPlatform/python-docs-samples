@@ -37,23 +37,13 @@ response_expected = [
     "Boston",
 ]
 
-response_fc_expected = [
-    "function_call",
-    "get_current_weather",
-    "args",
-    "fields",
-    "location",
-    "Boston",
-]
-
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling() -> None:
-    summary, response, response_fc = function_calling.generate_function_call(
+    summary, response = function_calling.generate_function_call(
         prompt="What is the weather like in Boston?",
         project_id=_PROJECT_ID,
         location=_LOCATION,
     )
     assert all(x in str(summary) for x in summary_expected)
     assert all(x in str(response) for x in response_expected)
-    assert all(x in str(response_fc) for x in response_fc_expected)
