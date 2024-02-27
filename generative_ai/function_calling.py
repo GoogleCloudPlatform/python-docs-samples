@@ -27,7 +27,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
-    # Load the Vertex AI Gemini API to use function calling
+    # Initialize Gemini model
     model = GenerativeModel("gemini-1.0-pro")
 
     # Specify a function declaration and parameters for an API request
