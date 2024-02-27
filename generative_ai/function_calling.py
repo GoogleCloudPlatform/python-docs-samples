@@ -46,22 +46,27 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
         function_declarations=[get_current_weather_func],
     )
 
-    # Send a prompt and instruct the model to generate content using the Tool that you just created
+    # Define the user's prompt in a Content object that we can reuse in model calls
+    user_prompt_content = Content(
+        role="user",
+        parts=[
+            Part.from_text(prompt),
+        ],
+    )
+
+    # Send the prompt and instruct the model to generate content using the Tool that you just created
     response = model.generate_content(
-        prompt,
+        user_prompt_content,
         generation_config={"temperature": 0},
         tools=[weather_tool],
     )
+    response_function_call_content = response.candidates[0].content
 
     # Check the function name that the model responded with, and make an API call to an external system
-    if (
-        response.candidates[0].content.parts[0].function_call.name
-        == "get_current_weather"
-    ):
+    if response.candidates[0].content.parts[0].function_call.name == "get_current_weather":
+
         # Extract the arguments to use in your API call
-        location = (
-            response.candidates[0].content.parts[0].function_call.args["location"]
-        )
+        location = response.candidates[0].content.parts[0].function_call.args["location"]
 
         # Here you can use your preferred method to make an API request to fetch the current weather, for example:
         # api_response = requests.post(weather_api_url, data={"location": location})
@@ -73,31 +78,15 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> str:
     # Return the API response to Gemini so it can generate a model response or request another function call
     response = model.generate_content(
         [
-            Content(
-                role="user",
-                parts=[
-                    Part.from_text(prompt),
-                ],
-            ),
-            Content(
-                role="function",
-                parts=[
-                    Part.from_dict(
-                        {
-                            "function_call": {
-                                "name": "get_current_weather",
-                            }
-                        }
-                    )
-                ],
-            ),
+            user_prompt_content,  # User prompt
+            response_function_call_content,  # Function call response
             Content(
                 role="function",
                 parts=[
                     Part.from_function_response(
                         name="get_current_weather",
                         response={
-                            "content": api_response,
+                            "content": api_response,  # Return the API response to Gemini
                         },
                     )
                 ],
