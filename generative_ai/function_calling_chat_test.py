@@ -58,7 +58,7 @@ responses_fc_expected = [
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_function_calling() -> None:
+def test_function_calling_chat() -> None:
     (
         _,
         summaries,
