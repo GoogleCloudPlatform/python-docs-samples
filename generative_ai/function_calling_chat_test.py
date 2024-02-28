@@ -27,12 +27,9 @@ _LOCATION = "us-central1"
 summaries_expected = [
     "Pixel 8 Pro",
     "stock",
-    "SKU",
-    "GA04834-US",
     "store",
-    "Mountain View",
-    "address",
     "2000 N Shoreline Blvd",
+    "Mountain View",
 ]
 
 

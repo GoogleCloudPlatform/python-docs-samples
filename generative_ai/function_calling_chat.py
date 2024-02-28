@@ -22,7 +22,7 @@ from vertexai.generative_models import (
 )
 
 
-def generate_function_call_chat(project_id: str, location: str) -> str:
+def generate_function_call_chat(project_id: str, location: str) -> tuple:
     prompts = []
     summaries = []
 
