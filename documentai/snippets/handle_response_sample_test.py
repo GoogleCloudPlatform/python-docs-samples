@@ -117,7 +117,8 @@ def test_process_document_quality(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "52a38e080c1a7296"
-    processor_version = "pretrained-ocr-v1.0-2020-09-23"
+    # processor_version = "pretrained-ocr-v1.0-2020-09-23"
+    processor_version = "pretrained-foundation-model-v2.0-2024-02-22"
     poor_quality_file_path = "resources/document_quality_poor.pdf"
     mime_type = "application/pdf"
 

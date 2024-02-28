@@ -388,11 +388,10 @@ def process_document(
     project_id: str,
     location: str,
     processor_id: str,
-    # processor_version: str,
+    processor_version: str,
     file_path: str,
     mime_type: str,
     process_options: Optional[documentai.ProcessOptions] = None,
-    processor_version: str = "pretrained-foundation-model-v2.0-2024-02-22",
 ) -> documentai.Document:
     # You must set the `api_endpoint` if you use a location other than "us".
     client = documentai.DocumentProcessorServiceClient(
