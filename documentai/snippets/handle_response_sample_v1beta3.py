@@ -63,15 +63,15 @@ def process_document_summarizer_sample(
     # Optional: Request specific summarization format other than the default
     # for the processor version.
     process_options = documentai.ProcessOptions(
-        # schema_override=documentai.DocumentSchema(
-        #     entity_types=[
-        #         documentai.DocumentSchema.EntityType(
-        #             name="summary_document_type",
-        #             base_types=["document"],
-        #             properties=properties,
-        #         )
-        #     ]
-        # )
+        schema_override=documentai.DocumentSchema(
+            entity_types=[
+                documentai.DocumentSchema.EntityType(
+                    name="summary_document_type",
+                    base_types=["document"],
+                    properties=properties,
+                )
+            ]
+        )
     )
 
     # Online processing request to Document AI
