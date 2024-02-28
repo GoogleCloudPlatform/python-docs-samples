@@ -95,7 +95,7 @@ colorlog==4.0.2
 configparser==3.5.3
 coverage==5.3
 croniter==0.3.36
-cryptography==42.0.2
+cryptography==42.0.4
 cx-Oracle==8.0.1
 datadog==0.39.0
 decorator==4.4.2
