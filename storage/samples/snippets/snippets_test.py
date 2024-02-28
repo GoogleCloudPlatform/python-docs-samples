@@ -361,7 +361,7 @@ def test_generate_upload_signed_url_v4(test_bucket, capsys):
 
     bucket = storage.Client().bucket(test_bucket.name)
     blob = bucket.blob(blob_name)
-    assert blob.download_as_string() == content
+    assert blob.download_as_bytes() == content
 
 
 def test_generate_signed_policy_v4(test_bucket, capsys):
@@ -592,7 +592,7 @@ def test_storage_compose_file(test_bucket):
             source_files[1],
             dest_file.name,
         )
-        composed = destination.download_as_string()
+        composed = destination.download_as_bytes()
 
         assert composed.decode("utf-8") == source_files[0] + source_files[1]
 
