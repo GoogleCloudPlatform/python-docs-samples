@@ -48,6 +48,6 @@ def streaming_prediction(
     return results
 
 
+# [END aiplatform_streaming_code]
 if __name__ == "__main__":
     streaming_prediction()
-# [END aiplatform_streaming_code]
