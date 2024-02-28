@@ -77,6 +77,6 @@ A:""",
     return response.text
 
 
+# [END aiplatform_sdk_extraction]
 if __name__ == "__main__":
     extractive_question_answering()
-# [END aiplatform_sdk_extraction]

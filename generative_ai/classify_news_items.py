@@ -62,6 +62,6 @@ The answer is:
     return response
 
 
+# [END aiplatform_sdk_classify_news_items]
 if __name__ == "__main__":
     classify_news_items()
-# [END aiplatform_sdk_classify_news_items]
