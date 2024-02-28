@@ -388,10 +388,11 @@ def process_document(
     project_id: str,
     location: str,
     processor_id: str,
-    processor_version: str,
+    # processor_version: str,
     file_path: str,
     mime_type: str,
     process_options: Optional[documentai.ProcessOptions] = None,
+    processor_version: Optional[str] = None,
 ) -> documentai.Document:
     # You must set the `api_endpoint` if you use a location other than "us".
     client = documentai.DocumentProcessorServiceClient(
