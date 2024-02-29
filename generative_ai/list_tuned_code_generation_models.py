@@ -31,6 +31,6 @@ def list_tuned_code_generation_models(
     return tuned_model_names
 
 
+# [END aiplatform_sdk_list_tuned_code_generation_models]
 if __name__ == "__main__":
     list_tuned_code_generation_models()
-# [END aiplatform_sdk_list_tuned_code_generation_models]

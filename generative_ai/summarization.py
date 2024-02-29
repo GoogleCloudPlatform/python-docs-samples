@@ -73,6 +73,6 @@ Summary:
     return response.text
 
 
+# [END aiplatform_sdk_summarization]
 if __name__ == "__main__":
     text_summarization()
-# [END aiplatform_sdk_summarization]

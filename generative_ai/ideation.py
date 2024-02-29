@@ -43,6 +43,4 @@ def interview(
     return response.text
 
 
-if __name__ == "__main__":
-    interview()
 # [END aiplatform_sdk_ideation]

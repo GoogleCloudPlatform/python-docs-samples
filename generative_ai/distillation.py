@@ -61,6 +61,6 @@ def distill_model(
     return distillation_job
 
 
+# [END aiplatform_sdk_distillation]
 if __name__ == "__main__":
     distill_model()
-# [END aiplatform_sdk_distillation]

@@ -57,7 +57,7 @@ def get_relative_cost(storage_class: str) -> float:
 
 def get_soft_delete_cost(
     project_name: str,
-    soft_delete_window: int,
+    soft_delete_window: float,
     agg_days: int,
     lookback_days: int,
 ) -> Dict[str, List[Dict[str, float]]]:
@@ -98,7 +98,7 @@ def get_soft_delete_cost(
 def calculate_soft_delete_costs(
     project_name: str,
     query_client: monitoring_client.QueryServiceClient,
-    soft_delete_window: int,
+    soft_delete_window: float,
     storage_ratios_by_bucket: Dict[str, float],
     agg_days: int,
     lookback_days: int,
@@ -234,7 +234,7 @@ def get_storage_class_ratio(
 def soft_delete_relative_cost_analyzer(
     project_name: str,
     cost_threshold: float = 0.0,
-    soft_delete_window: int = 604800,
+    soft_delete_window: float = 604800,
     agg_days: int = 30,
     lookback_days: int = 360,
     list_buckets: bool = False,
@@ -292,8 +292,8 @@ def soft_delete_relative_cost_analyzer_main() -> None:
     )
     parser.add_argument(
         "--soft_delete_window",
-        type=int,
-        default=604800,
+        type=float,
+        default=604800.0,
         help="Time window (in seconds) for considering soft-deleted objects.",
     )
     parser.add_argument(
