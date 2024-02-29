@@ -200,7 +200,7 @@ def test_process_document_summarizer(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "feacd98c28866ede"
-    processor_version = "stable"
+    processor_version = "pretrained-foundation-model-v2.0-2024-02-22"
     file_path = "resources/superconductivity.pdf"
     mime_type = "application/pdf"
 
