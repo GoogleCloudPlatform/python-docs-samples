@@ -23,7 +23,7 @@ from vertexai.generative_models import (
 )
 
 
-def generate_function_call(prompt: str, project_id: str, location: str) -> str:
+def generate_function_call(prompt: str, project_id: str, location: str) -> tuple:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
