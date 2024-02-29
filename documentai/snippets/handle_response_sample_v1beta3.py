@@ -47,18 +47,18 @@ def process_document_summarizer_sample(
         format=documentai.SummaryOptions.Format.BULLETS,
     )
 
-    properties = [
-        documentai.DocumentSchema.EntityType.Property(
-            name="summary",
-            value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
-            property_metadata=documentai.PropertyMetadata(
-                field_extraction_metadata=documentai.FieldExtractionMetadata(
-                    summary_options=summary_options
-                )
-            ),
-        )
-    ]
+    # properties = [
+    #     documentai.DocumentSchema.EntityType.Property(
+    #         name="summary",
+    #         value_type="string",
+    #         occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+    #         property_metadata=documentai.PropertyMetadata(
+    #             field_extraction_metadata=documentai.FieldExtractionMetadata(
+    #                 summary_options=summary_options
+    #             )
+    #         ),
+    #     )
+    # ]
 
     # Optional: Request specific summarization format other than the default
     # for the processor version.
@@ -88,8 +88,8 @@ def process_document_summarizer_sample(
     for entity in document.entities:
         print_entity(entity)
         # Print Nested Entities (if any)
-        for prop in entity.properties:
-            print_entity(prop)
+        # for prop in entity.properties:
+        #     print_entity(prop)
 
 
 # [END documentai_process_summarizer_document]
