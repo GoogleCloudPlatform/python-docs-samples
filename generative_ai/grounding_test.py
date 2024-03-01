@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@ import os
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import extraction
+import grounding
 
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -25,8 +25,14 @@ _LOCATION = "us-central1"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_extractive_question_answering() -> None:
-    content = extraction.extractive_question_answering(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
+def test_grounding() -> None:
+    data_store_id = "test-search-engine_1689960780551"
+    response = grounding.grounding(
+        project_id=_PROJECT_ID,
+        location=_LOCATION,
+        data_store_location="global",
+        data_store_id=data_store_id,
     )
-    assert content.strip() == "Reduced moist tropical vegetation cover in the basin."
+    assert response
+    assert response.text
+    assert response.grounding_metadata

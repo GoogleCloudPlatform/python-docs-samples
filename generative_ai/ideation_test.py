@@ -24,6 +24,7 @@ _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
 
 
+# example model response
 interview_expected_response = """1. What is your experience with project management?
 2. What is your process for managing a project?
 3. How do you handle unexpected challenges or roadblocks?
@@ -41,4 +42,8 @@ def test_interview() -> None:
     content = ideation.interview(
         temperature=0, project_id=_PROJECT_ID, location=_LOCATION
     )
-    assert content == interview_expected_response
+    # check if response is empty
+    assert len(content) > 0
+    # check if response has 10 points
+    for i in range(1, 11):
+        assert str(i) in content

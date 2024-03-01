@@ -35,6 +35,6 @@ def generate_a_function(temperature: float = 0.5) -> object:
     return response
 
 
+# [END aiplatform_sdk_code_generation_function]
 if __name__ == "__main__":
     generate_a_function()
-# [END aiplatform_sdk_code_generation_function]

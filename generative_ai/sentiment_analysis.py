@@ -79,6 +79,6 @@ Classify the sentiment of the message: """,
     return response.text
 
 
+# [END aiplatform_sdk_sentiment_analysis]
 if __name__ == "__main__":
     sentiment_analysis()
-# [END aiplatform_sdk_sentiment_analysis]

@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,18 +15,26 @@
 import os
 
 import backoff
+
+import generate_image
+
 from google.api_core.exceptions import ResourceExhausted
 
-import extraction
 
-
+_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
+_OUTPUT_FILE = os.path.join(_RESOURCES, "dog_newspaper.png")
+_PROMPT = "a dog reading a newspaper"
 
 
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_extractive_question_answering() -> None:
-    content = extraction.extractive_question_answering(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
+def test_generate_image() -> None:
+    response = generate_image.generate_image(
+        _PROJECT_ID,
+        _LOCATION,
+        _OUTPUT_FILE,
+        _PROMPT,
     )
-    assert content.strip() == "Reduced moist tropical vegetation cover in the basin."
+
+    assert len(response[0]._image_bytes) > 1000

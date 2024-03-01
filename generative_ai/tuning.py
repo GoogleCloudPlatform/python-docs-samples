@@ -86,6 +86,6 @@ def tuning(
     return model
 
 
+# [END aiplatform_sdk_tuning]
 if __name__ == "__main__":
     tuning()
-# [END aiplatform_sdk_tuning]
