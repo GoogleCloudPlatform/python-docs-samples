@@ -199,8 +199,8 @@ def test_process_document_splitter(capsys):
 def test_process_document_summarizer(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-    processor_id = "feacd98c28866ede"
-    processor_version = "stable"
+    processor_id = "a2ab373924245a07"
+    processor_version = "pretrained-foundation-model-v1.1-2023-09-12"
     file_path = "resources/superconductivity.pdf"
     mime_type = "application/pdf"
 
