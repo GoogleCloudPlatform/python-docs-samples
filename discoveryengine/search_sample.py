@@ -18,9 +18,9 @@ from typing import List
 
 from google.api_core.client_options import ClientOptions
 from google.cloud.discoveryengine_v1 import (
-    SearchServiceClient,
-    SearchResponse,
     SearchRequest,
+    SearchResponse,
+    SearchServiceClient,
 )
 
 # TODO(developer): Uncomment these variables before running the sample.
