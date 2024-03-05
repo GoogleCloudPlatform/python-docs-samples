@@ -35,7 +35,7 @@ def search_sample(
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
-        ClientOptions(api_endpoint=f"{location}-googleapis.com")
+        ClientOptions(api_endpoint=f"{location}-discoveryengine.googleapis.com")
         if location != "global"
         else None
     )
@@ -54,7 +54,7 @@ def search_sample(
 
     # Optional: Configuration options for search
     # Refer to the `ContentSearchSpec` reference for all supported fields:
-    # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.discoveryengine.SearchRequest.ContentSearchSpec
+    # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.SearchRequest.ContentSearchSpec
     content_search_spec = discoveryengine.SearchRequest.ContentSearchSpec(
         # For information about snippets, refer to:
         # https://cloud.google.com/generative-ai-app-builder/docs/snippets
@@ -77,8 +77,8 @@ def search_sample(
         ),
     )
 
-    # Refer to the `discoveryengine.SearchRequest` reference for all supported fields:
-    # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.discoveryengine.SearchRequest
+    # Refer to the `SearchRequest` reference for all supported fields:
+    # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.SearchRequest
     request = discoveryengine.SearchRequest(
         serving_config=serving_config,
         query=search_query,
