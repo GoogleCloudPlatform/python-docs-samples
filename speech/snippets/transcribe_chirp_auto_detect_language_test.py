@@ -26,8 +26,10 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 def test_transcribe_chirp() -> None:
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    response = transcribe_chirp_auto_detect_language.transcribe_chirp_auto_detect_language(
-        project_id, os.path.join(_RESOURCES, "audio.wav")
+    response = (
+        transcribe_chirp_auto_detect_language.transcribe_chirp_auto_detect_language(
+            project_id, os.path.join(_RESOURCES, "audio.wav")
+        )
     )
 
     assert re.search(
@@ -36,4 +38,4 @@ def test_transcribe_chirp() -> None:
         re.DOTALL | re.I,
     )
 
-    assert response.results[0].language_code == 'en'
+    assert response.results[0].language_code == "en"
