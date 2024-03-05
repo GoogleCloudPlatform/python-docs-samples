@@ -97,7 +97,7 @@ gcloud dataflow flex-template build $TEMPLATE_FILE  \
     --project $PROJECT
 ```
 
-Note: Older versions of gcloud might not support AR and require using GCR registry images in the `--flex-template-base-image` option.
+Note: Older versions of `gcloud` might not support Artifact Registry in the `--flex-template-base-image` option. You might need to upgrade `gcloud` or build the Flex Template from a `Dockerfile` using the instructions below.
 
 If you prefer to have a separate file to configure and build the Flex Template image (included in the example), such as a `Dockefile.flex_template` file, you can build the Flex Template as follows:
 
