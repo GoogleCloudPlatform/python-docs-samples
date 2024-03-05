@@ -20,23 +20,25 @@
 #   - https://cloud.google.com/dataflow/docs/reference/flex-templates-base-images
 #   - https://cloud.google.com/dataflow/docs/guides/using-custom-containers
 
-# NOTE: the version of Python interpreter and Beam SDK should be consistent throughout the project.
-# Use the same version of apache_beam in setup.py if you add an explicit dependency on Beam.
 
-# Use a custom base image for our containers. This is done as an illustration of possible
-# image for possible customizations. A 'slim' base image results in smaller image size,
-# but does not include some normally preinstalled libraries, like google-cloud-debugger.
+# This Dockerfile illustrates how to use a custom base image when building
+# custom contaier images for Dataflow. A 'slim' base image is smaller in size,
+# but does not include some preinstalled libraries, like google-cloud-debugger.
 # To use a standard image, use apache/beam_python3.11_sdk:2.54.0 instead.
+# Use consistent versions of Python interpreter in the project.
 FROM python:3.11-slim
 
-# Copy SDK entrypoint binary from Apache Beam image, so that we can use our image as SDK container image.
+# Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
+# use the image as SDK container image. If you explicitly depend on
+# apache-beam in setup.py, use the same version of Beam in both files.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 
-# Copy flex template launcher binary for the launcher image, so that we can use our image as a Flex Template.
+# Copy Flex Template launcher binary from the launcher image, which makes it
+# possible to use the image as a Flex Template base image.
 COPY --from=gcr.io/dataflow-templates-base/python311-template-launcher-base:20230622_RC00 /opt/google/dataflow/python_template_launcher /opt/google/dataflow/python_template_launcher
 
 # Location to store the pipeline artifacts.
-# The /template folder name is chosen for consistency with the default WORKDIR used
+# The /template location is chosen for consistency with the default WORKDIR used
 # when template image is created via `gcloud flex-templates build` command.
 ARG WORKDIR=/template
 WORKDIR ${WORKDIR}
@@ -47,13 +49,15 @@ COPY main.py .
 COPY my_package my_package
 
 # Installing exhaustive list of dependencies from a requirements.txt
-# helps to ensure that every time Docker container image is built, the Python dependencies stay the same.
+# helps to ensure that every time Docker container image is built,
+# the Python dependencies stay the same.
 RUN pip install -r requirements.txt
 
-# Installing the pipeline package will make all modules encompassing the pipeline
-# to be available via import statements, and make sure all necessary dependencies are installed .
+# Installing the pipeline package makes all modules encompassing the pipeline
+# available via import statements and installs necessary dependencies.
  # Editable installation allows picking up later changes to the pipeline code
-# for example during local experimentation within the container, or when the final flex template image is built.
+# for example during local experimentation within the container,
+# or when the final Flex Template image is built.
 RUN pip install -e .
 
 # For more informaiton, see: https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates
@@ -61,15 +65,19 @@ ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/main.py"
 ENV FLEX_TEMPLATE_PYTHON_SETUP_FILE="${WORKDIR}/setup.py"
 
 # To reduce pipeline submission time
-# we are not using FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
-# to specify pipeline dependencies, because we will use this image as custom sdk container image
-# and it already installs the dependencies from the requirements.txt.
+# do not using FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
+# to specify pipeline dependencies, because this image will be used
+# as custom sdk container image and it already installs the dependencies
+# from the requirements.txt.
 
-# Optionally, verify that dependencies are not conflicting. A conflict may or may not be significant for your pipeline.
+# Optionally, verify that dependencies are not conflicting.
+# A conflict may or may not be significant for your pipeline.
 RUN pip check
 
-# Optionally, list all installed dependencies. The output can be used to seed requirements.txt for reproducible builds.
+# Optionally, list all installed dependencies.
+# The output can be used to seed requirements.txt for reproducible builds.
 RUN pip freeze
 
-# Set the entrypoint to Apache Beam SDK launcher.
+# Set the entrypoint to Apache Beam SDK launcher, which allows this image
+# to be used as an SDK container image.
 ENTRYPOINT ["/opt/apache/beam/boot"]

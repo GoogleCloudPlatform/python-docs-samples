@@ -17,7 +17,7 @@ To illustrate this setup, we use a pipeline that does the following:
 
 ## The structure of the example
 
-The pipeline package is comprised of the `my_package` directory and the `setup.py` file. The package defines the pipeline, the pipeline dependencies, and the input parameters. You can define multiple pipelines in the same package. The `my_package.launcher` file is used to submit the pipeline to a runner.
+The pipeline package is comprised of the `my_package` directory and the `setup.py` file. The package defines the pipeline, the pipeline dependencies, and the input parameters. You can define multiple pipelines in the same package. The `my_package.launcher` module is used to submit the pipeline to a runner.
 
 The `main.py` file provides a top-level entrypoint to trigger the pipeline launcher from a
 launch environment.

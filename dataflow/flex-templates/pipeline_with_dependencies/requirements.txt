@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-# This requirements.txt file lists all Python dependenciences that will be installed
-# in Docker images that we build in this example.
+# This requirements.txt file lists all Python dependenciences that are installed
+# in Docker images in this example.
 
 # See the "Update the dependencies in requirements.txt" section in README.md
 

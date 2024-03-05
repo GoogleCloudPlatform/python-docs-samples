@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# In this example, most of the template configuration is already done in the `Dockerfile`, 
-# which defines the base image, so we won't repeat that configuration here.
-# We only need to change the entrypoint to make base image into a Flex template image.  
+# In this example, most of the Flex Template configuration is already done
+# in the base image `Dockerfile`, which defines the custom container image.
+# There is no need repeat the Template that configuration here.
+# To make the base image a Flex Template image, change the entrypoint.
 
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}
 
-ENTRYPOINT ["/opt/google/dataflow/python_template_launcher"] 
+ENTRYPOINT ["/opt/google/dataflow/python_template_launcher"]
