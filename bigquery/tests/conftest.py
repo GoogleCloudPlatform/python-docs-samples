@@ -14,10 +14,10 @@
 
 import datetime
 from typing import Iterator, List
+from unittest import mock
 import uuid
 
 import google.auth
-import mock
 import pytest
 
 from google.cloud import bigquery

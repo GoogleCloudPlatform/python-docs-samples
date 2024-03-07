@@ -13,17 +13,24 @@
 # limitations under the License.
 
 import os
+import sys
 from typing import Iterator, Union
+from unittest import mock
 
 import google.auth
-import mock
 import pytest
 
 from .user_credentials import main  # type: ignore
 
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-MockType = Union[mock.mock.MagicMock, mock.mock.AsyncMock]
+
+if sys.version_info >= (3, 8):
+    # Python 3.8+ has an AsyncMock attribute in unittest.mock, but 3.7 does not
+    MockType = Union[mock.MagicMock, mock.AsyncMock]
+else:
+    # Other definitions and imports
+    MockType = Union[mock.MagicMock]
 
 
 @pytest.fixture
