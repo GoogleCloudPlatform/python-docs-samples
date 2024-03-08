@@ -68,6 +68,12 @@ def search_sample(
             include_citations=True,
             ignore_adversarial_query=True,
             ignore_non_summary_seeking_query=True,
+            model_prompt_spec=discoveryengine.SearchRequest.ContentSearchSpec.SummarySpec.ModelPromptSpec(
+                preamble="YOUR_CUSTOM_PROMPT"
+            ),
+            model_spec=discoveryengine.SearchRequest.ContentSearchSpec.SummarySpec.ModelSpec(
+                version="stable",  # Options: stable, preview
+            ),
         ),
     )
 

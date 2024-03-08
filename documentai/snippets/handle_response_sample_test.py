@@ -117,7 +117,7 @@ def test_process_document_quality(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     processor_id = "52a38e080c1a7296"
-    processor_version = "pretrained-ocr-v1.0-2020-09-23"
+    processor_version = "pretrained-ocr-v2.0-2023-06-02"
     poor_quality_file_path = "resources/document_quality_poor.pdf"
     mime_type = "application/pdf"
 
@@ -199,8 +199,8 @@ def test_process_document_splitter(capsys):
 def test_process_document_summarizer(capsys):
     location = "us"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-    processor_id = "feacd98c28866ede"
-    processor_version = "stable"
+    processor_id = "a2ab373924245a07"
+    processor_version = "pretrained-foundation-model-v1.1-2023-09-12"
     file_path = "resources/superconductivity.pdf"
     mime_type = "application/pdf"
 
