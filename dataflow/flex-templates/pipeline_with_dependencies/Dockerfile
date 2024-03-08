@@ -50,12 +50,12 @@ COPY my_package my_package
 
 # Installing exhaustive list of dependencies from a requirements.txt
 # helps to ensure that every time Docker container image is built,
-# the Python dependencies stay the same.
-RUN pip install -r requirements.txt
+# the Python dependencies stay the same. Using `--no-cache-dir` reduces image size.
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Installing the pipeline package makes all modules encompassing the pipeline
 # available via import statements and installs necessary dependencies.
- # Editable installation allows picking up later changes to the pipeline code
+# Editable installation allows picking up later changes to the pipeline code
 # for example during local experimentation within the container,
 # or when the final Flex Template image is built.
 RUN pip install -e .
@@ -65,7 +65,7 @@ ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/main.py"
 ENV FLEX_TEMPLATE_PYTHON_SETUP_FILE="${WORKDIR}/setup.py"
 
 # To reduce pipeline submission time
-# do not using FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
+# do not use FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
 # to specify pipeline dependencies, because this image will be used
 # as custom sdk container image and it already installs the dependencies
 # from the requirements.txt.

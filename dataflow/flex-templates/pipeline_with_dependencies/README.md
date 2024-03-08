@@ -54,6 +54,8 @@ gcloud artifacts repositories create $REPOSITORY \
     --repository-format=docker \
     --location=$REGION \
     --project $PROJECT
+
+gcloud auth configure-docker $REGION-docker.pkg.dev
 ```
 
 ## Build a Docker image for the pipeline runtime environment
