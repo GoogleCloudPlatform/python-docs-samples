@@ -1,6 +1,8 @@
 
 # Dataflow flex template: a pipeline with dependencies and a custom container image.
 
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
+
 This project is created to illustrate the following setup of a Dataflow Python pipeline:
 - The pipeline is a package that consists of [multiple files](https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/#multiple-file-dependencies).
 - The pipeline has at least one dependency that is not provided in the default Dataflow runtime environment.
@@ -28,8 +30,18 @@ The `requirements.txt` file defines all Python packages in the dependency chain 
 
 ## Before you begin
 
-Follow the
-[Dataflow setup instructions](../../README.md).
+1. Follow the
+   [Dataflow setup instructions](../../README.md).
+
+1. [Enable the Cloud Build API](https://console.cloud.google.com/flows/enableapi?apiid=cloudbuild.googleapis.com).
+
+1. Clone the [`python-docs-samples` repository](https://github.com/GoogleCloudPlatform/python-docs-samples)
+and navigate to the code sample.
+
+    ```sh
+    git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
+    cd python-docs-samples/dataflow/flex-templates/streaming_beam
+    ```
 
 ## Create a Cloud Storage bucket
 
