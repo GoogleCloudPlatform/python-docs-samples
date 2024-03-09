@@ -24,8 +24,6 @@ launch environment.
 
 The `Dockerfile` defines the runtime environment for the pipeline. It also configures the Flex Template, which lets you reuse the runtime image to build the Flex Template.
 
-The`Dockerfile.flex_template` and `flex_template_cloudbuild.yaml` files provide the remaining instructions to build the Flex Template.
-
 The `requirements.txt` file defines all Python packages in the dependency chain of the pipeline package. Use it to create reproducible Python environments in the Docker images.
 
 ## Before you begin
@@ -67,6 +65,8 @@ We use the custom container image both to preinstall all of the pipeline depende
 
 To illustrate customizations, we use a [custom base base image](https://cloud.google.com/dataflow/docs/guides/build-container-image#use_a_custom_base_image) to build the SDK container image.
 
+We include the Flex Template launcher in the SDK container image, which makes it possible to [use the SDK container image to build a Flex Template](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
+
 ```sh
 # Use a unique tag to version artifacts we build.
 export TAG=`date +%Y%m%d-%H%M%S`
@@ -75,12 +75,10 @@ export SDK_CONTAINER_IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_base_
 gcloud builds submit .  --tag $SDK_CONTAINER_IMAGE --project $PROJECT
 ```
 
-You must rebuild the base image when your pipeline dependencies change.
-
 ## Build the Flex Template
 
-To build the Flex Templates, use the [runtime image as the base image](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
-Using the runtime image as the base image allows us to reduce the number of Docker images that need to be maintained.
+We build the Flex Template [from the SDK container image](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
+Using the runtime image as the Flex Template image allows us to reduce the number of Docker images that need to be maintained.
 It also ensures that the pipeline uses the same dependencies at submission and at runtime.
 
 ```sh
@@ -90,26 +88,7 @@ export TEMPLATE_IMAGE=$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_template_im
 
 ```sh
 gcloud dataflow flex-template build $TEMPLATE_FILE  \
-    --image-gcr-path $TEMPLATE_IMAGE \
-    --sdk-language "PYTHON" \
-    --flex-template-base-image $SDK_CONTAINER_IMAGE \
-    --py-path "."  \
-    --env "FLEX_TEMPLATE_PYTHON_PY_FILE=main.py" \
-    --env "FLEX_TEMPLATE_PYTHON_SETUP_FILE=setup.py" \
-    --project $PROJECT
-```
-
-Note: Older versions of `gcloud` might not support Artifact Registry in the `--flex-template-base-image` option. You might need to upgrade `gcloud` or build the Flex Template from a `Dockerfile` using the instructions below.
-
-If you prefer to have a separate file to configure and build the Flex Template image (included in the example), such as a `Dockefile.flex_template` file, you can build the Flex Template as follows:
-
-```sh
-gcloud builds submit --config flex_template_cloudbuild.yaml \
-    --substitutions="_TEMPLATE_IMAGE=${TEMPLATE_IMAGE},_BASE_IMAGE=${SDK_CONTAINER_IMAGE}" \
-    --project $PROJECT
-
-gcloud dataflow flex-template build $TEMPLATE_FILE  \
-    --image $TEMPLATE_IMAGE \
+    --image $SDK_CONTAINER_IMAGE \
     --sdk-language "PYTHON" \
     --project $PROJECT
 ```

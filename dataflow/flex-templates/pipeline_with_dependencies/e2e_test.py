@@ -37,22 +37,6 @@ def _include_repo(utils: Utils, image: str) -> str:
 
 
 @pytest.fixture(scope="session")
-def flex_template_image(utils: Utils, sdk_container_image: str) -> str:
-    template_image = TEMPLATE_IMAGE_NAME + ":" + utils.uuid
-    cloudbuild_submit_fixture_iter = utils.cloud_build_submit(
-        TEMPLATE_IMAGE_NAME,
-        config="flex_template_cloudbuild.yaml",
-        substitutions={
-            "_BASE_IMAGE": _include_repo(utils, sdk_container_image),
-            "_TEMPLATE_IMAGE": _include_repo(utils, template_image)
-        }
-    )
-    next(cloudbuild_submit_fixture_iter)  # not using cloudbuild output.
-    yield template_image
-    yield from cloudbuild_submit_fixture_iter
-
-
-@pytest.fixture(scope="session")
 def sdk_container_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(SDK_IMAGE_NAME)
 
@@ -60,7 +44,7 @@ def sdk_container_image(utils: Utils) -> str:
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
     yield from utils.dataflow_flex_template_build(
-        bucket_name, flex_template_image, metadata_file=None)
+        bucket_name, sdk_container_image, metadata_file=None)
 
 
 @pytest.fixture(scope="session")
