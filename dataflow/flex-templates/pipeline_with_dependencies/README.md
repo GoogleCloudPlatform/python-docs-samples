@@ -75,6 +75,18 @@ export SDK_CONTAINER_IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_base_
 gcloud builds submit .  --tag $SDK_CONTAINER_IMAGE --project $PROJECT
 ```
 
+## Optional: Inspect the Docker image
+
+If you have a local installation of Docker, you can inspect the image and run the pipeline on the Direct Runner as follows:
+```
+docker run --rm -it --entrypoint=/bin/bash $SDK_CONTAINER_IMAGE
+
+# Once the container is created, run:
+pip list
+python main.py --input requirements.txt --output=/tmp/output
+cat /tmp/output*
+```
+
 ## Build the Flex Template
 
 We build the Flex Template [from the SDK container image](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
