@@ -21,9 +21,9 @@ from typing import Optional
 from typing import Sequence
 
 import apache_beam as beam
-from apache_beam.ml.inference.base import RunInference
 from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
+from apache_beam.ml.inference.base import RunInference
 from apache_beam.options.pipeline_options import PipelineOptions
 
 import keras_nlp
@@ -81,8 +81,8 @@ class GemmaModelHandler(ModelHandler[str,
 
 
 class FormatOutput(beam.DoFn):
-   def process(self, element, *args, **kwargs):
-       yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
+    def process(self, element, *args, **kwargs):
+        yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
 
 
 if __name__ == "__main__":
@@ -103,7 +103,7 @@ if __name__ == "__main__":
       "--model_path",
       required=False,
       default="gemma_2B",
-       help="path to the Gemma model in the custom worker contaienr",
+      help="path to the Gemma model in the custom worker container",
     )
 
     args, beam_args = parser.parse_known_args()
@@ -116,9 +116,9 @@ if __name__ == "__main__":
     )
 
     with beam.Pipeline(options=beam_options) as p:
-      _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
+        _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
              | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
              | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path))  # Send the prompts to the model and get responses.
              | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
              | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
-      )
+        )
