@@ -80,7 +80,7 @@ To illustrate customizations, a [custom base base image](https://cloud.google.co
 The Flex Template launcher is included in the SDK container image, which makes it possible to [use the SDK container image to build a Flex Template](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
 
 ```sh
-# Use a unique tag to version artifacts we build.
+# Use a unique tag to version the artifacts that are built.
 export TAG=`date +%Y%m%d-%H%M%S`
 export SDK_CONTAINER_IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_base_image:$TAG"
 
