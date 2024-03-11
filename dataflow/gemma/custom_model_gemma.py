@@ -121,4 +121,4 @@ if __name__ == "__main__":
              | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path))  # Send the prompts to the model and get responses.
              | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
              | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
-            )
+             )
