@@ -3,7 +3,7 @@
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
 
-This project is created to illustrate the following setup of a Dataflow Python pipeline:
+This project illustrates the following Dataflow Python pipeline setup:
 - The pipeline is a package that consists of [multiple files](https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/#multiple-file-dependencies).
 - The pipeline has at least one dependency that is not provided in the default Dataflow runtime environment.
 - The workflow uses a [custom container image](https://cloud.google.com/dataflow/docs/guides/using-custom-containers) to preinstall dependencies and to define the pipeline runtime environment.
@@ -73,11 +73,11 @@ gcloud auth configure-docker $REGION-docker.pkg.dev
 Using a [custom SDK container image](https://cloud.google.com/dataflow/docs/guides/using-custom-containers)
 allows flexible customizations of the runtime environment.
 
-We use the custom container image both to preinstall all of the pipeline dependencies before job submission and to create a reproducible runtime environment.
+This example uses the custom container image both to preinstall all of the pipeline dependencies before job submission and to create a reproducible runtime environment.
 
-To illustrate customizations, we use a [custom base base image](https://cloud.google.com/dataflow/docs/guides/build-container-image#use_a_custom_base_image) to build the SDK container image.
+To illustrate customizations, a [custom base base image](https://cloud.google.com/dataflow/docs/guides/build-container-image#use_a_custom_base_image) is used to build the SDK container image.
 
-We include the Flex Template launcher in the SDK container image, which makes it possible to [use the SDK container image to build a Flex Template](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
+The Flex Template launcher is included in the SDK container image, which makes it possible to [use the SDK container image to build a Flex Template](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
 
 ```sh
 # Use a unique tag to version artifacts we build.
@@ -89,7 +89,7 @@ gcloud builds submit .  --tag $SDK_CONTAINER_IMAGE --project $PROJECT
 
 ## Optional: Inspect the Docker image
 
-If you have a local installation of Docker, you can inspect the image and run the pipeline on the Direct Runner as follows:
+If you have a local installation of Docker, you can inspect the image and run the pipeline by using the Direct Runner:
 ```
 docker run --rm -it --entrypoint=/bin/bash $SDK_CONTAINER_IMAGE
 
@@ -101,8 +101,8 @@ cat /tmp/output*
 
 ## Build the Flex Template
 
-We build the Flex Template [from the SDK container image](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
-Using the runtime image as the Flex Template image allows us to reduce the number of Docker images that need to be maintained.
+Build the Flex Template [from the SDK container image](https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates#use_custom_container_images).
+Using the runtime image as the Flex Template image reduces the number of Docker images that need to be maintained.
 It also ensures that the pipeline uses the same dependencies at submission and at runtime.
 
 ```sh
@@ -135,14 +135,14 @@ After the pipeline finishes, use the following command to inspect the output:
 gsutil cat gs://$BUCKET/output*
 ```
 
-## Optional: Update the dependencies in requirements.txt and rebuild the Docker images
+## Optional: Update the dependencies in the requirements file and rebuild the Docker images
 
 The top-level pipeline dependencies are defined in the `install_requires` section of the `setup.py` file.
 
-The `requirements.txt` file pins all Python dependencies, including transitive dependencies, that must be installed in the Docker base images. This step produces a reproducible set of dependencies every time the image is built.
+The `requirements.txt` file pins all Python dependencies, that must be installed in the Docker base images, including the transitive dependencies. This step produces a reproducible set of dependencies every time the image is built.
 Version control the `requirements.txt` file together with the rest of pipeline code.
 
-When the dependencies of your pipeline change or when you want to use the latest available versions of packages in the pipeline's dependency chain,  regenerate the `requirements.txt` file:
+When the dependencies of your pipeline change or when you want to use the latest available versions of packages in the pipeline's dependency chain, regenerate the `requirements.txt` file:
 
 ```
     python3.11 -m pip install pip-tools   # Use a consistent minor version of Python throughout the project.
@@ -156,8 +156,12 @@ To reduce the image size and to give preference to the versions already installe
    pip-compile --constraint=base_image_requirements.txt ./setup.py
 ```
 
-Alternatively, use an empty `requirements.txt` file,  build the SDK container Docker image from the Docker file,
-collect the output of `pip freeze` at the last stage of the Docker build, and seed the `requirements.txt` with that content.
+Alternatively, take the following steps:
+
+1. Use an empty `requirements.txt` file.
+1. Build the SDK container Docker image from the Docker file.
+1. Collect the output of `pip freeze` at the last stage of the Docker build.
+1. Seed the `requirements.txt` file with that content.
 
 For more information, see the Apache Beam [reproducible environments](https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/#create-reproducible-environments) documentation.
 
