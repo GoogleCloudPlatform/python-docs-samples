@@ -24,26 +24,12 @@ from apache_beam.options.pipeline_options import StandardOptions
 from apache_beam.options.pipeline_options import WorkerOptions
 from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import Optional
-from typing import Sequence
-
-model_path = "gemma_2B"
-topic_question="projects/google.com:clouddfe/subscriptions/gemma-input-a"
-topic_answer="projects/google.com:clouddfe/topics/jrmccluskey"
-
-# Define `SpacyModelHandler` to load the model and perform the inference.
-
-from apache_beam.ml.inference.base import ModelHandler
-from apache_beam.ml.inference.base import PredictionResult
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import Optional
-from typing import Sequence
 from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
+from typing import Any
+from typing import Dict
+from typing import Iterable
+from typing import Optional
+from typing import Sequence
 
 class GemmaModelHandler(ModelHandler[str,
                                      PredictionResult,GemmaCausalLM
@@ -96,30 +82,6 @@ class GemmaModelHandler(ModelHandler[str,
 class FormatOutput(beam.DoFn):
   def process(self, element, *args, **kwargs):
     yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
-
-# Specify the model handler, providing a path and the custom inference function.
-options = PipelineOptions()
-options.view_as(StandardOptions).streaming = True
-options.view_as(SetupOptions).save_main_session = True
-
-
-options.view_as(StandardOptions).runner = "dataflowrunner"
-options.view_as(GoogleCloudOptions).project = "google.com:clouddfe"
-options.view_as(GoogleCloudOptions).temp_location= "gs://clouddfe-jrmccluskey/tmp"
-options.view_as(GoogleCloudOptions).region= "us-central1"
-options.view_as(WorkerOptions).machine_type= "g2-standard-4"
-options.view_as(WorkerOptions).worker_harness_container_image = "us-central1-docker.pkg.dev/google.com/clouddfe/jrmccluskey-images/dataflow/gemma-dataflow:d4"
-options.view_as(WorkerOptions).disk_size_gb=200
-options.view_as(GoogleCloudOptions).dataflow_service_options=["worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver"]
-
-def run():
-  with beam.Pipeline(options=options) as p:
-    _ = (p | "Read Topic A" >> beam.io.ReadFromPubSub(subscription=topic_question)
-           | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-           | "RunInference-Gemma" >> RunInference(GemmaModelHandler(model_path)) # Send the prompts to the model and get responses.
-           | "Format Output" >> beam.ParDo(FormatOutput()) # Format the output.
-           | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=topic_answer)
-  )
 
 if __name__ == "__main__":
   import argparse
