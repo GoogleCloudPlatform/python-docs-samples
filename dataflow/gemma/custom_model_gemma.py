@@ -12,27 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import keras_nlp
 import logging
 
 import apache_beam as beam
 from apache_beam.ml.inference.base import RunInference
-from apache_beam.options.pipeline_options import GoogleCloudOptions
 from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.options.pipeline_options import SetupOptions
-from apache_beam.options.pipeline_options import StandardOptions
-from apache_beam.options.pipeline_options import WorkerOptions
 from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
-from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
+
 from typing import Any
 from typing import Dict
 from typing import Iterable
 from typing import Optional
 from typing import Sequence
 
+import keras_nlp
+from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
+
+
 class GemmaModelHandler(ModelHandler[str,
-                                     PredictionResult,GemmaCausalLM
+                                     PredictionResult, GemmaCausalLM
                                      ]):
     def __init__(
         self,
@@ -66,7 +65,7 @@ class GemmaModelHandler(ModelHandler[str,
 
         Args:
           batch: A sequence of examples as text strings. 
-          model: 
+          model: The Gemma model being used.
           inference_args: Any additional arguments for an inference.
 
         Returns:
@@ -79,9 +78,11 @@ class GemmaModelHandler(ModelHandler[str,
             predictions.append(result)
         return [PredictionResult(x, y) for x, y in zip(batch, predictions)]
 
+
 class FormatOutput(beam.DoFn):
   def process(self, element, *args, **kwargs):
     yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
+
 
 if __name__ == "__main__":
   import argparse
