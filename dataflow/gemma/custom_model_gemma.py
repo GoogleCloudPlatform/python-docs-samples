@@ -14,17 +14,17 @@
 
 import logging
 
-import apache_beam as beam
-from apache_beam.ml.inference.base import RunInference
-from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.ml.inference.base import ModelHandler
-from apache_beam.ml.inference.base import PredictionResult
-
 from typing import Any
 from typing import Dict
 from typing import Iterable
 from typing import Optional
 from typing import Sequence
+
+import apache_beam as beam
+from apache_beam.ml.inference.base import RunInference
+from apache_beam.ml.inference.base import ModelHandler
+from apache_beam.ml.inference.base import PredictionResult
+from apache_beam.options.pipeline_options import PipelineOptions
 
 import keras_nlp
 from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
@@ -86,39 +86,39 @@ class FormatOutput(beam.DoFn):
 
 
 if __name__ == "__main__":
-   import argparse
+    import argparse
 
-   parser = argparse.ArgumentParser()
-   parser.add_argument(
-     "--messages_topic",
-     required=True,
-     help="Pub/Sub topic for input text messages",
-   )
-   parser.add_argument(
-     "--responses_topic",
-     required=True,
-     help="Pub/Sub topic for output text responses",
-   )
-   parser.add_argument(
-     "--model_path",
-     required=False,
-     default="gemma_2B",
-     help="path to the Gemma model in the custom worker contaienr",
-   )
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+      "--messages_topic",
+      required=True,
+      help="Pub/Sub topic for input text messages",
+    )
+    parser.add_argument(
+      "--responses_topic",
+      required=True,
+      help="Pub/Sub topic for output text responses",
+    )
+    parser.add_argument(
+      "--model_path",
+      required=False,
+      default="gemma_2B",
+       help="path to the Gemma model in the custom worker contaienr",
+    )
 
-   args, beam_args = parser.parse_known_args()
+    args, beam_args = parser.parse_known_args()
 
-   logging.getLogger().setLevel(logging.INFO)
-   beam_options = PipelineOptions(
-       beam_args,
-       pickle_library="cloudpickle",
-       streaming=True,
-   )
+    logging.getLogger().setLevel(logging.INFO)
+    beam_options = PipelineOptions(
+        beam_args,
+        pickle_library="cloudpickle",
+        streaming=True,
+    )
 
-   with beam.Pipeline(options=beam_options) as p:
-     _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
-            | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-            | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path)) # Send the prompts to the model and get responses.
-            | "Format Output" >> beam.ParDo(FormatOutput()) # Format the output.
-            | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
-   )
+    with beam.Pipeline(options=beam_options) as p:
+      _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
+             | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
+             | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path))  # Send the prompts to the model and get responses.
+             | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
+             | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
+      )
