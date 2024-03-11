@@ -48,7 +48,8 @@ class GemmaModelHandler(ModelHandler[str,
         """
         self._model_name = model_name
         self._env_vars = {}
-    def share_model_across_processes(self)  -> bool:
+
+    def share_model_across_processes(self) -> bool:
         return True
 
     def load_model(self) -> GemmaCausalLM:
@@ -64,7 +65,7 @@ class GemmaModelHandler(ModelHandler[str,
         """Runs inferences on a batch of text strings.
 
         Args:
-          batch: A sequence of examples as text strings. 
+          batch: A sequence of examples as text strings.
           model: The Gemma model being used.
           inference_args: Any additional arguments for an inference.
 
@@ -80,44 +81,44 @@ class GemmaModelHandler(ModelHandler[str,
 
 
 class FormatOutput(beam.DoFn):
-  def process(self, element, *args, **kwargs):
-    yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
+   def process(self, element, *args, **kwargs):
+       yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
 
 
 if __name__ == "__main__":
-  import argparse
+   import argparse
 
-  parser = argparse.ArgumentParser()
-  parser.add_argument(
-    "--messages_topic",
-    required=True,
-    help="Pub/Sub topic for input text messages",
-  )
-  parser.add_argument(
-    "--responses_topic",
-    required=True,
-    help="Pub/Sub topic for output text responses",
-  )
-  parser.add_argument(
-    "--model_path",
-    required=False,
-    default="gemma_2B",
-    help="path to the Gemma model in the custom worker contaienr",
-  )
+   parser = argparse.ArgumentParser()
+   parser.add_argument(
+     "--messages_topic",
+     required=True,
+     help="Pub/Sub topic for input text messages",
+   )
+   parser.add_argument(
+     "--responses_topic",
+     required=True,
+     help="Pub/Sub topic for output text responses",
+   )
+   parser.add_argument(
+     "--model_path",
+     required=False,
+     default="gemma_2B",
+     help="path to the Gemma model in the custom worker contaienr",
+   )
 
-  args, beam_args = parser.parse_known_args()
+   args, beam_args = parser.parse_known_args()
 
-  logging.getLogger().setLevel(logging.INFO)
-  beam_options = PipelineOptions(
-        beam_args,
-        pickle_library="cloudpickle",
-        streaming=True,
-  )
+   logging.getLogger().setLevel(logging.INFO)
+   beam_options = PipelineOptions(
+       beam_args,
+       pickle_library="cloudpickle",
+       streaming=True,
+   )
 
-  with beam.Pipeline(options=beam_options) as p:
-    _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
-           | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-           | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path)) # Send the prompts to the model and get responses.
-           | "Format Output" >> beam.ParDo(FormatOutput()) # Format the output.
-           | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
-  )
+   with beam.Pipeline(options=beam_options) as p:
+     _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_topic)
+            | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
+            | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path)) # Send the prompts to the model and get responses.
+            | "Format Output" >> beam.ParDo(FormatOutput()) # Format the output.
+            | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responeses_topic)
+   )
