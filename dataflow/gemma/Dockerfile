@@ -29,8 +29,8 @@ RUN pip install --upgrade pip \
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 
-RUN pip install keras_nlp==0.8.0 
-RUN pip install keras==3.0.1
+RUN pip install --no-cache-dir keras_nlp==0.8.0 
+RUN pip install --no-cache-dir keras==3.0.5
 
 COPY gemma_2B gemma_2B
 COPY custom_model_gemma.py custom_model_gemma.py

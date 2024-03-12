@@ -28,7 +28,7 @@ You need to use Docker to build a custom container. This repository contains a D
 
 ### Create Pub/Sub topics for input and output
 
-Follow the [Google Cloud documentation for creating Pub/Sub topics](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console). This example uses two: one input topic and one output topic.
+Follow the [Google Cloud documentation for creating Pub/Sub topics](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console). This example uses two: one input topic and one output topic. For input, you will need to have a subscription to the topic to pass to the model. 
 
 ### Download and save the model
 
@@ -40,8 +40,8 @@ Install Apache Beam and the dependencies required to run the pipeline in your lo
 
 ```
 pip install -U -r requirements.txt
-pip install -q -U keras_nlp
-pip install -q -U keras
+pip install -q -U keras_nlp==0.8.0
+pip install -q -U keras==3.0.5
 ```
 
 Manually installing `keras-nlp` and `keras` separately is important, as they may cause mismatches with tensorflow system requirements; however, these do not impact the execution of the model or the pipeline and can be safely ignored.
@@ -121,17 +121,17 @@ class FormatOutput(beam.DoFn):
 Run the following code from the directory to start the Dataflow streaming pipeline. Replace `$PROJECT`, `$GCS_BUCKET`, `$REGION`, `$CONTAINER_URI`, `$INPUT_TOPIC`, and `$OUTPUT_TOPIC` with the Google Cloud Project resources you created earlier. It may take around 5 minutes for the worker to start up and begin accepting messages from the input Pub/Sub topic. 
 
 ```
-python custom_mode_gemma.py \
+python custom_model_gemma.py \
 --runner=dataflowrunner \
 --project=$PROJECT \
 --temp_location=$GCS_BUCKET \
 --region=$REGION \
---machine_type="g2-standard-4 \
+--machine_type="g2-standard-4" \
 --sdk_container_image=$CONTAINER_URI \ 
 --disk_size_gb=200 \
 --dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver" \
---messages_topic=$INPUT_TOPIC
---responses_topic=$OUTPUT_TOPIC
+--messages_subscription=$INPUT_SUBSCRIPTION \
+--responses_topic=$OUTPUT_TOPIC \
 --model_path="gemma_2B"
 ```
 
