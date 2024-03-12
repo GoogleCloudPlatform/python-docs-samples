@@ -1,1 +1,2 @@
-apache_beam[gcp]>=2.46.0
+apache_beam[gcp]==2.54.0
+protobuf==4.25.0
