@@ -1,1 +1,1 @@
-google-cloud-bigquery==3.18.0
+google-cloud-bigquery==3.19.0
