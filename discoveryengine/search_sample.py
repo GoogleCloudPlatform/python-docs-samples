@@ -21,15 +21,15 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION"                    # Values: "global", "us", "eu"
-# data_store_id = "YOUR_DATA_STORE_ID"
+# location = "YOUR_LOCATION"          # Values: "global", "us", "eu"
+# engine_id = "YOUR_APP_ID"
 # search_query = "YOUR_SEARCH_QUERY"
 
 
 def search_sample(
     project_id: str,
     location: str,
-    data_store_id: str,
+    engine_id: str,
     search_query: str,
 ) -> List[discoveryengine.SearchResponse]:
     #  For more information, refer to:
@@ -44,13 +44,8 @@ def search_sample(
     client = discoveryengine.SearchServiceClient(client_options=client_options)
 
     # The full resource name of the search engine serving config
-    # e.g. projects/{project_id}/locations/{location}/dataStores/{data_store_id}/servingConfigs/{serving_config_id}
-    serving_config = client.serving_config_path(
-        project=project_id,
-        location=location,
-        data_store=data_store_id,
-        serving_config="default_config",
-    )
+    # e.g. projects/{project_id}/locations/{location}/engines/{engine_id}/servingConfigs/{serving_config_id}
+    serving_config = f"projects/{project_id}/locations/{location}/engines/{engine_id}/servingConfigs/default_config"
 
     # Optional: Configuration options for search
     # Refer to the `ContentSearchSpec` reference for all supported fields:
@@ -72,7 +67,7 @@ def search_sample(
                 preamble="YOUR_CUSTOM_PROMPT"
             ),
             model_spec=discoveryengine.SearchRequest.ContentSearchSpec.SummarySpec.ModelSpec(
-                version="stable",  # Options: stable, preview
+                version="stable",
             ),
         ),
     )
