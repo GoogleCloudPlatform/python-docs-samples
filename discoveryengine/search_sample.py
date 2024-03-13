@@ -43,9 +43,8 @@ def search_sample(
     # Create a client
     client = discoveryengine.SearchServiceClient(client_options=client_options)
 
-    # The full resource name of the search engine serving config
-    # e.g. projects/{project_id}/locations/{location}/engines/{engine_id}/servingConfigs/{serving_config_id}
-    serving_config = f"projects/{project_id}/locations/{location}/engines/{engine_id}/servingConfigs/default_config"
+    # The full resource name of the search app serving config
+    serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_config"
 
     # Optional: Configuration options for search
     # Refer to the `ContentSearchSpec` reference for all supported fields:
