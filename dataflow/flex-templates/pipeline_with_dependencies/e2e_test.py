@@ -44,7 +44,7 @@ def sdk_container_image(utils: Utils) -> str:
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, sdk_container_image: str) -> str:
     yield from utils.dataflow_flex_template_build(
-        bucket_name, sdk_container_image, metadata_file=None)
+        bucket_name, sdk_container_image)
 
 
 @pytest.fixture(scope="session")

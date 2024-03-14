@@ -1,5 +1,5 @@
 
-# Dataflow flex template: a pipeline with dependencies and a custom container image.
+# Dataflow Flex Template: a pipeline with dependencies and a custom container image.
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
 
@@ -27,6 +27,8 @@ launch environment.
 The `Dockerfile` defines the runtime environment for the pipeline. It also configures the Flex Template, which lets you reuse the runtime image to build the Flex Template.
 
 The `requirements.txt` file defines all Python packages in the dependency chain of the pipeline package. Use it to create reproducible Python environments in the Docker image.
+
+The `metadata.json` file defines Flex Template parameters and their validation rules. It is optional.
 
 ## Before you begin
 
@@ -114,6 +116,7 @@ export TEMPLATE_IMAGE=$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_template_im
 gcloud dataflow flex-template build $TEMPLATE_FILE  \
     --image $SDK_CONTAINER_IMAGE \
     --sdk-language "PYTHON" \
+    --metadata-file=metadata.json \
     --project $PROJECT
 ```
 
