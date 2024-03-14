@@ -40,6 +40,8 @@ def generate_text_streaming(project_id: str, region: str) -> str:
             result.append(text)
 
     return "".join(result)
+
+
 # [END aiplatform_claude_3_streaming]
 
 

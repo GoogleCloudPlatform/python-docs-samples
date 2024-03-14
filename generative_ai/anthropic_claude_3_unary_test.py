@@ -22,10 +22,13 @@ import anthropic_claude_3_unary
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
 
+
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_text() -> None:
     responses = anthropic_claude_3_unary.generate_text(
         project_id=_PROJECT_ID, region=_LOCATION
     )
     assert "bread" in message.model_dump_json(indent=2)
+
+
 test_generate_text()

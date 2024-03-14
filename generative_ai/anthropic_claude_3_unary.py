@@ -35,6 +35,8 @@ def generate_text(project_id: str, region: str) -> object:
     )
     print(message.model_dump_json(indent=2))
     return message
+
+
 # [END aiplatform_claude_3_unary]
 
 
