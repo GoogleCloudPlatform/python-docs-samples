@@ -22,6 +22,8 @@ This workflow uses multiple Google Cloud Platform products, including Dataflow, 
 
 Using these services incurs billing charges.
 
+You will also need to ensure that your GCP project has Nvidia L4 GPU quota enabled, see [Google Cloud Platform documentation](https://cloud.google.com/compute/resource-usage#gpu_quota) for more information.
+
 ### Create a custom container
 
 You need to use Docker to build a custom container. This repository contains a Dockerfile that you can use to build your custom container. Follow the [Google Cloud documentation](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) that explains how to build and push a container to Artifact Registry by using Docker.
