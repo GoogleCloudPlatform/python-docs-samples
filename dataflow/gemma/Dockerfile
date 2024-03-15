@@ -11,20 +11,18 @@
 # limitations under the License.
 
 # This uses Ubuntu with Python 3.11
-ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:latest-gpu
+ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.15.0-gpu
 
 FROM ${SERVING_BUILD_IMAGE}
 
 WORKDIR /workspace
 
-RUN apt-get update -y
-RUN apt-get update
-RUN apt-get install cmake -y
+RUN apt-get update -y && apt-get install -y \
+    cmake
 
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
-    && rm -f requirements.txt
+    && pip install --no-cache-dir -r requirements.txt 
 
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam

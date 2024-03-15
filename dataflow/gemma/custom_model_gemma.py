@@ -111,7 +111,6 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     beam_options = PipelineOptions(
         beam_args,
-        pickle_library="cloudpickle",
         streaming=True,
     )
 

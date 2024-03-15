@@ -36,7 +36,7 @@ Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https:/
 
 ### Import dependencies
 
-Install Apache Beam and the dependencies required to run the pipeline in your local environment. **Note that the Python major and minor version contained in the custom container must match the environment used for job submission.**
+Install Apache Beam and the dependencies required to run the pipeline in your local environment. **Note that the Python major and minor version contained in the custom container must match the environment used for job submission. For this example, this should be Python 3.11.**
 
 ```
 pip install -U -r requirements.txt
