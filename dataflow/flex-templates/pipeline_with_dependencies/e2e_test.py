@@ -60,7 +60,7 @@ def dataflow_job_id(
         bucket_name=bucket_name,
         parameters={
             "input": "gs://dataflow-samples/shakespeare/hamlet.txt",
-            "output": f"{bucket_name}/output",
+            "output": f"gs://{bucket_name}/output",
             "sdk_container_image":  _include_repo(utils, sdk_container_image),
         },
     )
