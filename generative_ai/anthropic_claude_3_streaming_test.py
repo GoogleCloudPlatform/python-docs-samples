@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,6 @@ _LOCATION = "us-central1"
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_text_streaming() -> None:
-    print(_PROJECT_ID)
     responses = anthropic_claude_3_streaming.generate_text_streaming(
         project_id=_PROJECT_ID, region=_LOCATION
     )
