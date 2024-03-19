@@ -14,7 +14,7 @@
 
 import os
 
-from pytest import skip
+import pytest
 import vertexai
 
 import gemini_chat_example
@@ -133,7 +133,7 @@ def test_gemini_chat_example() -> None:
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
 
-@skip("Unable to test Google Search grounding due to allowlist restrictions.")
+@pytest.mark.skip("Unable to test Google Search grounding due to allowlist restrictions.")
 def test_gemini_grounding_example() -> None:
     data_store_id = "test-search-engine_1689960780551"
     data_store_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/dataStores/{data_store_id}"
