@@ -20,7 +20,6 @@ import pytest
 
 from . import append_rows_pending
 
-
 DIR = pathlib.Path(__file__).parent
 
 

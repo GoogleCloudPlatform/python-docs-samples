@@ -22,7 +22,6 @@ import pytest
 
 from . import append_rows_proto2
 
-
 DIR = pathlib.Path(__file__).parent
 
 

@@ -19,8 +19,7 @@ using the low-level generated client for Python.
 """
 
 from google.cloud import bigquery_storage_v1
-from google.cloud.bigquery_storage_v1 import types
-from google.cloud.bigquery_storage_v1 import writer
+from google.cloud.bigquery_storage_v1 import types, writer
 from google.protobuf import descriptor_pb2
 
 # If you update the customer_record.proto protocol buffer definition, run:
