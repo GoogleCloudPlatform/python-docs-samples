@@ -26,6 +26,7 @@ import gemini_pro_config_example
 import gemini_safety_config_example
 import gemini_single_turn_video_example
 
+from pytest import skip
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
@@ -132,9 +133,8 @@ def test_gemini_chat_example() -> None:
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
 
+@skip("Unable to test Google Search grounding due to allowlist restrictions.")
 def test_gemini_grounding_example() -> None:
-    # Test Vertex AI Search Grounding
-    # Unable to test Google Search grounding due to allowlist restrictions.
     data_store_id = "test-search-engine_1689960780551"
     data_store_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/dataStores/{data_store_id}"
     response = gemini_grounding_example.generate_text_with_grounding(
