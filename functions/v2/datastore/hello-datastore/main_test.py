@@ -21,11 +21,13 @@ import main
 def test_hello_datastore(capsys):
     old_entity = datastore.EntityResult(
         entity=datastore.Entity(
-           properties={"name": datastore.Value(string_value="Old Test Name")}),
+            properties={"name": datastore.Value(string_value="Old Test Name")}
+        ),
     )
     new_entity = datastore.EntityResult(
         entity=datastore.Entity(
-           properties={"name": datastore.Value(string_value="New Test Name")}),
+            properties={"name": datastore.Value(string_value="New Test Name")}
+        ),
     )
 
     datastore_payload = datastore.EntityEventData(
