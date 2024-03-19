@@ -14,8 +14,8 @@
 
 import os
 
-import vertexai
 from pytest import skip
+import vertexai
 
 import gemini_chat_example
 import gemini_count_token_example
