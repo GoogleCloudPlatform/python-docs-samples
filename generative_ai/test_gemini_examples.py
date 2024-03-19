@@ -15,6 +15,7 @@
 import os
 
 import vertexai
+from pytest import skip
 
 import gemini_chat_example
 import gemini_count_token_example
@@ -25,8 +26,6 @@ import gemini_pro_basic_example
 import gemini_pro_config_example
 import gemini_safety_config_example
 import gemini_single_turn_video_example
-
-from pytest import skip
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
@@ -84,9 +83,10 @@ def test_gemini_count_token_example() -> None:
 
 
 def test_gemini_safety_config_example() -> None:
-    import urllib
-    import typing
     import http
+    import typing
+    import urllib
+
     from vertexai.preview.generative_models import Image
 
     def load_image_from_url(image_url: str) -> str:
