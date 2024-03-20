@@ -64,6 +64,7 @@ def transcribe_chirp_auto_detect_language(
 
     return response
 
+
 # [END speech_transcribe_chirp_auto_detect_language]
 
 
