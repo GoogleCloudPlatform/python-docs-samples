@@ -65,7 +65,7 @@ with models.DAG(
 ) as dag:
     # Only name, namespace, image, and task_id are required to create a
     # KubernetesPodOperator. In Cloud Composer, the config file found at
-    # `/home/airflow/composer_kube_config contains credentials for
+    # `/home/airflow/composer_kube_config` contains credentials for
     # Cloud Composer's Google Kubernetes Engine cluster that is created
     # upon environment creation.
     # [START composer_2_kubernetespodoperator_minconfig]
