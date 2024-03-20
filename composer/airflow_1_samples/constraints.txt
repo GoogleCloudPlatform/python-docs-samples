@@ -72,7 +72,7 @@ backcall==0.2.0
 bcrypt==3.2.0
 beautifulsoup4==4.7.1
 billiard==3.6.3.0
-black==20.8b0
+black==24.3.0
 blinker==1.4
 boto3==1.10.50
 boto==2.49.0

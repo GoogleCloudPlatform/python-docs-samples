@@ -205,7 +205,7 @@ bcrypt==4.0.1
 beautifulsoup4==4.12.2
 billiard==4.1.0
 bitarray==2.7.6
-black==23.1a1
+black==24.3.0
 bleach==6.0.0
 blinker==1.6.2
 boto3==1.26.161
