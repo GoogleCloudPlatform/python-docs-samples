@@ -15,12 +15,11 @@
 """Defines command line arguments for the pipeline defined in the package."""
 
 import argparse
-from typing import List, Optional
 
 from my_package import my_pipeline
 
 
-def run(argv: Optional[List[str]] = None):
+def run(argv: list[str] | None = None):
     """Parses the parameters provided on the command line and runs the pipeline.
   """
     parser = argparse.ArgumentParser()

@@ -14,8 +14,6 @@
 
 """Defines a pipeline to create a banner from the longest word in the input."""
 
-from typing import List
-
 import apache_beam as beam
 
 from my_package import my_transforms
@@ -24,7 +22,7 @@ from my_package.utils import figlet
 
 def longest_word_pipeline(
         input_path: str, output_path: str,
-        pipeline_options_args: List[str]) -> beam.Pipeline:
+        pipeline_options_args: list[str]) -> beam.Pipeline:
     """Instantiates and returns a Beam pipeline object"""
 
     pipeline_options = beam.options.pipeline_options.PipelineOptions(
