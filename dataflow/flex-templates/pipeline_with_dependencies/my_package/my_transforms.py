@@ -14,8 +14,8 @@
 
 """Defines custom PTransforms and DoFns used in the pipleines."""
 
-import re
 from collections.abc import Iterable
+import re
 
 import apache_beam as beam
 
