@@ -64,11 +64,10 @@ with models.DAG(
     start_date=YESTERDAY,
 ) as dag:
     # Only name, namespace, image, and task_id are required to create a
-    # KubernetesPodOperator. In Cloud Composer, currently the operator defaults
-    # to using the config file found at `/home/airflow/composer_kube_config if
-    # no `config_file` parameter is specified. By default it will contain the
-    # credentials for Cloud Composer's Google Kubernetes Engine cluster that is
-    # created upon environment creation.
+    # KubernetesPodOperator. In Cloud Composer, the config file found at
+    # `/home/airflow/composer_kube_config contains credentials for
+    # Cloud Composer's Google Kubernetes Engine cluster that is created
+    # upon environment creation.
     # [START composer_2_kubernetespodoperator_minconfig]
     kubernetes_min_pod = KubernetesPodOperator(
         # The ID specified for the task.
@@ -89,8 +88,7 @@ with models.DAG(
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
         image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
-        # Specifies path to kubernetes config. If no config is specified will
-        # default to '~/.kube/config'. The config_file is templated.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
@@ -144,8 +142,7 @@ with models.DAG(
             "EXAMPLE_VAR": "/example/value",
             "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json",
         },
-        # Specifies path to kubernetes config. If no config is specified will
-        # default to '~/.kube/config'. The config_file is templated.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
@@ -195,8 +192,7 @@ with models.DAG(
             requests={"cpu": "1000m", "memory": "10G", "ephemeral-storage": "10G"},
             limits={"cpu": "1000m", "memory": "10G", "ephemeral-storage": "10G"},
         ),
-        # Specifies path to kubernetes config. If no config is specified will
-        # default to '~/.kube/config'. The config_file is templated.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # If true, the content of /airflow/xcom/return.json from container will
         # also be pushed to an XCom when the container ends.
