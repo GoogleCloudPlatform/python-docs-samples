@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_embedding]
-from vertexai.language_models import TextEmbeddingModel
+import os
+
+import backoff
+from google.api_core.exceptions import ResourceExhausted
+
+import anthropic_claude_3_streaming
 
 
-def text_embedding(text: str = "What is life?") -> list:
-    """Text embedding with a Large Language Model."""
-    model = TextEmbeddingModel.from_pretrained("textembedding-gecko@001")
-    embeddings = model.get_embeddings([text])
-    vector = embeddings[0].values
-    print(f"Length of Embedding Vector: {len(vector)}")
-    return vector
+_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+_LOCATION = "us-central1"
 
 
-# [END aiplatform_sdk_embedding]
-if __name__ == "__main__":
-    text_embedding()
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_generate_text_streaming() -> None:
+    responses = anthropic_claude_3_streaming.generate_text_streaming(
+        project_id=_PROJECT_ID, region=_LOCATION
+    )
+    assert "bread" in responses

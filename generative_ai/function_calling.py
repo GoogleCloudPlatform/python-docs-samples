@@ -85,7 +85,6 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
             user_prompt_content,  # User prompt
             response_function_call_content,  # Function call response
             Content(
-                role="function",
                 parts=[
                     Part.from_function_response(
                         name="get_current_weather",
