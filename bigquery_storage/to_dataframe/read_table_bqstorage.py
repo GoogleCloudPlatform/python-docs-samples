@@ -21,9 +21,10 @@ def read_table(your_project_id):
     your_project_id = original_your_project_id
 
     # [START bigquerystorage_pandas_tutorial_read_session]
+    import pandas
+
     from google.cloud import bigquery_storage
     from google.cloud.bigquery_storage import types
-    import pandas
 
     bqstorageclient = bigquery_storage.BigQueryReadClient()
 

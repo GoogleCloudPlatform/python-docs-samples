@@ -15,8 +15,9 @@
 import pathlib
 import random
 
-from google.cloud import bigquery
 import pytest
+
+from google.cloud import bigquery
 
 from . import append_rows_pending
 
