@@ -19,7 +19,7 @@
     "composer/blog/**/constraints.txt",
     "composer/airflow_1_samples/requirements.txt",
     "appengine/standard",
-    "dataflow/flex-templates/pipeline_with_dependencies"
+    "dataflow/flex-templates/pipeline_with_dependencies/**"
   ],
   "packageRules": [
     {
