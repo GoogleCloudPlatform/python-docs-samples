@@ -1,4 +1,3 @@
-
 # Dataflow Flex Template: a pipeline with dependencies and a custom container image.
 
 [![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
@@ -142,7 +141,7 @@ gsutil cat gs://$BUCKET/output*
 
 The top-level pipeline dependencies are defined in the `install_requires` section of the `setup.py` file.
 
-The `requirements.txt` file pins all Python dependencies, that must be installed in the Docker base images, including the transitive dependencies. This step produces a reproducible set of dependencies every time the image is built.
+The `requirements.txt` file pins all Python dependencies, that must be installed in the Docker container image, including the transitive dependencies. Listing all packages produces reproducible Python environments every time the image is built.
 Version control the `requirements.txt` file together with the rest of pipeline code.
 
 When the dependencies of your pipeline change or when you want to use the latest available versions of packages in the pipeline's dependency chain, regenerate the `requirements.txt` file:
@@ -152,7 +151,7 @@ When the dependencies of your pipeline change or when you want to use the latest
     pip-compile ./setup.py
 ```
 
-To reduce the image size and to give preference to the versions already installed in the Apache Beam base image, use a constraints file:
+If you base your custom container image on the standard Apache Beam base image, to reduce the image size and to give preference to the versions already installed in the Apache Beam base image, use a constraints file:
 
 ```
    wget https://raw.githubusercontent.com/apache/beam/release-2.54.0/sdks/python/container/py311/base_image_requirements.txt

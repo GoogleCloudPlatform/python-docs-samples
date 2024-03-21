@@ -22,7 +22,7 @@
 
 
 # This Dockerfile illustrates how to use a custom base image when building
-# custom contaier images for Dataflow. A 'slim' base image is smaller in size,
+# a custom contaier images for Dataflow. A 'slim' base image is smaller in size,
 # but does not include some preinstalled libraries, like google-cloud-debugger.
 # To use a standard image, use apache/beam_python3.11_sdk:2.54.0 instead.
 # Use consistent versions of Python interpreter in the project.
@@ -38,8 +38,6 @@ COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 COPY --from=gcr.io/dataflow-templates-base/python311-template-launcher-base:20230622_RC00 /opt/google/dataflow/python_template_launcher /opt/google/dataflow/python_template_launcher
 
 # Location to store the pipeline artifacts.
-# The /template location is chosen for consistency with the default WORKDIR used
-# when template image is created via `gcloud flex-templates build` command.
 ARG WORKDIR=/template
 WORKDIR ${WORKDIR}
 
@@ -56,8 +54,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Installing the pipeline package makes all modules encompassing the pipeline
 # available via import statements and installs necessary dependencies.
 # Editable installation allows picking up later changes to the pipeline code
-# for example during local experimentation within the container,
-# or when the final Flex Template image is built.
+# for example during local experimentation within the container.
 RUN pip install -e .
 
 # For more informaiton, see: https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates
