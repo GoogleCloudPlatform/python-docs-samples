@@ -11,10 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import datetime
 from multiprocessing import Pool
 import os
 import random
+import sys
 import uuid
 
 import backoff
@@ -35,13 +36,32 @@ from enable_certificate_authority import enable_certificate_authority
 PROJECT = google.auth.default()[1]
 LOCATIONS = (
     "us-central1",
-    "europe-north1",
-    "europe-central2",
-    "europe-west2",
     "us-east4",
+    "us-west1",
+    "us-west2",
+    "us-west3",
+    "us-west4",
+    "europe-central2",
+    "europe-north1",
     "europe-west1",
+    "europe-west2",
+    "europe-west3",
+    "europe-west4",
+    "europe-west6",
+    "europe-west8",
+    "europe-west9",
+    "europe-west12",
 )
-LOCATION = random.choice(LOCATIONS)
+
+# Make sure that every Python version runs on a different region
+# Start by seeding the RNG the same way for every version
+random.seed(str(datetime.date.today()))
+# Use minor Python version to offset the random region selection
+location_idx = (random.randrange(len(LOCATIONS)) + sys.version_info.minor) % len(LOCATIONS)
+# Pick the location to use for this test run
+LOCATION = LOCATIONS[location_idx]
+del location_idx
+
 COMMON_NAME = "COMMON_NAME"
 ORGANIZATION = "ORGANIZATION"
 CA_DURATION = 1000000
