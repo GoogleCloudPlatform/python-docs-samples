@@ -34,7 +34,7 @@ Follow the [Google Cloud documentation for creating Pub/Sub topics](https://clou
 
 ### Download and save the model
 
-Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/keras/gemma/frameworks/keras/variations/gemma_2b_en), and then rename the downloaded archive to `gemma_2B`.
+Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/keras/gemma/frameworks/keras/variations/gemma_2b_en), and then rename the downloaded archive to `gemma_2B`. Note that this is a directory, not a standalone file. 
 
 ### Import dependencies
 
