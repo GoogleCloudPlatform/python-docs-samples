@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_pro_config_example]
+# [START generativeaionvertexai_gemini_pro_config_example]
 import base64
 
 import vertexai
@@ -43,4 +43,4 @@ def generate_text(project_id: str, location: str) -> None:
     return response.text
 
 
-# [END aiplatform_gemini_pro_config_example]
+# [END generativeaionvertexai_gemini_pro_config_example]
