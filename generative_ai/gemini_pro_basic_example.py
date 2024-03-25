@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexaigemini_pro_example]
+# [START generativeaionvertexai_gemini_pro_example]
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
 
