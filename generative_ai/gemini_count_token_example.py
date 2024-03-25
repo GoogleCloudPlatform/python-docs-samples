@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# [START aiplatform_gemini_token_count]
+# [START generativeaionvertexai_gemini_token_count]
 import vertexai
 from vertexai.generative_models import GenerativeModel
 
@@ -36,4 +36,4 @@ def generate_text(project_id: str, location: str) -> str:
     return response.text
 
 
-# [END aiplatform_gemini_token_count]
+# [END generativeaionvertexai_gemini_token_count]

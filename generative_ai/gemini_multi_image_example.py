@@ -19,7 +19,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
-    # [START aiplatform_gemini_single_turn_multi_image]
+    # [START generativeaionvertexai_gemini_single_turn_multi_image]
     import http.client
     import typing
     import urllib.request
@@ -55,5 +55,5 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
         ]
     )
     print(response)
-    # [END aiplatform_gemini_single_turn_multi_image]
+    # [END generativeaionvertexai_gemini_single_turn_multi_image]
     return response.text

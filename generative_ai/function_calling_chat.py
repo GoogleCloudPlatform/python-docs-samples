@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_function_calling_chat]
+# [START generativeaionvertexai_gemini_function_calling_chat]
 import vertexai
 from vertexai.generative_models import (
     FunctionDeclaration,
@@ -141,4 +141,4 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
     return prompts, summaries
 
 
-# [END aiplatform_gemini_function_calling_chat]
+# [END generativeaionvertexai_gemini_function_calling_chat]

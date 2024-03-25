@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_pro_example]
+# [START generativeaionvertexaigemini_pro_example]
 import vertexai
 from vertexai.generative_models import GenerativeModel, Part
 
@@ -35,4 +35,4 @@ def generate_text(project_id: str, location: str) -> None:
     return response.text
 
 
-# [END aiplatform_gemini_pro_example]
+# [END generativeaionvertexai_gemini_pro_example]

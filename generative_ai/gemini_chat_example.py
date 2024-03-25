@@ -14,7 +14,7 @@
 
 
 def chat_text_example(project_id: str, location: str) -> str:
-    # [START aiplatform_gemini_multiturn_chat]
+    # [START generativeaionvertexai_gemini_multiturn_chat]
     import vertexai
     from vertexai.generative_models import GenerativeModel, ChatSession
 
@@ -38,12 +38,12 @@ def chat_text_example(project_id: str, location: str) -> str:
 
     prompt = "Why does it appear when it rains?"
     print(get_chat_response(chat, prompt))
-    # [END aiplatform_gemini_multiturn_chat]
+    # [END generativeaionvertexai_gemini_multiturn_chat]
     return get_chat_response(chat, "Hello")
 
 
 def chat_stream_example(project_id: str, location: str) -> str:
-    # [START aiplatform_gemini_multiturn_chat_stream]
+    # [START generativeaionvertexai_gemini_multiturn_chat_stream]
     import vertexai
     from vertexai.generative_models import GenerativeModel, ChatSession
 
@@ -69,5 +69,5 @@ def chat_stream_example(project_id: str, location: str) -> str:
 
     prompt = "Why does it appear when it rains?"
     print(get_chat_response(chat, prompt))
-    # [END aiplatform_gemini_multiturn_chat_stream]
+    # [END generativeaionvertexai_gemini_multiturn_chat_stream]
     return get_chat_response(chat, "Hello")
