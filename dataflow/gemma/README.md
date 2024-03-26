@@ -42,11 +42,7 @@ Install Apache Beam and the dependencies required to run the pipeline in your lo
 
 ```
 pip install -U -r requirements.txt
-pip install -q -U keras_nlp==0.8.0
-pip install -q -U keras==3.0.5
 ```
-
-Manually installing `keras-nlp` and `keras` separately is important, as they may cause mismatches with tensorflow system requirements; however, these do not impact the execution of the model or the pipeline and can be safely ignored.
 
 ## Code Overview
 
@@ -131,10 +127,11 @@ python custom_model_gemma.py \
 --machine_type="g2-standard-4" \
 --sdk_container_image=$CONTAINER_URI \ 
 --disk_size_gb=200 \
---dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver" \
+--dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
 --messages_subscription=$INPUT_SUBSCRIPTION \
 --responses_topic=$OUTPUT_TOPIC \
 --model_path="gemma_2B"
+--save_main_session
 ```
 
 ## Send a prompt to the model and check the response
