@@ -11,7 +11,7 @@
 # limitations under the License.
 
 # This uses Ubuntu with Python 3.11
-ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.15.0-gpu
+ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.16.1-gpu
 
 FROM ${SERVING_BUILD_IMAGE}
 
@@ -27,12 +27,11 @@ RUN pip install --upgrade pip \
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 
-RUN pip install --no-cache-dir keras_nlp==0.8.0 
-RUN pip install --no-cache-dir keras==3.0.5
-
 # Copy the model directory downloaded from Kaggle and the pipeline code.
 COPY gemma_2B gemma_2B
 COPY custom_model_gemma.py custom_model_gemma.py
+
+ENV KERAS_BACKEND="tensorflow"
 
 # Set the entrypoint to Apache Beam SDK launcher.
 ENTRYPOINT ["/opt/apache/beam/boot"]
