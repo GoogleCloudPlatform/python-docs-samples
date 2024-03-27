@@ -59,13 +59,13 @@ RUN pip install -e .
 
 # For more informaiton, see: https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates
 ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/main.py"
-ENV FLEX_TEMPLATE_PYTHON_SETUP_FILE="${WORKDIR}/setup.py"
 
-# To reduce pipeline submission time
-# do not use FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
-# to specify pipeline dependencies, because this image will be used
-# as custom sdk container image and it already installs the dependencies
-# from the requirements.txt.
+# Because this image will be used as custom sdk container image, and it already 
+# installs the dependencies from the requirements.txt, we can omit
+# the FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
+# to reduce pipeline submission time.
+# Similarly, since we already installed the pipeline package,
+# we don't have to specify the FLEX_TEMPLATE_PYTHON_SETUP_FILE="${WORKDIR}/setup.py" configuration option.
 
 # Optionally, verify that dependencies are not conflicting.
 # A conflict may or may not be significant for your pipeline.
