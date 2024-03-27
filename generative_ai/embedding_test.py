@@ -13,27 +13,28 @@
 # limitations under the License.
 
 import backoff
-import embedding
 from google.api_core.exceptions import ResourceExhausted
+
+import embedding
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_embed_text() -> None:
-  texts = [
-      "banana bread?",
-      "banana muffin?",
-      "banana?",
-      "recipe?",
-      "muffin recipe?",
-  ]
-  task_types = [
-      "RETRIEVAL_QUERY",
-      "RETRIEVAL_DOCUMENT",
-      "SEMANTIC_SIMILARITY",
-      "CLASSIFICATION",
-      "CLUSTERING",
-  ]
-  embeddings = embedding.embed_text(
-      texts, task_types, "textembedding-gecko@003"
-  )
-  assert [len(e) for e in embeddings] == [768, 768, 768, 768, 768]
+    texts = [
+        "banana bread?",
+        "banana muffin?",
+        "banana?",
+        "recipe?",
+        "muffin recipe?",
+    ]
+    task_types = [
+        "RETRIEVAL_QUERY",
+        "RETRIEVAL_DOCUMENT",
+        "SEMANTIC_SIMILARITY",
+        "CLASSIFICATION",
+        "CLUSTERING",
+    ]
+    embeddings = embedding.embed_text(
+        texts, task_types, "textembedding-gecko@003"
+    )
+    assert [len(e) for e in embeddings] == [768, 768, 768, 768, 768]
