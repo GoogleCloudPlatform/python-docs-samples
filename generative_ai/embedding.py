@@ -13,18 +13,27 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
-from vertexai.language_models import TextEmbeddingModel
+from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
-def text_embedding(text: str = "What is life?") -> list:
-    """Text embedding with a Large Language Model."""
-    model = TextEmbeddingModel.from_pretrained("textembedding-gecko@001")
-    embeddings = model.get_embeddings([text])
-    vector = embeddings[0].values
-    print(f"Length of Embedding Vector: {len(vector)}")
-    return vector
-
-
+def embed_text(
+    texts=["banana muffins? ", "banana bread? banana muffins?"],
+    task_types=["QUESTION_ANSWERING", "FACT_VERIFICATION"],
+    model_name="text-embedding-preview-0409",
+) -> list:
+  """Embeds texts with a pre-trained, foundational model."""
+  model = TextEmbeddingModel.from_pretrained(model_name)
+  # Google unveils elastic models at Google Cloud Next '24 (April 2024):
+  elastic = model_name in {
+      "text-embedding-preview-0409",
+      "text-multilingual-embedding-preview-0409",
+  }
+  inputs = [TextEmbeddingInput(*z) for z in zip(texts, task_types)]
+  kwargs = dict(output_dimensionality=192) if elastic else {}
+  embeddings = model.get_embeddings(inputs, **kwargs)
+  return [embedding.values for embedding in embeddings]
 # [END aiplatform_sdk_embedding]
+
+
 if __name__ == "__main__":
-    text_embedding()
+  embed_text()
