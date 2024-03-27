@@ -3,5 +3,5 @@ apache-beam[gcp]==2.46.0
 google-cloud-aiplatform==1.25.0
 gunicorn==20.1.0
 pandas==2.0.1
-tensorflow==2.12.0
+tensorflow==2.16.1
 Werkzeug==3.0.1

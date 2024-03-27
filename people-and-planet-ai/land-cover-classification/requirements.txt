@@ -5,4 +5,4 @@ folium==0.14.0
 google-cloud-aiplatform==1.25.0
 imageio==2.29.0
 plotly==5.15.0
-tensorflow==2.12.0
+tensorflow==2.16.1
