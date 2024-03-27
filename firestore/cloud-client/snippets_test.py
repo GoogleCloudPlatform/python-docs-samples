@@ -192,6 +192,13 @@ def test_update_data_batch(db):
     snippets.update_data_batch()
 
 
+def test_update_data_bulk(db):
+    db.collection("cities").document("SF").set({})
+    db.collection("cities").document("LA").set({})
+    write_results = snippets.update_data_bulk()
+    assert len(write_results) == 3
+
+
 def test_update_nested():
     snippets.update_nested()
 
