@@ -36,9 +36,20 @@ Follow the [Google Cloud documentation for creating Pub/Sub topics](https://clou
 
 Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/keras/gemma/frameworks/keras/variations/gemma_2b_en), and then rename the downloaded archive to `gemma_2B`. Note that this is a directory, not a standalone file. 
 
-### Import dependencies
+### (Optional) Create a new virtual environment
 
-Install Apache Beam and the dependencies required to run the pipeline in your local environment. **Note that the Python major and minor version contained in the custom container must match the environment used for job submission. For this example, this should be Python 3.11.**
+ **Note that the Python major and minor version contained in the custom container must match the environment used for job submission. For this example, this should be Python 3.11.**
+
+```
+python3.11 -m venv /tmp/venv
+. /tmp/venv/bin/activate
+```
+
+For more information, see: https://docs.python.org/3/library/venv.html
+
+### Install dependencies
+
+Install Apache Beam and the dependencies required to run the pipeline in your local environment. 
 
 ```
 pip install -U -r requirements.txt
