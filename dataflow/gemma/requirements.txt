@@ -1,0 +1,4 @@
+apache_beam[gcp]==2.54.0
+protobuf==4.25.0
+keras_nlp==0.8.2
+keras==3.0.5
