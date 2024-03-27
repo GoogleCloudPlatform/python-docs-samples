@@ -171,9 +171,9 @@ RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
 
-# Install "virtualenv", since the vast majority of users of this image
-# will want it.
-RUN pip install --no-cache-dir virtualenv
+# Install "setuptools" for Python 3.12+ (see https://docs.python.org/3/whatsnew/3.12.html#distutils)
+# Install "virtualenv", since the vast majority of users of this image will want it.
+RUN pip install --no-cache-dir setuptools virtualenv
 
 # Setup Cloud SDK
 ENV CLOUD_SDK_VERSION 389.0.0

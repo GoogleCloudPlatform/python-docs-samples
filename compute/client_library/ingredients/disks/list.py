@@ -28,11 +28,11 @@ def list_disks(
     project_id: str, zone: str, filter_: str = ""
 ) -> Iterable[compute_v1.Disk]:
     """
-    Deletes a disk from a project.
+    Lists disks in a project.
 
     Args:
         project_id: project ID or project number of the Cloud project you want to use.
-        zone: name of the zone in which is the disk you want to delete.
+        zone: name of the zone
         filter_: filter to be applied when listing disks. Learn more about filters here:
             https://cloud.google.com/python/docs/reference/compute/latest/google.cloud.compute_v1.types.ListDisksRequest
     """

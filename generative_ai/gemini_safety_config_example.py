@@ -14,7 +14,7 @@
 
 import vertexai
 
-# [START aiplatform_gemini_safety_settings]
+# [START generativeaionvertexai_gemini_safety_settings]
 from vertexai import generative_models
 
 
@@ -49,4 +49,4 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     return "".join(text_responses)
 
 
-# [END aiplatform_gemini_safety_settings]
+# [END generativeaionvertexai_gemini_safety_settings]

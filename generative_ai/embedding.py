@@ -16,13 +16,12 @@
 from vertexai.language_models import TextEmbeddingModel
 
 
-def text_embedding() -> list:
+def text_embedding(text: str = "What is life?") -> list:
     """Text embedding with a Large Language Model."""
     model = TextEmbeddingModel.from_pretrained("textembedding-gecko@001")
-    embeddings = model.get_embeddings(["What is life?"])
-    for embedding in embeddings:
-        vector = embedding.values
-        print(f"Length of Embedding Vector: {len(vector)}")
+    embeddings = model.get_embeddings([text])
+    vector = embeddings[0].values
+    print(f"Length of Embedding Vector: {len(vector)}")
     return vector
 
 
