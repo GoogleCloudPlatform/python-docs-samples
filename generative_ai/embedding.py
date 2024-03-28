@@ -13,16 +13,14 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
-from typing import List
-
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
 def embed_text(
-    texts: List[str] = ["banana muffins? ", "banana bread? banana muffins?"],
-    task_types: List[str] = ["QUESTION_ANSWERING", "FACT_VERIFICATION"],
+    texts: list[str] = ["banana muffins? ", "banana bread? banana muffins?"],
+    task_types: list[str] = ["QUESTION_ANSWERING", "FACT_VERIFICATION"],
     model_name: str = "text-embedding-preview-0409",
-) -> list:
+) -> list[list[float]]:
     """Embeds texts with a pre-trained, foundational model."""
     model = TextEmbeddingModel.from_pretrained(model_name)
     elastic = model_name in {
