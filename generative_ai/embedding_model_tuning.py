@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START aiplatform_sdk_embedding]
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
