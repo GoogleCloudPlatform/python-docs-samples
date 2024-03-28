@@ -30,8 +30,6 @@ def tune_embedding_model(
     batch_size: int = 50,
     iterations: int = 300
 ) -> list:
-    print(
-        f"api_endpoint='{api_endpoint}', project='{project}', output_dir='{output_dir}')")
     job = aiplatform.PipelineJob(
         display_name=pipeline_job_display_name,
         template_path="https://us-kfp.pkg.dev/ml-pipeline/llm-text-embedding/tune-text-embedding-model/v1.1.2",
