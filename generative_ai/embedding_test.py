@@ -19,6 +19,22 @@ import embedding
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_text_embedding() -> None:
-    content = embedding.text_embedding()
-    assert len(content) == 768
+def test_embed_text() -> None:
+    texts = [
+        "banana bread?",
+        "banana muffin?",
+        "banana?",
+        "recipe?",
+        "muffin recipe?",
+    ]
+    task_types = [
+        "RETRIEVAL_QUERY",
+        "RETRIEVAL_DOCUMENT",
+        "SEMANTIC_SIMILARITY",
+        "CLASSIFICATION",
+        "CLUSTERING",
+    ]
+    embeddings = embedding.embed_text(
+        texts, task_types, "textembedding-gecko@003"
+    )
+    assert [len(e) for e in embeddings] == [768, 768, 768, 768, 768]
