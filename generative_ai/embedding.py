@@ -25,7 +25,6 @@ def embed_text(
 ) -> list:
     """Embeds texts with a pre-trained, foundational model."""
     model = TextEmbeddingModel.from_pretrained(model_name)
-    # Google unveils elastic models at Google Cloud Next '24 (April 2024):
     elastic = model_name in {
         "text-embedding-preview-0409",
         "text-multilingual-embedding-preview-0409",
