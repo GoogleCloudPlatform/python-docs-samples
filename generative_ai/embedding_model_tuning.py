@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
+import re
+
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
@@ -31,13 +33,15 @@ def tune_embedding_model(
     batch_size: int = 50,
     iterations: int = 300
 ) -> list:
+    match = re.search(r"(.+)(-autopush|-staging)?-aiplatform.+", api_endpoint)
+    location = match.group(1) if match else "us-central1"
     job = aiplatform.PipelineJob(
         display_name=pipeline_job_display_name,
         template_path="https://us-kfp.pkg.dev/ml-pipeline/llm-text-embedding/tune-text-embedding-model/v1.1.2",
         pipeline_root=output_dir,
         parameter_values=dict(
             project=project,
-            location="us-central1",
+            location=location,
             base_model_version_id=base_model_version_id,
             task_type=task_type,
             queries_path=queries_path,
