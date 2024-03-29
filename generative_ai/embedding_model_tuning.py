@@ -17,6 +17,7 @@ import re
 
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
+from google.cloud.aiplatform import pipeline_jobs
 
 
 def tune_embedding_model(
@@ -32,7 +33,7 @@ def tune_embedding_model(
     test_label_path: str = "gs://embedding-customization-pipeline/dataset/test.tsv",
     batch_size: int = 50,
     iterations: int = 300
-) -> list:
+) -> pipeline_jobs.PipelineJob:
     match = re.search(r"(.+)(-autopush|-staging)?-aiplatform.+", api_endpoint)
     location = match.group(1) if match else "us-central1"
     job = aiplatform.PipelineJob(
