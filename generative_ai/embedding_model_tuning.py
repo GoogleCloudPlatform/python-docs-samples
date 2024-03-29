@@ -50,7 +50,7 @@ def tune_embedding_model(
             train_label_path=train_label_path,
             test_label_path=test_label_path,
             batch_size=batch_size,
-            iterations=batch_size)
+            iterations=iterations)
     )
     job.submit()
     return job
