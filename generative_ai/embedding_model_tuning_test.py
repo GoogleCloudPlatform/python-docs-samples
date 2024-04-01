@@ -17,7 +17,11 @@ import os
 import backoff
 
 from google.api_core.exceptions import FailedPrecondition
+import google.auth
+from google.cloud import aiplatform
+from google.cloud.aiplatform import initializer as aiplatform_init
 from google.cloud.aiplatform import pipeline_jobs
+
 
 import embedding_model_tuning
 
@@ -30,11 +34,16 @@ def dispose(job: pipeline_jobs.PipelineJob) -> None:
 
 
 def test_tune_embedding_model() -> None:
+    credentials, _ = google.auth.default(  # Explicit credentials with valid Oauth scopes.
+        scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    aiplatform.init(
+        api_endpoint="us-central1-aiplatform.googleapis.com:443",
+        project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+        staging_bucket=os.environ["CLOUD_STORAGE_BUCKET"],
+        credentials=credentials)
     job = embedding_model_tuning.tune_embedding_model(
-        "us-central1-aiplatform.googleapis.com:443",
-        os.getenv("GOOGLE_CLOUD_PROJECT"),
-        os.environ["CLOUD_STORAGE_BUCKET"]
-    )
+        aiplatform_init.global_config.api_endpoint,
+        aiplatform_init.global_config.project, aiplatform_init.global_config.staging_bucket)
     try:
         assert job.state != "PIPELINE_STATE_FAILED"
     finally:

@@ -21,9 +21,9 @@ from google.cloud.aiplatform import pipeline_jobs
 
 
 def tune_embedding_model(
-    api_endpoint: str = aiplatform_init.global_config.api_endpoint,
-    project: str = aiplatform_init.global_config.project,
-    output_dir: str = aiplatform_init.global_config.staging_bucket,
+    api_endpoint: str,
+    project: str,
+    output_dir: str,
     pipeline_job_display_name: str = "embedding-customization-pipeline-sample",
     base_model_version_id: str = "textembedding-gecko@003",
     task_type: str = "DEFAULT",
@@ -58,4 +58,5 @@ def tune_embedding_model(
 
 # [END aiplatform_sdk_embedding]
 if __name__ == "__main__":
-    tune_embedding_model()
+    tune_embedding_model(aiplatform_init.global_config.api_endpoint,
+                         aiplatform_init.global_config.project, aiplatform_init.global_config.staging_bucket)
