@@ -32,9 +32,9 @@ pandas==2.2.1; python_version >= '3.9'
 proto-plus==1.23.0
 pyarrow==12.0.1; python_version == '3.7'
 pyarrow==15.0.2; python_version >= '3.8'
-pyasn1==0.5.1; python_version == '3.7'
+pyasn1===0.5.1; python_version == '3.7'
 pyasn1==0.6.0; python_version >= '3.8'
-pyasn1-modules==0.3.0; python_version == '3.7'
+pyasn1-modules===0.3.0; python_version == '3.7'
 pyasn1-modules==0.4.0; python_version >= '3.8'
 pycparser==2.21
 pyparsing==3.1.2
