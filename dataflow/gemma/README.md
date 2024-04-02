@@ -74,7 +74,7 @@ class GemmaModelHandler(ModelHandler[str,
         self,
         model_name: str = "",
     ):
-        """ Implementation of the ModelHandler interface for spaCy using text as input.
+        """ Implementation of the ModelHandler interface for Gemma using text as input.
 
         Example Usage::
 
