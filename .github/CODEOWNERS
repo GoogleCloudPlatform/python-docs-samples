@@ -81,6 +81,7 @@
 /firestore/**/*                        @GoogleCloudPlatform/cloud-native-db-dpes @GoogleCloudPlatform/python-samples-reviewers
 # ---* Cloud Storage
 /storage/**/*                          @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
+/storagecontrol/**/*                   @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers
 # ---* Infra DB
 /cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers
