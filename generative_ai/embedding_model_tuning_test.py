@@ -39,7 +39,7 @@ def test_tune_embedding_model() -> None:
     aiplatform.init(
         api_endpoint="us-central1-aiplatform.googleapis.com:443",
         project=os.getenv("GOOGLE_CLOUD_PROJECT"),
-        staging_bucket=os.environ["CLOUD_STORAGE_BUCKET"],
+        staging_bucket="gs://ucaip-samples-us-central1/training_pipeline_output",
         credentials=credentials)
     job = embedding_model_tuning.tune_embedding_model(
         aiplatform_init.global_config.api_endpoint,
