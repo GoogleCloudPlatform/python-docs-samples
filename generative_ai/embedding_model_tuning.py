@@ -59,4 +59,5 @@ def tune_embedding_model(
 # [END aiplatform_sdk_embedding]
 if __name__ == "__main__":
     tune_embedding_model(aiplatform_init.global_config.api_endpoint,
-                         aiplatform_init.global_config.project, aiplatform_init.global_config.staging_bucket)
+                         aiplatform_init.global_config.project,
+                         aiplatform_init.global_config.staging_bucket)

@@ -34,7 +34,7 @@ def dispose(job: pipeline_jobs.PipelineJob) -> None:
 
 
 def test_tune_embedding_model() -> None:
-    credentials, _ = google.auth.default(  # Explicit credentials with valid Oauth scopes.
+    credentials, _ = google.auth.default(  # Set explicit credentials with Oauth scopes.
         scopes=["https://www.googleapis.com/auth/cloud-platform"])
     aiplatform.init(
         api_endpoint="us-central1-aiplatform.googleapis.com:443",
@@ -43,7 +43,8 @@ def test_tune_embedding_model() -> None:
         credentials=credentials)
     job = embedding_model_tuning.tune_embedding_model(
         aiplatform_init.global_config.api_endpoint,
-        aiplatform_init.global_config.project, aiplatform_init.global_config.staging_bucket)
+        aiplatform_init.global_config.project,
+        aiplatform_init.global_config.staging_bucket)
     try:
         assert job.state != "PIPELINE_STATE_FAILED"
     finally:
