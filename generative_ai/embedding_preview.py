@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_embedding]
+# [START generativeaionvertexai_sdk_embedding]
 from typing import List, Optional
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
@@ -30,7 +30,7 @@ def embed_text(
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
     return [embedding.values for embedding in embeddings]
-# [END aiplatform_sdk_embedding]
+# [END generativeaionvertexai_sdk_embedding]
 
 
 if __name__ == "__main__":
