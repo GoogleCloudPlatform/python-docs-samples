@@ -28,7 +28,7 @@ def generate_text(project_id: str, location: str) -> str:
     response = vision_model.generate_content(
         [
             Part.from_uri(
-                "gs://cloud-samples-data/vertex-ai/generative-ai/pdf/Winnie_the_Pooh_3_Pages.pdf",
+                "gs://cloud-samples-data/vertex-ai/generative-ai/pdf/intake-form.pdf",
                 mime_type="application/pdf",
             ),
             "Output the text in the PDF",
