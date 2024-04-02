@@ -37,11 +37,11 @@ class GemmaModelHandler(ModelHandler[str,
         self,
         model_name: str = "gemma_2B",
     ):
-        """ Implementation of the ModelHandler interface for spaCy using text as input.
+        """ Implementation of the ModelHandler interface for Gemma using text as input.
 
         Example Usage::
 
-          pcoll | RunInference(SpacyModelHandler())
+          pcoll | RunInference(GemmaModelHandler())
 
         Args:
           model_name: The Gemma model name. Default is gemma_2B.
