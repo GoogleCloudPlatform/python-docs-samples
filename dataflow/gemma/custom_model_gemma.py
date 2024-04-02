@@ -50,6 +50,10 @@ class GemmaModelHandler(ModelHandler[str,
         self._env_vars = {}
 
     def share_model_across_processes(self) -> bool:
+        """ Indicates if the model should be loaded once-per-worker rather than
+        once-per-thread on a worker. Because Gemma is a large language model,
+        this will always return True to avoid OOM errors.
+        """
         return True
 
     def load_model(self) -> GemmaCausalLM:
