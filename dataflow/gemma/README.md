@@ -3,7 +3,7 @@
 Gemma is a family of lightweight, state-of-the art open models built from research and technology used to create the Gemini models.
 You can use Gemma models in your Apache Beam inference pipelines with the `RunInference` transform.
 
-This example demonstrates how to utilize a Gemma model in a streaming Dataflow pipeline using Pub/Sub sources and sinks.
+This example demonstrates how to use a Gemma model in a streaming Dataflow pipeline that has Pub/Sub sources and sinks.
 
 For more information about using RunInference, see [Get started with AI/ML pipelines](https://beam.apache.org/documentation/ml/overview/) in the Apache Beam documentation.
 
@@ -22,30 +22,30 @@ This workflow uses multiple Google Cloud Platform products, including Dataflow, 
 
 Using these services incurs billing charges.
 
-You will also need to ensure that your GCP project has Nvidia L4 GPU quota enabled, see [Google Cloud Platform documentation](https://cloud.google.com/compute/resource-usage#gpu_quota) for more information.
+Your Google Cloud project also needs to have Nvidia L4 GPU quota. For more information, see [GPU quota](https://cloud.google.com/compute/resource-usage#gpu_quota) in the Google Cloud documentation.
 
 ### Create a custom container
 
-You need to use Docker to build a custom container. This repository contains a Dockerfile that you can use to build your custom container. Follow the [Google Cloud documentation](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) that explains how to build and push a container to Artifact Registry by using Docker.
+To build a custom container, use Docker. This repository contains a Dockerfile that you can use to build your custom container. To build and push a container to Artifact Registry by using DockerFollow, follow the instructions in the [Build and push the image](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) section of the "Build custom container images for Dataflow" page in the Google Cloud documentation.
 
 ### Create Pub/Sub topics for input and output
 
-Follow the [Google Cloud documentation for creating Pub/Sub topics](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console). This example uses two: one input topic and one output topic. For input, you will need to have a subscription to the topic to pass to the model. 
+To create your Pub/Sub source and sink, follow the instructions in [Create a Pub/Sub topic](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console) in the Google Cloud documentation. For this example, create two topics, one input topic and one output topic. For input, the topic must have a subscription that you can provide to the Gemma model. 
 
 ### Download and save the model
 
-Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/keras/gemma/frameworks/keras/variations/gemma_2b_en), and then rename the downloaded archive to `gemma_2B`. Note that this is a directory, not a standalone file. 
+Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/keras/gemma/frameworks/keras/variations/gemma_2b_en). Rename the downloaded archive `gemma_2B`. This download is a directory, not a standalone file. 
 
-### (Optional) Create a new virtual environment
+### Optional: Create a new virtual environment
 
- **Note that the Python major and minor version contained in the custom container must match the environment used for job submission. For this example, this should be Python 3.11.**
+The Python major and minor version contained in the custom container must match the environment used for job submission. For this example, use Python version 3.11.
 
 ```
 python3.11 -m venv /tmp/venv
 . /tmp/venv/bin/activate
 ```
 
-For more information, see: https://docs.python.org/3/library/venv.html
+For more information, see [venv — Creation of virtual environments](https://docs.python.org/3/library/venv.html).
 
 ### Install dependencies
 
@@ -56,6 +56,8 @@ pip install -U -r requirements.txt
 ```
 
 ## Code Overview
+
+This section provides details about the custom model handler and the formatting `DoFn` used in this example.
 
 ### Custom model handler
 
@@ -147,14 +149,14 @@ python custom_model_gemma.py \
 
 ## Send a prompt to the model and check the response
 
-From the Google Cloud Platform page for your previously created input Pub/Sub topic, navigate to the "Messages" tab and click the "Publish Message" button. You can then drop a message into the pipeline that will be picked up by the Dataflow job, passed through the model, and then have the output published to the response Pub/Sub topic. You can then manually pull messages from the destination topic to check the response from the model.
+In the Google Cloud console, navigate to the Pub/Sub topics page, and then select your input topic. On the **Messages** tab, click **Publish Message**. Add a message into the pipeline for the Dataflow job to pick up and pass through the model. The Dataflow job outputs the response to the Pub/Sub sink topic. To check the response from the model, you can manually pull messages from the destination topic. For more information, see [Publish messages](https://cloud.google.com/pubsub/docs/publisher#publish-messages) in the Google Cloud documentation.
 
 ## Clean up resources
 
-To avoid incurring further costs, you should do the following once you're done:
+To avoid incurring charges to your Google Cloud account for the resources used in this example, clean up the resources that you created.
 
 
-*   Cancel the streaming Dataflow job
-*   Delete the PubSub topic and subscriptions
-*   Delete the custom container from Artifact Registry
-*   Empty the `tmp` directory of your GCS storage bucket
+*   Cancel the streaming Dataflow job.
+*   Delete the Pub/Sub topic and subscriptions.
+*   Delete the custom container from Artifact Registry.
+*   Empty the `tmp` directory of your Google Cloud Storage bucket.
