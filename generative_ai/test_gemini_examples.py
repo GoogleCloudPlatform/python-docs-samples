@@ -126,7 +126,7 @@ def test_gemini_pdf_example() -> None:
     text = gemini_pdf_example.generate_text(PROJECT_ID, LOCATION)
     text = text.lower()
     assert len(text) > 0
-    assert any([_ in text for _ in ("Pooh", "bees")])
+    assert any([_ in text for _ in ("INTAKE", "FORM", "Software")])
 
 
 def test_gemini_chat_example() -> None:
