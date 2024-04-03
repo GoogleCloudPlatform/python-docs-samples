@@ -11,6 +11,8 @@
 # limitations under the License.
 
 # This uses Ubuntu with Python 3.11
+# You can check the Python version for a given tensorflow
+# container at https://hub.docker.com/r/tensorflow/tensorflow/tags
 ARG SERVING_BUILD_IMAGE=tensorflow/tensorflow:2.16.1-gpu
 
 FROM ${SERVING_BUILD_IMAGE}
@@ -21,7 +23,7 @@ RUN apt-get update -y && apt-get install -y \
     cmake
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade pip \
+RUN pip install --upgrade --no-cache-dir pip \
     && pip install --no-cache-dir -r requirements.txt 
 
 # Copy files from official SDK image, including script/dependencies.
