@@ -16,7 +16,7 @@
 import base64
 
 import vertexai
-from vertexai.generative_models import GenerativeModel, GenerationConfig, Part
+from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
 
 
 def generate_text(project_id: str, location: str) -> None:
