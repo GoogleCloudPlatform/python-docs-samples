@@ -1,2 +1,2 @@
-pytest==7.4.4; python_version == '3.7'
+pytest===7.4.4; python_version == '3.7'  # prevents dependabot from upgrading it
 pytest==8.1.1; python_version > '3.7'
