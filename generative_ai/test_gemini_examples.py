@@ -22,6 +22,7 @@ import gemini_count_token_example
 import gemini_grounding_example
 import gemini_guide_example
 import gemini_multi_image_example
+import gemini_pdf_example
 import gemini_pro_basic_example
 import gemini_pro_config_example
 import gemini_safety_config_example
@@ -119,6 +120,13 @@ def test_gemini_single_turn_video_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("zoo", "tiger", "leaf", "water")])
+
+
+def test_gemini_pdf_example() -> None:
+    text = gemini_pdf_example.generate_text(PROJECT_ID, LOCATION)
+    text = text.lower()
+    assert len(text) > 0
+    assert any([_ in text for _ in ("intake", "form", "software")])
 
 
 def test_gemini_chat_example() -> None:
