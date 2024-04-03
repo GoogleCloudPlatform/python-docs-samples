@@ -14,13 +14,13 @@
 
 import logging
 
+from collections.abc import Iterable
+from collections.abc import Sequence
 from typing import Any
-from typing import Dict
-from typing import Iterable
 from typing import Optional
-from typing import Sequence
 
 import apache_beam as beam
+from apache_beam.ml.inference import utils
 from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
 from apache_beam.ml.inference.base import RunInference
@@ -64,7 +64,7 @@ class GemmaModelHandler(ModelHandler[str,
         self,
         batch: Sequence[str],
         model: GemmaCausalLM,
-        inference_args: Optional[Dict[str, Any]] = None
+        inference_args: Optional[dict[str, Any]] = None
     ) -> Iterable[PredictionResult]:
         """Runs inferences on a batch of text strings.
 
@@ -81,7 +81,7 @@ class GemmaModelHandler(ModelHandler[str,
         for one_text in batch:
             result = model.generate(one_text, max_length=64)
             predictions.append(result)
-        return [PredictionResult(x, y) for x, y in zip(batch, predictions)]
+        return utils._convert_to_result(batch, predictions, self._model_name)
 
 
 class FormatOutput(beam.DoFn):

@@ -42,7 +42,7 @@ The Python major and minor version contained in the custom container must match 
 
 ```
 python3.11 -m venv /tmp/venv
-. /tmp/venv/bin/activate
+source /tmp/venv/bin/activate
 ```
 
 For more information, see [venv — Creation of virtual environments](https://docs.python.org/3/library/venv.html).
@@ -68,7 +68,7 @@ To customize the behavior of the handler, implement the following methods: `load
 The Keras implementation of the Gemma models has a `generate` method
 that generates text based on a prompt. To route the prompts correctly, use this function in the `run_inference` function.
 
-```
+```py
 class GemmaModelHandler(ModelHandler[str,
                                      PredictionResult,GemmaCausalLM
                                      ]):
@@ -122,7 +122,7 @@ class GemmaModelHandler(ModelHandler[str,
 
 The output from a keyed model handler is a tuple of the form `(key, PredictionResult)`. To format that output into a string before sending it to the answer Pub/Sub topic, use an extra `DoFn`.
 
-```
+```py
 class FormatOutput(beam.DoFn):
   def process(self, element, *args, **kwargs):
     yield "Key : {key}, Input: {input}, Output: {output}".format(key=element[0], input=element[1].example, output=element[1].inference)
@@ -133,18 +133,18 @@ Run the following code from the directory to start the Dataflow streaming pipeli
 
 ```
 python custom_model_gemma.py \
---runner=dataflowrunner \
---project=$PROJECT \
---temp_location=$GCS_BUCKET \
---region=$REGION \
---machine_type="g2-standard-4" \
---sdk_container_image=$CONTAINER_URI \ 
---disk_size_gb=200 \
---dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
---messages_subscription=$INPUT_SUBSCRIPTION \
---responses_topic=$OUTPUT_TOPIC \
---model_path="gemma_2B"
---save_main_session
+  --runner=dataflowrunner \
+  --project=$PROJECT \
+  --temp_location=$GCS_BUCKET \
+  --region=$REGION \
+  --machine_type="g2-standard-4" \
+  --sdk_container_image=$CONTAINER_URI \ 
+  --disk_size_gb=200 \
+  --dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
+  --messages_subscription=$INPUT_SUBSCRIPTION \
+  --responses_topic=$OUTPUT_TOPIC \
+  --model_path="gemma_2B"
+  --save_main_session
 ```
 
 ## Send a prompt to the model and check the response
