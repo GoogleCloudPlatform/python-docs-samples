@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-
 from collections.abc import Iterable
 from collections.abc import Sequence
+
+import logging
+
 from typing import Any
 from typing import Optional
 
