@@ -211,7 +211,6 @@ def retrieval_query(
 
 # [START generativeaionvertexai_rag_generate_content]
 from vertexai.preview.generative_models import GenerativeModel, Tool
-from typing import List
 
 
 def generate_content_with_rag(
