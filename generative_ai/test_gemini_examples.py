@@ -59,7 +59,7 @@ def test_gemini_pro_config_example() -> None:
         text = gemini_pro_config_example.generate_text(PROJECT_ID, LOCATION)
         text = text.lower()
         assert len(text) > 0
-        assert "recipe" in text or "table" in text
+        assert any(e in text for e in ("blueberry", "coffee", "flower", "table"))
 
         # clean-up
         os.remove(fname)
