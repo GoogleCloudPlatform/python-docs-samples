@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import google.auth
 import time
 import jwt
@@ -6,7 +7,7 @@ import json
 from google.cloud import iam_credentials_v1
 from google.auth import credentials
 
-def generate_jwt_payload(service_account_email, resource_url):
+def generate_jwt_payload(service_account_email: str, resource_url: str) --> str:
   """Generates JWT payload for service account to access application at specified resource url"""
   iat = time.time()
   exp = iat + 3600
@@ -19,7 +20,7 @@ def generate_jwt_payload(service_account_email, resource_url):
   }
   return json.dumps(payload)
 
-def sign_jwt(target_sa, resource_url):
+def sign_jwt(target_sa: str, resource_url: str) --> str:
   """Signs JWT payload using ADC and IAM credentials API"""
   # Uses Application Default Credentials
   source_credentials, project_id = google.auth.default()
@@ -31,7 +32,7 @@ def sign_jwt(target_sa, resource_url):
   signed_jwt = resp.signed_jwt
   return signed_jwt
 
-def sign_jwt_with_key_file(credential_key_file_path, resource_url):
+def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) --> str:
   """Signs JWT payload using local service account credential key file"""
   credential_key_file = open(credential_key_file_path)
   key_data = json.load(credential_key_file)
