@@ -18,7 +18,6 @@ import jwt
 import json
 
 from google.cloud import iam_credentials_v1
-from google.auth import credentials
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) --> str:
   """Generates JWT payload for service account
