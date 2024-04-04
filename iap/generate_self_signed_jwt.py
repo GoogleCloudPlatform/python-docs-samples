@@ -8,7 +8,10 @@ from google.cloud import iam_credentials_v1
 from google.auth import credentials
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) --> str:
-  """Generates JWT payload for service account to access application at specified resource url"""
+  """Generates JWT payload for service account
+  
+  The resource url provided must be the same as the url of the IAP secured resource
+  """
   iat = time.time()
   exp = iat + 3600
   payload = {
@@ -21,7 +24,7 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) --> str:
   return json.dumps(payload)
 
 def sign_jwt(target_sa: str, resource_url: str) --> str:
-  """Signs JWT payload using ADC and IAM credentials API"""
+  """Signs JWT payload using ADC and IAM credentials API """
   # Uses Application Default Credentials
   source_credentials, project_id = google.auth.default()
   # use the IAM api and the users credentials to sign the JWT
