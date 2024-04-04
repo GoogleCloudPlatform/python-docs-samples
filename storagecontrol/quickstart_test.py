@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud.storage import Bucket
+from google.cloud import storage
 
 import pytest
 
@@ -20,7 +20,7 @@ import quickstart
 
 
 def test_storage_control_quickstart(
-    capsys: pytest.LogCaptureFixture, gcs_bucket: Bucket
+    capsys: pytest.LogCaptureFixture, gcs_bucket: storage.Bucket
 ) -> None:
     bucket_name = gcs_bucket.name
     quickstart.storage_control_quickstart(bucket_name=bucket_name)
