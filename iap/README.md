@@ -76,6 +76,26 @@ service account private key can impersonate that account!
    ```
 2. Copy `validate_jwt.py` into your application.
 
+## Using generate_self_signed_jwt
+
+### Self-signed JWT with IAM Credentials API
+
+1. Install the libraries listed in `requirements.txt`, e.g. by running:
+   ```
+   virtualenv/bin/pip install -r requirements.txt
+   ```
+2. Call sign_jwt with service account email and target resource url.
+3. Use resulting token to access application.
+
+### Self-signed JWT with local key file
+1. Install the libraries listed in `requirements.txt`, e.g. by running:
+   ```
+   virtualenv/bin/pip install -r requirements.txt
+   ```
+2. Download credential file for service account
+3. Call sign_jwt_with_key_file with service account email and target resource url
+4. Use resulting token to access application.
+
 ## Running Tests
 
 1. Deploy `app_engine_app` to a project.
