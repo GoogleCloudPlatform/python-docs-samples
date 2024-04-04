@@ -33,7 +33,7 @@ def bucket_name() -> str:
 @pytest.fixture(scope="function")
 def gcs_bucket(project_id: str, bucket_name: str) -> storage.Bucket:
     """
-    Yields and auto-cleans up a CGS bucket for use in Storage Control quickstart
+    Yields and auto-cleans up a GCS bucket for use in Storage Control quickstart
     """
 
     storage_client = storage.Client(project=project_id)
