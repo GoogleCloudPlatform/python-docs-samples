@@ -20,7 +20,7 @@ Example usage:
         --output_file <filepath> --prompt <text>
 """
 
-# [START aiplatform_imagen_edit_image_mask]
+# [START generativeaionvertexai_imagen_edit_image_mask]
 
 import argparse
 
@@ -73,7 +73,7 @@ def edit_image_mask(
     return images
 
 
-# [END aiplatform_imagen_edit_image_mask]
+# [END generativeaionvertexai_imagen_edit_image_mask]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

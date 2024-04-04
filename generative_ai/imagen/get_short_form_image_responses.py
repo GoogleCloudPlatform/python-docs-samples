@@ -19,7 +19,7 @@ Example usage:
         --input_file <filepath> --question <text>
 """
 
-# [START aiplatform_imagen_get_short_form_image_responses]
+# [START generativeaionvertexai_imagen_get_short_form_image_responses]
 
 import argparse
 
@@ -54,7 +54,7 @@ def get_short_form_image_responses(
     return answers
 
 
-# [END aiplatform_imagen_get_short_form_image_responses]
+# [END generativeaionvertexai_imagen_get_short_form_image_responses]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
