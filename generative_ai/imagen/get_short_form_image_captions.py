@@ -19,6 +19,7 @@ Example usage:
 """
 
 # [START aiplatform_imagen_get_short_form_image_captions]
+# [START generativeaionvertexai_imagen_get_short_form_image_captions]
 
 import argparse
 
@@ -52,6 +53,7 @@ def get_short_form_image_captions(
     return captions
 
 
+# [END generativeaionvertexai_imagen_get_short_form_image_captions]
 # [END aiplatform_imagen_get_short_form_image_captions]
 
 if __name__ == "__main__":
