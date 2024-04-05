@@ -38,7 +38,7 @@ def test_tune_embedding_model() -> None:
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
     aiplatform.init(
-        api_endpoint="us-central1-aiplatform.googleapis.com:443",
+        api_endpoint="us-central1-aiplatform.googleapis.com",
         project=os.getenv("GOOGLE_CLOUD_PROJECT"),
         staging_bucket="gs://ucaip-samples-us-central1/training_pipeline_output",
         credentials=credentials,
