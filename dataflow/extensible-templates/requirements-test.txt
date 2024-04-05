@@ -1,6 +1,7 @@
-google-api-python-client==2.87.0
-google-cloud-bigquery==3.11.4
-google-cloud-storage==2.9.0
-pytest-xdist==3.3.0
-pytest==7.0.1
-pyyaml==6.0
+google-api-python-client==2.125.0
+google-cloud-bigquery==3.20.1
+google-cloud-storage==2.16.0
+pytest-xdist==3.5.0
+pytest==8.1.1
+pyyaml==6.0.1
+setuptools==69.2.0

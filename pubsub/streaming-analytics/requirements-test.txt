@@ -1,1 +1,2 @@
-pytest==7.0.1
+pytest==8.1.1
+setuptools==69.2.0

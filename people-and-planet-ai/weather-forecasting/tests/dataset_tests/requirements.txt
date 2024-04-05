@@ -1,4 +1,4 @@
 ../../serving/weather-data
-apache-beam[gcp,interactive]==2.43.0
-build==0.10.0
-plotly==5.15.0
+apache-beam[gcp,interactive]==2.55.0
+build==1.2.1
+plotly==5.20.0

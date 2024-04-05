@@ -1,3 +1,2 @@
-backoff==2.2.1; python_version < "3.7"
-backoff==2.2.1; python_version >= "3.7"
-pytest==7.0.1
+backoff==2.2.1
+setuptools==69.2.0
