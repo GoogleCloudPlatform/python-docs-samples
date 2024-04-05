@@ -53,7 +53,6 @@ def edit_image_product_image(
         prompt=prompt,
         edit_mode="product-image",
         # Optional parameters
-        number_of_images=1,
         # Allows for product repositioning: "reposition" (default; moves product
         # to center), "fixed" (keeps product in original position)
         # product_position="fixed",
