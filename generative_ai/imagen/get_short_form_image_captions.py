@@ -18,6 +18,7 @@ Example usage:
         --input_file <filepath>
 """
 
+# [START aiplatform_imagen_get_short_form_image_captions]
 # [START generativeaionvertexai_imagen_get_short_form_image_captions]
 
 import argparse
@@ -53,6 +54,7 @@ def get_short_form_image_captions(
 
 
 # [END generativeaionvertexai_imagen_get_short_form_image_captions]
+# [END aiplatform_imagen_get_short_form_image_captions]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

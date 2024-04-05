@@ -19,6 +19,7 @@ Example usage:
         --input_file <filepath> --output_file <filepath> --prompt <text>
 """
 
+# [START aiplatform_imagen_edit_image_mask_free]
 # [START generativeaionvertexai_imagen_edit_image_mask_free]
 
 import argparse
@@ -65,6 +66,7 @@ def edit_image_mask_free(
 
 
 # [END generativeaionvertexai_imagen_edit_image_mask_free]
+# [END aiplatform_imagen_edit_image_mask_free]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
