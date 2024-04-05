@@ -34,7 +34,7 @@ def tune_embedding_model(
     batch_size: int = 128,
     iterations: int = 1000,
 ) -> pipeline_jobs.PipelineJob:
-    match = re.search(r"(.+)(-autopush|-staging)?-aiplatform.+", api_endpoint)
+    match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"
     job = aiplatform.PipelineJob(
         display_name=pipeline_job_display_name,
