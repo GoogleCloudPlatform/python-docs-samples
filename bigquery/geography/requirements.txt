@@ -36,7 +36,8 @@ pyasn1===0.5.1; python_version == '3.7'
 pyasn1==0.6.0; python_version >= '3.8'
 pyasn1-modules===0.3.0; python_version == '3.7'
 pyasn1-modules==0.4.0; python_version >= '3.8'
-pycparser==2.21
+pycparser==2.21; python_version == '3.7'
+pycparser==2.22; python_version >= '3.8'
 pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
