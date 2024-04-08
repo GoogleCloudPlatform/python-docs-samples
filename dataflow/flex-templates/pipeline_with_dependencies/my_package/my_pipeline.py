@@ -21,19 +21,21 @@ from my_package.utils import figlet
 
 
 def longest_word_pipeline(
-        input_path: str, output_path: str,
-        pipeline_options_args: list[str]) -> beam.Pipeline:
+    input_path: str, output_path: str, pipeline_options_args: list[str]
+) -> beam.Pipeline:
     """Instantiates and returns a Beam pipeline object"""
 
     pipeline_options = beam.options.pipeline_options.PipelineOptions(
-        pipeline_options_args)
+        pipeline_options_args
+    )
 
     pipeline = beam.Pipeline(options=pipeline_options)
     _ = (
         pipeline
-        | 'Read Input' >> beam.io.ReadFromText(input_path)
-        | 'Find the Longest Word' >> my_transforms.FindLongestWord()
-        | 'Create a Banner' >> beam.Map(figlet.render)
-        | 'Write Output' >> beam.io.WriteToText(output_path))
+        | "Read Input" >> beam.io.ReadFromText(input_path)
+        | "Find the Longest Word" >> my_transforms.FindLongestWord()
+        | "Create a Banner" >> beam.Map(figlet.render)
+        | "Write Output" >> beam.io.WriteToText(output_path)
+    )
 
     return pipeline

@@ -24,7 +24,7 @@ class WordExtractingDoFn(beam.DoFn):
     """Parses each line of input text into words."""
 
     def process(self, element: str) -> Iterable[str]:
-        return re.findall(r'[\w\']+', element, re.UNICODE)
+        return re.findall(r"[\w\']+", element, re.UNICODE)
 
 
 class FindLongestWord(beam.PTransform):
@@ -34,4 +34,5 @@ class FindLongestWord(beam.PTransform):
         return (
             pcoll
             | "Extract words" >> beam.ParDo(WordExtractingDoFn())
-            | "Find longest" >> beam.combiners.Top.Largest(n=1, key=len))
+            | "Find longest" >> beam.combiners.Top.Largest(n=1, key=len)
+        )
