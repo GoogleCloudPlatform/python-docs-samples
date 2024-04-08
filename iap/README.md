@@ -81,11 +81,6 @@ service account private key can impersonate that account!
 ### Self-signed JWT with IAM Credentials API
 
 1. Install the libraries listed in `requirements.txt`, e.g. by running:
-   ```
-   virtualenv/bin/pip install -r requirements.txt
-   ```
-2. Call sign_jwt with service account email and target resource url.
-3. Use resulting token to access application.
 
 ### Self-signed JWT with local key file
 1. Install the libraries listed in `requirements.txt`, e.g. by running:
