@@ -22,7 +22,7 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
+    "ignored_versions": ["2.7", "3.7", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,
@@ -34,5 +34,8 @@ TEST_CONFIG_OVERRIDE = {
     "gcloud_project_env": "GOOGLE_CLOUD_PROJECT",
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    "envs": {
+        "IAM_PROJECT_ID": "gcp103148-cloudaccount",
+        "GOOGLE_APPLICATION_CREDENTIALS": "~/.config/gcloud/application_default_credentials.json"
+    },
 }
