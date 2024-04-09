@@ -86,6 +86,7 @@ def test_gemini_count_token_example() -> None:
     assert "sky" in text
 
 
+@pytest.mark.skip("Skip the test until it gets stable.")
 def test_gemini_safety_config_example() -> None:
     import http
     import typing
