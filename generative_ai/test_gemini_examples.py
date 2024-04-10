@@ -22,6 +22,8 @@ import gemini_audio
 import gemini_chat_example
 import gemini_count_token_example
 import gemini_grounding_example
+import gemini_grounding_example_with_web
+import gemini_grounding_example_with_vais
 import gemini_guide_example
 import gemini_multi_image_example
 import gemini_pdf_example
@@ -143,6 +145,14 @@ def test_gemini_chat_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
+
+
+def test_gemini_grounding_web_example() -> None:
+    response = gemini_grounding_example_with_web.generate_text_with_grounding(
+        PROJECT_ID,
+        LOCATION,
+    )
+    assert response
 
 
 @pytest.mark.skip(
