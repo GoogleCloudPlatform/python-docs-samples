@@ -21,7 +21,6 @@ import gemini_all_modalities
 import gemini_audio
 import gemini_chat_example
 import gemini_count_token_example
-import gemini_grounding_example
 import gemini_grounding_example_with_web
 import gemini_grounding_example_with_vais
 import gemini_guide_example
@@ -155,14 +154,13 @@ def test_gemini_grounding_web_example() -> None:
     assert response
 
 
-@pytest.mark.skip(
-    "Unable to test Google Search grounding due to allowlist restrictions."
-)
-def test_gemini_grounding_example() -> None:
-    data_store_id = "test-search-engine_1689960780551"
-    data_store_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/dataStores/{data_store_id}"
-    response = gemini_grounding_example.generate_text_with_grounding(
-        PROJECT_ID, LOCATION, data_store_path=data_store_path
+@pytest.mark.skip("Skip until ACL for the datastore is set correctly.")
+def test_gemini_grounding_vais_example() -> None:
+    data_store_path = "projects/vertex-llm-grounding-test/locations/global/collections/default_collection/dataStores/dmv"
+    response = gemini_grounding_example_with_vais.generate_text_with_grounding(
+        PROJECT_ID,
+        LOCATION,
+        data_store_path=data_store_path,
     )
     assert response
 

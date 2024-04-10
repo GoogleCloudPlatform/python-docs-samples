@@ -38,7 +38,7 @@ def generate_text_with_grounding(
         grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
     )
 
-    prompt = "When is the next total solar eclipse in US?"
+    prompt = "How do I make an appointment to renew my driver's license?"
     response = model.generate_content(
         prompt,
         tools=[tool],
