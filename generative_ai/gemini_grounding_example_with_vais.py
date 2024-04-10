@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START generativeaionvertexai_gemini_grounding_with_vais]
-from typing import Optional
-
 import vertexai
 from vertexai.preview.generative_models import (
     GenerationConfig,
@@ -41,11 +39,13 @@ def generate_text_with_grounding(
     )
 
     prompt = "When is the next total solar eclipse in US?"
-    response = model.generate_content(prompt, 
-                                    tools=[tool], 
-                                    generation_config=GenerationConfig(
-                                        temperature=0.0,
-                                    ))
+    response = model.generate_content(
+        prompt,
+        tools=[tool],
+        generation_config=GenerationConfig(
+            temperature=0.0,
+        ),
+    )
 
     print(response)
 

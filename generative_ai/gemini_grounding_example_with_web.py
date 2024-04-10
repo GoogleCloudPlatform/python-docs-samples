@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START generativeaionvertexai_gemini_grounding_with_web]
-from typing import Optional
-
 import vertexai
 from vertexai.preview.generative_models import (
     GenerationConfig,
@@ -25,9 +23,7 @@ from vertexai.preview.generative_models import (
 )
 
 
-def generate_text_with_grounding(
-    project_id: str, location: str
-) -> GenerationResponse:
+def generate_text_with_grounding(project_id: str, location: str) -> GenerationResponse:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
@@ -38,11 +34,13 @@ def generate_text_with_grounding(
     tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
 
     prompt = "When is the next total solar eclipse in US?"
-    response = model.generate_content(prompt, 
-                                    tools=[tool], 
-                                    generation_config=GenerationConfig(
-                                        temperature=0.0,
-                                    ))
+    response = model.generate_content(
+        prompt,
+        tools=[tool],
+        generation_config=GenerationConfig(
+            temperature=0.0,
+        ),
+    )
 
     print(response)
 
