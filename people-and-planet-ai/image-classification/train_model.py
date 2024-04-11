@@ -27,6 +27,7 @@ from typing import TypeVar
 import apache_beam as beam
 from apache_beam.options.pipeline_options import PipelineOptions
 from google.cloud.aiplatform.gapic import DatasetServiceClient
+from google.cloud.aiplatform.gapic import PipelineServiceClient
 from google.cloud.aiplatform.gapic.schema import trainingjob
 from PIL import Image, ImageFile
 import requests
@@ -220,7 +221,7 @@ def import_images_to_dataset(dataset_full_path: str, dataset_csv_filename: str) 
     Returns:
         The dataset_full_path.
     """
-    client = aiplatform.gapic.DatasetServiceClient(
+    client = DatasetServiceClient(
         client_options={"api_endpoint": "us-central1-aiplatform.googleapis.com"}
     )
 
@@ -261,7 +262,7 @@ def train_model(
     Returns:
         The training pipeline full path.
     """
-    client = aiplatform.gapic.PipelineServiceClient(
+    client = PipelineServiceClient(
         client_options={
             "api_endpoint": "us-central1-aiplatform.googleapis.com",
         }
