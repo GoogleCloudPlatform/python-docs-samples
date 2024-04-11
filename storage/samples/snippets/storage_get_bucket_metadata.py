@@ -44,6 +44,7 @@ def bucket_metadata(bucket_name):
     print(f"Retention Effective Time: {bucket.retention_policy_effective_time}")
     print(f"Retention Period: {bucket.retention_period}")
     print(f"Retention Policy Locked: {bucket.retention_policy_locked}")
+    print(f"Object Retention Mode: {bucket.object_retention_mode}")
     print(f"Requester Pays: {bucket.requester_pays}")
     print(f"Self Link: {bucket.self_link}")
     print(f"Time Created: {bucket.time_created}")

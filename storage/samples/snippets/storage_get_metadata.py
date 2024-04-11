@@ -59,6 +59,8 @@ def blob_metadata(bucket_name, blob_name):
         "Event based hold: ",
         "enabled" if blob.event_based_hold else "disabled",
     )
+    print(f"Retention mode: {blob.retention.mode}")
+    print(f"Retention retain until time: {blob.retention.retain_until_time}")
     if blob.retention_expiration_time:
         print(
             f"retentionExpirationTime: {blob.retention_expiration_time}"
