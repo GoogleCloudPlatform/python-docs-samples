@@ -205,7 +205,7 @@ def test_train_model(
             f"--temp_location=gs://{bucket_name}/temp",
             "--requirements_file=requirements.txt",
             "--requirements_cache=skip",
-            "--experiments=use_sibling_sdk_workers",
+            "--pickle_library=cloudpickle",
         ],
         check=True,
     )
