@@ -22,13 +22,12 @@ from google.cloud import bigquery
 from google.cloud import storage
 import pytest
 
-import deploy_model
-import predict
-
 # The conftest contains a bunch of reusable fixtures used all over the place.
 # If we use a fixture not defined here, it must be on the conftest!
 #   https://docs.pytest.org/en/latest/explanation/fixtures.html
 import conftest  # python-docs-samples/people-and-planet-ai/conftest.py
+import deploy_model
+import predict
 
 SUFFIX = uuid.uuid4().hex[0:6]
 PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
