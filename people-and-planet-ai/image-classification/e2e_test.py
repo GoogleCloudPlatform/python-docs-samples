@@ -14,6 +14,7 @@
 
 import io
 import os
+import subprocess
 import uuid
 
 import google
@@ -22,10 +23,6 @@ from google.cloud import bigquery
 from google.cloud import storage
 import pytest
 
-# The conftest contains a bunch of reusable fixtures used all over the place.
-# If we use a fixture not defined here, it must be on the conftest!
-#   https://docs.pytest.org/en/latest/explanation/fixtures.html
-import conftest  # python-docs-samples/people-and-planet-ai/conftest.py
 import deploy_model
 import predict
 
@@ -150,13 +147,16 @@ def cache_dependencies() -> None:
     # and compiling all the dependencies can take a long time.
     # We download the pre-compiled dependencies and then set PIP_NO_DEPS to force
     # pip to not rebuild any indirect dependencies.
-    run_cmd(
-        "pip",
-        "download",
-        "--dest",
-        "/tmp/dataflow-requirements-cache",
-        "-r",
-        "requirements.txt",
+    subprocess.run(
+        [
+            "pip",
+            "download",
+            "--dest",
+            "/tmp/dataflow-requirements-cache",
+            "-r",
+            "requirements.txt",
+        ],
+        check=True,
     )
     os.environ["PIP_NO_DEPS"] = "True"
 
@@ -165,17 +165,20 @@ def test_create_images_database_table(
     bucket_name: str, bigquery_dataset: str, cache_dependencies: None
 ) -> None:
     # The table is deleted when we delete the dataset.
-    run_cmd(
-        "python",
-        "create_images_metadata_table.py",
-        f"--bigquery-dataset={bigquery_dataset}",
-        f"--bigquery-table={BIGQUERY_TABLE}_test",
-        "--runner=DataflowRunner",
-        f"--job_name=wildlife-images-database-{SUFFIX}",
-        f"--project={PROJECT}",
-        f"--temp_location=gs://{bucket_name}/temp",
-        f"--region={REGION}",
-        "--worker_machine_type=n1-standard-2",
+    subprocess.run(
+        [
+            "python",
+            "create_images_metadata_table.py",
+            f"--bigquery-dataset={bigquery_dataset}",
+            f"--bigquery-table={BIGQUERY_TABLE}_test",
+            "--runner=DataflowRunner",
+            f"--job_name=wildlife-images-database-{SUFFIX}",
+            f"--project={PROJECT}",
+            f"--temp_location=gs://{bucket_name}/temp",
+            f"--region={REGION}",
+            "--worker_machine_type=n1-standard-2",
+        ],
+        check=True,
     )
 
 
@@ -185,21 +188,24 @@ def test_train_model(
     bigquery_table: str,
     cache_dependencies: None,
 ) -> None:
-    run_cmd(
-        "python",
-        "train_model.py",
-        f"--cloud-storage-path=gs://{bucket_name}",
-        f"--bigquery-dataset={bigquery_dataset}",
-        f"--bigquery-table={bigquery_table}",
-        "--ai-platform-name-prefix=",  # empty skips the AI Platform operations.
-        f"--min-images-per-class={MIN_IMAGES_PER_CLASS}",
-        f"--max-images-per-class={MAX_IMAGES_PER_CLASS}",
-        "--runner=DataflowRunner",
-        f"--job_name=wildlife-train-{SUFFIX}",
-        f"--project={PROJECT}",
-        f"--temp_location=gs://{bucket_name}/temp",
-        "--requirements_file=requirements.txt",
-        f"--region={REGION}",
+    subprocess.run(
+        [
+            "python",
+            "train_model.py",
+            f"--cloud-storage-path=gs://{bucket_name}",
+            f"--bigquery-dataset={bigquery_dataset}",
+            f"--bigquery-table={bigquery_table}",
+            "--ai-platform-name-prefix=",  # empty skips the AI Platform operations.
+            f"--min-images-per-class={MIN_IMAGES_PER_CLASS}",
+            f"--max-images-per-class={MAX_IMAGES_PER_CLASS}",
+            "--runner=DataflowRunner",
+            f"--job_name=wildlife-train-{SUFFIX}",
+            f"--project={PROJECT}",
+            f"--temp_location=gs://{bucket_name}/temp",
+            "--requirements_file=requirements.txt",
+            f"--region={REGION}",
+        ],
+        check=True,
     )
 
 
