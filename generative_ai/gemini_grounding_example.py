@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_grounding]
+# [START generativeaionvertexai_gemini_grounding]
 from typing import Optional
 
 import vertexai
@@ -49,5 +49,5 @@ def generate_text_with_grounding(
 
     print(response)
 
-    # [END aiplatform_gemini_grounding]
+    # [END generativeaionvertexai_gemini_grounding]
     return response

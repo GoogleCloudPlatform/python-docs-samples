@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_function_calling]
+# [START generativeaionvertexai_gemini_function_calling]
 import vertexai
 from vertexai.generative_models import (
     Content,
     FunctionDeclaration,
+    GenerationConfig,
     GenerativeModel,
     Part,
     Tool,
@@ -57,7 +58,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
     # Send the prompt and instruct the model to generate content using the Tool that you just created
     response = model.generate_content(
         user_prompt_content,
-        generation_config={"temperature": 0},
+        generation_config=GenerationConfig(temperature=0),
         tools=[weather_tool],
     )
     response_function_call_content = response.candidates[0].content
@@ -103,4 +104,4 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
     return summary, response
 
 
-# [END aiplatform_gemini_function_calling]
+# [END generativeaionvertexai_gemini_function_calling]

@@ -3,6 +3,6 @@ Flask==2.0.3; python_version < '3.7'
 gunicorn==20.1.0
 imageio==2.29.0
 numpy==1.21.6
-pillow==10.0.1
+pillow==10.3.0
 scipy==1.7.3
 Werkzeug==2.3.7

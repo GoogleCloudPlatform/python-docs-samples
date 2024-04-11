@@ -20,6 +20,7 @@ Example usage:
 """
 
 # [START aiplatform_imagen_edit_image_mask_free]
+# [START generativeaionvertexai_imagen_edit_image_mask_free]
 
 import argparse
 
@@ -64,6 +65,7 @@ def edit_image_mask_free(
     return images
 
 
+# [END generativeaionvertexai_imagen_edit_image_mask_free]
 # [END aiplatform_imagen_edit_image_mask_free]
 
 if __name__ == "__main__":

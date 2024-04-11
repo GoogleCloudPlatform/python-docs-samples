@@ -14,7 +14,7 @@
 
 import vertexai
 
-# [START aiplatform_gemini_safety_settings]
+# [START generativeaionvertexai_gemini_safety_settings]
 from vertexai import generative_models
 
 
@@ -26,7 +26,9 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     model = generative_models.GenerativeModel("gemini-1.0-pro-vision")
 
     # Generation config
-    config = {"max_output_tokens": 2048, "temperature": 0.4, "top_p": 1, "top_k": 32}
+    config = generative_models.GenerationConfig(
+        max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
+    )
 
     # Safety config
     safety_config = {
@@ -49,4 +51,4 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     return "".join(text_responses)
 
 
-# [END aiplatform_gemini_safety_settings]
+# [END generativeaionvertexai_gemini_safety_settings]
