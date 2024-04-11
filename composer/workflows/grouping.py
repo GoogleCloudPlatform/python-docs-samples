@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START composer_grouping_airflow_1]
 
-# [START composer_grouping]
 from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.dummy import DummyOperator
@@ -38,4 +38,5 @@ with DAG(dag_id=DAG_NAME, default_args=args) as dag:
     end = DummyOperator(task_id="end")
 
     start >> [task_1, task_2] >> some_other_task >> [task_3, task_4] >> end
-    # [END composer_grouping]
+
+# [END composer_grouping_airflow_1]
