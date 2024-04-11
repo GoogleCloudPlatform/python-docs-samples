@@ -1,6 +1,6 @@
 Flask==3.0.0
 gunicorn==20.1.0
-imageio==2.29.0
+imageio==2.34.0
 numpy==1.24.3
 pillow==10.0.1
 scipy==1.10.1
