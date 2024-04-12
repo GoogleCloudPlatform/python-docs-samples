@@ -54,9 +54,3 @@ def delete_existing_deny_policies(project_id: str, delete_name_prefix: str) -> N
     for policy in policies_client.list_policies(request=request):
         if delete_name_prefix in policy.name:
             delete_deny_policy(PROJECT_ID, str(policy.name).rsplit("/", 1)[-1])
-
-
-@pytest.fixture
-def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
-    name = f"test-{uuid.uuid4().hex[:25]}"
-    yield name
