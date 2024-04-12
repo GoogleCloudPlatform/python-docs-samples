@@ -22,7 +22,7 @@ google-crc32c==1.5.0
 google-resumable-media==2.7.0
 googleapis-common-protos==1.63.0
 grpcio==1.62.1
-idna==3.6
+idna==3.7
 munch==4.0.0
 mypy-extensions==1.0.0
 packaging==24.0
