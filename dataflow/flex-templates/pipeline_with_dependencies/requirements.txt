@@ -182,7 +182,7 @@ httplib2==0.22.0
     #   google-apitools
     #   google-auth-httplib2
     #   oauth2client
-idna==3.6
+idna==3.7
     # via requests
 js2py==0.74
     # via apache-beam
