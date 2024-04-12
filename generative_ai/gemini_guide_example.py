@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_get_started]
+# [START generativeaionvertexai_gemini_get_started]
 # TODO(developer): Vertex AI SDK - uncomment below & run
 # pip3 install --upgrade --user google-cloud-aiplatform
 # gcloud auth application-default login
@@ -41,4 +41,4 @@ def generate_text(project_id: str, location: str) -> str:
     return response.text
 
 
-# [END aiplatform_gemini_get_started]
+# [END generativeaionvertexai_gemini_get_started]

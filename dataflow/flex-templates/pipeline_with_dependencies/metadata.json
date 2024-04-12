@@ -1,0 +1,23 @@
+{
+  "_comment": "This file allows you to optionally add additional metadata for the Flex Template, its parameters and their validation rules.",
+  "name": "Longest Word Finder.",
+  "description": "A Flex Template that finds the longest word in the input, and makes a FIGlet-style banner out of it.",
+  "parameters": [
+    {
+      "name": "input",
+      "label": "Input path",
+      "helpText": "The path and filename prefix for input files. Example: gs://dataflow-samples/shakespeare/kinglear.txt",
+      "regexes": [
+        "^gs:\\/\\/[^\\n\\r]+$"
+      ]
+    },
+    {
+      "name": "output",
+      "label": "Output destination",
+      "helpText": "The path and filename prefix for writing the output. Example: gs://your-bucket/longest-word",
+      "regexes": [
+        "^gs:\\/\\/[^\\n\\r]+$"
+      ]
+    }
+  ]
+}

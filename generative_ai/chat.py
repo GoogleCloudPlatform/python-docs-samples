@@ -45,6 +45,6 @@ def science_tutoring(temperature: float = 0.2) -> None:
     return response
 
 
+# [END aiplatform_sdk_chat]
 if __name__ == "__main__":
     science_tutoring()
-# [END aiplatform_sdk_chat]

@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_gemini_pro_config_example]
+# [START generativeaionvertexai_gemini_pro_config_example]
 import base64
 
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part
+from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
 
 
 def generate_text(project_id: str, location: str) -> None:
@@ -33,7 +33,9 @@ def generate_text(project_id: str, location: str) -> None:
     )
 
     # Generation Config
-    config = {"max_output_tokens": 2048, "temperature": 0.4, "top_p": 1, "top_k": 32}
+    config = GenerationConfig(
+        max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
+    )
 
     # Generate text
     response = model.generate_content(
@@ -43,4 +45,4 @@ def generate_text(project_id: str, location: str) -> None:
     return response.text
 
 
-# [END aiplatform_gemini_pro_config_example]
+# [END generativeaionvertexai_gemini_pro_config_example]

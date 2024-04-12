@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,19 +24,26 @@ _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 _LOCATION = "us-central1"
 
 
-function_expected_responses = [
-    "function_call",
-    "get_current_weather",
-    "args",
-    "fields",
-    "location",
+summary_expected = [
+    "Boston",
+]
+
+response_expected = [
+    "candidates",
+    "content",
+    "role",
+    "model",
+    "parts",
     "Boston",
 ]
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_interview() -> None:
-    content = function_calling.generate_function_call(
-        prompt="What is the weather like in Boston?"
+def test_function_calling() -> None:
+    summary, response = function_calling.generate_function_call(
+        prompt="What is the weather like in Boston?",
+        project_id=_PROJECT_ID,
+        location=_LOCATION,
     )
-    assert all(x in content for x in function_expected_responses)
+    assert all(x in str(summary) for x in summary_expected)
+    assert all(x in str(response) for x in response_expected)

@@ -9,25 +9,37 @@
 # dir will use repo root as working directory if not specified.
 dir ?= $(shell pwd)
 # python version: defaults to 3.11
-py ?= "3.11"
+py ?= 3.11
 
 INTERFACE_ACTIONS="build test lint"
 repo_root = $(shell pwd)
 .ONESHELL: #ease subdirectory work by using the same subshell for all commands
 .-PHONY: *
 
-# Export env vars used to determine cloud project.
-export GOOGLE_CLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
-export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${GOOGLE_SAMPLES_PROJECT}
+# GOOGLE_SAMPLES_PROJECT takes precedence over GOOGLE_CLOUD_PROJECT
+PROJECT_ID = ${GOOGLE_SAMPLES_PROJECT}
+ifeq (${PROJECT_ID},)
+PROJECT_ID = ${GOOGLE_CLOUD_PROJECT}
+endif
+# export our project ID as GOOGLE_CLOUD_PROJECT in the action environment
+override GOOGLE_CLOUD_PROJECT := ${PROJECT_ID}
+export GOOGLE_CLOUD_PROJECT
+export BUILD_SPECIFIC_GCLOUD_PROJECT ?= ${PROJECT_ID}
 
 build: check-env
 	pip install nox
 	cd ${dir}
-	pip install -r requirements.txt
 
 test: check-env build noxfile.py
+# kokoro uses $RUN_TESTS_SESSION to indicate which session to run.
+# for local use, use a suitable default.
+ifndef RUN_TESTS_SESSION
 	cd ${dir}
 	nox -s py-$(py)
+else
+	cd ${dir}
+	nox -s ${RUN_TESTS_SESSION}
+endif
 
 lint: check-env noxfile.py
 	pip install nox black
@@ -41,8 +53,8 @@ noxfile.py:
 	cp -n ${repo_root}/noxfile-template.py noxfile.py
 
 check-env:
-ifndef GOOGLE_SAMPLES_PROJECT
-	$(error GOOGLE_SAMPLES_PROJECT must be set to the name of a GCP project to use.)
+ifndef PROJECT_ID
+	$(error At least one of the following env vars must be set: GOOGLE_SAMPLES_PROJECT, GOOGLE_CLOUD_PROJECT.)
 endif
 ifndef VIRTUAL_ENV
 	$(warning Use of a Python Virtual Environment is recommended. See README.md for details.)

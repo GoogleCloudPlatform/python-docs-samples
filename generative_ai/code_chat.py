@@ -36,6 +36,6 @@ def write_a_function(temperature: float = 0.5) -> object:
     return response
 
 
+# [END aiplatform_sdk_code_chat]
 if __name__ == "__main__":
     write_a_function()
-# [END aiplatform_sdk_code_chat]
