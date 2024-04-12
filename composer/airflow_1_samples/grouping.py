@@ -14,8 +14,8 @@
 # [START composer_grouping_airflow_1]
 
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
-from airflow.operators.dummy_operator import DummyOperator
+from airflow.operators.bash import BashOperator
+from airflow.operators.dummy import DummyOperator
 from airflow.utils.dates import days_ago
 
 DAG_NAME = "all_tasks_in_one_dag"

@@ -17,13 +17,18 @@ import argparse
 
 # [START speech_transcribe_streaming_v2]
 from google.cloud.speech_v2 import SpeechClient
-from google.cloud.speech_v2.types import cloud_speech as cloud_speech_types
+from google.cloud.speech_v2 import StreamingRecognizeRequest
+from google.cloud.speech_v2 import RecognitionConfig
+from google.cloud.speech_v2 import StreamingRecognizeResponse
+from google.cloud.speech_v2 import StreamingRecognitionConfig
+from google.cloud.speech_v2 import AutoDetectDecodingConfig
 
 
 def transcribe_streaming_v2(
     project_id: str,
     audio_file: str,
-) -> cloud_speech_types.StreamingRecognizeResponse:
+) -> StreamingRecognizeResponse:
+
     """Transcribes audio from audio file stream.
 
     Args:
@@ -47,23 +52,24 @@ def transcribe_streaming_v2(
         for start in range(0, len(content), chunk_length)
     ]
     audio_requests = (
-        cloud_speech_types.StreamingRecognizeRequest(audio=audio) for audio in stream
+        StreamingRecognizeRequest(audio=audio) for audio in stream
     )
 
-    recognition_config = cloud_speech_types.RecognitionConfig(
-        auto_decoding_config=cloud_speech_types.AutoDetectDecodingConfig(),
+    recognition_config = RecognitionConfig(
+        auto_decoding_config=AutoDetectDecodingConfig(),
         language_codes=["en-US"],
         model="long",
     )
-    streaming_config = cloud_speech_types.StreamingRecognitionConfig(
+    streaming_config = StreamingRecognitionConfig(
         config=recognition_config
     )
-    config_request = cloud_speech_types.StreamingRecognizeRequest(
+    config_request = StreamingRecognizeRequest(
         recognizer=f"projects/{project_id}/locations/global/recognizers/_",
         streaming_config=streaming_config,
     )
 
-    def requests(config: cloud_speech_types.RecognitionConfig, audio: list) -> list:
+
+    def requests(config: RecognitionConfig, audio: list) -> list:
         yield config
         yield from audio
 
