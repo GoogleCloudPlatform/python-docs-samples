@@ -17,12 +17,13 @@ command line application and sample code for creating a new secret.
 """
 
 import argparse
+from typing import Optional
 
 from google.cloud import secretmanager
 
 
 # [START secretmanager_create_secret]
-def create_secret(project_id: str, secret_id: str) -> secretmanager.CreateSecretRequest:
+def create_secret(project_id: str, secret_id: str, ttl: Optional[str] = None) -> secretmanager.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
@@ -43,7 +44,7 @@ def create_secret(project_id: str, secret_id: str) -> secretmanager.CreateSecret
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {"replication": {"automatic": {}}},
+            "secret": {"replication": {"automatic": {}}, "ttl": ttl},
         }
     )
 
@@ -60,6 +61,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret to create")
+    parser.add_argument("ttl", help="time to live for secrets, f.e. '600s' ")
     args = parser.parse_args()
 
-    create_secret(args.project_id, args.secret_id)
+    create_secret(args.project_id, args.secret_id, args.ttl)
