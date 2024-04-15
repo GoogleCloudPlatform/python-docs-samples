@@ -21,6 +21,7 @@ from snippets.create_key import create_key
 from snippets.create_service_account import create_service_account
 from snippets.delete_key import delete_key
 from snippets.delete_service_account import delete_service_account
+from snippets.list_keys import list_keys
 
 
 PROJECT_ID = os.environ["IAM_PROJECT_ID"]
@@ -40,6 +41,17 @@ def test_create_service_account_key(capsys: "pytest.CaptureFixture[str]", servic
     key_id = create_key(PROJECT_ID, service_account)
     out, _ = capsys.readouterr()
     assert re.search(f"Created a key: {key_id}", out)
+
+
+def test_list_service_account_keys(capsys: "pytest.CaptureFixture[str]", service_account: str) -> None:
+    key_id = create_key(PROJECT_ID, service_account)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Created a key: {key_id}", out)
+
+    list_keys(PROJECT_ID, service_account)
+    out, _ = capsys.readouterr()
+    assert len(re.findall(r"Got a key: \w+, type: 1", out)) >= 1
+    assert len(re.findall(r"Got a key: \w+, type: 2", out)) == 1
 
 
 def test_delete_service_account_key(capsys: "pytest.CaptureFixture[str]", service_account: str) -> None:
