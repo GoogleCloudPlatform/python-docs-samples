@@ -16,7 +16,7 @@
 
 
 # [START iam_list_service_accounts]
-def list_service_accounts(project_id: str) -> dict:
+def list_service_accounts(project_id: str) -> None:
     from google.cloud import iam_admin_v1
     from google.cloud.iam_admin_v1 import types
     """

@@ -15,7 +15,7 @@
 # This file contains code samples that demonstrate how to get delete service account.
 
 # [START iam_delete_service_account]
-def delete_service_account(project_id: str, account: str) -> dict:
+def delete_service_account(project_id: str, account: str) -> None:
     from google.cloud import iam_admin_v1
     from google.cloud.iam_admin_v1 import types
     """

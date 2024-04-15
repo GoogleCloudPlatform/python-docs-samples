@@ -14,11 +14,11 @@
 
 # This file contains code samples that demonstrate how to get create service account.
 
-from typing import Union
+from typing import Optional
 
 
 # [START iam_create_service_account]
-def create_service_account(project_id: str, account_id: str, display_name: Union[str, None] = None) -> dict:
+def create_service_account(project_id: str, account_id: str, display_name: Optional[str] = None) -> None:
     from google.cloud import iam_admin_v1
     from google.cloud.iam_admin_v1 import types
     """
