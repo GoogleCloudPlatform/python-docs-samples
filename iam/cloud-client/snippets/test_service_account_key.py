@@ -19,6 +19,7 @@ import uuid
 import pytest
 from snippets.create_key import create_key
 from snippets.create_service_account import create_service_account
+from snippets.delete_key import delete_key
 from snippets.delete_service_account import delete_service_account
 
 
@@ -39,3 +40,13 @@ def test_create_service_account_key(capsys: "pytest.CaptureFixture[str]", servic
     key_id = create_key(PROJECT_ID, service_account)
     out, _ = capsys.readouterr()
     assert re.search(f"Created a key: {key_id}", out)
+
+
+def test_delete_service_account_key(capsys: "pytest.CaptureFixture[str]", service_account: str) -> None:
+    key_id = create_key(PROJECT_ID, service_account)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Created a key: {key_id}", out)
+
+    delete_key(PROJECT_ID, service_account, key_id)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Deleted key: {key_id}", out)
