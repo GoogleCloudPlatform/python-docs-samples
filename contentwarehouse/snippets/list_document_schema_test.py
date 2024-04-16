@@ -18,6 +18,7 @@ import os
 from contentwarehouse.snippets import list_document_schema_sample
 from contentwarehouse.snippets import test_utilities
 
+import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
