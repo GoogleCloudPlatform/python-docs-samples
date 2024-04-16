@@ -21,8 +21,8 @@ import gemini_all_modalities
 import gemini_audio
 import gemini_chat_example
 import gemini_count_token_example
-import gemini_grounding_example_with_web
 import gemini_grounding_example_with_vais
+import gemini_grounding_example_with_web
 import gemini_guide_example
 import gemini_multi_image_example
 import gemini_pdf_example
