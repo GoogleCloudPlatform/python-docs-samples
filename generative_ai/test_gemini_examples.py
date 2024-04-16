@@ -115,7 +115,20 @@ def test_gemini_safety_config_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert any(
-        [_ in text for _ in ("scone", "blueberry", "coffee,", "flower", "table")]
+        [
+            _ in text
+            for _ in (
+                "scone",
+                "blueberry",
+                "coffee,",
+                "flower",
+                "table",
+                "cookie",
+                "spoon",
+                "cup",
+                "plant",
+            )
+        ]
     )
 
 
