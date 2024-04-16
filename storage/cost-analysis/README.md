@@ -1,23 +1,23 @@
-Google Cloud Storage Python Samples
+# Cloud Storage Python Samples
 ===============================================================================
 
 [![Open in Cloud Shell button](https://gstatic.com/cloudssh/images/open-btn.png)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=storage/s3-sdk/README.rst)
 
-**Google Cloud Storage:** https://cloud.google.com/storage/docs 
+**Cloud Storage:** https://cloud.google.com/storage/docs 
 
 Samples
 -------------------------------------------------------------------------------
-NOTE: Due to the specific functionality related to Google Cloud APIs, this guide assumes a base level of familiarity with Google Cloud Storage features, terminology, and pricing.
+NOTE: Due to the specific functionality related to Google Cloud APIs, this guide assumes a base level of familiarity with the Cloud Storage features, terminology, and pricing.
 
 ### Google Cloud Storage Soft Delete Cost Analyzer
 -------------------------------------------------------------------------------
 **Purpose**
 
 * Helps you understand the potential cost implications of enabling soft delete on your Google Cloud Storage buckets.
-* Identifies buckets where soft delete might lead to significant cost increases.
+* Identifies buckets where the cost of enabling soft delete exceeds some threshold.
 
 **Key Concepts**
-   1. Soft Delete: A feature for protecting against accidental data loss. Deleted objects are retained for a defined period before permanent deletion. This adds safety but carries potential additional storage costs.
+   1. [Soft Delete](https://cloud.google.com/storage/docs/soft-delete): The soft delete feature lets you preserve all deleted or overwritten objects in your bucket for a specified duration. 
    2. Cost Analysis: This script evaluates the relative cost increase within each bucket if soft delete is enabled. Considerations include:
         * Your soft delete retention period
         * Amount of data likely to be soft-deleted
@@ -47,19 +47,20 @@ Note: In this sample, if setting cost_threshold 0.15 would spotlight buckets whe
 
 To disable soft-delete for buckets flagged by the script, follow these steps:
 
+1. Authenticate (if needed): If you're not already authenticated or prefer a specific account, run:
 ```code-block::bash
-# 1. Authenticate (if needed): If you're not already authenticated or prefer a specific account, run:
-gcloud auth application-default login
-
-# 2. Run the analyzer to generate a list of buckets exceeding your cost threshold:
-python storage_soft_delete_relative_cost_analyzer.py [your-project-name] --[OTHER_OPTIONS] --list=True > list_of_buckets.txt
-
-# 3. Update the buckets using the generated list:
-cat list_of_buckets.txt | gcloud storage buckets update -I --clear-soft-delete
-
+$ gcloud auth application-default login
+```
+2. Run the analyzer to generate a list of buckets exceeding your cost threshold:
+```code-block::bash
+$ python storage_soft_delete_relative_cost_analyzer.py [your-project-name] --[OTHER_OPTIONS] --list=True > list_of_buckets.txt
+```
+3. Update the buckets using the generated list:
+```code-block::bash
+$ cat list_of_buckets.txt | gcloud storage buckets update -I --clear-soft-delete
 ```
 
-**Important Note:** <span style="color: red;">Disabling soft-delete for flagged buckets means when deleting it will permanently delete files. These files cannot be restored, even if a soft-delete policy is later re-enabled.</span> 
+**Important Note:** <span style="color: red;">Disabling soft-delete for flagged buckets means delete operations will permanently delete files. These files cannot be restored, even if a soft-delete policy is later re-enabled.</span> 
 
 -------------------------------------------------------------------------------
 
@@ -113,27 +114,31 @@ The script relies on the Google Cloud Monitoring API to fetch essential data for
 The relative increase in cost of using soft delete is calculated by combining the output of above mentioned queries and the for each bucket,
 
 ```
-Relative cost of each bucket = ('deleted bytes' / 'total bytes seconds' )
-                                 × 'soft delete retention duration'
-                                 x 'cost of storing in storage class'
-                                 x 'ratio of storage class'.
+Relative cost of each bucket = deleted_bytes / total_byte_seconds
+                                 x Soft delete retention duration-seconds
+                                 x Relative Storage Cost
+                                 x Storage Class Ratio
 ```
 
 where,
-   * `Soft Delete Retention Duration`: The number of days (or seconds) that soft-deleted objects are retained before permanent deletion. Longer retention periods increase potential costs.
-   * `Deleted Bytes`: The amount of data (in bytes) that has been soft-deleted within the bucket.
-   * `Total Bytes Seconds`: A cumulative measure of all data stored in the bucket (including active and soft-deleted objects) over time, expressed in byte-seconds (bytes * seconds).
-   * `Cost of Storing in Storage Class`: The per-byte-second cost of the specific storage class where the soft-deleted data resides (e.g., Standard, Nearline, Coldline).
-   * `Ratio of Storage Class`: The proportion of the bucket's data that belongs to the specific storage class being considered.
+
+   * `Deleted Bytes`: It is same as `storage/v2/deleted_bytes`. Delta count of deleted bytes per bucket,
+   * `Total Bytes Seconds`: It is same as `storage/v2/total_byte_seconds`. Total daily storage in byte*seconds used by the bucket, grouped by storage class and type where type can be live-object, noncurrent-object, soft-deleted-object and multipart-upload. 
+   * `Soft delete retention duration-seconds`: Soft Delete window defined for the bucket, this is the threshold to be provided to test out this relative cost script.
+   * `Relative Storage Cost`: The cost of storing data in a specific storage class (e.g., Standard, Nearline, Coldline) relative to the Standard class (where Standard class cost is 1).
+   * `Storage Class Ratio`: The proportion of the bucket's data that belongs to the specific storage class being considered. 
+
+Please note the following Cloud Monitoring metrics: 
+`storage/v2/deleted_bytes` and `storage/v2/total_byte_seconds` are defined on [https://cloud.google.com/monitoring/api/metrics_gcp#gcp-storage](https://cloud.google.com/monitoring/api/metrics_gcp#gcp-storage)
 
 ##### Explaination of each Steps:
 
-1. Soft Delete Ratio: Divide `Deleted Bytes` by `Total Bytes Seconds` to get the fraction of data that is soft-deleted. This indicates how much of the overall storage is occupied by inactive, potentially deletable data.
+1. Soft Delete Rate: Dividing 'Deleted Bytes' by 'Total Bytes Seconds' gives you the rate at which data is being soft-deleted (per second). This shows how quickly data marked for deletion accumulates in the bucket.
 2. Cost Impact:
-   * Multiply the `Soft Delete Ratio` by the `Soft Delete Retention Duration` to account for the extra time this data is being stored.
-   * Multiply this result by the 'Cost of Storing in Storage Class` to factor in the pricing of the specific storage class.
-   * Finally, multiply by the `Ratio of Storage Class` to consider only the portion of the cost attributable to that particular class.
+   * Multiply the `Soft Delete Rate` by the `Soft delete retention duration-seconds` to get the total ratio of data that is soft-deleted and retained within the specified period.
+   * Multiply this result by the 'Relative Storage Cost` to factor in the pricing of the specific storage class.
+   * Finally, multiply by the `Storage Class Ratio` to consider only the portion of the cost attributable to that particular class.
 
-The final result represents the relative increase in cost due to soft delete, expressed as a fraction or percentage. A higher value indicates a more significant cost impact. This allows you to assess whether the benefits of soft delete (data protection) outweigh the additional storage expenses for each bucket and storage class. Example: If the calculated relative cost increase is 0.15 (or 15%), it means that enabling soft delete for that bucket/storage class would increase your storage costs by approximately 15%.
+The final result represents the relative increase in cost due to soft delete, expressed as a fraction or percentage. If cost is 1 then no cost increase otherwise more increase makes more cost. This allows you to assess whether the benefits of soft delete (data protection) outweigh the additional storage expenses for each bucket and storage class. Example: If the calculated relative cost increase is 0.15 (or 15%), it means that enabling soft delete for that bucket/storage class would increase your storage costs by approximately 15%.
 
 
