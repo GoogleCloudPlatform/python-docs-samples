@@ -159,11 +159,20 @@ def test_gemini_chat_example() -> None:
 @pytest.mark.skip(
     "Unable to test Google Search grounding due to allowlist restrictions."
 )
-def test_gemini_grounding_example() -> None:
-    data_store_id = "test-search-engine_1689960780551"
-    data_store_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/dataStores/{data_store_id}"
-    response = gemini_grounding_example.generate_text_with_grounding(
-        PROJECT_ID, LOCATION, data_store_path=data_store_path
+def test_gemini_grounding_web_example() -> None:
+    response = gemini_grounding_example.generate_text_with_grounding_web(
+        PROJECT_ID,
+        LOCATION,
+    )
+    assert response
+
+
+def test_gemini_grounding_vais_example() -> None:
+    data_store_path = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
+    response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
+        PROJECT_ID,
+        LOCATION,
+        data_store_path=data_store_path,
     )
     assert response
 
