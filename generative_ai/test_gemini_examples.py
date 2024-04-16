@@ -21,8 +21,7 @@ import gemini_all_modalities
 import gemini_audio
 import gemini_chat_example
 import gemini_count_token_example
-import gemini_grounding_example_with_vais
-import gemini_grounding_example_with_web
+import gemini_grounding_example
 import gemini_guide_example
 import gemini_multi_image_example
 import gemini_pdf_example
@@ -147,17 +146,16 @@ def test_gemini_chat_example() -> None:
 
 
 def test_gemini_grounding_web_example() -> None:
-    response = gemini_grounding_example_with_web.generate_text_with_grounding(
+    response = gemini_grounding_example.generate_text_with_grounding_web(
         PROJECT_ID,
         LOCATION,
     )
     assert response
 
 
-@pytest.mark.skip("Skip until ACL for the datastore is set correctly.")
 def test_gemini_grounding_vais_example() -> None:
-    data_store_path = "projects/vertex-llm-grounding-test/locations/global/collections/default_collection/dataStores/dmv"
-    response = gemini_grounding_example_with_vais.generate_text_with_grounding(
+    data_store_path = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
+    response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
         PROJECT_ID,
         LOCATION,
         data_store_path=data_store_path,
