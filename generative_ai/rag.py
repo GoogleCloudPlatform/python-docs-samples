@@ -55,10 +55,8 @@ def create_corpus(
 
     corpus = rag.create_corpus(display_name=display_name, description=description)
     print(corpus)
+    # [END generativeaionvertexai_rag_create_corpus]
     return corpus
-
-
-# [END generativeaionvertexai_rag_create_corpus]
 
 
 # [START generativeaionvertexai_rag_get_corpus]
@@ -68,10 +66,8 @@ def get_corpus(project_id: str, location: str, corpus_name: str):
 
     corpus = rag.get_corpus(name=corpus_name)
     print(corpus)
+    # [END generativeaionvertexai_rag_get_corpus]
     return corpus
-
-
-# [END generativeaionvertexai_rag_get_corpus]
 
 
 # [START generativeaionvertexai_rag_list_corpora]
@@ -81,10 +77,8 @@ def list_corpora(project_id: str, location: str):
 
     corpora = rag.list_corpora()
     print(corpora)
+    # [END generativeaionvertexai_rag_list_corpora]
     return corpora
-
-
-# [END generativeaionvertexai_rag_list_corpora]
 
 
 # [START generativeaionvertexai_rag_upload_file]
@@ -106,10 +100,8 @@ def upload_file(
         description=description,
     )
     print(rag_file)
+    # [END generativeaionvertexai_rag_upload_file]
     return rag_file
-
-
-# [END generativeaionvertexai_rag_upload_file]
 
 
 # [START generativeaionvertexai_rag_import_files]
@@ -131,10 +123,8 @@ def import_files(
         chunk_overlap=chunk_overlap,
     )
     print(f"Imported {response.imported_rag_files_count} files.")
+    # [END generativeaionvertexai_rag_import_files]
     return response
-
-
-# [END generativeaionvertexai_rag_import_files]
 
 
 # [START generativeaionvertexai_rag_get_file]
@@ -144,10 +134,9 @@ def get_file(project_id: str, location: str, file_name: str):
 
     rag_file = rag.get_file(name=file_name)
     print(rag_file)
+    # [END generativeaionvertexai_rag_get_file]
+
     return rag_file
-
-
-# [END generativeaionvertexai_rag_get_file]
 
 
 # [START generativeaionvertexai_rag_list_files]
@@ -158,14 +147,13 @@ def list_files(project_id: str, location: str, corpus_name: str):
     files = rag.list_files(corpus_name=corpus_name)
     for file in files:
         print(file)
+    # [END generativeaionvertexai_rag_list_files]
+
     return files
 
 
-# [END generativeaionvertexai_rag_list_files]
-
-
 # [START generativeaionvertexai_rag_delete_file]
-def delete_file(project_id: str, location: str, file_name: str):
+def delete_file(project_id: str, location: str, file_name: str) -> None:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
@@ -177,7 +165,7 @@ def delete_file(project_id: str, location: str, file_name: str):
 
 
 # [START generativeaionvertexai_rag_delete_corpus]
-def delete_corpus(project_id: str, location: str, corpus_name: str):
+def delete_corpus(project_id: str, location: str, corpus_name: str) -> None:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
@@ -251,7 +239,6 @@ def generate_content_with_rag(
     rag_model = GenerativeModel("gemini-1.0-pro", tools=[rag_retrieval_tool])
     response = rag_model.generate_content("Why is the sky blue?")
     print(response.text)
+    # [END generativeaionvertexai_rag_generate_content]
+
     return response
-
-
-# [END generativeaionvertexai_rag_generate_content]
