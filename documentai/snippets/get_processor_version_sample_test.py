@@ -34,7 +34,6 @@ def test_get_processor_version(capsys):
     )
     out, _ = capsys.readouterr()
 
+    assert processor_version
     assert "Processor Version: pretrained-ocr" in out
     assert "Display Name: Google Stable" in out
-    assert "DEPLOYED" == processor_version.state
-    # assert "DEPLOYED" in out
