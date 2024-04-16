@@ -25,6 +25,9 @@ document_query_text = "document"
 user_id = "user:xxxx@example.com"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_search_documents(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     search_documents_sample.search_documents_sample(

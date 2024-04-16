@@ -24,6 +24,9 @@ location = "us"  # Format is 'us' or 'eu'
 user_id = "user:xxxx@example.com"  # Format is "user:xxxx@example.com"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_create_folder_link_document(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     create_folder_link_document_sample.create_folder_link_document(
