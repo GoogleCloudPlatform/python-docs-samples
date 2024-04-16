@@ -26,9 +26,9 @@
 # [START generativeaionvertexai_rag_generate_content]
 
 from typing import List, Union, Optional
-import vertexai
 
 from google.cloud.aiplatform.private_preview.vertex_rag import rag
+import vertexai
 
 # [END generativeaionvertexai_rag_create_corpus]
 # [END generativeaionvertexai_rag_get_corpus]
