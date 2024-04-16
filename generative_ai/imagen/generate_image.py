@@ -19,7 +19,7 @@ Example usage:
         --output_file <filepath> --prompt <text>
 """
 
-# [START aiplatform_imagen_generate_image]
+# [START generativeaionvertexai_imagen_generate_image]
 
 import argparse
 
@@ -39,13 +39,26 @@ def generate_image(
 
     vertexai.init(project=project_id, location=location)
 
-    model = ImageGenerationModel.from_pretrained("imagegeneration@005")
+    model = ImageGenerationModel.from_pretrained("imagegeneration@006")
 
     images = model.generate_images(
         prompt=prompt,
         # Optional parameters
-        seed=1,
         number_of_images=1,
+        language="en",  # prompt language
+        # By default, a SynthID watermark is added to images, but you can
+        # disable it. You can't use a seed value and watermark at the same time.
+        # add_watermark=False,
+        # seed=100,
+        aspect_ratio="1:1",  # "9:16" "16:9" "4:3" "3:4"
+        # Adds a filter level to Safety filtering: "block_most" (most strict blocking),
+        # "block_some" (default), "block_few", or "block_fewest" (available to
+        # allowlisted users only).
+        safety_filter_level="block_some",
+        # Allows generation of people by the model: "dont_allow" (block
+        # all people), "allow_adult" (default; allow adults but not children),
+        # "allow_all" (available to allowlisted users only; allow adults and children)
+        person_generation="allow_adult",
     )
 
     images[0].save(location=output_file, include_generation_parameters=True)
@@ -58,7 +71,7 @@ def generate_image(
     return images
 
 
-# [END aiplatform_imagen_generate_image]
+# [END generativeaionvertexai_imagen_generate_image]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

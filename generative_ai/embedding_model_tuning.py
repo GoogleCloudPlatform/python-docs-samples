@@ -31,10 +31,10 @@ def tune_embedding_model(
     corpus_path: str = "gs://embedding-customization-pipeline/dataset/corpus.jsonl",
     train_label_path: str = "gs://embedding-customization-pipeline/dataset/train.tsv",
     test_label_path: str = "gs://embedding-customization-pipeline/dataset/test.tsv",
-    batch_size: int = 50,
-    iterations: int = 300
+    batch_size: int = 128,
+    iterations: int = 1000,
 ) -> pipeline_jobs.PipelineJob:
-    match = re.search(r"(.+)(-autopush|-staging)?-aiplatform.+", api_endpoint)
+    match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"
     job = aiplatform.PipelineJob(
         display_name=pipeline_job_display_name,
@@ -50,7 +50,8 @@ def tune_embedding_model(
             train_label_path=train_label_path,
             test_label_path=test_label_path,
             batch_size=batch_size,
-            iterations=iterations)
+            iterations=iterations,
+        ),
     )
     job.submit()
     return job
@@ -58,6 +59,8 @@ def tune_embedding_model(
 
 # [END aiplatform_sdk_embedding]
 if __name__ == "__main__":
-    tune_embedding_model(aiplatform_init.global_config.api_endpoint,
-                         aiplatform_init.global_config.project,
-                         aiplatform_init.global_config.staging_bucket)
+    tune_embedding_model(
+        aiplatform_init.global_config.api_endpoint,
+        aiplatform_init.global_config.project,
+        aiplatform_init.global_config.staging_bucket,
+    )
