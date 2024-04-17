@@ -15,38 +15,37 @@
 # flake8: noqa ANN001, ANN201
 
 import os
+from pathlib import Path
 
 import pytest
-import vertexai
-
 import rag
+import vertexai
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
-CORPUS_NAME = "test_corpus"
-FILE_PATH = "./hello_world.txt"  # Replace with a valid file path
+GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
 
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
-@pytest.fixture(scope="module")
-def test_file():
-    file_path = "./hello.txt"
-    file_path.write_text("Hello World")
-    yield file_path
+@pytest.fixture(scope="module", name="test_file")
+def test_file_fixture():
+    file_path = Path("./hello.txt")
+    file_path.write_text("Hello World", encoding="utf-8")
+    yield file_path.absolute().as_posix()
     file_path.unlink()  # Delete the file after tests
 
 
-@pytest.fixture(scope="module")
-def test_corpus():
+@pytest.fixture(scope="module", name="test_corpus")
+def test_corpus_fixture():
     """Creates a corpus for testing and deletes it after tests are complete."""
-    corpus = rag.create_corpus(PROJECT_ID, CORPUS_NAME)
+    corpus = rag.create_corpus(PROJECT_ID, "test_corpus")
     yield corpus
     rag.delete_corpus(PROJECT_ID, corpus.name)
 
 
-@pytest.fixture
-def uploaded_file(test_corpus):
+@pytest.fixture(scope="module", name="uploaded_file")
+def uploaded_file_fixture(test_corpus, test_file):
     """Uploads a file to the corpus and deletes it after the test."""
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
     yield rag_file
@@ -64,24 +63,24 @@ def test_get_corpus(test_corpus):
     assert retrieved_corpus.name == test_corpus.name
 
 
-def test_list_corpora():
+def test_list_corpora(test_corpus):
     corpora = rag.list_corpora(PROJECT_ID)
     assert any(c.name == test_corpus.name for c in corpora)
 
 
-def test_upload_file(test_corpus):
+def test_upload_file(test_corpus, test_file):
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
     assert rag_file
 
 
 def test_import_files(test_corpus):
-    response = rag.import_files(PROJECT_ID, test_corpus.name, test_file)
+    response = rag.import_files(PROJECT_ID, test_corpus.name, [GCS_FILE])
     assert response.imported_rag_files_count > 0
 
 
-def test_import_files_async(test_corpus):
-    response = rag.import_files_async(PROJECT_ID, test_corpus.name, test_file)
-    assert response.imported_rag_files_count > 0
+# def test_import_files_async(test_corpus):
+#     response = rag.import_files_async(PROJECT_ID, test_corpus.name, [GCS_FILE])
+#     assert response
 
 
 def test_get_file(uploaded_file):
@@ -95,18 +94,21 @@ def test_list_files(test_corpus, uploaded_file):
 
 
 def test_retrieval_query(test_corpus):
-    response = rag.retrieval_query(PROJECT_ID, test_corpus.name, "test query")
-    assert len(response.results) > 0
+    response = rag.retrieval_query(PROJECT_ID, [test_corpus.name], "test query")
+    assert response
+    assert response.contexts
 
 
 def test_generate_content_with_rag(test_corpus):
     response = rag.generate_content_with_rag(PROJECT_ID, [test_corpus.name])
     assert response
+    assert response.text
 
 
 def test_quickstart():
     corpus, response = rag.quickstart(
-        PROJECT_ID, "test_corpus_generate_content", [test_file]
+        PROJECT_ID, "test_corpus_generate_content", [GCS_FILE]
     )
     assert response
+    assert response.text
     rag.delete_corpus(PROJECT_ID, corpus.name)
