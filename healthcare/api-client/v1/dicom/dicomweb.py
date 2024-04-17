@@ -29,18 +29,15 @@ def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dc
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -85,18 +82,15 @@ def dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id):
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -143,18 +137,15 @@ def dicomweb_retrieve_study(
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -202,18 +193,15 @@ def dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id):
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -271,18 +259,15 @@ def dicomweb_retrieve_instance(
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -346,18 +331,15 @@ def dicomweb_retrieve_rendered(
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -414,18 +396,15 @@ def dicomweb_delete_study(project_id, location, dataset_id, dicom_store_id, stud
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
 
-    # Imports a module to allow authentication using a service account
-    from google.oauth2 import service_account
+    # Imports a module to allow authentication using Application Default Credentials (ADC)
+    import google.auth
 
-    # Gets credentials from the environment.
-    credentials = service_account.Credentials.from_service_account_file(
-        os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
-    )
-    scoped_credentials = credentials.with_scopes(
-        ["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    # Gets credentials from the environment. google.auth.default() returns credentials and the
+    # associated project ID, but in this sample, the project ID is passed in manually.
+    credentials, _ = google.auth.default()
+
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(scoped_credentials)
+    session = requests.AuthorizedSession(credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
