@@ -34,8 +34,11 @@ def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dc
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -85,8 +88,11 @@ def dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id):
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -138,8 +144,11 @@ def dicomweb_retrieve_study(
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -192,8 +201,11 @@ def dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id):
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -256,8 +268,11 @@ def dicomweb_retrieve_instance(
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -326,8 +341,11 @@ def dicomweb_retrieve_rendered(
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
@@ -389,8 +407,11 @@ def dicomweb_delete_study(project_id, location, dataset_id, dicom_store_id, stud
     # associated project ID, but in this sample, the project ID is passed in manually.
     credentials, _ = google.auth.default()
 
+    scoped_credentials = credentials.with_scopes(
+        ["https://www.googleapis.com/auth/cloud-platform"]
+    )
     # Creates a requests Session object with the credentials.
-    session = requests.AuthorizedSession(credentials)
+    session = requests.AuthorizedSession(scoped_credentials)
 
     # URL to the Cloud Healthcare API endpoint and version
     base_url = "https://healthcare.googleapis.com/v1"
