@@ -20,7 +20,7 @@ def list_service_accounts(project_id: str) -> None:
     from google.cloud import iam_admin_v1
     from google.cloud.iam_admin_v1 import types
     """
-    Creates a service account.
+    Get list of service accounts.
     project_id: ID or number of the Google Cloud project you want to use.
     account_id: ID or email which will be unique identifier of the service account
     display_name (optional): human-readable name, which will be assigned to the service account
