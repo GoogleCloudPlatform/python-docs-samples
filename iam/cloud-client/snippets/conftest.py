@@ -22,9 +22,11 @@ import pytest
 from snippets.create_deny_policy import create_deny_policy
 from snippets.delete_deny_policy import delete_deny_policy
 
+from snippets.create_role import create_role
+from snippets.delete_role import delete_role
+
 PROJECT_ID = os.environ["IAM_PROJECT_ID"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
-
 
 @pytest.fixture
 def deny_policy(capsys: "pytest.CaptureFixture[str]") -> None:
@@ -54,3 +56,36 @@ def delete_existing_deny_policies(project_id: str, delete_name_prefix: str) -> N
     for policy in policies_client.list_policies(request=request):
         if delete_name_prefix in policy.name:
             delete_deny_policy(PROJECT_ID, str(policy.name).rsplit("/", 1)[-1])
+
+@pytest.fixture
+def iam_role(capsys: "pytest.CaptureFixture[str]") -> str:
+    role_prefix = "test_iam_role"
+    role_id = f"{role_prefix}_{uuid.uuid4()}".replace("-", "_")
+    permissions = ["iam.roles.get", "iam.roles.list"]
+    title = "test_role_title"
+    # Delete any iam roles. Otherwise, it might throw quota issue.
+    delete_existing_iam_roles(PROJECT_ID, role_prefix)
+
+    # Create the iam role.
+    create_role(PROJECT_ID, role_id, permissions, title)
+    yield role_id
+
+    # Delete the iam role and assert if deleted.
+    delete_role(PROJECT_ID, role_id)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Deleted role: {role_id}", out)
+
+
+def delete_existing_iam_roles(project_id: str, delete_name_prefix: str) -> None:
+    client = IAMClient()
+    parent = f"projects/{project_id}"
+    request = ListRolesRequest(
+        parent=parent,
+        view=0,
+        show_deleted=False,
+    )
+    roles = client.list_roles(request)
+    for page in roles.pages:
+        for role in page.roles:
+            if delete_name_prefix in role.name:
+                delete_role(project_id, role.name.rsplit("/", 1)[-1])
