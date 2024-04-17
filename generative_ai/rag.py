@@ -27,7 +27,7 @@
 
 from typing import List, Union, Optional
 
-from google.cloud.aiplatform.private_preview.vertex_rag import rag
+from vertexai.preview import rag
 import vertexai
 
 # [END generativeaionvertexai_rag_create_corpus]
@@ -241,4 +241,4 @@ def generate_content_with_rag(
     print(response.text)
     # [END generativeaionvertexai_rag_generate_content]
 
-    return response
+    return corpus, response
