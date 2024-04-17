@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# flake8: noqa ANN001, ANN201
 
 # [START generativeaionvertexai_rag_create_corpus]
 # [START generativeaionvertexai_rag_get_corpus]
@@ -25,7 +26,7 @@
 # [START generativeaionvertexai_rag_retrieval_query]
 # [START generativeaionvertexai_rag_generate_content]
 
-from typing import List, Union, Optional
+from typing import List, Optional, Union
 
 from vertexai.preview import rag
 import vertexai
