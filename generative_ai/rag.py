@@ -14,19 +14,21 @@
 
 # flake8: noqa ANN001, ANN201
 
+from typing import List, Optional
+
 # [START generativeaionvertexai_rag_create_corpus]
 # [START generativeaionvertexai_rag_get_corpus]
 # [START generativeaionvertexai_rag_list_corpora]
 # [START generativeaionvertexai_rag_upload_file]
 # [START generativeaionvertexai_rag_import_files]
+# [START generativeaionvertexai_rag_import_files_async]
 # [START generativeaionvertexai_rag_get_file]
 # [START generativeaionvertexai_rag_list_files]
 # [START generativeaionvertexai_rag_delete_file]
 # [START generativeaionvertexai_rag_delete_corpus]
 # [START generativeaionvertexai_rag_retrieval_query]
 # [START generativeaionvertexai_rag_generate_content]
-
-from typing import List, Optional, Union
+# [START generativeaionvertexai_rag_quickstart]
 
 from vertexai.preview import rag
 import vertexai
@@ -36,23 +38,29 @@ import vertexai
 # [END generativeaionvertexai_rag_list_corpora]
 # [END generativeaionvertexai_rag_upload_file]
 # [END generativeaionvertexai_rag_import_files]
+# [END generativeaionvertexai_rag_import_files_async]
 # [END generativeaionvertexai_rag_get_file]
 # [END generativeaionvertexai_rag_list_files]
 # [END generativeaionvertexai_rag_delete_file]
 # [END generativeaionvertexai_rag_delete_corpus]
 # [END generativeaionvertexai_rag_retrieval_query]
 # [END generativeaionvertexai_rag_generate_content]
+# [END generativeaionvertexai_rag_quickstart]
 
 
-# [START generativeaionvertexai_rag_create_corpus]
 def create_corpus(
     project_id: str,
-    location: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
 ):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # [START generativeaionvertexai_rag_create_corpus]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # display_name = "test_corpus"
+    # description = "Corpus Description"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     corpus = rag.create_corpus(display_name=display_name, description=description)
     print(corpus)
@@ -60,10 +68,14 @@ def create_corpus(
     return corpus
 
 
-# [START generativeaionvertexai_rag_get_corpus]
-def get_corpus(project_id: str, location: str, corpus_name: str):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+def get_corpus(project_id: str, corpus_name: str):
+    # [START generativeaionvertexai_rag_get_corpus]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     corpus = rag.get_corpus(name=corpus_name)
     print(corpus)
@@ -71,10 +83,13 @@ def get_corpus(project_id: str, location: str, corpus_name: str):
     return corpus
 
 
-# [START generativeaionvertexai_rag_list_corpora]
-def list_corpora(project_id: str, location: str):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+def list_corpora(project_id: str):
+    # [START generativeaionvertexai_rag_list_corpora]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     corpora = rag.list_corpora()
     print(corpora)
@@ -82,17 +97,22 @@ def list_corpora(project_id: str, location: str):
     return corpora
 
 
-# [START generativeaionvertexai_rag_upload_file]
 def upload_file(
     project_id: str,
-    location: str,
     corpus_name: str,
     path: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
 ):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # [START generativeaionvertexai_rag_upload_file]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # display_name = "file_display_name"
+    # description = "file description"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     rag_file = rag.upload_file(
         corpus_name=corpus_name,
@@ -105,33 +125,68 @@ def upload_file(
     return rag_file
 
 
-# [START generativeaionvertexai_rag_import_files]
 def import_files(
     project_id: str,
-    location: str,
     corpus_name: str,
-    path: Union[str, List[str]],
-    chunk_size: Optional[int] = 1024,
-    chunk_overlap: Optional[int] = 200,
+    paths: List[str],
 ):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # [START generativeaionvertexai_rag_import_files]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
+
+    vertexai.init(project=project_id, location="us-central1")
 
     response = rag.import_files(
         corpus_name=corpus_name,
-        path=path,
-        chunk_size=chunk_size,
-        chunk_overlap=chunk_overlap,
+        paths=paths,
+        chunk_size=512,  # Optional
+        chunk_overlap=100,  # Optional
     )
     print(f"Imported {response.imported_rag_files_count} files.")
     # [END generativeaionvertexai_rag_import_files]
     return response
 
 
-# [START generativeaionvertexai_rag_get_file]
-def get_file(project_id: str, location: str, file_name: str):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+async def import_files_async(
+    project_id: str,
+    corpus_name: str,
+    paths: List[str],
+):
+    # [START generativeaionvertexai_rag_import_files_async]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+
+    # Supports Google Cloud Storage and Google Drive Links
+    # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    response = await rag.import_files_async(
+        corpus_name=corpus_name,
+        paths=paths,
+        chunk_size=512,  # Optional
+        chunk_overlap=100,  # Optional
+    )
+
+    await response.result()
+    print(f"Imported {response.imported_rag_files_count} files.")
+    # [END generativeaionvertexai_rag_import_files_async]
+    return response
+
+
+def get_file(project_id: str, file_name: str):
+    # [START generativeaionvertexai_rag_get_file]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     rag_file = rag.get_file(name=file_name)
     print(rag_file)
@@ -140,10 +195,14 @@ def get_file(project_id: str, location: str, file_name: str):
     return rag_file
 
 
-# [START generativeaionvertexai_rag_list_files]
-def list_files(project_id: str, location: str, corpus_name: str):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+def list_files(project_id: str, corpus_name: str):
+    # [START generativeaionvertexai_rag_list_files]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     files = rag.list_files(corpus_name=corpus_name)
     for file in files:
@@ -153,86 +212,79 @@ def list_files(project_id: str, location: str, corpus_name: str):
     return files
 
 
-# [START generativeaionvertexai_rag_delete_file]
-def delete_file(project_id: str, location: str, file_name: str) -> None:
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+def delete_file(project_id: str, file_name: str) -> None:
+    # [START generativeaionvertexai_rag_delete_file]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     rag.delete_file(name=file_name)
     print(f"File {file_name} deleted.")
+    # [END generativeaionvertexai_rag_delete_file]
 
 
-# [END generativeaionvertexai_rag_delete_file]
+def delete_corpus(project_id: str, corpus_name: str) -> None:
+    # [START generativeaionvertexai_rag_delete_corpus]
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
-# [START generativeaionvertexai_rag_delete_corpus]
-def delete_corpus(project_id: str, location: str, corpus_name: str) -> None:
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=project_id, location="us-central1")
 
     rag.delete_corpus(name=corpus_name)
     print(f"Corpus {corpus_name} deleted.")
+    # [END generativeaionvertexai_rag_delete_corpus]
 
 
-# [END generativeaionvertexai_rag_delete_corpus]
-
-
-# [START generativeaionvertexai_rag_retrieval_query]
 def retrieval_query(
     project_id: str,
-    location: str,
-    rag_corpus: str,
+    rag_corpora: List[str],
     text: str,
-    similarity_top_k: Optional[int] = 10,
 ):
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # [START generativeaionvertexai_rag_retrieval_query]
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # rag_corpora = ["9183965540115283968"] # Only one corpus is supported at this time
+    # text = "Your Query"
+
+    vertexai.init(project=project_id, location="us-central1")
 
     response = rag.retrieval_query(
-        rag_corpora=rag_corpus, text=text, similarity_top_k=similarity_top_k
+        rag_corpora=rag_corpora,
+        text=text,
+        similarity_top_k=10,  # Optional
     )
     print(response)
+    # [END generativeaionvertexai_rag_retrieval_query]
+
     return response
 
 
-# [END generativeaionvertexai_rag_retrieval_query]
-
-
-# [START generativeaionvertexai_rag_generate_content]
-from vertexai.preview.generative_models import GenerativeModel, Tool
-
-
 def generate_content_with_rag(
-    project_id: str, location: str, corpus_display_name: str, paths: List[str]
+    project_id: str,
+    rag_corpora: List[str],
 ):
-    """
-    Creates and loads a RAG Corpus and generates text using Gemini.
+    # [START generativeaionvertexai_rag_generate_content]
 
-    Args:
-        project_id (str): The project ID for Vertex AI.
-        location (str): The location for Vertex AI resources.
-        corpus_display_name (str): The display name for the corpus to be created.
-        paths (List[str]): List of file paths to import into the corpus.
-            Supports GCS URIs `gs://my-bucket/my_file` and Google Drive URLs
-            `https://drive.google.com/file/123`
-    """
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    from vertexai.preview.generative_models import GenerativeModel, Tool
 
-    corpus = rag.create_corpus(display_name=corpus_display_name)
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # rag_corpora = ["9183965540115283968"] # Only one corpus is supported at this time
 
-    response = rag.import_files(
-        corpus.name,
-        paths,
-        chunk_size=1024,
-        chunk_overlap=200,
-    )
+    vertexai.init(project=project_id, location="us-central1")
 
     rag_retrieval_tool = Tool.from_retrieval(
         retrieval=rag.Retrieval(
             source=rag.VertexRagStore(
-                rag_corpora=corpus.name,  # Only 1 corpus is allowed.
-                similarity_top_k=3,
+                rag_corpora=rag_corpora,
+                similarity_top_k=3,  # Optional
+                vector_distance_threshold=0.3,  # Optional
             ),
         )
     )
@@ -242,4 +294,47 @@ def generate_content_with_rag(
     print(response.text)
     # [END generativeaionvertexai_rag_generate_content]
 
+    return response
+
+
+def quickstart(
+    project_id: str,
+    display_name: str,
+    paths: List[str],
+):
+    # [START generativeaionvertexai_rag_quickstart]
+    from vertexai.preview.generative_models import GenerativeModel, Tool
+
+    # Create a RAG Corpus, Import Files, and Generate a response
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # display_name = "test_corpus"
+    # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    corpus = rag.create_corpus(display_name=display_name)
+
+    response = rag.import_files(
+        corpus.name,
+        paths,
+        chunk_size=512,  # Optional
+        chunk_overlap=100,  # Optional
+    )
+
+    rag_retrieval_tool = Tool.from_retrieval(
+        retrieval=rag.Retrieval(
+            source=rag.VertexRagStore(
+                rag_corpora=[corpus.name],
+                similarity_top_k=3,  # Optional
+                vector_distance_threshold=0.4,  # Optional
+            ),
+        )
+    )
+
+    rag_model = GenerativeModel("gemini-1.0-pro", tools=[rag_retrieval_tool])
+    response = rag_model.generate_content("Why is the sky blue?")
+    print(response.text)
+    # [END generativeaionvertexai_rag_quickstart]
     return corpus, response
