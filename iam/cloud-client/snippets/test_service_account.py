@@ -20,6 +20,7 @@ import pytest
 from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
 from snippets.disable_service_account import disable_service_account
+from snippets.enable_service_account import enable_service_account
 from snippets.list_service_accounts import list_service_accounts
 
 PROJECT_ID = os.environ["IAM_PROJECT_ID"]
@@ -68,3 +69,16 @@ def test_disable_service_account(capsys: "pytest.CaptureFixture[str]", service_a
     out, _ = capsys.readouterr()
 
     assert re.search(f"Disabled service account: {email}", out)
+
+
+def test_enable_service_account(capsys: "pytest.CaptureFixture[str]", service_account: str) -> None:
+    create_service_account(PROJECT_ID, service_account)
+
+    email = f"{service_account}@{PROJECT_ID}.iam.gserviceaccount.com"
+    disable_service_account(PROJECT_ID, email)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Disabled service account: {email}", out)
+
+    enable_service_account(PROJECT_ID, email)
+    out, _ = capsys.readouterr()
+    assert re.search(f"Enabled service account: {email}", out)
