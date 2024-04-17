@@ -23,8 +23,6 @@ def dicomweb_store_instance(project_id, location, dataset_id, dicom_store_id, dc
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -76,8 +74,6 @@ def dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id):
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -131,8 +127,6 @@ def dicomweb_retrieve_study(
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -187,8 +181,6 @@ def dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id):
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -253,8 +245,6 @@ def dicomweb_retrieve_instance(
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -325,8 +315,6 @@ def dicomweb_retrieve_rendered(
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
@@ -390,8 +378,6 @@ def dicomweb_delete_study(project_id, location, dataset_id, dicom_store_id, stud
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/dicom
     before running the sample."""
-    # Imports Python's built-in "os" module
-    import os
 
     # Imports the google.auth.transport.requests transport
     from google.auth.transport import requests
