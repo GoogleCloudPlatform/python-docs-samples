@@ -20,16 +20,15 @@ from my_package import my_pipeline
 
 
 def run(argv: list[str] | None = None):
-    """Parses the parameters provided on the command line and runs the pipeline.
-  """
+    """Parses the parameters provided on the command line and runs the pipeline."""
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        '--input', required=True, help='Input file(s) to process')
-    parser.add_argument('--output', required=True, help='Output file')
+    parser.add_argument("--input", required=True, help="Input file(s) to process")
+    parser.add_argument("--output", required=True, help="Output file")
 
     pipeline_args, other_args = parser.parse_known_args(argv)
 
     pipeline = my_pipeline.longest_word_pipeline(
-        pipeline_args.input, pipeline_args.output, other_args)
+        pipeline_args.input, pipeline_args.output, other_args
+    )
 
     pipeline.run()

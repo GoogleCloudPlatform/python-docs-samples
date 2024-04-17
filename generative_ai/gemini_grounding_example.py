@@ -12,20 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_grounding]
-from typing import Optional
+# [START generativeaionvertexai_gemini_grounding_with_web]
+# [START generativeaionvertexai_gemini_grounding_with_vais]
 
 import vertexai
 from vertexai.preview.generative_models import (
+    GenerationConfig,
     GenerationResponse,
     GenerativeModel,
     grounding,
     Tool,
 )
 
+# [END generativeaionvertexai_gemini_grounding_with_vais]
 
-def generate_text_with_grounding(
-    project_id: str, location: str, data_store_path: Optional[str] = None
+
+def generate_text_with_grounding_web(
+    project_id: str, location: str
 ) -> GenerationResponse:
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
@@ -33,21 +36,52 @@ def generate_text_with_grounding(
     # Load the model
     model = GenerativeModel(model_name="gemini-1.0-pro")
 
-    # Create Tool for grounding
-    if data_store_path:
-        # Use Vertex AI Search data store
-        # Format: projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}
-        tool = Tool.from_retrieval(
-            grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
-        )
-    else:
-        # Use Google Search for grounding (Private Preview)
-        tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
+    # Use Google Search for grounding
+    tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
 
-    prompt = "What are the price, available colors, and storage size options of a Pixel Tablet?"
-    response = model.generate_content(prompt, tools=[tool])
+    prompt = "When is the next total solar eclipse in US?"
+    response = model.generate_content(
+        prompt,
+        tools=[tool],
+        generation_config=GenerationConfig(
+            temperature=0.0,
+        ),
+    )
 
     print(response)
 
-    # [END generativeaionvertexai_gemini_grounding]
+    # [END generativeaionvertexai_gemini_grounding_with_web]
+    return response
+
+
+# [START generativeaionvertexai_gemini_grounding_with_vais]
+
+
+def generate_text_with_grounding_vertex_ai_search(
+    project_id: str, location: str, data_store_path: str
+) -> GenerationResponse:
+    # Initialize Vertex AI
+    vertexai.init(project=project_id, location=location)
+
+    # Load the model
+    model = GenerativeModel(model_name="gemini-1.0-pro")
+
+    # Use Vertex AI Search data store
+    # Format: projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}
+    tool = Tool.from_retrieval(
+        grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
+    )
+
+    prompt = "How do I make an appointment to renew my driver's license?"
+    response = model.generate_content(
+        prompt,
+        tools=[tool],
+        generation_config=GenerationConfig(
+            temperature=0.0,
+        ),
+    )
+
+    print(response)
+
+    # [END generativeaionvertexai_gemini_grounding_with_vais]
     return response

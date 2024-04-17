@@ -37,6 +37,9 @@ user_id = os.environ["user_id"]
 reference_id = "001"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="create_schema")
 def test_create_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
@@ -52,6 +55,9 @@ def test_create_document_schema(request: pytest.fixture) -> None:
     request.config.cache.set("document_schema_id", document_schema_id)
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="create_doc", depends=["create_schema"])
 def test_create_document(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
@@ -73,6 +79,9 @@ def test_create_document(request: pytest.fixture) -> None:
     request.config.cache.set("document_name", response.document.name)
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="get_doc", depends=["create_doc"])
 def test_get_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
@@ -92,6 +101,9 @@ def test_get_document(request: pytest.fixture) -> None:
     )
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="update_doc", depends=["get_doc"])
 def test_update_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
@@ -108,6 +120,9 @@ def test_update_document(request: pytest.fixture) -> None:
     assert "document" in response
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="delete_doc", depends=["update_doc"])
 def test_delete_document(request: pytest.fixture) -> None:
     document_name = request.config.cache.get("document_name", None)
@@ -119,6 +134,9 @@ def test_delete_document(request: pytest.fixture) -> None:
     assert response is None
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 @pytest.mark.dependency(name="delete_schema", depends=["delete_doc"])
 def test_delete_document_schema(request: pytest.fixture) -> None:
     project_number = test_utilities.get_project_number(project_id)

@@ -90,6 +90,8 @@ assign_issues_by:
       - GoogleCloudPlatform/api-spanner-python
   - labels:
       - "api: storage"
+      - "api: storagecontrol"
+      - "api: storagetransfer"
     to:
       - GoogleCloudPlatform/cloud-storage-dpes
   - labels:

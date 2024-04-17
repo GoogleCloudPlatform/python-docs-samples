@@ -17,11 +17,11 @@
 import setuptools
 
 setuptools.setup(
-    name='my_package',
-    version='0.1.0',
+    name="my_package",
+    version="0.1.0",
     install_requires=[
-        'apache-beam[gcp]==2.54.0',   # Must match the version in `Dockerfile``.
-        'pyfiglet',  # This is the only non-Beam dependency of this pipeline.
+        "apache-beam[gcp]==2.54.0",  # Must match the version in `Dockerfile``.
+        "pyfiglet",  # This is the only non-Beam dependency of this pipeline.
     ],
     packages=setuptools.find_packages(),
 )
