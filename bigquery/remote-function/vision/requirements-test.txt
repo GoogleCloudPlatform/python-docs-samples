@@ -1,4 +1,4 @@
 Flask==2.2.2
-functions-framework==3.3.0
+functions-framework==3.5.0
 google-cloud-vision==3.4.2
 pytest==7.2.0
