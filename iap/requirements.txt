@@ -1,5 +1,5 @@
 cryptography==42.0.4
-Flask==3.0.0
+Flask==3.0.3
 google-auth==2.19.1
 gunicorn==22.0.0
 requests==2.31.0

@@ -1,5 +1,5 @@
 cryptography==42.0.4
-Flask==2.2.5
+Flask==3.0.3
 functions-framework==3.5.0
 google-cloud-secret-manager==2.12.1
 lxml==4.9.4
