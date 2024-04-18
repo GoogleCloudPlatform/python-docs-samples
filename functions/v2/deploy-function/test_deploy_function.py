@@ -1,10 +1,27 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import os
-import re
 import uuid
 
 import pytest
-from deploy_function import create_cloud_function
-from google.cloud import storage
+from google.cloud.functions_v2 import FunctionServiceClient
+
+from deploy_function import create_cloud_function, create_and_upload_function
+
+from google.cloud.functions_v2.types import ListFunctionsRequest
 
 
 def test_create_cloud_function(capsys: "pytest.CaptureFixture[str]"):
@@ -14,29 +31,23 @@ def test_create_cloud_function(capsys: "pytest.CaptureFixture[str]"):
     FILE_NAME = "my_function.zip"
     object_name = f"{FOLDER_NAME}/{FILE_NAME}"
     function_id = f"test-function-{uuid.uuid4()}"
-    storage_client = storage.Client()
     RUNTIME = "python310"
+    LOCATION_ID = "us-central1"
 
-    # Attempt to create the bucket (if it doesn't already exist)
-    bucket = storage_client.bucket(BUCKET_NAME)
-    if not bucket.exists():
-        bucket = storage_client.create_bucket(BUCKET_NAME)
-        print(f"Bucket {BUCKET_NAME} created.")
-    blob = bucket.blob(object_name)
-    current_folder = os.path.dirname(os.path.abspath(__file__))
-    blob.upload_from_filename(os.path.join(current_folder, FILE_NAME))
+    create_and_upload_function(BUCKET_NAME, object_name)
 
-    # upload function archive
     create_cloud_function(
         project_id=PROJECT_ID,
         bucket_name=BUCKET_NAME,
-        location_id="us-central1",
+        location_id=LOCATION_ID,
         function_id=function_id,
         entry_point="my_function_entry",
         function_archive=object_name,
         runtime=RUNTIME,
     )
 
-    out, _ = capsys.readouterr()
-    assert re.search(f'url: ".*{function_id}"', out)
-    assert re.search(f'runtime: "{RUNTIME}"', out)
+    client = FunctionServiceClient()
+    parent = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    request = ListFunctionsRequest(parent=parent)
+    functions = list(client.list_functions(request=request))
+    assert any(f.name == f"{parent}/functions/{function_id}" for f in functions)
