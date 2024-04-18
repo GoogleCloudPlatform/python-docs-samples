@@ -14,9 +14,6 @@
 
 """End-to-end tests.
 
-To use an existing bucket, set it without the 'gs://' prefix:
-    GOOGLE_CLOUD_BUCKET="my-bucket-name"
-
 Run with `pytest` (local environment):
     # Run all tests.
     PYTHONPATH=.. pytest -s tests/e2e_test.py
@@ -44,7 +41,7 @@ import pytest
 import custom_model_gemma
 
 DATAFLOW_MACHINE_TYPE = "g2-standard-4"
-GEMMA_GCS = "gs://"
+GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
 NAME = "dataflow/gemma/streaming"
 
 @pytest.fixture(scope="session")
