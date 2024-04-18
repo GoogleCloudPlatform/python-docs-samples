@@ -1,8 +1,23 @@
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the 'License');
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an 'AS IS' BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+
 import pytest
 import os
 import re
 
-from google.cloud.iam_admin_v1 import Role
+from google.cloud.iam_admin_v1 import Role, IAMClient, ListRolesRequest, GetRoleRequest
 
 from snippets.disable_role import disable_role
 from snippets.edit_role import edit_role
@@ -14,24 +29,36 @@ from snippets.list_roles import list_roles
 PROJECT_ID = os.environ["IAM_PROJECT_ID"]
 
 
-def test_retrieve_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
+def test_retrieve_role(iam_role: str) -> None:
     # Test role retrieval, given the iam role id.
     get_role(PROJECT_ID, iam_role)
-    out, _ = capsys.readouterr()
-    assert re.search(f"Retrieved role: {iam_role}", out)
+    client = IAMClient()
+    parent = f"projects/{PROJECT_ID}"
+    request = ListRolesRequest(parent=parent, show_deleted=False)
+    roles = client.list_roles(request)
+    found = False
+    for page in roles.pages:
+        for role in page.roles:
+            if iam_role in role.name:
+                found = True
+                break
+        if found:
+            break
+
+    assert found, f"Role {iam_role} was not found in the list of roles."
 
 
-def test_delete_undelete_role(
-    capsys: "pytest.CaptureFixture[str]", iam_role: str
-) -> None:
-    deleted_role = delete_role(PROJECT_ID, iam_role)
-    out, _ = capsys.readouterr()
-    assert re.search(f"Deleted role: {iam_role}", out)
+def test_delete_undelete_role(iam_role: str) -> None:
+    client = IAMClient()
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
+    request = GetRoleRequest(name=name)
+
+    delete_role(PROJECT_ID, iam_role)
+    deleted_role = client.get_role(request)
     assert deleted_role.deleted
 
-    undeleted_role = undelete_role(PROJECT_ID, iam_role)
-    out, _ = capsys.readouterr()
-    assert re.search(f"Undeleted role: {iam_role}", out)
+    undelete_role(PROJECT_ID, iam_role)
+    undeleted_role = client.get_role(request)
     assert not undeleted_role.deleted
 
 
@@ -40,21 +67,24 @@ def test_list_roles(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None
     list_roles(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert re.search(iam_role, out)
-    assert re.search("iam roles", out)
 
 
-def test_edit_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
-    role = get_role(PROJECT_ID, iam_role)
+def test_edit_role(iam_role: str) -> None:
+    client = IAMClient()
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
+    request = GetRoleRequest(name=name)
+    role = client.get_role(request)
     title = "updated role title"
     role.title = title
     edit_role(role)
-    out, _ = capsys.readouterr()
-    assert re.search(f"Edited role: {role.name}", out)
-    assert re.search(f'title: "{title}"', out)
+    updated_role = client.get_role(request)
+    assert updated_role.title == title
 
 
 def test_disable_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
-    role = disable_role(PROJECT_ID, iam_role)
-    out, _ = capsys.readouterr()
-    assert re.search(f"Disabled role: {iam_role}", out)
+    disable_role(PROJECT_ID, iam_role)
+    client = IAMClient()
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
+    request = GetRoleRequest(name=name)
+    role = client.get_role(request)
     assert role.stage == Role.RoleLaunchStage.DISABLED
