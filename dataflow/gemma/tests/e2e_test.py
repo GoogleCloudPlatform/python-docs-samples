@@ -23,8 +23,8 @@ Run with `pytest` (local environment):
 try:
     # `conftest` cannot be imported when running in `nox`, but we still
     # try to import it for the autocomplete when writing the tests.
-    import conftest # python-docs-samples/dataflow/conftest.py
-    from conftest import Utils # python-docs-samples/dataflow/conftest.py
+    import conftest  # python-docs-samples/dataflow/conftest.py
+    from conftest import Utils  # python-docs-samples/dataflow/conftest.py
 except ModuleNotFoundError:
     conftest = None
     Utils = None
