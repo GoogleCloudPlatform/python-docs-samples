@@ -22,7 +22,6 @@ from vertexai.preview import vision_models
 def generate_image(
     project_id: str, output_file: str, prompt: str
 ) -> vision_models.ImageGenerationResponse:
-
     # [START generativeaionvertexai_imagen_generate_image]
 
     import vertexai
