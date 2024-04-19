@@ -66,7 +66,7 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
     model = GenerativeModel(
         "gemini-1.0-pro-002",
         generation_config=GenerationConfig(temperature=0),
-        tools=[retail_tool]
+        tools=[retail_tool],
     )
 
     # Start a chat session
