@@ -13,11 +13,7 @@
 # limitations under the License.
 
 # [START iam_list_roles]
-from google.cloud.iam_admin_v1 import (
-    IAMClient,
-    RoleView,
-    ListRolesRequest,
-)
+from google.cloud.iam_admin_v1 import IAMClient, ListRolesRequest, RoleView
 from google.cloud.iam_admin_v1.services.iam.pagers import ListRolesPager
 
 
@@ -48,7 +44,7 @@ def list_roles(
 
 
 if __name__ == "__main__":
-    import os
+    import google.auth
 
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
-    list_roles(PROJECT_ID)
+    PROJECT = google.auth.default()[1]
+    list_roles(PROJECT)

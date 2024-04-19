@@ -13,17 +13,14 @@
 # limitations under the License.
 
 # [START iam_create_role]
-from typing import List
+from typing import List, Optional
+
 from google.api_core.exceptions import AlreadyExists, FailedPrecondition
-from google.cloud.iam_admin_v1 import (
-    IAMClient,
-    Role,
-    CreateRoleRequest,
-)
+from google.cloud.iam_admin_v1 import CreateRoleRequest, IAMClient, Role
 
 
 def create_role(
-    project_id: str, role_id: str, permissions: List[str], title: str | None = None
+    project_id: str, role_id: str, permissions: List[str], title: Optional[str] = None
 ) -> Role:
     """
     Creates iam role with given parameters.
@@ -60,10 +57,10 @@ def create_role(
 
 
 if __name__ == "__main__":
-    import os
+    import google.auth
 
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
+    PROJECT = google.auth.default()[1]
     role_id = "custom1_python"
     permissions = ["iam.roles.get", "iam.roles.list"]
     title = "custom1_python_title"
-    create_role(PROJECT_ID, role_id, permissions, title)
+    create_role(PROJECT, role_id, permissions, title)

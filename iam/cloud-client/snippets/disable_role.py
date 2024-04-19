@@ -12,14 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START iam_disable_role]
-from google.cloud.iam_admin_v1 import (
-    IAMClient,
-    Role,
-    GetRoleRequest,
-    UpdateRoleRequest,
-)
 from google.api_core.exceptions import NotFound
+# [START iam_disable_role]
+from google.cloud.iam_admin_v1 import (GetRoleRequest, IAMClient, Role,
+                                       UpdateRoleRequest)
 
 
 def disable_role(project_id: str, role_id: str) -> Role:

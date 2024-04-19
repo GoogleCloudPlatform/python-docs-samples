@@ -12,16 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.api_core.exceptions import FailedPrecondition, NotFound
 # [START iam_delete_role]
 # [START iam_undelete_role]
-from google.cloud.iam_admin_v1 import (
-    IAMClient,
-    DeleteRoleRequest,
-    Role,
-    UndeleteRoleRequest,
-)
-
-from google.api_core.exceptions import NotFound, FailedPrecondition
+from google.cloud.iam_admin_v1 import (DeleteRoleRequest, IAMClient, Role,
+                                       UndeleteRoleRequest)
 
 # [END iam_undelete_role]
 # [END iam_delete_role]
@@ -80,9 +75,9 @@ def undelete_role(project_id: str, role_id: str) -> Role:
 
 
 if __name__ == "__main__":
-    import os
+    import google.auth
 
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
+    PROJECT = google.auth.default()[1]
     role_id = "custom1_python"
-    delete_role(PROJECT_ID, role_id)
-    undelete_role(PROJECT_ID, role_id)
+    delete_role(PROJECT, role_id)
+    undelete_role(PROJECT, role_id)

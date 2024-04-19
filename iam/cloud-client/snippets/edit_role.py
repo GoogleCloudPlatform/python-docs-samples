@@ -12,13 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START iam_edit_role]
-from google.cloud.iam_admin_v1 import (
-    IAMClient,
-    Role,
-    UpdateRoleRequest,
-)
 from google.api_core.exceptions import NotFound
+# [START iam_edit_role]
+from google.cloud.iam_admin_v1 import IAMClient, Role, UpdateRoleRequest
 
 from snippets.get_role import get_role
 
@@ -45,11 +41,11 @@ def edit_role(role: Role) -> Role:
 
 
 if __name__ == "__main__":
-    import os
+    import google.auth
 
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
+    PROJECT = google.auth.default()[1]
     role_id = "custom1_python_duplicate5"
-    role = get_role(PROJECT_ID, role_id + "sadf")
+    role = get_role(PROJECT, role_id + "sadf")
 
     role.title = "Update_python_title2"
     upd_role = edit_role(role)
