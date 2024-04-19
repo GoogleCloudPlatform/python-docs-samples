@@ -48,8 +48,8 @@ def test_corpus_fixture():
 def uploaded_file_fixture(test_corpus, test_file):
     """Uploads a file to the corpus and deletes it after the test."""
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
+    rag_file.name = rag_file.name.replace("RagFile", "ragFiles")
     yield rag_file
-    rag.delete_file(PROJECT_ID, rag_file.name)
 
 
 def test_create_corpus():
@@ -71,6 +71,7 @@ def test_list_corpora(test_corpus):
 def test_upload_file(test_corpus, test_file):
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
     assert rag_file
+    rag.delete_file(PROJECT_ID, rag_file.name)
 
 
 def test_import_files(test_corpus):
@@ -78,9 +79,10 @@ def test_import_files(test_corpus):
     assert response.imported_rag_files_count > 0
 
 
-# def test_import_files_async(test_corpus):
-#     response = rag.import_files_async(PROJECT_ID, test_corpus.name, [GCS_FILE])
-#     assert response
+@pytest.mark.asyncio
+async def test_import_files_async(test_corpus):
+    response = await rag.import_files_async(PROJECT_ID, test_corpus.name, [GCS_FILE])
+    assert response.imported_rag_files_count > 0
 
 
 def test_get_file(uploaded_file):
@@ -106,9 +108,7 @@ def test_generate_content_with_rag(test_corpus):
 
 
 def test_quickstart():
-    corpus, response = rag.quickstart(
-        PROJECT_ID, "test_corpus_generate_content", [GCS_FILE]
-    )
+    corpus, response = rag.quickstart(PROJECT_ID, "test_corpus_quickstart", [GCS_FILE])
     assert response
     assert response.text
     rag.delete_corpus(PROJECT_ID, corpus.name)
