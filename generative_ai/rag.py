@@ -16,37 +16,6 @@
 
 from typing import List, Optional
 
-# [START generativeaionvertexai_rag_create_corpus]
-# [START generativeaionvertexai_rag_get_corpus]
-# [START generativeaionvertexai_rag_list_corpora]
-# [START generativeaionvertexai_rag_upload_file]
-# [START generativeaionvertexai_rag_import_files]
-# [START generativeaionvertexai_rag_import_files_async]
-# [START generativeaionvertexai_rag_get_file]
-# [START generativeaionvertexai_rag_list_files]
-# [START generativeaionvertexai_rag_delete_file]
-# [START generativeaionvertexai_rag_delete_corpus]
-# [START generativeaionvertexai_rag_retrieval_query]
-# [START generativeaionvertexai_rag_generate_content]
-# [START generativeaionvertexai_rag_quickstart]
-
-from vertexai.preview import rag
-import vertexai
-
-# [END generativeaionvertexai_rag_create_corpus]
-# [END generativeaionvertexai_rag_get_corpus]
-# [END generativeaionvertexai_rag_list_corpora]
-# [END generativeaionvertexai_rag_upload_file]
-# [END generativeaionvertexai_rag_import_files]
-# [END generativeaionvertexai_rag_import_files_async]
-# [END generativeaionvertexai_rag_get_file]
-# [END generativeaionvertexai_rag_list_files]
-# [END generativeaionvertexai_rag_delete_file]
-# [END generativeaionvertexai_rag_delete_corpus]
-# [END generativeaionvertexai_rag_retrieval_query]
-# [END generativeaionvertexai_rag_generate_content]
-# [END generativeaionvertexai_rag_quickstart]
-
 
 def create_corpus(
     project_id: str,
@@ -54,6 +23,9 @@ def create_corpus(
     description: Optional[str] = None,
 ):
     # [START generativeaionvertexai_rag_create_corpus]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -72,6 +44,9 @@ def create_corpus(
 def get_corpus(project_id: str, corpus_name: str):
     # [START generativeaionvertexai_rag_get_corpus]
 
+    from vertexai.preview import rag
+    import vertexai
+
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
@@ -87,6 +62,9 @@ def get_corpus(project_id: str, corpus_name: str):
 
 def list_corpora(project_id: str):
     # [START generativeaionvertexai_rag_list_corpora]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -108,6 +86,9 @@ def upload_file(
     description: Optional[str] = None,
 ):
     # [START generativeaionvertexai_rag_upload_file]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -136,6 +117,9 @@ def import_files(
 ):
     # [START generativeaionvertexai_rag_import_files]
 
+    from vertexai.preview import rag
+    import vertexai
+
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
@@ -161,6 +145,9 @@ async def import_files_async(
     paths: List[str],
 ):
     # [START generativeaionvertexai_rag_import_files_async]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -188,6 +175,9 @@ async def import_files_async(
 def get_file(project_id: str, file_name: str):
     # [START generativeaionvertexai_rag_get_file]
 
+    from vertexai.preview import rag
+    import vertexai
+
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
@@ -204,6 +194,9 @@ def get_file(project_id: str, file_name: str):
 
 def list_files(project_id: str, corpus_name: str):
     # [START generativeaionvertexai_rag_list_files]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -223,6 +216,9 @@ def list_files(project_id: str, corpus_name: str):
 def delete_file(project_id: str, file_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_file]
 
+    from vertexai.preview import rag
+    import vertexai
+
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
@@ -237,6 +233,9 @@ def delete_file(project_id: str, file_name: str) -> None:
 
 def delete_corpus(project_id: str, corpus_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_corpus]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -256,6 +255,9 @@ def retrieval_query(
     text: str,
 ):
     # [START generativeaionvertexai_rag_retrieval_query]
+
+    from vertexai.preview import rag
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -282,7 +284,9 @@ def generate_content_with_rag(
 ):
     # [START generativeaionvertexai_rag_generate_content]
 
+    from vertexai.preview import rag
     from vertexai.preview.generative_models import GenerativeModel, Tool
+    import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -315,7 +319,9 @@ def quickstart(
     paths: List[str],
 ):
     # [START generativeaionvertexai_rag_quickstart]
+    from vertexai.preview import rag
     from vertexai.preview.generative_models import GenerativeModel, Tool
+    import vertexai
 
     # Create a RAG Corpus, Import Files, and Generate a response
 
