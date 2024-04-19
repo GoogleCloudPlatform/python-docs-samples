@@ -15,14 +15,17 @@
 # This file contains code samples that demonstrate how to get delete IAM key for service account.
 
 # [START iam_delete_key]
+from google.cloud import iam_admin_v1
+from google.cloud.iam_admin_v1 import types
+
+
 def delete_key(project_id: str, account: str, key_id: str) -> None:
-    from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
     """
-    Creates a key for a service account.
+    Deletes a key for a service account.
 
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
+    key_id: unique ID of the key.
     """
 
     iam_admin_client = iam_admin_v1.IAMClient()
@@ -31,6 +34,8 @@ def delete_key(project_id: str, account: str, key_id: str) -> None:
 
     iam_admin_client.delete_service_account_key(request=request)
     print(f"Deleted key: {key_id}")
+
+# [END iam_delete_key]
 
 
 if __name__ == "__main__":
@@ -43,9 +48,7 @@ if __name__ == "__main__":
     account_name = "test-account-name"
     # Existing ID of the key
     key_id = "your-key-id"
-
     # Note: If you have different email format, you can just paste it directly
     email = f"{account_name}@{project_id}.iam.gserviceaccount.com"
-    delete_key(project_id, email, key_id)
 
-# [END iam_delete_key]
+    delete_key(project_id, email, key_id)
