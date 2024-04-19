@@ -327,27 +327,41 @@ def quickstart(
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
 
-    corpus = rag.create_corpus(display_name=display_name)
+    # Create RagCorpus
+    rag_corpus = rag.create_corpus(display_name=display_name)
 
+    # Import Files to the RagCorpus
     response = rag.import_files(
-        corpus.name,
+        rag_corpus.name,
         paths,
         chunk_size=512,  # Optional
         chunk_overlap=100,  # Optional
     )
 
+    # Direct context retrieval
+    response = rag.retrieval_query(
+        rag_corpora=[rag_corpus.name],
+        text="What is RAG and why it is helpful?",
+        similarity_top_k=10,
+    )
+    print(response)
+
+    # Enhance generation
+    # Create a RAG retrieval tool
     rag_retrieval_tool = Tool.from_retrieval(
         retrieval=rag.Retrieval(
             source=rag.VertexRagStore(
-                rag_corpora=[corpus.name],
+                rag_corpora=[rag_corpus.name],  # Currently only 1 corpus is allowed.
                 similarity_top_k=3,  # Optional
                 vector_distance_threshold=0.4,  # Optional
             ),
         )
     )
-
+    # Create a gemini-pro model instance
     rag_model = GenerativeModel("gemini-1.0-pro", tools=[rag_retrieval_tool])
-    response = rag_model.generate_content("Why is the sky blue?")
+
+    # Generate response
+    response = rag_model.generate_content("What is RAG and why it is helpful?")
     print(response.text)
     # [END generativeaionvertexai_rag_quickstart]
-    return corpus, response
+    return rag_corpus, response
