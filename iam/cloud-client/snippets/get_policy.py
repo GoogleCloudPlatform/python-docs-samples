@@ -16,28 +16,19 @@
 
 
 # [START iam_get_policy]
-def get_policy(project_id: str, account: str = None, policy_id: str = None) -> str:
+def get_policy(project_id: str, service_account, account: str = None, policy_id: str = None) -> str:
     from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
+    from google.iam.v1 import iam_policy_pb2
     """
-    Creates a key for a service account.
+    Get IAM policies for service account
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
     """
 
-    # policy_client = iam_v2.PoliciesClient()
-    # request = types.GetPolicyRequest()
-    # attachment_point = f"cloudresourcemanager.googleapis.com%2Fprojects%2{project_id}"
-    # request.name = f"policies/{attachment_point}/denypolicies/{policy_id}"
-
-    # policy = iam_admin_client.get_policy(request=request)
-    # print(policy)
-
-    import pdb;pdb.set_trace()
     iam_client = iam_admin_v1.IAMClient()
 
-    request = types.GetIamPolicyRequest()
-    request.resource = project_id
+    request = iam_policy_pb2.GetIamPolicyRequest()
+    request.resource = f"projects/{project_id}/serviceAccounts/{service_account}"
 
     response = iam_client.get_iam_policy(request)
     print(response)
@@ -48,8 +39,10 @@ if __name__ == "__main__":
     # iam.serviceAccountKeys.create permission (roles/iam.serviceAccountKeyAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "srasp-softserve-project"
+    project_id = "test-project-id"
+    name = "test-account-name"
+    service_account = f"{name}@{project_id}.iam.gserviceaccount.com"
 
-    get_policy(project_id)
+    get_policy(project_id, service_account)
 
 # [END iam_get_policy]
