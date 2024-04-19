@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """End-to-end tests.
 
 Run with `pytest` (local environment):
@@ -30,28 +29,24 @@ except ModuleNotFoundError:
 
 from collections.abc import Callable, Iterator
 
-import apache_beam as beam
-from apache_beam.testing.test_pipeline import TestPipeline
-from apache_beam.testing.test_stream import TestStream
-from apache_beam.testing.util import assert_that
-from apache_beam.testing.util import equal_to
 import conftest  # python-docs-samples/dataflow/conftest.py
 import pytest
-
-import custom_model_gemma
 
 DATAFLOW_MACHINE_TYPE = "g2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
 NAME = "dataflow/gemma/streaming"
+
 
 @pytest.fixture(scope="session")
 def test_name() -> str:
     # Many fixtures expect a fixture called `test_name`, so be sure to define it!
     return "dataflow/gemma"
 
+
 @pytest.fixture(scope="session")
 def container_image(utils: Utils) -> str:
     yield from utils.cloud_build_submit(NAME)
+
 
 @pytest.fixture(scope="session")
 def messages_topic(pubsub_topic: Callable[[str], str]) -> str:
@@ -64,19 +59,19 @@ def responses_topic(pubsub_topic: Callable[[str], str]) -> str:
 
 
 @pytest.fixture(scope="session")
-def responses_subscription(
-    pubsub_subscription: Callable[[str, str], str], responses_topic: str
-) -> str:
+def responses_subscription(pubsub_subscription: Callable[[str, str], str],
+                           responses_topic: str) -> str:
     return pubsub_subscription("responses", responses_topic)
+
 
 @pytest.fixture(scope="session")
 def dataflow_job(
-    project: str,
-    bucket_name: str,
-    location: str,
-    unique_name: str,
-    messages_subscription: str,
-    responses_topic: str,
+        project: str,
+        bucket_name: str,
+        location: str,
+        unique_name: str,
+        messages_subscription: str,
+        responses_topic: str,
 ) -> Iterator[str]:
     # Copy Gemma onto the local environment
     conftest.run_cmd("gsutil", "cp", GEMMA_GCS, ".")
@@ -108,19 +103,22 @@ def dataflow_job(
     print(f"Cancelling job: {job_id}")
     conftest.dataflow_cancel_job(project, location, job_id)
 
+
 def test_pipeline_dataflow(
-    project: str,
-    location: str,
-    dataflow_job: str,
-    messages_topic: str,
-    responses_subscription: str,
+        project: str,
+        location: str,
+        dataflow_job: str,
+        messages_topic: str,
+        responses_subscription: str,
 ) -> None:
     print(f"Waiting for the Dataflow workers to start: {dataflow_job}")
     conftest.wait_until(
-        lambda: conftest.dataflow_num_workers(project, location, dataflow_job) > 0,
+        lambda: conftest.dataflow_num_workers(project, location, dataflow_job)
+        > 0,
         "workers are running",
     )
-    num_workers = conftest.dataflow_num_workers(project, location, dataflow_job)
+    num_workers = conftest.dataflow_num_workers(project, location,
+                                                dataflow_job)
     print(f"Dataflow job num_workers: {num_workers}")
 
     messages = ["This is a test for a Python sample."]

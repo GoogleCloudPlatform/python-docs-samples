@@ -31,9 +31,7 @@ import keras_nlp
 from keras_nlp.src.models.gemma.gemma_causal_lm import GemmaCausalLM
 
 
-class GemmaModelHandler(ModelHandler[str,
-                                     PredictionResult, GemmaCausalLM
-                                     ]):
+class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
     def __init__(
         self,
         model_name: str = "gemma_2B",
@@ -87,7 +85,8 @@ class GemmaModelHandler(ModelHandler[str,
 
 class FormatOutput(beam.DoFn):
     def process(self, element, *args, **kwargs):
-        yield "Input: {input}, Output: {output}".format(input=element.example, output=element.inference)
+        yield "Input: {input}, Output: {output}".format(
+            input=element.example, output=element.inference)
 
 
 if __name__ == "__main__":
@@ -95,20 +94,20 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
-      "--messages_subscription",
-      required=True,
-      help="Pub/Sub subscription for input text messages",
+        "--messages_subscription",
+        required=True,
+        help="Pub/Sub subscription for input text messages",
     )
     parser.add_argument(
-      "--responses_topic",
-      required=True,
-      help="Pub/Sub topic for output text responses",
+        "--responses_topic",
+        required=True,
+        help="Pub/Sub topic for output text responses",
     )
     parser.add_argument(
-      "--model_path",
-      required=False,
-      default="gemma_2B",
-      help="path to the Gemma model in the custom worker container",
+        "--model_path",
+        required=False,
+        default="gemma_2B",
+        help="path to the Gemma model in the custom worker container",
     )
 
     args, beam_args = parser.parse_known_args()
@@ -120,9 +119,14 @@ if __name__ == "__main__":
     )
 
     with beam.Pipeline(options=beam_options) as p:
-        _ = (p | "Read Topic" >> beam.io.ReadFromPubSub(subscription=args.messages_subscription)
-               | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-               | "RunInference-Gemma" >> RunInference(GemmaModelHandler(args.model_path))  # Send the prompts to the model and get responses.
-               | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
-               | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responses_topic)
-             )
+        _ = (
+            p | "Read Topic" >>
+            beam.io.ReadFromPubSub(subscription=args.messages_subscription)
+            | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
+            | "RunInference-Gemma" >> RunInference(
+                GemmaModelHandler(args.model_path)
+            )  # Send the prompts to the model and get responses.
+            |
+            "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
+            | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(
+                topic=args.responses_topic))
