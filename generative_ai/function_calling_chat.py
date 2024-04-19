@@ -64,7 +64,7 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
 
     # Initialize Gemini model
     model = GenerativeModel(
-        "gemini-1.0-pro-002",
+        "gemini-1.0-pro-001",
         generation_config=GenerationConfig(temperature=0),
         tools=[retail_tool],
     )
