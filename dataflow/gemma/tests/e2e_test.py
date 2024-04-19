@@ -52,10 +52,12 @@ def container_image(utils: Utils) -> str:
 def messages_topic(pubsub_topic: Callable[[str], str]) -> str:
     return pubsub_topic("messages")
 
+
 @pytest.fixture(scope="session")
 def messages_subscription(pubsub_subscription: Callable[[str, str], str],
-                           messages_topic: str) -> str:
+                          messages_topic: str) -> str:
     return pubsub_subscription("messages", messages_topic)
+
 
 @pytest.fixture(scope="session")
 def responses_topic(pubsub_topic: Callable[[str], str]) -> str:
