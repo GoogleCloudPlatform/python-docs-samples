@@ -15,13 +15,13 @@ geopandas===0.13.2; python_version == '3.8'
 geopandas==0.14.3; python_version >= '3.9'
 google-api-core==2.18.0
 google-auth==2.29.0
-google-cloud-bigquery==3.20.1
+google-cloud-bigquery==3.21.0
 google-cloud-bigquery-storage==2.24.0
 google-cloud-core==2.4.1
 google-crc32c==1.5.0
 google-resumable-media==2.7.0
 googleapis-common-protos==1.63.0
-grpcio==1.62.1
+grpcio==1.62.2
 idna==3.7
 munch==4.0.0
 mypy-extensions==1.0.0
@@ -44,7 +44,7 @@ pytz==2024.1
 PyYAML==6.0.1
 requests==2.31.0
 rsa==4.9
-Shapely==2.0.3
+Shapely==2.0.4
 six==1.16.0
 typing-extensions===4.7.1; python_version == '3.7'
 typing-extensions==4.11.0; python_version >= '3.8'
