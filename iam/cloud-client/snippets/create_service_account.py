@@ -14,13 +14,14 @@
 
 # This file contains code samples that demonstrate how to get create service account.
 
+# [START iam_create_service_account]
 from typing import Optional
 
+from google.cloud import iam_admin_v1
+from google.cloud.iam_admin_v1 import types
 
-# [START iam_create_service_account]
+
 def create_service_account(project_id: str, account_id: str, display_name: Optional[str] = None) -> None:
-    from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
     """
     Creates a service account.
     project_id: ID or number of the Google Cloud project you want to use.
@@ -42,6 +43,8 @@ def create_service_account(project_id: str, account_id: str, display_name: Optio
 
     print(f"Created a service account: {account.email}")
 
+# [END iam_create_service_account]
+
 
 if __name__ == "__main__":
     # To run the sample you would need
@@ -54,5 +57,3 @@ if __name__ == "__main__":
     account_id = account_name = "test-service-account"
 
     create_service_account(project_id, account_id, account_name)
-
-# [END iam_create_service_account]

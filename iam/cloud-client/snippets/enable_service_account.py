@@ -15,9 +15,11 @@
 # This file contains code samples that demonstrate how to enable service account.
 
 # [START iam_enable_service_account]
+from google.cloud import iam_admin_v1
+from google.cloud.iam_admin_v1 import types
+
+
 def enable_service_account(project_id: str, account: str) -> None:
-    from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
     """
     Enables a service account.
     project_id: ID or number of the Google Cloud project you want to use.
@@ -27,8 +29,8 @@ def enable_service_account(project_id: str, account: str) -> None:
     iam_admin_client = iam_admin_v1.IAMClient()
     request = types.EnableServiceAccountRequest()
     name = f"projects/{project_id}/serviceAccounts/{account}"
-
     request.name = name
+
     iam_admin_client.enable_service_account(request=request)
 
     request = types.GetServiceAccountRequest()
@@ -37,6 +39,8 @@ def enable_service_account(project_id: str, account: str) -> None:
     service_account = iam_admin_client.get_service_account(request=request)
     if not service_account.disabled:
         print(f"Enabled service account: {account}")
+
+# [END iam_enable_service_account]
 
 
 if __name__ == "__main__":
@@ -51,5 +55,3 @@ if __name__ == "__main__":
     account_id = f"{account_name}@{project_id}.iam.gserviceaccount.com"
 
     enable_service_account(project_id, account_id)
-
-# [END iam_enable_service_account]

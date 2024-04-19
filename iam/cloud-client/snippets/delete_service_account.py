@@ -15,9 +15,11 @@
 # This file contains code samples that demonstrate how to get delete service account.
 
 # [START iam_delete_service_account]
+from google.cloud import iam_admin_v1
+from google.cloud.iam_admin_v1 import types
+
+
 def delete_service_account(project_id: str, account: str) -> None:
-    from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
     """
     Deletes a service account.
     project_id: ID or number of the Google Cloud project you want to use.
@@ -26,11 +28,12 @@ def delete_service_account(project_id: str, account: str) -> None:
 
     iam_admin_client = iam_admin_v1.IAMClient()
     request = types.DeleteServiceAccountRequest()
-
     request.name = f"projects/{project_id}/serviceAccounts/{account}"
-    iam_admin_client.delete_service_account(request=request)
 
+    iam_admin_client.delete_service_account(request=request)
     print(f"Deleted a service account: {account}")
+
+# [END iam_delete_service_account]
 
 
 if __name__ == "__main__":
@@ -45,5 +48,3 @@ if __name__ == "__main__":
     account_id = f"{account_name}@{project_id}.iam.gserviceaccount.com"
 
     delete_service_account(project_id, account_id)
-
-# [END iam_delete_service_account]

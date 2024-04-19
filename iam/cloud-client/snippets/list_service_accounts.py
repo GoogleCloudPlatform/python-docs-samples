@@ -16,25 +16,41 @@
 
 
 # [START iam_list_service_accounts]
-def list_service_accounts(project_id: str) -> None:
-    from google.cloud import iam_admin_v1
-    from google.cloud.iam_admin_v1 import types
+from typing import List
+
+from google.cloud import iam_admin_v1
+from google.cloud.iam_admin_v1 import types
+
+
+def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
     """
-    Get list of service accounts.
+    Get list of project service accounts.
     project_id: ID or number of the Google Cloud project you want to use.
-    account_id: ID or email which will be unique identifier of the service account
-    display_name (optional): human-readable name, which will be assigned to the service account
     """
 
     iam_admin_client = iam_admin_v1.IAMClient()
     request = types.ListServiceAccountsRequest()
-
     request.name = f"projects/{project_id}"
 
     accounts = iam_admin_client.list_service_accounts(request=request)
+    return accounts.accounts
 
-    for account in accounts.accounts:
-        print(f"Got service account: {account.email}")
+# [END iam_list_service_accounts]
+
+
+def get_service_account(project_id: str, account: str) -> iam_admin_v1.ServiceAccount:
+    """
+    Get certain service account.
+    project_id: ID or number of the Google Cloud project you want to use.
+    account_id: ID or email which will be unique identifier of the service account.
+    """
+
+    iam_admin_client = iam_admin_v1.IAMClient()
+    request = types.GetServiceAccountRequest()
+    request.name = f"projects/{project_id}/serviceAccounts/{account}"
+
+    account = iam_admin_client.get_service_account(request=request)
+    return account
 
 
 if __name__ == "__main__":
@@ -44,9 +60,4 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "your-google-cloud-project-id"
 
-    # Existing service account name within the project specified above.
-    account_id = account_name = "test-service-account"
-
     list_service_accounts(project_id)
-
-# [END iam_list_service_accounts]
