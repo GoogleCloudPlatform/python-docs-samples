@@ -173,10 +173,10 @@ async def import_files_async(
         chunk_overlap=100,  # Optional
     )
 
-    await response.result()
-    print(f"Imported {response.imported_rag_files_count} files.")
+    result = await response.result()
+    print(f"Imported {result.imported_rag_files_count} files.")
     # [END generativeaionvertexai_rag_import_files_async]
-    return response
+    return result
 
 
 def get_file(project_id: str, file_name: str):
