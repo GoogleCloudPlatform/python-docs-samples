@@ -14,35 +14,36 @@
 
 # This file contains code samples that demonstrate how to get create IAM key for service account.
 
-
 # [START iam_get_policy]
-def get_policy(project_id: str, service_account, account: str = None, policy_id: str = None) -> str:
-    from google.cloud import iam_admin_v1
-    from google.iam.v1 import iam_policy_pb2
+from google.cloud import iam_admin_v1
+from google.iam.v1 import iam_policy_pb2, policy_pb2
+
+
+def get_policy(project_id: str, account: str) -> policy_pb2.Policy:
     """
-    Get IAM policies for service account
+    Get IAM policy for service account.
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
     """
 
     iam_client = iam_admin_v1.IAMClient()
-
     request = iam_policy_pb2.GetIamPolicyRequest()
-    request.resource = f"projects/{project_id}/serviceAccounts/{service_account}"
+    request.resource = f"projects/{project_id}/serviceAccounts/{account}"
 
-    response = iam_client.get_iam_policy(request)
-    print(response)
+    policy = iam_client.get_iam_policy(request)
+    return policy
+
+# [END iam_get_policy]
 
 
 if __name__ == "__main__":
     # To run the sample you would need
-    # iam.serviceAccountKeys.create permission (roles/iam.serviceAccountKeyAdmin)
+    # iam.serviceAccounts.getIamPolicy permission (roles/iam.serviceAccountAdmin)
 
     # Your Google Cloud project ID.
     project_id = "test-project-id"
+    # Existing service account name within the project specified above.
     name = "test-account-name"
     service_account = f"{name}@{project_id}.iam.gserviceaccount.com"
 
     get_policy(project_id, service_account)
-
-# [END iam_get_policy]
