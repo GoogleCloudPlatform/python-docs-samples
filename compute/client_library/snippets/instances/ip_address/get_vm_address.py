@@ -47,6 +47,7 @@ def get_instance(project_id: str, zone: str, instance_name: str) -> compute_v1.I
 class IPType(Enum):
     INTERNAL = "internal"
     EXTERNAL = "external"
+    IP_V6 = "ipv6"
 
 
 def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> str:
@@ -55,7 +56,7 @@ def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> s
 
     Args:
         instance (compute_v1.Instance): instance to get
-        ip_type (IPType): The type of IP address to retrieve (internal or external).
+        ip_type (IPType): The type of IP address to retrieve (ipv6, internal or external).
 
     Returns:
         str: The requested IP address of the instance.
@@ -67,11 +68,16 @@ def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> s
                 for config in interface.access_configs:
                     if config.type_ == "ONE_TO_ONE_NAT":
                         return config.nat_i_p
+            elif ip_type == IPType.IP_V6:
+                for ipv6_config in getattr(interface, "ipv6_access_configs", []):
+                    if ipv6_config.type_ == "DIRECT_IPV6":
+                        return ipv6_config.external_ipv6
+
             elif ip_type == IPType.INTERNAL:
                 # Internal IP is directly available in the network interface
                 return interface.network_i_p
 
-    return instance
+    return ""
 
 
 # [END compute_ip_address_get_vm_address]

@@ -17,7 +17,6 @@ import uuid
 import google.auth
 
 from ..instances.create_start_instance.create_from_public_image import (
-    create_from_public_image,
     create_instance,
     disk_from_image,
     get_image_from_family,
@@ -26,24 +25,9 @@ from ..instances.create_start_instance.create_from_public_image import (
 from ..instances.delete import delete_instance
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 
-
 PROJECT = google.auth.default()[1]
 REGION = "us-central1"
 INSTANCE_ZONE = "us-central1-b"
-
-
-def test_get_instance_internal_ip_address():
-    instance_name = "i" + uuid.uuid4().hex[:10]
-    instance = create_from_public_image(
-        PROJECT,
-        INSTANCE_ZONE,
-        instance_name,
-    )
-    try:
-        internal_ip = get_instance_ip_address(instance, IPType.INTERNAL)
-        assert internal_ip == instance.network_interfaces[0].network_i_p
-    finally:
-        delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
 
 
 def test_get_instance_external_ip_address():
@@ -55,7 +39,24 @@ def test_get_instance_external_ip_address():
         PROJECT, INSTANCE_ZONE, instance_name, disks, external_access=True
     )
     try:
-        external_ip = get_instance_ip_address(instance, IPType.EXTERNAL)
+        # Internal ip check
+        internal_ip = get_instance_ip_address(instance, ip_type=IPType.INTERNAL)
+        assert internal_ip == instance.network_interfaces[0].network_i_p
+
+        # External ip check
+        external_ip = get_instance_ip_address(instance, ip_type=IPType.EXTERNAL)
         assert external_ip == instance.network_interfaces[0].access_configs[0].nat_i_p
+
+        # External ip check
+        external_ip = get_instance_ip_address(instance, ip_type=IPType.IP_V6)
+        assert external_ip == next(
+            (
+                ipv6_config.external_ipv6
+                for interface in instance.network_interfaces
+                for ipv6_config in getattr(interface, "ipv6_access_configs", [])
+                if ipv6_config.type_ == "DIRECT_IPV6"
+            ),
+            "",
+        )
     finally:
         delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
