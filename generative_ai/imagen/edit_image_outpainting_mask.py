@@ -15,38 +15,32 @@
 """Google Cloud Vertex AI sample for editing an image using a mask file.
     Outpainting lets you expand the content of a base image to fit a larger or
     differently sized mask canvas.
-Example usage:
-    python edit_image_outpainting_mask.py --project_id <project-id> \
-        --location <location> --input_file <filepath> --mask_file <filepath> \
-        --output_file <filepath> [--prompt <text>]
 """
 
-# [START generativeaionvertexai_imagen_edit_image_outpainting_mask]
-
-import argparse
-
-import vertexai
-from vertexai.preview.vision_models import Image, ImageGenerationModel
+from vertexai.preview import vision_models
 
 
 def edit_image_outpainting_mask(
     project_id: str,
-    location: str,
     input_file: str,
     mask_file: str,
     output_file: str,
     prompt: str,
-) -> vertexai.preview.vision_models.ImageGenerationResponse:
-    """Edit a local image by expanding the content of a base image using a mask.
-    Args:
-      project_id: Google Cloud project ID, used to initialize Vertex AI.
-      location: Google Cloud region, used to initialize Vertex AI.
-      input_file: Local path to the input image file. Image can be in PNG or JPEG format.
-      mask_file: Local path to the mask file. Image can be in PNG or JPEG format.
-      output_file: Local path to the output image file.
-      prompt: The optional text prompt describing what you want to see inserted."""
+) -> vision_models.ImageGenerationResponse:
 
-    vertexai.init(project=project_id, location=location)
+    # [START generativeaionvertexai_imagen_edit_image_outpainting_mask]
+
+    import vertexai
+    from vertexai.preview.vision_models import Image, ImageGenerationModel
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # input_file = "my-input.png"
+    # mask_file = "my-mask.png"
+    # output_file = "my-output.png"
+    # prompt = "" # The optional text prompt describing what you want to see inserted.
+
+    vertexai.init(project=project_id, location="us-central1")
 
     model = ImageGenerationModel.from_pretrained("imagegeneration@006")
     base_img = Image.load_from_file(location=input_file)
@@ -59,52 +53,13 @@ def edit_image_outpainting_mask(
         edit_mode="outpainting",
     )
 
-    images[0].save(location=output_file)
+    images[0].save(location=output_file, include_generation_parameters=False)
 
     # Optional. View the edited image in a notebook.
     # images[0].show()
 
     print(f"Created output image using {len(images[0]._image_bytes)} bytes")
 
+    # [END generativeaionvertexai_imagen_edit_image_outpainting_mask]
+
     return images
-
-
-# [END generativeaionvertexai_imagen_edit_image_outpainting_mask]
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
-    parser.add_argument(
-        "--location",
-        help="The location in which to initialize Vertex AI.",
-        default="us-central1",
-    )
-    parser.add_argument(
-        "--input_file",
-        help="The local path to the input file (e.g., 'my-input.png').",
-        required=True,
-    )
-    parser.add_argument(
-        "--mask_file",
-        help="The local path to the mask file (e.g., 'my-mask.png').",
-        required=True,
-    )
-    parser.add_argument(
-        "--output_file",
-        help="The local path to the output file (e.g., 'my-output.png').",
-        required=True,
-    )
-    parser.add_argument(
-        "--prompt",
-        help="The optional text prompt describing what you want to insert into the masked area.",
-        default="",
-    )
-    args = parser.parse_args()
-    edit_image_outpainting_mask(
-        args.project_id,
-        args.location,
-        args.input_file,
-        args.mask_file,
-        args.output_file,
-        args.prompt,
-    )

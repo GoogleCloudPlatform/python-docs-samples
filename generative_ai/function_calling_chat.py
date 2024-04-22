@@ -16,6 +16,7 @@
 import vertexai
 from vertexai.generative_models import (
     FunctionDeclaration,
+    GenerationConfig,
     GenerativeModel,
     Part,
     Tool,
@@ -63,7 +64,9 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
 
     # Initialize Gemini model
     model = GenerativeModel(
-        "gemini-1.0-pro", generation_config={"temperature": 0}, tools=[retail_tool]
+        "gemini-1.0-pro-001",
+        generation_config=GenerationConfig(temperature=0),
+        tools=[retail_tool],
     )
 
     # Start a chat session
