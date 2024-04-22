@@ -17,7 +17,6 @@
 
 
 def get_short_form_image_captions(project_id: str, input_file: str) -> list:
-
     # [START generativeaionvertexai_imagen_get_short_form_image_captions]
 
     import vertexai

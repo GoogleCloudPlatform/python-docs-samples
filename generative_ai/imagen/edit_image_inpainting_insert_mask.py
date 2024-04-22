@@ -27,7 +27,6 @@ def edit_image_inpainting_insert_mask(
     output_file: str,
     prompt: str,
 ) -> vision_models.ImageGenerationResponse:
-
     # [START generativeaionvertexai_imagen_edit_image_inpainting_insert_mask]
 
     import vertexai

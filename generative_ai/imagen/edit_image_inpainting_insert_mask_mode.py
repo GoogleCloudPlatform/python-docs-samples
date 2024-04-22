@@ -28,7 +28,6 @@ def edit_image_inpainting_insert_mask_mode(
     output_file: str,
     prompt: str,
 ) -> vision_models.ImageGenerationResponse:
-
     # [START generativeaionvertexai_imagen_edit_image_inpainting_insert_mask_mode]
 
     import vertexai

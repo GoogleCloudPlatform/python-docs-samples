@@ -20,7 +20,6 @@
 def get_short_form_image_responses(
     project_id: str, input_file: str, question: str
 ) -> list:
-
     # [START generativeaionvertexai_imagen_get_short_form_image_responses]
 
     import vertexai
