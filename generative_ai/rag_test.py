@@ -21,6 +21,9 @@ import pytest
 import rag
 import vertexai
 
+# TODO: Remove once SDK is updated
+pytest.skip(allow_module_level=True)
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
@@ -48,6 +51,7 @@ def test_corpus_fixture():
 def uploaded_file_fixture(test_corpus, test_file):
     """Uploads a file to the corpus and deletes it after the test."""
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
+    # TODO: Remove when upload_file service response changes to the correct format.
     rag_file.name = rag_file.name.replace("RagFile", "ragFiles")
     yield rag_file
 
@@ -71,6 +75,8 @@ def test_list_corpora(test_corpus):
 def test_upload_file(test_corpus, test_file):
     rag_file = rag.upload_file(PROJECT_ID, test_corpus.name, test_file)
     assert rag_file
+    # TODO: Remove when upload_file service response changes to the correct format.
+    rag_file.name = rag_file.name.replace("RagFile", "ragFiles")
     rag.delete_file(PROJECT_ID, rag_file.name)
 
 
@@ -96,7 +102,7 @@ def test_list_files(test_corpus, uploaded_file):
 
 
 def test_retrieval_query(test_corpus):
-    response = rag.retrieval_query(PROJECT_ID, [test_corpus.name], "test query")
+    response = rag.retrieval_query(PROJECT_ID, [test_corpus.name], "hello")
     assert response
     assert response.contexts
 
