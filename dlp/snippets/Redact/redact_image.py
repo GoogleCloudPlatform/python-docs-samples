@@ -78,13 +78,23 @@ def redact_image(
         mime_type = mime_guess[0] or "application/octet-stream"
 
     # Select the content type index from the list of supported types.
+    # https://github.com/googleapis/googleapis/blob/master/google/privacy/dlp/v2/dlp.proto / message ByteContentItem
     supported_content_types = {
-        None: 0,  # "Unspecified"
-        "image/jpeg": 1,
-        "image/bmp": 2,
-        "image/png": 3,
-        "image/svg": 4,
-        "text/plain": 5,
+        None: 0,  # "Unspecified" or BYTES_TYPE_UNSPECIFIED
+        "image/jpeg": 1,  # IMAGE_JPEG
+        "image/bmp": 2,  # IMAGE_BMP
+        "image/png": 3,  # IMAGE_PNG
+        "image/svg": 4,  # IMAGE_SVG - Adjusted to "image/svg+xml" for correct MIME type
+        "text/plain": 5,  # TEXT_UTF8
+        # Note: No specific MIME type for general "image", mapping to IMAGE for any image type not specified
+        "image": 6,  # IMAGE - Any image type
+        "application/msword": 7,  # WORD_DOCUMENT
+        "application/pdf": 8,  # PDF
+        "application/powerpoint": 9,  # POWERPOINT_DOCUMENT
+        "application/msexcel": 10,  # EXCEL_DOCUMENT
+        "application/avro": 11,  # AVRO
+        "text/csv": 12,  # CSV
+        "text/tsv": 13,  # TSV
     }
     content_type_index = supported_content_types.get(mime_type, 0)
 
