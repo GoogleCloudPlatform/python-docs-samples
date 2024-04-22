@@ -31,7 +31,6 @@ def get_policy(project_id: str, account: str) -> policy_pb2.Policy:
     request.resource = f"projects/{project_id}/serviceAccounts/{account}"
 
     policy = iam_client.get_iam_policy(request)
-    print(policy)
     return policy
 
 # [END iam_service_account_get_policy]
@@ -53,34 +52,3 @@ if __name__ == "__main__":
     service_account = f"{name}@{project_id}.iam.gserviceaccount.com"
 
     get_policy(project_id, service_account)
-
-
-# import os
-
-# from google.oauth2 import service_account  # type: ignore
-# import googleapiclient.discovery  # type: ignore
-
-
-# # [START iam_get_policy]
-# def get_policy(project_id: str, version: int = 1) -> dict:
-#     """Gets IAM policy for a project."""
-
-#     credentials = service_account.Credentials.from_service_account_file(
-#         filename="/Users/srasp/.config/gcloud/application_default_credentials2.json",
-#         scopes=["https://www.googleapis.com/auth/cloud-platform"],
-#     )
-#     service = googleapiclient.discovery.build(
-#         "cloudresourcemanager", "v1", credentials=credentials
-#     )
-#     policy = (
-#         service.projects()
-#         .getIamPolicy(
-#             resource=project_id,
-#             body={"options": {"requestedPolicyVersion": version}},
-#         )
-#         .execute()
-#     )
-#     print(policy)
-#     return policy
-
-# get_policy("gcp103148-cloudaccount")
