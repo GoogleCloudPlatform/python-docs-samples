@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,13 +15,16 @@
 # This file contains code samples that demonstrate how to disable service account.
 
 # [START iam_disable_service_account]
+import time
+
 from google.cloud import iam_admin_v1
 from google.cloud.iam_admin_v1 import types
 
 
-def disable_service_account(project_id: str, account: str) -> None:
+def disable_service_account(project_id: str, account: str) -> types.ServiceAccount:
     """
-    Enables a service account.
+    Disables a service account.
+
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
     """
@@ -32,13 +35,15 @@ def disable_service_account(project_id: str, account: str) -> None:
     request.name = name
 
     iam_admin_client.disable_service_account(request=request)
+    time.sleep(5)  # waiting to make sure changes applied
 
-    request = types.GetServiceAccountRequest()
-    request.name = name
+    get_request = types.GetServiceAccountRequest()
+    get_request.name = name
 
-    service_account = iam_admin_client.get_service_account(request=request)
+    service_account = iam_admin_client.get_service_account(request=get_request)
     if service_account.disabled:
         print(f"Disabled service account: {account}")
+    return service_account
 
 # [END iam_disable_service_account]
 

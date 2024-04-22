@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ from snippets.list_service_accounts import get_service_account, list_service_acc
 PROJECT = google.auth.default()[1]
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
@@ -53,16 +53,16 @@ def test_list_service_accounts(service_account: str) -> None:
 
 
 def test_disable_service_account(service_account: str) -> None:
-    disable_service_account(PROJECT, service_account)
-    account = get_service_account(PROJECT, service_account)
-    assert account.disabled
+    account_before = get_service_account(PROJECT, service_account)
+    assert not account_before.disabled
+
+    account_after = disable_service_account(PROJECT, service_account)
+    assert account_after.disabled
 
 
 def test_enable_service_account(service_account: str) -> None:
-    disable_service_account(PROJECT, service_account)
-    account = get_service_account(PROJECT, service_account)
-    assert account.disabled
+    account_before = disable_service_account(PROJECT, service_account)
+    assert account_before.disabled
 
-    enable_service_account(PROJECT, service_account)
-    account = get_service_account(PROJECT, service_account)
-    assert not account.disabled
+    account_after = enable_service_account(PROJECT, service_account)
+    assert not account_after.disabled

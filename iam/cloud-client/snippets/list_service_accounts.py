@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ from google.cloud.iam_admin_v1 import types
 def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
     """
     Get list of project service accounts.
+
     project_id: ID or number of the Google Cloud project you want to use.
     """
 
