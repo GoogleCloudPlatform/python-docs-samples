@@ -25,7 +25,6 @@ def edit_image_product_image(
     output_file: str,
     prompt: str,
 ) -> vision_models.ImageGenerationResponse:
-
     # [START generativeaionvertexai_imagen_edit_image_product_image]
 
     import vertexai

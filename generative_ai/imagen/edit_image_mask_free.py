@@ -22,7 +22,6 @@ from vertexai.preview import vision_models
 def edit_image_mask_free(
     project_id: str, input_file: str, output_file: str, prompt: str
 ) -> vision_models.ImageGenerationResponse:
-
     # [START generativeaionvertexai_imagen_edit_image_mask_free]
 
     import vertexai
