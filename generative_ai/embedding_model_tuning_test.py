@@ -21,6 +21,7 @@ import google.auth
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 from google.cloud.aiplatform import pipeline_jobs
+import vertexai
 
 
 import embedding_model_tuning
@@ -34,6 +35,8 @@ def dispose(job: pipeline_jobs.PipelineJob) -> None:
 
 
 def test_tune_embedding_model() -> None:
+    if vertexai.__version__:
+        raise ValueError(f"vertexai: {vertexai.__version__}")
     credentials, _ = google.auth.default(  # Set explicit credentials with Oauth scopes.
         scopes=["https://www.googleapis.com/auth/cloud-platform"]
     )
