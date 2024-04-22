@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import re
 import uuid
 
@@ -54,7 +55,9 @@ def key_found(project_id: str, account: str, key_id: str) -> bool:
 
 
 def test_delete_service_account_key(service_account: str) -> None:
-    key_id = create_key(PROJECT, service_account)
+    key = create_key(PROJECT, service_account)
+    json_key_data = json.loads(key.private_key_data)
+    key_id = json_key_data["private_key_id"]
     assert key_found(PROJECT, service_account, key_id)
 
     delete_key(PROJECT, service_account, key_id)
