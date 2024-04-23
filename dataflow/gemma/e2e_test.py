@@ -48,6 +48,11 @@ def test_name() -> str:
 
 @pytest.fixture(scope="session")
 def container_image(utils: Utils) -> str:
+    # Copy Gemma onto the local environment
+    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
+    # Ensure that Gemma files are sent to Cloud Build
+    conftest.run_cmd("gcloud", "config", "set", "gcloudignore/enabled",
+                     "false")
     yield from utils.cloud_build_submit(NAME)
 
 
@@ -79,13 +84,10 @@ def dataflow_job(
         bucket_name: str,
         location: str,
         unique_name: str,
+        container_image: str,
         messages_subscription: str,
         responses_topic: str,
 ) -> Iterator[str]:
-    # Copy Gemma onto the local environment
-    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
-    # Build the custom container image
-    container_name = container_image(Utils)
     # Launch the streaming Dataflow pipeline.
     conftest.run_cmd(
         "python",
@@ -98,7 +100,7 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
-        f"--sdk_container_image={container_name}"
+        f"--sdk_container_image={container_image}"
         "--requirements_file=requirements.txt",
     )
 
