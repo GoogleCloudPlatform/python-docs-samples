@@ -41,11 +41,10 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
   source_credentials, project_id = google.auth.default()
   # use the IAM api and the users credentials to sign the JWT
   iam_client = iam_credentials_v1.IAMCredentialsClient(credentials=source_credentials)
-  name = iam_client.service_account_path('-', target_sa)
-  payload = generate_jwt_payload(target_sa, resource_url)
-  resp = iam_client.sign_jwt(name=name, payload=payload)
-  signed_jwt = resp.signed_jwt
-  return signed_jwt
+  return iam_client.sign_jwt(
+      name=iam_client.service_account_path('-', target_sa),
+      payload=generate_jwt_payload(target_sa, resource_url),
+  ).signed_jwt
 
 def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> str:
   """Signs JWT payload using local service account credential key file"""
