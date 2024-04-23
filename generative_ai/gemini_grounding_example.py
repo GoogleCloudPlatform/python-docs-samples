@@ -22,8 +22,7 @@ def generate_text_with_grounding_web(
     # [START generativeaionvertexai_gemini_grounding_with_web]
     import vertexai
     from vertexai.preview.generative_models import grounding
-    from vertexai.generative_models import GenerationConfig, GenerativeModel, \
-        Tool
+    from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
 
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
