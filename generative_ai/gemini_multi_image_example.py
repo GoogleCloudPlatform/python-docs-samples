@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import vertexai
-
 
 def generate_text_multimodal(project_id: str, location: str) -> str:
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
-
     # [START generativeaionvertexai_gemini_single_turn_multi_image]
     import http.client
     import typing
     import urllib.request
+    import vertexai
+
     from vertexai.generative_models import GenerativeModel, Image
+
+    # Initialize Vertex AI
+    vertexai.init(project=project_id, location=location)
 
     # create helper function
     def load_image_from_url(image_url: str) -> Image:
@@ -44,7 +44,7 @@ def generate_text_multimodal(project_id: str, location: str) -> str:
     )
 
     # Pass multimodal prompt
-    model = GenerativeModel("gemini-1.0-pro-vision")
+    model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
     response = model.generate_content(
         [
             landmark1,
