@@ -89,7 +89,9 @@ def test_gemini_count_token_example() -> None:
 def test_gemini_safety_config_example() -> None:
     from vertexai.preview.generative_models import Part
 
-    image = Part.from_uri("gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg")
+    image = Part.from_uri(
+        "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
+    )
 
     vertexai.init(project=PROJECT_ID, location=LOCATION)
     text = gemini_safety_config_example.generate_text(PROJECT_ID, LOCATION, image)

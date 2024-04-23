@@ -36,11 +36,11 @@ def generate_text(project_id: str, location: str, image: Part) -> str:
     safety_config = [
         generative_models.SafetySetting(
             category=generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
         ),
         generative_models.SafetySetting(
             category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
         ),
     ]
 
