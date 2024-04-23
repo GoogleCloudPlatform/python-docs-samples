@@ -13,21 +13,23 @@
 # limitations under the License.
 """End-to-end tests.
 
-Run with `pytest` (local environment):
-    # Run all tests.
-    PYTHONPATH=.. pytest -s tests/e2e_test.py
+1. Set your project.
+    export GOOGLE_CLOUD_PROJECT="my-project-id"
 
-    # Run a single test.
-    PYTHONPATH=.. pytest -s tests/e2e_test.py -k test_name
+2. To use an existing bucket, set it without the 'gs://' prefix.
+    export GOOGLE_CLOUD_BUCKET="my-bucket-name"
+
+3. Change directory to where the conftest.py is located.
+    cd dataflow
+
+4. Install sample and test requirements.
+    pip install -r gemma/requirements.txt -r gemma/requirements-test.txt && pip check
+
+5. Run with `pytest` locally, you can use -k to run a specific test.
+    pytest --verbose -s gemma
 """
-try:
-    # `conftest` cannot be imported when running in `nox`, but we still
-    # try to import it for the autocomplete when writing the tests.
-    import conftest  # python-docs-samples/dataflow/conftest.py
-    from conftest import Utils  # python-docs-samples/dataflow/conftest.py
-except ModuleNotFoundError:
-    conftest = None
-    Utils = None
+import conftest  # python-docs-samples/dataflow/conftest.py
+from conftest import Utils
 
 from collections.abc import Callable, Iterator
 
