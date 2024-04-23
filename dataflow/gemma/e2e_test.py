@@ -83,7 +83,7 @@ def dataflow_job(
         responses_topic: str,
 ) -> Iterator[str]:
     # Copy Gemma onto the local environment
-    conftest.run_cmd("gsutil", "cp", GEMMA_GCS, ".")
+    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
     # Build the custom container image
     container_name = container_image(Utils)
     # Launch the streaming Dataflow pipeline.
