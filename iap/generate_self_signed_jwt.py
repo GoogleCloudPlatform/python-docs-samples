@@ -26,14 +26,13 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
   """
   iat = time.time()
   exp = iat + 3600
-  payload = {
+  return json.dumps({
       'iss': service_account_email,
       'sub': service_account_email,
       'aud': resource_url,
       'iat': iat,
       'exp': exp,
-  }
-  return json.dumps(payload)
+  })
 
 def sign_jwt(target_sa: str, resource_url: str) -> str:
   """Signs JWT payload using ADC and IAM credentials API """
