@@ -29,11 +29,11 @@
     pytest --verbose -s gemma
 """
 import conftest  # python-docs-samples/dataflow/conftest.py
-from conftest import Utils
+import pytest
 
 from collections.abc import Callable, Iterator
 
-import pytest
+from conftest import Utils
 
 DATAFLOW_MACHINE_TYPE = "g2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
