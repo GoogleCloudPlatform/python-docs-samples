@@ -15,8 +15,12 @@
 # [START iam_delete_role]
 # [START iam_undelete_role]
 from google.api_core.exceptions import FailedPrecondition, NotFound
-from google.cloud.iam_admin_v1 import (DeleteRoleRequest, IAMClient, Role,
-                                       UndeleteRoleRequest)
+from google.cloud.iam_admin_v1 import (
+    DeleteRoleRequest,
+    IAMClient,
+    Role,
+    UndeleteRoleRequest,
+)
 
 # [END iam_undelete_role]
 # [END iam_delete_role]
