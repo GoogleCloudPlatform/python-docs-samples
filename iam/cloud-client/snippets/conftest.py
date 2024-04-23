@@ -49,7 +49,7 @@ def deny_policy(capsys: "pytest.CaptureFixture[str]") -> None:
     assert re.search(f"Deleted the deny policy: {policy_id}", out)
 
 
-def delete_existing_deny_policies(PROJECT: str, delete_name_prefix: str) -> None:
+def delete_existing_deny_policies(project_id: str, delete_name_prefix: str) -> None:
     policies_client = iam_v2.PoliciesClient()
 
     attachment_point = f"cloudresourcemanager.googleapis.com%2Fprojects%2F{PROJECT}"
@@ -58,7 +58,7 @@ def delete_existing_deny_policies(PROJECT: str, delete_name_prefix: str) -> None
     request.parent = f"policies/{attachment_point}/denypolicies"
     for policy in policies_client.list_policies(request=request):
         if delete_name_prefix in policy.name:
-            delete_deny_policy(PROJECT, str(policy.name).rsplit("/", 1)[-1])
+            delete_deny_policy(project_id, str(policy.name).rsplit("/", 1)[-1])
 
 
 @pytest.fixture
@@ -83,11 +83,11 @@ def iam_role(capsys: "pytest.CaptureFixture[str]") -> str:
             assert re.search(f"Deleted role: {role_id}", out)
 
 
-def delete_iam_roles_by_prefix(PROJECT: str, delete_name_prefix: str) -> None:
+def delete_iam_roles_by_prefix(iam_role: str, delete_name_prefix: str) -> None:
     """
     Helper function to clean-up roles starting with a prefix
     Args:
-        PROJECT: GCP project id
+        iam_role: project id
         delete_name_prefix: start of the role id to be deleted. F.e. "test-role" in role id "test-role-123"
 
     """
@@ -102,4 +102,4 @@ def delete_iam_roles_by_prefix(PROJECT: str, delete_name_prefix: str) -> None:
     for page in roles.pages:
         for role in page.roles:
             if delete_name_prefix in role.name:
-                delete_role(PROJECT, role.name.rsplit("/", 1)[-1])
+                delete_role(iam_role, role.name.rsplit("/", 1)[-1])
