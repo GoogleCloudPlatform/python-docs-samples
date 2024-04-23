@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from vertexai.generative_models import Part
 
-def generate_text(project_id: str, location: str, image: str) -> str:
+
+def generate_text(project_id: str, location: str, image: Part) -> str:
     # [START generativeaionvertexai_gemini_safety_settings]
     import vertexai
 
@@ -26,20 +28,26 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     model = generative_models.GenerativeModel(model_name="gemini-1.0-pro-vision-001")
 
     # Generation config
-    config = generative_models.GenerationConfig(
+    generation_config = generative_models.GenerationConfig(
         max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
     )
 
     # Safety config
-    safety_config = {
-        generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-        generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT: generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-    }
+    safety_config = [
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+        ),
+        generative_models.SafetySetting(
+            category=generative_models.HarmCategory.HARM_CATEGORY_HARASSMENT,
+            threshold=generative_models.HarmBlockThreshold.BLOCK_LOW_AND_ABOVE
+        ),
+    ]
 
     # Generate content
     responses = model.generate_content(
         [image, "Add your prompt here"],
-        generation_config=config,
+        generation_config=generation_config,
         stream=True,
         safety_settings=safety_config,
     )
