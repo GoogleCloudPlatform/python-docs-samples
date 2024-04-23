@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     # Your Google Cloud project ID.
     project_id = "test-project-id"
-    # project_id = "gcp103148-cloudaccount"
+
     bindings = [
         {
             "role": "roles/viewer",

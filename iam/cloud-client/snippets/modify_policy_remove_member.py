@@ -12,20 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START iam_modify_policy_add_member]
+# [START iam_modify_policy_remove_member]
 from typing import Dict, List, Union
 
-from google.cloud import resourcemanager_v3
-from google.iam.v1 import iam_policy_pb2, policy_pb2
 
-
-def modify_policy_add_member(
-    project_id: str, bindings: List[Dict[str, Union[str, List[str]]]], role: str, member: str
-) -> policy_pb2.Policy:
+def modify_policy_remove_member(
+    bindings: List[Dict[str, Union[str, List[str]]]], role: str, member: str
+) -> List[Dict[str, Union[str, List[str]]]]:
     """
-    Add user to existing policy binding.
+    Remove user from policy binding.
 
-    project_id: ID or number of the Google Cloud project you want to use.
     bindings: Policy attached to the project, which have to be modified.
     role: role to which member need to be added.
     member: The principals requesting access.
@@ -39,35 +35,17 @@ def modify_policy_add_member(
         * deleted:group:{emailid}?uid={uniqueid}
         * domain:{domain}
     """
-
-    client = resourcemanager_v3.ProjectsClient()
-    request = iam_policy_pb2.SetIamPolicyRequest()
-    request.resource = f"projects/{project_id}"
-
-    set_bindings = []
     for bind in bindings:
-        binding = policy_pb2.Binding()
-        binding.role = bind["role"]
-
         if bind["role"] == role:
-            bind["members"].append(member)
+            if member in bind["members"]:
+                bind["members"].remove(member)
 
-        binding.members.extend(bind["members"])
-        set_bindings.append(binding)
+    return bindings
 
-    request.policy.bindings.extend(set_bindings)
-    policy = client.set_iam_policy(request)
-    return policy
-
-# [END iam_modify_policy_add_member]
+# [END iam_modify_policy_remove_member]
 
 
 if __name__ == "__main__":
-    # To run the sample you would need
-    # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
-
-    # Your Google Cloud project ID.
-    project_id = "test-project-id"
     role = "roles/viewer"
     bindings = [
         {
@@ -77,6 +55,6 @@ if __name__ == "__main__":
             ],
         },
     ]
-    member = "serviceAccount:test2-service-account@test-project-id.iam.gserviceaccount.com"
+    member = "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com"
 
-    modify_policy_add_member(project_id, bindings, role, member)
+    modify_policy_remove_member(bindings, role, member)

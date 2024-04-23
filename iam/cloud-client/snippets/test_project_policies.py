@@ -24,6 +24,7 @@ from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
 from snippets.get_policy import get_policy
 from snippets.modify_policy_add_member import modify_policy_add_member
+from snippets.modify_policy_remove_member import modify_policy_remove_member
 from snippets.set_policy import set_policy
 
 PROJECT = google.auth.default()[1]
@@ -101,9 +102,38 @@ def test_modify_policy_add_member(project_bindings: List[Dict[str, Union[str, Li
     member = f"serviceAccount:{service_account}"
     policy = modify_policy_add_member(PROJECT, project_bindings, role, member)
 
-    binding_modified = False
+    member_added = False
     for bind in policy.bindings:
         if bind.role == test_binding["role"]:
-            binding_modified = member in bind.members
+            member_added = member in bind.members
             break
-    assert binding_modified
+    assert member_added
+
+
+def test_modify_policy_remove_member(project_bindings: List[Dict[str, Union[str, List[str]]]], service_account: str) -> None:
+    role = "roles/viewer"
+    member = f"serviceAccount:{service_account}"
+    test_binding = {
+        "role": role,
+        "members": [
+            f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+            member,
+        ]
+    }
+    project_bindings.append(test_binding)
+    policy = set_policy(PROJECT, project_bindings)
+    binding_found = False
+    for bind in policy.bindings:
+        if bind.role == test_binding["role"]:
+            binding_found = test_binding["members"][0] in bind.members
+            break
+    assert binding_found
+
+    bindings = modify_policy_remove_member(project_bindings, role, member)
+
+    member_removed = False
+    for bind in bindings:
+        if bind["role"] == test_binding["role"]:
+            member_removed = member not in bind["members"]
+            break
+    assert member_removed

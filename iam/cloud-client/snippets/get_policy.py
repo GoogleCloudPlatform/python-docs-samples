@@ -41,7 +41,6 @@ if __name__ == "__main__":
     # resourcemanager.projects.getIamPolicy (roles/resourcemanager.projectIamAdmin)
 
     # Your Google Cloud project ID.
-    # project_id = "test-project-id"
-    project_id = "gcp103148-cloudaccount"
+    project_id = "test-project-id"
 
     policy = get_policy(project_id)
