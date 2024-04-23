@@ -84,12 +84,6 @@ service account private key can impersonate that account!
 
 ### Self-signed JWT with local key file
 1. Install the libraries listed in `requirements.txt`, e.g. by running:
-   ```
-   virtualenv/bin/pip install -r requirements.txt
-   ```
-2. Download credential file for service account
-3. Call sign_jwt_with_key_file with service account email and target resource url
-4. Use resulting token to access application.
 
 ## Running Tests
 
