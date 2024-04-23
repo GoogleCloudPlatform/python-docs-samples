@@ -12,6 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
+from typing import List, Optional, Union
 import uuid
 
 import google.auth
@@ -24,10 +25,12 @@ from ..instances.create_start_instance.create_from_public_image import (
     disk_from_image,
     get_image_from_family,
 )
-
 from ..instances.delete import delete_instance
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
+from ..instances.ip_address.reserve_new_external_ip_address import (
+    reserve_new_external_ip_address,
+)
 
 PROJECT = google.auth.default()[1]
 REGION = "us-central1"
@@ -101,6 +104,51 @@ def test_get_static_ip(static_ip: Address):
     assert static_ip.name == actual_address.name
 
 
+def delete_ip_address(
+    client: Union[AddressesClient, GlobalAddressesClient],
+    project_id: str,
+    address_name: str,
+    region: Optional[str] = None,
+):
+    """
+    Deletes ip address with given parameters.
+    Args:
+        client (Union[AddressesClient, GlobalAddressesClient]): global or regional address client
+        project_id (str): project id
+        address_name (str): ip address name to delete
+        region (Optional[str]): region of ip address. Marker to choose between clients (GlobalAddressesClient when None)
+    """
+    if region:
+        operation = client.delete(
+            project=project_id, region=region, address=address_name
+        )
+    else:
+        operation = client.delete(project=project_id, address=address_name)
+    operation.result()
+
+
+def list_ip_addresses(
+    client: Union[AddressesClient, GlobalAddressesClient],
+    project_id: str,
+    region: Optional[str] = None,
+) -> List[str]:
+    """
+    Retrieves ip address names of project (global) or region.
+    Args:
+        client (Union[AddressesClient, GlobalAddressesClient]): global or regional address client
+        project_id (str): project id
+        region (Optional[str]): region of ip address. Marker to choose between clients (GlobalAddressesClient when None)
+
+    Returns:
+        list of ip address names as strings
+    """
+    if region:
+        return [
+            address.name for address in client.list(project=project_id, region=region)
+        ]
+    return [address.name for address in client.list(project=project_id)]
+
+
 def test_get_instance_external_ip_address(instance_with_ips):
     # Internal IP check
     internal_ips = get_instance_ip_address(instance_with_ips, ip_type=IPType.INTERNAL)
@@ -128,3 +176,64 @@ def test_get_instance_external_ip_address(instance_with_ips):
         if ipv6_config.type_ == "DIRECT_IPV6"
     }
     assert set(ipv6_ips) == expected_ipv6_ips, "IPv6 IPs do not match"
+
+
+def test_reserve_new_external_ip_address_global():
+    global_client = GlobalAddressesClient()
+    unique_string = uuid.uuid4()
+    ip_4_global = f"ip4-global-{unique_string}"
+    ip_6_global = f"ip6-global-{unique_string}"
+
+    expected_ips = {ip_4_global, ip_6_global}
+    try:
+        # ip4 global
+        reserve_new_external_ip_address(PROJECT, ip_4_global)
+        # ip6 global
+        reserve_new_external_ip_address(PROJECT, ip_6_global, is_v6=True)
+
+        ips = list_ip_addresses(global_client, PROJECT)
+        assert set(ips).issuperset(expected_ips)
+    finally:
+        # cleanup
+        for address in expected_ips:
+            delete_ip_address(global_client, PROJECT, address)
+
+
+def test_reserve_new_external_ip_address_regional():
+    regional_client = AddressesClient()
+    unique_string = uuid.uuid4()
+    region = "us-central1"
+
+    ip_4_regional = f"ip4-regional-{unique_string}"
+    ip_4_regional_premium = f"ip4-regional-premium-{unique_string}"
+    ip_6_regional = f"ip6-regional-{unique_string}"
+    ip_6_regional_premium = f"ip6-regional-premium-{unique_string}"
+
+    expected_ips = {
+        ip_4_regional,
+        ip_4_regional_premium,
+        ip_6_regional,
+        ip_6_regional_premium,
+    }
+    try:
+        # ip4 regional standard
+        reserve_new_external_ip_address(PROJECT, ip_4_regional, region=region)
+        # ip4 regional premium
+        reserve_new_external_ip_address(
+            PROJECT, ip_4_regional_premium, region=region, is_premium=True
+        )
+        # ip6 regional standard
+        reserve_new_external_ip_address(
+            PROJECT, ip_6_regional, region=region, is_v6=True
+        )
+        # ip6 regional premium
+        reserve_new_external_ip_address(
+            PROJECT, ip_6_regional_premium, region=region, is_premium=True, is_v6=True
+        )
+
+        ips = list_ip_addresses(regional_client, PROJECT, region=region)
+        assert set(ips).issuperset(expected_ips)
+    finally:
+        # cleanup
+        for address in expected_ips:
+            delete_ip_address(regional_client, PROJECT, address, region=region)
