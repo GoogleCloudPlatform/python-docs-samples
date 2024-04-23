@@ -80,11 +80,29 @@ service account private key can impersonate that account!
 
 ### Self-signed JWT with IAM Credentials API
 
-1. Install the libraries listed in `requirements.txt`, e.g. by running:
+Ensure that you are in the correct working directory: (/python-docs-samples/iap):
+
+1. Install the libraries listed in `/python-docs-samples/iap/requirements.txt`, e.g. by running:
+
+```
+   virtualenv/bin/pip install -r requirements.txt
+```
+
+2. Call `sign_jwt` in the python file `sign_jwt("email@gmail.com", "https://example.com")` This example would create a JWT for the service account email@gmail.com to access the IAP protected application hosted at https://example.com.
+
+3. Use the result of the call to access your IAP protected resource programmatically: `curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"`
+
 
 ### Self-signed JWT with local key file
-1. Install the libraries listed in `requirements.txt`, e.g. by running:
+1. Install the libraries listed in `/python-docs-samples/iap/requirements.txt`, e.g. by running:
 
+```
+   virtualenv/bin/pip install -r requirements.txt
+```
+
+2. Call `sign_jwt_with_local_credentials_file`, sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
+
+3. Use the result of the call to access your IAP protected resource programmatically: `curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"`
 ## Running Tests
 
 1. Deploy `app_engine_app` to a project.
