@@ -49,8 +49,8 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
 
 def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> str:
   """Signs JWT payload using local service account credential key file"""
-  credential_key_file = open(credential_key_file_path)
-  key_data = json.load(credential_key_file)
+  with open(credential_key_file_path, 'r') as credential_key_file:
+      key_data = json.load(credential_key_file)
   
   # Data retrieved from credential key file
   PRIVATE_KEY_ID_FROM_JSON = key_data["private_key_id"]
