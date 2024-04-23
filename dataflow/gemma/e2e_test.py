@@ -28,12 +28,12 @@
 5. Run with `pytest` locally, you can use -k to run a specific test.
     pytest --verbose -s gemma
 """
-import conftest  # python-docs-samples/dataflow/conftest.py
-import pytest
-
 from collections.abc import Callable, Iterator
 
+import conftest  # python-docs-samples/dataflow/conftest.py
 from conftest import Utils
+
+import pytest
 
 DATAFLOW_MACHINE_TYPE = "g2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/gemma_2b"
