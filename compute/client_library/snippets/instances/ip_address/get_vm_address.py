@@ -21,6 +21,7 @@
 
 # [START compute_ip_address_get_vm_address]
 from enum import Enum
+from typing import List
 
 from google.cloud import compute_v1
 
@@ -50,34 +51,36 @@ class IPType(Enum):
     IP_V6 = "ipv6"
 
 
-def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> str:
+def get_instance_ip_address(
+    instance: compute_v1.Instance, ip_type: IPType
+) -> List[str]:
     """
-    Retrieves the specified type of IP address (internal or external) of a specified Compute Engine instance.
+    Retrieves the specified type of IP address (ipv6, internal or external) of a specified Compute Engine instance.
 
     Args:
         instance (compute_v1.Instance): instance to get
         ip_type (IPType): The type of IP address to retrieve (ipv6, internal or external).
 
     Returns:
-        str: The requested IP address of the instance.
+        List[str]: Requested type IP addresses of the instance.
     """
+    ips = []
+    if not instance.network_interfaces:
+        return ips
+    for interface in instance.network_interfaces:
+        if ip_type == IPType.EXTERNAL:
+            for config in interface.access_configs:
+                if config.type_ == "ONE_TO_ONE_NAT":
+                    ips.append(config.nat_i_p)
+        elif ip_type == IPType.IP_V6:
+            for ipv6_config in getattr(interface, "ipv6_access_configs", []):
+                if ipv6_config.type_ == "DIRECT_IPV6":
+                    ips.append(ipv6_config.external_ipv6)
 
-    if instance.network_interfaces:
-        for interface in instance.network_interfaces:
-            if ip_type == IPType.EXTERNAL:
-                for config in interface.access_configs:
-                    if config.type_ == "ONE_TO_ONE_NAT":
-                        return config.nat_i_p
-            elif ip_type == IPType.IP_V6:
-                for ipv6_config in getattr(interface, "ipv6_access_configs", []):
-                    if ipv6_config.type_ == "DIRECT_IPV6":
-                        return ipv6_config.external_ipv6
-
-            elif ip_type == IPType.INTERNAL:
-                # Internal IP is directly available in the network interface
-                return interface.network_i_p
-
-    return ""
+        elif ip_type == IPType.INTERNAL:
+            # Internal IP is directly available in the network interface
+            ips.append(interface.network_i_p)
+    return ips
 
 
 # [END compute_ip_address_get_vm_address]
