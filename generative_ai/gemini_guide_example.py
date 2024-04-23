@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_get_started]
-# TODO(developer): Vertex AI SDK - uncomment below & run
-# pip3 install --upgrade --user google-cloud-aiplatform
-# gcloud auth application-default login
-
-import vertexai
-from vertexai.generative_models import GenerativeModel, Part
-
 
 def generate_text(project_id: str, location: str) -> str:
+    # [START generativeaionvertexai_gemini_get_started]
+    # TODO(developer): Vertex AI SDK - uncomment below & run
+    # pip3 install --upgrade --user google-cloud-aiplatform
+    # gcloud auth application-default login
+
+    import vertexai
+    from vertexai.generative_models import GenerativeModel, Part
+
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
     # Load the model
-    multimodal_model = GenerativeModel("gemini-1.0-pro-vision")
+    multimodal_model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
     # Query the model
     response = multimodal_model.generate_content(
         [

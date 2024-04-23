@@ -12,18 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import vertexai
-
-# [START generativeaionvertexai_gemini_safety_settings]
-from vertexai import generative_models
-
 
 def generate_text(project_id: str, location: str, image: str) -> str:
+    # [START generativeaionvertexai_gemini_safety_settings]
+    import vertexai
+
+    from vertexai import generative_models
+
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = generative_models.GenerativeModel("gemini-1.0-pro-vision")
+    model = generative_models.GenerativeModel(model_name="gemini-1.0-pro-vision-001")
 
     # Generation config
     config = generative_models.GenerationConfig(
@@ -48,7 +48,5 @@ def generate_text(project_id: str, location: str, image: str) -> str:
     for response in responses:
         print(response.text)
         text_responses.append(response.text)
+    # [END generativeaionvertexai_gemini_safety_settings]
     return "".join(text_responses)
-
-
-# [END generativeaionvertexai_gemini_safety_settings]

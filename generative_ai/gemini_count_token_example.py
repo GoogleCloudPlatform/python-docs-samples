@@ -13,17 +13,17 @@
 # limitations under the License.
 
 
-# [START generativeaionvertexai_gemini_token_count]
-import vertexai
-from vertexai.generative_models import GenerativeModel
-
-
 def generate_text(project_id: str, location: str) -> str:
+    # [START generativeaionvertexai_gemini_token_count]
+    import vertexai
+
+    from vertexai.generative_models import GenerativeModel
+
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = GenerativeModel("gemini-1.0-pro")
+    model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
     # prompt tokens count
     print(model.count_tokens("why is sky blue?"))
@@ -33,7 +33,5 @@ def generate_text(project_id: str, location: str) -> str:
 
     # response tokens count
     print(response._raw_response.usage_metadata)
+    # [END generativeaionvertexai_gemini_token_count]
     return response.text
-
-
-# [END generativeaionvertexai_gemini_token_count]

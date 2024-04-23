@@ -305,7 +305,9 @@ def generate_content_with_rag(
         )
     )
 
-    rag_model = GenerativeModel("gemini-1.0-pro", tools=[rag_retrieval_tool])
+    rag_model = GenerativeModel(
+        model_name="gemini-1.0-pro-002", tools=[rag_retrieval_tool]
+    )
     response = rag_model.generate_content("Why is the sky blue?")
     print(response.text)
     # [END generativeaionvertexai_rag_generate_content]
@@ -364,7 +366,9 @@ def quickstart(
         )
     )
     # Create a gemini-pro model instance
-    rag_model = GenerativeModel("gemini-1.0-pro", tools=[rag_retrieval_tool])
+    rag_model = GenerativeModel(
+        model_name="gemini-1.0-pro-002", tools=[rag_retrieval_tool]
+    )
 
     # Generate response
     response = rag_model.generate_content("What is RAG and why it is helpful?")

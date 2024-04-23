@@ -12,19 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_pro_config_example]
-import base64
-
-import vertexai
-from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
-
 
 def generate_text(project_id: str, location: str) -> None:
+    # [START generativeaionvertexai_gemini_pro_config_example]
+    import base64
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
+
     # Initialize Vertex AI
     vertexai.init(project=project_id, location=location)
 
     # Load the model
-    model = GenerativeModel("gemini-1.0-pro-vision")
+    model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
 
     # Load example image from local storage
     encoded_image = base64.b64encode(open("scones.jpg", "rb").read()).decode("utf-8")
@@ -42,7 +42,6 @@ def generate_text(project_id: str, location: str) -> None:
         [image_content, "what is this image?"], generation_config=config
     )
     print(response.text)
+    # [END generativeaionvertexai_gemini_pro_config_example]
+
     return response.text
-
-
-# [END generativeaionvertexai_gemini_pro_config_example]

@@ -15,8 +15,8 @@
 
 def analyze_pdf(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_pdf]
-
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
     # TODO(developer): Update and un-comment below lines
@@ -24,7 +24,7 @@ def analyze_pdf(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     prompt = """
     Your are a very professional document summarization specialist.
@@ -37,6 +37,6 @@ def analyze_pdf(project_id: str) -> str:
 
     response = model.generate_content(contents)
     print(response.text)
-
     # [END generativeaionvertexai_gemini_pdf]
+
     return response.text

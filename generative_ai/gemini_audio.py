@@ -24,7 +24,7 @@ def summarize_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     prompt = """
     Please provide a summary for the audio.
@@ -55,7 +55,7 @@ def transcript_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     prompt = """
     Can you transcribe this interview, in the format of timecode, speaker, caption.
