@@ -12,11 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import json
-import jwt
-import time
-
 import google.auth
+import jwt
+import json
+import datetime
+
 import jwt
 import json
 import datetime
@@ -34,6 +34,7 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
     A signed-jwt that can be used to access IAP protected applications.
     Sample: curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
   """
+  iat = datetime.datetime.now(tz=datetime.timezone.utc)
   iat = datetime.datetime.now(tz=datetime.timezone.utc)
   exp = iat + 3600
   return json.dumps({
@@ -54,7 +55,7 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
     A signed-jwt that can be used to access IAP protected apps.
   """
   # Uses Application Default Credentials
-  source_credentials, project_id = google.auth.default()
+  source_credentials, _ = google.auth.default()
   # use the IAM api and the users credentials to sign the JWT
   iam_client = iam_credentials_v1.IAMCredentialsClient(credentials=source_credentials)
   return iam_client.sign_jwt(
@@ -65,7 +66,7 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
 def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> str:
   """Signs JWT payload using local service account credential key file
   Args:
-    credential_key_file_path (str): Path to the credentials of the service account the JWT is being created for
+    credential_key_file_path (str): Path to the downloaded JSON credentials of the service account the JWT is being created for.
     resource_url (str): Scope of JWT token, This is the url of the IAP protected application.
   Returns:
     A self-signed JWT created with a downloaded private key.
@@ -78,8 +79,10 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
   SERVICE_ACCOUNT_EMAIL=key_data["client_email"]
   
   # Sign JWT with private key and store key id in the header
+  # Sign JWT with private key and store key id in the header
   additional_headers = {'kid': PRIVATE_KEY_ID_FROM_JSON}
   payload = generate_jwt_payload(service_account_email=SERVICE_ACCOUNT_EMAIL, resource_url=resource_url)
+
 
   signed_jwt = jwt.encode(
       payload,
@@ -88,3 +91,6 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
       algorithm='RS256',
   )
   return signed_jwt
+
+# sign_jwt("test_email", "resource-url")
+# sign_jwt_with_key_file("/path/to/local/key/file.json", "resource-url")
