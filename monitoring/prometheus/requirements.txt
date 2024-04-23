@@ -3,6 +3,6 @@ google-api-core==2.17.1
 google-auth==2.19.1
 googleapis-common-protos==1.59.1
 prometheus-client==0.17.0
-prometheus-flask-exporter==0.22.4
+prometheus-flask-exporter==0.23.0
 requests==2.31.0
 Werkzeug==3.0.1
