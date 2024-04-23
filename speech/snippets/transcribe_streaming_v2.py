@@ -24,7 +24,6 @@ def transcribe_streaming_v2(
     project_id: str,
     audio_file: str,
 ) -> cloud_speech_types.StreamingRecognizeResponse:
-
     """Transcribes audio from audio file stream.
 
     Args:
