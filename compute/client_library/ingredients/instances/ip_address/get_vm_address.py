@@ -25,7 +25,9 @@ class IPType(Enum):
     IP_V6 = "ipv6"
 
 
-def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> List[str]:
+def get_instance_ip_address(
+    instance: compute_v1.Instance, ip_type: IPType
+) -> List[str]:
     """
     Retrieves the specified type of IP address (ipv6, internal or external) of a specified Compute Engine instance.
 
@@ -53,4 +55,6 @@ def get_instance_ip_address(instance: compute_v1.Instance, ip_type: IPType) -> L
             # Internal IP is directly available in the network interface
             ips.append(interface.network_i_p)
     return ips
+
+
 # </INGREDIENT>
