@@ -15,8 +15,7 @@
 import re
 
 import google.auth
-from google.cloud.iam_admin_v1 import (GetRoleRequest, IAMClient,
-                                       ListRolesRequest, Role)
+from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, ListRolesRequest, Role
 import pytest
 
 from snippets.delete_role import delete_role, undelete_role
