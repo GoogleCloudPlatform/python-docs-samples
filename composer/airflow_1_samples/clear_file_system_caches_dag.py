@@ -18,7 +18,7 @@ import os
 
 import airflow
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.operators.bash_operator import BashOperator
 
 dag = DAG(
     "clear_file_system_caches_dag",
