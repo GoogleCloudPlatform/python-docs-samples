@@ -12,11 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import google.auth
-import time
-import jwt
 import json
+import jwt
+import time
 
+import google.auth
 from google.cloud import iam_credentials_v1
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
