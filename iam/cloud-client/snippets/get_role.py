@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.api_core.exceptions import NotFound
 # [START iam_get_role]
+from google.api_core.exceptions import NotFound
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, Role
 
 

@@ -67,7 +67,7 @@ def iam_role(capsys: "pytest.CaptureFixture[str]") -> str:
     role_id = f"{role_prefix}_{uuid.uuid4().hex[:10]}"
     permissions = ["iam.roles.get", "iam.roles.list"]
     title = "test_role_title"
-    # Delete any iam roles. Otherwise, it might throw quota issue.
+    # Delete any iam roles with `role_prefix` prefix. Otherwise, it might throw quota issue.
     delete_iam_roles_by_prefix(PROJECT, role_prefix)
     created = False
     try:
