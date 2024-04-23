@@ -13,15 +13,36 @@
 # limitations under the License.
 
 from copy import deepcopy
+import re
 from typing import Dict, List, Union
+import uuid
 
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
+from snippets.create_service_account import create_service_account
+from snippets.delete_service_account import delete_service_account
 from snippets.get_policy import get_policy
+from snippets.modify_policy_add_member import modify_policy_add_member
 from snippets.set_policy import set_policy
 
 PROJECT = google.auth.default()[1]
+
+
+@pytest.fixture
+def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
+    name = f"test-{uuid.uuid4().hex[:25]}"
+    created = False
+    try:
+        create_service_account(PROJECT, name)
+        created = True
+        email = f"{name}@{PROJECT}.iam.gserviceaccount.com"
+        yield email
+    finally:
+        if created:
+            delete_service_account(PROJECT, email)
+            out, _ = capsys.readouterr()
+            assert re.search(f"Deleted a service account: {email}", out)
 
 
 @pytest.fixture
@@ -63,3 +84,26 @@ def test_set_policy(project_bindings: List[Dict[str, Union[str, List[str]]]]) ->
             binding_found = test_binding["members"][0] in bind.members
             break
     assert binding_found
+
+
+def test_modify_policy_add_member(project_bindings: List[Dict[str, Union[str, List[str]]]], service_account: str) -> None:
+    role = "roles/viewer"
+    test_binding = {"role": role, "members": [f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com"]}
+    project_bindings.append(test_binding)
+    policy = set_policy(PROJECT, project_bindings)
+    binding_found = False
+    for bind in policy.bindings:
+        if bind.role == test_binding["role"]:
+            binding_found = test_binding["members"][0] in bind.members
+            break
+    assert binding_found
+
+    member = f"serviceAccount:{service_account}"
+    policy = modify_policy_add_member(PROJECT, project_bindings, role, member)
+
+    binding_modified = False
+    for bind in policy.bindings:
+        if bind.role == test_binding["role"]:
+            binding_modified = member in bind.members
+            break
+    assert binding_modified

@@ -12,35 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This file contains code samples that demonstrate how to set policy for project.
+# This file contains code samples that demonstrate how modify policy for project.
 
-# [START iam_set_policy]
+# [START iam_modify_policy_add_member]
 from typing import Dict, List, Union
 
 from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_policy(
-    project_id: str, bindings: List[Dict[str, Union[str, List[str]]]]
+def modify_policy_add_member(
+    project_id: str, bindings: List[Dict[str, Union[str, List[str]]]], role: str, member: str
 ) -> policy_pb2.Policy:
     """
-    Set policy for project. Pay attention that previous state will be completely rewritten.
-    If you want to update only part of the policy leverage update_policy snippet.
-    For more details about policies check out https://cloud.google.com/iam/docs/policies
+    Add user to existing policy binding.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    bindings: List of bindings, which contains all policies for the project.
+    bindings: Policy attached to the project, which have to be modified.
+    role: role to which member need to be added.
+    member: The principals requesting access.
 
-    Bindings example:
-    [
-        {
-            "role": "roles/viewer",
-            "members": [
-                "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
-            ],
-        },
-    ]
+    Possible format for member:
+        * user:{emailid}
+        * serviceAccount:{emailid}
+        * group:{emailid}
+        * deleted:user:{emailid}?uid={uniqueid}
+        * deleted:serviceAccount:{emailid}?uid={uniqueid}
+        * deleted:group:{emailid}?uid={uniqueid}
+        * domain:{domain}
     """
 
     client = resourcemanager_v3.ProjectsClient()
@@ -51,6 +50,10 @@ def set_policy(
     for bind in bindings:
         binding = policy_pb2.Binding()
         binding.role = bind["role"]
+
+        if bind["role"] == role:
+            bind["members"].append(member)
+
         binding.members.extend(bind["members"])
         set_bindings.append(binding)
 
@@ -58,8 +61,7 @@ def set_policy(
     policy = client.set_iam_policy(request)
     return policy
 
-
-# [END iam_set_policy]
+# [END iam_modify_policy_add_member]
 
 
 if __name__ == "__main__":
@@ -68,15 +70,15 @@ if __name__ == "__main__":
 
     # Your Google Cloud project ID.
     project_id = "test-project-id"
-    # project_id = "gcp103148-cloudaccount"
     bindings = [
         {
             "role": "roles/viewer",
             "members": [
                 "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
             ],
-            "condition": {},
         },
     ]
+    role = "roles/viewer"
+    member = "allAuthenticatedUsers"
 
-    set_policy(project_id, bindings)
+    modify_policy_add_member(project_id, bindings, role, member)

@@ -31,7 +31,6 @@ def get_policy(project_id: str) -> policy_pb2.Policy:
     request.resource = f"projects/{project_id}"
 
     policy = client.get_iam_policy(request)
-    print(policy)
     return policy
 
 # [END iam_get_policy]
