@@ -123,7 +123,10 @@ def secret_id(
 
 @pytest.fixture()
 def secret(
-    client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str, ttl: Optional[str]
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    ttl: Optional[str],
 ) -> Iterator[Tuple[str, str, str]]:
     print(f"creating secret {secret_id}")
 
@@ -193,14 +196,20 @@ def test_add_secret_version(secret: Tuple[str, str, str]) -> None:
 
 
 def test_create_secret(
-    client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str, ttl: Optional[str]
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    ttl: Optional[str],
 ) -> None:
     secret = create_secret(project_id, secret_id, ttl)
     assert secret_id in secret.name
 
 
 def test_create_secret_with_user_managed_replication(
-    client: secretmanager.SecretManagerServiceClient, project_id: str, secret_id: str, ttl: Optional[str]
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    ttl: Optional[str],
 ) -> None:
     locations = ["us-east1", "us-east4", "us-west1"]
     secret = create_ummr_secret(project_id, secret_id, locations, ttl)

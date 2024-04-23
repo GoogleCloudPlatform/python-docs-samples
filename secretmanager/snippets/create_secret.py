@@ -23,7 +23,9 @@ from google.cloud import secretmanager
 
 
 # [START secretmanager_create_secret]
-def create_secret(project_id: str, secret_id: str, ttl: Optional[str] = None) -> secretmanager.Secret:
+def create_secret(
+    project_id: str, secret_id: str, ttl: Optional[str] = None
+) -> secretmanager.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual

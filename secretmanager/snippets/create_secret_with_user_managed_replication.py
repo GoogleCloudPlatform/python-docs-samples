@@ -24,7 +24,10 @@ from google.cloud import secretmanager
 
 
 def create_ummr_secret(
-    project_id: str, secret_id: str, locations: typing.List[str], ttl: typing.Optional[str] = None
+    project_id: str,
+    secret_id: str,
+    locations: typing.List[str],
+    ttl: typing.Optional[str] = None,
 ) -> secretmanager.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
