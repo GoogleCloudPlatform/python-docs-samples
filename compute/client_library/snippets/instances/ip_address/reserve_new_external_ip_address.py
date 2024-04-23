@@ -54,7 +54,7 @@ def reserve_new_external_ip_address(
     address = Address(
         name=address_name,
         address_type="EXTERNAL",
-        network_tier=network_tier,  # Can be PREMIUM or STANDARD, depending on your needs
+        network_tier=network_tier,
     )
     if not region:  # global IP address
         client = GlobalAddressesClient()
