@@ -47,7 +47,7 @@ def create_secret(
         new_secret = create_secret("my-project", "my-new-secret")
 
         # Create a secret with a TTL of 30 days
-        new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "P30D")
+        new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "7776000s")
     """
 
     # Import the Secret Manager client library.

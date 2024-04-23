@@ -52,7 +52,7 @@ def create_ummr_secret(
         new_secret = create_ummr_secret("my-project", "my-new-secret", ["us-east1", "europe-west1"])
 
         # Create a secret with a TTL of 30 days and user-managed replication across three locations
-        new_secret_with_ttl = create_ummr_secret("my-project", "my-timed-secret", ["us-east1", "us-west1", "asia-east1"], "P30D")
+        new_secret_with_ttl = create_ummr_secret("my-project", "my-timed-secret", ["us-east1", "us-west1"], "7776000s")
 
     Note:
         This function requires that the `secretmanager` API is enabled on the cloud project and that the caller has the
