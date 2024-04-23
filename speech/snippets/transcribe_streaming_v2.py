@@ -58,7 +58,7 @@ def transcribe_streaming_v2(
     streaming_config = cloud_speech_types.StreamingRecognitionConfig(
         config=recognition_config
     )
-    config_request = StreamingRecognizeRequest(
+    config_request = cloud_speech_types.StreamingRecognizeRequest(
         recognizer=f"projects/{project_id}/locations/global/recognizers/_",
         streaming_config=streaming_config,
     )
