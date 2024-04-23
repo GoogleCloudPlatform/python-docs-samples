@@ -1,4 +1,4 @@
-cryptography==42.0.4
+cryptography==42.0.5
 Flask==3.0.0
 google-auth==2.19.1
 gunicorn==22.0.0
