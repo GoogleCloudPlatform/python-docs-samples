@@ -13,7 +13,7 @@ Example:
 
 ```python
 def create_hello_world_file(filename):
-    # [START hello_world_file_creation]
+    # <region tag: starts here>
     import os
     
     # TODO(developer): Update and uncomment below code
@@ -24,10 +24,10 @@ def create_hello_world_file(filename):
     
     with open(filename) as fp:
         fp.write('Hello world!')
-    # [END hello_world_file_creation]
+    # <region tag: ends here>
 ```
 
-In Google Cloud documentation page, code sample for region tag `hello_world_file_creation` is shown as below
+In Google Cloud documentation page, code sample is shown as below
 
 ```python
 import os
