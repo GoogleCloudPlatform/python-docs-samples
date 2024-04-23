@@ -24,7 +24,7 @@ def analyze_video_with_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     prompt = """
     Provide a description of the video.
