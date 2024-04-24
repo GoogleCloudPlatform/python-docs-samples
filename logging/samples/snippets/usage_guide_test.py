@@ -88,3 +88,9 @@ def test_client_list_entries():
 
     for item in to_delete:
         usage_guide._backoff_not_found(item.delete)
+
+
+def test_dict_config():
+    client = Client()
+
+    usage_guide.logging_dict_config(client)
