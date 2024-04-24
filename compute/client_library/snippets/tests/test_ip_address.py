@@ -118,13 +118,16 @@ def delete_ip_address(
         address_name (str): ip address name to delete
         region (Optional[str]): region of ip address. Marker to choose between clients (GlobalAddressesClient when None)
     """
-    if region:
-        operation = client.delete(
-            project=project_id, region=region, address=address_name
-        )
-    else:
-        operation = client.delete(project=project_id, address=address_name)
-    operation.result()
+    try:
+        if region:
+            operation = client.delete(
+                project=project_id, region=region, address=address_name
+            )
+        else:
+            operation = client.delete(project=project_id, address=address_name)
+        operation.result()
+    except Exception as e:
+        print(f"Error deleting ip address: {e}")  # suppress potential errors during deletions
 
 
 def list_ip_addresses(
