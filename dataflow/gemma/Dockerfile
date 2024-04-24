@@ -30,7 +30,7 @@ RUN pip install --upgrade --no-cache-dir pip \
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.
-COPY model gemma_2B
+COPY gemma_2b gemma_2B
 COPY custom_model_gemma.py custom_model_gemma.py
 
 ENV KERAS_BACKEND="tensorflow"
