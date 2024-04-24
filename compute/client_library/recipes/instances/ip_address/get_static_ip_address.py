@@ -19,6 +19,8 @@
 
 # <INGREDIENT get_static_ip_address />
 
+# </REGION compute_ip_address_get_static_address>
+
 if __name__ == "__main__":
     import google.auth
 
@@ -27,5 +29,3 @@ if __name__ == "__main__":
     address_name = "my-new-external-ip1"
 
     result = get_static_ip_address(PROJECT, address_name, region)
-
-# </REGION compute_ip_address_get_static_address>
