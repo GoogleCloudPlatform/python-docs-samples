@@ -108,7 +108,7 @@ def dataflow_job(
         f"--temp_location=gs://{bucket_name}/temp",
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
-        f"--sdk_container_image={container_image}"
+        f"--sdk_container_image={container_image}",
         "--requirements_file=requirements.txt",
     )
 
