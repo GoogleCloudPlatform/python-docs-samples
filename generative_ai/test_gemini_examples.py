@@ -86,28 +86,11 @@ def test_gemini_count_token_example() -> None:
     assert "sky" in text
 
 
-@pytest.mark.skip("Skip the test until it gets stable.")
 def test_gemini_safety_config_example() -> None:
-    import http
-    import typing
-    import urllib
+    from vertexai.preview.generative_models import Part
 
-    from vertexai.preview.generative_models import Image
-
-    def load_image_from_url(image_url: str) -> str:
-        with urllib.request.urlopen(image_url) as response:
-            response = typing.cast(http.client.HTTPResponse, response)
-            image_bytes = response.read()
-        return Image.from_bytes(image_bytes)
-
-    # import base64
-
-    # base64_image_data = base64.b64encode(
-    #     open('scones.jpg', 'rb').read()).decode("utf-8")
-    # image = generative_models.Part.from_data(
-    #     data=base64.b64decode(base64_image_data), mime_type="image/png")
-    image = load_image_from_url(
-        "https://storage.googleapis.com/generativeai-downloads/images/scones.jpg"
+    image = Part.from_uri(
+        "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
     )
 
     vertexai.init(project=PROJECT_ID, location=LOCATION)
