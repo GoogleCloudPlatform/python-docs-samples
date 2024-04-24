@@ -26,6 +26,7 @@ from snippets.get_policy import get_policy
 from snippets.modify_policy_add_member import modify_policy_add_member
 from snippets.modify_policy_remove_member import modify_policy_remove_member
 from snippets.set_policy import set_policy
+from snippets.query_testable_permissions import query_testable_permissions
 
 PROJECT = google.auth.default()[1]
 
@@ -137,3 +138,14 @@ def test_modify_policy_remove_member(project_bindings: List[Dict[str, Union[str,
             member_removed = member not in bind["members"]
             break
     assert member_removed
+
+
+def test_query_testable_permissions():
+    permissions = [
+        "resourcemanager.projects.get",
+        "resourcemanager.projects.delete",
+    ]
+    query_permissions = query_testable_permissions(PROJECT, permissions)
+
+    assert permissions[0] in query_permissions
+    assert permissions[1] not in query_permissions
