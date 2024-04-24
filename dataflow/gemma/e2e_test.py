@@ -109,6 +109,7 @@ def dataflow_job(
         f"--region={location}",
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
         f"--sdk_container_image=gcr.io/{project}/{container_image}",
+        "--dataflow_service_options=worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
         "--requirements_file=requirements.txt",
     )
 
