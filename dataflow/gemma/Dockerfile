@@ -23,14 +23,13 @@ RUN apt-get update -y && apt-get install -y \
     cmake
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade --no-cache-dir pip \
-    && pip install --no-cache-dir -r requirements.txt 
+RUN pip install --upgrade --no-cache-dir pip \    && pip install --no-cache-dir -r requirements.txt 
 
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.
-COPY gemma_2B gemma_2B
+COPY model gemma_2B
 COPY custom_model_gemma.py custom_model_gemma.py
 
 ENV KERAS_BACKEND="tensorflow"

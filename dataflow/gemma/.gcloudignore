@@ -1,0 +1,6 @@
+# Ignore everything except the source files.
+**/*
+!Dockerfile
+!requirements.txt
+!custom_model_gemma.py
+!gemma_2b/**

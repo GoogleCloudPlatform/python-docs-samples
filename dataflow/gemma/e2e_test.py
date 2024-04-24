@@ -50,9 +50,6 @@ def test_name() -> str:
 def container_image(utils: Utils) -> str:
     # Copy Gemma onto the local environment
     conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
-    # Ensure that Gemma files are sent to Cloud Build
-    conftest.run_cmd("gcloud", "config", "set", "gcloudignore/enabled",
-                     "false")
     yield from utils.cloud_build_submit(NAME)
 
 
