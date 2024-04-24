@@ -38,6 +38,8 @@ def get_static_ip_address(
     address_name (str): The name of the IP address.
     region (Optional[str]): The region of the IP address if it's regional. None if it's global.
 
+    Raises: google.api_core.exceptions.NotFound: in case of address not found
+
     Returns:
     Address: The Address object containing details about the requested IP.
     """
@@ -52,5 +54,14 @@ def get_static_ip_address(
 
     return address
 
+
+if __name__ == "__main__":
+    import google.auth
+
+    PROJECT = google.auth.default()[1]
+    region = "us-central1"
+    address_name = "my-new-external-ip1"
+
+    result = get_static_ip_address(PROJECT, address_name, region)
 
 # [END compute_ip_address_get_static_address]

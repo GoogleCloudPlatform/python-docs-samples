@@ -19,4 +19,13 @@
 
 # <INGREDIENT get_static_ip_address />
 
+if __name__ == "__main__":
+    import google.auth
+
+    PROJECT = google.auth.default()[1]
+    region = "us-central1"
+    address_name = "my-new-external-ip1"
+
+    result = get_static_ip_address(PROJECT, address_name, region)
+
 # </REGION compute_ip_address_get_static_address>
