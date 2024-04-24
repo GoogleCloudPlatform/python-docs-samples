@@ -49,5 +49,3 @@ def get_static_ip_address(
 
 
 # </INGREDIENT>
-
-
