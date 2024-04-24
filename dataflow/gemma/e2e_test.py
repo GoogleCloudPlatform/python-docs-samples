@@ -19,14 +19,25 @@
 2. To use an existing bucket, set it without the 'gs://' prefix.
     export GOOGLE_CLOUD_BUCKET="my-bucket-name"
 
-3. Change directory to where the conftest.py is located.
-    cd dataflow
+3. Change directory to the sample location.
+    cd dataflow/gemma
 
-4. Install sample and test requirements.
-    pip install -r gemma/requirements.txt -r gemma/requirements-test.txt && pip check
+4. Set the PYTHONPATH to where the conftest is located.
+    export PYTHONPATH=..
 
-5. Run with `pytest` locally, you can use -k to run a specific test.
-    pytest --verbose -s gemma
+OPTION A: Run tests with pytest, you can use -k to run specific tests
+    python -m venv env
+    source env/bin/activate
+    pip install -r requirements.txt -r requirements-test.txt
+    pip check
+    python -m pytest --verbose -s
+
+OPTION B: Run tests with nox
+    pip install nox
+    nox -s py-3.10
+
+NOTE: For the tests to find the conftest in the testing infrastructure,
+      add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
 from collections.abc import Callable, Iterator
 

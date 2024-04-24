@@ -23,7 +23,8 @@ RUN apt-get update -y && apt-get install -y \
     cmake
 
 COPY requirements.txt requirements.txt
-RUN pip install --upgrade --no-cache-dir pip \    && pip install --no-cache-dir -r requirements.txt 
+RUN pip install --upgrade --no-cache-dir pip \
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy files from official SDK image, including script/dependencies.
 COPY --from=apache/beam_python3.11_sdk:2.54.0 /opt/apache/beam /opt/apache/beam
