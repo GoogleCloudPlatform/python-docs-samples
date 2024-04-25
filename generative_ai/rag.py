@@ -93,6 +93,7 @@ def upload_file(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # path = "path/to/local/file.txt"
     # display_name = "file_display_name"
     # description = "file description"
 
