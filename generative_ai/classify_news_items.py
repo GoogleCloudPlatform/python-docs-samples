@@ -13,21 +13,22 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_classify_news_items]
-from vertexai.language_models import TextGenerationModel
 
 
-def classify_news_items(temperature: float = 0.2) -> None:
+def classify_news_items() -> str:
     """Text Classification Example with a Large Language Model"""
-
-    # TODO developer - override these parameters as needed:
-    parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
-        "max_output_tokens": 5,  # Token limit determines the maximum amount of text output.
-        "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
-        "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
-    }
+    # [START generativeaionvertexai_classification]
+    from vertexai.language_models import TextGenerationModel
 
     model = TextGenerationModel.from_pretrained("text-bison@002")
+
+    parameters = {
+        "temperature": 0.2,
+        "max_output_tokens": 5,
+        "top_p": 0,
+        "top_k": 1,
+    }
+
     response = model.predict(
         """What is the topic for a given news headline?
 - business
@@ -57,11 +58,10 @@ The answer is:
         **parameters,
     )
 
-    print(f"Response from Model: {response.text}")
+    print(response.text)
+    # [START generativeaionvertexai_classification]
 
-    return response
+    return response.text
 
 
 # [END aiplatform_sdk_classify_news_items]
-if __name__ == "__main__":
-    classify_news_items()
