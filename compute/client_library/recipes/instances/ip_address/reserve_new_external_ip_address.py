@@ -31,7 +31,10 @@ if __name__ == "__main__":
     reserve_new_external_ip_address(PROJECT, address_name + "ip4-global")
     # ip4 regional premium
     reserve_new_external_ip_address(
-        PROJECT, address_name + "ip4-regional-premium", region=region, is_premium=True,
+        PROJECT,
+        address_name + "ip4-regional-premium",
+        region=region,
+        is_premium=True,
     )
     # ip4 regional
     reserve_new_external_ip_address(
@@ -43,4 +46,3 @@ if __name__ == "__main__":
     reserve_new_external_ip_address(
         PROJECT, address_name + "ip6-regional", is_v6=True, region=region
     )
-

@@ -127,7 +127,9 @@ def delete_ip_address(
             operation = client.delete(project=project_id, address=address_name)
         operation.result()
     except Exception as e:
-        print(f"Error deleting ip address: {e}")  # suppress potential errors during deletions
+        print(
+            f"Error deleting ip address: {e}"
+        )  # suppress potential errors during deletions
 
 
 def list_ip_addresses(

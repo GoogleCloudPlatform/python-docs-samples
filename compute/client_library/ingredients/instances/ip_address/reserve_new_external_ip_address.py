@@ -66,5 +66,3 @@ def reserve_new_external_ip_address(
 
 
 # </INGREDIENT>
-
-
