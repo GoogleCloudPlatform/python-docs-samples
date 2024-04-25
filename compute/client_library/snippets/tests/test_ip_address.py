@@ -29,6 +29,7 @@ from ..instances.delete import delete_instance
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
+from ..instances.ip_address.release_external_ip_address import release_external_ip_address
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
 )
@@ -86,11 +87,7 @@ def static_ip(request):
     yield address
 
     # Cleanup
-    if region:
-        operation = client.delete(project=PROJECT, region=region, address=address_name)
-    else:
-        operation = client.delete(project=PROJECT, address=address_name)
-    operation.result()
+    delete_ip_address(client, PROJECT, address_name, region)
 
 
 @pytest.mark.parametrize(
@@ -256,3 +253,16 @@ def test_reserve_new_external_ip_address_regional():
         # cleanup
         for address in expected_ips:
             delete_ip_address(regional_client, PROJECT, address, region=region)
+
+
+@pytest.mark.parametrize(
+    "static_ip", [{"region": None}, {"region": "us-central1"}], indirect=True
+)
+def test_release_static_ip(static_ip: Address):
+    client = GlobalAddressesClient() if not static_ip.region else AddressesClient()
+    region = static_ip.region.split("/")[-1] if static_ip.region else None
+    release_external_ip_address(
+        project_id=PROJECT, address_name=static_ip.name, region=region
+    )
+    ips = list_ip_addresses(client, PROJECT, region=region)
+    assert static_ip.name not in ips
