@@ -28,6 +28,7 @@ from ..instances.create_start_instance.create_from_public_image import (
 from ..instances.delete import delete_instance
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
+from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
 )
@@ -102,6 +103,19 @@ def test_get_static_ip(static_ip: Address):
     )
     assert static_ip.region in actual_address.region
     assert static_ip.name == actual_address.name
+
+
+@pytest.mark.parametrize(
+    "static_ip", [{"region": None}, {"region": "us-central1"}], indirect=True
+)
+def test_list_static_ip(static_ip: Address):
+    region = static_ip.region.split("/")[-1] if static_ip.region else None
+    actual_addresses = list_static_ip_addresses(project_id=PROJECT, region=region)
+    assert static_ip.name in [address.name for address in actual_addresses]
+    if region:
+        actual_regions = [address.region.split("/")[-1] for address in actual_addresses]
+        assert static_ip.region in actual_regions
+        assert len(set(actual_regions)) == 1
 
 
 def delete_ip_address(
