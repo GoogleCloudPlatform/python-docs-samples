@@ -59,7 +59,7 @@ The answer is:
     )
 
     print(response.text)
-    # [START generativeaionvertexai_classification]
+    # [END generativeaionvertexai_classification]
 
     return response.text
 
