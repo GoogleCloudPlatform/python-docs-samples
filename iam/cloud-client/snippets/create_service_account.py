@@ -21,7 +21,9 @@ from google.cloud import iam_admin_v1
 from google.cloud.iam_admin_v1 import types
 
 
-def create_service_account(project_id: str, account_id: str, display_name: Optional[str] = None) -> types.ServiceAccount:
+def create_service_account(
+    project_id: str, account_id: str, display_name: Optional[str] = None
+) -> types.ServiceAccount:
     """
     Creates a service account.
 
@@ -44,6 +46,7 @@ def create_service_account(project_id: str, account_id: str, display_name: Optio
 
     print(f"Created a service account: {account.email}")
     return account
+
 
 # [END iam_create_service_account]
 

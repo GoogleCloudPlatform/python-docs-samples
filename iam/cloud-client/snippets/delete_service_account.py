@@ -34,6 +34,7 @@ def delete_service_account(project_id: str, account: str) -> None:
     iam_admin_client.delete_service_account(request=request)
     print(f"Deleted a service account: {account}")
 
+
 # [END iam_delete_service_account]
 
 

@@ -36,6 +36,7 @@ def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
     accounts = iam_admin_client.list_service_accounts(request=request)
     return accounts.accounts
 
+
 # [END iam_list_service_accounts]
 
 

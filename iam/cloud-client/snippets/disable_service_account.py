@@ -45,6 +45,7 @@ def disable_service_account(project_id: str, account: str) -> types.ServiceAccou
         print(f"Disabled service account: {account}")
     return service_account
 
+
 # [END iam_disable_service_account]
 
 

@@ -45,6 +45,7 @@ def enable_service_account(project_id: str, account: str) -> types.ServiceAccoun
         print(f"Enabled service account: {account}")
     return service_account
 
+
 # [END iam_enable_service_account]
 
 
