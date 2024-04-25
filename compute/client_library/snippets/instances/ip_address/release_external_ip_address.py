@@ -78,7 +78,7 @@ def release_external_ip_address(
     region: Optional[str] = None,
 ) -> None:
     """
-    Releases a static external IP address that is currently being used by a VM instance.
+    Releases a static external IP address that is currently reserved.
     This action requires that the address is not being used by any forwarding rule.
 
     Args:
