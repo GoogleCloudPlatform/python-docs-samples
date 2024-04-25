@@ -16,14 +16,13 @@
 """Dialogflow API Python sample showing how to manage Participants.
 """
 
-import google.auth
-from google.cloud import dialogflow_v2beta1 as dialogflow
-
 ROLES = ["HUMAN_AGENT", "AUTOMATED_AGENT", "END_USER"]
 
 
 # [START dialogflow_create_participant]
 def create_participant(project_id: str, conversation_id: str, role: str):
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     """Creates a participant in a given conversation.
 
     Args:
@@ -53,6 +52,8 @@ def create_participant(project_id: str, conversation_id: str, role: str):
 def analyze_content_text(
     project_id: str, conversation_id: str, participant_id: str, text: str
 ):
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     """Analyze text message content from a participant.
 
     Args:
@@ -118,6 +119,9 @@ def analyze_content_text(
 def analyze_content_audio(
     conversation_id: str, participant_id: str, audio_file_path: str
 ):
+    import google.auth
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     """Analyze audio content for END_USER with audio files.
 
     Args:
@@ -193,6 +197,9 @@ def analyze_content_audio_stream(
     language_code: str,
     single_utterance=False,
 ):
+    import google.auth
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
     """Stream audio streams to Dialogflow and receive transcripts and
     suggestions.
 
