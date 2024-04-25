@@ -29,7 +29,9 @@ from ..instances.delete import delete_instance
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
-from ..instances.ip_address.release_external_ip_address import release_external_ip_address
+from ..instances.ip_address.release_external_ip_address import (
+    release_external_ip_address,
+)
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
 )

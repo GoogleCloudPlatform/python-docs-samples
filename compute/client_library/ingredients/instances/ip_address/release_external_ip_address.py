@@ -20,9 +20,9 @@ from google.cloud.compute_v1.services.global_addresses import GlobalAddressesCli
 
 # <INGREDIENT release_external_ip_address>
 def release_external_ip_address(
-        project_id: str,
-        address_name: str,
-        region: Optional[str] = None,
+    project_id: str,
+    address_name: str,
+    region: Optional[str] = None,
 ) -> None:
     """
     Releases a static external IP address that is currently reserved.
@@ -40,8 +40,12 @@ def release_external_ip_address(
         operation = client.delete(project=project_id, address=address_name)
     else:  # regional IP address
         client = AddressesClient()
-        operation = client.delete(project=project_id, region=region, address=address_name)
+        operation = client.delete(
+            project=project_id, region=region, address=address_name
+        )
 
     operation.result()
     print(f"External IP address '{address_name}' released successfully.")
+
+
 # </INGREDIENT>
