@@ -13,16 +13,16 @@
 # limitations under the License.
 
 # [START iam_modify_policy_remove_member]
-from typing import Dict, List, Union
+from google.iam.v1 import policy_pb2
+from snippets.get_policy import get_policy
+from snippets.set_policy import set_policy
 
 
-def modify_policy_remove_member(
-    bindings: List[Dict[str, Union[str, List[str]]]], role: str, member: str
-) -> List[Dict[str, Union[str, List[str]]]]:
+def modify_policy_remove_member(project_id: str, role: str, member: str) -> policy_pb2.Policy:
     """
-    Remove user from policy binding.
+    Remove a member from certain role in project policy.
 
-    bindings: Policy attached to the project, which have to be modified.
+    project_id: ID or number of the Google Cloud project you want to use.
     role: role to which member need to be added.
     member: The principals requesting access.
 
@@ -35,26 +35,26 @@ def modify_policy_remove_member(
         * deleted:group:{emailid}?uid={uniqueid}
         * domain:{domain}
     """
-    for bind in bindings:
-        if bind["role"] == role:
-            if member in bind["members"]:
-                bind["members"].remove(member)
+    policy = get_policy(project_id)
 
-    return bindings
+    for bind in policy.bindings:
+        if bind.role == role:
+            if member in bind.members:
+                bind.members.remove(member)
+            break
+
+    return set_policy(project_id, policy)
 
 # [END iam_modify_policy_remove_member]
 
 
 if __name__ == "__main__":
-    role = "roles/viewer"
-    bindings = [
-        {
-            "role": role,
-            "members": [
-                "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
-            ],
-        },
-    ]
-    member = "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com"
+    # To run the sample you would need
+    # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
 
-    modify_policy_remove_member(bindings, role, member)
+    # Your Google Cloud project ID.
+    project_id = "test-project-id"
+    role = "roles/viewer"
+    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+
+    modify_policy_remove_member(project_id, role, member)

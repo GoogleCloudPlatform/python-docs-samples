@@ -12,9 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from copy import deepcopy
 import re
-from typing import Dict, List, Union
 import uuid
 
 import google.auth
@@ -25,8 +23,8 @@ from snippets.delete_service_account import delete_service_account
 from snippets.get_policy import get_policy
 from snippets.modify_policy_add_member import modify_policy_add_member
 from snippets.modify_policy_remove_member import modify_policy_remove_member
-from snippets.set_policy import set_policy
 from snippets.query_testable_permissions import query_testable_permissions
+from snippets.set_policy import set_policy
 
 PROJECT = google.auth.default()[1]
 
@@ -48,99 +46,97 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
 
 
 @pytest.fixture
-def project_bindings() -> policy_pb2.Policy:
+def project_policy() -> policy_pb2.Policy:
     try:
         policy = get_policy(PROJECT)
-        bindings = format_bindings(policy)
-        bindings_copy = deepcopy(bindings)
-        yield bindings_copy
+        policy_copy = policy_pb2.Policy()
+        policy_copy.CopyFrom(policy)
+        yield policy_copy
     finally:
-        updated_policy = set_policy(PROJECT, bindings)
-
-        assert updated_policy.etag != policy.etag
-        updated_policy.ClearField("etag")
         policy.ClearField("etag")
+        updated_policy = set_policy(PROJECT, policy)
+
+        updated_policy.ClearField("etag")
         assert updated_policy == policy
 
 
-def format_bindings(policy: policy_pb2.Policy) -> List[Dict[str, Union[str, List[str]]]]:
-    bindings = []
-    for bind in policy.bindings:
-        binding = {"role": "", "members": []}
-        # Role, which will be assigned to an entity
-        binding["role"] = bind.role
-        binding["members"].extend(bind.members)
-        bindings.append(binding)
-    return bindings
+def test_set_policy(project_policy: policy_pb2.Policy) -> None:
+    role = "roles/viewer"
+    test_binding = policy_pb2.Binding()
+    test_binding.role = role
+    test_binding.members.extend([
+        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+    ])
+    project_policy.bindings.append(test_binding)
 
-
-def test_set_policy(project_bindings: List[Dict[str, Union[str, List[str]]]]) -> None:
-    test_binding = {"role": "roles/viewer", "members": [f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com"]}
-    project_bindings.append(test_binding)
-
-    policy = set_policy(PROJECT, project_bindings)
+    policy = set_policy(PROJECT, project_policy)
 
     binding_found = False
     for bind in policy.bindings:
-        if bind.role == test_binding["role"]:
-            binding_found = test_binding["members"][0] in bind.members
+        if bind.role == test_binding.role:
+            binding_found = test_binding.members[0] in bind.members
             break
     assert binding_found
 
 
-def test_modify_policy_add_member(project_bindings: List[Dict[str, Union[str, List[str]]]], service_account: str) -> None:
+def test_modify_policy_add_member(project_policy: policy_pb2.Policy, service_account: str) -> None:
     role = "roles/viewer"
-    test_binding = {"role": role, "members": [f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com"]}
-    project_bindings.append(test_binding)
-    policy = set_policy(PROJECT, project_bindings)
+    test_binding = policy_pb2.Binding()
+    test_binding.role = role
+    test_binding.members.extend([
+        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+    ])
+    project_policy.bindings.append(test_binding)
+
+    policy = set_policy(PROJECT, project_policy)
     binding_found = False
     for bind in policy.bindings:
-        if bind.role == test_binding["role"]:
-            binding_found = test_binding["members"][0] in bind.members
+        if bind.role == test_binding.role:
+            binding_found = test_binding.members[0] in bind.members
             break
     assert binding_found
 
     member = f"serviceAccount:{service_account}"
-    policy = modify_policy_add_member(PROJECT, project_bindings, role, member)
+    policy = modify_policy_add_member(PROJECT, role, member)
 
     member_added = False
     for bind in policy.bindings:
-        if bind.role == test_binding["role"]:
+        if bind.role == test_binding.role:
             member_added = member in bind.members
             break
     assert member_added
 
 
-def test_modify_policy_remove_member(project_bindings: List[Dict[str, Union[str, List[str]]]], service_account: str) -> None:
+def test_modify_policy_remove_member(project_policy: policy_pb2.Policy, service_account: str) -> None:
     role = "roles/viewer"
     member = f"serviceAccount:{service_account}"
-    test_binding = {
-        "role": role,
-        "members": [
-            f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
-            member,
-        ]
-    }
-    project_bindings.append(test_binding)
-    policy = set_policy(PROJECT, project_bindings)
+    test_binding = policy_pb2.Binding()
+    test_binding.role = role
+    test_binding.members.extend([
+        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+        member,
+    ])
+    project_policy.bindings.append(test_binding)
+
+    policy = set_policy(PROJECT, project_policy)
     binding_found = False
     for bind in policy.bindings:
-        if bind.role == test_binding["role"]:
-            binding_found = test_binding["members"][0] in bind.members
+        if bind.role == test_binding.role:
+            binding_found = test_binding.members[0] in bind.members
             break
     assert binding_found
 
-    bindings = modify_policy_remove_member(project_bindings, role, member)
+    policy = modify_policy_remove_member(PROJECT, role, member)
 
     member_removed = False
-    for bind in bindings:
-        if bind["role"] == test_binding["role"]:
-            member_removed = member not in bind["members"]
+    for bind in policy.bindings:
+        if bind.role == test_binding.role:
+            member_removed = member not in bind.members
             break
     assert member_removed
 
 
-def test_query_testable_permissions():
+def test_query_testable_permissions() -> None:
     permissions = [
         "resourcemanager.projects.get",
         "resourcemanager.projects.delete",

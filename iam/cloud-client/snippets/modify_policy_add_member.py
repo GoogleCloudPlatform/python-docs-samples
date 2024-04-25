@@ -13,20 +13,16 @@
 # limitations under the License.
 
 # [START iam_modify_policy_add_member]
-from typing import Dict, List, Union
+from google.iam.v1 import policy_pb2
+from snippets.get_policy import get_policy
+from snippets.set_policy import set_policy
 
-from google.cloud import resourcemanager_v3
-from google.iam.v1 import iam_policy_pb2, policy_pb2
 
-
-def modify_policy_add_member(
-    project_id: str, bindings: List[Dict[str, Union[str, List[str]]]], role: str, member: str
-) -> policy_pb2.Policy:
+def modify_policy_add_member(project_id: str, role: str, member: str) -> policy_pb2.Policy:
     """
-    Add user to existing policy binding.
+    Add a member to certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    bindings: Policy attached to the project, which have to be modified.
     role: role to which member need to be added.
     member: The principals requesting access.
 
@@ -39,25 +35,14 @@ def modify_policy_add_member(
         * deleted:group:{emailid}?uid={uniqueid}
         * domain:{domain}
     """
+    policy = get_policy(project_id)
 
-    client = resourcemanager_v3.ProjectsClient()
-    request = iam_policy_pb2.SetIamPolicyRequest()
-    request.resource = f"projects/{project_id}"
+    for bind in policy.bindings:
+        if bind.role == role:
+            bind.members.append(member)
+            break
 
-    set_bindings = []
-    for bind in bindings:
-        binding = policy_pb2.Binding()
-        binding.role = bind["role"]
-
-        if bind["role"] == role:
-            bind["members"].append(member)
-
-        binding.members.extend(bind["members"])
-        set_bindings.append(binding)
-
-    request.policy.bindings.extend(set_bindings)
-    policy = client.set_iam_policy(request)
-    return policy
+    return set_policy(project_id, policy)
 
 # [END iam_modify_policy_add_member]
 
@@ -69,14 +54,6 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "test-project-id"
     role = "roles/viewer"
-    bindings = [
-        {
-            "role": role,
-            "members": [
-                "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
-            ],
-        },
-    ]
-    member = "serviceAccount:test2-service-account@test-project-id.iam.gserviceaccount.com"
+    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
 
-    modify_policy_add_member(project_id, bindings, role, member)
+    modify_policy_add_member(project_id, role, member)

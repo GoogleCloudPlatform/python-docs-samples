@@ -15,46 +15,29 @@
 # This file contains code samples that demonstrate how to set policy for project.
 
 # [START iam_set_policy]
-from typing import Dict, List, Union
-
 from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_policy(
-    project_id: str, bindings: List[Dict[str, Union[str, List[str]]]]
-) -> policy_pb2.Policy:
+def set_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
     """
     Set policy for project. Pay attention that previous state will be completely rewritten.
-    If you want to update only part of the policy leverage update_policy snippet.
+    If you want to update only part of the policy follow the approach read->modify->write.
     For more details about policies check out https://cloud.google.com/iam/docs/policies
 
     project_id: ID or number of the Google Cloud project you want to use.
-    bindings: List of bindings, which contains all policies for the project.
-
-    Bindings example:
-    [
-        {
-            "role": "roles/viewer",
-            "members": [
-                "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
-            ],
-        },
-    ]
+    policy: Policy which has to be set.
     """
 
     client = resourcemanager_v3.ProjectsClient()
     request = iam_policy_pb2.SetIamPolicyRequest()
     request.resource = f"projects/{project_id}"
 
-    set_bindings = []
-    for bind in bindings:
-        binding = policy_pb2.Binding()
-        binding.role = bind["role"]
-        binding.members.extend(bind["members"])
-        set_bindings.append(binding)
+    # request.etag field also will be merged which means you are secured from collision,
+    # but it means that request may fail and you need to leverage exponential reties approach
+    # to be sure policy has been updated.
+    request.policy.MergeFrom(policy)
 
-    request.policy.bindings.extend(set_bindings)
     policy = client.set_iam_policy(request)
     return policy
 
