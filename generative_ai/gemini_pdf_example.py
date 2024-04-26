@@ -27,7 +27,7 @@ def analyze_pdf(project_id: str) -> str:
     model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     prompt = """
-    Your are a very professional document summarization specialist.
+    You are a very professional document summarization specialist.
     Please summarize the given document.
     """
 
