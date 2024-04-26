@@ -24,52 +24,6 @@ from typing import Optional
 
 from google.cloud.compute_v1.services.addresses.client import AddressesClient
 from google.cloud.compute_v1.services.global_addresses import GlobalAddressesClient
-from google.cloud.compute_v1.types import Address
-
-
-def reserve_new_external_ip_address(
-    project_id: str,
-    address_name: str,
-    is_v6: bool = False,
-    is_premium: bool = False,
-    region: Optional[str] = None,
-):
-    """
-    Reserves a new external IP address in the specified project and region.
-
-    Args:
-    project_id (str): Your Google Cloud project ID.
-    address_name (str): The name for the new IP address.
-    is_v6 (bool): 'IPV4' or 'IPV6' depending on the IP version. IPV6 if True. Option only for global regions.
-    is_premium (bool): 'STANDARD' or 'PREMIUM' network tier. Standard option available only in regional ip.
-    region (Optional[str]): The region to reserve the IP address in, if regional. Must be None if global.
-
-    Returns:
-    None
-    """
-
-    ip_version = "IPV6" if is_v6 else "IPV4"
-    network_tier = "STANDARD" if not is_premium and region else "PREMIUM"
-
-    address = Address(
-        name=address_name,
-        address_type="EXTERNAL",
-        network_tier=network_tier,
-    )
-    if not region:  # global IP address
-        client = GlobalAddressesClient()
-        address.ip_version = ip_version
-        operation = client.insert(project=project_id, address_resource=address)
-    else:  # regional IP address
-        address.region = region
-        client = AddressesClient()
-        operation = client.insert(
-            project=project_id, region=region, address_resource=address
-        )
-
-    operation.result()
-
-    print(f"External IP address '{address_name}' reserved successfully.")
 
 
 def release_external_ip_address(

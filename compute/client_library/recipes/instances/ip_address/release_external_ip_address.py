@@ -17,7 +17,6 @@
 # <REGION compute_ip_address_release_static_address>
 # <IMPORTS/>
 
-# <INGREDIENT reserve_new_external_ip_address />
 # <INGREDIENT release_external_ip_address />
 
 # </REGION compute_ip_address_release_static_address>
