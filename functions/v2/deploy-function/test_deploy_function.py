@@ -13,41 +13,71 @@
 # limitations under the License.
 
 
-import os
 import uuid
 
-import pytest
+import google.auth
+import google.auth.transport.requests
 from google.cloud.functions_v2 import FunctionServiceClient
+from google.iam.v1 import iam_policy_pb2, policy_pb2
+import google.oauth2.id_token
+import pytest
+import requests
 
-from deploy_function import create_cloud_function, create_and_upload_function
-
-from google.cloud.functions_v2.types import ListFunctionsRequest
+from deploy_function import (
+    create_and_upload_function,
+    create_cloud_function,
+    delete_bucket,
+    delete_function,
+)
 
 
 def test_create_cloud_function(capsys: "pytest.CaptureFixture[str]"):
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
-    BUCKET_NAME = "samples-functions-test-practice-bucket-111"
-    FOLDER_NAME = "samples-functions-test-practice-folder-111"
+    PROJECT = google.auth.default()[1]
+    BUCKET_NAME = f"samples-functions-test-bucket-{uuid.uuid4().hex[:10]}"
+    FOLDER_NAME = f"samples-functions-test-folder-{uuid.uuid4().hex[:10]}"
     FILE_NAME = "my_function.zip"
     object_name = f"{FOLDER_NAME}/{FILE_NAME}"
     function_id = f"test-function-{uuid.uuid4()}"
     RUNTIME = "python310"
     LOCATION_ID = "us-central1"
-
-    create_and_upload_function(BUCKET_NAME, object_name)
-
-    create_cloud_function(
-        project_id=PROJECT_ID,
-        bucket_name=BUCKET_NAME,
-        location_id=LOCATION_ID,
-        function_id=function_id,
-        entry_point="my_function_entry",
-        function_archive=object_name,
-        runtime=RUNTIME,
+    resource_name = (
+        f"projects/{PROJECT}/locations/{LOCATION_ID}/functions/{function_id}"
     )
 
-    client = FunctionServiceClient()
-    parent = f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
-    request = ListFunctionsRequest(parent=parent)
-    functions = list(client.list_functions(request=request))
-    assert any(f.name == f"{parent}/functions/{function_id}" for f in functions)
+    try:
+        create_and_upload_function(BUCKET_NAME, object_name)
+        create_cloud_function(
+            project_id=PROJECT,
+            bucket_name=BUCKET_NAME,
+            location_id=LOCATION_ID,
+            function_id=function_id,
+            entry_point="my_function_entry",
+            function_archive=object_name,
+            runtime=RUNTIME,
+        )
+
+        client = FunctionServiceClient()
+
+        get_policy_request = iam_policy_pb2.GetIamPolicyRequest(resource=resource_name)
+        current_policy = client.get_iam_policy(request=get_policy_request)
+
+        new_binding = policy_pb2.Binding(
+            role="roles/cloudfunctions.invoker", members=["allUsers"]
+        )
+        current_policy.bindings.append(new_binding)
+
+        set_policy_request = iam_policy_pb2.SetIamPolicyRequest(
+            resource=resource_name, policy=current_policy
+        )
+        client.set_iam_policy(request=set_policy_request)
+
+        function_url = (
+            f"https://{LOCATION_ID}-{PROJECT}.cloudfunctions.net/{function_id}"
+        )
+        response = requests.get(function_url)
+
+        assert response.status_code == 200
+        assert response.text == "ok"
+    finally:
+        delete_function(PROJECT, LOCATION_ID, function_id)
+        delete_bucket(PROJECT, BUCKET_NAME)
