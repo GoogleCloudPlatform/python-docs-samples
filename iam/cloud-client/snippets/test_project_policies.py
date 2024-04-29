@@ -64,9 +64,11 @@ def test_set_policy(project_policy: policy_pb2.Policy) -> None:
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
     test_binding.role = role
-    test_binding.members.extend([
-        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
-    ])
+    test_binding.members.extend(
+        [
+            f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+        ]
+    )
     project_policy.bindings.append(test_binding)
 
     policy = set_policy(PROJECT, project_policy)
@@ -79,13 +81,17 @@ def test_set_policy(project_policy: policy_pb2.Policy) -> None:
     assert binding_found
 
 
-def test_modify_policy_add_member(project_policy: policy_pb2.Policy, service_account: str) -> None:
+def test_modify_policy_add_member(
+    project_policy: policy_pb2.Policy, service_account: str
+) -> None:
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
     test_binding.role = role
-    test_binding.members.extend([
-        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
-    ])
+    test_binding.members.extend(
+        [
+            f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+        ]
+    )
     project_policy.bindings.append(test_binding)
 
     policy = set_policy(PROJECT, project_policy)
@@ -107,15 +113,19 @@ def test_modify_policy_add_member(project_policy: policy_pb2.Policy, service_acc
     assert member_added
 
 
-def test_modify_policy_remove_member(project_policy: policy_pb2.Policy, service_account: str) -> None:
+def test_modify_policy_remove_member(
+    project_policy: policy_pb2.Policy, service_account: str
+) -> None:
     role = "roles/viewer"
     member = f"serviceAccount:{service_account}"
     test_binding = policy_pb2.Binding()
     test_binding.role = role
-    test_binding.members.extend([
-        f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
-        member,
-    ])
+    test_binding.members.extend(
+        [
+            f"serviceAccount:{PROJECT}@appspot.gserviceaccount.com",
+            member,
+        ]
+    )
     project_policy.bindings.append(test_binding)
 
     policy = set_policy(PROJECT, project_policy)

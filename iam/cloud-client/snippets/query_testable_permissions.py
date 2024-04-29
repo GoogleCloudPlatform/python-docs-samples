@@ -21,7 +21,9 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def query_testable_permissions(project_id: str, permissions: List[str]) -> policy_pb2.Policy:
+def query_testable_permissions(
+    project_id: str, permissions: List[str]
+) -> policy_pb2.Policy:
     """
     Tests IAM permissions of the caller.
 

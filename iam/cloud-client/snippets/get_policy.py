@@ -33,6 +33,7 @@ def get_policy(project_id: str) -> policy_pb2.Policy:
     policy = client.get_iam_policy(request)
     return policy
 
+
 # [END iam_get_policy]
 
 

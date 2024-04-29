@@ -18,7 +18,9 @@ from snippets.get_policy import get_policy
 from snippets.set_policy import set_policy
 
 
-def modify_policy_remove_member(project_id: str, role: str, member: str) -> policy_pb2.Policy:
+def modify_policy_remove_member(
+    project_id: str, role: str, member: str
+) -> policy_pb2.Policy:
     """
     Remove a member from certain role in project policy.
 
@@ -44,6 +46,7 @@ def modify_policy_remove_member(project_id: str, role: str, member: str) -> poli
             break
 
     return set_policy(project_id, policy)
+
 
 # [END iam_modify_policy_remove_member]
 
