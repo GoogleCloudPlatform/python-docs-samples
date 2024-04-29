@@ -91,12 +91,12 @@ Ensure that you are in the correct working directory: (/python-docs-samples/iap)
 2. Call `sign_jwt` in the python file. This example would create a JWT for the service account email@gmail.com to access the IAP protected application hosted at https://example.com.
 
 ```
-sign_jwt("email@gmail.com", "https://example.com")
+   sign_jwt("email@gmail.com", "https://example.com")
 ``` 
 
 3. Use the result of the call to access your IAP protected resource programmatically: 
 ```
-curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
+   curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
 ```
 
 
@@ -109,12 +109,12 @@ curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
 
 2. Call `sign_jwt_with_local_credentials_file`, 
 ```
-sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
+   sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
 ```
 
 3. Use the result of the call to access your IAP protected resource programmatically: 
 ```
-curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
+   curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
 ```
 ## Running Tests
 
