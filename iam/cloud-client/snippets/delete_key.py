@@ -35,6 +35,7 @@ def delete_key(project_id: str, account: str, key_id: str) -> None:
     iam_admin_client.delete_service_account_key(request=request)
     print(f"Deleted key: {key_id}")
 
+
 # [END iam_delete_key]
 
 
