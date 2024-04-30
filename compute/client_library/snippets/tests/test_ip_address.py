@@ -17,7 +17,7 @@ import uuid
 
 import google.auth
 from google.cloud.compute_v1 import AddressesClient, GlobalAddressesClient
-from google.cloud.compute_v1.types import Address
+from google.cloud.compute_v1.types import Address, Instance
 import pytest
 
 from ..instances.create_start_instance.create_from_public_image import (
@@ -35,6 +35,7 @@ from ..instances.ip_address.release_external_ip_address import (
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
 )
+from ..instances.ip_address.unassign_static_ip_address_from_existing_vm import unassign_static_ip_from_existing_vm
 
 PROJECT = google.auth.default()[1]
 REGION = "us-central1"
@@ -268,3 +269,12 @@ def test_release_static_ip(static_ip: Address):
     )
     ips = list_ip_addresses(client, PROJECT, region=region)
     assert static_ip.name not in ips
+
+
+def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
+    PROJECT = google.auth.default()[1]
+    ZONE = "us-central1-b"
+
+    assert len(instance_with_ips.network_interfaces[0].access_configs) == 1
+    updated_instance = unassign_static_ip_from_existing_vm(PROJECT, ZONE, instance_with_ips.name)
+    assert len(updated_instance.network_interfaces[0].access_configs) == 0
