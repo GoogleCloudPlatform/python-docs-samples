@@ -69,9 +69,9 @@ The Keras implementation of the Gemma models has a `generate` method
 that generates text based on a prompt. To route the prompts correctly, use this function in the `run_inference` function.
 
 ```py
-class GemmaModelHandler(ModelHandler[str,
-                                     PredictionResult,GemmaCausalLM
-                                     ]):
+class GemmaModelHandler(
+    ModelHandler[str, PredictionResult, GemmaCausalLM]
+):
     def __init__(
         self,
         model_name: str = "",
