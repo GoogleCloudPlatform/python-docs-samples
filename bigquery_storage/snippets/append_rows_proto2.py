@@ -214,6 +214,14 @@ def append_rows_proto2(project_id: str, dataset_id: str, table_id: str):
     row.struct_list.append(sub_message)
     proto_rows.serialized_rows.append(row.SerializeToString())
 
+    row = sample_data_pb2.SampleData()
+    row.row_num = 16
+    date_value = datetime.date(2021, 8, 8)
+    epoch_value = datetime.date(1970, 1, 1)
+    delta = date_value - epoch_value
+    row.range_date.start = delta.days
+    proto_rows.serialized_rows.append(row.SerializeToString())
+
     request = types.AppendRowsRequest()
     request.offset = 12
     proto_data = types.AppendRowsRequest.ProtoData()

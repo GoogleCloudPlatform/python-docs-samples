@@ -29,6 +29,11 @@ message SampleData {
     optional int64 sub_int_col = 1;
   }
 
+   message RangeValue {
+    optional int32 start = 1;
+    optional int32 end = 2;
+   }
+
   // The following types map directly between protocol buffers and their
   // corresponding BigQuery data types.
   optional bool bool_col = 1;
@@ -55,7 +60,11 @@ message SampleData {
   optional SampleStruct struct_col = 14;
   repeated SampleStruct struct_list = 15;
 
+  // Range types, see:
+  // https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#range_type
+   optional RangeValue range_date = 16;
+
   // Use the required keyword for client-side validation of required fields.
-  required int64 row_num = 16;
+  required int64 row_num = 17;
 }
 // [END bigquerystorage_append_rows_raw_proto2_definition]
