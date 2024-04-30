@@ -26,7 +26,9 @@ from ..instances.create_start_instance.create_from_public_image import (
     get_image_from_family,
 )
 from ..instances.delete import delete_instance
-from ..instances.ip_address.assign_static_ip_to_existing_vm import assign_static_ip_to_existing_vm
+from ..instances.ip_address.assign_static_ip_to_existing_vm import (
+    assign_static_ip_to_existing_vm,
+)
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
@@ -271,10 +273,10 @@ def test_release_static_ip(static_ip: Address):
     assert static_ip.name not in ips
 
 
-@pytest.mark.parametrize(
-    "static_ip", [{"region": "us-central1"}], indirect=True
-)
-def test_assign_static_ip_to_existing_vm(instance_with_ips: Instance, static_ip: Address):
+@pytest.mark.parametrize("static_ip", [{"region": "us-central1"}], indirect=True)
+def test_assign_static_ip_to_existing_vm(
+    instance_with_ips: Instance, static_ip: Address
+):
     PROJECT = google.auth.default()[1]
     ZONE = "us-central1-b"
     REGION = "us-central1"
@@ -282,5 +284,10 @@ def test_assign_static_ip_to_existing_vm(instance_with_ips: Instance, static_ip:
     client = AddressesClient()
     ip_address = client.get(project=PROJECT, region=REGION, address=static_ip.name)
 
-    updated_instance = assign_static_ip_to_existing_vm(PROJECT, ZONE, instance_with_ips.name, ip_address.address)
-    assert updated_instance.network_interfaces[0].access_configs[0].nat_i_p == ip_address.address
+    updated_instance = assign_static_ip_to_existing_vm(
+        PROJECT, ZONE, instance_with_ips.name, ip_address.address
+    )
+    assert (
+        updated_instance.network_interfaces[0].access_configs[0].nat_i_p
+        == ip_address.address
+    )
