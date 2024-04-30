@@ -16,9 +16,9 @@ import os
 
 import backoff
 
-import verify_image_watermark
-
 from google.api_core.exceptions import ResourceExhausted
+
+import verify_image_watermark
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
