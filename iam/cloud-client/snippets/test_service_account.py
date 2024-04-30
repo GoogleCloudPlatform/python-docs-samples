@@ -16,12 +16,15 @@ import re
 import uuid
 
 import google.auth
+from google.iam.v1 import policy_pb2
 import pytest
 from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
 from snippets.disable_service_account import disable_service_account
 from snippets.enable_service_account import enable_service_account
 from snippets.list_service_accounts import get_service_account, list_service_accounts
+from snippets.service_account_get_policy import get_policy
+from snippets.service_account_set_policy import set_policy
 
 PROJECT = google.auth.default()[1]
 
@@ -66,3 +69,23 @@ def test_enable_service_account(service_account: str) -> None:
 
     account_after = enable_service_account(PROJECT, service_account)
     assert not account_after.disabled
+
+
+def test_service_account_set_policy(service_account: str) -> None:
+    policy = get_policy(PROJECT, service_account)
+
+    role = "roles/viewer"
+    test_binding = policy_pb2.Binding()
+    test_binding.role = role
+    test_binding.members.append(f"serviceAccount:{service_account}")
+    policy.bindings.append(test_binding)
+
+    new_policy = set_policy(PROJECT, service_account, policy)
+
+    binding_found = False
+    for bind in new_policy.bindings:
+        if bind.role == test_binding.role:
+            binding_found = test_binding.members[0] in bind.members
+            break
+    assert binding_found
+    assert new_policy.etag != policy.etag
