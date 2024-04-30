@@ -14,7 +14,7 @@
 
 # This file contains code samples that demonstrate how to set policy for service account.
 
-# [START iam_serivce_account_set_policy]
+# [START iam_service_account_set_policy]
 from google.cloud import iam_admin_v1
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
@@ -43,7 +43,7 @@ def set_policy(project_id: str, account: str, policy: policy_pb2.Policy) -> poli
     policy = iam_client.set_iam_policy(request)
     return policy
 
-# [END iam_serivce_account_set_policy]
+# [END iam_service_account_set_policy]
 
 
 if __name__ == "__main__":

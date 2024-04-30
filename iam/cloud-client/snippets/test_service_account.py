@@ -24,6 +24,7 @@ from snippets.disable_service_account import disable_service_account
 from snippets.enable_service_account import enable_service_account
 from snippets.list_service_accounts import get_service_account, list_service_accounts
 from snippets.service_account_get_policy import get_policy
+from snippets.service_account_rename import rename_service_account
 from snippets.service_account_set_policy import set_policy
 
 PROJECT = google.auth.default()[1]
@@ -89,3 +90,9 @@ def test_service_account_set_policy(service_account: str) -> None:
             break
     assert binding_found
     assert new_policy.etag != policy.etag
+
+
+def test_service_account_rename(service_account: str) -> None:
+    new_name = "New Name"
+    account = rename_service_account(PROJECT, service_account, new_name)
+    assert account.display_name == new_name
