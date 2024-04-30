@@ -80,12 +80,14 @@ def test_upload_file(test_corpus, test_file):
 def test_import_files(test_corpus):
     response = rag.import_files(PROJECT_ID, test_corpus.name, [GCS_FILE])
     assert response.imported_rag_files_count > 0
+    rag.delete_file(PROJECT_ID, response.imported_rag_files[0].name)
 
 
 @pytest.mark.asyncio
 async def test_import_files_async(test_corpus):
     result = await rag.import_files_async(PROJECT_ID, test_corpus.name, [GCS_FILE])
     assert result.imported_rag_files_count > 0
+    rag.delete_file(PROJECT_ID, result.imported_rag_files[0].name)
 
 
 def test_get_file(uploaded_file):
