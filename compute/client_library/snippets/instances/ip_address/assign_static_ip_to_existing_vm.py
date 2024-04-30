@@ -29,7 +29,11 @@ from google.cloud.compute_v1.types import DeleteAccessConfigInstanceRequest
 
 
 def assign_static_ip_to_existing_vm(
-    project_id: str, zone: str, instance_name: str, ip_address: str
+    project_id: str,
+    zone: str,
+    instance_name: str,
+    ip_address: str,
+    network_interface_name: str = "nic0",
 ):
     """
     Updates or creates an access configuration for a VM instance to assign a static external IP.
@@ -42,11 +46,16 @@ def assign_static_ip_to_existing_vm(
         zone (str): Zone where the VM is located.
         instance_name (str): Name of the VM instance.
         ip_address (str): New static external IP address to assign to the VM.
+        network_interface_name (str): Name of the network interface to assign.
+
+    Returns:
+        google.cloud.compute_v1.types.Instance: Updated instance object.
     """
     client = InstancesClient()
     instance = client.get(project=project_id, zone=zone, instance=instance_name)
     network_interface = next(
-        (ni for ni in instance.network_interfaces if ni.name == "nic0"), None
+        (ni for ni in instance.network_interfaces if ni.name == network_interface_name),
+        None,
     )
 
     if network_interface is None:
@@ -66,7 +75,7 @@ def assign_static_ip_to_existing_vm(
             zone=zone,
             instance=instance_name,
             access_config=access_config.name,
-            network_interface="nic0",
+            network_interface=network_interface_name,
             request_id=str(uuid.uuid4()),
         )
         delete_operation = client.delete_access_config(delete_request)
