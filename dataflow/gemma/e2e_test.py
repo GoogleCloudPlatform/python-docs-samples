@@ -110,7 +110,7 @@ def dataflow_job(
         f"--machine_type={DATAFLOW_MACHINE_TYPE}",
         f"--sdk_container_image=gcr.io/{project}/{container_image}",
         "--dataflow_service_options=worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
-        "--requirements_file=requirements.txt",
+        "--requirements_cache=skip",
         "--save_main_session",
     )
 
@@ -125,6 +125,7 @@ def dataflow_job(
     conftest.dataflow_cancel_job(project, location, job_id)
 
 
+@pytest.mark.timeout(3600)
 def test_pipeline_dataflow(
         project: str,
         location: str,
