@@ -17,10 +17,6 @@ import jwt
 import json
 import datetime
 
-import jwt
-import json
-import datetime
-
 from google.cloud import iam_credentials_v1
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
@@ -47,7 +43,6 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
 
 def sign_jwt(target_sa: str, resource_url: str) -> str:
   """Signs JWT payload using ADC and IAM credentials API 
-  
   Args:
     target_sa (str): Service Account JWT is being created for. This service account will require IAM permissions
     resource_url (str): Audience of the JWT, and scope of the JWT token. This is the url of the IAP protected application.
@@ -73,12 +68,11 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
   """
   with open(credential_key_file_path, 'r') as credential_key_file:
       key_data = json.load(credential_key_file)
-  
+
   PRIVATE_KEY_ID_FROM_JSON = key_data["private_key_id"]
   PRIVATE_KEY_FROM_JSON = key_data["private_key"]
   SERVICE_ACCOUNT_EMAIL=key_data["client_email"]
-  
-  # Sign JWT with private key and store key id in the header
+
   # Sign JWT with private key and store key id in the header
   additional_headers = {'kid': PRIVATE_KEY_ID_FROM_JSON}
   payload = generate_jwt_payload(service_account_email=SERVICE_ACCOUNT_EMAIL, resource_url=resource_url)
