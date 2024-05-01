@@ -21,12 +21,13 @@ import pytest
 import rag
 import vertexai
 
+# TODO: Remove once Allowlist is removed
+pytest.skip(allow_module_level=True)
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
 
-# TODO: Remove once Allowlist is removed
-pytest.skip(allow_module_level=True)
 
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
