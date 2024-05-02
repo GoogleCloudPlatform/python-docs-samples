@@ -21,7 +21,7 @@ import pytest
 import rag
 import vertexai
 
-# TODO: Remove once Allowlist is removed
+# TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
 pytest.skip(allow_module_level=True)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
