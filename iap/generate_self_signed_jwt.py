@@ -24,6 +24,7 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
     """Generates JWT payload for service account.
 
     The resource url provided must be the same as the url of the IAP secured resource.
+
     Args:
       service_account_email (str): Specifies service account JWT is created for
       resource_url (str): Specifies scope of the JWT, the URL that the JWT will be allowed to access.
