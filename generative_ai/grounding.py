@@ -12,15 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_grounding]
 from typing import Optional
 
-import vertexai
-from vertexai.language_models import (
-    GroundingSource,
-    TextGenerationModel,
-    TextGenerationResponse,
-)
+from vertexai.language_models import TextGenerationResponse
 
 
 def grounding(
@@ -30,7 +24,12 @@ def grounding(
     data_store_id: Optional[str],
 ) -> TextGenerationResponse:
     """Grounding example with a Large Language Model"""
+    # [START aiplatform_sdk_grounding]
+    import vertexai
 
+    from vertexai.language_models import GroundingSource, TextGenerationModel
+
+    # TODO(developer): Update values for project_id, location
     vertexai.init(project=project_id, location=location)
 
     # TODO developer - override these parameters as needed:
@@ -43,6 +42,7 @@ def grounding(
 
     model = TextGenerationModel.from_pretrained("text-bison@002")
 
+    # TODO(developer): Update values for data_store_location, data_store_id
     if data_store_id and data_store_location:
         # Use Vertex AI Search data store
         grounding_source = GroundingSource.VertexAISearch(

@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_streaming_text]
-import vertexai
-from vertexai import language_models
 
 
 def streaming_prediction(
@@ -22,7 +19,11 @@ def streaming_prediction(
     location: str,
 ) -> str:
     """Streaming Text Example with a Large Language Model."""
+    # [START aiplatform_streaming_text]
+    import vertexai
+    from vertexai import language_models
 
+    # TODO(developer): update project_id & location
     vertexai.init(project=project_id, location=location)
 
     text_generation_model = language_models.TextGenerationModel.from_pretrained(
@@ -51,9 +52,10 @@ def streaming_prediction(
         print(response)
         results.append(str(response))
     results = "\n".join(results)
+    print(results)
+    # [END aiplatform_streaming_text]
     return results
 
 
-# [END aiplatform_streaming_text]
 if __name__ == "__main__":
     streaming_prediction()

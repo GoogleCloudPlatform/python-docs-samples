@@ -12,26 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_list_tuned_models]
-
-import vertexai
-from vertexai.language_models import TextGenerationModel
-
 
 def list_tuned_models(
     project_id: str,
     location: str,
 ) -> None:
     """List tuned models."""
+    # [START aiplatform_sdk_list_tuned_models]
+    import vertexai
 
+    from vertexai.language_models import TextGenerationModel
+
+    # TODO(developer): Update values for project_id & location
     vertexai.init(project=project_id, location=location)
     model = TextGenerationModel.from_pretrained("text-bison@002")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
+    # [END aiplatform_sdk_list_tuned_models]
 
     return tuned_model_names
 
 
-# [END aiplatform_sdk_list_tuned_models]
 if __name__ == "__main__":
     list_tuned_models()

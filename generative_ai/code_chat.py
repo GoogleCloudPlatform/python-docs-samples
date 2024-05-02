@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_code_chat]
-from vertexai.language_models import CodeChatModel
-
 
 def write_a_function(temperature: float = 0.5) -> object:
     """Example of using Codey for Code Chat Model to write a function."""
+    # [START aiplatform_sdk_code_chat]
+    from vertexai.language_models import CodeChatModel
 
     # TODO developer - override these parameters as needed:
     parameters = {
@@ -32,10 +31,10 @@ def write_a_function(temperature: float = 0.5) -> object:
         "Please help write a function to calculate the min of two numbers", **parameters
     )
     print(f"Response from Model: {response.text}")
+    # [END aiplatform_sdk_code_chat]
 
     return response
 
 
-# [END aiplatform_sdk_code_chat]
 if __name__ == "__main__":
     write_a_function()
