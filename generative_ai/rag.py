@@ -93,6 +93,7 @@ def upload_file(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    # path = "path/to/local/file.txt"
     # display_name = "file_display_name"
     # description = "file description"
 
@@ -300,7 +301,6 @@ def generate_content_with_rag(
             source=rag.VertexRagStore(
                 rag_corpora=rag_corpora,
                 similarity_top_k=3,  # Optional
-                vector_distance_threshold=0.3,  # Optional
             ),
         )
     )
@@ -361,7 +361,6 @@ def quickstart(
             source=rag.VertexRagStore(
                 rag_corpora=[rag_corpus.name],  # Currently only 1 corpus is allowed.
                 similarity_top_k=3,  # Optional
-                vector_distance_threshold=0.4,  # Optional
             ),
         )
     )
