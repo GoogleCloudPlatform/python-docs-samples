@@ -68,7 +68,8 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
     """Signs JWT payload using local service account credential key file.
 
     Args:
-      credential_key_file_path (str): Path to the downloaded JSON credentials of the service account the JWT is being created for.
+      credential_key_file_path (str): Path to the downloaded JSON credentials of the service
+        account the JWT is being created for.
       resource_url (str): Scope of JWT token, This is the url of the IAP protected application.
     Returns:
       A self-signed JWT created with a downloaded private key.
