@@ -13,14 +13,12 @@
 # limitations under the License.
 #
 
-from typing import List
-
 from google.cloud import discoveryengine_v1alpha as discoveryengine
 
 
 def check_grounding_sample(
     project_id: str,
-) -> List[discoveryengine.CheckGroundingResponse]:
+) -> discoveryengine.CheckGroundingResponse:
     # [START genappbuilder_check_grounding]
     from google.cloud import discoveryengine_v1alpha as discoveryengine
 
@@ -78,7 +76,7 @@ def check_grounding_sample(
 
 def rank_sample(
     project_id: str,
-) -> List[discoveryengine.RankResponse]:
+) -> discoveryengine.RankResponse:
     # [START genappbuilder_rank]
     from google.cloud import discoveryengine_v1alpha as discoveryengine
 
