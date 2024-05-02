@@ -42,11 +42,25 @@ def check_grounding_sample(
         answer_candidate="Titanic was directed by James Cameron. It was released in 1997.",
         facts=[
             discoveryengine.GroundingFact(
-                fact_text="Titanic is a 1997 American epic romantic disaster movie. It was directed, written, and co-produced by James Cameron. The movie is about the 1912 sinking of the RMS Titanic. It stars Kate Winslet and Leonardo DiCaprio. The movie was released on December 19, 1997. It received positive critical reviews. The movie won 11 Academy Awards, and was nominated for fourteen total Academy Awards.",
+                fact_text=(
+                    "Titanic is a 1997 American epic romantic disaster movie. It was directed, written,"
+                    " and co-produced by James Cameron. The movie is about the 1912 sinking of the"
+                    " RMS Titanic. It stars Kate Winslet and Leonardo DiCaprio. The movie was released"
+                    " on December 19, 1997. It received positive critical reviews. The movie won 11 Academy"
+                    " Awards, and was nominated for fourteen total Academy Awards."
+                ),
                 attributes={"author": "Simple Wikipedia"},
             ),
             discoveryengine.GroundingFact(
-                fact_text='James Cameron&#39;s "Titanic" is an epic, action-packed romance set against the ill-fated maiden voyage of the R.M.S. Titanic; the pride and joy of the White Star Line and, at the time, the largest moving object ever built. She was the most luxurious liner of her era -- the "ship of dreams" -- which ultimately carried over 1,500 people to their death in the ice cold waters of the North Atlantic in the early hours of April 15, 1912.',
+                fact_text=(
+                    'James Cameron\'s "Titanic" is an epic, action-packed romance'
+                    "set against the ill-fated maiden voyage of the R.M.S. Titanic;"
+                    "the pride and joy of the White Star Line and, at the time,"
+                    "the largest moving object ever built. "
+                    'She was the most luxurious liner of her era -- the "ship of dreams" -- '
+                    "which ultimately carried over 1,500 people to their death in the "
+                    "ice cold waters of the North Atlantic in the early hours of April 15, 1912."
+                ),
                 attributes={"author": "Simple Wikipedia"},
             ),
         ],
