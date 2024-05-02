@@ -44,7 +44,8 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
 
 
 def sign_jwt(target_sa: str, resource_url: str) -> str:
-    """Signs JWT payload using ADC and IAM credentials API
+    """Signs JWT payload using ADC and IAM credentials API.
+
     Args:
       target_sa (str): Service Account JWT is being created for. This service account will require IAM permissions
       resource_url (str): Audience of the JWT, and scope of the JWT token. This is the url of the IAP protected application.
