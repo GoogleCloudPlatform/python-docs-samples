@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_summarization]
-import vertexai
-from vertexai.language_models import TextGenerationModel
-
 
 def text_summarization(
     temperature: float,
@@ -23,9 +19,12 @@ def text_summarization(
     location: str,
 ) -> str:
     """Summarization Example with a Large Language Model"""
+    # [START aiplatform_sdk_summarization]
+    import vertexai
+    from vertexai.language_models import TextGenerationModel
 
+    # TODO(developer): update project_id, location & temperature
     vertexai.init(project=project_id, location=location)
-    # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -69,10 +68,10 @@ Summary:
         **parameters,
     )
     print(f"Response from Model: {response.text}")
+    # [END aiplatform_sdk_summarization]
 
     return response.text
 
 
-# [END aiplatform_sdk_summarization]
 if __name__ == "__main__":
     text_summarization()

@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_streaming_code]
-import vertexai
-from vertexai import language_models
-
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
     """Streaming Code Example with a Large Language Model."""
+    # [START aiplatform_streaming_code]
+    import vertexai
+    from vertexai import language_models
 
+    # TODO(developer): update project_id & location
     vertexai.init(project=project_id, location=location)
 
     code_generation_model = language_models.CodeGenerationModel.from_pretrained(

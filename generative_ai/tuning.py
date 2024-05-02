@@ -19,7 +19,6 @@ from __future__ import annotations
 def tuning(
     project_id: str,
 ) -> None:
-
     # [START generativeaionvertexai_tuning]
     import vertexai
     from vertexai.language_models import TextGenerationModel
@@ -44,5 +43,6 @@ def tuning(
     # [END generativeaionvertexai_tuning]
 
     return model
+
 
 # [END aiplatform_sdk_tuning]
