@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def streaming_prediction(
     project_id: str,
     location: str,

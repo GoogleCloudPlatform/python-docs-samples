@@ -14,7 +14,7 @@
 
 from typing import Optional
 
-from vertexai.vision_models import VideoSegmentConfig, MultiModalEmbeddingResponse
+from vertexai.vision_models import MultiModalEmbeddingResponse, VideoSegmentConfig
 
 
 def get_video_embeddings(

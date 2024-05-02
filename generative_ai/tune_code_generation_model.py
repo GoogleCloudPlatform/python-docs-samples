@@ -16,10 +16,7 @@
 from __future__ import annotations
 
 
-def tune_code_generation_model(
-    project_id: str
-) -> None:
-
+def tune_code_generation_model(project_id: str) -> None:
     # [START generativeaionvertexai_tune_code_generation_model]
     from google.auth import default
     import vertexai
