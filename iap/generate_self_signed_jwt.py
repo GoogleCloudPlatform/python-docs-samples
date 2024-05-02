@@ -25,7 +25,7 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
     The resource url provided must be the same as the url of the IAP secured resource.
 
     Args:
-      service_account_email (str): Specifies service account JWT is created for
+      service_account_email (str): Specifies service account JWT is created for.
       resource_url (str): Specifies scope of the JWT, the URL that the JWT will be allowed to access.
     Returns:
       A signed-jwt that can be used to access IAP protected applications.
@@ -47,9 +47,9 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
     """Signs JWT payload using ADC and IAM credentials API.
 
     Args:
-      target_sa (str): Service Account JWT is being created for. 
+      target_sa (str): Service Account JWT is being created for.
         iap.webServiceVersions.accessViaIap permission is required.
-      resource_url (str): Audience of the JWT, and scope of the JWT token. 
+      resource_url (str): Audience of the JWT, and scope of the JWT token.
         This is the url of the IAP protected application.
     Returns:
       A signed-jwt that can be used to access IAP protected apps.
@@ -68,7 +68,7 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
     """Signs JWT payload using local service account credential key file.
 
     Args:
-      credential_key_file_path (str): Path to the downloaded JSON credentials of the service 
+      credential_key_file_path (str): Path to the downloaded JSON credentials of the service
         account the JWT is being created for.
       resource_url (str): Scope of JWT token, This is the url of the IAP protected application.
     Returns:
