@@ -34,4 +34,7 @@ def list_tuned_code_generation_models(
 
 
 if __name__ == "__main__":
-    list_tuned_code_generation_models()
+    import google.auth
+
+    PROJECT = google.auth.default()[1]
+    list_tuned_code_generation_models(PROJECT, "us-central1")
