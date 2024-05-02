@@ -16,9 +16,8 @@ import datetime
 import json
 
 import google.auth
-import jwt
-
 from google.cloud import iam_credentials_v1
+import jwt
 
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
