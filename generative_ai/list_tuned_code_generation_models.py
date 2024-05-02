@@ -15,7 +15,7 @@
 # [START aiplatform_sdk_list_tuned_code_generation_models]
 
 import vertexai
-from vertexai.preview.language_models import CodeGenerationModel
+from vertexai.language_models import CodeGenerationModel
 
 
 def list_tuned_code_generation_models(
@@ -33,4 +33,7 @@ def list_tuned_code_generation_models(
 
 # [END aiplatform_sdk_list_tuned_code_generation_models]
 if __name__ == "__main__":
-    list_tuned_code_generation_models()
+    import google.auth
+
+    PROJECT = google.auth.default()[1]
+    list_tuned_code_generation_models(PROJECT, "us-central1")

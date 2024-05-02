@@ -32,7 +32,7 @@ def bucket_name(utils: Utils) -> str:
 
 def _include_repo(utils: Utils, image: str) -> str:
     project = utils.project
-    gcr_project = project.replace(':', '/')
+    gcr_project = project.replace(":", "/")
     return f"gcr.io/{gcr_project}/{image}"
 
 
@@ -43,16 +43,12 @@ def sdk_container_image(utils: Utils) -> str:
 
 @pytest.fixture(scope="session")
 def flex_template_path(utils: Utils, bucket_name: str, sdk_container_image: str) -> str:
-    yield from utils.dataflow_flex_template_build(
-        bucket_name, sdk_container_image)
+    yield from utils.dataflow_flex_template_build(bucket_name, sdk_container_image)
 
 
 @pytest.fixture(scope="session")
 def dataflow_job_id(
-    utils: Utils,
-    bucket_name: str,
-    flex_template_path: str,
-    sdk_container_image: str
+    utils: Utils, bucket_name: str, flex_template_path: str, sdk_container_image: str
 ) -> str:
     yield from utils.dataflow_flex_template_run(
         job_name=NAME,
@@ -61,10 +57,12 @@ def dataflow_job_id(
         parameters={
             "input": "gs://dataflow-samples/shakespeare/hamlet.txt",
             "output": f"gs://{bucket_name}/output",
-            "sdk_container_image":  _include_repo(utils, sdk_container_image),
+            "sdk_container_image": _include_repo(utils, sdk_container_image),
         },
     )
 
 
-def test_flex_template_with_dependencies_and_custom_container(utils: Utils, dataflow_job_id: str) -> None:
+def test_flex_template_with_dependencies_and_custom_container(
+    utils: Utils, dataflow_job_id: str
+) -> None:
     utils.dataflow_jobs_wait(dataflow_job_id, target_states={"JOB_STATE_DONE"})

@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,29 +13,30 @@
 # limitations under the License.
 
 
-# [START generativeaionvertexai_gemini_pdf]
-import vertexai
+def analyze_pdf(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_pdf]
+    import vertexai
 
-from vertexai.generative_models import GenerativeModel, Part
+    from vertexai.generative_models import GenerativeModel, Part
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
 
-def generate_text(project_id: str, location: str) -> str:
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
-    # Load the model
-    vision_model = GenerativeModel("gemini-1.0-pro-vision")
-    # Generate text
-    response = vision_model.generate_content(
-        [
-            Part.from_uri(
-                "gs://cloud-samples-data/vertex-ai/generative-ai/pdf/intake-form.pdf",
-                mime_type="application/pdf",
-            ),
-            "Output the text in the PDF",
-        ]
-    )
-    print(response)
+    vertexai.init(project=project_id, location="us-central1")
+
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
+
+    prompt = """
+    You are a very professional document summarization specialist.
+    Please summarize the given document.
+    """
+
+    pdf_file_uri = "gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf"
+    pdf_file = Part.from_uri(pdf_file_uri, mime_type="application/pdf")
+    contents = [pdf_file, prompt]
+
+    response = model.generate_content(contents)
+    print(response.text)
+    # [END generativeaionvertexai_gemini_pdf]
+
     return response.text
-
-
-# [END generativeaionvertexai_gemini_pdf]

@@ -316,7 +316,7 @@ def print_entity(entity: documentai.Document.Entity) -> None:
     # https://cloud.google.com/document-ai/docs/processors-list
     key = entity.type_
 
-    # Some other value formats in addition to text are availible
+    # Some other value formats in addition to text are available
     # e.g. dates: `entity.normalized_value.date_value.year`
     text_value = entity.text_anchor.content
     confidence = entity.confidence

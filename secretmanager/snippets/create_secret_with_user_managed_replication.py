@@ -24,12 +24,40 @@ from google.cloud import secretmanager
 
 
 def create_ummr_secret(
-    project_id: str, secret_id: str, locations: typing.List[str]
-) -> secretmanager.CreateSecretRequest:
+    project_id: str,
+    secret_id: str,
+    locations: typing.List[str],
+    ttl: typing.Optional[str] = None,
+) -> secretmanager.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
     secret material.
+
+    Args:
+        project_id (str): The project ID where the secret is to be created.
+        secret_id (str): The unique identifier for the new secret within the project.
+        locations (List[str]): A list of Google Cloud locations where the secret should be replicated.
+        ttl (Optional[str]): An optional string that specifies the secret's time-to-live in seconds with
+                             format (e.g., "900s" for 15 minutes). If specified, the secret versions will be
+                             automatically deleted upon reaching the end of the TTL period.
+
+    Returns:
+        secretmanager.Secret: An object representing the newly created secret. This object includes information like the
+                              secret's name and its replication configuration. If TTL is provided, it also configures how long
+                              secret versions remain before being automatically deleted.
+
+    Example:
+        # Create a secret with user-managed replication across two locations without TTL
+        new_secret = create_ummr_secret("my-project", "my-new-secret", ["us-east1", "europe-west1"])
+
+        # Create a secret with a TTL of 30 days and user-managed replication across three locations
+        new_secret_with_ttl = create_ummr_secret("my-project", "my-timed-secret", ["us-east1", "us-west1"], "7776000s")
+
+    Note:
+        This function requires that the `secretmanager` API is enabled on the cloud project and that the caller has the
+        necessary permissions to create secrets. Ensure that `secretmanager.SecretManagerServiceClient` and the `secretmanager`
+        library are correctly configured and authenticated. The specified locations must be valid Google Cloud locations.
     """
 
     # Import the Secret Manager client library.
@@ -49,7 +77,8 @@ def create_ummr_secret(
             "secret": {
                 "replication": {
                     "user_managed": {"replicas": [{"location": x} for x in locations]}
-                }
+                },
+                "ttl": ttl,
             },
         }
     )

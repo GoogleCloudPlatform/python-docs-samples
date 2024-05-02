@@ -30,6 +30,6 @@ import logging
 
 from my_package import launcher
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     launcher.run()

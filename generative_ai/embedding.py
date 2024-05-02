@@ -21,13 +21,15 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 def embed_text(
     texts: List[str] = ["banana muffins? ", "banana bread? banana muffins?"],
     task: str = "RETRIEVAL_DOCUMENT",
-    model_name: str = "textembedding-gecko@003"
+    model_name: str = "textembedding-gecko@003",
 ) -> List[List[float]]:
     """Embeds texts with a pre-trained, foundational model."""
     model = TextEmbeddingModel.from_pretrained(model_name)
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     embeddings = model.get_embeddings(inputs)
     return [embedding.values for embedding in embeddings]
+
+
 # [END aiplatform_sdk_embedding]
 
 

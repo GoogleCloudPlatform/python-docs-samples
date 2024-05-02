@@ -13,29 +13,20 @@
 # limitations under the License.
 
 """Google Cloud Vertex AI sample for getting short-form image captions.
-Example usage:
-    python get_short_form_image_captions.py --project_id <project-id> --location <location> \
-        --input_file <filepath>
 """
 
-# [START aiplatform_imagen_get_short_form_image_captions]
 
-import argparse
+def get_short_form_image_captions(project_id: str, input_file: str) -> list:
+    # [START generativeaionvertexai_imagen_get_short_form_image_captions]
 
-import vertexai
-from vertexai.preview.vision_models import Image, ImageTextModel
+    import vertexai
+    from vertexai.preview.vision_models import Image, ImageTextModel
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # input_file = "my-input.png"
 
-def get_short_form_image_captions(
-    project_id: str, location: str, input_file: str
-) -> list:
-    """Get short-form captions for a local image.
-    Args:
-      project_id: Google Cloud project ID, used to initialize Vertex AI.
-      location: Google Cloud region, used to initialize Vertex AI.
-      input_file: Local path to the input image file."""
-
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=project_id, location="us-central1")
 
     model = ImageTextModel.from_pretrained("imagetext@001")
     source_img = Image.load_from_file(location=input_file)
@@ -49,27 +40,6 @@ def get_short_form_image_captions(
 
     print(captions)
 
+    # [END generativeaionvertexai_imagen_get_short_form_image_captions]
+
     return captions
-
-
-# [END aiplatform_imagen_get_short_form_image_captions]
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
-    parser.add_argument(
-        "--location",
-        help="The location in which to initialize Vertex AI.",
-        default="us-central1",
-    )
-    parser.add_argument(
-        "--input_file",
-        help="The local path to the input file (e.g., 'my-input.png').",
-        required=True,
-    )
-    args = parser.parse_args()
-    get_short_form_image_captions(
-        args.project_id,
-        args.location,
-        args.input_file,
-    )

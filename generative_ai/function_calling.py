@@ -29,7 +29,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
     vertexai.init(project=project_id, location=location)
 
     # Initialize Gemini model
-    model = GenerativeModel("gemini-1.0-pro")
+    model = GenerativeModel(model_name="gemini-1.0-pro-001")
 
     # Specify a function declaration and parameters for an API request
     get_current_weather_func = FunctionDeclaration(
