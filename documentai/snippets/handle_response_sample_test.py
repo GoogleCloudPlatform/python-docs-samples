@@ -219,3 +219,25 @@ def test_process_document_summarizer(capsys):
     ]
     for expected_string in expected_strings:
         assert expected_string in out
+
+
+def test_process_document_layout():
+    location = "us"
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    processor_id = "85b02a52f356f564"
+    processor_version = "pretrained"
+    file_path = "resources/superconductivity.pdf"
+    mime_type = "application/pdf"
+
+    document = handle_response_sample_v1beta3.process_document_layout_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version=processor_version,
+        file_path=file_path,
+        mime_type=mime_type,
+    )
+
+    assert document
+    assert document.document_layout
+    assert document.chunked_document
