@@ -52,7 +52,6 @@ def process_document_layout_sample(
         )
     )
 
-    # Online processing request to Document AI
     document = process_document(
         project_id,
         location,
