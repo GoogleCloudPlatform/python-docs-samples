@@ -222,7 +222,6 @@ def test_process_document_summarizer(capsys):
 
 
 def test_process_document_layout():
-
     document = handle_response_sample_v1beta3.process_document_layout_sample(
         project_id=os.environ["GOOGLE_CLOUD_PROJECT"],
         location="us",
