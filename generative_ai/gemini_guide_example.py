@@ -15,9 +15,6 @@
 
 def generate_text(project_id: str, location: str) -> str:
     # [START generativeaionvertexai_gemini_get_started]
-    # TODO(developer): Vertex AI SDK - uncomment below & run
-    # pip3 install --upgrade --user google-cloud-aiplatform
-    # gcloud auth application-default login
 
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
