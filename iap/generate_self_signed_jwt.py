@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # Copyright 2024 Google LLC
 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,7 +29,8 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
       resource_url (str): Specifies scope of the JWT, the URL that the JWT will be allowed to access.
     Returns:
       A signed-jwt that can be used to access IAP protected applications.
-      Sample: curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
+        Access the application with the JWT in the Authorization Header.
+        curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
     """
     iat = datetime.datetime.now(tz=datetime.timezone.utc)
     exp = iat + 3600
@@ -47,10 +47,10 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
     """Signs JWT payload using ADC and IAM credentials API.
 
     Args:
-      target_sa (str): Service Account JWT is being created for. This service account will
-        require IAM permissions
-      resource_url (str): Audience of the JWT, and scope of the JWT token. This is the
-        url of the IAP protected application.
+      target_sa (str): Service Account JWT is being created for. 
+        iap.webServiceVersions.accessViaIap permission is required.
+      resource_url (str): Audience of the JWT, and scope of the JWT token. 
+        This is the url of the IAP protected application.
     Returns:
       A signed-jwt that can be used to access IAP protected apps.
     """
@@ -68,7 +68,7 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
     """Signs JWT payload using local service account credential key file.
 
     Args:
-      credential_key_file_path (str): Path to the downloaded JSON credentials of the service
+      credential_key_file_path (str): Path to the downloaded JSON credentials of the service 
         account the JWT is being created for.
       resource_url (str): Scope of JWT token, This is the url of the IAP protected application.
     Returns:
