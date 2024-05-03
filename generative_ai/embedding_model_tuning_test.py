@@ -17,20 +17,19 @@ import os
 import backoff
 
 from google.api_core.exceptions import FailedPrecondition
+
 import google.auth
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
-from google.cloud.aiplatform import pipeline_jobs
 
 
 import embedding_model_tuning
 
 
 @backoff.on_exception(backoff.expo, FailedPrecondition, max_time=300)
-def dispose(job: pipeline_jobs.PipelineJob) -> None:
-    if not job.done():
-        job.cancel()
-    job.delete()
+def dispose(tuning_job) -> None:  # noqa: ANN001
+    if tuning_job._status.name == "PIPELINE_STATE_RUNNING":
+        tuning_job._cancel()
 
 
 def test_tune_embedding_model() -> None:
@@ -43,12 +42,9 @@ def test_tune_embedding_model() -> None:
         staging_bucket="gs://ucaip-samples-us-central1/training_pipeline_output",
         credentials=credentials,
     )
-    job = embedding_model_tuning.tune_embedding_model(
-        aiplatform_init.global_config.api_endpoint,
-        aiplatform_init.global_config.project,
-        aiplatform_init.global_config.staging_bucket,
-    )
+    tuning_job = embedding_model_tuning.tune_embedding_model(
+        aiplatform_init.global_config.api_endpoint)
     try:
-        assert job.state != "PIPELINE_STATE_FAILED"
+        assert tuning_job._status.name != "PIPELINE_STATE_FAILED"
     finally:
-        dispose(job)
+        dispose(tuning_job)
