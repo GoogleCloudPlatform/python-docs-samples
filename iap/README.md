@@ -106,8 +106,10 @@ Ensure that you are in the correct working directory: (/python-docs-samples/iap)
 ```
    virtualenv/bin/pip install -r requirements.txt
 ```
-2. Download [credential file](https://cloud.google.com/iam/docs/keys-create-delete#creating) for authenticating service account
-2. Call `sign_jwt_with_local_credentials_file`, 
+
+1. Download [credential file](https://cloud.google.com/iam/docs/keys-create-delete#creating) for authenticating service account
+
+1. Call `sign_jwt_with_local_credentials_file`, 
 ```
    sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
 ```
