@@ -29,8 +29,8 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
       resource_url (str): Specifies scope of the JWT, the URL that the JWT will be allowed to access.
     Returns:
       A signed-jwt that can be used to access IAP protected applications.
-        Access the application with the JWT in the Authorization Header.
-        curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
+      Access the application with the JWT in the Authorization Header.
+      curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
     """
     iat = datetime.datetime.now(tz=datetime.timezone.utc)
     exp = iat + 3600
