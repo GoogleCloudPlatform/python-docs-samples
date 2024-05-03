@@ -84,41 +84,41 @@ Ensure that you are in the correct working directory: (/python-docs-samples/iap)
 
 1. Install the libraries listed in `/python-docs-samples/iap/requirements.txt`, e.g. by running:
 
-```
-   virtualenv/bin/pip install -r requirements.txt
-```
+   ```
+      virtualenv/bin/pip install -r requirements.txt
+   ```
 
 1. Call `sign_jwt` in the python file. This example would create a JWT for the service account email@gmail.com to access the IAP protected application hosted at https://example.com.
 
-```
-   sign_jwt("email@gmail.com", "https://example.com")
-``` 
+   ```
+      sign_jwt("email@gmail.com", "https://example.com")
+   ``` 
 
 1. Use the result of the call to access your IAP protected resource programmatically: 
-```
-   curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
-```
+   ```
+      curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
+   ```
 
 
 ### Self-signed JWT with local key file
 1. Install the libraries listed in `/python-docs-samples/iap/requirements.txt`, e.g. by running:
 
-```
-   virtualenv/bin/pip install -r requirements.txt
-```
+   ```
+      virtualenv/bin/pip install -r requirements.txt
+   ```
 1. Create a service account and download its private key.
    See https://cloud.google.com/iam/docs/creating-managing-service-account-keys
    for more information on how to do this.
 1. Call `sign_jwt_with_local_credentials_file`,  using the downloaded local credentials
    for the service account.
-```
-   sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
-```
+   ```
+      sign_jwt_with_local_credentials_file("path/to/key/file.json", "https://example.com")
+   ```
 
 1. Use the result of the call to access your IAP protected resource programmatically: 
-```
-   curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
-```
+   ```
+      curl --verbose --header 'Authorization: Bearer SIGNED_JWT' "https://example.com"
+   ```
 ## Running Tests
 
 1. Deploy `app_engine_app` to a project.
