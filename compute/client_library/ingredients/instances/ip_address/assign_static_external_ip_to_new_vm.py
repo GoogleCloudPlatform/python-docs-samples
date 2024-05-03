@@ -40,7 +40,14 @@ def assign_static_external_ip_to_new_vm(
     newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [disk_from_image(disk_type, 10, True, newest_debian.self_link, True)]
-    instance = create_instance(project_id, zone, instance_name, disks, external_ipv4=ip_address, external_access=True)
+    instance = create_instance(
+        project_id,
+        zone,
+        instance_name,
+        disks,
+        external_ipv4=ip_address,
+        external_access=True,
+    )
     return instance
 
 

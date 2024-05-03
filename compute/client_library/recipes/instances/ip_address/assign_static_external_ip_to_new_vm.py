@@ -30,7 +30,7 @@
 # <INGREDIENT assign_static_external_ip_to_new_vm />
 # </REGION compute_instances_create_from_image>
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     import google.auth
     import uuid
 
@@ -41,4 +41,4 @@ if __name__ == '__main__':
 
     assign_static_external_ip_to_new_vm(
         PROJECT, ZONE, instance_name, external_ipv4=ip_address, external_access=True
-        )
+    )
