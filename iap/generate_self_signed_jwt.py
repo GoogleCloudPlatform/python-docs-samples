@@ -54,9 +54,7 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
     Returns:
       A signed-jwt that can be used to access IAP protected apps.
     """
-    # Uses Application Default Credentials
     source_credentials, _ = google.auth.default()
-    # use the IAM api and the users credentials to sign the JWT
     iam_client = iam_credentials_v1.IAMCredentialsClient(credentials=source_credentials)
     return iam_client.sign_jwt(
         name=iam_client.service_account_path('-', target_sa),
