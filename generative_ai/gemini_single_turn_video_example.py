@@ -13,16 +13,19 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str) -> str:
+def generate_text(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_single_turn_video]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
-    # Load the model
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
+
     vision_model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
+
     # Generate text
     response = vision_model.generate_content(
         [
@@ -32,7 +35,7 @@ def generate_text(project_id: str, location: str) -> str:
             "What is in the video?",
         ]
     )
-    print(response)
+    print(response.text)
     # [END generativeaionvertexai_gemini_single_turn_video]
 
     return response.text
