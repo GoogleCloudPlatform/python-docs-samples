@@ -14,8 +14,8 @@
 
 import os
 
-import grounding_public_data_basic
 import grounding_private_data_basic
+import grounding_public_data_basic
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
