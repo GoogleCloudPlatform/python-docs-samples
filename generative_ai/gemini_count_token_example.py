@@ -13,10 +13,12 @@
 # limitations under the License.
 
 
-def count_tokens(project_id: str) -> str:
+from vertexai.generative_models import GenerationResponse
+
+
+def count_tokens(project_id: str) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_token_count]
     import vertexai
-
     from vertexai.generative_models import GenerativeModel
 
     # TODO(developer): Update and un-comment below line
@@ -26,8 +28,59 @@ def count_tokens(project_id: str) -> str:
 
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
-    response = model.count_tokens("Why is sky blue?")
-    print(response)
+    prompt = "Why is the sky blue?"
+
+    # Prompt tokens count
+    response = model.count_tokens(prompt)
+    print(f"Prompt Token Count: {response.total_tokens}")
+    print(f"Prompt Character Count: {response.total_billable_characters}")
+
+    # Send text to Gemini
+    response = model.generate_content(prompt)
+
+    # Response tokens count
+    usage_metadata = response.usage_metadata
+    print(f"Prompt Token Count: {usage_metadata.prompt_token_count}")
+    print(f"Candidates Token Count: {usage_metadata.candidates_token_count}")
+    print(f"Total Token Count: {usage_metadata.total_token_count}")
 
     # [END generativeaionvertexai_gemini_token_count]
+    return response
+
+
+def count_tokens_multimodal(project_id: str) -> GenerationResponse:
+    # [START generativeaionvertexai_gemini_token_count_multimodal]
+    import vertexai
+    from vertexai.generative_models import GenerativeModel, Part
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
+
+    contents = [
+        Part.from_uri(
+            "gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
+            mime_type="video/mp4",
+        ),
+        "Provide a description of the video.",
+    ]
+
+    # Prompt tokens count
+    response = model.count_tokens(contents)
+    print(f"Prompt Token Count: {response.total_tokens}")
+    print(f"Prompt Character Count: {response.total_billable_characters}")
+
+    # Send text to Gemini
+    response = model.generate_content(contents)
+    usage_metadata = response.usage_metadata
+
+    # Response tokens count
+    print(f"Prompt Token Count: {usage_metadata.prompt_token_count}")
+    print(f"Candidates Token Count: {usage_metadata.candidates_token_count}")
+    print(f"Total Token Count: {usage_metadata.total_token_count}")
+
+    # [END generativeaionvertexai_gemini_token_count_multimodal]
     return response

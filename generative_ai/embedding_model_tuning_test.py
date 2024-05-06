@@ -43,7 +43,8 @@ def test_tune_embedding_model() -> None:
         credentials=credentials,
     )
     tuning_job = embedding_model_tuning.tune_embedding_model(
-        aiplatform_init.global_config.api_endpoint)
+        aiplatform_init.global_config.api_endpoint
+    )
     try:
         assert tuning_job._status.name != "PIPELINE_STATE_FAILED"
     finally:

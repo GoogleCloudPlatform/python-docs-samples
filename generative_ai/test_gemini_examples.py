@@ -82,6 +82,11 @@ def test_gemini_multi_image_example() -> None:
 def test_gemini_count_token_example() -> None:
     response = gemini_count_token_example.count_tokens(PROJECT_ID)
     assert response
+    assert response.usage_metadata
+
+    response = gemini_count_token_example.count_tokens_multimodal(PROJECT_ID)
+    assert response
+    assert response.usage_metadata
 
 
 def test_gemini_safety_config_example() -> None:
