@@ -15,13 +15,14 @@
 import os
 
 import backoff
+import pytest
+
 from google.api_core.exceptions import ResourceExhausted
 
 import function_calling
 
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
 
 
 summary_expected = [
@@ -40,10 +41,17 @@ response_expected = [
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling() -> None:
-    summary, response = function_calling.generate_function_call(
-        prompt="What is the weather like in Boston?",
-        project_id=_PROJECT_ID,
-        location=_LOCATION,
-    )
-    assert all(x in str(summary) for x in summary_expected)
+    response = function_calling.generate_function_call(project_id=_PROJECT_ID)
+    assert all(x in str(response.text) for x in summary_expected)
+    assert all(x in str(response) for x in response_expected)
+
+
+# TODO: Remove skip once b/336973838 is resolved.
+pytest.skip("Service currently returning INVALID_ARGUMENT")
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_function_calling_advanced() -> None:
+    response = function_calling.generate_function_call_advanced(project_id=_PROJECT_ID)
+    assert all(x in str(response.text) for x in summary_expected)
     assert all(x in str(response) for x in response_expected)
