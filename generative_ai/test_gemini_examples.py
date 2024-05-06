@@ -40,14 +40,14 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
 def test_gemini_guide_example() -> None:
-    text = gemini_guide_example.generate_text(PROJECT_ID, LOCATION)
+    text = gemini_guide_example.generate_text(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
     assert "scones" in text
 
 
 def test_gemini_pro_basic_example() -> None:
-    text = gemini_pro_basic_example.generate_text(PROJECT_ID, LOCATION)
+    text = gemini_pro_basic_example.generate_text(PROJECT_ID)
     assert len(text) > 0
 
 
@@ -60,7 +60,7 @@ def test_gemini_pro_config_example() -> None:
     urllib.request.urlretrieve(url, fname)
 
     if os.path.isfile(fname):
-        text = gemini_pro_config_example.generate_text(PROJECT_ID, LOCATION)
+        text = gemini_pro_config_example.generate_text(PROJECT_ID)
         text = text.lower()
         assert len(text) > 0
         assert any(e in text for e in ("blueberry", "coffee", "flower", "table"))
@@ -72,7 +72,7 @@ def test_gemini_pro_config_example() -> None:
 
 
 def test_gemini_multi_image_example() -> None:
-    text = gemini_multi_image_example.generate_text_multimodal(PROJECT_ID, LOCATION)
+    text = gemini_multi_image_example.generate_text_multimodal(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
     assert "city" in text
@@ -90,19 +90,12 @@ def test_gemini_count_token_example() -> None:
 
 
 def test_gemini_safety_config_example() -> None:
-    from vertexai.preview.generative_models import Part
-
-    image = Part.from_uri(
-        "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
-    )
-
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
-    text = gemini_safety_config_example.generate_text(PROJECT_ID, LOCATION, image)
+    text = gemini_safety_config_example.generate_text(PROJECT_ID)
     assert len(text) > 0
 
 
 def test_gemini_single_turn_video_example() -> None:
-    text = gemini_single_turn_video_example.generate_text(PROJECT_ID, LOCATION)
+    text = gemini_single_turn_video_example.generate_text(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("zoo", "tiger", "leaf", "water")])
@@ -114,12 +107,12 @@ def test_gemini_pdf_example() -> None:
 
 
 def test_gemini_chat_example() -> None:
-    text = gemini_chat_example.chat_text_example(PROJECT_ID, LOCATION)
+    text = gemini_chat_example.chat_text_example(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
-    text = gemini_chat_example.chat_stream_example(PROJECT_ID, LOCATION)
+    text = gemini_chat_example.chat_stream_example(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
@@ -131,7 +124,6 @@ def test_gemini_chat_example() -> None:
 def test_gemini_grounding_web_example() -> None:
     response = gemini_grounding_example.generate_text_with_grounding_web(
         PROJECT_ID,
-        LOCATION,
     )
     assert response
 
@@ -140,7 +132,6 @@ def test_gemini_grounding_vais_example() -> None:
     data_store_path = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
     response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
         PROJECT_ID,
-        LOCATION,
         data_store_path=data_store_path,
     )
     assert response
