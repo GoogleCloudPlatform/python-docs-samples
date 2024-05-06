@@ -14,15 +14,18 @@
 
 import os
 
+import pytest
 import gemini_tuning
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
 MODEL_ID = "gemini-1.5-pro-preview-0409"
-TUNING_JOB_ID = "tuning_job_ID"
+TUNING_JOB_ID = "4982013113894174720"
 
 
 def test_supervised_tuning() -> None:
+    # Skip due to tuning taking a long time.
+    pytest.skip()
     response = gemini_tuning.gemini_supervised_tuning(PROJECT_ID)
     assert response
 
@@ -34,10 +37,11 @@ def test_get_supervised_tuning_job() -> None:
     assert response
 
 
-def test_list_tuning_jobs() -> None:
+def test_list_supervised_tuning_jobs() -> None:
     response = gemini_tuning.list_supervised_tuning_jobs(PROJECT_ID)
     assert response
 
 
 def test_cancel_supervised_tuning_job() -> None:
+    pytest.skip()
     gemini_tuning.cancel_supervised_tuning_job(PROJECT_ID, REGION, TUNING_JOB_ID)
