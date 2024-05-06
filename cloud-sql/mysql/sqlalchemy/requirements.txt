@@ -4,4 +4,4 @@ PyMySQL==1.1.0
 gunicorn==22.0.0
 cloud-sql-python-connector==1.2.4
 functions-framework==3.5.0
-Werkzeug==2.3.7
+Werkzeug==3.0.3
