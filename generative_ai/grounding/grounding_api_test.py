@@ -15,7 +15,7 @@
 import os
 
 import grounding_public_data_basic
-# import grounding_private_data_basic
+import grounding_private_data_basic
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -29,8 +29,8 @@ def test_grounding_public_data_basic() -> None:
     assert response
 
 
-# def test_grounding_private_data_basic() -> None:
-#     response = grounding_private_data_basic.generate_content(
-#         PROJECT_ID, REGION, MODEL_ID, DATASTORE
-#     )
-#     assert response
+def test_grounding_private_data_basic() -> None:
+    response = grounding_private_data_basic.generate_content(
+        PROJECT_ID, REGION, MODEL_ID, DATASTORE
+    )
+    assert response
