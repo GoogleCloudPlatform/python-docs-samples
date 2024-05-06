@@ -14,8 +14,8 @@
 
 import os
 
-import text_embedding_basic
 import text_embedding_advanced
+import text_embedding_basic
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"

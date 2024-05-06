@@ -28,4 +28,3 @@ def generate_content(
     # [END generativeaionvertexai_text_embedding_basic]
 
     return vector
-
