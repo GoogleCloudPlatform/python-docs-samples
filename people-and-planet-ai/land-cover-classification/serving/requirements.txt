@@ -3,4 +3,4 @@ Flask==3.0.0
 earthengine-api==0.1.395
 gunicorn==22.0.0
 tensorflow==2.12.0
-Werkzeug==3.0.1
+Werkzeug==3.0.3
