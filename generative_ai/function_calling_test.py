@@ -15,9 +15,10 @@
 import os
 
 import backoff
-import pytest
 
 from google.api_core.exceptions import ResourceExhausted
+
+import pytest
 
 import function_calling
 

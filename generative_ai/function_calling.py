@@ -74,7 +74,7 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     # Check the function name that the model responded with, and make an API call to an external system
     if function_call.name == function_name:
         # Extract the arguments to use in your API call
-        location = function_call.args["location"]
+        location = function_call.args["location"]  # noqa: F841
 
         # Here you can use your preferred method to make an API request to fetch the current weather, for example:
         # api_response = requests.post(weather_api_url, data={"location": location})
