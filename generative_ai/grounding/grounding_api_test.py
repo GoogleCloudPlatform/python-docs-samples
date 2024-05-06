@@ -21,7 +21,7 @@ import grounding_public_data_basic
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
 MODEL_ID = "gemini-1.5-pro-preview-0409"
-DATASTORE = ""
+DATASTORE = "test-search-engine_1689960780551"
 
 
 def test_grounding_public_data_basic() -> None:
