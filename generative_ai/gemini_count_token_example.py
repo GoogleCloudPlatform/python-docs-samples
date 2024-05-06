@@ -32,8 +32,8 @@ def count_tokens(project_id: str) -> GenerationResponse:
 
     # Prompt tokens count
     response = model.count_tokens(prompt)
-    usage_metadata = response.usage_metadata
-    print(f"Prompt Token Count: {usage_metadata.prompt_token_count}")
+    print(f"Prompt Token Count: {response.total_tokens}")
+    print(f"Prompt Character Count: {response.total_billable_characters}")
 
     # Send text to Gemini
     response = model.generate_content(prompt)
@@ -58,7 +58,7 @@ def count_tokens_multimodal(project_id: str) -> GenerationResponse:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.0-pro-002")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     contents = [
         Part.from_uri(
@@ -70,8 +70,8 @@ def count_tokens_multimodal(project_id: str) -> GenerationResponse:
 
     # Prompt tokens count
     response = model.count_tokens(contents)
-    usage_metadata = response.usage_metadata
-    print(f"Prompt Token Count: {usage_metadata.prompt_token_count}")
+    print(f"Prompt Token Count: {response.total_tokens}")
+    print(f"Prompt Character Count: {response.total_billable_characters}")
 
     # Send text to Gemini
     response = model.generate_content(contents)
