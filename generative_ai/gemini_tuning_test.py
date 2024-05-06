@@ -14,12 +14,7 @@
 
 import os
 
-import tuning_basic
-import tuning_advanced
-import list_tunning_job
-import get_tunning_job
-import cancel_tunning_job
-
+import gemini_tuning
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
@@ -27,32 +22,22 @@ MODEL_ID = "gemini-1.5-pro-preview-0409"
 TUNING_JOB_ID = "tuning_job_ID"
 
 
-def test_tuning_basic() -> None:
-    response = tuning_basic.generate_content(PROJECT_ID, REGION)
+def test_supervised_tuning() -> None:
+    response = gemini_tuning.gemini_supervised_tuning(PROJECT_ID)
     assert response
 
 
-def test_tuning_advanced() -> None:
-    response = tuning_advanced.generate_content(PROJECT_ID, REGION)
-    assert response
-    
-    
-def test_list_tunning_job() -> None:
-    response = list_tunning_job.generate_content(PROJECT_ID, REGION)
-    assert response
-    
-
-def test_get_tunning_job() -> None:
-    response = get_tunning_job.generate_content(PROJECT_ID, REGION, TUNING_JOB_ID)
-    assert response
-    
-
-def test_cancel_tunning_job() -> None:
-    response = cancel_tunning_job.generate_content(PROJECT_ID, REGION, TUNING_JOB_ID)
+def test_get_supervised_tuning_job() -> None:
+    response = gemini_tuning.get_supervised_tuning_job(
+        PROJECT_ID, REGION, TUNING_JOB_ID
+    )
     assert response
 
 
+def test_list_tuning_jobs() -> None:
+    response = gemini_tuning.list_supervised_tuning_jobs(PROJECT_ID)
+    assert response
 
 
-
-
+def test_cancel_supervised_tuning_job() -> None:
+    gemini_tuning.cancel_supervised_tuning_job(PROJECT_ID, REGION, TUNING_JOB_ID)
