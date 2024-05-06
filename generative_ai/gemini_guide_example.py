@@ -13,29 +13,30 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str) -> str:
+def generate_text(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_get_started]
-
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
-    # Load the model
-    multimodal_model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
-    # Query the model
-    response = multimodal_model.generate_content(
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
+
+    response = model.generate_content(
         [
-            # Add an example image
             Part.from_uri(
-                "gs://generativeai-downloads/images/scones.jpg", mime_type="image/jpeg"
+                "gs://cloud-samples-data/generative-ai/image/scones.jpg",
+                mime_type="image/jpeg",
             ),
-            # Add an example query
-            "what is shown in this image?",
+            "What is shown in this image?",
         ]
     )
-    print(response)
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_get_started]
+
     return response.text
-
-
-# [END generativeaionvertexai_gemini_get_started]
