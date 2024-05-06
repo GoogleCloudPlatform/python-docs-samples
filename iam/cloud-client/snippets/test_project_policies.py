@@ -15,6 +15,8 @@
 import re
 import uuid
 
+import backoff
+from google.api_core.exceptions import Aborted
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -60,6 +62,11 @@ def project_policy() -> policy_pb2.Policy:
         assert updated_policy == policy
 
 
+@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
+def policy_setter(project: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
+    return set_policy(project, policy)
+
+
 def test_set_policy(project_policy: policy_pb2.Policy) -> None:
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
@@ -71,7 +78,7 @@ def test_set_policy(project_policy: policy_pb2.Policy) -> None:
     )
     project_policy.bindings.append(test_binding)
 
-    policy = set_policy(PROJECT, project_policy)
+    policy = policy_setter(PROJECT, project_policy)
 
     binding_found = False
     for bind in policy.bindings:
@@ -94,7 +101,7 @@ def test_modify_policy_add_member(
     )
     project_policy.bindings.append(test_binding)
 
-    policy = set_policy(PROJECT, project_policy)
+    policy = policy_setter(PROJECT, project_policy)
     binding_found = False
     for bind in policy.bindings:
         if bind.role == test_binding.role:
@@ -128,7 +135,8 @@ def test_modify_policy_remove_member(
     )
     project_policy.bindings.append(test_binding)
 
-    policy = set_policy(PROJECT, project_policy)
+    policy = policy_setter(PROJECT, project_policy)
+
     binding_found = False
     for bind in policy.bindings:
         if bind.role == test_binding.role:
