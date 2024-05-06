@@ -21,7 +21,7 @@ def count_tokens(project_id: str) -> GenerationResponse:
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
 
     vertexai.init(project=project_id, location="us-central1")
