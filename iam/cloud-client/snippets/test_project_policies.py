@@ -13,20 +13,20 @@
 # limitations under the License.
 
 import re
+from typing import Callable, Union
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
 from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
-from snippets.get_policy import get_policy
+from snippets.get_policy import get_project_policy
 from snippets.modify_policy_add_member import modify_policy_add_member
 from snippets.modify_policy_remove_member import modify_policy_remove_member
 from snippets.query_testable_permissions import query_testable_permissions
-from snippets.set_policy import set_policy
+from snippets.set_policy import set_project_policy
 
 PROJECT = google.auth.default()[1]
 
@@ -50,24 +50,23 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
 @pytest.fixture
 def project_policy() -> policy_pb2.Policy:
     try:
-        policy = get_policy(PROJECT)
+        policy = get_project_policy(PROJECT)
         policy_copy = policy_pb2.Policy()
         policy_copy.CopyFrom(policy)
         yield policy_copy
     finally:
-        policy.ClearField("etag")
-        updated_policy = set_policy(PROJECT, policy)
+        updated_policy = execute_wrapped(set_project_policy, PROJECT, policy)
 
         updated_policy.ClearField("etag")
         assert updated_policy == policy
 
 
-@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
-def policy_setter(project: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
-    return set_policy(project, policy)
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def execute_wrapped(func: Callable, *args: Union[str, policy_pb2.Policy]) -> policy_pb2.Policy:
+    return func(*args)
 
 
-def test_set_policy(project_policy: policy_pb2.Policy) -> None:
+def test_set_project_policy(project_policy: policy_pb2.Policy) -> None:
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
     test_binding.role = role
@@ -78,7 +77,7 @@ def test_set_policy(project_policy: policy_pb2.Policy) -> None:
     )
     project_policy.bindings.append(test_binding)
 
-    policy = policy_setter(PROJECT, project_policy)
+    policy = execute_wrapped(set_project_policy, PROJECT, project_policy)
 
     binding_found = False
     for bind in policy.bindings:
@@ -101,7 +100,7 @@ def test_modify_policy_add_member(
     )
     project_policy.bindings.append(test_binding)
 
-    policy = policy_setter(PROJECT, project_policy)
+    policy = execute_wrapped(set_project_policy, PROJECT, project_policy)
     binding_found = False
     for bind in policy.bindings:
         if bind.role == test_binding.role:
@@ -110,7 +109,7 @@ def test_modify_policy_add_member(
     assert binding_found
 
     member = f"serviceAccount:{service_account}"
-    policy = modify_policy_add_member(PROJECT, role, member)
+    policy = execute_wrapped(modify_policy_add_member, PROJECT, role, member)
 
     member_added = False
     for bind in policy.bindings:
@@ -135,7 +134,7 @@ def test_modify_policy_remove_member(
     )
     project_policy.bindings.append(test_binding)
 
-    policy = policy_setter(PROJECT, project_policy)
+    policy = execute_wrapped(set_project_policy, PROJECT, project_policy)
 
     binding_found = False
     for bind in policy.bindings:
@@ -144,7 +143,7 @@ def test_modify_policy_remove_member(
             break
     assert binding_found
 
-    policy = modify_policy_remove_member(PROJECT, role, member)
+    policy = execute_wrapped(modify_policy_remove_member, PROJECT, role, member)
 
     member_removed = False
     for bind in policy.bindings:

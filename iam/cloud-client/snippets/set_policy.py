@@ -19,7 +19,7 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
+def set_project_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
     """
     Set policy for project. Pay attention that previous state will be completely rewritten.
     If you want to update only part of the policy follow the approach read->modify->write.
@@ -28,15 +28,22 @@ def set_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
     project_id: ID or number of the Google Cloud project you want to use.
     policy: Policy which has to be set.
     """
-
     client = resourcemanager_v3.ProjectsClient()
+
+    request = iam_policy_pb2.GetIamPolicyRequest()
+    request.resource = f"projects/{project_id}"
+    current_policy = client.get_iam_policy(request)
+
+    # Etag should as fresh as possible to lower chance of collisions
+    policy.ClearField("etag")
+    current_policy.CopyFrom(policy)
     request = iam_policy_pb2.SetIamPolicyRequest()
     request.resource = f"projects/{project_id}"
 
     # request.etag field also will be merged which means you are secured from collision,
-    # but it means that request may fail and you need to leverage exponential reties approach
+    # but it means that request may fail and you need to leverage exponential retries approach
     # to be sure policy has been updated.
-    request.policy.MergeFrom(policy)
+    request.policy.CopyFrom(current_policy)
 
     policy = client.set_iam_policy(request)
     return policy
@@ -52,14 +59,10 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "test-project-id"
 
-    bindings = [
-        {
-            "role": "roles/viewer",
-            "members": [
-                "serviceAccount:test-service-account@test-project-id.iam.gserviceaccount.com",
-            ],
-            "condition": {},
-        },
-    ]
+    new_policy = policy_pb2.Policy()
+    binding = policy_pb2.Binding()
+    binding.role = "roles/viewer"
+    binding.members.append(f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com")
+    new_policy.bindings.append(binding)
 
-    set_policy(project_id, bindings)
+    set_project_policy(project_id, new_policy)
