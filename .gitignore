@@ -30,4 +30,5 @@ env/
 .idea
 .env*
 **/venv
+**/notebook_venv
 **/noxfile.py
