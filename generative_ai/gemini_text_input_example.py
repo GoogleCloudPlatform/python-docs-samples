@@ -26,7 +26,7 @@ def generate_from_text_input(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.0-pro")
+    model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
     response = model.generate_content(
         [
