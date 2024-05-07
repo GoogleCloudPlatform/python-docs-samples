@@ -13,17 +13,14 @@
 # limitations under the License.
 
 
-def generate_content(PROJECT_ID: str, REGION: str) -> object:
+def generate_content(PROJECT_ID: str, REGION: str, EXTENSION_ID:str) -> object:
     # [START generativeaionvertexai_delete_extension]
     import vertexai
     from vertexai.preview import extensions
 
     vertexai.init(project=PROJECT_ID, location=REGION)
 
-    extension_code_interpreter = extensions.Extension(
-        # "${EXTENSION_ID}"
-        "7381153498655621120"
-    )
+    extension_code_interpreter = extensions.Extension(EXTENSION_ID)
     deletion_status = extension_code_interpreter.delete()
     # [END generativeaionvertexai_delete_extension]
     return deletion_status

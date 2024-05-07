@@ -28,7 +28,7 @@ REGION = "us-central1"
 
 
 def test_delete_extension() -> None:
-    response = delete_extension.generate_content(PROJECT_ID, REGION)
+    response = delete_extension.generate_content(PROJECT_ID, REGION, EXTENSION_ID)
     assert response
 
 
