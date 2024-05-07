@@ -16,7 +16,6 @@ from vertexai.generative_models import GenerationResponse
 
 
 def generate_function_call(project_id: str) -> GenerationResponse:
-
     # [START generativeaionvertexai_gemini_function_calling]
     import vertexai
     from vertexai.generative_models import (
@@ -27,7 +26,6 @@ def generate_function_call(project_id: str) -> GenerationResponse:
         Part,
         Tool,
     )
-
 
     # Initialize Vertex AI
     # TODO(developer): Update and un-comment below lines
