@@ -19,7 +19,7 @@ from google.cloud import iam_admin_v1
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def get_policy(project_id: str, account: str) -> policy_pb2.Policy:
+def get_service_account_iam_policy(project_id: str, account: str) -> policy_pb2.Policy:
     """
     Get policy for service account.
     project_id: ID or number of the Google Cloud project you want to use.
@@ -46,5 +46,5 @@ if __name__ == "__main__":
     name = "test-account-name"
     service_account = f"{name}@{project_id}.iam.gserviceaccount.com"
 
-    policy = get_policy(project_id, service_account)
+    policy = get_service_account_iam_policy(project_id, service_account)
     print(policy)

@@ -23,9 +23,9 @@ from snippets.delete_service_account import delete_service_account
 from snippets.disable_service_account import disable_service_account
 from snippets.enable_service_account import enable_service_account
 from snippets.list_service_accounts import get_service_account, list_service_accounts
-from snippets.service_account_get_policy import get_policy
+from snippets.service_account_get_policy import get_service_account_iam_policy
 from snippets.service_account_rename import rename_service_account
-from snippets.service_account_set_policy import set_policy
+from snippets.service_account_set_policy import set_service_account_iam_policy
 
 PROJECT = google.auth.default()[1]
 
@@ -73,7 +73,7 @@ def test_enable_service_account(service_account: str) -> None:
 
 
 def test_service_account_set_policy(service_account: str) -> None:
-    policy = get_policy(PROJECT, service_account)
+    policy = get_service_account_iam_policy(PROJECT, service_account)
 
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
@@ -81,7 +81,7 @@ def test_service_account_set_policy(service_account: str) -> None:
     test_binding.members.append(f"serviceAccount:{service_account}")
     policy.bindings.append(test_binding)
 
-    new_policy = set_policy(PROJECT, service_account, policy)
+    new_policy = set_service_account_iam_policy(PROJECT, service_account, policy)
 
     binding_found = False
     for bind in new_policy.bindings:

@@ -19,7 +19,7 @@ from google.cloud import iam_admin_v1
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_policy(project_id: str, account: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
+def set_service_account_iam_policy(project_id: str, account: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
     """
     Set policy for service account. Pay attention that previous state will be completely rewritten.
     If you want to update only part of the policy follow the approach read->modify->write.
@@ -67,4 +67,4 @@ if __name__ == "__main__":
     )
     policy.bindings.append(test_binding)
 
-    set_policy(project_id, service_account, policy)
+    set_service_account_iam_policy(project_id, service_account, policy)
