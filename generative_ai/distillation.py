@@ -14,7 +14,9 @@
 
 # [START aiplatform_sdk_distillation]
 from __future__ import annotations
+
 from typing import Optional
+
 from google.auth import default
 
 import vertexai

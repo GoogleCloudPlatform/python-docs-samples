@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def generate_function_call_chat(project_id: str, location: str) -> tuple:
     # [START generativeaionvertexai_gemini_function_calling_chat]
     import vertexai

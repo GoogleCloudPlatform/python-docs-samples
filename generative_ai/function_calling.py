@@ -13,9 +13,6 @@
 # limitations under the License.
 
 
-
-
-
 def generate_function_call(prompt: str, project_id: str, location: str) -> tuple:
     # [START generativeaionvertexai_gemini_function_calling]
     import vertexai
