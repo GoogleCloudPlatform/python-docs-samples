@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import List
+
 from vertexai.preview.tuning import sft
 
 
@@ -74,7 +76,7 @@ def get_supervised_tuning_job(
     return response
 
 
-def list_supervised_tuning_jobs(project_id: str) -> list[sft.SupervisedTuningJob]:
+def list_supervised_tuning_jobs(project_id: str) -> List[sft.SupervisedTuningJob]:
     # [START generativeaionvertexai_list_supervised_tuning_jobs]
     import vertexai
     from vertexai.preview.tuning import sft
