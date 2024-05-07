@@ -26,9 +26,8 @@ def tuning(
 
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
+    # Initialize Vertex AI
+    # TODO(developer): Update project_id
     vertexai.init(project=project_id, location="us-central1", credentials=credentials)
 
     model = TextGenerationModel.from_pretrained("text-bison@002")
@@ -41,7 +40,6 @@ def tuning(
 
     print(tuning_job._status)
     # [END generativeaionvertexai_tuning]
-
     return model
 
 

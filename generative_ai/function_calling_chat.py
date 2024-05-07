@@ -26,10 +26,9 @@ def generate_function_call_chat(project_id: str) -> ChatSession:
         Tool,
     )
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
     # Initialize Vertex AI
+    # project_id = "PROJECT_ID"
+    # TODO(developer): Update and un-comment below lines
     vertexai.init(project=project_id, location="us-central1")
 
     # Specify a function declaration and parameters for an API request
@@ -92,7 +91,7 @@ def generate_function_call_chat(project_id: str) -> ChatSession:
         # In this example, we'll use synthetic data to simulate a response payload from an external API
         api_response = {"sku": "GA04834-US", "in_stock": "yes"}
 
-    # Return the API response to Gemini so it can generate a model response or request another function call
+    # Return the API response to Gemini, so it can generate a model response or request another function call
     response = chat.send_message(
         Part.from_function_response(
             name=get_product_sku,
@@ -123,7 +122,7 @@ def generate_function_call_chat(project_id: str) -> ChatSession:
         # In this example, we'll use synthetic data to simulate a response payload from an external API
         api_response = {"store": "2000 N Shoreline Blvd, Mountain View, CA 94043, US"}
 
-    # Return the API response to Gemini so it can generate a model response or request another function call
+    # Return the API response to Gemini, so it can generate a model response or request another function call
     response = chat.send_message(
         Part.from_function_response(
             name="get_store_location",
