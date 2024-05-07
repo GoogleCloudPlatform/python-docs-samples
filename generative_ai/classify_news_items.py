@@ -31,30 +31,30 @@ def classify_news_items() -> str:
 
     response = model.predict(
         """What is the topic for a given news headline?
-- business
-- entertainment
-- health
-- sports
-- technology
-
-Text: Pixel 7 Pro Expert Hands On Review, the Most Helpful Google Phones.
-The answer is: technology
-
-Text: Quit smoking?
-The answer is: health
-
-Text: Roger Federer reveals why he touched Rafael Nadals hand while they were crying
-The answer is: sports
-
-Text: Business relief from Arizona minimum-wage hike looking more remote
-The answer is: business
-
-Text: #TomCruise has arrived in Bari, Italy for #MissionImpossible.
-The answer is: entertainment
-
-Text: CNBC Reports Rising Digital Profit as Print Advertising Falls
-The answer is:
-""",
+    - business
+    - entertainment
+    - health
+    - sports
+    - technology
+    
+    Text: Pixel 7 Pro Expert Hands On Review, the Most Helpful Google Phones.
+    The answer is: technology
+    
+    Text: Quit smoking?
+    The answer is: health
+    
+    Text: Roger Federer reveals why he touched Rafael Nadals hand while they were crying
+    The answer is: sports
+    
+    Text: Business relief from Arizona minimum-wage hike looking more remote
+    The answer is: business
+    
+    Text: #TomCruise has arrived in Bari, Italy for #MissionImpossible.
+    The answer is: entertainment
+    
+    Text: CNBC Reports Rising Digital Profit as Print Advertising Falls
+    The answer is:
+    """,
         **parameters,
     )
 

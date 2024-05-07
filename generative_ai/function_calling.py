@@ -12,20 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_function_calling]
-import vertexai
-from vertexai.generative_models import (
-    Content,
-    FunctionDeclaration,
-    GenerationConfig,
-    GenerativeModel,
-    Part,
-    Tool,
-)
+
+
 
 
 def generate_function_call(prompt: str, project_id: str, location: str) -> tuple:
+    # [START generativeaionvertexai_gemini_function_calling]
+    import vertexai
+    from vertexai.generative_models import Content, FunctionDeclaration, GenerationConfig, GenerativeModel, Part, Tool
+
     # Initialize Vertex AI
+    # TODO (developer): update project_id, location & temperature
     vertexai.init(project=project_id, location=location)
 
     # Initialize Gemini model
@@ -65,8 +62,8 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
 
     # Check the function name that the model responded with, and make an API call to an external system
     if (
-        response.candidates[0].content.parts[0].function_call.name
-        == "get_current_weather"
+            response.candidates[0].content.parts[0].function_call.name
+            == "get_current_weather"
     ):
         # Extract the arguments to use in your API call
         location = (
@@ -80,7 +77,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
         api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
                         "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
 
-    # Return the API response to Gemini so it can generate a model response or request another function call
+    # Return the API response to Gemini, so it can generate a model response or request another function call
     response = model.generate_content(
         [
             user_prompt_content,  # User prompt
@@ -100,8 +97,7 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
     )
     # Get the model summary response
     summary = response.candidates[0].content.parts[0].text
+    print(summary)
 
+    # [END generativeaionvertexai_gemini_function_calling]
     return summary, response
-
-
-# [END generativeaionvertexai_gemini_function_calling]

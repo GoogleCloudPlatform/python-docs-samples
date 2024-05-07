@@ -12,23 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_function_calling_chat]
-import vertexai
-from vertexai.generative_models import (
-    FunctionDeclaration,
-    GenerationConfig,
-    GenerativeModel,
-    Part,
-    Tool,
-)
 
 
 def generate_function_call_chat(project_id: str, location: str) -> tuple:
-    prompts = []
-    summaries = []
+    # [START generativeaionvertexai_gemini_function_calling_chat]
+    import vertexai
+    from vertexai.generative_models import FunctionDeclaration, GenerationConfig, GenerativeModel, Part, Tool
 
     # Initialize Vertex AI
+    # TODO (developer): update project_id, location
     vertexai.init(project=project_id, location=location)
+
+    prompts = []
+    summaries = []
 
     # Specify a function declaration and parameters for an API request
     get_product_info_func = FunctionDeclaration(
@@ -112,8 +108,8 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
 
     # Check the function name that the model responded with, and make an API call to an external system
     if (
-        response.candidates[0].content.parts[0].function_call.name
-        == "get_store_location"
+            response.candidates[0].content.parts[0].function_call.name
+            == "get_store_location"
     ):
         # Extract the arguments to use in your API call
         location = (
@@ -140,8 +136,7 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
     # Extract the text from the summary response
     summary = response.candidates[0].content.parts[0].text
     summaries.append(summary)
+    print(summaries)
+    # [END generativeaionvertexai_gemini_function_calling_chat]
 
     return prompts, summaries
-
-
-# [END generativeaionvertexai_gemini_function_calling_chat]
