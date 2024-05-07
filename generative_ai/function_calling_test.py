@@ -48,9 +48,7 @@ def test_function_calling() -> None:
 
 
 # TODO: Remove skip once b/336973838 is resolved.
-pytest.skip("Service currently returning INVALID_ARGUMENT")
-
-
+@pytest.mark.skip("Service currently returning INVALID_ARGUMENT")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_advanced() -> None:
     response = function_calling.generate_function_call_advanced(project_id=_PROJECT_ID)
