@@ -60,7 +60,7 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
             self.project = project
 
         def get_embedding(self, text: str = None, image_uri: str = None, video_uri: str = None,
-                          start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension = 1408) -> EmbeddingResponse:
+                          start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension: int = 1408) -> EmbeddingResponse:
             if not text and not image_uri and not video_uri:
                 raise ValueError(
                     'At least one of text or image_uri or video_uri must be specified.')
