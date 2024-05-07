@@ -16,7 +16,13 @@
 def generate_function_call_chat(project_id: str, location: str) -> tuple:
     # [START generativeaionvertexai_gemini_function_calling_chat]
     import vertexai
-    from vertexai.generative_models import FunctionDeclaration, GenerationConfig, GenerativeModel, Part, Tool
+    from vertexai.generative_models import (
+        FunctionDeclaration,
+        GenerationConfig,
+        GenerativeModel,
+        Part,
+        Tool,
+    )
 
     # Initialize Vertex AI
     # TODO (developer): update project_id, location
@@ -107,8 +113,8 @@ def generate_function_call_chat(project_id: str, location: str) -> tuple:
 
     # Check the function name that the model responded with, and make an API call to an external system
     if (
-            response.candidates[0].content.parts[0].function_call.name
-            == "get_store_location"
+        response.candidates[0].content.parts[0].function_call.name
+        == "get_store_location"
     ):
         # Extract the arguments to use in your API call
         location = (

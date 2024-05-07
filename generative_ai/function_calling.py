@@ -16,7 +16,14 @@
 def generate_function_call(prompt: str, project_id: str, location: str) -> tuple:
     # [START generativeaionvertexai_gemini_function_calling]
     import vertexai
-    from vertexai.generative_models import Content, FunctionDeclaration, GenerationConfig, GenerativeModel, Part, Tool
+    from vertexai.generative_models import (
+        Content,
+        FunctionDeclaration,
+        GenerationConfig,
+        GenerativeModel,
+        Part,
+        Tool,
+    )
 
     # Initialize Vertex AI
     # TODO (developer): update project_id, location & temperature
@@ -59,8 +66,8 @@ def generate_function_call(prompt: str, project_id: str, location: str) -> tuple
 
     # Check the function name that the model responded with, and make an API call to an external system
     if (
-            response.candidates[0].content.parts[0].function_call.name
-            == "get_current_weather"
+        response.candidates[0].content.parts[0].function_call.name
+        == "get_current_weather"
     ):
         # Extract the arguments to use in your API call
         location = (
