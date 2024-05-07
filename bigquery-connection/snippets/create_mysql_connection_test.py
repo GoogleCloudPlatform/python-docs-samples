@@ -61,6 +61,7 @@ def connection_id(
 @pytest.mark.parametrize("transport", ["grpc", "rest"])
 def test_create_mysql_connection(
     capsys: pytest.CaptureFixture,
+    connection_id: str,
     mysql_username: str,
     mysql_password: str,
     database: str,
@@ -84,6 +85,7 @@ def test_create_mysql_connection(
         }
     )
     create_mysql_connection.create_mysql_connection(
+        connection_id=connection_id,
         project_id=project_id,
         location=location,
         cloud_sql_properties=cloud_sql_properties,
