@@ -22,4 +22,5 @@ def generate_content(PROJECT_ID: str, REGION: str, EXTENSION_ID: str) -> object:
 
     extension = extensions.Extension(EXTENSION_ID)
     # [END generativeaionvertexai_get_extension]
+
     return extension

@@ -18,12 +18,12 @@ def generate_content(PROJECT_ID: str, REGION: str) -> object:
     import vertexai
     from vertexai.preview import extensions
 
-    vertexai.init(project=PROJECT_ID,location=REGION)
+    vertexai.init(project=PROJECT_ID, location=REGION)
 
     extension_code_interpreter = extensions.Extension.create(
-        display_name = "Code Interpreter",
-        description = "This extension generates and executes code in the specified language",
-        manifest = {
+        display_name="Code Interpreter",
+        description="This extension generates and executes code in the specified language",
+        manifest={
             "name": "code_interpreter_tool",
             "description": "Google Code Interpreter Extension",
             "api_spec": {
@@ -36,4 +36,5 @@ def generate_content(PROJECT_ID: str, REGION: str) -> object:
         },
     )
     # [END generativeaionvertexai_extension_basic]
+
     return extension_code_interpreter

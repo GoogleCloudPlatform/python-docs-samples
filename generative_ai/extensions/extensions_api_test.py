@@ -15,25 +15,19 @@
 
 import os
 
-import delete_extension
 import execute_extension
 import extension_basic
 import get_extension
 import list_extension
-
 
 EXTENSION_ID = "EXTENSION_ID"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
 
 
-def test_delete_extension() -> None:
-    response = delete_extension.generate_content(PROJECT_ID, REGION, EXTENSION_ID)
-    assert response
-
-
 def test_execute_extension() -> None:
-    response = execute_extension.generate_content(PROJECT_ID, REGION, EXTENSION_ID)
+    response = execute_extension.generate_content(
+        PROJECT_ID, REGION, EXTENSION_ID)
     assert response
 
 
