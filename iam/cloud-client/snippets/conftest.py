@@ -17,6 +17,7 @@ import re
 import uuid
 
 import google.auth
+from google.api_core.exceptions import PermissionDenied
 from google.cloud import iam_v2
 from google.cloud.iam_admin_v1 import IAMClient, ListRolesRequest
 from google.cloud.iam_v2 import types
@@ -34,12 +35,14 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
 @pytest.fixture
 def deny_policy(capsys: "pytest.CaptureFixture[str]") -> None:
     policy_id = f"test-deny-policy-{uuid.uuid4()}"
+    try:
+        # Delete any existing policies. Otherwise it might throw quota issue.
+        delete_existing_deny_policies(PROJECT, "test-deny-policy")
 
-    # Delete any existing policies. Otherwise it might throw quota issue.
-    delete_existing_deny_policies(PROJECT, "test-deny-policy")
-
-    # Create the Deny policy.
-    create_deny_policy(PROJECT, policy_id)
+        # Create the Deny policy.
+        create_deny_policy(PROJECT, policy_id)
+    except PermissionDenied:
+        pytest.skip("Don't have permissions to run this test.")
 
     yield policy_id
 
