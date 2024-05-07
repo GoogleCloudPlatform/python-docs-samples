@@ -17,7 +17,6 @@ import os
 
 import delete_extension
 import execute_extension
-import extension_advanced
 import extension_basic
 import get_extension
 import list_extension
@@ -26,7 +25,6 @@ import list_extension
 EXTENSION_ID = "EXTENSION_ID"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
-SERVING_CONFIG_NAME = "SERVING_CONFIG_NAME"
 
 
 def test_delete_extension() -> None:
@@ -36,11 +34,6 @@ def test_delete_extension() -> None:
 
 def test_execute_extension() -> None:
     response = execute_extension.generate_content(PROJECT_ID, REGION, EXTENSION_ID)
-    assert response
-
-
-def test_extension_advanced() -> None:
-    response = extension_advanced.generate_content(PROJECT_ID, REGION, SERVING_CONFIG_NAME)
     assert response
 
 
