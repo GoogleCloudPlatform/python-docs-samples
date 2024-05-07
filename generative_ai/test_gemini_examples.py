@@ -30,6 +30,7 @@ import gemini_pro_config_example
 import gemini_safety_config_example
 import gemini_single_turn_video_example
 import gemini_system_instruction
+import gemini_text_input_example
 import gemini_video_audio
 
 
@@ -44,6 +45,11 @@ def test_gemini_guide_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert "scones" in text
+
+
+def test_gemini_text_input_example() -> None:
+    text = gemini_text_input_example.generate_from_text_input(PROJECT_ID)
+    assert len(text) > 0
 
 
 def test_gemini_pro_basic_example() -> None:
