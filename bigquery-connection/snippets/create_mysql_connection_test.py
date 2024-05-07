@@ -42,7 +42,6 @@ def cleanup_connection(
             connection_client.delete_connection(name=connection.name)
 
 
-@pytest.fixture(scope="session")
 def connection_id(
     connection_client: connection_service.ConnectionServiceClient,
     project_id: str,
