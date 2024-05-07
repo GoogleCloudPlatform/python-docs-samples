@@ -45,7 +45,7 @@ def modify_policy_remove_member(
                 bind.members.remove(member)
             break
 
-    return set_project_policy(project_id, policy)
+    return set_project_policy(project_id, policy, False)
 
 
 # [END iam_modify_policy_remove_member]

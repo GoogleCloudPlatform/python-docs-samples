@@ -17,6 +17,7 @@ from typing import Callable, Union
 import uuid
 
 import backoff
+from google.api_core.exceptions import Aborted
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -47,7 +48,7 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
             assert re.search(f"Deleted a service account: {email}", out)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def project_policy() -> policy_pb2.Policy:
     try:
         policy = get_project_policy(PROJECT)
@@ -55,13 +56,13 @@ def project_policy() -> policy_pb2.Policy:
         policy_copy.CopyFrom(policy)
         yield policy_copy
     finally:
-        updated_policy = execute_wrapped(set_project_policy, PROJECT, policy)
+        updated_policy = execute_wrapped(set_project_policy, PROJECT, policy, False)
 
         updated_policy.ClearField("etag")
         assert updated_policy == policy
 
 
-@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+@backoff.on_exception(backoff.expo, Aborted, max_tries=6)
 def execute_wrapped(func: Callable, *args: Union[str, policy_pb2.Policy]) -> policy_pb2.Policy:
     return func(*args)
 

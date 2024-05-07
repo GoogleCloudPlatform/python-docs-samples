@@ -19,7 +19,7 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_project_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2.Policy:
+def set_project_policy(project_id: str, policy: policy_pb2.Policy, merge: bool = True) -> policy_pb2.Policy:
     """
     Set policy for project. Pay attention that previous state will be completely rewritten.
     If you want to update only part of the policy follow the approach read->modify->write.
@@ -27,6 +27,7 @@ def set_project_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2
 
     project_id: ID or number of the Google Cloud project you want to use.
     policy: Policy which has to be set.
+    merge: The strategy to be used forming the request
     """
     client = resourcemanager_v3.ProjectsClient()
 
@@ -36,7 +37,11 @@ def set_project_policy(project_id: str, policy: policy_pb2.Policy) -> policy_pb2
 
     # Etag should as fresh as possible to lower chance of collisions
     policy.ClearField("etag")
-    current_policy.CopyFrom(policy)
+    if merge:
+        current_policy.MergeFrom(policy)
+    else:
+        current_policy.CopyFrom(policy)
+
     request = iam_policy_pb2.SetIamPolicyRequest()
     request.resource = f"projects/{project_id}"
 
