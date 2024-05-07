@@ -28,10 +28,10 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
     IMAGE_URI = "gs://cloud-samples-data/generative-ai/image/daisy.jpg"
     TEXT = "white shoes"
     VIDEO_URI = "gs://cloud-samples-data/generative-ai/video/animals.mp4"
-    VIDEO_START_OFFSET_SEC=10
-    VIDEO_END_OFFSET_SEC=60
-    VIDEO_EMBEDDING_INTERVAL_SEC=10
-    DIMENSION= 128
+    VIDEO_START_OFFSET_SEC = 10
+    VIDEO_END_OFFSET_SEC = 60
+    VIDEO_EMBEDDING_INTERVAL_SEC = 10
+    DIMENSION = 128
 
     # Inspired from https://stackoverflow.com/questions/34269772/type-hints-in-namedtuple.
     class EmbeddingResponse(typing.NamedTuple):
@@ -45,24 +45,25 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
         image_embedding: typing.Sequence[float]
         video_embeddings: typing.Sequence[VideoEmbedding]
 
-
     class EmbeddingPredictionClient:
         """Wrapper around Prediction Service Client."""
 
         def __init__(self, project: str,
-                    location: str = REGION,
-                    api_regional_endpoint: str = f"{REGION}-aiplatform.googleapis.com"):
+                     location: str = REGION,
+                     api_regional_endpoint: str = f"{REGION}-aiplatform.googleapis.com"):
             client_options = {"api_endpoint": api_regional_endpoint}
             # Initialize client that will be used to create and send requests.
             # This client only needs to be created once, and can be reused for multiple requests.
-            self.client = aiplatform.gapic.PredictionServiceClient(client_options=client_options)
+            self.client = aiplatform.gapic.PredictionServiceClient(
+                client_options=client_options)
             self.location = location
             self.project = project
 
         def get_embedding(self, text: str = None, image_uri: str = None, video_uri: str = None,
-                        start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension=1408):
+                          start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension=1408):
             if not text and not image_uri and not video_uri:
-                raise ValueError('At least one of text or image_uri or video_uri must be specified.')
+                raise ValueError(
+                    'At least one of text or image_uri or video_uri must be specified.')
 
             instance = struct_pb2.Struct()
             if text:
@@ -86,7 +87,8 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
             instances = [instance]
             endpoint = (f"projects/{self.project}/locations/{self.location}"
                         f"/publishers/google/models/{MODEL_ID}")
-            response = self.client.predict(endpoint=endpoint, instances=instances, parameters=parameters)
+            response = self.client.predict(
+                endpoint=endpoint, instances=instances, parameters=parameters)
 
             text_embedding = None
             if text:
@@ -103,7 +105,7 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
                 video_emb_values = response.predictions[0]['videoEmbeddings']
                 video_embeddings = [
                     EmbeddingResponse.VideoEmbedding(start_offset_sec=v['startOffsetSec'], end_offset_sec=v['endOffsetSec'],
-                                                    embedding=[x for x in v['embedding']])
+                                                     embedding=[x for x in v['embedding']])
                     for v in
                     video_emb_values]
 
@@ -116,10 +118,10 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
     client = EmbeddingPredictionClient(project=PROJECT_ID)
     start = time.time()
     response = client.get_embedding(text=TEXT, image_uri=IMAGE_URI, video_uri=VIDEO_URI,
-                                        start_offset_sec=VIDEO_START_OFFSET_SEC,
-                                        end_offset_sec=VIDEO_END_OFFSET_SEC,
-                                        interval_sec=VIDEO_EMBEDDING_INTERVAL_SEC,
-                                        dimension=DIMENSION)
+                                    start_offset_sec=VIDEO_START_OFFSET_SEC,
+                                    end_offset_sec=VIDEO_END_OFFSET_SEC,
+                                    interval_sec=VIDEO_EMBEDDING_INTERVAL_SEC,
+                                    dimension=DIMENSION)
     end = time.time()
 
     print(response)
