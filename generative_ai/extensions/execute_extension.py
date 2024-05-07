@@ -21,8 +21,9 @@ def generate_content(PROJECT_ID: str, REGION: str, EXTENSION_ID: str) -> object:
     vertexai.init(project=PROJECT_ID, location=REGION)
 
     code_interpreter_extensions = extensions.Extension(EXTENSION_ID)
-    extension_code_interpreter.execute(
+    response = code_interpreter_extensions.execute(
         operation_id = "generate_and_execute",
         operation_params = {"query": "find the max value in the list: [1,2,3,4,-5]"},
     )
     # [END generativeaionvertexai_execute_extension]
+    return response

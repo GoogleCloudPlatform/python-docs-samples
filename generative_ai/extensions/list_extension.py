@@ -20,5 +20,6 @@ def generate_content(PROJECT_ID: str, REGION: str) -> object:
 
     vertexai.init(project=PROJECT_ID,location=REGION)
 
-    extensions.Extension.list()
+    extensions_list = extensions.Extension.list()
     # [START generativeaionvertexai_list_extension]
+    return extensions_list
