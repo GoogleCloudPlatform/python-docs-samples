@@ -16,18 +16,18 @@
 from vertexai.preview.generative_models import GenerationResponse
 
 
-def generate_text_with_grounding_web(
-    project_id: str, location: str
-) -> GenerationResponse:
+def generate_text_with_grounding_web(project_id: str) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_web]
     import vertexai
+
     from vertexai.preview.generative_models import grounding
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # Load the model
+    vertexai.init(project=project_id, location="us-central1")
+
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
     # Use Google Search for grounding
@@ -49,7 +49,7 @@ def generate_text_with_grounding_web(
 
 
 def generate_text_with_grounding_vertex_ai_search(
-    project_id: str, location: str, data_store_path: str
+    project_id: str, data_store_path: str
 ) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_vais]
     import vertexai
@@ -57,10 +57,11 @@ def generate_text_with_grounding_vertex_ai_search(
     from vertexai.preview.generative_models import grounding
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # Load the model
+    vertexai.init(project=project_id, location="us-central1")
+
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
     # Use Vertex AI Search data store
