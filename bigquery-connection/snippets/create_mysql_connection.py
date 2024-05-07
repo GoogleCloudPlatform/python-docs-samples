@@ -45,7 +45,9 @@ def main() -> None:
             "credential": cloud_sql_credential,
         }
     )
-    create_mysql_connection(connection_id, project_id, location, cloud_sql_properties, transport)
+    create_mysql_connection(
+        connection_id, project_id, location, cloud_sql_properties, transport
+    )
 
 
 def create_mysql_connection(
