@@ -50,7 +50,7 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
 
         def __init__(self, project: str,
                      location: str = REGION,
-                     api_regional_endpoint: str = f"{REGION}-aiplatform.googleapis.com"):
+                     api_regional_endpoint: str = f"{REGION}-aiplatform.googleapis.com") -> None:
             client_options = {"api_endpoint": api_regional_endpoint}
             # Initialize client that will be used to create and send requests.
             # This client only needs to be created once, and can be reused for multiple requests.
@@ -60,7 +60,7 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> dict:
             self.project = project
 
         def get_embedding(self, text: str = None, image_uri: str = None, video_uri: str = None,
-                          start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension=1408):
+                          start_offset_sec: int = 0, end_offset_sec: int = 120, interval_sec: int = 16, dimension = 1408) -> EmbeddingResponse:
             if not text and not image_uri and not video_uri:
                 raise ValueError(
                     'At least one of text or image_uri or video_uri must be specified.')
