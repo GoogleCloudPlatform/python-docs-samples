@@ -12,23 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import os
 
 import multimodal_embedding_advanced
 import multimodal_embedding_basic
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-REGION = "us-central1"
+location = "us-central1"
 MODEL_ID = "multimodalembedding@001"
 
 
 def test_multimodal_embedding_basic() -> None:
     response = multimodal_embedding_basic.generate_content(
-        PROJECT_ID, REGION, MODEL_ID)
+        PROJECT_ID, location, MODEL_ID)
     assert response
 
 
 def test_multimodal_embedding_advanced() -> None:
     response = multimodal_embedding_advanced.generate_content(
-        PROJECT_ID, REGION, MODEL_ID)
+        PROJECT_ID, location, MODEL_ID)
     assert response

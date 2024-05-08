@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> object:
+def generate_content(PROJECT_ID: str, location: str, MODEL_ID: str) -> object:
     # [START generativeaionvertexai_multimodal_embedding_basic]
     # @title Client for multimodal embedding
     import time
@@ -50,8 +50,8 @@ def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> object:
         """Wrapper around Prediction Service Client."""
 
         def __init__(self, project: str,
-                     location: str = REGION,
-                     api_regional_endpoint: str = f"{REGION}-aiplatform.googleapis.com") -> None:
+                     location: str = location,
+                     api_regional_endpoint: str = f"{location}-aiplatform.googleapis.com") -> None:
             client_options = {"api_endpoint": api_regional_endpoint}
             # Initialize client that will be used to create and send requests.
             # This client only needs to be created once, and can be reused for multiple requests.
