@@ -29,7 +29,7 @@ def analyze_video_with_audio(project_id: str) -> str:
     prompt = """
     Provide a description of the video.
     The description should also contain anything important which people say in the video.
-  """
+    """
 
     video_file_uri = "gs://cloud-samples-data/generative-ai/video/pixel8.mp4"
     video_file = Part.from_uri(video_file_uri, mime_type="video/mp4")
