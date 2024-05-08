@@ -17,8 +17,38 @@ from typing import List
 from vertexai.preview.tuning import sft
 
 
-def gemini_supervised_tuning(project_id: str) -> sft.SupervisedTuningJob:
-    # [START generativeaionvertexai_supervised_tuning]
+def gemini_supervised_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
+    # [START generativeaionvertexai_tuning_basic]
+
+    import time
+    import vertexai
+    from vertexai.preview.tuning import sft
+
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    sft_tuning_job = sft.train(
+        source_model="gemini-1.0-pro-002",
+        train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_train_data.jsonl",
+    )
+
+    # Polling for job completion
+    while not sft_tuning_job.has_ended:
+        time.sleep(60)
+        sft_tuning_job.refresh()
+
+    print(sft_tuning_job.tuned_model_name)
+    print(sft_tuning_job.tuned_model_endpoint_name)
+    print(sft_tuning_job.experiment)
+    # [END generativeaionvertexai_tuning_basic]
+
+    return sft_tuning_job
+
+
+def gemini_supervised_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
+    # [START generativeaionvertexai_tuning_advanced]
 
     import time
     import vertexai
@@ -47,15 +77,15 @@ def gemini_supervised_tuning(project_id: str) -> sft.SupervisedTuningJob:
     print(sft_tuning_job.tuned_model_name)
     print(sft_tuning_job.tuned_model_endpoint_name)
     print(sft_tuning_job.experiment)
-    # [END generativeaionvertexai_supervised_tuning]
+    # [END generativeaionvertexai_tuning_advanced]
 
     return sft_tuning_job
 
 
-def get_supervised_tuning_job(
+def get_tuning_job(
     project_id: str, location: str, tuning_job_id: str
 ) -> sft.SupervisedTuningJob:
-    # [START generativeaionvertexai_get_supervised_tuning_job]
+    # [START generativeaionvertexai_get_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
 
@@ -71,13 +101,15 @@ def get_supervised_tuning_job(
     )
 
     print(response)
-    # [END generativeaionvertexai_get_supervised_tuning_job]
+    # [END generativeaionvertexai_get_tuning_job]
 
     return response
 
 
-def list_supervised_tuning_jobs(project_id: str) -> List[sft.SupervisedTuningJob]:
-    # [START generativeaionvertexai_list_supervised_tuning_jobs]
+def list_tuning_jobs(
+    project_id: str,
+) -> List[sft.SupervisedTuningJob]:
+    # [START generativeaionvertexai_list_tuning_jobs]
     import vertexai
     from vertexai.preview.tuning import sft
 
@@ -90,7 +122,7 @@ def list_supervised_tuning_jobs(project_id: str) -> List[sft.SupervisedTuningJob
 
     for response in responses:
         print(response)
-    # [END generativeaionvertexai_list_supervised_tuning_jobs]
+    # [END generativeaionvertexai_list_tuning_jobs]
 
     return responses
 
@@ -98,7 +130,7 @@ def list_supervised_tuning_jobs(project_id: str) -> List[sft.SupervisedTuningJob
 def cancel_supervised_tuning_job(
     project_id: str, location: str, tuning_job_id: str
 ) -> None:
-    # [START generativeaionvertexai_cancel_supervised_tuning_job]
+    # [START generativeaionvertexai_cancel_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
 
@@ -114,4 +146,4 @@ def cancel_supervised_tuning_job(
     )
     job.cancel()
 
-    # [END generativeaionvertexai_cancel_supervised_tuning_job]
+    # [END generativeaionvertexai_cancel_tuning_job]
