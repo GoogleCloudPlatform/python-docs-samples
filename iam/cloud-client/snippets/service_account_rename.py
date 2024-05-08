@@ -17,7 +17,9 @@ from google.cloud import iam_admin_v1
 from google.cloud.iam_admin_v1 import types
 
 
-def rename_service_account(project_id: str, account: str, new_name: str) -> types.ServiceAccount:
+def rename_service_account(
+    project_id: str, account: str, new_name: str
+) -> types.ServiceAccount:
     """
     Renames service account display name.
 
@@ -44,6 +46,7 @@ def rename_service_account(project_id: str, account: str, new_name: str) -> type
 
     updated_account = iam_admin_client.patch_service_account(request=request)
     return updated_account
+
 
 # [END iam_rename_service_account]
 
