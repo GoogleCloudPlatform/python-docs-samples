@@ -127,9 +127,7 @@ def list_tuning_jobs(
     return responses
 
 
-def cancel_supervised_tuning_job(
-    project_id: str, location: str, tuning_job_id: str
-) -> None:
+def cancel_tuning_job(project_id: str, location: str, tuning_job_id: str) -> None:
     # [START generativeaionvertexai_cancel_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
