@@ -144,10 +144,10 @@ def query_reasoning_engine(project_id: str, reasoning_engine_id: str) -> object:
     # reasoning_engine_id = "REASONING_ENGINE_ID"
 
     vertexai.init(project=project_id, location="us-central1")
-    remote_app = reasoning_engines.ReasoningEngine(reasoning_engine_id)
+    reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
 
     # Replace with kwargs for `.query()` method.
-    response = remote_app.query(a=1, b=2)
+    response = reasoning_engine.query(a=1, b=2)
     print(response)
     # [END generativeaionvertexai_query_reasoning_engine]
     return response
