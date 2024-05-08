@@ -25,23 +25,24 @@ TUNING_JOB_ID = "4982013113894174720"
 
 
 @pytest.mark.skip(reason="Skip due to tuning taking a long time.")
-def test_supervised_tuning() -> None:
-    response = gemini_tuning.gemini_supervised_tuning(PROJECT_ID)
+def test_gemini_tuning() -> None:
+    response = gemini_tuning.gemini_tuning_basic(PROJECT_ID)
+    assert response
+
+    response = gemini_tuning.gemini_tuning_advanced(PROJECT_ID)
     assert response
 
 
-def test_get_supervised_tuning_job() -> None:
-    response = gemini_tuning.get_supervised_tuning_job(
-        PROJECT_ID, REGION, TUNING_JOB_ID
-    )
+def test_get_tuning_job() -> None:
+    response = gemini_tuning.get_tuning_job(PROJECT_ID, REGION, TUNING_JOB_ID)
     assert response
 
 
-def test_list_supervised_tuning_jobs() -> None:
-    response = gemini_tuning.list_supervised_tuning_jobs(PROJECT_ID)
+def test_list_tuning_jobs() -> None:
+    response = gemini_tuning.list_tuning_jobs(PROJECT_ID)
     assert response
 
 
 @pytest.mark.skip(reason="Skip due to tuning taking a long time.")
-def test_cancel_supervised_tuning_job() -> None:
-    gemini_tuning.cancel_supervised_tuning_job(PROJECT_ID, REGION, TUNING_JOB_ID)
+def test_cancel_tuning_job() -> None:
+    gemini_tuning.cancel_tuning_job(PROJECT_ID, REGION, TUNING_JOB_ID)
