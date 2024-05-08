@@ -58,3 +58,4 @@ def test_get_extension(extension_id) -> None:
 def test_list_extension() -> None:
     response = list_extension.generate_content(PROJECT_ID)
     assert response
+
