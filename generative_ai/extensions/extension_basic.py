@@ -13,12 +13,12 @@
 # limitations under the License.
 
 
-def generate_content(PROJECT_ID: str, REGION: str) -> object:
+def generate_content(PROJECT_ID: str) -> str:
     # [START generativeaionvertexai_extension_basic]
     import vertexai
     from vertexai.preview import extensions
 
-    vertexai.init(project=PROJECT_ID, location=REGION)
+    vertexai.init(project=PROJECT_ID)
 
     extension_code_interpreter = extensions.Extension.create(
         display_name="Code Interpreter",
@@ -37,4 +37,4 @@ def generate_content(PROJECT_ID: str, REGION: str) -> object:
     )
     # [END generativeaionvertexai_extension_basic]
 
-    return extension_code_interpreter
+    return str(extension_code_interpreter)

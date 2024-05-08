@@ -13,12 +13,12 @@
 # limitations under the License.
 
 
-def generate_content(PROJECT_ID: str, REGION: str) -> object:
+def generate_content(PROJECT_ID: str) -> object:
     # [START generativeaionvertexai_list_extension]
     import vertexai
     from vertexai.preview import extensions
 
-    vertexai.init(project=PROJECT_ID, location=REGION)
+    vertexai.init(project=PROJECT_ID)
 
     extensions_list = extensions.Extension.list()
     # [START generativeaionvertexai_list_extension]

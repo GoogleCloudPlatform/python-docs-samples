@@ -15,32 +15,46 @@
 
 import os
 
+import pytest
+
+import delete_extension
 import execute_extension
 import extension_basic
 import get_extension
 import list_extension
 
-EXTENSION_ID = "EXTENSION_ID"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
 
 
-def test_execute_extension() -> None:
+@pytest.fixture(scope="module")
+def extension_id():
+    response = extension_basic.generate_content(PROJECT_ID)
+    extension_id_part = response.split('extensions/')[-1].split('/')[0]
+    extension_id = ''.join(filter(str.isdigit, extension_id_part))
+    print("Extension_id", extension_id)
+    yield extension_id
+    print("Deleting Extension...")
+    delete_response = delete_extension.generate_content(
+        PROJECT_ID, extension_id)
+    assert delete_response
+
+
+def test_extension_basic(extension_id) -> None:
+    assert extension_id
+
+
+def test_execute_extension(extension_id) -> None:
     response = execute_extension.generate_content(
-        PROJECT_ID, REGION, EXTENSION_ID)
+        PROJECT_ID, extension_id)
     assert response
 
 
-def test_extension_basic() -> None:
-    response = extension_basic.generate_content(PROJECT_ID, REGION)
-    assert response
-
-
-def test_get_extension() -> None:
-    response = get_extension.generate_content(PROJECT_ID, REGION, EXTENSION_ID)
+def test_get_extension(extension_id) -> None:
+    response = get_extension.generate_content(PROJECT_ID, extension_id)
     assert response
 
 
 def test_list_extension() -> None:
-    response = list_extension.generate_content(PROJECT_ID, REGION)
+    response = list_extension.generate_content(PROJECT_ID)
     assert response
