@@ -68,7 +68,7 @@ def create_reasoning_engine_advanced(
 ) -> reasoning_engines.ReasoningEngine:
     # [START generativeaionvertexai_create_reasoning_engine_advanced]
 
-    from typing import Dict, List
+    from typing import List
 
     import vertexai
     from vertexai.preview import reasoning_engines
