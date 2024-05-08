@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import os
+import sys
 from typing import Generator
 
 import pytest
@@ -21,11 +22,15 @@ import gemini_reasoning_engine
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
+STAGING_BUCKET = "gs://ucaip-samples-us-central1/reasoning_engine"
 
 
+@pytest.mark.skipif(sys.version_info >= (3, 12), reason="Python 3.12 is not supported")
 @pytest.fixture(scope="module")
 def reasoning_engine_id() -> Generator[str, None, None]:
-    reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_basic(PROJECT_ID)
+    reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_basic(
+        PROJECT_ID, STAGING_BUCKET
+    )
     yield reasoning_engine.resource_name
     print("Deleting Reasoning Engine...")
     gemini_reasoning_engine.delete_reasoning_engine(
@@ -39,7 +44,7 @@ def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
 
 def test_create_reasoning_engine_advanced() -> None:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_advanced(
-        PROJECT_ID, REGION
+        PROJECT_ID, REGION, STAGING_BUCKET
     )
     assert reasoning_engine
     gemini_reasoning_engine.delete_reasoning_engine(

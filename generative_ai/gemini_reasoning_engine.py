@@ -17,7 +17,9 @@ from typing import List
 from vertexai.preview import reasoning_engines
 
 
-def create_reasoning_engine_basic(project_id: str) -> reasoning_engines.ReasoningEngine:
+def create_reasoning_engine_basic(
+    project_id: str, staging_bucket: str
+) -> reasoning_engines.ReasoningEngine:
 
     # [START generativeaionvertexai_create_reasoning_engine_basic]
     import vertexai
@@ -25,8 +27,11 @@ def create_reasoning_engine_basic(project_id: str) -> reasoning_engines.Reasonin
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
+    # staging_bucket = "gs://YOUR_BUCKET_NAME"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(
+        project=project_id, location="us-central1", staging_bucket=staging_bucket
+    )
 
     class SimpleAdditionApp:
         def query(self, a: int, b: int):
@@ -60,7 +65,7 @@ def create_reasoning_engine_basic(project_id: str) -> reasoning_engines.Reasonin
 
 
 def create_reasoning_engine_advanced(
-    project_id: str, location: str
+    project_id: str, location: str, staging_bucket: str
 ) -> reasoning_engines.ReasoningEngine:
 
     # [START generativeaionvertexai_create_reasoning_engine_advanced]
@@ -71,6 +76,9 @@ def create_reasoning_engine_advanced(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # location = "us-central1"
+    # staging_bucket = "gs://YOUR_BUCKET_NAME"
+
+    vertexai.init(project=project_id, location=location, staging_bucket=staging_bucket)
 
     class LangchainApp:
         def __init__(self, project: str, location: str):
@@ -107,8 +115,6 @@ def create_reasoning_engine_advanced(
     app = LangchainApp(project=project_id, location=location)
     app.set_up()
     print(app.query("What is Vertex AI?"))
-
-    vertexai.init(project=project_id, location=location)
 
     # Create a remote app with reasoning engine
     # This may take 1-2 minutes to finish because it builds a container and turn up HTTP servers.
