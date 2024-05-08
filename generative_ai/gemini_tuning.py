@@ -17,7 +17,7 @@ from typing import List
 from vertexai.preview.tuning import sft
 
 
-def gemini_supervised_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
+def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_basic]
 
     import time
@@ -47,7 +47,7 @@ def gemini_supervised_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     return sft_tuning_job
 
 
-def gemini_supervised_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
+def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_advanced]
 
     import time
@@ -145,5 +145,4 @@ def cancel_supervised_tuning_job(
         f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
     )
     job.cancel()
-
     # [END generativeaionvertexai_cancel_tuning_job]

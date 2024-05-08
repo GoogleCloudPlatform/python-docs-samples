@@ -19,14 +19,13 @@ from __future__ import annotations
 def tune_code_generation_model(project_id: str) -> None:
     # [START generativeaionvertexai_tune_code_generation_model]
     from google.auth import default
+
     import vertexai
     from vertexai.language_models import CodeGenerationModel
 
+    # Initialize Vertex AI
+    # TODO(developer): Update project_id
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
     vertexai.init(project=project_id, location="us-central1", credentials=credentials)
 
     model = CodeGenerationModel.from_pretrained("code-bison@002")

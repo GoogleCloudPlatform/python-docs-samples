@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,30 +13,29 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str) -> str:
-    # [START generativeaionvertexai_gemini_get_started]
+def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> object:
+    # [START generativeaionvertexai_non_stream_multimodality_basic]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
+    vertexai.init(project=PROJECT_ID, location=REGION)
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
-
+    model = GenerativeModel(MODEL_ID)
     response = model.generate_content(
         [
             Part.from_uri(
-                "gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                mime_type="image/jpeg",
+                "gs://cloud-samples-data/generative-ai/video/animals.mp4", "video/mp4"
             ),
-            "What is shown in this image?",
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/image/character.jpg",
+                "image/jpeg",
+            ),
+            "Are these video and image correlated?",
         ]
     )
 
-    print(response.text)
-    # [END generativeaionvertexai_gemini_get_started]
+    print(response)
+    # [END generativeaionvertexai_non_stream_multimodality_basic]
 
-    return response.text
+    return response
