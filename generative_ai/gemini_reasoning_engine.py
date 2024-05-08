@@ -33,7 +33,7 @@ def create_reasoning_engine_basic(
     )
 
     class SimpleAdditionApp:
-        def query(self, a: int, b: int):
+        def query(self, a: int, b: int) -> str:
             """Query the application.
 
             Args:
@@ -68,6 +68,8 @@ def create_reasoning_engine_advanced(
 ) -> reasoning_engines.ReasoningEngine:
     # [START generativeaionvertexai_create_reasoning_engine_advanced]
 
+    from typing import Dict, List
+
     import vertexai
     from vertexai.preview import reasoning_engines
 
@@ -83,7 +85,7 @@ def create_reasoning_engine_advanced(
             self.project_id = project
             self.location = location
 
-        def set_up(self):
+        def set_up(self) -> None:
             from langchain_core.prompts import ChatPromptTemplate
             from langchain_google_vertexai import ChatVertexAI
 
@@ -98,7 +100,7 @@ def create_reasoning_engine_advanced(
             chat = ChatVertexAI(project=self.project_id, location=self.location)
             self.chain = prompt | chat
 
-        def query(self, question: str):
+        def query(self, question: str) -> str | List[str | Dict]:
             """Query the application.
 
             Args:
@@ -145,7 +147,7 @@ def query_reasoning_engine(project_id: str, reasoning_engine_id: str) -> object:
     remote_app = reasoning_engines.ReasoningEngine(reasoning_engine_id)
 
     # Replace with kwargs for `.query()` method.
-    response = remote_app.query(question="What is Vertex AI?")
+    response = remote_app.query(a=1, b=2)
     print(response)
     # [END generativeaionvertexai_query_reasoning_engine]
     return response

@@ -22,7 +22,7 @@ import gemini_reasoning_engine
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
-STAGING_BUCKET = "gs://ucaip-samples-us-central1/reasoning_engine"
+STAGING_BUCKET = "gs://ucaip-samples-us-central1"
 
 
 @pytest.mark.skipif(sys.version_info >= (3, 12), reason="Python 3.12 is not supported")
@@ -57,6 +57,7 @@ def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
         PROJECT_ID, reasoning_engine_id
     )
     assert response
+    assert response == "1 + 2 is 3"
 
 
 def test_list_reasoning_engines() -> None:
