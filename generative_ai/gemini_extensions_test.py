@@ -15,6 +15,8 @@
 
 import os
 
+from typing import Generator
+
 import pytest
 
 import gemini_extensions
@@ -24,7 +26,7 @@ REGION = "us-central1"
 
 
 @pytest.fixture(scope="module")
-def extension_id():
+def extension_id() -> Generator[str, None, None]:
     extension = gemini_extensions.create_extension(PROJECT_ID)
     yield extension.extension_name
     print("Deleting Extension...")
