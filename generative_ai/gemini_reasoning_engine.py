@@ -81,7 +81,7 @@ def create_reasoning_engine_advanced(
     vertexai.init(project=project_id, location=location, staging_bucket=staging_bucket)
 
     class LangchainApp:
-        def __init__(self, project: str, location: str):
+        def __init__(self, project: str, location: str) -> None:
             self.project_id = project
             self.location = location
 
