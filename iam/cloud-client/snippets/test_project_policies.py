@@ -48,7 +48,7 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
             assert re.search(f"Deleted a service account: {email}", out)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="module")
 def project_policy() -> policy_pb2.Policy:
     try:
         policy = get_project_policy(PROJECT)
@@ -56,6 +56,7 @@ def project_policy() -> policy_pb2.Policy:
         policy_copy.CopyFrom(policy)
         yield policy_copy
     finally:
+        print("Policy: ======>", policy)
         updated_policy = execute_wrapped(set_project_policy, PROJECT, policy, False)
 
         updated_policy.ClearField("etag")
