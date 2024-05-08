@@ -43,7 +43,7 @@ def test_embed_text() -> None:
         "banana?",
     ]
     dimensionality = 256
-    embeddings = embedding_preview.embed_text(
+    embeddings = embedding.embed_text(
         texts, "RETRIEVAL_QUERY", "text-embedding-004", dimensionality
     )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
