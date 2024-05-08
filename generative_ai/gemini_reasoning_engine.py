@@ -20,7 +20,6 @@ from vertexai.preview import reasoning_engines
 def create_reasoning_engine_basic(
     project_id: str, staging_bucket: str
 ) -> reasoning_engines.ReasoningEngine:
-
     # [START generativeaionvertexai_create_reasoning_engine_basic]
     import vertexai
     from vertexai.preview import reasoning_engines
@@ -67,7 +66,6 @@ def create_reasoning_engine_basic(
 def create_reasoning_engine_advanced(
     project_id: str, location: str, staging_bucket: str
 ) -> reasoning_engines.ReasoningEngine:
-
     # [START generativeaionvertexai_create_reasoning_engine_advanced]
 
     import vertexai
