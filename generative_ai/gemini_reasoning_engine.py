@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import List
+from typing import Dict, List, Union
 
 from vertexai.preview import reasoning_engines
 
@@ -100,7 +100,7 @@ def create_reasoning_engine_advanced(
             chat = ChatVertexAI(project=self.project_id, location=self.location)
             self.chain = prompt | chat
 
-        def query(self, question: str) -> str | List[str | dict]:
+        def query(self, question: str) -> Union[str, List[Union[str, Dict]]]:
             """Query the application.
 
             Args:
