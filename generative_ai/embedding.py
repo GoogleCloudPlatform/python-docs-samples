@@ -13,7 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
-from typing import List
+from typing import List, Optional
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
