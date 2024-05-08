@@ -127,7 +127,7 @@ def create_reasoning_engine_advanced(
         ],
         display_name="Demo LangChain App",
         description="This is a simple LangChain app.",
-        sys_version="3.10",
+        # sys_version="3.10",  # Optional
         extra_packages=[],
     )
     # [END generativeaionvertexai_create_reasoning_engine_advanced]
