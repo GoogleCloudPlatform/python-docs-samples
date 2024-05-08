@@ -40,17 +40,17 @@ def extension_id():
     assert delete_response
 
 
-def test_extension_basic(extension_id) -> None:
+def test_extension_basic(extension_id: str) -> None:
     assert extension_id
 
 
-def test_execute_extension(extension_id) -> None:
+def test_execute_extension(extension_id: str) -> None:
     response = execute_extension.generate_content(
         PROJECT_ID, extension_id)
     assert response
 
 
-def test_get_extension(extension_id) -> None:
+def test_get_extension(extension_id: str) -> None:
     response = get_extension.generate_content(PROJECT_ID, extension_id)
     assert response
 
@@ -58,4 +58,3 @@ def test_get_extension(extension_id) -> None:
 def test_list_extension() -> None:
     response = list_extension.generate_content(PROJECT_ID)
     assert response
-
