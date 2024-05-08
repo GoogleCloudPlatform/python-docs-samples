@@ -28,9 +28,9 @@ REGION = "us-central1"
 @pytest.fixture(scope="module")
 def extension_id() -> Generator[str, None, None]:
     extension = gemini_extensions.create_extension(PROJECT_ID)
-    yield extension.extension_name
+    yield extension.resource_name
     print("Deleting Extension...")
-    gemini_extensions.delete_extension(PROJECT_ID, extension.extension_name)
+    gemini_extensions.delete_extension(PROJECT_ID, extension.resource_name)
 
 
 def test_create_extension_basic(extension_id: str) -> None:
