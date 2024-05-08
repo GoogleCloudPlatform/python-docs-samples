@@ -100,7 +100,7 @@ def create_reasoning_engine_advanced(
             chat = ChatVertexAI(project=self.project_id, location=self.location)
             self.chain = prompt | chat
 
-        def query(self, question: str) -> str | List[str | Dict]:
+        def query(self, question: str) -> str | List[str | dict]:
             """Query the application.
 
             Args:

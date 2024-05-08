@@ -25,7 +25,6 @@ REGION = "us-central1"
 STAGING_BUCKET = "gs://ucaip-samples-us-central1"
 
 
-@pytest.mark.skipif(sys.version_info >= (3, 12), reason="Python 3.12 is not supported")
 @pytest.fixture(scope="module")
 def reasoning_engine_id() -> Generator[str, None, None]:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_basic(
@@ -38,6 +37,9 @@ def reasoning_engine_id() -> Generator[str, None, None]:
     )
 
 
+@pytest.mark.skipif(
+    sys.version_info >= (3, 12), reason="requires Python version lower than 3.12"
+)
 def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
     assert reasoning_engine_id
 
