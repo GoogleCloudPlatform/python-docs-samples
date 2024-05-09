@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from vertexai.preview.evaluation import EvalResult
+# TODO(b/339659946): Update samples to use Vertex AI SDK
 
 
-def eval_pairwise_summarization_quality(project_id: str):
+def eval_pairwise_summarization_quality(project_id: str) -> object:
     # [START generativeaionvertexai_eval_pairwise_summarization_quality]
     import json
 
@@ -56,109 +56,46 @@ def eval_pairwise_summarization_quality(project_id: str):
     return result
 
 
-def eval_pairwise_summarization_quality(project_id: str) -> EvalResult:
-
-    # [START generativeaionvertexai_eval_pairwise_summarization_quality]
-    import pandas as pd
-
-    import vertexai
-    from vertexai.preview.evaluation import EvalTask
-    from vertexai.generative_models import GenerativeModel
-
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
-
-    eval_dataset = pd.DataFrame(
-        {
-            "instruction": ["Summarize the context."],
-            "content": ["Summarize the context."],
-            "context": [
-                "France is a country located in Western Europe. It's bordered by "
-                "Belgium, Luxembourg, Germany, Switzerland, Italy, Monaco, Spain, "
-                "and Andorra.  France's coastline stretches along the English "
-                "Channel, the North Sea, the Atlantic Ocean, and the Mediterranean "
-                "Sea.  Known for its rich history, iconic landmarks like the Eiffel "
-                "Tower, and delicious cuisine, France is a major cultural and "
-                "economic power in Europe and throughout the world."
-            ],
-            "baseline_prediction": "France is a country.",
-            "response": ["France is a country located in Western Europe."],
-        }
-    )
-
-    eval_task = EvalTask(
-        dataset=eval_dataset,
-        metrics=["pairwise_summarization_quality"],
-    )
-
-    model = GenerativeModel("gemini-1.0-pro")
-
-    result = eval_task.evaluate(model=model)
-
-    print(result)
-    # [END generativeaionvertexai_eval_pairwise_summarization_quality]
-    return result
-
-
-def eval_rouge(project_id: str) -> EvalResult:
-
+def eval_rouge(project_id: str) -> object:
     # [START generativeaionvertexai_eval_rouge]
-    import pandas as pd
+    import json
 
-    import vertexai
-    from vertexai.preview.evaluation import EvalTask
-    from vertexai.generative_models import GenerativeModel
+    from google import auth
+    from google.auth.transport import requests as google_auth_requests
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    creds, _ = auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
-    # eval_dataset = pd.DataFrame(
-    #     {
-    #         "prediction": "A fast brown fox leaps over a lazy dog.",
-    #         "reference": "The quick brown fox jumps over the lazy dog.",
-    #     },
-    #     {
-    #         "prediction": "A quick brown fox jumps over the lazy canine.",
-    #         "reference": "The quick brown fox jumps over the lazy dog.",
-    #     },
-    #     {
-    #         "prediction": "The speedy brown fox jumps over the lazy dog.",
-    #         "reference": "The quick brown fox jumps over the lazy dog.",
-    #     },
-    # )
-
-    # eval_task = EvalTask(
-    #     dataset=eval_dataset,
-    #     metrics=["rouge"],
-    # )
-
-    eval_dataset = pd.DataFrame(
-        {
-            "content": [
-                "The Roman Senate was filled with exuberance due to Pompey's defeat in Asia."
-            ],
-            "reference": [
-                "The Roman Senate was filled with exuberance due to successes against Catiline."
+    data = {
+        "rouge_input": {
+            "metric_spec": {
+                "rouge_type": "rougeLsum",
+                "use_stemmer": True,
+                "split_summaries": True,
+            },
+            "instances": [
+                {
+                    "prediction": "A fast brown fox leaps over a lazy dog.",
+                    "reference": "The quick brown fox jumps over the lazy dog.",
+                },
+                {
+                    "prediction": "A quick brown fox jumps over the lazy canine.",
+                    "reference": "The quick brown fox jumps over the lazy dog.",
+                },
+                {
+                    "prediction": "The speedy brown fox jumps over the lazy dog.",
+                    "reference": "The quick brown fox jumps over the lazy dog.",
+                },
             ],
         }
-    )
+    }
 
-    eval_task = EvalTask(
-        dataset=eval_dataset,
-        metrics=["exact_match", "bleu", "rouge"],
-    )
-    model = GenerativeModel("gemini-1.0-pro")
+    uri = f"https://us-central1-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/us-central1:evaluateInstances"
+    result = google_auth_requests.AuthorizedSession(creds).post(uri, json=data)
 
-    result = eval_task.evaluate(model=model)
-
-    print(result)
+    print(json.dumps(result.json(), indent=2))
     # [END generativeaionvertexai_eval_rouge]
+
     return result
-
-
-if __name__ == "__main__":
-    generate_content("document-ai-test-337818", "us-central1")
