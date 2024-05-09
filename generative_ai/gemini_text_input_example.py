@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# laishers. "A New Era in Cartoon History." Review of Steamboat Willie.
-# 4 January 2001. https://www.imdb.com/review/rw0005574/?ref_=rw_urv
-
 
 def generate_from_text_input(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_generate_from_text_input]
@@ -30,7 +27,6 @@ def generate_from_text_input(project_id: str) -> str:
 
     response = model.generate_content(
         [
-            # Movie review from https://www.imdb.com/review/rw0005574/?ref_=rw_urv.
             # Does the returned sentiment score match the reviewer's movie rating?
             Part.from_text(
                 """Give a score from 1 - 10 to suggest if the
@@ -38,13 +34,12 @@ def generate_from_text_input(project_id: str) -> str:
                 negative, 10 is most positive, 5 will be neutral). Include an
                 explanation.
 
-                This era was not just the dawn of sound in cartoons, but of a
-                cartoon character which would go down in history as the world's
-                most famous mouse. Yes, Mickey makes his debut here, in this
-                cheery tale of life on board a steamboat. The animation is good
-                for it's time, and the plot - though a little simple - is quite
-                jolly. A true classic, and if you ever manage to get it on
-                video, you won't regret it."""
+                The movie takes some time to build, but that is part of its beauty.
+                By the time you are hooked, this tale of friendship and hope is
+                thrilling and affecting, until the very last scene. You will find
+                yourself rooting for the hero every step of the way. This is the
+                sharpest, most original animated film I have seen in years.
+                I would give it 8 out of 10 stars."""
             )
         ]
     )
