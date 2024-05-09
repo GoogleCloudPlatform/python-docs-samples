@@ -15,8 +15,8 @@
 
 def set_system_instruction(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_system_instruction]
-
     import vertexai
+
     from vertexai.generative_models import GenerativeModel
 
     # TODO(developer): Update and un-comment below lines
@@ -25,7 +25,7 @@ def set_system_instruction(project_id: str) -> str:
     vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(
-        "gemini-1.5-pro-preview-0409",
+        model_name="gemini-1.5-pro-preview-0409",
         system_instruction=[
             "You are a helpful language translator.",
             "Your mission is to translate text in English to French.",
@@ -35,12 +35,12 @@ def set_system_instruction(project_id: str) -> str:
     prompt = """
     User input: I like bagels.
     Answer:
-  """
+    """
 
     contents = [prompt]
 
     response = model.generate_content(contents)
     print(response.text)
-
     # [END generativeaionvertexai_gemini_system_instruction]
+
     return response.text

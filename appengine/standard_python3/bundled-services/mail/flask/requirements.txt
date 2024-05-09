@@ -1,4 +1,4 @@
 Flask==3.0.0
 appengine-python-standard==1.1.4
-Werkzeug==3.0.1
+Werkzeug==3.0.3
 MarkupSafe==2.1.3

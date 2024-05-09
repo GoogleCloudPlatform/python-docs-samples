@@ -12,16 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_claude_3_unary]
-# TODO(developer): Vertex AI SDK - uncomment below & run
-# pip3 install --upgrade --user google-cloud-aiplatform
-# gcloud auth application-default login
-# pip3 install -U 'anthropic[vertex]'
-
-from anthropic import AnthropicVertex
-
 
 def generate_text(project_id: str, region: str) -> object:
+    # [START aiplatform_claude_3_unary]
+    # TODO(developer): Vertex AI SDK - uncomment below & run
+    # pip3 install --upgrade --user google-cloud-aiplatform
+    # gcloud auth application-default login
+    # pip3 install -U 'anthropic[vertex]'
+
+    from anthropic import AnthropicVertex
+
     client = AnthropicVertex(region=region, project_id=project_id)
     message = client.messages.create(
         model="claude-3-sonnet@20240229",
@@ -34,10 +34,8 @@ def generate_text(project_id: str, region: str) -> object:
         ],
     )
     print(message.model_dump_json(indent=2))
+    # [END aiplatform_claude_3_unary]
     return message
-
-
-# [END aiplatform_claude_3_unary]
 
 
 if __name__ == "__main__":

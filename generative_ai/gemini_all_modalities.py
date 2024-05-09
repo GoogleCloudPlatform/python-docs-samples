@@ -24,7 +24,7 @@ def analyze_all_modalities(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 
     video_file_uri = (
         "gs://cloud-samples-data/generative-ai/video/behind_the_scenes_pixel.mp4"

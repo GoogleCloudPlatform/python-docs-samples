@@ -12,27 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_gemini_pro_example]
-import vertexai
-from vertexai.generative_models import GenerativeModel, Part
 
+def generate_text(project_id: str) -> None:
+    # [START generativeaionvertexai_gemini_pro_example]
+    import vertexai
 
-def generate_text(project_id: str, location: str) -> None:
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    from vertexai.generative_models import GenerativeModel, Part
 
-    # Load the model
-    model = GenerativeModel(model_name="gemini-pro-vision")
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # Load example image
-    image_url = "gs://generativeai-downloads/images/scones.jpg"
-    image_content = Part.from_uri(image_url, "image/jpeg")
+    vertexai.init(project=project_id, location="us-central1")
+
+    model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
+
+    image_file = Part.from_uri(
+        "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"
+    )
 
     # Query the model
-    response = model.generate_content([image_content, "what is this image?"])
-    print(response)
+    response = model.generate_content([image_file, "what is this image?"])
+    print(response.text)
 
+    # [END generativeaionvertexai_gemini_pro_example]
     return response.text
-
-
-# [END generativeaionvertexai_gemini_pro_example]

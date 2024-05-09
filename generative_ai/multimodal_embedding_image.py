@@ -12,15 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_multimodal_embedding_image]
 from typing import Optional
 
-import vertexai
-from vertexai.vision_models import (
-    Image,
-    MultiModalEmbeddingModel,
-    MultiModalEmbeddingResponse,
-)
+from vertexai.vision_models import MultiModalEmbeddingResponse
 
 
 def get_image_embeddings(
@@ -37,7 +31,11 @@ def get_image_embeddings(
         image_path: Path to image (local or Google Cloud Storage) to generate embeddings for.
         contextual_text: Text to generate embeddings for.
     """
+    # [START aiplatform_sdk_multimodal_embedding_image]
+    import vertexai
+    from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
+    # TODO(developer): Update values for project_id, location, image_path & contextual_text
     vertexai.init(project=project_id, location=location)
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")

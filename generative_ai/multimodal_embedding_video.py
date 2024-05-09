@@ -12,16 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_multimodal_embedding_video]
 from typing import Optional
 
-import vertexai
-from vertexai.vision_models import (
-    MultiModalEmbeddingModel,
-    MultiModalEmbeddingResponse,
-    Video,
-    VideoSegmentConfig,
-)
+from vertexai.vision_models import MultiModalEmbeddingResponse, VideoSegmentConfig
 
 
 def get_video_embeddings(
@@ -44,7 +37,13 @@ def get_video_embeddings(
         video_segment_config: Define specific segments to generate embeddings for.
             https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
+    # [START aiplatform_sdk_multimodal_embedding_video]
+    import vertexai
 
+    from vertexai.vision_models import MultiModalEmbeddingModel, Video
+
+    # TODO(developer): Update values for project_id, location,
+    #               video_path, contextual_text, dimension, video_segment_config
     vertexai.init(project=project_id, location=location)
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
