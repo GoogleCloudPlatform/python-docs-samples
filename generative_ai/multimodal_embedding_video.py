@@ -41,7 +41,7 @@ def get_video_embeddings(
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
 
-    # TODO(developer): Update values for project_id, location,
+    # TODO(developer): Update values for project_id,
     #               video_path, contextual_text, dimension, video_segment_config
     vertexai.init(project=project_id, location="us-central1")
 
