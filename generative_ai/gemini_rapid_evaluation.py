@@ -12,90 +12,73 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO(b/339659946): Update samples to use Vertex AI SDK
+from vertexai.preview.evaluation import EvalResult
 
 
-def eval_pairwise_summarization_quality(project_id: str) -> object:
-    # [START generativeaionvertexai_eval_pairwise_summarization_quality]
-    import json
+def create_evaluation_task(project_id: str) -> EvalResult:
+    # [START generativeaionvertexai_create_evaluation_task]
+    import pandas as pd
 
-    from google import auth
-    from google.auth.transport import requests as google_auth_requests
-
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    creds, _ = auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-
-    data = {
-        "pairwise_summarization_quality_input": {
-            "metric_spec": {},
-            "instance": {
-                "prediction": "France is a country located in Western Europe.",
-                "baseline_prediction": "France is a country.",
-                "instruction": "Summarize the context.",
-                "context": (
-                    "France is a country located in Western Europe. It's bordered by "
-                    "Belgium, Luxembourg, Germany, Switzerland, Italy, Monaco, Spain, "
-                    "and Andorra.  France's coastline stretches along the English "
-                    "Channel, the North Sea, the Atlantic Ocean, and the Mediterranean "
-                    "Sea.  Known for its rich history, iconic landmarks like the Eiffel "
-                    "Tower, and delicious cuisine, France is a major cultural and "
-                    "economic power in Europe and throughout the world."
-                ),
-            },
-        }
-    }
-
-    uri = f"https://us-central1-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/us-central1:evaluateInstances"
-    result = google_auth_requests.AuthorizedSession(creds).post(uri, json=data)
-
-    print(json.dumps(result.json(), indent=2))
-    # [END generativeaionvertexai_eval_pairwise_summarization_quality]
-
-    return result
-
-
-def eval_rouge(project_id: str) -> object:
-    # [START generativeaionvertexai_eval_rouge]
-    import json
-
-    from google import auth
-    from google.auth.transport import requests as google_auth_requests
+    import vertexai
+    from vertexai.preview.evaluation import EvalTask
+    from vertexai.generative_models import GenerativeModel
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    creds, _ = auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    vertexai.init(project=project_id, location="us-central1")
 
-    data = {
-        "rouge_input": {
-            "metric_spec": {
-                "rouge_type": "rougeLsum",
-                "use_stemmer": True,
-                "split_summaries": True,
-            },
-            "instances": [
-                {
-                    "prediction": "A fast brown fox leaps over a lazy dog.",
-                    "reference": "The quick brown fox jumps over the lazy dog.",
-                },
-                {
-                    "prediction": "A quick brown fox jumps over the lazy canine.",
-                    "reference": "The quick brown fox jumps over the lazy dog.",
-                },
-                {
-                    "prediction": "The speedy brown fox jumps over the lazy dog.",
-                    "reference": "The quick brown fox jumps over the lazy dog.",
-                },
+    eval_dataset = pd.DataFrame(
+        {
+            "instruction": [
+                "Summarize the text in one sentence.",
+                "Summarize the text such that a five-year-old can understand.",
+            ],
+            "context": [
+                """As part of a comprehensive initiative to tackle urban congestion and foster
+                sustainable urban living, a major city has revealed ambitious plans for an
+                extensive overhaul of its public transportation system. The project aims not
+                only to improve the efficiency and reliability of public transit but also to
+                reduce the city\'s carbon footprint and promote eco-friendly commuting options.
+                City officials anticipate that this strategic investment will enhance
+                accessibility for residents and visitors alike, ushering in a new era of
+                efficient, environmentally conscious urban transportation.""",
+                """A team of archaeologists has unearthed ancient artifacts shedding light on a
+                previously unknown civilization. The findings challenge existing historical
+                narratives and provide valuable insights into human history.""",
+            ],
+            "response": [
+                "A major city is revamping its public transportation system to fight congestion, reduce emissions, and make getting around greener and easier.",
+                "Some people who dig for old things found some very special tools and objects that tell us about people who lived a long, long time ago! What they found is like a new puzzle piece that helps us understand how people used to live.",
             ],
         }
-    }
+    )
 
-    uri = f"https://us-central1-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/us-central1:evaluateInstances"
-    result = google_auth_requests.AuthorizedSession(creds).post(uri, json=data)
+    eval_task = EvalTask(
+        dataset=eval_dataset,
+        metrics=[
+            "summarization_quality",
+            "groundedness",
+            "fulfillment",
+            "summarization_helpfulness",
+            "summarization_verbosity",
+        ],
+    )
 
-    print(json.dumps(result.json(), indent=2))
-    # [END generativeaionvertexai_eval_rouge]
+    model = GenerativeModel("gemini-1.0-pro")
 
+    prompt_template = (
+        "Instruction: {instruction}. Article: {context}. Summary: {response}"
+    )
+    result = eval_task.evaluate(model=model, prompt_template=prompt_template)
+
+    print("Summary Metrics:\n")
+
+    for key, value in result.summary_metrics.items():
+        print(f"{key}: \t{value}")
+
+    print("\n\nMetrics Table:\n")
+    print(result.metrics_table)
+
+    # [END generativeaionvertexai_create_evaluation_task]
     return result

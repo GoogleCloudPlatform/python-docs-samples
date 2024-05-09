@@ -20,11 +20,6 @@ import gemini_rapid_evaluation
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def test_eval_pairwise_summarization_quality() -> None:
-    response = gemini_rapid_evaluation.eval_pairwise_summarization_quality(PROJECT_ID)
-    assert response
-
-
-def test_eval_rouge() -> None:
-    response = gemini_rapid_evaluation.eval_rouge(PROJECT_ID)
+def test_create_evaluation_task() -> None:
+    response = gemini_rapid_evaluation.create_evaluation_task(PROJECT_ID)
     assert response
