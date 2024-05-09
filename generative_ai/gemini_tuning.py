@@ -85,7 +85,7 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
 
 
 def get_tuning_job(
-    project_id: str, LOCATION: str, tuning_job_id: str
+    project_id: str, location: str, tuning_job_id: str
 ) -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_get_tuning_job]
     import vertexai
@@ -99,7 +99,7 @@ def get_tuning_job(
     vertexai.init(project=project_id, location="us-central1")
 
     response = sft.SupervisedTuningJob(
-        f"projects/{project_id}/locations/{LOCATION}/tuningJobs/{tuning_job_id}"
+        f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
     )
 
     print(response)
@@ -129,7 +129,7 @@ def list_tuning_jobs(
     return responses
 
 
-def cancel_tuning_job(project_id: str, LOCATION: str, tuning_job_id: str) -> None:
+def cancel_tuning_job(project_id: str, location: str, tuning_job_id: str) -> None:
     # [START generativeaionvertexai_cancel_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
@@ -142,7 +142,7 @@ def cancel_tuning_job(project_id: str, LOCATION: str, tuning_job_id: str) -> Non
     vertexai.init(project=project_id, location="us-central1")
 
     job = sft.SupervisedTuningJob(
-        f"projects/{project_id}/locations/{LOCATION}/tuningJobs/{tuning_job_id}"
+        f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
     )
     job.cancel()
     # [END generativeaionvertexai_cancel_tuning_job]
