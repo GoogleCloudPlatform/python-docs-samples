@@ -29,7 +29,7 @@ def create_reasoning_engine_basic(
     # staging_bucket = "gs://YOUR_BUCKET_NAME"
 
     vertexai.init(
-        project=project_id, location="us-central1", staging_bucket=staging_bucket
+        project=project_id, staging_bucket=staging_bucket
     )
 
     class SimpleAdditionApp:
@@ -75,10 +75,9 @@ def create_reasoning_engine_advanced(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
     # staging_bucket = "gs://YOUR_BUCKET_NAME"
 
-    vertexai.init(project=project_id, location=location, staging_bucket=staging_bucket)
+    vertexai.init(project=project_id, staging_bucket=staging_bucket)
 
     class LangchainApp:
         def __init__(self, project: str, location: str) -> None:
@@ -143,7 +142,7 @@ def query_reasoning_engine(project_id: str, reasoning_engine_id: str) -> object:
     # project_id = "PROJECT_ID"
     # reasoning_engine_id = "REASONING_ENGINE_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
 
     # Replace with kwargs for `.query()` method.
@@ -161,7 +160,7 @@ def list_reasoning_engines(project_id: str) -> List[reasoning_engines.ReasoningE
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     reasoning_engine_list = reasoning_engines.ReasoningEngine.list()
     print(reasoning_engine_list)
@@ -180,7 +179,7 @@ def get_reasoning_engine(
     # project_id = "PROJECT_ID"
     # reasoning_engine_id = "REASONING_ENGINE_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
     print(reasoning_engine)
@@ -197,7 +196,7 @@ def delete_reasoning_engine(project_id: str, reasoning_engine_id: str) -> None:
     # project_id = "PROJECT_ID"
     # reasoning_engine_id = "REASONING_ENGINE_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
     reasoning_engine.delete()

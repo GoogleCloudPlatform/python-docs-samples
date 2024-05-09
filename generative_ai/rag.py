@@ -33,7 +33,7 @@ def create_corpus(
     # description = "Corpus Description"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     corpus = rag.create_corpus(display_name=display_name, description=description)
     print(corpus)
@@ -52,7 +52,7 @@ def get_corpus(project_id: str, corpus_name: str):
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     corpus = rag.get_corpus(name=corpus_name)
     print(corpus)
@@ -70,7 +70,7 @@ def list_corpora(project_id: str):
     # project_id = "PROJECT_ID"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     corpora = rag.list_corpora()
     print(corpora)
@@ -98,7 +98,7 @@ def upload_file(
     # description = "file description"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     rag_file = rag.upload_file(
         corpus_name=corpus_name,
@@ -127,7 +127,7 @@ def import_files(
     # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     response = rag.import_files(
         corpus_name=corpus_name,
@@ -158,7 +158,7 @@ async def import_files_async(
     # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     response = await rag.import_files_async(
         corpus_name=corpus_name,
@@ -184,7 +184,7 @@ def get_file(project_id: str, file_name: str):
     # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     rag_file = rag.get_file(name=file_name)
     print(rag_file)
@@ -204,7 +204,7 @@ def list_files(project_id: str, corpus_name: str):
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     files = rag.list_files(corpus_name=corpus_name)
     for file in files:
@@ -225,7 +225,7 @@ def delete_file(project_id: str, file_name: str) -> None:
     # file_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}/ragFiles/{rag_file_id}"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     rag.delete_file(name=file_name)
     print(f"File {file_name} deleted.")
@@ -243,7 +243,7 @@ def delete_corpus(project_id: str, corpus_name: str) -> None:
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     rag.delete_corpus(name=corpus_name)
     print(f"Corpus {corpus_name} deleted.")
@@ -266,7 +266,7 @@ def retrieval_query(
     # text = "Your Query"
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     response = rag.retrieval_query(
         rag_corpora=rag_corpora,
@@ -294,7 +294,7 @@ def generate_content_with_rag(
     # rag_corpora = ["9183965540115283968"] # Only one corpus is supported at this time
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     rag_retrieval_tool = Tool.from_retrieval(
         retrieval=rag.Retrieval(
@@ -333,7 +333,7 @@ def quickstart(
     # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     # Create RagCorpus
     rag_corpus = rag.create_corpus(display_name=display_name)

@@ -13,13 +13,13 @@
 # limitations under the License.
 
 
-def generate_content(PROJECT_ID: str, REGION: str, MODEL_ID: str) -> object:
+def generate_content(PROJECT_ID: str, MODEL_ID: str) -> object:
     # [START generativeaionvertexai_non_stream_multimodality_basic]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    vertexai.init(project=PROJECT_ID, location=REGION)
+    vertexai.init(project=PROJECT_ID)
 
     model = GenerativeModel(MODEL_ID)
     response = model.generate_content(

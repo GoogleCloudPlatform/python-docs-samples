@@ -30,7 +30,7 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     # Initialize Vertex AI
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     # Initialize Gemini model
     model = GenerativeModel(model_name="gemini-1.0-pro-001")
@@ -120,7 +120,7 @@ def generate_function_call_advanced(project_id: str) -> GenerationResponse:
     # project_id = "PROJECT_ID"
 
     # Initialize Vertex AI
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     # Specify a function declaration and parameters for an API request
     get_product_sku_func = FunctionDeclaration(

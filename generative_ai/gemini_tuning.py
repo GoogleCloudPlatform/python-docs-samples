@@ -27,7 +27,7 @@ def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -57,7 +57,7 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -91,10 +91,9 @@ def get_tuning_job(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
     # tuning_job_id = "TUNING_JOB_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     response = sft.SupervisedTuningJob(
         f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
@@ -116,7 +115,7 @@ def list_tuning_jobs(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     responses = sft.SupervisedTuningJob.list()
 
@@ -134,10 +133,9 @@ def cancel_tuning_job(project_id: str, location: str, tuning_job_id: str) -> Non
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
     # tuning_job_id = "TUNING_JOB_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     job = sft.SupervisedTuningJob(
         f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"

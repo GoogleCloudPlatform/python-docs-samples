@@ -39,7 +39,7 @@ def edit_image_inpainting_insert_mask(
     # output_file = "my-output.png"
     # prompt = "" # The text prompt describing what you want to see inserted.
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = ImageGenerationModel.from_pretrained("imagegeneration@006")
     base_img = Image.load_from_file(location=input_file)

@@ -32,7 +32,7 @@ def generate_image(
     # output_file = "my-output.png"
     # prompt = "" # The text prompt describing what you want to see.
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = ImageGenerationModel.from_pretrained("imagegeneration@006")
 

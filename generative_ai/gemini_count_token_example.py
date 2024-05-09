@@ -24,7 +24,7 @@ def count_tokens(project_id: str) -> GenerationResponse:
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
@@ -56,7 +56,7 @@ def count_tokens_multimodal(project_id: str) -> GenerationResponse:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
 

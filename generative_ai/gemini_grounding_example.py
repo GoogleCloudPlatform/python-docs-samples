@@ -26,7 +26,7 @@ def generate_text_with_grounding_web(project_id: str) -> GenerationResponse:
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
@@ -60,7 +60,7 @@ def generate_text_with_grounding_vertex_ai_search(
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 

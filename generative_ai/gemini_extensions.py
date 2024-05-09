@@ -25,7 +25,7 @@ def create_extension(project_id: str) -> extensions.Extension:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     extension = extensions.Extension.create(
         display_name="Code Interpreter",
@@ -56,7 +56,7 @@ def execute_extension(project_id: str, extension_id: str) -> object:
     # project_id = "PROJECT_ID"
     # extension_id = "EXTENSION_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     extension = extensions.Extension(extension_id)
     response = extension.execute(
@@ -78,7 +78,7 @@ def get_extension(project_id: str, extension_id: str) -> extensions.Extension:
     # project_id = "PROJECT_ID"
     # extension_id = "EXTENSION_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     extension = extensions.Extension(extension_id)
     print(extension)
@@ -94,7 +94,7 @@ def list_extensions(project_id: str) -> List[extensions.Extension]:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     extensions = extensions.Extension.list()
     print(extensions)
@@ -111,7 +111,7 @@ def delete_extension(project_id: str, extension_id: str) -> None:
     # project_id = "PROJECT_ID"
     # extension_id = "EXTENSION_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=project_id)
 
     extension = extensions.Extension(extension_id)
     extension.delete()

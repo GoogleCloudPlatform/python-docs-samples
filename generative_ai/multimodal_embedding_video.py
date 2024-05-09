@@ -19,7 +19,6 @@ from vertexai.vision_models import MultiModalEmbeddingResponse, VideoSegmentConf
 
 def get_video_embeddings(
     project_id: str,
-    location: str,
     video_path: str,
     contextual_text: Optional[str] = None,
     dimension: Optional[int] = 1408,
@@ -29,7 +28,6 @@ def get_video_embeddings(
 
     Args:
         project_id: Google Cloud Project ID, used to initialize vertexai
-        location: Google Cloud Region, used to initialize vertexai
         video_path: Path to video (local or Google Cloud Storage) to generate embeddings for.
         contextual_text: Text to generate embeddings for.
         dimension: Dimension for the returned embeddings.
@@ -42,9 +40,9 @@ def get_video_embeddings(
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
 
-    # TODO(developer): Update values for project_id, location,
+    # TODO(developer): Update values for project_id,
     #               video_path, contextual_text, dimension, video_segment_config
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=project_id)
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
     video = Video.load_from_file(video_path)

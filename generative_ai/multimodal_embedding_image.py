@@ -19,7 +19,6 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 
 def get_image_embeddings(
     project_id: str,
-    location: str,
     image_path: str,
     contextual_text: Optional[str] = None,
 ) -> MultiModalEmbeddingResponse:
@@ -27,7 +26,6 @@ def get_image_embeddings(
 
     Args:
         project_id: Google Cloud Project ID, used to initialize vertexai
-        location: Google Cloud Region, used to initialize vertexai
         image_path: Path to image (local or Google Cloud Storage) to generate embeddings for.
         contextual_text: Text to generate embeddings for.
     """
@@ -35,8 +33,8 @@ def get_image_embeddings(
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
-    # TODO(developer): Update values for project_id, location, image_path & contextual_text
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update values for project_id, image_path & contextual_text
+    vertexai.init(project=project_id)
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
     image = Image.load_from_file(image_path)
