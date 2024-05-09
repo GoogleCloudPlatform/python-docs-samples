@@ -14,8 +14,9 @@
 
 import os
 
-import gemini_tuning
 import pytest
+
+import gemini_tuning
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
