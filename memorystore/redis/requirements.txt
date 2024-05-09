@@ -14,5 +14,5 @@
 Flask==3.0.0
 gunicorn==22.0.0
 redis==5.0.1
-Werkzeug==3.0.1
+Werkzeug==3.0.3
 # [END memorystore_requirements]
