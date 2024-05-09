@@ -2,4 +2,4 @@ google-auth==2.19.1
 requests==2.31.0
 Flask==3.0.0
 gunicorn==22.0.0
-Werkzeug==3.0.1
+Werkzeug==3.0.3
