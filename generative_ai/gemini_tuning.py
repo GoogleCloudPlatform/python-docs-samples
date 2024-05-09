@@ -136,7 +136,7 @@ def cancel_tuning_job(project_id: str, LOCATION: str, tuning_job_id: str) -> Non
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # LOCATION = "us-central1"
+    # location = "us-central1"
     # tuning_job_id = "TUNING_JOB_ID"
 
     vertexai.init(project=project_id, location="us-central1")
