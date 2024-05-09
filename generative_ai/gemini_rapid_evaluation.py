@@ -16,7 +16,6 @@ from vertexai.preview.evaluation import EvalResult
 
 
 def create_evaluation_task(project_id: str) -> EvalResult:
-
     # [START generativeaionvertexai_create_evaluation_task]
     import pandas as pd
 
