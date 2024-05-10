@@ -22,7 +22,7 @@ import rag
 import vertexai
 
 # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
-# pytest.skip(allow_module_level=True)
+pytest.skip(allow_module_level=True)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
