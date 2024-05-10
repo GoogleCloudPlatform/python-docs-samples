@@ -22,7 +22,7 @@ import rag
 import vertexai
 
 # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
-pytest.skip(allow_module_level=True)
+# pytest.skip(allow_module_level=True)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
@@ -105,13 +105,13 @@ def test_list_files(test_corpus, uploaded_file):
 
 
 def test_retrieval_query(test_corpus):
-    response = rag.retrieval_query(PROJECT_ID, [test_corpus.name], "hello")
+    response = rag.retrieval_query(PROJECT_ID, test_corpus.name)
     assert response
     assert response.contexts
 
 
 def test_generate_content_with_rag(test_corpus):
-    response = rag.generate_content_with_rag(PROJECT_ID, [test_corpus.name])
+    response = rag.generate_content_with_rag(PROJECT_ID, test_corpus.name)
     assert response
     assert response.text
 

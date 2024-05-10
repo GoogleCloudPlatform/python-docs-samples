@@ -252,8 +252,7 @@ def delete_corpus(project_id: str, corpus_name: str) -> None:
 
 def retrieval_query(
     project_id: str,
-    rag_corpora: List[str],
-    text: str,
+    rag_corpus_id: str,
 ):
     # [START generativeaionvertexai_rag_retrieval_query]
 
@@ -262,16 +261,22 @@ def retrieval_query(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # rag_corpora = ["9183965540115283968"] # Only one corpus is supported at this time
-    # text = "Your Query"
+    # rag_corpus_id = "9183965540115283968" # Only one corpus is supported at this time
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
 
     response = rag.retrieval_query(
-        rag_corpora=rag_corpora,
-        text=text,
+        rag_resources=[
+            rag.RagResource(
+                rag_corpus=rag_corpus_id,
+                # Supply IDs from `rag.list_files()`.
+                # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+            )
+        ],
+        text="What is RAG and why it is helpful?",
         similarity_top_k=10,  # Optional
+        vector_distance_threshold=0.5,  # Optional
     )
     print(response)
     # [END generativeaionvertexai_rag_retrieval_query]
@@ -281,7 +286,7 @@ def retrieval_query(
 
 def generate_content_with_rag(
     project_id: str,
-    rag_corpora: List[str],
+    rag_corpus_id: str,
 ):
     # [START generativeaionvertexai_rag_generate_content]
 
@@ -291,7 +296,7 @@ def generate_content_with_rag(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # rag_corpora = ["9183965540115283968"] # Only one corpus is supported at this time
+    # rag_corpus_id = "9183965540115283968" # Only one corpus is supported at this time
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
@@ -299,8 +304,15 @@ def generate_content_with_rag(
     rag_retrieval_tool = Tool.from_retrieval(
         retrieval=rag.Retrieval(
             source=rag.VertexRagStore(
-                rag_corpora=rag_corpora,
+                rag_resources=[
+                    rag.RagResource(
+                        rag_corpus=rag_corpus_id,  # Currently only 1 corpus is allowed.
+                        # Supply IDs from `rag.list_files()`.
+                        # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+                    )
+                ],
                 similarity_top_k=3,  # Optional
+                vector_distance_threshold=0.5,  # Optional
             ),
         )
     )
@@ -348,9 +360,16 @@ def quickstart(
 
     # Direct context retrieval
     response = rag.retrieval_query(
-        rag_corpora=[rag_corpus.name],
+        rag_resources=[
+            rag.RagResource(
+                rag_corpus=rag_corpus.name,
+                # Supply IDs from `rag.list_files()`.
+                # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+            )
+        ],
         text="What is RAG and why it is helpful?",
-        similarity_top_k=10,
+        similarity_top_k=10,  # Optional
+        vector_distance_threshold=0.5,  # Optional
     )
     print(response)
 
@@ -359,8 +378,15 @@ def quickstart(
     rag_retrieval_tool = Tool.from_retrieval(
         retrieval=rag.Retrieval(
             source=rag.VertexRagStore(
-                rag_corpora=[rag_corpus.name],  # Currently only 1 corpus is allowed.
+                rag_resources=[
+                    rag.RagResource(
+                        rag_corpus=rag_corpus.name,  # Currently only 1 corpus is allowed.
+                        # Supply IDs from `rag.list_files()`.
+                        # rag_file_ids=["rag-file-1", "rag-file-2", ...],
+                    )
+                ],
                 similarity_top_k=3,  # Optional
+                vector_distance_threshold=0.5,  # Optional
             ),
         )
     )
