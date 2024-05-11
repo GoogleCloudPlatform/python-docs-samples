@@ -106,6 +106,7 @@ def test_gemini_single_turn_video_example() -> None:
     assert any([_ in text for _ in ("zoo", "tiger", "leaf", "water")])
 
 
+@pytest.mark.skip("TODO: Safty filters are likely blocking model output b/339985493")
 def test_gemini_pdf_example() -> None:
     text = gemini_pdf_example.analyze_pdf(PROJECT_ID)
     assert len(text) > 0
