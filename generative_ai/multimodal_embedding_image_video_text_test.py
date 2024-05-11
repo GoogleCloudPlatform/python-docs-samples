@@ -19,14 +19,12 @@ from google.api_core.exceptions import ResourceExhausted
 import multimodal_embedding_image_video_text
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_video_text() -> None:
     embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings(
         project_id=_PROJECT_ID,
-        location=_LOCATION,
         image_path="gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png",
         video_path="gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4",
         contextual_text="Cars on Highway",
