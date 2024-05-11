@@ -21,6 +21,7 @@ def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_basic]
 
     import time
+
     import vertexai
     from vertexai.preview.tuning import sft
 
@@ -51,6 +52,7 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_advanced]
 
     import time
+
     import vertexai
     from vertexai.preview.tuning import sft
 
