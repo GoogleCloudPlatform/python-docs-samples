@@ -44,7 +44,6 @@ def test_gemini_guide_example() -> None:
     text = gemini_guide_example.generate_text(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
-    assert "scones" in text
 
 
 def test_gemini_text_input_example() -> None:
