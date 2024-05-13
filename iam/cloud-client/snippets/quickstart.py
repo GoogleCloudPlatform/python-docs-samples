@@ -69,13 +69,10 @@ def modify_policy_add_role(crm_service: resourcemanager_v3.ProjectsClient, proje
 
     policy = get_policy(crm_service, project_id)
 
-    binding = None
     for bind in policy.bindings:
         if bind.role == role:
-            binding = bind
+            bind.members.append(member)
             break
-    if binding is not None:
-        binding.members.append(member)
     else:
         binding = policy_pb2.Binding()
         binding.role = role
