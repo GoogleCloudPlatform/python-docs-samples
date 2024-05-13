@@ -14,6 +14,7 @@
 
 import json
 import re
+import time
 import uuid
 
 import google.auth
@@ -61,4 +62,5 @@ def test_delete_service_account_key(service_account: str) -> None:
     assert key_found(PROJECT, service_account, key_id)
 
     delete_key(PROJECT, service_account, key_id)
+    time.sleep(5)
     assert not key_found(PROJECT, service_account, key_id)
