@@ -27,7 +27,9 @@ def set_project_policy(project_id: str, policy: policy_pb2.Policy, merge: bool =
 
     project_id: ID or number of the Google Cloud project you want to use.
     policy: Policy which has to be set.
-    merge: The strategy to be used forming the request
+    merge: The strategy to be used forming the request. CopyFrom is clearing both mutable and immutable fields,
+    when MergeFrom is replacing only immutable fields and extending mutable.
+    https://googleapis.dev/python/protobuf/latest/google/protobuf/message.html#google.protobuf.message.Message.CopyFrom
     """
     client = resourcemanager_v3.ProjectsClient()
 
