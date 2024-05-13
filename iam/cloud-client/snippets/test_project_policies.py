@@ -63,7 +63,9 @@ def project_policy() -> policy_pb2.Policy:
 
 
 @backoff.on_exception(backoff.expo, Aborted, max_tries=6)
-def execute_wrapped(func: Callable, *args: Union[str, policy_pb2.Policy]) -> policy_pb2.Policy:
+def execute_wrapped(
+    func: Callable, *args: Union[str, policy_pb2.Policy]
+) -> policy_pb2.Policy:
     return func(*args)
 
 

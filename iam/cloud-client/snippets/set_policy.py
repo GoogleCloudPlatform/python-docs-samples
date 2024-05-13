@@ -19,7 +19,9 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def set_project_policy(project_id: str, policy: policy_pb2.Policy, merge: bool = True) -> policy_pb2.Policy:
+def set_project_policy(
+    project_id: str, policy: policy_pb2.Policy, merge: bool = True
+) -> policy_pb2.Policy:
     """
     Set policy for project. Pay attention that previous state will be completely rewritten.
     If you want to update only part of the policy follow the approach read->modify->write.
@@ -69,7 +71,9 @@ if __name__ == "__main__":
     new_policy = policy_pb2.Policy()
     binding = policy_pb2.Binding()
     binding.role = "roles/viewer"
-    binding.members.append(f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com")
+    binding.members.append(
+        f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+    )
     new_policy.bindings.append(binding)
 
     set_project_policy(project_id, new_policy)
