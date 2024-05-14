@@ -44,7 +44,9 @@ def quickstart(project_id: str, member: str) -> None:
     modify_policy_remove_member(crm_service, project_id, role, member)
 
 
-def get_policy(crm_service: resourcemanager_v3.ProjectsClient, project_id: str) -> policy_pb2.Policy:
+def get_policy(
+    crm_service: resourcemanager_v3.ProjectsClient, project_id: str
+) -> policy_pb2.Policy:
     """Gets IAM policy for a project."""
 
     request = iam_policy_pb2.GetIamPolicyRequest()
@@ -54,7 +56,11 @@ def get_policy(crm_service: resourcemanager_v3.ProjectsClient, project_id: str) 
     return policy
 
 
-def set_policy(crm_service: resourcemanager_v3.ProjectsClient, project_id: str, policy: policy_pb2.Policy) -> None:
+def set_policy(
+    crm_service: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    policy: policy_pb2.Policy,
+) -> None:
     """Adds a new role binding to a policy."""
 
     request = iam_policy_pb2.SetIamPolicyRequest()
@@ -64,7 +70,12 @@ def set_policy(crm_service: resourcemanager_v3.ProjectsClient, project_id: str, 
     crm_service.set_iam_policy(request)
 
 
-def modify_policy_add_role(crm_service: resourcemanager_v3.ProjectsClient, project_id: str, role: str, member: str) -> None:
+def modify_policy_add_role(
+    crm_service: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    role: str,
+    member: str,
+) -> None:
     """Adds a new role binding to a policy."""
 
     policy = get_policy(crm_service, project_id)
@@ -82,7 +93,12 @@ def modify_policy_add_role(crm_service: resourcemanager_v3.ProjectsClient, proje
     set_policy(crm_service, project_id, policy)
 
 
-def modify_policy_remove_member(crm_service: resourcemanager_v3.ProjectsClient, project_id: str, role: str, member: str) -> None:
+def modify_policy_remove_member(
+    crm_service: resourcemanager_v3.ProjectsClient,
+    project_id: str,
+    role: str,
+    member: str,
+) -> None:
     """Removes a  member from a role binding."""
 
     policy = get_policy(crm_service, project_id)
