@@ -17,7 +17,7 @@ from typing import Callable, Union
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted
+from google.api_core.exceptions import Aborted, InvalidArgument, NotFound
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -66,7 +66,10 @@ def project_policy() -> policy_pb2.Policy:
 def execute_wrapped(
     func: Callable, *args: Union[str, policy_pb2.Policy]
 ) -> policy_pb2.Policy:
-    return func(*args)
+    try:
+        return func(*args)
+    except (NotFound, InvalidArgument):
+        pytest.skip("Service account wasn't created")
 
 
 def test_set_project_policy(project_policy: policy_pb2.Policy) -> None:
