@@ -21,7 +21,7 @@ import stream_text_basic
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = "gemini-1.5-pro-preview-0409"
+MODEL_ID = "gemini-1.5-flash-preview-0514"
 
 
 def test_non_stream_text_basic() -> None:
@@ -30,9 +30,7 @@ def test_non_stream_text_basic() -> None:
 
 
 def test_non_stream_multi_modality_basic() -> None:
-    response = non_stream_multimodality_basic.generate_content(
-        PROJECT_ID, MODEL_ID
-    )
+    response = non_stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
     assert response
 
 
@@ -42,7 +40,5 @@ def test_stream_text_basic() -> None:
 
 
 def test_stream_multi_modality_basic() -> None:
-    responses = stream_multimodality_basic.generate_content(
-        PROJECT_ID, MODEL_ID
-    )
+    responses = stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
     assert responses
