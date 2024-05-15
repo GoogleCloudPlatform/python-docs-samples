@@ -16,7 +16,7 @@
 def generate_from_text_input(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_generate_from_text_input]
     import vertexai
-    from vertexai.generative_models import GenerativeModel, Part
+    from vertexai.generative_models import GenerativeModel
 
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
@@ -26,22 +26,7 @@ def generate_from_text_input(project_id: str) -> str:
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
 
     response = model.generate_content(
-        [
-            # Does the returned sentiment score match the reviewer's movie rating?
-            Part.from_text(
-                """Give a score from 1 - 10 to suggest if the
-                following movie review is negative or positive (1 is most
-                negative, 10 is most positive, 5 will be neutral). Include an
-                explanation.
-
-                The movie takes some time to build, but that is part of its beauty.
-                By the time you are hooked, this tale of friendship and hope is
-                thrilling and affecting, until the very last scene. You will find
-                yourself rooting for the hero every step of the way. This is the
-                sharpest, most original animated film I have seen in years.
-                I would give it 8 out of 10 stars."""
-            )
-        ]
+        "What's a good name for a flower shop that specializes in selling bouquets of dried flowers?"
     )
 
     print(response.text)
