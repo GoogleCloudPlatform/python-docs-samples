@@ -24,7 +24,7 @@ def set_system_instruction(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    # TODO(developer): Check latest AI models at https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
+    # Check latest AI models at https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
     model = GenerativeModel(
         model_name="gemini-1.5-flash-preview-0514",
         system_instruction=[
