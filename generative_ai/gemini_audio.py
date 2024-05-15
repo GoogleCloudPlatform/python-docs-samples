@@ -24,11 +24,12 @@ def summarize_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
+    # For Gemini supported models check https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
+    model = GenerativeModel(model_name="gemini-1.5-flash-preview-0514")
 
     prompt = """
     Please provide a summary for the audio.
-    Provide chapter titles with timestamps, be concise and short, no need to provide chapter summaries.
+    Provide chapter titles, be concise and short, no need to provide chapter summaries.
     Do not make up any information that is not part of the audio and do not be verbose.
   """
 
@@ -55,7 +56,8 @@ def transcript_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
+    # For Gemini supported models check https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
+    model = GenerativeModel(model_name="gemini-1.5-flash-preview-0514")
 
     prompt = """
     Can you transcribe this interview, in the format of timecode, speaker, caption.

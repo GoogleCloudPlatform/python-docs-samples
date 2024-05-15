@@ -21,7 +21,7 @@ import stream_text_basic
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = "gemini-1.5-pro-preview-0409"
+MODEL_ID = "gemini-1.5-flash-preview-0514"
 
 
 def test_non_stream_text_basic() -> None:
