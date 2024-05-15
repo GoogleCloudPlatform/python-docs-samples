@@ -16,12 +16,12 @@
 import re
 
 from google.cloud.aiplatform import initializer as aiplatform_init
-from vertexai.language_models import TextEmbeddingModel
+from vertexai.preview.language_models import TextEmbeddingModel
 
 
 def tune_embedding_model(
     api_endpoint: str,
-    base_model_name: str = "textembedding-gecko@003",
+    base_model_name: str = "text-embedding-004",
     task_type: str = "DEFAULT",
     queries_path: str = "gs://embedding-customization-pipeline/dataset/queries.jsonl",
     corpus_path: str = "gs://embedding-customization-pipeline/dataset/corpus.jsonl",
@@ -29,6 +29,8 @@ def tune_embedding_model(
     test_label_path: str = "gs://embedding-customization-pipeline/dataset/test.tsv",
     batch_size: int = 128,
     train_steps: int = 1000,
+    output_dimensionality: int = 768,
+    learning_rate_multiplier: float = 1.0
 ):  # noqa: ANN201
     match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"
@@ -42,6 +44,8 @@ def tune_embedding_model(
         batch_size=batch_size,
         train_steps=train_steps,
         tuned_model_location=location,
+        output_dimensionality=output_dimensionality,
+        learning_rate_multiplier=learning_rate_multiplier,
     )
     return tuning_job
 
