@@ -54,7 +54,7 @@ def unassign_static_ip_from_existing_vm(
     )
 
     if access_config:
-        # Delete the existing access configuration first
+        # Delete the existing access configuration
         delete_request = DeleteAccessConfigInstanceRequest(
             project=project_id,
             zone=zone,
