@@ -165,7 +165,7 @@ def generate_function_call_advanced(project_id: str) -> GenerationResponse:
         )
     )
 
-    # For Gemini supported models check https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
+    # TODO(developer): Check latest AI models at https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
     model = GenerativeModel(
         "gemini-1.5-flash-preview-0514",
         tools=[retail_tool],
