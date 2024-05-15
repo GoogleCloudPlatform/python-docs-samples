@@ -284,7 +284,7 @@ def test_assign_static_external_new_vm(static_ip, disk_fixture):
         instance_name,
         ip_address=ip_address.address,
     )
+    delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
     assert (
         instance.network_interfaces[0].access_configs[0].nat_i_p == ip_address.address
     )
-    delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
