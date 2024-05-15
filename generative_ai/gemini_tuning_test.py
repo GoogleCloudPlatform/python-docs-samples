@@ -34,8 +34,7 @@ def test_gemini_tuning() -> None:
 
 
 def test_get_tuning_job() -> None:
-    response = gemini_tuning.get_tuning_job(
-        PROJECT_ID, LOCATION, TUNING_JOB_ID)
+    response = gemini_tuning.get_tuning_job(PROJECT_ID, LOCATION, TUNING_JOB_ID)
     assert response
 
 

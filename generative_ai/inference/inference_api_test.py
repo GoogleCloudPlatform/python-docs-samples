@@ -30,9 +30,7 @@ def test_non_stream_text_basic() -> None:
 
 
 def test_non_stream_multi_modality_basic() -> None:
-    response = non_stream_multimodality_basic.generate_content(
-        PROJECT_ID, MODEL_ID
-    )
+    response = non_stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
     assert response
 
 
@@ -42,7 +40,5 @@ def test_stream_text_basic() -> None:
 
 
 def test_stream_multi_modality_basic() -> None:
-    responses = stream_multimodality_basic.generate_content(
-        PROJECT_ID, MODEL_ID
-    )
+    responses = stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
     assert responses
