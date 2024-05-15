@@ -14,16 +14,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import RetryError, ServerError
+import google.auth
 import pytest
 
 import manage_dataset
 import testing_lib
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+PROJECT_ID = google.auth.default()[1]
 
 
 @pytest.fixture(scope="module")

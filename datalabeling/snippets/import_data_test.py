@@ -39,7 +39,6 @@ def dataset():
     testing_lib.delete_dataset(dataset.name)
 
 
-@pytest.mark.skip(reason="service is limited due to covid")
 def test_import_data(capsys, dataset):
     @backoff.on_exception(
         backoff.expo, ServerError, max_time=testing_lib.RETRY_DEADLINE
