@@ -24,7 +24,6 @@ def summarize_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    # Check latest AI models at https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
     model = GenerativeModel(model_name="gemini-1.5-flash-preview-0514")
 
     prompt = """
@@ -56,7 +55,6 @@ def transcript_audio(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    # Check latest AI models at https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/inference
     model = GenerativeModel(model_name="gemini-1.5-flash-preview-0514")
 
     prompt = """
