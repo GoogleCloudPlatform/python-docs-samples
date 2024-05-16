@@ -12,14 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_code_generation_function]
-from vertexai.language_models import CodeGenerationModel
-
 
 def generate_a_function(temperature: float = 0.5) -> object:
     """Example of using Codey for Code Generation to write a function."""
+    # [START aiplatform_sdk_code_generation_function]
+    from vertexai.language_models import CodeGenerationModel
 
-    # TODO developer - override these parameters as needed:
+    # TODO(developer): update temperature value. Ex: temperature = 0.5
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -33,8 +32,8 @@ def generate_a_function(temperature: float = 0.5) -> object:
     print(f"Response from Model: {response.text}")
 
     return response
+    # [END aiplatform_sdk_code_generation_function]
 
 
-# [END aiplatform_sdk_code_generation_function]
 if __name__ == "__main__":
     generate_a_function()

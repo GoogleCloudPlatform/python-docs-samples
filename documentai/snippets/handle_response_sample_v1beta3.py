@@ -15,6 +15,7 @@
 
 # [START documentai_process_summarizer_document]
 # [START documentai_process_custom_extractor_document]
+# [START documentai_process_layout_document]
 from typing import Optional
 
 from google.api_core.client_options import ClientOptions
@@ -31,6 +32,7 @@ from google.cloud import documentai_v1beta3 as documentai
 
 # [END documentai_process_custom_extractor_document]
 # [END documentai_process_summarizer_document]
+# [END documentai_process_layout_document]
 
 
 # [START documentai_process_layout_document]

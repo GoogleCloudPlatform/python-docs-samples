@@ -15,16 +15,17 @@
 from vertexai.generative_models import Part
 
 
-def generate_text(project_id: str, location: str, image: Part) -> str:
+def generate_text(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_safety_settings]
     import vertexai
 
     from vertexai import generative_models
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # Load the model
+    vertexai.init(project=project_id, location="us-central1")
+
     model = generative_models.GenerativeModel(model_name="gemini-1.0-pro-vision-001")
 
     # Generation config
@@ -44,12 +45,16 @@ def generate_text(project_id: str, location: str, image: Part) -> str:
         ),
     ]
 
+    image_file = Part.from_uri(
+        "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"
+    )
+
     # Generate content
     responses = model.generate_content(
-        [image, "Add your prompt here"],
+        [image_file, "What is in this image?"],
         generation_config=generation_config,
-        stream=True,
         safety_settings=safety_config,
+        stream=True,
     )
 
     text_responses = []
@@ -57,4 +62,5 @@ def generate_text(project_id: str, location: str, image: Part) -> str:
         print(response.text)
         text_responses.append(response.text)
     # [END generativeaionvertexai_gemini_safety_settings]
+
     return "".join(text_responses)

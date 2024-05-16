@@ -13,47 +13,42 @@
 # limitations under the License.
 
 
-def generate_text_multimodal(project_id: str, location: str) -> str:
+def generate_text_multimodal(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_single_turn_multi_image]
-    import http.client
-    import typing
-    import urllib.request
     import vertexai
 
-    from vertexai.generative_models import GenerativeModel, Image
+    from vertexai.generative_models import GenerativeModel, Part
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # create helper function
-    def load_image_from_url(image_url: str) -> Image:
-        with urllib.request.urlopen(image_url) as response:
-            response = typing.cast(http.client.HTTPResponse, response)
-            image_bytes = response.read()
-        return Image.from_bytes(image_bytes)
+    vertexai.init(project=project_id, location="us-central1")
 
     # Load images from Cloud Storage URI
-    landmark1 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
+    image_file1 = Part.from_uri(
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png",
+        mime_type="image/png",
     )
-    landmark2 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark2.png"
+    image_file2 = Part.from_uri(
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark2.png",
+        mime_type="image/png",
     )
-    landmark3 = load_image_from_url(
-        "https://storage.googleapis.com/cloud-samples-data/vertex-ai/llm/prompts/landmark3.png"
+    image_file3 = Part.from_uri(
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark3.png",
+        mime_type="image/png",
     )
 
-    # Pass multimodal prompt
     model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
     response = model.generate_content(
         [
-            landmark1,
+            image_file1,
             "city: Rome, Landmark: the Colosseum",
-            landmark2,
+            image_file2,
             "city: Beijing, Landmark: Forbidden City",
-            landmark3,
+            image_file3,
         ]
     )
-    print(response)
+    print(response.text)
+
     # [END generativeaionvertexai_gemini_single_turn_multi_image]
     return response.text

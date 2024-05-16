@@ -24,7 +24,6 @@ app = Flask(__name__)
 
 
 # [START cloudrun_pubsub_handler]
-# [START run_pubsub_handler]
 @app.route("/", methods=["POST"])
 def index():
     """Receive and parse Pub/Sub messages."""
@@ -50,5 +49,4 @@ def index():
     return ("", 204)
 
 
-# [END run_pubsub_handler]
 # [END cloudrun_pubsub_handler]
