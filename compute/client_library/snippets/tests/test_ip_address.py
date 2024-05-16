@@ -35,7 +35,9 @@ from ..instances.ip_address.release_external_ip_address import (
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
 )
-from ..instances.ip_address.unassign_static_ip_address_from_existing_vm import unassign_static_ip_from_existing_vm
+from ..instances.ip_address.unassign_static_ip_address_from_existing_vm import (
+    unassign_static_ip_from_existing_vm,
+)
 
 PROJECT = google.auth.default()[1]
 REGION = "us-central1"
@@ -276,5 +278,7 @@ def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
     ZONE = "us-central1-b"
 
     assert len(instance_with_ips.network_interfaces[0].access_configs) == 1
-    updated_instance = unassign_static_ip_from_existing_vm(PROJECT, ZONE, instance_with_ips.name)
+    updated_instance = unassign_static_ip_from_existing_vm(
+        PROJECT, ZONE, instance_with_ips.name
+    )
     assert len(updated_instance.network_interfaces[0].access_configs) == 0

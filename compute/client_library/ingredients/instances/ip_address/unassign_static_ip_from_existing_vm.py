@@ -40,7 +40,8 @@ def unassign_static_ip_from_existing_vm(
     client = InstancesClient()
     instance = client.get(project=project_id, zone=zone, instance=instance_name)
     network_interface = next(
-        (ni for ni in instance.network_interfaces if ni.name == network_interface_name), None
+        (ni for ni in instance.network_interfaces if ni.name == network_interface_name),
+        None,
     )
 
     if network_interface is None:
