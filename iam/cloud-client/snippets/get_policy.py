@@ -19,7 +19,7 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def get_policy(project_id: str) -> policy_pb2.Policy:
+def get_project_policy(project_id: str) -> policy_pb2.Policy:
     """
     Get policy for project.
 
@@ -44,4 +44,4 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "test-project-id"
 
-    policy = get_policy(project_id)
+    policy = get_project_policy(project_id)

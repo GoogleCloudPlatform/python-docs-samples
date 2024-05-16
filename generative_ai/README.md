@@ -1,15 +1,23 @@
 # Generative AI on Google Cloud
 
-Product Page: https://cloud.google.com/ai/generative-ai?hl=en
-Code samples: https://cloud.google.com/docs/samples?text=Generative%20AI
+* Product Page: https://cloud.google.com/ai/generative-ai?hl=en
+* Code samples: https://cloud.google.com/docs/samples?text=Generative%20AI
 
-## Developer Notes
+## Samples Style Guide
 
-In developing code samples for Generative AI products, a scripting style format is recommended. It's important to wrap the code samples and region tags to be with in a function definition.
+> If you are new and interested in samples contributions, you are welcome! See the [Contributing Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/README.md).
 
-This change is motivated by the desire to provide a code format that can effortlessly integrate with popular data science community tools. These tools include Colab, Jupyter Notebooks, and the IPython shell.
 
-Example:
+While developing code samples for Generative AI products, scripting style format
+is to be used. So wrap your imports, sample code and region tags to be with
+in one function definition. This is to keep the region tag section code to be in
+script format and also allowing you to write regular testcases.
+
+This change is motivated by the desire to provide code samples in a copy-paste-run
+format that is helpful for popular data science community tools like
+Google Colab, Jupyter Notebooks, and IPython shell.
+
+Here is an example code.
 
 ```python
 def create_hello_world_file(filename):
@@ -27,7 +35,7 @@ def create_hello_world_file(filename):
     # <region tag: ends here>
 ```
 
-In Google Cloud documentation page, code sample is shown as below
+In Google Cloud documentation, this code sample will be shown as below
 
 ```python
 import os
@@ -42,8 +50,6 @@ with open(filename) as fp:
     fp.write('Hello world!')
 ```
 
-
-
-
-
+**Note:** In the above sample, `imports` are include and `TODO's` are provided to variable
+that need to update by users.
 

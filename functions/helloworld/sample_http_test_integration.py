@@ -29,4 +29,5 @@ def test_args():
     expected_response = f"Hello {name}!"
     assert resp.data.decode("utf-8") == expected_response
 
+
 # [END functions_http_integration_test]

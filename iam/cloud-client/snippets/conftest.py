@@ -16,6 +16,7 @@ import os
 import re
 import uuid
 
+from google.api_core.exceptions import PermissionDenied
 import google.auth
 from google.cloud import iam_v2
 from google.cloud.iam_admin_v1 import IAMClient, ListRolesRequest
@@ -26,6 +27,8 @@ from snippets.create_deny_policy import create_deny_policy
 from snippets.create_role import create_role
 from snippets.delete_deny_policy import delete_deny_policy
 from snippets.delete_role import delete_role
+from snippets.edit_role import edit_role
+from snippets.get_role import get_role
 
 PROJECT = google.auth.default()[1]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
@@ -34,12 +37,14 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
 @pytest.fixture
 def deny_policy(capsys: "pytest.CaptureFixture[str]") -> None:
     policy_id = f"test-deny-policy-{uuid.uuid4()}"
+    try:
+        # Delete any existing policies. Otherwise it might throw quota issue.
+        delete_existing_deny_policies(PROJECT, "test-deny-policy")
 
-    # Delete any existing policies. Otherwise it might throw quota issue.
-    delete_existing_deny_policies(PROJECT, "test-deny-policy")
-
-    # Create the Deny policy.
-    create_deny_policy(PROJECT, policy_id)
+        # Create the Deny policy.
+        create_deny_policy(PROJECT, policy_id)
+    except PermissionDenied:
+        pytest.skip("Don't have permissions to run this test.")
 
     yield policy_id
 
@@ -61,8 +66,23 @@ def delete_existing_deny_policies(project_id: str, delete_name_prefix: str) -> N
             delete_deny_policy(project_id, str(policy.name).rsplit("/", 1)[-1])
 
 
-@pytest.fixture
-def iam_role(capsys: "pytest.CaptureFixture[str]") -> str:
+@pytest.fixture(scope="session")
+def iam_role() -> str:
+    if PROJECT == "python-docs-samples-tests":
+        # This "if" was added intentionally to prevent overflowing project with roles.
+        # The limit for project is 300 custom roles and they can't be permanently deleted
+        # immediately. They persist as tombstones ~7 days after deletion.
+        role_id = "pythonTestCustomRole"
+        try:
+            role = get_role(PROJECT, role_id)
+            yield role_id
+        finally:
+            role.etag = b""
+            new_role = edit_role(role)
+            assert new_role.name == role.name
+            assert new_role.stage == role.stage
+        return
+
     role_prefix = "test_iam_role"
     role_id = f"{role_prefix}_{uuid.uuid4().hex[:10]}"
     permissions = ["iam.roles.get", "iam.roles.list"]
@@ -78,9 +98,8 @@ def iam_role(capsys: "pytest.CaptureFixture[str]") -> str:
     finally:
         # Delete the iam role and assert if deleted.
         if created:
-            delete_role(PROJECT, role_id)
-            out, _ = capsys.readouterr()
-            assert re.search(f"Deleted role: {role_id}", out)
+            role = delete_role(PROJECT, role_id)
+            assert role.deleted
 
 
 def delete_iam_roles_by_prefix(iam_role: str, delete_name_prefix: str) -> None:

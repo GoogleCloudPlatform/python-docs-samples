@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def chat_text_example(project_id: str, location: str) -> str:
+def chat_text_example(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_multiturn_chat]
     import vertexai
 
@@ -21,10 +21,11 @@ def chat_text_example(project_id: str, location: str) -> str:
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
-    vertexai.init(project=project_id, location=location)
+
+    vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
+
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:
@@ -43,17 +44,19 @@ def chat_text_example(project_id: str, location: str) -> str:
     return get_chat_response(chat, "Hello")
 
 
-def chat_stream_example(project_id: str, location: str) -> str:
+def chat_stream_example(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_multiturn_chat_stream]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, ChatSession
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
-    # location = "us-central1"
-    vertexai.init(project=project_id, location=location)
+
+    vertexai.init(project=project_id, location="us-central1")
+
     model = GenerativeModel(model_name="gemini-1.0-pro-002")
+
     chat = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:
