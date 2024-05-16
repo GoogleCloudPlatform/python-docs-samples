@@ -27,11 +27,11 @@ import storage_set_rpo_default
 def dual_region_bucket():
     """Yields a dual region bucket that is deleted after the test completes."""
     bucket = None
+    location = "NAM4"
     while bucket is None or bucket.exists():
         bucket_name = f"bucket-lock-{uuid.uuid4()}"
         bucket = storage.Client().bucket(bucket_name)
-        bucket.location = "NAM4"
-    bucket.create()
+    bucket.create(location=location)
     yield bucket
     bucket.delete(force=True)
 

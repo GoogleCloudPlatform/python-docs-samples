@@ -125,4 +125,4 @@ def test_object_csek_to_cmek(test_blob):
         BUCKET, test_blob_name, TEST_ENCRYPTION_KEY_2, KMS_KEY
     )
 
-    assert cmek_blob.download_as_string(), test_blob_content
+    assert cmek_blob.download_as_bytes(), test_blob_content
