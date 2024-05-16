@@ -295,7 +295,7 @@ def test_assign_static_ip_to_existing_vm(
         == ip_address.address
     )
 
-    
+
 def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
     PROJECT = google.auth.default()[1]
     ZONE = "us-central1-b"
@@ -305,4 +305,3 @@ def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
         PROJECT, ZONE, instance_with_ips.name
     )
     assert len(updated_instance.network_interfaces[0].access_configs) == 0
-
