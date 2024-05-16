@@ -51,7 +51,7 @@ def unassign_static_ip_from_existing_vm(
 
     if network_interface is None:
         raise ValueError(
-            f"No network interface named 'nic0' found on instance {instance_name}."
+            f"No network interface named '{network_interface_name}' found on instance {instance_name}."
         )
 
     access_config = next(
@@ -60,7 +60,7 @@ def unassign_static_ip_from_existing_vm(
     )
 
     if access_config:
-        # Delete the existing access configuration first
+        # Delete the existing access configuration
         delete_request = DeleteAccessConfigInstanceRequest(
             project=project_id,
             zone=zone,
