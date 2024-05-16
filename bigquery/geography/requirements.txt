@@ -12,16 +12,17 @@ Fiona==1.9.6
 geojson==3.1.0
 geopandas===0.10.2; python_version == '3.7'
 geopandas===0.13.2; python_version == '3.8'
-geopandas==0.14.3; python_version >= '3.9'
-google-api-core==2.18.0
+geopandas==0.14.4; python_version >= '3.9'
+google-api-core==2.19.0
 google-auth==2.29.0
-google-cloud-bigquery==3.21.0
-google-cloud-bigquery-storage==2.24.0
+google-cloud-bigquery==3.22.0
+google-cloud-bigquery-storage==2.25.0
 google-cloud-core==2.4.1
 google-crc32c==1.5.0
 google-resumable-media==2.7.0
 googleapis-common-protos==1.63.0
-grpcio==1.62.2
+grpcio==1.62.2; python_version == '3.7'
+grpcio==1.63.0; python_version >= '3.8'
 idna==3.7
 munch==4.0.0
 mypy-extensions==1.0.0
@@ -31,7 +32,7 @@ pandas===2.0.3; python_version == '3.8'
 pandas==2.2.2; python_version >= '3.9'
 proto-plus==1.23.0
 pyarrow==12.0.1; python_version == '3.7'
-pyarrow==15.0.2; python_version >= '3.8'
+pyarrow==16.0.0; python_version >= '3.8'
 pyasn1===0.5.1; python_version == '3.7'
 pyasn1==0.6.0; python_version >= '3.8'
 pyasn1-modules===0.3.0; python_version == '3.7'
