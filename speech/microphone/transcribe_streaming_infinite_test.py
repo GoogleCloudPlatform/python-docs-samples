@@ -1,10 +1,10 @@
-# Copyright 2017 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#    https://www.apache.org/licenses/LICENSE-2.0
+#     https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,8 +19,6 @@ import time
 
 from unittest import mock
 
-import google.auth.transport.grpc  # noqa: F401
-import google.auth.transport.requests  # noqa: F401
 import pytest
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
@@ -81,9 +79,9 @@ class MockPyAudio:
     pyaudio=mock.MagicMock(PyAudio=MockPyAudio(os.path.join(RESOURCES, "quit.raw"))),
 )
 def test_main(capsys: pytest.CaptureFixture) -> None:
-    import transcribe_streaming_mic
+    import transcribe_streaming_infinite
 
-    transcribe_streaming_mic.main()
+    transcribe_streaming_infinite.main()
     out, err = capsys.readouterr()
 
     assert re.search(r"quit", out, re.DOTALL | re.I)
