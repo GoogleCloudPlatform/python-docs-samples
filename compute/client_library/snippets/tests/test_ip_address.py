@@ -26,6 +26,9 @@ from ..instances.create_start_instance.create_from_public_image import (
     get_image_from_family,
 )
 from ..instances.delete import delete_instance
+from ..instances.ip_address.assign_static_external_ip_to_new_vm import (
+    assign_static_external_ip_to_new_vm,
+)
 from ..instances.ip_address.assign_static_ip_to_existing_vm import (
     assign_static_ip_to_existing_vm,
 )
@@ -306,6 +309,23 @@ def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
         PROJECT, ZONE, instance_with_ips.name
     )
     assert len(updated_instance.network_interfaces[0].access_configs) == 0
+
+
+@pytest.mark.parametrize("static_ip", [{"region": "us-central1"}], indirect=True)
+def test_assign_static_external_new_vm(static_ip, disk_fixture):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    client = AddressesClient()
+    ip_address = client.get(project=PROJECT, region=REGION, address=static_ip.name)
+    instance = assign_static_external_ip_to_new_vm(
+        PROJECT,
+        INSTANCE_ZONE,
+        instance_name,
+        ip_address=ip_address.address,
+    )
+    delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+    assert (
+        instance.network_interfaces[0].access_configs[0].nat_i_p == ip_address.address
+    )
 
 
 def test_promote_ephemeral_ip(instance_with_ips: Instance):

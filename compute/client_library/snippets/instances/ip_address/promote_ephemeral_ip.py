@@ -28,7 +28,7 @@ from google.cloud.compute_v1.types import Address
 
 def promote_ephemeral_ip(project_id: str, ephemeral_ip: str, region):
     """
-    Promote the first ephemeral IP found on the instance to a static IP.
+    Promote ephemeral IP found on the instance to a static IP.
 
     Args:
         project_id (str): Project ID.
