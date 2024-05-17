@@ -307,7 +307,7 @@ def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
     )
     assert len(updated_instance.network_interfaces[0].access_configs) == 0
 
-    
+
 def test_promote_ephemeral_ip(instance_with_ips: Instance):
     ephemeral_ip = next(
         (
