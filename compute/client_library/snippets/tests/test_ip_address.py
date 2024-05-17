@@ -290,5 +290,6 @@ def test_promote_ephemeral_ip(instance_with_ips: Instance):
     for address in addresses_iterator:
         # ex ephemeral ip in list of static IPs and still attached to instance
         if address.address == ephemeral_ip and address.status == "IN_USE":
+            release_external_ip_address(PROJECT, address.name, REGION)
             return
     assert False, f"IP address {ephemeral_ip} was not promoted correctly"
