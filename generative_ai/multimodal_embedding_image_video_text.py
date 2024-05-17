@@ -19,7 +19,6 @@ from vertexai.vision_models import MultiModalEmbeddingResponse, VideoSegmentConf
 
 def get_image_video_text_embeddings(
     project_id: str,
-    location: str,
     image_path: str,
     video_path: str,
     contextual_text: Optional[str] = None,
@@ -44,9 +43,9 @@ def get_image_video_text_embeddings(
 
     from vertexai.vision_models import Image, MultiModalEmbeddingModel, Video
 
-    # TODO(developer): Update values for project_id, location,
+    # TODO(developer): Update values for project_id,
     #            image_path, video_path, contextual_text, video_segment_config
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=project_id, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
     image = Image.load_from_file(image_path)

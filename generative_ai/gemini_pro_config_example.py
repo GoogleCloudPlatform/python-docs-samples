@@ -13,17 +13,18 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str) -> None:
+def generate_text(project_id: str) -> None:
     # [START generativeaionvertexai_gemini_pro_config_example]
     import base64
     import vertexai
 
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
 
-    # Initialize Vertex AI
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
 
-    # Load the model
+    vertexai.init(project=project_id, location="us-central1")
+
     model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
 
     # Load example image from local storage
