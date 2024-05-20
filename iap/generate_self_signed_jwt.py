@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 import datetime
 import json
 
@@ -18,6 +19,7 @@ import google.auth
 from google.cloud import iam_credentials_v1
 import jwt
 
+# [START iap_generate_self_signed_jwt]
 
 def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
     """Generates JWT payload for service account.
@@ -42,7 +44,10 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
         'exp': exp,
     })
 
+# [END iap_generate_self_signed_jwt]
 
+
+# [START iap_sign_jwt_IAM]
 def sign_jwt(target_sa: str, resource_url: str) -> str:
     """Signs JWT payload using ADC and IAM credentials API.
 
@@ -61,6 +66,9 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
         payload=generate_jwt_payload(target_sa, resource_url),
     ).signed_jwt
 
+# [END iap_sign_jwt_IAM]
+
+# [START iap_sign_jwt_with_key_file]
 
 def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> str:
     """Signs JWT payload using local service account credential key file.
@@ -90,6 +98,8 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
         algorithm='RS256',
     )
     return signed_jwt
+
+# [END iap_sign_jwt_with_key_file]
 
 # sign_jwt("test_email", "resource-url")
 # sign_jwt_with_key_file("/path/to/local/key/file.json", "resource-url")
