@@ -18,6 +18,6 @@ from .iam_check_permissions import test_permissions as sample_test_permissions
 PROJECT = google.auth.default()[1]
 
 
-def test_test_permissions():
+def test_test_permissions() -> None:
     perms = sample_test_permissions(PROJECT)
     assert "resourcemanager.projects.get" in perms
