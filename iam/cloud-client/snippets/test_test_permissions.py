@@ -20,4 +20,4 @@ PROJECT = google.auth.default()[1]
 
 def test_test_permissions():
     perms = sample_test_permissions(PROJECT)
-    assert 'resourcemanager.projects.get' in perms
+    assert "resourcemanager.projects.get" in perms
