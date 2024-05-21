@@ -18,7 +18,6 @@ For more information, see the documentation at
 https://cloud.google.com/iam/docs/granting-changing-revoking-access.
 """
 
-import argparse
 import os
 
 from google.oauth2 import service_account  # type: ignore
@@ -92,4 +91,3 @@ def test_permissions(project_id: str) -> dict:
 
 
 # [END iam_test_permissions]
-
