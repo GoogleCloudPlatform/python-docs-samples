@@ -30,7 +30,7 @@ def tune_embedding_model(
     batch_size: int = 128,
     train_steps: int = 1000,
     output_dimensionality: int = 768,
-    learning_rate_multiplier: float = 1.0
+    learning_rate_multiplier: float = 1.0,
 ):  # noqa: ANN201
     match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"
