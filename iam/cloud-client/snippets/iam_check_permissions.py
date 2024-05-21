@@ -12,11 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import List
+
 from google.cloud import resourcemanager_v3
 
 
 # [START iam_test_permissions]
-def test_permissions(project_id: str) -> list[str]:
+def test_permissions(project_id: str) -> List[str]:
     """Tests IAM permissions of currently authenticated user to a project."""
 
     projects_client = resourcemanager_v3.ProjectsClient()
