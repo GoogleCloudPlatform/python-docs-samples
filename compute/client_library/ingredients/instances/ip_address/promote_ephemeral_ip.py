@@ -20,7 +20,7 @@ from google.cloud.compute_v1.types import Address
 # <INGREDIENT promote_ephemeral_ip>
 
 
-def promote_ephemeral_ip(project_id: str, ephemeral_ip: str, region):
+def promote_ephemeral_ip(project_id: str, ephemeral_ip: str, region: str):
     """
     Promote ephemeral IP found on the instance to a static IP.
 
