@@ -21,6 +21,14 @@ from google.cloud import memcache_v1
 
 
 def create_instance(project_id: str, location_id: str, instance_id: str) -> None:
+    """
+    Creates a Memcached instance.
+
+    project_id: ID or number of the Google Cloud project you want to use.
+    location_id: A GCP region, where instance is going to be located.
+    instance_id: Unique id of the instance. Must be unique within the user project / location.
+    """
+
     client = memcache_v1.CloudMemcacheClient()
     parent = f"projects/{project_id}/locations/{location_id}"
 
@@ -43,6 +51,14 @@ def create_instance(project_id: str, location_id: str, instance_id: str) -> None
 
 
 def get_instance(project_id: str, location_id: str, instance_id: str) -> memcache_v1.Instance:
+    """
+    Get a Memcached instance.
+
+    project_id: ID or number of the Google Cloud project you want to use.
+    location_id: A GCP region, where instance is located.
+    instance_id: Unique id of the instance. Must be unique within the user project / location.
+    """
+
     client = memcache_v1.CloudMemcacheClient()
 
     name = f"projects/{project_id}/locations/{location_id}/instances/{instance_id}"
@@ -58,6 +74,13 @@ def get_instance(project_id: str, location_id: str, instance_id: str) -> memcach
 
 
 def update_instance(instance: memcache_v1.Instance, display_name: str) -> None:
+    """
+    Updates a Memcached instance.
+
+    instance_id: Unique id of the instance. Must be unique within the user project / location.
+    display_name: New name of the instance to be set.
+    """
+
     client = memcache_v1.CloudMemcacheClient()
 
     instance.display_name = display_name
@@ -72,6 +95,14 @@ def update_instance(instance: memcache_v1.Instance, display_name: str) -> None:
 
 
 def delete_instance(project_id: str, location_id: str, instance_id: str) -> None:
+    """
+    Deletes a Memcached instance.
+
+    project_id: ID or number of the Google Cloud project you want to use.
+    location_id: A GCP region, where instance is located.
+    instance_id: Unique id of the instance. Must be unique within the user project / location.
+    """
+
     client = memcache_v1.CloudMemcacheClient()
 
     name = f"projects/{project_id}/locations/{location_id}/instances/{instance_id}"
@@ -88,6 +119,14 @@ def delete_instance(project_id: str, location_id: str, instance_id: str) -> None
 
 
 def quickstart(project_id: str, location_id: str, instance_id: str) -> None:
+    """
+    Briefly demonstrates a full lifecycle of the Memcached instances.
+
+    project_id: ID or number of the Google Cloud project you want to use.
+    location_id: A GCP region, where instance is located.
+    instance_id: Unique id of the instance. Must be unique within the user project / location.
+    """
+
     create_instance(project_id, location_id, instance_id)
     instance = get_instance(project_id, location_id, instance_id)
     update_instance(instance, "new_name")
