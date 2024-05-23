@@ -58,7 +58,7 @@ def count_tokens_multimodal(project_id: str) -> GenerationResponse:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.5-pro-preview-0409")
+    model = GenerativeModel(model_name="gemini-1.5-flash-preview-0514")
 
     contents = [
         Part.from_uri(

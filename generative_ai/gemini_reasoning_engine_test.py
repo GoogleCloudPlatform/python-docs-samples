@@ -13,7 +13,7 @@
 # limitations under the License.
 
 import os
-import sys
+
 from typing import Generator
 
 import pytest
@@ -37,13 +37,12 @@ def reasoning_engine_id() -> Generator[str, None, None]:
     )
 
 
-@pytest.mark.skipif(
-    sys.version_info >= (3, 12), reason="requires Python version lower than 3.12"
-)
+@pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
     assert reasoning_engine_id
 
 
+@pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_advanced() -> None:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_advanced(
         PROJECT_ID, REGION, STAGING_BUCKET

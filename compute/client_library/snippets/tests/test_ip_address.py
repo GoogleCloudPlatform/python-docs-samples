@@ -17,7 +17,7 @@ import uuid
 
 import google.auth
 from google.cloud.compute_v1 import AddressesClient, GlobalAddressesClient
-from google.cloud.compute_v1.types import Address
+from google.cloud.compute_v1.types import Address, Instance
 import pytest
 
 from ..instances.create_start_instance.create_from_public_image import (
@@ -26,14 +26,24 @@ from ..instances.create_start_instance.create_from_public_image import (
     get_image_from_family,
 )
 from ..instances.delete import delete_instance
+from ..instances.ip_address.assign_static_external_ip_to_new_vm import (
+    assign_static_external_ip_to_new_vm,
+)
+from ..instances.ip_address.assign_static_ip_to_existing_vm import (
+    assign_static_ip_to_existing_vm,
+)
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
+from ..instances.ip_address.promote_ephemeral_ip import promote_ephemeral_ip
 from ..instances.ip_address.release_external_ip_address import (
     release_external_ip_address,
 )
 from ..instances.ip_address.reserve_new_external_ip_address import (
     reserve_new_external_ip_address,
+)
+from ..instances.ip_address.unassign_static_ip_address_from_existing_vm import (
+    unassign_static_ip_from_existing_vm,
 )
 
 PROJECT = google.auth.default()[1]
@@ -268,3 +278,75 @@ def test_release_static_ip(static_ip: Address):
     )
     ips = list_ip_addresses(client, PROJECT, region=region)
     assert static_ip.name not in ips
+
+
+@pytest.mark.parametrize("static_ip", [{"region": "us-central1"}], indirect=True)
+def test_assign_static_ip_to_existing_vm(
+    instance_with_ips: Instance, static_ip: Address
+):
+    PROJECT = google.auth.default()[1]
+    ZONE = "us-central1-b"
+    REGION = "us-central1"
+
+    client = AddressesClient()
+    ip_address = client.get(project=PROJECT, region=REGION, address=static_ip.name)
+
+    updated_instance = assign_static_ip_to_existing_vm(
+        PROJECT, ZONE, instance_with_ips.name, ip_address.address
+    )
+    assert (
+        updated_instance.network_interfaces[0].access_configs[0].nat_i_p
+        == ip_address.address
+    )
+
+
+def test_unassign_static_ip_from_existing_vm(instance_with_ips: Instance):
+    PROJECT = google.auth.default()[1]
+    ZONE = "us-central1-b"
+
+    assert len(instance_with_ips.network_interfaces[0].access_configs) == 1
+    updated_instance = unassign_static_ip_from_existing_vm(
+        PROJECT, ZONE, instance_with_ips.name
+    )
+    assert len(updated_instance.network_interfaces[0].access_configs) == 0
+
+
+@pytest.mark.parametrize("static_ip", [{"region": "us-central1"}], indirect=True)
+def test_assign_static_external_new_vm(static_ip, disk_fixture):
+    instance_name = "i" + uuid.uuid4().hex[:10]
+    client = AddressesClient()
+    ip_address = client.get(project=PROJECT, region=REGION, address=static_ip.name)
+    instance = assign_static_external_ip_to_new_vm(
+        PROJECT,
+        INSTANCE_ZONE,
+        instance_name,
+        ip_address=ip_address.address,
+    )
+    delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+    assert (
+        instance.network_interfaces[0].access_configs[0].nat_i_p == ip_address.address
+    )
+
+
+def test_promote_ephemeral_ip(instance_with_ips: Instance):
+    ephemeral_ip = next(
+        (
+            config.nat_i_p
+            for interface in instance_with_ips.network_interfaces
+            for config in interface.access_configs
+            if config.type_ == "ONE_TO_ONE_NAT"
+        ),
+        None,
+    )
+
+    promote_ephemeral_ip(PROJECT, ephemeral_ip, REGION)
+
+    client = AddressesClient()
+    addresses_iterator = client.list(project=PROJECT, region=REGION)
+
+    for address in addresses_iterator:
+        # ex ephemeral ip in list of static IPs and still attached to instance
+        if address.address == ephemeral_ip and address.status == "IN_USE":
+            release_external_ip_address(PROJECT, address.name, REGION)
+            return
+    assert False, f"IP address {ephemeral_ip} was not promoted correctly"

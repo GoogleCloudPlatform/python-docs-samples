@@ -14,8 +14,8 @@
 
 # [START iam_modify_policy_remove_member]
 from google.iam.v1 import policy_pb2
-from snippets.get_policy import get_policy
-from snippets.set_policy import set_policy
+from snippets.get_policy import get_project_policy
+from snippets.set_policy import set_project_policy
 
 
 def modify_policy_remove_member(
@@ -37,7 +37,7 @@ def modify_policy_remove_member(
         * deleted:group:{emailid}?uid={uniqueid}
         * domain:{domain}
     """
-    policy = get_policy(project_id)
+    policy = get_project_policy(project_id)
 
     for bind in policy.bindings:
         if bind.role == role:
@@ -45,7 +45,7 @@ def modify_policy_remove_member(
                 bind.members.remove(member)
             break
 
-    return set_policy(project_id, policy)
+    return set_project_policy(project_id, policy, False)
 
 
 # [END iam_modify_policy_remove_member]
