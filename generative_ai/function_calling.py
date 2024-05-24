@@ -166,7 +166,7 @@ def generate_function_call_advanced(project_id: str) -> GenerationResponse:
     )
 
     model = GenerativeModel(
-        "gemini-1.5-flash-preview-0514",
+        model_name="gemini-1.5-flash-001",
         tools=[retail_tool],
         tool_config=retail_tool_config,
     )
