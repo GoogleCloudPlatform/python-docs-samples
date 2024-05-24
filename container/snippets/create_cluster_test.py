@@ -23,7 +23,7 @@ import pytest
 import create_cluster as gke_create
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-ZONE = "us-central1-b"
+ZONE = "us-central1"
 CLUSTER_NAME = f"py-container-repo-test-{uuid.uuid4().hex[:10]}"
 
 
