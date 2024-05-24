@@ -14,7 +14,7 @@
 
 # This file contains code samples that demonstrate how to set policy for project.
 
-# [START iam_set_policy]
+# [START iam_query_testable_permissions]
 from typing import List
 
 from google.cloud import resourcemanager_v3
@@ -40,7 +40,7 @@ def query_testable_permissions(
     return permissions_reponse.permissions
 
 
-# [END iam_set_policy]
+# [END iam_query_testable_permissions]
 
 
 if __name__ == "__main__":
