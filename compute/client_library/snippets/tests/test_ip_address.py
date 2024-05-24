@@ -35,6 +35,7 @@ from ..instances.ip_address.assign_static_ip_to_existing_vm import (
 from ..instances.ip_address.get_static_ip_address import get_static_ip_address
 from ..instances.ip_address.get_vm_address import get_instance_ip_address, IPType
 from ..instances.ip_address.list_static_ip_addresses import list_static_ip_addresses
+from ..instances.ip_address.promote_ephemeral_ip import promote_ephemeral_ip
 from ..instances.ip_address.release_external_ip_address import (
     release_external_ip_address,
 )
@@ -325,3 +326,27 @@ def test_assign_static_external_new_vm(static_ip, disk_fixture):
     assert (
         instance.network_interfaces[0].access_configs[0].nat_i_p == ip_address.address
     )
+
+
+def test_promote_ephemeral_ip(instance_with_ips: Instance):
+    ephemeral_ip = next(
+        (
+            config.nat_i_p
+            for interface in instance_with_ips.network_interfaces
+            for config in interface.access_configs
+            if config.type_ == "ONE_TO_ONE_NAT"
+        ),
+        None,
+    )
+
+    promote_ephemeral_ip(PROJECT, ephemeral_ip, REGION)
+
+    client = AddressesClient()
+    addresses_iterator = client.list(project=PROJECT, region=REGION)
+
+    for address in addresses_iterator:
+        # ex ephemeral ip in list of static IPs and still attached to instance
+        if address.address == ephemeral_ip and address.status == "IN_USE":
+            release_external_ip_address(PROJECT, address.name, REGION)
+            return
+    assert False, f"IP address {ephemeral_ip} was not promoted correctly"

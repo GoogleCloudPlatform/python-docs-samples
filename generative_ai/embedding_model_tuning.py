@@ -23,14 +23,14 @@ def tune_embedding_model(
     api_endpoint: str,
     base_model_name: str = "text-embedding-004",
     task_type: str = "DEFAULT",
-    queries_path: str = "gs://embedding-customization-pipeline/dataset/queries.jsonl",
-    corpus_path: str = "gs://embedding-customization-pipeline/dataset/corpus.jsonl",
-    train_label_path: str = "gs://embedding-customization-pipeline/dataset/train.tsv",
-    test_label_path: str = "gs://embedding-customization-pipeline/dataset/test.tsv",
+    corpus_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/corpus.jsonl",
+    queries_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/queries.jsonl",
+    train_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv",
+    test_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/test.tsv",
     batch_size: int = 128,
     train_steps: int = 1000,
     output_dimensionality: int = 768,
-    learning_rate_multiplier: float = 1.0
+    learning_rate_multiplier: float = 1.0,
 ):  # noqa: ANN201
     match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"

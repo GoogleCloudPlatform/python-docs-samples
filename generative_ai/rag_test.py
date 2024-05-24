@@ -105,13 +105,13 @@ def test_list_files(test_corpus, uploaded_file):
 
 
 def test_retrieval_query(test_corpus):
-    response = rag.retrieval_query(PROJECT_ID, [test_corpus.name], "hello")
+    response = rag.retrieval_query(PROJECT_ID, test_corpus.name)
     assert response
     assert response.contexts
 
 
 def test_generate_content_with_rag(test_corpus):
-    response = rag.generate_content_with_rag(PROJECT_ID, [test_corpus.name])
+    response = rag.generate_content_with_rag(PROJECT_ID, test_corpus.name)
     assert response
     assert response.text
 
