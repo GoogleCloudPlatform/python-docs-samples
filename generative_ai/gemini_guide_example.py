@@ -19,9 +19,6 @@ def generate_text(project_id: str) -> str:
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
     vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(model_name="gemini-1.0-pro-vision-001")
