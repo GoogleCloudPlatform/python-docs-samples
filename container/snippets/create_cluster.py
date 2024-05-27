@@ -88,15 +88,12 @@ def create_cluster(project_id: str, location: str, cluster_name: str) -> None:
         # [Optional] Enables autopilot. For more details visit:
         # https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview
         "autopilot": {"enabled": True},
-
         # [Optional] Enables vertical pod autoscaling. For more details visit:
         # https://cloud.google.com/kubernetes-engine/docs/how-to/vertical-pod-autoscaling
         "vertical_pod_autoscaling": {"enabled": True},
-
         # [Optional] Enables horizontal pod autoscaling. For more details visit:
         # https://cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler
         "addons_config": {"horizontal_pod_autoscaling": {"disabled": False}},
-
         # [Optional] Configures logs and metrics being collected.
         # Note: logging and monitoring can't be disabled for autopilot. For more details visit:
         # https://cloud.google.com/kubernetes-engine/docs/how-to/config-logging-monitoring
