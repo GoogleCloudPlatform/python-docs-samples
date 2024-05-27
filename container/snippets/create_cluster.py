@@ -76,10 +76,10 @@ def poll_for_op_status(
 
 
 def create_cluster(project_id: str, location: str, cluster_name: str) -> None:
-    """Create a new GKE cluster in the given GCP Project and Zone"""
+    """Create a new GKE cluster in the given GCP Project and Zone/Region."""
     # Initialize the Cluster management client.
     client = container_v1.ClusterManagerClient()
-    # Create a fully qualified location identifier of form `projects/{project_id}/location/{zone}'.
+    # Create a fully qualified location identifier of form `projects/{project_id}/location/{zone|region}'.
     cluster_location = client.common_location_path(project_id, location)
     cluster_def = {
         "name": cluster_name,
@@ -134,7 +134,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
-    parser.add_argument("zone", help="GKE Cluster zone")
+    parser.add_argument("zone", help="GKE Cluster zone/region")
     parser.add_argument("cluster_name", help="Name to be given to the GKE Cluster")
     args = parser.parse_args()
 
