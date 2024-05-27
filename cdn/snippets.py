@@ -67,6 +67,8 @@ def sign_url(
     signature = base64.urlsafe_b64encode(digest).decode("utf-8")
 
     return f"{url_to_sign}&Signature={signature}"
+
+
 # [END cloudcdn_sign_url]
 
 
@@ -107,6 +109,8 @@ def sign_url_prefix(
     signature = base64.urlsafe_b64encode(digest).decode("utf-8")
 
     return f"{stripped_url}{'&' if query_params else '?'}{policy}&Signature={signature}"
+
+
 # [END cloudcdn_sign_url_prefix]
 
 
@@ -143,6 +147,8 @@ def sign_cookie(
     signed_policy = f"Cloud-CDN-Cookie={policy}:Signature={signature}"
 
     return signed_policy
+
+
 # [END cloudcdn_sign_cookie]
 
 
