@@ -43,7 +43,8 @@ pyparsing==3.1.2
 python-dateutil==2.9.0.post0
 pytz==2024.1
 PyYAML==6.0.1
-requests==2.31.0
+requests==2.31.0; python_version == '3.7'
+requests==2.32.2; python_version >= '3.8'
 rsa==4.9
 Shapely==2.0.4
 six==1.16.0
