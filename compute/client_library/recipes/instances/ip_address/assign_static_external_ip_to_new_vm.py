@@ -13,7 +13,7 @@
 #  limitations under the License.
 # flake8: noqa
 
-# <REGION compute_instances_create_from_image>
+# <REGION compute_ip_address_assign_static_new_vm>
 # <IMPORTS/>
 
 # <INGREDIENT get_image_from_family />
@@ -28,7 +28,7 @@
 
 
 # <INGREDIENT assign_static_external_ip_to_new_vm />
-# </REGION compute_instances_create_from_image>
+# </REGION compute_ip_address_assign_static_new_vm>
 
 if __name__ == "__main__":
     import google.auth
