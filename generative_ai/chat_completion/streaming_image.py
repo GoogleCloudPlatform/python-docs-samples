@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def example(project_id: str, location: str) -> str:
+def example(project_id: str, location: str = "us-central1") -> str:
     """Streaming Chat Example with a Large Language Model."""
     # [START generativeaionvertexai_gemini_chat_completion_streaming_image]
     import vertexai
