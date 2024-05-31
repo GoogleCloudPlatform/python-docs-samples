@@ -15,9 +15,13 @@
 import os
 
 import non_streaming_image
+
 import non_streaming_text
+
 import streaming_image
+
 import streaming_text
+
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
