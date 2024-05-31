@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str = "us-central1") -> str:
+def generate_text(project_id: str, location: str = "us-central1") -> object:
     # [START generativeaionvertexai_gemini_chat_completion_streaming]
     import vertexai
     import openai
