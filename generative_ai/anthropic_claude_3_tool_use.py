@@ -24,39 +24,39 @@ from anthropic import AnthropicVertex
 def tool_use(project_id: str, region: str) -> object:
     client = AnthropicVertex(region=region, project_id=project_id)
     message = client.messages.create(
-    model = "claude-3-opus@20240229",
-    max_tokens = 1024,
-    tools = [
-        {
-            "name": "text_search_places_api",
-            "description": "returns information about a set of places based on a string",
-            "input_schema": {
-            "type": "object",
-            "properties": {
-                "textQuery": {
-                "type": "string",
-                "description": "The text string on which to search"
-                },
-                "priceLevels": {
-                "type": "array",
-                "description": "Price levels to query places, value can be one of [PRICE_LEVEL_INEXPENSIVE, PRICE_LEVEL_MODERATE, PRICE_LEVEL_EXPENSIVE, PRICE_LEVEL_VERY_EXPENSIVE]",
-                },
-                "openNow": {
-                "type": "boolean",
-                "description": "whether those places are open for business."
-                },
-            },
-            "required": ["textQuery"]
+        model="claude-3-opus@20240229",
+        max_tokens=1024,
+        tools=[
+            {
+                "name": "text_search_places_api",
+                "description": "returns information about a set of places based on a string",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "textQuery": {
+                            "type": "string",
+                            "description": "The text string on which to search"
+                        },
+                        "priceLevels": {
+                            "type": "array",
+                            "description": "Price levels to query places, value can be one of [PRICE_LEVEL_INEXPENSIVE, PRICE_LEVEL_MODERATE, PRICE_LEVEL_EXPENSIVE, PRICE_LEVEL_VERY_EXPENSIVE]",
+                        },
+                        "openNow": {
+                            "type": "boolean",
+                            "description": "whether those places are open for business."
+                        },
+                    },
+                    "required": ["textQuery"]
+                }
             }
-        }
-    ],
-    messages = [
-        {
-            "role": "user",
-            "content": "What are some affordable and good Italian restaurants open now in San Francisco??"
-        }
-    ],
-)
+        ],
+        messages=[
+            {
+                "role": "user",
+                "content": "What are some affordable and good Italian restaurants open now in San Francisco??"
+            }
+        ],
+    )
     print(message.model_dump_json(indent=2))
     return message
 
