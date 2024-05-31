@@ -37,7 +37,7 @@ def example(project_id: str, location: str = "us-central1") -> str:
 
     response = client.chat.completions.create(
         model="google/gemini-1.5-flash-001",
-        messages=[{"role": "user", "content": "Who are you?"}],
+        messages=[{"role": "user", "content": "Why is the sky blue?"}],
     )
 
     print(response)

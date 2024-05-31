@@ -37,7 +37,7 @@ def example(project_id: str, location: str = "us-central1") -> str:
 
     responses = client.chat.completions.create(
         model="google/gemini-1.5-flash-001",
-        messages=[{"role": "user", "content": "Who are you?"}],
+        messages=[{"role": "user", "content": "What's 1+1? Answer in one word."}],
         stream=True,
     )
     for chunk in responses:
