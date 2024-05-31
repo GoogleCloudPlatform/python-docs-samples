@@ -13,33 +13,36 @@
 # limitations under the License.
 
 
-def example(project_id: str, location: str = "us-central1") -> str:
-    """Streaming Chat Example with a Large Language Model."""
+def generate_text(project_id: str, location: str = "us-central1") -> object:
     # [START generativeaionvertexai_gemini_chat_completion_non_streaming]
     import vertexai
     import openai
 
     from google.auth import default, transport
 
-    # TODO(developer): update project_id & location
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # location = "us-central1"
+
     vertexai.init(project=project_id, location=location)
 
     # Programmatically get an access token
-    creds, _ = default()
-    auth_req = transport.requests.Request()
-    creds.refresh(auth_req)
+    credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    auth_request = transport.requests.Request()
+    credentials.refresh(auth_request)
 
-    # OpenAI Client
+    # # OpenAI Client
     client = openai.OpenAI(
         base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/openapi",
-        api_key=creds.token,
+        api_key=credentials.token,
     )
 
     response = client.chat.completions.create(
         model="google/gemini-1.5-flash-001",
-        messages=[{"role": "user", "content": "What's 1+1? Answer in one word."}],
+        messages=[{"role": "user", "content": "Why is the sky blue?"}],
     )
 
     print(response)
     # [END generativeaionvertexai_gemini_chat_completion_non_streaming]
-    return f"{response.model}:{response.choices[0].message.content}"
+
+    return response
