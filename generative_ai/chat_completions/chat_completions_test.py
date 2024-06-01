@@ -14,11 +14,10 @@
 
 import os
 
-import non_streaming_image
-import non_streaming_text
-import streaming_image
-
-import streaming_text
+import chat_completions_non_streaming_image
+import chat_completions_non_streaming_text
+import chat_completions_streaming_image
+import chat_completions_streaming_text
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -26,20 +25,20 @@ LOCATION = "us-central1"
 
 
 def test_streaming_text() -> None:
-    response = streaming_text.generate_text(PROJECT_ID, LOCATION)
+    response = chat_completions_streaming_text.generate_text(PROJECT_ID, LOCATION)
     assert response
 
 
 def test_non_streaming_text() -> None:
-    response = non_streaming_text.generate_text(PROJECT_ID, LOCATION)
+    response = chat_completions_non_streaming_text.generate_text(PROJECT_ID, LOCATION)
     assert response
 
 
 def test_streaming_image() -> None:
-    response = streaming_image.generate_text(PROJECT_ID, LOCATION)
+    response = chat_completions_streaming_image.generate_text(PROJECT_ID, LOCATION)
     assert response
 
 
 def test_non_streaming_image() -> None:
-    response = non_streaming_image.generate_text(PROJECT_ID, LOCATION)
+    response = chat_completions_non_streaming_image.generate_text(PROJECT_ID, LOCATION)
     assert response
