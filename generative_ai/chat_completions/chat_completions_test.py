@@ -14,6 +14,8 @@
 
 import os
 
+import chat_completions_function_calling_basic
+import chat_completions_function_calling_config
 import chat_completions_non_streaming_image
 import chat_completions_non_streaming_text
 import chat_completions_streaming_image
@@ -41,4 +43,18 @@ def test_streaming_image() -> None:
 
 def test_non_streaming_image() -> None:
     response = chat_completions_non_streaming_image.generate_text(PROJECT_ID, LOCATION)
+    assert response
+
+
+def test_function_calling_basic() -> None:
+    response = chat_completions_function_calling_basic.generate_text(
+        PROJECT_ID, LOCATION
+    )
+    assert response
+
+
+def test_function_calling_config() -> None:
+    response = chat_completions_function_calling_config.generate_text(
+        PROJECT_ID, LOCATION
+    )
     assert response
