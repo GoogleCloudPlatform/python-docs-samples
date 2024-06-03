@@ -162,7 +162,7 @@ def model_id(client: bigquery.Client, dataset_id: str) -> str:
     CREATE MODEL `{}`
     OPTIONS (
         model_type='linear_reg',
-        max_iteration=1,
+        max_iterations=1,
         learn_rate=0.4,
         learn_rate_strategy='constant'
     ) AS (
