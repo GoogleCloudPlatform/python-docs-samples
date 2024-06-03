@@ -14,7 +14,7 @@
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_gemini_chat_completion_streaming]
+    # [START generativeaionvertexai_gemini_chat_completions_streaming]
     import vertexai
     import openai
 
@@ -44,6 +44,6 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
     for chunk in response:
         print(chunk)
-    # [END generativeaionvertexai_gemini_chat_completion_streaming]
+    # [END generativeaionvertexai_gemini_chat_completions_streaming]
 
     return response

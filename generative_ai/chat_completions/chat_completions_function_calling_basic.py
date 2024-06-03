@@ -14,7 +14,7 @@
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_gemini_chat_completion_function_calling_basic]
+    # [START generativeaionvertexai_gemini_chat_completions_function_calling_basic]
     import vertexai
     import openai
 
@@ -73,6 +73,6 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     print(response)
-    # [END generativeaionvertexai_gemini_chat_completion_function_calling_basic]
+    # [END generativeaionvertexai_gemini_chat_completions_function_calling_basic]
 
     return response

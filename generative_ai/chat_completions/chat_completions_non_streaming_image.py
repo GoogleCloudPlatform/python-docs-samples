@@ -14,7 +14,7 @@
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_gemini_chat_completion_non_streaming_image]
+    # [START generativeaionvertexai_gemini_chat_completions_non_streaming_image]
     import vertexai
     import openai
 
@@ -54,6 +54,6 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     print(response)
-    # [END generativeaionvertexai_gemini_chat_completion_non_streaming_image]
+    # [END generativeaionvertexai_gemini_chat_completions_non_streaming_image]
 
     return response
