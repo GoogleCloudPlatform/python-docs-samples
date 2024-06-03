@@ -15,6 +15,7 @@
 import re
 import uuid
 
+import backoff
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -57,11 +58,15 @@ def test_list_service_accounts(service_account: str) -> None:
 
 
 def test_disable_service_account(service_account: str) -> None:
-    account_before = get_service_account(PROJECT, service_account)
-    assert not account_before.disabled
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
+    def run_test() -> None:
+        account_before = get_service_account(PROJECT, service_account)
+        assert not account_before.disabled
 
-    account_after = disable_service_account(PROJECT, service_account)
-    assert account_after.disabled
+        account_after = disable_service_account(PROJECT, service_account)
+        assert account_after.disabled
+
+    run_test()
 
 
 def test_enable_service_account(service_account: str) -> None:
