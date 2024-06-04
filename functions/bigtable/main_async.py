@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import asyncio
+
 # [START bigtable_functions_quickstart_asyncio]
 from asyncio import run
 import functions_framework
@@ -23,21 +24,25 @@ asyncio.set_event_loop(event_loop)
 # Setup: create a shared client within the context of the event loop
 client = None
 
+
 async def create_client():
     return BigtableDataClientAsync()
 
+
 client = event_loop.run_until_complete(create_client())
+
 
 # Wrap async handlers in sync functions
 @functions_framework.http
 def bigtable_read_data(request):
     return event_loop.run_until_complete(bigtable_read_data_async(request))
 
+
 # Actual handler
 async def bigtable_read_data_async(request):
     async with client.get_table(
-        request.headers.get("instance_id"),
-        request.headers.get("table_id")) as table:
+        request.headers.get("instance_id"), request.headers.get("table_id")
+    ) as table:
 
         prefix = "phone#"
         end_key = prefix[:-1] + chr(ord(prefix[-1]) + 1)
@@ -49,7 +54,7 @@ async def bigtable_read_data_async(request):
             print("%s" % row)
             output = "Rowkey: {}, os_build: {}".format(
                 row.row_key.decode("utf-8"),
-                row.get_cells("stats_summary",b"os_build")[0].value.decode("utf-8"),
+                row.get_cells("stats_summary", b"os_build")[0].value.decode("utf-8"),
             )
             outputs.append(output)
 
