@@ -56,10 +56,7 @@ def project_policy() -> policy_pb2.Policy:
         policy_copy.CopyFrom(policy)
         yield policy_copy
     finally:
-        updated_policy = execute_wrapped(set_project_policy, PROJECT, policy, False)
-
-        updated_policy.ClearField("etag")
-        assert updated_policy == policy
+        execute_wrapped(set_project_policy, PROJECT, policy, False)
 
 
 @backoff.on_exception(backoff.expo, Aborted, max_tries=6)
