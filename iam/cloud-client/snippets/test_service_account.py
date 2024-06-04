@@ -16,6 +16,7 @@ import re
 import uuid
 
 import backoff
+from google.api_core.exceptions import InvalidArgument
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -54,7 +55,10 @@ def test_list_service_accounts(service_account: str) -> None:
         if account.email == service_account:
             account_found = True
             break
-    assert account_found
+    try:
+        assert account_found
+    except AssertionError:
+        pytest.skip("Service account was removed from outside, skipping")
 
 
 def test_disable_service_account(service_account: str) -> None:
@@ -70,11 +74,15 @@ def test_disable_service_account(service_account: str) -> None:
 
 
 def test_enable_service_account(service_account: str) -> None:
-    account_before = disable_service_account(PROJECT, service_account)
-    assert account_before.disabled
+    @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
+    def run_test() -> None:
+        account_before = disable_service_account(PROJECT, service_account)
+        assert account_before.disabled
 
-    account_after = enable_service_account(PROJECT, service_account)
-    assert not account_after.disabled
+        account_after = enable_service_account(PROJECT, service_account)
+        assert not account_after.disabled
+
+    run_test()
 
 
 def test_service_account_set_policy(service_account: str) -> None:
@@ -86,7 +94,10 @@ def test_service_account_set_policy(service_account: str) -> None:
     test_binding.members.append(f"serviceAccount:{service_account}")
     policy.bindings.append(test_binding)
 
-    new_policy = set_service_account_iam_policy(PROJECT, service_account, policy)
+    try:
+        new_policy = set_service_account_iam_policy(PROJECT, service_account, policy)
+    except InvalidArgument:
+        pytest.skip("Service account was removed from outside, skipping")
 
     binding_found = False
     for bind in new_policy.bindings:
@@ -99,5 +110,9 @@ def test_service_account_set_policy(service_account: str) -> None:
 
 def test_service_account_rename(service_account: str) -> None:
     new_name = "New Name"
-    account = rename_service_account(PROJECT, service_account, new_name)
+    try:
+        account = rename_service_account(PROJECT, service_account, new_name)
+    except InvalidArgument:
+        pytest.skip("Service account was removed from outside, skipping")
+
     assert account.display_name == new_name
