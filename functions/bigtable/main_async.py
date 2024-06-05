@@ -11,35 +11,34 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import asyncio
 
 # [START bigtable_functions_quickstart_asyncio]
-from asyncio import run
+import asyncio
 import functions_framework
 from google.cloud.bigtable.data import BigtableDataClientAsync, ReadRowsQuery, RowRange
 
 event_loop = asyncio.new_event_loop()
 asyncio.set_event_loop(event_loop)
 
+
 # Setup: create a shared client within the context of the event loop
-client = None
-
-
 async def create_client():
+    # create client in the asyncio event loop context to
+    # give background tasks a chance to initialize
     return BigtableDataClientAsync()
 
 
 client = event_loop.run_until_complete(create_client())
 
 
-# Wrap async handlers in sync functions
+# Actual cloud functions entrypoint, will delegate to the async one
 @functions_framework.http
 def bigtable_read_data(request):
-    return event_loop.run_until_complete(bigtable_read_data_async(request))
+    return event_loop.run_until_complete(_bigtable_read_data_async(request))
 
 
 # Actual handler
-async def bigtable_read_data_async(request):
+async def _bigtable_read_data_async(request):
     async with client.get_table(
         request.headers.get("instance_id"), request.headers.get("table_id")
     ) as table:
