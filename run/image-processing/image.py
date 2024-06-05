@@ -21,7 +21,7 @@ from wand.image import Image
 
 storage_client = storage.Client()
 vision_client = vision.ImageAnnotatorClient()
-# [END cloudrun_imageproc_handler_setup]
+# [START cloudrun_imageproc_handler_setup]
 
 
 # [START cloudrun_imageproc_handler_analyze]
