@@ -50,6 +50,8 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
 
 def test_list_service_accounts(service_account: str) -> None:
     accounts = list_service_accounts(PROJECT)
+    assert len(accounts) > 0
+
     account_found = False
     for account in accounts:
         if account.email == service_account:
@@ -61,28 +63,22 @@ def test_list_service_accounts(service_account: str) -> None:
         pytest.skip("Service account was removed from outside, skipping")
 
 
+@backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
 def test_disable_service_account(service_account: str) -> None:
-    @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
-    def run_test() -> None:
-        account_before = get_service_account(PROJECT, service_account)
-        assert not account_before.disabled
+    account_before = get_service_account(PROJECT, service_account)
+    assert not account_before.disabled
 
-        account_after = disable_service_account(PROJECT, service_account)
-        assert account_after.disabled
-
-    run_test()
+    account_after = disable_service_account(PROJECT, service_account)
+    assert account_after.disabled
 
 
+@backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
 def test_enable_service_account(service_account: str) -> None:
-    @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
-    def run_test() -> None:
-        account_before = disable_service_account(PROJECT, service_account)
-        assert account_before.disabled
+    account_before = disable_service_account(PROJECT, service_account)
+    assert account_before.disabled
 
-        account_after = enable_service_account(PROJECT, service_account)
-        assert not account_after.disabled
-
-    run_test()
+    account_after = enable_service_account(PROJECT, service_account)
+    assert not account_after.disabled
 
 
 def test_service_account_set_policy(service_account: str) -> None:
