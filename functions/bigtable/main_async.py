@@ -14,6 +14,7 @@
 
 # [START bigtable_functions_quickstart_asyncio]
 import asyncio
+
 import functions_framework
 from google.cloud.bigtable.data import BigtableDataClientAsync, ReadRowsQuery, RowRange
 
