@@ -17,6 +17,9 @@
 # [START documentai_process_form_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
+# [START documentai_process_layout_document]
+# [START documentai_process_custom_extractor_document]
+
 from typing import Optional, Sequence
 
 from google.api_core.client_options import ClientOptions
@@ -35,6 +38,8 @@ from google.cloud import documentai
 # [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
+# [END documentai_process_layout_document]
+# [END documentai_process_custom_extractor_document]
 
 
 # [START documentai_process_ocr_document]
@@ -309,7 +314,76 @@ def process_document_entity_extraction_sample(
             print_entity(prop)
 
 
+# [END documentai_process_specialized_document]
+
+
+# [START documentai_process_custom_extractor_document]
+
+
+def process_document_custom_extractor_sample(
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
+) -> None:
+    # Entities to extract from Foundation Model CDE
+    properties = [
+        documentai.DocumentSchema.EntityType.Property(
+            name="invoice_id",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="notes",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="terms",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+        ),
+    ]
+    # Optional: For Generative AI processors, request different fields than the
+    # schema for a processor version
+    process_options = documentai.ProcessOptions(
+        schema_override=documentai.DocumentSchema(
+            display_name="CDE Schema",
+            description="Document Schema for the CDE Processor",
+            entity_types=[
+                documentai.DocumentSchema.EntityType(
+                    name="custom_extraction_document_type",
+                    base_types=["document"],
+                    properties=properties,
+                )
+            ],
+        )
+    )
+
+    # Online processing request to Document AI
+    document = process_document(
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        process_options=process_options,
+    )
+
+    for entity in document.entities:
+        print_entity(entity)
+        # Print Nested Entities (if any)
+        for prop in entity.properties:
+            print_entity(prop)
+
+
 # [START documentai_process_form_document]
+# [START documentai_process_specialized_document]
+
+
 def print_entity(entity: documentai.Document.Entity) -> None:
     # Fields detected. For a full list of fields for each processor see
     # the processor documentation:
@@ -329,6 +403,7 @@ def print_entity(entity: documentai.Document.Entity) -> None:
 
 # [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
+# [END documentai_process_custom_extractor_document]
 
 
 # [START documentai_process_splitter_document]
@@ -425,6 +500,7 @@ def process_document_layout_sample(
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
 # [START documentai_process_layout_document]
+# [START documentai_process_custom_extractor_document]
 
 
 def process_document(
@@ -472,6 +548,7 @@ def process_document(
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
 # [END documentai_process_layout_document]
+# [END documentai_process_custom_extractor_document]
 
 
 def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
