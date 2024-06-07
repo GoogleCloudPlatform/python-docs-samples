@@ -234,3 +234,26 @@ def test_process_document_layout():
     assert document
     assert document.document_layout
     assert document.chunked_document
+
+
+def test_process_document_custom_extractor(capsys):
+    location = "us"
+    project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
+    processor_id = "295e41049f27a2fa"
+    processor_version = "pretrained-foundation-model-v1.0-2023-08-22"
+    file_path = "resources/invoice.pdf"
+    mime_type = "application/pdf"
+
+    handle_response_sample.process_document_custom_extractor_sample(
+        project_id=project_id,
+        location=location,
+        processor_id=processor_id,
+        processor_version=processor_version,
+        file_path=file_path,
+        mime_type=mime_type,
+    )
+    out, _ = capsys.readouterr()
+
+    expected_strings = ["Document Id", "97551579", "invoice_id"]
+    for expected_string in expected_strings:
+        assert expected_string in out
