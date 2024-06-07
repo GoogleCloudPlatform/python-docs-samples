@@ -380,10 +380,53 @@ def page_refs_to_string(
 # [END documentai_process_splitter_document]
 
 
+# [START documentai_process_layout_document]
+def process_document_layout_sample(
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
+) -> documentai.Document:
+    process_options = documentai.ProcessOptions(
+        layout_config=documentai.ProcessOptions.LayoutConfig(
+            chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
+                chunk_size=1000,
+                include_ancestor_headings=True,
+            )
+        )
+    )
+
+    document = process_document(
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        process_options=process_options,
+    )
+
+    print("Document Layout Blocks")
+    for block in document.document_layout.blocks:
+        print(block)
+
+    print("Document Chunks")
+    for chunk in document.chunked_document.chunks:
+        print(chunk)
+
+    # [END documentai_process_layout_document]
+    return document
+
+
 # [START documentai_process_ocr_document]
 # [START documentai_process_form_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
+# [START documentai_process_layout_document]
+
+
 def process_document(
     project_id: str,
     location: str,
@@ -428,6 +471,9 @@ def process_document(
 
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
+# [END documentai_process_layout_document]
+
+
 def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
     """
     Document AI identifies text in different parts of the document by their

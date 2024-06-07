@@ -15,7 +15,6 @@
 
 # [START documentai_process_summarizer_document]
 # [START documentai_process_custom_extractor_document]
-# [START documentai_process_layout_document]
 from typing import Optional
 
 from google.api_core.client_options import ClientOptions
@@ -32,48 +31,6 @@ from google.cloud import documentai_v1beta3 as documentai
 
 # [END documentai_process_custom_extractor_document]
 # [END documentai_process_summarizer_document]
-# [END documentai_process_layout_document]
-
-
-# [START documentai_process_layout_document]
-def process_document_layout_sample(
-    project_id: str,
-    location: str,
-    processor_id: str,
-    processor_version: str,
-    file_path: str,
-    mime_type: str,
-) -> documentai.Document:
-    process_options = documentai.ProcessOptions(
-        layout_config=documentai.ProcessOptions.LayoutConfig(
-            chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
-                chunk_size=1000,
-                include_ancestor_headings=True,
-                breakpoint_percentile_threshold=90,
-            )
-        )
-    )
-
-    document = process_document(
-        project_id,
-        location,
-        processor_id,
-        processor_version,
-        file_path,
-        mime_type,
-        process_options=process_options,
-    )
-
-    print("Document Layout Blocks")
-    for block in document.document_layout.blocks:
-        print(block)
-
-    print("Document Chunks")
-    for chunk in document.chunked_document.chunks:
-        print(chunk)
-
-    # [END documentai_process_layout_document]
-    return document
 
 
 # [START documentai_process_summarizer_document]
@@ -263,6 +220,5 @@ def process_document(
     return result.document
 
 
-# [END documentai_process_layout_document]
 # [END documentai_process_summarizer_document]
 # [END documentai_process_custom_extractor_document]
