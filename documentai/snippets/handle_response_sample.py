@@ -338,12 +338,12 @@ def process_document_custom_extractor_sample(
         documentai.DocumentSchema.EntityType.Property(
             name="notes",
             value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.OPTIONAL_MULTIPLE,
         ),
         documentai.DocumentSchema.EntityType.Property(
             name="terms",
             value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.OPTIONAL_MULTIPLE,
         ),
     ]
     # Optional: For Generative AI processors, request different fields than the
@@ -392,10 +392,10 @@ def print_entity(entity: documentai.Document.Entity) -> None:
 
     # Some other value formats in addition to text are available
     # e.g. dates: `entity.normalized_value.date_value.year`
-    text_value = entity.text_anchor.content
+    text_value = entity.text_anchor.content or entity.mention_text
     confidence = entity.confidence
     normalized_value = entity.normalized_value.text
-    print(f"    * {repr(key)}: {repr(text_value)}({confidence:.1%} confident)")
+    print(f"    * {repr(key)}: {repr(text_value)} ({confidence:.1%} confident)")
 
     if normalized_value:
         print(f"    * Normalized Value: {repr(normalized_value)}")

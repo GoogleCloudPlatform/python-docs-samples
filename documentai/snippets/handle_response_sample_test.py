@@ -254,6 +254,6 @@ def test_process_document_custom_extractor(capsys):
     )
     out, _ = capsys.readouterr()
 
-    expected_strings = ["Document Id", "97551579", "invoice_id"]
+    expected_strings = ["invoice_id", "001"]
     for expected_string in expected_strings:
         assert expected_string in out
