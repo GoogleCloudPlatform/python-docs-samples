@@ -84,7 +84,7 @@ def process_document_ocr_sample(
     for page in document.pages:
         print(f"Page {page.page_number}:")
         print_page_dimensions(page.dimension)
-        print_detected_langauges(page.detected_languages)
+        print_detected_languages(page.detected_languages)
 
         print_blocks(page.blocks, text)
         print_paragraphs(page.paragraphs, text)
@@ -106,7 +106,7 @@ def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None
     print(f"    Height: {str(dimension.height)}")
 
 
-def print_detected_langauges(
+def print_detected_languages(
     detected_languages: Sequence[documentai.Document.Page.DetectedLanguage],
 ) -> None:
     print("    Detected languages:")
