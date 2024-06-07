@@ -14,8 +14,6 @@
 #
 
 # [START documentai_process_summarizer_document]
-# [START documentai_process_custom_extractor_document]
-# [START documentai_process_layout_document]
 from typing import Optional
 
 from google.api_core.client_options import ClientOptions
@@ -30,50 +28,7 @@ from google.cloud import documentai_v1beta3 as documentai
 # file_path = "/path/to/local/pdf"
 # mime_type = "application/pdf" # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 
-# [END documentai_process_custom_extractor_document]
 # [END documentai_process_summarizer_document]
-# [END documentai_process_layout_document]
-
-
-# [START documentai_process_layout_document]
-def process_document_layout_sample(
-    project_id: str,
-    location: str,
-    processor_id: str,
-    processor_version: str,
-    file_path: str,
-    mime_type: str,
-) -> documentai.Document:
-    process_options = documentai.ProcessOptions(
-        layout_config=documentai.ProcessOptions.LayoutConfig(
-            chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
-                chunk_size=1000,
-                include_ancestor_headings=True,
-                breakpoint_percentile_threshold=90,
-            )
-        )
-    )
-
-    document = process_document(
-        project_id,
-        location,
-        processor_id,
-        processor_version,
-        file_path,
-        mime_type,
-        process_options=process_options,
-    )
-
-    print("Document Layout Blocks")
-    for block in document.document_layout.blocks:
-        print(block)
-
-    print("Document Chunks")
-    for chunk in document.chunked_document.chunks:
-        print(chunk)
-
-    # [END documentai_process_layout_document]
-    return document
 
 
 # [START documentai_process_summarizer_document]
@@ -139,68 +94,6 @@ def process_document_summarizer_sample(
 
 # [END documentai_process_summarizer_document]
 
-# [START documentai_process_custom_extractor_document]
-
-
-def process_document_custom_extractor_sample(
-    project_id: str,
-    location: str,
-    processor_id: str,
-    processor_version: str,
-    file_path: str,
-    mime_type: str,
-) -> None:
-    # Entities to extract from Foundation Model CDE
-    properties = [
-        documentai.DocumentSchema.EntityType.Property(
-            name="invoice_id",
-            value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
-        ),
-        documentai.DocumentSchema.EntityType.Property(
-            name="notes",
-            value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
-        ),
-        documentai.DocumentSchema.EntityType.Property(
-            name="terms",
-            value_type="string",
-            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
-        ),
-    ]
-    # Optional: For Generative AI processors, request different fields than the
-    # schema for a processor version
-    process_options = documentai.ProcessOptions(
-        schema_override=documentai.DocumentSchema(
-            display_name="CDE Schema",
-            description="Document Schema for the CDE Processor",
-            entity_types=[
-                documentai.DocumentSchema.EntityType(
-                    name="custom_extraction_document_type",
-                    base_types=["document"],
-                    properties=properties,
-                )
-            ],
-        )
-    )
-
-    # Online processing request to Document AI
-    document = process_document(
-        project_id,
-        location,
-        processor_id,
-        processor_version,
-        file_path,
-        mime_type,
-        process_options=process_options,
-    )
-
-    for entity in document.entities:
-        print_entity(entity)
-        # Print Nested Entities (if any)
-        for prop in entity.properties:
-            print_entity(prop)
-
 
 # [START documentai_process_summarizer_document]
 def print_entity(entity: documentai.Document.Entity) -> None:
@@ -220,7 +113,6 @@ def print_entity(entity: documentai.Document.Entity) -> None:
         print(f"    * Normalized Value: {repr(normalized_value)}")
 
 
-# [START documentai_process_layout_document]
 def process_document(
     project_id: str,
     location: str,
@@ -263,6 +155,4 @@ def process_document(
     return result.document
 
 
-# [END documentai_process_layout_document]
 # [END documentai_process_summarizer_document]
-# [END documentai_process_custom_extractor_document]
