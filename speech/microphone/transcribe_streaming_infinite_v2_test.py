@@ -86,4 +86,3 @@ def test_main(capsys: pytest.CaptureFixture) -> None:
     out, err = capsys.readouterr()
 
     assert re.search(r"quit", out, re.DOTALL | re.I)
-    

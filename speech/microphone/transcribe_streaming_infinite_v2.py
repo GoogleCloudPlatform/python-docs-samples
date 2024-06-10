@@ -26,10 +26,10 @@ Example usage:
 
 # [START speech_transcribe_infinite_streaming_v2]
 
+import argparse
 import queue
 import re
 import sys
-import argparse
 import time
 
 from google.cloud.speech_v2 import SpeechClient
@@ -351,7 +351,7 @@ def main(project_id: str) -> None:
             # Transcribes the audio into text
             responses_iterator = client.streaming_recognize(
                 requests=requests(config_request, audio_generator))
-            
+
             listen_print_loop(responses_iterator, stream)
 
             if stream.result_end_time > 0:
