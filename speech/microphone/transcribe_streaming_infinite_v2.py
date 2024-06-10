@@ -21,10 +21,10 @@ To install using pip:
     pip install termcolor
 
 Example usage:
-    python transcribe_streaming_infinite_v2.py
+    python transcribe_streaming_infinite_v2.py gcp_project_id
 """
 
-# [START speech_transcribe_infinite_streaming]
+# [START speech_transcribe_infinite_streaming_v2]
 
 import queue
 import re
@@ -374,4 +374,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
     main(args.project_id)
 
-# [END speech_transcribe_infinite_streaming]
+# [END speech_transcribe_infinite_streaming_v2]
