@@ -29,8 +29,8 @@ Example usage:
 import queue
 import re
 import sys
-import time
 import argparse
+import time
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech as cloud_speech_types
@@ -317,6 +317,7 @@ def main(project_id: str) -> None:
         recognizer=f"projects/{project_id}/locations/global/recognizers/_",
         streaming_config=streaming_config,
     )
+
     def requests(config: cloud_speech_types.RecognitionConfig, audio: list) -> list:
         """Helper function to generate the requests list for the streaming API.
 
@@ -368,7 +369,7 @@ def main(project_id: str) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-    description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="GCP Project ID")
     args = parser.parse_args()

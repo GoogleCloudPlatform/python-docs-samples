@@ -81,9 +81,9 @@ class MockPyAudio:
 def test_main(capsys: pytest.CaptureFixture) -> None:
     import transcribe_streaming_infinite_v2
 
-    GCP_PROJECT_ID="python-docs-samples-tests"
+    GCP_PROJECT_ID = "python-docs-samples-tests"
     transcribe_streaming_infinite_v2.main(GCP_PROJECT_ID)
     out, err = capsys.readouterr()
 
     assert re.search(r"quit", out, re.DOTALL | re.I)
-
+    
