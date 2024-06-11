@@ -26,6 +26,11 @@ def project_id() -> str:
 
 
 @pytest.fixture(scope="function")
+def uuid_name(prefix: str = "storagecontrol") -> str:
+    yield f"{prefix}-{uuid.uuid4().hex[:5]}"
+
+
+@pytest.fixture(scope="function")
 def bucket_name() -> str:
     yield f"storagecontrol-samples-{uuid.uuid4()}"
 
@@ -38,6 +43,23 @@ def gcs_bucket(project_id: str, bucket_name: str) -> storage.Bucket:
 
     storage_client = storage.Client(project=project_id)
     bucket = storage_client.create_bucket(bucket_name)
+
+    yield bucket
+
+    bucket.delete(force=True)
+
+
+@pytest.fixture(scope="function")
+def hns_enabled_bucket(project_id: str, bucket_name: str) -> storage.Bucket:
+    """
+    Yields and auto-cleans up an HNS enabled bucket.
+    """
+
+    storage_client = storage.Client(project=project_id)
+    bucket = storage_client.bucket(bucket_name)
+    bucket.iam_configuration.uniform_bucket_level_access_enabled = True
+    bucket.hierarchical_namespace_enabled = True
+    bucket = storage_client.create_bucket(bucket)
 
     yield bucket
 
