@@ -10,8 +10,6 @@
 dir ?= $(shell pwd)
 # python version: defaults to 3.11
 py ?= 3.11
-# arguments to pass to pytest through nox
-args ?= ""
 
 INTERFACE_ACTIONS="build test lint"
 repo_root = $(shell pwd)
@@ -37,10 +35,10 @@ test: check-env build noxfile.py
 # for local use, use a suitable default.
 ifndef RUN_TESTS_SESSION
 	cd ${dir}
-	nox -s py-$(py) -- $(args)
+	nox -s py-$(py)
 else
 	cd ${dir}
-	nox -s ${RUN_TESTS_SESSION} -- $(args)
+	nox -s ${RUN_TESTS_SESSION}
 endif
 
 lint: check-env noxfile.py
