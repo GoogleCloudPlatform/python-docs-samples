@@ -37,6 +37,7 @@ import storage_copy_file_archived_generation
 import storage_cors_configuration
 import storage_create_bucket_class_location
 import storage_create_bucket_dual_region
+import storage_create_bucket_hierarchical_namespace
 import storage_create_bucket_object_retention
 import storage_define_bucket_website_configuration
 import storage_delete_file
@@ -841,3 +842,11 @@ def test_object_retention_policy(test_bucket_create, capsys):
     blob.retention.mode = None
     blob.retention.retain_until_time = None
     blob.patch(override_unlocked_retention=True)
+
+
+def test_create_bucket_hierarchical_namespace(test_bucket_create, capsys):
+    storage_create_bucket_hierarchical_namespace.create_bucket_hierarchical_namespace(
+        test_bucket_create.name
+    )
+    out, _ = capsys.readouterr()
+    assert f"Created bucket {test_bucket_create.name} with hierarchical namespace enabled" in out
