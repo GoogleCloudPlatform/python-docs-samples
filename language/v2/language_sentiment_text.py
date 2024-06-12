@@ -23,7 +23,6 @@
 # [START language_sentiment_text]
 from google.cloud import language_v2
 
-
 def sample_analyze_sentiment(text_content: str = "I am so happy and joyful.") -> None:
     """
     Analyzes Sentiment in a string.
