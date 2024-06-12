@@ -19,6 +19,7 @@ import language_sentiment_text
 
 
 def test_sample_analyze_sentiment_text(capsys: ...) -> None:
+    assert False
     assert os.environ["GOOGLE_CLOUD_PROJECT"] != ""
 
     language_sentiment_text.sample_analyze_sentiment()
