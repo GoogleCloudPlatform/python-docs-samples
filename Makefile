@@ -50,7 +50,7 @@ lint: check-env noxfile.py
 # if no noxfile is present, we create one from the toplevel noxfile-template.py
 noxfile.py:
 	cd ${dir}
-	cp -n ${repo_root}/noxfile-template.py noxfile.py
+	cp ${repo_root}/noxfile-template.py noxfile.py
 
 check-env:
 ifndef PROJECT_ID
