@@ -61,7 +61,7 @@ def generate_text_with_grounding_vertex_ai_search(
     from vertexai.preview.generative_models import grounding
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
 
-    # TODO(developer): Update and un-comment below line
+    # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # data_store_path = "projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}"
 
