@@ -63,13 +63,12 @@ def generate_text_with_grounding_vertex_ai_search(
 
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
+    # data_store_path = "projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}"
 
     vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(model_name="gemini-1.5-pro-001")
 
-    # Use Vertex AI Search data store
-    # Format: projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}
     tool = Tool.from_retrieval(
         grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
     )
