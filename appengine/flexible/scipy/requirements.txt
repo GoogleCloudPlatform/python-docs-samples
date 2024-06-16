@@ -1,7 +1,7 @@
 Flask==3.0.3
 gunicorn==22.0.0
 imageio==2.34.1
-numpy==1.26.4; python_version > '3.8'
-numpy==1.24.4; python_version == '3.8'
+numpy==2.0.0; python_version > '3.8'
+numpy==2.0.0; python_version == '3.8'
 pillow==10.3.0
 scipy==1.10.1
