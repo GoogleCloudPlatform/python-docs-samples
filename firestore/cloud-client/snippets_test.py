@@ -26,17 +26,45 @@ UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
 
 
 class TestFirestoreClient(firestore.Client):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, add_unique_string: bool = True, *args, **kwargs):
         self._UNIQUE_STRING = UNIQUE_STRING
         self._super = super()
         self._super.__init__(*args, **kwargs)
+        self.add_unique_string = add_unique_string
 
-    def collection(self, collection_name, *args, **kwargs):
-        collection_name += f"-{self._UNIQUE_STRING}"
+    def collection(self, collection_name: str, *args, **kwargs):
+        if (
+            self.add_unique_string and self._UNIQUE_STRING not in collection_name
+        ):  # subcollection overwrite prevention
+            collection_name = f"{collection_name}-{self._UNIQUE_STRING}"
         return self._super.collection(collection_name, *args, **kwargs)
 
 
 snippets.firestore.Client = TestFirestoreClient
+
+
+@pytest.fixture(scope="session", autouse=True)
+def test_delete_all_collections():
+    def delete_collection(coll_ref, batch_size):
+        if batch_size == 0:
+            return
+
+        docs = coll_ref.list_documents(page_size=batch_size)
+        deleted = 0
+
+        for doc in docs:
+            print(f"Deleting doc {doc.id} => {doc.get().to_dict()}")
+            for subcollection in doc.collections():
+                delete_collection(subcollection, batch_size)
+            doc.delete()
+            deleted = deleted + 1
+
+        if deleted >= batch_size:
+            return delete_collection(coll_ref, batch_size)
+
+    db = firestore.Client(add_unique_string=False)
+    for collection in db.collections():
+        delete_collection(collection, 10)
 
 
 @pytest.fixture
