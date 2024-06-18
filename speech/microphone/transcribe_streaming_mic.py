@@ -172,6 +172,8 @@ def listen_print_loop(responses: object) -> str:
 
         # Display the transcription of the top alternative.
         transcript = result.alternatives[0].transcript
+        print(transcript, result.is_final, result.language_code, result.stability)
+        continue
 
         # Display interim results, but with a carriage return at the end of the
         # line, so subsequent lines will overwrite them.
@@ -204,7 +206,7 @@ def main() -> None:
     """Transcribe speech from audio file."""
     # See http://g.co/cloud/speech/docs/languages
     # for a list of supported languages.
-    language_code = "en-US"  # a BCP-47 language tag
+    language_code = "pl-PL"  # a BCP-47 language tag
 
     client = speech.SpeechClient()
     config = speech.RecognitionConfig(
