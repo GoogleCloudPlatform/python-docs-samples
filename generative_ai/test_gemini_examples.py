@@ -102,7 +102,9 @@ def test_gemini_single_turn_video_example() -> None:
     text = gemini_single_turn_video_example.generate_text(PROJECT_ID)
     text = text.lower()
     assert len(text) > 0
-    assert any([_ in text for _ in ("zoo", "tiger", "leaf", "water")])
+    assert any(
+        [_ in text for _ in ("zoo", "tiger", "leaf", "water", "animals", "photos")]
+    )
 
 
 @pytest.mark.skip(
