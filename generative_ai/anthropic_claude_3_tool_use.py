@@ -24,7 +24,7 @@ from anthropic import AnthropicVertex
 def tool_use(project_id: str, region: str) -> object:
     client = AnthropicVertex(region=region, project_id=project_id)
     message = client.messages.create(
-        model="claude-3-opus@20240229",
+        model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
         tools=[
             {

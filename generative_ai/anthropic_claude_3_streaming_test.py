@@ -21,7 +21,7 @@ import anthropic_claude_3_streaming
 
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
+_LOCATION = "us-east5"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
