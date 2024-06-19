@@ -26,13 +26,9 @@ def config_response_mime_type(project_id: str) -> str:
     model = GenerativeModel("gemini-1.5-flash-001")
 
     prompt = """
-        List 5 popular cookie recipes.
-
-        Using this JSON schema:
-
+        List a few popular cookie recipes using this JSON schema:
         Recipe = {"recipe_name": str}
-
-        Return a `list[Recipe]`
+        Return: `list[Recipe]`
     """
 
     response = model.generate_content(
