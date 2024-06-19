@@ -14,15 +14,20 @@
 
 import os
 
+from typing import Generator
+
+import create_context_cache
 import pytest
 
-import gemini_rapid_evaluation
-
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+REGION = "us-central1"
 
 
-@pytest.mark.skip("TODO: Resolve issue b/348174062")
-def test_create_evaluation_task() -> None:
-    response = gemini_rapid_evaluation.create_evaluation_task(PROJECT_ID)
-    assert response
+@pytest.fixture(scope="module")
+def cache_id() -> Generator[str, None, None]:
+    cached_content_name = create_context_cache.create_context_cache(PROJECT_ID)
+    yield cached_content_name
+
+
+def test_create_context_cache(cache_id: str) -> None:
+    assert cache_id
