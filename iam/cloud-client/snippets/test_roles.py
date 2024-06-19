@@ -14,6 +14,8 @@
 
 import re
 
+import backoff
+from google.api_core.exceptions import Aborted, InvalidArgument
 import google.auth
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, ListRolesRequest, Role
 import pytest
@@ -67,6 +69,7 @@ def test_list_roles(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None
     assert re.search(iam_role, out)
 
 
+@backoff.on_exception(backoff.expo, Aborted, max_tries=3)
 def test_edit_role(iam_role: str) -> None:
     client = IAMClient()
     name = f"projects/{PROJECT}/roles/{iam_role}"
@@ -79,6 +82,7 @@ def test_edit_role(iam_role: str) -> None:
     assert updated_role.title == title
 
 
+@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
 def test_disable_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
     disable_role(PROJECT, iam_role)
     client = IAMClient()
