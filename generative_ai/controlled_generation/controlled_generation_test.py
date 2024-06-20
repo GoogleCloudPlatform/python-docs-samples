@@ -14,15 +14,18 @@
 
 import os
 
-import pytest
-
-import gemini_rapid_evaluation
+import response_mime_type
+import response_schema
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-@pytest.mark.skip("TODO: Resolve issue b/348174062")
-def test_create_evaluation_task() -> None:
-    response = gemini_rapid_evaluation.create_evaluation_task(PROJECT_ID)
+def test_config_response_mime_type() -> None:
+    response = response_mime_type.config_response_mime_type(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema() -> None:
+    response = response_schema.config_response_schema(PROJECT_ID)
     assert response
