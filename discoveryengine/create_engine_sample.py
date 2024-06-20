@@ -54,12 +54,15 @@ def create_engine_sample(
         industry_vertical=discoveryengine.IndustryVertical.GENERIC,
         # Options: SOLUTION_TYPE_RECOMMENDATION, SOLUTION_TYPE_SEARCH, SOLUTION_TYPE_CHAT, SOLUTION_TYPE_GENERATIVE_CHAT
         solution_type=discoveryengine.SolutionType.SOLUTION_TYPE_SEARCH,
+        # For search apps only
         search_engine_config=discoveryengine.Engine.SearchEngineConfig(
             # Options: SEARCH_TIER_STANDARD, SEARCH_TIER_ENTERPRISE
             search_tier=discoveryengine.SearchTier.SEARCH_TIER_ENTERPRISE,
             # Options: SEARCH_ADD_ON_LLM, SEARCH_ADD_ON_UNSPECIFIED
             search_add_ons=[discoveryengine.SearchAddOn.SEARCH_ADD_ON_LLM],
         ),
+        # For recommendation apps only
+        # similar_documents_config=discoveryengine.Engine.SimilarDocumentsEngineConfig,
         data_store_ids=data_store_ids,
     )
 
