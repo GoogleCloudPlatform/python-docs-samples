@@ -56,9 +56,11 @@ def test_name() -> str:
     # Many fixtures expect a fixture called `test_name`, so be sure to define it!
     return "dataflow/gemma-flex-template"
 
+
 @pytest.fixture(scope="session")
 def bucket_name(utils: Utils) -> str:
     yield from utils.storage_bucket(NAME)
+
 
 @pytest.fixture(scope="session")
 def messages_topic(pubsub_topic: Callable[[str], str]) -> str:
@@ -81,6 +83,7 @@ def responses_subscription(pubsub_subscription: Callable[[str, str], str],
                            responses_topic: str) -> str:
     return pubsub_subscription("responses", responses_topic)
 
+
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
     #conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
@@ -88,19 +91,22 @@ def flex_template_image(utils: Utils) -> str:
 
 
 @pytest.fixture(scope="session")
-def flex_template_path(utils: Utils, bucket_name: str, flex_template_image: str) -> str:
-    yield from utils.dataflow_flex_template_build(bucket_name, flex_template_image)
+def flex_template_path(utils: Utils, bucket_name: str,
+                       flex_template_image: str) -> str:
+    yield from utils.dataflow_flex_template_build(bucket_name,
+                                                  flex_template_image)
+
 
 @pytest.fixture(scope="session")
 def dataflow_job(
-    utils: Utils,
-    project: str,
-    location: str,
-    bucket_name: str,
-    flex_template_image: str,
-    flex_template_path: str,
-    messages_subscription: str,
-    responses_topic: str,
+        utils: Utils,
+        project: str,
+        location: str,
+        bucket_name: str,
+        flex_template_image: str,
+        flex_template_path: str,
+        messages_subscription: str,
+        responses_topic: str,
 ) -> str:
     yield from utils.dataflow_flex_template_run(
         job_name=NAME,
@@ -108,14 +114,22 @@ def dataflow_job(
         bucket_name=bucket_name,
         project=project,
         region=location,
-        parameters={"messages_subscription": messages_subscription,
-                    "responses_topic": responses_topic,
-                    "device": "CPU",
-                    "sdk_container_image": f"gcr.io/{project}/{flex_template_image}",
-                    "machine_type": f"{DATAFLOW_MACHINE_TYPE}",
-                    "dataflow_service_options": "worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
-                    },
+        parameters={
+            "messages_subscription":
+            messages_subscription,
+            "responses_topic":
+            responses_topic,
+            "device":
+            "CPU",
+            "sdk_container_image":
+            f"gcr.io/{project}/{flex_template_image}",
+            "machine_type":
+            f"{DATAFLOW_MACHINE_TYPE}",
+            "dataflow_service_options":
+            "worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
+        },
     )
+
 
 @pytest.mark.timeout(7200)
 def test_pipeline_dataflow(
