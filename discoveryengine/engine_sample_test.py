@@ -38,12 +38,12 @@ def test_create_engine():
     operation_name = create_engine_sample.create_engine_sample(
         project_id, location, engine_id, data_store_ids=[data_store_id]
     )
-    assert operation_name
+    assert operation_name, operation_name
 
 
 def test_get_engine():
     engine = get_engine_sample.get_engine_sample(project_id, location, engine_id)
-    assert engine.name
+    assert engine.name, engine.name
 
 
 def test_list_engines():
@@ -51,14 +51,14 @@ def test_list_engines():
         project_id,
         location,
     )
-    assert response.engines
+    assert response.engines, response.engines
 
 
 def test_delete_engine():
     operation_name = delete_engine_sample.delete_engine_sample(
         project_id, location, engine_id
     )
-    assert operation_name
+    assert operation_name, operation_name
     delete_data_store_sample.delete_data_store_sample(
         project_id, location, data_store_id
     )
