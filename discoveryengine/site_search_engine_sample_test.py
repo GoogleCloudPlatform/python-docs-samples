@@ -14,6 +14,7 @@
 #
 
 import os
+import re
 
 from discoveryengine import site_search_engine_sample
 
@@ -23,10 +24,21 @@ data_store_id = "site-search-data-store"
 
 
 def test_create_target_site():
-    operation_name = site_search_engine_sample.create_target_site(
+    response = site_search_engine_sample.create_target_site(
         project_id,
         location,
         data_store_id,
         uri_pattern="https://cloud.google.com/generative-ai-app-builder/docs/*",
     )
-    assert operation_name
+    assert response
+
+    match = re.search(r"\/targetSites\/([^\/]+)", response.name)
+
+    if match:
+        target_site = match.group(1)
+        site_search_engine_sample.delete_target_site(
+            project_id=project_id,
+            location=location,
+            data_store_id=data_store_id,
+            target_site_id=target_site,
+        )
