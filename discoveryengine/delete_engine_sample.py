@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-# [START discoveryengine_delete_engine]
+# [START genappbuilder_delete_engine]
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
@@ -60,4 +60,4 @@ def delete_engine_sample(
     return operation.operation.name
 
 
-# [END discoveryengine_delete_engine]
+# [END genappbuilder_delete_engine]

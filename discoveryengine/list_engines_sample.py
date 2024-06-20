@@ -13,7 +13,7 @@
 # limitations under the License.
 #
 
-# [START discoveryengine_list_engines]
+# [START genappbuilder_list_engines]
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
@@ -54,4 +54,4 @@ def list_engines_sample(
     return response
 
 
-# [END discoveryengine_list_engines]
+# [END genappbuilder_list_engines]

@@ -14,7 +14,7 @@
 #
 
 
-# [START discoveryengine_create_engine]
+# [START genappbuilder_create_engine]
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
@@ -76,4 +76,4 @@ def create_engine_sample(
     return operation.operation.name
 
 
-# [END discoveryengine_create_engine]
+# [END genappbuilder_create_engine]
