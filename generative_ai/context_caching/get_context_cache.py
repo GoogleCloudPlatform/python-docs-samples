@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
-import pytest
+def get_context_cache(project_id: str, cache_id: str) -> str:
+    # [START generativeaionvertexai_gemini_get_context_cache]
+    import vertexai
 
-import gemini_rapid_evaluation
+    from vertexai.preview import caching
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # cache_id = "CACHE_ID"
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+    vertexai.init(project=project_id, location="us-central1")
 
+    cached_content = caching.CachedContent(cached_content_name=cache_id)
 
-@pytest.mark.skip("TODO: Resolve issue b/348174062")
-def test_create_evaluation_task() -> None:
-    response = gemini_rapid_evaluation.create_evaluation_task(PROJECT_ID)
-    assert response
+    print(cached_content.name)
+    # [END generativeaionvertexai_gemini_get_context_cache]
+
+    return cached_content.name
