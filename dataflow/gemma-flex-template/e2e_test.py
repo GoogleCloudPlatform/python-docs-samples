@@ -39,7 +39,7 @@ OPTION B: Run tests with nox
 NOTE: For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
-from collections.abc import Callable, Iterator
+from collections.abc import Callable
 
 import conftest  # python-docs-samples/dataflow/conftest.py
 from conftest import Utils
@@ -86,7 +86,7 @@ def responses_subscription(pubsub_subscription: Callable[[str, str], str],
 
 @pytest.fixture(scope="session")
 def flex_template_image(utils: Utils) -> str:
-    #conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
+    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
     yield from utils.cloud_build_submit(NAME)
 
 

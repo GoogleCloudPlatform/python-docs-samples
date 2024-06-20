@@ -27,11 +27,11 @@ from apache_beam.ml.inference.base import RunInference
 from apache_beam.options.pipeline_options import PipelineOptions
 from apache_beam.options.pipeline_options import SetupOptions
 
-import torch
-
 from gemma.config import get_config_for_2b
 from gemma.config import get_config_for_7b
 from gemma.model import GemmaForCausalLM
+
+import torch
 
 
 class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
@@ -53,7 +53,7 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
           checkpoint_path: the path to a local copy of gemma model weights.
           tokenizer_path: the path to a local copy of the gemma tokenizer
           device: optional. the device to run inference on. can be either
-            'cpu' or 'gpu', defaults to cpu. 
+            'cpu' or 'gpu', defaults to cpu.
         """
         model_config = get_config_for_2b(
         ) if "2b" in model_variant else get_config_for_7b()
