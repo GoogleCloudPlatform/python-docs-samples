@@ -46,7 +46,7 @@ def search_sample(
     # The full resource name of the search app serving config
     serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_config"
 
-    # Optional: Configuration options for search. For unstructured data only (otherwise comment-out content_search_spec).
+    # Optional - only supported for unstructured data: Configuration options for search. 
     # Refer to the `ContentSearchSpec` reference for all supported fields:
     # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.SearchRequest.ContentSearchSpec
     content_search_spec = discoveryengine.SearchRequest.ContentSearchSpec(
