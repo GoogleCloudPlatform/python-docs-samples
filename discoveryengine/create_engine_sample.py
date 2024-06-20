@@ -61,7 +61,7 @@ def create_engine_sample(
             # Options: SEARCH_ADD_ON_LLM, SEARCH_ADD_ON_UNSPECIFIED
             search_add_ons=[discoveryengine.SearchAddOn.SEARCH_ADD_ON_LLM],
         ),
-        # For recommendation apps only
+        # For generic recommendation apps only
         # similar_documents_config=discoveryengine.Engine.SimilarDocumentsEngineConfig,
         data_store_ids=data_store_ids,
     )
