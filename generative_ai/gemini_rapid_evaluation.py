@@ -65,7 +65,7 @@ def create_evaluation_task(project_id: str) -> EvalResult:
         ],
     )
 
-    model = GenerativeModel("gemini-1.0-pro")
+    model = GenerativeModel("gemini-1.5-flash-001")
 
     prompt_template = (
         "Instruction: {instruction}. Article: {context}. Summary: {response}"

@@ -26,7 +26,7 @@ def count_tokens(project_id: str) -> GenerationResponse:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.0-pro-002")
+    model = GenerativeModel(model_name="gemini-1.5-flash-001")
 
     prompt = "Why is the sky blue?"
 
