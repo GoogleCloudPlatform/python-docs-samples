@@ -51,11 +51,7 @@ def delete_engine_sample(
     # Make the request
     operation = client.delete_engine(name=name)
 
-    print(f"Waiting for operation to complete: {operation.operation.name}")
-    response = operation.result()
-
-    # Handle response
-    print(response)
+    print(f"Operation: {operation.operation.name}")
 
     return operation.operation.name
 

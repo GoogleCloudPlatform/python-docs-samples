@@ -15,6 +15,7 @@
 
 
 # [START genappbuilder_create_engine]
+from typing import List
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
@@ -22,12 +23,11 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_LOCATION" # Values: "global"
 # engine_id = "YOUR_ENGINE_ID"
+# data_store_ids = ["YOUR_DATA_STORE_ID"]
 
 
 def create_engine_sample(
-    project_id: str,
-    location: str,
-    engine_id: str,
+    project_id: str, location: str, engine_id: str, data_store_ids: List[str]
 ) -> str:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
@@ -50,7 +50,17 @@ def create_engine_sample(
 
     engine = discoveryengine.Engine(
         display_name="Test Engine",
+        # Options: GENERIC, MEDIA, HEALTHCARE_FHIR
+        industry_vertical=discoveryengine.IndustryVertical.GENERIC,
+        # Options: SOLUTION_TYPE_RECOMMENDATION, SOLUTION_TYPE_SEARCH, SOLUTION_TYPE_CHAT, SOLUTION_TYPE_GENERATIVE_CHAT
         solution_type=discoveryengine.SolutionType.SOLUTION_TYPE_SEARCH,
+        search_engine_config=discoveryengine.Engine.SearchEngineConfig(
+            # Options: SEARCH_TIER_STANDARD, SEARCH_TIER_ENTERPRISE
+            search_tier=discoveryengine.SearchTier.SEARCH_TIER_ENTERPRISE,
+            # Options: SEARCH_ADD_ON_LLM, SEARCH_ADD_ON_UNSPECIFIED
+            search_add_ons=[discoveryengine.SearchAddOn.SEARCH_ADD_ON_LLM],
+        ),
+        data_store_ids=data_store_ids,
     )
 
     request = discoveryengine.CreateEngineRequest(
