@@ -17,7 +17,11 @@ import os
 from typing import Generator
 
 import create_context_cache
+import delete_context_cache
+import get_context_cache
 import pytest
+import update_context_cache
+import use_context_cache
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
@@ -27,7 +31,23 @@ REGION = "us-central1"
 def cache_id() -> Generator[str, None, None]:
     cached_content_name = create_context_cache.create_context_cache(PROJECT_ID)
     yield cached_content_name
+    delete_context_cache.delete_context_cache(PROJECT_ID, cached_content_name)
 
 
 def test_create_context_cache(cache_id: str) -> None:
     assert cache_id
+
+
+def test_use_context_cache(cache_id: str) -> None:
+    response = use_context_cache.use_context_cache(PROJECT_ID, cache_id)
+    assert response
+
+
+def test_get_context_cache(cache_id: str) -> None:
+    response = get_context_cache.get_context_cache(PROJECT_ID, cache_id)
+    assert response
+
+
+def test_update_context_cache(cache_id: str) -> None:
+    response = update_context_cache.update_context_cache(PROJECT_ID, cache_id)
+    assert response
