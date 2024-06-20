@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def config_response_mime_type(project_id: str) -> str:
+def generate_content(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_mime_type]
     import vertexai
 

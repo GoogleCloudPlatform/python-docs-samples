@@ -22,10 +22,35 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def test_config_response_mime_type() -> None:
-    response = response_mime_type.config_response_mime_type(PROJECT_ID)
+    response = response_mime_type.generate_content(PROJECT_ID)
     assert response
 
 
 def test_config_response_schema() -> None:
-    response = response_schema.config_response_schema(PROJECT_ID)
+    response = response_schema.generate_content(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema2() -> None:
+    response = response_schema.generate_content2(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema3() -> None:
+    response = response_schema.generate_content3(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema4() -> None:
+    response = response_schema.generate_content4(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema5() -> None:
+    response = response_schema.generate_content5(PROJECT_ID)
+    assert response
+
+
+def test_config_response_schema6() -> None:
+    response = response_schema.generate_content6(PROJECT_ID)
     assert response

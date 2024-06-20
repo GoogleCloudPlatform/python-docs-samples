@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def config_response_schema(project_id: str) -> str:
+def generate_content(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema]
     import vertexai
 
@@ -47,5 +47,300 @@ def config_response_schema(project_id: str) -> str:
 
     print(response.text)
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema]
+
+    return response.text
+
+
+def generate_content2(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_2]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+    vertexai.init(project=project_id, location="us-central1")
+
+    response_schema = {
+        "type": "ARRAY",
+        "items": {
+            "type": "ARRAY",
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "rating": {"type": "INTEGER"},
+                    "flavor": {"type": "STRING"},
+                },
+            },
+        },
+    }
+
+    prompt = """
+        Reviews from our social media:
+
+        - "Absolutely loved it! Best ice cream I've ever had." Rating: 4, Flavor: Strawberry Cheesecake
+        - "Quite good, but a bit too sweet for my taste." Rating: 1, Flavor: Mango Tango
+    """
+
+    model = GenerativeModel("gemini-1.5-pro-001")
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_2]
+
+    return response.text
+
+
+def generate_content3(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_3]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+    vertexai.init(project=project_id, location="us-central1")
+
+    response_schema = {
+        "type": "OBJECT",
+        "properties": {
+            "forecast": {
+                "type": "ARRAY",
+                "items": {
+                    "type": "OBJECT",
+                    "properties": {
+                        "Forecast": {"type": "STRING"},
+                        "Humidity": {"type": "STRING"},
+                        "Temperature": {"type": "INTEGER"},
+                        "Wind Speed": {"type": "INTEGER"},
+                    },
+                },
+            }
+        },
+    }
+
+    prompt = """
+        The week ahead brings a mix of weather conditions.
+        Sunday is expected to be sunny with a temperature of 77°F and a humidity level of 50%. Winds will be light at around 10 km/h.
+        Monday will see partly cloudy skies with a slightly cooler temperature of 72°F and humidity increasing to 55%. Winds will pick up slightly to around 15 km/h.
+        Tuesday brings rain showers, with temperatures dropping to 64°F and humidity rising to 70%. Expect stronger winds at 20 km/h.
+        Wednesday may see thunderstorms, with a temperature of 68°F and high humidity of 75%. Winds will be gusty at 25 km/h.
+        Thursday will be cloudy with a temperature of 66°F and moderate humidity at 60%. Winds will ease slightly to 18 km/h.
+        Friday returns to partly cloudy conditions, with a temperature of 73°F and lower humidity at 45%. Winds will be light at 12 km/h.
+        Finally, Saturday rounds off the week with sunny skies, a temperature of 80°F, and a humidity level of 40%. Winds will be gentle at 8 km/h.
+    """
+
+    model = GenerativeModel("gemini-1.5-pro-001")
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_3]
+
+    return response.text
+
+
+def generate_content4(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_4]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+    vertexai.init(project=project_id, location="us-central1")
+
+    response_schema = {
+        "type": "ARRAY",
+        "items": {
+            "type": "OBJECT",
+            "properties": {
+                "to_discard": {"type": "INTEGER"},
+                "subcategory": {"type": "STRING"},
+                "safe_handling": {"type": "INTEGER"},
+                "item_category": {
+                    "type": "STRING",
+                    "enum": [
+                        "clothing",
+                        "winter apparel",
+                        "specialized apparel",
+                        "furniture",
+                        "decor",
+                        "tableware",
+                        "cookware",
+                        "toys",
+                    ],
+                },
+                "for_resale": {"type": "INTEGER"},
+                "condition": {
+                    "type": "STRING",
+                    "enum": [
+                        "new in package",
+                        "like new",
+                        "gently used",
+                        "used",
+                        "damaged",
+                        "soiled",
+                    ],
+                },
+            },
+        },
+    }
+
+    prompt = """
+        Item description:
+        The item is a long winter coat that has many tears all around the seams and is falling apart.
+        It has large questionable stains on it.
+    """
+
+    model = GenerativeModel("gemini-1.5-pro-001")
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_4]
+
+    return response.text
+
+
+def generate_content5(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_5]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+    vertexai.init(project=project_id, location="us-central1")
+
+    response_schema = {
+        "type": "ARRAY",
+        "items": {
+            "type": "OBJECT",
+            "properties": {
+                "Announcement_Date": {"type": "STRING", "nullable": 1},
+                "Author(s)": {
+                    "type": "ARRAY",
+                    "nullable": 1,
+                    "items": {"type": "STRING"},
+                },
+                "Journal_Ref": {"type": "STRING", "nullable": 1},
+                "Keyword(s)": {
+                    "type": "ARRAY",
+                    "nullable": 1,
+                    "items": {"type": "STRING"},
+                },
+                "Subject(s)": {
+                    "type": "ARRAY",
+                    "nullable": 1,
+                    "items": {"type": "STRING"},
+                },
+                "Submission_Date": {"type": "STRING", "nullable": 1},
+                "Title": {"type": "STRING", "nullable": 1},
+                "Version": {
+                    "type": "STRING",
+                    "nullable": 1,
+                    "enum": [
+                        "Dungeons & Dragons",
+                        "Duel Masters",
+                        "G.I. Joe",
+                        "Jem and The Holograms",
+                        "Littlest Pet Shop",
+                        "Magic: The Gathering",
+                        "Monopoly",
+                        "My Little Pony",
+                        "Nerf",
+                    ],
+                },
+            },
+        },
+    }
+
+    prompt = """
+        Hasbro stock slid 5.2% following a double-downgrade to “underperform” from “buy” at Bank of America.
+        BofA conducted a “deep dive” on trading card game. BofA said Hasbro has been overprinting cards and
+        destroying the long-term value of the business.
+    """
+
+    model = GenerativeModel("gemini-1.5-pro-001")
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_5]
+
+    return response.text
+
+
+def generate_content6(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_6]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+    vertexai.init(project=project_id, location="us-central1")
+
+    response_schema = {
+        "type": "OBJECT",
+        "properties": {
+            "playlist": {
+                "type": "ARRAY",
+                "items": {
+                    "type": "OBJECT",
+                    "properties": {
+                        "artist": {"type": "STRING"},
+                        "song": {"type": "STRING"},
+                        "era": {"type": "STRING"},
+                        "released": {"type": "INTEGER"},
+                    },
+                },
+            },
+            "time_start": {"type": "STRING"},
+        },
+    }
+
+    prompt = """
+    We have two friends of the host who have requested a few songs for us to play. We're going to start this playlist at 8:15.
+    They'll want to hear Black Hole Sun by Soundgarden because their son was born in 1994. They will also want Loser by Beck
+    coming right after which is a funny choice considering it's also the same year as their son was born, but that's probably
+    just a coincidence. Add Take On Me from A-ha to the list since they were married when the song released in 1985. Their final
+    request is Sweet Child O' Mine by Guns N Roses, which I think came out in 1987 when they both finished university.
+    Thank you, this party should be great!
+    """
+
+    model = GenerativeModel("gemini-1.5-pro-001")
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="application/json", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_6]
 
     return response.text
