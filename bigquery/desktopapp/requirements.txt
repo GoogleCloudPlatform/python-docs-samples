@@ -1,2 +1,2 @@
-google-cloud-bigquery==3.24.0
+google-cloud-bigquery==3.25.0
 google-auth-oauthlib==1.2.0
