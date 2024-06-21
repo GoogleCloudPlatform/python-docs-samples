@@ -24,6 +24,7 @@ client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 # [END instantiate]
 
+
 # [START job_discovery_commute_search]
 # [START commute_search]
 def commute_search(client_service, company_name):
@@ -53,7 +54,7 @@ def commute_search(client_service, company_name):
     )
     print(response)
 
- 
+
 # [END commute_search]
 # [END job_discovery_commute_search]
 
