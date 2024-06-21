@@ -37,7 +37,7 @@ def create_corpus(
 
     # Configure embedding model
     embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/textembedding-gecko@003"
+        publisher_model="publishers/google/models/text-embedding-004"
     )
 
     corpus = rag.create_corpus(
@@ -360,9 +360,9 @@ def quickstart(
     vertexai.init(project=project_id, location="us-central1")
 
     # Create RagCorpus
-    # Configure embedding model, for example "textembedding-gecko@003".
+    # Configure embedding model, for example "text-embedding-004".
     embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/textembedding-gecko@003"
+        publisher_model="publishers/google/models/text-embedding-004"
     )
     
     rag_corpus = rag.create_corpus(
