@@ -10,7 +10,7 @@
       {
         "name": "responses_topic",
         "label": "Output messages topic",
-        "helpText": "The pub/sub topic to push inputs to"
+        "helpText": "The pub/sub topic to push outputs to"
       },
       {
         "name": "device",
