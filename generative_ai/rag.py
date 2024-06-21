@@ -35,7 +35,17 @@ def create_corpus(
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
 
-    corpus = rag.create_corpus(display_name=display_name, description=description)
+    # Configure embedding model
+    embedding_model_config = rag.EmbeddingModelConfig(
+        publisher_model="publishers/google/models/textembedding-gecko@003"
+    )
+
+    corpus = rag.create_corpus(
+        display_name=display_name,
+        description=description,
+        embedding_model_config=embedding_model_config,
+        
+    )
     print(corpus)
     # [END generativeaionvertexai_rag_create_corpus]
     return corpus
@@ -134,6 +144,7 @@ def import_files(
         paths=paths,
         chunk_size=512,  # Optional
         chunk_overlap=100,  # Optional
+        max_embedding_requests_per_min=900,  # Optional
     )
     print(f"Imported {response.imported_rag_files_count} files.")
     # [END generativeaionvertexai_rag_import_files]
@@ -155,7 +166,7 @@ async def import_files_async(
     # corpus_name = "projects/{project_id}/locations/us-central1/ragCorpora/{rag_corpus_id}"
 
     # Supports Google Cloud Storage and Google Drive Links
-    # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]
+    # paths = ["https://drive.google.com/file/d/123", "gs://my_bucket/my_files_dir"]
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
@@ -165,6 +176,7 @@ async def import_files_async(
         paths=paths,
         chunk_size=512,  # Optional
         chunk_overlap=100,  # Optional
+        max_embedding_requests_per_min=900,  # Optional
     )
 
     result = await response.result()
@@ -342,13 +354,21 @@ def quickstart(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # display_name = "test_corpus"
-    # paths = ["https://drive.google.com/file/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
+    # paths = ["https://drive.google.com/file/d//123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
 
     # Create RagCorpus
-    rag_corpus = rag.create_corpus(display_name=display_name)
+    # Configure embedding model, for example "textembedding-gecko@003".
+    embedding_model_config = rag.EmbeddingModelConfig(
+        publisher_model="publishers/google/models/textembedding-gecko@003"
+    )
+    
+    rag_corpus = rag.create_corpus(
+        display_name=display_name,
+        embedding_model_config=embedding_model_config,
+    )
 
     # Import Files to the RagCorpus
     response = rag.import_files(
@@ -356,6 +376,7 @@ def quickstart(
         paths,
         chunk_size=512,  # Optional
         chunk_overlap=100,  # Optional
+        max_embedding_requests_per_min=900,  # Optional
     )
 
     # Direct context retrieval
