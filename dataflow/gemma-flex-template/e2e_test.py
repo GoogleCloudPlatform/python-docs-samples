@@ -120,13 +120,11 @@ def dataflow_job(
             "responses_topic":
             responses_topic,
             "device":
-            "GPU",
+            "CPU",
             "sdk_container_image":
             f"gcr.io/{project}/{flex_template_image}",
             "machine_type":
             f"{DATAFLOW_MACHINE_TYPE}",
-            "dataflow_service_options":
-            "worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx",
         },
     )
 
