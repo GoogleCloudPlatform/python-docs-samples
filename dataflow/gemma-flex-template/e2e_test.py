@@ -46,7 +46,7 @@ from conftest import Utils
 
 import pytest
 
-DATAFLOW_MACHINE_TYPE = "g2-standard-4"
+DATAFLOW_MACHINE_TYPE = "e2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/pytorch_model"
 NAME = "dataflow/gemma-flex-template/streaming"
 
