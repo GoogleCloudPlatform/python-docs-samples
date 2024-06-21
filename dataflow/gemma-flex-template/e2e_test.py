@@ -120,7 +120,7 @@ def dataflow_job(
             "responses_topic":
             responses_topic,
             "device":
-            "CPU",
+            "GPU",
             "sdk_container_image":
             f"gcr.io/{project}/{flex_template_image}",
             "machine_type":
