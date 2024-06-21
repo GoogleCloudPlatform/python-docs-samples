@@ -354,7 +354,7 @@ def quickstart(
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # display_name = "test_corpus"
-    # paths = ["https://drive.google.com/file/d//123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
+    # paths = ["https://drive.google.com/file/d/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=project_id, location="us-central1")
