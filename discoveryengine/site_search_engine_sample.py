@@ -14,24 +14,23 @@
 #
 
 
-# [START genappbuilder_create_target_site]
-from google.api_core.client_options import ClientOptions
-
-from google.cloud import discoveryengine_v1 as discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# uri_pattern = "https://cloud.google.com/generative-ai-app-builder/docs/*"
-
-
 def create_target_site(
     project_id: str,
     location: str,
     data_store_id: str,
     uri_pattern: str,
 ):
+    # [START genappbuilder_create_target_site]
+    from google.api_core.client_options import ClientOptions
+
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # uri_pattern = "https://cloud.google.com/generative-ai-app-builder/docs/*"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -75,22 +74,9 @@ def create_target_site(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_create_target_site]
 
     return response
-
-
-# [END genappbuilder_create_target_site]
-
-# [START genappbuilder_delete_target_site]
-from google.api_core.client_options import ClientOptions
-
-from google.cloud import discoveryengine_v1 as discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# target_site_id = "YOUR_TARGET_SITE_ID"
 
 
 def delete_target_site(
@@ -99,6 +85,17 @@ def delete_target_site(
     data_store_id: str,
     target_site_id: str,
 ):
+    # [START genappbuilder_delete_target_site]
+    from google.api_core.client_options import ClientOptions
+
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # target_site_id = "YOUR_TARGET_SITE_ID"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -125,8 +122,6 @@ def delete_target_site(
     operation = client.delete_target_site(name=name)
 
     print(f"Operation: {operation.operation.name}")
+    # [END genappbuilder_delete_target_site]
 
     return operation.operation.name
-
-
-# [END genappbuilder_delete_target_site]
