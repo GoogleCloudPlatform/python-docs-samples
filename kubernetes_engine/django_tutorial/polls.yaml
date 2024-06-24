@@ -98,7 +98,7 @@ spec:
 
 ---
 
-# [START gke_poll_service]
+# [START container_poll_service]
 # [START service]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
@@ -121,4 +121,4 @@ spec:
   selector:
     app: polls
 # [END service]
-# [END gke_poll_service]
+# [END container_poll_service]
