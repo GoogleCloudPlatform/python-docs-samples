@@ -82,7 +82,7 @@ spec:
             mountPath: /etc/ssl/certs
           - name: cloudsql
             mountPath: /cloudsql
-      # [END proxy_container] 
+      # [END proxy_container]
       # [START volumes]
       volumes:
         - name: cloudsql-oauth-credentials
@@ -93,11 +93,12 @@ spec:
             path: /etc/ssl/certs
         - name: cloudsql
           emptyDir: {}
-      # [END volumes]        
+      # [END volumes]
 # [END kubernetes_deployment]
 
 ---
 
+# [START gke_poll_service]
 # [START service]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
@@ -120,3 +121,4 @@ spec:
   selector:
     app: polls
 # [END service]
+# [END gke_poll_service]
