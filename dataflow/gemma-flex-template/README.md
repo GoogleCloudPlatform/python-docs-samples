@@ -1,10 +1,10 @@
-# RunInference on Dataflow Streaming with Gemma and Flex Templates
+# RunInference on Dataflow streaming with Gemma and Flex Templates
 
 Gemma is a family of lightweight, state-of-the art open models built from research and technology used to create the Gemini models.
 You can use Gemma models in your Apache Beam inference pipelines with the `RunInference` transform.
 
 This example demonstrates how to use a Gemma model running on Pytorch in a streaming Dataflow pipeline that has Pub/Sub sources and sinks. This pipeline
-is deployed using flex templates.
+is deployed by using Flex Templates.
 
 For more information about using RunInference, see [Get started with AI/ML pipelines](https://beam.apache.org/documentation/ml/overview/) in the Apache Beam documentation.
 
@@ -14,7 +14,7 @@ Follow the steps in this section to create the necessary environment to run this
 
 ### Enable Google Cloud services
 
-This workflow uses multiple Google Cloud Platform products, including Dataflow, Pub/Sub, Google Cloud Storage, and Artifact Registry. Before you start the workflow, create a Google Cloud project that has the following services enabled:
+This workflow uses multiple Google Cloud products, including Dataflow, Pub/Sub, Google Cloud Storage, and Artifact Registry. Before you start the workflow, create a Google Cloud project that has the following services enabled:
 
 * Dataflow
 * Pub/Sub
@@ -27,7 +27,7 @@ Your Google Cloud project also needs to have Nvidia L4 GPU quota. For more infor
 
 ### Create a custom container
 
-To build a custom container, use Docker. This repository contains a Dockerfile that you can use to build your custom container. To build and push a container to Artifact Registry by using DockerFollow, follow the instructions in the [Build and push the image](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) section of the "Build custom container images for Dataflow" page in the Google Cloud documentation.
+To build a custom container, use Docker. This repository contains a Dockerfile that you can use to build your custom container. To build and push a container to Artifact Registry by using DockerFollow, follow the instructions in the [Build and push the image](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) section of "Build custom container images for Dataflow" in the Google Cloud documentation.
 
 ### Create Pub/Sub topics for input and output
 
@@ -56,23 +56,23 @@ Install Apache Beam and the dependencies required to run the pipeline in your lo
 pip install -U -r requirements.txt
 ```
 
-This example also requires having access to the base class for the Pytorch implementation of Gemma.
+This example also requires access to the base class for the PyTorch implementation of Gemma.
 ```
 git clone https://github.com/google/gemma_pytorch.git
 pip install ./gemma_pytorch
 ```
 
-## Code Overview
+## Code overview
 
 This section provides details about the custom model handler and the formatting `DoFn` used in this example.
 
 ### Custom model handler
-This notebook defines a custom model handler that loads the model by constructing a configuration object and loading the model's checkpoint from the local filesystem.
-This approach differs from Pytorch model loading process followed in the Beam Pytorch model handler, which is why a custom implementation is necessary. 
+This notebook defines a custom model handler that loads the model. The model handler constructs a configuration object and loads the model's checkpoint from the local filesystem.
+Because this approach differs from the PyTorch model loading process followed in the Beam PyTorch model handler, a custom implementation is necessary. 
 
 To customize the behavior of the handler, implement the following methods: `load_model`, `validate_inference_args`, and `share_model_across_processes`.
 
-The Pytorch implementation of the Gemma models has a `generate` method
+The PyTorch implementation of the Gemma models has a `generate` method
 that generates text based on a prompt. To route the prompts correctly, use this function in the `run_inference` function.
 
 ```py
@@ -159,7 +159,11 @@ class FormatOutput(beam.DoFn):
 ```
 
 ## Build the Flex Template
-Run the following code from the directory to build the Dataflow flex template. Replace `$TEMPLATE_FILE` with a GCS path written as a `.json` file. Set `SDK_CONTAINER_IMAGE` to the name Docker image created earlier and `$PROJECT` is the GCP project you created earlier. 
+Run the following code from the directory to build the Dataflow flex template.
+
+- Replace `$TEMPLATE_FILE` with a Google Cloud Storage path written as a JSON file.
+- Set `SDK_CONTAINER_IMAGE` to the name of the Docker image created previously.
+- `$PROJECT` is the Google Cloud project that you created previously. 
 
 ```sh
 gcloud dataflow flex-template build $TEMPLATE_FILE \
@@ -170,7 +174,7 @@ gcloud dataflow flex-template build $TEMPLATE_FILE \
 ```
 
 ## Start the pipeline
-Run the following code from the directory to start the Dataflow streaming pipeline. Replace `$TEMPLATE_FILE`, `$REGION`, `$GCS_BUCKET`, `$INPUT_SUBSCRIPTION`, `$OUTPUT_TOPIC`, `$SDK_CONTAINER_IMAGE`, and `$PROJECT` with the Google Cloud Project resources you created earlier. It may take around 15 minutes for the worker to start up and begin accepting messages from the input Pub/Sub topic. 
+To start the Dataflow streaming job, run the following code from the directory. Replace `$TEMPLATE_FILE`, `$REGION`, `$GCS_BUCKET`, `$INPUT_SUBSCRIPTION`, `$OUTPUT_TOPIC`, `$SDK_CONTAINER_IMAGE`, and `$PROJECT` with the Google Cloud project resources you created previously. It might take as much as 15 minutes for the worker to start up and to begin accepting messages from the input Pub/Sub topic. 
 
 ```sh
 gcloud dataflow flex-template run "gemma-flex-`date +%Y%m%d-%H%M%S`" \
@@ -188,7 +192,7 @@ gcloud dataflow flex-template run "gemma-flex-`date +%Y%m%d-%H%M%S`" \
 
 ## Send a prompt to the model and check the response
 
-In the Google Cloud console, navigate to the Pub/Sub topics page, and then select your input topic. On the **Messages** tab, click **Publish Message**. Add a message into the pipeline for the Dataflow job to pick up and pass through the model. The Dataflow job outputs the response to the Pub/Sub sink topic. To check the response from the model, you can manually pull messages from the destination topic. For more information, see [Publish messages](https://cloud.google.com/pubsub/docs/publisher#publish-messages) in the Google Cloud documentation.
+In the Google Cloud console, navigate to the Pub/Sub topics page, and then select your input topic. On the **Messages** tab, click **Publish Message**. Add a message for the Dataflow job to pick up and pass through the model. The Dataflow job outputs the response to the Pub/Sub sink topic. To check the response from the model, you can manually pull messages from the destination topic. For more information, see [Publish messages](https://cloud.google.com/pubsub/docs/publisher#publish-messages) in the Google Cloud documentation.
 
 ## Clean up resources
 
