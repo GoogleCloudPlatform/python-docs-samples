@@ -85,7 +85,8 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
 
     def validate_inference_args(self, inference_args: Optional[dict[str,
                                                                     Any]]):
-        if len(inference_args) > 1 or "max_length" not in inference_args.keys:
+        if len(inference_args) > 1 or "max_length" not in inference_args.keys(
+        ):
             raise ValueError(
                 "invalid inference args, only valid arg is max_length, got",
                 inference_args)
