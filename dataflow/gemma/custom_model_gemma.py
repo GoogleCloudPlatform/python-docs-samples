@@ -74,6 +74,8 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
         Returns:
           An Iterable of type PredictionResult.
         """
+        if inference_args is None:
+            inference_args = {"max_length": 64}
         # Loop each text string, and use a tuple to store the inference results.
         predictions = []
         for one_text in batch:
@@ -132,7 +134,7 @@ if __name__ == "__main__":
         | "RunInference-Gemma" >> RunInference(
             GemmaModelHandler(args.model_path),
             inference_args={
-                "max_length", 64
+                "max_length": 32
             })  # Send the prompts to the model and get responses.
         | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
         | "Publish Result" >>
