@@ -16,7 +16,7 @@
 from google.cloud import batch_v1
 
 
-def create_local_ssd(
+def create_local_ssd_job(
     project_id: str, region: str, job_name: str, ssd_name: str
 ) -> batch_v1.Job:
     """
@@ -55,8 +55,7 @@ def create_local_ssd(
     # Tasks are grouped inside a job using TaskGroups.
     # Currently, it's possible to have only one task group.
     group = batch_v1.TaskGroup()
-    group.task_count = 3
-    group.parallelism = 1
+    group.task_count = 4
     group.task_spec = task
 
     disk = batch_v1.AllocationPolicy.Disk()
@@ -105,5 +104,5 @@ if __name__ == "__main__":
 
     PROJECT = google.auth.default()[1]
     REGION = "europe-west4"
-    job = create_local_ssd(PROJECT, REGION, "ssd-job-batch", "local-ssd-0")
+    job = create_local_ssd_job(PROJECT, REGION, "ssd-job-batch", "local-ssd-0")
     print(job)
