@@ -129,7 +129,7 @@ def dataflow_job(
     )
 
 
-@pytest.mark.timeout(7200)
+@pytest.mark.timeout(5400)
 def test_pipeline_dataflow(
         project: str,
         location: str,

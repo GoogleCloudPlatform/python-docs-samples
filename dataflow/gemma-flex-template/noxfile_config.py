@@ -16,7 +16,7 @@
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    # Opting out of all Python versions except 3.11.
+    # Opting out of all Python versions except 3.10.
     # The Python version used is defined by the Dockerfile and the job
     # submission enviornment must match.
     "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.11", "3.12"],
