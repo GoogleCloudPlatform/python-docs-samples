@@ -27,12 +27,10 @@ import pytest
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_script_no_mounting import create_script_job
-<<<<<<< HEAD
 from ..create.create_with_service_account import create_with_custom_service_account_job
 from ..create.create_with_ssd import create_local_ssd_job
-=======
 from ..create.create_with_persistent_disk import create_with_pd_job
->>>>>>> 2d7dc2ccb (feat: create job with persistent disk sample)
+from ..create.create_with_script_no_mounting import create_script_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -42,14 +40,9 @@ from ..list.list_tasks import list_tasks
 from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
-<<<<<<< HEAD
 REGION = "europe-central2"
 ZONE = "europe-central2-b"
-=======
-REGION = "europe-north1"
-ZONE = "europe-north1-c"
 
->>>>>>> 2d7dc2ccb (feat: create job with persistent disk sample)
 TIMEOUT = 600  # 10 minutes
 
 WAIT_STATES = {
@@ -66,7 +59,6 @@ def job_name():
     return f"test-job-{uuid.uuid4().hex[:10]}"
 
 
-<<<<<<< HEAD
 @pytest.fixture()
 def service_account() -> str:
     client = resourcemanager_v3.ProjectsClient()
@@ -79,12 +71,7 @@ def service_account() -> str:
 
 @pytest.fixture
 def disk_name():
-    return f"test-ssd-{uuid.uuid4().hex[:10]}"
-=======
-@pytest.fixture
-def disk_name():
     return f"test-disk-{uuid.uuid4().hex[:10]}"
->>>>>>> 2d7dc2ccb (feat: create job with persistent disk sample)
 
 
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
@@ -125,7 +112,6 @@ def _check_tasks(job_name):
 
 
 def _check_policy(job: batch_v1.Job, job_name: str, disk_name: str):
-    breakpoint()
     assert job_name in job.name
     assert job.allocation_policy.instances[0].policy.disks[0].device_name == disk_name
 
@@ -181,5 +167,8 @@ def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[s
 
 @flaky(max_runs=3, min_passes=1)
 def test_pd_job(job_name, disk_name):
-    job = create_with_pd_job(PROJECT, REGION, job_name, disk_name, ZONE)
-    _test_body(job, additional_test=lambda: _check_policy(job, job_name, disk_name))
+    region = "europe-north1"
+    zone = "europe-north1-c"
+    existing_disk_name = "permanent-batch-testing"
+    job = create_with_pd_job(PROJECT, REGION, job_name, disk_name, zone, existing_disk_name)
+    _test_body(job, additional_test=lambda: _check_policy(job, job_name, disk_name), region=region)

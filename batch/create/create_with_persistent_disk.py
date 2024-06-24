@@ -74,7 +74,6 @@ def create_with_pd_job(
 
     instances = batch_v1.AllocationPolicy.InstancePolicyOrTemplate()
     instances.policy = policy
-    
 
     allocation_policy = batch_v1.AllocationPolicy()
     allocation_policy.instances = [instances]
