@@ -42,7 +42,7 @@ def create_local_ssd_job(
     task = batch_v1.TaskSpec()
     runnable = batch_v1.Runnable()
     runnable.script = batch_v1.Runnable.Script()
-    runnable.script.text = "echo Hello world from task ${BATCH_TASK_INDEX}."
+    runnable.script.text = "echo Hello world! This is task ${BATCH_TASK_INDEX}. This job has a total of ${BATCH_TASK_COUNT} tasks."
     task.runnables = [runnable]
     task.max_retry_count = 2
     task.max_run_duration = "3600s"
@@ -87,6 +87,9 @@ def create_local_ssd_job(
     job.task_groups = [group]
     job.allocation_policy = allocation_policy
     job.labels = {"env": "testing", "type": "script"}
+    # We use Cloud Logging as it's an out of the box available option
+    job.logs_policy = batch_v1.LogsPolicy()
+    job.logs_policy.destination = batch_v1.LogsPolicy.Destination.CLOUD_LOGGING
 
     create_request = batch_v1.CreateJobRequest()
     create_request.job = job
