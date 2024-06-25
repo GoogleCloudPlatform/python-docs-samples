@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for creating a new secret.
+command line application and sample code for creating a new regional secret.
 """
 
 import argparse
@@ -27,7 +27,7 @@ def create_secret(
         project_id: str, location_id : str,  secret_id: str, ttl: Optional[str] = None
 ) -> secretmanager_v1beta2.Secret:
     """
-    Create a new secret with the given name. A secret is a logical wrapper
+    Create a new regional secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
     secret material.
 
@@ -45,10 +45,10 @@ def create_secret(
 
     Example:
         # Create a secret with automatic replication and no TTL
-        new_secret = create_secret("my-project", "my-new-secret")
+        new_secret = create_secret("my-project", "location", "my-new-secret")
 
         # Create a secret with a TTL of 30 days
-        new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "7776000s")
+        new_secret_with_ttl = create_secret("my-project", "location", "my-timed-secret", "7776000s")
     """
 
     # Import the Secret Manager client library.
