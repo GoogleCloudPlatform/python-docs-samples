@@ -134,9 +134,10 @@ if __name__ == "__main__":
         beam.io.ReadFromPubSub(subscription=args.messages_subscription)
         | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
         | "RunInference-Gemma" >> RunInference(
-            GemmaModelHandler(args.model_path), 
-            inference_args={"max_length": 32}
-        )  # Send the prompts to the model and get responses.
+            GemmaModelHandler(args.model_path),
+            inference_args={
+                "max_length": 32
+            })  # Send the prompts to the model and get responses.
         | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
         | "Publish Result" >>
         beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responses_topic))
