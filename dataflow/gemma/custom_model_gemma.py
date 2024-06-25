@@ -85,11 +85,12 @@ class GemmaModelHandler(ModelHandler[str, PredictionResult, GemmaCausalLM]):
 
     def validate_inference_args(self, inference_args: Optional[dict[str,
                                                                     Any]]):
-        if len(inference_args) > 1 or "max_length" not in inference_args.keys(
-        ):
-            raise ValueError(
-                "invalid inference args, only valid arg is max_length, got",
-                inference_args)
+        if inference_args:
+            if len(inference_args
+                   ) > 1 or "max_length" not in inference_args.keys():
+                raise ValueError(
+                    "invalid inference args, only valid arg is max_length, got",
+                    inference_args)
 
 
 class FormatOutput(beam.DoFn):
@@ -133,10 +134,9 @@ if __name__ == "__main__":
         beam.io.ReadFromPubSub(subscription=args.messages_subscription)
         | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
         | "RunInference-Gemma" >> RunInference(
-            GemmaModelHandler(args.model_path),
-            inference_args={
-                "max_length": 32
-            })  # Send the prompts to the model and get responses.
+            GemmaModelHandler(args.model_path), 
+            inference_args={"max_length": 32}
+        )  # Send the prompts to the model and get responses.
         | "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
         | "Publish Result" >>
         beam.io.gcp.pubsub.WriteStringsToPubSub(topic=args.responses_topic))
