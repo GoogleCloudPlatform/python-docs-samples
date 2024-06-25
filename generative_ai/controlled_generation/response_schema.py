@@ -39,7 +39,7 @@ def generate_content(project_id: str) -> str:
     model = GenerativeModel("gemini-1.5-pro-001")
 
     response = model.generate_content(
-        "List a few popular popular cookie recipes",
+        "List a few popular cookie recipes",
         generation_config=GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
         ),
