@@ -21,11 +21,13 @@ from flaky import flaky
 
 import google.auth
 from google.cloud import batch_v1
+from google.cloud import resourcemanager_v3
 import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_script_no_mounting import create_script_job
+from ..create.create_with_service_account import create_with_custom_service_account_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -52,6 +54,16 @@ WAIT_STATES = {
 @pytest.fixture
 def job_name():
     return f"test-job-{uuid.uuid4().hex[:10]}"
+
+
+@pytest.fixture()
+def service_account() -> str:
+    client = resourcemanager_v3.ProjectsClient()
+    request = resourcemanager_v3.GetProjectRequest()
+    request.name = f"projects/{PROJECT}"
+    project = client.get_project(request)
+    project_number = project.name.split("/")[-1]
+    return f"{project_number}-compute@developer.gserviceaccount.com"
 
 
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
@@ -102,6 +114,10 @@ def _check_logs(job, capsys):
     assert all("Hello world!" in log_msg for log_msg in output)
 
 
+def _check_service_account(job: batch_v1.Job, service_account_email: str):
+    assert job.allocation_policy.service_account.email == service_account_email
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -118,3 +134,9 @@ def test_container_job(job_name):
 def test_create_gpu_job(job_name):
     job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
     _test_body(job, additional_test=lambda: _check_tasks)
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_service_account_job(job_name, service_account):
+    job = create_with_custom_service_account_job(PROJECT, REGION, job_name, service_account)
+    _test_body(job, additional_test=lambda: _check_service_account(job, service_account))
