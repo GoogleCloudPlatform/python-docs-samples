@@ -16,7 +16,7 @@ import re
 import uuid
 
 import backoff
-from google.api_core.exceptions import InvalidArgument
+from google.api_core.exceptions import InvalidArgument, NotFound
 import google.auth
 from google.iam.v1 import policy_pb2
 import pytest
@@ -92,7 +92,7 @@ def test_service_account_set_policy(service_account: str) -> None:
 
     try:
         new_policy = set_service_account_iam_policy(PROJECT, service_account, policy)
-    except InvalidArgument:
+    except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
     binding_found = False
@@ -108,7 +108,7 @@ def test_service_account_rename(service_account: str) -> None:
     new_name = "New Name"
     try:
         account = rename_service_account(PROJECT, service_account, new_name)
-    except InvalidArgument:
+    except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
     assert account.display_name == new_name

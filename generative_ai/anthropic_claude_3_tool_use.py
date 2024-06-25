@@ -24,7 +24,7 @@ from anthropic import AnthropicVertex
 def tool_use(project_id: str, region: str) -> object:
     client = AnthropicVertex(region=region, project_id=project_id)
     message = client.messages.create(
-        model="claude-3-opus@20240229",
+        model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
         tools=[
             {
@@ -35,7 +35,7 @@ def tool_use(project_id: str, region: str) -> object:
                     "properties": {
                         "textQuery": {
                             "type": "string",
-                            "description": "The text string on which to search"
+                            "description": "The text string on which to search",
                         },
                         "priceLevels": {
                             "type": "array",
@@ -43,17 +43,17 @@ def tool_use(project_id: str, region: str) -> object:
                         },
                         "openNow": {
                             "type": "boolean",
-                            "description": "whether those places are open for business."
+                            "description": "whether those places are open for business.",
                         },
                     },
-                    "required": ["textQuery"]
-                }
+                    "required": ["textQuery"],
+                },
             }
         ],
         messages=[
             {
                 "role": "user",
-                "content": "What are some affordable and good Italian restaurants open now in San Francisco??"
+                "content": "What are some affordable and good Italian restaurants open now in San Francisco??",
             }
         ],
     )

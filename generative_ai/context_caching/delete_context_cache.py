@@ -12,21 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
-import backoff
-from google.api_core.exceptions import ResourceExhausted
+def delete_context_cache(project_id: str, cache_id: str) -> None:
+    # [START generativeaionvertexai_gemini_delete_context_cache]
+    import vertexai
 
-import anthropic_claude_3_streaming
+    from vertexai.preview import caching
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "PROJECT_ID"
+    # cache_id = "CACHE_ID"
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-east5"
+    vertexai.init(project=project_id, location="us-central1")
 
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_generate_text_streaming() -> None:
-    responses = anthropic_claude_3_streaming.generate_text_streaming(
-        project_id=_PROJECT_ID, region=_LOCATION
-    )
-    assert "bread" in responses
+    cached_content = caching.CachedContent(cached_content_name=cache_id)
+    cached_content.delete()
+    # [END generativeaionvertexai_gemini_delete_context_cache]

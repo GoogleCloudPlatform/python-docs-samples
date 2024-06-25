@@ -26,7 +26,7 @@ def generate_text(project_id: str) -> str:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = generative_models.GenerativeModel(model_name="gemini-1.0-pro-vision-001")
+    model = generative_models.GenerativeModel(model_name="gemini-1.5-flash-001")
 
     # Generation config
     generation_config = generative_models.GenerationConfig(
