@@ -54,6 +54,7 @@ def list_instances(
 # [END list_instances]
 
 
+# [START compute_create_instance]
 # [START create_instance]
 def create_instance(
     compute: object,
@@ -142,6 +143,7 @@ def create_instance(
 
 
 # [END create_instance]
+# [END compute_create_instance]
 
 
 # [START delete_instance]
