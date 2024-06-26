@@ -1,6 +1,6 @@
 # RunInference on Dataflow streaming with Gemma and Flex Templates
 
-Gemma is a family of lightweight, state-of-the art open models built from research and technology used to create the Gemini models.
+Gemma is a family of lightweight, state-of-the-art open models built from research and technology used to create the Gemini models.
 You can use Gemma models in your Apache Beam inference pipelines with the `RunInference` transform.
 
 This example demonstrates how to use a Gemma model running on Pytorch in a streaming Dataflow pipeline that has Pub/Sub sources and sinks. This pipeline
