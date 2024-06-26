@@ -60,14 +60,17 @@ spec:
             "--service_account_key=/etc/nginx/creds/service-account-creds.json"
           ]
       # [END service]
+      # [END endpoints_service]
         ports:
           - containerPort: 9000
+          # [START endpoints_secret-2]
           # [START secret-2]
           volumeMounts:
             - mountPath: /etc/nginx/creds
               name: service-account-creds
               readOnly: true
           # [END secret-2]
+          # [END endpoints_secret-2]
       - name: bookstore
         image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
         ports:
