@@ -48,6 +48,7 @@ spec:
           secret:
             secretName: service-account-creds
       # [END secret-1]
+      # [START endpoints_service]
       # [START service]
       containers:
         - name: esp
