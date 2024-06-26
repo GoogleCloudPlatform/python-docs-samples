@@ -50,8 +50,6 @@ def list_instances(
     return result["items"] if "items" in result else None
 
 
-
-
 # [START compute_create_instance]
 # [START create_instance]
 def create_instance(
@@ -164,8 +162,6 @@ def delete_instance(
     return (
         compute.instances().delete(project=project, zone=zone, instance=name).execute()
     )
-
-
 
 
 # [START compute_wait_for_operation]
