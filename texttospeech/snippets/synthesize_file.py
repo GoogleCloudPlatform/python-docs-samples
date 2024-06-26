@@ -24,7 +24,6 @@ Example usage:
 import argparse
 
 
-# [START tts_synthesize_text_file]
 # [START tts_synthesize_ssml_file]
 def synthesize_ssml_file(ssml_file):
     """Synthesizes speech from the input file of ssml.
