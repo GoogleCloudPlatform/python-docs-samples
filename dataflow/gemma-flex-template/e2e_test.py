@@ -115,16 +115,11 @@ def dataflow_job(
         project=project,
         region=location,
         parameters={
-            "messages_subscription":
-            messages_subscription,
-            "responses_topic":
-            responses_topic,
-            "device":
-            "CPU",
-            "sdk_container_image":
-            f"gcr.io/{project}/{flex_template_image}",
-            "machine_type":
-            f"{DATAFLOW_MACHINE_TYPE}",
+            "messages_subscription": messages_subscription,
+            "responses_topic": responses_topic,
+            "device": "CPU",
+            "sdk_container_image": f"gcr.io/{project}/{flex_template_image}",
+            "machine_type": f"{DATAFLOW_MACHINE_TYPE}",
         },
     )
 

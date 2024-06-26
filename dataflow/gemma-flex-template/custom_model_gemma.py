@@ -72,6 +72,9 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         self._env_vars = {}
 
     def share_model_across_processes(self) -> bool:
+        """Allows us to load a model only once per worker VM, decreasing
+        pipeline memory requirements.
+        """
         return True
 
     def load_model(self) -> GemmaForCausalLM:

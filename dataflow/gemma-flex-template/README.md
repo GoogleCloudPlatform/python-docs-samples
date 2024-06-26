@@ -113,11 +113,6 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
             self._device = torch.device('cpu')
         self._env_vars = {}
 
-    # This allows us to load a large model only once per worker VM, 
-    # which decreases the pipeline memory requirements.
-    def share_model_across_processes(self) -> bool:
-        return True
-
     def load_model(self) -> GemmaForCausalLM:
         """Loads and initializes a model for processing."""
         torch.set_default_dtype(self._model_config.get_dtype())
@@ -125,29 +120,6 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         model.load_weights(self._checkpoint_path)
         model = model.to(self._device).eval()
         return model
-
-    def run_inference(
-        self,
-        batch: Sequence[str],
-        model: GemmaForCausalLM,
-        inference_args: Optional[Dict[str, Any]] = None
-    ) -> Iterable[PredictionResult]:
-        """Runs inferences on a batch of text strings.
-
-        Args:
-          batch: A sequence of examples as text strings.
-          model: The Gemma model being used.
-          inference_args: Any additional arguments for an inference.
-
-        Returns:
-          An Iterable of type PredictionResult.
-        """
-        # Loop each text string, and use a tuple to store the inference results.
-        predictions = []
-        result = model.generate(prompts=batch, device=self._device)
-        predictions.append(result)
-        return [PredictionResult(x, y) for x, y in zip(batch, predictions)]
-
 ```
 
 ### Formatting DoFn
