@@ -51,7 +51,6 @@ def list_instances(
 
 
 # [START compute_create_instance]
-# [START create_instance]
 def create_instance(
     compute: object,
     project: str,
@@ -138,7 +137,6 @@ def create_instance(
     return compute.instances().insert(project=project, zone=zone, body=config).execute()
 
 
-# [END create_instance]
 # [END compute_create_instance]
 
 
