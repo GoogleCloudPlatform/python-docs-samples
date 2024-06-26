@@ -18,11 +18,12 @@ FROM ${SERVING_BUILD_IMAGE}
 
 WORKDIR /workspace
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends apt-utils
-RUN apt-get install -y --no-install-recommends curl
-RUN apt-get install -y --no-install-recommends wget
-RUN apt-get install -y --no-install-recommends git
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends apt-utils \
+    && apt-get install -y --no-install-recommends curl \
+    && apt-get install -y --no-install-recommends wget \
+    && apt-get install -y --no-install-recommends git \
+    && && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
 RUN pip install --upgrade pip \
@@ -31,8 +32,12 @@ RUN pip install --upgrade pip \
 RUN git clone https://github.com/google/gemma_pytorch.git
 RUN pip install ./gemma_pytorch
 
-# Copy files from official SDK image, including script/dependencies.
+# Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
+# use the image as SDK container image.
 COPY --from=apache/beam_python3.10_sdk:2.56.0 /opt/apache/beam /opt/apache/beam
+
+# Copy Flex Template launcher binary from the launcher image, which makes it
+# possible to use the image as a Flex Template base image.
 COPY --from=gcr.io/dataflow-templates-base/python310-template-launcher-base:latest /opt/google/dataflow/python_template_launcher /opt/google/dataflow/python_template_launcher
 
 # Copy the model directory downloaded from Kaggle and the pipeline code.

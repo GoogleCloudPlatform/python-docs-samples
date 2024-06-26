@@ -27,7 +27,7 @@ Your Google Cloud project also needs to have Nvidia L4 GPU quota. For more infor
 
 ### Create a custom container
 
-To build a custom container, use Docker. This repository contains a Dockerfile that you can use to build your custom container. To build and push a container to Artifact Registry by using DockerFollow, follow the instructions in the [Build and push the image](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) section of "Build custom container images for Dataflow" in the Google Cloud documentation.
+To build a custom container, use Docker. This repository contains a Dockerfile that you can use to build your custom container. To build and push a container to Artifact Registry by using Docker or Cloud Build, follow the instructions in the [Build and push the image](https://cloud.google.com/dataflow/docs/guides/build-container-image#build_and_push_the_image) section of "Build custom container images for Dataflow" in the Google Cloud documentation.
 
 ### Create Pub/Sub topics for input and output
 
@@ -113,6 +113,8 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
             self._device = torch.device('cpu')
         self._env_vars = {}
 
+    # This allows us to load a large model only once per worker VM, 
+    # which decreases the pipeline memory requirements.
     def share_model_across_processes(self) -> bool:
         return True
 
