@@ -31,7 +31,6 @@ import time
 import googleapiclient.discovery
 
 
-# [START list_instances]
 def list_instances(
     compute: object,
     project: str,
@@ -49,9 +48,6 @@ def list_instances(
     """
     result = compute.instances().list(project=project, zone=zone).execute()
     return result["items"] if "items" in result else None
-
-
-# [END list_instances]
 
 
 # [START compute_create_instance]
@@ -146,7 +142,6 @@ def create_instance(
 # [END compute_create_instance]
 
 
-# [START delete_instance]
 def delete_instance(
     compute: object,
     project: str,
@@ -169,9 +164,7 @@ def delete_instance(
     )
 
 
-# [END delete_instance]
-
-
+# [START compute_wait_for_operation]
 # [START wait_for_operation]
 def wait_for_operation(
     compute: object,
@@ -208,9 +201,9 @@ def wait_for_operation(
 
 
 # [END wait_for_operation]
+# [END compute_wait_for_operation]
 
 
-# [START run]
 def main(
     project: str,
     bucket: str,
@@ -274,4 +267,3 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.project_id, args.bucket_name, args.zone, args.name)
-# [END run]
