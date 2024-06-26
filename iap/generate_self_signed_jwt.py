@@ -37,13 +37,17 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
     """
     iat = datetime.datetime.now(tz=datetime.timezone.utc)
     exp = iat + 3600
-    return json.dumps({
-        'iss': service_account_email,
-        'sub': service_account_email,
-        'aud': resource_url,
-        'iat': iat,
-        'exp': exp,
-    })
+    return json.dumps(
+        {
+            "iss": service_account_email,
+            "sub": service_account_email,
+            "aud": resource_url,
+            "iat": iat,
+            "exp": exp,
+        }
+    )
+
+
 # [END iap_generate_self_signed_jwt]
 # [START iap_sign_jwt_IAM]
 
@@ -62,9 +66,11 @@ def sign_jwt(target_sa: str, resource_url: str) -> str:
     source_credentials, _ = google.auth.default()
     iam_client = iam_credentials_v1.IAMCredentialsClient(credentials=source_credentials)
     return iam_client.sign_jwt(
-        name=iam_client.service_account_path('-', target_sa),
+        name=iam_client.service_account_path("-", target_sa),
         payload=generate_jwt_payload(target_sa, resource_url),
     ).signed_jwt
+
+
 # [END iap_sign_jwt_IAM]
 # [START iap_sign_jwt_with_key_file]
 
@@ -79,7 +85,7 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
     Returns:
       A self-signed JWT created with a downloaded private key.
     """
-    with open(credential_key_file_path, 'r') as credential_key_file:
+    with open(credential_key_file_path, "r") as credential_key_file:
         key_data = json.load(credential_key_file)
 
     PRIVATE_KEY_ID_FROM_JSON = key_data["private_key_id"]
@@ -87,16 +93,20 @@ def sign_jwt_with_key_file(credential_key_file_path: str, resource_url: str) -> 
     SERVICE_ACCOUNT_EMAIL = key_data["client_email"]
 
     # Sign JWT with private key and store key id in the header
-    additional_headers = {'kid': PRIVATE_KEY_ID_FROM_JSON}
-    payload = generate_jwt_payload(service_account_email=SERVICE_ACCOUNT_EMAIL, resource_url=resource_url)
+    additional_headers = {"kid": PRIVATE_KEY_ID_FROM_JSON}
+    payload = generate_jwt_payload(
+        service_account_email=SERVICE_ACCOUNT_EMAIL, resource_url=resource_url
+    )
 
     signed_jwt = jwt.encode(
         payload,
         PRIVATE_KEY_FROM_JSON,
         headers=additional_headers,
-        algorithm='RS256',
+        algorithm="RS256",
     )
     return signed_jwt
+
+
 # [END iap_sign_jwt_with_key_file]
 
 # sign_jwt("test_email", "resource-url")
