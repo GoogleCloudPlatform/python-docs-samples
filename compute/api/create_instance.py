@@ -163,7 +163,6 @@ def delete_instance(
 
 
 # [START compute_wait_for_operation]
-# [START wait_for_operation]
 def wait_for_operation(
     compute: object,
     project: str,
@@ -198,7 +197,6 @@ def wait_for_operation(
         time.sleep(1)
 
 
-# [END wait_for_operation]
 # [END compute_wait_for_operation]
 
 
