@@ -23,8 +23,8 @@ import google.auth
 from google.cloud import batch_v1
 import pytest
 
-from ..create.create_gpu_with_script_no_mounting import create_gpu_job
 from ..create.create_with_container_no_mounting import create_container_job
+from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_script_no_mounting import create_script_job
 
 from ..delete.delete_job import delete_job
@@ -35,7 +35,8 @@ from ..list.list_tasks import list_tasks
 from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
-REGION = "europe-west4"
+REGION = "europe-central2"
+ZONE = "europe-central2-b"
 
 TIMEOUT = 600  # 10 minutes
 
@@ -115,5 +116,5 @@ def test_container_job(job_name):
 
 @flaky(max_runs=3, min_passes=1)
 def test_create_gpu_job(job_name):
-    job = create_gpu_job(PROJECT, REGION, job_name)
+    job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
     _test_body(job, additional_test=lambda: _check_tasks)
