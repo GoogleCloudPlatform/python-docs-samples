@@ -54,7 +54,7 @@ def disable_regional_secret_version_with_etag(
     response = client.disable_secret_version(request=request)
 
     print(f"Disabled secret version: {response.name}")
-    # [END secretmanager_disable_secret_version_with_etag]
+    # [END secretmanager_v1_disable_regional_secret_version_with_etag]
 
     return response
 

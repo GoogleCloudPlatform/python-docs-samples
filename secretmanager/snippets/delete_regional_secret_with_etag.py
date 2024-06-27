@@ -49,7 +49,7 @@ def delete_regional_secret_with_etag(project_id: str,location_id: str, secret_id
     client.delete_secret(request=request)
 
 
-# [END secretmanager_delete_secret_with_etag]
+# [END secretmanager_v1_delete_regional_secret_with_etag]
 
 
 if __name__ == "__main__":

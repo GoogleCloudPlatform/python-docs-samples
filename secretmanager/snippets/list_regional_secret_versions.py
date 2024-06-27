@@ -44,7 +44,7 @@ def list_regional_secret_versions(project_id: str, location_id: str, secret_id: 
         print(f"Found secret version: {version.name}")
 
 
-# [END secretmanager_list_secret_versions]
+# [END secretmanager_v1_list_regional_secret_versions]
 
 
 if __name__ == "__main__":
