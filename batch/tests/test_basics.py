@@ -138,5 +138,9 @@ def test_create_gpu_job(job_name):
 
 @flaky(max_runs=3, min_passes=1)
 def test_service_account_job(job_name, service_account):
-    job = create_with_custom_service_account_job(PROJECT, REGION, job_name, service_account)
-    _test_body(job, additional_test=lambda: _check_service_account(job, service_account))
+    job = create_with_custom_service_account_job(
+        PROJECT, REGION, job_name, service_account
+    )
+    _test_body(
+        job, additional_test=lambda: _check_service_account(job, service_account)
+    )

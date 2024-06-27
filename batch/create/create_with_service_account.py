@@ -90,5 +90,7 @@ if __name__ == "__main__":
     # Existing service account name within the project specified above.
     name = "test-account-name"
     service_account_email = f"{name}@{PROJECT}.iam.gserviceaccount.com"
-    job = create_with_custom_service_account_job(PROJECT, REGION, "sa-job-batch3", service_account_email)
+    job = create_with_custom_service_account_job(
+        PROJECT, REGION, "sa-job-batch3", service_account_email
+    )
     print(job)
