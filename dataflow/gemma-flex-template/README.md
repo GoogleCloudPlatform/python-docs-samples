@@ -67,7 +67,7 @@ pip install ./gemma_pytorch
 This section provides details about the custom model handler and the formatting `DoFn` used in this example.
 
 ### Custom model handler
-This notebook defines a custom model handler that loads the model. The model handler constructs a configuration object and loads the model's checkpoint from the local filesystem.
+This example defines a custom model handler that loads the model. The model handler constructs a configuration object and loads the model's checkpoint from the local filesystem.
 Because this approach differs from the PyTorch model loading process followed in the Beam PyTorch model handler, a custom implementation is necessary. 
 
 To customize the behavior of the handler, implement the following methods: `load_model`, `validate_inference_args`, and `share_model_across_processes`.
