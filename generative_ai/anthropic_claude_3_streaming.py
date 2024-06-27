@@ -26,7 +26,7 @@ def generate_text_streaming(project_id: str, region: str) -> str:
     result = []
 
     with client.messages.stream(
-        model="claude-3-sonnet@20240229",
+        model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
         messages=[
             {

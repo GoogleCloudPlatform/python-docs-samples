@@ -21,10 +21,13 @@ from flaky import flaky
 
 import google.auth
 from google.cloud import batch_v1
+from google.cloud import resourcemanager_v3
 import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
+from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_script_no_mounting import create_script_job
+from ..create.create_with_service_account import create_with_custom_service_account_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -34,7 +37,8 @@ from ..list.list_tasks import list_tasks
 from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
-REGION = "europe-north1"
+REGION = "europe-central2"
+ZONE = "europe-central2-b"
 
 TIMEOUT = 600  # 10 minutes
 
@@ -52,20 +56,30 @@ def job_name():
     return f"test-job-{uuid.uuid4().hex[:10]}"
 
 
-def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
+@pytest.fixture()
+def service_account() -> str:
+    client = resourcemanager_v3.ProjectsClient()
+    request = resourcemanager_v3.GetProjectRequest()
+    request.name = f"projects/{PROJECT}"
+    project = client.get_project(request)
+    project_number = project.name.split("/")[-1]
+    return f"{project_number}-compute@developer.gserviceaccount.com"
+
+
+def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
     start_time = time.time()
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(
-                PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]
+                PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]
             )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 
-        for job in list_jobs(PROJECT, REGION):
+        for job in list_jobs(PROJECT, region):
             if test_job.uid == job.uid:
                 break
         else:
@@ -74,9 +88,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
-    for job in list_jobs(PROJECT, REGION):
+    for job in list_jobs(PROJECT, region):
         if job.uid == test_job.uid:
             pytest.fail("The test job should be deleted at this point!")
 
@@ -100,6 +114,10 @@ def _check_logs(job, capsys):
     assert all("Hello world!" in log_msg for log_msg in output)
 
 
+def _check_service_account(job: batch_v1.Job, service_account_email: str):
+    assert job.allocation_policy.service_account.email == service_account_email
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -110,3 +128,19 @@ def test_script_job(job_name, capsys):
 def test_container_job(job_name):
     job = create_container_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_tasks(job_name))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_gpu_job(job_name):
+    job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
+    _test_body(job, additional_test=lambda: _check_tasks)
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_service_account_job(job_name, service_account):
+    job = create_with_custom_service_account_job(
+        PROJECT, REGION, job_name, service_account
+    )
+    _test_body(
+        job, additional_test=lambda: _check_service_account(job, service_account)
+    )

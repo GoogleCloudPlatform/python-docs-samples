@@ -121,7 +121,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
-# [START db_setup]
 # [START gaestd_py_django_database_config]
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
@@ -132,7 +131,6 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["PORT"] = 5432
 
 # [END gaestd_py_django_database_config]
-# [END db_setup]
 
 # Use a in-memory sqlite3 database when testing in CI systems
 # TODO(glasnt) CHECK IF THIS IS REQUIRED because we're setting a val above

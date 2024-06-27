@@ -20,6 +20,10 @@ import create_folder
 import delete_folder
 import get_folder
 import list_folders
+import managed_folder_create
+import managed_folder_delete
+import managed_folder_get
+import managed_folder_list
 import rename_folder
 
 
@@ -61,3 +65,41 @@ def test_folder_create_get_list_rename_delete(
     delete_folder.delete_folder(bucket_name=bucket_name, folder_name=new_name)
     out, _ = capsys.readouterr()
     assert new_name in out
+
+
+# === Managed Folders === #
+
+
+def test_managed_folder_create_get_list_delete(
+    capsys: pytest.LogCaptureFixture,
+    ubla_enabled_bucket: storage.Bucket,
+    uuid_name: str,
+) -> None:
+    bucket_name = ubla_enabled_bucket.name
+    folder_name = uuid_name
+
+    # Test create managed folder
+    managed_folder_create.create_managed_folder(
+        bucket_name=bucket_name, managed_folder_id=folder_name
+    )
+    out, _ = capsys.readouterr()
+    assert folder_name in out
+
+    # Test get managed folder
+    managed_folder_get.get_managed_folder(
+        bucket_name=bucket_name, managed_folder_id=folder_name
+    )
+    out, _ = capsys.readouterr()
+    assert folder_name in out
+
+    # Test list managed folders
+    managed_folder_list.list_managed_folders(bucket_name=bucket_name)
+    out, _ = capsys.readouterr()
+    assert folder_name in out
+
+    # Test delete managed folder
+    managed_folder_delete.delete_managed_folder(
+        bucket_name=bucket_name, managed_folder_id=folder_name
+    )
+    out, _ = capsys.readouterr()
+    assert folder_name in out

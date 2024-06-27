@@ -17,6 +17,7 @@ import re
 import time
 import uuid
 
+from google.api_core.exceptions import NotFound
 import google.auth
 import pytest
 from snippets.create_key import create_key
@@ -56,7 +57,10 @@ def key_found(project_id: str, account: str, key_id: str) -> bool:
 
 
 def test_delete_service_account_key(service_account: str) -> None:
-    key = create_key(PROJECT, service_account)
+    try:
+        key = create_key(PROJECT, service_account)
+    except NotFound:
+        pytest.skip("Service account was removed from outside, skipping")
     json_key_data = json.loads(key.private_key_data)
     key_id = json_key_data["private_key_id"]
     time.sleep(5)

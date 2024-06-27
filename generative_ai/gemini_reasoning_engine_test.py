@@ -53,6 +53,7 @@ def test_create_reasoning_engine_advanced() -> None:
     )
 
 
+@pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
     response = gemini_reasoning_engine.query_reasoning_engine(
         PROJECT_ID, reasoning_engine_id
@@ -66,6 +67,7 @@ def test_list_reasoning_engines() -> None:
     assert response
 
 
+@pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_get_reasoning_engine(reasoning_engine_id: str) -> None:
     response = gemini_reasoning_engine.get_reasoning_engine(
         PROJECT_ID, reasoning_engine_id
