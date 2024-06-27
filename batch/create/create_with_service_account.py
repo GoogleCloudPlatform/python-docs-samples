@@ -29,7 +29,7 @@ def create_with_custom_service_account_job(
             available for Batch are listed on: https://cloud.google.com/batch/docs/get-started#locations
         job_name: the name of the job that will be created.
             It needs to be unique for each project and region pair.
-        service_account: custom service account email
+        service_account_email: custom service account email
 
     Returns:
         A job object representing the job created.
