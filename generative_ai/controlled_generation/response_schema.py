@@ -114,12 +114,14 @@ def generate_content3(project_id: str) -> str:
                 "type": "ARRAY",
                 "items": {
                     "type": "OBJECT",
-                    "properties": {
+                    "properties": {                       
+                        "Day": {"type": "STRING"},
                         "Forecast": {"type": "STRING"},
                         "Humidity": {"type": "STRING"},
                         "Temperature": {"type": "INTEGER"},
                         "Wind Speed": {"type": "INTEGER"},
                     },
+                    "required": ["Day", "Temperature", "Forecast"]
                 },
             }
         },
