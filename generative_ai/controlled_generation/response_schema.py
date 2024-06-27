@@ -273,8 +273,8 @@ def generate_content5(project_id: str) -> str:
     }
 
     prompt = """
-        Hasbro stock slid 5.2% following a double-downgrade to “underperform” from “buy” at Bank of Anthos.
-        Bank of Anthos conducted a “deep dive” on trading card game. Bank of Anthos said Hasbro has been
+        Cymbal stock slid 5.2% following a double-downgrade to “underperform” from “buy” at Bank of Anthos.
+        Bank of Anthos conducted a “deep dive” on trading card game. Bank of Anthos said Cymbal has been
         overprinting cards and destroying the long-term value of the business.
     """
 
