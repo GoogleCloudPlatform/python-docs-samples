@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START job_search_quick_start_python]
+# [START job_search_quick_start]
 # [START quickstart]
 import os
 
@@ -45,4 +45,4 @@ def run_sample():
 if __name__ == "__main__":
     run_sample()
 # [END quickstart]
-# [END job_search_quick_start_python]
+# [END job_search_quick_start]
