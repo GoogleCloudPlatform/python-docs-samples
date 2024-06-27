@@ -16,7 +16,9 @@
 from google.cloud import batch_v1
 
 
-def create_gpu_job(project_id: str, region: str, zone: str, job_name: str) -> batch_v1.Job:
+def create_gpu_job(
+    project_id: str, region: str, zone: str, job_name: str
+) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
     a simple command on Cloud Compute instances on GPU machines.
