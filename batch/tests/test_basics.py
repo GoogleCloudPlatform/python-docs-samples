@@ -39,7 +39,7 @@ from ..logs.read_job_logs import print_job_logs
 PROJECT = google.auth.default()[1]
 REGION = "europe-central2"
 ZONE = "europe-central2-b"
-SECRET_NAME = "TEST_SECRET"
+SECRET_NAME = "permanent-batch-testing"
 PROJECT_NUMBER = (
     resourcemanager_v3.ProjectsClient()
     .get_project(name=f"projects/{PROJECT}")
