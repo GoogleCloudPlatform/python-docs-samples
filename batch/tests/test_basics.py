@@ -158,7 +158,13 @@ def test_service_account_job(job_name, service_account):
 
 @flaky(max_runs=3, min_passes=1)
 def test_secret_manager_job(job_name):
-    service_account_email = "jenkins-and-travis@python-docs-samples-tests.iam.gserviceaccount.com"
-    secrets = {SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"}
-    job = create_with_secret_manager(PROJECT, REGION, job_name, secrets, service_account_email)
+    service_account_email = (
+        "jenkins-and-travis@python-docs-samples-tests.iam.gserviceaccount.com"
+    )
+    secrets = {
+        SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
+    }
+    job = create_with_secret_manager(
+        PROJECT, REGION, job_name, secrets, service_account_email
+    )
     _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))

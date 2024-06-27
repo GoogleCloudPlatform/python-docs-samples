@@ -19,7 +19,11 @@ from google.cloud import batch_v1
 
 
 def create_with_secret_manager(
-    project_id: str, region: str, job_name: str, secrets: Dict[str, str], service_account_email: Optional[str] = None
+    project_id: str,
+    region: str,
+    job_name: str,
+    secrets: Dict[str, str],
+    service_account_email: Optional[str] = None,
 ) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
@@ -49,7 +53,10 @@ def create_with_secret_manager(
     task = batch_v1.TaskSpec()
     runnable = batch_v1.Runnable()
     runnable.script = batch_v1.Runnable.Script()
-    runnable.script.text = "echo Hello world! from task ${BATCH_TASK_INDEX}." + f" ${next(iter(secrets.keys()))} is the value of the secret."
+    runnable.script.text = (
+        "echo Hello world! from task ${BATCH_TASK_INDEX}."
+        + f" ${next(iter(secrets.keys()))} is the value of the secret."
+    )
     task.runnables = [runnable]
     task.max_retry_count = 2
     task.max_run_duration = "3600s"
@@ -105,4 +112,6 @@ if __name__ == "__main__":
     name = "test-account-name"
     secret_name = "TEST_SECRET"
     secrets = {secret_name: f"projects/11111111/secrets/{secret_name}/versions/latest"}
-    job = create_with_secret_manager(PROJECT, REGION, "secret-manager-job-batch", secrets)
+    job = create_with_secret_manager(
+        PROJECT, REGION, "secret-manager-job-batch", secrets
+    )
