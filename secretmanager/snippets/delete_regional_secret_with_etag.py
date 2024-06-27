@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,23 +13,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for getting metadata about a regional secret.
+command line application and sample code for deleting an existing regional
+secret.
 """
 
 import argparse
 
-from google.cloud import secretmanager_v1
 
-
-# [START secretmanager_v1_get_regional_secret]
-def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> secretmanager_v1.GetSecretRequest:
+# [START secretmanager_v1_delete_regional_secret_with_etag]
+def delete_regional_secret_with_etag(project_id: str,location_id: str, secret_id: str, etag: str) -> None:
     """
-    Get information about the given secret. This only returns metadata about
-    the secret container, not any secret material.
+    Delete the regional secret with the given name, etag, and all of its versions.
     """
 
-    # Import the Secret Manager client library.
+    # Import the Secret Manager client library and types.
     from google.cloud import secretmanager_v1
+    from google.cloud.secretmanager_v1.types import service
 
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
@@ -41,14 +40,16 @@ def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> se
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # Get the secret.
-    response = client.get_secret(request={"name": name})
+    # Build the request
+    request = service.DeleteSecretRequest()
+    request.name = name
+    request.etag = etag
 
-    # Print data about the secret.
-    print(f"Got secret {response.name}")
-    # [END secretmanager_v1_get_regional_secret]
+    # Delete the secret.
+    client.delete_secret(request=request)
 
-    return response
+
+# [END secretmanager_delete_secret_with_etag]
 
 
 if __name__ == "__main__":
@@ -57,7 +58,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
-    parser.add_argument("secret_id", help="id of the secret to get")
+    parser.add_argument("secret_id", help="id of the secret to delete")
+    parser.add_argument("etag", help="current etag of the secret to delete")
     args = parser.parse_args()
 
-    get_secret(args.project_id, args.location_id, args.secret_id)
+    delete_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)

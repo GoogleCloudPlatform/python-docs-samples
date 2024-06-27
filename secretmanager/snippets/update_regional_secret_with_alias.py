@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,20 +12,18 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
-"""
-command line application and sample code for getting metadata about a regional secret.
-"""
 
 import argparse
 
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_v1_get_regional_secret]
-def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> secretmanager_v1.GetSecretRequest:
+# [START secretmanager_v1_update_regional_secret_with_alias]
+def update_regional_secret_with_alias(
+    project_id: str, location_id: str, secret_id: str
+) -> secretmanager_v1.UpdateSecretRequest:
     """
-    Get information about the given secret. This only returns metadata about
-    the secret container, not any secret material.
+    Update the metadata about an existing regional secret.
     """
 
     # Import the Secret Manager client library.
@@ -41,12 +39,16 @@ def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> se
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # Get the secret.
-    response = client.get_secret(request={"name": name})
+    # Update the secret.
+    secret = {"name": name, "version_aliases": {"test": 1}}
+    update_mask = {"paths": ["version_aliases"]}
+    response = client.update_secret(
+        request={"secret": secret, "update_mask": update_mask}
+    )
 
-    # Print data about the secret.
-    print(f"Got secret {response.name}")
-    # [END secretmanager_v1_get_regional_secret]
+    # Print the new secret name.
+    print(f"Updated secret: {response.name}")
+    # [END secretmanager_v1_update_regional_secret_with_alias]
 
     return response
 
@@ -57,7 +59,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
-    parser.add_argument("secret_id", help="id of the secret to get")
+    parser.add_argument("--secret-id", required=True)
     args = parser.parse_args()
 
-    get_secret(args.project_id, args.location_id, args.secret_id)
+    update_secret_with_alias(args.project_id, args.location_id, args.secret_id)

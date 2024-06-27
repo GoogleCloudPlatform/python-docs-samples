@@ -19,13 +19,13 @@ command line application and sample code for creating a new regional secret.
 import argparse
 from typing import Optional
 
-from google.cloud import secretmanager_v1beta2
+from google.cloud import secretmanager_v1
 
 
 # [START secretmanager_v1_create_regional_secret]
-def create_secret(
+def create_regional_secret(
         project_id: str, location_id : str,  secret_id: str, ttl: Optional[str] = None
-) -> secretmanager_v1beta2.Secret:
+) -> secretmanager_v1.Secret:
     """
     Create a new regional secret with the given name. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
@@ -52,12 +52,13 @@ def create_secret(
     """
 
     # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1beta2
+    from google.cloud import secretmanager_v1
 
-    api_endpoint = f"staging-secretmanager.{location_id}.rep.sandbox.googleapis.com"
 
+    api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
+    
     # Create the Secret Manager client.
-    client = secretmanager_v1beta2.SecretManagerServiceClient(client_options={
+    client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
     })
 

@@ -13,7 +13,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for getting metadata about a regional secret.
+command line application and sample code for disabling a regional 
+secret version.
 """
 
 import argparse
@@ -21,11 +22,13 @@ import argparse
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_v1_get_regional_secret]
-def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> secretmanager_v1.GetSecretRequest:
+# [START secretmanager_v1_disable_regional_secret_version]
+def disable_regional_secret_version(
+    project_id: str, location_id: str, secret_id: str, version_id: str
+) -> secretmanager_v1.DisableSecretVersionRequest:
     """
-    Get information about the given secret. This only returns metadata about
-    the secret container, not any secret material.
+    Disable the given secret version. Future requests will throw an error until
+    the secret version is enabled. Other secrets versions are unaffected.
     """
 
     # Import the Secret Manager client library.
@@ -38,15 +41,14 @@ def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> se
         "api_endpoint": api_endpoint
             })
 
-    # Build the resource name of the secret.
-    name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
+    # Build the resource name of the secret version
+    name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
-    # Get the secret.
-    response = client.get_secret(request={"name": name})
+    # Disable the secret version.
+    response = client.disable_secret_version(request={"name": name})
 
-    # Print data about the secret.
-    print(f"Got secret {response.name}")
-    # [END secretmanager_v1_get_regional_secret]
+    print(f"Disabled secret version: {response.name}")
+    # [END secretmanager_v1_disable_regional_secret_version]
 
     return response
 
@@ -57,7 +59,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
-    parser.add_argument("secret_id", help="id of the secret to get")
+    parser.add_argument("secret_id", help="id of the secret from which to act")
+    parser.add_argument("version_id", help="id of the version to disable")
     args = parser.parse_args()
 
-    get_secret(args.project_id, args.location_id, args.secret_id)
+    disable_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
