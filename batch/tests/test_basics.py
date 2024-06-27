@@ -39,7 +39,7 @@ from ..logs.read_job_logs import print_job_logs
 PROJECT = google.auth.default()[1]
 REGION = "europe-central2"
 ZONE = "europe-central2-b"
-SECRET_NAME = "permanent-batch-testing"
+SECRET_NAME = "PERMANENT_BATCH_TESTING"
 PROJECT_NUMBER = (
     resourcemanager_v3.ProjectsClient()
     .get_project(name=f"projects/{PROJECT}")
@@ -158,6 +158,7 @@ def test_service_account_job(job_name, service_account):
 
 @flaky(max_runs=3, min_passes=1)
 def test_secret_manager_job(job_name):
+    service_account_email = "jenkins-and-travis@python-docs-samples-tests.iam.gserviceaccount.com"
     secrets = {SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"}
-    job = create_with_secret_manager(PROJECT, REGION, job_name, secrets)
+    job = create_with_secret_manager(PROJECT, REGION, job_name, secrets, service_account_email)
     _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))

@@ -13,13 +13,13 @@
 #  limitations under the License.
 
 # [START batch_create_using_secret_manager]
-from typing import Dict
+from typing import Dict, Optional
 
 from google.cloud import batch_v1
 
 
 def create_with_secret_manager(
-    project_id: str, region: str, job_name: str, secrets: Dict[str, str]
+    project_id: str, region: str, job_name: str, secrets: Dict[str, str], service_account_email: Optional[str] = None
 ) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
@@ -33,10 +33,12 @@ def create_with_secret_manager(
             available for Batch are listed on: https://cloud.google.com/batch/docs/get-started#locations
         job_name: the name of the job that will be created.
             It needs to be unique for each project and region pair.
-        secrets: secrets, which should be passed to the job.
+        secrets: secrets, which should be passed to the job. Environment variables should be capitalized
+        by convention https://google.github.io/styleguide/shellguide.html#constants-and-environment-variable-names
             The format should look like:
-                - {'secret-name': 'projects/{project_id}/secrets/{secret_name}/versions/{version}'}
+                - {'SECRET_NAME': 'projects/{project_id}/secrets/{SECRET_NAME}/versions/{version}'}
             version can be set to 'latest'.
+        service_account_email (optional): custom service account email
 
     Returns:
         A job object representing the job created.
@@ -70,6 +72,10 @@ def create_with_secret_manager(
     instances.policy = policy
     allocation_policy = batch_v1.AllocationPolicy()
     allocation_policy.instances = [instances]
+
+    service_account = batch_v1.ServiceAccount()
+    service_account.email = service_account_email
+    allocation_policy.service_account = service_account
 
     job = batch_v1.Job()
     job.task_groups = [group]
