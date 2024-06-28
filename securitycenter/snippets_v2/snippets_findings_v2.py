@@ -16,7 +16,8 @@
 
 """Examples of working with source and findings in Security Command Center."""
 
-def list_all_findings(organization_id):
+def list_all_findings(organization_id, location_id):
+  i = 0
   # [START securitycenter_list_all_findings]
   from google.cloud import securitycenter_v2
 
@@ -30,7 +31,13 @@ def list_all_findings(organization_id):
   parent = f"organizations/{organization_id}"
   # The "sources/-" suffix lists findings across all sources.  You
   # also use a specific source_name instead.
-  all_sources = f"{parent}/sources/-/locations/global"
+  all_sources = f"{parent}/sources/-/locations/{location_id}"
+  # Create the request dictionary
+  request = {"parent": all_sources}
+
+  # Print the request for debugging
+  print("Request: ", request)
+
   finding_result_iterator = client.list_findings(request={"parent": all_sources})
   for i, finding_result in enumerate(finding_result_iterator):
     print(
@@ -43,6 +50,7 @@ def list_all_findings(organization_id):
 
 
 def list_filtered_findings(source_name):
+  i = 0
   # [START securitycenter_list_filtered_findings]
   from google.cloud import securitycenter_v2
 
@@ -60,7 +68,7 @@ def list_filtered_findings(source_name):
   # You an also use a wild-card "-" for all sources:
   #   source_name = "organizations/111122222444/sources/-/locations/{location_id}"
   finding_result_iterator = client.list_findings(
-      request={"parent": source_name, "filter": 'category="MEDIUM_RISK_ONE"'}
+      request={"parent": source_name, "filter": 'severity="MEDIUM"'}
   )
   # Iterate an print all finding names and the resource they are
   # in reference to.
@@ -74,7 +82,7 @@ def list_filtered_findings(source_name):
   return i
 
 
-def group_all_findings(organization_id):
+def group_all_findings(organization_id, location_id):
   """Demonstrates grouping all findings across an organization."""
   i = 0
   # [START securitycenter_group_all_findings]
@@ -90,7 +98,7 @@ def group_all_findings(organization_id):
   parent = f"organizations/{organization_id}"
   # The "sources/-" suffix lists findings across all sources.  You
   # also use a specific source_name instead.
-  all_sources = f"{parent}/sources/-/locations/global"
+  all_sources = f"{parent}/sources/-/locations/{location_id}"
   group_result_iterator = client.group_findings(
       request={"parent": all_sources, "group_by": "category"}
   )
@@ -130,3 +138,4 @@ def group_filtered_findings(source_name):
     print((i + 1), group_result)
   # [END securitycenter_group_filtered_findings]
   return i
+
