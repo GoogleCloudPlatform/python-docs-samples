@@ -18,8 +18,6 @@ import os
 from discoveryengine import import_documents_sample
 from discoveryengine import list_documents_sample
 
-import pytest
-
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
 data_store_id = "test-structured-data-engine"
