@@ -64,7 +64,7 @@ def create_local_ssd_job(
     # so this value must be a multiple of 375 GB.
     # For example, for 2 local SSDs, set this value to 750 GB.
     disk.size_gb = 375
-    assert(disk.size_gb % 375 == 0)
+    assert disk.size_gb % 375 == 0
 
     # Policies are used to define on what kind of virtual machines the tasks will run on.
     # The allowed number of local SSDs depends on the machine type for your job's VMs.
