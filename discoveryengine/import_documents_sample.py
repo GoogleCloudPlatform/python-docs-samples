@@ -14,20 +14,6 @@
 #
 
 
-# [START genappbuilder_import_documents_bigquery]
-
-
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# bigquery_dataset = "YOUR_BIGQUERY_DATASET"
-# bigquery_table = "YOUR_BIGQUERY_TABLE"
-
-
 def import_documents_bigquery_sample(
     project_id: str,
     location: str,
@@ -35,6 +21,18 @@ def import_documents_bigquery_sample(
     bigquery_dataset: str,
     bigquery_table: str,
 ) -> str:
+    # [START genappbuilder_import_documents_bigquery]
+
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # bigquery_dataset = "YOUR_BIGQUERY_DATASET"
+    # bigquery_table = "YOUR_BIGQUERY_TABLE"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -80,23 +78,9 @@ def import_documents_bigquery_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_bigquery]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_bigquery]
-
-
-# [START genappbuilder_import_documents_gcs]
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# Format: `gs://bucket/directory/object.json` or `gs://bucket/directory/*.json`
-# gcs_uri = "YOUR_GCS_PATH"
 
 
 def import_documents_gcs_sample(
@@ -105,6 +89,17 @@ def import_documents_gcs_sample(
     data_store_id: str,
     gcs_uri: str,
 ) -> str:
+    # [START genappbuilder_import_documents_gcs]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # Format: `gs://bucket/directory/object.json` or `gs://bucket/directory/*.json`
+    # gcs_uri = "YOUR_GCS_PATH"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -148,26 +143,9 @@ def import_documents_gcs_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_gcs]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_gcs]
-
-
-# [START genappbuilder_import_documents_cloud_sql]
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# sql_project_id = "YOUR_SQL_PROJECT_ID"
-# sql_instance_id = "YOUR_SQL_INSTANCE_ID"
-# sql_database_id = "YOUR_SQL_DATABASE_ID"
-# sql_table_id = "YOUR_SQL_TABLE_ID"
-# gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
 
 
 def import_documents_cloud_sql_sample(
@@ -180,6 +158,20 @@ def import_documents_cloud_sql_sample(
     sql_table_id: str,
     gcs_staging_dir: str,
 ) -> str:
+    # [START genappbuilder_import_documents_cloud_sql]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # sql_project_id = "YOUR_SQL_PROJECT_ID"
+    # sql_instance_id = "YOUR_SQL_INSTANCE_ID"
+    # sql_database_id = "YOUR_SQL_DATABASE_ID"
+    # sql_table_id = "YOUR_SQL_TABLE_ID"
+    # gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -226,24 +218,9 @@ def import_documents_cloud_sql_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_cloud_sql]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_cloud_sql]
-
-# [START genappbuilder_import_documents_cloud_spanner]
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# spanner_project_id = "YOUR_SPANNER_PROJECT_ID"
-# spanner_instance_id = "YOUR_SPANNER_INSTANCE_ID"
-# spanner_database_id = "YOUR_SPANNER_DATABASE_ID"
-# spanner_table_id = "YOUR_SPANNER_TABLE_ID"
 
 
 def import_documents_cloud_spanner_sample(
@@ -255,6 +232,19 @@ def import_documents_cloud_spanner_sample(
     spanner_database_id: str,
     spanner_table_id: str,
 ) -> str:
+    # [START genappbuilder_import_documents_cloud_spanner]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # spanner_project_id = "YOUR_SPANNER_PROJECT_ID"
+    # spanner_instance_id = "YOUR_SPANNER_INSTANCE_ID"
+    # spanner_database_id = "YOUR_SPANNER_DATABASE_ID"
+    # spanner_table_id = "YOUR_SPANNER_TABLE_ID"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -300,25 +290,9 @@ def import_documents_cloud_spanner_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_cloud_spanner]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_cloud_spanner]
-
-
-# [START genappbuilder_import_documents_firestore]
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# firestore_project_id = "YOUR_FIRESTORE_PROJECT_ID"
-# firestore_database_id = "YOUR_FIRESTORE_DATABASE_ID"
-# firestore_collection_id = "YOUR_FIRESTORE_COLLECTION_ID"
-# gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
 
 
 def import_documents_firestore_sample(
@@ -330,6 +304,19 @@ def import_documents_firestore_sample(
     firestore_collection_id: str,
     gcs_staging_dir: str,
 ) -> str:
+    # [START genappbuilder_import_documents_firestore]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # firestore_project_id = "YOUR_FIRESTORE_PROJECT_ID"
+    # firestore_database_id = "YOUR_FIRESTORE_DATABASE_ID"
+    # firestore_collection_id = "YOUR_FIRESTORE_COLLECTION_ID"
+    # gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -375,24 +362,9 @@ def import_documents_firestore_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_firestore]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_firestore]
-
-
-# [START genappbuilder_import_documents_bigtable]
-from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
-
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = "YOUR_PROJECT_ID"
-# location = "YOUR_LOCATION" # Values: "global"
-# data_store_id = "YOUR_DATA_STORE_ID"
-# bigtable_project_id = "YOUR_BIGTABLE_PROJECT_ID"
-# bigtable_instance_id = "YOUR_BIGTABLE_INSTANCE_ID"
-# bigtable_table_id = "YOUR_BIGTABLE_TABLE_ID"
 
 
 def import_documents_bigtable_sample(
@@ -403,6 +375,18 @@ def import_documents_bigtable_sample(
     bigtable_instance_id: str,
     bigtable_table_id: str,
 ) -> str:
+    # [START genappbuilder_import_documents_bigtable]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # bigtable_project_id = "YOUR_BIGTABLE_PROJECT_ID"
+    # bigtable_instance_id = "YOUR_BIGTABLE_INSTANCE_ID"
+    # bigtable_table_id = "YOUR_BIGTABLE_TABLE_ID"
+
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -467,8 +451,6 @@ def import_documents_bigtable_sample(
     # Handle the response
     print(response)
     print(metadata)
+    # [END genappbuilder_import_documents_bigtable]
 
     return operation.operation.name
-
-
-# [END genappbuilder_import_documents_bigtable]
