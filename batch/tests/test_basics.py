@@ -28,6 +28,7 @@ from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_service_account import create_with_custom_service_account_job
+from ..create.create_with_ssd import create_local_ssd_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -39,7 +40,6 @@ from ..logs.read_job_logs import print_job_logs
 PROJECT = google.auth.default()[1]
 REGION = "europe-central2"
 ZONE = "europe-central2-b"
-
 TIMEOUT = 600  # 10 minutes
 
 WAIT_STATES = {
@@ -64,6 +64,11 @@ def service_account() -> str:
     project = client.get_project(request)
     project_number = project.name.split("/")[-1]
     return f"{project_number}-compute@developer.gserviceaccount.com"
+
+
+@pytest.fixture
+def disk_name():
+    return f"test-ssd-{uuid.uuid4().hex[:10]}"
 
 
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
@@ -144,3 +149,9 @@ def test_service_account_job(job_name, service_account):
     _test_body(
         job, additional_test=lambda: _check_service_account(job, service_account)
     )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[str]"):
+    job = create_local_ssd_job(PROJECT, REGION, job_name, disk_name)
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
