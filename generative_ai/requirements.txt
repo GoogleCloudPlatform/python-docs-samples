@@ -8,4 +8,5 @@ google-auth==2.29.0
 anthropic[vertex]==0.28.0
 langchain-core==0.1.52
 langchain-google-vertexai==1.0.3
+numpy<2
 openai==1.30.5
