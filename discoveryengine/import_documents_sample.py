@@ -156,7 +156,6 @@ def import_documents_cloud_sql_sample(
     sql_instance_id: str,
     sql_database_id: str,
     sql_table_id: str,
-    gcs_staging_dir: str,
 ) -> str:
     # [START genappbuilder_import_documents_cloud_sql]
     from google.api_core.client_options import ClientOptions
@@ -170,7 +169,6 @@ def import_documents_cloud_sql_sample(
     # sql_instance_id = "YOUR_SQL_INSTANCE_ID"
     # sql_database_id = "YOUR_SQL_DATABASE_ID"
     # sql_table_id = "YOUR_SQL_TABLE_ID"
-    # gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
 
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
@@ -199,7 +197,6 @@ def import_documents_cloud_sql_sample(
             instance_id=sql_instance_id,
             database_id=sql_database_id,
             table_id=sql_table_id,
-            gcs_staging_dir=gcs_staging_dir,
         ),
         # Options: `FULL`, `INCREMENTAL`
         reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
@@ -302,7 +299,6 @@ def import_documents_firestore_sample(
     firestore_project_id: str,
     firestore_database_id: str,
     firestore_collection_id: str,
-    gcs_staging_dir: str,
 ) -> str:
     # [START genappbuilder_import_documents_firestore]
     from google.api_core.client_options import ClientOptions
@@ -315,7 +311,6 @@ def import_documents_firestore_sample(
     # firestore_project_id = "YOUR_FIRESTORE_PROJECT_ID"
     # firestore_database_id = "YOUR_FIRESTORE_DATABASE_ID"
     # firestore_collection_id = "YOUR_FIRESTORE_COLLECTION_ID"
-    # gcs_staging_dir = "YOUR_GCS_DIR" # Format: `gs://bucket/directory/`
 
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
@@ -343,7 +338,6 @@ def import_documents_firestore_sample(
             project_id=firestore_project_id,
             database_id=firestore_database_id,
             collection_id=firestore_collection_id,
-            gcs_staging_dir=gcs_staging_dir,
         ),
         # Options: `FULL`, `INCREMENTAL`
         reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,

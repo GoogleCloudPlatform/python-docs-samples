@@ -58,7 +58,6 @@ def test_import_documents_cloud_sql():
     sql_instance_id = "vais-tests"
     sql_database_id = "test-db"
     sql_table_id = "products"
-    gcs_staging_dir = "gs://vais-test-staging/"
 
     operation_name = import_documents_sample.import_documents_cloud_sql_sample(
         project_id=project_id,
@@ -68,7 +67,6 @@ def test_import_documents_cloud_sql():
         sql_instance_id=sql_instance_id,
         sql_database_id=sql_database_id,
         sql_table_id=sql_table_id,
-        gcs_staging_dir=gcs_staging_dir,
     )
 
     assert "operations/import-documents" in operation_name
@@ -94,12 +92,10 @@ def test_import_documents_cloud_spanner():
     assert "operations/import-documents" in operation_name
 
 
-@pytest.mark.skip(reason="No Resources")
 def test_import_documents_firestore():
     firestore_project_id = project_id
-    firestore_database_id = "(default)"
+    firestore_database_id = "vais-tests"
     firestore_collection_id = "products"
-    gcs_staging_dir = "cloud-samples-data"
 
     operation_name = import_documents_sample.import_documents_firestore_sample(
         project_id=project_id,
@@ -108,7 +104,6 @@ def test_import_documents_firestore():
         firestore_project_id=firestore_project_id,
         firestore_database_id=firestore_database_id,
         firestore_collection_id=firestore_collection_id,
-        gcs_staging_dir=gcs_staging_dir,
     )
 
     assert "operations/import-documents" in operation_name
