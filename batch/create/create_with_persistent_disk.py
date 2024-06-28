@@ -17,7 +17,7 @@ from google.cloud import batch_v1
 
 
 def create_with_pd_job(
-    project_id: str, region: str, job_name: str, disk_name: str, zone: str
+    project_id: str, region: str, job_name: str, disk_name: str, zone: str, existing_disk_name=None
 ) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
@@ -30,6 +30,7 @@ def create_with_pd_job(
         job_name: the name of the job that will be created.
             It needs to be unique for each project and region pair.
         disk_name: name of the disk to be mounted for your Job.
+        existing_disk_name(optional): existing disk name, which you want to attach to a job
 
     Returns:
         A job object representing the job created.
@@ -71,6 +72,11 @@ def create_with_pd_job(
     attached_disk.new_disk = disk
     attached_disk.device_name = disk_name
     policy.disks = [attached_disk]
+
+    if existing_disk_name:
+        attached_disk2 = batch_v1.AllocationPolicy.AttachedDisk()
+        attached_disk2.existing_disk = f"projects/{project_id}/regions/{region}/{existing_disk_name}"
+        policy.disks.append(attached_disk2)
 
     instances = batch_v1.AllocationPolicy.InstancePolicyOrTemplate()
     instances.policy = policy
