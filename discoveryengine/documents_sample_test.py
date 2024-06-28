@@ -52,10 +52,9 @@ def test_import_documents_gcs():
     assert "operations/import-documents" in operation_name
 
 
-@pytest.mark.skip(reason="No Resources")
 def test_import_documents_cloud_sql():
     sql_project_id = project_id
-    sql_instance_id = "vais-tests"
+    sql_instance_id = "vertex-ai-search-tests"
     sql_database_id = "test-db"
     sql_table_id = "products"
 
