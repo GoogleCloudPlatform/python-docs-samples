@@ -10,6 +10,8 @@ For more information about using RunInference, see [Get started with AI/ML pipel
 
 ## Before you begin
 
+Make sure you have followed the [Dataflow setup instructions](../../README.md).
+
 Follow the steps in this section to create the necessary environment to run this workflow.
 
 ### Enable Google Cloud services
@@ -18,12 +20,33 @@ This workflow uses multiple Google Cloud products, including Dataflow, Pub/Sub, 
 
 * Dataflow
 * Pub/Sub
+* Compute Engine
+* Cloud Logging
 * Google Cloud Storage
+* Google Cloud Storage JSON
+* Cloud Build
+* Datastore
+* Cloud Resource Manager
 * Artifact Registry
 
 Using these services incurs billing charges.
 
 Your Google Cloud project also needs to have Nvidia L4 GPU quota. For more information, see [GPU quota](https://cloud.google.com/compute/resource-usage#gpu_quota) in the Google Cloud documentation.
+
+### Download and save the model
+
+Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/google/gemma/pyTorch/1.1-2b-it). This download is a `.tar.gz` archive. Extract the archive into a directory and name it `pytorch_model`. 
+
+### Create a cloud storage bucket
+
+Click [here to create a GCS bucket](https://console.cloud.google.com/storage/create-bucket) or run the following commands:
+
+```sh
+export GCS_BUCKET="your--bucket"
+gsutil mb gs://$GCS_BUCKET
+```
+
+Make sure your GCS bucket name does __not__ include the `gs://` prefix
 
 ### Create a custom container
 
@@ -31,36 +54,7 @@ To build a custom container, use Docker. This repository contains a Dockerfile t
 
 ### Create Pub/Sub topics for input and output
 
-To create your Pub/Sub source and sink, follow the instructions in [Create a Pub/Sub topic](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console) in the Google Cloud documentation. For this example, create two topics, one input topic and one output topic. For input, the topic must have a subscription that you can provide to the Gemma model. 
-
-### Download and save the model
-
-Save a version of the Gemma 2B model. Downloaded the model from [Kaggle](https://www.kaggle.com/models/google/gemma/pyTorch/1.1-2b-it). This download is a `.tar.gz` archive. Extract the archive into a directory and name it `pytorch_model`. 
-
-### Optional: Create a new virtual environment
-
-The Python major and minor version contained in the custom container must match the environment used for job submission. For this example, use Python version 3.10.
-
-```
-python3.10 -m venv /tmp/venv
-source /tmp/venv/bin/activate
-```
-
-For more information, see [venv — Creation of virtual environments](https://docs.python.org/3/library/venv.html).
-
-### Install dependencies
-
-Install Apache Beam and the dependencies required to run the pipeline in your local environment. 
-
-```
-pip install -U -r requirements.txt
-```
-
-This example also requires access to the base class for the PyTorch implementation of Gemma.
-```
-git clone https://github.com/google/gemma_pytorch.git
-pip install ./gemma_pytorch
-```
+To create your Pub/Sub source and sink, follow the instructions in [Create a Pub/Sub topic](https://cloud.google.com/pubsub/docs/create-topic#pubsub_create_topic-Console) in the Google Cloud documentation. For this example, create two topics, one input topic and one output topic. Follow the instructions in [Create pull subscriptions](https://cloud.google.com/pubsub/docs/create-subscription) to create a pull subscription for each of the two topics you jsut created. The input subscription allows you to provide input to the pipeline, while the output subscription will allow you to see the output from the pipeline during and after execution.
 
 ## Code overview
 
@@ -135,12 +129,12 @@ class FormatOutput(beam.DoFn):
 ## Build the Flex Template
 Run the following code from the directory to build the Dataflow flex template.
 
-- Replace `$TEMPLATE_FILE` with a Google Cloud Storage path written as a JSON file.
+- Replace `$GCS_BUCKET` with a Google Cloud Storage bucket.
 - Set `SDK_CONTAINER_IMAGE` to the name of the Docker image created previously.
 - `$PROJECT` is the Google Cloud project that you created previously. 
 
 ```sh
-gcloud dataflow flex-template build $TEMPLATE_FILE \
+gcloud dataflow flex-template build gs://$GCS_BUCKET/config.json \
   --image $SDK_CONTAINER_IMAGE \
   --sdk-language "PYTHON" \
   --metadata-file metadata.json \
@@ -148,25 +142,28 @@ gcloud dataflow flex-template build $TEMPLATE_FILE \
 ```
 
 ## Start the pipeline
-To start the Dataflow streaming job, run the following code from the directory. Replace `$TEMPLATE_FILE`, `$REGION`, `$GCS_BUCKET`, `$INPUT_SUBSCRIPTION`, `$OUTPUT_TOPIC`, `$SDK_CONTAINER_IMAGE`, and `$PROJECT` with the Google Cloud project resources you created previously. It might take as much as 15 minutes for the worker to start up and to begin accepting messages from the input Pub/Sub topic. 
+To start the Dataflow streaming job, run the following code from the directory. Replace `$TEMPLATE_FILE`, `$REGION`, `$GCS_BUCKET`, `$INPUT_SUBSCRIPTION`, `$OUTPUT_TOPIC`, `$SDK_CONTAINER_IMAGE`, and `$PROJECT` with the Google Cloud project resources you created previously. Ensure that `$INPUT_SUBSCRIPTION` and `$OUTPUT_TOPIC` are the fully qualified subscription and topic names, respectively. It might take as much as 30 minutes for the worker to start up and to begin accepting messages from the input Pub/Sub topic. 
 
 ```sh
 gcloud dataflow flex-template run "gemma-flex-`date +%Y%m%d-%H%M%S`" \
   --template-file-gcs-location $TEMPLATE_FILE \
   --region $REGION \
-  --staging-location $GCS_BUCKET \
+  --temp-location gs://$GCS_BUCKET/tmp \
+  --staging-location gs://$GCS_BUCKET \
   --parameters messages_subscription=$INPUT_SUBSCRIPTION \
   --parameters responses_topic=$OUTPUT_TOPIC \
   --parameters device="GPU" \
-  --parameters sdk_container_image=$SDK_CONTAINER_IMAGE \
-  --parameters dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
+  --sdk_container_image=$SDK_CONTAINER_IMAGE \
+  --dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
   --project $PROJECT \
   --worker-machine-type "g2-standard-4"
 ```
 
 ## Send a prompt to the model and check the response
 
-In the Google Cloud console, navigate to the Pub/Sub topics page, and then select your input topic. On the **Messages** tab, click **Publish Message**. Add a message for the Dataflow job to pick up and pass through the model. The Dataflow job outputs the response to the Pub/Sub sink topic. To check the response from the model, you can manually pull messages from the destination topic. For more information, see [Publish messages](https://cloud.google.com/pubsub/docs/publisher#publish-messages) in the Google Cloud documentation.
+In the Google Cloud console, navigate to the Pub/Sub topics page, and then select your input topic. On the **Messages** tab, click **Publish Message**. Add a message for the Dataflow job to pick up and pass through the model. For example, your input message could be "Tell the the sentiment of the following sentence: I like pineapple on pizza."
+
+The Dataflow job outputs the response to the Pub/Sub sink topic. To check the response from the model, you can manually pull messages from the destination topic. For more information, see [Publish messages](https://cloud.google.com/pubsub/docs/publisher#publish-messages) in the Google Cloud documentation.
 
 ## Clean up resources
 
@@ -176,4 +173,4 @@ To avoid incurring charges to your Google Cloud account for the resources used i
 *   Cancel the streaming Dataflow job.
 *   Delete the Pub/Sub topic and subscriptions.
 *   Delete the custom container from Artifact Registry.
-*   Empty the `tmp` directory of your Google Cloud Storage bucket.
+*   Delete the created GCS bucket.

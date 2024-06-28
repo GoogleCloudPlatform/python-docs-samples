@@ -14,11 +14,7 @@
 
 import logging
 
-from typing import Any
-from typing import Dict
-from typing import Iterable
-from typing import Optional
-from typing import Sequence
+from typing import Any, Dict, Iterable, Optional, Sequence
 
 import apache_beam as beam
 from apache_beam.ml.inference.base import ModelHandler
@@ -178,5 +174,5 @@ if __name__ == "__main__":
                 handler)  # Send the prompts to the model and get responses.
             |
             "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
-            | "Publish Result" >> beam.io.gcp.pubsub.WriteStringsToPubSub(
-                topic=args.responses_topic))
+            | "Publish Result" >>
+            beam.io.gcp.pubsub.WriteToPubSub(topic=args.responses_topic))
