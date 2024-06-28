@@ -51,6 +51,12 @@ def create_with_pd_job(
     volume.mount_path = f"/mnt/disks/{disk_name}"
     task.volumes = [volume]
 
+    if existing_disk_name:
+        volume2 = batch_v1.Volume()
+        volume2.device_name = existing_disk_name
+        volume2.mount_path = f"/mnt/disks/{existing_disk_name}"
+        task.volumes.append(volume2)
+
     # Tasks are grouped inside a job using TaskGroups.
     # Currently, it's possible to have only one task group.
     group = batch_v1.TaskGroup()
@@ -75,7 +81,8 @@ def create_with_pd_job(
 
     if existing_disk_name:
         attached_disk2 = batch_v1.AllocationPolicy.AttachedDisk()
-        attached_disk2.existing_disk = f"projects/{project_id}/regions/{region}/{existing_disk_name}"
+        attached_disk2.existing_disk = f"projects/{project_id}/zones/{zone}/disks/{existing_disk_name}"
+        attached_disk2.device_name = existing_disk_name
         policy.disks.append(attached_disk2)
 
     instances = batch_v1.AllocationPolicy.InstancePolicyOrTemplate()
