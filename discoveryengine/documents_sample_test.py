@@ -107,11 +107,10 @@ def test_import_documents_firestore():
     assert "operations/import-documents" in operation_name
 
 
-@pytest.mark.skip(reason="No Resources")
 def test_import_documents_bigtable():
     bigtable_project_id = project_id
-    bigtable_instance_id = "test-instance"
-    bigtable_table_id = "products"
+    bigtable_instance_id = "bigtable-test"
+    bigtable_table_id = "vais-test"
 
     operation_name = import_documents_sample.import_documents_bigtable_sample(
         project_id=project_id,
