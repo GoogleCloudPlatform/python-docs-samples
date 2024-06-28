@@ -15,21 +15,34 @@
 
 import os
 
+import pytest
+
 from discoveryengine import import_documents_sample
 from discoveryengine import list_documents_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
 data_store_id = "test-structured-data-engine"
-gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/empty.json"
 
-# Empty Dataset
-bigquery_dataset = "genappbuilder_test"
-bigquery_table = "import_documents_test"
+
+def test_import_documents_bigquery():
+    # Empty Dataset
+    bigquery_dataset = "genappbuilder_test"
+    bigquery_table = "import_documents_test"
+    operation_name = import_documents_sample.import_documents_bigquery_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        bigquery_dataset=bigquery_dataset,
+        bigquery_table=bigquery_table,
+    )
+
+    assert "operations/import-documents" in operation_name
 
 
 def test_import_documents_gcs():
-    operation_name = import_documents_sample.import_documents_sample(
+    gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/empty.json"
+    operation_name = import_documents_sample.import_documents_gcs_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
@@ -39,13 +52,81 @@ def test_import_documents_gcs():
     assert "operations/import-documents" in operation_name
 
 
-def test_import_documents_bigquery():
-    operation_name = import_documents_sample.import_documents_sample(
+@pytest.mark.skip(reason="No Resources")
+def test_import_documents_cloud_sql():
+    sql_project_id = project_id
+    sql_instance_id = "vais-tests"
+    sql_database_id = "test-db"
+    sql_table_id = "products"
+    gcs_staging_dir = "gs://vais-test-staging/"
+
+    operation_name = import_documents_sample.import_documents_cloud_sql_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
-        bigquery_dataset=bigquery_dataset,
-        bigquery_table=bigquery_table,
+        sql_project_id=sql_project_id,
+        sql_instance_id=sql_instance_id,
+        sql_database_id=sql_database_id,
+        sql_table_id=sql_table_id,
+        gcs_staging_dir=gcs_staging_dir,
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
+@pytest.mark.skip(reason="No Resources")
+def test_import_documents_cloud_spanner():
+    spanner_project_id = project_id
+    spanner_instance_id = "test-instance"
+    spanner_database_id = "test-db"
+    spanner_table_id = "products"
+
+    operation_name = import_documents_sample.import_documents_cloud_spanner_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        spanner_project_id=spanner_project_id,
+        spanner_instance_id=spanner_instance_id,
+        spanner_database_id=spanner_database_id,
+        spanner_table_id=spanner_table_id,
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
+@pytest.mark.skip(reason="No Resources")
+def test_import_documents_firestore():
+    firestore_project_id = project_id
+    firestore_database_id = "(default)"
+    firestore_collection_id = "products"
+    gcs_staging_dir = "cloud-samples-data"
+
+    operation_name = import_documents_sample.import_documents_firestore_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        firestore_project_id=firestore_project_id,
+        firestore_database_id=firestore_database_id,
+        firestore_collection_id=firestore_collection_id,
+        gcs_staging_dir=gcs_staging_dir,
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
+@pytest.mark.skip(reason="No Resources")
+def test_import_documents_bigtable():
+    bigtable_project_id = project_id
+    bigtable_instance_id = "test-instance"
+    bigtable_table_id = "products"
+
+    operation_name = import_documents_sample.import_documents_bigtable_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        bigtable_project_id=bigtable_project_id,
+        bigtable_instance_id=bigtable_instance_id,
+        bigtable_table_id=bigtable_table_id,
     )
 
     assert "operations/import-documents" in operation_name
