@@ -171,6 +171,7 @@ To avoid incurring charges to your Google Cloud account for the resources used i
 
 
 *   Cancel the streaming Dataflow job.
+*   **Optional**: Archive the streaming Dataflow job.
 *   Delete the Pub/Sub topic and subscriptions.
 *   Delete the custom container from Artifact Registry.
 *   Delete the created GCS bucket.
