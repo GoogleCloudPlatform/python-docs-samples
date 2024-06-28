@@ -71,14 +71,13 @@ def test_import_documents_cloud_sql():
     assert "operations/import-documents" in operation_name
 
 
-@pytest.mark.skip(reason="No Resources")
-def test_import_documents_cloud_spanner():
+def test_import_documents_spanner():
     spanner_project_id = project_id
     spanner_instance_id = "test-instance"
-    spanner_database_id = "test-db"
+    spanner_database_id = "vais-test-db"
     spanner_table_id = "products"
 
-    operation_name = import_documents_sample.import_documents_cloud_spanner_sample(
+    operation_name = import_documents_sample.import_documents_spanner_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,

@@ -220,7 +220,7 @@ def import_documents_cloud_sql_sample(
     return operation.operation.name
 
 
-def import_documents_cloud_spanner_sample(
+def import_documents_spanner_sample(
     project_id: str,
     location: str,
     data_store_id: str,
@@ -229,7 +229,7 @@ def import_documents_cloud_spanner_sample(
     spanner_database_id: str,
     spanner_table_id: str,
 ) -> str:
-    # [START genappbuilder_import_documents_cloud_spanner]
+    # [START genappbuilder_import_documents_spanner]
     from google.api_core.client_options import ClientOptions
     from google.cloud import discoveryengine
 
@@ -264,7 +264,7 @@ def import_documents_cloud_spanner_sample(
 
     request = discoveryengine.ImportDocumentsRequest(
         parent=parent,
-        cloud_spanner_source=discoveryengine.SpannerSource(
+        spanner_source=discoveryengine.SpannerSource(
             project_id=spanner_project_id,
             instance_id=spanner_instance_id,
             database_id=spanner_database_id,
@@ -287,7 +287,7 @@ def import_documents_cloud_spanner_sample(
     # Handle the response
     print(response)
     print(metadata)
-    # [END genappbuilder_import_documents_cloud_spanner]
+    # [END genappbuilder_import_documents_spanner]
 
     return operation.operation.name
 
