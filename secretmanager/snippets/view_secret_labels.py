@@ -20,8 +20,8 @@ secret.
 import argparse
 
 
-# [START secretmanager_list_secret_labels]
-def list_secret_labels(project_id: str, secret_id: str) -> None:
+# [START secretmanager_view_secret_labels]
+def view_secret_labels(project_id: str, secret_id: str) -> None:
     """
     List all secret versions in the given secret and their metadata.
     """
@@ -42,7 +42,7 @@ def list_secret_labels(project_id: str, secret_id: str) -> None:
         print(f"{key} : {response.labels[key]}")
 
 
-# [END secretmanager_list_secret_labels]
+# [END secretmanager_view_secret_labels]
 
 
 if __name__ == "__main__":

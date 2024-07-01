@@ -44,13 +44,12 @@ from iam_revoke_access import iam_revoke_access
 from list_secret_versions import list_secret_versions
 from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
-from list_secret_labels import list_secret_labels
 from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_etag import update_secret_with_etag
-
+from view_secret_labels import view_secret_labels
 
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
@@ -392,11 +391,11 @@ def test_list_secret_versions_with_filter(
     assert f"Found secret version: {disabled.name}" not in out
 
 
-def test_list_secret_labels(
+def test_view_secret_labels(
         capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str], label_key: str
 ) -> None:
     project_id, secret_id, _ = secret
-    list_secret_labels(project_id, secret_id)
+    view_secret_labels(project_id, secret_id)
 
     out, _ = capsys.readouterr()
     assert label_key in out
