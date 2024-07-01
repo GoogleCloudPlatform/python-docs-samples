@@ -17,7 +17,12 @@ from google.cloud import batch_v1
 
 
 def create_with_pd_job(
-    project_id: str, region: str, job_name: str, disk_name: str, zone: str, existing_disk_name=None
+    project_id: str,
+    region: str,
+    job_name: str,
+    disk_name: str,
+    zone: str,
+    existing_disk_name=None,
 ) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
@@ -41,7 +46,11 @@ def create_with_pd_job(
     task = batch_v1.TaskSpec()
     runnable = batch_v1.Runnable()
     runnable.script = batch_v1.Runnable.Script()
-    runnable.script.text = "echo Hello world from task ${BATCH_TASK_INDEX}. >> /mnt/disks/" + disk_name + "/output_task_${BATCH_TASK_INDEX}.txt"
+    runnable.script.text = (
+        "echo Hello world from task ${BATCH_TASK_INDEX}. >> /mnt/disks/"
+        + disk_name
+        + "/output_task_${BATCH_TASK_INDEX}.txt"
+    )
     task.runnables = [runnable]
     task.max_retry_count = 2
     task.max_run_duration = "3600s"
@@ -81,7 +90,9 @@ def create_with_pd_job(
 
     if existing_disk_name:
         attached_disk2 = batch_v1.AllocationPolicy.AttachedDisk()
-        attached_disk2.existing_disk = f"projects/{project_id}/zones/{zone}/disks/{existing_disk_name}"
+        attached_disk2.existing_disk = (
+            f"projects/{project_id}/zones/{zone}/disks/{existing_disk_name}"
+        )
         attached_disk2.device_name = existing_disk_name
         policy.disks.append(attached_disk2)
 

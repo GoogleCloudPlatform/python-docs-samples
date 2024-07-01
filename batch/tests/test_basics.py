@@ -169,5 +169,11 @@ def test_pd_job(job_name, disk_name):
     region = "europe-north1"
     zone = "europe-north1-c"
     existing_disk_name = "permanent-batch-testing"
-    job = create_with_pd_job(PROJECT, region, job_name, disk_name, zone, existing_disk_name)
-    _test_body(job, additional_test=lambda: _check_policy(job, job_name, disk_name), region=region)
+    job = create_with_pd_job(
+        PROJECT, region, job_name, disk_name, zone, existing_disk_name
+    )
+    _test_body(
+        job,
+        additional_test=lambda: _check_policy(job, job_name, disk_name),
+        region=region,
+    )
