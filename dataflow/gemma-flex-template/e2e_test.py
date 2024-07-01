@@ -46,7 +46,7 @@ from conftest import Utils
 
 import pytest
 
-DATAFLOW_MACHINE_TYPE = "e2-standard-4"
+DATAFLOW_MACHINE_TYPE = "g2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/pytorch_model"
 NAME = "dataflow/gemma-flex-template/streaming"
 
@@ -117,10 +117,13 @@ def dataflow_job(
         parameters={
             "messages_subscription": messages_subscription,
             "responses_topic": responses_topic,
-            "device": "CPU",
+            "device": "GPU",
             "sdk_container_image": f"gcr.io/{project}/{flex_template_image}",
             "machine_type": f"{DATAFLOW_MACHINE_TYPE}",
         },
+        additional_experiments={
+            "worker_accelerator" : "type:nvidia-l4;count:1;install-nvidia-driver:5xx",
+        }
     )
 
 

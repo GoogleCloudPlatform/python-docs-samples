@@ -794,6 +794,7 @@ class Utils:
         parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
+        additional_experiments: dict[str,str] = {},
     ) -> str:
         import yaml
 
@@ -814,6 +815,11 @@ class Utils:
             f"--parameters={name}={value}"
             for name, value in {
                 **parameters,
+            }.items()
+        ] + [
+            f"--additional-experiments={name}={value}"
+            for name, value in {
+                **additional_experiments,
             }.items()
         ]
         logging.info(f"{cmd}")

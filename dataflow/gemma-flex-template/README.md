@@ -153,8 +153,8 @@ gcloud dataflow flex-template run "gemma-flex-`date +%Y%m%d-%H%M%S`" \
   --parameters messages_subscription=$INPUT_SUBSCRIPTION \
   --parameters responses_topic=$OUTPUT_TOPIC \
   --parameters device="GPU" \
-  --sdk_container_image=$SDK_CONTAINER_IMAGE \
-  --dataflow_service_options="worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
+  --parameters sdk_container_image=$SDK_CONTAINER_IMAGE \
+  --additional-experiments "worker_accelerator=type:nvidia-l4;count:1;install-nvidia-driver:5xx" \
   --project $PROJECT \
   --worker-machine-type "g2-standard-4"
 ```
