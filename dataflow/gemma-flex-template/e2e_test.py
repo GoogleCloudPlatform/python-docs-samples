@@ -122,7 +122,7 @@ def dataflow_job(
             "machine_type": f"{DATAFLOW_MACHINE_TYPE}",
         },
         additional_experiments={
-            "worker_accelerator" : "type:nvidia-l4;count:1;install-nvidia-driver:5xx",
+            "worker_accelerator" : "type:nvidia-l4;count:1;install-nvidia-driver",
         }
     )
 
