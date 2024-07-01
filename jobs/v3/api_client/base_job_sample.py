@@ -79,7 +79,6 @@ def create_job(client_service, job_to_be_created):
 
 
 # [START job_get_job]
-# [START get_job]
 def get_job(client_service, job_name):
     try:
         job_existed = client_service.projects().jobs().get(name=job_name).execute()
@@ -90,7 +89,6 @@ def get_job(client_service, job_name):
         raise e
 
 
-# [END get_job]
 # [END job_get_job]
 
 
