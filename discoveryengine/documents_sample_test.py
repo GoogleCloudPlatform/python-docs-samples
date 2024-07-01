@@ -123,6 +123,8 @@ def test_import_documents_bigtable():
 
 
 def test_import_documents_healthcare_fhir_sample():
+    location = "us"
+    data_store_id = "healthcare-search-test"
     healthcare_project_id = project_id
     healthcare_location = "us-central1"
     healthcare_dataset_id = "vais_testing"

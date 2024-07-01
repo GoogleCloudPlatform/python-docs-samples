@@ -465,7 +465,7 @@ def import_documents_healthcare_fhir_sample(
 
     # TODO(developer): Uncomment these variables before running the sample.
     # project_id = "YOUR_PROJECT_ID"
-    # location = "YOUR_LOCATION" # Values: "global"
+    # location = "YOUR_LOCATION" # Values: "us"
     # data_store_id = "YOUR_DATA_STORE_ID"
     # healthcare_project_id = "YOUR_HEALTHCARE_PROJECT_ID"
     # healthcare_location = "YOUR_HEALTHCARE_LOCATION"
@@ -494,7 +494,7 @@ def import_documents_healthcare_fhir_sample(
 
     request = discoveryengine.ImportDocumentsRequest(
         parent=parent,
-        firestore_source=discoveryengine.FhirStoreSource(
+        fhir_store_source=discoveryengine.FhirStoreSource(
             fhir_store=f"projects/{healthcare_project_id}/locations/{healthcare_location}/datasets/{healthcare_dataset_id}/fhirStores/{healthcare_fihr_store_id}",
         ),
         # Options: `FULL`, `INCREMENTAL`
