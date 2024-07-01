@@ -448,3 +448,72 @@ def import_documents_bigtable_sample(
     # [END genappbuilder_import_documents_bigtable]
 
     return operation.operation.name
+
+
+def import_documents_healthcare_fhir_sample(
+    project_id: str,
+    location: str,
+    data_store_id: str,
+    healthcare_project_id: str,
+    healthcare_location: str,
+    healthcare_dataset_id: str,
+    healthcare_fihr_store_id: str,
+) -> str:
+    # [START genappbuilder_import_documents_healthcare_fhir]
+    from google.api_core.client_options import ClientOptions
+    from google.cloud import discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION" # Values: "global"
+    # data_store_id = "YOUR_DATA_STORE_ID"
+    # healthcare_project_id = "YOUR_HEALTHCARE_PROJECT_ID"
+    # healthcare_location = "YOUR_HEALTHCARE_LOCATION"
+    # healthcare_dataset_id = "YOUR_HEALTHCARE_DATASET_ID"
+    # healthcare_fihr_store_id = "YOUR_HEALTHCARE_FHIR_STORE_ID"
+
+    #  For more information, refer to:
+    # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-discoveryengine.googleapis.com")
+        if location != "global"
+        else None
+    )
+
+    # Create a client
+    client = discoveryengine.DocumentServiceClient(client_options=client_options)
+
+    # The full resource name of the search engine branch.
+    # e.g. projects/{project}/locations/{location}/dataStores/{data_store_id}/branches/{branch}
+    parent = client.branch_path(
+        project=project_id,
+        location=location,
+        data_store=data_store_id,
+        branch="default_branch",
+    )
+
+    request = discoveryengine.ImportDocumentsRequest(
+        parent=parent,
+        firestore_source=discoveryengine.FhirStoreSource(
+            fhir_store=f"projects/{healthcare_project_id}/locations/{healthcare_location}/datasets/{healthcare_dataset_id}/fhirStores/{healthcare_fihr_store_id}",
+        ),
+        # Options: `FULL`, `INCREMENTAL`
+        reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.FULL,
+    )
+
+    # Make the request
+    operation = client.import_documents(request=request)
+
+    print(f"Waiting for operation to complete: {operation.operation.name}")
+    response = operation.result()
+
+    # Once the operation is complete,
+    # get information from operation metadata
+    metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
+
+    # Handle the response
+    print(response)
+    print(metadata)
+    # [END genappbuilder_import_documents_healthcare_fhir]
+
+    return operation.operation.name

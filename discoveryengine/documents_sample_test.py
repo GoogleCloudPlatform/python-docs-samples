@@ -122,6 +122,25 @@ def test_import_documents_bigtable():
     assert "operations/import-documents" in operation_name
 
 
+def test_import_documents_healthcare_fhir_sample():
+    healthcare_project_id = project_id
+    healthcare_location = "us-central1"
+    healthcare_dataset_id = "vais_testing"
+    healthcare_fihr_store_id = "vais_test_fihr_data"
+
+    operation_name = import_documents_sample.import_documents_healthcare_fhir_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        healthcare_project_id=healthcare_project_id,
+        healthcare_location=healthcare_location,
+        healthcare_dataset_id=healthcare_dataset_id,
+        healthcare_fihr_store_id=healthcare_fihr_store_id,
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
 def test_list_documents():
     response = list_documents_sample.list_documents_sample(
         project_id=project_id,
