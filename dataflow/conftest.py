@@ -850,7 +850,7 @@ class Utils:
             f"--project={project}",
             f"--region={region}",
             f"--staging-location=gs://{bucket_name}/staging",
-            f"--temp-location'gs://{bucket_name}/staging",
+            f"--temp-location=gs://{bucket_name}/staging",
         ] + [
             f"--parameters={name}={value}"
             for name, value in {

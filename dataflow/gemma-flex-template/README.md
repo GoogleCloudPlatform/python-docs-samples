@@ -10,7 +10,7 @@ For more information about using RunInference, see [Get started with AI/ML pipel
 
 ## Before you begin
 
-Make sure you have followed the [Dataflow setup instructions](../../README.md).
+Make sure you have followed the [Dataflow setup instructions](/dataflow/README.md).
 
 Follow the steps in this section to create the necessary environment to run this workflow.
 
