@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START datastore_quickstart_python]
-# [START ndb_context_usage]
 # [START ndb_import]
 from google.cloud import ndb
 
@@ -35,7 +34,6 @@ def list_books():
             print(book.to_dict())
 
 
-# [END ndb_context_usage]
 # [END datastore_quickstart_python]
 
 if __name__ == "__main__":
