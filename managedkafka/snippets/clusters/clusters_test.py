@@ -14,17 +14,15 @@
 
 from unittest import mock
 from unittest.mock import MagicMock
-from google.cloud import managedkafka_v1
-from google.api_core.operation import Operation
-from google.protobuf import message
 
-import get_cluster
 import create_cluster
 import delete_cluster
-import update_cluster
+import get_cluster
+from google.api_core.operation import Operation
+from google.cloud import managedkafka_v1
 import list_clusters
-
 import pytest
+import update_cluster
 
 PROJECT_ID = "test-project-id"
 REGION = "us-central1"

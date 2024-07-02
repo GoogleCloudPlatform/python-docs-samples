@@ -14,14 +14,13 @@
 
 from unittest import mock
 from unittest.mock import MagicMock
-from google.cloud import managedkafka_v1
 
-import get_consumer_group
-import update_consumer_group
-import list_consumer_groups
 import delete_consumer_group
-
+import get_consumer_group
+from google.cloud import managedkafka_v1
+import list_consumer_groups
 import pytest
+import update_consumer_group
 
 PROJECT_ID = "test-project-id"
 REGION = "us-central1"

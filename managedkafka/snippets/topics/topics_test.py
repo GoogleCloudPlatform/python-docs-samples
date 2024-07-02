@@ -14,15 +14,14 @@
 
 from unittest import mock
 from unittest.mock import MagicMock
-from google.cloud import managedkafka_v1
 
 import create_topic
-import get_topic
-import update_topic
-import list_topics
 import delete_topic
-
+import get_topic
+from google.cloud import managedkafka_v1
+import list_topics
 import pytest
+import update_topic
 
 PROJECT_ID = "test-project-id"
 REGION = "us-central1"
