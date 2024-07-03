@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import time
+from typing import Tuple
 import uuid
 
 from flaky import flaky
@@ -110,9 +111,10 @@ def _check_tasks(job_name):
     print("Tasks tested")
 
 
-def _check_policy(job: batch_v1.Job, job_name: str, disk_name: str):
+def _check_policy(job: batch_v1.Job, job_name: str, disk_names: Tuple[str]):
     assert job_name in job.name
-    assert job.allocation_policy.instances[0].policy.disks[0].device_name == disk_name
+    assert job.allocation_policy.instances[0].policy.disks[0].device_name in disk_names
+    assert job.allocation_policy.instances[0].policy.disks[1].device_name in disk_names
 
 
 def _check_logs(job, capsys):
@@ -172,8 +174,9 @@ def test_pd_job(job_name, disk_name):
     job = create_with_pd_job(
         PROJECT, region, job_name, disk_name, zone, existing_disk_name
     )
+    disk_names = (disk_name, existing_disk_name)
     _test_body(
         job,
-        additional_test=lambda: _check_policy(job, job_name, disk_name),
+        additional_test=lambda: _check_policy(job, job_name, disk_names),
         region=region,
     )
