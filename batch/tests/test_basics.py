@@ -64,12 +64,7 @@ def job_name():
 
 @pytest.fixture()
 def service_account() -> str:
-    client = resourcemanager_v3.ProjectsClient()
-    request = resourcemanager_v3.GetProjectRequest()
-    request.name = f"projects/{PROJECT}"
-    project = client.get_project(request)
-    project_number = project.name.split("/")[-1]
-    return f"{project_number}-compute@developer.gserviceaccount.com"
+    return f"{PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
 
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
@@ -157,14 +152,12 @@ def test_service_account_job(job_name, service_account):
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_secret_manager_job(job_name):
-    service_account_email = (
-        "jenkins-and-travis@python-docs-samples-tests.iam.gserviceaccount.com"
-    )
+def test_secret_manager_job(job_name, service_account):
+
     secrets = {
         SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
     }
     job = create_with_secret_manager(
-        PROJECT, REGION, job_name, secrets, service_account_email
+        PROJECT, REGION, job_name, secrets, service_account
     )
     _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))
