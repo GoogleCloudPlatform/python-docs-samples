@@ -18,6 +18,8 @@ import os
 from discoveryengine import import_documents_sample
 from discoveryengine import list_documents_sample
 
+import pytest
+
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
 data_store_id = "test-structured-data-engine"
@@ -50,6 +52,7 @@ def test_import_documents_gcs():
     assert "operations/import-documents" in operation_name
 
 
+@pytest.mark.skip(reason="Permissions")
 def test_import_documents_cloud_sql():
     sql_project_id = project_id
     sql_instance_id = "vertex-ai-search-tests"
@@ -122,6 +125,7 @@ def test_import_documents_bigtable():
     assert "operations/import-documents" in operation_name
 
 
+@pytest.mark.skip(reason="Permissions")
 def test_import_documents_healthcare_fhir_sample():
     location = "us"
     data_store_id = "healthcare-search-test"
