@@ -18,7 +18,7 @@
 import googleapiclient.discovery
 
 
-# [START predict_json]
+# [START gapp_predict_json_py]
 def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
     Args:
@@ -51,3 +51,4 @@ def predict_json(project, model, instances, version=None):
 
 
 # [END predict_json]
+# [END gapp_predict_json_py]
