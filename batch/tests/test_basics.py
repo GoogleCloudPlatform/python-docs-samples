@@ -153,7 +153,6 @@ def test_service_account_job(job_name, service_account):
 
 @flaky(max_runs=3, min_passes=1)
 def test_secret_manager_job(job_name, service_account):
-
     secrets = {
         SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
     }
