@@ -17,6 +17,7 @@
 
 import googleapiclient.discovery
 
+
 # [START gapp_predict_json_py]
 # [START predict_json]
 def predict_json(project, model, instances, version=None):
