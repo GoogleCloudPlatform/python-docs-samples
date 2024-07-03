@@ -55,7 +55,7 @@ def create_data_store_sample(
         # Options: SOLUTION_TYPE_RECOMMENDATION, SOLUTION_TYPE_SEARCH, SOLUTION_TYPE_CHAT, SOLUTION_TYPE_GENERATIVE_CHAT
         solution_types=[discoveryengine.SolutionType.SOLUTION_TYPE_SEARCH],
         # Options: NO_CONTENT, CONTENT_REQUIRED, PUBLIC_WEBSITE
-        content_config=discoveryengine.DataStore.ContentConfig.PUBLIC_WEBSITE,
+        # content_config=discoveryengine.DataStore.ContentConfig.PUBLIC_WEBSITE,
     )
 
     request = discoveryengine.CreateDataStoreRequest(

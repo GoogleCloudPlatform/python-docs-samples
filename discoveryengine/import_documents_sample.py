@@ -498,7 +498,7 @@ def import_documents_healthcare_fhir_sample(
             fhir_store=f"projects/{healthcare_project_id}/locations/{healthcare_location}/datasets/{healthcare_dataset_id}/fhirStores/{healthcare_fihr_store_id}",
         ),
         # Options: `FULL`, `INCREMENTAL`
-        reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.FULL,
+        reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
     )
 
     # Make the request
