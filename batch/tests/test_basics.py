@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import time
+from typing import Tuple
 import uuid
 
 from flaky import flaky
@@ -25,9 +26,11 @@ import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
+from ..create.create_with_ssd import create_local_ssd_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -67,6 +70,11 @@ def service_account() -> str:
     return f"{PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
 
 
+@pytest.fixture
+def disk_name():
+    return f"test-disk-{uuid.uuid4().hex[:10]}"
+
+
 def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
     start_time = time.time()
     try:
@@ -102,6 +110,12 @@ def _check_tasks(job_name):
     for i in range(4):
         assert get_task(PROJECT, REGION, job_name, "group0", i) is not None
     print("Tasks tested")
+
+
+def _check_policy(job: batch_v1.Job, job_name: str, disk_names: Tuple[str]):
+    assert job_name in job.name
+    assert job.allocation_policy.instances[0].policy.disks[0].device_name in disk_names
+    assert job.allocation_policy.instances[0].policy.disks[1].device_name in disk_names
 
 
 def _check_logs(job, capsys):
@@ -160,3 +174,25 @@ def test_secret_manager_job(job_name, service_account):
         PROJECT, REGION, job_name, secrets, service_account
     )
     _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[str]"):
+    job = create_local_ssd_job(PROJECT, REGION, job_name, disk_name)
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_pd_job(job_name, disk_name):
+    region = "europe-north1"
+    zone = "europe-north1-c"
+    existing_disk_name = "permanent-batch-testing"
+    job = create_with_pd_job(
+        PROJECT, region, job_name, disk_name, zone, existing_disk_name
+    )
+    disk_names = (disk_name, existing_disk_name)
+    _test_body(
+        job,
+        additional_test=lambda: _check_policy(job, job_name, disk_names),
+        region=region,
+    )

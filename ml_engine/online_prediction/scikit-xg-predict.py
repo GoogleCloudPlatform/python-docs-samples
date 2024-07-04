@@ -18,6 +18,7 @@
 import googleapiclient.discovery
 
 
+# [START aiplatformprediction_predict_json_py]
 # [START predict_json]
 def predict_json(project, model, instances, version=None):
     """Send json data to a deployed model for prediction.
@@ -51,3 +52,4 @@ def predict_json(project, model, instances, version=None):
 
 
 # [END predict_json]
+# [END aiplatformprediction_predict_json_py]

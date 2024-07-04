@@ -44,7 +44,6 @@ def create_corpus(
         display_name=display_name,
         description=description,
         embedding_model_config=embedding_model_config,
-        
     )
     print(corpus)
     # [END generativeaionvertexai_rag_create_corpus]
@@ -364,7 +363,7 @@ def quickstart(
     embedding_model_config = rag.EmbeddingModelConfig(
         publisher_model="publishers/google/models/text-embedding-004"
     )
-    
+
     rag_corpus = rag.create_corpus(
         display_name=display_name,
         embedding_model_config=embedding_model_config,

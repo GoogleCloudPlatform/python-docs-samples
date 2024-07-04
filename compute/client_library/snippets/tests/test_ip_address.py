@@ -54,7 +54,7 @@ INSTANCE_ZONE = "us-central1-b"
 @pytest.fixture
 def disk_fixture():
     project = "debian-cloud"
-    family = "debian-10"
+    family = "debian-12"
     disk_type = f"zones/{INSTANCE_ZONE}/diskTypes/pd-standard"
     newest_debian = get_image_from_family(project=project, family=family)
     # Create and return the disk configuration

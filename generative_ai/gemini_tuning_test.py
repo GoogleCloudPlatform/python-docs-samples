@@ -20,7 +20,7 @@ import gemini_tuning
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
-MODEL_ID = "gemini-1.5-flash-001"
+MODEL_ID = "gemini-1.0-pro-002"
 TUNING_JOB_ID = "4982013113894174720"
 
 

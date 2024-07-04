@@ -16,7 +16,7 @@
 import re
 
 from google.cloud.aiplatform import initializer as aiplatform_init
-from vertexai.preview.language_models import TextEmbeddingModel
+from vertexai.language_models import TextEmbeddingModel
 
 
 def tune_embedding_model(

@@ -55,14 +55,10 @@ with models.DAG(
 
     # An instance of an operator is called a task. In this case, the
     # hello_python task calls the "greeting" Python function.
-    hello_python = PythonOperator(
-        task_id="hello", python_callable=greeting
-    )
+    hello_python = PythonOperator(task_id="hello", python_callable=greeting)
 
     # Likewise, the goodbye_bash task calls a Bash script.
-    goodbye_bash = BashOperator(
-        task_id="bye", bash_command="echo Goodbye."
-    )
+    goodbye_bash = BashOperator(task_id="bye", bash_command="echo Goodbye.")
     # [END composer_simple_operators]
 
     # [START composer_simple_relationships]

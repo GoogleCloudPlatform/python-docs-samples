@@ -31,7 +31,7 @@ def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     vertexai.init(project=project_id, location="us-central1")
 
     sft_tuning_job = sft.train(
-        source_model="gemini-1.5-flash-001",
+        source_model="gemini-1.0-pro-002",
         train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_train_data.jsonl",
     )
 
@@ -62,7 +62,7 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     vertexai.init(project=project_id, location="us-central1")
 
     sft_tuning_job = sft.train(
-        source_model="gemini-1.5-flash-001",
+        source_model="gemini-1.0-pro-002",
         train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_train_data.jsonl",
         # The following parameters are optional
         validation_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_validation_data.jsonl",
