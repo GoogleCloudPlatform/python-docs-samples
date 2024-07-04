@@ -48,7 +48,6 @@ def create_notification_config(parent_id, notification_config_id, pubsub_topic):
     print(created_notification_config)
     # [END securitycenter_create_notification_config]
     return created_notification_config
-create_notification_config("organizations/1032198118627/location/global", notification_config_id, pubsub_topic)
 
 
 # [START securitycenter_delete_notification_config]

@@ -27,14 +27,35 @@ import snippets_notification_configs_v2
 
 ORG_ID = os.environ["GCLOUD_ORGANIZATION"]
 PROJECT_ID = os.environ["GCLOUD_PROJECT"]
-PUBSUB_TOPIC = os.environ["GCLOUD_PUBSUB_TOPIC"]
-PUBSUB_SUBSCRIPTION = os.environ["GCLOUD_PUBSUB_SUBSCRIPTION"]
+PUBSUB_TOPIC = "projects/" + PROJECT_ID + "/topics/" + "test-topic-" + str(uuid.uuid1())
+PUBSUB_SUBSCRIPTION = "projects/" + PROJECT_ID + "/subscriptions/" + "test-sub-" + str(uuid.uuid1())
 LOCATION_ID = os.environ["GCLOUD_LOCATION"]
 
 CREATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
 DELETE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
 GET_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
 UPDATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
+
+
+
+
+def pubsub_topic_id():
+    from google.cloud import pubsub_v1
+    client = pubsub_v1.PublisherClient()
+    #topic_path = client.topic_path(PROJECT_ID,PUBSUB_TOPIC)
+    response = client.create_topic(request={"name": PUBSUB_TOPIC})
+    return response.name.split('/')[-1]
+
+
+
+def pubsub_sub_id():
+    from google.cloud import pubsub_v1
+    #client = pubsub_v1.PublisherClient()
+    #topic_path = client.topic_path(PROJECT_ID,PUBSUB_TOPIC)
+    client = pubsub_v1.SubscriberClient()
+    #sub_path = client.subscription_path(PROJECT_ID,PUBSUB_SUBSCRIPTION)
+    response = client.create_subscription(request={"name": PUBSUB_SUBSCRIPTION,"topic": PUBSUB_TOPIC})
+    return response.name.split('/')[-1]
 
 
 def cleanup_notification_config(notification_config_id):
@@ -114,8 +135,10 @@ def deleted_notification_config():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_create_notification_config():
+    pubsub_topic_id()
+    pubsub_sub_id()
     created_notification_config = (
-        snippets_notification_configs.create_notification_config(
+        snippets_notification_configs_v2.create_notification_config(
             f"organizations/{ORG_ID}/locations/{LOCATION_ID}", CREATE_CONFIG_ID, PUBSUB_TOPIC
         )
     )
@@ -161,5 +184,7 @@ def test_update_notification_config(new_notification_config_for_update):
         f"organizations/{ORG_ID}/locations/{LOCATION_ID}", UPDATE_CONFIG_ID, PUBSUB_TOPIC
     )
     assert updated_config is not None
+
+
 
 
