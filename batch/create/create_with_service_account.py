@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START batch_create_custom_serive_account]
+# [START batch_create_custom_service_account]
 from google.cloud import batch_v1
 
 
@@ -80,7 +80,7 @@ def create_with_custom_service_account_job(
     return client.create_job(create_request)
 
 
-# [END batch_create_custom_serive_account]
+# [END batch_create_custom_service_account]
 
 if __name__ == "__main__":
     import google.auth
