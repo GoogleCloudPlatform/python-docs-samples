@@ -47,7 +47,7 @@ def create_bigquery_export(
     bigquery_export = securitycenter_v2.BigQueryExport()
     bigquery_export.description = "Export low and medium findings if the compute resource has an IAM anomalous grant"
     bigquery_export.filter = export_filter
-    bigquery_export.dataset = f"{parent}/datasets/{bigquery_dataset_id}"
+    bigquery_export.dataset = bigquery_dataset_id
 
     request = securitycenter_v2.CreateBigQueryExportRequest()
     request.parent = parent

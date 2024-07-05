@@ -40,7 +40,7 @@ def bigquery_export_id():
     create_bigquery_dataset(BIGQUERY_DATASET_ID)
     export_filter = 'severity="LOW" OR severity="MEDIUM"'
     snippets_bigquery_export_v2.create_bigquery_export(
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", export_filter, BIGQUERY_DATASET_ID, bigquery_export_id
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", export_filter, f"projects/{PROJECT_ID}/datasets/{BIGQUERY_DATASET_ID}", bigquery_export_id
     )
 
     yield bigquery_export_id
@@ -81,6 +81,8 @@ def delete_bigquery_dataset(dataset_id: str):
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_get_bigquery_export(capsys: CaptureFixture, bigquery_export_id: str):
+    print("**********")
+    print(LOCATION_ID)
     snippets_bigquery_export_v2.get_bigquery_export(
         f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", bigquery_export_id
     )
