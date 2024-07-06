@@ -34,7 +34,7 @@ cachetools==5.3.3
     # via
     #   apache-beam
     #   google-auth
-certifi==2024.2.2
+certifi==2024.7.4
     # via requests
 charset-normalizer==3.3.2
     # via requests
