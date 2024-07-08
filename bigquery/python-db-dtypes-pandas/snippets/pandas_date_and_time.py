@@ -17,7 +17,9 @@ def pandas_date_and_time():
     # [START bigquery_pandas_date_create]
 
     import datetime
+
     import pandas as pd
+
     import db_dtypes  # noqa import to register dtypes
 
     dates = pd.Series([datetime.date(2021, 9, 17), "2021-9-18"], dtype="dbdate")
