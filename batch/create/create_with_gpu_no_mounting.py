@@ -12,7 +12,7 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START batch_create_gpu_job]
+# [START batch_create_gpu_job_n1]
 from google.cloud import batch_v1
 
 
@@ -102,7 +102,7 @@ def create_gpu_job(
     return client.create_job(create_request)
 
 
-# [END batch_create_gpu_job]
+# [END batch_create_gpu_job_n1]
 
 
 if __name__ == "__main__":
