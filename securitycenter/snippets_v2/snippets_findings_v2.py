@@ -139,3 +139,94 @@ def group_filtered_findings(source_name):
   # [END securitycenter_group_filtered_findings]
   return i
 
+
+def create_source(organization_id):
+  """Create a new findings source."""
+  # [START securitycenter_create_source]
+  from google.cloud import securitycenter_v2
+
+  client = securitycenter_v2.SecurityCenterClient()
+  # organization_id is the numeric ID of the organization. e.g.:
+  # organization_id = "111122222444"
+  org_name = f"organizations/{organization_id}"
+
+  created = client.create_source(
+      request={
+          "parent": org_name,
+          "source": {
+              "display_name": "Customized Display Name",
+              "description": "A new custom source that does X",
+          },
+      }
+  )
+  print(f"Created Source: {created.name}")
+  # [END securitycenter_create_source]
+
+
+def get_source(source_name):
+  """Gets an existing source."""
+  # [START securitycenter_get_source]
+  from google.cloud import securitycenter_v2
+
+  client = securitycenter_v2.SecurityCenterClient()
+
+  # 'source_name' is the resource path for a source that has been
+  # created previously (you can use list_sources to find a specific one).
+  # Its format is:
+  # source_name = "organizations/{organization_id}/sources/{source_id}"
+  # e.g.:
+  # source_name = "organizations/111122222444/sources/1234"
+  source = client.get_source(request={"name": source_name})
+
+  print(f"Source: {source}")
+  # [END securitycenter_get_source]
+  return source
+
+
+def update_source(source_name):
+  """Updates a source's display name."""
+  # [START securitycenter_update_source]
+  from google.cloud import securitycenter
+  from google.protobuf import field_mask_pb2
+
+  client = securitycenter.SecurityCenterClient()
+
+  # Field mask to only update the display name.
+  field_mask = field_mask_pb2.FieldMask(paths=["display_name"])
+
+  # 'source_name' is the resource path for a source that has been
+  # created previously (you can use list_sources to find a specific one).
+  # Its format is:
+  # source_name = "organizations/{organization_id}/sources/{source_id}"
+  # e.g.:
+  # source_name = "organizations/111122222444/sources/1234"
+  updated = client.update_source(
+      request={
+          "source": {"name": source_name, "display_name": "Updated Display Name"},
+          "update_mask": field_mask,
+      }
+  )
+  print(f"Updated Source: {updated}")
+  # [END securitycenter_update_source]
+  return updated
+
+
+def list_source(organization_id):
+  """Lists finding sources."""
+  i = -1
+  # [START securitycenter_list_sources]
+  from google.cloud import securitycenter
+
+  # Create a new client.
+  client = securitycenter.SecurityCenterClient()
+  # 'parent' must be in one of the following formats:
+  #   "organizations/{organization_id}"
+  #   "projects/{project_id}"
+  #   "folders/{folder_id}"
+  parent = f"organizations/{organization_id}"
+
+  # Call the API and print out each existing source.
+  for i, source in enumerate(client.list_sources(request={"parent": parent})):
+    print(i, source)
+  # [END securitycenter_list_sources]
+  return i

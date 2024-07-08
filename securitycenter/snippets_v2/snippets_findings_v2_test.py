@@ -27,6 +27,26 @@ def organization_id():
     return os.environ["GCLOUD_ORGANIZATION"]
 
 
+@pytest.fixture(scope="module")
+def source_name(organization_id):
+    from google.cloud import securitycenter_v2
+
+    client = securitycenter_v2.SecurityCenterClient()
+    org_name = f"organizations/{organization_id}"
+
+    source = client.create_source(
+        request={
+            "parent": org_name,
+            "source": {
+                "display_name": "Unit test source",
+                "description": "A new custom source that does X",
+            },
+        }
+    )
+    return source.name
+
+
+
 def test_list_all_findings(organization_id):
     count = snippets_findings_v2.list_all_findings(organization_id, "global")
     assert count > 0
@@ -49,4 +69,20 @@ def test_group_filtered_findings(organization_id):
     assert count > 0
 
 
+def test_create_source(organization_id):
+    snippets_findings_v2.create_source(organization_id)
 
+
+def test_get_source(source_name):
+    source = snippets_findings_v2.get_source(source_name)
+    assert source.name == source_name
+
+
+def test_list_source(organization_id):
+    count = snippets_findings_v2.list_source(organization_id)
+    assert count >= 0
+
+
+def test_update_source(source_name):
+    updated = snippets_findings_v2.update_source(source_name)
+    assert updated.display_name == "Updated Display Name"
