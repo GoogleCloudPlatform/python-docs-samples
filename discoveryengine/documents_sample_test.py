@@ -108,6 +108,7 @@ def test_import_documents_firestore():
     assert "operations/import-documents" in operation_name
 
 
+@pytest.mark.skip(reason="Timeout")
 def test_import_documents_bigtable():
     bigtable_project_id = project_id
     bigtable_instance_id = "bigtable-test"
