@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,14 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Video Stitcher sample for creating a video on demand (VOD)
-session in which to insert ads.
+"""Google Cloud Video Stitcher sample for getting a VOD config.
 Example usage:
-    python create_vod_session.py --project_id <project-id> \
-        --location <location> --vod_config_id <vod-config-id>
+    python get_vod_config.py --project_id <project-id> --location <location> \
+        --vod_config_id <vod-config-id>
 """
 
-# [START videostitcher_create_vod_session]
+# [START videostitcher_get_vod_config]
 
 import argparse
 
@@ -31,46 +30,36 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 )
 
 
-def create_vod_session(
+def get_vod_config(
     project_id: str, location: str, vod_config_id: str
-) -> stitcher_v1.types.VodSession:
-    """Creates a VOD session. VOD sessions are ephemeral resources that expire
-    after a few hours.
+) -> stitcher_v1.types.VodConfig:
+    """Gets a VOD config.
     Args:
         project_id: The GCP project ID.
-        location: The location in which to create the session.
-        vod_config_id: The user-defined VOD config ID to use to create the
-                        session.
+        location: The location of the VOD config.
+        vod_config_id: The user-defined VOD config ID.
 
     Returns:
-        The VOD session resource.
+        The VOD config resource.
     """
 
     client = VideoStitcherServiceClient()
 
-    parent = f"projects/{project_id}/locations/{location}"
-    vod_config_name = (
-        f"projects/{project_id}/locations/{location}/vodConfigs/{vod_config_id}"
-    )
-
-    vod_session = stitcher_v1.types.VodSession(
-        vod_config=vod_config_name, ad_tracking="SERVER"
-    )
-
-    response = client.create_vod_session(parent=parent, vod_session=vod_session)
-    print(f"VOD session: {response.name}")
+    name = f"projects/{project_id}/locations/{location}/vodConfigs/{vod_config_id}"
+    response = client.get_vod_config(name=name)
+    print(f"VOD config: {response.name}")
     return response
 
 
-# [END videostitcher_create_vod_session]
+# [END videostitcher_get_vod_config]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
-        help="The location in which to create the VOD session.",
-        default="us-central1",
+        help="The location of the VOD config.",
+        required=True,
     )
     parser.add_argument(
         "--vod_config_id",
@@ -78,7 +67,7 @@ if __name__ == "__main__":
         required=True,
     )
     args = parser.parse_args()
-    create_vod_session(
+    get_vod_config(
         args.project_id,
         args.location,
         args.vod_config_id,
