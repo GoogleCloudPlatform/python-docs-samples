@@ -13,6 +13,8 @@
 # limitations under the License.
 #
 
+# [START genappbuilder_import_documents]
+
 
 def import_documents_bigquery_sample(
     project_id: str,
@@ -146,6 +148,9 @@ def import_documents_gcs_sample(
     # [END genappbuilder_import_documents_gcs]
 
     return operation.operation.name
+
+
+# [END genappbuilder_import_documents]
 
 
 def import_documents_cloud_sql_sample(
