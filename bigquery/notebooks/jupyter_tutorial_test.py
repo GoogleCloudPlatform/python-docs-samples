@@ -60,7 +60,7 @@ def _strip_region_tags(sample_text: str) -> str:
 def test_jupyter_tutorial(ipython: "TerminalInteractiveShell") -> None:
     matplotlib.use("agg")
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension("google.cloud.bigquery")
+    ip.extension_manager.load_extension("bigquery_magics")
 
     sample = """
     # [START bigquery_jupyter_magic_gender_by_year]

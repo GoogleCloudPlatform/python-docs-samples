@@ -24,7 +24,7 @@ if typing.TYPE_CHECKING:
 
 def query_with_parameters() -> "pandas.DataFrame":
     ip = IPython.get_ipython()
-    ip.extension_manager.load_extension("google.cloud.bigquery")
+    ip.extension_manager.load_extension("bigquery_magics")
 
     sample = """
     # [START bigquery_jupyter_query_params_scalars]
