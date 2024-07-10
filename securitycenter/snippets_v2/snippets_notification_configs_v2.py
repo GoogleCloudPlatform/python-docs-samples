@@ -46,7 +46,7 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
             },
         }
     )
-
+    # [END securitycenter_create_notification_config]
     return response
 
 
