@@ -17,23 +17,25 @@
 
 
 # [START securitycenter_create_notification_config]
-def create_notification_config(parent_id, notification_config_id, pubsub_topic):
+def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
     """
     Args:
         parent_id: must be in one of the following formats:
-            "organizations/{organization_id}/location/{location_id}"
-            "projects/{project_id}/location/{location_id}"
-            "folders/{folder_id}/location/{location_id}"
-        notification_config_id: "your-config-id"
+            "organizations/{organization_id}"
+            "projects/{project_id}"
+            "folders/{folder_id}"
+        location_id: "global"
         pubsub_topic: "projects/{your-project-id}/topics/{your-topic-ic}"
+        notification_config_id: "your-config-id"
+
 
     Ensure this ServiceAccount has the "pubsub.topics.setIamPolicy" permission on the new topic.
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-
-    created_notification_config = client.create_notification_config(
+    parent_id = parent_id+"/locations/"+location_id
+    response = client.create_notification_config(
         request={
             "parent": parent_id,
             "config_id": notification_config_id,
@@ -45,25 +47,24 @@ def create_notification_config(parent_id, notification_config_id, pubsub_topic):
         }
     )
 
-    print(created_notification_config)
-    # [END securitycenter_create_notification_config]
-    return created_notification_config
+    return response
 
 
 # [START securitycenter_delete_notification_config]
-def delete_notification_config(parent_id, notification_config_id):
+def delete_notification_config(parent_id, location_id, notification_config_id):
     """
     Args:
         parent_id: must be in one of the following formats:
-            "organizations/{organization_id}/location/{location_id}"
-            "projects/{project_id}/location/{location_id}"
-            "folders/{folder_id}/location/{location_id}"
+            "organizations/{organization_id}"
+            "projects/{project_id}"
+            "folders/{folder_id}"
+        location_id: "global"
         notification_config_id: "your-config-id"
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-
+    parent_id = parent_id+"/locations/"+location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
@@ -75,44 +76,46 @@ def delete_notification_config(parent_id, notification_config_id):
 
 
 # [START securitycenter_get_notification_config]
-def get_notification_config(parent_id, notification_config_id):
+def get_notification_config(parent_id, location_id, notification_config_id):
     """
     Args:
         parent_id: must be in one of the following formats:
-            "organizations/{organization_id}/location/{location_id}"
-            "projects/{project_id}/location/{location_id}"
-            "folders/{folder_id}/location/{location_id}"
+            "organizations/{organization_id}"
+            "projects/{project_id}"
+            "folders/{folder_id}"
+        location_id: "global"
         notification_config_id: "your-config-id"
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-
+    parent_id = parent_id+"/locations/"+location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
 
-    notification_config = client.get_notification_config(
+    response = client.get_notification_config(
         request={"name": notification_config_name}
     )
-    print(f"Got notification config: {notification_config}")
+    print(f"Got notification config: {response}")
     # [END securitycenter_get_notification_config]
-    return notification_config
+    return response
 
 
 # [START securitycenter_list_notification_configs]
-def list_notification_configs(parent_id):
+def list_notification_configs(parent_id, location_id):
     """
     Args:
         parent_id: must be in one of the following formats:
-            "organizations/{organization_id}/location/{location_id}"
-            "projects/{project_id}/location/{location_id}"
-            "folders/{folder_id}/location/{location_id}"
+            "organizations/{organization_id}"
+            "projects/{project_id}"
+            "folders/{folder_id}"
+        location_id: "global"
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-
+    parent_id = parent_id+"/locations/"+location_id
     notification_configs_iterator = client.list_notification_configs(
         request={"parent": parent_id}
     )
@@ -123,15 +126,17 @@ def list_notification_configs(parent_id):
 
 
 # [START securitycenter_update_notification_config]
-def update_notification_config(parent_id, notification_config_id, pubsub_topic):
+def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
     """
     Args:
         parent_id: must be in one of the following formats:
-            "organizations/{organization_id}/location/{location_id}"
-            "projects/{project_id}/location/{location_id}"
-            "folders/{folder_id}/location/{location_id}"
-        notification_config_id: "config-id-to-update"
+            "organizations/{organization_id}"
+            "projects/{project_id}"
+            "folders/{folder_id}"
+        location_id: "global"
         pubsub_topic: "projects/{new-project}/topics/{new-topic}"
+        notification_config_id: "config-id-to-update"
+
 
     If updating a pubsub_topic, ensure this ServiceAccount has the
     "pubsub.topics.setIamPolicy" permission on the new topic.
@@ -140,7 +145,7 @@ def update_notification_config(parent_id, notification_config_id, pubsub_topic):
     from google.protobuf import field_mask_pb2
 
     client = securitycenter_v2.SecurityCenterClient()
-
+    parent_id = parent_id+"/locations/"+location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
