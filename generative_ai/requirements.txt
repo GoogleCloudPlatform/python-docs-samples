@@ -6,7 +6,7 @@ pillow==10.3.0; python_version >= '3.8'
 google-cloud-aiplatform[pipelines,rapid_evaluation,reasoningengine]==1.57.0
 google-auth==2.29.0
 anthropic[vertex]==0.28.0
-langchain-core==0.1.52
-langchain-google-vertexai==1.0.3
+langchain-core==0.2.11
+langchain-google-vertexai==1.0.6
 numpy<2
 openai==1.30.5
