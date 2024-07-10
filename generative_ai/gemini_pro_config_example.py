@@ -25,7 +25,7 @@ def generate_text(project_id: str) -> None:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-001")
 
     # Load example image from local storage
     encoded_image = base64.b64encode(open("scones.jpg", "rb").read()).decode("utf-8")

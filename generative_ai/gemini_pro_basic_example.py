@@ -24,7 +24,7 @@ def generate_text(project_id: str) -> None:
 
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel(model_name="gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-001")
 
     image_file = Part.from_uri(
         "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"
