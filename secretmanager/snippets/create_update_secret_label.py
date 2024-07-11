@@ -13,24 +13,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START secretmanager_create_update_secret_label]
+
 import argparse
 
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
-
-# [START secretmanager_create_update_secret_label]
 def create_update_secret_label(
     project_id: str, 
     secret_id: str, 
-    label_key: str, 
-    label_value: str
+    new_labels: dict[str, str]
 ) -> secretmanager.UpdateSecretRequest:
     """
     Create or update a label on an existing secret.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -43,8 +40,9 @@ def create_update_secret_label(
 
     labels = response.labels
 
-    # Update the label
-    labels[label_key] = label_value
+    # Update the labels
+    for label_key in new_labels:
+        labels[label_key] = new_labels[label_key]
 
     # Update the secret.
     secret = {"name": name, "labels": labels}
@@ -55,10 +53,10 @@ def create_update_secret_label(
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    # [END secretmanager_create_update_secret_label]
-
+    
     return response
 
+# [END secretmanager_create_update_secret_label]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -70,4 +68,5 @@ if __name__ == "__main__":
     parser.add_argument("label_value", help="value of the label to be added/updated")
     args = parser.parse_args()
 
-    create_update_secret_label(args.project_id, args.secret_id, args.label_key, args.label_value)
+    labels = {args.label_key, args.label_value}
+    create_update_secret_label(args.project_id, args.secret_id, labels)

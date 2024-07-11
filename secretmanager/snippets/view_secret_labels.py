@@ -16,19 +16,16 @@
 command line application and sample code for listing labels of a
 secret.
 """
-
+# [START secretmanager_view_secret_labels]
 import argparse
 
+# Import the Secret Manager client library.
+from google.cloud import secretmanager
 
-# [START secretmanager_view_secret_labels]
 def view_secret_labels(project_id: str, secret_id: str) -> None:
     """
     List all secret versions in the given secret and their metadata.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
-
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
 

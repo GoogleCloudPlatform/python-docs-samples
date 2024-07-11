@@ -240,7 +240,9 @@ def test_create_secret_with_label(
     label_value: str,
     ttl: Optional[str],
 ) -> None:
-    secret = create_secret_with_labels(project_id, secret_id, label_key, label_value, ttl)
+
+    labels = {label_key : label_value}
+    secret = create_secret_with_labels(project_id, secret_id, labels, ttl)
     assert secret_id in secret.name
 
 def test_delete_secret(
@@ -431,7 +433,8 @@ def test_list_secrets_with_filter(
 def test_create_update_secret_label(secret: Tuple[str, str, str], label_key: str) -> None:
     project_id, secret_id, _ = secret
     updated_label_value = "vibes"
-    updated_secret = create_update_secret_label(project_id, secret_id, label_key, updated_label_value)
+    labels = {label_key : updated_label_value}
+    updated_secret = create_update_secret_label(project_id, secret_id, labels)
     assert updated_secret.labels[label_key] == updated_label_value
 
 def test_update_secret(secret: Tuple[str, str, str]) -> None:

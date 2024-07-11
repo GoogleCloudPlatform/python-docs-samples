@@ -17,17 +17,17 @@ command line application and sample code for creating a new secret with
 labels.
 """
 
+# [START secretmanager_create_secret_with_label]
 import argparse
 import typing
 
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
-# [START secretmanager_create_secret_with_label]
 def create_secret_with_labels(
     project_id: str,
     secret_id: str,
-    label_key: str,
-    label_value: str,
+    labels: dict[str, str],
     ttl: typing.Optional[str] = None,
 ) -> secretmanager.Secret:
     """
@@ -35,9 +35,6 @@ def create_secret_with_labels(
     around a collection of secret versions. Secret versions hold the actual
     secret material.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -53,7 +50,7 @@ def create_secret_with_labels(
             "secret": {
                 "replication": {"automatic": {}},
                 "ttl": ttl,
-                "labels": {label_key: label_value}
+                "labels": labels
                 }
             }
     )
@@ -61,9 +58,8 @@ def create_secret_with_labels(
     # Print the new secret name.
     print(f"Created secret: {response.name}")
 
-    # [END secretmanager_create_secret_with_label]
     return response
-
+# [END secretmanager_create_secret_with_label]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -75,4 +71,5 @@ if __name__ == "__main__":
     parser.add_argument("label_value", help="value of the label you want to add")
     args = parser.parse_args()
 
-    create_secret_with_labels(args.project_id, args.secret_id, args.label_key, args.label_value)
+    labels = {args.label_key, args.label_value}
+    create_secret_with_labels(args.project_id, args.secret_id, labels)

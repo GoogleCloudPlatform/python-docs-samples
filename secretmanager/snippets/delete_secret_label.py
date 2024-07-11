@@ -13,19 +13,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+# [START secretmanager_delete_secret_label]
 import argparse
 
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
-
-# [START secretmanager_delete_secret_label]
 def delete_secret_label(project_id: str, secret_id: str, label_key: str) -> secretmanager.UpdateSecretRequest:
     """
     Delete a label on an existing secret.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -50,10 +47,9 @@ def delete_secret_label(project_id: str, secret_id: str, label_key: str) -> secr
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    # [END secretmanager_delete_secret_label]
 
     return response
-
+# [END secretmanager_delete_secret_label]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
