@@ -38,7 +38,7 @@ def generate_text_multimodal(project_id: str) -> str:
         mime_type="image/png",
     )
 
-    model = GenerativeModel(model_name="gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-001")
     response = model.generate_content(
         [
             image_file1,

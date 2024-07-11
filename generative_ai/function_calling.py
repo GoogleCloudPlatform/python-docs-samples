@@ -33,7 +33,7 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     vertexai.init(project=project_id, location="us-central1")
 
     # Initialize Gemini model
-    model = GenerativeModel(model_name="gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-001")
 
     # Define the user's prompt in a Content object that we can reuse in model calls
     user_prompt_content = Content(
