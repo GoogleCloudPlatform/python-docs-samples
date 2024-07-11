@@ -17,7 +17,7 @@
 """Snippets on exporting findings from Security Command Center to BigQuery."""
 
 
-# [START securitycenter_create_bigquery_export]
+# [START securitycenter_create_bigquery_export_v2]
 
 
 def create_bigquery_export(
@@ -36,6 +36,7 @@ def create_bigquery_export(
              - projects/{project_id}/locations/{location_id}
         export_filter: Expression that defines the filter to apply across create/update events of findings.
         bigquery_dataset_id: The BigQuery dataset to write findings' updates to.
+             - projects/{PROJECT_ID}/datasets/{BIGQUERY_DATASET_ID}
         bigquery_export_id: Unique identifier provided by the client.
              - example id: f"default-{str(uuid.uuid4()).split('-')[0]}"
         For more info, see:
@@ -58,12 +59,12 @@ def create_bigquery_export(
     response = client.create_big_query_export(request)
 
     print(f"BigQuery export request created successfully: {response.name}\n")
+    return response
+
+# [END securitycenter_create_bigquery_export_v2]
 
 
-# [END securitycenter_create_bigquery_export]
-
-
-# [START securitycenter_get_bigquery_export]
+# [START securitycenter_get_bigquery_export_v2]
 def get_bigquery_export(parent: str, bigquery_export_id: str):
     from google.cloud import securitycenter_v2
 
@@ -84,12 +85,12 @@ def get_bigquery_export(parent: str, bigquery_export_id: str):
 
     response = client.get_big_query_export(request)
     print(f"Retrieved the BigQuery export: {response.name}")
+    return response
+
+# [END securitycenter_get_bigquery_export_v2]
 
 
-# [END securitycenter_get_bigquery_export]
-
-
-# [START securitycenter_list_bigquery_export]
+# [START securitycenter_list_bigquery_export_v2]
 def list_bigquery_exports(parent: str):
     from google.cloud import securitycenter_v2
 
@@ -113,12 +114,12 @@ def list_bigquery_exports(parent: str):
     print("Listing BigQuery exports:")
     for bigquery_export in response:
         print(bigquery_export.name)
+    return response
+
+# [END securitycenter_list_bigquery_export_v2]
 
 
-# [END securitycenter_list_bigquery_export]
-
-
-# [START securitycenter_update_bigquery_export]
+# [START securitycenter_update_bigquery_export_v2]
 def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: str):
     """
     Updates an existing BigQuery export.
@@ -159,12 +160,12 @@ def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: 
         print("Failed to update BigQueryExport!")
         return
     print("BigQueryExport updated successfully!")
+    return response
+
+# [END securitycenter_update_bigquery_export_v2]
 
 
-# [END securitycenter_update_bigquery_export]
-
-
-# [START securitycenter_delete_bigquery_export]
+# [START securitycenter_delete_bigquery_export_v2]
 def delete_bigquery_export(parent: str, bigquery_export_id: str):
     """
     Delete an existing BigQuery export.
@@ -186,4 +187,4 @@ def delete_bigquery_export(parent: str, bigquery_export_id: str):
     print(f"BigQuery export request deleted successfully: {bigquery_export_id}")
 
 
-# [END securitycenter_delete_bigquery_export]
+# [END securitycenter_delete_bigquery_export_v2]
