@@ -26,6 +26,7 @@ import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_notifications import create_with_notifications
 from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
@@ -137,6 +138,17 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
     assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
 
 
+def _check_notifications(job: batch_v1.Job):
+    notifications_found = 0
+    for notif in job.notifications:
+        if (
+            notif.message.type_ == batch_v1.JobNotification.Type.TASK_STATE_CHANGED
+            and notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+        ) or notif.message.type_ == batch_v1.JobNotification.Type.JOB_STATE_CHANGED:
+            notifications_found += 1
+    assert notifications_found == 2
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -196,3 +208,9 @@ def test_pd_job(job_name, disk_name):
         additional_test=lambda: _check_policy(job, job_name, disk_names),
         region=region,
     )
+
+
+def test_notificatoins_job(job_name):
+    topic_name = "some-topic"
+    job = create_with_notifications(PROJECT, REGION, job_name, topic_name)
+    _test_body(job, additional_test=lambda: _check_notifications(job))
