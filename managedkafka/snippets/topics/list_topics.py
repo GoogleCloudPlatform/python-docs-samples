@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START managedkafka_list_topics]
+from typing import List
+
 from google.cloud import managedkafka_v1
 
 
@@ -20,7 +22,7 @@ def list_topics(
     project_id: str,
     region: str,
     cluster_id: str,
-) -> None:
+) -> List[str]:
     """
     List Kafka topics in a cluster.
 
@@ -40,5 +42,6 @@ def list_topics(
     for topic in response:
         print("Got topic:", topic)
 
+    return [topic.name for topic in response]
 
 # [END managedkafka_list_topics]

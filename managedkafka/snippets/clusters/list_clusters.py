@@ -13,13 +13,15 @@
 # limitations under the License.
 
 # [START managedkafka_list_clusters]
+from typing import List
+
 from google.cloud import managedkafka_v1
 
 
 def list_clusters(
     project_id: str,
     region: str,
-) -> None:
+) -> List[str]:
     """
     List Kafka clusters in a given project ID and region.
 
@@ -37,6 +39,8 @@ def list_clusters(
     response = client.list_clusters(request=request)
     for cluster in response:
         print("Got cluster:", cluster)
+
+    return [cluster.name for cluster in response]
 
 
 # [END managedkafka_list_clusters]

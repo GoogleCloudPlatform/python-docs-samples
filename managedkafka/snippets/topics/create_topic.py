@@ -36,7 +36,7 @@ def create_topic(
         topic_id: ID of the Kafka topic.
         partition_count: Number of partitions in a topic..
         replication_factor: Number of replicas of each partition.
-        configs: Configuration of the topic.
+        configs: Configuration of the topic. For a list of configs, one can check https://kafka.apache.org/documentation/#topicconfigs.
 
     Raises:
         This method will raise the exception if the topic already exists.

@@ -126,9 +126,8 @@ def test_list_topics(
     topic.name = managedkafka_v1.ManagedKafkaClient.topic_path(
         PROJECT_ID, REGION, CLUSTER_ID, TOPIC_ID
     )
-    response = managedkafka_v1.ListTopicsResponse()
-    response.topics.append(topic)
-    mock_method.return_value = [response]
+    response = [topic]
+    mock_method.return_value = response
 
     list_topics.list_topics(
         project_id=PROJECT_ID,

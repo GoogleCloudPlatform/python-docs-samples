@@ -121,9 +121,8 @@ def test_list_clusters(
     cluster.name = managedkafka_v1.ManagedKafkaClient.cluster_path(
         PROJECT_ID, REGION, CLUSTER_ID
     )
-    response = managedkafka_v1.ListClustersResponse()
-    response.clusters.append(cluster)
-    mock_method.return_value = [response]
+    response = [cluster]
+    mock_method.return_value = response
 
     list_clusters.list_clusters(
         project_id=PROJECT_ID,

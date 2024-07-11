@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START managedkafka_get_topic]
-from google.api_core.exceptions import NotFound
 from google.cloud import managedkafka_v1
 
 
@@ -22,7 +21,7 @@ def get_topic(
     region: str,
     cluster_id: str,
     topic_id: str,
-) -> None:
+) -> managedkafka_v1.Topic:
     """
     Get a Kafka topic.
 
@@ -31,9 +30,6 @@ def get_topic(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         topic_id: ID of the Kafka topic.
-
-    Raises:
-        This method will raise the exception if the topic is not found.
     """
 
     client = managedkafka_v1.ManagedKafkaClient()
@@ -43,11 +39,10 @@ def get_topic(
         name=topic_path,
     )
 
-    try:
-        topic = client.get_topic(request=request)
-        print("Got topic:", topic)
-    except NotFound:
-        print(f"Topic {topic_path} not found")
+    topic = client.get_topic(request=request)
+    print("Got topic:", topic)
+
+    return topic
 
 
 # [END managedkafka_get_topic]

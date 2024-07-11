@@ -98,9 +98,8 @@ def test_list_consumer_groups(
     consumer_group.name = managedkafka_v1.ManagedKafkaClient.consumer_group_path(
         PROJECT_ID, REGION, CLUSTER_ID, CONSUMER_GROUP_ID
     )
-    response = managedkafka_v1.ListConsumerGroupsResponse()
-    response.consumer_groups.append(consumer_group)
-    mock_method.return_value = [response]
+    response = [consumer_group]
+    mock_method.return_value = response
 
     list_consumer_groups.list_consumer_groups(
         project_id=PROJECT_ID,

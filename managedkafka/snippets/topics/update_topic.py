@@ -27,7 +27,7 @@ def update_topic(
     configs: dict[str, str],
 ) -> None:
     """
-    Update a Kafka topic.
+    Update a Kafka topic. For a list of editable fields, one can check https://cloud.google.com/managed-kafka/docs/create-topic#properties.
 
     Args:
         project_id: Google Cloud project ID.

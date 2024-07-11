@@ -27,7 +27,7 @@ def update_consumer_group(
     partition_offsets: dict[int, int],
 ) -> None:
     """
-    Update a Kafka consumer group.
+    Update a single partition's offset in a Kafka consumer group.
 
     Args:
         project_id: Google Cloud project ID.

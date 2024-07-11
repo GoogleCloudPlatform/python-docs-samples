@@ -22,7 +22,7 @@ def update_cluster(
     project_id: str, region: str, cluster_id: str, memory_bytes: int
 ) -> None:
     """
-    Update a Kafka cluster.
+    Update a Kafka cluster. For a list of editable fields, one can check https://cloud.google.com/managed-kafka/docs/create-cluster#properties.
 
     Args:
         project_id: Google Cloud project ID.

@@ -13,6 +13,8 @@
 # limitations under the License.
 
 # [START managedkafka_list_consumergroups]
+from typing import List
+
 from google.cloud import managedkafka_v1
 
 
@@ -20,7 +22,7 @@ def list_consumer_groups(
     project_id: str,
     region: str,
     cluster_id: str,
-) -> None:
+) -> List[str]:
     """
     List Kafka consumer groups in a cluster.
 
@@ -40,5 +42,6 @@ def list_consumer_groups(
     for consumer_group in response:
         print("Got consumer group:", consumer_group)
 
+    return [consumer_group.name for consumer_group in response]
 
 # [END managedkafka_list_consumergroups]

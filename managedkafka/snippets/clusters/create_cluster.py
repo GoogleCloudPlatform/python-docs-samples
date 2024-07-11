@@ -32,7 +32,7 @@ def create_cluster(
         project_id: Google Cloud project ID.
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
-        subnet: VPC subnet from which the cluster is accessible.
+        subnet: VPC subnet from which the cluster is accessible. The expected format is projects/{project_id}/regions{region}/subnetworks/{subnetwork}.
         cpu: Number of vCPUs to provision for the cluster.
         memory_bytes: The memory to provision for the cluster in bytes.
 
@@ -59,8 +59,9 @@ def create_cluster(
     )
 
     try:
-        operation = client.create_cluster(request=request)
         # The duration of this operation can vary considerably, typically taking 10-40 minutes.
+        # We can set a timeout of 3000s (50 minutes).
+        operation = client.create_cluster(request=request, timeout=3000)
         response = operation.result()
         print("Created cluster:", response)
     except GoogleAPICallError:

@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START managedkafka_get_consumergroup]
-from google.api_core.exceptions import NotFound
 from google.cloud import managedkafka_v1
 
 
@@ -22,7 +21,7 @@ def get_consumer_group(
     region: str,
     cluster_id: str,
     consumer_group_id: str,
-) -> None:
+) -> managedkafka_v1.ConsumerGroup:
     """
     Get a Kafka consumer group.
 
@@ -31,9 +30,6 @@ def get_consumer_group(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         consumer_group_id: ID of the Kafka consumer group.
-
-    Raises:
-        This method will raise the exception if the consumer group is not found.
     """
 
     client = managedkafka_v1.ManagedKafkaClient()
@@ -45,11 +41,10 @@ def get_consumer_group(
         name=consumer_group_path,
     )
 
-    try:
-        consumer_group = client.get_consumer_group(request=request)
-        print("Got consumer group:", consumer_group)
-    except NotFound:
-        print(f"Consumer group {consumer_group_path} not found")
+    consumer_group = client.get_consumer_group(request=request)
+    print("Got consumer group:", consumer_group)
+
+    return consumer_group
 
 
 # [END managedkafka_get_consumergroup]
