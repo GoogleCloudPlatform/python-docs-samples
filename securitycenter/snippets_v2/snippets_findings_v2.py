@@ -18,7 +18,7 @@
 
 def list_all_findings(organization_id, source_id, location_id):
   count = 0
-  # [START securitycenter_list_all_findings]
+  # [START securitycenter_list_all_findings_v2]
   from google.cloud import securitycenter_v2
 
   # Create a client.
@@ -49,13 +49,13 @@ def list_all_findings(organization_id, source_id, location_id):
             count, finding_result.finding.name, finding_result.finding.resource_name
         )
     )
-  # [END securitycenter_list_all_findings]
+  # [END securitycenter_list_all_findings_v2]
   return count
 
 
 def list_filtered_findings(organization_id, source_id, location_id):
   count = 0
-  # [START securitycenter_list_filtered_findings]
+  # [START securitycenter_list_filtered_findings_v2]
   from google.cloud import securitycenter_v2
 
   # Create a new client.
@@ -83,14 +83,14 @@ def list_filtered_findings(organization_id, source_id, location_id):
             count, finding_result.finding.name, finding_result.finding.resource_name
         )
     )
-  # [END securitycenter_list_filtered_findings]
+  # [END securitycenter_list_filtered_findings_v2]
   return count
 
 
 def group_all_findings(organization_id, source_id, location_id):
   """Demonstrates grouping all findings across an organization."""
   count = 0
-  # [START securitycenter_group_all_findings]
+  # [START securitycenter_group_all_findings_v2]
   from google.cloud import securitycenter_v2
 
   # Create a client.
@@ -113,14 +113,14 @@ def group_all_findings(organization_id, source_id, location_id):
   )
   for count, group_result in enumerate(group_result_iterator):
     print((count + 1), group_result)
-  # [END securitycenter_group_all_findings]
+  # [END securitycenter_group_all_findings_v2]
   return count
 
 
 def group_filtered_findings(organization_id, source_id, location_id):
   """Demonstrates grouping all findings across an organization."""
   count = 0
-  # [START securitycenter_group_filtered_findings]
+  # [START securitycenter_group_filtered_findings_v2]
   from google.cloud import securitycenter_v2
 
   # Create a client.
@@ -147,6 +147,71 @@ def group_filtered_findings(organization_id, source_id, location_id):
   )
   for count, group_result in enumerate(group_result_iterator):
     print((count + 1), group_result)
-  # [END securitycenter_group_filtered_findings]
+  # [END securitycenter_group_filtered_findings_v2]
   return count
+
+
+def list_findings_with_security_marks(organization_id, source_id, location_id):
+  count = 0
+  # [START securitycenter_list_findings_with_security_marks_v2]
+  from google.cloud import securitycenter_v2
+
+  # Create a new client.
+  client = securitycenter_v2.SecurityCenterClient()
+
+  # 'parent' must be in one of the following formats:
+  #   "organizations/{organization_id}"
+  #   "projects/{project_id}"
+  #   "folders/{folder_id}"
+  parent = f"organizations/{organization_id}"
+
+  # 'source_id' to scope the findings.
+  # The "sources/-" suffix lists findings across all sources.  You
+  # also use a specific source_name instead.
+  # location_id= "global"
+  all_sources = f"{parent}/sources/{source_id}/locations/{location_id}"
+  finding_result_iterator = client.list_findings(
+      request={"parent": all_sources, "filter": 'NOT security_marks.marks.ACK="true" AND NOT mute="MUTED" AND state="ACTIVE"'}
+  )
+  # Iterate an print all finding names and the resource they are
+  # in reference to.
+  for count, finding_result in enumerate(finding_result_iterator):
+    print(
+        "{}: name: {} resource: {}".format(
+            count, finding_result.finding.name, finding_result.finding.resource_name
+        )
+    )
+  # [END securitycenter_list_findings_with_security_marks_v2]
+  return count
+
+
+def group_findings_by_state(organization_id, source_id, location_id):
+  """Demonstrates grouping all findings across an organization."""
+  count = 0
+  # [START securitycenter_group_findings_by_state_v2]
+  from google.cloud import securitycenter_v2
+
+  # Create a client.
+  client = securitycenter_v2.SecurityCenterClient()
+
+  # 'parent' must be in one of the following formats:
+  #   "organizations/{organization_id}"
+  #   "projects/{project_id}"
+  #   "folders/{folder_id}"
+  parent = f"organizations/{organization_id}"
+
+  # 'source_id' to scope the findings.
+  # The "sources/-" suffix lists findings across all sources.  You
+  # also use a specific source_name instead.
+  # location_id= "global"
+  all_sources = f"{parent}/sources/{source_id}/locations/{location_id}"
+
+  group_result_iterator = client.group_findings(
+      request={"parent": all_sources, "group_by": "state"}
+  )
+  for count, group_result in enumerate(group_result_iterator):
+    print((count + 1), group_result)
+  # [END securitycenter_group_findings_by_state_v2]
+  return count
+
 

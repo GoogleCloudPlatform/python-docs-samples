@@ -46,5 +46,15 @@ def test_group_filtered_findings(organization_id):
     count = snippets_findings_v2.group_filtered_findings(organization_id, "-", "global")
     assert count > 0
 
+def test_list_findings_with_security_marks(organization_id):
+    count = snippets_findings_v2.list_findings_with_security_marks(organization_id, "-", "global")
+    assert count > 0
+
+
+def test_group_findings_by_state(organization_id):
+    count = snippets_findings_v2.group_findings_by_state(organization_id, "-", "global")
+    assert count > 0
+
+
 
 
