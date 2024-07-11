@@ -69,7 +69,7 @@ from list_regional_secrets_with_filter import list_regional_secrets_with_filter
 from update_regional_secret import update_regional_secret
 from update_regional_secret_with_alias import update_regional_secret_with_alias
 from update_regional_secret_with_etag import update_regional_secret_with_etag
-
+from regional_quickstart import regional_quickstart
 
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
@@ -290,6 +290,8 @@ def pubsub_message() -> dict:
 def test_quickstart(project_id: str, secret_id: str) -> None:
     quickstart(project_id, secret_id)
 
+def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
+    regional_quickstart(project_id, location_id, secret_id)
 
 def test_access_secret_version(secret_version: Tuple[str, str, str, str]) -> None:
     project_id, secret_id, version_id, _ = secret_version
