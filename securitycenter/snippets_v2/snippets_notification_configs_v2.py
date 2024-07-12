@@ -16,7 +16,7 @@
 """Demos for working with notification configs."""
 
 
-# [START securitycenter_create_notification_config]
+# [START securitycenter_create_notification_config_v2]
 def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
     """
     Args:
@@ -46,11 +46,11 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
             },
         }
     )
-    # [END securitycenter_create_notification_config]
+    # [END securitycenter_create_notification_config_v2]
     return response
 
 
-# [START securitycenter_delete_notification_config]
+# [START securitycenter_delete_notification_config_v2]
 def delete_notification_config(parent_id, location_id, notification_config_id):
     """
     Args:
@@ -75,7 +75,7 @@ def delete_notification_config(parent_id, location_id, notification_config_id):
     return True
 
 
-# [START securitycenter_get_notification_config]
+# [START securitycenter_get_notification_config_v2]
 def get_notification_config(parent_id, location_id, notification_config_id):
     """
     Args:
@@ -98,11 +98,11 @@ def get_notification_config(parent_id, location_id, notification_config_id):
         request={"name": notification_config_name}
     )
     print(f"Got notification config: {response}")
-    # [END securitycenter_get_notification_config]
+    # [END securitycenter_get_notification_config_v2]
     return response
 
 
-# [START securitycenter_list_notification_configs]
+# [START securitycenter_list_notification_configs_v2]
 def list_notification_configs(parent_id, location_id):
     """
     Args:
@@ -121,11 +121,11 @@ def list_notification_configs(parent_id, location_id):
     )
     for i, config in enumerate(notification_configs_iterator):
         print(f"{i}: notification_config: {config}")
-    # [END securitycenter_list_notification_configs]]
+    # [END securitycenter_list_notification_configs_v2]
     return notification_configs_iterator
 
 
-# [START securitycenter_update_notification_config]
+# [START securitycenter_update_notification_config_v2]
 def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
     """
     Args:
@@ -171,5 +171,47 @@ def update_notification_config(parent_id, location_id, pubsub_topic, notificatio
     )
 
     print(updated_notification_config)
-    # [END securitycenter_update_notification_config]
+    # [END securitycenter_update_notification_config_v2]
     return updated_notification_config
+
+
+def receive_notifications(subscription_name):
+    # [START securitycenter_receive_notifications_v2]
+    # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
+    import concurrent
+
+    from google.cloud import pubsub_v1
+    from google.cloud.securitycenter_v2 import NotificationMessage
+    """
+    Args:
+        subscription_name: "projects/{your-project-id}/subscriptions/{your-subscription-id}"
+    """
+
+    def callback(message):
+        # Print the data received for debugging purpose if needed
+        print(f"Received message: {message.data}")
+
+        notification_msg = NotificationMessage.from_json(message.data)
+
+        print(
+            "Notification config name: {}".format(
+                notification_msg.notification_config_name
+            )
+        )
+        print(f"Finding: {notification_msg.finding}")
+
+        # Ack the message to prevent it from being pulled again
+        message.ack()
+
+    subscriber = pubsub_v1.SubscriberClient()
+
+    streaming_pull_future = subscriber.subscribe(subscription_name, callback=callback)
+
+    print(f"Listening for messages on {subscription_name}...\n")
+    try:
+        streaming_pull_future.result(timeout=1)  # Block for 1 second
+    except concurrent.futures.TimeoutError:
+        streaming_pull_future.cancel()
+    # [END securitycenter_receive_notifications_v2]
+    return True
+
