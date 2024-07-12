@@ -12,33 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import non_stream_multimodality_basic
 import non_stream_text_basic
 import stream_multimodality_basic
 import stream_text_basic
 
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = "gemini-1.5-flash-001"
-
-
 def test_non_stream_text_basic() -> None:
-    response = non_stream_text_basic.generate_content(PROJECT_ID, MODEL_ID)
+    response = non_stream_text_basic.generate_content()
     assert response
 
 
 def test_non_stream_multi_modality_basic() -> None:
-    response = non_stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
+    response = non_stream_multimodality_basic.generate_content()
     assert response
 
 
 def test_stream_text_basic() -> None:
-    responses = stream_text_basic.generate_content(PROJECT_ID, MODEL_ID)
+    responses = stream_text_basic.generate_content()
     assert responses
 
 
 def test_stream_multi_modality_basic() -> None:
-    responses = stream_multimodality_basic.generate_content(PROJECT_ID, MODEL_ID)
+    responses = stream_multimodality_basic.generate_content()
     assert responses

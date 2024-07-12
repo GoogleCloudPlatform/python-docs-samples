@@ -12,12 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from typing import List
 
 from vertexai.preview.tuning import sft
 
 
-def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = "us-central1"
+
+
+def gemini_tuning_basic() -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_basic]
 
     import time
@@ -25,10 +31,8 @@ def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -48,7 +52,7 @@ def gemini_tuning_basic(project_id: str) -> sft.SupervisedTuningJob:
     return sft_tuning_job
 
 
-def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
+def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_tuning_advanced]
 
     import time
@@ -56,10 +60,8 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -84,22 +86,17 @@ def gemini_tuning_advanced(project_id: str) -> sft.SupervisedTuningJob:
     return sft_tuning_job
 
 
-def get_tuning_job(
-    project_id: str, location: str, tuning_job_id: str
-) -> sft.SupervisedTuningJob:
+def get_tuning_job() -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_get_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # location = "us-central1"
-    # tuning_job_id = "TUNING_JOB_ID"
+    # TODO(developer): Update project, location
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
 
-    vertexai.init(project=project_id, location="us-central1")
-
+    tuning_job_id = "4982013113894174720"
     response = sft.SupervisedTuningJob(
-        f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
+        f"projects/{PROJECT_ID}/locations/{LOCATION}/tuningJobs/{tuning_job_id}"
     )
 
     print(response)
@@ -108,17 +105,13 @@ def get_tuning_job(
     return response
 
 
-def list_tuning_jobs(
-    project_id: str,
-) -> List[sft.SupervisedTuningJob]:
+def list_tuning_jobs() -> List[sft.SupervisedTuningJob]:
     # [START generativeaionvertexai_list_tuning_jobs]
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     responses = sft.SupervisedTuningJob.list()
 
@@ -129,20 +122,17 @@ def list_tuning_jobs(
     return responses
 
 
-def cancel_tuning_job(project_id: str, location: str, tuning_job_id: str) -> None:
+def cancel_tuning_job() -> None:
     # [START generativeaionvertexai_cancel_tuning_job]
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # location = "us-central1"
-    # tuning_job_id = "TUNING_JOB_ID"
+    # TODO(developer): Update project, location
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
 
-    vertexai.init(project=project_id, location="us-central1")
-
+    tuning_job_id = "4982013113894174720"
     job = sft.SupervisedTuningJob(
-        f"projects/{project_id}/locations/{location}/tuningJobs/{tuning_job_id}"
+        f"projects/{PROJECT_ID}/locations/{LOCATION}/tuningJobs/{tuning_job_id}"
     )
     job.cancel()
     # [END generativeaionvertexai_cancel_tuning_job]

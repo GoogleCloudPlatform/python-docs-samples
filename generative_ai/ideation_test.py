@@ -12,16 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import ideation
-
-
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
 
 
 # example model response
@@ -39,9 +34,7 @@ interview_expected_response = """1. What is your experience with project managem
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_interview() -> None:
-    content = ideation.interview(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
-    )
+    content = ideation.interview()
     # check if response is empty
     assert len(content) > 0
     # check if response has 10 points

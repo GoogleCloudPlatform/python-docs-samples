@@ -12,19 +12,27 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 from vertexai.generative_models import Part
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def generate_text(project_id: str) -> str:
+
+def generate_text() -> str:
     # [START generativeaionvertexai_gemini_safety_settings]
     import vertexai
 
-    from vertexai.generative_models import GenerativeModel, GenerationConfig, SafetySetting, HarmCategory, HarmBlockThreshold
+    from vertexai.generative_models import (
+        GenerativeModel,
+        GenerationConfig,
+        SafetySetting,
+        HarmCategory,
+        HarmBlockThreshold,
+    )
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
