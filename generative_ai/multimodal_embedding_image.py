@@ -19,6 +19,7 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+
 def get_image_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image and text.
 
