@@ -47,9 +47,7 @@ def test_non_streaming_image() -> None:
 
 
 def test_function_calling_basic() -> None:
-    response = chat_completions_function_calling_basic.generate_text(
-        PROJECT_ID, LOCATION
-    )
+    response = chat_completions_function_calling_basic.generate_text(PROJECT_ID, LOCATION)
     assert response
 
 

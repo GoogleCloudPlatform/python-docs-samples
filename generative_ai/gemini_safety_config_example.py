@@ -31,7 +31,7 @@ def generate_text() -> str:
         HarmBlockThreshold,
     )
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")

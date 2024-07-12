@@ -30,7 +30,7 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     from vertexai.vision_models import Image, MultiModalEmbeddingModel, Video
     from vertexai.vision_models import VideoSegmentConfig
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")

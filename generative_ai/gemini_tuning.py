@@ -31,7 +31,7 @@ def gemini_tuning_basic() -> sft.SupervisedTuningJob:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
@@ -60,7 +60,7 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
@@ -91,7 +91,7 @@ def get_tuning_job() -> sft.SupervisedTuningJob:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update project_id, location
+    # TODO(developer): Update project, location
     vertexai.init(project=PROJECT_ID, location=LOCATION)
 
     tuning_job_id = "4982013113894174720"
@@ -110,7 +110,7 @@ def list_tuning_jobs() -> List[sft.SupervisedTuningJob]:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     responses = sft.SupervisedTuningJob.list()
@@ -127,7 +127,7 @@ def cancel_tuning_job() -> None:
     import vertexai
     from vertexai.preview.tuning import sft
 
-    # TODO(developer): Update project_id, location
+    # TODO(developer): Update project, location
     vertexai.init(project=PROJECT_ID, location=LOCATION)
 
     tuning_job_id = "4982013113894174720"

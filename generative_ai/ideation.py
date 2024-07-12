@@ -24,7 +24,7 @@ def interview() -> str:
 
     from vertexai.language_models import TextGenerationModel
 
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
     parameters = {
         "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
