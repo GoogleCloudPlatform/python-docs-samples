@@ -35,8 +35,12 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
 
-    image = Image.load_from_file("gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png")
-    video = Video.load_from_file("gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4")
+    image = Image.load_from_file(
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
+    )
+    video = Video.load_from_file(
+        "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
+    )
     contextual_text = "Cars on Highway"
     embeddings = model.get_embeddings(
         image=image,
