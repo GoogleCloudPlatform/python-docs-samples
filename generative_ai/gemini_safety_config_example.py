@@ -23,7 +23,13 @@ def generate_text() -> str:
     # [START generativeaionvertexai_gemini_safety_settings]
     import vertexai
 
-    from vertexai.generative_models import GenerativeModel, GenerationConfig, SafetySetting, HarmCategory, HarmBlockThreshold
+    from vertexai.generative_models import (
+        GenerativeModel,
+        GenerationConfig,
+        SafetySetting,
+        HarmCategory,
+        HarmBlockThreshold,
+    )
 
     # TODO(developer): Update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
