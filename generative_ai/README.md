@@ -5,9 +5,9 @@
 
 ## Samples Style Guide
 
-If you are new to this work and interested in samples contributions, use the [Contributing Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/README.md).
+If you are interested in code sample contributions, see [Contributing Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/CONTRIBUTING.md).
 
-For Generative AI samples, these style guide instructions take precedence over [Contributing Guide](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/README.md).
+Only for Generative AI Python samples, below style guide instructions take precedence over [Samples Style Guide](https://googlecloudplatform.github.io/samples-style-guide/).
 
 ### 1. Use Scripting format
 
@@ -58,16 +58,19 @@ that need to update by users.
 
 Suggestion to avoid hidden variables in code samples
 
-* Keep the function def as much possible simple.
-  * Ex:`def hello() -> str:` is better than `def hello(a=..b=..c=..d=..) -> str:`  
-* Defined common variables like PROJECT_ID, LOCATION as global variables.
-* Use description variables name
-  * Ex: Instead of `user_input` use `text_input`
-* Resist the temptation to tell more. 
-  * Ex: Don't define unused optional arguments
-  * Ex: Use `Read more @ http://` than explaining '..'
+* Use global variables, to defined common variables like PROJECT_ID, LOCATION.
 
-Note: Not all the samples are the same. `Avoid Hidden variables` is not same as `Dont/No Hidden Variables`
+* Keep the function definitions simple, with less or no arguments.
+  * Ex: Use `def generate_text() -> str:` instead of `def generate_text(temperature=..image_path=..video_path=..) -> str:`
+
+* Use descriptive variables names and if need, use long variable name.
+  * Ex: Use `text_input` instead of `user_input` or `input_var` or `myvar` ...
+
+* Resist the temptation to tell more
+  * Ex: Don't define unused optional arguments
+  * Ex: Use `Read more @ http://..` than explaining `video_config looks like {"foo": "bar",...}`
+
+**Note**: Not all the samples are the same! "Avoid Hidden variables" is not same as "Dont/No Hidden Variables".
 
 
 ## Conclusion
