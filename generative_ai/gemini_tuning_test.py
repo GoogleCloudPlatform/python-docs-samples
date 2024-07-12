@@ -12,37 +12,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import pytest
 
 import gemini_tuning
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
-MODEL_ID = "gemini-1.0-pro-002"
-TUNING_JOB_ID = "4982013113894174720"
-
 
 @pytest.mark.skip(reason="Skip due to tuning taking a long time.")
 def test_gemini_tuning() -> None:
-    response = gemini_tuning.gemini_tuning_basic(PROJECT_ID)
+    response = gemini_tuning.gemini_tuning_basic()
     assert response
 
-    response = gemini_tuning.gemini_tuning_advanced(PROJECT_ID)
+    response = gemini_tuning.gemini_tuning_advanced()
     assert response
 
 
 def test_get_tuning_job() -> None:
-    response = gemini_tuning.get_tuning_job(PROJECT_ID, LOCATION, TUNING_JOB_ID)
+    response = gemini_tuning.get_tuning_job()
     assert response
 
 
 def test_list_tuning_jobs() -> None:
-    response = gemini_tuning.list_tuning_jobs(PROJECT_ID)
+    response = gemini_tuning.list_tuning_jobs()
     assert response
 
 
 @pytest.mark.skip(reason="Skip due to tuning taking a long time.")
 def test_cancel_tuning_job() -> None:
-    gemini_tuning.cancel_tuning_job(PROJECT_ID, LOCATION, TUNING_JOB_ID)
+    gemini_tuning.cancel_tuning_job()

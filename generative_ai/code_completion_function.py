@@ -13,14 +13,13 @@
 # limitations under the License.
 
 
-def complete_code_function(temperature: float = 0.2) -> object:
+def complete_code_function() -> object:
     """Example of using Codey for Code Completion to complete a function."""
     # [START aiplatform_sdk_code_completion_comment]
     from vertexai.language_models import CodeGenerationModel
 
-    # TODO developer - override these parameters as needed:
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 64,  # Token limit determines the maximum amount of text output.
     }
 

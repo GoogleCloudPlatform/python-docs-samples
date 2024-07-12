@@ -24,10 +24,7 @@ _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_video_text() -> None:
     embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings(
-        project_id=_PROJECT_ID,
-        image_path="gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png",
-        video_path="gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4",
-        contextual_text="Cars on Highway",
+        project_id=_PROJECT_ID
     )
     assert embeddings is not None
     assert embeddings.image_embedding is not None

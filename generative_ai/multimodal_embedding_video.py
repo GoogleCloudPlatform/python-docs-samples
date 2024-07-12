@@ -12,38 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Optional
+import os
 
-from vertexai.vision_models import MultiModalEmbeddingResponse, VideoSegmentConfig
+from vertexai.vision_models import MultiModalEmbeddingResponse
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_video_embeddings(
-    project_id: str,
-    video_path: str,
-    contextual_text: Optional[str] = None,
-    video_segment_config: Optional[VideoSegmentConfig] = None,
-) -> MultiModalEmbeddingResponse:
+def get_video_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from video and text.
 
-    Args:
-        project_id: Google Cloud Project ID, used to initialize vertexai
-        location: Google Cloud Region, used to initialize vertexai
-        video_path: Path to video (local or Google Cloud Storage) to generate embeddings for.
-        contextual_text: Text to generate embeddings for.
-        video_segment_config: Define specific segments to generate embeddings for.
-            https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
+    Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
     # [START aiplatform_sdk_multimodal_embedding_video]
     import vertexai
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
+    from vertexai.vision_models import VideoSegmentConfig
 
-    # TODO(developer): Update values for project_id,
-    #               video_path, contextual_text, dimension, video_segment_config
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    video_path = "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
+    contextual_text = "Cars on Highway"
     video = Video.load_from_file(video_path)
+    video_segment_config = VideoSegmentConfig(end_offset_sec=1)
 
     embeddings = model.get_embeddings(
         video=video,

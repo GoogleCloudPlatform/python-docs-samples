@@ -39,9 +39,7 @@ interview_expected_response = """1. What is your experience with project managem
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_interview() -> None:
-    content = ideation.interview(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
-    )
+    content = ideation.interview(project_id=_PROJECT_ID)
     # check if response is empty
     assert len(content) > 0
     # check if response has 10 points
