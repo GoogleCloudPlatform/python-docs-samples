@@ -71,7 +71,7 @@ def delete_notification_config(parent_id, location_id, notification_config_id):
 
     client.delete_notification_config(request={"name": notification_config_name})
     print(f"Deleted notification config: {notification_config_name}")
-    # [END securitycenter_delete_notification_config]
+    # [END securitycenter_delete_notification_config_v2]
     return True
 
 
