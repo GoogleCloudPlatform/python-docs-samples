@@ -71,7 +71,9 @@ def training_data_filename() -> str:
         delete_from_gcs(_BUCKET, temp_filename)
 
 
-def teardown_model(tuned_model: TextGenerationModel, training_data_filename: str) -> None:
+def teardown_model(
+    tuned_model: TextGenerationModel, training_data_filename: str
+) -> None:
     for tuned_model_name in tuned_model.list_tuned_model_names():
         model_registry = aiplatform.models.ModelRegistry(model=tuned_model_name)
         if (

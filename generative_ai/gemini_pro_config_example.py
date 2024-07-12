@@ -34,7 +34,9 @@ def generate_text(project_id: str) -> None:
     )
 
     # Generation Config
-    config = GenerationConfig(max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32)
+    config = GenerationConfig(
+        max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
+    )
 
     # Generate text
     response = model.generate_content(
