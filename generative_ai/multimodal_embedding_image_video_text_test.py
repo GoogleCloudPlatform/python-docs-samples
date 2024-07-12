@@ -11,21 +11,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import multimodal_embedding_image_video_text
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_video_text() -> None:
-    embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings(
-        project_id=_PROJECT_ID
-    )
+    embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings()
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert embeddings.video_embeddings is not None
