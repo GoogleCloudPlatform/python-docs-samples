@@ -48,29 +48,37 @@ def source_name(organization_id):
 
 
 def test_list_all_findings(organization_id):
-    count = snippets_findings_v2.list_all_findings(organization_id, "global")
+    count = snippets_findings_v2.list_all_findings(organization_id, "-", "global")
     assert count > 0
 
 
 def test_list_filtered_findings(organization_id):
-    source_name = f"organizations/{organization_id}/sources/-/locations/global"
-    count = snippets_findings_v2.list_filtered_findings(source_name)
+    count = snippets_findings_v2.list_filtered_findings(organization_id, "-", "global")
     assert count > 0
 
 
 def test_group_all_findings(organization_id):
-    count = snippets_findings_v2.group_all_findings(organization_id, "global")
+    count = snippets_findings_v2.group_all_findings(organization_id, "-", "global")
     assert count > 0
 
 
 def test_group_filtered_findings(organization_id):
-    source_name = f"organizations/{organization_id}/sources/-/locations/global"
-    count = snippets_findings_v2.group_filtered_findings(source_name)
+    count = snippets_findings_v2.group_filtered_findings(organization_id, "-", "global")
+    assert count > 0
+
+def test_list_findings_with_security_marks(organization_id):
+    count = snippets_findings_v2.list_findings_with_security_marks(organization_id, "-", "global")
+    assert count > 0
+
+
+def test_group_findings_by_state(organization_id):
+    count = snippets_findings_v2.group_findings_by_state(organization_id, "-", "global")
     assert count > 0
 
 
 def test_create_source(organization_id):
-    snippets_findings_v2.create_source(organization_id)
+    source = snippets_findings_v2.create_source(organization_id)
+    assert source.display_name == "Customized Display Name"
 
 
 def test_get_source(source_name):
