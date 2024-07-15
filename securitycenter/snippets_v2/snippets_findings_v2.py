@@ -215,3 +215,88 @@ def group_findings_by_state(organization_id, source_id, location_id):
   return count
 
 
+def create_finding(organization_id, location_id, finding_id, source_name, category):
+  """Creates a new finding."""
+  # [START securitycenter_create_finding_v2]
+  import datetime
+
+  from google.cloud import securitycenter_v2
+  from google.cloud.securitycenter_v2 import Finding
+
+  # Create a new client.
+  client = securitycenter_v2.SecurityCenterClient()
+
+  # Use the current time as the finding "event time".
+  event_time = datetime.datetime.now(tz=datetime.timezone.utc)
+
+  # 'source_name' is the resource path for a source that has been
+  # created previously (you can use list_sources to find a specific one).
+  # Its format is:
+  # source_name = "organizations/{organization_id}/sources/{source_id}"
+  # e.g.:
+  # source_name = "organizations/111122222444/sources/1234"
+  # source_name = f"organizations/{organization_id}/sources/{source_name}"
+  # category= "MEDIUM_RISK_ONE"
+  # The resource this finding applies to.  The CSCC UI can link
+  # the findings for a resource to the corresponding Asset of a resource
+  # if there are matches.
+  resource_name = f"//cloudresourcemanager.googleapis.com/organizations/{organization_id}"
+
+  finding = Finding(
+      state=Finding.State.ACTIVE,
+      resource_name=resource_name,
+      category=category,
+      event_time=event_time,
+  )
+  parent = source_name+"/locations/"+location_id
+  # Call The API.
+  created_finding = client.create_finding(
+      request={"parent": parent, "finding_id": finding_id, "finding": finding}
+  )
+  print(created_finding)
+  # [END securitycenter_create_finding_v2]
+  return created_finding
+
+
+def update_finding(source_name, location_id):
+  # [START securitycenter_update_finding_source_properties_v2]
+  import datetime
+
+  from google.cloud import securitycenter_v2
+  from google.cloud.securitycenter_v2 import Finding
+  from google.protobuf import field_mask_pb2
+
+  client = securitycenter_v2.SecurityCenterClient()
+  # Only update the specific source property and event_time.  event_time
+  # is required for updates.
+  field_mask = field_mask_pb2.FieldMask(
+      paths=["source_properties.s_value", "event_time"]
+  )
+
+  # Set the update time to Now.  This must be some time greater then the
+  # event_time on the original finding.
+  event_time = datetime.datetime.now(tz=datetime.timezone.utc)
+
+  # 'source_name' is the resource path for a source that has been
+  # created previously (you can use list_sources to find a specific one).
+  # Its format is:
+  # source_name = "organizations/{organization_id}/sources/{source_id}"
+  # e.g.:
+  # source_name = "organizations/111122222444/sources/1234"
+  finding_name = f"{source_name}/locations/{location_id}/findings/samplefindingid"
+  finding = Finding(
+      name=finding_name,
+      source_properties={"s_value": "new_string"},
+      event_time=event_time,
+  )
+  updated_finding = client.update_finding(
+      request={"finding": finding, "update_mask": field_mask}
+  )
+
+  print(
+      "New Source properties: {}, Event Time {}".format(
+          updated_finding.source_properties, updated_finding.event_time
+      )
+  )
+  return updated_finding
+  # [END securitycenter_update_finding_source_properties_v2]
