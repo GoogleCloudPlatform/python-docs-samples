@@ -50,7 +50,7 @@ def sample_classify_text(
     }
 
     response = client.classify_text(request={"document": document})
-    # Loop through classified categories returned from the API
+    # Loop through classified categories returned from the API.
     for category in response.categories:
         # Get the name of the category representing the document.
         # See the predefined taxonomy of categories:
