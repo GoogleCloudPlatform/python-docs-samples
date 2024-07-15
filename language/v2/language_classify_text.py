@@ -42,15 +42,14 @@ def sample_classify_text(
     # Optional. If not specified, the language is automatically detected.
     # For list of supported languages:
     # https://cloud.google.com/natural-language/docs/languages
-    language_code = "en"
     document = {
         "content": text_content,
         "type_": document_type_in_plain_text,
-        "language_code": language_code,
+        "language_code": "en",
     }
 
     response = client.classify_text(request={"document": document})
-    # Loop through classified categories returned from the API
+    # Loop through classified categories returned from the API.
     for category in response.categories:
         # Get the name of the category representing the document.
         # See the predefined taxonomy of categories:

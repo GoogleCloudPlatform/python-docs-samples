@@ -19,6 +19,7 @@ import language_entities_text
 
 
 def test_sample_analyze_entities_text(capsys: ...) -> None:
+    # TODO: delete this comment
     assert os.environ["GOOGLE_CLOUD_PROJECT"] != ""
 
     language_entities_text.sample_analyze_entities()
