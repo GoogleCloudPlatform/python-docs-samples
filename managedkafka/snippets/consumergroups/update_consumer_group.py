@@ -47,7 +47,7 @@ def update_consumer_group(
     consumer_group.name = client.consumer_group_path(
         project_id, region, cluster_id, consumer_group_id
     )
-    
+
     topic_metadata = managedkafka_v1.ConsumerTopicMetadata()
     for partition, offset in partition_offsets.items():
         partition_metadata = managedkafka_v1.ConsumerPartitionMetadata(offset=offset)
