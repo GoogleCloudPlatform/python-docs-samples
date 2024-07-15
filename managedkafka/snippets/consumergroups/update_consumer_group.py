@@ -35,7 +35,7 @@ def update_consumer_group(
         cluster_id: ID of the Kafka cluster.
         consumer_group_id: ID of the Kafka consumer group.
         topic_path: Name of the Kafka topic.
-        partition_offsets: Configuration of the topics.
+        partition_offsets: Configuration of the topic, represented as a map of partition indexes to their offset value.
 
     Raises:
         This method will raise the exception if the consumer group is not found.
@@ -47,11 +47,11 @@ def update_consumer_group(
     consumer_group.name = client.consumer_group_path(
         project_id, region, cluster_id, consumer_group_id
     )
-
+    
     topic_metadata = managedkafka_v1.ConsumerTopicMetadata()
     for partition, offset in partition_offsets.items():
         partition_metadata = managedkafka_v1.ConsumerPartitionMetadata(offset=offset)
-        topic_metadata.partitions = {partition: partition_metadata}
+        topic_metadata.partitions[partition] = partition_metadata
     consumer_group.topics = {
         topic_path: topic_metadata,
     }
