@@ -467,7 +467,7 @@ def import_documents_alloy_db_sample(
 ) -> str:
     # [START genappbuilder_import_documents_alloy_db]
     from google.api_core.client_options import ClientOptions
-    from google.cloud import discoveryengine
+    from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
     # project_id = "YOUR_PROJECT_ID"

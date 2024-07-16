@@ -128,10 +128,10 @@ def test_import_documents_bigtable():
 
 def test_import_documents_alloy_db():
     alloy_db_project_id = project_id
-    alloy_db_location_id = "YOUR_ALLOY_DB_LOCATION_ID"
-    alloy_db_cluster_id = "YOUR_ALLOY_DB_CLUSTER_ID"
-    alloy_db_database_id = "YOUR_ALLOY_DB_DATABASE_ID"
-    alloy_db_table_id = "YOUR_ALLOY_DB_TABLE_ID"
+    alloy_db_location_id = "us-central1"
+    alloy_db_cluster_id = "vais-tests"
+    alloy_db_database_id = "postgres"
+    alloy_db_table_id = "public.vais"
 
     operation_name = import_documents_sample.import_documents_alloy_db_sample(
         project_id=project_id,
