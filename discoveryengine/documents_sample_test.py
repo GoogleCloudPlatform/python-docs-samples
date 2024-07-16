@@ -126,6 +126,27 @@ def test_import_documents_bigtable():
     assert "operations/import-documents" in operation_name
 
 
+def test_import_documents_alloy_db():
+    alloy_db_project_id = project_id
+    alloy_db_location_id = "YOUR_ALLOY_DB_LOCATION_ID"
+    alloy_db_cluster_id = "YOUR_ALLOY_DB_CLUSTER_ID"
+    alloy_db_database_id = "YOUR_ALLOY_DB_DATABASE_ID"
+    alloy_db_table_id = "YOUR_ALLOY_DB_TABLE_ID"
+
+    operation_name = import_documents_sample.import_documents_alloy_db_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        alloy_db_project_id=alloy_db_project_id,
+        alloy_db_location_id=alloy_db_location_id,
+        alloy_db_cluster_id=alloy_db_cluster_id,
+        alloy_db_database_id=alloy_db_database_id,
+        alloy_db_table_id=alloy_db_table_id,
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
 @pytest.mark.skip(reason="Permissions")
 def test_import_documents_healthcare_fhir_sample():
     location = "us"
