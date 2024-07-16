@@ -16,12 +16,15 @@ import os
 
 import backoff
 
+import pytest
+
 from google.api_core.exceptions import ResourceExhausted
 
 import embedding_batch
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+@pytest.fixture(scope="session", autouse=True)
 def test_embed_text_batch() -> None:
     os.environ["GCS_OUTPUT_URI"] = "gs://python-docs-samples-tests/"
     batch_prediction_job = embedding_batch.embed_text_batch()
