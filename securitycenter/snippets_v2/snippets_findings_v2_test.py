@@ -94,3 +94,14 @@ def test_list_source(organization_id):
 def test_update_source(source_name):
     updated = snippets_findings_v2.update_source(source_name)
     assert updated.display_name == "Updated Display Name"
+
+def test_create_finding(organization_id, source_name):
+    created_finding = snippets_findings_v2.create_finding(organization_id,"global","samplefindingid",source_name,"MEDIUM_RISK_ONE")
+    assert len(created_finding.name) > 0
+
+
+def test_update_finding(source_name):
+    snippets_findings_v2.create_finding(organization_id,"global","samplefindingid2",source_name,"MEDIUM_RISK_ONE")
+    updated_finding = snippets_findings_v2.update_finding(source_name,"global")
+    assert len(updated_finding.name) > 0
+
