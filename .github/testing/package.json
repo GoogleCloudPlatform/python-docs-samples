@@ -1,0 +1,17 @@
+{
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "gts": "^5.3.1",
+    "typescript": "^5.5.3"
+  },
+  "scripts": {
+    "clean": "gts clean",
+    "lint": "gts lint",
+    "fix": "gts fix",
+    "build": "tsc",
+    "affected": "node build/src/main.js"
+  },
+  "dependencies": {
+    "minimatch": "^10.0.1"
+  }
+}
