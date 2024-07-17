@@ -16,6 +16,12 @@
         "name": "device",
         "label": "Device",
         "helpText": "The device to run inference on. Can be 'CPU' or 'GPU'."
+      },
+      {
+        "name": "disk_size_gb",
+        "label": "disk_size_gb",
+        "helpText": "disk_size_gb for worker",
+        "isOptional": true
       }
     ]
   }

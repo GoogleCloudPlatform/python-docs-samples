@@ -14,7 +14,8 @@
 
 import logging
 
-from typing import Any, Dict, Iterable, Optional, Sequence
+from typing import Any, Optional
+from collections.abc import Iterable, Sequence
 
 import apache_beam as beam
 from apache_beam.ml.inference.base import ModelHandler
@@ -85,7 +86,7 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         self,
         batch: Sequence[str],
         model: GemmaForCausalLM,
-        inference_args: Optional[Dict[str, Any]] = None
+        inference_args: Optional[dict[str, Any]] = None
     ) -> Iterable[PredictionResult]:
         """Runs inferences on a batch of text strings.
 
@@ -97,10 +98,8 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         Returns:
           An Iterable of type PredictionResult.
         """
-        # Loop each text string, and use a tuple to store the inference results.
-        predictions = []
         result = model.generate(prompts=batch, device=self._device)
-        predictions.append(result)
+        predictions = [result]
         return [PredictionResult(x, y) for x, y in zip(batch, predictions)]
 
 
@@ -156,9 +155,9 @@ if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
     beam_options = PipelineOptions(
         beam_args,
+        save_main_session=True,
         streaming=True,
     )
-    beam_options.view_as(SetupOptions).save_main_session = True
 
     handler = GemmaPytorchModelHandler(model_variant=args.model_variant,
                                        checkpoint_path=args.checkpoint_path,
@@ -173,6 +172,6 @@ if __name__ == "__main__":
             | "RunInference-Gemma" >> RunInference(
                 handler)  # Send the prompts to the model and get responses.
             |
-            "Format Output" >> beam.ParDo(FormatOutput())  # Format the output.
+            "Format Output" >> beam.ParDo(FormatOutput())
             | "Publish Result" >>
             beam.io.gcp.pubsub.WriteToPubSub(topic=args.responses_topic))

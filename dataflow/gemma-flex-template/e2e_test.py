@@ -120,6 +120,7 @@ def dataflow_job(
             "device": "GPU",
             "sdk_container_image": f"gcr.io/{project}/{flex_template_image}",
             "machine_type": f"{DATAFLOW_MACHINE_TYPE}",
+            "disk_size_gb": "50",
         },
         additional_experiments={
             "worker_accelerator" : "type:nvidia-l4;count:1;install-nvidia-driver",
