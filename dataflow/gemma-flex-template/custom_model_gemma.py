@@ -22,7 +22,6 @@ from apache_beam.ml.inference.base import ModelHandler
 from apache_beam.ml.inference.base import PredictionResult
 from apache_beam.ml.inference.base import RunInference
 from apache_beam.options.pipeline_options import PipelineOptions
-from apache_beam.options.pipeline_options import SetupOptions
 
 from gemma.config import get_config_for_2b
 from gemma.config import get_config_for_7b
