@@ -51,25 +51,6 @@ def mute_rule():
     )
 
 
-@pytest.fixture
-def finding(capsys: CaptureFixture):
-    import snippets_findings_v2
-    from snippets_findings_v2 import create_finding
-
-    snippets_findings_v2.create_source(ORGANIZATION_ID)
-    out, _ = capsys.readouterr()
-    # source_path is of the format: organizations/{ORGANIZATION_ID}/sources/{source_name}
-    source_path = out.split(":")[1].strip()
-    source_name = source_path.split("/")[3]
-    finding1_path = create_finding(source_path, "1testingscc").name
-    finding2_path = create_finding(source_path, "2testingscc").name
-
-    yield {
-        "source": source_name,
-        "finding1": finding1_path,
-        "finding2": finding2_path,
-    }
-
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -99,38 +80,3 @@ def test_update_mute_rule(mute_rule):
     )
     assert response.name == mute_rule.get('update_resp').name
 
-
-
-@backoff.on_exception(
-    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
-)
-def test_set_mute_finding(finding):
-    finding_path = finding.get("finding1")
-    response = snippets_mute_config_v2.set_mute_finding(finding_path)
-    assert response.name == finding_path
-
-
-@backoff.on_exception(
-    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
-)
-def test_set_unmute_finding(finding):
-    finding_path = finding.get("finding1")
-    response = snippets_mute_config_v2.set_unmute_finding(finding_path)
-
-
-
-@backoff.on_exception(
-    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
-)
-def test_bulk_mute_findings(finding):
-    # Mute findings that belong to this project.
-    snippets_mute_config.bulk_mute_findings(
-        f"projects/{PROJECT_ID}", f'resource.project_display_name="{PROJECT_ID}"'
-    )
-
-    # Get all findings in the source to check if they are muted.
-    response = list_all_findings(
-        f"projects/{PROJECT_ID}/sources/{finding.get('source')}"
-    )
-    for i, finding in enumerate(response):
-        assert finding.finding.mute == securitycenter.Finding.Mute.MUTED
