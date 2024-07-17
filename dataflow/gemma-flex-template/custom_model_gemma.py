@@ -14,8 +14,8 @@
 
 import logging
 
-from typing import Any, Optional
 from collections.abc import Iterable, Sequence
+from typing import Any, Optional
 
 import apache_beam as beam
 from apache_beam.ml.inference.base import ModelHandler
