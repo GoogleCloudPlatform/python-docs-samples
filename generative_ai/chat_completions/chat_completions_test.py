@@ -14,13 +14,13 @@
 
 import os
 
+import chat_completions_credentials_refresher
 import chat_completions_function_calling_basic
 import chat_completions_function_calling_config
 import chat_completions_non_streaming_image
 import chat_completions_non_streaming_text
 import chat_completions_streaming_image
 import chat_completions_streaming_text
-import chat_completions_credentials_refresher
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -60,6 +60,9 @@ def test_function_calling_config() -> None:
     )
     assert response
 
+
 def test_credentials_refresher() -> None:
-    response = chat_completions_credentials_refresher.generate_text(PROJECT_ID, LOCATION)
+    response = chat_completions_credentials_refresher.generate_text(
+        PROJECT_ID, LOCATION
+    )
     assert response

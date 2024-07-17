@@ -12,17 +12,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import openai
+# Disable linting on `Any` type annotations (needed for OpenAI kwargs and attributes).
+# flake8: noqa ANN401
+
+from typing import Any
+
 import google.auth
 import google.auth.transport.requests
+import openai
+
 
 class OpenAICredentialsRefresher:
-    def __init__(self, **kwargs):
+    def __init__(self, **kwargs: Any) -> None:
         # Set a dummy key here
-        self.client = openai.OpenAI(**kwargs, api_key='DUMMY')
-        self.creds, self.project = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+        self.client = openai.OpenAI(**kwargs, api_key="DUMMY")
+        self.creds, self.project = google.auth.default(
+            scopes=["https://www.googleapis.com/auth/cloud-platform"]
+        )
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str) -> Any:
         if not self.creds.valid:
             auth_req = google.auth.transport.requests.Request()
             self.creds.refresh(auth_req)
@@ -32,6 +40,7 @@ class OpenAICredentialsRefresher:
 
             self.client.api_key = self.creds.token
         return getattr(self.client, name)
+
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
     # [START generativeaionvertexai_credentials_refresher]
