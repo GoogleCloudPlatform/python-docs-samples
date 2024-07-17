@@ -13,22 +13,25 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for listing regional secrets 
-in a project.
+command line application and sample code for getting metadata about a regional secret.
 """
 
 import argparse
 
+from google.cloud import secretmanager_v1
 
-# [START secretmanager_v1_list_regional_secrets]
-def list_regional_secrets(project_id: str, location_id: str) -> None:
+
+# [START secretmanager_v1_get_regional_secret]
+def get_regional_secret(project_id: str, location_id: str, secret_id: str) -> secretmanager_v1.GetSecretRequest:
     """
-    List all regional secrets in the given project.
+    Get information about the given secret. This only returns metadata about
+    the secret container, not any secret material.
     """
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
+    # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
@@ -36,15 +39,17 @@ def list_regional_secrets(project_id: str, location_id: str) -> None:
         "api_endpoint": api_endpoint
             })
 
-    # Build the resource name of the parent project.
-    parent = f"projects/{project_id}/locations/{location_id}"
+    # Build the resource name of the secret.
+    name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # List all secrets.
-    for secret in client.list_secrets(request={"parent": parent}):
-        print(f"Found secret: {secret.name}")
+    # Get the secret.
+    response = client.get_secret(request={"name": name})
 
+    # Print data about the secret.
+    print(f"Got secret {response.name}")
+    # [END secretmanager_v1_get_regional_secret]
 
-# [END secretmanager_v1_list_regional_secrets]
+    return response
 
 
 if __name__ == "__main__":
@@ -53,6 +58,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
+    parser.add_argument("secret_id", help="id of the secret to get")
     args = parser.parse_args()
 
-    list_secrets(args.project_id, args.location_id)
+    get_secret(args.project_id, args.location_id, args.secret_id)

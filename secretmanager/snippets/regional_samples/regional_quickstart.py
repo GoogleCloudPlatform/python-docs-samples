@@ -37,6 +37,7 @@ def regional_quickstart(_project_id: str, _location_id: str, _secret_id: str) ->
     secret_id = _secret_id
     # [START secretmanager_regional_quickstart]
 
+    # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google LLC
+# Copyright 2021 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,37 +18,38 @@ import argparse
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_v1_update_regional_secret_with_alias]
-def update_regional_secret_with_alias(
-    project_id: str, location_id: str, secret_id: str
+# [START secretmanager_v1_update_regional_secret_with_etag]
+def update_regional_secret_with_etag(
+    project_id: str, location_id: str, secret_id: str, etag: str
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
-    Update the metadata about an existing regional secret.
+    Update the metadata about an existing secret, using etag.
     """
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
+    # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-
+    
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
     # Update the secret.
-    secret = {"name": name, "version_aliases": {"test": 1}}
-    update_mask = {"paths": ["version_aliases"]}
+    secret = {"name": name, "labels": {"secretmanager": "rocks"}, "etag": etag}
+    update_mask = {"paths": ["labels"]}
     response = client.update_secret(
         request={"secret": secret, "update_mask": update_mask}
     )
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    # [END secretmanager_v1_update_regional_secret_with_alias]
+    # [END secretmanager_v1_update_regional_secret_with_etag]
 
     return response
 
@@ -59,7 +60,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
-    parser.add_argument("--secret-id", required=True)
+    parser.add_argument("secret-id", required=True)
+    parser.add_argument("etag", help="current etag of the secret")
     args = parser.parse_args()
 
-    update_secret_with_alias(args.project_id, args.location_id, args.secret_id)
+    update_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)

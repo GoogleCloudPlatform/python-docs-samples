@@ -31,6 +31,7 @@ def add_regional_secret_version(
     Add a new secret version to the given secret with the provided payload.
     """
 
+    # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.

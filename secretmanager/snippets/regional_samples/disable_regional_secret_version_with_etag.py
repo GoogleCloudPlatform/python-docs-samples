@@ -35,6 +35,7 @@ def disable_regional_secret_version_with_etag(
     from google.cloud import secretmanager_v1
     from google.cloud.secretmanager_v1.types import service
 
+    # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
