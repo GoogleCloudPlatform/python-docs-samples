@@ -69,6 +69,7 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
         # The following parameters are optional
         validation_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_validation_data.jsonl",
         epochs=4,
+        adapter_size=4,
         learning_rate_multiplier=1.0,
         tuned_model_display_name="tuned_gemini_pro",
     )
