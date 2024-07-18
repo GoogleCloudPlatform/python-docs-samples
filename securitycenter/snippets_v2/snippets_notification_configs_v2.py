@@ -15,10 +15,12 @@
 # limitations under the License.
 """Demos for working with notification configs."""
 
+from typing import Dict
 
 # [START securitycenter_create_notification_config_v2]
-def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
+def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> Dict:
     """
+    This method is used to create the Notification Config.
     Args:
         parent_id: must be in one of the following formats:
             "organizations/{organization_id}"
@@ -51,8 +53,9 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
 
 
 # [START securitycenter_delete_notification_config_v2]
-def delete_notification_config(parent_id, location_id, notification_config_id):
+def delete_notification_config(parent_id, location_id, notification_config_id) -> bool:
     """
+    This method is used to delete the Notification Config.
     Args:
         parent_id: must be in one of the following formats:
             "organizations/{organization_id}"
@@ -76,8 +79,9 @@ def delete_notification_config(parent_id, location_id, notification_config_id):
 
 
 # [START securitycenter_get_notification_config_v2]
-def get_notification_config(parent_id, location_id, notification_config_id):
+def get_notification_config(parent_id, location_id, notification_config_id) -> Dict:
     """
+    This method is used to get the Notification Config.
     Args:
         parent_id: must be in one of the following formats:
             "organizations/{organization_id}"
@@ -103,8 +107,9 @@ def get_notification_config(parent_id, location_id, notification_config_id):
 
 
 # [START securitycenter_list_notification_configs_v2]
-def list_notification_configs(parent_id, location_id):
+def list_notification_configs(parent_id, location_id) -> Dict:
     """
+    This method is used to list the Notification Config.
     Args:
         parent_id: must be in one of the following formats:
             "organizations/{organization_id}"
@@ -126,8 +131,9 @@ def list_notification_configs(parent_id, location_id):
 
 
 # [START securitycenter_update_notification_config_v2]
-def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id):
+def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> Dict:
     """
+    This method is used to update the Notification Config.
     Args:
         parent_id: must be in one of the following formats:
             "organizations/{organization_id}"
@@ -175,7 +181,7 @@ def update_notification_config(parent_id, location_id, pubsub_topic, notificatio
     return updated_notification_config
 
 
-def receive_notifications(subscription_name):
+def receive_notifications(subscription_name) -> bool:
     # [START securitycenter_receive_notifications_v2]
     # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
     import concurrent
@@ -183,6 +189,7 @@ def receive_notifications(subscription_name):
     from google.cloud import pubsub_v1
     from google.cloud.securitycenter_v2 import NotificationMessage
     """
+    This method is used to recieve the Notification Config.
     Args:
         subscription_name: "projects/{your-project-id}/subscriptions/{your-subscription-id}"
     """
