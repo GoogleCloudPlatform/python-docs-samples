@@ -14,11 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from typing import Dict
 
 # [START securitycenter_create_mute_config_v2]
-
-
-def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str):
+def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Dict:
     """
      Creates a mute configuration under a given scope that will mute
      all new findings that match a given filter.
@@ -28,7 +27,10 @@ def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str):
                       - organizations/{organization_id}
                       - folders/{folder_id}
                       - projects/{project_id}
+         location_id: Gcp location id; example: 'global'
          mute_config_id: Set a unique id; max of 63 chars.
+     Returns:
+         Dict: returns the mute rule details
      """
 
     from google.cloud import securitycenter_v2
@@ -61,7 +63,7 @@ def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str):
 
 
 # [START securitycenter_delete_mute_config_v2]
-def delete_mute_rule(parent_path: str, location_id: str, mute_config_name: str) -> None:
+def delete_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> None:
     """
     Deletes a mute configuration given its resource name.
     Note: Previously muted findings are not affected when a mute config is deleted.
@@ -70,24 +72,27 @@ def delete_mute_rule(parent_path: str, location_id: str, mute_config_name: str) 
                      - organizations/{organization_id}
                      - folders/{folder_id}
                      - projects/{project_id}
-        mute_config_name: Set a unique id; max of 63 chars.
+        location_id: Gcp location id; example: 'global'
+        mute_config_id: Set a unique id; max of 63 chars.
+    Returns:
+         None: returns none mute rule is deleted
     """
     from google.cloud import securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
 
     request = securitycenter_v2.DeleteMuteConfigRequest()
-    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_name
+    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
 
     client.delete_mute_config(request)
-    print(f"Mute rule deleted successfully: {mute_config_name}")
+    print(f"Mute rule deleted successfully: {mute_config_id}")
 
 
 # [END securitycenter_delete_mute_config_v2]
 
 
 # [START securitycenter_get_mute_config_v2]
-def get_mute_rule(parent_path: str, location_id: str, mute_config_name: str) -> None:
+def get_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Dict:
     """
     Retrieves a mute configuration given its resource name.
     Args:
@@ -95,14 +100,17 @@ def get_mute_rule(parent_path: str, location_id: str, mute_config_name: str) -> 
                      - organizations/{organization_id}
                      - folders/{folder_id}
                      - projects/{project_id}
-        mute_config_name: Set a unique id; max of 63 chars.
+        location_id: Gcp location id; example: 'global'
+        mute_config_id: Set a unique id; max of 63 chars.
+    Returns:
+         Dict: returns the mute rule details
     """
     from google.cloud import securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
 
     request = securitycenter_v2.GetMuteConfigRequest()
-    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_name
+    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
 
     mute_config = client.get_mute_config(request)
     print(f"Retrieved the mute rule: {mute_config.name}")
@@ -112,7 +120,7 @@ def get_mute_rule(parent_path: str, location_id: str, mute_config_name: str) -> 
 
 
 # [START securitycenter_list_mute_configs_v2]
-def list_mute_rules(parent: str, location_id: str) -> None:
+def list_mute_rules(parent: str, location_id: str) -> Dict:
     """
     Listing mute configs at organization level will return all the configs
     at the org, folder and project levels.
@@ -123,6 +131,9 @@ def list_mute_rules(parent: str, location_id: str) -> None:
                 - organizations/{organization_id}
                 - folders/{folder_id}
                 - projects/{project_id}
+        location_id: Gcp location id; example: 'global'
+    Returns:
+         Dict: returns the mute rule details
     """
     from google.cloud import securitycenter_v2
 
@@ -140,7 +151,7 @@ def list_mute_rules(parent: str, location_id: str) -> None:
 
 
 # [START securitycenter_update_mute_config_v2]
-def update_mute_rule(parent_path: str, location_id: str, mute_config_name: str) -> None:
+def update_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Dict:
     """
     Updates an existing mute configuration.
     The following can be updated in a mute config: description, and filter/ mute rule.
@@ -149,11 +160,10 @@ def update_mute_rule(parent_path: str, location_id: str, mute_config_name: str) 
                 - organizations/{organization_id}
                 - folders/{folder_id}
                 - projects/{project_id}
-        mute_config_name: Specify the name of the mute config to delete.
-                          Use any one of the following formats:
-                          - organizations/{organization}/locations/{location_id}/muteConfigs/{config_id}
-                          - folders/{folder}/locations/{location_id}/muteConfigs/{config_id}
-                          - projects/{project}/locations/{location_id}/muteConfigs/{config_id}
+        location_id: Gcp location id; example: 'global'
+        mute_config_id: Set a unique id; max of 63 chars.
+    Returns:
+         Dict: returns the mute rule details
     """
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
@@ -161,7 +171,7 @@ def update_mute_rule(parent_path: str, location_id: str, mute_config_name: str) 
     client = securitycenter_v2.SecurityCenterClient()
 
     update_mute_config = securitycenter_v2.MuteConfig()
-    update_mute_config.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_name
+    update_mute_config.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
     update_mute_config.description = "Updated mute config description"
 
     field_mask = field_mask_pb2.FieldMask(paths=["description"])

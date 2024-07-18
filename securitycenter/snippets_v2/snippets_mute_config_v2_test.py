@@ -28,7 +28,6 @@ import pytest
 
 import snippets_mute_config_v2
 
-# TODO(developer): Replace these variables before running the sample.
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 ORGANIZATION_ID = os.environ["GCLOUD_ORGANIZATION"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
@@ -50,7 +49,14 @@ def mute_rule():
         f"projects/{PROJECT_ID}","global",mute_rule_update
     )
 
-
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_create_mute_rule():
+    mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
+    response = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
+    assert mute_rule_create in response.name
+    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -61,15 +67,14 @@ def test_get_mute_rule(mute_rule):
     )
     assert response.name == mute_rule.get('create_resp').name
 
-
-
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_mute_rules(mute_rule):
     response = snippets_mute_config_v2.list_mute_rules(f"projects/{PROJECT_ID}","global")
-    assert len(list(response))>0
-
+    rule_names = [rule.name for rule in response]
+    assert mute_rule.get('create_resp').name in rule_names
+    assert mute_rule.get('update_resp').name in rule_names
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -78,5 +83,12 @@ def test_update_mute_rule(mute_rule):
     response = snippets_mute_config_v2.update_mute_rule(
         f"projects/{PROJECT_ID}","global",mute_rule.get('update')
     )
-    assert response.name == mute_rule.get('update_resp').name
+    assert response.description == "Updated mute config description"
 
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_delete_mute_rule():
+    mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
+    snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
+    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
