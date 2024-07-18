@@ -479,7 +479,7 @@ def import_documents_alloy_db_sample(
     # alloy_db_database_id = "YOUR_ALLOY_DB_DATABASE_ID"
     # alloy_db_table_id = "YOUR_ALLOY_DB_TABLE_ID"
 
-    #  For more information, refer to:
+    # For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
         ClientOptions(api_endpoint=f"{location}-discoveryengine.googleapis.com")
