@@ -31,6 +31,7 @@ from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
 from ..create.create_with_ssd import create_local_ssd_job
+from ..create.create_with_pubsub_notifications import create_with_pubsub_notification_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -137,6 +138,18 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
     assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
 
 
+def _check_notification(job, test_topic):
+    notification_found = 0
+    for notification in job.notifications:
+        if notification.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED:
+            notification_found += 1
+        elif notification.message.new_task_state == batch_v1.TaskStatus.State.FAILED:
+            notification_found += 1
+    assert job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    assert notification_found == len(job.notifications)
+    assert len(job.notifications) == 2
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -196,3 +209,10 @@ def test_pd_job(job_name, disk_name):
         additional_test=lambda: _check_policy(job, job_name, disk_names),
         region=region,
     )
+
+
+@flaky(max_runs=1, min_passes=1)
+def test_check_notification_job(job_name):
+    test_topic = "test_topic"
+    job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
+    _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
