@@ -32,12 +32,12 @@ def embed_text_batch() -> BatchPredictionJob:
 
     # TODO(developer): Update variables
     vertexai.init(project=PROJECT_ID, location="us-central1")
-
     input_uri = (
         "gs://cloud-samples-data/generative-ai/embeddings/embeddings_input.jsonl"
     )
     # Format: `gs://BUCKET_NAME/DIRECTORY/` or `bq://project_name.llm_dataset`
     output_uri = OUTPUT_URI
+
     textembedding_model = TextEmbeddingModel.from_pretrained("textembedding-gecko")
 
     batch_prediction_job = textembedding_model.batch_predict(
