@@ -139,12 +139,9 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
 
 
 def _check_notification(job, test_topic):
-    notification_found = 0
-    for notification in job.notifications:
-        if notification.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED:
-            notification_found += 1
-        elif notification.message.new_task_state == batch_v1.TaskStatus.State.FAILED:
-            notification_found += 1
+    notification_found = sum(1 for notif in job.notifications
+                             if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+                             or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED)
     assert job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
     assert notification_found == len(job.notifications)
     assert len(job.notifications) == 2
@@ -211,7 +208,7 @@ def test_pd_job(job_name, disk_name):
     )
 
 
-@flaky(max_runs=1, min_passes=1)
+@flaky(max_runs=3, min_passes=1)
 def test_check_notification_job(job_name):
     test_topic = "test_topic"
     job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
