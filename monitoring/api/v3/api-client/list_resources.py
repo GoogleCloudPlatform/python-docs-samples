@@ -24,7 +24,7 @@ To run locally:
     python list_resources.py --project_id=<YOUR-PROJECT-ID>
 
 """
-# [START cloudvision_face_detection_dependencies]
+# [START vision_face_detection_dependencies]
 # [START all]
 import argparse
 import datetime
@@ -128,4 +128,4 @@ if __name__ == "__main__":
     main(args.project_id)
 
 # [END all]
-# [END cloudvision_face_detection_dependencies]
+# [END vision_face_detection_dependencies]
