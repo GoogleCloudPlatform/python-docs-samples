@@ -85,7 +85,6 @@ def create_with_pubsub_notification_job(project_id: str, region: str, job_name: 
 
     # Configuring the first notification
     notification1 = batch_v1.JobNotification()
-    # Set the Pub/Sub topic to which notifications will be sent
     notification1.pubsub_topic = f"projects/{project_id}/topics/{topic_name}"
     # Define the message that will be sent to the topic
     first_massage = batch_v1.JobNotification.Message()
