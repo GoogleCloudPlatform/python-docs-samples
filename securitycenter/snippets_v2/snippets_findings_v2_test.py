@@ -76,6 +76,17 @@ def test_group_findings_by_state(organization_id):
     assert count > 0
 
 
+def test_create_finding(organization_id, source_name):
+    created_finding = snippets_findings_v2.create_finding(organization_id,"global","samplefindingid",source_name,"MEDIUM_RISK_ONE")
+    assert len(created_finding.name) > 0
+
+
+def test_update_finding(source_name):
+    snippets_findings_v2.create_finding(organization_id,"global","samplefindingid2",source_name,"MEDIUM_RISK_ONE")
+    updated_finding = snippets_findings_v2.update_finding(source_name,"global")
+    assert len(updated_finding.name) > 0
+
+
 def test_create_source(organization_id):
     source = snippets_findings_v2.create_source(organization_id)
     assert source.display_name == "Customized Display Name"
@@ -94,3 +105,25 @@ def test_list_source(organization_id):
 def test_update_source(source_name):
     updated = snippets_findings_v2.update_source(source_name)
     assert updated.display_name == "Updated Display Name"
+
+
+def test_get_iam_policy(organization_id, source_name):
+    response = snippets_findings_v2.get_iam_policy(organization_id, source_name.split("/")[-1])
+    assert response is not None
+
+
+def test_set_source_iam_policy(organization_id, source_name):
+    user_email = "csccclienttest@gmail.com"
+    role_id = "roles/securitycenter.findingsEditor"
+    updated = snippets_findings_v2.set_source_iam_policy(organization_id, source_name.split("/")[-1], user_email, role_id)
+    assert any(
+        member == "user:csccclienttest@gmail.com"
+        for member in chain.from_iterable(
+            binding.members for binding in updated.bindings
+        )
+    )
+
+def test_troubleshoot_iam_permissions(organization_id, source_name):
+    permissions = ["securitycenter.findings.update"]
+    response = snippets_findings_v2.troubleshoot_iam_permissions(organization_id,source_name.split("/")[-1],permissions)
+    assert permissions == response.permissions
