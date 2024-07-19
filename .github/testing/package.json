@@ -12,6 +12,7 @@
     "affected": "node build/src/main.js"
   },
   "dependencies": {
+    "core-js": "^3.37.1",
     "minimatch": "^10.0.1"
   }
 }

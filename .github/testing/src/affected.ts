@@ -1,16 +1,16 @@
 import * as fs from 'node:fs';
 import * as path from 'path';
-import { minimatch } from 'minimatch'; /* eslint-disable  @typescript-eslint/no-explicit-any */
+import {minimatch} from 'minimatch'; /* eslint-disable  @typescript-eslint/no-explicit-any */
 import * as git from './git';
 
 // AffectedTests = TestAll | TestSome {String: String[]}
 export type AffectedTests = TestAll | TestSome;
 export interface TestAll {
-  kind: 'TestAll';
+  tag: 'TestAll';
 }
 export interface TestSome {
-  kind: 'TestSome';
-  tests: Record<string, string[]>; // {path: testNames}
+  tag: 'TestSome';
+  values: Map<string, string[]>; // {path: testNames}
 }
 
 export type Affected = {
@@ -23,7 +23,7 @@ export class Config {
   ignore: string[];
   packageConfig: string[];
 
-  constructor({ match, ignore, packageConfig }: any) {
+  constructor({match, ignore, packageConfig}: any) {
     this.match = match || ['**'];
     this.ignore = ignore || [];
     this.packageConfig = packageConfig || [];
@@ -35,7 +35,7 @@ export class Config {
 
   affected = (diff: git.Diff): Affected => ({
     package: this.findPackage(diff.filename),
-    tests: { kind: 'TestAll' }, // TODO: discover affected tests
+    tests: {tag: 'TestAll'}, // TODO: discover affected tests
   });
 
   findPackage = (filename: string): string => {
