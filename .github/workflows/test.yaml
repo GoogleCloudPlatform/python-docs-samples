@@ -27,6 +27,8 @@ jobs:
       affected: ${{steps.find-affected.outputs.affected}}
     steps:
       - uses: actions/checkout@v4
+      - run: npm ci
+        working-directory: .github/testing
       - run: npm run build
         working-directory: .github/testing
       - id: find-affected
