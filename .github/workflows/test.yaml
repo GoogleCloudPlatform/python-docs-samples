@@ -25,28 +25,30 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       python: ${{steps.python.outputs.affected}}
-    # defaults:
-    #   run:
-    #     working-directory: .github/testing
+    defaults:
+      run:
+        working-directory: .github/testing
     steps:
-      # - uses: actions/checkout@v4
-      # - uses: actions/setup-node@v4
-      #   with:
-      #     node-version: '20.x'
-      # - run: npm ci
-      # - run: npm run build
-      # - id: find-affected
-      #   run: echo "affected=$(npm run --silent affected)" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
       - id: python
-        run: echo "affected=$MATRIX" >> "$GITHUB_OUTPUT"
-        env:
-          MATRIX: '[{"A": ["a"]}, {"B": ["b"]}]'
+        run: echo "affected=$(npm run --silent affected python)" >> "$GITHUB_OUTPUT"
+      # - id: python
+      #   run: echo "affected=$MATRIX" >> "$GITHUB_OUTPUT"
+      #   env:
+      #     # MATRIX: '[{"package": "language/v2", "tests": {"tag":"TestAll"}}]'
+      #     # MATRIX: '[{"package": "language/v2", "tests": {"tag":"TestSome", "tests": {"T1": ["a", "b"], "T2": ["c"]}}}]'
+      #     MATRIX: '[{"package": "language/v2", "TestSome": {"T1": ["a", "b"], "T2": ["c"]}}]'
 
   Python:
     needs: affected
     runs-on: ubuntu-latest
     strategy:
-      matrix:
+      matrix: 
         affected: ${{fromJson(needs.affected.outputs.python)}}
     steps:
       # - uses: actions/checkout@v4

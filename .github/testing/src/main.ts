@@ -12,34 +12,46 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {List} from 'immutable';
+import { Map, List } from 'immutable';
 import * as affected from './affected';
 import * as git from './git';
-import {global} from './config/global';
-import {python} from './config/python';
+import { global } from './config/global';
+import { python } from './config/python';
 
-const diffsCommit =
+const language =
   process.argv.length > 2 //
     ? process.argv[2]
+    : '<undefined>';
+
+const diffsCommit =
+  process.argv.length > 3 //
+    ? process.argv[3]
     : git.branchName();
 
 const baseCommit =
-  process.argv.length > 3 //
-    ? process.argv[3]
+  process.argv.length > 4 //
+    ? process.argv[4]
     : 'main';
 
 const diffs = git.diffs(diffsCommit, baseCommit).filter(global.matchFile);
 
-const strategyMatrix = {
-  python: List(
-    diffs
-      .filter(python.matchFile)
-      .map(python.changes)
-      .groupBy(change => change.package)
-      .map(change => change.map(pkg => pkg.affected))
-      .map(affected.merge)
-      .map((tests, pkg) => ({package: pkg, tests: tests}))
-      .values()
-  ),
-};
-console.log(JSON.stringify(strategyMatrix));
+const config = Map({
+  python: python,
+}).get(language);
+
+if (!config) {
+  throw `unsupported language: ${language}`;
+}
+
+const affectedTests = List(
+  diffs
+    .filter(config.matchFile)
+    .map(config.changes)
+    .groupBy(change => change.package)
+    .map(change => change.map(pkg => pkg.affected))
+    .map(affected.merge)
+    .map((tests, pkg) => ({ package: pkg, ...tests }))
+    .values()
+);
+
+console.log(JSON.stringify(affectedTests));

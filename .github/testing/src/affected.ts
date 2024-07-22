@@ -12,33 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Map, List, Set} from 'immutable';
+import { Map, List, Set } from 'immutable';
 
 export type PackageName = string;
 export type TestPath = string;
 export type TestName = string;
 
-export interface TestAll {
-  tag: 'TestAll';
-}
-export const TestAll = (): Affected => ({tag: 'TestAll'});
-export interface TestSome {
-  tag: 'TestSome';
-  tests: Map<TestPath, Set<TestName>>;
-}
+export const TestAll = (): Affected => ({ 'TestAll': null });
 export const TestSome = (tests: Map<TestPath, Set<TestName>>): Affected => ({
-  tag: 'TestSome',
-  tests: tests,
+  'TestSome': tests,
 });
-export type Affected = TestAll | TestSome;
+export type Affected = { 'TestAll': null } | { 'TestSome': Map<TestPath, Set<TestName>> };
 
-export type Change = {package: PackageName; affected: Affected};
+export type Change = { package: PackageName; affected: Affected };
 
 export function merge(affected: List<Affected>): Affected {
   return affected.reduce((result, current) => {
-    if (result.tag === 'TestSome' && current.tag === 'TestSome') {
+    if ('TestSome' in result && 'TestSome' in current) {
       return TestSome(
-        result.tests.mergeWith((xs, ys) => xs.union(ys), current.tests)
+        result.TestSome.mergeWith((xs, ys) => xs.union(ys), current.TestSome)
       );
     }
     return TestAll();

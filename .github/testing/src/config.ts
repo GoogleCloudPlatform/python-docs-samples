@@ -20,9 +20,9 @@ import {List} from 'immutable';
 import {minimatch} from 'minimatch'; /* eslint-disable  @typescript-eslint/no-explicit-any */
 
 export class Config {
-  match: List<string>;
-  ignore: List<string>;
-  packageConfig: List<string>;
+  match: List<string> = List(['**']);
+  ignore: List<string> = List();
+  packageConfig: List<string> = List();
 
   constructor({
     match,
@@ -34,8 +34,8 @@ export class Config {
     packageConfig?: string[];
   }) {
     this.match = List(match || ['**']);
-    this.ignore = List(ignore || []);
-    this.packageConfig = List(packageConfig || []);
+    this.ignore = List(ignore);
+    this.packageConfig = List(packageConfig);
   }
 
   matchFile = (diff: git.Diff): boolean =>
