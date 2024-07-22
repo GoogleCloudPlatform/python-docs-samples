@@ -19,7 +19,9 @@ import google.auth
 from google.cloud import batch_v1
 
 
-def create_job_with_status_events(project_id: str, region: str, job_name: str) -> batch_v1.Job:
+def create_job_with_status_events(
+    project_id: str, region: str, job_name: str
+) -> batch_v1.Job:
     """
     This method shows the creation of a Batch job with custom status events which describe runnables
     Within the method, the state of a runnable is described by defining its display name.
@@ -46,9 +48,7 @@ def create_job_with_status_events(project_id: str, region: str, job_name: str) -
     # Acts as a barrier to synchronize the execution of subsequent runnables.
     runn2 = batch_v1.Runnable()
     runn2.display_name = "Barrier 1"
-    runn2.barrier = batch_v1.Runnable.Barrier(
-        {"name": "hello-barrier"}
-    )
+    runn2.barrier = batch_v1.Runnable.Barrier({"name": "hello-barrier"})
 
     # Executes another script that prints a message, intended to run after the barrier.
     runn3 = batch_v1.Runnable()
@@ -57,7 +57,9 @@ def create_job_with_status_events(project_id: str, region: str, job_name: str) -
 
     # Executes a script that imitates a delay and creates a custom event for monitoring purposes.
     runn4 = batch_v1.Runnable()
-    runn4.script.text = "sleep 30; echo '{\"batch/custom/event\": \"EVENT_DESCRIPTION\"}'; sleep 30"
+    runn4.script.text = (
+        'sleep 30; echo \'{"batch/custom/event": "EVENT_DESCRIPTION"}\'; sleep 30'
+    )
 
     # Jobs can be divided into tasks. In this case, we have only one task.
     task = batch_v1.TaskSpec()

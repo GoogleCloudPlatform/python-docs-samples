@@ -148,7 +148,7 @@ def _check_custom_events(job: batch_v1.Job):
             display_names.remove(runnable.display_name)
         if runnable.barrier.name == "hello-barrier":
             barrier_name_found = True
-        if "{\"batch/custom/event\": \"EVENT_DESCRIPTION\"}" in runnable.script.text:
+        if '{"batch/custom/event": "EVENT_DESCRIPTION"}' in runnable.script.text:
             custom_event_found = True
 
     assert not display_names
