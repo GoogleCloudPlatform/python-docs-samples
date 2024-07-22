@@ -21,13 +21,13 @@ on:
   workflow_dispatch: # Manual runs
 
 jobs:
-  find-tests:
+  affected:
     runs-on: ubuntu-latest
     outputs:
-      affected: ${{steps.find-affected.outputs.affected}}
-    defaults:
-      run:
-        working-directory: .github/testing
+      python: ${{steps.python.outputs.affected}}
+    # defaults:
+    #   run:
+    #     working-directory: .github/testing
     steps:
       # - uses: actions/checkout@v4
       # - uses: actions/setup-node@v4
@@ -37,17 +37,18 @@ jobs:
       # - run: npm run build
       # - id: find-affected
       #   run: echo "affected=$(npm run --silent affected)" >> "$GITHUB_OUTPUT"
-      - id: find-affected
-        run: echo "$MATRIX" >> "$GITHUB_OUTPUT"
+      - id: python
+        run: echo "affected=$MATRIX" >> "$GITHUB_OUTPUT"
         env:
-          MATRIX: '{"python": ["py"], "nodejs": ["js"]}'
+          MATRIX: '[{"A": ["a"]}, {"B": ["b"]}]'
 
-  test-python:
-    needs: find-tests
+  Python:
+    needs: affected
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix: ${{fromJson(needs.find-tests.outputs.affected)}}
+    strategy:
+      matrix:
+        affected: ${{fromJson(needs.affected.outputs.python)}}
     steps:
       # - uses: actions/checkout@v4
-      # - run: echo ${{matrix}}
-      - run: echo ${{needs.find-tests.outputs.affected}}
+      # - run: echo "matrix=${{needs.find-tests.outputs.affected}}"
+      - run: echo "affected=${{toJson(matrix.affected)}}"
