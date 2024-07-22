@@ -45,7 +45,6 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
 
 
 def update_queue(project, location, queue):
-    # [START cloud_tasks_taskqueues_processing_rate]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -63,7 +62,6 @@ def update_queue(project, location, queue):
 
     response = client.update_queue(queue=queue)
     print(response)
-    # [END cloud_tasks_taskqueues_processing_rate]
     return response
 
 
@@ -190,7 +188,6 @@ def purge_queue(project, location, queue):
 
 
 def pause_queue(project, location, queue):
-    # [START cloud_tasks_taskqueues_pause_queue]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -200,7 +197,6 @@ def pause_queue(project, location, queue):
 
     queue_path = client.queue_path(project, location, queue)
     response = client.pause_queue(name=queue_path)
-    # [END cloud_tasks_taskqueues_pause_queue]
     return response
 
 
