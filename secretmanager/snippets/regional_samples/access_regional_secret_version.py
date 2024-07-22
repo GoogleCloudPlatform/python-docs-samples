@@ -18,7 +18,7 @@ command line application and sample code for accessing a regional secret version
 
 import argparse
 
-# [START secretmanager_access_secret_version]
+# [START secretmanager_access_regional_secret_version]
 from google.cloud import secretmanager_v1
 import google_crc32c
 
@@ -58,7 +58,7 @@ def access_regional_secret_version(
     # snippet is showing how to access the secret material.
     payload = response.payload.data.decode("UTF-8")
     print(f"Plaintext: {payload}")
-    # [END secretmanager_access_secret_version]
+    # [END secretmanager_access_regional_secret_version]
 
     return response
 
@@ -73,4 +73,4 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="version to access")
     args = parser.parse_args()
 
-    access_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    access_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)

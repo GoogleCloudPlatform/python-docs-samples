@@ -36,7 +36,7 @@ def list_regional_secret_versions(project_id: str, location_id: str, secret_id: 
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-    
+
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
@@ -57,4 +57,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
-    list_secret_versions(args.project_id, args.location_id, args.secret_id)
+    list_regional_secret_versions(args.project_id, args.location_id, args.secret_id)

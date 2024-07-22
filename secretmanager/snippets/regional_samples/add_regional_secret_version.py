@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for adding a secret version to a 
+command line application and sample code for adding a secret version to a
 regional secret with the specified payload to an existing regional secret.
 """
 
@@ -38,7 +38,7 @@ def add_regional_secret_version(
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-    
+
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
@@ -78,4 +78,4 @@ if __name__ == "__main__":
     parser.add_argument("payload", help="secret material payload")
     args = parser.parse_args()
 
-    add_secret_version(args.project_id, args.location_id, args.secret_id, args.payload)
+    add_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.payload)

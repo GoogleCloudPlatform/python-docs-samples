@@ -43,53 +43,83 @@ from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
 from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
+from regional_samples.access_regional_secret_version import (
+    access_regional_secret_version,
+)
+from regional_samples.add_regional_secret_version import add_regional_secret_version
+from regional_samples.create_regional_secret import create_regional_secret
+from regional_samples.delete_regional_secret import delete_regional_secret
+from regional_samples.delete_regional_secret_with_etag import (
+    delete_regional_secret_with_etag,
+)
+from regional_samples.destroy_regional_secret_version import (
+    destroy_regional_secret_version,
+)
+from regional_samples.destroy_regional_secret_version_with_etag import (
+    destroy_regional_secret_version_with_etag,
+)
+from regional_samples.disable_regional_secret_version import (
+    disable_regional_secret_version,
+)
+from regional_samples.disable_regional_secret_version_with_etag import (
+    disable_regional_secret_version_with_etag,
+)
+from regional_samples.enable_regional_secret_version import (
+    enable_regional_secret_version,
+)
+from regional_samples.enable_regional_secret_version_with_etag import (
+    enable_regional_secret_version_with_etag,
+)
+from regional_samples.get_regional_secret import get_regional_secret
+from regional_samples.get_regional_secret_version import get_regional_secret_version
+from regional_samples.iam_grant_access_with_regional_secret import (
+    iam_grant_access_with_regional_secret,
+)
+from regional_samples.iam_revoke_access_with_regional_secret import (
+    iam_revoke_access_with_regional_secret,
+)
+from regional_samples.list_regional_secret_versions import list_regional_secret_versions
+from regional_samples.list_regional_secret_versions_with_filter import (
+    list_regional_secret_versions_with_filter,
+)
+from regional_samples.list_regional_secrets import list_regional_secrets
+from regional_samples.list_regional_secrets_with_filter import (
+    list_regional_secrets_with_filter,
+)
+from regional_samples.regional_quickstart import regional_quickstart
+from regional_samples.update_regional_secret import update_regional_secret
+from regional_samples.update_regional_secret_with_alias import (
+    update_regional_secret_with_alias,
+)
+from regional_samples.update_regional_secret_with_etag import (
+    update_regional_secret_with_etag,
+)
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_etag import update_secret_with_etag
 
-from regional_samples.access_regional_secret_version import access_regional_secret_version
-from regional_samples.add_regional_secret_version import add_regional_secret_version
-from regional_samples.create_regional_secret import create_regional_secret
-from regional_samples.delete_regional_secret import delete_regional_secret
-from regional_samples.delete_regional_secret_with_etag import delete_regional_secret_with_etag
-from regional_samples.destroy_regional_secret_version import destroy_regional_secret_version
-from regional_samples.destroy_regional_secret_version_with_etag import destroy_regional_secret_version_with_etag
-from regional_samples.disable_regional_secret_version import disable_regional_secret_version
-from regional_samples.disable_regional_secret_version_with_etag import disable_regional_secret_version_with_etag
-from regional_samples.enable_regional_secret_version import enable_regional_secret_version
-from regional_samples.enable_regional_secret_version_with_etag import enable_regional_secret_version_with_etag
-from regional_samples.get_regional_secret import get_regional_secret
-from regional_samples.get_regional_secret_version import get_regional_secret_version
-from regional_samples.iam_grant_access_with_regional_secret import iam_grant_access_with_regional_secret
-from regional_samples.iam_revoke_access_with_regional_secret import iam_revoke_access_with_regional_secret
-from regional_samples.list_regional_secret_versions import list_regional_secret_versions
-from regional_samples.list_regional_secret_versions_with_filter import list_regional_secret_versions_with_filter
-from regional_samples.list_regional_secrets import list_regional_secrets
-from regional_samples.list_regional_secrets_with_filter import list_regional_secrets_with_filter
-from regional_samples.update_regional_secret import update_regional_secret
-from regional_samples.update_regional_secret_with_alias import update_regional_secret_with_alias
-from regional_samples.update_regional_secret_with_etag import update_regional_secret_with_etag
-from regional_samples.regional_quickstart import regional_quickstart
 
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
     return secretmanager.SecretManagerServiceClient()
 
+
 @pytest.fixture()
 def location_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT_LOCATION"]
 
+
 @pytest.fixture()
 def regional_client(location_id: str) -> secretmanager_v1.SecretManagerServiceClient:
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
-    return secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    return secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint}
+    )
+
 
 @pytest.fixture()
 def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
-
 
 
 @pytest.fixture()
@@ -110,6 +140,7 @@ def retry_client_create_secret(
     # Retry to avoid 503 error & flaky issues
     return client.create_secret(request=request)
 
+
 @retry.Retry()
 def retry_client_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -119,7 +150,6 @@ def retry_client_create_regional_secret(
     return regional_client.create_secret(request=request)
 
 
-
 @retry.Retry()
 def retry_client_access_secret_version(
     client: secretmanager.SecretManagerServiceClient,
@@ -127,6 +157,7 @@ def retry_client_access_secret_version(
 ) -> secretmanager.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return client.access_secret_version(request=request)
+
 
 @retry.Retry()
 def retry_client_access_regional_secret_version(
@@ -145,6 +176,7 @@ def retry_client_delete_secret(
     # Retry to avoid 503 error & flaky issues
     return client.delete_secret(request=request)
 
+
 @retry.Retry()
 def retry_client_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -154,7 +186,6 @@ def retry_client_delete_regional_secret(
     return regional_client.delete_secret(request=request)
 
 
-
 @retry.Retry()
 def retry_client_add_secret_version(
     client: secretmanager.SecretManagerServiceClient,
@@ -162,6 +193,7 @@ def retry_client_add_secret_version(
 ) -> secretmanager.SecretVersion:
     # Retry to avoid 503 error & flaky issues
     return client.add_secret_version(request=request)
+
 
 @retry.Retry()
 def retry_client_add_regional_secret_version(
@@ -211,6 +243,7 @@ def secret(
 
     yield project_id, secret_id, secret.etag
 
+
 @pytest.fixture()
 def regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -235,7 +268,6 @@ def regional_secret(
     yield project_id, location_id, secret_id, regional_secret.etag
 
 
-
 @pytest.fixture()
 def secret_version(
     client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
@@ -252,9 +284,11 @@ def secret_version(
 
     yield project_id, secret_id, version.name.rsplit("/", 1)[-1], version.etag
 
+
 @pytest.fixture()
 def regional_secret_version(
-    regional_client: secretmanager_v1.SecretManagerServiceClient, regional_secret: Tuple[str, str, str, str]
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
 ) -> Iterator[Tuple[str, str, str, str, str]]:
     project_id, location_id, secret_id, _ = regional_secret
 
@@ -266,7 +300,9 @@ def regional_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
     )
 
-    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[-1], version.etag
+    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
+        -1
+    ], version.etag
 
 
 another_secret_version = secret_version
@@ -290,8 +326,10 @@ def pubsub_message() -> dict:
 def test_quickstart(project_id: str, secret_id: str) -> None:
     quickstart(project_id, secret_id)
 
+
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart(project_id, location_id, secret_id)
+
 
 def test_access_secret_version(secret_version: Tuple[str, str, str, str]) -> None:
     project_id, secret_id, version_id, _ = secret_version
@@ -520,13 +558,19 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
     assert secret.version_aliases["test"] == 1
 
 
-def test_access_regional_secret_version(regional_secret_version: Tuple[str, str, str, str, str]) -> None:
+def test_access_regional_secret_version(
+    regional_secret_version: Tuple[str, str, str, str, str]
+) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = access_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version = access_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     assert version.payload.data == b"hello world!"
 
 
-def test_add_regional_secret_version(regional_secret: Tuple[str, str, str, str]) -> None:
+def test_add_regional_secret_version(
+    regional_secret: Tuple[str, str, str, str]
+) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     payload = "test123"
     version = add_regional_secret_version(project_id, location_id, secret_id, payload)
@@ -545,25 +589,31 @@ def test_create_regional_secret(
 
 
 def test_delete_regional_secret(
-    regional_client: secretmanager_v1.SecretManagerServiceClient, regional_secret: Tuple[str, str, str, str]
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     delete_regional_secret(project_id, location_id, secret_id)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_regional_secret_version(regional_client, request={"name": name})
+        retry_client_access_regional_secret_version(
+            regional_client, request={"name": name}
+        )
 
 
 def test_delete_regional_secret_with_etag(
-    regional_client: secretmanager_v1.SecretManagerServiceClient, regional_secret: Tuple[str, str, str, str]
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, etag = regional_secret
     delete_regional_secret_with_etag(project_id, location_id, secret_id, etag)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_regional_secret_version(regional_client, request={"name": name})
+        retry_client_access_regional_secret_version(
+            regional_client, request={"name": name}
+        )
 
 
 def test_destroy_regional_secret_version(
@@ -571,7 +621,9 @@ def test_destroy_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = destroy_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version = destroy_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     assert version.destroy_time
 
 
@@ -580,7 +632,9 @@ def test_destroy_regional_secret_version_with_etag(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, etag = regional_secret_version
-    version = destroy_regional_secret_version_with_etag(project_id, location_id, secret_id, version_id, etag)
+    version = destroy_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, etag
+    )
     assert version.destroy_time
 
 
@@ -589,10 +643,14 @@ def test_enable_disable_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = disable_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version = disable_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
-    version = enable_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version = enable_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
 
@@ -601,7 +659,9 @@ def test_enable_disable_regional_secret_version_with_etag(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, etag = regional_secret_version
-    version = disable_regional_secret_version_with_etag(project_id, location_id, secret_id, version_id, etag)
+    version = disable_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, etag
+    )
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
     version = enable_regional_secret_version_with_etag(
@@ -615,13 +675,16 @@ def test_get_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = get_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     assert secret_id in version.name
     assert version_id in version.name
 
 
 def test_get_regional_secret(
-    regional_client: secretmanager_v1.SecretManagerServiceClient, regional_secret: Tuple[str, str, str, str]
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     snippet_regional_secret = get_regional_secret(project_id, location_id, secret_id)
@@ -634,7 +697,9 @@ def test_iam_grant_access_with_regional_secret(
     iam_user: str,
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    policy = iam_grant_access_with_regional_secret(project_id, location_id, secret_id, iam_user)
+    policy = iam_grant_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
     assert any(iam_user in b.members for b in policy.bindings)
 
 
@@ -644,7 +709,9 @@ def test_iam_revoke_access_with_regional_secret(
     iam_user: str,
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    policy = iam_revoke_access_with_regional_secret(project_id, location_id, secret_id, iam_user)
+    policy = iam_revoke_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
     assert not any(iam_user in b.members for b in policy.bindings)
 
 
@@ -654,9 +721,13 @@ def test_list_regional_secret_versions(
     another_regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version_1 = get_regional_secret_version(project_id, location_id, secret_id, version_id)
+    version_1 = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     _, _, _, another_version_id, _ = another_regional_secret_version
-    version_2 = get_regional_secret_version(project_id, location_id, secret_id, another_version_id)
+    version_2 = get_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
     list_regional_secret_versions(project_id, location_id, secret_id)
 
     out, _ = capsys.readouterr()
@@ -671,11 +742,17 @@ def test_list_regional_secret_versions_with_filter(
     another_regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    enabled = get_regional_secret_version(project_id, location_id, secret_id, version_id)
+    enabled = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
     _, _, _, another_version_id, _ = another_regional_secret_version
-    disabled = disable_regional_secret_version(project_id, location_id, secret_id, another_version_id)
+    disabled = disable_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
     assert disabled.state == secretmanager.SecretVersion.State.DISABLED
-    list_regional_secret_versions_with_filter(project_id, location_id, secret_id, "state:ENABLED")
+    list_regional_secret_versions_with_filter(
+        project_id, location_id, secret_id, "state:ENABLED"
+    )
 
     out, _ = capsys.readouterr()
     assert secret_id in out
@@ -699,14 +776,18 @@ def test_list_regional_secrets_with_filter(
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     unlabeled = get_regional_secret(project_id, location_id, secret_id)
-    list_regional_secrets_with_filter(project_id, location_id, "labels.secretmanager:rocks")
+    list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
 
     out, _ = capsys.readouterr()
     assert f"Found secret: {unlabeled.name}" not in out
 
     labeled = update_regional_secret(project_id, location_id, secret_id)
     assert labeled.labels["secretmanager"] == "rocks"
-    list_regional_secrets_with_filter(project_id, location_id, "labels.secretmanager:rocks")
+    list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
 
     out, _ = capsys.readouterr()
     assert f"Found secret: {labeled.name}" in out
@@ -717,15 +798,20 @@ def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> N
     updated_regional_secret = update_regional_secret(project_id, location_id, secret_id)
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
 
-def test_update_regional_secret_with_etag(regional_secret: Tuple[str, str, str, str]) -> None:
+
+def test_update_regional_secret_with_etag(
+    regional_secret: Tuple[str, str, str, str]
+) -> None:
     project_id, location_id, secret_id, etag = regional_secret
-    updated_regional_secret = update_regional_secret_with_etag(project_id, location_id, secret_id, etag)
+    updated_regional_secret = update_regional_secret_with_etag(
+        project_id, location_id, secret_id, etag
+    )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
 
 
-def test_update_regional_secret_with_alias(regional_secret_version: Tuple[str, str, str, str, str]) -> None:
+def test_update_regional_secret_with_alias(
+    regional_secret_version: Tuple[str, str, str, str, str]
+) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     secret = update_regional_secret_with_alias(project_id, location_id, secret_id)
     assert secret.version_aliases["test"] == 1
-
-

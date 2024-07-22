@@ -61,4 +61,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret to get")
     args = parser.parse_args()
 
-    get_secret(args.project_id, args.location_id, args.secret_id)
+    get_regional_secret(args.project_id, args.location_id, args.secret_id)

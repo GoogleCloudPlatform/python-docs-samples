@@ -21,7 +21,7 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret_with_etag]
-def delete_regional_secret_with_etag(project_id: str,location_id: str, secret_id: str, etag: str) -> None:
+def delete_regional_secret_with_etag(project_id: str, location_id: str, secret_id: str, etag: str) -> None:
     """
     Delete the regional secret with the given name, etag, and all of its versions.
     """
@@ -63,4 +63,4 @@ if __name__ == "__main__":
     parser.add_argument("etag", help="current etag of the secret to delete")
     args = parser.parse_args()
 
-    delete_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)
+    delete_regional_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)

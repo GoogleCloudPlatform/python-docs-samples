@@ -17,6 +17,8 @@ command line application and sample code for listing secret versions of a
 regional secret.
 """
 
+import argparse
+
 
 # [START secretmanager_v1_list_regional_secret_versions_with_filter]
 def list_regional_secret_versions_with_filter(
@@ -42,7 +44,7 @@ def list_regional_secret_versions_with_filter(
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-    
+
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
@@ -52,8 +54,9 @@ def list_regional_secret_versions_with_filter(
     ):
         print(f"Found secret version: {version.name}")
 
-
     # [END secretmanager_v1_list_regional_secret_versions_with_filter]
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -64,4 +67,4 @@ if __name__ == "__main__":
     parser.add_argument("filter", help="filter string to apply")
     args = parser.parse_args()
 
-    list_secret_versions_with_filter(args.project_id, args.secret_id, args.filter)
+    list_regional_secret_versions_with_filter(args.project_id, args.secret_id, args.filter)

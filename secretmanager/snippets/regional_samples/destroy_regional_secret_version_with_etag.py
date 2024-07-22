@@ -70,6 +70,6 @@ if __name__ == "__main__":
     parser.add_argument("etag", help="current etag of the version")
     args = parser.parse_args()
 
-    destroy_secret_version_with_etag(
+    destroy_regional_secret_version_with_etag(
         args.project_id, args.location_id, args.secret_id, args.version_id, args.etag
     )

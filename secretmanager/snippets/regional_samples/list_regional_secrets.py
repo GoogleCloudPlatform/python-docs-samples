@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for listing regional secrets 
+command line application and sample code for listing regional secrets
 in a project.
 """
 
@@ -56,4 +56,4 @@ if __name__ == "__main__":
     parser.add_argument("location_id", help="id of location where secret is stored")
     args = parser.parse_args()
 
-    list_secrets(args.project_id, args.location_id)
+    list_regional_secrets(args.project_id, args.location_id)

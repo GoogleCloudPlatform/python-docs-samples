@@ -70,4 +70,4 @@ if __name__ == "__main__":
     parser.add_argument("member", help="member to grant access")
     args = parser.parse_args()
 
-    iam_grant_access(args.project_id, args.location_id, args.secret_id, args.member)
+    iam_grant_access_with_regional_secret(args.project_id, args.location_id, args.secret_id, args.member)

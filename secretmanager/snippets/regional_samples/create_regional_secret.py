@@ -56,7 +56,7 @@ def create_regional_secret(
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
-    
+
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
@@ -91,4 +91,4 @@ if __name__ == "__main__":
     parser.add_argument("ttl", help="time to live for secrets, f.e. '600s' ")
     args = parser.parse_args()
 
-    create_secret(args.project_id, args.location_id, args.secret_id, args.ttl)
+    create_regional_secret(args.project_id, args.location_id, args.secret_id, args.ttl)

@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for deleting an existing regional 
+command line application and sample code for deleting an existing regional
 secret.
 """
 
@@ -56,4 +56,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret to delete")
     args = parser.parse_args()
 
-    delete_secret(args.project_id, args.location_id, args.secret_id)
+    delete_regional_secret(args.project_id, args.location_id, args.secret_id)

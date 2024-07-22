@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for destroying a regional 
+command line application and sample code for destroying a regional
 secret version.
 """
 
@@ -64,4 +64,4 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="id of the version to destroy")
     args = parser.parse_args()
 
-    destroy_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    destroy_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)

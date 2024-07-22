@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for revoking access to a regional 
+command line application and sample code for revoking access to a regional
 secret.
 """
 
@@ -73,4 +73,4 @@ if __name__ == "__main__":
     parser.add_argument("member", help="member to revoke access")
     args = parser.parse_args()
 
-    iam_revoke_access(args.project_id, args.location_id, args.secret_id, args.member)
+    iam_revoke_access_with_regional_secret(args.project_id, args.location_id, args.secret_id, args.member)

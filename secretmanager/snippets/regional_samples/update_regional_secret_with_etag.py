@@ -36,7 +36,7 @@ def update_regional_secret_with_etag(
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-    
+
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
@@ -64,4 +64,4 @@ if __name__ == "__main__":
     parser.add_argument("etag", help="current etag of the secret")
     args = parser.parse_args()
 
-    update_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)
+    update_regional_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)

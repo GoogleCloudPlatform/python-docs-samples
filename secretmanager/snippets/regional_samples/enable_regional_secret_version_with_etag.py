@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for enabling a regional 
+command line application and sample code for enabling a regional
 secret version.
 """
 
@@ -71,6 +71,6 @@ if __name__ == "__main__":
     parser.add_argument("etag", help="current etag of the version")
     args = parser.parse_args()
 
-    enable_secret_version_with_etag(
+    enable_regional_secret_version_with_etag(
         args.project_id, args.location_id, args.secret_id, args.version_id, args.etag
     )

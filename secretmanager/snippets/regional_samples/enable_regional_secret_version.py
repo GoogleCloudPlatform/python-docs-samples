@@ -22,7 +22,7 @@ import argparse
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_enable_secret_version]
+# [START secretmanager_enable_regional_secret_version]
 def enable_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
 ) -> secretmanager_v1.EnableSecretVersionRequest:
@@ -41,7 +41,7 @@ def enable_regional_secret_version(
     client = secretmanager_v1.SecretManagerServiceClient(client_options={
         "api_endpoint": api_endpoint
             })
-    
+
     # Build the resource name of the secret version
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
@@ -49,7 +49,7 @@ def enable_regional_secret_version(
     response = client.enable_secret_version(request={"name": name})
 
     print(f"Enabled secret version: {response.name}")
-    # [END secretmanager_enable_secret_version]
+    # [END secretmanager_enable_regional_secret_version]
 
     return response
 
@@ -64,4 +64,4 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="id of the version to enable")
     args = parser.parse_args()
 
-    enable_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    enable_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)

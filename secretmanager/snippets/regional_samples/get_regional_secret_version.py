@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for getting metadata about a regional 
+command line application and sample code for getting metadata about a regional
 secret version, but not the secret payload.
 """
 
@@ -25,7 +25,7 @@ from google.cloud import secretmanager_v1
 # [START secretmanager_v1_get_regional_secret_version]
 def get_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
-    ) -> secretmanager_v1.GetSecretVersionRequest:
+) -> secretmanager_v1.GetSecretVersionRequest:
     """
     Get information about the given secret version. It does not include the
     payload data.
@@ -66,4 +66,4 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="id of the version to get")
     args = parser.parse_args()
 
-    get_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    get_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
