@@ -25,15 +25,15 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       affected: ${{steps.find-affected.outputs.affected}}
+    defaults:
+      run:
+        working-directory: .github/testing
     steps:
       - uses: actions/checkout@v4
       - run: npm ci
-        working-directory: .github/testing
       - run: npm run build
-        working-directory: .github/testing
       - id: find-affected
-        run: echo "affected=$AFFECTED" >> "$GITHUB_OUTPUT"
-        working-directory: .github/testing
+        run: echo "affected=$AFFECTED" # >> "$GITHUB_OUTPUT"
         env:
           AFFECTED: $(npm run affected)
 
