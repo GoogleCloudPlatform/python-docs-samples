@@ -16,7 +16,6 @@ from google.cloud import tasks
 
 
 def create_queue(project, location, queue_blue_name, queue_red_name):
-    # [START cloud_tasks_taskqueues_using_yaml]
     client = tasks.CloudTasksClient()
 
     # TODO(developer): Uncomment these lines and replace with your values.
@@ -42,7 +41,6 @@ def create_queue(project, location, queue_blue_name, queue_red_name):
     for queue in queues:
         response = client.create_queue(parent=parent, queue=queue)
         print(response)
-    # [END cloud_tasks_taskqueues_using_yaml]
     return response
 
 
