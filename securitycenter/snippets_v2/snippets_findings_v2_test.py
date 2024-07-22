@@ -24,7 +24,7 @@ import snippets_findings_v2
 @pytest.fixture(scope="module")
 def organization_id():
     """Get Organization ID from the environment variable"""
-    return os.environ["GCLOUD_ORGANIZATION"]
+    return os.environ["SCC_PROJECT_ORG_ID"]
 
 
 @pytest.fixture(scope="module")
@@ -45,11 +45,53 @@ def source_name(organization_id):
     )
     return source.name
 
+@pytest.fixture(scope="module")
+def finding_name(source_name):
+    """Creates a new finding and returns it name."""
+    from google.cloud import securitycenter_v2
+    from google.cloud.securitycenter_v2 import Finding
+    from google.protobuf.timestamp_pb2 import Timestamp
+
+    client = securitycenter_v2.SecurityCenterClient()
+    now_proto = Timestamp()
+    now_proto.GetCurrentTime()
+
+    finding = client.create_finding(
+        request={
+            "parent": source_name,
+            "finding_id": "scfinding",
+            "finding": {
+                "state": Finding.State.ACTIVE,
+                "category": "C1",
+                "event_time": now_proto,
+                "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
+            },
+        }
+    )
+    client.create_finding(
+        request={
+            "parent": source_name,
+            "finding_id": "untouched",
+            "finding": {
+                "state": Finding.State.ACTIVE,
+                "category": "MEDIUM_RISK_ONE",
+                "event_time": now_proto,
+                "resource_name": "//cloudresourcemanager.googleapis.com/organizations/1234",
+            },
+        }
+    )
+
+    return finding.name
 
 
-def test_list_all_findings(organization_id):
-    count = snippets_findings_v2.list_all_findings(organization_id, "-", "global")
-    assert count > 0
+
+def test_list_all_findings(organization_id,finding_name, source_name):
+    finding_result_iterator = snippets_findings_v2.list_all_findings(organization_id, source_name.split("/")[-1], "global")
+
+    names = []
+    for finding_result in finding_result_iterator:
+        names.append(finding_result.finding.name)
+    assert finding_name in names
 
 
 def test_list_filtered_findings(organization_id):

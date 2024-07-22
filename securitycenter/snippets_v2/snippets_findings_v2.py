@@ -49,7 +49,7 @@ def list_all_findings(organization_id, source_name, location_id) -> int:
         )
     )
   # [END securitycenter_list_all_findings_v2]
-  return count
+  return finding_result_iterator
 
 
 def list_filtered_findings(organization_id, source_name, location_id) -> int:
@@ -163,6 +163,7 @@ def list_findings_with_security_marks(organization_id, source_name, location_id)
   client = securitycenter_v2.SecurityCenterClient()
   parent = f"organizations/{organization_id}"
   all_sources = f"{parent}/sources/{source_name}/locations/{location_id}"
+  # below filter is used to list active and unmuted findings without security marks acknowledgement as true.
   finding_result_iterator = client.list_findings(
       request={"parent": all_sources, "filter": 'NOT security_marks.marks.ACK="true" AND NOT mute="MUTED" AND state="ACTIVE"'}
   )
