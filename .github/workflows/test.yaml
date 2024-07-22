@@ -24,18 +24,23 @@ jobs:
   find-tests:
     runs-on: ubuntu-latest
     outputs:
-      tests: ${{steps.affected.outputs.tests}}
+      affected: ${{steps.find-affected.outputs.affected}}
     steps:
       - uses: actions/checkout@v4
-      - id: affected
-        run: echo "tests=`TODO`" >> "$GITHUB_OUTPUT"
+      - run: npm run build
+        working-directory: .github/testing
+      - id: find-affected
+        run: echo "affected=$AFFECTED" >> "$GITHUB_OUTPUT"
+        working-directory: .github/testing
+        env:
+          AFFECTED: $(npm run affected)
+
 
   test-python:
     needs: find-tests
     runs-on: ubuntu-latest
     strategy:
-      matrix:
-        test: ${{fromJson(needs.find-tests.outputs.tests)}}
+      matrix: ${{fromJson(needs.find-tests.outputs.affected)}}
     steps:
       # - uses: actions/checkout@v4
-      - run: echo ${{matrix.test}}
+      - run: echo ${{matrix}}
