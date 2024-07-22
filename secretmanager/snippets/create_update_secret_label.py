@@ -20,10 +20,9 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
+
 def create_update_secret_label(
-    project_id: str, 
-    secret_id: str, 
-    new_labels: dict[str, str]
+    project_id: str, secret_id: str, new_labels: dict[str, str]
 ) -> secretmanager.UpdateSecretRequest:
     """
     Create or update a label on an existing secret.
@@ -53,8 +52,9 @@ def create_update_secret_label(
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    
+
     return response
+
 
 # [END secretmanager_create_update_secret_label]
 

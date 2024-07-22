@@ -19,7 +19,10 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
-def delete_secret_label(project_id: str, secret_id: str, label_key: str) -> secretmanager.UpdateSecretRequest:
+
+def delete_secret_label(
+    project_id: str, secret_id: str, label_key: str
+) -> secretmanager.UpdateSecretRequest:
     """
     Delete a label on an existing secret.
     """
@@ -49,6 +52,8 @@ def delete_secret_label(project_id: str, secret_id: str, label_key: str) -> secr
     print(f"Updated secret: {response.name}")
 
     return response
+
+
 # [END secretmanager_delete_secret_label]
 
 if __name__ == "__main__":

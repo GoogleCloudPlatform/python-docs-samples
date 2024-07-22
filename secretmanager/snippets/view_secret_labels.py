@@ -22,6 +22,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
+
 def view_secret_labels(project_id: str, secret_id: str) -> None:
     """
     List all secret versions in the given secret and their metadata.
@@ -50,4 +51,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
-    list_secret_labels(args.project_id, args.secret_id)
+    view_secret_labels(args.project_id, args.secret_id)

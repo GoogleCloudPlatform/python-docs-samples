@@ -24,6 +24,7 @@ import typing
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
+
 def create_secret_with_labels(
     project_id: str,
     secret_id: str,
@@ -47,18 +48,16 @@ def create_secret_with_labels(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {
-                "replication": {"automatic": {}},
-                "ttl": ttl,
-                "labels": labels
-                }
-            }
+            "secret": {"replication": {"automatic": {}}, "ttl": ttl, "labels": labels},
+        }
     )
 
     # Print the new secret name.
     print(f"Created secret: {response.name}")
 
     return response
+
+
 # [END secretmanager_create_secret_with_label]
 
 if __name__ == "__main__":
