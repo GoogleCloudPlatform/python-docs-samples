@@ -12,8 +12,8 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-# [START batch_PubSub_notifications]
 import google.auth
+# [START batch_notifications]
 from google.cloud import batch_v1
 
 
@@ -102,6 +102,7 @@ def create_with_pubsub_notification_job(project_id: str, region: str, job_name: 
     second_message.type_ = batch_v1.JobNotification.Type.TASK_STATE_CHANGED
     second_message.new_task_state = batch_v1.TaskStatus.State.FAILED
     notification2.message = second_message
+
     # Assign a list of notifications to the job.
     job.notifications = [notification1, notification2]
 
@@ -113,7 +114,7 @@ def create_with_pubsub_notification_job(project_id: str, region: str, job_name: 
     return client.create_job(create_request)
 
 
-# [END batch_PubSub_notifications]
+# [END batch_notifications]
 
 if __name__ == '__main__':
     PROJECT_ID = google.auth.default()[1]
