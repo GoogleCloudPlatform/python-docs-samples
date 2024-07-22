@@ -1,4 +1,4 @@
-import {Config} from '../affected';
+import {Config} from '../config';
 
 export const python = new Config({
   match: ['**'],

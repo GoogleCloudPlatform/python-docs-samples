@@ -1,9 +1,6 @@
 {
   "extends": "./node_modules/gts/tsconfig-google.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext"
-    ],
     "rootDir": ".",
     "outDir": "build"
   },

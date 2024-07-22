@@ -1,3 +1,4 @@
+import {List} from 'immutable';
 import {spawnSync} from 'child_process';
 
 export type Diff = {
@@ -10,11 +11,10 @@ export function branchName(): string {
   return p.stdout.toString().trim();
 }
 
-export function diffs(commit1: string, commit2: string): Diff[] {
+export function diffs(commit1: string, commit2: string): List<Diff> {
   const p = spawnSync('git', ['diff', '--unified=0', commit1, commit2]);
-  return p.stdout
-    .toString()
-    .split(/^diff --git a\//m)
+  const lines = List(p.stdout.toString().split(/^diff --git a\//m));
+  return lines
     .map(output => output.split('\n').filter(line => line.length > 0))
     .filter(lines => lines.length > 0)
     .map(lines => ({
