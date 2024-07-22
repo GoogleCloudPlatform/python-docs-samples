@@ -25,6 +25,7 @@ from google.cloud import batch_v1, resourcemanager_v3
 import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
+from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_script_no_mounting import create_script_job
@@ -137,6 +138,24 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
     assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
 
 
+def _check_custom_events(job: batch_v1.Job):
+    display_names = ["Script 1", "Barrier 1", "Script 2"]
+    custom_event_found = False
+    barrier_name_found = False
+
+    for runnable in job.task_groups[0].task_spec.runnables:
+        if runnable.display_name in display_names:
+            display_names.remove(runnable.display_name)
+        if runnable.barrier.name == "hello-barrier":
+            barrier_name_found = True
+        if "{\"batch/custom/event\": \"EVENT_DESCRIPTION\"}" in runnable.script.text:
+            custom_event_found = True
+
+    assert not display_names
+    assert custom_event_found
+    assert barrier_name_found
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -196,3 +215,9 @@ def test_pd_job(job_name, disk_name):
         additional_test=lambda: _check_policy(job, job_name, disk_names),
         region=region,
     )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_custom_events(job_name):
+    job = create_job_with_status_events(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_custom_events(job))
