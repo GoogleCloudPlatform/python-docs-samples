@@ -36,7 +36,7 @@ jobs:
       - run: npm ci
       - run: npm run build
       - id: find-affected
-        run: echo "affected=$(npm run affected)" # >> "$GITHUB_OUTPUT"
+        run: echo "affected=$(npm run --silent affected)" # >> "$GITHUB_OUTPUT"
 
 
   test-python:
