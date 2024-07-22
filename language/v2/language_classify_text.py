@@ -36,7 +36,7 @@ def sample_classify_text(
 
     client = language_v2.LanguageServiceClient()
 
-    # Available types: PLAIN_TEXT, HTML
+    # Available types: PLAIN_TEXT, HTML.
     document_type_in_plain_text = language_v2.Document.Type.PLAIN_TEXT
 
     # Optional. If not specified, the language is automatically detected.
