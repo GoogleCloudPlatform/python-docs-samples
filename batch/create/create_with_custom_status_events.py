@@ -14,6 +14,7 @@
 
 
 import google.auth
+
 # [START batch_custom_events]
 from google.cloud import batch_v1
 
@@ -109,7 +110,7 @@ def create_job_with_status_events(project_id: str, region: str, job_name: str) -
 # [END batch_custom_events]
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "europe-west4"
     job_name = "test-job-name"
