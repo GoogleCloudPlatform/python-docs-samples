@@ -27,7 +27,9 @@ import pytest
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_persistent_disk import create_with_pd_job
-from ..create.create_with_pubsub_notifications import create_with_pubsub_notification_job
+from ..create.create_with_pubsub_notifications import (
+    create_with_pubsub_notification_job,
+)
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
@@ -140,10 +142,15 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
 
 
 def _check_notification(job, test_topic):
-    notification_found = sum(1 for notif in job.notifications
-                             if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
-                             or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED)
-    assert job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    notification_found = sum(
+        1
+        for notif in job.notifications
+        if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+        or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED
+    )
+    assert (
+        job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    )
     assert notification_found == len(job.notifications)
     assert len(job.notifications) == 2
 

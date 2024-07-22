@@ -13,11 +13,14 @@
 #  limitations under the License.
 
 import google.auth
+
 # [START batch_notifications]
 from google.cloud import batch_v1
 
 
-def create_with_pubsub_notification_job(project_id: str, region: str, job_name: str, topic_name: str) -> batch_v1.Job:
+def create_with_pubsub_notification_job(
+    project_id: str, region: str, job_name: str, topic_name: str
+) -> batch_v1.Job:
     """
     This method shows how to create a sample Batch Job that will run
     a simple command inside a container on Cloud Compute instances.
@@ -116,10 +119,12 @@ def create_with_pubsub_notification_job(project_id: str, region: str, job_name: 
 
 # [END batch_notifications]
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "europe-west4"
     job_name = "your-job-name"
     pub_sub_topic_name = "your-topic-name"
-    job = create_with_pubsub_notification_job(PROJECT_ID, REGION, job_name, pub_sub_topic_name)
+    job = create_with_pubsub_notification_job(
+        PROJECT_ID, REGION, job_name, pub_sub_topic_name
+    )
     print(job)
