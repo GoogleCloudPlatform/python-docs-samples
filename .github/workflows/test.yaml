@@ -36,14 +36,14 @@ jobs:
       - run: npm ci
       - run: npm run build
       - id: find-affected
-        run: echo "affected=$(npm run --silent affected)" # >> "$GITHUB_OUTPUT"
-
+        run: echo "affected=$(npm run --silent affected)" >> "$GITHUB_OUTPUT"
 
   test-python:
     needs: find-tests
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.find-tests.outputs.affected)}}
+    # strategy:
+    #   matrix: ${{fromJson(needs.find-tests.outputs.affected)}}
     steps:
       # - uses: actions/checkout@v4
-      - run: echo ${{matrix}}
+      # - run: echo ${{matrix}}
+      - run: echo ${{needs.find-tests.outputs.affected}}
