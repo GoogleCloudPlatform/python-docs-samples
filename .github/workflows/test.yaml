@@ -33,13 +33,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+      - run: git fetch origin main
       - run: npm ci
       - run: npm run build
-      - run: git fetch origin
-      - run: git diff --name-only main HEAD
       - id: python
         run: |
-          PYTHON_AFFECTED=$(npm --silent run affected python ${{github.event.pull_request.head.sha}} main)
+          PYTHON_AFFECTED=$(npm --silent run affected python HEAD origin/main)
           echo "$PYTHON_AFFECTED"
           echo "affected=$PYTHON_AFFECTED" >> "$GITHUB_OUTPUT"
       # - id: python
