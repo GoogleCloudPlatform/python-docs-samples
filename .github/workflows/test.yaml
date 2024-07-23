@@ -30,17 +30,18 @@ jobs:
         working-directory: .github/testing
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-      - run: git fetch origin main
       - run: npm ci
       - run: npm run build
       - id: python
         run: |
-          affected_python=$(npm --silent run affected python HEAD origin/main)
-          echo "$affected_python"
-          echo "affected=$affected_python" >> "$GITHUB_OUTPUT"
+          AFFECTED_PYTHON=$(npm --silent run affected python HEAD origin/main)
+          echo "$AFFECTED_PYTHON"
+          echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
   Python:
     needs: affected
