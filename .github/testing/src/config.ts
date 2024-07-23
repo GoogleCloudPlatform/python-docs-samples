@@ -65,12 +65,15 @@ export class Config {
     );
 
   test = (affected: Affected) => {
+    const cwd = process.cwd()
+    process.chdir(git.root())
     if ('TestAll' in affected) {
-      return this.testAll(affected.path)
+      this.testAll(affected.path)
     }
     if ('TestSome' in affected) {
-      return this.testSome(affected.path, affected.TestSome)
+      this.testSome(affected.path, affected.TestSome)
     }
+    process.chdir(cwd)
   }
 
   matchFile = (diff: git.Diff): boolean =>

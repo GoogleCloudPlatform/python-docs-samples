@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {List} from 'immutable';
-import {spawnSync} from 'child_process';
+import { List } from 'immutable';
+import { spawnSync } from 'child_process';
 
 export type Diff = {
   filename: string;
@@ -22,6 +22,11 @@ export type Diff = {
 
 export function branchName(): string {
   const p = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
+  return p.stdout.toString().trim();
+}
+
+export function root(): string {
+  const p = spawnSync('git', ['rev-parse', '--show-toplevel']);
   return p.stdout.toString().trim();
 }
 
@@ -43,9 +48,4 @@ export function diffs(commit1: string, commit2: string): List<Diff> {
         .filter(match => match !== undefined)
         .map(match => parseInt(match)),
     }));
-}
-
-export function root(): string {
-  const p = spawnSync('git', ['rev-parse', '--show-toplevel']);
-  return p.stdout.toString().trim();
 }
