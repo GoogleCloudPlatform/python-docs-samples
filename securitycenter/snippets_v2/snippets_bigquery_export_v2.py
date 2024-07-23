@@ -128,7 +128,7 @@ def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: 
                  - organizations/{organization_id}/locations/{location_id}
                  - folders/{folder_id}/locations/{location_id}
                  - projects/{project_id}/locations/{location_id}
-        export_filter: Expression that defines the filter to apply across create/update events of findings.
+        export_filter: Expression that defines the filter to apply across create/update events of findings.export_filter = 'severity="MEDIUM"'
         bigquery_export_id: Unique identifier provided by the client.
         For more info, see:
         https://cloud.google.com/security-command-center/docs/how-to-analyze-findings-in-big-query#export_findings_from_to
@@ -142,6 +142,7 @@ def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: 
     bigquery_export = securitycenter_v2.BigQueryExport()
     bigquery_export.name = f"{parent}/bigQueryExports/{bigquery_export_id}"
     bigquery_export.filter = export_filter
+    bigquery_export.description = "Updated description."
 
     # Field mask to only update the export filter.
     # Set the update mask to specify which properties should be updated.

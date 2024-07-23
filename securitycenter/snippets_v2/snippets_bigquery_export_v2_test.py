@@ -80,37 +80,30 @@ def delete_bigquery_dataset(dataset_id: str):
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-def test_get_bigquery_export(capsys: CaptureFixture, bigquery_export_id: str):
-    print("**********")
-    print(LOCATION_ID)
-    snippets_bigquery_export_v2.get_bigquery_export(
+def test_get_bigquery_export(bigquery_export_id: str):
+    response = snippets_bigquery_export_v2.get_bigquery_export(
         f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", bigquery_export_id
     )
-    out, _ = capsys.readouterr()
-    assert re.search(
-        "Retrieved the BigQuery export",
-        out,
-    )
-    assert re.search(f"bigQueryExports/{bigquery_export_id}", out)
+    assert bigquery_export_id.split("/")[-1] == response.name.split("/")[-1]
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-def test_list_bigquery_exports(capsys: CaptureFixture, bigquery_export_id: str):
-    snippets_bigquery_export_v2.list_bigquery_exports(f"projects/{PROJECT_ID}/locations/{LOCATION_ID}")
-    out, _ = capsys.readouterr()
-    assert re.search("Listing BigQuery exports:", out)
-    assert re.search(bigquery_export_id, out)
+def test_list_bigquery_exports(bigquery_export_id: str):
+    response = snippets_bigquery_export_v2.list_bigquery_exports(f"projects/{PROJECT_ID}/locations/{LOCATION_ID}")
+    names = []
+    for bigquery_export in response:
+        names.append(bigquery_export.name.split("/")[-1])
+    assert bigquery_export_id in names
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-def test_update_bigquery_exports(capsys: CaptureFixture, bigquery_export_id: str):
+def test_update_bigquery_exports(bigquery_export_id: str):
     export_filter = 'severity="MEDIUM"'
-    snippets_bigquery_export_v2.update_bigquery_export(
+    response = snippets_bigquery_export_v2.update_bigquery_export(
         f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", export_filter, bigquery_export_id
     )
-    out, _ = capsys.readouterr()
-    assert re.search("BigQueryExport updated successfully!", out)
+    assert bigquery_export_id.split("/")[-1] == response.name.split("/")[-1]
