@@ -36,7 +36,10 @@ jobs:
       - run: npm ci
       - run: npm run build
       - id: python
-        run: echo "affected=$(npm run --silent affected python)" >> "$GITHUB_OUTPUT"
+        run: |
+          AFFECTED=$(npm --silent run affected python)
+          echo "python affected: $AFFECTED"
+          echo "affected=$AFFECTED" >> "$GITHUB_OUTPUT"
       # - id: python
       #   run: echo "affected=$MATRIX" >> "$GITHUB_OUTPUT"
       #   env:
@@ -48,7 +51,7 @@ jobs:
     needs: affected
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
+      matrix:
         affected: ${{fromJson(needs.affected.outputs.python)}}
     steps:
       # - uses: actions/checkout@v4
