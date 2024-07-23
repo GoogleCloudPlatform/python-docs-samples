@@ -30,11 +30,9 @@ export type Affected =
 export function mergeAffected(path: string, affected: List<Affected>): Affected {
   return affected.reduce((result, current) => {
     if ('TestSome' in result && 'TestSome' in current) {
-      return TestSome(
-        path,
-        result.TestSome.mergeWith((xs, ys) => xs.union(ys), current.TestSome)
-      );
+      const tests = result.TestSome.mergeWith((xs, ys) => xs.union(ys), current.TestSome)
+      return TestSome(path, tests);
     }
     return TestAll(path);
-  }, TestSome(path || '', Map()));
+  }, TestSome(path, Map()));
 }
