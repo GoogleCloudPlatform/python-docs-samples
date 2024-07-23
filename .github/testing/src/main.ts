@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { Map, List } from 'immutable';
+import {Map, List} from 'immutable';
 import * as affected from './affected';
 import * as git from './git';
-import { global } from './config/global';
-import { python } from './config/python';
+import {global} from './config/global';
+import {python} from './config/python';
 
 const language =
   process.argv.length > 2 //
@@ -50,7 +50,7 @@ const affectedTests = List(
     .groupBy(change => change.package)
     .map(change => change.map(pkg => pkg.affected))
     .map(affected.merge)
-    .map((tests, pkg) => ({ package: pkg, ...tests }))
+    .map((tests, pkg) => ({package: pkg, ...tests}))
     .values()
 );
 

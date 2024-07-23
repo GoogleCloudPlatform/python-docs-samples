@@ -26,7 +26,13 @@ export function branchName(): string {
 }
 
 export function diffs(commit1: string, commit2: string): List<Diff> {
-  const p = spawnSync('git', ['diff', '--unified=0', commit1, commit2]);
+  const p = spawnSync('git', [
+    '--no-pager',
+    'diff',
+    '--unified=0',
+    commit1,
+    commit2,
+  ]);
   return List(p.stdout.toString().split(/^diff --git a\//m))
     .map(output => output.split('\n').filter(line => line.length > 0))
     .filter(lines => lines.length > 0)

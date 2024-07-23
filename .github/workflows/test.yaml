@@ -35,7 +35,8 @@ jobs:
           node-version: '20.x'
       - run: npm ci
       - run: npm run build
-      - run: git diff --name-only origin/main origin/$GITHUB_HEAD_REF
+      - run: git fetch origin
+      - run: git diff --name-only main HEAD
       - id: python
         run: |
           PYTHON_AFFECTED=$(npm --silent run affected python ${{github.event.pull_request.head.sha}} main)
