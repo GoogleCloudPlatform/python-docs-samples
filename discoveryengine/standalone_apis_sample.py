@@ -123,3 +123,122 @@ def rank_sample(
     # [END genappbuilder_rank]
 
     return response
+
+
+def grounded_generation_inline_sample(
+    project_id: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_inline]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_id}/locations/{location}
+        location=client.common_location_path(project=project_id, location="us"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-experimental",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="Write a news article based on the sources."
+                    )
+                ],
+            )
+        ],
+        system_instruction=discoveryengine.GroundedGenerationContent(
+            parts=[
+                discoveryengine.GroundedGenerationContent.Part(
+                    text="Be comprehensive. Answer in HTML."
+                )
+            ],
+        ),
+        # What to ground on.
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.InlineSource(
+                        grounding_facts=[
+                            discoveryengine.GroundingFact(
+                                fact_text=(
+                                    "Titanic is a 1997 American epic romantic disaster movie. It was directed, written,"
+                                    " and co-produced by James Cameron. The movie is about the 1912 sinking of the"
+                                    " RMS Titanic. It stars Kate Winslet and Leonardo DiCaprio. The movie was released"
+                                    " on December 19, 1997. It received positive critical reviews. The movie won 11 Academy"
+                                    " Awards, and was nominated for fourteen total Academy Awards."
+                                ),
+                                attributes={"author": "Simple Wikipedia"},
+                            ),
+                        ]
+                    ),
+                ),
+            ]
+        ),
+    )
+    response = client.generate_grounded_content(request)
+
+    # Handle the response
+    print(response)
+    # [END genappbuilder_grounded_generation_inline]
+
+    return response
+
+
+def grounded_generation_google_search_sample(
+    project_id: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_google_search]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_id}/locations/{location}
+        location=client.common_location_path(project=project_id, location="us"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-experimental",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="How much is Google stock?"
+                    )
+                ],
+            )
+        ],
+        system_instruction=discoveryengine.GroundedGenerationContent(
+            parts=[
+                discoveryengine.GroundedGenerationContent.Part(text="Be comprehensive.")
+            ],
+        ),
+        # What to ground on.
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearch()
+                ),
+            ]
+        ),
+    )
+    response = client.generate_grounded_content(request)
+
+    # Handle the response
+    print(response)
+    # [END genappbuilder_grounded_generation_google_search]
+
+    return response
