@@ -12,46 +12,37 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Map, List} from 'immutable';
-import * as affected from './affected';
 import * as git from './git';
-import {global} from './config/global';
-import {python} from './config/python';
+import { Config } from './config';
+import { python } from './config/python';
+import { Affected } from './affected';
 
-const language =
-  process.argv.length > 2 //
-    ? process.argv[2]
-    : '<undefined>';
-
-const diffsCommit =
-  process.argv.length > 3 //
-    ? process.argv[3]
-    : git.branchName();
-
-const baseCommit =
-  process.argv.length > 4 //
-    ? process.argv[4]
-    : 'main';
-
-const diffs = git.diffs(diffsCommit, baseCommit).filter(global.matchFile);
-
-const config = Map({
-  python: python,
-}).get(language);
-
-if (!config) {
-  throw `unsupported language: ${language}`;
+function getConfig(lang: string): Config {
+  switch (lang) {
+    case 'python':
+      return python;
+  }
+  throw `unsupported language: ${lang}`;
 }
 
-const affectedTests = List(
-  diffs
-    .filter(config.matchFile)
-    .map(config.changes)
-    .groupBy(change => change.package)
-    .map(change => change.map(pkg => pkg.affected))
-    .map(affected.merge)
-    .map((tests, pkg) => ({package: pkg, ...tests}))
-    .values()
-);
+function main(command: string) {
+  switch (command) {
+    case 'affected': {
+      const config = getConfig(process.argv[3]);
+      const head = process.argv[4] || git.branchName();
+      const main = process.argv[5] || 'main';
+      const affected = config.affected(head, main);
+      console.log(JSON.stringify(affected));
+      return;
+    }
+    case 'tests': {
+      const config = getConfig(process.argv[3]);
+      const affected: Affected = JSON.parse(process.argv[4]);
+      config.test(affected);
+      return;
+    }
+  }
+  throw `unsupported command: ${command}`;
+}
 
-console.log(JSON.stringify(affectedTests));
+main(process.argv[2]);

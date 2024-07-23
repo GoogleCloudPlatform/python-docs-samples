@@ -12,16 +12,22 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {Config} from '../config';
+import { Config } from '../config';
 
 export const python = new Config({
   match: ['**'],
   ignore: ['**/README.md'],
-  packageConfig: [
+  packageFile: [
     'noxfile_config.py',
     'requirements.txt',
     'pyproject.toml',
     'setup.py',
     'setup.cfg',
   ],
+  testAll: path => {
+    throw `TODO: config/python.ts testAll ${path}`
+  },
+  testSome: (path, tests) => {
+    throw `TODO: config/python.ts testSome ${path} ${JSON.stringify(tests)}`
+  }
 });

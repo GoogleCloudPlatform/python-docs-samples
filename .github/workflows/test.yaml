@@ -38,15 +38,9 @@ jobs:
       - run: npm run build
       - id: python
         run: |
-          PYTHON_AFFECTED=$(npm --silent run affected python HEAD origin/main)
-          echo "$PYTHON_AFFECTED"
-          echo "affected=$PYTHON_AFFECTED" >> "$GITHUB_OUTPUT"
-      # - id: python
-      #   run: echo "affected=$MATRIX" >> "$GITHUB_OUTPUT"
-      #   env:
-      #     # MATRIX: '[{"package": "language/v2", "tests": {"tag":"TestAll"}}]'
-      #     # MATRIX: '[{"package": "language/v2", "tests": {"tag":"TestSome", "tests": {"T1": ["a", "b"], "T2": ["c"]}}}]'
-      #     MATRIX: '[{"package": "language/v2", "TestSome": {"T1": ["a", "b"], "T2": ["c"]}}]'
+          affected_python=$(npm --silent run affected python HEAD origin/main)
+          echo "$affected_python"
+          echo "affected=$affected_python" >> "$GITHUB_OUTPUT"
 
   Python:
     needs: affected
@@ -54,7 +48,16 @@ jobs:
     strategy:
       matrix:
         affected: ${{fromJson(needs.affected.outputs.python)}}
+    defaults:
+      run:
+        working-directory: .github/testing
     steps:
-      # - uses: actions/checkout@v4
-      # - run: echo "matrix=${{needs.find-tests.outputs.affected}}"
-      - run: echo "affected=${{toJson(matrix.affected)}}"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
+      - run: npm run tests python "$AFFECTED"
+        env:
+          AFFECTED: ${{toJson(matrix.affected)}}
