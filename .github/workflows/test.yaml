@@ -49,6 +49,8 @@ jobs:
     strategy:
       matrix:
         affected: ${{fromJson(needs.affected.outputs.python)}}
+    env:
+      GOOGLE_CLOUD_PROJECT: python-docs-samples-tests
     defaults:
       run:
         working-directory: .github/testing
