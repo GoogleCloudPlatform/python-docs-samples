@@ -40,7 +40,7 @@ jobs:
       - run: git diff --name-only HEAD origin/main
       - id: python
         run: |
-          AFFECTED_PYTHON=$(npm --silent run affected python $GITHUB_SHA origin/main)
+          AFFECTED_PYTHON=$(npm --silent run affected python HEAD origin/main)
           echo "$AFFECTED_PYTHON"
           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
@@ -67,15 +67,15 @@ jobs:
           node-version: '20.x'
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
       - uses: 'google-github-actions/auth@v2'
         with:
           workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
-          service_account: github-actions@jss-22p1-test.iam.gserviceaccount.com
+          service_account: github-actions-python@jss-22p1-test.iam.gserviceaccount.com
       - run: python --version
       - run: pip --version
       - run: pip install --upgrade pip
-      - run: pip install nox
+      # - run: pip install nox
       - run: npm ci
       - run: npm run build
       - run: npm run tests python "$AFFECTED"
