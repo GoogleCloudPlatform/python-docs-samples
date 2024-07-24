@@ -28,7 +28,7 @@ def embed_text_batch() -> BatchPredictionJob:
     """
     # [START generativeaionvertexai_sdk_embedding_batch]
     import vertexai
-    from vertexai.preview.language_models import TextEmbeddingModel
+    from vertexai.preview import language_models
 
     # TODO(developer): Update variables
     vertexai.init(project=PROJECT_ID, location="us-central1")
@@ -38,7 +38,9 @@ def embed_text_batch() -> BatchPredictionJob:
     # Format: `gs://BUCKET_NAME/DIRECTORY/` or `bq://project_name.llm_dataset`
     output_uri = OUTPUT_URI
 
-    textembedding_model = TextEmbeddingModel.from_pretrained("textembedding-gecko")
+    textembedding_model = language_models.TextEmbeddingModel.from_pretrained(
+        "textembedding-gecko"
+    )
 
     batch_prediction_job = textembedding_model.batch_predict(
         dataset=[input_uri],
