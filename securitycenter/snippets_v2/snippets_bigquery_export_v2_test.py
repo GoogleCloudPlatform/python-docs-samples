@@ -17,10 +17,8 @@
 
 # TODO(developer): Replace these variables before running the sample.
 import os
-import re
 import uuid
 
-from _pytest.capture import CaptureFixture
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 import pytest
@@ -30,7 +28,7 @@ import snippets_bigquery_export_v2
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 BIGQUERY_DATASET_ID = f"sampledataset{str(uuid.uuid4()).split('-')[0]}"
-LOCATION_ID = os.environ["GCLOUD_LOCATION"]
+LOCATION_ID = os.getenv("GCLOUD_LOCATION", "global")
 
 
 @pytest.fixture(scope="module")
