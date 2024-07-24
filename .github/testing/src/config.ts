@@ -15,23 +15,16 @@
 import * as fs from 'node:fs';
 import * as git from './git';
 import * as path from 'path';
-import { List, Map, Set } from 'immutable';
-import { minimatch } from 'minimatch'; /* eslint-disable  @typescript-eslint/no-explicit-any */
-import {
-  Affected,
-  PackageName,
-  TestAll,
-  TestName,
-  TestPath,
-  mergeAffected,
-} from './affected';
+import {List, Map, Set} from 'immutable';
+import {minimatch} from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Affected, TestAll, TestName, TestPath, mergeAffected} from './affected';
 
 export class Config {
   match: List<string>;
   ignore: List<string>;
   packageFile: List<string>;
-  testAll: (path: PackageName) => void;
-  testSome: (path: PackageName, tests: Map<TestPath, Set<TestName>>) => void;
+  testAll: () => void;
+  testSome: (tests: Map<TestPath, Set<TestName>>) => void;
 
   constructor({
     match,
@@ -43,14 +36,16 @@ export class Config {
     match?: string[];
     ignore?: string[];
     packageFile?: string[];
-    testAll?: (path: PackageName) => void;
-    testSome?: (path: PackageName, tests: Map<TestPath, Set<TestName>>) => void;
+    testAll?: () => void;
+    testSome?: (tests: Map<TestPath, Set<TestName>>) => void;
   }) {
     this.match = List(match || ['**']);
     this.ignore = List(ignore);
     this.packageFile = List(packageFile);
-    this.testAll = testAll || (path => { });
-    this.testSome = testSome || ((path, tests) => { });
+    this.testAll = testAll || (() => {});
+    this.testSome =
+      testSome ||
+      (_ => {}); /* eslint-disable @typescript-eslint/no-unused-vars */
   }
 
   affected = (head: string, main: string): List<Affected> =>
@@ -65,25 +60,27 @@ export class Config {
     );
 
   test = (affected: Affected) => {
-    const cwd = process.cwd()
-    process.chdir(git.root())
+    const cwd = process.cwd();
+    const dir = path.join(git.root(), affected.path);
+    console.log(`>> cd ${dir}`);
+    process.chdir(dir);
     if ('TestAll' in affected) {
-      this.testAll(affected.path)
+      this.testAll();
     }
     if ('TestSome' in affected) {
-      this.testSome(affected.path, affected.TestSome)
+      this.testSome(affected.TestSome);
     }
-    process.chdir(cwd)
-  }
+    process.chdir(cwd);
+  };
 
   matchFile = (diff: git.Diff): boolean =>
     this.match.some(p => minimatch(diff.filename, p)) &&
     this.ignore.some(p => !minimatch(diff.filename, p));
 
   findAffected = (diff: git.Diff): Affected => {
-    const path = this.findPackage(diff.filename)
-    return TestAll(path) // TOOD: discover affected tests only
-  }
+    const path = this.findPackage(diff.filename);
+    return TestAll(path); // TOOD: discover affected tests only
+  };
 
   findPackage = (filename: string): string => {
     const dir = path.dirname(filename);

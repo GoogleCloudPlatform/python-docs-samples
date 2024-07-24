@@ -57,6 +57,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python --version
+      - run: pip --version
+      - run: pip install --upgrade pip
+      - run: pip install nox
       - run: npm ci
       - run: npm run build
       - run: npm run tests python "$AFFECTED"

@@ -12,23 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import * as subprocess from '../subprocess';
-import {Config} from '../config';
+import { spawnSync } from 'child_process';
 
-export const python = new Config({
-  match: ['**'],
-  ignore: ['**/README.md'],
-  packageFile: [
-    'noxfile_config.py',
-    'requirements.txt',
-    'pyproject.toml',
-    'setup.py',
-    'setup.cfg',
-  ],
-  testAll: () => {
-    subprocess.run('nox', ['-s', 'py-3.11']);
-  },
-  testSome: tests => {
-    throw `TODO: config/python.ts testSome ${JSON.stringify(tests)}`;
-  },
-});
+export function run(cmd: string, args: string[]) {
+  const p = spawnSync(cmd, args, { stdio: 'inherit' });
+  process.exitCode = p.status || undefined;
+}
+
+export function output(cmd: string, args: string[]): string {
+  const p = spawnSync(cmd, args);
+  process.exitCode = p.status || undefined;
+  return p.stdout.toString().trim();
+}
+

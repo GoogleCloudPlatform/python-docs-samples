@@ -13,7 +13,7 @@
 // limitations under the License.
 
 import { List } from 'immutable';
-import { spawnSync } from 'child_process';
+import * as subprocess from './subprocess';
 
 export type Diff = {
   filename: string;
@@ -21,24 +21,22 @@ export type Diff = {
 };
 
 export function branchName(): string {
-  const p = spawnSync('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
-  return p.stdout.toString().trim();
+  return subprocess.output('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
 }
 
 export function root(): string {
-  const p = spawnSync('git', ['rev-parse', '--show-toplevel']);
-  return p.stdout.toString().trim();
+  return subprocess.output('git', ['rev-parse', '--show-toplevel']);
 }
 
 export function diffs(commit1: string, commit2: string): List<Diff> {
-  const p = spawnSync('git', [
+  const output = subprocess.output('git', [
     '--no-pager',
     'diff',
     '--unified=0',
     commit1,
     commit2,
   ]);
-  return List(p.stdout.toString().split(/^diff --git a\//m))
+  return List(output.split(/^diff --git a\//m))
     .map(output => output.split('\n').filter(line => line.length > 0))
     .filter(lines => lines.length > 0)
     .map(lines => ({
