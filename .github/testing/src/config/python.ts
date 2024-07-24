@@ -18,7 +18,10 @@ import { Config } from '../config';
 
 export const python = new Config({
   match: ['**'],
-  ignore: ['**/README.md'],
+  ignore: [
+    '**/README.md',
+    'pytest.ini',
+  ],
   packageFile: [
     'noxfile_config.py',
     'requirements.txt',

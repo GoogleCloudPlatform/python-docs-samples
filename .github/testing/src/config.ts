@@ -30,6 +30,10 @@ type RunTestsSome = {
   tests: Map<TestPath, Set<TestName>>;
 }
 
+const IGNORE_GLOBAL = [
+  'README.md',
+]
+
 export class Config {
   match: List<string>;
   ignore: List<string>;
@@ -61,6 +65,7 @@ export class Config {
     List(
       git
         .diffs(head, main)
+        .filter(diff => IGNORE_GLOBAL.some(p => minimatch(diff.filename, p)))
         .filter(this.matchFile)
         .map(this.findAffected)
         .groupBy(affected => affected.path)
@@ -72,7 +77,7 @@ export class Config {
     const cwd = process.cwd();
     const root = git.root();
     const dir = path.join(root, affected.path);
-    console.log(`>> cd ${dir}`);
+    console.log(`> cd ${dir}`);
     process.chdir(dir);
     if ('TestAll' in affected) {
       this.testAll({ root: root, path: affected.path });

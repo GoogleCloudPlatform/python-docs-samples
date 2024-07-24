@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {spawnSync} from 'child_process';
+import { spawnSync } from 'child_process';
 
 export function run(cmd: string, args: string[]) {
-  const p = spawnSync(cmd, args, {stdio: 'inherit'});
+  const p = spawnSync(cmd, args, { stdio: 'inherit' });
   process.exitCode = p.status || undefined;
 }
 
