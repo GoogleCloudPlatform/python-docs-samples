@@ -14,6 +14,7 @@
 
 import os
 
+import chat_completions_credentials_refresher
 import chat_completions_function_calling_basic
 import chat_completions_function_calling_config
 import chat_completions_non_streaming_image
@@ -55,6 +56,13 @@ def test_function_calling_basic() -> None:
 
 def test_function_calling_config() -> None:
     response = chat_completions_function_calling_config.generate_text(
+        PROJECT_ID, LOCATION
+    )
+    assert response
+
+
+def test_credentials_refresher() -> None:
+    response = chat_completions_credentials_refresher.generate_text(
         PROJECT_ID, LOCATION
     )
     assert response
