@@ -19,7 +19,6 @@ from google.api_core.exceptions import ResourceExhausted
 import ideation
 
 
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_interview() -> None:
     content = ideation.interview()
