@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import { List } from 'immutable';
+import {List} from 'immutable';
 import * as subprocess from './subprocess';
 
 export type Diff = {

@@ -15,16 +15,27 @@
 import * as fs from 'node:fs';
 import * as git from './git';
 import * as path from 'path';
-import {List, Map, Set} from 'immutable';
-import {minimatch} from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Affected, TestAll, TestName, TestPath, mergeAffected} from './affected';
+import { List, Map, Set } from 'immutable';
+import { minimatch } from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Affected, TestAll, TestName, TestPath, mergeAffected } from './affected';
+
+type RunTestsAll = {
+  root: string
+  path: string
+}
+
+type RunTestsSome = {
+  root: string
+  path: string
+  tests: Map<TestPath, Set<TestName>>;
+}
 
 export class Config {
   match: List<string>;
   ignore: List<string>;
   packageFile: List<string>;
-  testAll: () => void;
-  testSome: (tests: Map<TestPath, Set<TestName>>) => void;
+  testAll: (_: RunTestsAll) => void;
+  testSome: (_: RunTestsSome) => void;
 
   constructor({
     match,
@@ -36,16 +47,14 @@ export class Config {
     match?: string[];
     ignore?: string[];
     packageFile?: string[];
-    testAll?: () => void;
-    testSome?: (tests: Map<TestPath, Set<TestName>>) => void;
+    testAll?: (_: RunTestsAll) => void;
+    testSome?: (_: RunTestsSome) => void;
   }) {
     this.match = List(match || ['**']);
     this.ignore = List(ignore);
     this.packageFile = List(packageFile);
-    this.testAll = testAll || (() => {});
-    this.testSome =
-      testSome ||
-      (_ => {}); /* eslint-disable @typescript-eslint/no-unused-vars */
+    this.testAll = testAll || (_ => { });
+    this.testSome = testSome || (_ => { });
   }
 
   affected = (head: string, main: string): List<Affected> =>
@@ -61,14 +70,19 @@ export class Config {
 
   test = (affected: Affected) => {
     const cwd = process.cwd();
-    const dir = path.join(git.root(), affected.path);
+    const root = git.root();
+    const dir = path.join(root, affected.path);
     console.log(`>> cd ${dir}`);
     process.chdir(dir);
     if ('TestAll' in affected) {
-      this.testAll();
+      this.testAll({ root: root, path: affected.path });
     }
     if ('TestSome' in affected) {
-      this.testSome(affected.TestSome);
+      this.testSome({
+        root: root,
+        path: affected.path,
+        tests: affected.TestSome,
+      });
     }
     process.chdir(cwd);
   };
