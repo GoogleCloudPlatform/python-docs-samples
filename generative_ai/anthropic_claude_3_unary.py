@@ -15,6 +15,7 @@
 
 def generate_text(project_id: str, region: str) -> object:
     # [START aiplatform_claude_3_unary]
+    # [START generativeaionvertexai_claude_3_unary]
     # TODO(developer): Vertex AI SDK - uncomment below & run
     # pip3 install --upgrade --user google-cloud-aiplatform
     # gcloud auth application-default login
@@ -35,6 +36,7 @@ def generate_text(project_id: str, region: str) -> object:
     )
     print(message.model_dump_json(indent=2))
     # [END aiplatform_claude_3_unary]
+    # [END generativeaionvertexai_claude_3_unary]
     return message
 
 

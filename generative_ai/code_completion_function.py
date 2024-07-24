@@ -16,6 +16,7 @@
 def complete_code_function() -> object:
     """Example of using Codey for Code Completion to complete a function."""
     # [START aiplatform_sdk_code_completion_comment]
+    # [START generativeaionvertexai_sdk_code_completion_comment]
     from vertexai.language_models import CodeGenerationModel
 
     parameters = {
@@ -30,6 +31,7 @@ def complete_code_function() -> object:
 
     print(f"Response from Model: {response.text}")
     # [END aiplatform_sdk_code_completion_comment]
+    # [END generativeaionvertexai_sdk_code_completion_comment]
 
     return response
 

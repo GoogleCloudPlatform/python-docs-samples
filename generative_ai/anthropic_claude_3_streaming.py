@@ -15,6 +15,7 @@
 
 def generate_text_streaming(project_id: str, region: str) -> str:
     # [START aiplatform_claude_3_streaming]
+    # [START generativeaionvertexai_claude_3_streaming]
     # TODO(developer): Vertex AI SDK - uncomment below & run
     # pip3 install --upgrade --user google-cloud-aiplatform
     # gcloud auth application-default login
@@ -40,6 +41,7 @@ def generate_text_streaming(project_id: str, region: str) -> str:
             result.append(text)
 
     # [END aiplatform_claude_3_streaming]
+    # [END generativeaionvertexai_claude_3_streaming]
     return "".join(result)
 
 

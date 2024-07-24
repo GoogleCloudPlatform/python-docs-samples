@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
+# [START generativeaionvertexai_sdk_embedding]
 import re
 
 from google.cloud.aiplatform import initializer as aiplatform_init
@@ -51,5 +52,6 @@ def tune_embedding_model(
 
 
 # [END aiplatform_sdk_embedding]
+# [END generativeaionvertexai_sdk_embedding]
 if __name__ == "__main__":
     tune_embedding_model(aiplatform_init.global_config.api_endpoint)
