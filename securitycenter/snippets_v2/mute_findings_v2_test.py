@@ -17,7 +17,6 @@ import os
 
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-from google.cloud import securitycenter_v2
 
 import pytest
 import snippets_findings_v2
@@ -25,41 +24,41 @@ import mute_findings_v2
 
 # TODO(developer): Replace these variables before running the sample.
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-ORGANIZATION_ID = os.environ["GCLOUD_ORGANIZATION"]
+ORGANIZATION_ID = os.environ["SCC_PROJECT_ORG_ID"]
 
 
 @pytest.fixture
 def finding():
-  import snippets_findings_v2
-  from snippets_findings_v2 import create_finding
+    import snippets_findings_v2
+    from snippets_findings_v2 import create_finding
 
-  response = snippets_findings_v2.create_source(ORGANIZATION_ID)
-  source_name = response.name
-  finding1_path = create_finding(ORGANIZATION_ID,"global", "1testingscc",source_name,"MEDIUM_RISK_ONE").name
-  finding2_path = create_finding(ORGANIZATION_ID,"global", "2testingscc",source_name, "MEDIUM_RISK_ONE").name
+    response = snippets_findings_v2.create_source(ORGANIZATION_ID)
+    source_name = response.name
+    finding1_path = create_finding(ORGANIZATION_ID,"global", "1testingscc",source_name,"MEDIUM_RISK_ONE").name
+    finding2_path = create_finding(ORGANIZATION_ID,"global", "2testingscc",source_name, "MEDIUM_RISK_ONE").name
 
-  yield {
-      "source": source_name,
-      "finding1": finding1_path,
-      "finding2": finding2_path,
-  }
+    yield {
+        "source": source_name,
+        "finding1": finding1_path,
+        "finding2": finding2_path,
+    }
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_set_mute_finding(finding):
-  finding_path = finding.get("finding1")
-  response = mute_findings_v2.set_mute_finding(finding_path)
-  assert response.name == finding_path
+    finding_path = finding.get("finding1")
+    response = mute_findings_v2.set_mute_finding(finding_path)
+    assert response.name == finding_path
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_set_unmute_finding(finding):
-  finding_path = finding.get("finding1")
-  response = mute_findings_v2.set_unmute_finding(finding_path)
+    finding_path = finding.get("finding1")
+    response = mute_findings_v2.set_unmute_finding(finding_path)
 
 
 
@@ -67,14 +66,14 @@ def test_set_unmute_finding(finding):
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_bulk_mute_findings(finding):
-  # Mute findings that belong to this project.
-  mute_findings_v2.bulk_mute_findings(
-      f"organizations/{ORGANIZATION_ID}","global", f'resource.project_display_name="{ORGANIZATION_ID}"'
-  )
+    # Mute findings that belong to this project.
+    mute_findings_v2.bulk_mute_findings(
+        f"organizations/{ORGANIZATION_ID}","global", f'resource.project_display_name="{ORGANIZATION_ID}"'
+    )
 
-  # Get all findings in the source to check if they are muted.
-  response = snippets_findings_v2.list_all_findings(
-      ORGANIZATION_ID,finding.get('source').split("/")[-1],"global"
-  )
-  count, response = enumerate(response)
-  assert len(response)>0
+    # Get all findings in the source to check if they are muted.
+    response = snippets_findings_v2.list_all_findings(
+        ORGANIZATION_ID,finding.get('source').split("/")[-1],"global"
+    )
+    count, response = enumerate(response)
+    assert len(response)>0

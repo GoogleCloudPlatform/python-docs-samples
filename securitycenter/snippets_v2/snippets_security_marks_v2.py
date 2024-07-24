@@ -18,14 +18,14 @@ from typing import Dict
 
 def add_to_asset(organization_id, asset_name) -> Dict:
     """
-   Add new security marks to an asset.
-   Args:
+    Add new security marks to an asset.
+    Args:
        organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
        asset_name: is the resource path for an asset that exists in SCC
 
-   Returns:
+    Returns:
         Dict: returns the updated security marks details.
-   """
+    """
     # [START securitycenter_add_security_marks_v2]
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
@@ -57,7 +57,7 @@ def delete_security_marks(organization_id, asset_name) -> Dict:
        organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
        asset_name: is the resource path for an asset that exists in SCC
 
-   Returns:
+    Returns:
         Dict: returns the deleted security marks response.
     """
     # Make sure they are there first
