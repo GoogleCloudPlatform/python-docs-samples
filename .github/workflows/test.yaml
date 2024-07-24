@@ -39,7 +39,7 @@ jobs:
       - run: npm run build
       - id: python
         run: |
-          AFFECTED_PYTHON=$(npm --silent run affected python HEAD origin/main)
+          AFFECTED_PYTHON=$(npm --silent run affected python $GITHUB_SHA origin/main)
           echo "$AFFECTED_PYTHON"
           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
