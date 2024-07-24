@@ -128,9 +128,16 @@ def test_create_notification_config():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_delete_notification_config(deleted_notification_config):
-    assert snippets_notification_configs_v2.delete_notification_config(
+    snippets_notification_configs_v2.delete_notification_config(
         f"organizations/{ORG_ID}", LOCATION_ID, DELETE_CONFIG_ID
     )
+    iterator = snippets_notification_configs_v2.list_notification_configs(
+        f"organizations/{ORG_ID}", LOCATION_ID
+    )
+    names = []
+    for item in iterator:
+        names.append(item.name)
+    assert DELETE_CONFIG_ID not in names
 
 
 @backoff.on_exception(

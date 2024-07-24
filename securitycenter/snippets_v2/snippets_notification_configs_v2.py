@@ -27,7 +27,7 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
             "projects/{project_id}"
             "folders/{folder_id}"
         location_id: "global"
-        pubsub_topic: "projects/{your-project-id}/topics/{your-topic-ic}"
+        pubsub_topic: "projects/{your-project-id}/topics/{your-topic-id}"
         notification_config_id: "your-config-id"
 
 
@@ -48,6 +48,7 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
             },
         }
     )
+    print(f"create notification config response:{response}")
     # [END securitycenter_create_notification_config_v2]
     return response
 
@@ -75,7 +76,6 @@ def delete_notification_config(parent_id, location_id, notification_config_id) -
     client.delete_notification_config(request={"name": notification_config_name})
     print(f"Deleted notification config: {notification_config_name}")
     # [END securitycenter_delete_notification_config_v2]
-    return True
 
 
 # [START securitycenter_get_notification_config_v2]
