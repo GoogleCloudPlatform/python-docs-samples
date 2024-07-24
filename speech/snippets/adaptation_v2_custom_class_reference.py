@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-import argparse
-
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 # [START speech_adaptation_v2_custom_class_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_custom_class_reference(
-    project_id: str,
     phrase_set_id: str,
     custom_class_id: str,
     audio_file: str,
@@ -29,41 +28,43 @@ def adaptation_v2_custom_class_reference(
     """Transcribe audio file using a custom class.
 
     Args:
-        project_id: The GCP project ID.
-        phrase_set_id: The ID of the phrase set to use.
-        custom_class_id: The ID of the custom class to use.
-        audio_file: The audio file to transcribe.
+        phrase_set_id: The unique ID of the phrase set to use.
+        custom_class_id: The unique ID of the custom class to use.
+        audio_file: The path to audio file to transcribe.
 
     Returns:
-        The transcript of the audio file.
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-    # Instantiates a client
+
+    # Instantiates a speech client
     client = SpeechClient()
 
-    # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
-
-    # Create a persistent CustomClass to reference in phrases
-    request = cloud_speech.CreateCustomClassRequest(
-        parent=f"projects/{project_id}/locations/global",
+    # Create a custom class to reference in a PhraseSet
+    # Simplified version of creating a persistent CustomClass for phrase reference
+    # The CustomClass is created with a specific value ("fare") that can be used
+    # to improve recognition accuracy for specific terms.
+    created_custom_class = cloud_speech.CustomClass(items=[{"value": "fare"}])
+    operation = client.create_custom_class(
+        parent=f"projects/{PROJECT_ID}/locations/global",
         custom_class_id=custom_class_id,
-        custom_class=cloud_speech.CustomClass(items=[{"value": "fare"}]),
+        custom_class=created_custom_class,
     )
-
-    operation = client.create_custom_class(request=request)
     custom_class = operation.result()
 
     # Create a persistent PhraseSet to reference in a recognition request
-    request = cloud_speech.CreatePhraseSetRequest(
-        parent=f"projects/{project_id}/locations/global",
-        phrase_set_id=phrase_set_id,
-        phrase_set=cloud_speech.PhraseSet(
-            phrases=[{"value": f"${{{custom_class.name}}}", "boost": 20}]
-        ),
+    created_phrase_set = cloud_speech.PhraseSet(
+        phrases=[
+            {
+                "value": f"${{{custom_class.name}}}",
+                "boost": 20,
+            },  # Using custom class reference
+        ]
     )
-
-    operation = client.create_phrase_set(request=request)
+    operation = client.create_phrase_set(
+        parent=f"projects/{PROJECT_ID}/locations/global",
+        phrase_set_id=phrase_set_id,
+        phrase_set=created_phrase_set,
+    )
     phrase_set = operation.result()
 
     # Add a reference of the PhraseSet into the recognition request
@@ -74,6 +75,10 @@ def adaptation_v2_custom_class_reference(
             )
         ]
     )
+    # AutoDetectDecodingConfig is used to automatically detect the audio's encoding.
+    # This simplifies the configuration by not requiring explicit encoding settings.
+    # The model to use for the recognition. "short" is typically used for short utterances
+    #   like commands or prompts.
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
@@ -81,13 +86,17 @@ def adaptation_v2_custom_class_reference(
         model="short",
     )
 
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        content = f.read()
+    # Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
         content=content,
     )
 
-    # Transcribes the audio into text
+    # Transcribes the audio into text. The response contains the transcription results
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -100,14 +109,9 @@ def adaptation_v2_custom_class_reference(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("phrase_set_id", help="ID for the phrase set to create")
-    parser.add_argument("custom_class_id", help="ID for the custom class to create")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    adaptation_v2_custom_class_reference(
-        args.project_id, args.phrase_set_id, args.custom_class_id, args.audio_file
+    phrase_set_unique_id = "custom-phrase-set"
+    custom_class_unique_id = "custom-class-id"
+    path_to_audio_file = "resources/fair.wav"
+    recognition_response = adaptation_v2_custom_class_reference(
+        phrase_set_unique_id, custom_class_unique_id, path_to_audio_file
     )

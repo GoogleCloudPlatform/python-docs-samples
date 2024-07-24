@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,9 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
-
-import argparse
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 # [START speech_change_speech_v2_location]
 from google.api_core.client_options import ClientOptions
@@ -22,11 +22,19 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def change_speech_v2_location(
-    project_id: str,
     location: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file in a specific region."""
+    """Transcribe an audio file in a specific region. It allows for specifying the location
+        to potentially reduce latency and meet data residency requirements.
+    Args:
+        location (str): The cloud region where the Speech-to-Text API is called.
+            For example, 'europe-west3'.
+            Use 'gcloud compute regions list' for available locations
+        audio_file (str): The path to the audio file to be transcribed.
+    Returns:
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+    """
     # Instantiates a client to a regionalized Speech endpoint.
     client = SpeechClient(
         client_options=ClientOptions(
@@ -34,18 +42,18 @@ def change_speech_v2_location(
         )
     )
 
-    # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
-
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
         model="long",
     )
 
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        content = f.read()
+
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/{location}/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/{location}/recognizers/_",
         config=config,
         content=content,
     )
@@ -55,19 +63,12 @@ def change_speech_v2_location(
 
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
-
     return response
 
 
 # [END speech_change_speech_v2_location]
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("location", help="The GCP region to which to connect")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    change_speech_v2_location(args.project_id, args.location, args.audio_file)
+    path_to_audio_file = "resources/audio.wav"
+    api_location = "europe-west3"
+    change_speech_v2_location(api_location, path_to_audio_file)
