@@ -65,7 +65,7 @@ export class Config {
     List(
       git
         .diffs(head, main)
-        .filter(diff => IGNORE_GLOBAL.some(p => minimatch(diff.filename, p)))
+        .filter(diff => !IGNORE_GLOBAL.some(p => minimatch(diff.filename, p)))
         .filter(this.matchFile)
         .map(this.findAffected)
         .groupBy(affected => affected.path)
