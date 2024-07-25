@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")

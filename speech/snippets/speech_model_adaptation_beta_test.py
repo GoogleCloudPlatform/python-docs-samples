@@ -14,9 +14,9 @@
 import os
 import uuid
 
-import pytest
 from google.api_core.retry import Retry
 from google.cloud import speech_v1p1beta1 as speech
+import pytest
 
 import speech_model_adaptation_beta
 
@@ -54,7 +54,5 @@ def phrase_set_id() -> str:
     phrase_set_id = f"phraseSetId{str(uuid.uuid4())[:8]}"
     yield phrase_set_id
     # clean up resources
-    PHRASE_PARENT = (
-        f"projects/{PROJECT_ID}/locations/global/phraseSets/{phrase_set_id}"
-    )
+    PHRASE_PARENT = f"projects/{PROJECT_ID}/locations/global/phraseSets/{phrase_set_id}"
     client.delete_phrase_set(name=PHRASE_PARENT)

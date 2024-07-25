@@ -15,13 +15,13 @@
 import os
 from uuid import uuid4
 
+import create_recognizer
 from google.api_core.retry import Retry
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 import pytest
-
-import create_recognizer
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -38,7 +38,7 @@ def test_create_recognizer(
 ) -> None:
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup():
+    def cleanup() -> None:
         delete_recognizer(
             f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
         )

@@ -16,11 +16,12 @@ import os
 import re
 from uuid import uuid4
 
+import adaptation_v2_phrase_set_reference
 import backoff
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-import adaptation_v2_phrase_set_reference
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 

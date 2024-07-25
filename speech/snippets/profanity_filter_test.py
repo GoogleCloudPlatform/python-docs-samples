@@ -16,8 +16,8 @@ import re
 
 from google.api_core.retry import Retry
 
-import pytest
 import profanity_filter
+import pytest
 
 
 @Retry()

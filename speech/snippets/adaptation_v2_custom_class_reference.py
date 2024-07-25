@@ -22,8 +22,7 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def adaptation_v2_custom_class_reference(
-    phrase_set_id: str,
-    custom_class_id: str
+    phrase_set_id: str, custom_class_id: str
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe audio file using a custom class.
 
@@ -89,7 +88,6 @@ def adaptation_v2_custom_class_reference(
         language_codes=["en-US"],
         model="short",
     )
-
 
     # Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
