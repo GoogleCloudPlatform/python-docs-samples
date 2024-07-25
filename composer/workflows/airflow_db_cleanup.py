@@ -71,7 +71,6 @@ from airflow.version import version as airflow_version
 import dateutil.parser
 from sqlalchemy import and_, func
 from sqlalchemy.exc import ProgrammingError
-from sqlalchemy.orm import load_only
 
 now = timezone.utcnow
 
@@ -298,7 +297,7 @@ def build_query(
     keep_last_filters=None,
     keep_last_group_by=None,
 ):
-    query = session.query(airflow_db_model).options(load_only(age_check_column))
+    query = session.query(airflow_db_model)
 
     logging.info("INITIAL QUERY : " + str(query))
 
