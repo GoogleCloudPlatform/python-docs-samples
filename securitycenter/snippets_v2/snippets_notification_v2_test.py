@@ -25,95 +25,20 @@ import pytest
 
 import snippets_notification_configs_v2
 
-ORG_ID = os.environ["GCLOUD_ORGANIZATION"]
-PROJECT_ID = os.environ["GCLOUD_PROJECT"]
+ORG_ID = os.environ["SCC_PROJECT_ORG_ID"]
+PROJECT_ID = os.environ["SCC_PROJECT_ID"]
 PUBSUB_TOPIC = os.environ["GCLOUD_PUBSUB_TOPIC"]
 PUBSUB_SUBSCRIPTION = os.environ["GCLOUD_PUBSUB_SUBSCRIPTION"]
 LOCATION_ID = os.environ["GCLOUD_LOCATION"]
 
 CREATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
-DELETE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
-GET_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
-UPDATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
-
-
-def cleanup_notification_config(notification_config_id):
-    client = securitycenter_v2.SecurityCenterClient()
-
-    notification_config_name = (
-        "organizations/{org_id}/locations/{location_id}/notificationConfigs/{config_id}".format(
-            org_id=ORG_ID, location_id=LOCATION_ID, config_id=notification_config_id
-        )
-    )
-    client.delete_notification_config(request={"name": notification_config_name})
-
-
-@pytest.fixture
-def new_notification_config_for_update():
-    client = securitycenter_v2.SecurityCenterClient()
-
-    org_name = f"organizations/{ORG_ID}/locations/{LOCATION_ID}"
-
-    created_notification_config = client.create_notification_config(
-        request={
-            "parent": org_name,
-            "config_id": UPDATE_CONFIG_ID,
-            "notification_config": {
-                "description": "Notification for active findings",
-                "pubsub_topic": PUBSUB_TOPIC,
-                "streaming_config": {"filter": ""},
-            },
-        }
-    )
-    yield created_notification_config
-    cleanup_notification_config(UPDATE_CONFIG_ID)
-
-
-@pytest.fixture
-def new_notification_config_for_get():
-    client = securitycenter_v2.SecurityCenterClient()
-
-    org_name = f"organizations/{ORG_ID}/locations/{LOCATION_ID}"
-
-    created_notification_config = client.create_notification_config(
-        request={
-            "parent": org_name,
-            "config_id": GET_CONFIG_ID,
-            "notification_config": {
-                "description": "Notification for active findings",
-                "pubsub_topic": PUBSUB_TOPIC,
-                "streaming_config": {"filter": ""},
-            },
-        }
-    )
-    yield created_notification_config
-    cleanup_notification_config(GET_CONFIG_ID)
-
-
-@pytest.fixture
-def deleted_notification_config():
-    client = securitycenter_v2.SecurityCenterClient()
-
-    org_name = f"organizations/{ORG_ID}/locations/{LOCATION_ID}"
-
-    created_notification_config = client.create_notification_config(
-        request={
-            "parent": org_name,
-            "config_id": DELETE_CONFIG_ID,
-            "notification_config": {
-                "description": "Notification for active findings",
-                "pubsub_topic": PUBSUB_TOPIC,
-                "streaming_config": {"filter": ""},
-            },
-        }
-    )
-    return created_notification_config
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_create_notification_config():
+    #create_config_id = "new-notification-pytest" + str(uuid.uuid1())
     created_notification_config = (
         snippets_notification_configs_v2.create_notification_config(
             f"organizations/{ORG_ID}", LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
@@ -121,31 +46,13 @@ def test_create_notification_config():
     )
     assert created_notification_config is not None
 
-    cleanup_notification_config(CREATE_CONFIG_ID)
-
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-def test_delete_notification_config(deleted_notification_config):
-    snippets_notification_configs_v2.delete_notification_config(
-        f"organizations/{ORG_ID}", LOCATION_ID, DELETE_CONFIG_ID
-    )
-    iterator = snippets_notification_configs_v2.list_notification_configs(
-        f"organizations/{ORG_ID}", LOCATION_ID
-    )
-    names = []
-    for item in iterator:
-        names.append(item.name)
-    assert DELETE_CONFIG_ID not in names
-
-
-@backoff.on_exception(
-    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
-)
-def test_get_notification_config(new_notification_config_for_get):
+def test_get_notification_config():
     retrieved_config = snippets_notification_configs_v2.get_notification_config(
-        f"organizations/{ORG_ID}", LOCATION_ID, GET_CONFIG_ID
+        f"organizations/{ORG_ID}", LOCATION_ID, CREATE_CONFIG_ID
     )
     assert retrieved_config is not None
 
@@ -163,9 +70,9 @@ def test_list_notification_configs():
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-def test_update_notification_config(new_notification_config_for_update):
+def test_update_notification_config():
     updated_config = snippets_notification_configs_v2.update_notification_config(
-        f"organizations/{ORG_ID}",LOCATION_ID, PUBSUB_TOPIC, UPDATE_CONFIG_ID
+        f"organizations/{ORG_ID}",LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
     )
     assert updated_config is not None
 
@@ -174,3 +81,18 @@ def test_receive_notifications():
     assert snippets_notification_configs_v2.receive_notifications(
         PUBSUB_SUBSCRIPTION
     )
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_delete_notification_config():
+    snippets_notification_configs_v2.delete_notification_config(
+        f"organizations/{ORG_ID}", LOCATION_ID, CREATE_CONFIG_ID
+    )
+    iterator = snippets_notification_configs_v2.list_notification_configs(
+        f"organizations/{ORG_ID}", LOCATION_ID
+    )
+    names = []
+    for item in iterator:
+        names.append(item.name)
+    assert CREATE_CONFIG_ID not in names
