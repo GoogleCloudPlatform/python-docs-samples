@@ -21,35 +21,35 @@ on:
   workflow_dispatch: # Manual runs
 
 jobs:
-  # affected:
-  #   runs-on: ubuntu-latest
-  #   outputs:
-  #     python: ${{steps.python.outputs.affected}}
-  #   defaults:
-  #     run:
-  #       working-directory: .github/testing
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         fetch-depth: 0
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20.x'
-  #     - run: npm ci
-  #     - run: npm run build
-  #     - run: git diff --name-only HEAD origin/main
-  #     - id: python
-  #       run: |
-  #         AFFECTED_PYTHON=$(npm --silent run affected python HEAD origin/main)
-  #         echo "$AFFECTED_PYTHON"
-  #         echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
+  affected:
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{steps.python.outputs.affected}}
+    defaults:
+      run:
+        working-directory: .github/testing
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run build
+      - run: git diff --name-only HEAD origin/main
+      - id: python
+        run: |
+          AFFECTED_PYTHON=$(npm --silent run affected python HEAD origin/main)
+          echo "$AFFECTED_PYTHON"
+          echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
   Python:
-    # needs: affected
+    needs: affected
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     affected: ${{fromJson(needs.affected.outputs.python)}}
+    strategy:
+      matrix:
+        affected: ${{fromJson(needs.affected.outputs.python)}}
     # Needed to generate the identity token for google-github-actions/auth.
     # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
     permissions:
@@ -72,16 +72,12 @@ jobs:
         with:
           project_id: jss-22p1-test
           workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
-          # service_account: github-actions-python@jss-22p1-test.iam.gserviceaccount.com
       - run: python --version
       - run: pip --version
-      # - run: pip install --upgrade pip
-      # # - run: pip install nox
-      # - run: npm ci
-      # - run: npm run build
-      # - run: npm run tests python "$AFFECTED"
-      #   env:
-      #     AFFECTED: ${{toJson(matrix.affected)}}
-      - run: gcloud storage ls
-      - run: pip install google-cloud-storage
-      - run: python -c 'from google.cloud import storage; client = storage.Client(); print("\n".join(b.name for b in client.list_buckets()))'
+      - run: pip install --upgrade pip
+      # - run: pip install nox
+      - run: npm ci
+      - run: npm run build
+      - run: npm run tests python "$AFFECTED"
+        env:
+          AFFECTED: ${{toJson(matrix.affected)}}
