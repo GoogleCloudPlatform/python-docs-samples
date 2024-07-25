@@ -22,7 +22,6 @@ from google.cloud.speech_v2.types import cloud_speech
 
 import adaptation_v2_phrase_set_reference
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -37,7 +36,7 @@ def test_adaptation_v2_phrase_set_reference() -> None:
 
     phrase_set_id = "phrase-set-" + str(uuid4())
     response = adaptation_v2_phrase_set_reference.adaptation_v2_phrase_set_reference(
-        phrase_set_id, os.path.join(_RESOURCES, "fair.wav")
+        phrase_set_id
     )
 
     assert re.search(
