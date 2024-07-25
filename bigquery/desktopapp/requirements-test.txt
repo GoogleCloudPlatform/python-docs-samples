@@ -1,4 +1,4 @@
 google-cloud-testutils==1.4.0
 pytest===7.4.4; python_version == '3.7'
-pytest==8.2.2; python_version >= '3.8'
+pytest==8.3.2; python_version >= '3.8'
 mock==5.1.0
