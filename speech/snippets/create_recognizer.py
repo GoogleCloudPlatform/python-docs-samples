@@ -22,8 +22,7 @@ from google.cloud.speech_v2.types import cloud_speech
 
 
 def create_recognizer(recognizer_id: str) -> cloud_speech.Recognizer:
-    """
-    Method creates a recognizer with an unique ID and default recognition
+    """Method creates a recognizer with an unique ID and default recognition
     configuration. The recognizer is created in the global location of the project specified by the
     PROJECT_ID environment variable.
 
@@ -32,7 +31,6 @@ def create_recognizer(recognizer_id: str) -> cloud_speech.Recognizer:
 
     Returns:
         cloud_speech.Recognizer: The created recognizer object with configuration.
-
     """
 
     # Instantiates a client
