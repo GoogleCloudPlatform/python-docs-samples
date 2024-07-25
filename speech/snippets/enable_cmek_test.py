@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
 from google.api_core.retry import Retry
 
@@ -21,11 +20,6 @@ import enable_cmek
 
 @Retry()
 def test_enable_cmek() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-    response = enable_cmek.enable_cmek(
-        project_id,
-        "",
-    )
-
+    key_name = ""
+    response = enable_cmek.enable_cmek(key_name)
     assert response.kms_key_name == ""
