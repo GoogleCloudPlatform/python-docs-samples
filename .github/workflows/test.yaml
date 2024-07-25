@@ -70,8 +70,9 @@ jobs:
           python-version: '3.12'
       - uses: 'google-github-actions/auth@v2'
         with:
+          project_id: jss-22p1-test
           workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
-          service_account: github-actions-python@jss-22p1-test.iam.gserviceaccount.com
+          # service_account: github-actions-python@jss-22p1-test.iam.gserviceaccount.com
       - run: python --version
       - run: pip --version
       - run: pip install --upgrade pip
