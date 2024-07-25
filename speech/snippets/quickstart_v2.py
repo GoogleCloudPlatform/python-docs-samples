@@ -1,4 +1,4 @@
-# Copyright 2022 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,24 +13,29 @@
 # limitations under the License.
 
 
-import argparse
+import os
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+RESOURCES_FOLDER = os.path.join(os.path.dirname(__file__), "resources")
 # [START speech_quickstart_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def quickstart_v2(
-    project_id: str,
-    audio_file: str,
-) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file."""
-    # Instantiates a client
-    client = SpeechClient()
-
+def quickstart_v2() -> cloud_speech.RecognizeResponse:
+    """Transcribe an audio file.
+    Returns:
+        cloud_speech.RecognizeResponse: The response from the recognize request, containing
+        the transcription results
+    """
+    # Could be "resources/fair.wav" or any another absolute|relative local path to the audio file
+    audio_file = os.path.join(RESOURCES_FOLDER, "audio.wav")
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
+
+    # Instantiates a client
+    client = SpeechClient()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -39,9 +44,9 @@ def quickstart_v2(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -57,10 +62,4 @@ def quickstart_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    quickstart_v2(args.project_id, args.audio_file)
+    recognition_response = quickstart_v2()
