@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,17 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-
+import os
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 # [START speech_transcribe_with_model_adaptation]
 
 from google.cloud import speech_v1p1beta1 as speech
 
 
 def transcribe_with_model_adaptation(
-    project_id: str,
-    location: str,
-    storage_uri: str,
     custom_class_id: str,
     phrase_set_id: str,
 ) -> str:
@@ -29,20 +26,22 @@ def transcribe_with_model_adaptation(
     items that are likely to occur in your input data.
 
     Args:
-        project_id: The GCP project ID.
-        location: The GCS location of the input audio.
-        storage_uri: The Cloud Storage URI of the input audio.
-        custom_class_id: The ID of the custom class to create
+        custom_class_id: The unique ID of the custom class to create
+        phrase_set_id: The unique ID of the PhraseSet to create.
 
     Returns:
         The transcript of the input audio.
     """
+    # The name of the audio file to transcribe
+    # storage_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
+    storage_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+    # The location to create the custom class and phrase set
 
     # Create the adaptation client
     adaptation_client = speech.AdaptationClient()
 
     # The parent resource where the custom class and phrase set will be created.
-    parent = f"projects/{project_id}/locations/{location}"
+    parent = f"projects/{PROJECT_ID}/locations/global"
 
     # Create the custom class resource
     adaptation_client.create_custom_class(
@@ -59,7 +58,7 @@ def transcribe_with_model_adaptation(
         }
     )
     custom_class_name = (
-        f"projects/{project_id}/locations/{location}/customClasses/{custom_class_id}"
+        f"projects/{PROJECT_ID}/locations/global/customClasses/{custom_class_id}"
     )
     # Create the phrase set resource
     phrase_set_response = adaptation_client.create_phrase_set(
@@ -89,9 +88,7 @@ def transcribe_with_model_adaptation(
         adaptation=speech_adaptation,
     )
 
-    # The name of the audio file to transcribe
-    # storage_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
-
+    # Audio object
     audio = speech.RecognitionAudio(uri=storage_uri)
 
     # Create the speech client
@@ -105,3 +102,10 @@ def transcribe_with_model_adaptation(
     # [END speech_transcribe_with_model_adaptation]
 
     return response.results[0].alternatives[0].transcript
+
+
+if __name__ == "__main__":
+    transcript = recognition_response = transcribe_with_model_adaptation(
+        custom_class_id="your-custom-class-id",
+        phrase_set_id="your-phrase-set-id",
+    )
