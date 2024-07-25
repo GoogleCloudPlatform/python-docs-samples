@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,5 @@ import speech_adaptation_beta
 
 @Retry()
 def test_adaptation_beta() -> None:
-    response = speech_adaptation_beta.sample_recognize(
-        "gs://cloud-samples-data/speech/brooklyn_bridge.mp3", "Brooklyn Bridge"
-    )
+    response = speech_adaptation_beta.sample_recognize()
     assert "brooklyn" in response.results[0].alternatives[0].transcript.lower()
