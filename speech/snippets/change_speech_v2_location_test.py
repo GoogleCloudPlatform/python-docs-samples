@@ -20,14 +20,11 @@ from google.api_core.retry import Retry
 import change_speech_v2_location
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 @Retry()
 def test_change_speech_v2_location() -> None:
-    response = change_speech_v2_location.change_speech_v2_location(
-        "us-central1", os.path.join(_RESOURCES, "audio.wav")
-    )
+    response = change_speech_v2_location.change_speech_v2_location()
 
     assert re.search(
         r"how old is the Brooklyn Bridge",
