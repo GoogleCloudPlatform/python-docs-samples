@@ -16,21 +16,17 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+RESOURCES_FOLDER = os.path.join(os.path.dirname(__file__), "resources")
 
 # [START speech_adaptation_v2_inline_phrase_set]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeResponse:
-    """
-    Enhances speech recognition accuracy using an inline phrase set.
+def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
+    """Enhances speech recognition accuracy using an inline phrase set.
     The inline custom phrase set helps the recognizer produce more accurate transcriptions for specific terms.
-
     Phrases are given a boost to increase their chances of being recognized correctly.
-
-    Args:
-        audio_file: The path to audio file to transcribe.
 
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
@@ -38,6 +34,13 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
 
     # Instantiates a client
     client = SpeechClient()
+
+    # Could be "resources/fair.wav" or any another absolute|relative local path to the audio file
+    audio_file = os.path.join(RESOURCES_FOLDER, "fair.wav")
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        content = f.read()
+
     # Build inline phrase set to produce a more accurate transcript
     phrase_set = cloud_speech.PhraseSet(
         phrases=[{"value": "fare", "boost": 10}, {"value": "word", "boost": 20}]
@@ -56,9 +59,6 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
         model="short",
     )
 
-    # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
     # Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
         recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
@@ -79,5 +79,4 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
 
 
 if __name__ == "__main__":
-    path_to_audio_file = "resources/fair.wav"
-    recognition_response = adaptation_v2_inline_phrase_set(path_to_audio_file)
+    recognition_response = adaptation_v2_inline_phrase_set()
