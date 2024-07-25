@@ -23,7 +23,6 @@ from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -48,7 +47,6 @@ def test_adaptation_v2_custom_class_reference() -> None:
         adaptation_v2_custom_class_reference.adaptation_v2_custom_class_reference(
             phrase_set_id,
             custom_class_id,
-            os.path.join(_RESOURCES, "fair.wav"),
         )
     )
 
