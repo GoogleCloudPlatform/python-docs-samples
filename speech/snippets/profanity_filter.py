@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,22 +18,29 @@ processing.
 Example usage:
     python transcribe.py gs://cloud-samples-tests/speech/brooklyn.flac
 """
+from google.cloud.speech import RecognizeResponse
 
 
-# [START speech_recognize_with_profanity_filter_gcs]
-from google.cloud import speech
+def sync_recognize_with_profanity_filter_gcs() -> RecognizeResponse:
+    """Recognizes speech from an audio file in Cloud Storage and filters out profane language.
 
+    Returns:
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+    """
+    # [START speech_recognize_with_profanity_filter_gcs]
+    from google.cloud import speech
 
-def sync_recognize_with_profanity_filter_gcs(gcs_uri: str) -> speech.RecognizeResponse:
+    # Replace path_to_file with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
+    # Define the audio source
+    audio = {"uri": audio_uri}
+
     client = speech.SpeechClient()
-
-    audio = {"uri": gcs_uri}
-
     config = speech.RecognitionConfig(
-        encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
+        encoding=speech.RecognitionConfig.AudioEncoding.FLAC,  # Audio format
         sample_rate_hertz=16000,
         language_code="en-US",
-        profanity_filter=True,
+        profanity_filter=True,  # Enable profanity filter
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -42,12 +49,10 @@ def sync_recognize_with_profanity_filter_gcs(gcs_uri: str) -> speech.RecognizeRe
         alternative = result.alternatives[0]
         print(f"Transcript: {alternative.transcript}")
 
+    # [END speech_recognize_with_profanity_filter_gcs]
+
     return response.results
 
 
-# [END speech_recognize_with_profanity_filter_gcs]
-
-
-sync_recognize_with_profanity_filter_gcs(
-    "gs://cloud-samples-tests/speech/brooklyn.flac"
-)
+if __name__ == "__main__":
+    recognition_response = sync_recognize_with_profanity_filter_gcs()
