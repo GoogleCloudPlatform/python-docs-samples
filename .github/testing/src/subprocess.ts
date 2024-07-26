@@ -12,15 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-import {spawnSync} from 'child_process';
+import { spawnSync } from 'child_process';
 
 export function run(cmd: string, args: string[]) {
-  const p = spawnSync(cmd, args, {stdio: 'inherit'});
-  process.exitCode = p.status || undefined;
+  const p = spawnSync(cmd, args, { stdio: 'inherit' });
+  if (p.status !== 0) {
+    process.exitCode = p.status || undefined;
+  }
 }
 
 export function output(cmd: string, args: string[]): string {
   const p = spawnSync(cmd, args);
-  process.exitCode = p.status || undefined;
+  if (p.status !== 0) {
+    process.exitCode = p.status || undefined;
+  }
   return p.stdout.toString().trim();
 }

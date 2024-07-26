@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as git from './git';
-import {Config} from './config';
-import {python} from './config/python';
-import {Affected} from './affected';
+import { Config } from './config';
+import { python } from './config/python';
+import { Affected } from './affected';
 
 function getConfig(lang: string): Config {
   switch (lang) {
@@ -37,7 +37,7 @@ function main(command: string) {
     }
     case 'tests': {
       const config = getConfig(process.argv[3]);
-      const affected: Affected = JSON.parse(process.argv[4]);
+      const affected: Affected = JSON.parse(process.env[process.argv[4]] || "");
       config.test(affected);
       return;
     }
