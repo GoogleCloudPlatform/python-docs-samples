@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_claude_3_tool_use]
+# [START generativeaionvertexai_claude_3_tool_use]
 # TODO(developer): Vertex AI SDK - uncomment below & run
 # pip3 install --upgrade --user google-cloud-aiplatform
 # gcloud auth application-default login
@@ -62,6 +63,7 @@ def tool_use(project_id: str, region: str) -> object:
 
 
 # [END aiplatform_claude_3_tool_use]
+# [END generativeaionvertexai_claude_3_tool_use]
 
 
 if __name__ == "__main__":

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_tuning]
+# [START generativeaionvertexai_sdk_tuning]
 from __future__ import annotations
 
 import os
@@ -48,3 +49,4 @@ def tuning(
 
 
 # [END aiplatform_sdk_tuning]
+# [END generativeaionvertexai_sdk_tuning]

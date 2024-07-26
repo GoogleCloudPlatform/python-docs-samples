@@ -25,6 +25,7 @@ def grounding(
 ) -> TextGenerationResponse:
     """Grounding example with a Large Language Model"""
     # [START aiplatform_sdk_grounding]
+    # [START generativeaionvertexai_sdk_grounding]
     import vertexai
 
     from vertexai.language_models import GroundingSource, TextGenerationModel
@@ -60,6 +61,7 @@ def grounding(
     print(f"Response from Model: {response.text}")
     print(f"Grounding Metadata: {response.grounding_metadata}")
     # [END aiplatform_sdk_grounding]
+    # [END generativeaionvertexai_sdk_grounding]
 
     return response
 

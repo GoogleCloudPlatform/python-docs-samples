@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START aiplatform_sdk_embedding]
+# [START generativeaionvertexai_sdk_embedding]
 from typing import List, Optional
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
@@ -33,6 +34,7 @@ def embed_text(
 
 
 # [END aiplatform_sdk_embedding]
+# [END generativeaionvertexai_sdk_embedding]
 
 
 if __name__ == "__main__":
