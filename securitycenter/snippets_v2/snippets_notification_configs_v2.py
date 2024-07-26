@@ -16,9 +16,10 @@
 """Demos for working with notification configs."""
 
 from typing import Dict
+from google.cloud.securitycenter_v2 import NotificationConfig, ListNotificationConfigsResponse
 
 # [START securitycenter_create_notification_config_v2]
-def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> Dict:
+def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> NotificationConfig:
     """
     This method is used to create the Notification Config.
     Args:
@@ -49,8 +50,8 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
         }
     )
     print(f"create notification config response:{response}")
-    # [END securitycenter_create_notification_config_v2]
     return response
+# [END securitycenter_create_notification_config_v2]
 
 
 # [START securitycenter_delete_notification_config_v2]
@@ -79,7 +80,7 @@ def delete_notification_config(parent_id, location_id, notification_config_id) -
 
 
 # [START securitycenter_get_notification_config_v2]
-def get_notification_config(parent_id, location_id, notification_config_id) -> Dict:
+def get_notification_config(parent_id, location_id, notification_config_id) -> NotificationConfig:
     """
     This method is used to get the Notification Config.
     Args:
@@ -102,12 +103,12 @@ def get_notification_config(parent_id, location_id, notification_config_id) -> D
         request={"name": notification_config_name}
     )
     print(f"Got notification config: {response}")
-    # [END securitycenter_get_notification_config_v2]
     return response
+# [END securitycenter_get_notification_config_v2]
 
 
 # [START securitycenter_list_notification_configs_v2]
-def list_notification_configs(parent_id, location_id) -> Dict:
+def list_notification_configs(parent_id, location_id) -> ListNotificationConfigsResponse:
     """
     This method is used to list the Notification Config.
     Args:
@@ -126,12 +127,12 @@ def list_notification_configs(parent_id, location_id) -> Dict:
     )
     for i, config in enumerate(notification_configs_iterator):
         print(f"{i}: notification_config: {config}")
-    # [END securitycenter_list_notification_configs_v2]
     return notification_configs_iterator
+# [END securitycenter_list_notification_configs_v2]
 
 
 # [START securitycenter_update_notification_config_v2]
-def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> Dict:
+def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> NotificationConfig:
     """
     This method is used to update the Notification Config.
     Args:
@@ -177,13 +178,12 @@ def update_notification_config(parent_id, location_id, pubsub_topic, notificatio
     )
 
     print(updated_notification_config)
-    # [END securitycenter_update_notification_config_v2]
     return updated_notification_config
+# [END securitycenter_update_notification_config_v2]
 
-
+# [START securitycenter_receive_notifications_v2]
 def receive_notifications(subscription_name) -> bool:
-    # [START securitycenter_receive_notifications_v2]
-    # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
+        # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
     import concurrent
 
     from google.cloud import pubsub_v1
@@ -219,6 +219,6 @@ def receive_notifications(subscription_name) -> bool:
         streaming_pull_future.result(timeout=1)  # Block for 1 second
     except concurrent.futures.TimeoutError:
         streaming_pull_future.cancel()
-    # [END securitycenter_receive_notifications_v2]
     return True
+# [END securitycenter_receive_notifications_v2]
 
