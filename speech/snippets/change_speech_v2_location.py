@@ -13,13 +13,12 @@
 # limitations under the License.
 import os
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-RESOURCES_FOLDER = os.path.join(os.path.dirname(__file__), "resources")
-
 # [START speech_change_speech_v2_location]
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
@@ -30,8 +29,7 @@ def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
     location = "europe-west3"
-    # Could be "resources/fair.wav" or any another absolute|relative local path to the audio file
-    audio_file = os.path.join(RESOURCES_FOLDER, "audio.wav")
+    audio_file = "resources/audio.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -66,4 +64,5 @@ def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
 # [END speech_change_speech_v2_location]
 
 if __name__ == "__main__":
-    recognition_response = change_speech_v2_location()
+    response = recognition_response = change_speech_v2_location()
+    print(response)

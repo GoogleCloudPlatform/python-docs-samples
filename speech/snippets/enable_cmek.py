@@ -14,10 +14,11 @@
 
 import os
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 # [START speech_enable_cmek]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def enable_cmek(

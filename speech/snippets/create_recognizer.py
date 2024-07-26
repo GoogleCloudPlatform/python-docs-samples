@@ -14,11 +14,11 @@
 
 import os
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
 # [START speech_create_recognizer]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def create_recognizer(recognizer_id: str) -> cloud_speech.Recognizer:

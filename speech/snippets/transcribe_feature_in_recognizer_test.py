@@ -40,7 +40,7 @@ def test_transcribe_feature_in_recognizer(
     project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup():
+    def cleanup() -> None:
         delete_recognizer(project_id, recognizer_id)
 
     request.addfinalizer(cleanup)

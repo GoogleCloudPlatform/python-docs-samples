@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 from google.api_core.retry import Retry
-
-import pytest
-
 import multi_region
+import pytest
 
 
 @Retry()

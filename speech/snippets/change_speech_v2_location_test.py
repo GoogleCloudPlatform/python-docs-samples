@@ -18,8 +18,6 @@ import re
 import change_speech_v2_location
 from google.api_core.retry import Retry
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-
 
 @Retry()
 def test_change_speech_v2_location() -> None:

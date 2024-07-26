@@ -11,11 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-# [START speech_transcribe_with_model_adaptation]
 
+import os
+
+# [START speech_transcribe_with_model_adaptation]
 from google.cloud import speech_v1p1beta1 as speech
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def transcribe_with_model_adaptation(

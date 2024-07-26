@@ -12,15 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import os
-
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-RESOURCES_FOLDER = os.path.join(os.path.dirname(__file__), "resources")
 
 # [START speech_adaptation_v2_phrase_set_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def adaptation_v2_phrase_set_reference(
@@ -35,8 +33,7 @@ def adaptation_v2_phrase_set_reference(
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
 
-    # Could be "resources/fair.wav" or any another absolute|relative local path to the audio file
-    audio_file = os.path.join(RESOURCES_FOLDER, "fair.wav")
+    audio_file = "resources/fair.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
