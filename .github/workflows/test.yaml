@@ -35,7 +35,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-      - run: npm ci
+      - run: npm ci --no-audit
       - run: npm run build
       - run: git diff --name-only HEAD origin/main
       - id: python
@@ -72,12 +72,12 @@ jobs:
         with:
           project_id: jss-22p1-test
           workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
+      - run: npm ci --no-audit
+      - run: npm run build
       - run: python --version
       - run: pip --version
       - run: pip install --upgrade pip
       # - run: pip install nox
-      - run: npm ci
-      - run: npm run build
       - run: npm run tests python "$AFFECTED"
         env:
           AFFECTED: ${{toJson(matrix.affected)}}
