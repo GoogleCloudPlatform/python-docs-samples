@@ -14,9 +14,9 @@
 
 import re
 
-from google.api_core.retry import Retry
-
 import change_speech_v2_location
+
+from google.api_core.retry import Retry
 
 
 @Retry()

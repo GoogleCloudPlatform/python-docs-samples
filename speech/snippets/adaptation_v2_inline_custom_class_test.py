@@ -14,9 +14,9 @@
 
 import re
 
-from google.api_core.retry import Retry
-
 import adaptation_v2_inline_custom_class
+
+from google.api_core.retry import Retry
 
 
 @Retry()
