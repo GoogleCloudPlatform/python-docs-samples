@@ -27,11 +27,11 @@ export const python = new Config({
     'setup.cfg',
   ],
   testAll: args => {
-    // const noxfile = path.join(args.root, 'noxfile-template.py');
-    // subprocess.run('cp', [noxfile, 'noxfile.py']);
-    // subprocess.run('nox', ['-s', 'py-3.11']);
-    subprocess.run('python', ['-m', 'pip', 'install', '-r', 'requirements.txt', '-r', 'requirements-test.txt', '--only-binary', ':all'])
-    subprocess.run('python', ['-m', 'pytest', '--verbose', '-s'])
+    const noxfile = path.join(args.root, 'noxfile-template.py');
+    subprocess.run('cp', [noxfile, 'noxfile.py']);
+    subprocess.run('nox', ['-s', 'py-3.11']);
+    // subprocess.run('python', ['-m', 'pip', 'install', '-r', 'requirements.txt', '-r', 'requirements-test.txt', '--only-binary', ':all'])
+    // subprocess.run('python', ['-m', 'pytest', '-s'])
   },
   testSome: args => {
     subprocess.run('cp', [
