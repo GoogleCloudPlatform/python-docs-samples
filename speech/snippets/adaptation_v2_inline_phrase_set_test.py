@@ -15,8 +15,10 @@
 import os
 import re
 
-import adaptation_v2_inline_phrase_set
 from google.api_core.retry import Retry
+
+import adaptation_v2_inline_phrase_set
+
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 

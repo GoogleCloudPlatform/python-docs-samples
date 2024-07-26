@@ -13,8 +13,10 @@
 # limitations under the License.
 
 from google.api_core.retry import Retry
-import multi_region
+
 import pytest
+
+import multi_region
 
 
 @Retry()

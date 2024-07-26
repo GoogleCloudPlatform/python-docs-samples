@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
-import change_speech_v2_location
 from google.api_core.retry import Retry
+
+import change_speech_v2_location
 
 
 @Retry()

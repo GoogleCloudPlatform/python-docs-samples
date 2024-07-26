@@ -16,12 +16,12 @@ import os
 import re
 from uuid import uuid4
 
-import adaptation_v2_custom_class_reference
-
 from google.api_core.retry import Retry
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+import adaptation_v2_custom_class_reference
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
