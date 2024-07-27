@@ -33,6 +33,7 @@ jobs:
         with:
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v2
+      - run: bun install
       - id: python
         run: |
           AFFECTED_PYTHON=$(bun run affected python HEAD origin/main)
@@ -66,6 +67,7 @@ jobs:
           project_id: jss-22p1-test
           workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
       - run: pip install nox
+      - run: bun install
       - run: bun run tests python AFFECTED
         env:
           AFFECTED: ${{toJson(matrix.affected)}}
