@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,43 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+
+import argparse
 
 # [START speech_adaptation_v2_inline_custom_class]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+def adaptation_v2_inline_custom_class(
+    project_id: str,
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
+    """Transcribe audio file using inline custom class
 
-def adaptation_v2_inline_custom_class() -> cloud_speech.RecognizeResponse:
-    """Transcribe audio file using inline custom class.
-    The inline custom class helps the recognizer produce more accurate transcriptions for specific terms.
+    Args:
+        project_id: The GCP project ID.
+        audio_file: The audio file to transcribe.
 
     Returns:
-        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+        The response from the recognizer.
     """
     # Instantiates a client
     client = SpeechClient()
 
-    audio_file = "resources/fair.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         content = f.read()
 
-    # Define an inline custom class with specific items to enhance recognition
-    # The CustomClass is created with a specific value ("fare") that can be used
-    #   to improve recognition accuracy for specific terms.
-    custom_class_name = "your-class-name"
-    custom_class = cloud_speech.CustomClass(
-        name=custom_class_name,
-        items=[{"value": "fare"}],
-    )
-
     # Build inline phrase set to produce a more accurate transcript
-    phrase_set = cloud_speech.PhraseSet(
-        phrases=[{"value": custom_class_name, "boost": 20}]
-    )
+    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "${fare}", "boost": 20}])
+    custom_class = cloud_speech.CustomClass(name="fare", items=[{"value": "fare"}])
     adaptation = cloud_speech.SpeechAdaptation(
         phrase_sets=[
             cloud_speech.SpeechAdaptation.AdaptationPhraseSet(
@@ -64,14 +58,13 @@ def adaptation_v2_inline_custom_class() -> cloud_speech.RecognizeResponse:
         model="short",
     )
 
-    # Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
         config=config,
         content=content,
     )
 
-    # Transcribes the audio into text. The response contains the transcription results
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -84,4 +77,10 @@ def adaptation_v2_inline_custom_class() -> cloud_speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    recognition_response = adaptation_v2_inline_custom_class()
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    adaptation_v2_inline_custom_class(args.project_id, args.audio_file)

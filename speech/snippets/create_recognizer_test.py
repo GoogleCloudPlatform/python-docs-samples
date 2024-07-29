@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,17 +15,13 @@
 import os
 from uuid import uuid4
 
-import create_recognizer
-
 from google.api_core.retry import Retry
-
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 import pytest
 
-
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+import create_recognizer
 
 
 def delete_recognizer(name: str) -> None:
@@ -38,16 +34,16 @@ def delete_recognizer(name: str) -> None:
 def test_create_recognizer(
     capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
 ) -> None:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup() -> None:
+    def cleanup():
         delete_recognizer(
-            f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
+            f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
         )
 
     request.addfinalizer(cleanup)
 
-    recognizer = create_recognizer.create_recognizer(recognizer_id)
-    captured = capsys.readouterr()
-    assert recognizer_id in captured.out
+    recognizer = create_recognizer.create_recognizer(project_id, recognizer_id)
+
     assert recognizer_id in recognizer.name

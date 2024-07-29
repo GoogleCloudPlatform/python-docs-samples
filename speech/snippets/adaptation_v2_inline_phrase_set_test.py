@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,18 +15,20 @@
 import os
 import re
 
-import adaptation_v2_inline_phrase_set
-
 from google.api_core.retry import Retry
 
+import adaptation_v2_inline_phrase_set
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
 def test_adaptation_v2_inline_phrase_set() -> None:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set()
+    response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set(
+        project_id, os.path.join(_RESOURCES, "fair.wav")
+    )
 
     assert re.search(
         r"the word is fare",

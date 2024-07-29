@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,17 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
+
+from google.api_core.retry import Retry
 
 import adaptation_v2_inline_custom_class
 
-from google.api_core.retry import Retry
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
 def test_adaptation_v2_inline_custom_class() -> None:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-    response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class()
+    response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class(
+        project_id, os.path.join(_RESOURCES, "fair.wav")
+    )
 
     assert re.search(
         r"the word",

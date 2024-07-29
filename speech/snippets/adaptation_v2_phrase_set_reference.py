@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,40 +12,44 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
+
+import argparse
 
 # [START speech_adaptation_v2_phrase_set_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
 
 def adaptation_v2_phrase_set_reference(
+    project_id: str,
     phrase_set_id: str,
+    audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe audio files using a PhraseSet.
 
     Args:
-        phrase_set_id: The unique ID of the PhraseSet to use.
+        project_id: The GCP project ID.
+        phrase_set_id: The ID of the PhraseSet to use.
+        audio_file: The path to the audio file to transcribe.
 
     Returns:
-        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+        The response from the recognize call.
     """
-
-    audio_file = "resources/fair.wav"
-    # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        audio_content = f.read()
-
     # Instantiates a client
     client = SpeechClient()
-    # Creating operation of creating the PhraseSet on the cloud.
-    operation = client.create_phrase_set(
-        parent=f"projects/{PROJECT_ID}/locations/global",
+
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        content = f.read()
+
+    # Create a persistent PhraseSet to reference in a recognition request
+    request = cloud_speech.CreatePhraseSetRequest(
+        parent=f"projects/{project_id}/locations/global",
         phrase_set_id=phrase_set_id,
         phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}]),
     )
+
+    operation = client.create_phrase_set(request=request)
     phrase_set = operation.result()
 
     # Add a reference of the PhraseSet into the recognition request
@@ -56,23 +60,20 @@ def adaptation_v2_phrase_set_reference(
             )
         ]
     )
-    # AutoDetectDecodingConfig is used to automatically detect the audio's encoding.
-    # This simplifies the configuration by not requiring explicit encoding settings.
-    # The model to use for the recognition. "short" is typically used for short utterances
-    #   like commands or prompts.
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
         language_codes=["en-US"],
         model="short",
     )
-    #  Prepare the request which includes specifying the recognizer, configuration, and the audio content
+
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
+        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
         config=config,
-        content=audio_content,
+        content=content,
     )
-    # Transcribes the audio into text. The response contains the transcription results
+
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -85,5 +86,15 @@ def adaptation_v2_phrase_set_reference(
 
 
 if __name__ == "__main__":
-    phrase_set_unique_id = "phrase-set-123"
-    recognition_response = adaptation_v2_phrase_set_reference(phrase_set_unique_id)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="GCP Project ID")
+    parser.add_argument("phrase_set_id", help="ID for the phrase set to create")
+    parser.add_argument("audio_file", help="Audio file to stream")
+    args = parser.parse_args()
+    adaptation_v2_phrase_set_reference(
+        args.project_id,
+        args.phrase_set_id,
+        args.audio_file,
+    )
