@@ -32,6 +32,8 @@ def create_with_pubsub_notification_job(
         job_name: the name of the job that will be created.
             It needs to be unique for each project and region pair.
         topic_name: the name of the Pub/Sub topic to which the notification will be sent.
+            The topic should be created in GCP Pub/Sub before running this method.
+            The procedure for creating a topic is listed here: https://cloud.google.com/pubsub/docs/create-topic
 
     Returns:
         A job object representing the job created.
@@ -123,8 +125,9 @@ if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "europe-west4"
     job_name = "your-job-name"
-    pub_sub_topic_name = "your-topic-name"
+    # The topic should be created in GCP Pub/Sub
+    existing_topic_name = "your-existing-topic-name"
     job = create_with_pubsub_notification_job(
-        PROJECT_ID, REGION, job_name, pub_sub_topic_name
+        PROJECT_ID, REGION, job_name, existing_topic_name
     )
     print(job)
