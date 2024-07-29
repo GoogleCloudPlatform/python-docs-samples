@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_evaluate_model]
+# [START generativeaionvertexai_evaluate_model]
 
 from google.auth import default
 import vertexai
@@ -52,6 +52,6 @@ def evaluate_model(
     return eval_metrics
 
 
-# [END aiplatform_evaluate_model]
+# [END generativeaionvertexai_evaluate_model]
 if __name__ == "__main__":
     evaluate_model()
