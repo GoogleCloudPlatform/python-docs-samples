@@ -37,7 +37,7 @@ def test_model_adaptation_beta(
     transcript = speech_model_adaptation_beta.transcribe_with_model_adaptation(
         PROJECT_ID, LOCATION, STORAGE_URI, class_id, phrase_id
     )
-    assert "how long is the Brooklyn Bridge" in transcript
+    assert "how old is the Brooklyn Bridge" in transcript
 
 
 @pytest.fixture
