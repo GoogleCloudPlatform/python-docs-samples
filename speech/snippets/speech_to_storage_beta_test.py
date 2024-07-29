@@ -39,7 +39,9 @@ language_code = "en-US"
 
 
 @Retry()
-def test_export_transcript_to_storage_beta(bucket: storage.Bucket, capsys: pytest.CaptureFixture) -> None:
+def test_export_transcript_to_storage_beta(
+    bucket: storage.Bucket, capsys: pytest.CaptureFixture
+) -> None:
     results = speech_to_storage_beta.export_transcript_to_storage_beta(
         INPUT_STORAGE_URI,
         OUTPUT_STORAGE_URI,
