@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_embedding]
 # [START generativeaionvertexai_sdk_embedding]
 from typing import List, Optional
 
@@ -33,7 +32,6 @@ def embed_text(
     return [embedding.values for embedding in embeddings]
 
 
-# [END aiplatform_sdk_embedding]
 # [END generativeaionvertexai_sdk_embedding]
 
 

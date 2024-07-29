@@ -18,7 +18,6 @@ def streaming_prediction(
     location: str,
 ) -> str:
     """Streaming Text Example with a Large Language Model."""
-    # [START aiplatform_streaming_text]
     # [START generativeaionvertexai_streaming_text]
     import vertexai
     from vertexai import language_models
@@ -53,7 +52,6 @@ def streaming_prediction(
         results.append(str(response))
     results = "\n".join(results)
     print(results)
-    # [END aiplatform_streaming_text]
     # [END generativeaionvertexai_streaming_text]
     return results
 

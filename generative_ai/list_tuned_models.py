@@ -18,7 +18,6 @@ def list_tuned_models(
     location: str,
 ) -> None:
     """List tuned models."""
-    # [START aiplatform_sdk_list_tuned_models]
     # [START generativeaionvertexai_sdk_list_tuned_models]
     import vertexai
 
@@ -29,7 +28,6 @@ def list_tuned_models(
     model = TextGenerationModel.from_pretrained("text-bison@002")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
-    # [END aiplatform_sdk_list_tuned_models]
     # [END generativeaionvertexai_sdk_list_tuned_models]
 
     return tuned_model_names
