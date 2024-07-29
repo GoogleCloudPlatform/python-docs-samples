@@ -125,11 +125,11 @@ def rank_sample(
     return response
 
 
-def grounded_generation_inline_sample(
+def grounded_generation_inline_vais_sample(
     project_id: str,
     serving_config: str,
 ) -> discoveryengine.GenerateGroundedContentResponse:
-    # [START genappbuilder_grounded_generation_inline]
+    # [START genappbuilder_grounded_generation_inline_vais]
     from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
@@ -192,7 +192,7 @@ def grounded_generation_inline_sample(
 
     # Handle the response
     print(response)
-    # [END genappbuilder_grounded_generation_inline]
+    # [END genappbuilder_grounded_generation_inline_vais]
 
     return response
 
