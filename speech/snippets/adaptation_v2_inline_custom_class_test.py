@@ -15,9 +15,9 @@
 import os
 import re
 
-import adaptation_v2_inline_custom_class
-
 from google.api_core.retry import Retry
+
+import adaptation_v2_inline_custom_class
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 

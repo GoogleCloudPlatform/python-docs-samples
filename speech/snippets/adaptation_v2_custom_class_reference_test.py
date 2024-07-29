@@ -18,10 +18,10 @@ from uuid import uuid4
 
 from google.api_core.retry import Retry
 
-import adaptation_v2_custom_class_reference
-
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
+
+import adaptation_v2_custom_class_reference
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
