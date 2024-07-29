@@ -15,9 +15,10 @@
 import os
 import re
 
+from google.api_core.retry import Retry
+
 import adaptation_v2_inline_phrase_set
 
-from google.api_core.retry import Retry
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 

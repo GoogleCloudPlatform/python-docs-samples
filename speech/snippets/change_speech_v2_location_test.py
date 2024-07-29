@@ -15,9 +15,9 @@
 import os
 import re
 
-import change_speech_v2_location
-
 from google.api_core.retry import Retry
+
+import change_speech_v2_location
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
