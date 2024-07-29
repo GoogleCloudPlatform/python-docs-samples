@@ -149,7 +149,7 @@ def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: 
     # If empty, all mutable fields will be updated.
     # For more info on constructing field mask path, see the proto or:
     # https://googleapis.dev/python/protobuf/latest/google/protobuf/field_mask_pb2.html
-    field_mask = field_mask_pb2.FieldMask(paths=["filter"])
+    field_mask = field_mask_pb2.FieldMask(paths=["filter", "description"])
 
     request = securitycenter_v2.UpdateBigQueryExportRequest()
     request.big_query_export = bigquery_export
@@ -186,6 +186,4 @@ def delete_bigquery_export(parent: str, bigquery_export_id: str):
 
     client.delete_big_query_export(request)
     print(f"BigQuery export request deleted successfully: {bigquery_export_id}")
-
-
 # [END securitycenter_delete_bigquery_export_v2]
