@@ -127,21 +127,24 @@ def rank_sample(
 
 def grounded_generation_inline_sample(
     project_id: str,
+    serving_config: str,
 ) -> discoveryengine.GenerateGroundedContentResponse:
     # [START genappbuilder_grounded_generation_inline]
     from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
     # project_id = "YOUR_PROJECT_ID"
+    # The full resource name of the serving config for a Vertex AI Search App
+    # serving_config = "projects/{project_id}/locations/global/collections/default_collection/engines/{engine_id}/servingConfigs/default_search"
 
     client = discoveryengine.GroundedGenerationServiceClient()
 
     request = discoveryengine.GenerateGroundedContentRequest(
         # The full resource name of the location.
         # Format: projects/{project_id}/locations/{location}
-        location=client.common_location_path(project=project_id, location="us"),
+        location=client.common_location_path(project=project_id, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
-            model_id="gemini-experimental",
+            model_id="gemini-1.5-flash",
         ),
         # Conversation between user and model
         contents=[
@@ -149,7 +152,7 @@ def grounded_generation_inline_sample(
                 role="user",
                 parts=[
                     discoveryengine.GroundedGenerationContent.Part(
-                        text="Write a news article based on the sources."
+                        text="How did Google do in 2020? Where can I find BigQuery docs?"
                     )
                 ],
             )
@@ -157,7 +160,7 @@ def grounded_generation_inline_sample(
         system_instruction=discoveryengine.GroundedGenerationContent(
             parts=[
                 discoveryengine.GroundedGenerationContent.Part(
-                    text="Be comprehensive. Answer in HTML."
+                    text="Add a smiley emoji after the answer."
                 )
             ],
         ),
@@ -169,16 +172,18 @@ def grounded_generation_inline_sample(
                         grounding_facts=[
                             discoveryengine.GroundingFact(
                                 fact_text=(
-                                    "Titanic is a 1997 American epic romantic disaster movie. It was directed, written,"
-                                    " and co-produced by James Cameron. The movie is about the 1912 sinking of the"
-                                    " RMS Titanic. It stars Kate Winslet and Leonardo DiCaprio. The movie was released"
-                                    " on December 19, 1997. It received positive critical reviews. The movie won 11 Academy"
-                                    " Awards, and was nominated for fourteen total Academy Awards."
+                                    "The BigQuery documentation can be found at https://cloud.google.com/bigquery/docs/introduction"
                                 ),
-                                attributes={"author": "Simple Wikipedia"},
+                                attributes={
+                                    "title": "BigQuery Overview",
+                                    "uri": "https://cloud.google.com/bigquery/docs/introduction",
+                                },
                             ),
                         ]
                     ),
+                ),
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource.SearchSource(
+                    serving_config=serving_config,
                 ),
             ]
         ),
