@@ -211,9 +211,9 @@ def grounded_generation_google_search_sample(
     request = discoveryengine.GenerateGroundedContentRequest(
         # The full resource name of the location.
         # Format: projects/{project_id}/locations/{location}
-        location=client.common_location_path(project=project_id, location="us"),
+        location=client.common_location_path(project=project_id, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
-            model_id="gemini-experimental",
+            model_id="gemini-1.5-flash",
         ),
         # Conversation between user and model
         contents=[
@@ -245,5 +245,51 @@ def grounded_generation_google_search_sample(
     # Handle the response
     print(response)
     # [END genappbuilder_grounded_generation_google_search]
+
+    return response
+
+
+def grounded_generation_streaming_sample(
+    project_id: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_streaming]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_id}/locations/{location}
+        location=client.common_location_path(project=project_id, location="global"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-1.5-flash",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="Summarize how to delete a data store in Vertex AI Agent Builder?"
+                    )
+                ],
+            )
+        ],
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearch()
+                ),
+            ]
+        ),
+    )
+    response = client.stream_generate_grounded_content(request)
+
+    # Handle the response
+    print(response)
+    # [END genappbuilder_grounded_generation_streaming]
 
     return response
