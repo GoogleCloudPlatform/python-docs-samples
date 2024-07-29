@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_embedding]
 # [START generativeaionvertexai_sdk_embedding]
 import re
 
@@ -51,7 +50,6 @@ def tune_embedding_model(
     return tuning_job
 
 
-# [END aiplatform_sdk_embedding]
 # [END generativeaionvertexai_sdk_embedding]
 if __name__ == "__main__":
     tune_embedding_model(aiplatform_init.global_config.api_endpoint)

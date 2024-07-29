@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_tune_code_generation_model]
 # [START generativeaionvertexai_sdk_tune_code_generation_model]
 from __future__ import annotations
 
@@ -47,5 +46,4 @@ def tune_code_generation_model(project_id: str) -> None:
     return model
 
 
-# [END aiplatform_sdk_tune_code_generation_model]
 # [END generativeaionvertexai_sdk_tune_code_generation_model]

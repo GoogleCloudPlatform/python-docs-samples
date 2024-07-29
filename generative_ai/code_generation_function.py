@@ -15,7 +15,6 @@
 
 def generate_a_function(temperature: float = 0.5) -> object:
     """Example of using Codey for Code Generation to write a function."""
-    # [START aiplatform_sdk_code_generation_function]
     # [START generativeaionvertexai_sdk_code_generation_function]
     from vertexai.language_models import CodeGenerationModel
 
@@ -33,7 +32,6 @@ def generate_a_function(temperature: float = 0.5) -> object:
     print(f"Response from Model: {response.text}")
 
     return response
-    # [END aiplatform_sdk_code_generation_function]
     # [END generativeaionvertexai_sdk_code_generation_function]
 
 
