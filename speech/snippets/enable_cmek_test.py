@@ -14,9 +14,9 @@
 
 import os
 
-from google.api_core.retry import Retry
-
 import enable_cmek
+
+from google.api_core.retry import Retry
 
 
 @Retry()
