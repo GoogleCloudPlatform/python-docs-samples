@@ -14,7 +14,7 @@
 
 import * as path from 'path';
 import * as subprocess from '../subprocess';
-import { Config } from '../config';
+import {Config} from '../config';
 
 export const python = (version = '3.11') =>
   new Config({

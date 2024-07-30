@@ -15,9 +15,9 @@
 import * as fs from 'node:fs';
 import * as git from './git';
 import * as path from 'path';
-import { List, Map, Set } from 'immutable';
-import { minimatch } from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Affected, AffectedTests, TestAll, TestName, TestPath, mergeAffected } from './affected';
+import {List} from 'immutable';
+import {minimatch} from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Affected, AffectedTests, TestAll, mergeAffected} from './affected';
 
 type Args = {
   root: string;
@@ -52,9 +52,9 @@ export class Config {
     this.match = List(match || ['**']);
     this.ignore = List(ignore);
     this.packageFile = List(packageFile);
-    this._lint = lint || (_ => { });
-    this._testAll = testAll || (_ => { });
-    this._testSome = testSome || (_ => { });
+    this._lint = lint || (_ => {});
+    this._testAll = testAll || (_ => {});
+    this._testSome = testSome || (_ => {});
   }
 
   affected = (head: string, main: string): List<Affected> =>
@@ -69,28 +69,26 @@ export class Config {
         .values()
     );
 
-  lint = (affected: Affected) => {
-    const args = { root: git.root(), path: affected.path };
-    const cwd = process.cwd();
-    const dir = path.join(args.root, affected.path);
-    console.log(`> cd ${dir}`);
-    process.chdir(dir);
-    this._lint(args);
-    process.chdir(cwd);
-  };
+  lint = (affected: Affected) =>
+    this.withDir(affected.path, args => this._lint(args));
 
-  test = (affected: Affected) => {
-    const args = { root: git.root(), path: affected.path };
+  test = (affected: Affected) =>
+    this.withDir(affected.path, args => {
+      if ('TestAll' in affected) {
+        this._testAll(args);
+      }
+      if ('TestSome' in affected) {
+        this._testSome(args, affected.TestSome);
+      }
+    });
+
+  withDir = (dir: string, f: (args: Args) => void) => {
+    const args = {root: git.root(), path: dir};
     const cwd = process.cwd();
-    const dir = path.join(args.root, affected.path);
-    console.log(`> cd ${dir}`);
-    process.chdir(dir);
-    if ('TestAll' in affected) {
-      this._testAll(args);
-    }
-    if ('TestSome' in affected) {
-      this._testSome(args, affected.TestSome);
-    }
+    const absDir = path.join(args.root, dir);
+    console.log(`> cd ${absDir}`);
+    process.chdir(absDir);
+    f(args);
     process.chdir(cwd);
   };
 
