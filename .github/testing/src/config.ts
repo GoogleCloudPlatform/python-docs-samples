@@ -50,8 +50,8 @@ export class Config {
     testSome?: (args: Args, tests: AffectedTests) => void;
   }) {
     this.match = List(match || ['**']);
-    this.ignore = List(ignore);
-    this.packageFile = List(packageFile);
+    this.ignore = List(ignore || []);
+    this.packageFile = List(packageFile || []);
     this._lint = lint || (_ => {});
     this._testAll = testAll || (_ => {});
     this._testSome = testSome || (_ => {});
