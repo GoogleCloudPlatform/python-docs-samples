@@ -12,20 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import uuid
 
 from google.api_core.retry import Retry
-import google.auth
-
 from google.cloud import speech_v1p1beta1 as speech
-
 import pytest
 
 import speech_model_adaptation_beta
 
 
 STORAGE_URI = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
-_, PROJECT_ID = google.auth.default()
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "global"
 client = speech.AdaptationClient()
 
@@ -39,7 +37,7 @@ def test_model_adaptation_beta(
     transcript = speech_model_adaptation_beta.transcribe_with_model_adaptation(
         PROJECT_ID, LOCATION, STORAGE_URI, class_id, phrase_id
     )
-    assert "how long is the Brooklyn Bridge" in transcript
+    assert "how old is the Brooklyn Bridge" in transcript
 
 
 @pytest.fixture
