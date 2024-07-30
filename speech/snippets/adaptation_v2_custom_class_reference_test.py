@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2022 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,15 +16,15 @@ import os
 import re
 from uuid import uuid4
 
-import adaptation_v2_custom_class_reference
-
 from google.api_core.retry import Retry
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+import adaptation_v2_custom_class_reference
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def delete_phrase_set(name: str) -> None:
@@ -41,13 +41,16 @@ def delete_custom_class(name: str) -> None:
 
 @Retry()
 def test_adaptation_v2_custom_class_reference() -> None:
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
 
     phrase_set_id = "phrase-set-" + str(uuid4())
     custom_class_id = "custom-class-" + str(uuid4())
     response = (
         adaptation_v2_custom_class_reference.adaptation_v2_custom_class_reference(
+            project_id,
             phrase_set_id,
             custom_class_id,
+            os.path.join(_RESOURCES, "fair.wav"),
         )
     )
 
@@ -58,9 +61,9 @@ def test_adaptation_v2_custom_class_reference() -> None:
     )
 
     delete_phrase_set(
-        f"projects/{PROJECT_ID}/locations/global/phraseSets/{phrase_set_id}"
+        f"projects/{project_id}/locations/global/phraseSets/{phrase_set_id}"
     )
 
     delete_custom_class(
-        f"projects/{PROJECT_ID}/locations/global/customClasses/{custom_class_id}"
+        f"projects/{project_id}/locations/global/customClasses/{custom_class_id}"
     )

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_chat]
+# [START generativeaionvertexai_sdk_chat]
 
 
 def send_chat() -> str:
@@ -47,4 +47,4 @@ def send_chat() -> str:
     return response.text
 
 
-# [END aiplatform_sdk_chat]
+# [END generativeaionvertexai_sdk_chat]

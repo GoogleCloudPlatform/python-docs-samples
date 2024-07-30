@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -81,4 +81,4 @@ def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    recognition_response = sample_recognize()
+    sample_recognize()

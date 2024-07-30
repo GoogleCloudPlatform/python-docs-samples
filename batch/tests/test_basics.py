@@ -28,6 +28,9 @@ from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
 from ..create.create_with_persistent_disk import create_with_pd_job
+from ..create.create_with_pubsub_notifications import (
+    create_with_pubsub_notification_job,
+)
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
@@ -138,6 +141,20 @@ def _check_secret_set(job: batch_v1.Job, secret_name: str):
     assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
 
 
+def _check_notification(job, test_topic):
+    notification_found = sum(
+        1
+        for notif in job.notifications
+        if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+        or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED
+    )
+    assert (
+        job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    )
+    assert notification_found == len(job.notifications)
+    assert len(job.notifications) == 2
+
+
 def _check_custom_events(job: batch_v1.Job):
     display_names = ["Script 1", "Barrier 1", "Script 2"]
     custom_event_found = False
@@ -221,3 +238,10 @@ def test_pd_job(job_name, disk_name):
 def test_create_job_with_custom_events(job_name):
     job = create_job_with_status_events(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_custom_events(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_notification_job(job_name):
+    test_topic = "test_topic"
+    job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
+    _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
