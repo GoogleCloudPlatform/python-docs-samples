@@ -14,7 +14,7 @@
 
 import * as path from 'path';
 import * as subprocess from '../subprocess';
-import { Config } from '../config';
+import {Config} from '../config';
 
 export const python = (version = '3.11') =>
   new Config({
@@ -38,10 +38,8 @@ export const python = (version = '3.11') =>
       subprocess.run('nox', ['-s', `py-${version}`]);
     },
     testSome: args => {
-      subprocess.run('cp', [
-        path.join(args.root, 'noxfile-template.py'),
-        'noxfile.py',
-      ]);
+      const noxfile = path.join(args.root, 'noxfile-template.py');
+      subprocess.run('cp', [noxfile, 'noxfile.py']);
       throw `TODO: config/python.ts testSome ${JSON.stringify(args)}`;
     },
   });

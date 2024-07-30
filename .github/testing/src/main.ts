@@ -13,9 +13,9 @@
 // limitations under the License.
 
 import * as git from './git';
-import { Config } from './config';
-import { python } from './config/python';
-import { Affected } from './affected';
+import {Config} from './config';
+import {python} from './config/python';
+import {Affected} from './affected';
 
 function getConfig(lang: string): Config {
   switch (lang) {

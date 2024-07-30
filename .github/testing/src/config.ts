@@ -15,9 +15,9 @@
 import * as fs from 'node:fs';
 import * as git from './git';
 import * as path from 'path';
-import { List, Map, Set } from 'immutable';
-import { minimatch } from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Affected, TestAll, TestName, TestPath, mergeAffected } from './affected';
+import {List, Map, Set} from 'immutable';
+import {minimatch} from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
+import {Affected, TestAll, TestName, TestPath, mergeAffected} from './affected';
 
 type Args = {
   root: string;
@@ -58,9 +58,9 @@ export class Config {
     this.match = List(match || ['**']);
     this.ignore = List(ignore);
     this.packageFile = List(packageFile);
-    this._lint = lint || (_ => { });
-    this._testAll = testAll || (_ => { });
-    this._testSome = testSome || (_ => { });
+    this._lint = lint || (_ => {});
+    this._testAll = testAll || (_ => {});
+    this._testSome = testSome || (_ => {});
   }
 
   affected = (head: string, main: string): List<Affected> =>
@@ -81,7 +81,7 @@ export class Config {
     const dir = path.join(root, affected.path);
     console.log(`> cd ${dir}`);
     process.chdir(dir);
-    this._lint({ root: root, path: affected.path });
+    this._lint({root: root, path: affected.path});
     process.chdir(cwd);
   };
 
@@ -92,7 +92,7 @@ export class Config {
     console.log(`> cd ${dir}`);
     process.chdir(dir);
     if ('TestAll' in affected) {
-      this._testAll({ root: root, path: affected.path });
+      this._testAll({root: root, path: affected.path});
     }
     if ('TestSome' in affected) {
       this._testSome({
