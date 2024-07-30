@@ -19,8 +19,17 @@ import { Affected } from './affected';
 
 function getConfig(lang: string): Config {
   switch (lang) {
+    case 'python3.8':
+      return python('3.8');
+    case 'python3.9':
+      return python('3.9');
+    case 'python3.10':
+      return python('3.10');
+    case 'python3.11':
+      return python('3.11');
+    case 'python3.12':
     case 'python':
-      return python;
+      return python('3.12');
   }
   throw `unsupported language: ${lang}`;
 }
@@ -37,7 +46,7 @@ function main(command: string) {
     }
     case 'tests': {
       const config = getConfig(process.argv[3]);
-      const affected: Affected = JSON.parse(process.env[process.argv[4]] || "");
+      const affected: Affected = JSON.parse(process.env[process.argv[4]] || '');
       config.test(affected);
       return;
     }

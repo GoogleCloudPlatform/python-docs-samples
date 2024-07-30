@@ -14,30 +14,29 @@
 
 import * as path from 'path';
 import * as subprocess from '../subprocess';
-import { Config } from '../config';
+import {Config} from '../config';
 
-export const python = new Config({
-  match: ['**'],
-  ignore: ['**/README.md', 'pytest.ini'],
-  packageFile: [
-    'noxfile_config.py',
-    'requirements.txt',
-    'pyproject.toml',
-    'setup.py',
-    'setup.cfg',
-  ],
-  testAll: args => {
-    const noxfile = path.join(args.root, 'noxfile-template.py');
-    subprocess.run('cp', [noxfile, 'noxfile.py']);
-    subprocess.run('nox', ['-s', 'py-3.11']);
-    // subprocess.run('pip', ['install', '-r', 'requirements.txt', '-r', 'requirements-test.txt', '--only-binary', ':all'])
-    // subprocess.run('pytest', ['-s'])
-  },
-  testSome: args => {
-    subprocess.run('cp', [
-      path.join(args.root, 'noxfile-template.py'),
-      'noxfile.py',
-    ]);
-    throw `TODO: config/python.ts testSome ${JSON.stringify(args)}`;
-  },
-});
+export const python = (version = '3.11') =>
+  new Config({
+    match: ['**'],
+    ignore: ['**/README.md', 'pytest.ini'],
+    packageFile: [
+      'noxfile_config.py',
+      'requirements.txt',
+      'pyproject.toml',
+      'setup.py',
+      'setup.cfg',
+    ],
+    testAll: args => {
+      const noxfile = path.join(args.root, 'noxfile-template.py');
+      subprocess.run('cp', [noxfile, 'noxfile.py']);
+      subprocess.run('nox', ['-s', `py-${version}`]);
+    },
+    testSome: args => {
+      subprocess.run('cp', [
+        path.join(args.root, 'noxfile-template.py'),
+        'noxfile.py',
+      ]);
+      throw `TODO: config/python.ts testSome ${JSON.stringify(args)}`;
+    },
+  });

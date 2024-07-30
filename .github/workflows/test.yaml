@@ -20,6 +20,10 @@ on:
   pull_request:
   workflow_dispatch: # Manual runs
 
+env:
+  PROJECT: jss-22p1-test
+  WORKLOAD_IDENTITY_PROVIDER: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
+
 jobs:
   affected:
     runs-on: ubuntu-latest
@@ -40,19 +44,17 @@ jobs:
           echo "$AFFECTED_PYTHON"
           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
-  Python:
+  python-311:
+    name: Python ${{matrix.python-version}}
     needs: affected
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         affected: ${{fromJson(needs.affected.outputs.python)}}
-    # Needed to generate the identity token for google-github-actions/auth.
-    # https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/configuring-openid-connect-in-google-cloud-platform
     permissions:
-      id-token: write  # This is required for requesting the JWT
-      contents: read   # This is required for actions/checkout
-    env:
-      GOOGLE_CLOUD_PROJECT: jss-22p1-test
+      id-token: write
+      contents: read
     defaults:
       run:
         working-directory: .github/testing
@@ -61,13 +63,13 @@ jobs:
       - uses: oven-sh/setup-bun@v2
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{matrix.python-version}}
       - uses: 'google-github-actions/auth@v2'
         with:
-          project_id: jss-22p1-test
-          workload_identity_provider: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
+          project_id: $PROJECT
+          workload_identity_provider: $WORKLOAD_IDENTITY_PROVIDER
       - run: pip install nox
       - run: bun install
-      - run: bun run tests python AFFECTED
+      - run: bun run tests python${{matrix.python-version}} AFFECTED
         env:
           AFFECTED: ${{toJson(matrix.affected)}}
