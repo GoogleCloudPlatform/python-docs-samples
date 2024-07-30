@@ -18,10 +18,12 @@
 # [START functions_http_method]
 # [START functions_helloworld_get]
 import functions_framework
+
 # [END functions_http_method]
 # [END functions_helloworld_get]
 
 from markupsafe import escape
+
 # [END functions_helloworld_http]
 # [END functions_http_content]
 

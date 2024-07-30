@@ -33,6 +33,7 @@ def transcribe_with_model_adaptation(
         location: The GCS location of the input audio.
         storage_uri: The Cloud Storage URI of the input audio.
         custom_class_id: The ID of the custom class to create
+        phrase_set_id: The unique ID of the PhraseSet to create.
 
     Returns:
         The transcript of the input audio.

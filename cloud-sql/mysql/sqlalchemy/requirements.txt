@@ -1,7 +1,7 @@
-Flask==2.1.0
+Flask==2.2.2
 SQLAlchemy==2.0.24
-PyMySQL==1.1.0
-gunicorn==20.1.0
+PyMySQL==1.1.1
+gunicorn==22.0.0
 cloud-sql-python-connector==1.2.4
-functions-framework==3.3.0
+functions-framework==3.5.0
 Werkzeug==2.3.7

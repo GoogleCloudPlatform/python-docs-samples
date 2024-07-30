@@ -12,44 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_multimodal_embedding_image]
-from typing import Optional
+import os
 
-import vertexai
-from vertexai.vision_models import (
-    Image,
-    MultiModalEmbeddingModel,
-    MultiModalEmbeddingResponse,
-)
+from vertexai.vision_models import MultiModalEmbeddingResponse
 
 
-def get_image_embeddings(
-    project_id: str,
-    location: str,
-    image_path: str,
-    contextual_text: Optional[str] = None,
-) -> MultiModalEmbeddingResponse:
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+
+def get_image_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image and text.
 
-    Args:
-        project_id: Google Cloud Project ID, used to initialize vertexai
-        location: Google Cloud Region, used to initialize vertexai
-        image_path: Path to image (local or Google Cloud Storage) to generate embeddings for.
-        contextual_text: Text to generate embeddings for.
+    Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
     """
+    # [START generativeaionvertexai_sdk_multimodal_embedding_image]
+    import vertexai
+    from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
-    image = Image.load_from_file(image_path)
+    image = Image.load_from_file(
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
+    )
 
     embeddings = model.get_embeddings(
         image=image,
-        contextual_text=contextual_text,
+        contextual_text="Colosseum",
+        dimension=1408,
     )
     print(f"Image Embedding: {embeddings.image_embedding}")
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # [END aiplatform_sdk_multimodal_embedding_image]
+    # [END generativeaionvertexai_sdk_multimodal_embedding_image]
 
     return embeddings
 

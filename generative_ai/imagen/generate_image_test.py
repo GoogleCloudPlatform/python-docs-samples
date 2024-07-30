@@ -23,7 +23,6 @@ from google.api_core.exceptions import ResourceExhausted
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
 _OUTPUT_FILE = os.path.join(_RESOURCES, "dog_newspaper.png")
 _PROMPT = "a dog reading a newspaper"
 
@@ -32,7 +31,6 @@ _PROMPT = "a dog reading a newspaper"
 def test_generate_image() -> None:
     response = generate_image.generate_image(
         _PROJECT_ID,
-        _LOCATION,
         _OUTPUT_FILE,
         _PROMPT,
     )

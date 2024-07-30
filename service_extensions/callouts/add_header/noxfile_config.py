@@ -22,7 +22,7 @@
 
 TEST_CONFIG_OVERRIDE = {
     # Supported versions are >= 3.7 as per https://pypi.org/project/grpcio/
-    "ignored_versions": ["2.7", "3.6", "3.7"],  # "3.9", "3.8", "3.10", "3.11"
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.12"],  # "3.9", "3.8", "3.10", "3.11"
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,

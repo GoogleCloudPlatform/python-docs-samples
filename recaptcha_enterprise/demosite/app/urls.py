@@ -68,7 +68,7 @@ def on_homepage_load() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
-            recaptcha_action
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -115,7 +115,7 @@ def on_signup() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
-            recaptcha_action
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -164,7 +164,7 @@ def on_login() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
-            recaptcha_action
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -213,7 +213,7 @@ def on_store_checkout() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
-            recaptcha_action
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -261,7 +261,7 @@ def on_comment_submit() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
-            recaptcha_action
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.

@@ -214,7 +214,7 @@ class ResumableMicrophoneStream:
             yield b"".join(data)
 
 
-def listen_print_loop(responses: object, stream: object) -> object:
+def listen_print_loop(responses: object, stream: object) -> None:
     """Iterates through server responses and prints them.
 
     The responses passed is a generator that will block until a response
@@ -232,9 +232,6 @@ def listen_print_loop(responses: object, stream: object) -> object:
     Arg:
         responses: The responses returned from the API.
         stream: The audio stream to be processed.
-
-    Returns:
-        The transcript of the result
     """
     for response in responses:
         if get_current_time() - stream.start_time > STREAMING_LIMIT:
@@ -291,8 +288,6 @@ def listen_print_loop(responses: object, stream: object) -> object:
             sys.stdout.write(str(corrected_time) + ": " + transcript + "\r")
 
             stream.last_transcript_was_final = False
-
-        return transcript
 
 
 def main() -> None:

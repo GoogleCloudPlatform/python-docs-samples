@@ -322,7 +322,7 @@ def create_with_snapshotted_data_disk(
     Returns:
         Instance object.
     """
-    newest_debian = get_image_from_family(project="debian-cloud", family="debian-10")
+    newest_debian = get_image_from_family(project="debian-cloud", family="debian-12")
     disk_type = f"zones/{zone}/diskTypes/pd-standard"
     disks = [
         disk_from_image(disk_type, 10, True, newest_debian.self_link),

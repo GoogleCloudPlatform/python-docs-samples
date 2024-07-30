@@ -21,7 +21,7 @@ import datetime
 import snippets
 
 
-def test_sign_url():
+def test_sign_url() -> None:
     assert (
         snippets.sign_url(
             "http://35.186.234.33/index.html",
@@ -52,7 +52,7 @@ def test_sign_url():
     )
 
 
-def test_sign_url_prefix():
+def test_sign_url_prefix() -> None:
     assert snippets.sign_url_prefix(
         "http://35.186.234.33/index.html",
         "http://35.186.234.33/",
@@ -86,7 +86,7 @@ def test_sign_url_prefix():
     )
 
 
-def test_sign_cookie():
+def test_sign_cookie() -> None:
     assert (
         snippets.sign_cookie(
             "http://35.186.234.33/index.html",

@@ -19,6 +19,8 @@ import time
 
 from unittest import mock
 
+import google.auth.transport.grpc  # noqa: F401
+import google.auth.transport.requests  # noqa: F401
 import pytest
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")

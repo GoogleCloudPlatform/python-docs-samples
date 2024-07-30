@@ -12,49 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_multimodal_embedding_video]
-from typing import Optional
+import os
 
-import vertexai
-from vertexai.vision_models import (
-    MultiModalEmbeddingModel,
-    MultiModalEmbeddingResponse,
-    Video,
-    VideoSegmentConfig,
-)
+from vertexai.vision_models import MultiModalEmbeddingResponse
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_video_embeddings(
-    project_id: str,
-    location: str,
-    video_path: str,
-    contextual_text: Optional[str] = None,
-    dimension: Optional[int] = 1408,
-    video_segment_config: Optional[VideoSegmentConfig] = None,
-) -> MultiModalEmbeddingResponse:
+def get_video_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from video and text.
 
-    Args:
-        project_id: Google Cloud Project ID, used to initialize vertexai
-        location: Google Cloud Region, used to initialize vertexai
-        video_path: Path to video (local or Google Cloud Storage) to generate embeddings for.
-        contextual_text: Text to generate embeddings for.
-        dimension: Dimension for the returned embeddings.
-            https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
-        video_segment_config: Define specific segments to generate embeddings for.
-            https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
+    Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
+    # [START generativeaionvertexai_sdk_multimodal_embedding_video]
+    import vertexai
 
-    vertexai.init(project=project_id, location=location)
+    from vertexai.vision_models import MultiModalEmbeddingModel, Video
+    from vertexai.vision_models import VideoSegmentConfig
+
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    video_path = "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
+    contextual_text = "Cars on Highway"
     video = Video.load_from_file(video_path)
+    video_segment_config = VideoSegmentConfig(end_offset_sec=1)
 
     embeddings = model.get_embeddings(
         video=video,
         video_segment_config=video_segment_config,
         contextual_text=contextual_text,
-        dimension=dimension,
     )
 
     # Video Embeddings are segmented based on the video_segment_config.
@@ -66,7 +54,7 @@ def get_video_embeddings(
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # [END aiplatform_sdk_multimodal_embedding_video]
+    # [END generativeaionvertexai_sdk_multimodal_embedding_video]
 
     return embeddings
 

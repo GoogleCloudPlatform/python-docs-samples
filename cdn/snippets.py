@@ -21,6 +21,9 @@ For more information, see the README.md under /cdn and the documentation
 at https://cloud.google.com/cdn/docs.
 """
 
+# [START cloudcdn_sign_url]
+# [START cloudcdn_sign_url_prefix]
+# [START cloudcdn_sign_cookie]
 import argparse
 import base64
 from datetime import datetime
@@ -29,6 +32,9 @@ import hmac
 from urllib.parse import parse_qs, urlsplit
 
 
+# [END cloudcdn_sign_url]
+# [END cloudcdn_sign_url_prefix]
+# [END cloudcdn_sign_cookie]
 # [START cloudcdn_sign_url]
 def sign_url(
     url: str,

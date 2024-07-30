@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_claude_3_streaming]
-# TODO(developer): Vertex AI SDK - uncomment below & run
-# pip3 install --upgrade --user google-cloud-aiplatform
-# gcloud auth application-default login
-# pip3 install -U 'anthropic[vertex]'
-
-from anthropic import AnthropicVertex
-
 
 def generate_text_streaming(project_id: str, region: str) -> str:
+    # [START generativeaionvertexai_claude_3_streaming]
+    # TODO(developer): Vertex AI SDK - uncomment below & run
+    # pip3 install --upgrade --user google-cloud-aiplatform
+    # gcloud auth application-default login
+    # pip3 install -U 'anthropic[vertex]'
+
+    from anthropic import AnthropicVertex
+
     client = AnthropicVertex(region=region, project_id=project_id)
     result = []
 
     with client.messages.stream(
-        model="claude-3-sonnet@20240229",
+        model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
         messages=[
             {
@@ -39,10 +39,8 @@ def generate_text_streaming(project_id: str, region: str) -> str:
             print(text, end="", flush=True)
             result.append(text)
 
+    # [END generativeaionvertexai_claude_3_streaming]
     return "".join(result)
-
-
-# [END aiplatform_claude_3_streaming]
 
 
 if __name__ == "__main__":

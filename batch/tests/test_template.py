@@ -124,4 +124,4 @@ def test_template_job(job_name, instance_template):
     job = create_script_job_with_template(
         PROJECT, REGION, job_name, instance_template.self_link
     )
-    _test_body(job)
+    _test_body(job, region=REGION)

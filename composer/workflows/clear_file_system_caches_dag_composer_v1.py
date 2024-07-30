@@ -16,7 +16,7 @@ import os
 
 import airflow
 from airflow import DAG
-from airflow.operators.bash_operator import BashOperator
+from airflow.operators.bash import BashOperator
 
 
 """A dag that prevents memory leaks on scheduler and workers."""

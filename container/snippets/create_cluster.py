@@ -76,15 +76,44 @@ def poll_for_op_status(
 
 
 def create_cluster(project_id: str, location: str, cluster_name: str) -> None:
-    """Create a new GKE cluster in the given GCP Project and Zone"""
+    """Create a new GKE cluster in the given GCP Project and Zone/Region."""
     # Initialize the Cluster management client.
     client = container_v1.ClusterManagerClient()
-    # Create a fully qualified location identifier of form `projects/{project_id}/location/{zone}'.
+    # Create a fully qualified location identifier of form `projects/{project_id}/location/{zone|region}'.
     cluster_location = client.common_location_path(project_id, location)
     cluster_def = {
         "name": cluster_name,
-        "initial_node_count": 2,
+        "initial_node_count": 1,
         "node_config": {"machine_type": "e2-standard-2"},
+        # [Optional] Enables autopilot. For more details visit:
+        # https://cloud.google.com/kubernetes-engine/docs/concepts/autopilot-overview
+        "autopilot": {"enabled": True},
+        # [Optional] Enables vertical pod autoscaling. For more details visit:
+        # https://cloud.google.com/kubernetes-engine/docs/how-to/vertical-pod-autoscaling
+        "vertical_pod_autoscaling": {"enabled": True},
+        # [Optional] Enables horizontal pod autoscaling. For more details visit:
+        # https://cloud.google.com/kubernetes-engine/docs/concepts/horizontalpodautoscaler
+        "addons_config": {"horizontal_pod_autoscaling": {"disabled": False}},
+        # [Optional] Configures logs and metrics being collected.
+        # Note: logging and monitoring can't be disabled for autopilot. For more details visit:
+        # https://cloud.google.com/kubernetes-engine/docs/how-to/config-logging-monitoring
+        "logging_config": {
+            "component_config": {
+                "enable_components": [
+                    container_v1.LoggingComponentConfig.Component.APISERVER,
+                    container_v1.LoggingComponentConfig.Component.SYSTEM_COMPONENTS,
+                ],
+            }
+        },
+        "monitoring_config": {
+            "managed_prometheus_config": {"enabled": True},
+            "component_config": {
+                "enable_components": [
+                    container_v1.MonitoringComponentConfig.Component.APISERVER,
+                    container_v1.MonitoringComponentConfig.Component.SYSTEM_COMPONENTS,
+                ],
+            },
+        },
     }
     # Create the request object with the location identifier.
     request = {"parent": cluster_location, "cluster": cluster_def}
@@ -102,7 +131,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="Google Cloud project ID")
-    parser.add_argument("zone", help="GKE Cluster zone")
+    parser.add_argument("zone", help="GKE Cluster zone/region")
     parser.add_argument("cluster_name", help="Name to be given to the GKE Cluster")
     args = parser.parse_args()
 

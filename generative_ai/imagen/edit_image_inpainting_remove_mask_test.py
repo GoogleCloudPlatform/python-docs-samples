@@ -23,7 +23,6 @@ from google.api_core.exceptions import ResourceExhausted
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
 _INPUT_FILE = os.path.join(_RESOURCES, "volleyball_game.png")
 _MASK_FILE = os.path.join(_RESOURCES, "volleyball_game_inpainting_remove_mask.png")
 _OUTPUT_FILE = os.path.join(_RESOURCES, "volleyball_game_single_blue_player.png")
@@ -34,7 +33,6 @@ _PROMPT = "volleyball game"
 def test_edit_image_inpainting_remove_mask() -> None:
     response = edit_image_inpainting_remove_mask.edit_image_inpainting_remove_mask(
         _PROJECT_ID,
-        _LOCATION,
         _INPUT_FILE,
         _MASK_FILE,
         _OUTPUT_FILE,

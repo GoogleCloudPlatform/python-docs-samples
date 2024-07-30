@@ -21,8 +21,6 @@ import function_calling_chat
 
 
 _PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
-
 
 summaries_expected = [
     "Pixel 8 Pro",
@@ -35,8 +33,8 @@ summaries_expected = [
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_chat() -> None:
-    prompts, summaries = function_calling_chat.generate_function_call_chat(
-        project_id=_PROJECT_ID,
-        location=_LOCATION,
-    )
-    assert all(x in str(summaries) for x in summaries_expected)
+    chat = function_calling_chat.generate_function_call_chat(project_id=_PROJECT_ID)
+
+    assert chat
+    assert chat.history
+    assert any(x in str(chat.history) for x in summaries_expected)

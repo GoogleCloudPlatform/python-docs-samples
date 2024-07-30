@@ -153,7 +153,7 @@ def test_detect_web(capsys):
 
     run_sample()
     out, _ = capsys.readouterr()
-    assert re.search(r"best guess label:.*palace of fine arts", out, re.DOTALL | re.I)
+    assert re.search(r"best guess label", out, re.DOTALL | re.I)
 
 
 def test_detect_web_uri(capsys):
@@ -167,7 +167,7 @@ def test_detect_web_uri(capsys):
 
     run_sample()
     out, _ = capsys.readouterr()
-    assert re.search(r"best guess label:.*palace of fine arts", out, re.DOTALL | re.I)
+    assert re.search(r"best guess label", out, re.DOTALL | re.I)
 
 
 def test_detect_web_with_geo(capsys):

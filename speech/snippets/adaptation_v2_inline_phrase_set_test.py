@@ -19,6 +19,7 @@ from google.api_core.retry import Retry
 
 import adaptation_v2_inline_phrase_set
 
+
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 

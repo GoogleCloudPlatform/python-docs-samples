@@ -4,4 +4,4 @@ requests==2.27.1
 requests-futures==1.0.0
 requests-toolbelt==0.10.1
 Werkzeug==1.0.1; python_version < '3.0'
-Werkzeug==3.0.1; python_version > '3.0'
+Werkzeug==3.0.3; python_version > '3.0'

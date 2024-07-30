@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_streaming_codechat]
-import vertexai
-from vertexai import language_models
-
 
 def streaming_prediction(
     project_id: str,
     location: str,
 ) -> str:
     """Streaming Code Chat Example with a Large Language Model."""
+    # [START aiplatform_streaming_codechat]
+    import vertexai
+    from vertexai import language_models
 
+    # TODO(developer): update project_id & location
     vertexai.init(project=project_id, location=location)
 
     codechat_model = language_models.CodeChatModel.from_pretrained("codechat-bison")
@@ -44,9 +44,10 @@ def streaming_prediction(
         print(response)
         results.append(str(response))
     results = "\n".join(results)
+    print(results)
+    # [END aiplatform_streaming_codechat]
     return results
 
 
-# [END aiplatform_streaming_codechat]
 if __name__ == "__main__":
     streaming_prediction()

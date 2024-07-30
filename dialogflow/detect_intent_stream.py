@@ -81,6 +81,13 @@ def detect_intent_stream(project_id, session_id, audio_file_path, language_code)
                 response.recognition_result.transcript
             )
         )
+        # Note: Since Python gRPC doesn't have closeSend method, to stop processing the audio after result is recognized,
+        # you may close the channel manually to prevent further iteration.
+        # Keep in mind that if there is a silence chunk in the audio, part after it might be missed because of early teardown.
+        # https://cloud.google.com/dialogflow/es/docs/how/detect-intent-stream#streaming_basics
+        if response.recognition_result.is_final:
+            session_client.transport.close()
+            break
 
     # Note: The result from the last response is the final transcript along
     # with the detected content.

@@ -21,14 +21,14 @@ from google.cloud.speech_v1 import types
 
 
 def export_transcript_to_storage_beta(
-    input_storage_uri,
-    output_storage_uri,
-    encoding,
-    sample_rate_hertz,
-    language_code,
-    bucket_name,
-    object_name,
-):
+    input_storage_uri: str,
+    output_storage_uri: str,
+    encoding: str,
+    sample_rate_hertz: int,
+    language_code: str,
+    bucket_name: str,
+    object_name: str,
+) -> types.LongRunningRecognizeResponse:
     # input_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
     audio = speech.RecognitionAudio(uri=input_storage_uri)
 

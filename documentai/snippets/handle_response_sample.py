@@ -17,6 +17,9 @@
 # [START documentai_process_form_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
+# [START documentai_process_layout_document]
+# [START documentai_process_custom_extractor_document]
+
 from typing import Optional, Sequence
 
 from google.api_core.client_options import ClientOptions
@@ -35,6 +38,8 @@ from google.cloud import documentai
 # [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
+# [END documentai_process_layout_document]
+# [END documentai_process_custom_extractor_document]
 
 
 # [START documentai_process_ocr_document]
@@ -79,7 +84,7 @@ def process_document_ocr_sample(
     for page in document.pages:
         print(f"Page {page.page_number}:")
         print_page_dimensions(page.dimension)
-        print_detected_langauges(page.detected_languages)
+        print_detected_languages(page.detected_languages)
 
         print_blocks(page.blocks, text)
         print_paragraphs(page.paragraphs, text)
@@ -101,7 +106,7 @@ def print_page_dimensions(dimension: documentai.Document.Page.Dimension) -> None
     print(f"    Height: {str(dimension.height)}")
 
 
-def print_detected_langauges(
+def print_detected_languages(
     detected_languages: Sequence[documentai.Document.Page.DetectedLanguage],
 ) -> None:
     print("    Detected languages:")
@@ -309,19 +314,88 @@ def process_document_entity_extraction_sample(
             print_entity(prop)
 
 
+# [END documentai_process_specialized_document]
+
+
+# [START documentai_process_custom_extractor_document]
+
+
+def process_document_custom_extractor_sample(
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
+) -> None:
+    # Entities to extract from Foundation Model CDE
+    properties = [
+        documentai.DocumentSchema.EntityType.Property(
+            name="invoice_id",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.REQUIRED_ONCE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="notes",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.OPTIONAL_MULTIPLE,
+        ),
+        documentai.DocumentSchema.EntityType.Property(
+            name="terms",
+            value_type="string",
+            occurrence_type=documentai.DocumentSchema.EntityType.Property.OccurrenceType.OPTIONAL_MULTIPLE,
+        ),
+    ]
+    # Optional: For Generative AI processors, request different fields than the
+    # schema for a processor version
+    process_options = documentai.ProcessOptions(
+        schema_override=documentai.DocumentSchema(
+            display_name="CDE Schema",
+            description="Document Schema for the CDE Processor",
+            entity_types=[
+                documentai.DocumentSchema.EntityType(
+                    name="custom_extraction_document_type",
+                    base_types=["document"],
+                    properties=properties,
+                )
+            ],
+        )
+    )
+
+    # Online processing request to Document AI
+    document = process_document(
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        process_options=process_options,
+    )
+
+    for entity in document.entities:
+        print_entity(entity)
+        # Print Nested Entities (if any)
+        for prop in entity.properties:
+            print_entity(prop)
+
+
 # [START documentai_process_form_document]
+# [START documentai_process_specialized_document]
+
+
 def print_entity(entity: documentai.Document.Entity) -> None:
     # Fields detected. For a full list of fields for each processor see
     # the processor documentation:
     # https://cloud.google.com/document-ai/docs/processors-list
     key = entity.type_
 
-    # Some other value formats in addition to text are availible
+    # Some other value formats in addition to text are available
     # e.g. dates: `entity.normalized_value.date_value.year`
-    text_value = entity.text_anchor.content
+    text_value = entity.text_anchor.content or entity.mention_text
     confidence = entity.confidence
     normalized_value = entity.normalized_value.text
-    print(f"    * {repr(key)}: {repr(text_value)}({confidence:.1%} confident)")
+    print(f"    * {repr(key)}: {repr(text_value)} ({confidence:.1%} confident)")
 
     if normalized_value:
         print(f"    * Normalized Value: {repr(normalized_value)}")
@@ -329,6 +403,7 @@ def print_entity(entity: documentai.Document.Entity) -> None:
 
 # [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
+# [END documentai_process_custom_extractor_document]
 
 
 # [START documentai_process_splitter_document]
@@ -380,10 +455,54 @@ def page_refs_to_string(
 # [END documentai_process_splitter_document]
 
 
+# [START documentai_process_layout_document]
+def process_document_layout_sample(
+    project_id: str,
+    location: str,
+    processor_id: str,
+    processor_version: str,
+    file_path: str,
+    mime_type: str,
+) -> documentai.Document:
+    process_options = documentai.ProcessOptions(
+        layout_config=documentai.ProcessOptions.LayoutConfig(
+            chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
+                chunk_size=1000,
+                include_ancestor_headings=True,
+            )
+        )
+    )
+
+    document = process_document(
+        project_id,
+        location,
+        processor_id,
+        processor_version,
+        file_path,
+        mime_type,
+        process_options=process_options,
+    )
+
+    print("Document Layout Blocks")
+    for block in document.document_layout.blocks:
+        print(block)
+
+    print("Document Chunks")
+    for chunk in document.chunked_document.chunks:
+        print(chunk)
+
+    # [END documentai_process_layout_document]
+    return document
+
+
 # [START documentai_process_ocr_document]
 # [START documentai_process_form_document]
 # [START documentai_process_specialized_document]
 # [START documentai_process_splitter_document]
+# [START documentai_process_layout_document]
+# [START documentai_process_custom_extractor_document]
+
+
 def process_document(
     project_id: str,
     location: str,
@@ -428,6 +547,10 @@ def process_document(
 
 # [END documentai_process_specialized_document]
 # [END documentai_process_splitter_document]
+# [END documentai_process_layout_document]
+# [END documentai_process_custom_extractor_document]
+
+
 def layout_to_text(layout: documentai.Document.Page.Layout, text: str) -> str:
     """
     Document AI identifies text in different parts of the document by their

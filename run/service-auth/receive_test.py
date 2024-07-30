@@ -52,25 +52,35 @@ def services():
     )
 
     # Get the URL for the service
-    endpoint_url = subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "describe",
-            service_name,
-            "--project",
-            project,
-            "--region=us-central1",
-            "--format=value(status.url)",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).stdout.strip().decode()
+    endpoint_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                service_name,
+                "--project",
+                project,
+                "--region=us-central1",
+                "--format=value(status.url)",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
-    token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip().decode()
+    token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
     yield endpoint_url, token
 

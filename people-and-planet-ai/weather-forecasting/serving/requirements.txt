@@ -1,6 +1,6 @@
-Flask==3.0.0
-gunicorn==20.1.0
-Werkzeug==3.0.1
+Flask==3.0.3
+gunicorn==22.0.0
+Werkzeug==3.0.3
 
 # Local packages.
 ./weather-data

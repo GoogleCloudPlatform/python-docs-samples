@@ -93,7 +93,7 @@ def read_table_list(table_list_file):
     the DAG dynamically.
     :param table_list_file: (String) The file location of the table list file,
     e.g. '/home/airflow/framework/table_list.csv'
-    :return table_list: (List) List of tuples containing the source and
+    :return table_list: (List) List of dictionaries containing the source and
     target tables.
     """
     table_list = []
@@ -104,8 +104,8 @@ def read_table_list(table_list_file):
             next(csv_reader)  # skip the headers
             for row in csv_reader:
                 logger.info(row)
-                table_tuple = {"table_source": row[0], "table_dest": row[1]}
-                table_list.append(table_tuple)
+                table_locations = {"table_source": row[0], "table_dest": row[1]}
+                table_list.append(table_locations)
             return table_list
     except OSError as e:
         logger.error("Error opening table_list_file %s: " % str(table_list_file), e)

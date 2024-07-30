@@ -18,11 +18,15 @@ import os
 from contentwarehouse.snippets import list_document_schema_sample
 from contentwarehouse.snippets import test_utilities
 
+import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_list_document_schemas() -> None:
     project_number = test_utilities.get_project_number(project_id)
 
