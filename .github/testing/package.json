@@ -8,8 +8,8 @@
     "lint": "gts lint",
     "fix": "gts fix",
     "affected": "bun run ./src/main.ts affected",
-    "linter": "bun run ./src/main.ts linter",
-    "tests": "bun run ./src/main.ts tests"
+    "ci-lint": "bun run ./src/main.ts lint",
+    "ci-test": "bun run ./src/main.ts test"
   },
   "dependencies": {
     "immutable": "^4.3.7",

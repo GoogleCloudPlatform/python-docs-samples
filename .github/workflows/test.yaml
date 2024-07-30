@@ -61,9 +61,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - run: pip install nox
+      - run: pip install nox black
       - run: bun install
-      - run: bun run linter python AFFECTED
+      - run: bun run ci-lint python AFFECTED
         env:
           AFFECTED: ${{toJson(matrix.affected)}}
 
@@ -93,6 +93,6 @@ jobs:
           workload_identity_provider: ${{env.WORKLOAD_IDENTITY_PROVIDER}}
       - run: pip install nox
       - run: bun install
-      - run: bun run tests python${{matrix.python-version}} AFFECTED
+      - run: bun run ci-test python${{matrix.python-version}} AFFECTED
         env:
           AFFECTED: ${{toJson(matrix.affected)}}
