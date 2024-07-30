@@ -20,8 +20,8 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 def embed_text(
     texts: List[str] = ["banana muffins? ", "banana bread? banana muffins?"],
-    task: str = "QUESTION_ANSWERING",
-    model_name: str = "text-embedding-preview-0409",
+    task: str = "CODE_RETRIEVAL_QUERY",
+    model_name: str = "text-embedding-preview-0815",
     dimensionality: Optional[int] = 256,
 ) -> List[List[float]]:
     """Embeds texts with a pre-trained, foundational model."""
