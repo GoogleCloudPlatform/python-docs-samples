@@ -28,7 +28,7 @@ def quickstart_v2() -> cloud_speech.RecognizeResponse:
         cloud_speech.RecognizeResponse: The response from the recognize request, containing
         the transcription results
     """
-    # Could be "resources/fair.wav" or any another absolute|relative local path to the audio file
+    # Could be any another absolute|relative local path to the audio file
     audio_file = "resources/audio.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -62,4 +62,4 @@ def quickstart_v2() -> cloud_speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    recognition_response = quickstart_v2()
+    quickstart_v2()

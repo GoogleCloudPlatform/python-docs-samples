@@ -23,7 +23,6 @@ from google.api_core.retry import Retry
 def test_adaptation_v2_inline_custom_class() -> None:
 
     response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class()
-
     assert re.search(
         r"the word",
         response.results[0].alternatives[0].transcript,

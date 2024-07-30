@@ -14,9 +14,6 @@
 
 """ Google Cloud Speech API sample application using the REST API for batch
 processing.
-
-Example usage:
-    python transcribe.py gs://cloud-samples-tests/speech/brooklyn.flac
 """
 from google.cloud.speech import RecognizeResponse
 
@@ -30,7 +27,7 @@ def sync_recognize_with_profanity_filter_gcs() -> RecognizeResponse:
     # [START speech_recognize_with_profanity_filter_gcs]
     from google.cloud import speech
 
-    # Replace path_to_file with the URI of your audio file in Google Cloud Storage
+    # Replace with the URI of your audio file in Google Cloud Storage
     audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
     # Define the audio source
     audio = {"uri": audio_uri}

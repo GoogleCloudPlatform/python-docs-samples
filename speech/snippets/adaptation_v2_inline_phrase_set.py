@@ -32,11 +32,11 @@ def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
 
     # Instantiates a client
     client = SpeechClient()
-
+    # Could be any another absolute|relative local path to the audio file
     audio_file = "resources/fair.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     # Build inline phrase set to produce a more accurate transcript
     phrase_set = cloud_speech.PhraseSet(
@@ -60,7 +60,7 @@ def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
     request = cloud_speech.RecognizeRequest(
         recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text. The response contains the transcription results

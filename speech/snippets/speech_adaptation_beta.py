@@ -20,7 +20,6 @@
 # sample-metadata
 #   title: Speech Adaptation (Cloud Storage)
 #   description: Transcribe a short audio file with speech adaptation.
-#   usage: python3 samples/v1p1beta1/speech_adaptation_beta.py [--storage_uri "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"] [--phrase "Brooklyn Bridge"]
 
 from google.cloud import speech_v1p1beta1
 
@@ -33,8 +32,11 @@ def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
     from google.cloud import speech_v1p1beta1 as speech
 
     client = speech.SpeechClient()
+    # Replace with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
+    # Define the audio source
+    audio = {"uri": audio_uri}
 
-    storage_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
     phrase = "Brooklyn Bridge"
     phrases = [phrase]
 
@@ -65,9 +67,6 @@ def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
             "encoding": encoding,
         }
     )
-
-    # Define the audio source
-    audio = {"uri": storage_uri}
 
     response = client.recognize(config=config, audio=audio)
 

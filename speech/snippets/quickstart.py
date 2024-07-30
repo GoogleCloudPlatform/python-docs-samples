@@ -29,10 +29,9 @@ def run_quickstart() -> speech.RecognizeResponse:
     client = speech.SpeechClient()
     # [END speech_python_migration_client]
 
-    # The name of the audio file to transcribe
-    gcs_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
-
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    # # Replace with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+    audio = speech.RecognitionAudio(uri=audio_uri)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,

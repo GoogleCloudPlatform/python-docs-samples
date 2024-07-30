@@ -28,7 +28,9 @@ def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
+    # Specifies the region where the Speech API will be accessed.
     location = "europe-west3"
+    # Could be any another absolute|relative local path to the audio file
     audio_file = "resources/audio.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -64,5 +66,4 @@ def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
 # [END speech_change_speech_v2_location]
 
 if __name__ == "__main__":
-    response = recognition_response = change_speech_v2_location()
-    print(response)
+    change_speech_v2_location()

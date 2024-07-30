@@ -33,7 +33,7 @@ def adaptation_v2_custom_class_reference(
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-
+    # Could be any another absolute|relative local path to the audio file
     audio_file = "resources/fair.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:

@@ -32,7 +32,7 @@ def adaptation_v2_phrase_set_reference(
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-
+    # Could be any another absolute|relative local path to the audio file
     audio_file = "resources/fair.wav"
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
@@ -86,4 +86,4 @@ def adaptation_v2_phrase_set_reference(
 
 if __name__ == "__main__":
     phrase_set_unique_id = "phrase-set-123"
-    recognition_response = adaptation_v2_phrase_set_reference(phrase_set_unique_id)
+    adaptation_v2_phrase_set_reference(phrase_set_unique_id)
