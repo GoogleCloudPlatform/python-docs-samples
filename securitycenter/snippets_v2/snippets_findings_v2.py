@@ -16,17 +16,17 @@
 
 """Examples of working with source and findings in Security Command Center."""
 from typing import Dict
+# [START securitycenter_list_all_findings_v2]
 def list_all_findings(organization_id, source_name, location_id) -> int:
     """
     lists all findings for a source
     Args:
        organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
        source_name: is the resource path for a source that has been created
-       location_id: Gcp location id; example: 'global'
+       location_id: GCP location id; example: 'global'
     Returns:
         int: returns the count of all findings for a source
     """
-    # [START securitycenter_list_all_findings_v2]
     from google.cloud import securitycenter_v2
 
     # Create a client.
@@ -47,22 +47,22 @@ def list_all_findings(organization_id, source_name, location_id) -> int:
               count, finding_result.finding.name, finding_result.finding.resource_name
           )
       )
-    # [END securitycenter_list_all_findings_v2]
     return finding_result_iterator
+# [END securitycenter_list_all_findings_v2]
 
 
+# [START securitycenter_list_filtered_findings_v2]
 def list_filtered_findings(organization_id, source_name, location_id) -> int:
     """
      lists filtered findings for a source
      Args:
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           int: returns the filtered findings for a source
      """
     count = 0
-    # [START securitycenter_list_filtered_findings_v2]
     from google.cloud import securitycenter_v2
 
     # Create a new client.
@@ -80,22 +80,22 @@ def list_filtered_findings(organization_id, source_name, location_id) -> int:
               count, finding_result.finding.name, finding_result.finding.resource_name
           )
       )
-    # [END securitycenter_list_filtered_findings_v2]
     return count
+# [END securitycenter_list_filtered_findings_v2]
 
 
+# [START securitycenter_group_all_findings_v2]
 def group_all_findings(organization_id, source_name, location_id) -> int:
     """
      Demonstrates grouping all findings across an organization.
      Args:
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           int: returns the count of groups all findings for a source across the organization.
      """
     count = 0
-    # [START securitycenter_group_all_findings_v2]
     from google.cloud import securitycenter_v2
 
     # Create a client.
@@ -108,22 +108,22 @@ def group_all_findings(organization_id, source_name, location_id) -> int:
     )
     for count, group_result in enumerate(group_result_iterator):
       print((count + 1), group_result)
-    # [END securitycenter_group_all_findings_v2]
     return count
+# [END securitycenter_group_all_findings_v2]
 
 
+# [START securitycenter_group_filtered_findings_v2]
 def group_filtered_findings(organization_id, source_name, location_id) -> int:
     """
      Demonstrates grouping all filtered findings across an organization.
      Args:
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           int: returns the count of groups all filtered findings for a source across the organization.
      """
     count = 0
-    # [START securitycenter_group_filtered_findings_v2]
     from google.cloud import securitycenter_v2
 
     # Create a client.
@@ -140,22 +140,22 @@ def group_filtered_findings(organization_id, source_name, location_id) -> int:
     )
     for count, group_result in enumerate(group_result_iterator):
       print((count + 1), group_result)
-    # [END securitycenter_group_filtered_findings_v2]
     return count
+# [END securitycenter_group_filtered_findings_v2]
 
 
+# [START securitycenter_list_findings_with_security_marks_v2]
 def list_findings_with_security_marks(organization_id, source_name, location_id) -> int:
     """
      lists all filtered findings with security marks across an organization.
      Args:
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           int: returns the count of filtered findings with security marks across the organization.
      """
     count = 0
-    # [START securitycenter_list_findings_with_security_marks_v2]
     from google.cloud import securitycenter_v2
 
     # Create a new client.
@@ -174,22 +174,22 @@ def list_findings_with_security_marks(organization_id, source_name, location_id)
               count, finding_result.finding.name, finding_result.finding.resource_name
           )
       )
-    # [END securitycenter_list_findings_with_security_marks_v2]
     return count
+# [END securitycenter_list_findings_with_security_marks_v2]
 
 
+# [START securitycenter_group_findings_by_state_v2]
 def group_findings_by_state(organization_id, source_name, location_id) -> int:
     """
      groups the findings across an organization.
      Args:
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           int: returns the count of group findings for a source across the organization.
      """
     count = 0
-    # [START securitycenter_group_findings_by_state_v2]
     from google.cloud import securitycenter_v2
 
     # Create a client.
@@ -202,10 +202,11 @@ def group_findings_by_state(organization_id, source_name, location_id) -> int:
     )
     for count, group_result in enumerate(group_result_iterator):
       print((count + 1), group_result)
-    # [END securitycenter_group_findings_by_state_v2]
     return count
+# [END securitycenter_group_findings_by_state_v2]
 
 
+# [START securitycenter_create_finding_v2]
 def create_finding(organization_id, location_id, finding_id, source_name, category) -> Dict:
     """
      cretaes a new finding
@@ -213,12 +214,11 @@ def create_finding(organization_id, location_id, finding_id, source_name, catego
          organization_id: organization_id is the numeric ID of the organization. e.g.:organization_id = "111122222444"
          source_name: is the resource path for a source that has been created
          finding_id: unique identifier provided by the client.
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
          category: the additional category group with in findings.
      Returns:
           Dict: returns the created findings details.
      """
-    # [START securitycenter_create_finding_v2]
     import datetime
 
     from google.cloud import securitycenter_v2
@@ -255,20 +255,20 @@ def create_finding(organization_id, location_id, finding_id, source_name, catego
         request={"parent": parent, "finding_id": finding_id, "finding": finding}
     )
     print(created_finding)
-    # [END securitycenter_create_finding_v2]
     return created_finding
+# [END securitycenter_create_finding_v2]
 
 
+# [START securitycenter_update_finding_source_properties_v2]
 def update_finding(source_name, location_id) -> Dict:
     """
      updates a finding
      Args:
          source_name: is the resource path for a source that has been created
-         location_id: Gcp location id; example: 'global'
+         location_id: GCP location id; example: 'global'
      Returns:
           Dict: returns the updated findings details.
      """
-    # [START securitycenter_update_finding_source_properties_v2]
     import datetime
 
     from google.cloud import securitycenter_v2
@@ -308,10 +308,10 @@ def update_finding(source_name, location_id) -> Dict:
         )
     )
     return updated_finding
-    # [END securitycenter_update_finding_source_properties_v2]
+# [END securitycenter_update_finding_source_properties_v2]
 
 
-
+# [START securitycenter_create_source_v2]
 def create_source(organization_id) -> Dict:
     """
      Create a new findings source
@@ -320,7 +320,6 @@ def create_source(organization_id) -> Dict:
      Returns:
           Dict: returns the created findings source details.
      """
-    # [START securitycenter_create_source]
     from google.cloud import securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
@@ -337,9 +336,10 @@ def create_source(organization_id) -> Dict:
     )
     print(f"Created Source: {response.name}")
     return response
-    # [END securitycenter_create_source]
+# [END securitycenter_create_source_v2]
 
 
+# [START securitycenter_get_source_v2]
 def get_source(source_name) -> Dict:
     """
      Gets the details of an existing source.
@@ -348,8 +348,6 @@ def get_source(source_name) -> Dict:
      Returns:
           Dict: returns the details of existing source.
      """
-
-    # [START securitycenter_get_source]
     from google.cloud import securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
@@ -363,10 +361,11 @@ def get_source(source_name) -> Dict:
     source = client.get_source(request={"name": source_name})
 
     print(f"Source: {source}")
-    # [END securitycenter_get_source]
     return source
+# [END securitycenter_get_source_v2]
 
 
+# [START securitycenter_update_source_v2]
 def update_source(source_name) -> Dict:
     """
      Updates a source's display name.
@@ -375,7 +374,6 @@ def update_source(source_name) -> Dict:
      Returns:
           Dict: returns the details of updated source.
      """
-    # [START securitycenter_update_source]
     from google.cloud import securitycenter
     from google.protobuf import field_mask_pb2
 
@@ -397,10 +395,11 @@ def update_source(source_name) -> Dict:
         }
     )
     print(f"Updated Source: {updated}")
-    # [END securitycenter_update_source]
     return updated
+# [END securitycenter_update_source_v2]
 
 
+# [START securitycenter_list_sources_v2]
 def list_source(organization_id) -> int:
     """
     lists the findings source
@@ -410,7 +409,6 @@ def list_source(organization_id) -> int:
          Dict: returns the count of the findings source
     """
     count = -1
-    # [START securitycenter_list_sources]
     from google.cloud import securitycenter
 
     # Create a new client.
@@ -424,12 +422,11 @@ def list_source(organization_id) -> int:
     # Call the API and print out each existing source.
     for count, source in enumerate(client.list_sources(request={"parent": parent})):
       print(count, source)
-    # [END securitycenter_list_sources]
     return count
+# [END securitycenter_list_sources_v2]
 
-    # [START securitycenter_get_source_iam_v2]
 
-
+# [START securitycenter_get_source_iam_v2]
 def get_iam_policy(organization_id,source_name) -> Dict:
     """
     Gets the iam policy of the source.
@@ -446,9 +443,10 @@ def get_iam_policy(organization_id,source_name) -> Dict:
     policy = client.get_iam_policy(request={"resource": source_name})
     print(f"Policy: {policy}")
     return policy
-    # [END securitycenter_get_source_iam_v2]
+# [END securitycenter_get_source_iam_v2]
 
 
+# [START securitycenter_set_source_iam_v2]
 def set_source_iam_policy(organization_id, source_name, user_email, role_id) -> Dict:
     """
     Gives a user findingsEditor permission to the source.
@@ -460,7 +458,6 @@ def set_source_iam_policy(organization_id, source_name, user_email, role_id) -> 
     Returns:
         Dict: returns the source iam policy
     """
-    # [START securitycenter_set_source_iam_v2]
     from google.cloud import securitycenter_v2
     from google.iam.v1 import policy_pb2
 
@@ -484,11 +481,11 @@ def set_source_iam_policy(organization_id, source_name, user_email, role_id) -> 
     )
 
     print(f"Updated Policy: {updated}")
-
-    # [END securitycenter_set_source_iam_v2]
     return updated
+# [END securitycenter_set_source_iam_v2]
 
 
+# [START securitycenter_test_iam_v2]
 def troubleshoot_iam_permissions(organization_id, source_name, permissions):
     """
     Demonstrate calling test_iam_permissions to determine if the
@@ -500,7 +497,6 @@ def troubleshoot_iam_permissions(organization_id, source_name, permissions):
     Returns:
        Dict: returns the source iam policy
     """
-    # [START securitycenter_test_iam_v2]
     from google.cloud import securitycenter_v2
 
     # Create a client.
@@ -520,4 +516,4 @@ def troubleshoot_iam_permissions(organization_id, source_name, permissions):
         )
     )
     return permission_response
-    # [END securitycenter_test_iam_v2]
+# [END securitycenter_test_iam_v2]

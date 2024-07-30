@@ -51,6 +51,7 @@ def test_set_mute_finding(finding):
     finding_path = finding.get("finding1")
     response = mute_findings_v2.set_mute_finding(finding_path)
     assert response.name == finding_path
+    assert response.mute.name == "MUTED"
 
 
 @backoff.on_exception(
@@ -59,7 +60,7 @@ def test_set_mute_finding(finding):
 def test_set_unmute_finding(finding):
     finding_path = finding.get("finding1")
     response = mute_findings_v2.set_unmute_finding(finding_path)
-
+    assert response.mute.name == "UNMUTED"
 
 
 @backoff.on_exception(
@@ -67,13 +68,7 @@ def test_set_unmute_finding(finding):
 )
 def test_bulk_mute_findings(finding):
     # Mute findings that belong to this project.
-    mute_findings_v2.bulk_mute_findings(
+    response = mute_findings_v2.bulk_mute_findings(
         f"organizations/{ORGANIZATION_ID}","global", f'resource.project_display_name="{ORGANIZATION_ID}"'
     )
-
-    # Get all findings in the source to check if they are muted.
-    response = snippets_findings_v2.list_all_findings(
-        ORGANIZATION_ID,finding.get('source').split("/")[-1],"global"
-    )
-    count, response = enumerate(response)
-    assert len(response)>0
+    assert response.done

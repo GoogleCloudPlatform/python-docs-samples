@@ -41,7 +41,7 @@ def set_mute_finding(finding_path: str) -> None:
     print(f"Mute value for the finding: {finding.mute.name}")
     return finding
 
-    # [END securitycenter_set_mute_v2]
+# [END securitycenter_set_mute_v2]
 
 
 # [START securitycenter_set_unmute_v2]
@@ -70,7 +70,7 @@ def set_unmute_finding(finding_path: str) -> None:
     print(f"Mute value for the finding: {finding.mute.name}")
     return finding
 
-    # [END securitycenter_set_unmute_v2]
+# [END securitycenter_set_unmute_v2]
 
 
 # [START securitycenter_bulk_mute_v2]
@@ -100,4 +100,4 @@ def bulk_mute_findings(parent_path: str,location_id, mute_rule: str) -> None:
     print(f"Bulk mute findings completed successfully! : {response}")
     return response
 
-    # [END securitycenter_bulk_mute_v2]
+# [END securitycenter_bulk_mute_v2]

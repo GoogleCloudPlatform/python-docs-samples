@@ -16,6 +16,7 @@
 """Demos for working with security marks."""
 from typing import Dict
 
+# [START securitycenter_add_security_marks_v2]
 def add_to_asset(organization_id, asset_name) -> Dict:
     """
     Add new security marks to an asset.
@@ -26,7 +27,6 @@ def add_to_asset(organization_id, asset_name) -> Dict:
     Returns:
         Dict: returns the updated security marks details.
     """
-    # [START securitycenter_add_security_marks_v2]
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
 
@@ -47,9 +47,11 @@ def add_to_asset(organization_id, asset_name) -> Dict:
         }
     )
     print(updated_marks)
-    # [END securitycenter_add_security_marks_v2]
     return updated_marks, marks
+# [END securitycenter_add_security_marks_v2]
 
+
+# [START securitycenter_delete_security_marks_v2]
 def delete_security_marks(organization_id, asset_name) -> Dict:
     """
     Removes security marks from an asset.
@@ -62,7 +64,6 @@ def delete_security_marks(organization_id, asset_name) -> Dict:
     """
     # Make sure they are there first
     add_to_asset(organization_id, asset_name)
-    # [START securitycenter_delete_security_marks_v2]
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
 
@@ -84,10 +85,11 @@ def delete_security_marks(organization_id, asset_name) -> Dict:
         }
     )
     print(updated_marks)
-    # [END securitycenter_delete_security_marks_v2]
     return updated_marks
+# [END securitycenter_delete_security_marks_v2]
 
 
+# [START securitycenter_add_delete_security_marks_v2]
 def delete_and_update_marks(organization_id, asset_name) -> Dict:
     """
     Updates and deletes security marks from an asset in the same call.
@@ -101,7 +103,6 @@ def delete_and_update_marks(organization_id, asset_name) -> Dict:
     """
     # Make sure they are there first
     add_to_asset(organization_id, asset_name)
-    # [START securitycenter_add_delete_security_marks_v2]
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
 
@@ -119,9 +120,11 @@ def delete_and_update_marks(organization_id, asset_name) -> Dict:
         }
     )
     print(updated_marks)
-    # [END securitycenter_add_delete_security_marks_v2]
     return updated_marks
+# [END securitycenter_add_delete_security_marks_v2]
 
+
+# [START securitycenter_add_finding_security_marks_v2]
 def add_to_finding(organization_id, source_name, location_id, finding_name):
     """
     Adds security marks to a finding.
@@ -134,7 +137,6 @@ def add_to_finding(organization_id, source_name, location_id, finding_name):
     Returns:
         Dict: returns the deleted security marks response.
     """
-    # [START securitycenter_add_finding_security_marks_v2]
     from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
 
@@ -155,5 +157,5 @@ def add_to_finding(organization_id, source_name, location_id, finding_name):
             "update_mask": field_mask,
         }
     )
-    # [END securitycenter_add_finding_security_marks_v2]
     return updated_marks, marks
+# [END securitycenter_add_finding_security_marks_v2]
