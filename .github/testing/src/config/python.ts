@@ -38,7 +38,7 @@ export const python = (version = '3.11') =>
       subprocess.run('cp', [noxfile, 'noxfile.py']);
       subprocess.run('nox', ['-s', `py-${version}`]);
     },
-    testSome: args => {
+    testSome: (args, tests) => {
       const noxfile = path.join(args.root, 'noxfile-template.py');
       subprocess.run('cp', [noxfile, 'noxfile.py']);
       throw `TODO: config/python.ts testSome ${JSON.stringify(args)}`;
