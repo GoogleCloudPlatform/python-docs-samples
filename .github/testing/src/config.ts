@@ -76,9 +76,10 @@ export class Config {
     this.withDir(affected.path, args => {
       if ('TestAll' in affected) {
         this._testAll(args);
-      }
-      if ('TestSome' in affected) {
+      } else if ('TestSome' in affected) {
         this._testSome(args, affected.TestSome);
+      } else {
+        throw `affected must contain either a "TestAll" or "TestSome" field, got ${affected}`;
       }
     });
 
