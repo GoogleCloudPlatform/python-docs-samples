@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: Test
+name: 🪿
 
 on:
   push:
@@ -26,6 +26,7 @@ env:
 
 jobs:
   affected:
+    name: Finding affected tests
     runs-on: ubuntu-latest
     outputs:
       python: ${{steps.python.outputs.affected}}
@@ -44,8 +45,8 @@ jobs:
           echo "$AFFECTED_PYTHON"
           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
-  python-311:
-    name: Python ${{matrix.python-version}}
+  python-test:
+    name: Test Python ${{matrix.python-version}}
     needs: affected
     runs-on: ubuntu-latest
     strategy:
