@@ -15,16 +15,16 @@
 import * as fs from 'node:fs';
 import * as git from './git';
 import * as path from 'path';
-import {List, Map, Set} from 'immutable';
-import {minimatch} from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
-import {Affected, TestAll, TestName, TestPath, mergeAffected} from './affected';
+import { List, Map, Set } from 'immutable';
+import { minimatch } from 'minimatch'; /* eslint-disable @typescript-eslint/no-explicit-any */
+import { Affected, TestAll, TestName, TestPath, mergeAffected } from './affected';
 
-type RunTestsAll = {
+type Args = {
   root: string;
   path: string;
 };
 
-type RunTestsSome = {
+type ArgsTestSome = {
   root: string;
   path: string;
   tests: Map<TestPath, Set<TestName>>;
@@ -36,27 +36,31 @@ export class Config {
   match: List<string>;
   ignore: List<string>;
   packageFile: List<string>;
-  testAll: (_: RunTestsAll) => void;
-  testSome: (_: RunTestsSome) => void;
+  _lint: (_: Args) => void;
+  _testAll: (_: Args) => void;
+  _testSome: (_: ArgsTestSome) => void;
 
   constructor({
     match,
     ignore,
     packageFile,
+    lint,
     testAll,
     testSome,
   }: {
     match?: string[];
     ignore?: string[];
     packageFile?: string[];
-    testAll?: (_: RunTestsAll) => void;
-    testSome?: (_: RunTestsSome) => void;
+    lint?: (_: Args) => void;
+    testAll?: (_: Args) => void;
+    testSome?: (_: ArgsTestSome) => void;
   }) {
     this.match = List(match || ['**']);
     this.ignore = List(ignore);
     this.packageFile = List(packageFile);
-    this.testAll = testAll || (_ => {});
-    this.testSome = testSome || (_ => {});
+    this._lint = lint || (_ => { });
+    this._testAll = testAll || (_ => { });
+    this._testSome = testSome || (_ => { });
   }
 
   affected = (head: string, main: string): List<Affected> =>
@@ -71,6 +75,16 @@ export class Config {
         .values()
     );
 
+  lint = (affected: Affected) => {
+    const cwd = process.cwd();
+    const root = git.root();
+    const dir = path.join(root, affected.path);
+    console.log(`> cd ${dir}`);
+    process.chdir(dir);
+    this._lint({ root: root, path: affected.path });
+    process.chdir(cwd);
+  };
+
   test = (affected: Affected) => {
     const cwd = process.cwd();
     const root = git.root();
@@ -78,10 +92,10 @@ export class Config {
     console.log(`> cd ${dir}`);
     process.chdir(dir);
     if ('TestAll' in affected) {
-      this.testAll({root: root, path: affected.path});
+      this._testAll({ root: root, path: affected.path });
     }
     if ('TestSome' in affected) {
-      this.testSome({
+      this._testSome({
         root: root,
         path: affected.path,
         tests: affected.TestSome,

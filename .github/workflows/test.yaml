@@ -45,8 +45,30 @@ jobs:
           echo "$AFFECTED_PYTHON"
           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
 
+  python-lint:
+    name: Lint Python
+    needs: affected
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        affected: ${{fromJson(needs.affected.outputs.python)}}
+    defaults:
+      run:
+        working-directory: .github/testing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install nox
+      - run: bun install
+      - run: bun run linter python AFFECTED
+        env:
+          AFFECTED: ${{toJson(matrix.affected)}}
+
   python-test:
-    name: Test Python ${{matrix.python-version}}
+    name: Test Python
     needs: affected
     runs-on: ubuntu-latest
     strategy:

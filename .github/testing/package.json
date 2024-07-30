@@ -8,6 +8,7 @@
     "lint": "gts lint",
     "fix": "gts fix",
     "affected": "bun run ./src/main.ts affected",
+    "linter": "bun run ./src/main.ts linter",
     "tests": "bun run ./src/main.ts tests"
   },
   "dependencies": {

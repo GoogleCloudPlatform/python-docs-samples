@@ -44,6 +44,12 @@ function main(command: string) {
       console.log(JSON.stringify(affected));
       return;
     }
+    case 'linter': {
+      const config = getConfig(process.argv[3]);
+      const affected: Affected = JSON.parse(process.env[process.argv[4]] || '');
+      config.lint(affected);
+      return;
+    }
     case 'tests': {
       const config = getConfig(process.argv[3]);
       const affected: Affected = JSON.parse(process.env[process.argv[4]] || '');
