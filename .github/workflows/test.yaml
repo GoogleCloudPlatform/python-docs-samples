@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: 🛠️ Test
+name: Test
 
 on:
   push:
@@ -52,7 +52,7 @@ jobs:
       matrix:
         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
         affected: ${{fromJson(needs.affected.outputs.python)}}
-    permissions:
+    permissions: # needed for google-github-actions/auth
       id-token: write
       contents: read
     defaults:
@@ -66,8 +66,8 @@ jobs:
           python-version: ${{matrix.python-version}}
       - uses: 'google-github-actions/auth@v2'
         with:
-          project_id: $PROJECT
-          workload_identity_provider: $WORKLOAD_IDENTITY_PROVIDER
+          project_id: ${{env.PROJECT}}
+          workload_identity_provider: ${{env.WORKLOAD_IDENTITY_PROVIDER}}
       - run: pip install nox
       - run: bun install
       - run: bun run tests python${{matrix.python-version}} AFFECTED
