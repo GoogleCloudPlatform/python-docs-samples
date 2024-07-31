@@ -174,7 +174,7 @@ def _check_custom_events(job: batch_v1.Job):
     assert barrier_name_found
 
 
-def _check_nfc_mounting(
+def _check_nfs_mounting(
     job: batch_v1.Job, mount_path: str, nfc_ip_address: str, nfs_path: str
 ):
     expected_script_text = f"{mount_path}/output_task_${{BATCH_TASK_INDEX}}"
@@ -259,7 +259,7 @@ def test_check_notification_job(job_name):
 
 
 @flaky(max_runs=3, min_passes=1)
-def test_check_nfc_job(job_name):
+def test_check_nfs_job(job_name):
     mount_path = "/mnt/nfs"
     nfc_ip_address = "10.180.103.74"
     nfs_path = "/vol1"
