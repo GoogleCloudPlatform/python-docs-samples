@@ -116,7 +116,7 @@ def create_job_with_network_file_system(
 if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "us-central1"
-    job_name = "your-job-name3"
+    job_name = "your-job-name"
     # The local path on your VM where the NFS mounted.
     mount_path = "/mnt/disks"
     # IP address of the NFS server e.g. Filestore instance.
