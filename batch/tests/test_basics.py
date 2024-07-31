@@ -27,6 +27,7 @@ import pytest
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_nfs import create_job_with_network_file_system
 from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_pubsub_notifications import (
     create_with_pubsub_notification_job,
@@ -173,6 +174,16 @@ def _check_custom_events(job: batch_v1.Job):
     assert barrier_name_found
 
 
+def _check_nfc_mounting(
+    job: batch_v1.Job, mount_path: str, nfc_ip_address: str, nfs_path: str
+):
+    expected_script_text = f"{mount_path}/output_task_${{BATCH_TASK_INDEX}}"
+    assert job.task_groups[0].task_spec.volumes[0].nfs.server == nfc_ip_address
+    assert job.task_groups[0].task_spec.volumes[0].nfs.remote_path == nfs_path
+    assert job.task_groups[0].task_spec.volumes[0].mount_path == mount_path
+    assert expected_script_text in job.task_groups[0].task_spec.runnables[0].script.text
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -245,3 +256,19 @@ def test_check_notification_job(job_name):
     test_topic = "test_topic"
     job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
     _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_nfc_job(job_name):
+    mount_path = "/mnt/nfs"
+    nfc_ip_address = "10.180.103.74"
+    nfs_path = "/vol1"
+    job = create_job_with_network_file_system(
+        PROJECT, REGION, job_name, mount_path, nfc_ip_address, nfs_path
+    )
+    _test_body(
+        job,
+        additional_test=lambda: _check_nfc_mounting(
+            job, mount_path, nfc_ip_address, nfs_path
+        ),
+    )
