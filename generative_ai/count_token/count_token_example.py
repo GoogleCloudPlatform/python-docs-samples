@@ -18,7 +18,7 @@ LOCATION = "us-central1"
 
 
 def count_token_locally() -> int:
-    # [START generativeaionvertexai_token_count_sample01]
+    # [START generativeaionvertexai_token_count_sample_with_local_sdk]
     from vertexai.preview.tokenization import get_tokenizer_for_model
 
     # using local tokenzier
@@ -31,12 +31,12 @@ def count_token_locally() -> int:
     prompt = ["hello world", "what's the weather today"]
     response = tokenizer.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
-    # [END generativeaionvertexai_token_count_sample01]
+    # [END generativeaionvertexai_token_count_sample_with_local_sdk]
     return response.total_tokens
 
 
 def count_token_service() -> int:
-    # [START generativeaionvertexai_token_count_sample02]
+    # [START generativeaionvertexai_token_count_sample_with_genai]
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
@@ -55,7 +55,7 @@ def count_token_service() -> int:
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
-    # [END generativeaionvertexai_token_count_sample02]
+    # [END generativeaionvertexai_token_count_sample_with_genai]
     return response.total_tokens
 
 
