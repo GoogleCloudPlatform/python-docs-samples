@@ -268,7 +268,7 @@ def test_check_nfs_job(job_name):
     )
     _test_body(
         job,
-        additional_test=lambda: _check_nfc_mounting(
+        additional_test=lambda: _check_nfs_mounting(
             job, mount_path, nfc_ip_address, nfs_path
         ),
     )
