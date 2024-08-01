@@ -16,6 +16,8 @@ import os
 
 from google.api_core.retry import Retry
 
+import pytest
+
 from beta_snippets import (
     transcribe_file_with_auto_punctuation,
     transcribe_file_with_diarization,
@@ -27,8 +29,6 @@ from beta_snippets import (
     transcribe_file_with_word_level_confidence,
 )
 
-
-import pytest
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
