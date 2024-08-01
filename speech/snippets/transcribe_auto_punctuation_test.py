@@ -12,22 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from google.api_core.retry import Retry
 import pytest
 
 import transcribe_auto_punctuation
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-
 
 @Retry()
 def test_transcribe_file_with_auto_punctuation(capsys: pytest.CaptureFixture) -> None:
-    result = transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        "resources/commercial_mono.wav"
-    )
+    result = transcribe_auto_punctuation.transcribe_file_with_auto_punctuation()
     out, _ = capsys.readouterr()
 
     assert "First alternative of result " in out
+    assert "okay, great" in out
     assert result is not None

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
 from google.api_core.retry import Retry
@@ -20,12 +19,10 @@ import pytest
 
 import transcribe_async_file
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-
 
 @Retry()
 def test_transcribe(capsys: pytest.CaptureFixture) -> None:
-    result = transcribe_async_file.transcribe_file(os.path.join(RESOURCES, "audio.raw"))
+    result = transcribe_async_file.transcribe_file()
     out, err = capsys.readouterr()
 
     assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)

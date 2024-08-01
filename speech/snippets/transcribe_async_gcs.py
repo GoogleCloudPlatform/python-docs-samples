@@ -16,18 +16,20 @@
 batch processing.
 """
 
-
 # [START speech_transcribe_async_gcs]
+from google.cloud import speech
+
+
 def transcribe_gcs(gcs_uri: str) -> str:
-    """Asynchronously transcribes the audio file specified by the gcs_uri.
+    """Asynchronously transcribes the audio file from Cloud Storage
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
+            Example: `gs://storage-bucket/file.flac`.
 
     Returns:
         The generated transcript from the audio file provided.
     """
-    from google.cloud import speech
 
     client = speech.SpeechClient()
 
@@ -58,3 +60,7 @@ def transcribe_gcs(gcs_uri: str) -> str:
 
 
 # [END speech_transcribe_async_gcs]
+
+if __name__ == '__main__':
+    path_to_gcp_audiofile = "gs://bucket_name/brooklyn_bridge.flac"
+    transcribe_gcs(path_to_gcp_audiofile)
