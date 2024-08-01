@@ -126,8 +126,6 @@ def test_create_finding(organization_id, source_name):
 def test_update_finding(source_name):
     snippets_findings_v2.create_finding(organization_id,"global","samplefindingid2",source_name,"MEDIUM_RISK_ONE")
     updated_finding = snippets_findings_v2.update_finding(source_name,"global")
-    print("************")
-    print(updated_finding)
     source_properties = updated_finding.source_properties
     keys = source_properties.keys()
     assert "s_value" in keys

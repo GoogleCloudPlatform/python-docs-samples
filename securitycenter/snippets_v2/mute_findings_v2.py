@@ -99,5 +99,4 @@ def bulk_mute_findings(parent_path: str,location_id, mute_rule: str) -> None:
     response = client.bulk_mute_findings(request)
     print(f"Bulk mute findings completed successfully! : {response}")
     return response
-
 # [END securitycenter_bulk_mute_v2]
