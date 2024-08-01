@@ -24,16 +24,19 @@
 from google.cloud import speech_v1p1beta1
 
 
-def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
+def sample_recognize(audio_uri: str) -> speech_v1p1beta1.RecognizeResponse:
     """
     Transcribe a short audio file with speech adaptation.
+
+    Args:
+      audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
+
     """
     # [START speech_adaptation_beta]
     from google.cloud import speech_v1p1beta1 as speech
 
     client = speech.SpeechClient()
-    # Replace with the URI of your audio file in Google Cloud Storage
-    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
+
     # Define the audio source
     audio = {"uri": audio_uri}
 
@@ -80,4 +83,6 @@ def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    sample_recognize()
+    # Replace with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
+    sample_recognize(audio_uri)

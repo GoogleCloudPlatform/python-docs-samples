@@ -28,7 +28,7 @@ def export_transcript_to_storage_beta(
     Transcribes an audio file from Cloud Storage and exports the transcript to Cloud Storage bucket.
 
     Args:
-        audio_uri (str): URI for the audio file in Cloud Storage, e.g., gs://[BUCKET]/[FILE].
+        audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
         output_bucket_name (str): Name of the Cloud Storage bucket to store the output transcript.
         output_filename (str): Name of the output file to store the transcript.
 

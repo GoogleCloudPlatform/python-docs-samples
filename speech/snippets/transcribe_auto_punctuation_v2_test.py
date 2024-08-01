@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 import re
 
 from google.api_core.retry import Retry
@@ -19,9 +19,14 @@ from google.api_core.retry import Retry
 import transcribe_auto_punctuation_v2
 
 
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+
+
 @Retry()
 def test_transcribe_auto_punctuation_v2() -> None:
-    response = transcribe_auto_punctuation_v2.transcribe_auto_punctuation_v2()
+    response = transcribe_auto_punctuation_v2.transcribe_auto_punctuation_v2(
+        os.path.join(_RESOURCES, "commercial_mono.wav")
+    )
 
     assert re.search(
         r"Okay, I'm here.",

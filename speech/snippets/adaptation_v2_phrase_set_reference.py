@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START speech_adaptation_v2_phrase_set_reference]
 import os
 
-# [START speech_adaptation_v2_phrase_set_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
@@ -27,7 +27,7 @@ def adaptation_v2_phrase_set_reference(
     """Transcribe audio files using a PhraseSet.
 
     Args:
-        phrase_set_id: The unique ID of the PhraseSet to use.
+        phrase_set_id (str): The unique ID of the PhraseSet to use.
 
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.

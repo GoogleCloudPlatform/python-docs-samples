@@ -22,16 +22,23 @@ and recognition metadata.
 from google.cloud import speech
 
 
-def transcribe_file_with_auto_punctuation() -> speech.RecognizeResponse:
-    """Transcribe the given audio file with auto punctuation enabled."""
+def transcribe_file_with_auto_punctuation(audio_file: str) -> speech.RecognizeResponse:
+    """
+    Transcribe the given audio file with auto punctuation enabled.
+
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/commercial_mono.wav"
+
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results.
+    """
     client = speech.SpeechClient()
 
-    # Could be any another absolute|relative local path to the audio file
-    audio_file = "resources/commercial_mono.wav"
     with open(audio_file, "rb") as f:
-        audion_content = f.read()
+        audio_content = f.read()
 
-    audio = speech.RecognitionAudio(content=audion_content)
+    audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=8000,
@@ -53,4 +60,6 @@ def transcribe_file_with_auto_punctuation() -> speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    transcribe_file_with_auto_punctuation()
+    # Could be any another absolute|relative local path to the audio file
+    audio_path = "resources/commercial_mono.wav"
+    transcribe_file_with_auto_punctuation(audio_path)

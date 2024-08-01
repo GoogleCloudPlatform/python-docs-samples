@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START speech_adaptation_v2_custom_class_reference]
 import os
 
-# [START speech_adaptation_v2_custom_class_reference]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
@@ -27,8 +27,8 @@ def adaptation_v2_custom_class_reference(
     """Transcribe audio file using a custom class.
 
     Args:
-        phrase_set_id: The unique ID of the phrase set to use.
-        custom_class_id: The unique ID of the custom class to use.
+        phrase_set_id (str): The unique ID of the phrase set to use.
+        custom_class_id (str): The unique ID of the custom class to use.
 
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
@@ -43,14 +43,14 @@ def adaptation_v2_custom_class_reference(
     client = SpeechClient()
 
     # Create a custom class to reference in a PhraseSet
-    # Simplified version of creating a persistent CustomClass for phrase reference
-    # The CustomClass is created with a specific value ("fare") that can be used
+    # Simplified version of creating a CustomClass for phrase reference
+    # The CustomClass is created with a specific values that can be used
     # to improve recognition accuracy for specific terms.
-    created_custom_class = cloud_speech.CustomClass(items=[{"value": "fare"}])
+    custom_class = cloud_speech.CustomClass(items=[{"value": "fare"}])
     operation = client.create_custom_class(
         parent=f"projects/{PROJECT_ID}/locations/global",
         custom_class_id=custom_class_id,
-        custom_class=created_custom_class,
+        custom_class=custom_class,
     )
     custom_class = operation.result()
 

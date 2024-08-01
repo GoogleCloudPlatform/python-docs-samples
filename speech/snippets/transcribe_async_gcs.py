@@ -25,7 +25,7 @@ def transcribe_gcs(gcs_uri: str) -> str:
 
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
-            Example: `gs://storage-bucket/file.flac`.
+            E.g., "gs://storage-bucket/file.flac".
 
     Returns:
         The generated transcript from the audio file provided.
@@ -61,6 +61,6 @@ def transcribe_gcs(gcs_uri: str) -> str:
 
 # [END speech_transcribe_async_gcs]
 
-if __name__ == '__main__':
-    path_to_gcp_audiofile = "gs://bucket_name/brooklyn_bridge.flac"
-    transcribe_gcs(path_to_gcp_audiofile)
+if __name__ == "__main__":
+    audio_uri = "gs://bucket_name/brooklyn_bridge.flac"
+    transcribe_gcs(audio_uri)

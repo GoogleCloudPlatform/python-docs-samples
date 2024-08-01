@@ -15,20 +15,22 @@
 """ Google Cloud Speech API sample application using the REST API for batch
 processing.
 """
+
+# [START speech_recognize_with_profanity_filter_gcs]
+from google.cloud import speech
 from google.cloud.speech import RecognizeResponse
 
 
-def sync_recognize_with_profanity_filter_gcs() -> RecognizeResponse:
+def sync_recognize_with_profanity_filter_gcs(audio_uri: str) -> RecognizeResponse:
     """Recognizes speech from an audio file in Cloud Storage and filters out profane language.
+
+    Args:
+        audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
 
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-    # [START speech_recognize_with_profanity_filter_gcs]
-    from google.cloud import speech
 
-    # Replace with the URI of your audio file in Google Cloud Storage
-    audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
     # Define the audio source
     audio = {"uri": audio_uri}
 
@@ -37,7 +39,8 @@ def sync_recognize_with_profanity_filter_gcs() -> RecognizeResponse:
         encoding=speech.RecognitionConfig.AudioEncoding.FLAC,  # Audio format
         sample_rate_hertz=16000,
         language_code="en-US",
-        profanity_filter=True,  # Enable profanity filter
+        # Enable profanity filter
+        profanity_filter=True,
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -52,4 +55,6 @@ def sync_recognize_with_profanity_filter_gcs() -> RecognizeResponse:
 
 
 if __name__ == "__main__":
-    recognition_response = sync_recognize_with_profanity_filter_gcs()
+    # Replace with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
+    sync_recognize_with_profanity_filter_gcs(audio_uri)

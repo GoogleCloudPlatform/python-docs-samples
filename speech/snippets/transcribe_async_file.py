@@ -21,15 +21,17 @@ batch processing.
 from google.cloud import speech
 
 
-def transcribe_file() -> speech.RecognizeResponse:
-    """Transcribe the given audio file asynchronously."""
+def transcribe_file(audio_file: str) -> speech.RecognizeResponse:
+    """Transcribe the given audio file asynchronously.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.raw"
+    """
     client = speech.SpeechClient()
 
     # [START speech_python_migration_async_request]
-    # Could be any another absolute|relative local path to the audio file
-    path_to_audio = "resources/audio.raw"
-
-    with open(path_to_audio, "rb") as file:
+    # Reads a file as bytes
+    with open(audio_file, "rb") as file:
         audio_content = file.read()
 
     # Note that transcription is limited to a 60 seconds local audio file.
@@ -62,3 +64,6 @@ def transcribe_file() -> speech.RecognizeResponse:
 
 
 # [END speech_transcribe_async]
+if __name__ == "__main__":
+    # Could be any another absolute|relative local path to the audio file
+    audio_path = "resources/audio.raw"

@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
+
 
 # [START speech_change_speech_v2_location]
+import os
+
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
@@ -21,17 +23,19 @@ from google.cloud.speech_v2.types import cloud_speech
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
+def change_speech_v2_location(audio_file: str, location: str) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file in a specific region. It allows for specifying the location
         to potentially reduce latency and meet data residency requirements.
 
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+        location (str): The region where the Speech API will be accessed.
+            Example: "europe-west3"
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-    # Specifies the region where the Speech API will be accessed.
-    location = "europe-west3"
-    # Could be any another absolute|relative local path to the audio file
-    audio_file = "resources/audio.wav"
+
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -66,4 +70,7 @@ def change_speech_v2_location() -> cloud_speech.RecognizeResponse:
 # [END speech_change_speech_v2_location]
 
 if __name__ == "__main__":
-    change_speech_v2_location()
+    # Could be any another absolute|relative local path to the audio file
+    audio_path = "resources/audio.wav"
+    location = "europe-west3"
+    change_speech_v2_location(audio_path, location)

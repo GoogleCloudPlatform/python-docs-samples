@@ -12,16 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from google.api_core.retry import Retry
 
 import adaptation_v2_inline_phrase_set
 
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+
 
 @Retry()
 def test_adaptation_v2_inline_phrase_set() -> None:
-    response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set()
+    response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set(
+        os.path.join(_RESOURCES, "fair.wav")
+    )
     assert re.search(
         r"the word is fare",
         response.results[0].alternatives[0].transcript,

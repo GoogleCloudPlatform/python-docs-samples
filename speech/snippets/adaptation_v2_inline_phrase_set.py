@@ -12,19 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START speech_adaptation_v2_inline_phrase_set]
 import os
 
-# [START speech_adaptation_v2_inline_phrase_set]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
+def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeResponse:
     """Enhances speech recognition accuracy using an inline phrase set.
     The inline custom phrase set helps the recognizer produce more accurate transcriptions for specific terms.
     Phrases are given a boost to increase their chances of being recognized correctly.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/fair.wav"
 
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
@@ -32,8 +35,7 @@ def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
 
     # Instantiates a client
     client = SpeechClient()
-    # Could be any another absolute|relative local path to the audio file
-    audio_file = "resources/fair.wav"
+
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -76,4 +78,6 @@ def adaptation_v2_inline_phrase_set() -> cloud_speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    recognition_response = adaptation_v2_inline_phrase_set()
+    # Could be any another absolute|relative local path to the audio file
+    audio_path = "resources/fair.wav"
+    adaptation_v2_inline_phrase_set(audio_path)

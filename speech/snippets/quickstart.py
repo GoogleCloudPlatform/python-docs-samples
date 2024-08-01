@@ -23,14 +23,12 @@ from google.cloud import speech
 # [END speech_python_migration_imports]
 
 
-def run_quickstart() -> speech.RecognizeResponse:
+def run_quickstart(audio_uri: str) -> speech.RecognizeResponse:
     # Instantiates a client
     # [START speech_python_migration_client]
     client = speech.SpeechClient()
     # [END speech_python_migration_client]
 
-    # # Replace with the URI of your audio file in Google Cloud Storage
-    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
     audio = speech.RecognitionAudio(uri=audio_uri)
 
     config = speech.RecognitionConfig(
@@ -50,4 +48,6 @@ def run_quickstart() -> speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    run_quickstart()
+    # Replace with the URI of your audio file in Google Cloud Storage
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+    run_quickstart(audio_uri)

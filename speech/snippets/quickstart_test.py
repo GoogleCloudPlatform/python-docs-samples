@@ -22,7 +22,8 @@ import quickstart
 
 @Retry()
 def test_quickstart(capsys: pytest.CaptureFixture) -> None:
-    result = quickstart.run_quickstart()
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+    result = quickstart.run_quickstart(audio_uri)
     out, _ = capsys.readouterr()
     assert "Transcript: how old is the Brooklyn Bridge" in out
     assert result is not None

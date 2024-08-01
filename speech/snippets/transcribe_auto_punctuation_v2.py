@@ -12,24 +12,26 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
+# [START speech_transcribe_auto_punctuation_v2]
 import os
 
-# [START speech_transcribe_auto_punctuation_v2]
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def transcribe_auto_punctuation_v2() -> cloud_speech.RecognizeResponse:
+def transcribe_auto_punctuation_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file with automatically detect and insert
     punctuation in transcription results.
+
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/commercial_mono.wav"
     """
     # Instantiates a client
     client = SpeechClient()
-    # Could be any another absolute|relative local path to the audio file
-    audio_file = "resources/commercial_mono.wav"
+
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -63,4 +65,6 @@ def transcribe_auto_punctuation_v2() -> cloud_speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    transcribe_auto_punctuation_v2()
+    # Could be any another absolute|relative local path to the audio file
+    audio_path = "resources/commercial_mono.wav"
+    transcribe_auto_punctuation_v2(audio_path)

@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
 # [START speech_transcribe_with_model_adaptation]
+import os
 
 from google.cloud import speech_v1p1beta1 as speech
 
@@ -22,6 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def transcribe_with_model_adaptation(
+    audio_uri: str,
     custom_class_id: str,
     phrase_set_id: str,
 ) -> str:
@@ -29,17 +30,16 @@ def transcribe_with_model_adaptation(
     items that are likely to occur in your input data.
 
     Args:
-        custom_class_id: The unique ID of the custom class to create
-        phrase_set_id: The unique ID of the PhraseSet to create.
+        audio_uri (str): The Cloud Storage URI of the input audio. e.g. gs://[BUCKET]/[FILE]
+        custom_class_id (str): The unique ID of the custom class to create
+        phrase_set_id (str): The unique ID of the PhraseSet to create.
 
     Returns:
         The transcript of the input audio.
     """
     # Specifies the location where the Speech API will be accessed.
     location = "global"
-    # The name of the audio file to transcribe
-    # audio_uri - URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
-    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
+
     # Audio object
     audio = speech.RecognitionAudio(uri=audio_uri)
 
@@ -108,7 +108,9 @@ def transcribe_with_model_adaptation(
 
 
 if __name__ == "__main__":
+    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
     transcript = recognition_response = transcribe_with_model_adaptation(
+        audio_uri=audio_uri,
         custom_class_id="your-custom-class-id",
         phrase_set_id="your-phrase-set-id",
     )

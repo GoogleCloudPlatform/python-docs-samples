@@ -12,17 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 from google.api_core.retry import Retry
 
 import adaptation_v2_inline_custom_class
 
+_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+
 
 @Retry()
 def test_adaptation_v2_inline_custom_class() -> None:
 
-    response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class()
+    response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class(
+        os.path.join(_RESOURCES, "fair.wav")
+    )
     assert re.search(
         r"the word",
         response.results[0].alternatives[0].transcript,
