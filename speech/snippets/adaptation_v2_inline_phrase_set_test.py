@@ -12,12 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
-from google.api_core.retry import Retry
-
 import adaptation_v2_inline_phrase_set
+
+from google.api_core.retry import Retry
 
 
 @Retry()
