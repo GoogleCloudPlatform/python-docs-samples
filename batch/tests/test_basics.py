@@ -260,15 +260,16 @@ def test_check_notification_job(job_name):
 
 @flaky(max_runs=3, min_passes=1)
 def test_check_nfs_job(job_name):
-    mount_path = "/mnt/disks"
+    mount_path = "/mnt/nfs"
     nfc_ip_address = "10.180.103.74"
     nfs_path = "/vol1"
     job = create_job_with_network_file_system(
-        PROJECT, REGION, job_name, mount_path, nfc_ip_address, nfs_path
+        PROJECT, "us-central1", job_name, mount_path, nfc_ip_address, nfs_path
     )
     _test_body(
         job,
         additional_test=lambda: _check_nfs_mounting(
             job, mount_path, nfc_ip_address, nfs_path
         ),
+        region="us-central1",
     )

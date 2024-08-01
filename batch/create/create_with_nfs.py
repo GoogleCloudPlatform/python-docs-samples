@@ -23,7 +23,7 @@ def create_job_with_network_file_system(
     region: str,
     job_name: str,
     mount_path: str,
-    nfc_ip_address: str,
+    nfs_ip_address: str,
     nfs_path: str,
 ) -> batch_v1.Job:
     """
@@ -55,8 +55,7 @@ def create_job_with_network_file_system(
 
     # Define a volume that uses NFS
     volume = batch_v1.Volume()
-    volume.nfs.server = nfc_ip_address
-    volume.nfs.remote_path = nfs_path
+    volume.nfs = batch_v1.NFS(server=nfs_ip_address, remote_path=nfs_path)
     volume.mount_path = mount_path
 
     # Create a task specification and assign the runnable and volume to it
@@ -75,7 +74,7 @@ def create_job_with_network_file_system(
 
     # Create a task group and assign the task specification to it
     group = batch_v1.TaskGroup()
-    group.task_count = 3
+    group.task_count = 1
     group.task_spec = task
 
     # Policies are used to define on what kind of virtual machines the tasks will run on.
