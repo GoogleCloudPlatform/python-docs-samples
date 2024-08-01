@@ -15,9 +15,9 @@
 import os
 from uuid import uuid4
 
-import create_recognizer
-
 from google.api_core.retry import Retry
+
+import create_recognizer
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
