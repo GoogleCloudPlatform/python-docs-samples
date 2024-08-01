@@ -126,6 +126,21 @@ def test_import_documents_bigtable():
     assert "operations/import-documents" in operation_name
 
 
+def test_import_documents_alloy_db():
+    operation_name = import_documents_sample.import_documents_alloy_db_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        alloy_db_project_id=project_id,
+        alloy_db_location_id="us-central1",
+        alloy_db_cluster_id="vais-tests",
+        alloy_db_database_id="postgres",
+        alloy_db_table_id="public.vais",
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
 @pytest.mark.skip(reason="Permissions")
 def test_import_documents_healthcare_fhir_sample():
     location = "us"

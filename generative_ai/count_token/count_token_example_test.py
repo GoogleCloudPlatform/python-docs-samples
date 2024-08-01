@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,16 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.api_core.retry import Retry
 
-import pytest
-
-import multi_region
+import count_token_example
 
 
-@Retry()
-def test_multi_region(capsys: pytest.CaptureFixture) -> None:
-    result = multi_region.sync_recognize_with_multi_region_gcs()
-    out, _ = capsys.readouterr()
-    assert "Transcript: how old is the Brooklyn Bridge" in out
-    assert result is not None
+def test_count_token() -> None:
+    assert count_token_example.count_token_locally()
+    assert count_token_example.count_token_service()
