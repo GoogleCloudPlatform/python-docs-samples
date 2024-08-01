@@ -23,7 +23,9 @@ from google.cloud.speech_v2.types import cloud_speech
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def change_speech_v2_location(audio_file: str, location: str) -> cloud_speech.RecognizeResponse:
+def change_speech_v2_location(
+    audio_file: str, location: str
+) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file in a specific region. It allows for specifying the location
         to potentially reduce latency and meet data residency requirements.
 

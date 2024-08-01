@@ -41,7 +41,6 @@ def delete_custom_class(name: str) -> None:
 
 @Retry()
 def test_adaptation_v2_custom_class_reference() -> None:
-
     phrase_set_id = "phrase-set-" + str(uuid4())
     custom_class_id = "custom-class-" + str(uuid4())
     response = (

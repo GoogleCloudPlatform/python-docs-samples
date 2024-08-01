@@ -35,7 +35,6 @@ def delete_phrase_set(name: str) -> None:
 
 @backoff.on_exception(backoff.expo, Exception, max_time=120)
 def test_adaptation_v2_phrase_set_reference() -> None:
-
     phrase_set_id = "phrase-set-" + str(uuid4())
     response = adaptation_v2_phrase_set_reference.adaptation_v2_phrase_set_reference(
         phrase_set_id

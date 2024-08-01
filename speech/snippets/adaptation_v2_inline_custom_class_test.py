@@ -24,7 +24,6 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_adaptation_v2_inline_custom_class() -> None:
-
     response = adaptation_v2_inline_custom_class.adaptation_v2_inline_custom_class(
         os.path.join(_RESOURCES, "fair.wav")
     )

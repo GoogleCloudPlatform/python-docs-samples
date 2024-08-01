@@ -21,7 +21,9 @@ from google.cloud.speech_v2.types import cloud_speech
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def adaptation_v2_inline_custom_class(audio_file: str) -> cloud_speech.RecognizeResponse:
+def adaptation_v2_inline_custom_class(
+    audio_file: str,
+) -> cloud_speech.RecognizeResponse:
     """Transcribe audio file using inline custom class.
     The inline custom class helps the recognizer produce more accurate transcriptions for specific terms.
 
