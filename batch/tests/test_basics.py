@@ -14,6 +14,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
+import os
 import time
 from typing import Tuple
 import uuid
@@ -102,9 +103,7 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=
         if additional_test:
             additional_test()
     finally:
-        # Temporary for debug
-        # delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
-        pass
+        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
     for job in list_jobs(PROJECT, region):
         if job.uid == test_job.uid:
@@ -265,8 +264,9 @@ def test_check_nfs_job(job_name):
     mount_path = "/mnt/nfs"
     nfc_ip_address = "10.180.103.74"
     nfs_path = "/vol1"
+    project_with_nfs_filestore = os.getenv("GOOGLE_CLOUD_PROJECT")
     job = create_job_with_network_file_system(
-        PROJECT, "us-central1", job_name, mount_path, nfc_ip_address, nfs_path
+        project_with_nfs_filestore, "us-central1", job_name, mount_path, nfc_ip_address, nfs_path
     )
     _test_body(
         job,
