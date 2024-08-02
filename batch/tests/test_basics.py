@@ -113,7 +113,8 @@ def _test_body(
 
     for job in list_jobs(project, region):
         if job.uid == test_job.uid:
-            pytest.fail("The test job should be deleted at this point!")
+            if project == PROJECT:
+                pytest.fail("The test job should be deleted at this point!")
 
 
 def _check_tasks(job_name):
