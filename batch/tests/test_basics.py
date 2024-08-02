@@ -102,7 +102,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        # Temporary for debug
+        # delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        pass
 
     for job in list_jobs(PROJECT, region):
         if job.uid == test_job.uid:
