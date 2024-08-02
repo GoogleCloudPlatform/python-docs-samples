@@ -270,7 +270,7 @@ def test_check_nfs_job(job_name):
     mount_path = "/mnt/nfs"
     nfc_ip_address = "10.180.103.74"
     nfs_path = "/vol1"
-    project_with_nfs_filestore = os.getenv("GOOGLE_CLOUD_PROJECT")
+    project_with_nfs_filestore = "python-docs-samples-tests"
     job = create_job_with_network_file_system(
         project_with_nfs_filestore,
         "us-central1",
