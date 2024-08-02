@@ -81,20 +81,25 @@ def disk_name():
     return f"test-disk-{uuid.uuid4().hex[:10]}"
 
 
-def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
+def _test_body(
+    test_job: batch_v1.Job,
+    additional_test: Callable = None,
+    region=REGION,
+    project=PROJECT,
+):
     start_time = time.time()
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(
-                PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]
+                project, region, test_job.name.rsplit("/", maxsplit=1)[1]
             )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 
-        for job in list_jobs(PROJECT, region):
+        for job in list_jobs(project, region):
             if test_job.uid == job.uid:
                 break
         else:
@@ -103,9 +108,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(project, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
-    for job in list_jobs(PROJECT, region):
+    for job in list_jobs(project, region):
         if job.uid == test_job.uid:
             pytest.fail("The test job should be deleted at this point!")
 
@@ -266,7 +271,12 @@ def test_check_nfs_job(job_name):
     nfs_path = "/vol1"
     project_with_nfs_filestore = os.getenv("GOOGLE_CLOUD_PROJECT")
     job = create_job_with_network_file_system(
-        project_with_nfs_filestore, "us-central1", job_name, mount_path, nfc_ip_address, nfs_path
+        project_with_nfs_filestore,
+        "us-central1",
+        job_name,
+        mount_path,
+        nfc_ip_address,
+        nfs_path,
     )
     _test_body(
         job,
@@ -274,4 +284,5 @@ def test_check_nfs_job(job_name):
             job, mount_path, nfc_ip_address, nfs_path
         ),
         region="us-central1",
+        project=project_with_nfs_filestore,
     )
