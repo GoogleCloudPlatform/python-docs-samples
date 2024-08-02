@@ -28,7 +28,7 @@ from google.cloud import secretmanager
 def create_secret_with_labels(
     project_id: str,
     secret_id: str,
-    labels: dict[str, str],
+    labels: typing.Dict[str, str],
     ttl: typing.Optional[str] = None,
 ) -> secretmanager.Secret:
     """

@@ -16,13 +16,14 @@
 # [START secretmanager_create_update_secret_label]
 
 import argparse
+from typing import Dict
 
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
 
 def create_update_secret_label(
-    project_id: str, secret_id: str, new_labels: dict[str, str]
+    project_id: str, secret_id: str, new_labels: Dict[str, str]
 ) -> secretmanager.UpdateSecretRequest:
     """
     Create or update a label on an existing secret.
