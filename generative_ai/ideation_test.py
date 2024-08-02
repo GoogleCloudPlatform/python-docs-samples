@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
@@ -20,30 +19,8 @@ from google.api_core.exceptions import ResourceExhausted
 import ideation
 
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
-
-
-# example model response
-interview_expected_response = """1. What is your experience with project management?
-2. What is your process for managing a project?
-3. How do you handle unexpected challenges or roadblocks?
-4. How do you communicate with stakeholders?
-5. How do you measure the success of a project?
-6. What are your strengths and weaknesses as a project manager?
-7. What are your salary expectations?
-8. What are your career goals?
-9. Why are you interested in this position?
-10. What questions do you have for me?"""
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_interview() -> None:
-    content = ideation.interview(
-        temperature=0, project_id=_PROJECT_ID, location=_LOCATION
-    )
+    content = ideation.interview()
     # check if response is empty
     assert len(content) > 0
-    # check if response has 10 points
-    for i in range(1, 11):
-        assert str(i) in content

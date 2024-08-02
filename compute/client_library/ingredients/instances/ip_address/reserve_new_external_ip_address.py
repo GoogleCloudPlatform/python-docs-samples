@@ -33,7 +33,7 @@ def reserve_new_external_ip_address(
     Args:
     project_id (str): Your Google Cloud project ID.
     address_name (str): The name for the new IP address.
-    is_v6 (bool): 'IPV4' or 'IPV6' depending on the IP version. IPV6 if True. Option only for global regions.
+    is_v6 (bool): 'IPV4' or 'IPV6' depending on the IP version. IPV6 if True.
     is_premium (bool): 'STANDARD' or 'PREMIUM' network tier. Standard option available only in regional ip.
     region (Optional[str]): The region to reserve the IP address in, if regional. Must be None if global.
 

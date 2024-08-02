@@ -11,9 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+MODEL_ID = "gemini-1.5-flash-001"
 
 
-def generate_content(PROJECT_ID: str, MODEL_ID: str) -> object:
+def generate_content() -> object:
     # [START generativeaionvertexai_stream_multimodality_basic]
     import vertexai
 

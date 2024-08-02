@@ -28,7 +28,7 @@ def run_quickstart(project_id: str) -> bool:
     import time
 
     client = monitoring_v3.MetricServiceClient()
-    # project = 'my-project'  # TODO: Update to your project ID.
+    # project_id = 'my-project'  # TODO: Update to your project ID.
     project_name = f"projects/{project_id}"
 
     series = monitoring_v3.TimeSeries()

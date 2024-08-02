@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from google.cloud import aiplatform
 import pytest
 from vertexai.preview.language_models import TextGenerationModel
 
 import tuning
-
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def teardown_model(tuned_model: TextGenerationModel) -> None:
@@ -39,9 +35,7 @@ def teardown_model(tuned_model: TextGenerationModel) -> None:
 @pytest.mark.skip("Blocked on b/277959219")
 def test_tuning() -> None:
     """Takes approx. 20 minutes."""
-    tuned_model = tuning.tuning(
-        project_id=_PROJECT_ID,
-    )
+    tuned_model = tuning.tuning()
     try:
         assert tuned_model
     finally:

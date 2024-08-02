@@ -15,16 +15,26 @@ from __future__ import annotations
 
 from collections.abc import Callable
 import time
+from typing import Tuple
 import uuid
 
 from flaky import flaky
 
 import google.auth
-from google.cloud import batch_v1
+from google.cloud import batch_v1, resourcemanager_v3
 import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
+from ..create.create_with_custom_status_events import create_job_with_status_events
+from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_persistent_disk import create_with_pd_job
+from ..create.create_with_pubsub_notifications import (
+    create_with_pubsub_notification_job,
+)
 from ..create.create_with_script_no_mounting import create_script_job
+from ..create.create_with_secret_manager import create_with_secret_manager
+from ..create.create_with_service_account import create_with_custom_service_account_job
+from ..create.create_with_ssd import create_local_ssd_job
 
 from ..delete.delete_job import delete_job
 from ..get.get_job import get_job
@@ -34,7 +44,14 @@ from ..list.list_tasks import list_tasks
 from ..logs.read_job_logs import print_job_logs
 
 PROJECT = google.auth.default()[1]
-REGION = "europe-north1"
+REGION = "europe-central2"
+ZONE = "europe-central2-b"
+SECRET_NAME = "PERMANENT_BATCH_TESTING"
+PROJECT_NUMBER = (
+    resourcemanager_v3.ProjectsClient()
+    .get_project(name=f"projects/{PROJECT}")
+    .name.split("/")[1]
+)
 
 TIMEOUT = 600  # 10 minutes
 
@@ -52,20 +69,30 @@ def job_name():
     return f"test-job-{uuid.uuid4().hex[:10]}"
 
 
-def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
+@pytest.fixture()
+def service_account() -> str:
+    return f"{PROJECT_NUMBER}-compute@developer.gserviceaccount.com"
+
+
+@pytest.fixture
+def disk_name():
+    return f"test-disk-{uuid.uuid4().hex[:10]}"
+
+
+def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
     start_time = time.time()
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(
-                PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]
+                PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]
             )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 
-        for job in list_jobs(PROJECT, REGION):
+        for job in list_jobs(PROJECT, region):
             if test_job.uid == job.uid:
                 break
         else:
@@ -74,9 +101,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None):
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, REGION, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
-    for job in list_jobs(PROJECT, REGION):
+    for job in list_jobs(PROJECT, region):
         if job.uid == test_job.uid:
             pytest.fail("The test job should be deleted at this point!")
 
@@ -87,6 +114,12 @@ def _check_tasks(job_name):
     for i in range(4):
         assert get_task(PROJECT, REGION, job_name, "group0", i) is not None
     print("Tasks tested")
+
+
+def _check_policy(job: batch_v1.Job, job_name: str, disk_names: Tuple[str]):
+    assert job_name in job.name
+    assert job.allocation_policy.instances[0].policy.disks[0].device_name in disk_names
+    assert job.allocation_policy.instances[0].policy.disks[1].device_name in disk_names
 
 
 def _check_logs(job, capsys):
@@ -100,6 +133,46 @@ def _check_logs(job, capsys):
     assert all("Hello world!" in log_msg for log_msg in output)
 
 
+def _check_service_account(job: batch_v1.Job, service_account_email: str):
+    assert job.allocation_policy.service_account.email == service_account_email
+
+
+def _check_secret_set(job: batch_v1.Job, secret_name: str):
+    assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
+
+
+def _check_notification(job, test_topic):
+    notification_found = sum(
+        1
+        for notif in job.notifications
+        if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+        or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED
+    )
+    assert (
+        job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    )
+    assert notification_found == len(job.notifications)
+    assert len(job.notifications) == 2
+
+
+def _check_custom_events(job: batch_v1.Job):
+    display_names = ["Script 1", "Barrier 1", "Script 2"]
+    custom_event_found = False
+    barrier_name_found = False
+
+    for runnable in job.task_groups[0].task_spec.runnables:
+        if runnable.display_name in display_names:
+            display_names.remove(runnable.display_name)
+        if runnable.barrier.name == "hello-barrier":
+            barrier_name_found = True
+        if '{"batch/custom/event": "EVENT_DESCRIPTION"}' in runnable.script.text:
+            custom_event_found = True
+
+    assert not display_names
+    assert custom_event_found
+    assert barrier_name_found
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -110,3 +183,65 @@ def test_script_job(job_name, capsys):
 def test_container_job(job_name):
     job = create_container_job(PROJECT, REGION, job_name)
     _test_body(job, additional_test=lambda: _check_tasks(job_name))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_gpu_job(job_name):
+    job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
+    _test_body(job, additional_test=lambda: _check_tasks)
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_service_account_job(job_name, service_account):
+    job = create_with_custom_service_account_job(
+        PROJECT, REGION, job_name, service_account
+    )
+    _test_body(
+        job, additional_test=lambda: _check_service_account(job, service_account)
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_secret_manager_job(job_name, service_account):
+    secrets = {
+        SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
+    }
+    job = create_with_secret_manager(
+        PROJECT, REGION, job_name, secrets, service_account
+    )
+    _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[str]"):
+    job = create_local_ssd_job(PROJECT, REGION, job_name, disk_name)
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_pd_job(job_name, disk_name):
+    region = "europe-north1"
+    zone = "europe-north1-c"
+    existing_disk_name = "permanent-batch-testing"
+    job = create_with_pd_job(
+        PROJECT, region, job_name, disk_name, zone, existing_disk_name
+    )
+    disk_names = (disk_name, existing_disk_name)
+    _test_body(
+        job,
+        additional_test=lambda: _check_policy(job, job_name, disk_names),
+        region=region,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_custom_events(job_name):
+    job = create_job_with_status_events(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_custom_events(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_notification_job(job_name):
+    test_topic = "test_topic"
+    job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
+    _test_body(job, additional_test=lambda: _check_notification(job, test_topic))

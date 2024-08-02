@@ -46,11 +46,6 @@ def test_config_response_schema4() -> None:
     assert response
 
 
-def test_config_response_schema5() -> None:
-    response = response_schema.generate_content5(PROJECT_ID)
-    assert response
-
-
 def test_config_response_schema6() -> None:
     response = response_schema.generate_content6(PROJECT_ID)
     assert response

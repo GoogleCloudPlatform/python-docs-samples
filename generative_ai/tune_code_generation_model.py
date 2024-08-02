@@ -12,8 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_tune_code_generation_model]
+# [START generativeaionvertexai_sdk_tune_code_generation_model]
 from __future__ import annotations
+
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def tune_code_generation_model(project_id: str) -> None:
@@ -24,9 +28,9 @@ def tune_code_generation_model(project_id: str) -> None:
     from vertexai.language_models import CodeGenerationModel
 
     # Initialize Vertex AI
-    # TODO(developer): Update project_id
+    # TODO(developer): Update project
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-    vertexai.init(project=project_id, location="us-central1", credentials=credentials)
+    vertexai.init(project=PROJECT_ID, location="us-central1", credentials=credentials)
 
     model = CodeGenerationModel.from_pretrained("code-bison@002")
 
@@ -42,4 +46,4 @@ def tune_code_generation_model(project_id: str) -> None:
     return model
 
 
-# [END aiplatform_sdk_tune_code_generation_model]
+# [END generativeaionvertexai_sdk_tune_code_generation_model]

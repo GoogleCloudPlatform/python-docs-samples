@@ -12,22 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-def interview(
-    temperature: float,
-    project_id: str,
-    location: str,
-) -> str:
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+
+def interview() -> str:
     """Ideation example with a Large Language Model"""
-    # [START aiplatform_sdk_ideation]
+    # [START generativeaionvertexai_sdk_ideation]
     import vertexai
 
     from vertexai.language_models import TextGenerationModel
 
-    # TODO(developer): Update values for project_id, location & temperature
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update project
+    vertexai.init(project=PROJECT_ID, location="us-central1")
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.2,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
         "top_p": 0.8,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
         "top_k": 40,  # A top_k of 1 means the selected token is the most probable among all tokens.
@@ -43,4 +43,4 @@ def interview(
     return response.text
 
 
-# [END aiplatform_sdk_ideation]
+# [END generativeaionvertexai_sdk_ideation]

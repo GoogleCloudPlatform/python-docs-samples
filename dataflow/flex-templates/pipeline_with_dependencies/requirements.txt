@@ -34,7 +34,7 @@ cachetools==5.3.3
     # via
     #   apache-beam
     #   google-auth
-certifi==2024.2.2
+certifi==2024.7.4
     # via requests
 charset-normalizer==3.3.2
     # via requests
@@ -312,7 +312,7 @@ typing-extensions==4.10.0
     # via apache-beam
 tzlocal==5.2
     # via js2py
-urllib3==2.2.1
+urllib3==2.2.2
     # via requests
 wrapt==1.16.0
     # via deprecated

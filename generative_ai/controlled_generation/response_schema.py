@@ -39,7 +39,7 @@ def generate_content(project_id: str) -> str:
     model = GenerativeModel("gemini-1.5-pro-001")
 
     response = model.generate_content(
-        "List a few popular popular cookie recipes",
+        "List a few popular cookie recipes",
         generation_config=GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
         ),
@@ -115,11 +115,13 @@ def generate_content3(project_id: str) -> str:
                 "items": {
                     "type": "OBJECT",
                     "properties": {
+                        "Day": {"type": "STRING"},
                         "Forecast": {"type": "STRING"},
                         "Humidity": {"type": "STRING"},
                         "Temperature": {"type": "INTEGER"},
                         "Wind Speed": {"type": "INTEGER"},
                     },
+                    "required": ["Day", "Temperature", "Forecast"],
                 },
             }
         },
@@ -219,11 +221,11 @@ def generate_content4(project_id: str) -> str:
     return response.text
 
 
-def generate_content5(project_id: str) -> str:
-    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_5]
+def generate_content6(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_6]
     import vertexai
 
-    from vertexai.generative_models import GenerationConfig, GenerativeModel
+    from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
 
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
@@ -232,109 +234,30 @@ def generate_content5(project_id: str) -> str:
     response_schema = {
         "type": "ARRAY",
         "items": {
-            "type": "OBJECT",
-            "properties": {
-                "Announcement_Date": {"type": "STRING", "nullable": 1},
-                "Author(s)": {
-                    "type": "ARRAY",
-                    "nullable": 1,
-                    "items": {"type": "STRING"},
-                },
-                "Journal_Ref": {"type": "STRING", "nullable": 1},
-                "Keyword(s)": {
-                    "type": "ARRAY",
-                    "nullable": 1,
-                    "items": {"type": "STRING"},
-                },
-                "Subject(s)": {
-                    "type": "ARRAY",
-                    "nullable": 1,
-                    "items": {"type": "STRING"},
-                },
-                "Submission_Date": {"type": "STRING", "nullable": 1},
-                "Title": {"type": "STRING", "nullable": 1},
-                "Version": {
-                    "type": "STRING",
-                    "nullable": 1,
-                    "enum": [
-                        "Dungeons & Dragons",
-                        "Duel Masters",
-                        "G.I. Joe",
-                        "Jem and The Holograms",
-                        "Littlest Pet Shop",
-                        "Magic: The Gathering",
-                        "Monopoly",
-                        "My Little Pony",
-                        "Nerf",
-                    ],
+            "type": "ARRAY",
+            "items": {
+                "type": "OBJECT",
+                "properties": {
+                    "object": {"type": "STRING"},
                 },
             },
         },
     }
 
-    prompt = """
-        Hasbro stock slid 5.2% following a double-downgrade to “underperform” from “buy” at Bank of America.
-        BofA conducted a “deep dive” on trading card game. BofA said Hasbro has been overprinting cards and
-        destroying the long-term value of the business.
-    """
-
     model = GenerativeModel("gemini-1.5-pro-001")
 
     response = model.generate_content(
-        prompt,
-        generation_config=GenerationConfig(
-            response_mime_type="application/json", response_schema=response_schema
-        ),
-    )
-
-    print(response.text)
-    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_5]
-
-    return response.text
-
-
-def generate_content6(project_id: str) -> str:
-    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_6]
-    import vertexai
-
-    from vertexai.generative_models import GenerationConfig, GenerativeModel
-
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-    vertexai.init(project=project_id, location="us-central1")
-
-    response_schema = {
-        "type": "OBJECT",
-        "properties": {
-            "playlist": {
-                "type": "ARRAY",
-                "items": {
-                    "type": "OBJECT",
-                    "properties": {
-                        "artist": {"type": "STRING"},
-                        "song": {"type": "STRING"},
-                        "era": {"type": "STRING"},
-                        "released": {"type": "INTEGER"},
-                    },
-                },
-            },
-            "time_start": {"type": "STRING"},
-        },
-    }
-
-    prompt = """
-    We have two friends of the host who have requested a few songs for us to play. We're going to start this playlist at 8:15.
-    They'll want to hear Black Hole Sun by Soundgarden because their son was born in 1994. They will also want Loser by Beck
-    coming right after which is a funny choice considering it's also the same year as their son was born, but that's probably
-    just a coincidence. Add Take On Me from A-ha to the list since they were married when the song released in 1985. Their final
-    request is Sweet Child O' Mine by Guns N Roses, which I think came out in 1987 when they both finished university.
-    Thank you, this party should be great!
-    """
-
-    model = GenerativeModel("gemini-1.5-pro-001")
-
-    response = model.generate_content(
-        prompt,
+        [
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/image/office-desk.jpeg",
+                "image/jpeg",
+            ),
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/image/gardening-tools.jpeg",
+                "image/jpeg",
+            ),
+            "Generate a list of objects in the images.",
+        ],
         generation_config=GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
         ),

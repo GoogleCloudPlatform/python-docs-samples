@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_distillation]
+# [START generativeaionvertexai_sdk_distillation]
 from __future__ import annotations
 
 from typing import Optional
@@ -60,6 +60,6 @@ def distill_model(
     return distillation_job
 
 
-# [END aiplatform_sdk_distillation]
+# [END generativeaionvertexai_sdk_distillation]
 if __name__ == "__main__":
     distill_model()

@@ -94,7 +94,7 @@ def test_gemini_count_token_example() -> None:
 
 
 def test_gemini_safety_config_example() -> None:
-    text = gemini_safety_config_example.generate_text(PROJECT_ID)
+    text = gemini_safety_config_example.generate_text()
     assert len(text) > 0
 
 
