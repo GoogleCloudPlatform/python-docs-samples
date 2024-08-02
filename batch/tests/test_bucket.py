@@ -41,16 +41,16 @@ def job_name():
     return f"test-job-{uuid.uuid4().hex[:10]}"
 
 
-# @pytest.fixture()
-# def test_bucket():
-#     bucket_name = f"test-bucket-{uuid.uuid4().hex[:8]}"
-#     client = storage.Client()
-#     client.create_bucket(bucket_name, location="eu")
-#
-#     yield bucket_name
-#
-#     bucket = client.get_bucket(bucket_name)
-#     bucket.delete(force=True)
+@pytest.fixture()
+def test_bucket():
+    bucket_name = f"test-bucket-{uuid.uuid4().hex[:8]}"
+    client = storage.Client()
+    client.create_bucket(bucket_name, location="eu")
+
+    yield bucket_name
+
+    bucket = client.get_bucket(bucket_name)
+    bucket.delete(force=True)
 
 
 def _test_bucket_content(test_bucket):
@@ -66,7 +66,7 @@ def _test_bucket_content(test_bucket):
         assert content == file_content_template.format(task_number=i)
 
 
-# @flaky(max_runs=3, min_passes=1)
-# def test_bucket_job(job_name, test_bucket):
-#     job = create_script_job_with_bucket(PROJECT, REGION, job_name, test_bucket)
-#     _test_body(job, lambda: _test_bucket_content(test_bucket), REGION)
+@flaky(max_runs=3, min_passes=1)
+def test_bucket_job(job_name, test_bucket):
+    job = create_script_job_with_bucket(PROJECT, REGION, job_name, test_bucket)
+    _test_body(job, lambda: _test_bucket_content(test_bucket), REGION)
