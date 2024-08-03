@@ -107,8 +107,7 @@ def _test_body(
         if additional_test:
             additional_test()
     finally:
-        if project == PROJECT:
-            delete_job(project, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(project, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
     for job in list_jobs(project, region):
         if job.uid == test_job.uid:
