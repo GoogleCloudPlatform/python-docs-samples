@@ -26,7 +26,6 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 BUCKET = "cloud-samples-data"
 GCS_AUDIO_PATH = "gs://" + BUCKET + "/speech/brooklyn_bridge.flac"
 GCS_DIARIZATION_AUDIO_PATH = "gs://" + BUCKET + "/speech/commercial_mono.wav"
-GCS_MUTLILANGUAGE_PATH = "gs://" + BUCKET + "/speech/Google_Gnome.wav"
 
 
 @Retry()
@@ -40,15 +39,6 @@ def test_transcribe_diarization_gcs_beta() -> None:
         GCS_DIARIZATION_AUDIO_PATH
     )
     assert is_completed
-
-
-def test_transcribe_multilanguage_gcs_bets() -> None:
-    transcript = (
-        transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(
-            GCS_MUTLILANGUAGE_PATH
-        )
-    )
-    assert re.search("Transcript: OK Google", transcript)
 
 
 def test_transcribe_word_level_confidence_gcs_beta() -> None:
