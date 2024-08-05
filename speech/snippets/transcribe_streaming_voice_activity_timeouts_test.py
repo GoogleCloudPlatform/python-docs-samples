@@ -27,10 +27,7 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @flaky(max_runs=3, min_passes=1)
 def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     responses = transcribe_streaming_voice_activity_timeouts.transcribe_streaming_voice_activity_timeouts(
-        project_id,
         1,
         5,
         os.path.join(_RESOURCES, "audio_silence_padding.wav"),
@@ -44,10 +41,7 @@ def test_transcribe_silence_padding_timeouts(capsys: pytest.CaptureFixture) -> N
 def test_transcribe_streaming_voice_activity_timeouts(
     capsys: pytest.CaptureFixture,
 ) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     responses = transcribe_streaming_voice_activity_timeouts.transcribe_streaming_voice_activity_timeouts(
-        project_id,
         5,
         1,
         os.path.join(_RESOURCES, "audio_silence_padding.wav"),
