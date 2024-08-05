@@ -51,7 +51,6 @@ def create_job_with_network_file_system(
     # Create a runnable with a script that writes a message to a file
     runnable = batch_v1.Runnable()
     runnable.script = batch_v1.Runnable.Script()
-    mount_path = "/mnt/disks"
     runnable.script.text = f"echo Hello world from task ${{BATCH_TASK_INDEX}}. >> {mount_path}/output_task_${{BATCH_TASK_INDEX}}.txt"
 
     # Define a volume that uses NFS
