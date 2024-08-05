@@ -182,7 +182,7 @@ def _check_custom_events(job: batch_v1.Job):
 def _check_nfs_mounting(
     job: batch_v1.Job, mount_path: str, nfc_ip_address: str, nfs_path: str
 ):
-    expected_script_text = f"{mount_path}/output_task.txt"
+    expected_script_text = f"{mount_path}/output_task_${{BATCH_TASK_INDEX}}.txt"
     assert job.task_groups[0].task_spec.volumes[0].nfs.server == nfc_ip_address
     assert job.task_groups[0].task_spec.volumes[0].nfs.remote_path == nfs_path
     assert job.task_groups[0].task_spec.volumes[0].mount_path == mount_path
