@@ -19,7 +19,6 @@ from google.api_core.retry import Retry
 
 import transcribe_async_gcs
 import transcribe_diarization_gcs_beta
-import transcribe_multilanguage_gcs_beta
 import transcribe_word_level_confidence_gcs_beta
 
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
