@@ -12,28 +12,52 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START firestore_query_filter_or]
 from google.cloud import firestore
 from google.cloud.firestore_v1.base_query import FieldFilter, Or
 
 
-def query_or_composite_filter(project_id: str) -> None:
+def query_or_filter(project_id: str) -> None:
     # Instantiate the Firestore client
     client = firestore.Client(project=project_id)
-    col_ref = client.collection("users")
+    # [START firestore_query_filter_or]
+    from google.cloud.firestore_v1.base_query import FieldFilter, Or
 
-    filter_1 = FieldFilter("birthYear", "==", 1906)
-    filter_2 = FieldFilter("birthYear", "==", 1912)
-
-    # Create the union filter of the two filters (queries)
-    or_filter = Or(filters=[filter_1, filter_2])
-
+    col_ref = client.collection("cities")
     # Execute the query
-    docs = col_ref.where(filter=or_filter).stream()
+    query = col_ref.where(
+        Or(
+            FieldFilter("capital", "==", True),
+            FieldFilter("population", ">", 1000000)
+        )
+    )
+    docs = query.stream()
+    # [STOP firestore_query_filter_or]
 
     print("Documents found:")
     for doc in docs:
         print(f"ID: {doc.id}")
 
 
-# [END firestore_query_filter_or]
+def query_or_compound_filter(project_id: str) -> None:
+    # Instantiate the Firestore client
+    client = firestore.Client(project=project_id)
+    # [START firestore_query_filter_or_compound]
+    from google.cloud.firestore_v1.base_query import FieldFilter, Or, And
+
+    col_ref = client.collection("cities")
+    # Execute the query
+    query = col_ref.where(
+        And(
+            FieldFilter("state", "==", "CA"),
+            Or(
+                FieldFilter("capital", "==", True),
+                FieldFilter("population", ">", 1000000),
+            ),
+        )
+    )
+    docs = query.stream()
+    # [STOP firestore_query_filter_or_compound]
+
+    print("Documents found:")
+    for doc in docs:
+        print(f"ID: {doc.id}")
