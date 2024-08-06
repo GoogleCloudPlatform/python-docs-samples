@@ -926,6 +926,24 @@ def in_query_with_array(db):
     # [END firestore_query_filter_in_with_array]
 
 
+def not_in(db):
+    # [START firestore_query_filter_not_in]
+    cities_ref = db.collection("cities")
+
+    query = cities_ref.where(filter=FieldFilter("country", "not-in", ["USA", "Japan"]))
+    return query
+    # [END firestore_query_filter_not_in]
+
+
+def not_equal(db):
+    # [START firestore_query_filter_not_equal]
+    cities_ref = db.collection("cities")
+
+    query = cities_ref.where(filter=FieldFilter("capital", "!=", False))
+    return query
+    # [END firestore_query_filter_not_equal]
+
+
 def update_document_increment(db):
     # [START firestore_data_set_numeric_increment]
     washington_ref = db.collection("cities").document("DC")
@@ -990,3 +1008,44 @@ def regional_endpoint():
         print(r)
     # [END firestore_regional_endpoint]
     return cities_query
+
+
+def query_filter_compound_multi_ineq():
+    from google.cloud import firestore
+
+    db = firestore.Client()
+    # [START firestore_query_filter_compound_multi_ineq]
+    query = (
+        db.collection("cities")
+        .where("population", ">", 1_000_000)
+        .where("density", "<", 10_000)
+    )
+    # [END firestore_query_filter_compound_multi_ineq]
+    return query
+
+
+def query_indexing_considerations():
+    db = firestore.Client()
+    # [START firestore_query_indexing_considerations]
+    query = (
+        db.collection("employees")
+        .where("salary", ">", 100000)
+        .where("experience", ">", 0)
+        .order_by("salary").order_by("experience")
+    )
+    # [END firestore_query_indexing_considerations]
+    return query
+
+
+def query_order_fields():
+    # [START firestore_query_order_fields]
+    query = (
+        db.collection("employees")
+        .where("salary", ">", 100000)
+        .order_by("salary")
+    )
+    results = query.stream()
+    # Order results by `experience`
+    sorted_results = sorted(results, key=lambda x: x.get("experience"))
+    # [END firestore_query_order_fields]
+    return sorted_results
