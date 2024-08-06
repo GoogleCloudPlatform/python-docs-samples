@@ -28,16 +28,13 @@ def change_speech_v2_location(
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file in a specific region. It allows for specifying the location
         to potentially reduce latency and meet data residency requirements.
-
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/audio.wav"
         location (str): The region where the Speech API will be accessed.
-            Example: "europe-west3"
+            E.g., "europe-west3"
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -61,7 +58,7 @@ def change_speech_v2_location(
         content=audio_content,
     )
 
-    # Transcribes the audio into text. The response contains the transcription results
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -72,7 +69,4 @@ def change_speech_v2_location(
 # [END speech_change_speech_v2_location]
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/audio.wav"
-    location = "europe-west3"
-    change_speech_v2_location(audio_path, location)
+    change_speech_v2_location(audio_file="resources/audio.wav", location="us-central1")

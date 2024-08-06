@@ -25,12 +25,9 @@ def enable_cmek(
     kms_key_name: str,
 ) -> cloud_speech.Config:
     """Enable Customer-Managed Encryption Keys (CMEK) in a project and region.
-
     Args:
         kms_key_name (str): The full resource name of the KMS key to be used for encryption.
-            This should include the project ID, location, key ring, and key name.
-            Example: projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{KEY_RING}/cryptoKeys/{KEY_NAME}
-
+            E.g,: projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{KEY_RING}/cryptoKeys/{KEY_NAME}
     Returns:
         cloud_speech.Config: The response from the update configuration request,
         containing the updated configuration details.

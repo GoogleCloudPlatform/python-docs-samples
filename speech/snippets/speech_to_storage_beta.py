@@ -24,14 +24,11 @@ def export_transcript_to_storage_beta(
     output_bucket_name: str,
     output_filename: str,
 ) -> types.LongRunningRecognizeResponse:
-    """
-    Transcribes an audio file from Cloud Storage and exports the transcript to Cloud Storage bucket.
-
+    """Transcribes an audio file from Cloud Storage and exports the transcript to Cloud Storage bucket.
     Args:
         audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
         output_bucket_name (str): Name of the Cloud Storage bucket to store the output transcript.
         output_filename (str): Name of the output file to store the transcript.
-
     Returns:
         types.LongRunningRecognizeResponse: The response containing the transcription results.
     """
@@ -88,7 +85,8 @@ def export_transcript_to_storage_beta(
 
 
 if __name__ == "__main__":
-    AUDIO_URI = "gs://cloud-samples-data/speech/commercial_mono.wav"
-    OUTPUT_BUCKET_NAME = "your-bucket-unique-name"
-    OUTPUT_FILE_NAME = "output-transcript-filename"
-    export_transcript_to_storage_beta(AUDIO_URI, OUTPUT_BUCKET_NAME, OUTPUT_FILE_NAME)
+    export_transcript_to_storage_beta(
+        audio_uri="gs://cloud-samples-data/speech/commercial_mono.wav",
+        output_bucket_name="bucket-unique-name",
+        output_filename="output-transcript-filename",
+    )

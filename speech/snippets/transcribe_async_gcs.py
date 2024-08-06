@@ -22,15 +22,12 @@ from google.cloud import speech
 
 def transcribe_gcs(gcs_uri: str) -> str:
     """Asynchronously transcribes the audio file from Cloud Storage
-
     Args:
         gcs_uri: The Google Cloud Storage path to an audio file.
             E.g., "gs://storage-bucket/file.flac".
-
     Returns:
         The generated transcript from the audio file provided.
     """
-
     client = speech.SpeechClient()
 
     audio = speech.RecognitionAudio(uri=gcs_uri)
@@ -62,5 +59,4 @@ def transcribe_gcs(gcs_uri: str) -> str:
 # [END speech_transcribe_async_gcs]
 
 if __name__ == "__main__":
-    audio_uri = "gs://bucket_name/brooklyn_bridge.flac"
-    transcribe_gcs(audio_uri)
+    transcribe_gcs("gs://bucket_name/brooklyn_bridge.flac")

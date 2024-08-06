@@ -23,13 +23,9 @@ from google.cloud import speech
 
 
 def transcribe_file_with_auto_punctuation(audio_file: str) -> speech.RecognizeResponse:
-    """
-    Transcribe the given audio file with auto punctuation enabled.
-
+    """Transcribe the given audio file with auto punctuation enabled.
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/commercial_mono.wav"
-
     Returns:
         speech.RecognizeResponse: The response containing the transcription results.
     """
@@ -60,6 +56,4 @@ def transcribe_file_with_auto_punctuation(audio_file: str) -> speech.RecognizeRe
 
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/commercial_mono.wav"
-    transcribe_file_with_auto_punctuation(audio_path)
+    transcribe_file_with_auto_punctuation("resources/commercial_mono.wav")

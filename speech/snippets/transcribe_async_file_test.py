@@ -19,13 +19,13 @@ import pytest
 
 import transcribe_async_file
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
 def test_transcribe(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_async_file.transcribe_file(
-        os.path.join(_RESOURCES, "audio.raw")
+        os.path.join(RESOURCES, "audio.raw")
     )
     out, err = capsys.readouterr()
 

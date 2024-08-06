@@ -27,8 +27,6 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
     Phrases are given a boost to increase their chances of being recognized correctly.
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/fair.wav"
-
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
@@ -65,7 +63,7 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
         content=audio_content,
     )
 
-    # Transcribes the audio into text. The response contains the transcription results
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -78,6 +76,4 @@ def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeRe
 
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/fair.wav"
-    adaptation_v2_inline_phrase_set(audio_path)
+    adaptation_v2_inline_phrase_set("resources/fair.wav")

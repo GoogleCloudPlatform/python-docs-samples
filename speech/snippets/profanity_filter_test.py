@@ -23,8 +23,9 @@ import profanity_filter
 
 @Retry()
 def test_profanity_filter(capsys: pytest.CaptureFixture) -> None:
-    audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
-    result = profanity_filter.sync_recognize_with_profanity_filter_gcs(audio_uri)
+    result = profanity_filter.sync_recognize_with_profanity_filter_gcs(
+        "gs://cloud-samples-tests/speech/brooklyn.flac"
+    )
     out, err = capsys.readouterr()
     assert re.search(r"how old is the Brooklyn Bridge", out, re.DOTALL | re.I)
     assert result is not None

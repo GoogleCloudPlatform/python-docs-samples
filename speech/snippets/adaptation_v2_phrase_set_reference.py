@@ -22,24 +22,24 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def adaptation_v2_phrase_set_reference(
+    audio_file: str,
     phrase_set_id: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe audio files using a PhraseSet.
-
     Args:
+        audio_file (str): Path to the local audio file to be transcribed.
         phrase_set_id (str): The unique ID of the PhraseSet to use.
-
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-    # Could be any another absolute|relative local path to the audio file
-    audio_file = "resources/fair.wav"
+
+    # Instantiates a client
+    client = SpeechClient()
+
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
 
-    # Instantiates a client
-    client = SpeechClient()
     # Creating operation of creating the PhraseSet on the cloud.
     operation = client.create_phrase_set(
         parent=f"projects/{PROJECT_ID}/locations/global",
@@ -56,10 +56,8 @@ def adaptation_v2_phrase_set_reference(
             )
         ]
     )
-    # AutoDetectDecodingConfig is used to automatically detect the audio's encoding.
-    # This simplifies the configuration by not requiring explicit encoding settings.
-    # The model to use for the recognition. "short" is typically used for short utterances
-    #   like commands or prompts.
+
+    # Automatically detect audio encoding. Use "short" model for short utterances.
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
@@ -72,7 +70,7 @@ def adaptation_v2_phrase_set_reference(
         config=config,
         content=audio_content,
     )
-    # Transcribes the audio into text. The response contains the transcription results
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -85,5 +83,6 @@ def adaptation_v2_phrase_set_reference(
 
 
 if __name__ == "__main__":
-    phrase_set_unique_id = "phrase-set-123"
-    adaptation_v2_phrase_set_reference(phrase_set_unique_id)
+    adaptation_v2_phrase_set_reference(
+        audio_file="resources/fair.wav", phrase_set_id="phrase-set-unique_id"
+    )

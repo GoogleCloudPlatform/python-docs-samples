@@ -25,12 +25,10 @@ def quickstart_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file.
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/audio.wav"
     Returns:
         cloud_speech.RecognizeResponse: The response from the recognize request, containing
         the transcription results
     """
-
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
         audio_content = f.read()
@@ -63,6 +61,4 @@ def quickstart_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/audio.wav"
-    quickstart_v2(audio_path)
+    quickstart_v2("resources/audio.wav")

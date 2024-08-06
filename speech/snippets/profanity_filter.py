@@ -23,14 +23,11 @@ from google.cloud.speech import RecognizeResponse
 
 def sync_recognize_with_profanity_filter_gcs(audio_uri: str) -> RecognizeResponse:
     """Recognizes speech from an audio file in Cloud Storage and filters out profane language.
-
     Args:
         audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
-
     Returns:
         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
-
     # Define the audio source
     audio = {"uri": audio_uri}
 
@@ -49,12 +46,11 @@ def sync_recognize_with_profanity_filter_gcs(audio_uri: str) -> RecognizeRespons
         alternative = result.alternatives[0]
         print(f"Transcript: {alternative.transcript}")
 
-    # [END speech_recognize_with_profanity_filter_gcs]
-
     return response.results
 
 
+# [END speech_recognize_with_profanity_filter_gcs]
+
 if __name__ == "__main__":
-    # Replace with the URI of your audio file in Google Cloud Storage
     audio_uri = "gs://cloud-samples-tests/speech/brooklyn.flac"
     sync_recognize_with_profanity_filter_gcs(audio_uri)

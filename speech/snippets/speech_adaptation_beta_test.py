@@ -19,6 +19,5 @@ import speech_adaptation_beta
 
 @Retry()
 def test_adaptation_beta() -> None:
-    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
-    response = speech_adaptation_beta.sample_recognize(audio_uri)
+    response = speech_adaptation_beta.sample_recognize()
     assert "brooklyn" in response.results[0].alternatives[0].transcript.lower()

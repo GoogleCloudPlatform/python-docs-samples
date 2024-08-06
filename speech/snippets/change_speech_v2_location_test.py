@@ -20,13 +20,12 @@ from google.api_core.retry import Retry
 import change_speech_v2_location
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
-LOCATION = "europe-west3"
 
 
 @Retry()
 def test_change_speech_v2_location() -> None:
     response = change_speech_v2_location.change_speech_v2_location(
-        os.path.join(_RESOURCES, "audio.wav"), LOCATION
+        os.path.join(_RESOURCES, "audio.wav"), "us-central1"
     )
 
     assert re.search(

@@ -22,17 +22,12 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def create_recognizer(recognizer_id: str) -> cloud_speech.Recognizer:
-    """Method creates a recognizer with an unique ID and default recognition
-    configuration. The recognizer is created in the global location of the project specified by the
-    PROJECT_ID environment variable.
-
+    """Сreates a recognizer with an unique ID and default recognition configuration.
     Args:
         recognizer_id (str): The unique identifier for the recognizer to be created.
-
     Returns:
         cloud_speech.Recognizer: The created recognizer object with configuration.
     """
-
     # Instantiates a client
     client = SpeechClient()
 
@@ -57,5 +52,4 @@ def create_recognizer(recognizer_id: str) -> cloud_speech.Recognizer:
 
 
 if __name__ == "__main__":
-    custom_recognizer_id = "recognizer-custom-id"
-    create_recognizer(custom_recognizer_id)
+    create_recognizer("recognizer-custom-id")

@@ -22,12 +22,9 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def transcribe_auto_punctuation_v2(audio_file: str) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file with automatically detect and insert
-    punctuation in transcription results.
-
+    """Transcribe an audio file with automatically detect and insert punctuation in transcription results.
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/commercial_mono.wav"
     """
     # Instantiates a client
     client = SpeechClient()
@@ -65,6 +62,4 @@ def transcribe_auto_punctuation_v2(audio_file: str) -> cloud_speech.RecognizeRes
 
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/commercial_mono.wav"
-    transcribe_auto_punctuation_v2(audio_path)
+    transcribe_auto_punctuation_v2("resources/commercial_mono.wav")

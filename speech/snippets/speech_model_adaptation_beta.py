@@ -26,14 +26,11 @@ def transcribe_with_model_adaptation(
     custom_class_id: str,
     phrase_set_id: str,
 ) -> str:
-    """Create`PhraseSet` and `CustomClasses` to create custom lists of similar
-    items that are likely to occur in your input data.
-
+    """Create `PhraseSet` and `CustomClasses` for custom item lists in input data.
     Args:
         audio_uri (str): The Cloud Storage URI of the input audio. e.g. gs://[BUCKET]/[FILE]
         custom_class_id (str): The unique ID of the custom class to create
         phrase_set_id (str): The unique ID of the PhraseSet to create.
-
     Returns:
         The transcript of the input audio.
     """
@@ -108,9 +105,8 @@ def transcribe_with_model_adaptation(
 
 
 if __name__ == "__main__":
-    audio_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
-    transcript = recognition_response = transcribe_with_model_adaptation(
-        audio_uri=audio_uri,
+    transcribe_with_model_adaptation(
+        audio_uri="gs://cloud-samples-data/speech/brooklyn_bridge.raw",
         custom_class_id="your-custom-class-id",
         phrase_set_id="your-phrase-set-id",
     )

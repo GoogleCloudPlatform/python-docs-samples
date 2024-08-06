@@ -26,13 +26,10 @@ def adaptation_v2_inline_custom_class(
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe audio file using inline custom class.
     The inline custom class helps the recognizer produce more accurate transcriptions for specific terms.
-
     Args:
         audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/fair.wav"
-
     Returns:
-        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+        cloud_speech.RecognizeResponse: The response object which includes the transcription results.
     """
     # Instantiates a client
     client = SpeechClient()
@@ -41,9 +38,7 @@ def adaptation_v2_inline_custom_class(
     with open(audio_file, "rb") as f:
         audio_content = f.read()
 
-    # Define an inline custom class with specific items to enhance recognition
-    # The CustomClass is created with a specific value ("fare") that can be used
-    #   to improve recognition accuracy for specific terms.
+    # Define an inline custom class to enhance recognition accuracy with specific items like "fare" etc.
     custom_class_name = "your-class-name"
     custom_class = cloud_speech.CustomClass(
         name=custom_class_name,
@@ -76,7 +71,7 @@ def adaptation_v2_inline_custom_class(
         content=audio_content,
     )
 
-    # Transcribes the audio into text. The response contains the transcription results
+    # Transcribes the audio into text
     response = client.recognize(request=request)
 
     for result in response.results:
@@ -89,6 +84,4 @@ def adaptation_v2_inline_custom_class(
 
 
 if __name__ == "__main__":
-    # Could be any another absolute|relative local path to the audio file
-    audio_path = "resources/fair.wav"
-    adaptation_v2_inline_custom_class(audio_path)
+    adaptation_v2_inline_custom_class("resources/fair.wav")

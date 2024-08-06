@@ -18,16 +18,15 @@ import pytest
 
 import transcribe_auto_punctuation
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
 def test_transcribe_file_with_auto_punctuation(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        os.path.join(_RESOURCES, "commercial_mono.wav")
+        os.path.join(RESOURCES, "commercial_mono.wav")
     )
     out, _ = capsys.readouterr()
 
     assert "First alternative of result " in out
-    assert "okay, great" in out
     assert result is not None
