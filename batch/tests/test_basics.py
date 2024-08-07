@@ -24,13 +24,20 @@ import google.auth
 from google.cloud import batch_v1, resourcemanager_v3
 import pytest
 
+from ..create.create_with_allocation_policy_labels import (
+    create_job_with_custom_allocation_policy_labels,
+)
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_job_labels import create_job_with_custom_job_labels
 from ..create.create_with_nfs import create_job_with_network_file_system
 from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_pubsub_notifications import (
     create_with_pubsub_notification_job,
+)
+from ..create.create_with_runnables_labels import (
+    create_job_with_custom_runnables_labels,
 )
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
@@ -53,6 +60,8 @@ PROJECT_NUMBER = (
     .get_project(name=f"projects/{PROJECT}")
     .name.split("/")[1]
 )
+LABELS_KEYS = ["label_key1", "label_key2"]
+LABELS_VALUES = ["label_value1", "label_value2"]
 
 TIMEOUT = 600  # 10 minutes
 
@@ -189,6 +198,27 @@ def _check_nfs_mounting(
     assert expected_script_text in job.task_groups[0].task_spec.runnables[0].script.text
 
 
+def _check_job_labels(job: batch_v1.Job):
+    assert job.labels[LABELS_KEYS[0]] == LABELS_VALUES[0]
+    assert job.labels[LABELS_KEYS[1]] == LABELS_VALUES[1]
+
+
+def _check_job_allocation_policy_labels(job: batch_v1.Job):
+    assert job.allocation_policy.labels[LABELS_KEYS[0]] == LABELS_VALUES[0]
+    assert job.allocation_policy.labels[LABELS_KEYS[1]] == LABELS_VALUES[1]
+
+
+def _check_runnables_labels(job: batch_v1.Job):
+    assert (
+        job.task_groups[0].task_spec.runnables[0].labels[LABELS_KEYS[0]]
+        == LABELS_VALUES[0]
+    )
+    assert (
+        job.task_groups[0].task_spec.runnables[1].labels[LABELS_KEYS[1]]
+        == LABELS_VALUES[1]
+    )
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -285,3 +315,46 @@ def test_check_nfs_job(job_name):
         region="us-central1",
         project=project_with_nfs_filestore,
     )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels(job_name):
+    job = create_job_with_custom_job_labels(
+        PROJECT,
+        REGION,
+        job_name,
+        LABELS_KEYS[0],
+        LABELS_VALUES[0],
+        LABELS_KEYS[1],
+        LABELS_VALUES[1],
+    )
+    _test_body(job, additional_test=lambda: _check_job_labels(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels_runnables(job_name):
+    job = create_job_with_custom_runnables_labels(
+        PROJECT,
+        REGION,
+        job_name,
+        LABELS_KEYS[0],
+        LABELS_VALUES[0],
+        LABELS_KEYS[1],
+        LABELS_VALUES[1],
+    )
+    _test_body(job, additional_test=lambda: _check_runnables_labels(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels_allocation_policy(job_name):
+    job = create_job_with_custom_allocation_policy_labels(
+        PROJECT,
+        REGION,
+        job_name,
+        LABELS_KEYS[0],
+        LABELS_VALUES[0],
+        LABELS_KEYS[1],
+        LABELS_VALUES[1],
+    )
+    print(job.allocation_policy.labels)
+    _test_body(job, additional_test=lambda: _check_job_allocation_policy_labels(job))
