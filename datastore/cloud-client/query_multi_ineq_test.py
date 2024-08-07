@@ -72,7 +72,6 @@ def test_query_indexing_considerations(entities):
     results = list(query.stream())
     # should contain employees salary > 100_000 sorted by salary and experience
     assert len(results) == 3
-    # TODO: check ordering
     assert results[0].to_dict()["name"] == "Charlie"
     assert results[1].to_dict()["name"] == "Eve"
     assert results[2].to_dict()["name"] == "Joe"
