@@ -27,7 +27,7 @@ def query_or_filter(project_id: str) -> None:
     query = col_ref.where(
         Or(
             FieldFilter("capital", "==", True),
-            FieldFilter("population", ">", 1000000)
+            FieldFilter("population", ">", 1_000_000)
         )
     )
     docs = query.stream()

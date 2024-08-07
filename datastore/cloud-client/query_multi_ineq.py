@@ -18,7 +18,7 @@ Samples for multi-inequality queries
 See https://cloud.google.com/python/docs/reference/datastore/latest before running code.
 """
 
-def query_filter_compount_multi_ineq():
+def query_filter_compound_multi_ineq():
     from google.cloud import datastore
     client = datastore.Client()
     # [START datastore_query_filter_compound_multi_ineq]
@@ -26,13 +26,14 @@ def query_filter_compount_multi_ineq():
     query.add_filter(filter=PropertyFilter("priority", ">", 4))
     query.add_filter(filter=PropertyFilter("days", "<", 3))
     # [END datastore_query_filter_compound_multi_ineq]
+    return query
 
 def query_indexing_considerations():
     from google.cloud import datastore
     client = datastore.Client()
     # [START datastore_query_indexing_considerations]
     query = client.query(kind="employees")
-    query.add_filter("salary", ">", 100000)
+    query.add_filter("salary", ">", 100_000)
     query.add_filter("experience", ">", 0)
     query.order = ["-salary", "-experience"]
     # [END datastore_query_indexing_considerations]
@@ -44,7 +45,7 @@ def query_order_fields():
     client = datastore.Client()
     # [START datastore_query_order_fields]
     query = client.query(kind="employees")
-    query.add_filter("salary", ">", 100000)
+    query.add_filter("salary", ">", 100_000)
     query.order = ["salary"]
     results = query.fetch()
     # Order results by `experience`

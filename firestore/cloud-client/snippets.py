@@ -1029,7 +1029,7 @@ def query_indexing_considerations():
     # [START firestore_query_indexing_considerations]
     query = (
         db.collection("employees")
-        .where("salary", ">", 100000)
+        .where("salary", ">", 100_000)
         .where("experience", ">", 0)
         .order_by("salary").order_by("experience")
     )
@@ -1041,7 +1041,7 @@ def query_order_fields():
     # [START firestore_query_order_fields]
     query = (
         db.collection("employees")
-        .where("salary", ">", 100000)
+        .where("salary", ">", 100_000)
         .order_by("salary")
     )
     results = query.stream()
