@@ -89,6 +89,7 @@
 /video/live-stream/*                   @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /video/stitcher/*                      @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /translate                             @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/cloud-ml-translate-dev
+/routeoptimization/**/*                @GoogleCloudPlatform/geo-routeoptimization @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
 # BEGIN - pending clarification
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
