@@ -27,7 +27,7 @@ def authenticate_with_api_key(api_key_string: str) -> None:
         api_key_string: The API key to authenticate to the service.
     """
 
-    # Initialize the Language Service client and set the API key and the quota project id.
+    # Initialize the Language Service client and set the API key
     client = language_v1.LanguageServiceClient(
         client_options={"api_key": api_key_string}
     )
