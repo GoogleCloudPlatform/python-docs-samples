@@ -16,6 +16,8 @@
 
 """Examples of working with source and findings in Security Command Center."""
 from typing import Dict
+
+
 # [START securitycenter_list_all_findings_v2]
 def list_all_findings(organization_id, source_name, location_id) -> int:
     """
@@ -42,11 +44,11 @@ def list_all_findings(organization_id, source_name, location_id) -> int:
 
     finding_result_iterator = client.list_findings(request={"parent": all_sources})
     for count, finding_result in enumerate(finding_result_iterator):
-      print(
-          "{}: name: {} resource: {}".format(
-              count, finding_result.finding.name, finding_result.finding.resource_name
-          )
-      )
+        print(
+              "{}: name: {} resource: {}".format(
+                  count, finding_result.finding.name, finding_result.finding.resource_name
+              )
+        )
     return finding_result_iterator
 # [END securitycenter_list_all_findings_v2]
 
@@ -75,11 +77,11 @@ def list_filtered_findings(organization_id, source_name, location_id) -> int:
     # Iterate an print all finding names and the resource they are
     # in reference to.
     for count, finding_result in enumerate(finding_result_iterator):
-      print(
+        print(
           "{}: name: {} resource: {}".format(
               count, finding_result.finding.name, finding_result.finding.resource_name
           )
-      )
+        )
     return count
 # [END securitycenter_list_filtered_findings_v2]
 
@@ -107,7 +109,7 @@ def group_all_findings(organization_id, source_name, location_id) -> int:
         request={"parent": all_sources, "group_by": "category"}
     )
     for count, group_result in enumerate(group_result_iterator):
-      print((count + 1), group_result)
+        print((count + 1), group_result)
     return count
 # [END securitycenter_group_all_findings_v2]
 
@@ -139,7 +141,7 @@ def group_filtered_findings(organization_id, source_name, location_id) -> int:
         }
     )
     for count, group_result in enumerate(group_result_iterator):
-      print((count + 1), group_result)
+        print((count + 1), group_result)
     return count
 # [END securitycenter_group_filtered_findings_v2]
 
@@ -169,11 +171,11 @@ def list_findings_with_security_marks(organization_id, source_name, location_id)
     # Iterate an print all finding names and the resource they are
     # in reference to.
     for count, finding_result in enumerate(finding_result_iterator):
-      print(
+        print(
           "{}: name: {} resource: {}".format(
               count, finding_result.finding.name, finding_result.finding.resource_name
           )
-      )
+        )
     return count
 # [END securitycenter_list_findings_with_security_marks_v2]
 
@@ -201,7 +203,7 @@ def group_findings_by_state(organization_id, source_name, location_id) -> int:
         request={"parent": all_sources, "group_by": "state"}
     )
     for count, group_result in enumerate(group_result_iterator):
-      print((count + 1), group_result)
+        print((count + 1), group_result)
     return count
 # [END securitycenter_group_findings_by_state_v2]
 
@@ -421,13 +423,13 @@ def list_source(organization_id) -> int:
 
     # Call the API and print out each existing source.
     for count, source in enumerate(client.list_sources(request={"parent": parent})):
-      print(count, source)
+        print(count, source)
     return count
 # [END securitycenter_list_sources_v2]
 
 
 # [START securitycenter_get_source_iam_v2]
-def get_iam_policy(organization_id,source_name) -> Dict:
+def get_iam_policy(organization_id, source_name) -> Dict:
     """
     Gets the iam policy of the source.
     Args:

@@ -16,6 +16,7 @@
 """Demos for working with security marks."""
 from typing import Dict
 
+
 # [START securitycenter_add_security_marks_v2]
 def add_to_asset(organization_id, asset_name) -> Dict:
     """

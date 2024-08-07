@@ -45,6 +45,7 @@ def source_name(organization_id):
     )
     return source.name
 
+
 @pytest.fixture(scope="module")
 def finding_name(source_name):
     """Creates a new finding and returns it name."""
@@ -84,8 +85,7 @@ def finding_name(source_name):
     return finding.name
 
 
-
-def test_list_all_findings(organization_id,finding_name, source_name):
+def test_list_all_findings(organization_id, finding_name, source_name):
     finding_result_iterator = snippets_findings_v2.list_all_findings(organization_id, source_name.split("/")[-1], "global")
 
     names = []
@@ -108,6 +108,7 @@ def test_group_filtered_findings(organization_id):
     count = snippets_findings_v2.group_filtered_findings(organization_id, "-", "global")
     assert count > 0
 
+
 def test_list_findings_with_security_marks(organization_id):
     count = snippets_findings_v2.list_findings_with_security_marks(organization_id, "-", "global")
     assert count > 0
@@ -119,13 +120,13 @@ def test_group_findings_by_state(organization_id):
 
 
 def test_create_finding(organization_id, source_name):
-    created_finding = snippets_findings_v2.create_finding(organization_id,"global","samplefindingid",source_name,"MEDIUM_RISK_ONE")
+    created_finding = snippets_findings_v2.create_finding(organization_id, "global", "samplefindingid", source_name, "MEDIUM_RISK_ONE")
     assert created_finding.name.split("/")[-1] == "samplefindingid"
 
 
 def test_update_finding(source_name):
-    snippets_findings_v2.create_finding(organization_id,"global","samplefindingid2",source_name,"MEDIUM_RISK_ONE")
-    updated_finding = snippets_findings_v2.update_finding(source_name,"global")
+    snippets_findings_v2.create_finding(organization_id, "global", "samplefindingid2", source_name, "MEDIUM_RISK_ONE")
+    updated_finding = snippets_findings_v2.update_finding(source_name, "global")
     source_properties = updated_finding.source_properties
     keys = source_properties.keys()
     assert "s_value" in keys
@@ -167,7 +168,8 @@ def test_set_source_iam_policy(organization_id, source_name):
         )
     )
 
+
 def test_troubleshoot_iam_permissions(organization_id, source_name):
     permissions = ["securitycenter.findings.update"]
-    response = snippets_findings_v2.troubleshoot_iam_permissions(organization_id,source_name.split("/")[-1],permissions)
+    response = snippets_findings_v2.troubleshoot_iam_permissions(organization_id, source_name.split("/")[-1], permissions)
     assert permissions == response.permissions

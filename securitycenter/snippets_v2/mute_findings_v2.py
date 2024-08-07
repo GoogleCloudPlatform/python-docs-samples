@@ -74,7 +74,7 @@ def set_unmute_finding(finding_path: str) -> None:
 
 
 # [START securitycenter_bulk_mute_v2]
-def bulk_mute_findings(parent_path: str,location_id, mute_rule: str) -> None:
+def bulk_mute_findings(parent_path: str, location_id, mute_rule: str) -> None:
     """
       Kicks off a long-running operation (LRO) to bulk mute findings for a parent based on a filter.
       The parent can be either an organization, folder, or project. The findings
