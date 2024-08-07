@@ -15,12 +15,12 @@
 # Disable linting on `Any` type annotations (needed for OpenAI kwargs and attributes).
 # flake8: noqa ANN401
 
+# [START generativeaionvertexai_credentials_refresher_class]
 from typing import Any
 
 import google.auth
 import google.auth.transport.requests
 import openai
-
 
 class OpenAICredentialsRefresher:
     def __init__(self, **kwargs: Any) -> None:
@@ -40,10 +40,11 @@ class OpenAICredentialsRefresher:
 
             self.client.api_key = self.creds.token
         return getattr(self.client, name)
+# [END generativeaionvertexai_credentials_refresher_class]
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_credentials_refresher]
+    # [START generativeaionvertexai_credentials_refresher_usage]
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -59,6 +60,6 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     print(response)
-    # [END generativeaionvertexai_credentials_refresher]
+    # [END generativeaionvertexai_credentials_refresher_usage]
 
     return response

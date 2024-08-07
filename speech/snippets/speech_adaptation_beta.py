@@ -22,23 +22,20 @@
 #   description: Transcribe a short audio file with speech adaptation.
 #   usage: python3 samples/v1p1beta1/speech_adaptation_beta.py [--storage_uri "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"] [--phrase "Brooklyn Bridge"]
 
-# [START speech_adaptation_beta]
-from google.cloud import speech_v1p1beta1 as speech
+from google.cloud import speech_v1p1beta1
 
 
-def sample_recognize(storage_uri: str, phrase: str) -> speech.RecognizeResponse:
+def sample_recognize() -> speech_v1p1beta1.RecognizeResponse:
     """
     Transcribe a short audio file with speech adaptation.
-
-    Args:
-      storage_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
-      phrase Phrase "hints" help recognize the specified phrases from your audio.
     """
+    # [START speech_adaptation_beta]
+    from google.cloud import speech_v1p1beta1 as speech
 
     client = speech.SpeechClient()
 
-    # storage_uri = 'gs://cloud-samples-data/speech/brooklyn_bridge.mp3'
-    # phrase = 'Brooklyn Bridge'
+    storage_uri = "gs://cloud-samples-data/speech/brooklyn_bridge.mp3"
+    phrase = "Brooklyn Bridge"
     phrases = [phrase]
 
     # Hint Boost. This value increases the probability that a specific
@@ -60,13 +57,16 @@ def sample_recognize(storage_uri: str, phrase: str) -> speech.RecognizeResponse:
     # Encoding of audio data sent. This sample sets this explicitly.
     # This field is optional for FLAC and WAV audio formats
     encoding = speech.RecognitionConfig.AudioEncoding.MP3
+    config = speech.RecognitionConfig(
+        {
+            "speech_contexts": speech_contexts,
+            "sample_rate_hertz": sample_rate_hertz,
+            "language_code": language_code,
+            "encoding": encoding,
+        }
+    )
 
-    config = {
-        "speech_contexts": speech_contexts,
-        "sample_rate_hertz": sample_rate_hertz,
-        "language_code": language_code,
-        "encoding": encoding,
-    }
+    # Define the audio source
     audio = {"uri": storage_uri}
 
     response = client.recognize(config=config, audio=audio)
@@ -80,20 +80,5 @@ def sample_recognize(storage_uri: str, phrase: str) -> speech.RecognizeResponse:
     return response
 
 
-def main() -> None:
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--storage_uri",
-        type=str,
-        default="gs://cloud-samples-data/speech/brooklyn_bridge.mp3",
-    )
-    parser.add_argument("--phrase", type=str, default="Brooklyn Bridge")
-    args = parser.parse_args()
-
-    sample_recognize(args.storage_uri, args.phrase)
-
-
 if __name__ == "__main__":
-    main()
+    sample_recognize()

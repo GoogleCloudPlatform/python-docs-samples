@@ -14,8 +14,6 @@
 
 import os
 
-from vertexai.generative_models import Part
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -26,9 +24,10 @@ def generate_text() -> str:
     from vertexai.generative_models import (
         GenerativeModel,
         GenerationConfig,
-        SafetySetting,
         HarmCategory,
         HarmBlockThreshold,
+        Part,
+        SafetySetting
     )
 
     # TODO(developer): Update project

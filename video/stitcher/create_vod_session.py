@@ -18,7 +18,7 @@
 session in which to insert ads.
 Example usage:
     python create_vod_session.py --project_id <project-id> \
-        --location <location> --source_uri <uri> --ad_tag_uri <uri>
+        --location <location> --vod_config_id <vod-config-id>
 """
 
 # [START videostitcher_create_vod_session]
@@ -32,16 +32,15 @@ from google.cloud.video.stitcher_v1.services.video_stitcher_service import (
 
 
 def create_vod_session(
-    project_id: str, location: str, source_uri: str, ad_tag_uri: str
+    project_id: str, location: str, vod_config_id: str
 ) -> stitcher_v1.types.VodSession:
     """Creates a VOD session. VOD sessions are ephemeral resources that expire
     after a few hours.
     Args:
         project_id: The GCP project ID.
         location: The location in which to create the session.
-        source_uri: Uri of the media to stitch; this URI must reference either an MPEG-DASH
-                    manifest (.mpd) file or an M3U playlist manifest (.m3u8) file.
-        ad_tag_uri: Uri of the ad tag.
+        vod_config_id: The user-defined VOD config ID to use to create the
+                        session.
 
     Returns:
         The VOD session resource.
@@ -50,9 +49,12 @@ def create_vod_session(
     client = VideoStitcherServiceClient()
 
     parent = f"projects/{project_id}/locations/{location}"
+    vod_config_name = (
+        f"projects/{project_id}/locations/{location}/vodConfigs/{vod_config_id}"
+    )
 
     vod_session = stitcher_v1.types.VodSession(
-        source_uri=source_uri, ad_tag_uri=ad_tag_uri, ad_tracking="SERVER"
+        vod_config=vod_config_name, ad_tracking="SERVER"
     )
 
     response = client.create_vod_session(parent=parent, vod_session=vod_session)
@@ -71,19 +73,13 @@ if __name__ == "__main__":
         default="us-central1",
     )
     parser.add_argument(
-        "--source_uri",
-        help="The Uri of the media to stitch (.mpd or .m3u8 file) in double quotes.",
-        required=True,
-    )
-    parser.add_argument(
-        "--ad_tag_uri",
-        help="Uri of the ad tag in double quotes.",
+        "--vod_config_id",
+        help="The user-defined VOD config ID.",
         required=True,
     )
     args = parser.parse_args()
     create_vod_session(
         args.project_id,
         args.location,
-        args.source_uri,
-        args.ad_tag_uri,
+        args.vod_config_id,
     )

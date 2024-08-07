@@ -25,8 +25,13 @@ from google.cloud import batch_v1, resourcemanager_v3
 import pytest
 
 from ..create.create_with_container_no_mounting import create_container_job
+from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_nfs import create_job_with_network_file_system
 from ..create.create_with_persistent_disk import create_with_pd_job
+from ..create.create_with_pubsub_notifications import (
+    create_with_pubsub_notification_job,
+)
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
@@ -75,20 +80,25 @@ def disk_name():
     return f"test-disk-{uuid.uuid4().hex[:10]}"
 
 
-def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
+def _test_body(
+    test_job: batch_v1.Job,
+    additional_test: Callable = None,
+    region=REGION,
+    project=PROJECT,
+):
     start_time = time.time()
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(
-                PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]
+                project, region, test_job.name.rsplit("/", maxsplit=1)[1]
             )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 
-        for job in list_jobs(PROJECT, region):
+        for job in list_jobs(project, region):
             if test_job.uid == job.uid:
                 break
         else:
@@ -97,9 +107,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(project, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
-    for job in list_jobs(PROJECT, region):
+    for job in list_jobs(project, region):
         if job.uid == test_job.uid:
             pytest.fail("The test job should be deleted at this point!")
 
@@ -135,6 +145,48 @@ def _check_service_account(job: batch_v1.Job, service_account_email: str):
 
 def _check_secret_set(job: batch_v1.Job, secret_name: str):
     assert secret_name in job.task_groups[0].task_spec.environment.secret_variables
+
+
+def _check_notification(job, test_topic):
+    notification_found = sum(
+        1
+        for notif in job.notifications
+        if notif.message.new_task_state == batch_v1.TaskStatus.State.FAILED
+        or notif.message.new_job_state == batch_v1.JobStatus.State.SUCCEEDED
+    )
+    assert (
+        job.notifications[0].pubsub_topic == f"projects/{PROJECT}/topics/{test_topic}"
+    )
+    assert notification_found == len(job.notifications)
+    assert len(job.notifications) == 2
+
+
+def _check_custom_events(job: batch_v1.Job):
+    display_names = ["Script 1", "Barrier 1", "Script 2"]
+    custom_event_found = False
+    barrier_name_found = False
+
+    for runnable in job.task_groups[0].task_spec.runnables:
+        if runnable.display_name in display_names:
+            display_names.remove(runnable.display_name)
+        if runnable.barrier.name == "hello-barrier":
+            barrier_name_found = True
+        if '{"batch/custom/event": "EVENT_DESCRIPTION"}' in runnable.script.text:
+            custom_event_found = True
+
+    assert not display_names
+    assert custom_event_found
+    assert barrier_name_found
+
+
+def _check_nfs_mounting(
+    job: batch_v1.Job, mount_path: str, nfc_ip_address: str, nfs_path: str
+):
+    expected_script_text = f"{mount_path}/output_task_${{BATCH_TASK_INDEX}}.txt"
+    assert job.task_groups[0].task_spec.volumes[0].nfs.server == nfc_ip_address
+    assert job.task_groups[0].task_spec.volumes[0].nfs.remote_path == nfs_path
+    assert job.task_groups[0].task_spec.volumes[0].mount_path == mount_path
+    assert expected_script_text in job.task_groups[0].task_spec.runnables[0].script.text
 
 
 @flaky(max_runs=3, min_passes=1)
@@ -195,4 +247,41 @@ def test_pd_job(job_name, disk_name):
         job,
         additional_test=lambda: _check_policy(job, job_name, disk_names),
         region=region,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_custom_events(job_name):
+    job = create_job_with_status_events(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_custom_events(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_notification_job(job_name):
+    test_topic = "test_topic"
+    job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
+    _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_nfs_job(job_name):
+    mount_path = "/mnt/nfs"
+    nfc_ip_address = "10.180.103.74"
+    nfs_path = "/vol1"
+    project_with_nfs_filestore = "python-docs-samples-tests"
+    job = create_job_with_network_file_system(
+        project_with_nfs_filestore,
+        "us-central1",
+        job_name,
+        mount_path,
+        nfc_ip_address,
+        nfs_path,
+    )
+    _test_body(
+        job,
+        additional_test=lambda: _check_nfs_mounting(
+            job, mount_path, nfc_ip_address, nfs_path
+        ),
+        region="us-central1",
+        project=project_with_nfs_filestore,
     )

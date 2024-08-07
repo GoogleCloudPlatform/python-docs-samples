@@ -15,7 +15,7 @@
 
 def write_a_function(temperature: float = 0.5) -> object:
     """Example of using Codey for Code Chat Model to write a function."""
-    # [START aiplatform_sdk_code_chat]
+    # [START generativeaionvertexai_sdk_code_chat]
     from vertexai.language_models import CodeChatModel
 
     # TODO developer - override these parameters as needed:
@@ -31,7 +31,7 @@ def write_a_function(temperature: float = 0.5) -> object:
         "Please help write a function to calculate the min of two numbers", **parameters
     )
     print(f"Response from Model: {response.text}")
-    # [END aiplatform_sdk_code_chat]
+    # [END generativeaionvertexai_sdk_code_chat]
 
     return response
 
