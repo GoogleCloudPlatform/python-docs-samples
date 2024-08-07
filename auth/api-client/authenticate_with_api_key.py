@@ -21,7 +21,7 @@ def authenticate_with_api_key(api_key_string: str) -> None:
     """
     Authenticates with an API key for Google Language service.
 
-    TODO(Developer): Replace these variables before running the sample.
+    TODO(Developer): Replace this variable before running the sample.
 
     Args:
         api_key_string: The API key to authenticate to the service.
