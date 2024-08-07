@@ -17,20 +17,19 @@
 from google.cloud import language_v1
 
 
-def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> None:
+def authenticate_with_api_key(api_key_string: str) -> None:
     """
     Authenticates with an API key for Google Language service.
 
-    TODO(Developer): Replace these variables before running the sample.
+    TODO(Developer): Replace this variable before running the sample.
 
     Args:
-        quota_project_id: Google Cloud project id that should be used for quota and billing purposes.
         api_key_string: The API key to authenticate to the service.
     """
 
-    # Initialize the Language Service client and set the API key and the quota project id.
+    # Initialize the Language Service client and set the API key
     client = language_v1.LanguageServiceClient(
-        client_options={"api_key": api_key_string, "quota_project_id": quota_project_id}
+        client_options={"api_key": api_key_string}
     )
 
     text = "Hello, world!"

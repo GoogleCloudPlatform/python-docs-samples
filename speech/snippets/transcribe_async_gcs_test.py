@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 
 from google.api_core.retry import Retry
@@ -22,7 +21,6 @@ import transcribe_diarization_gcs_beta
 import transcribe_multilanguage_gcs_beta
 import transcribe_word_level_confidence_gcs_beta
 
-RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 BUCKET = "cloud-samples-data"
 GCS_AUDIO_PATH = "gs://" + BUCKET + "/speech/brooklyn_bridge.flac"
 GCS_DIARIZATION_AUDIO_PATH = "gs://" + BUCKET + "/speech/commercial_mono.wav"

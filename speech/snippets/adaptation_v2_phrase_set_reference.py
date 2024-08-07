@@ -12,44 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_adaptation_v2_phrase_set_reference]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def adaptation_v2_phrase_set_reference(
-    project_id: str,
-    phrase_set_id: str,
     audio_file: str,
+    phrase_set_id: str,
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe audio files using a PhraseSet.
-
     Args:
-        project_id: The GCP project ID.
-        phrase_set_id: The ID of the PhraseSet to use.
-        audio_file: The path to the audio file to transcribe.
-
+        audio_file (str): Path to the local audio file to be transcribed.
+        phrase_set_id (str): The unique ID of the PhraseSet to use.
     Returns:
-        The response from the recognize call.
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
+
     # Instantiates a client
     client = SpeechClient()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
-    # Create a persistent PhraseSet to reference in a recognition request
-    request = cloud_speech.CreatePhraseSetRequest(
-        parent=f"projects/{project_id}/locations/global",
+    # Creating operation of creating the PhraseSet on the cloud.
+    operation = client.create_phrase_set(
+        parent=f"projects/{PROJECT_ID}/locations/global",
         phrase_set_id=phrase_set_id,
         phrase_set=cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}]),
     )
-
-    operation = client.create_phrase_set(request=request)
     phrase_set = operation.result()
 
     # Add a reference of the PhraseSet into the recognition request
@@ -60,19 +56,20 @@ def adaptation_v2_phrase_set_reference(
             )
         ]
     )
+
+    # Automatically detect audio encoding. Use "short" model for short utterances.
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         adaptation=adaptation,
         language_codes=["en-US"],
         model="short",
     )
-
+    #  Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
-
     # Transcribes the audio into text
     response = client.recognize(request=request)
 
@@ -86,15 +83,6 @@ def adaptation_v2_phrase_set_reference(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("phrase_set_id", help="ID for the phrase set to create")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
     adaptation_v2_phrase_set_reference(
-        args.project_id,
-        args.phrase_set_id,
-        args.audio_file,
+        audio_file="resources/fair.wav", phrase_set_id="phrase-set-unique_id"
     )
