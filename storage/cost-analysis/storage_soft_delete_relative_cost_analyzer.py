@@ -31,7 +31,7 @@ Relative cost of each bucket = deleted_bytes / total_byte_seconds
 
 import argparse
 import json
-from typing import Dict, List
+from typing import Dict, List, Union
 import google.cloud.monitoring_v3 as monitoring_client
 
 
@@ -238,7 +238,7 @@ def soft_delete_relative_cost_analyzer(
     agg_days: int = 30,
     lookback_days: int = 360,
     list_buckets: bool = False,
-) -> str | Dict[str, float]:  # Note potential string output
+    ) -> Union[str, Dict[str, float]]: # Note potential string output
     """Identifies buckets exceeding the relative cost threshold for enabling soft delete.
 
     Args:
