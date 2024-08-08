@@ -1,2 +1,2 @@
-google-cloud-discoveryengine==0.11.14
+google-cloud-discoveryengine==0.12.0
 google-api-core==2.19.0
