@@ -12,20 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_chirp]
+import os
+
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_chirp(
-    project_id: str,
     audio_file: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file using Chirp."""
+    """Transcribes an audio file using the Chirp model of Google Cloud Speech-to-Text API.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+    Returns:
+        cloud_speech.RecognizeResponse: The response from the Speech-to-Text API containing
+        the transcription results.
+
+    """
     # Instantiates a client
     client = SpeechClient(
         client_options=ClientOptions(
@@ -35,7 +43,7 @@ def transcribe_chirp(
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -44,9 +52,9 @@ def transcribe_chirp(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/us-central1/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/us-central1/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -62,10 +70,4 @@ def transcribe_chirp(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    transcribe_chirp(args.project_id, args.audio_file)
+    transcribe_chirp("resources/audio.wav")
