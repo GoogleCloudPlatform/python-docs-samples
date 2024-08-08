@@ -285,8 +285,9 @@ def test_predict(service_url: str, access_token: str, train_model: None) -> None
     raw_response.raise_for_status()
 
     response = raw_response.json()
+    assert "predictions" in predictions, predictions
     predictions = pd.DataFrame(response["predictions"])
 
     # Check that we get non-empty predictions.
-    assert "is_fishing" in predictions
+    assert "is_fishing" in predictions, predictions
     assert len(predictions["is_fishing"]) > 0
