@@ -14,38 +14,41 @@
 
 """Google Cloud Speech API sample that demonstrates how to select the model
 used for speech recognition.
-
-Example usage:
-    python transcribe_model_selection.py \
-        resources/Google_Gnome.wav --model video
-    python transcribe_model_selection.py \
-        gs://cloud-samples-tests/speech/Google_Gnome.wav --model video
 """
 
-import argparse
-
+# [START speech_transcribe_model_selection]
 from google.cloud import speech
 
 
-# [START speech_transcribe_model_selection]
 def transcribe_model_selection(
-    speech_file: str,
+    audio_file: str,
     model: str,
 ) -> speech.RecognizeResponse:
-    """Transcribe the given audio file synchronously with
-    the selected model."""
+    """Transcribe the given audio file synchronously with the selected model.
+    List of possible models: https://cloud.google.com/speech-to-text/docs/transcription-model
+
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/fair.wav"
+        model (str): The model to be used for transcription.
+            Example: "phone_call".
+
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results.
+    """
+    # Instantiates a client
     client = speech.SpeechClient()
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        audio_content = f.read()
 
-    with open(speech_file, "rb") as audio_file:
-        content = audio_file.read()
-
-    audio = speech.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=audio_content)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code="en-US",
-        model=model,
+        model=model,  # Chosen model
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -63,17 +66,29 @@ def transcribe_model_selection(
 
 
 # [START speech_transcribe_model_selection_gcs]
+
+
 def transcribe_model_selection_gcs(
-    gcs_uri: str,
+    audio_uri: str,
     model: str,
 ) -> speech.RecognizeResponse:
-    """Transcribe the given audio file asynchronously with
-    the selected model."""
+    """Transcribe the given audio file synchronously with the selected model.
+    List of possible models: https://cloud.google.com/speech-to-text/docs/transcription-model
+
+    Args:
+        audio_uri (str): The Cloud Storage URI of the input audio.
+            e.g., gs://[BUCKET]/[FILE]
+        model (str): The model to be used for transcription.
+            Example: "phone_call" or "video"
+
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results.
+    """
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=audio_uri)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -100,20 +115,12 @@ def transcribe_model_selection_gcs(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
-    parser.add_argument(
-        "--model",
-        help="The speech recognition model to use",
-        choices=["command_and_search", "phone_call", "video", "default"],
-        default="default",
-    )
+    # It could be a local path like: path_to_file = "resources/Google_Gnome.wav"
+    path_to_file = "gs://cloud-samples-tests/speech/Google_Gnome.wav"
+    # Possible models: "command_and_search", "phone_call", "video", "default"
+    model = "phone_call"
 
-    args = parser.parse_args()
-
-    if args.path.startswith("gs://"):
-        transcribe_model_selection_gcs(args.path, args.model)
+    if path_to_file.startswith("gs://"):
+        transcribe_model_selection_gcs(path_to_file, model)
     else:
-        transcribe_model_selection(args.path, args.model)
+        transcribe_model_selection(path_to_file, model)

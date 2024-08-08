@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-
 from google.api_core.retry import Retry
 
-import transcribe_model_selection_v2
+import pytest
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+import transcribe_diarization_gcs_beta
+
+_TEST_AUDIO_URI = "gs://cloud-samples-data/speech/commercial_mono.wav"
 
 
 @Retry()
-def test_transcribe_model_selection_v2() -> None:
-    response = transcribe_model_selection_v2.transcribe_model_selection_v2(
-        os.path.join(_RESOURCES, "audio.wav"), "short"
+def test_transcribe_chirp(capsys: pytest.CaptureFixture) -> None:
+    response = transcribe_diarization_gcs_beta.transcribe_diarization_gcs_beta(
+        _TEST_AUDIO_URI
     )
-
-    assert re.search(
-        r"how old is the Brooklyn Bridge",
-        response.results[0].alternatives[0].transcript,
-        re.DOTALL | re.I,
-    )
+    out, _ = capsys.readouterr()
+    assert "speaker_tag: 1" in out
+    assert "speaker_tag: 2" in out
+    assert "Brooke" in out
+    assert response

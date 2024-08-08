@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,24 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-
 from google.api_core.retry import Retry
 
-import transcribe_model_selection_v2
-
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+import transcribe_word_level_confidence_gcs_beta
 
 
 @Retry()
-def test_transcribe_model_selection_v2() -> None:
-    response = transcribe_model_selection_v2.transcribe_model_selection_v2(
-        os.path.join(_RESOURCES, "audio.wav"), "short"
+def test_transcribe_file_with_multilanguage_gcs() -> None:
+    audio = "gs://cloud-samples-data/speech/brooklyn_bridge.flac"
+    response = transcribe_word_level_confidence_gcs_beta.transcribe_file_with_word_level_confidence(
+        audio
     )
-
-    assert re.search(
-        r"how old is the Brooklyn Bridge",
-        response.results[0].alternatives[0].transcript,
-        re.DOTALL | re.I,
-    )
+    assert "how old is the Brooklyn Bridge" in response
+    assert "Confidence: (how, 0" in response

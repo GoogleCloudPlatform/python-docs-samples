@@ -12,37 +12,47 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_model_selection_v2]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_model_selection_v2(
-    project_id: str,
-    model: str,
     audio_file: str,
+    model: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file."""
+    """Transcribe an audio file using a specified speech recognition model.
+        Available models: https://cloud.google.com/speech-to-text/v2/docs/transcription-model
+
+    Args:
+        audio_file (str): The path to the audio file to be transcribed.
+            Example: "resources/audio.wav"
+        model (str): The recognition model to be used for the transcription.
+
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results.
+    """
     # Instantiates a client
     client = SpeechClient()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
-        model=model,
+        model=model,  # Chosen model
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -58,11 +68,6 @@ def transcribe_model_selection_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("model", help="Speech-to-Text model with which to transcribe")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    transcribe_model_selection_v2(args.project_id, args.model, args.audio_file)
+    path_to_audio_file = "resources/audio.wav"
+    model = "short"
+    transcribe_model_selection_v2(path_to_audio_file, model)
