@@ -54,7 +54,6 @@ def get_gcs_object(gcs_path: str) -> cloud_speech.BatchRecognizeResults:
 def test_transcribe_batch_multiple_files_v2(
     gcs_bucket: pytest.FixtureRequest, capsys: pytest.CaptureFixture
 ) -> None:
-
     response = transcribe_batch_multiple_files_v2.transcribe_batch_multiple_files_v2(
         [_TEST_AUDIO_FILE_PATH], f"gs://{gcs_bucket}"
     )

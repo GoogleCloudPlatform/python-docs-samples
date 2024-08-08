@@ -28,7 +28,6 @@ _TEST_AUDIO_FILE_PATH = "gs://cloud-samples-data/speech/audio.flac"
 def test_transcribe_batch_dynamic_batching_v2(
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     response = (
         transcribe_batch_dynamic_batching_v2.transcribe_batch_dynamic_batching_v2(
             _TEST_AUDIO_FILE_PATH

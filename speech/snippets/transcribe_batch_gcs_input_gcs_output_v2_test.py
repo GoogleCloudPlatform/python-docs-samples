@@ -42,7 +42,6 @@ def test_transcribe_batch_gcs_input_gcs_output_v2(
     gcs_bucket: pytest.CaptureFixture,
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     response = transcribe_batch_gcs_input_gcs_output_v2.transcribe_batch_gcs_input_gcs_output_v2(
         _TEST_AUDIO_FILE_PATH, f"gs://{gcs_bucket}"
     )
