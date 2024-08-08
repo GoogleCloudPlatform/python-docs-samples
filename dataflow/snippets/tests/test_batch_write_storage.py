@@ -11,6 +11,7 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
+import gc
 import sys
 import uuid
 
@@ -32,6 +33,9 @@ def setup_and_teardown() -> None:
         yield
     finally:
         bucket.delete(force=True)
+        # Ensure that PipelineOptions subclasses have been cleaned up between tests
+        # See https://github.com/apache/beam/issues/18197
+        gc.collect()
 
 
 def test_write_to_cloud_storage(setup_and_teardown: None) -> None:
