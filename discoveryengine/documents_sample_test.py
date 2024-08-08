@@ -41,7 +41,7 @@ def test_import_documents_bigquery():
 
 
 def test_import_documents_gcs():
-    gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/empty.json"
+    gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/alphabet-investor-pdfs/goog023-alphabet-2023-annual-report-web-1.pdf"
     operation_name = import_documents_sample.import_documents_gcs_sample(
         project_id=project_id,
         location=location,

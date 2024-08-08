@@ -99,7 +99,15 @@ def import_documents_gcs_sample(
     # project_id = "YOUR_PROJECT_ID"
     # location = "YOUR_LOCATION" # Values: "global"
     # data_store_id = "YOUR_DATA_STORE_ID"
-    # Format: `gs://bucket/directory/object.json` or `gs://bucket/directory/*.json`
+
+    # Examples:
+    # - Unstructured documents
+    #   - `gs://bucket/directory/file.pdf`
+    #   - `gs://bucket/directory/*.pdf`
+    # - Unstructured documents with JSONL Metadata
+    #   - `gs://bucket/directory/file.json`
+    # - Unstructured documents with CSV Metadata
+    #   - `gs://bucket/directory/file.csv`
     # gcs_uri = "YOUR_GCS_PATH"
 
     #  For more information, refer to:
@@ -125,8 +133,13 @@ def import_documents_gcs_sample(
     request = discoveryengine.ImportDocumentsRequest(
         parent=parent,
         gcs_source=discoveryengine.GcsSource(
+            # Can input multiple URIs
             input_uris=[gcs_uri],
-            data_schema="custom",
+            # Options:
+            # - `content` - Unstructured documents (PDF, HTML, DOC, TXT, PPTX)
+            # - `custom` - Unstructured documents with JSONL metadata
+            # - `csv` - Unstructured documents with CSV metadata
+            data_schema="content",
         ),
         # Options: `FULL`, `INCREMENTAL`
         reconciliation_mode=discoveryengine.ImportDocumentsRequest.ReconciliationMode.INCREMENTAL,
