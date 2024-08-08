@@ -133,7 +133,7 @@ def import_documents_gcs_sample(
     request = discoveryengine.ImportDocumentsRequest(
         parent=parent,
         gcs_source=discoveryengine.GcsSource(
-            # Can input multiple URIs
+            # Multiple URIs are supported
             input_uris=[gcs_uri],
             # Options:
             # - `content` - Unstructured documents (PDF, HTML, DOC, TXT, PPTX)
