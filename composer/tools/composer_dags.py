@@ -60,9 +60,9 @@ class DAG:
         else:
             list_of_dags = []
             for line in command_output.split("\n"):
-                if re.compile("[a-z_]+|[a-z]+|[a-z]+|[a-z_]+").findall(line):
+                if re.compile("^[a-zA-Z].*").findall(line):
                     list_of_dags.append(line.split()[0])
-            return list_of_dags[1:-1]
+            return list_of_dags
 
     @staticmethod
     def _run_shell_command_locally_once(
