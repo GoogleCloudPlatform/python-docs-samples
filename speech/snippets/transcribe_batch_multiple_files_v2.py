@@ -32,7 +32,7 @@ def transcribe_batch_multiple_files_v2(
     The transcription results are stored in another Google Cloud Storage bucket.
     Args:
         audio_uris (List[str]): The list of Google Cloud Storage URIs of the input audio files.
-            E.g., gs://[BUCKET]/[FILE]
+            E.g., ["gs://[BUCKET]/[FILE]", "gs://[BUCKET]/[FILE]"]
         gcs_output_path (str): The Google Cloud Storage bucket URI where the output transcript will be stored.
             E.g., gs://[BUCKET]
     Returns:
