@@ -117,6 +117,7 @@
 /billing/**/*                          @GoogleCloudPlatform/billing-samples-maintainers @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /video/live-stream/*                   @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /video/stitcher/*                      @GoogleCloudPlatform/cloud-media-team @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/routeoptimization/**/*                @GoogleCloudPlatform/geo-routeoptimization @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
 # Deprecated
 /iot/**/*                              @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers

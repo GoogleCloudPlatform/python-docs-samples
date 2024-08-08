@@ -326,6 +326,10 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/service-extensions-samples-reviewers
       - GoogleCloudPlatform/dee-infra
+  - labels:
+      - "api: routeoptimization"
+    to:
+      - GoogleCloudPlatform/geo-routeoptimization
   # Self-service individuals
   - labels:
       - "api: auth"
