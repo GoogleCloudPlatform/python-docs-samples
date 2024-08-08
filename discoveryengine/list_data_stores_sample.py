@@ -26,7 +26,7 @@ from google.cloud import discoveryengine
 def list_data_stores_sample(
     project_id: str,
     location: str,
-) -> discoveryengine.ListDataStoresPager:
+) -> discoveryengine.ListDataStoresResponse:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
