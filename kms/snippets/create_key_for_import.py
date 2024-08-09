@@ -45,6 +45,7 @@ def create_key_for_import(
             "algorithm": algorithm,
             "protection_level": protection_level,
         },
+        "skip_initial_version_creation": True,
     }
 
     # Build the parent key ring name.
