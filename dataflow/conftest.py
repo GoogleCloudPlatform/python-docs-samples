@@ -831,7 +831,7 @@ class Utils:
         logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
-        Utils.dataflow_jobs_cancel(job_id)
+        Utils.dataflow_jobs_cancel(job_id, region=region)
 
     @staticmethod
     def dataflow_extensible_template_run(
