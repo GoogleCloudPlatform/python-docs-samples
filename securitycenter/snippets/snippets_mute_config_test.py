@@ -135,6 +135,16 @@ def test_set_unmute_finding(capsys: CaptureFixture, finding):
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
+def test_set_undefined_finding(capsys: CaptureFixture, finding):
+    finding_path = finding.get("finding1")
+    snippets_mute_config.set_undefined_finding(finding_path)
+    out, _ = capsys.readouterr()
+    assert re.search("Reset mute value for the finding: UNDEFINED", out)
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_bulk_mute_findings(capsys: CaptureFixture, finding):
     # Mute findings that belong to this project.
     snippets_mute_config.bulk_mute_findings(
