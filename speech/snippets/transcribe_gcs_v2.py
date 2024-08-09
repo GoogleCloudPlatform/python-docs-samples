@@ -12,26 +12,24 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_gcs_v2]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_gcs_v2(
-    project_id: str,
-    gcs_uri: str,
+    audio_uri: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribes audio from a Google Cloud Storage URI.
-
+    """Transcribe an audio file using Google Cloud Speech-to-Text API v2.
     Args:
-        project_id: The GCP project ID.
-        gcs_uri: The Google Cloud Storage URI.
-
+        audio_uri (str): The Google Cloud Storage URI of the input audio file.
+            E.g., gs://[BUCKET]/[FILE]
     Returns:
-        The RecognizeResponse.
+        cloud_speech.RecognizeResponse: The response containing the transcription results.
     """
     # Instantiates a client
     client = SpeechClient()
@@ -43,9 +41,9 @@ def transcribe_gcs_v2(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        uri=gcs_uri,
+        uri=audio_uri,
     )
 
     # Transcribes the audio into text
@@ -61,10 +59,4 @@ def transcribe_gcs_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("gcs_uri", help="URI to GCS file")
-    args = parser.parse_args()
-    transcribe_gcs_v2(args.project_id, args.gcs_uri)
+    transcribe_gcs_v2("gs://cloud-samples-data/speech/audio.flac")
