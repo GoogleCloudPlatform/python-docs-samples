@@ -94,6 +94,8 @@ def generate_function_call(project_id: str) -> GenerationResponse:
             ],
         )
     )
+
+    # Print the model response
     print(response.text)
     # [END generativeaionvertexai_gemini_function_calling]
     return response
