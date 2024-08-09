@@ -21,7 +21,6 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     from vertexai.generative_models import (
         Content,
         FunctionDeclaration,
-        GenerationConfig,
         GenerativeModel,
         Part,
         Tool,
@@ -59,13 +58,10 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     weather_tool = Tool(
         function_declarations=[get_current_weather_func],
     )
-
+    # Start a chat session with the model
+    chat_session = model.start_chat()
     # Send the prompt and instruct the model to generate content using the Tool that you just created
-    response = model.generate_content(
-        user_prompt_content,
-        generation_config=GenerationConfig(temperature=0),
-        tools=[weather_tool],
-    )
+    response = chat_session.send_message(user_prompt_content, tools=[weather_tool])
     function_call = response.candidates[0].function_calls[0]
     print(function_call)
 
@@ -78,29 +74,26 @@ def generate_function_call(project_id: str) -> GenerationResponse:
         # api_response = requests.post(weather_api_url, data={"location": location})
 
         # In this example, we'll use synthetic data to simulate a response payload from an external API
-        api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
-                        "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
+        api_response = {
+            "location": "Boston, MA",
+            "temperature": 38,
+            "description": "Partly Cloudy",
+            "icon": "partly-cloudy",
+            "humidity": 65,
+            "wind": {"speed": 10, "direction": "NW"},
+        }
 
     # Return the API response to Gemini so it can generate a model response or request another function call
-    response = model.generate_content(
-        [
-            user_prompt_content,  # User prompt
-            response.candidates[0].content,  # Function call response
-            Content(
-                parts=[
-                    Part.from_function_response(
-                        name=function_name,
-                        response={
-                            "content": api_response,  # Return the API response to Gemini
-                        },
-                    ),
-                ],
-            ),
-        ],
-        tools=[weather_tool],
+    response = chat_session.send_message(
+        Content(
+            role="function",
+            parts=[
+                Part.from_function_response(
+                    name=function_name, response={"content": api_response}
+                )
+            ],
+        )
     )
-
-    # Get the model response
     print(response.text)
     # [END generativeaionvertexai_gemini_function_calling]
     return response
