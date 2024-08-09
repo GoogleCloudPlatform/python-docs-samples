@@ -235,7 +235,7 @@ def set_unmute_finding(finding_path: str) -> None:
 
 
 # [START securitycenter_set_mute_undefined]
-def set_unmute_finding(finding_path: str) -> None:
+def set_undefined_finding(finding_path: str) -> None:
     """
       Reset mute state of an individual finding.
       Resetting a finding that isn't muted or unmuted has no effect.
