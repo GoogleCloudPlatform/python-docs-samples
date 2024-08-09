@@ -163,7 +163,12 @@ def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
 
     subscriber = pubsub.SubscriberClient()
     with subscriber:
+        print(f"pulling from subscription_path")
         response = subscriber.pull(subscription=subscription_path, max_messages=10)
+
+        print("Raw data received:")
+        print([str(m.message.data) for m in response.received_messages])
+
         messages = [m.message.data.decode("utf-8") for m in response.received_messages]
         if not messages:
             raise ValueError("pubsub_wait_for_messages no messages received")
