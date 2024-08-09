@@ -53,6 +53,7 @@ NAME = "dataflow/gemma-flex-template/streaming"
 # There are limited resources in us-central1, so change to a known good region.
 REGION = "us-west1"
 
+
 @pytest.fixture(scope="session")
 def test_name() -> str:
     # Many fixtures expect a fixture called `test_name`, so be sure to define it!
