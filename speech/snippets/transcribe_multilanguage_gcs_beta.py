@@ -29,7 +29,7 @@ def transcribe_file_with_multilanguage_gcs(audio_uri: str) -> str:
     client = speech.SpeechClient()
 
     first_language = "es-ES"
-    alternate_languages = ["es-ES"]
+    alternate_languages = ["en-US", "fr-FR"]
 
     # Configure request to enable multiple languages
     recognition_config = speech.RecognitionConfig(
@@ -63,6 +63,4 @@ def transcribe_file_with_multilanguage_gcs(audio_uri: str) -> str:
 # [END speech_transcribe_multilanguage_gcs_beta]
 
 if __name__ == "__main__":
-    transcribe_file_with_multilanguage_gcs(
-        audio_uri="gs://cloud-samples-data/speech/multi_es.flac"
-    )
+    transcribe_file_with_multilanguage_gcs("gs://cloud-samples-data/speech/multi_es.flac")
