@@ -163,7 +163,12 @@ def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
 
     subscriber = pubsub.SubscriberClient()
     with subscriber:
+        print(f"pulling from subscription_path")
         response = subscriber.pull(subscription=subscription_path, max_messages=10)
+
+        print("Raw data received:")
+        print([str(m.message.data) for m in response.received_messages])
+
         messages = [m.message.data.decode("utf-8") for m in response.received_messages]
         if not messages:
             raise ValueError("pubsub_wait_for_messages no messages received")
@@ -794,6 +799,7 @@ class Utils:
         parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
+        additional_experiments: dict[str,str] = {},
     ) -> str:
         import yaml
 
@@ -815,6 +821,11 @@ class Utils:
             for name, value in {
                 **parameters,
             }.items()
+        ] + [
+            f"--additional-experiments={name}={value}"
+            for name, value in {
+                **additional_experiments,
+            }.items()
         ]
         logging.info(f"{cmd}")
 
@@ -825,7 +836,7 @@ class Utils:
         logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
-        Utils.dataflow_jobs_cancel(job_id)
+        Utils.dataflow_jobs_cancel(job_id, region=region)
 
     @staticmethod
     def dataflow_extensible_template_run(
@@ -849,7 +860,7 @@ class Utils:
             f"--gcs-location={template_path}",
             f"--project={project}",
             f"--region={region}",
-            f"--staging-location=gs://{bucket_name}/staging",
+            f"--temp-location=gs://{bucket_name}/staging",
         ] + [
             f"--parameters={name}={value}"
             for name, value in {
