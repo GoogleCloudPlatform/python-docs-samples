@@ -50,6 +50,8 @@ DATAFLOW_MACHINE_TYPE = "g2-standard-4"
 GEMMA_GCS = "gs://perm-dataflow-gemma-example-testdata/pytorch_model"
 NAME = "dataflow/gemma-flex-template/streaming"
 
+# There are limited resources in us-central1, so change to a known good region.
+REGION = "us-west1"
 
 @pytest.fixture(scope="session")
 def test_name() -> str:
@@ -113,7 +115,7 @@ def dataflow_job(
         template_path=flex_template_path,
         bucket_name=bucket_name,
         project=project,
-        region=location,
+        region=REGION,
         parameters={
             "messages_subscription": messages_subscription,
             "responses_topic": responses_topic,
@@ -138,11 +140,11 @@ def test_pipeline_dataflow(
 ) -> None:
     print(f"Waiting for the Dataflow workers to start: {dataflow_job}")
     conftest.wait_until(
-        lambda: conftest.dataflow_num_workers(project, location, dataflow_job)
+        lambda: conftest.dataflow_num_workers(project, REGION, dataflow_job)
         > 0,
         "workers are running",
     )
-    num_workers = conftest.dataflow_num_workers(project, location,
+    num_workers = conftest.dataflow_num_workers(project, REGION,
                                                 dataflow_job)
     print(f"Dataflow job num_workers: {num_workers}")
 
