@@ -56,7 +56,7 @@ def create_key_for_import(
             "parent": key_ring_name,
             "crypto_key_id": crypto_key_id,
             "crypto_key": key,
-             # Do not allow KMS to generate an initial version of this key.
+            # Do not allow KMS to generate an initial version of this key.
             "skip_initial_version_creation": True,
         }
     )
