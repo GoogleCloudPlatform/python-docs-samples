@@ -74,14 +74,8 @@ def generate_function_call(project_id: str) -> GenerationResponse:
         # api_response = requests.post(weather_api_url, data={"location": location})
 
         # In this example, we'll use synthetic data to simulate a response payload from an external API
-        api_response = {
-            "location": "Boston, MA",
-            "temperature": 38,
-            "description": "Partly Cloudy",
-            "icon": "partly-cloudy",
-            "humidity": 65,
-            "wind": {"speed": 10, "direction": "NW"},
-        }
+        api_response = """{ "location": "Boston, MA", "temperature": 38, "description": "Partly Cloudy",
+                                "icon": "partly-cloudy", "humidity": 65, "wind": { "speed": 10, "direction": "NW" } }"""
 
     # Return the API response to Gemini so it can generate a model response or request another function call
     response = chat_session.send_message(
