@@ -63,4 +63,6 @@ def transcribe_file_with_multilanguage_gcs(audio_uri: str) -> str:
 # [END speech_transcribe_multilanguage_gcs_beta]
 
 if __name__ == "__main__":
-    transcribe_file_with_multilanguage_gcs("gs://cloud-samples-data/speech/multi_es.flac")
+    transcribe_file_with_multilanguage_gcs(
+        "gs://cloud-samples-data/speech/multi_es.flac"
+    )
