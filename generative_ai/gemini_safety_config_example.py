@@ -24,10 +24,7 @@ def generate_text() -> str:
     from vertexai.generative_models import (
         GenerativeModel,
         GenerationConfig,
-        HarmCategory,
-        HarmBlockThreshold,
         Part,
-        SafetySetting
     )
 
     # TODO(developer): Update project
@@ -40,18 +37,6 @@ def generate_text() -> str:
         max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
     )
 
-    # Safety config
-    safety_config = [
-        SafetySetting(
-            category=HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-            threshold=HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-        ),
-        SafetySetting(
-            category=HarmCategory.HARM_CATEGORY_HARASSMENT,
-            threshold=HarmBlockThreshold.BLOCK_LOW_AND_ABOVE,
-        ),
-    ]
-
     image_file = Part.from_uri(
         "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"
     )
@@ -60,7 +45,6 @@ def generate_text() -> str:
     responses = model.generate_content(
         [image_file, "What is in this image?"],
         generation_config=generation_config,
-        safety_settings=safety_config,
         stream=True,
     )
 
