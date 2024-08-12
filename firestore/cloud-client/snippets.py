@@ -1047,6 +1047,7 @@ def query_indexing_considerations():
 
 
 def query_order_fields():
+    db = firestore.Client()
     # [START firestore_query_order_fields]
     query = db.collection("employees").where("salary", ">", 100_000).order_by("salary")
     results = query.stream()
