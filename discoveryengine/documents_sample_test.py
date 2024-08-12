@@ -17,6 +17,7 @@ import os
 
 from discoveryengine import import_documents_sample
 from discoveryengine import list_documents_sample
+from discoveryengine import purge_documents_sample
 
 import pytest
 
@@ -165,6 +166,16 @@ def test_import_documents_healthcare_fhir_sample():
 
 def test_list_documents():
     response = list_documents_sample.list_documents_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+    )
+
+    assert response
+
+
+def test_purge_documents():
+    response = purge_documents_sample.purge_documents_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
