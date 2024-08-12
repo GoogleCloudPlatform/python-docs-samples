@@ -18,9 +18,9 @@ from uuid import uuid4
 
 from discoveryengine import (
     create_data_store_sample,
+    delete_data_store_sample,
     get_data_store_sample,
     list_data_stores_sample,
-    delete_data_store_sample,
 )
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
