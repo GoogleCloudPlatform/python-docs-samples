@@ -42,21 +42,24 @@ def entities():
         {"name": "Mallory", "salary": 200_000, "experience": 0},
     ]
 
+    created_entities = []
     for task in tasks:
         task_key = client.key("Task")
         task_entity = datastore.Entity(key=task_key)
         task_entity.update(task)
         client.put(task_entity)
+        created_entities.append(task_entity)
     for employee in employees:
         employee_key = client.key("employees")
         employee_entity = datastore.Entity(key=employee_key)
         employee_entity.update(employee)
         client.put(employee_entity)
+        created_entities.append(employee_entity)
 
     yield entities
 
-    client.delete(task1)
-    client.delete(task2)
+    for entity in created_entities:
+        client.delete(entity)
 
 
 def test_query_filter_compound_multi_ineq(entities):

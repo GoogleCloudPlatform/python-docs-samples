@@ -21,6 +21,7 @@ See https://cloud.google.com/python/docs/reference/datastore/latest before runni
 
 def query_filter_compound_multi_ineq():
     from google.cloud import datastore
+    from google.cloud.datastore.query import PropertyFilter
 
     client = datastore.Client()
     # [START datastore_query_filter_compound_multi_ineq]
