@@ -18,7 +18,7 @@ import backoff
 from google.cloud import firestore
 import pytest
 
-from query_filter_or import query_or_composite_filter
+from query_filter_or import query_or_compound_filter
 
 os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
 PROJECT_ID = os.environ["FIRESTORE_PROJECT"]
