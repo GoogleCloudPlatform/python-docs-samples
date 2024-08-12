@@ -20,7 +20,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def tune_code_generation_model(project_id: str) -> None:
+def tune_code_generation_model() -> None:
     # [START generativeaionvertexai_tune_code_generation_model]
     from google.auth import default
 
