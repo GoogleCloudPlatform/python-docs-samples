@@ -24,7 +24,9 @@ from google.cloud import discoveryengine
 # data_store_id = "YOUR_DATA_STORE_ID"
 
 
-def purge_documents_sample(project_id: str, location: str, data_store_id: str) -> Any:
+def purge_documents_sample(
+    project_id: str, location: str, data_store_id: str
+) -> discoveryengine.PurgeDocumentsMetadata:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -63,7 +65,7 @@ def purge_documents_sample(project_id: str, location: str, data_store_id: str) -
     print(response)
     print(metadata)
 
-    return response
+    return metadata
 
 
 # [END genappbuilder_purge_documents]
