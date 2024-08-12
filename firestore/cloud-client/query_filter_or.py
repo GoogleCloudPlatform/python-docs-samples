@@ -30,7 +30,7 @@ def query_or_filter(project_id: str) -> None:
         )
     )
     docs = query.stream()
-    # [STOP firestore_query_filter_or]
+    # [END firestore_query_filter_or]
 
     print("Documents found:")
     for doc in docs:
@@ -55,7 +55,7 @@ def query_or_compound_filter(project_id: str) -> None:
         )
     )
     docs = query.stream()
-    # [STOP firestore_query_filter_or_compound]
+    # [END firestore_query_filter_or_compound]
 
     print("Documents found:")
     for doc in docs:
