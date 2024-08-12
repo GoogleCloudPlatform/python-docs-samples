@@ -18,8 +18,10 @@ Samples for multi-inequality queries
 See https://cloud.google.com/python/docs/reference/datastore/latest before running code.
 """
 
+
 def query_filter_compound_multi_ineq():
     from google.cloud import datastore
+
     client = datastore.Client()
     # [START datastore_query_filter_compound_multi_ineq]
     query = client.query(kind="Task")
@@ -28,8 +30,10 @@ def query_filter_compound_multi_ineq():
     # [END datastore_query_filter_compound_multi_ineq]
     return query
 
+
 def query_indexing_considerations():
     from google.cloud import datastore
+
     client = datastore.Client()
     # [START datastore_query_indexing_considerations]
     query = client.query(kind="employees")
@@ -42,6 +46,7 @@ def query_indexing_considerations():
 
 def query_order_fields():
     from google.cloud import datastore
+
     client = datastore.Client()
     # [START datastore_query_order_fields]
     query = client.query(kind="employees")

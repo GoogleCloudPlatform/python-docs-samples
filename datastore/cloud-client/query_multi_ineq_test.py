@@ -53,7 +53,6 @@ def entities():
         employee_entity.update(employee)
         client.put(employee_entity)
 
-
     yield entities
 
     client.delete(task1)

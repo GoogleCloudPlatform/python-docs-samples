@@ -75,6 +75,7 @@ def test_query_or_filter(capsys, data):
         else:
             assert city not in out
 
+
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_query_or_compound_filter(capsys, data):
     client = firestore.Client(project=PROJECT_ID)
@@ -88,8 +89,9 @@ def test_query_or_compound_filter(capsys, data):
 
     out, _ = capsys.readouterr()
     for city in data:
-        if data[city]["state"] == "CA" and (data[city]["capital"] or data[city]["population"] > 1_000_000):
+        if data[city]["state"] == "CA" and (
+            data[city]["capital"] or data[city]["population"] > 1_000_000
+        ):
             assert city in out
         else:
             assert city not in out
-

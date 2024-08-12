@@ -189,6 +189,7 @@ def test_query_filter_in_query_with_array(db):
     results = list(result.stream())
     assert len(results) >= 2
 
+
 def test_not_in_query(db):
     db.collection("cities").document("LA").set({"country": "USA"})
     db.collection("cities").document("Tokyo").set({"country": "Japan"})
@@ -198,14 +199,18 @@ def test_not_in_query(db):
     assert len(results) == 1
     assert results[0].to_dict()["country"] == "Canada"
 
+
 def test_not_equal_query(db):
-    db.collection("cities").document("Ottawa").set({"capital": True, "country": "Canada"})
+    db.collection("cities").document("Ottawa").set(
+        {"capital": True, "country": "Canada"}
+    )
     db.collection("cities").document("Tokyo").set({"capital": True, "country": "Japan"})
     db.collection("cities").document("LA").set({"capital": False, "country": "USA"})
     result = snippets.not_equal_query(db)
     results = list(result.stream())
     assert len(results) == 1
     assert results[0].to_dict()["country"] == "USA"
+
 
 def test_add_custom_class_with_id(db):
     snippets.add_custom_class_with_id()
@@ -812,6 +817,7 @@ def test_regional_endpoint(db):
     cities_list = list(cities_query)
     assert len(cities_list) == 2
 
+
 def test_query_filter_compound_multi_ineq(db):
     cities = [
         {"name": "SF", "state": "CA", "population": 1_000_000, "density": 10_000},
@@ -826,6 +832,7 @@ def test_query_filter_compound_multi_ineq(db):
     results = list(query.stream())
     assert len(results) == 1
     assert results[0].to_dict()["name"] == "NYC"
+
 
 def test_query_indexing_considerations(db):
     emplyees = [
@@ -846,6 +853,7 @@ def test_query_indexing_considerations(db):
     assert results[0].to_dict()["name"] == "Charlie"
     assert results[1].to_dict()["name"] == "Eve"
     assert results[2].to_dict()["name"] == "Joe"
+
 
 def test_query_order_fields(db):
     emplyees = [
