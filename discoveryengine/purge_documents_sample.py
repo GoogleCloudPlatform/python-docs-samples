@@ -13,8 +13,6 @@
 # limitations under the License.
 #
 # [START genappbuilder_purge_documents]
-from typing import Any
-
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine
 
