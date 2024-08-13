@@ -33,7 +33,7 @@ def submit_uri(project_id: str, uri: str) -> Submission:
              uri = "http://testsafebrowsing.appspot.com/s/malware.html"
 
     Returns:
-        Submission response that contains the URI submitted.
+        A Long Running Operation ID similar to `projects/1234/operations/5678`.
     """
     webrisk_client = webrisk_v1.WebRiskServiceClient()
 
@@ -81,8 +81,8 @@ def submit_uri(project_id: str, uri: str) -> Submission:
         threat_discovery=threat_discovery,
     )
 
-    response = webrisk_client.submit_uri(request).result(timeout=30)
-    return response
+    response = webrisk_client.submit_uri(request)
+    return response.operation
 
 
 # [END webrisk_submit_uri]
