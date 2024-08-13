@@ -13,11 +13,11 @@
 #  limitations under the License.
 
 # [START webrisk_submit_uri]
+from google.api_core.operation import Operation
 from google.cloud import webrisk_v1
-from google.cloud.webrisk_v1 import Submission
 
 
-def submit_uri(project_id: str, uri: str) -> Submission:
+def submit_uri(project_id: str, uri: str) -> Operation:
     """Submits a URI suspected of containing malicious content to be reviewed.
 
     Returns a google.longrunning.Operation which, once the review is complete, is updated with its result.
