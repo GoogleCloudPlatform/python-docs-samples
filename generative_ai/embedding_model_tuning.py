@@ -22,30 +22,34 @@ from vertexai.language_models import TextEmbeddingModel
 def tune_embedding_model(
     api_endpoint: str,
     base_model_name: str = "text-embedding-004",
-    task_type: str = "DEFAULT",
     corpus_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/corpus.jsonl",
     queries_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/queries.jsonl",
     train_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv",
     test_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/test.tsv",
-    batch_size: int = 128,
-    train_steps: int = 1000,
-    output_dimensionality: int = 768,
-    learning_rate_multiplier: float = 1.0,
 ):  # noqa: ANN201
+    """ Tune an embedding model using the specified parameters.
+    Args:
+        api_endpoint (str): The API endpoint for the Vertex AI service.
+        base_model_name (str): The name of the base model to use for tuning.
+        corpus_path (str): GCS URI of the JSONL file containing the corpus data.
+        queries_path (str): GCS URI of the JSONL file containing the queries data.
+        train_label_path (str): GCS URI of the TSV file containing the training labels.
+        test_label_path (str): GCS URI of the TSV file containing the test labels.
+    """
     match = re.search(r"^(\w+-\w+)", api_endpoint)
     location = match.group(1) if match else "us-central1"
     base_model = TextEmbeddingModel.from_pretrained(base_model_name)
     tuning_job = base_model.tune_model(
-        task_type=task_type,
+        task_type="DEFAULT",
         corpus_data=corpus_path,
         queries_data=queries_path,
         training_data=train_label_path,
         test_data=test_label_path,
-        batch_size=batch_size,
-        train_steps=train_steps,
+        batch_size=128,  # The batch size to use for training.
+        train_steps=1000,  # The number of training steps.
         tuned_model_location=location,
-        output_dimensionality=output_dimensionality,
-        learning_rate_multiplier=learning_rate_multiplier,
+        output_dimensionality=768,  # The dimensionality of the output embeddings.
+        learning_rate_multiplier=1.0,  # The multiplier for the learning rate.
     )
     return tuning_job
 

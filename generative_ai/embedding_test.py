@@ -29,9 +29,7 @@ def test_embed_text_preview() -> None:
         "banana?",
     ]
     dimensionality = 256 if aiplatform.__version__ >= "v1.45.0" else None
-    embeddings = embedding_preview.embed_text(
-        texts, "RETRIEVAL_QUERY", "text-embedding-preview-0409", dimensionality
-    )
+    embeddings = embedding_preview.embed_text(texts, "RETRIEVAL_QUERY", dimensionality)
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
 
 
@@ -43,7 +41,5 @@ def test_embed_text() -> None:
         "banana?",
     ]
     dimensionality = 256
-    embeddings = embedding.embed_text(
-        texts, "RETRIEVAL_QUERY", "text-embedding-004", dimensionality
-    )
+    embeddings = embedding.embed_text(texts, "RETRIEVAL_QUERY", dimensionality)
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)

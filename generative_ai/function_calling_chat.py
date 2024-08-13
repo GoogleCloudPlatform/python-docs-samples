@@ -11,11 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from vertexai.generative_models import ChatSession
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def generate_function_call_chat(project_id: str) -> ChatSession:
+
+def generate_function_call_chat() -> ChatSession:
     # [START generativeaionvertexai_gemini_function_calling_chat]
     import vertexai
     from vertexai.generative_models import (
@@ -27,9 +30,8 @@ def generate_function_call_chat(project_id: str) -> ChatSession:
     )
 
     # Initialize Vertex AI
-    # project_id = "PROJECT_ID"
-    # TODO(developer): Update and un-comment below lines
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Specify a function declaration and parameters for an API request
     get_product_sku = "get_product_sku"
@@ -137,3 +139,7 @@ def generate_function_call_chat(project_id: str) -> ChatSession:
     # [END generativeaionvertexai_gemini_function_calling_chat]
 
     return chat
+
+
+if __name__ == "__main__":
+    generate_function_call_chat()

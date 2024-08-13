@@ -21,11 +21,17 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 def embed_text(
     texts: List[str] = ["banana muffins? ", "banana bread? banana muffins?"],
     task: str = "QUESTION_ANSWERING",
-    model_name: str = "text-embedding-preview-0409",
     dimensionality: Optional[int] = 256,
 ) -> List[List[float]]:
-    """Embeds texts with a pre-trained, foundational model."""
-    model = TextEmbeddingModel.from_pretrained(model_name)
+    """Embeds texts with a pre-trained, foundational model.
+    Args:
+        texts (List[str]): A list of texts to be embedded.
+        task (str): The task type for embedding. Check the available tasks in the model's documentation.
+        dimensionality (Optional[int]): The dimensionality of the output embeddings.>
+    Returns:
+        List[List[float]]: A list of lists containing the embedding vectors for each input text
+    """
+    model = TextEmbeddingModel.from_pretrained("text-embedding-preview-0409")
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START generativeaionvertexai_evaluate_model]
+import os
 
 from google.auth import default
 import vertexai
@@ -22,16 +23,15 @@ from vertexai.preview.language_models import (
 )
 
 # Set credentials for the pipeline components used in the evaluation task
-credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+CREDENTIALS, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = "us-central1"
 
 
-def evaluate_model(
-    project_id: str,
-    location: str,
-) -> object:
+def evaluate_model() -> object:
     """Evaluate the performance of a generative AI model."""
-
-    vertexai.init(project=project_id, location=location, credentials=credentials)
+    # TODO developer: Replace the following variables
+    vertexai.init(project=PROJECT_ID, location=LOCATION, credentials=CREDENTIALS)
 
     # Create a reference to a generative AI model
     model = TextGenerationModel.from_pretrained("text-bison@002")
@@ -48,10 +48,11 @@ def evaluate_model(
     # Evaluate the model
     eval_metrics = model.evaluate(task_spec=task_spec)
     print(eval_metrics)
-
     return eval_metrics
 
 
 # [END generativeaionvertexai_evaluate_model]
+
+
 if __name__ == "__main__":
     evaluate_model()

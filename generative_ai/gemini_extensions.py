@@ -11,21 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from typing import List
 
 from vertexai.preview import extensions
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def create_extension(project_id: str) -> extensions.Extension:
+
+def create_extension() -> extensions.Extension:
     # [START generativeaionvertexai_create_extension]
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     extension = extensions.Extension.create(
         display_name="Code Interpreter",
@@ -47,17 +48,16 @@ def create_extension(project_id: str) -> extensions.Extension:
     return extension
 
 
-def execute_extension(project_id: str, extension_id: str) -> object:
+def execute_extension(extension_id: str) -> object:
     # [START generativeaionvertexai_execute_extension]
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
+
+    # TODO(developer): Update and un-comment below line
     # extension_id = "EXTENSION_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
-
     extension = extensions.Extension(extension_id)
     response = extension.execute(
         operation_id="generate_and_execute",
@@ -69,32 +69,29 @@ def execute_extension(project_id: str, extension_id: str) -> object:
     return response
 
 
-def get_extension(project_id: str, extension_id: str) -> extensions.Extension:
+def get_extension(extension_id: str) -> extensions.Extension:
     # [START generativeaionvertexai_get_extension]
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
+
+    # TODO(developer): Update and un-comment below line
     # extension_id = "EXTENSION_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
-
     extension = extensions.Extension(extension_id)
     print(extension)
     # [END generativeaionvertexai_get_extension]
     return extension
 
 
-def list_extensions(project_id: str) -> List[extensions.Extension]:
+def list_extensions() -> List[extensions.Extension]:
     # [START generativeaionvertexai_list_extensions]
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     extensions = extensions.Extension.list()
     print(extensions)
@@ -102,17 +99,20 @@ def list_extensions(project_id: str) -> List[extensions.Extension]:
     return extensions
 
 
-def delete_extension(project_id: str, extension_id: str) -> None:
+def delete_extension(extension_id: str) -> None:
     # [START generativeaionvertexai_delete_extension]
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
+
+    # TODO(developer): Update and un-comment below line
     # extension_id = "EXTENSION_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
-
     extension = extensions.Extension(extension_id)
     extension.delete()
     # [END generativeaionvertexai_delete_extension]
+
+
+if __name__ == "__main__":
+    list_extensions()
