@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 # [START generativeaionvertexai_claude_3_tool_use]
 # TODO(developer): Vertex AI SDK - uncomment below & run
@@ -20,9 +21,12 @@
 
 from anthropic import AnthropicVertex
 
+# TODO(developer): Update below line
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def tool_use(project_id: str, region: str) -> object:
-    client = AnthropicVertex(region=region, project_id=project_id)
+
+def tool_use() -> object:
+    client = AnthropicVertex(region="us-east5", project_id=PROJECT_ID)
     message = client.messages.create(
         model="claude-3-5-sonnet@20240620",
         max_tokens=1024,

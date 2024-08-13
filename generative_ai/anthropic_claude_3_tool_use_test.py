@@ -12,22 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import anthropic_claude_3_tool_use
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-east5"
-
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def tool_use_test() -> None:
-    response = anthropic_claude_3_tool_use.tool_use(
-        project_id=_PROJECT_ID, region=_LOCATION
-    )
+    response = anthropic_claude_3_tool_use.tool_use()
     json_response = response.model_dump_json(indent=2)
     assert "restaurant" in json_response
     assert "tool_use" in json_response

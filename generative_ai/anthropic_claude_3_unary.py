@@ -11,18 +11,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_text(project_id: str, region: str) -> object:
+def generate_text() -> object:
     # [START generativeaionvertexai_claude_3_unary]
     # TODO(developer): Vertex AI SDK - uncomment below & run
     # pip3 install --upgrade --user google-cloud-aiplatform
     # gcloud auth application-default login
     # pip3 install -U 'anthropic[vertex]'
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "PROJECT_ID"
 
     from anthropic import AnthropicVertex
 
-    client = AnthropicVertex(region=region, project_id=project_id)
+    client = AnthropicVertex(region="us-east5", project_id=PROJECT_ID)
     message = client.messages.create(
         model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
