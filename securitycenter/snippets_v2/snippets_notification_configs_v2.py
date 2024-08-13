@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Demos for working with notification configs."""
-
+import json
 from typing import Dict
 from google.cloud.securitycenter_v2 import NotificationConfig, ListNotificationConfigsResponse
 
@@ -119,15 +119,23 @@ def list_notification_configs(parent_id, location_id) -> ListNotificationConfigs
         location_id: "global"
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
-
+    all_config = []
     client = securitycenter_v2.SecurityCenterClient()
     parent_id = parent_id+"/locations/"+location_id
     notification_configs_iterator = client.list_notification_configs(
-        request={"parent": parent_id}
+        request={"parent": parent_id, "page_size": 1000}
     )
     for i, config in enumerate(notification_configs_iterator):
-        print(f"{i}: notification_config: {config}")
-    return notification_configs_iterator
+        all_config.append(config)
+    next_page_token = notification_configs_iterator.next_page_token
+    while next_page_token:
+        iterator = client.list_notification_configs(
+            request={"parent": parent_id, "page_token": next_page_token, "page_size": 1000}
+        )
+        for i, config in enumerate(iterator):
+            all_config.append(config)
+    print(all_config)
+    return all_config
 # [END securitycenter_list_notification_configs_v2]
 
 
@@ -189,26 +197,27 @@ def receive_notifications(subscription_name) -> bool:
     from google.cloud import pubsub_v1
     from google.cloud.securitycenter_v2 import NotificationMessage
     """
-    This method is used to recieve the Notification Config.
+    This method is used to receive the Notification Config.
     Args:
         subscription_name: "projects/{your-project-id}/subscriptions/{your-subscription-id}"
     """
-
     def callback(message):
-        # Print the data received for debugging purpose if needed
-        print(f"Received message: {message.data}")
+        try:
+            # Print the data received for debugging purpose if needed
+            print(f"Received message: {message.data}")
 
-        notification_msg = NotificationMessage.from_json(message.data)
-
-        print(
-            "Notification config name: {}".format(
-                notification_msg.notification_config_name
+            notification_msg = NotificationMessage.from_json(message.data)
+            print(
+                "Notification config name: {}".format(
+                    notification_msg.notification_config_name
+                )
             )
-        )
-        print(f"Finding: {notification_msg.finding}")
+            print(f"Finding: {notification_msg.finding}")
 
-        # Ack the message to prevent it from being pulled again
-        message.ack()
+            # Ack the message to prevent it from being pulled again
+            message.ack()
+        except Exception as e:
+            print(f"couldn't pass message {e}")
 
     subscriber = pubsub_v1.SubscriberClient()
 

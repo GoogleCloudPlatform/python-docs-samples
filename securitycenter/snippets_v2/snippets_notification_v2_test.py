@@ -45,6 +45,7 @@ def test_create_notification_config():
         )
     )
     assert created_notification_config is not None
+    assert CREATE_CONFIG_ID in created_notification_config.name
 
 
 @backoff.on_exception(
@@ -65,6 +66,11 @@ def test_list_notification_configs():
         f"organizations/{ORG_ID}", LOCATION_ID
     )
     assert iterator is not None
+    names = []
+    for item in iterator:
+        names.append(item.name)
+    assert any(CREATE_CONFIG_ID in name for name in names), "not found"
+
 
 
 @backoff.on_exception(
@@ -75,7 +81,7 @@ def test_update_notification_config():
         f"organizations/{ORG_ID}",LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
     )
     assert updated_config is not None
-
+    assert CREATE_CONFIG_ID in updated_config.name
 
 def test_receive_notifications():
     assert snippets_notification_configs_v2.receive_notifications(
