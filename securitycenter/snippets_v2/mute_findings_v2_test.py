@@ -23,7 +23,7 @@ import pytest
 import mute_findings_v2
 
 # TODO(developer): Replace these variables before running the sample.
-PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+PROJECT_ID = os.environ["SCC_PROJECT_ID"]
 ORGANIZATION_ID = os.environ["SCC_PROJECT_ORG_ID"]
 
 
