@@ -27,7 +27,7 @@ def generate_text() -> str:
         HarmCategory,
         HarmBlockThreshold,
         Part,
-        SafetySetting
+        SafetySetting,
     )
 
     # TODO(developer): Update project
