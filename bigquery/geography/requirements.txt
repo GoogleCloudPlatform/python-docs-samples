@@ -1,4 +1,4 @@
-attrs==23.2.0
+attrs==24.1.0
 certifi==2024.7.4
 cffi===1.15.1; python_version == '3.7'
 cffi==1.16.0; python_version >= '3.8'
@@ -22,7 +22,7 @@ google-crc32c==1.5.0
 google-resumable-media==2.7.1
 googleapis-common-protos==1.63.2
 grpcio===1.62.2; python_version == '3.7'
-grpcio==1.65.1; python_version >= '3.8'
+grpcio==1.65.4; python_version >= '3.8'
 idna==3.7
 munch==4.0.0
 mypy-extensions==1.0.0
