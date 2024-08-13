@@ -32,7 +32,7 @@ def gemini_tuning_basic() -> sft.SupervisedTuningJob:
     from vertexai.preview.tuning import sft
 
     # TODO(developer): Update project
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -61,7 +61,7 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     from vertexai.preview.tuning import sft
 
     # TODO(developer): Update project
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
         source_model="gemini-1.0-pro-002",
@@ -112,7 +112,7 @@ def list_tuning_jobs() -> List[sft.SupervisedTuningJob]:
     from vertexai.preview.tuning import sft
 
     # TODO(developer): Update project
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     responses = sft.SupervisedTuningJob.list()
 
