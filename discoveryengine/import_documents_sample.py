@@ -73,7 +73,7 @@ def import_documents_bigquery_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -151,7 +151,7 @@ def import_documents_gcs_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -226,7 +226,7 @@ def import_documents_cloud_sql_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -298,7 +298,7 @@ def import_documents_spanner_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -367,7 +367,7 @@ def import_documents_firestore_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -456,7 +456,7 @@ def import_documents_bigtable_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -531,7 +531,7 @@ def import_documents_alloy_db_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 
@@ -605,7 +605,7 @@ def import_documents_healthcare_fhir_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.ImportDocumentsMetadata(operation.metadata)
 

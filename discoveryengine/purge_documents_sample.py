@@ -55,7 +55,7 @@ def purge_documents_sample(
     print(f"Waiting for operation to complete: {operation.operation.name}")
     response = operation.result()
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get information from operation metadata
     metadata = discoveryengine.PurgeDocumentsMetadata(operation.metadata)
 
