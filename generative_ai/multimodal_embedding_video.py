@@ -34,12 +34,11 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
-    video = Video.load_from_file(
-        "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
-    )
 
     embeddings = model.get_embeddings(
-        video=video,
+        video=Video.load_from_file(
+            "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
+        ),
         video_segment_config=VideoSegmentConfig(end_offset_sec=1),
         contextual_text="Cars on Highway",
     )
