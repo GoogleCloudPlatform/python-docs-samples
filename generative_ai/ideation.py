@@ -39,8 +39,10 @@ def interview() -> str:
         **parameters,
     )
     print(f"Response from Model: {response.text}")
+    # [END generativeaionvertexai_sdk_ideation]
 
     return response.text
 
 
-# [END generativeaionvertexai_sdk_ideation]
+if __name__ == "__main__":
+    interview()

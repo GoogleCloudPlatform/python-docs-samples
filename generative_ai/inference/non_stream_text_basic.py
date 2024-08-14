@@ -29,7 +29,11 @@ def generate_content() -> object:
     model = GenerativeModel(MODEL_ID)
     response = model.generate_content("Write a story about a magic backpack.")
 
-    print(response)
+    print(response.text)
     # [END generativeaionvertexai_non_stream_text_basic]
 
     return response
+
+
+if __name__ == "__main__":
+    generate_content()

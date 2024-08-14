@@ -22,6 +22,7 @@ import google.auth
 import google.auth.transport.requests
 import openai
 
+
 class OpenAICredentialsRefresher:
     def __init__(self, **kwargs: Any) -> None:
         # Set a dummy key here
@@ -40,6 +41,8 @@ class OpenAICredentialsRefresher:
 
             self.client.api_key = self.creds.token
         return getattr(self.client, name)
+
+
 # [END generativeaionvertexai_credentials_refresher_class]
 
 
