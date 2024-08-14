@@ -39,6 +39,7 @@ OPTION B: Run tests with nox
 NOTE: For the tests to find the conftest in the testing infrastructure,
       add the PYTHONPATH to the "env" in your noxfile_config.py file.
 """
+import base64
 from collections.abc import Callable
 
 import conftest  # python-docs-samples/dataflow/conftest.py
@@ -153,5 +154,18 @@ def test_pipeline_dataflow(
     conftest.pubsub_publish(messages_topic, messages)
 
     print(f"Waiting for messages on {responses_subscription}")
-    responses = conftest.pubsub_wait_for_messages(responses_subscription)
+    responses = conftest.pubsub_wait_for_messages_raw(responses_subscription)
+
+    print(f"Received {len(responses)} responses(s)")
+
+    for msg in responses:
+        print(f"- {type(msg)} - {msg}")
+        try:
+            decoded = base64.b64encode(msg)
+            print(f"- {decoded}\n({msg})")
+        except (UnicodeDecodeError, TypeError) as e:
+            print(f"Error while parsing: {e}.")
+            print("Continuing, anyway.")
+
+
     assert responses, "expected at least one response"
