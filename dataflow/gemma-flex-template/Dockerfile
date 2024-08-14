@@ -25,7 +25,7 @@ RUN apt-get update \
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
     && git clone https://github.com/google/gemma_pytorch.git \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir -r requirements.txt ./pytorch_gemma
 
 # Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
 # use the image as SDK container image.
