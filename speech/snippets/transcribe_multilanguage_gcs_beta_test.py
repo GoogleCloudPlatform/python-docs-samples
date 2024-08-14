@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-import re
-
 from google.api_core.retry import Retry
 
-import transcribe_chirp
+import pytest
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+import transcribe_multilanguage_gcs_beta
 
 
 @Retry()
-def test_transcribe_chirp() -> None:
-    response = transcribe_chirp.transcribe_chirp(os.path.join(_RESOURCES, "audio.wav"))
-    assert re.search(
-        r"how old is the Brooklyn Bridge",
-        response.results[0].alternatives[0].transcript,
-        re.DOTALL | re.I,
+def test_transcribe_file_with_multilanguage_gcs(capsys: pytest.CaptureFixture) -> None:
+    audio = "gs://cloud-samples-data/speech/multi_es.flac"
+    response = transcribe_multilanguage_gcs_beta.transcribe_file_with_multilanguage_gcs(
+        audio
     )
+    out, err = capsys.readouterr()
+
+    assert response is not None
+    assert "estoy" in out
