@@ -163,7 +163,6 @@ def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
 
     subscriber = pubsub.SubscriberClient()
     with subscriber:
-        print(f"pulling from subscription_path")
         response = subscriber.pull(subscription=subscription_path, max_messages=10)
 
         messages = [m.message.data.decode("utf-8") for m in response.received_messages]
