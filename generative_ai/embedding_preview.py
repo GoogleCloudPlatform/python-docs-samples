@@ -18,16 +18,37 @@ from typing import List, Optional
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
-def embed_text(
-    texts: List[str] = [
-        "Retrieve a function that adds two numbers",
-        "def func(a, b): return a + b",
-    ],
+def embed_code_query(
+    texts: List[str] = ["Retrieve a function that adds two numbers"],
     task: str = "CODE_RETRIEVAL_QUERY",
     model_name: str = "text-embedding-preview-0815",
     dimensionality: Optional[int] = 256,
 ) -> List[List[float]]:
-  """Embeds texts with a pre-trained, foundational model."""
+  """Embeds code retrieval with a pre-trained, foundational model.
+
+  Using this function to calculate the embedding for query.
+  """
+  model = TextEmbeddingModel.from_pretrained(model_name)
+  inputs = [TextEmbeddingInput(text, task) for text in texts]
+  kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
+  embeddings = model.get_embeddings(inputs, **kwargs)
+  return [embedding.values for embedding in embeddings]
+
+
+def embed_code_corpus(
+    texts: List[str] = [
+        "def func(a, b): return a + b",
+        "def func(a, b): return a - b",
+        "def func(a, b): return (a ** 2 + b ** 2) ** 0.5",
+    ],
+    task: str = "RETRIEVAL_DOCUMENT",
+    model_name: str = "text-embedding-preview-0815",
+    dimensionality: Optional[int] = 256,
+) -> List[List[float]]:
+  """Embeds code block with a pre-trained, foundational model.
+
+  Using this function to calculate the embedding for corpus.
+  """
   model = TextEmbeddingModel.from_pretrained(model_name)
   inputs = [TextEmbeddingInput(text, task) for text in texts]
   kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
