@@ -13,8 +13,8 @@
 # limitations under the License.
 
 from collections.abc import Iterable, Sequence
+import json
 import logging
-from typing import Any, Optional
 
 import apache_beam as beam
 from apache_beam.ml.inference.base import ModelHandler
@@ -29,14 +29,15 @@ from gemma.model import GemmaForCausalLM
 import torch
 
 
-class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
-                                            GemmaForCausalLM]):
-    def __init__(self,
-                 model_variant: str,
-                 checkpoint_path: str,
-                 tokenizer_path: str,
-                 device: Optional[str] = 'cpu'):
-        """ Implementation of the ModelHandler interface for Gemma-on-Pytorch
+class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult, GemmaForCausalLM]):
+    def __init__(
+        self,
+        model_variant: str,
+        checkpoint_path: str,
+        tokenizer_path: str,
+        device: str | None = "cpu",
+    ):
+        """Implementation of the ModelHandler interface for Gemma-on-Pytorch
         using text as input.
 
         Example Usage::
@@ -50,20 +51,21 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
           device: optional. the device to run inference on. can be either
             'cpu' or 'gpu', defaults to cpu.
         """
-        model_config = get_config_for_2b(
-        ) if "2b" in model_variant else get_config_for_7b()
+        model_config = (
+            get_config_for_2b() if "2b" in model_variant else get_config_for_7b()
+        )
         model_config.tokenizer = tokenizer_path
-        model_config.quant = 'quant' in model_variant
+        model_config.quant = "quant" in model_variant
         model_config.tokenizer = tokenizer_path
 
         self._model_config = model_config
         self._checkpoint_path = checkpoint_path
-        if device == 'GPU':
+        if device == "GPU":
             logging.info("Device is set to CUDA")
-            self._device = torch.device('cuda')
+            self._device = torch.device("cuda")
         else:
             logging.info("Device is set to CPU")
-            self._device = torch.device('cpu')
+            self._device = torch.device("cpu")
         self._env_vars = {}
 
     def share_model_across_processes(self) -> bool:
@@ -84,7 +86,7 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         self,
         batch: Sequence[str],
         model: GemmaForCausalLM,
-        inference_args: Optional[dict[str, Any]] = None
+        inference_args: dict | None = None,
     ) -> Iterable[PredictionResult]:
         """Runs inferences on a batch of text strings.
 
@@ -99,12 +101,6 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
         result = model.generate(prompts=batch, device=self._device)
         predictions = [result]
         return [PredictionResult(x, y) for x, y in zip(batch, predictions)]
-
-
-class FormatOutput(beam.DoFn):
-    def process(self, element, *args, **kwargs):
-        yield "Input: {input}, Output: {output}".format(
-            input=element.example, output=element.inference)
 
 
 if __name__ == "__main__":
@@ -157,19 +153,24 @@ if __name__ == "__main__":
         streaming=True,
     )
 
-    handler = GemmaPytorchModelHandler(model_variant=args.model_variant,
-                                       checkpoint_path=args.checkpoint_path,
-                                       tokenizer_path=args.tokenizer_path,
-                                       device=args.device)
+    handler = GemmaPytorchModelHandler(
+        model_variant=args.model_variant,
+        checkpoint_path=args.checkpoint_path,
+        tokenizer_path=args.tokenizer_path,
+        device=args.device,
+    )
 
-    with beam.Pipeline(options=beam_options) as p:
+    with beam.Pipeline(options=beam_options) as pipeline:
         _ = (
-            p | "Read Topic" >>
-            beam.io.ReadFromPubSub(subscription=args.messages_subscription)
-            | "Parse" >> beam.Map(lambda x: x.decode("utf-8"))
-            | "RunInference-Gemma" >> RunInference(
-                handler)  # Send the prompts to the model and get responses.
-            |
-            "Format Output" >> beam.ParDo(FormatOutput())
-            | "Publish Result" >>
-            beam.io.gcp.pubsub.WriteToPubSub(topic=args.responses_topic))
+            pipeline
+            | "Subscribe to Pub/Sub" >> beam.io.ReadFromPubSub(subscription=args.messages_subscription)
+            | "Decode" >> beam.Map(lambda msg: msg.decode("utf-8"))
+            | "RunInference Gemma" >> RunInference(handler)
+            | "Format output" >> beam.Map(
+                lambda response: json.dumps(
+                    {"input": response.example, "outputs": response.inference}
+                )
+            )
+            | "Encode" >> beam.Map(lambda msg: msg.encode("utf-8"))
+            | "Publish to Pub/Sub" >> beam.io.gcp.pubsub.WriteToPubSub(topic=args.responses_topic)
+        )

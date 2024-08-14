@@ -164,34 +164,7 @@ def pubsub_wait_for_messages(subscription_path: str) -> list[str]:
     subscriber = pubsub.SubscriberClient()
     with subscriber:
         response = subscriber.pull(subscription=subscription_path, max_messages=10)
-
         messages = [m.message.data.decode("utf-8") for m in response.received_messages]
-        if not messages:
-            raise ValueError("pubsub_wait_for_messages no messages received")
-
-        print(f"pubsub_receive got {len(messages)} message(s)")
-        for msg in messages:
-            print(f"- {repr(msg)}")
-
-        ack_ids = [m.ack_id for m in response.received_messages]
-        subscriber.acknowledge(subscription=subscription_path, ack_ids=ack_ids)
-        print(f"pubsub_receive ack messages")
-    return messages
-
-
-
-@retry.Retry(retry.if_exception_type(ValueError), timeout=TIMEOUT_SEC)
-def pubsub_wait_for_messages_raw(subscription_path: str) -> list[str]:
-    # Let the test decode content itself
-    from google.cloud import pubsub
-
-    subscriber = pubsub.SubscriberClient()
-    with subscriber:
-        print(f"pulling from subscription_path")
-        response = subscriber.pull(subscription=subscription_path, max_messages=10)
-
-        # Do not decode, let calling test do this.
-        messages = [m.message.data for m in response.received_messages]
         if not messages:
             raise ValueError("pubsub_wait_for_messages no messages received")
 

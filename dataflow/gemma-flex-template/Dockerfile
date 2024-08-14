@@ -19,21 +19,17 @@ FROM ${SERVING_BUILD_IMAGE}
 WORKDIR /workspace
 
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends apt-utils \
-    && apt-get install -y --no-install-recommends curl \
-    && apt-get install -y --no-install-recommends wget \
-    && apt-get install -y --no-install-recommends git \
+    && apt-get install -y --no-install-recommends apt-utils curl wget git \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt \
     && git clone https://github.com/google/gemma_pytorch.git \
-    && pip install --no-cache-dir ./gemma_pytorch
+    && pip install --no-cache-dir -r requirements.txt
 
 # Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
-# use the image as SDK container image. The Beam version should match the 
-# version specified in requirements.txt
+# use the image as SDK container image.
+# The Beam version should match the version specified in requirements.txt
 COPY --from=apache/beam_python3.10_sdk:2.56.0 /opt/apache/beam /opt/apache/beam
 
 # Copy Flex Template launcher binary from the launcher image, which makes it
