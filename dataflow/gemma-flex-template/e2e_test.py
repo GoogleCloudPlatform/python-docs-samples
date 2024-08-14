@@ -167,5 +167,4 @@ def test_pipeline_dataflow(
             print(f"Error while parsing: {e}.")
             print("Continuing, anyway.")
 
-
     assert responses, "expected at least one response"
