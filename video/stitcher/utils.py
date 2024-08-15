@@ -90,3 +90,27 @@ def delete_stale_live_configs(project_id: str, location: str) -> None:
             continue
         if (now.seconds - creation_time_sec) > (3 * seconds_per_hour):
             response = client.delete_live_config(name=live_config.name)
+
+
+def delete_stale_vod_configs(project_id: str, location: str) -> None:
+    """Lists all outdated VOD configs in a location.
+    Args:
+        project_id: The GCP project ID.
+        location: The location of the VOD configs."""
+
+    client = VideoStitcherServiceClient()
+
+    parent = f"projects/{project_id}/locations/{location}"
+    response = client.list_vod_configs(parent=parent)
+
+    now = timestamp_pb2.Timestamp()
+    now.GetCurrentTime()
+
+    for vod_config in response.vod_configs:
+        tmp = vod_config.name.split("-")
+        try:
+            creation_time_sec = int(tmp.pop())
+        except ValueError:
+            continue
+        if (now.seconds - creation_time_sec) > (3 * seconds_per_hour):
+            response = client.delete_vod_config(name=vod_config.name)

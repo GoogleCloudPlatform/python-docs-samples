@@ -24,7 +24,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
 
     Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
-    # [START aiplatform_sdk_multimodal_embedding_video]
+    # [START generativeaionvertexai_sdk_multimodal_embedding_video]
     import vertexai
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
@@ -34,15 +34,13 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
-    video_path = "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
-    contextual_text = "Cars on Highway"
-    video = Video.load_from_file(video_path)
-    video_segment_config = VideoSegmentConfig(end_offset_sec=1)
 
     embeddings = model.get_embeddings(
-        video=video,
-        video_segment_config=video_segment_config,
-        contextual_text=contextual_text,
+        video=Video.load_from_file(
+            "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
+        ),
+        video_segment_config=VideoSegmentConfig(end_offset_sec=1),
+        contextual_text="Cars on Highway",
     )
 
     # Video Embeddings are segmented based on the video_segment_config.
@@ -54,7 +52,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # [END aiplatform_sdk_multimodal_embedding_video]
+    # [END generativeaionvertexai_sdk_multimodal_embedding_video]
 
     return embeddings
 

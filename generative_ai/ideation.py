@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 def interview() -> str:
     """Ideation example with a Large Language Model"""
-    # [START aiplatform_sdk_ideation]
+    # [START generativeaionvertexai_sdk_ideation]
     import vertexai
 
     from vertexai.language_models import TextGenerationModel
@@ -39,8 +39,10 @@ def interview() -> str:
         **parameters,
     )
     print(f"Response from Model: {response.text}")
+    # [END generativeaionvertexai_sdk_ideation]
 
     return response.text
 
 
-# [END aiplatform_sdk_ideation]
+if __name__ == "__main__":
+    interview()

@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from google.api_core.retry import Retry
 
 import enable_cmek
@@ -21,11 +19,6 @@ import enable_cmek
 
 @Retry()
 def test_enable_cmek() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-    response = enable_cmek.enable_cmek(
-        project_id,
-        "",
-    )
-
+    key_name = ""
+    response = enable_cmek.enable_cmek(key_name)
     assert response.kms_key_name == ""

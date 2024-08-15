@@ -16,20 +16,19 @@
 from google.cloud import speech
 
 
-def transcribe_context_classes(storage_uri: str) -> speech.RecognizeResponse:
-    """Provides "hints" to the speech recognizer to
-    favor specific classes of words in the results.
-
+def transcribe_context_classes(audio_uri: str) -> speech.RecognizeResponse:
+    """Provides "hints" to the speech recognizer to favor
+    specific classes of words in the results.
     Args:
-        storage_uri: The URI of the audio file to transcribe.
-
+        audio_uri: The URI of the audio file to transcribe.
+            E.g., gs://[BUCKET]/[FILE]
     Returns:
-        The transcript of the audio file.
+        cloud_speech.RecognizeResponse: The response containing the transcription results.
     """
     client = speech.SpeechClient()
 
-    # storage_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.wav'
-    audio = speech.RecognitionAudio(uri=storage_uri)
+    # audio_uri = 'gs://YOUR_BUCKET_ID/path/to/your/file.wav'
+    audio = speech.RecognitionAudio(uri=audio_uri)
 
     # SpeechContext: to configure your speech_context see:
     # https://cloud.google.com/speech-to-text/docs/reference/rpc/google.cloud.speech.v1#speechcontext

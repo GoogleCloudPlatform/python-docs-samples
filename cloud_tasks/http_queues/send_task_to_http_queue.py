@@ -24,12 +24,12 @@ def send_task_to_http_queue(
 ) -> int:
     """Send a task to an HTTP queue.
     Args:
-        queue: The queue to delete.
+        queue: The queue to send task to.
         body: The body of the task.
         auth_token: An authorization token for the queue.
         headers: Headers to set on the task.
     Returns:
-        The matching queue, or None if it does not exist.
+        The matching queue, or None if it doesn't exist.
     """
 
     # Use application default credentials if not supplied in a header

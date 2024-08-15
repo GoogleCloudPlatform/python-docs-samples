@@ -14,8 +14,6 @@
 
 import os
 
-from vertexai.generative_models import Part
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -25,21 +23,16 @@ def generate_text() -> str:
 
     from vertexai.generative_models import (
         GenerativeModel,
-        GenerationConfig,
-        SafetySetting,
         HarmCategory,
         HarmBlockThreshold,
+        Part,
+        SafetySetting,
     )
 
     # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
-
-    # Generation config
-    generation_config = GenerationConfig(
-        max_output_tokens=2048, temperature=0.4, top_p=1, top_k=32
-    )
 
     # Safety config
     safety_config = [
@@ -60,7 +53,6 @@ def generate_text() -> str:
     # Generate content
     responses = model.generate_content(
         [image_file, "What is in this image?"],
-        generation_config=generation_config,
         safety_settings=safety_config,
         stream=True,
     )

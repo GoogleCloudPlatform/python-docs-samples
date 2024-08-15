@@ -24,12 +24,9 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_adaptation_v2_inline_phrase_set() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     response = adaptation_v2_inline_phrase_set.adaptation_v2_inline_phrase_set(
-        project_id, os.path.join(_RESOURCES, "fair.wav")
+        os.path.join(_RESOURCES, "fair.wav")
     )
-
     assert re.search(
         r"the word is fare",
         response.results[0].alternatives[0].transcript,

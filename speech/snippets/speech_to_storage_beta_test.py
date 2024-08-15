@@ -15,13 +15,10 @@
 import uuid
 
 from google.api_core.retry import Retry
-from google.cloud import speech_v1p1beta1 as speech
 from google.cloud import storage
 import pytest
 
 import speech_to_storage_beta
-
-STORAGE_URI = "gs://cloud-samples-data/speech/brooklyn_bridge.raw"
 
 
 storage_client = storage.Client()
@@ -29,23 +26,17 @@ storage_client = storage.Client()
 BUCKET_UUID = str(uuid.uuid4())[:8]
 BUCKET_NAME = f"speech-{BUCKET_UUID}"
 BUCKET_PREFIX = "export-transcript-output-test"
-DELIMETER = None
 
 INPUT_STORAGE_URI = "gs://cloud-samples-data/speech/commercial_mono.wav"
-OUTPUT_STORAGE_URI = f"gs://{BUCKET_NAME}/{BUCKET_PREFIX}"
-encoding = speech.RecognitionConfig.AudioEncoding.LINEAR16
-sample_rate_hertz = 8000
 language_code = "en-US"
 
 
 @Retry()
-def test_export_transcript_to_storage_beta(bucket, capsys):
+def test_export_transcript_to_storage_beta(
+    bucket: storage.Bucket, capsys: pytest.CaptureFixture
+) -> None:
     results = speech_to_storage_beta.export_transcript_to_storage_beta(
         INPUT_STORAGE_URI,
-        OUTPUT_STORAGE_URI,
-        encoding,
-        sample_rate_hertz,
-        language_code,
         BUCKET_NAME,
         BUCKET_PREFIX,
     )
@@ -53,7 +44,7 @@ def test_export_transcript_to_storage_beta(bucket, capsys):
 
 
 @pytest.fixture
-def bucket():
+def bucket() -> storage.Bucket:
     """Yields a bucket that is deleted after the test completes."""
     bucket = None
     while bucket is None or bucket.exists():

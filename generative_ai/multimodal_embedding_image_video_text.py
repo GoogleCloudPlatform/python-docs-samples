@@ -24,7 +24,7 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
 
     Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
-    # [START aiplatform_sdk_multimodal_embedding_image_video_text]
+    # [START generativeaionvertexai_sdk_multimodal_embedding_image_video_text]
     import vertexai
 
     from vertexai.vision_models import Image, MultiModalEmbeddingModel, Video
@@ -41,12 +41,12 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     video = Video.load_from_file(
         "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
     )
-    contextual_text = "Cars on Highway"
+
     embeddings = model.get_embeddings(
         image=image,
         video=video,
         video_segment_config=VideoSegmentConfig(end_offset_sec=1),
-        contextual_text=contextual_text,
+        contextual_text="Cars on Highway",
     )
 
     print(f"Image Embedding: {embeddings.image_embedding}")
@@ -60,7 +60,7 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # [END aiplatform_sdk_multimodal_embedding_image_video_text]
+    # [END generativeaionvertexai_sdk_multimodal_embedding_image_video_text]
 
     return embeddings
 

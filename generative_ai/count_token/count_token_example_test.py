@@ -1,10 +1,10 @@
-# Copyright 2021 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#      http://www.apache.org/licenses/LICENSE-2.0
+#    https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,19 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python27
-api_version: 1
-threadsafe: true
 
-handlers:
-- url: /.*
-  script: main.app
+import count_token_example
 
-libraries:
-- name: grpcio
-  version: 1.0.0
 
-env_variables:
-  QUEUE: "YOUR_QUEUE_NAME"
-  LOCATION: "YOUR_PROJECT_LOCATION"
-  GOOGLE_CLOUD_PROJECT: "YOUR_PROJECT_ID"
+def test_count_token() -> None:
+    assert count_token_example.count_token_locally()
+    assert count_token_example.count_token_service()

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_tuning]
+# [START generativeaionvertexai_sdk_tuning]
 from __future__ import annotations
 
 import os
@@ -20,9 +20,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def tuning(
-    project_id: str,
-) -> None:
+def tuning() -> None:
     # [START generativeaionvertexai_tuning]
     import vertexai
     from vertexai.language_models import TextGenerationModel
@@ -47,4 +45,4 @@ def tuning(
     return model
 
 
-# [END aiplatform_sdk_tuning]
+# [END generativeaionvertexai_sdk_tuning]

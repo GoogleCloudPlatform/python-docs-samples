@@ -17,6 +17,7 @@ import os
 
 from discoveryengine import import_documents_sample
 from discoveryengine import list_documents_sample
+from discoveryengine import purge_documents_sample
 
 import pytest
 
@@ -41,7 +42,7 @@ def test_import_documents_bigquery():
 
 
 def test_import_documents_gcs():
-    gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/empty.json"
+    gcs_uri = "gs://cloud-samples-data/gen-app-builder/search/alphabet-investor-pdfs/goog023-alphabet-2023-annual-report-web-1.pdf"
     operation_name = import_documents_sample.import_documents_gcs_sample(
         project_id=project_id,
         location=location,
@@ -126,6 +127,21 @@ def test_import_documents_bigtable():
     assert "operations/import-documents" in operation_name
 
 
+def test_import_documents_alloy_db():
+    operation_name = import_documents_sample.import_documents_alloy_db_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+        alloy_db_project_id=project_id,
+        alloy_db_location_id="us-central1",
+        alloy_db_cluster_id="vais-tests",
+        alloy_db_database_id="postgres",
+        alloy_db_table_id="public.vais",
+    )
+
+    assert "operations/import-documents" in operation_name
+
+
 @pytest.mark.skip(reason="Permissions")
 def test_import_documents_healthcare_fhir_sample():
     location = "us"
@@ -150,6 +166,16 @@ def test_import_documents_healthcare_fhir_sample():
 
 def test_list_documents():
     response = list_documents_sample.list_documents_sample(
+        project_id=project_id,
+        location=location,
+        data_store_id=data_store_id,
+    )
+
+    assert response
+
+
+def test_purge_documents():
+    response = purge_documents_sample.purge_documents_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
