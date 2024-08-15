@@ -13,8 +13,10 @@
 # limitations under the License.
 
 import os
+
 from google.cloud import firestore
 from google.cloud.firestore_v1.vector import Vector
+
 from vector_search import store_vectors
 from vector_search import vector_search_basic
 from vector_search import vector_search_prefilter
