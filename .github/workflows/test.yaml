@@ -16,7 +16,7 @@ name: 🪿
 
 on:
   workflow_run:
-    workflows: ["🔍"]
+    workflows: ["PR"]
     types: ["completed"]
 
 jobs:
