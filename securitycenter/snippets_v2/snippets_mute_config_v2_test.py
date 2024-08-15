@@ -22,7 +22,7 @@ import pytest
 
 import snippets_mute_config_v2
 
-PROJECT_ID = os.environ["SCC_PROJECT_ID"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 ORGANIZATION_ID = os.environ["SCC_PROJECT_ORG_ID"]
 GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 
