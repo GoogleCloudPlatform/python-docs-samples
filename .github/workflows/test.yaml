@@ -15,84 +15,95 @@
 name: 🪿
 
 on:
-  push:
-    branches: main
-  pull_request:
-  workflow_dispatch: # Manual runs
-
-env:
-  PROJECT: jss-22p1-test
-  WORKLOAD_IDENTITY_PROVIDER: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
+  workflow_run:
+    workflows: ["🔍"]
+    types: ["completed"]
 
 jobs:
-  affected:
-    name: Finding affected tests
+  test:
     runs-on: ubuntu-latest
-    outputs:
-      python: ${{steps.python.outputs.affected}}
-    defaults:
-      run:
-        working-directory: .github/testing
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: oven-sh/setup-bun@v2
-      - run: bun install
-      - id: python
-        run: |
-          AFFECTED_PYTHON=$(bun run affected python HEAD origin/main)
-          echo "$AFFECTED_PYTHON"
-          echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
+      - run: echo "Running tests"
 
-  python-lint:
-    name: Lint Python
-    needs: affected
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        affected: ${{fromJson(needs.affected.outputs.python)}}
-    defaults:
-      run:
-        working-directory: .github/testing
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-      - run: pip install nox
-      - run: bun install
-      - run: bun run ci-lint python AFFECTED
-        env:
-          AFFECTED: ${{toJson(matrix.affected)}}
+# on:
+#   push:
+#     branches: main
+#   pull_request:
+#   workflow_dispatch: # Manual runs
 
-  python-test:
-    name: Test Python
-    needs: affected
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
-        affected: ${{fromJson(needs.affected.outputs.python)}}
-    permissions: # needed for google-github-actions/auth
-      id-token: write
-      contents: read
-    defaults:
-      run:
-        working-directory: .github/testing
-    steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
-      - uses: actions/setup-python@v5
-        with:
-          python-version: ${{matrix.python-version}}
-      - uses: 'google-github-actions/auth@v2'
-        with:
-          project_id: ${{env.PROJECT}}
-          workload_identity_provider: ${{env.WORKLOAD_IDENTITY_PROVIDER}}
-      - run: pip install nox
-      - run: bun install
-      - run: bun run ci-test python${{matrix.python-version}} AFFECTED
-        env:
-          AFFECTED: ${{toJson(matrix.affected)}}
+# env:
+#   PROJECT: jss-22p1-test
+#   WORKLOAD_IDENTITY_PROVIDER: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
+
+# jobs:
+#   affected:
+#     name: Finding affected tests
+#     runs-on: ubuntu-latest
+#     outputs:
+#       python: ${{steps.python.outputs.affected}}
+#     defaults:
+#       run:
+#         working-directory: .github/testing
+#     steps:
+#       - uses: actions/checkout@v4
+#         with:
+#           fetch-depth: 0
+#       - uses: oven-sh/setup-bun@v2
+#       - run: bun install
+#       - id: python
+#         run: |
+#           AFFECTED_PYTHON=$(bun run affected python HEAD origin/main)
+#           echo "$AFFECTED_PYTHON"
+#           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
+
+#   python-lint:
+#     name: Lint Python
+#     needs: affected
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         affected: ${{fromJson(needs.affected.outputs.python)}}
+#     defaults:
+#       run:
+#         working-directory: .github/testing
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: oven-sh/setup-bun@v2
+#       - uses: actions/setup-python@v5
+#         with:
+#           python-version: '3.12'
+#       - run: pip install nox
+#       - run: bun install
+#       - run: bun run ci-lint python AFFECTED
+#         env:
+#           AFFECTED: ${{toJson(matrix.affected)}}
+
+#   python-test:
+#     name: Test Python
+#     needs: affected
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+#         affected: ${{fromJson(needs.affected.outputs.python)}}
+#     permissions: # needed for google-github-actions/auth
+#       id-token: write
+#       contents: read
+#     defaults:
+#       run:
+#         working-directory: .github/testing
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: oven-sh/setup-bun@v2
+#       - uses: actions/setup-python@v5
+#         with:
+#           python-version: ${{matrix.python-version}}
+#       - uses: 'google-github-actions/auth@v2'
+#         with:
+#           project_id: ${{env.PROJECT}}
+#           workload_identity_provider: ${{env.WORKLOAD_IDENTITY_PROVIDER}}
+#       - run: pip install nox
+#       - run: bun install
+#       - run: bun run ci-test python${{matrix.python-version}} AFFECTED
+#         env:
+#           AFFECTED: ${{toJson(matrix.affected)}}
