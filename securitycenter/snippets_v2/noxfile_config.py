@@ -32,7 +32,7 @@ TEST_CONFIG_OVERRIDE = {
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
     "envs": {
-        "GCLOUD_ORGANIZATION": "1032198118627",
+        "GCLOUD_ORGANIZATION": "1081635000895",
         "GCLOUD_PROJECT": "project-a-id",
         "GCLOUD_PUBSUB_TOPIC": "projects/project-a-id/topics/notifications-sample-topic",
         "GCLOUD_PUBSUB_SUBSCRIPTION": "notification-sample-subscription",

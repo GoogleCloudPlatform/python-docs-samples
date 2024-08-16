@@ -72,7 +72,7 @@ def list_filtered_findings(organization_id, source_name, location_id) -> int:
     parent = f"organizations/{organization_id}"
     all_sources = f"{parent}/sources/{source_name}/locations/{location_id}"
     finding_result_iterator = client.list_findings(
-        request={"parent": all_sources, "filter": 'severity="MEDIUM"'}
+        request={"parent": all_sources, "filter": 'severity="LOW"'}
     )
     # Iterate an print all finding names and the resource they are
     # in reference to.
