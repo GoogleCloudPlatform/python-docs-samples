@@ -121,9 +121,11 @@ class GemmaPytorchModelHandler(ModelHandler[str, PredictionResult,
 The output from a keyed model handler is a tuple of the form `(key, PredictionResult)`. To format that output into a string before sending it to the answer Pub/Sub topic, use an extra `DoFn`.
 
 ```py
-class FormatOutput(beam.DoFn):
-  def process(self, element, *args, **kwargs):
-    yield "Key : {key}, Input: {input}, Output: {output}".format(key=element[0], input=element[1].example, output=element[1].inference)
+| "Format output" >> beam.Map(
+    lambda response: json.dumps(
+        {"input": response.example, "outputs": response.inference}
+    )
+)
 ```
 
 ## Build the Flex Template
