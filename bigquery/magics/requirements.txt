@@ -1,5 +1,5 @@
 bigquery_magics==0.1.0
-db-dtypes==1.2.0
+db-dtypes==1.3.0
 google.cloud.bigquery==3.25.0
 google-cloud-bigquery-storage==2.25.0
 ipython===7.31.1; python_version == '3.7'
