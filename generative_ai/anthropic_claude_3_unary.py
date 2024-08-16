@@ -27,7 +27,7 @@ def generate_text() -> object:
 
     from anthropic import AnthropicVertex
 
-    client = AnthropicVertex(region="us-east5", project_id=PROJECT_ID)
+    client = AnthropicVertex(project_id=PROJECT_ID, region="us-east5")
     message = client.messages.create(
         model="claude-3-5-sonnet@20240620",
         max_tokens=1024,

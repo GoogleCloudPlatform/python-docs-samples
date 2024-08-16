@@ -19,30 +19,28 @@ import os
 
 from typing import Optional
 
-from google.auth import default
-
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel, TuningEvaluationSpec
 
 
-CREDENTIALS, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
 
 
 def distill_model(
     dataset: str,
-    teacher_model: str,
+    source_model: str,
     evaluation_dataset: Optional[str] = None,
 ) -> None:
     """Distill a new model using a teacher model and a dataset.
     Args:
         dataset (str): GCS URI of the JSONL file containing the training data.
-        teacher_model (str): Name of the teacher model to distill from.
+            E.g., "gs://[BUCKET]/[FILENAME].jsonl".
+        source_model (str): Name of the teacher model to distill from.
+            E.g., "text-unicorn@001".
         evaluation_dataset (Optional[str]): GCS URI of the JSONL file containing the evaluation data.
     """
     # TODO developer - override these parameters as needed:
-    vertexai.init(project=PROJECT_ID, location=LOCATION, credentials=CREDENTIALS)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Create a tuning evaluation specification with the evaluation dataset
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
@@ -52,7 +50,7 @@ def distill_model(
 
     # Start the distillation job using the teacher model and dataset
     distillation_job = student_model.distill_from(
-        teacher_model=teacher_model,
+        teacher_model=source_model,
         dataset=dataset,
         # Optional:
         train_steps=300,  # Number of training steps to use when tuning the model.
@@ -65,7 +63,7 @@ def distill_model(
 # [END generativeaionvertexai_sdk_distillation]
 if __name__ == "__main__":
     distill_model(
-        dataset="gs://bucket/dataset.jsonl",
-        teacher_model="text-unicorn@001",
-        evaluation_dataset="gs://bucket/evaluation_dataset.jsonl",
+        dataset="your-dataset-uri",
+        source_model="your-source-model",
+        evaluation_dataset="your-evaluation-dataset-uri",
     )

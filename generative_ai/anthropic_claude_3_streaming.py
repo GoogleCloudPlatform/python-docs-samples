@@ -28,7 +28,7 @@ def generate_text_streaming() -> str:
 
     from anthropic import AnthropicVertex
 
-    client = AnthropicVertex(region="us-east5", project_id=PROJECT_ID)
+    client = AnthropicVertex(project_id=PROJECT_ID, region="us-east5")
     result = []
 
     with client.messages.stream(
