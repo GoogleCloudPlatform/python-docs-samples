@@ -105,13 +105,13 @@ def create_with_custom_network(
 if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "europe-west"
-    NETWORK_NAME = "VPC-network-name"
-    SUBNET = "subnet-name"
+    vpc_network = "VPC-network-name"
+    subnet = "subnet-name"
     job_name = "test-job-name"
     job = create_with_custom_network(
         PROJECT_ID,
         REGION,
-        NETWORK_NAME,
-        SUBNET,
+        vpc_network,
+        subnet,
         job_name,
     )

@@ -201,104 +201,105 @@ def _check_custom_networks(job, network_name, subnet_name):
     )
 
 
-# @flaky(max_runs=3, min_passes=1)
-# def test_script_job(job_name, capsys):
-#     job = create_script_job(PROJECT, REGION, job_name)
-#     _test_body(job, additional_test=lambda: _check_logs(job, capsys))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_container_job(job_name):
-#     job = create_container_job(PROJECT, REGION, job_name)
-#     _test_body(job, additional_test=lambda: _check_tasks(job_name))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_create_gpu_job(job_name):
-#     job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
-#     _test_body(job, additional_test=lambda: _check_tasks)
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_service_account_job(job_name, service_account):
-#     job = create_with_custom_service_account_job(
-#         PROJECT, REGION, job_name, service_account
-#     )
-#     _test_body(
-#         job, additional_test=lambda: _check_service_account(job, service_account)
-#     )
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_secret_manager_job(job_name, service_account):
-#     secrets = {
-#         SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
-#     }
-#     job = create_with_secret_manager(
-#         PROJECT, REGION, job_name, secrets, service_account
-#     )
-#     _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[str]"):
-#     job = create_local_ssd_job(PROJECT, REGION, job_name, disk_name)
-#     _test_body(job, additional_test=lambda: _check_logs(job, capsys))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_pd_job(job_name, disk_name):
-#     region = "europe-north1"
-#     zone = "europe-north1-c"
-#     existing_disk_name = "permanent-batch-testing"
-#     job = create_with_pd_job(
-#         PROJECT, region, job_name, disk_name, zone, existing_disk_name
-#     )
-#     disk_names = (disk_name, existing_disk_name)
-#     _test_body(
-#         job,
-#         additional_test=lambda: _check_policy(job, job_name, disk_names),
-#         region=region,
-#     )
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_create_job_with_custom_events(job_name):
-#     job = create_job_with_status_events(PROJECT, REGION, job_name)
-#     _test_body(job, additional_test=lambda: _check_custom_events(job))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_check_notification_job(job_name):
-#     test_topic = "test_topic"
-#     job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
-#     _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
-#
-#
-# @flaky(max_runs=3, min_passes=1)
-# def test_check_nfs_job(job_name):
-#     mount_path = "/mnt/nfs"
-#     nfc_ip_address = "10.180.103.74"
-#     nfs_path = "/vol1"
-#     project_with_nfs_filestore = "python-docs-samples-tests"
-#     job = create_job_with_network_file_system(
-#         project_with_nfs_filestore,
-#         "us-central1",
-#         job_name,
-#         mount_path,
-#         nfc_ip_address,
-#         nfs_path,
-#     )
-#     _test_body(
-#         job,
-#         additional_test=lambda: _check_nfs_mounting(
-#             job, mount_path, nfc_ip_address, nfs_path
-#         ),
-#         region="us-central1",
-#         project=project_with_nfs_filestore,
-#     )
+@flaky(max_runs=3, min_passes=1)
+def test_script_job(job_name, capsys):
+    job = create_script_job(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
 
 
+@flaky(max_runs=3, min_passes=1)
+def test_container_job(job_name):
+    job = create_container_job(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_tasks(job_name))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_gpu_job(job_name):
+    job = create_gpu_job(PROJECT, REGION, ZONE, job_name)
+    _test_body(job, additional_test=lambda: _check_tasks)
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_service_account_job(job_name, service_account):
+    job = create_with_custom_service_account_job(
+        PROJECT, REGION, job_name, service_account
+    )
+    _test_body(
+        job, additional_test=lambda: _check_service_account(job, service_account)
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_secret_manager_job(job_name, service_account):
+    secrets = {
+        SECRET_NAME: f"projects/{PROJECT_NUMBER}/secrets/{SECRET_NAME}/versions/latest"
+    }
+    job = create_with_secret_manager(
+        PROJECT, REGION, job_name, secrets, service_account
+    )
+    _test_body(job, additional_test=lambda: _check_secret_set(job, SECRET_NAME))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_ssd_job(job_name: str, disk_name: str, capsys: "pytest.CaptureFixture[str]"):
+    job = create_local_ssd_job(PROJECT, REGION, job_name, disk_name)
+    _test_body(job, additional_test=lambda: _check_logs(job, capsys))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_pd_job(job_name, disk_name):
+    region = "europe-north1"
+    zone = "europe-north1-c"
+    existing_disk_name = "permanent-batch-testing"
+    job = create_with_pd_job(
+        PROJECT, region, job_name, disk_name, zone, existing_disk_name
+    )
+    disk_names = (disk_name, existing_disk_name)
+    _test_body(
+        job,
+        additional_test=lambda: _check_policy(job, job_name, disk_names),
+        region=region,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_custom_events(job_name):
+    job = create_job_with_status_events(PROJECT, REGION, job_name)
+    _test_body(job, additional_test=lambda: _check_custom_events(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_notification_job(job_name):
+    test_topic = "test_topic"
+    job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
+    _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_nfs_job(job_name):
+    mount_path = "/mnt/nfs"
+    nfc_ip_address = "10.180.103.74"
+    nfs_path = "/vol1"
+    project_with_nfs_filestore = "python-docs-samples-tests"
+    job = create_job_with_network_file_system(
+        project_with_nfs_filestore,
+        "us-central1",
+        job_name,
+        mount_path,
+        nfc_ip_address,
+        nfs_path,
+    )
+    _test_body(
+        job,
+        additional_test=lambda: _check_nfs_mounting(
+            job, mount_path, nfc_ip_address, nfs_path
+        ),
+        region="us-central1",
+        project=project_with_nfs_filestore,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
 def test_job_with_custom_network(job_name):
     network_name = "default"
     subnet = "default"
