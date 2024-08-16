@@ -32,7 +32,11 @@ def generate_content() -> object:
     )
 
     for response in responses:
-        print(response)
+        print(response.text)
     # [END generativeaionvertexai_stream_text_basic]
 
     return responses
+
+
+if __name__ == "__main__":
+    generate_content()
