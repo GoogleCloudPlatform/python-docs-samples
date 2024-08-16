@@ -45,11 +45,11 @@ def transcribe_feature_in_recognizer(
     )
 
     try:
-        # Try to fetch the existing recognizer
+        # Use an existing recognizer
         recognizer = client.get_recognizer(name=recognizer_name)
         print("Using existing Recognizer:", recognizer.name)
     except NotFound:
-        # Create a new recognizer if it does not exist
+        # Create a new recognizer
         request = cloud_speech.CreateRecognizerRequest(
             parent=f"projects/{PROJECT_ID}/locations/global",
             recognizer_id=recognizer_id,
