@@ -42,6 +42,7 @@ def test_embed_text_preview() -> None:
         dimensionality,
     )
 
+
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_embed_text() -> None:
     texts = [
