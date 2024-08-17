@@ -56,4 +56,3 @@ def embed_code_corpus(
 if __name__ == "__main__":
     embed_code_query()
     embed_code_corpus()
-

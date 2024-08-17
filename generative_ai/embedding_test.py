@@ -55,4 +55,3 @@ def test_embed_text() -> None:
     )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
 
-
