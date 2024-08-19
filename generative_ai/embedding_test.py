@@ -28,14 +28,14 @@ def test_embed_text_preview() -> None:
         "banana?",
     ]
     dimensionality = 256
-    embeddings = embedding_preview.embed_code_query(
+    embeddings = embedding_preview.embed_text(
         texts,
         "CODE_RETRIEVAL_QUERY",
         "text-embedding-preview-0815",
         dimensionality,
     )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
-    embeddings = embedding_preview.embed_code_corpus(
+    embeddings = embedding_preview.embed_text(
         texts,
         "RETRIEVAL_DOCUMENT",
         "text-embedding-preview-0815",
