@@ -11,15 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from typing import Optional
 
 from vertexai.language_models import TextGenerationResponse
 
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = "us-central1"
+
+
 def grounding(
-    project_id: str,
-    location: str,
     data_store_location: Optional[str],
     data_store_id: Optional[str],
 ) -> TextGenerationResponse:
@@ -29,8 +32,8 @@ def grounding(
 
     from vertexai.language_models import GroundingSource, TextGenerationModel
 
-    # TODO(developer): Update values for project_id, location
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update project_id and location
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
 
     # TODO developer - override these parameters as needed:
     parameters = {
@@ -43,6 +46,8 @@ def grounding(
     model = TextGenerationModel.from_pretrained("text-bison@002")
 
     # TODO(developer): Update values for data_store_location, data_store_id
+    # data_store_id = ""
+    # data_store_location = ""
     if data_store_id and data_store_location:
         # Use Vertex AI Search data store
         grounding_source = GroundingSource.VertexAISearch(
@@ -62,7 +67,3 @@ def grounding(
     # [END generativeaionvertexai_sdk_grounding]
 
     return response
-
-
-if __name__ == "__main__":
-    grounding()
