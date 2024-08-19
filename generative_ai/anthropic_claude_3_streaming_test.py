@@ -12,21 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import anthropic_claude_3_streaming
 
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-east5"
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_text_streaming() -> None:
-    responses = anthropic_claude_3_streaming.generate_text_streaming(
-        project_id=_PROJECT_ID, region=_LOCATION
-    )
+    responses = anthropic_claude_3_streaming.generate_text_streaming()
     assert "bread" in responses

@@ -12,17 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_claude_3_tool_use]
-# TODO(developer): Vertex AI SDK - uncomment below & run
-# pip3 install --upgrade --user google-cloud-aiplatform
-# gcloud auth application-default login
-# pip3 install -U 'anthropic[vertex]'
 
-from anthropic import AnthropicVertex
+def tool_use(project_id: str) -> object:
+    # [START generativeaionvertexai_claude_3_tool_use]
+    # TODO(developer): Vertex AI SDK - uncomment below & run
+    # pip3 install --upgrade --user google-cloud-aiplatform
+    # gcloud auth application-default login
+    # pip3 install -U 'anthropic[vertex]'
+    from anthropic import AnthropicVertex
 
-
-def tool_use(project_id: str, region: str) -> object:
-    client = AnthropicVertex(region=region, project_id=project_id)
+    # TODO(developer): Update your project ID and region
+    client = AnthropicVertex(project_id=project_id, region="us-east5")
     message = client.messages.create(
         model="claude-3-5-sonnet@20240620",
         max_tokens=1024,
@@ -58,11 +58,5 @@ def tool_use(project_id: str, region: str) -> object:
         ],
     )
     print(message.model_dump_json(indent=2))
+    # [END generativeaionvertexai_claude_3_tool_use]
     return message
-
-
-# [END generativeaionvertexai_claude_3_tool_use]
-
-
-if __name__ == "__main__":
-    tool_use()
