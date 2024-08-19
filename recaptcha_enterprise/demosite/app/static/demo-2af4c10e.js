@@ -3974,7 +3974,7 @@ class RecaptchaDemo extends s {
           Play the game, search the store, view the source, or just poke around
           and have fun!
         </p>
-        <button @click=${this.handleSubmit} class="button" type="button">
+        <button @click=${this.goToNextStep} class="button" type="button">
           View examples
         </button>
       </section>
@@ -4134,16 +4134,11 @@ class RecaptchaDemo extends s {
             <h4 class="h1">Pattern</h4>
             <h5 class="h2">Protect your entire site</h5>
             <p>
-              Add to every page of your site when it loads. Tracking the
-              behavior of legitimate users and bad ones between different pages
-              and actions will improve scores.
+              Add reCAPTCHA to user interactions across your entire site.
+              Tracking the behavior of legitimate users and bad ones between
+              different pages and actions will improve scores.
+              Click VIEW EXAMPLES to begin!
             </p>
-            <a
-              class="documentation"
-              href="https://cloud.google.com/recaptcha-enterprise/docs/instrument-web-pages#page-load"
-              target="_blank"
-              ><span>Learn more</span><mwc-icon>launch</mwc-icon></a
-            >
           </section>
           ${this[RESULTS[this.step]]}
         </div>

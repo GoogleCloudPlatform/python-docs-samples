@@ -1,0 +1,27 @@
+{
+    "name": "Streaming Gemma-on-Dataflow",
+    "description": "A flex template configuring a streaming Gemma pipeline using pytorch and pub/sub",
+    "parameters": [
+      {
+        "name": "messages_subscription",
+        "label": "Input messages subscription",
+        "helpText": "The pub/sub subscription to pull inputs from"
+      },
+      {
+        "name": "responses_topic",
+        "label": "Output messages topic",
+        "helpText": "The pub/sub topic to push outputs to"
+      },
+      {
+        "name": "device",
+        "label": "Device",
+        "helpText": "The device to run inference on. Can be 'CPU' or 'GPU'."
+      },
+      {
+        "name": "disk_size_gb",
+        "label": "disk_size_gb",
+        "helpText": "disk_size_gb for worker",
+        "isOptional": true
+      }
+    ]
+  }

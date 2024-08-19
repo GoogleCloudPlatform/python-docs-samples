@@ -40,7 +40,11 @@ def generate_content() -> object:
         ]
     )
 
-    print(response)
+    print(response.text)
     # [END generativeaionvertexai_non_stream_multimodality_basic]
 
     return response
+
+
+if __name__ == "__main__":
+    generate_content()

@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,19 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python27
-api_version: 1
-threadsafe: true
+# This is a test configuration file. It is not a part of the sample.
 
-handlers:
-- url: /.*
-  script: main.app
-
-libraries:
-- name: grpcio
-  version: 1.0.0
-
-env_variables:
-  QUEUE: "YOUR_QUEUE_NAME"
-  LOCATION: "YOUR_PROJECT_LOCATION"
-  GOOGLE_CLOUD_PROJECT: "YOUR_PROJECT_ID"
+TEST_CONFIG_OVERRIDE = {
+    # You can opt out from the test for specific Python versions.
+    # Opting out of all Python versions except 3.10.
+    # The Python version used is defined by the Dockerfile and the job
+    # submission enviornment must match.
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.11", "3.12"],
+    "envs": {
+        "PYTHONPATH": ".."
+    },
+}

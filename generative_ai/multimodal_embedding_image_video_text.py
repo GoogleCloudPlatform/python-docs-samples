@@ -41,12 +41,12 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     video = Video.load_from_file(
         "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
     )
-    contextual_text = "Cars on Highway"
+
     embeddings = model.get_embeddings(
         image=image,
         video=video,
         video_segment_config=VideoSegmentConfig(end_offset_sec=1),
-        contextual_text=contextual_text,
+        contextual_text="Cars on Highway",
     )
 
     print(f"Image Embedding: {embeddings.image_embedding}")

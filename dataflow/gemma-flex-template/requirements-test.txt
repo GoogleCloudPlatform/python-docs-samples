@@ -1,0 +1,7 @@
+google-cloud-aiplatform==1.62.0
+google-cloud-dataflow-client==0.8.12
+google-cloud-pubsub==2.23.0
+google-cloud-storage==2.18.2
+pytest==8.3.2
+pytest-timeout==2.3.1
+pyyaml==6.0.2

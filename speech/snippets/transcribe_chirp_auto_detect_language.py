@@ -12,25 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_chirp_auto_detect_language]
+import os
 
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_chirp_auto_detect_language(
-    project_id: str,
     audio_file: str,
     region: str = "us-central1",
 ) -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file and auto-detect spoken language using Chirp.
-
     Please see https://cloud.google.com/speech-to-text/v2/docs/encoding for more
     information on which audio encodings are supported.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+        region (str): The region for the API endpoint.
+    Returns:
+        cloud_speech.RecognizeResponse: The response containing the transcription results.
     """
     # Instantiates a client
     client = SpeechClient(
@@ -41,7 +44,7 @@ def transcribe_chirp_auto_detect_language(
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -50,9 +53,9 @@ def transcribe_chirp_auto_detect_language(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/{region}/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/{region}/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -69,10 +72,4 @@ def transcribe_chirp_auto_detect_language(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    transcribe_chirp_auto_detect_language(args.project_id, args.audio_file)
+    transcribe_chirp_auto_detect_language("resources/audio.wav")

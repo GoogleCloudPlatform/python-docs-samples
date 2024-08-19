@@ -14,16 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-import re
 import uuid
 
-from _pytest.capture import CaptureFixture
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-from google.cloud import securitycenter_v2
-from google.cloud.securitycenter_v2.services.security_center.pagers import (
-    ListFindingsPager,
-)
 import pytest
 
 import snippets_mute_config_v2
@@ -37,58 +31,63 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 def mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
     mute_rule_update = f"random-mute-update-{uuid.uuid4()}"
-    resp_create = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
-    resp_update = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_update)
+    resp_create = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+    resp_update = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_update)
 
     yield {"create": mute_rule_create, "create_resp": resp_create, "update": mute_rule_update, "update_resp": resp_update}
 
     snippets_mute_config_v2.delete_mute_rule(
-        f"projects/{PROJECT_ID}","global",mute_rule_create
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
     )
     snippets_mute_config_v2.delete_mute_rule(
-        f"projects/{PROJECT_ID}","global",mute_rule_update
+        f"projects/{PROJECT_ID}", "global", mute_rule_update
     )
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_create_mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
-    response = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
+    response = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
     assert mute_rule_create in response.name
-    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
+    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_get_mute_rule(mute_rule):
     response = snippets_mute_config_v2.get_mute_rule(
-        f"projects/{PROJECT_ID}","global",mute_rule.get('create')
+        f"projects/{PROJECT_ID}", "global", mute_rule.get('create')
     )
     assert response.name == mute_rule.get('create_resp').name
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_mute_rules(mute_rule):
-    response = snippets_mute_config_v2.list_mute_rules(f"projects/{PROJECT_ID}","global")
+    response = snippets_mute_config_v2.list_mute_rules(f"projects/{PROJECT_ID}", "global")
     rule_names = [rule.name for rule in response]
     assert mute_rule.get('create_resp').name in rule_names
     assert mute_rule.get('update_resp').name in rule_names
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_update_mute_rule(mute_rule):
     response = snippets_mute_config_v2.update_mute_rule(
-        f"projects/{PROJECT_ID}","global",mute_rule.get('update')
+        f"projects/{PROJECT_ID}", "global", mute_rule.get('update')
     )
     assert response.description == "Updated mute config description"
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_delete_mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
-    snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
-    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}","global",mute_rule_create)
+    snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
