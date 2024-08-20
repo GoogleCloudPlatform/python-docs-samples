@@ -32,8 +32,8 @@ def read_from_kafka() -> None:
     # For more information, see
     # https://beam.apache.org/documentation/programming-guide/#configuring-pipeline-options
     class MyOptions(PipelineOptions):
-        @classmethod
-        def _add_argparse_args(cls, parser: argparse.ArgumentParser) -> None:
+        @staticmethod
+        def _add_argparse_args(parser: argparse.ArgumentParser) -> None:
             parser.add_argument('--topic')
             parser.add_argument('--bootstrap_server')
             parser.add_argument('--output')
