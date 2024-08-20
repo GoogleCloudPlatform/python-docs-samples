@@ -20,7 +20,8 @@ from google.api_core.exceptions import NotFound
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-
+# TODO (Developer): Update the PROJECT_ID to the value of your project
+# PROJECT_ID = "your-project-id"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -43,7 +44,6 @@ def transcribe_feature_in_recognizer(
     recognizer_name = (
         f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
     )
-
     try:
         # Use an existing recognizer
         recognizer = client.get_recognizer(name=recognizer_name)

@@ -45,12 +45,27 @@ def test_transcribe_feature_in_recognizer(
 
     request.addfinalizer(cleanup)
 
-    response = transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
-        os.path.join(_RESOURCES, "audio.wav"), recognizer_id
+    response_with_new_recognizer = (
+        transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
+            os.path.join(_RESOURCES, "audio.wav"), recognizer_id
+        )
     )
-
+    # Call function one more time to test work with the existing recognizer
+    response_with_existing_recognizer = (
+        transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
+            os.path.join(_RESOURCES, "audio.wav"), recognizer_id
+        )
+    )
+    out, _ = capsys.readouterr()
+    assert "Created Recognizer:" in out
+    assert "Using existing Recognizer:" in out
     assert re.search(
         r"How old is the Brooklyn Bridge?",
-        response.results[0].alternatives[0].transcript,
+        response_with_new_recognizer.results[0].alternatives[0].transcript,
+        re.DOTALL | re.I,
+    )
+    assert re.search(
+        r"How old is the Brooklyn Bridge?",
+        response_with_existing_recognizer.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )
