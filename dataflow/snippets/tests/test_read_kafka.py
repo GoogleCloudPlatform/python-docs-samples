@@ -26,7 +26,7 @@ import pytest
 
 
 BOOTSTRAP_SERVER = 'localhost:9092'
-TOPIC_NAME = 'my-topic'
+TOPIC_NAME = f'topic-{uuid.uuid4()}'
 CONTAINER_IMAGE_NAME = 'kafka-pipeline:1'
 
 

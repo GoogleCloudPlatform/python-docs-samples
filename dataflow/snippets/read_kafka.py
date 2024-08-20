@@ -23,8 +23,6 @@ from apache_beam.io.kafka import ReadFromKafka
 from apache_beam.io.textio import WriteToText
 from apache_beam.options.pipeline_options import PipelineOptions
 
-from typing_extensions import Self
-
 
 def read_from_kafka() -> None:
 
@@ -35,36 +33,35 @@ def read_from_kafka() -> None:
     # https://beam.apache.org/documentation/programming-guide/#configuring-pipeline-options
     class MyOptions(PipelineOptions):
         @classmethod
-        def _add_argparse_args(cls: Self, parser: argparse.ArgumentParser) -> None:
+        def _add_argparse_args(cls, parser: argparse.ArgumentParser) -> None:
             parser.add_argument('--topic')
             parser.add_argument('--bootstrap_server')
             parser.add_argument('--output')
 
     options = MyOptions()
-    p = beam.Pipeline(options=options)
-    (
-        p
-        # Read messages from an Apache Kafka topic.
-        | ReadFromKafka(
-            consumer_config={
-                "bootstrap.servers": options.bootstrap_server
-            },
-            topics=[options.topic],
-            with_metadata=False,
-            max_num_records=5,
-            start_read_time=0
+    with beam.Pipeline(options=options) as pipeline:
+        (
+            pipeline
+            # Read messages from an Apache Kafka topic.
+            | ReadFromKafka(
+                consumer_config={
+                    "bootstrap.servers": options.bootstrap_server
+                },
+                topics=[options.topic],
+                with_metadata=False,
+                max_num_records=5,
+                start_read_time=0
+            )
+            # The previous step creates a key-value collection, keyed by message ID.
+            # The values are the message payloads.
+            | beam.Values()
+            # Subdivide the output into fixed 5-second windows.
+            | beam.WindowInto(window.FixedWindows(5))
+            | WriteToText(
+                file_path_prefix=options.output,
+                file_name_suffix='.txt',
+                num_shards=1)
         )
-        # The previous step creates a key-value collection, keyed by message ID.
-        # The values are the message payloads.
-        | beam.Values()
-        # Subdivide the output into fixed 5-second windows.
-        | beam.WindowInto(window.FixedWindows(5))
-        | WriteToText(
-            file_path_prefix=options.output,
-            file_name_suffix='.txt',
-            num_shards=1)
-    )
-    p.run()
 # [END dataflow_kafka_read]
 
 

@@ -27,10 +27,8 @@ ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 COPY requirements.txt .
 RUN apt-get update \
-    && apt-get install default-jre -y \
-    && apt-get install docker.io -y \
     && apt-get install -y --no-install-recommends \
-        curl python3-distutils \
+        curl python3-distutils default-jre docker.io \
     && rm -rf /var/lib/apt/lists/* \
     && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
     && curl https://bootstrap.pypa.io/get-pip.py | python \
