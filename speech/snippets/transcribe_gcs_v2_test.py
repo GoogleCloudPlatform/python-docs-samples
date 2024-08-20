@@ -24,7 +24,6 @@ _TEST_AUDIO_FILE_PATH = "gs://cloud-samples-data/speech/audio.flac"
 
 @Retry()
 def test_transcribe_gcs_v2(capsys: pytest.CaptureFixture) -> None:
-
     response = transcribe_gcs_v2.transcribe_gcs_v2(_TEST_AUDIO_FILE_PATH)
 
     assert re.search(

@@ -23,7 +23,6 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 def test_transcribe_file_v2(capsys: pytest.CaptureFixture) -> None:
-
     response = transcribe_file_v2.transcribe_file_v2(
         os.path.join(_RESOURCES, "audio.wav")
     )
