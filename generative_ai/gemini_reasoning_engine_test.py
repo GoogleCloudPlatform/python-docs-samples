@@ -31,12 +31,12 @@ def reasoning_engine_id() -> Generator[str, None, None]:
     gemini_reasoning_engine.delete_reasoning_engine(reasoning_engine.resource_name)
 
 
-# @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
+@pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
     assert reasoning_engine_id
 
 
-# @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
+@pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_advanced() -> None:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_advanced(
         STAGING_BUCKET
@@ -45,7 +45,7 @@ def test_create_reasoning_engine_advanced() -> None:
     gemini_reasoning_engine.delete_reasoning_engine(reasoning_engine.resource_name)
 
 
-# @pytest.mark.skip("TODO: Resolve issue b/348193408")
+@pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
     response = gemini_reasoning_engine.query_reasoning_engine(reasoning_engine_id)
     assert response
@@ -57,7 +57,7 @@ def test_list_reasoning_engines() -> None:
     assert response
 
 
-# @pytest.mark.skip("TODO: Resolve issue b/348193408")
+@pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_get_reasoning_engine(reasoning_engine_id: str) -> None:
     response = gemini_reasoning_engine.get_reasoning_engine(reasoning_engine_id)
     assert response
