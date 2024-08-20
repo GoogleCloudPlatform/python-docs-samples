@@ -115,7 +115,6 @@ if __name__ == "__main__":
     path_to_file = "gs://cloud-samples-tests/speech/Google_Gnome.wav"
     # Possible models: "command_and_search", "phone_call", "video", "default"
     model = "phone_call"
-
     if path_to_file.startswith("gs://"):
         transcribe_model_selection_gcs(path_to_file, model)
     else:
