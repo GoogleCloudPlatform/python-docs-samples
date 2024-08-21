@@ -160,6 +160,7 @@ def generate_content3(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_3]
     return response
 
+
 def generate_content4(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_4]
     import vertexai
@@ -274,6 +275,7 @@ def generate_content6(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_6]
 
     return response.text
+
 
 def generate_content7(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_7]
