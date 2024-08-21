@@ -14,6 +14,7 @@
 
 # [START generativeaionvertexai_sdk_tune_code_generation_model]
 from __future__ import annotations
+
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
