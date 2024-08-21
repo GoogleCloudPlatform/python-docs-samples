@@ -146,11 +146,25 @@ def generate_content3(project_id: str) -> str:
             response_mime_type="application/json", response_schema=response_schema
         ),
     )
-
     print(response.text)
+    # Example reponse:
+    #     {"forecast": [{"Day": "Sunday", "Forecast": "Sunny", "Temperature": 77, "Humidity": "50%", "Wind Speed": 10},
+    #                 {"Day": "Monday", "Forecast": "Partly Cloudy", "Temperature": 72, "Wind Speed": 15},
+    #                 {"Day": "Tuesday", "Forecast": "Rain Showers", "Temperature": 64, "Humidity": "70%"},
+    #                 {"Day": "Wednesday", "Forecast": "Thunderstorms", "Temperature": 68},
+    #                 {"Day": "Thursday", "Forecast": "Cloudy", "Temperature": 66, "Humidity": "60%"},
+    #                 {"Day": "Friday", "Forecast": "Partly Cloudy", "Temperature": 73, "Wind Speed": 12},
+    #                 {"Day": "Saturday", "Forecast": "Sunny", "Temperature": 80, "Humidity": "40%", "Wind Speed": 8}]}
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_3]
+    return response
 
-    return response.text
+
+
+import json
+import pandas as pd
+
+response = generate_content3("cloud-llm-preview1")
+pd.DataFrame(json.loads(response.text)['forecast']).fillna('None')
 
 
 def generate_content4(project_id: str) -> str:
