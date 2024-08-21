@@ -105,6 +105,7 @@ def generate_content3(project_id: str) -> str:
 
     # TODO(developer): Update and un-comment below line
     # project_id = "PROJECT_ID"
+
     vertexai.init(project=project_id, location="us-central1")
 
     response_schema = {
@@ -115,7 +116,7 @@ def generate_content3(project_id: str) -> str:
                 "items": {
                     "type": "OBJECT",
                     "properties": {
-                        "Day": {"type": "STRING"},
+                        "Day": {"type": "STRING", },
                         "Forecast": {"type": "STRING"},
                         "Temperature": {"type": "INTEGER"},
                         "Humidity": {"type": "STRING", "nullable": True},
@@ -130,11 +131,11 @@ def generate_content3(project_id: str) -> str:
     prompt = """
         The week ahead brings a mix of weather conditions.
         Sunday is expected to be sunny with a temperature of 77°F and a humidity level of 50%. Winds will be light at around 10 km/h.
-        Monday will see partly cloudy skies with a slightly cooler temperature of 72°F and humidity increasing to 55%. Winds will pick up slightly to around 15 km/h.
-        Tuesday brings rain showers, with temperatures dropping to 64°F and humidity rising to 70%. Expect stronger winds at 20 km/h.
-        Wednesday may see thunderstorms, with a temperature of 68°F and high humidity of 75%. Winds will be gusty at 25 km/h.
-        Thursday will be cloudy with a temperature of 66°F and moderate humidity at 60%. Winds will ease slightly to 18 km/h.
-        Friday returns to partly cloudy conditions, with a temperature of 73°F and lower humidity at 45%. Winds will be light at 12 km/h.
+        Monday will see partly cloudy skies with a slightly cooler temperature of 72°F and the winds will pick up slightly to around 15 km/h.
+        Tuesday brings rain showers, with temperatures dropping to 64°F and humidity rising to 70%.
+        Wednesday may see thunderstorms, with a temperature of 68°F.
+        Thursday will be cloudy with a temperature of 66°F and moderate humidity at 60%.
+        Friday returns to partly cloudy conditions, with a temperature of 73°F and the Winds will be light at 12 km/h.
         Finally, Saturday rounds off the week with sunny skies, a temperature of 80°F, and a humidity level of 40%. Winds will be gentle at 8 km/h.
     """
 
@@ -146,6 +147,7 @@ def generate_content3(project_id: str) -> str:
             response_mime_type="application/json", response_schema=response_schema
         ),
     )
+
     print(response.text)
     # Example reponse:
     #     {"forecast": [{"Day": "Sunday", "Forecast": "Sunny", "Temperature": 77, "Humidity": "50%", "Wind Speed": 10},
@@ -157,15 +159,6 @@ def generate_content3(project_id: str) -> str:
     #                 {"Day": "Saturday", "Forecast": "Sunny", "Temperature": 80, "Humidity": "40%", "Wind Speed": 8}]}
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_3]
     return response
-
-
-
-import json
-import pandas as pd
-
-response = generate_content3("cloud-llm-preview1")
-pd.DataFrame(json.loads(response.text)['forecast']).fillna('None')
-
 
 def generate_content4(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_4]
@@ -281,3 +274,41 @@ def generate_content6(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_6]
 
     return response.text
+
+def generate_content7(project_id: str) -> str:
+    # [START generativeaionvertexai_gemini_controlled_generation_response_schema_7]
+    import vertexai
+
+    from vertexai.generative_models import GenerationConfig, GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
+    # project_id = "PROJECT_ID"
+
+    vertexai.init(project=project_id, location="us-central1")
+
+    model = GenerativeModel("gemini-1.5-pro")
+
+    response_schema = {
+          "type": "STRING",
+          "enum": ["drama", "comedy", "documentary"]
+    }
+
+    prompt = "Movie name: The uncovered (2007)Movie context: The film's title refers not only to the un-recovered bodies at ground zero, "
+    "but also to the state of the nation at large. Set in the hallucinatory period of time between September 11 and Halloween of 2001, "
+    "The Unrecovered examines the effect of terror on the average mind, the way a state of heightened anxiety and/or alertness can cause "
+    "the average person to make the sort of imaginative connections that are normally made only by artists and conspiracy theorists-both "
+    "of whom figure prominently in this film. The Unrecovered explores the way in which irony, empathy, and paranoia relate to one another "
+    "in the wake of 9/11.Given the movie name and context, please classify the movie type."
+
+    response = model.generate_content(
+        prompt,
+        generation_config=GenerationConfig(
+            response_mime_type="text/x.enum", response_schema=response_schema
+        ),
+    )
+
+    print(response.text)
+    # Example reponse:
+    #     documentary
+    # [END generativeaionvertexai_gemini_controlled_generation_response_schema_7]
+    return response
