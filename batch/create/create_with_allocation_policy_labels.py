@@ -19,13 +19,7 @@ from google.cloud import batch_v1
 
 
 def create_job_with_custom_allocation_policy_labels(
-    project_id: str,
-    region: str,
-    job_name: str,
-    label_key1: str,
-    label_value1: str,
-    label_key2: str,
-    label_value2: str,
+    project_id: str, region: str, job_name: str, labels: dict[str, str]
 ) -> batch_v1.Job:
     """
     This method shows the creation of a Batch job with custom labels which describe the allocation policy.
@@ -34,10 +28,8 @@ def create_job_with_custom_allocation_policy_labels(
         region (str): name of the region you want to use to run the job. Regions that are
             available for Batch are listed on: https://cloud.google.com/batch/docs/locations
         job_name (str): the name of the job that will be created.
-        label_key1 (str): First custom label key.
-        label_value1 (str): First custom label value.
-        label_key2 (str): Second custom label key.
-        label_value2 (str): Second custom label value.
+        labels (dict[str, str]): a dictionary of key-value pairs that will be used as labels
+            E.g., {"label_key1": "label_value2", "label_key2": "label_value2"}
     Returns:
         batch_v1.Job: The created Batch job object containing configuration details.
     """
@@ -81,7 +73,7 @@ def create_job_with_custom_allocation_policy_labels(
     allocation_policy.instances = [instances]
 
     # Assign the provided labels to the allocation policy
-    allocation_policy.labels = {label_key1: label_value1, label_key2: label_value2}
+    allocation_policy.labels = labels
 
     # Create the job and assign the task group and allocation policy to it
     job = batch_v1.Job()
@@ -109,12 +101,7 @@ if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "us-central1"
     job_name = "your-job-name"
+    labels = {"label_key1": "label_value2", "label_key2": "label_value2"}
     create_job_with_custom_allocation_policy_labels(
-        PROJECT_ID,
-        REGION,
-        job_name,
-        label_key1="label1",
-        label_value1="value1",
-        label_key2="label2",
-        label_value2="value2",
+        PROJECT_ID, REGION, job_name, labels
     )

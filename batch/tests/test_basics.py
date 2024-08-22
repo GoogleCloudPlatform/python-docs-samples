@@ -348,10 +348,7 @@ def test_create_job_with_labels_allocation_policy(job_name):
         PROJECT,
         REGION,
         job_name,
-        LABELS_KEYS[0],
-        LABELS_VALUES[0],
-        LABELS_KEYS[1],
-        LABELS_VALUES[1],
+        labels={LABELS_KEYS[0]: LABELS_VALUES[0], LABELS_KEYS[1]: LABELS_VALUES[1]},
     )
     print(job.allocation_policy.labels)
     _test_body(job, additional_test=lambda: _check_job_allocation_policy_labels(job))
