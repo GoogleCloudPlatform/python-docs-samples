@@ -323,10 +323,7 @@ def test_create_job_with_labels(job_name):
         PROJECT,
         REGION,
         job_name,
-        LABELS_KEYS[0],
-        LABELS_VALUES[0],
-        LABELS_KEYS[1],
-        LABELS_VALUES[1],
+        labels={LABELS_KEYS[0]: LABELS_VALUES[0], LABELS_KEYS[1]: LABELS_VALUES[1]},
     )
     _test_body(job, additional_test=lambda: _check_job_labels(job))
 

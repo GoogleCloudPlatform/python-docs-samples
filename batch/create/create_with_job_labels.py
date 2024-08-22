@@ -22,10 +22,7 @@ def create_job_with_custom_job_labels(
     project_id: str,
     region: str,
     job_name: str,
-    label_key1: str,
-    label_value1: str,
-    label_key2: str,
-    label_value2: str,
+    labels: dict,
 ) -> batch_v1.Job:
     """
     This method creates a Batch job with custom labels.
@@ -34,10 +31,8 @@ def create_job_with_custom_job_labels(
         region (str): name of the region you want to use to run the job. Regions that are
             available for Batch are listed on: https://cloud.google.com/batch/docs/locations
         job_name (str): the name of the job that will be created.
-        label_key1 (str): First custom label key.
-        label_value1 (str): First custom label value.
-        label_key2 (str): Second custom label key.
-        label_value2 (str): Second custom label value.
+        labels (dict): A dictionary of custom labels to be added to the job.
+            E.g., {"label_key1": "label_value2", "label_key2": "label_value2"}
     Returns:
         batch_v1.Job: The created Batch job object containing configuration details.
     """
@@ -86,7 +81,7 @@ def create_job_with_custom_job_labels(
     job.allocation_policy = allocation_policy
 
     # Set the labels for the job
-    job.labels = {label_key1: label_value1, label_key2: label_value2}
+    job.labels = labels
 
     # We use Cloud Logging as it's an out of the box available option
     job.logs_policy = batch_v1.LogsPolicy()
@@ -109,12 +104,5 @@ if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "us-central1"
     job_name = "your-job-name"
-    create_job_with_custom_job_labels(
-        PROJECT_ID,
-        REGION,
-        job_name,
-        label_key1="label1",
-        label_value1="value1",
-        label_key2="label2",
-        label_value2="value2",
-    )
+    labels = {"label_key1": "label_value2", "label_key2": "label_value2"}
+    create_job_with_custom_job_labels(PROJECT_ID, REGION, job_name, labels)
