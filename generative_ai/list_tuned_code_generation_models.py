@@ -23,7 +23,8 @@ def list_tuned_code_generation_models() -> None:
     import vertexai
     from vertexai.preview.language_models import CodeGenerationModel
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
     model = CodeGenerationModel.from_pretrained("code-bison@001")
     tuned_model_names = model.list_tuned_model_names()

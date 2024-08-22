@@ -23,7 +23,8 @@ def list_tuned_models() -> None:
 
     from vertexai.language_models import TextGenerationModel
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
     model = TextGenerationModel.from_pretrained("text-bison@002")
     tuned_model_names = model.list_tuned_model_names()

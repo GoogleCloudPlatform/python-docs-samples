@@ -18,7 +18,6 @@ def generate_a_function() -> object:
     # [START generativeaionvertexai_sdk_code_generation_function]
     from vertexai.language_models import CodeGenerationModel
 
-    # TODO(developer): update temperature value. Ex: temperature = 0.1
     parameters = {
         "temperature": 0.1,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.

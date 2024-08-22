@@ -28,7 +28,9 @@ def create_reasoning_engine_basic(
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project, location, and staging_bucket
+    # TODO(developer): Update project and staging_bucket
+    # PROJECT_ID = "your-project-id"
+    # staging_bucket = "gs://YOUR_BUCKET_NAME"
     vertexai.init(
         project=PROJECT_ID, location="us-central1", staging_bucket=staging_bucket
     )
@@ -71,7 +73,9 @@ def create_reasoning_engine_advanced(
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project_id, location, and staging_bucket
+    # TODO(developer): Update project_id and staging_bucket
+    # PROJECT_ID = "your-project-id"
+    # staging_bucket = "gs://YOUR_BUCKET_NAME"
     vertexai.init(
         project=PROJECT_ID, location="us-central1", staging_bucket=staging_bucket
     )
@@ -134,7 +138,8 @@ def query_reasoning_engine(reasoning_engine_id: str) -> object:
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
 
@@ -150,7 +155,8 @@ def list_reasoning_engines() -> List[reasoning_engines.ReasoningEngine]:
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     reasoning_engine_list = reasoning_engines.ReasoningEngine.list()
@@ -164,7 +170,8 @@ def get_reasoning_engine(reasoning_engine_id: str) -> reasoning_engines.Reasonin
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
@@ -178,7 +185,8 @@ def delete_reasoning_engine(reasoning_engine_id: str) -> None:
     import vertexai
     from vertexai.preview import reasoning_engines
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     reasoning_engine = reasoning_engines.ReasoningEngine(reasoning_engine_id)
