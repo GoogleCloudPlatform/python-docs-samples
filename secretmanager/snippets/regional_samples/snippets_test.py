@@ -111,6 +111,28 @@ def secret_id(
         print(f"Secret {secret_id} was not found.")
 
 @pytest.fixture()
+def regional_secret_version(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+) -> Iterator[Tuple[str, str, str, str, str]]:
+    project_id, location_id, secret_id, _ = regional_secret
+
+    print(f"adding secret version to {secret_id}")
+    parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
+    payload = b"hello world!"
+    time.sleep(5)
+    version = regional_client.add_secret_version(
+        request={"parent": parent, "payload": {"data": payload}}
+    )
+
+    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
+        -1
+    ], version.etag
+
+
+another_regional_secret_version = regional_secret_version
+
+@pytest.fixture()
 def regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,

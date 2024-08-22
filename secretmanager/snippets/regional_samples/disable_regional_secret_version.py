@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for enabling a regional
+command line application and sample code for disabling a regional
 secret version.
 """
 
@@ -22,13 +22,13 @@ import argparse
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_enable_regional_secret_version]
-def enable_regional_secret_version(
+# [START secretmanager_v1_disable_regional_secret_version]
+def disable_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
-) -> secretmanager_v1.EnableSecretVersionRequest:
+) -> secretmanager_v1.DisableSecretVersionRequest:
     """
-    Enable the given secret version, enabling it to be accessed after
-    previously being disabled. Other secrets versions are unaffected.
+    Disable the given secret version. Future requests will throw an error until
+    the secret version is enabled. Other secrets versions are unaffected.
     """
 
     # Import the Secret Manager client library.
@@ -46,10 +46,10 @@ def enable_regional_secret_version(
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
     # Disable the secret version.
-    response = client.enable_secret_version(request={"name": name})
+    response = client.disable_secret_version(request={"name": name})
 
-    print(f"Enabled secret version: {response.name}")
-    # [END secretmanager_enable_regional_secret_version]
+    print(f"Disabled secret version: {response.name}")
+    # [END secretmanager_v1_disable_regional_secret_version]
 
     return response
 
@@ -61,7 +61,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
     parser.add_argument("secret_id", help="id of the secret from which to act")
-    parser.add_argument("version_id", help="id of the version to enable")
+    parser.add_argument("version_id", help="id of the version to disable")
     args = parser.parse_args()
 
-    enable_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    disable_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
