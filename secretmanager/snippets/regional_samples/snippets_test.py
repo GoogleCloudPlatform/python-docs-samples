@@ -104,6 +104,27 @@ def secret_id(
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
 
+@pytest.fixture()
+def regional_secret_version(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+) -> Iterator[Tuple[str, str, str, str, str]]:
+    project_id, location_id, secret_id, _ = regional_secret
+
+    print(f"adding secret version to {secret_id}")
+    parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
+    payload = b"hello world!"
+    time.sleep(5)
+    version = regional_client.add_secret_version(
+        request={"parent": parent, "payload": {"data": payload}}
+    )
+
+    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
+        -1
+    ], version.etag
+
+
+another_regional_secret_version = regional_secret_version
 
 @pytest.fixture()
 def regional_secret(
@@ -127,26 +148,6 @@ def regional_secret(
     )
 
     yield project_id, location_id, secret_id, regional_secret.etag
-
-@pytest.fixture()
-def regional_secret_version(
-    regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str, str, str],
-) -> Iterator[Tuple[str, str, str, str, str]]:
-    project_id, location_id, secret_id, _ = regional_secret
-
-    print(f"adding secret version to {secret_id}")
-    parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
-    payload = b"hello world!"
-    time.sleep(5)
-    version = regional_client.add_secret_version(
-        request={"parent": parent, "payload": {"data": payload}}
-    )
-
-    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
-        -1
-    ], version.etag
-
 
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
@@ -200,6 +201,21 @@ def test_enable_disable_regional_secret_version(
 
     version = enable_regional_secret_version.enable_regional_secret_version(
         project_id, location_id, secret_id, version_id
+    )
+    assert version.state == secretmanager.SecretVersion.State.ENABLED
+
+def test_enable_disable_regional_secret_version_with_etag(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, etag = regional_secret_version
+    version = disable_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, etag
+    )
+    assert version.state == secretmanager.SecretVersion.State.DISABLED
+
+    version = enable_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, version.etag
     )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
