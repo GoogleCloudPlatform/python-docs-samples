@@ -24,7 +24,6 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_transcribe_multichannel_v2() -> None:
-
     response = transcribe_multichannel_v2.transcribe_multichannel_v2(
         os.path.join(_RESOURCES, "two_channel_16k.wav")
     )

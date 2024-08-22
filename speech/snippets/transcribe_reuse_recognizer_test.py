@@ -66,7 +66,8 @@ def test_transcribe_reuse_recognizer(
     create_recognizer(PROJECT_ID, recognizer_id)
 
     response = transcribe_reuse_recognizer.transcribe_reuse_recognizer(
-        os.path.join(_RESOURCES, "audio.wav"), recognizer_id,
+        os.path.join(_RESOURCES, "audio.wav"),
+        recognizer_id,
     )
 
     assert re.search(
