@@ -19,7 +19,7 @@ from google.cloud import batch_v1
 
 
 def create_job_with_custom_allocation_policy_labels(
-    project_id: str, region: str, job_name: str, labels: dict[str, str]
+    project_id: str, region: str, job_name: str, labels: dict
 ) -> batch_v1.Job:
     """
     This method shows the creation of a Batch job with custom labels which describe the allocation policy.
@@ -28,7 +28,7 @@ def create_job_with_custom_allocation_policy_labels(
         region (str): name of the region you want to use to run the job. Regions that are
             available for Batch are listed on: https://cloud.google.com/batch/docs/locations
         job_name (str): the name of the job that will be created.
-        labels (dict[str, str]): a dictionary of key-value pairs that will be used as labels
+        labels (dict): a dictionary of key-value pairs that will be used as labels
             E.g., {"label_key1": "label_value2", "label_key2": "label_value2"}
     Returns:
         batch_v1.Job: The created Batch job object containing configuration details.

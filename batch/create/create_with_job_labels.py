@@ -22,7 +22,7 @@ def create_job_with_custom_job_labels(
     project_id: str,
     region: str,
     job_name: str,
-    labels: dict[str, str],
+    labels: dict,
 ) -> batch_v1.Job:
     """
     This method creates a Batch job with custom labels.
