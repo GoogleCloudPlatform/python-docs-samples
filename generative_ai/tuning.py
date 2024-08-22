@@ -24,16 +24,14 @@ def tuning() -> None:
     # [START generativeaionvertexai_tuning]
     import vertexai
     from vertexai.language_models import TextGenerationModel
-    from google.auth import default
-
-    credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
 
     # Initialize Vertex AI
-    # TODO(developer): Update project
-    vertexai.init(project=PROJECT_ID, location="us-central1", credentials=credentials)
+    # TODO(developer): update project_id & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = TextGenerationModel.from_pretrained("text-bison@002")
 
+    # TODO(developer): Update the training data path
     tuning_job = model.tune_model(
         training_data="gs://cloud-samples-data/ai-platform/generative_ai/headline_classification.jsonl",
         tuning_job_location="europe-west4",
@@ -46,3 +44,6 @@ def tuning() -> None:
 
 
 # [END generativeaionvertexai_sdk_tuning]
+
+if __name__ == "__main__":
+    tuning()

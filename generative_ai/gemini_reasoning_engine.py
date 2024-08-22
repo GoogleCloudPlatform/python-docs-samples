@@ -54,7 +54,7 @@ def create_reasoning_engine_basic(
         SimpleAdditionApp(),
         display_name="Demo Addition App",
         description="A simple demo addition app",
-        requirements=[],
+        requirements=["cloudpickle==3"],
         extra_packages=[],
     )
     # [END generativeaionvertexai_create_reasoning_engine_basic]
@@ -118,6 +118,7 @@ def create_reasoning_engine_advanced(
             "google-cloud-aiplatform==1.50.0",
             "langchain-google-vertexai",
             "langchain-core",
+            "cloudpickle==3",
         ],
         display_name="Demo LangChain App",
         description="This is a simple LangChain app.",
