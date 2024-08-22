@@ -1,6 +1,6 @@
 # Dataflow Flex Template: a pipeline with dependencies and a custom container image.
 
-[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/streaming_beam/README.md)
+[![Open in Cloud Shell](http://gstatic.com/cloudssh/images/open-btn.svg)](https://console.cloud.google.com/cloudshell/open?git_repo=https://github.com/GoogleCloudPlatform/python-docs-samples&page=editor&open_in_editor=dataflow/flex-templates/pipeline_with_dependencies/README.md)
 
 This project illustrates the following Dataflow Python pipeline setup:
 - The pipeline is a package that consists of [multiple files](https://beam.apache.org/documentation/sdks/python-pipeline-dependencies/#multiple-file-dependencies).
@@ -15,12 +15,13 @@ To illustrate this setup, we use a pipeline that does the following:
 2. Creates a [FIGLet text banner](https://en.wikipedia.org/wiki/FIGlet) from of it using [pyfiglet](https://pypi.org/project/pyfiglet/)
 3. Outputs the text banner in another file
 
+This project uses `setup.py` as the main package setup. If you prefer an example using `pyproject.toml` see [pipeline_with_dependencies_toml](../pipeline_with_dependencies_toml/README.md).
 
 ## The structure of the example
 
-The pipeline package is comprised of the `my_package` directory and the `setup.py` file. The package defines the pipeline, the pipeline dependencies, and the input parameters. You can define multiple pipelines in the same package. The `my_package.launcher` module is used to submit the pipeline to a runner.
+The pipeline package is comprised of the `src/my_package` directory and the `setup.py` file. The package defines the pipeline, the pipeline dependencies, and the input parameters. You can define multiple pipelines in the same package. The `my_package.launcher` module is used to submit the pipeline to a runner.
 
-The `main.py` file provides a top-level entrypoint to trigger the pipeline launcher from a
+The `src/main.py` file provides a top-level entrypoint to trigger the pipeline launcher from a
 launch environment.
 
 The `Dockerfile` defines the runtime environment for the pipeline. It also configures the Flex Template, which lets you reuse the runtime image to build the Flex Template.
@@ -41,7 +42,7 @@ and navigate to the code sample.
 
     ```sh
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
-    cd python-docs-samples/dataflow/flex-templates/streaming_beam
+    cd python-docs-samples/dataflow/flex-templates/pipeline_with_dependencies
     ```
 
 ## Create a Cloud Storage bucket
