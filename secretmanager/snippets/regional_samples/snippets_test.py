@@ -54,7 +54,6 @@ def iam_user() -> str:
 def ttl() -> Optional[str]:
     return "300s"
 
-
 @retry.Retry()
 def retry_client_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -62,7 +61,6 @@ def retry_client_create_regional_secret(
 ) -> secretmanager_v1.Secret:
     # Retry to avoid 503 error & flaky issues
     return regional_client.create_secret(request=request)
-
 
 @retry.Retry()
 def retry_client_delete_regional_secret(
@@ -72,7 +70,6 @@ def retry_client_delete_regional_secret(
     # Retry to avoid 503 error & flaky issues
     return regional_client.delete_secret(request=request)
 
-
 @retry.Retry()
 def retry_client_access_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -80,7 +77,6 @@ def retry_client_access_regional_secret_version(
 ) -> secretmanager_v1.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return regional_client.access_secret_version(request=request)
-
 
 @pytest.fixture()
 def secret_id(
