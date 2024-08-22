@@ -27,19 +27,34 @@ from regional_samples.access_regional_secret_version import (
 from regional_samples.add_regional_secret_version import add_regional_secret_version
 from regional_samples.create_regional_secret import create_regional_secret
 from regional_samples.delete_regional_secret import delete_regional_secret
+from regional_samples.delete_regional_secret_with_etag import (
+    delete_regional_secret_with_etag,
+)
 from regional_samples.destroy_regional_secret_version import (
     destroy_regional_secret_version,
+)
+from regional_samples.destroy_regional_secret_version_with_etag import (
+    destroy_regional_secret_version_with_etag,
 )
 from regional_samples.disable_regional_secret_version import (
     disable_regional_secret_version,
 )
+from regional_samples.disable_regional_secret_version_with_etag import (
+    disable_regional_secret_version_with_etag,
+)
 from regional_samples.enable_regional_secret_version import (
     enable_regional_secret_version,
+)
+from regional_samples.enable_regional_secret_version_with_etag import (
+    enable_regional_secret_version_with_etag,
 )
 from regional_samples.get_regional_secret import get_regional_secret
 from regional_samples.get_regional_secret_version import get_regional_secret_version
 from regional_samples.regional_quickstart import regional_quickstart
 from regional_samples.update_regional_secret import update_regional_secret
+from regional_samples.update_regional_secret_with_etag import (
+    update_regional_secret_with_etag,
+)
 
 @pytest.fixture()
 def location_id() -> str:
@@ -199,6 +214,19 @@ def test_delete_regional_secret(
             regional_client, request={"name": name}
         )
 
+def test_delete_regional_secret_with_etag(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, etag = regional_secret
+    delete_regional_secret_with_etag(project_id, location_id, secret_id, etag)
+    with pytest.raises(exceptions.NotFound):
+        print(f"{regional_client}")
+        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_regional_secret_version(
+            regional_client, request={"name": name}
+        )
+
 def test_destroy_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret_version: Tuple[str, str, str, str, str],
@@ -224,6 +252,21 @@ def test_enable_disable_regional_secret_version(
     )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
 
+def test_enable_disable_regional_secret_version_with_etag(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, etag = regional_secret_version
+    version = disable_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, etag
+    )
+    assert version.state == secretmanager.SecretVersion.State.DISABLED
+
+    version = enable_regional_secret_version_with_etag(
+        project_id, location_id, secret_id, version_id, version.etag
+    )
+    assert version.state == secretmanager.SecretVersion.State.ENABLED
+
 def test_get_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret_version: Tuple[str, str, str, str, str],
@@ -238,4 +281,13 @@ def test_get_regional_secret_version(
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     updated_regional_secret = update_regional_secret(project_id, location_id, secret_id)
+    assert updated_regional_secret.labels["secretmanager"] == "rocks"
+
+def test_update_regional_secret_with_etag(
+    regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, etag = regional_secret
+    updated_regional_secret = update_regional_secret_with_etag(
+        project_id, location_id, secret_id, etag
+    )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
