@@ -197,7 +197,6 @@ def test_delete_regional_secret(
             regional_client, request={"name": name}
         )
 
-
 def test_delete_regional_secret_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret: Tuple[str, str, str, str],
