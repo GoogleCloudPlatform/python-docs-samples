@@ -20,6 +20,7 @@ from google.api_core import exceptions, retry
 from google.cloud import secretmanager, secretmanager_v1
 import pytest
 
+<<<<<<< HEAD
 from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
 from regional_samples import create_regional_secret
@@ -43,6 +44,50 @@ from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_etag
 
+=======
+from regional_samples.access_regional_secret_version import (
+    access_regional_secret_version,
+)
+from regional_samples.add_regional_secret_version import add_regional_secret_version
+from regional_samples.create_regional_secret import create_regional_secret
+from regional_samples.delete_regional_secret import delete_regional_secret
+from regional_samples.delete_regional_secret_with_etag import (
+    delete_regional_secret_with_etag,
+)
+from regional_samples.destroy_regional_secret_version import (
+    destroy_regional_secret_version,
+)
+from regional_samples.destroy_regional_secret_version_with_etag import (
+    destroy_regional_secret_version_with_etag,
+)
+from regional_samples.disable_regional_secret_version import (
+    disable_regional_secret_version,
+)
+from regional_samples.disable_regional_secret_version_with_etag import (
+    disable_regional_secret_version_with_etag,
+)
+from regional_samples.enable_regional_secret_version import (
+    enable_regional_secret_version,
+)
+from regional_samples.enable_regional_secret_version_with_etag import (
+    enable_regional_secret_version_with_etag,
+)
+from regional_samples.get_regional_secret import get_regional_secret
+from regional_samples.get_regional_secret_version import get_regional_secret_version
+from regional_samples.list_regional_secret_versions import list_regional_secret_versions
+from regional_samples.list_regional_secret_versions_with_filter import (
+    list_regional_secret_versions_with_filter,
+)
+from regional_samples.list_regional_secrets import list_regional_secrets
+from regional_samples.list_regional_secrets_with_filter import (
+    list_regional_secrets_with_filter,
+)
+from regional_samples.regional_quickstart import regional_quickstart
+from regional_samples.update_regional_secret import update_regional_secret
+from regional_samples.update_regional_secret_with_etag import (
+    update_regional_secret_with_etag,
+)
+>>>>>>> daff46de1 (fix:regional samples for SM)
 
 @pytest.fixture()
 def location_id() -> str:
@@ -294,10 +339,92 @@ def test_get_regional_secret_version(
     assert secret_id in version.name
     assert version_id in version.name
 
+<<<<<<< HEAD
 def test_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret: Tuple[str, str, str, str],
 ) -> None:
+=======
+
+def test_list_regional_secret_versions(
+    capsys: pytest.LogCaptureFixture,
+    regional_secret_version: Tuple[str, str, str, str, str],
+    another_regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version_1 = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    _, _, _, another_version_id, _ = another_regional_secret_version
+    version_2 = get_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
+    list_regional_secret_versions(project_id, location_id, secret_id)
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert f"Found secret version: {version_1.name}" in out
+    assert f"Found secret version: {version_2.name}" in out
+
+
+def test_list_regional_secret_versions_with_filter(
+    capsys: pytest.LogCaptureFixture,
+    regional_secret_version: Tuple[str, str, str, str, str],
+    another_regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    enabled = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    _, _, _, another_version_id, _ = another_regional_secret_version
+    disabled = disable_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
+    assert disabled.state == secretmanager.SecretVersion.State.DISABLED
+    list_regional_secret_versions_with_filter(
+        project_id, location_id, secret_id, "state:ENABLED"
+    )
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert f"Found secret version: {enabled.name}" in out
+    assert f"Found secret version: {disabled.name}" not in out
+
+
+def test_list_regional_secrets(
+    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    got_regional_secret = get_regional_secret(project_id, location_id, secret_id)
+    list_regional_secrets(project_id, location_id)
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {got_regional_secret.name}" in out
+
+
+def test_list_regional_secrets_with_filter(
+    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    unlabeled = get_regional_secret(project_id, location_id, secret_id)
+    list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {unlabeled.name}" not in out
+
+    labeled = update_regional_secret(project_id, location_id, secret_id)
+    assert labeled.labels["secretmanager"] == "rocks"
+    list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {labeled.name}" in out
+
+def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
+>>>>>>> daff46de1 (fix:regional samples for SM)
     project_id, location_id, secret_id, _ = regional_secret
     delete_regional_secret.delete_regional_secret(project_id, location_id, secret_id)
     with pytest.raises(exceptions.NotFound):
