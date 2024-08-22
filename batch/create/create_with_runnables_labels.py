@@ -28,7 +28,7 @@ def create_job_with_custom_runnables_labels(
     label_value2: str,
 ) -> batch_v1.Job:
     """
-    This method creates a Batch job with custom labels.
+    This method creates a Batch job with custom labels for runnables.
     Args:
         project_id (str): project ID or project number of the Cloud project you want to use.
         region (str): name of the region you want to use to run the job. Regions that are
