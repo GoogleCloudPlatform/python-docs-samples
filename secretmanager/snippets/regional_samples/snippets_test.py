@@ -21,9 +21,23 @@ from google.api_core import exceptions, retry
 from google.cloud import secretmanager, secretmanager_v1
 import pytest
 
+from regional_samples.access_regional_secret_version import (
+    access_regional_secret_version,
+)
+from regional_samples.add_regional_secret_version import add_regional_secret_version
 from regional_samples.create_regional_secret import create_regional_secret
 from regional_samples.delete_regional_secret import delete_regional_secret
+from regional_samples.destroy_regional_secret_version import (
+    destroy_regional_secret_version,
+)
+from regional_samples.disable_regional_secret_version import (
+    disable_regional_secret_version,
+)
+from regional_samples.enable_regional_secret_version import (
+    enable_regional_secret_version,
+)
 from regional_samples.get_regional_secret import get_regional_secret
+from regional_samples.get_regional_secret_version import get_regional_secret_version
 from regional_samples.regional_quickstart import regional_quickstart
 from regional_samples.update_regional_secret import update_regional_secret
 
@@ -122,6 +136,23 @@ def regional_secret(
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart(project_id, location_id, secret_id)
 
+def test_access_regional_secret_version(
+    regional_secret_version: Tuple[str, str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version = access_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    assert version.payload.data == b"hello world!"
+
+def test_add_regional_secret_version(
+    regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    payload = "test123"
+    version = add_regional_secret_version(project_id, location_id, secret_id, payload)
+    assert secret_id in version.name
+
 def test_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
@@ -145,6 +176,42 @@ def test_delete_regional_secret(
         retry_client_access_regional_secret_version(
             regional_client, request={"name": name}
         )
+
+def test_destroy_regional_secret_version(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version = destroy_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    assert version.destroy_time
+
+def test_enable_disable_regional_secret_version(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version = disable_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    assert version.state == secretmanager.SecretVersion.State.DISABLED
+
+    version = enable_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    assert version.state == secretmanager.SecretVersion.State.ENABLED
+
+def test_get_regional_secret_version(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version = get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    assert secret_id in version.name
+    assert version_id in version.name
 
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret
