@@ -64,7 +64,7 @@ def transcribe_gcs(audio_uri: str) -> speech.RecognizeResponse:
     """Transcribes the audio file specified by the gcs_uri.
     Args:
         audio_uri (str): The Google Cloud Storage URI of the input audio file.
-            E.g., gs://[BUCKET]/[FILE]
+            E.g., gs://cloud-samples-data/speech/audio.flac
     Returns:
         cloud_speech.RecognizeResponse: The response containing the transcription results
     """

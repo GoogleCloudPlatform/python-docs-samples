@@ -60,7 +60,7 @@ def transcribe_gcs_with_multichannel(audio_uri: str) -> speech.RecognizeResponse
     """Transcribe the given audio file from Google Cloud Storage synchronously with multichannel.
     Args:
         audio_uri (str): The Cloud Storage URI of the input audio.
-            E.g., gs://[BUCKET]/[FILE]
+            E.g., gs://cloud-samples-data/speech/multi.wav
     Returns:
         speech.RecognizeResponse: The full response object which includes the transcription results.
     """
