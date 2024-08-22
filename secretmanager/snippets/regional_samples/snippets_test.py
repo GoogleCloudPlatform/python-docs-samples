@@ -27,6 +27,7 @@ from regional_samples.get_regional_secret import get_regional_secret
 from regional_samples.regional_quickstart import regional_quickstart
 from regional_samples.update_regional_secret import update_regional_secret
 
+
 @pytest.fixture()
 def location_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT_LOCATION"]
@@ -54,6 +55,7 @@ def iam_user() -> str:
 def ttl() -> Optional[str]:
     return "300s"
 
+
 @retry.Retry()
 def retry_client_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -61,6 +63,7 @@ def retry_client_create_regional_secret(
 ) -> secretmanager_v1.Secret:
     # Retry to avoid 503 error & flaky issues
     return regional_client.create_secret(request=request)
+
 
 @retry.Retry()
 def retry_client_delete_regional_secret(
@@ -70,6 +73,7 @@ def retry_client_delete_regional_secret(
     # Retry to avoid 503 error & flaky issues
     return regional_client.delete_secret(request=request)
 
+
 @retry.Retry()
 def retry_client_access_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -78,11 +82,12 @@ def retry_client_access_regional_secret_version(
     # Retry to avoid 503 error & flaky issues
     return regional_client.access_secret_version(request=request)
 
+
 @pytest.fixture()
 def secret_id(
     regional_client: secretmanager.SecretManagerServiceClient,
     project_id: str,
-    location_id: str
+    location_id: str,
 ) -> Iterator[str]:
     secret_id = f"python-secret-{uuid.uuid4()}"
 
@@ -91,10 +96,13 @@ def secret_id(
     print(f"deleting secret {secret_id}")
     try:
         time.sleep(5)
-        retry_client_delete_regional_secret(regional_client, request={"name": secret_path})
+        retry_client_delete_regional_secret(
+            regional_client, request={"name": secret_path}
+        )
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
+
 
 @pytest.fixture()
 def regional_secret(
@@ -119,8 +127,10 @@ def regional_secret(
 
     yield project_id, location_id, secret_id, regional_secret.etag
 
+
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart(project_id, location_id, secret_id)
+
 
 def test_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -145,6 +155,7 @@ def test_delete_regional_secret(
         retry_client_access_regional_secret_version(
             regional_client, request={"name": name}
         )
+
 
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret

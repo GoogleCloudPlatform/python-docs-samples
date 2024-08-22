@@ -41,9 +41,9 @@ def regional_quickstart(_project_id: str, _location_id: str, _secret_id: str) ->
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint}
+    )
 
     # Build the parent name from the project.
     parent = f"projects/{project_id}/locations/{location_id}"

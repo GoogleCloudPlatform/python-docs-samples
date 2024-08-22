@@ -33,9 +33,9 @@ def delete_regional_secret(project_id: str, location_id: str, secret_id: str) ->
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint}
+    )
 
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
