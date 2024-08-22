@@ -50,6 +50,12 @@ from regional_samples.enable_regional_secret_version_with_etag import (
 )
 from regional_samples.get_regional_secret import get_regional_secret
 from regional_samples.get_regional_secret_version import get_regional_secret_version
+from regional_samples.iam_grant_access_with_regional_secret import (
+    iam_grant_access_with_regional_secret,
+)
+from regional_samples.iam_revoke_access_with_regional_secret import (
+    iam_revoke_access_with_regional_secret,
+)
 from regional_samples.list_regional_secret_versions import list_regional_secret_versions
 from regional_samples.list_regional_secret_versions_with_filter import (
     list_regional_secret_versions_with_filter,
@@ -286,6 +292,28 @@ def test_get_regional_secret_version(
     assert secret_id in version.name
     assert version_id in version.name
 
+def test_iam_grant_access_with_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+    iam_user: str,
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    policy = iam_grant_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
+    assert any(iam_user in b.members for b in policy.bindings)
+
+
+def test_iam_revoke_access_with_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+    iam_user: str,
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    policy = iam_revoke_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
+    assert not any(iam_user in b.members for b in policy.bindings)
 
 def test_list_regional_secret_versions(
     capsys: pytest.LogCaptureFixture,
