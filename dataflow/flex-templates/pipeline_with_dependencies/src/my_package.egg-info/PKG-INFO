@@ -1,5 +1,0 @@
-Metadata-Version: 2.1
-Name: my_package
-Version: 0.1.0
-Requires-Dist: apache-beam[gcp]==2.54.0
-Requires-Dist: pyfiglet

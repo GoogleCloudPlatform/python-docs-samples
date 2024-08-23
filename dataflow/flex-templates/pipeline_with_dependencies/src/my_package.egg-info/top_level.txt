@@ -1,3 +1,0 @@
-__init__
-main
-my_package
