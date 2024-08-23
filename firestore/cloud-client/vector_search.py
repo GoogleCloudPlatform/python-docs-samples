@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 
 
-from google.cloud import firestore
-
-
 def store_vectors():
     # [START firestore_store_vectors]
     from google.cloud import firestore
@@ -32,11 +29,7 @@ def store_vectors():
     # [END firestore_store_vectors]
 
 
-def vector_search_basic():
-    db = firestore.Client(
-        add_unique_string=False
-    )  # Flag for testing purposes, needs index to be precreated
-
+def vector_search_basic(db):
     # [START firestore_vector_search_basic]
     from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
     from google.cloud.firestore_v1.vector import Vector
@@ -54,11 +47,7 @@ def vector_search_basic():
     return vector_query
 
 
-def vector_search_prefilter():
-    db = firestore.Client(
-        add_unique_string=False
-    )  # Flag for testing purposes, needs index to be precreated
-
+def vector_search_prefilter(db):
     # [START firestore_vector_search_basic]
     from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
     from google.cloud.firestore_v1.vector import Vector

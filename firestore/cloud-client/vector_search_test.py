@@ -61,7 +61,7 @@ def test_vector_search_basic():
     )  # Flag for testing purposes, needs index to be precreated
     add_coffee_beans_data(db)
 
-    vector_query = vector_search_basic()
+    vector_query = vector_search_basic(db)
     results = list(vector_query.stream())
 
     assert len(results) == 4
@@ -77,7 +77,7 @@ def test_vector_search_prefilter():
     )  # Flag for testing purposes, needs index to be precreated
     add_coffee_beans_data(db)
 
-    vector_query = vector_search_prefilter()
+    vector_query = vector_search_prefilter(db)
     results = list(vector_query.stream())
 
     assert len(results) == 2
