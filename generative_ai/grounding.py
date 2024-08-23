@@ -19,7 +19,6 @@ from vertexai.language_models import TextGenerationResponse
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
 
 
 def grounding(
@@ -33,7 +32,7 @@ def grounding(
     from vertexai.language_models import GroundingSource, TextGenerationModel
 
     # TODO(developer): Update project_id and location
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # TODO developer - override these parameters as needed:
     parameters = {
