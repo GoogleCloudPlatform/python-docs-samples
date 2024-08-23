@@ -116,7 +116,9 @@ def generate_content3(project_id: str) -> str:
                 "items": {
                     "type": "OBJECT",
                     "properties": {
-                        "Day": {"type": "STRING", },
+                        "Day": {
+                            "type": "STRING",
+                        },
                         "Forecast": {"type": "STRING"},
                         "Temperature": {"type": "INTEGER"},
                         "Humidity": {"type": "STRING", "nullable": True},
@@ -290,10 +292,7 @@ def generate_content7(project_id: str) -> str:
 
     model = GenerativeModel("gemini-1.5-pro")
 
-    response_schema = {
-          "type": "STRING",
-          "enum": ["drama", "comedy", "documentary"]
-    }
+    response_schema = {"type": "STRING", "enum": ["drama", "comedy", "documentary"]}
 
     prompt = "Movie name: The uncovered (2007)Movie context: The film's title refers not only to the un-recovered bodies at ground zero, "
     "but also to the state of the nation at large. Set in the hallucinatory period of time between September 11 and Halloween of 2001, "

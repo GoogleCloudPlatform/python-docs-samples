@@ -15,7 +15,6 @@
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
-from google.cloud import aiplatform
 
 import embedding
 import embedding_preview
@@ -28,9 +27,20 @@ def test_embed_text_preview() -> None:
         "banana muffin?",
         "banana?",
     ]
-    dimensionality = 256 if aiplatform.__version__ >= "v1.45.0" else None
-    embeddings = embedding_preview.embed_text(texts, "RETRIEVAL_QUERY", dimensionality)
+    dimensionality = 256
+    embeddings = embedding_preview.embed_text(
+        texts,
+        "CODE_RETRIEVAL_QUERY",
+        "text-embedding-preview-0815",
+        dimensionality,
+    )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
+    embeddings = embedding_preview.embed_text(
+        texts,
+        "RETRIEVAL_DOCUMENT",
+        "text-embedding-preview-0815",
+        dimensionality,
+    )
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
@@ -41,5 +51,7 @@ def test_embed_text() -> None:
         "banana?",
     ]
     dimensionality = 256
-    embeddings = embedding.embed_text(texts, "RETRIEVAL_QUERY", dimensionality)
+    embeddings = embedding.embed_text(
+        texts, "RETRIEVAL_QUERY", "text-embedding-004", dimensionality
+    )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)

@@ -11,18 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def analyze_video_with_audio(project_id: str) -> str:
+def analyze_video_with_audio() -> str:
     # [START generativeaionvertexai_gemini_video_with_audio]
 
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project_id and location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
@@ -31,8 +32,10 @@ def analyze_video_with_audio(project_id: str) -> str:
     The description should also contain anything important which people say in the video.
     """
 
-    video_file_uri = "gs://cloud-samples-data/generative-ai/video/pixel8.mp4"
-    video_file = Part.from_uri(video_file_uri, mime_type="video/mp4")
+    video_file = Part.from_uri(
+        uri="gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
+        mime_type="video/mp4",
+    )
 
     contents = [video_file, prompt]
 

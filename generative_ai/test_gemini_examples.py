@@ -41,18 +41,18 @@ vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
 def test_gemini_guide_example() -> None:
-    text = gemini_guide_example.generate_text(PROJECT_ID)
+    text = gemini_guide_example.generate_text()
     text = text.lower()
     assert len(text) > 0
 
 
 def test_gemini_text_input_example() -> None:
-    text = gemini_text_input_example.generate_from_text_input(PROJECT_ID)
+    text = gemini_text_input_example.generate_from_text_input()
     assert len(text) > 0
 
 
 def test_gemini_pro_basic_example() -> None:
-    text = gemini_pro_basic_example.generate_text(PROJECT_ID)
+    text = gemini_pro_basic_example.generate_text()
     assert len(text) > 0
 
 
@@ -65,7 +65,7 @@ def test_gemini_pro_config_example() -> None:
     urllib.request.urlretrieve(url, fname)
 
     if os.path.isfile(fname):
-        text = gemini_pro_config_example.generate_text(PROJECT_ID)
+        text = gemini_pro_config_example.generate_text()
         text = text.lower()
         assert len(text) > 0
 
@@ -76,7 +76,7 @@ def test_gemini_pro_config_example() -> None:
 
 
 def test_gemini_multi_image_example() -> None:
-    text = gemini_multi_image_example.generate_text_multimodal(PROJECT_ID)
+    text = gemini_multi_image_example.generate_text_multimodal()
     text = text.lower()
     assert len(text) > 0
     assert "city" in text
@@ -99,7 +99,7 @@ def test_gemini_safety_config_example() -> None:
 
 
 def test_gemini_single_turn_video_example() -> None:
-    text = gemini_single_turn_video_example.generate_text(PROJECT_ID)
+    text = gemini_single_turn_video_example.generate_text()
     text = text.lower()
     assert len(text) > 0
     assert any(
@@ -111,7 +111,7 @@ def test_gemini_single_turn_video_example() -> None:
     "TODO: Exception Logs indicate safety filters are likely blocking model output b/339985493"
 )
 def test_gemini_pdf_example() -> None:
-    text = gemini_pdf_example.analyze_pdf(PROJECT_ID)
+    text = gemini_pdf_example.analyze_pdf()
     assert len(text) > 0
 
 
@@ -154,7 +154,7 @@ def test_transcript_audio() -> None:
 
 
 def test_analyze_video_with_audio() -> None:
-    text = gemini_video_audio.analyze_video_with_audio(PROJECT_ID)
+    text = gemini_video_audio.analyze_video_with_audio()
     assert len(text) > 0
 
 
