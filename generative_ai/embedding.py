@@ -19,7 +19,7 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
 def embed_text(
-    texts: List[str] = ["banana muffins? ", "banana bread? banana muffins?"],
+    texts=None,
     task: str = "RETRIEVAL_DOCUMENT",
     dimensionality: Optional[int] = 256,
 ) -> List[List[float]]:
@@ -31,6 +31,8 @@ def embed_text(
     Returns:
         List[List[float]]: A list of lists containing the embedding vectors for each input text
     """
+    if texts is None:
+        texts = ["banana muffins? ", "banana bread? banana muffins?"]
     model = TextEmbeddingModel.from_pretrained("text-embedding-004")
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
