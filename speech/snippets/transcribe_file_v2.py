@@ -23,21 +23,21 @@ from google.cloud.speech_v2.types import cloud_speech
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def transcribe_file_v2(
-    audio_file: str,
-) -> cloud_speech.RecognizeResponse:
+def transcribe_file_v2() -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file using Google Cloud Speech-to-Text API v2.
-    Args:
-        audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/audio.wav"
     Returns:
         cloud_speech.RecognizeResponse: The response containing the transcription results.
     """
+    # [START speech_transcribe_file_v2]
+
+    # TODO (Developer): Update the PROJECT_ID to the value of your project
+    # PROJECT_ID = "your-project-id"
+
     # Instantiates a client
     client = SpeechClient()
 
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
+    with open("resources/audio.wav", "rb") as f:
         audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
@@ -58,11 +58,6 @@ def transcribe_file_v2(
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
 
+    # [END speech_transcribe_file_v2]
+
     return response
-
-
-# [END speech_transcribe_file_v2]
-
-
-if __name__ == "__main__":
-    transcribe_file_v2("resources/audio.wav")

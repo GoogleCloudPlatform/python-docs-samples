@@ -12,41 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START speech_transcribe_model_selection_v2]
 import os
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-# TODO (Developer): Update the PROJECT_ID to the value of your project
-# PROJECT_ID = "your-project-id"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def transcribe_model_selection_v2(
-    audio_file: str,
-    model: str,
-) -> cloud_speech.RecognizeResponse:
+def transcribe_model_selection_v2() -> cloud_speech.RecognizeResponse:
     """Transcribe an audio file using a specified speech recognition model.
         Available models: https://cloud.google.com/speech-to-text/v2/docs/transcription-model
-    Args:
-        audio_file (str): The path to the audio file to be transcribed.
-            Example: "resources/audio.wav"
-        model (str): The recognition model to be used for the transcription.
     Returns:
         speech.RecognizeResponse: The response containing the transcription results.
     """
+    # [START speech_transcribe_model_selection_v2]
+
     # Instantiates a client
     client = SpeechClient()
 
+    # TODO (Developer): Update the PROJECT_ID to the value of your project
+    # PROJECT_ID = "your-project-id"
+
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
+    with open("resources/audio.wav", "rb") as f:
         audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
         language_codes=["en-US"],
-        model=model,  # Chosen model
+        model="short",  # Chosen model
     )
 
     request = cloud_speech.RecognizeRequest(
@@ -61,11 +56,6 @@ def transcribe_model_selection_v2(
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
 
+    # [END speech_transcribe_model_selection_v2]
+
     return response
-
-
-# [END speech_transcribe_model_selection_v2]
-
-
-if __name__ == "__main__":
-    transcribe_model_selection_v2("resources/audio.wav", "short")

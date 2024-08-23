@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# [START speech_transcribe_feature_in_recognizer]
 import os
 
 from google.api_core.exceptions import NotFound
@@ -20,8 +18,6 @@ from google.api_core.exceptions import NotFound
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-# TODO (Developer): Update the PROJECT_ID to the value of your project
-# PROJECT_ID = "your-project-id"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
@@ -39,8 +35,14 @@ def transcribe_feature_in_recognizer(
     Returns:
         cloud_speech.RecognizeResponse: The response containing the transcription results.
     """
+    # [START speech_transcribe_feature_in_recognizer]
+
     # Instantiates a client
     client = SpeechClient()
+
+    # TODO (Developer): uncomment and update the PROJECT_ID and recognizer_id
+    # PROJECT_ID = "your-project-id"
+    # recognizer_id = "id-recognizer"
     recognizer_name = (
         f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
     )
@@ -83,10 +85,9 @@ def transcribe_feature_in_recognizer(
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
 
+    # [END speech_transcribe_feature_in_recognizer]
+
     return response
-
-
-# [END speech_transcribe_feature_in_recognizer]
 
 
 if __name__ == "__main__":

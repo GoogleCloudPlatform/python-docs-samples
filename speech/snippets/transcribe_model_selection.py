@@ -15,29 +15,22 @@
 """Google Cloud Speech API sample that demonstrates how to select the model
 used for speech recognition.
 """
-
-# [START speech_transcribe_model_selection]
 from google.cloud import speech
 
 
-def transcribe_model_selection(
-    audio_file: str,
-    model: str,
-) -> speech.RecognizeResponse:
+def transcribe_model_selection() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with the selected model.
     List of possible models: https://cloud.google.com/speech-to-text/docs/transcription-model
-    Args:
-        audio_file (str): Path to the local audio file to be transcribed.
-            Example: "resources/fair.wav"
-        model (str): The model to be used for transcription.
-            Example: "phone_call".
     Returns:
-        speech.RecognizeResponse: The response containing the transcription results.
+        The response containing the transcription results.
     """
+    # [START speech_transcribe_model_selection]
+    from google.cloud import speech
+
     # Instantiates a client
     client = speech.SpeechClient()
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
+    with open("resources/Google_Gnome.wav", "rb") as f:
         audio_content = f.read()
 
     audio = speech.RecognitionAudio(content=audio_content)
@@ -46,7 +39,7 @@ def transcribe_model_selection(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code="en-US",
-        model=model,  # Chosen model
+        model="video",  # Chosen model
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -57,40 +50,31 @@ def transcribe_model_selection(
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
 
+    # [END speech_transcribe_model_selection]
+
     return response
 
 
-# [END speech_transcribe_model_selection]
-
-
-# [START speech_transcribe_model_selection_gcs]
-
-
-def transcribe_model_selection_gcs(
-    audio_uri: str,
-    model: str,
-) -> speech.RecognizeResponse:
+def transcribe_model_selection_gcs() -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously with the selected model.
     List of possible models: https://cloud.google.com/speech-to-text/docs/transcription-model
-    Args:
-        audio_uri (str): The Cloud Storage URI of the input audio.
-            e.g., gs://[BUCKET]/[FILE]
-        model (str): The model to be used for transcription.
-            Example: "phone_call" or "video"
     Returns:
         speech.RecognizeResponse: The response containing the transcription results.
     """
+    # [START speech_transcribe_model_selection_gcs]
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    audio = speech.RecognitionAudio(uri=audio_uri)
+    audio = speech.RecognitionAudio(
+        uri="gs://cloud-samples-tests/speech/Google_Gnome.wav"
+    )
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
         language_code="en-US",
-        model=model,
+        model="video",  # Chosen model
     )
 
     operation = client.long_running_recognize(config=config, audio=audio)
@@ -104,18 +88,5 @@ def transcribe_model_selection_gcs(
         print(f"First alternative of result {i}")
         print(f"Transcript: {alternative.transcript}")
 
+    # [END speech_transcribe_model_selection_gcs]
     return response
-
-
-# [END speech_transcribe_model_selection_gcs]
-
-
-if __name__ == "__main__":
-    # It could be a local path like: path_to_file = "resources/Google_Gnome.wav"
-    path_to_file = "gs://cloud-samples-tests/speech/Google_Gnome.wav"
-    # Possible models: "command_and_search", "phone_call", "video", "default"
-    model = "phone_call"
-    if path_to_file.startswith("gs://"):
-        transcribe_model_selection_gcs(path_to_file, model)
-    else:
-        transcribe_model_selection(path_to_file, model)

@@ -25,9 +25,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_transcribe_model_selection_file(capsys: pytest.CaptureFixture) -> None:
-    response = transcribe_model_selection.transcribe_model_selection(
-        os.path.join(RESOURCES, "Google_Gnome.wav"), "video"
-    )
+    response = transcribe_model_selection.transcribe_model_selection()
     out, err = capsys.readouterr()
 
     assert re.search(r"the weather outside is sunny", out, re.DOTALL | re.I)
@@ -36,9 +34,7 @@ def test_transcribe_model_selection_file(capsys: pytest.CaptureFixture) -> None:
 
 @Retry()
 def test_transcribe_model_selection_gcs(capsys: pytest.CaptureFixture) -> None:
-    response = transcribe_model_selection.transcribe_model_selection_gcs(
-        "gs://cloud-samples-tests/speech/Google_Gnome.wav", "video"
-    )
+    response = transcribe_model_selection.transcribe_model_selection_gcs()
     out, err = capsys.readouterr()
 
     assert re.search(r"the weather outside is sunny", out, re.DOTALL | re.I)

@@ -19,12 +19,10 @@ import pytest
 
 import transcribe_gcs_v2
 
-_TEST_AUDIO_FILE_PATH = "gs://cloud-samples-data/speech/audio.flac"
-
 
 @Retry()
 def test_transcribe_gcs_v2(capsys: pytest.CaptureFixture) -> None:
-    response = transcribe_gcs_v2.transcribe_gcs_v2(_TEST_AUDIO_FILE_PATH)
+    response = transcribe_gcs_v2.transcribe_gcs_v2()
 
     assert re.search(
         r"how old is the Brooklyn Bridge",
