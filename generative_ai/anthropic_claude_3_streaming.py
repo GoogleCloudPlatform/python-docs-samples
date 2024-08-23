@@ -12,17 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 
-def generate_text_streaming(project_id: str, region: str) -> str:
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+
+def generate_text_streaming() -> str:
     # [START generativeaionvertexai_claude_3_streaming]
     # TODO(developer): Vertex AI SDK - uncomment below & run
     # pip3 install --upgrade --user google-cloud-aiplatform
     # gcloud auth application-default login
     # pip3 install -U 'anthropic[vertex]'
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "PROJECT_ID"
 
     from anthropic import AnthropicVertex
 
-    client = AnthropicVertex(region=region, project_id=project_id)
+    client = AnthropicVertex(project_id=PROJECT_ID, region="us-east5")
     result = []
 
     with client.messages.stream(

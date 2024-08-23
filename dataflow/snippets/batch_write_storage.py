@@ -35,7 +35,7 @@ def write_to_cloud_storage(argv : List[str] = None) -> None:
     wordsList = ["1", "2", "3", "4"]
     options = MyOptions()
 
-    with beam.Pipeline(options=options) as pipeline:
+    with beam.Pipeline(options=options.view_as(PipelineOptions)) as pipeline:
         (
             pipeline
             | "Create elements" >> beam.Create(wordsList)

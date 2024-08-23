@@ -20,20 +20,18 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def tune_code_generation_model(project_id: str) -> None:
+def tune_code_generation_model() -> None:
     # [START generativeaionvertexai_tune_code_generation_model]
-    from google.auth import default
-
     import vertexai
     from vertexai.language_models import CodeGenerationModel
 
     # Initialize Vertex AI
-    # TODO(developer): Update project
-    credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-    vertexai.init(project=PROJECT_ID, location="us-central1", credentials=credentials)
+    # TODO(developer): update project_id & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = CodeGenerationModel.from_pretrained("code-bison@002")
 
+    # TODO(developer): Update the training data path
     tuning_job = model.tune_model(
         training_data="gs://cloud-samples-data/ai-platform/generative_ai/headline_classification.jsonl",
         tuning_job_location="europe-west4",
@@ -47,3 +45,6 @@ def tune_code_generation_model(project_id: str) -> None:
 
 
 # [END generativeaionvertexai_sdk_tune_code_generation_model]
+
+if __name__ == "__main__":
+    tune_code_generation_model()
