@@ -30,7 +30,7 @@ def generate_function_call_chat() -> ChatSession:
     )
 
     # Initialize Vertex AI
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Specify a function declaration and parameters for an API request

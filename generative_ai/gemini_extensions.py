@@ -25,7 +25,7 @@ def create_extension() -> extensions.Extension:
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     extension = extensions.Extension.create(
@@ -53,7 +53,7 @@ def execute_extension(extension_id: str) -> object:
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # TODO(developer): Update and un-comment below line
@@ -74,7 +74,7 @@ def get_extension(extension_id: str) -> extensions.Extension:
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # TODO(developer): Update and un-comment below line
@@ -90,7 +90,7 @@ def list_extensions() -> List[extensions.Extension]:
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     extensions = extensions.Extension.list()
@@ -104,7 +104,7 @@ def delete_extension(extension_id: str) -> None:
     import vertexai
     from vertexai.preview import extensions
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # TODO(developer): Update and un-comment below line

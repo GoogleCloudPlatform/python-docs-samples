@@ -23,7 +23,7 @@ def chat_text_example() -> str:
 
     from vertexai.generative_models import GenerativeModel, ChatSession
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
@@ -53,7 +53,7 @@ def chat_stream_example() -> str:
 
     from vertexai.generative_models import GenerativeModel, ChatSession
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")

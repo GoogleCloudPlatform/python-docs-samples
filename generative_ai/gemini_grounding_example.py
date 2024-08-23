@@ -29,7 +29,7 @@ def generate_text_with_grounding_web() -> GenerationResponse:
         grounding,
     )
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
@@ -61,7 +61,7 @@ def generate_text_with_grounding_vertex_ai_search(
     from vertexai.preview.generative_models import grounding
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")

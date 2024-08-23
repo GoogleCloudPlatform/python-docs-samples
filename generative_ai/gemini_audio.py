@@ -23,7 +23,7 @@ def summarize_audio() -> str:
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO (developer): update project & location
+    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")

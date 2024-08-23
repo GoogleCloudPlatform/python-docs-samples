@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 from __future__ import annotations
 
 # [START generativeaionvertexai_sdk_embedding]
@@ -35,25 +34,25 @@ def embed_text(
     return [embedding.values for embedding in embeddings]
 
 
-# Embeds code block with a pre-trained, foundational model.
-# Using this function to calculate the embedding for corpus.
-texts = ["Retrieve a function that adds two numbers"]
-task = "CODE_RETRIEVAL_QUERY"
-code_block_embeddings = embed_text(texts=texts, task=task,
-                                   model_name=MODEL_NAME, dimensionality=DIMENSIONALITY)
+if __name__ == "__main__":
+    # Embeds code block with a pre-trained, foundational model.
+    # Using this function to calculate the embedding for corpus.
+    texts = ["Retrieve a function that adds two numbers"]
+    task = "CODE_RETRIEVAL_QUERY"
+    code_block_embeddings = embed_text(
+        texts=texts, task=task, model_name=MODEL_NAME, dimensionality=DIMENSIONALITY
+    )
 
-
-# Embeds code retrieval with a pre-trained, foundational model.
-# Using this function to calculate the embedding for query.
-texts = ["def func(a, b): return a + b",
-         "def func(a, b): return a - b",
-         "def func(a, b): return (a ** 2 + b ** 2) ** 0.5"]
-task = "RETRIEVAL_DOCUMENT"
-code_query_embeddings = embed_text(texts=texts, task=task,
-                                   model_name=MODEL_NAME, dimensionality=DIMENSIONALITY)
+    # Embeds code retrieval with a pre-trained, foundational model.
+    # Using this function to calculate the embedding for query.
+    texts = [
+        "def func(a, b): return a + b",
+        "def func(a, b): return a - b",
+        "def func(a, b): return (a ** 2 + b ** 2) ** 0.5",
+    ]
+    task = "RETRIEVAL_DOCUMENT"
+    code_query_embeddings = embed_text(
+        texts=texts, task=task, model_name=MODEL_NAME, dimensionality=DIMENSIONALITY
+    )
 
 # [END generativeaionvertexai_sdk_embedding]
-
-
-if __name__ == "__main__":
-    embed_text()
