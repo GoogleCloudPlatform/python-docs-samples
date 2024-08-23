@@ -41,9 +41,9 @@ COPY --from=gcr.io/dataflow-templates-base/python311-template-launcher-base:2023
 ARG WORKDIR=/template
 WORKDIR ${WORKDIR}
 
+COPY pyproject.toml .
 COPY requirements.txt .
 COPY setup.py .
-COPY pyproject.toml .
 COPY src/main.py .
 COPY src/my_package my_package
 
