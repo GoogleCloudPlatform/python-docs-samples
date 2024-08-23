@@ -12,14 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START speech_transcribe_file_v2]
 import os
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
-# TODO (Developer): Update the PROJECT_ID to the value of your project
-# PROJECT_ID = "your-project-id"
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
