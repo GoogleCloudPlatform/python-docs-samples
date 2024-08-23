@@ -1,0 +1,2 @@
+apache-beam[gcp]==2.54.0
+pyfiglet
