@@ -11,22 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from vertexai.preview.evaluation import EvalResult
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def create_evaluation_task(project_id: str) -> EvalResult:
+
+def create_evaluation_task() -> EvalResult:
     # [START generativeaionvertexai_create_evaluation_task]
     import pandas as pd
 
     import vertexai
     from vertexai.preview.evaluation import EvalTask
-    from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project_id and location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     eval_dataset = pd.DataFrame(
         {
@@ -65,12 +65,10 @@ def create_evaluation_task(project_id: str) -> EvalResult:
         ],
     )
 
-    model = GenerativeModel("gemini-1.5-flash-001")
-
     prompt_template = (
         "Instruction: {instruction}. Article: {context}. Summary: {response}"
     )
-    result = eval_task.evaluate(model=model, prompt_template=prompt_template)
+    result = eval_task.evaluate(prompt_template=prompt_template)
 
     print("Summary Metrics:\n")
 
