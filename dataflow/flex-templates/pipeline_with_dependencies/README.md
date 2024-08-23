@@ -115,7 +115,7 @@ it possible to
 export TAG=`date +%Y%m%d-%H%M%S`
 export SDK_CONTAINER_IMAGE="$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_base_image:$TAG"
 
-gcloud builds submit .  --tag $SDK_CONTAINER_IMAGE --project $PROJECT
+gcloud builds submit . --tag $SDK_CONTAINER_IMAGE --project $PROJECT
 ```
 
 ## Optional: Inspect the Docker image
@@ -127,8 +127,8 @@ the pipeline by using the Direct Runner:
 docker run --rm -it --entrypoint=/bin/bash $SDK_CONTAINER_IMAGE
 
 # Once the container is created, run:
-pip list
-python main.py --input requirements.txt --output=/tmp/output
+python3 -m pip list
+python3 ./src/main.py --input ./requirements.txt --output=/tmp/output
 cat /tmp/output*
 ```
 
@@ -188,8 +188,8 @@ available versions of packages in the pipeline's dependency chain, regenerate
 the `requirements.txt` file:
 
   ```bash
-  python3.11 -m pip install pip-tools   # Use a consistent minor version of Python throughout the project.
-  pip-compile ./setup.py
+  python3 -m pip install pip-tools
+  python3 -m piptools compile -o requirements.txt pyproject.toml
   ```
 
 If you base your custom container image on the standard Apache Beam base image,
@@ -198,7 +198,7 @@ installed in the Apache Beam base image, use a constraints file:
 
 ```bash
 wget https://raw.githubusercontent.com/apache/beam/release-2.54.0/sdks/python/container/py311/base_image_requirements.txt
-pip-compile --constraint=base_image_requirements.txt ./setup.py
+python3 -m piptools compile --constraint=base_image_requirements.txt ./pyproject.toml
 ```
 
 Alternatively, take the following steps:
