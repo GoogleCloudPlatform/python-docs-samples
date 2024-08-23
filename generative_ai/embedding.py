@@ -19,7 +19,7 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
 def embed_text(
-    texts=None,
+    texts: list = None,
     task: str = "RETRIEVAL_DOCUMENT",
     dimensionality: Optional[int] = 256,
 ) -> List[List[float]]:
