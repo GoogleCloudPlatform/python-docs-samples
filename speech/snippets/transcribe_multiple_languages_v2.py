@@ -12,28 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_multiple_languages_v2]
+import os
+
 from typing import List
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_multiple_languages_v2(
-    project_id: str,
-    language_codes: List[str],
     audio_file: str,
+    language_codes: List[str],
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file."""
-    # Instantiates a client
+    """Transcribe an audio file using Google Cloud Speech-to-Text API with support for multiple languages.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+        language_codes (List[str]): A list of BCP-47 language codes to be used for transcription.
+            Example: ["en-US", "fr-FR"]
+    Returns:
+        cloud_speech.RecognizeResponse: The response from the Speech-to-Text API containing the
+            transcription results.
+    """
     client = SpeechClient()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -42,14 +50,14 @@ def transcribe_multiple_languages_v2(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
     response = client.recognize(request=request)
-
+    # Prints the transcription results
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
 
@@ -60,15 +68,7 @@ def transcribe_multiple_languages_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument(
-        "language_codes", nargs="+", help="Language codes to transcribe"
-    )
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
+    # Language codes to transcribe
     transcribe_multiple_languages_v2(
-        args.project_id, args.language_codes, args.audio_file
+        audio_file="resources/audio.wav", language_codes=["en-US", "fr-FR"]
     )
