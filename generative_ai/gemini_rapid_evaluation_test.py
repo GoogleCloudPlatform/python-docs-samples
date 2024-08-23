@@ -12,17 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
-import pytest
-
 import gemini_rapid_evaluation
 
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-
-@pytest.mark.skip("TODO: Resolve issue b/348174062")
 def test_create_evaluation_task() -> None:
-    response = gemini_rapid_evaluation.create_evaluation_task(PROJECT_ID)
+    response = gemini_rapid_evaluation.create_evaluation_task()
     assert response
