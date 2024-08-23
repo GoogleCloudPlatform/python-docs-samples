@@ -43,6 +43,7 @@ WORKDIR ${WORKDIR}
 
 COPY requirements.txt .
 COPY setup.py .
+COPY pyproject.toml .
 COPY src/main.py .
 COPY src/my_package my_package
 
