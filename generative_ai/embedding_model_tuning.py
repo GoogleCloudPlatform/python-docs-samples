@@ -27,7 +27,7 @@ def tune_embedding_model(
     train_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv",
     test_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/test.tsv",
 ):  # noqa: ANN201
-    """ Tune an embedding model using the specified parameters.
+    """Tune an embedding model using the specified parameters.
     Args:
         api_endpoint (str): The API endpoint for the Vertex AI service.
         base_model_name (str): The name of the base model to use for tuning.
