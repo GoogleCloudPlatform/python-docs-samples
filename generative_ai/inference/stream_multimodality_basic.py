@@ -23,7 +23,7 @@ def generate_content() -> object:
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below line
+    # TODO(developer): Set the following variables and un-comment the lines below
     # PROJECT_ID = "your-project-id"
     # MODEL_ID = "gemini-1.5-flash-001"
 
