@@ -12,3 +12,4 @@ langchain-core==0.2.11
 langchain-google-vertexai==1.0.6
 numpy<2
 openai==1.30.5
+immutabledict==4.2.0
