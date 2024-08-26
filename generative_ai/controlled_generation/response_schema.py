@@ -294,10 +294,12 @@ def generate_content7(project_id: str) -> str:
 
     response_schema = {"type": "STRING", "enum": ["drama", "comedy", "documentary"]}
 
-    prompt = ("The film aims to educate and inform viewers about real-life subjects, events, or people."
-              "It offers a factual record of a particular topic by combining interviews, historical footage, "
-              "and narration. The primary purpose of a film is to present information and provide insights "
-              "into various aspects of reality.")
+    prompt = (
+        "The film aims to educate and inform viewers about real-life subjects, events, or people."
+        "It offers a factual record of a particular topic by combining interviews, historical footage, "
+        "and narration. The primary purpose of a film is to present information and provide insights "
+        "into various aspects of reality."
+    )
 
     response = model.generate_content(
         prompt,
