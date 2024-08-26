@@ -10,6 +10,8 @@
 # distributed under the License is distributed on an 'AS IS' BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
+from google.cloud.firestore_v1.vector import Vector
 
 
 def store_vectors():
@@ -36,7 +38,7 @@ def vector_search_basic(db):
 
     collection = db.collection("coffee-beans")
 
-    # Requires a vector index
+    # Requires a single-field vector index
     vector_query = collection.find_nearest(
         vector_field="embedding_field",
         query_vector=Vector([3.0, 1.0, 2.0]),
@@ -48,7 +50,7 @@ def vector_search_basic(db):
 
 
 def vector_search_prefilter(db):
-    # [START firestore_vector_search_basic]
+    # [START firestore_vector_search_prefilter]
     from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
     from google.cloud.firestore_v1.vector import Vector
 
@@ -62,5 +64,66 @@ def vector_search_prefilter(db):
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=5,
     )
-    # [END firestore_vector_search_basic]
+    # [END firestore_vector_search_prefilter]
+    return vector_query
+
+
+def vector_search_distance_result_field(db):
+    # [START firestore_vector_search_distance_result_field]
+    from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
+    from google.cloud.firestore_v1.vector import Vector
+
+    collection = db.collection("coffee-beans")
+
+    vector_query = collection.find_nearest(
+        vector_field="embedding_field",
+        query_vector=Vector([3.0, 1.0, 2.0]),
+        distance_measure=DistanceMeasure.EUCLIDEAN,
+        limit=10,
+        distance_result_field="vector_distance",
+    )
+
+    docs = vector_query.stream()
+
+    for doc in docs:
+        print(f"{doc.id}, Distance: {doc.get('vector_distance')}")
+    # [END firestore_vector_search_distance_result_field]
+    return vector_query
+
+
+def vector_search_distance_result_field_with_mask(db):
+    collection = db.collection("coffee-beans")
+
+    # [START firestore_vector_search_distance_result_field_masked]
+    vector_query = collection.select(["color", "vector_distance"]).find_nearest(
+        vector_field="embedding_field",
+        query_vector=Vector([3.0, 1.0, 2.0]),
+        distance_measure=DistanceMeasure.EUCLIDEAN,
+        limit=10,
+        distance_result_field="vector_distance",
+    )
+    # [END firestore_vector_search_distance_result_field_masked]
+    return vector_query
+
+
+def vector_search_distance_threshold(db):
+    # [START firestore_vector_search_distance_threshold]
+    from google.cloud.firestore_v1.base_vector_query import DistanceMeasure
+    from google.cloud.firestore_v1.vector import Vector
+
+    collection = db.collection("coffee-beans")
+
+    vector_query = collection.find_nearest(
+        vector_field="embedding_field",
+        query_vector=Vector([3.0, 1.0, 2.0]),
+        distance_measure=DistanceMeasure.EUCLIDEAN,
+        limit=10,
+        distance_threshold=4.5,
+    )
+
+    docs = vector_query.stream()
+
+    for doc in docs:
+        print(f"{doc.id}")
+    # [END firestore_vector_search_distance_threshold]
     return vector_query
