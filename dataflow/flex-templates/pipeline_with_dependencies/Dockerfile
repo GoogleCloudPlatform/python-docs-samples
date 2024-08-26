@@ -44,8 +44,7 @@ WORKDIR ${WORKDIR}
 COPY pyproject.toml .
 COPY requirements.txt .
 COPY setup.py .
-COPY src/main.py .
-COPY src/my_package my_package
+COPY src src
 
 # Installing exhaustive list of dependencies from a requirements.txt
 # helps to ensure that every time Docker container image is built,
@@ -59,7 +58,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install -e .
 
 # For more informaiton, see: https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates
-ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/main.py"
+ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/src/main.py"
 
 # Because this image will be used as custom sdk container image, and it already
 # installs the dependencies from the requirements.txt, we can omit
