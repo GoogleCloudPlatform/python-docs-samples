@@ -47,7 +47,7 @@ def create_context_cache(project_id: str) -> str:
         system_instruction=system_instruction,
         contents=contents,
         ttl=datetime.timedelta(minutes=60),
-        display_name = "example-cache",
+        display_name="example-cache",
     )
 
     print(cached_content.name)
