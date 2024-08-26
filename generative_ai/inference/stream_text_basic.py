@@ -24,6 +24,10 @@ def generate_content() -> object:
 
     from vertexai.generative_models import GenerativeModel
 
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
+    # MODEL_ID = "gemini-1.5-flash-001"
+
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel(MODEL_ID)
