@@ -38,3 +38,4 @@ RUN apt-get update \
 
 
 COPY read_kafka.py ./
+COPY read_kafka_multi_topic.py ./
