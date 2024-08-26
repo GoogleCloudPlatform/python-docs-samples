@@ -133,6 +133,7 @@
 
 
 # BEGIN - pending clarification
+/aml/**/*                      @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /memorystore/**/*                      @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /opencensus/**/*                       @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 # END - pending clarification
