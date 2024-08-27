@@ -53,7 +53,7 @@ def list_regional_secret_versions_with_filter(
     ):
         print(f"Found secret version: {version.name}")
 
-    # [END secretmanager_v1_list_regional_secret_versions_with_filter]
+# [END secretmanager_v1_list_regional_secret_versions_with_filter]
 
 
 if __name__ == "__main__":
