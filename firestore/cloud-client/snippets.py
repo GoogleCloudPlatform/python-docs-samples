@@ -934,7 +934,7 @@ def in_query_with_array(db):
     # [END firestore_query_filter_in_with_array]
 
 
-def not_in(db):
+def not_in_query(db):
     # [START firestore_query_filter_not_in]
     cities_ref = db.collection("cities")
 
@@ -943,7 +943,7 @@ def not_in(db):
     # [END firestore_query_filter_not_in]
 
 
-def not_equal(db):
+def not_equal_query(db):
     # [START firestore_query_filter_not_equal]
     cities_ref = db.collection("cities")
 
