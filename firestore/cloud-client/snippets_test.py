@@ -205,12 +205,14 @@ def test_not_equal_query(db_no_unique_string):
     db.collection("cities").document("Ottawa").set(
         {"capital": True, "country": "Canada"}
     )
-    db.collection("cities").document("Tokyo").set({"capital": True, "country": "Japan"})
+    db.collection("cities").document("Kyoto").set(
+        {"capital": False, "country": "Japan"}
+    )
     db.collection("cities").document("LA").set({"capital": False, "country": "USA"})
     result = snippets.not_equal_query(db)
     results = list(result.stream())
     assert len(results) == 1
-    assert results[0].to_dict()["country"] == "USA"
+    assert results[0].to_dict()["country"] == "Canada"
 
 
 def test_add_custom_class_with_id(db):
