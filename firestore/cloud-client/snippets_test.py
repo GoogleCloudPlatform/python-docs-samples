@@ -200,7 +200,8 @@ def test_not_in_query(db):
     assert results[0].to_dict()["country"] == "Canada"
 
 
-def test_not_equal_query(db):
+def test_not_equal_query(db_no_unique_string):
+    db = db_no_unique_string
     db.collection("cities").document("Ottawa").set(
         {"capital": True, "country": "Canada"}
     )
@@ -818,7 +819,8 @@ def test_regional_endpoint(db):
     assert len(cities_list) == 2
 
 
-def test_query_filter_compound_multi_ineq(db):
+def test_query_filter_compound_multi_ineq(db_no_unique_string):
+    db = db_no_unique_string
     cities = [
         {"name": "SF", "state": "CA", "population": 1_000_000, "density": 10_000},
         {"name": "LA", "state": "CA", "population": 5_000_000, "density": 8_000},
@@ -834,7 +836,8 @@ def test_query_filter_compound_multi_ineq(db):
     assert results[0].to_dict()["name"] == "NYC"
 
 
-def test_query_indexing_considerations(db):
+def test_query_indexing_considerations(db_no_unique_string):
+    db = db_no_unique_string
     emplyees = [
         {"name": "Alice", "salary": 100_000, "experience": 10},
         {"name": "Bob", "salary": 80_000, "experience": 2},
