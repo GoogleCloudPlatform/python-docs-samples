@@ -45,12 +45,9 @@ class TestFirestoreClient(firestore.Client):
         return f"{collection_name}-{self._UNIQUE_STRING}"
 
 
-snippets.firestore.Client = TestFirestoreClient
-
-
 @pytest.fixture(scope="function")
 def db():
-    client = snippets.firestore.Client()
+    client = TestFirestoreClient()
     yield client
     # Cleanup
     try:
