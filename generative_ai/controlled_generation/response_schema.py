@@ -116,15 +116,13 @@ def generate_content3(project_id: str) -> str:
                 "items": {
                     "type": "OBJECT",
                     "properties": {
-                        "Day": {
-                            "type": "STRING",
-                        },
-                        "Forecast": {"type": "STRING"},
-                        "Temperature": {"type": "INTEGER"},
+                        "Day": {"type": "STRING", "nullable": True},
+                        "Forecast": {"type": "STRING", "nullable": True},
+                        "Temperature": {"type": "INTEGER", "nullable": True},
                         "Humidity": {"type": "STRING", "nullable": True},
                         "Wind Speed": {"type": "INTEGER", "nullable": True},
                     },
-                    "required": ["Day", "Temperature", "Forecast"],
+                    "required": ["Day", "Temperature", "Forecast", "Wind Speed"],
                 },
             }
         },

@@ -40,3 +40,7 @@ def generate_text() -> str:
     # [END generativeaionvertexai_gemini_single_turn_video]
 
     return response.text
+
+
+if __name__ == "__main__":
+    generate_text()

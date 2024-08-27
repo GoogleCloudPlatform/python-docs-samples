@@ -37,3 +37,7 @@ def generate_text() -> None:
 
     # [END generativeaionvertexai_gemini_pro_example]
     return response.text
+
+
+if __name__ == "__main__":
+    generate_text()

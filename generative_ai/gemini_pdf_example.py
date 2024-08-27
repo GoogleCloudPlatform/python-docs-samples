@@ -43,3 +43,7 @@ def analyze_pdf() -> str:
     # [END generativeaionvertexai_gemini_pdf]
 
     return response.text
+
+
+if __name__ == "__main__":
+    analyze_pdf()

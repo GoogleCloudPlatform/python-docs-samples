@@ -32,3 +32,7 @@ def list_tuned_models() -> None:
     # [END generativeaionvertexai_sdk_list_tuned_models]
 
     return tuned_model_names
+
+
+if __name__ == "__main__":
+    list_tuned_models()

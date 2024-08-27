@@ -35,3 +35,7 @@ def generate_from_text_input() -> str:
     # [END generativeaionvertexai_gemini_generate_from_text_input]
 
     return response.text
+
+
+if __name__ == "__main__":
+    generate_from_text_input()
