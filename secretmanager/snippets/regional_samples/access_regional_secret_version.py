@@ -58,10 +58,9 @@ def access_regional_secret_version(
     # snippet is showing how to access the secret material.
     payload = response.payload.data.decode("UTF-8")
     print(f"Plaintext: {payload}")
-    # [END secretmanager_access_regional_secret_version]
 
     return response
-
+# [END secretmanager_access_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

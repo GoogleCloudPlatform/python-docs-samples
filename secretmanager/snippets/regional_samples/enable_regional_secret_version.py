@@ -49,10 +49,9 @@ def enable_regional_secret_version(
     response = client.enable_secret_version(request={"name": name})
 
     print(f"Enabled secret version: {response.name}")
-    # [END secretmanager_enable_regional_secret_version]
-
+    
     return response
-
+# [END secretmanager_enable_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

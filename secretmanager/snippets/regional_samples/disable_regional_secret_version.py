@@ -49,10 +49,9 @@ def disable_regional_secret_version(
     response = client.disable_secret_version(request={"name": name})
 
     print(f"Disabled secret version: {response.name}")
-    # [END secretmanager_v1_disable_regional_secret_version]
-
+    
     return response
-
+# [END secretmanager_v1_disable_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

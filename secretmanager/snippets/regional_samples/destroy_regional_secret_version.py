@@ -49,10 +49,9 @@ def destroy_regional_secret_version(
     response = client.destroy_secret_version(request={"name": name})
 
     print(f"Destroyed secret version: {response.name}")
-    # [END secretmanager_v1_destroy_regional_secret_version]
-
+    
     return response
-
+# [END secretmanager_v1_destroy_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

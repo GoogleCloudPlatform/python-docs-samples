@@ -64,9 +64,8 @@ def add_regional_secret_version(
 
     # Print the new secret version name.
     print(f"Added secret version: {response.name}")
-    # [END secretmanager_v1_add_regional_secret_version]
     return response
-
+# [END secretmanager_v1_add_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

@@ -51,10 +51,9 @@ def get_regional_secret_version(
     # Print information about the secret version.
     state = response.state.name
     print(f"Got secret version {response.name} with state {state}")
-    # [END secretmanager_v1_get_regional_secret_version]
 
     return response
-
+# [END secretmanager_v1_get_regional_secret_version]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
