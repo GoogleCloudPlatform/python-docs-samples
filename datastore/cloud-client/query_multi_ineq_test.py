@@ -64,14 +64,14 @@ def entities():
 
 def test_query_filter_compound_multi_ineq(entities):
     query = snippets.query_indexing_considerations()
-    results = list(query.stream())
+    results = list(query.fetch())
     assert len(results) == 1
     assert results[0].to_dict()["description"] == "Play with dog"
 
 
 def test_query_indexing_considerations(entities):
     query = snippets.query_indexing_considerations()
-    results = list(query.stream())
+    results = list(query.fetch())
     # should contain employees salary > 100_000 sorted by salary and experience
     assert len(results) == 3
     assert results[0].to_dict()["name"] == "Charlie"
@@ -80,7 +80,8 @@ def test_query_indexing_considerations(entities):
 
 
 def test_query_order_fields(entities):
-    results = snippets.query_indexing_considerations()
+    query = snippets.query_indexing_considerations()
+    results = list(query.fetch())
     assert len(results) == 4
     assert results[0].to_dict()["name"] == "Mallory"
     assert results[1].to_dict()["name"] == "Joe"
