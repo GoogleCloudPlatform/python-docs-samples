@@ -25,8 +25,10 @@ def query_or_filter(project_id: str) -> None:
     # Execute the query
     query = col_ref.where(
         Or(
-            FieldFilter("capital", "==", True),
-            FieldFilter("population", ">", 1_000_000),
+            [
+                FieldFilter("capital", "==", True),
+                FieldFilter("population", ">", 1_000_000),
+            ]
         )
     )
     docs = query.stream()
@@ -47,11 +49,15 @@ def query_or_compound_filter(project_id: str) -> None:
     # Execute the query
     query = col_ref.where(
         And(
-            FieldFilter("state", "==", "CA"),
-            Or(
-                FieldFilter("capital", "==", True),
-                FieldFilter("population", ">", 1000000),
-            ),
+            [
+                FieldFilter("state", "==", "CA"),
+                Or(
+                    [
+                        FieldFilter("capital", "==", True),
+                        FieldFilter("population", ">", 1000000),
+                    ]
+                ),
+            ]
         )
     )
     docs = query.stream()
