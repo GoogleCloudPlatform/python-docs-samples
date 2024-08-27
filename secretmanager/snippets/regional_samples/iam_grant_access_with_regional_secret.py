@@ -55,9 +55,9 @@ def iam_grant_access_with_regional_secret(
 
     # Print data about the secret.
     print(f"Updated IAM policy on {secret_id}")
-    # [END secretmanager_v1_iam_grant_access_regional_secret]
 
     return new_policy
+# [END secretmanager_v1_iam_grant_access_regional_secret]
 
 
 if __name__ == "__main__":
