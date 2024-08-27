@@ -74,6 +74,8 @@ def create_regional_secret(
     print(f"Created secret: {response.name}")
 
     return response
+
+
 # [END secretmanager_v1_create_regional_secret]
 
 if __name__ == "__main__":

@@ -51,6 +51,8 @@ def update_regional_secret(
     print(f"Updated secret: {response.name}")
 
     return response
+
+
 # [END secretmanager_v1_update_regional_secret]
 
 if __name__ == "__main__":

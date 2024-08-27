@@ -49,8 +49,10 @@ def get_regional_secret(
 
     # Print data about the secret.
     print(f"Got secret {response.name}")
-    
+
     return response
+
+
 # [END secretmanager_v1_get_regional_secret]
 
 if __name__ == "__main__":
