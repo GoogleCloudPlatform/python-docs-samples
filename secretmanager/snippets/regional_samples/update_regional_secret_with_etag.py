@@ -49,10 +49,9 @@ def update_regional_secret_with_etag(
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    # [END secretmanager_v1_update_regional_secret_with_etag]
-
+    
     return response
-
+# [END secretmanager_v1_update_regional_secret_with_etag]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
