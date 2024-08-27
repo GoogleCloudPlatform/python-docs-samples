@@ -23,7 +23,7 @@ def create_evaluation_task() -> EvalResult:
     import pandas as pd
 
     import vertexai
-    from vertexai.preview.evaluation import EvalTask
+    from vertexai.preview.evaluation import EvalTask, MetricPromptTemplateExamples
 
     # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
@@ -57,11 +57,9 @@ def create_evaluation_task() -> EvalResult:
     eval_task = EvalTask(
         dataset=eval_dataset,
         metrics=[
-            "summarization_quality",
-            "groundedness",
-            "fulfillment",
-            "summarization_helpfulness",
-            "summarization_verbosity",
+            MetricPromptTemplateExamples.Pointwise.SUMMARIZATION_QUALITY,
+            MetricPromptTemplateExamples.Pointwise.GROUNDEDNESS,
+            MetricPromptTemplateExamples.Pointwise.VERBOSITY,
         ],
     )
 
