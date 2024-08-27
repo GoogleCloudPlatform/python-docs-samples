@@ -20,7 +20,9 @@ having too much data in your Airflow MetaStore.
 
 ## Authors
 
-The DAG is a fork of [teamclairvoyant repository.](https://github.com/teamclairvoyant/airflow-maintenance-dags/tree/master/db-cleanup)
+The DAG is a fork of [teamclairvoyant repository.](
+https://github.com/teamclairvoyant/airflow-maintenance-dags/tree/master/db-cleanup
+)
 
 ## Usage
 
@@ -35,15 +37,16 @@ The DAG is a fork of [teamclairvoyant repository.](https://github.com/teamclairv
       date of data deletion
     - keep_last: Boolean to specify whether to preserve last run instance
         - keep_last_filters: List of filters to preserve data from deleting
-          during clean-up, such as DAG runs where the external trigger is set to 0.
+          during clean-up, such as DAG runs where the external trigger is set
+          to 0.
         - keep_last_group_by: Option to specify column by which to group the
           database entries and perform aggregate functions.
 
 3. Create and Set the following Variables in the Airflow Web Server
   (Admin -> Variables)
-    - airflow_db_cleanup__max_db_entry_age_in_days - integer - Length to retain
-      the log files if not already provided in the conf. If this is set to 30,
-      the job will remove those files that are 30 days old or older.
+    - airflow_db_cleanup__max_db_entry_age_in_days - integer - Length to
+      retain the log files if not already provided in the conf. If this is set
+      to 30, the job will remove those files that are 30 days old or older.
 
 4. Put the DAG in your gcs bucket.
 """
@@ -256,8 +259,12 @@ def print_configuration_function(**context):
     logging.info("dag_run.conf: " + str(dag_run_conf))
     max_db_entry_age_in_days = None
     if dag_run_conf:
-        max_db_entry_age_in_days = dag_run_conf.get("maxDBEntryAgeInDays", None)
-    logging.info("maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf))
+        max_db_entry_age_in_days = dag_run_conf.get(
+                "maxDBEntryAgeInDays", None
+        )
+    logging.info(
+            "maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf)
+    )
     if max_db_entry_age_in_days is None or max_db_entry_age_in_days < 1:
         logging.info(
             "maxDBEntryAgeInDays conf variable isn't included or Variable "
@@ -322,7 +329,8 @@ def build_query(
         subquery = subquery.from_self()
 
         query = query.filter(
-            and_(age_check_column.notin_(subquery)), and_(age_check_column <= max_date)
+            and_(age_check_column.notin_(subquery)),
+            and_(age_check_column <= max_date)
         )
 
     return query
@@ -432,7 +440,8 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata. " "Skipping..."
+            str(airflow_db_model) + " is not present in the metadata." +
+            "Skipping..."
         )
 
     finally:
@@ -446,7 +455,10 @@ def analyze_db():
 
 
 analyze_op = PythonOperator(
-    task_id="analyze_query", python_callable=analyze_db, provide_context=True, dag=dag
+    task_id="analyze_query",
+    python_callable=analyze_db,
+    provide_context=True,
+    dag=dag
 )
 
 for db_object in DATABASE_OBJECTS:
