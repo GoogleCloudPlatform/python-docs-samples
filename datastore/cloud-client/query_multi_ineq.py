@@ -34,12 +34,13 @@ def query_filter_compound_multi_ineq():
 
 def query_indexing_considerations():
     from google.cloud import datastore
+    from google.cloud.datastore.query import PropertyFilter
 
     client = datastore.Client()
     # [START datastore_query_indexing_considerations]
     query = client.query(kind="employees")
-    query.add_filter("salary", ">", 100_000)
-    query.add_filter("experience", ">", 0)
+    query.add_filter(filter=PropertyFilter("salary", ">", 100_000))
+    query.add_filter(filter=PropertyFilter("experience", ">", 0))
     query.order = ["-salary", "-experience"]
     # [END datastore_query_indexing_considerations]
     return query
@@ -47,11 +48,12 @@ def query_indexing_considerations():
 
 def query_order_fields():
     from google.cloud import datastore
+    from google.cloud.datastore.query import PropertyFilter
 
     client = datastore.Client()
     # [START datastore_query_order_fields]
     query = client.query(kind="employees")
-    query.add_filter("salary", ">", 100_000)
+    query.add_filter(filter=PropertyFilter("salary", ">", 100_000))
     query.order = ["salary"]
     results = query.fetch()
     # Order results by `experience`
