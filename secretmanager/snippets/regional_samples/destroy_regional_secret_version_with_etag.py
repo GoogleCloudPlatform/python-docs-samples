@@ -54,10 +54,9 @@ def destroy_regional_secret_version_with_etag(
     response = client.destroy_secret_version(request=request)
 
     print(f"Destroyed secret version: {response.name}")
-    # [END secretmanager_v1_destroy_regional_secret_version_with_etag]
-
+    
     return response
-
+# [END secretmanager_v1_destroy_regional_secret_version_with_etag]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
