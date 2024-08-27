@@ -1021,7 +1021,9 @@ def regional_endpoint():
 def query_filter_compound_multi_ineq():
     from google.cloud import firestore
 
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_filter_compound_multi_ineq]
     query = (
         db.collection("cities")
@@ -1033,7 +1035,9 @@ def query_filter_compound_multi_ineq():
 
 
 def query_indexing_considerations():
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_indexing_considerations]
     query = (
         db.collection("employees")
