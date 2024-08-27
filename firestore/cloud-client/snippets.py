@@ -1025,8 +1025,8 @@ def query_filter_compound_multi_ineq():
     # [START firestore_query_filter_compound_multi_ineq]
     query = (
         db.collection("cities")
-        .where("population", ">", 1_000_000)
-        .where("density", "<", 10_000)
+        .where(filter=FieldFilter("population", ">", 1_000_000))
+        .where(filter=FieldFilter("density", "<", 10_000))
     )
     # [END firestore_query_filter_compound_multi_ineq]
     return query
@@ -1037,8 +1037,8 @@ def query_indexing_considerations():
     # [START firestore_query_indexing_considerations]
     query = (
         db.collection("employees")
-        .where("salary", ">", 100_000)
-        .where("experience", ">", 0)
+        .where(filter=FieldFilter("salary", ">", 100_000))
+        .where(filter=FieldFilter("experience", ">", 0))
         .order_by("salary")
         .order_by("experience")
     )
@@ -1049,7 +1049,11 @@ def query_indexing_considerations():
 def query_order_fields():
     db = firestore.Client()
     # [START firestore_query_order_fields]
-    query = db.collection("employees").where("salary", ">", 100_000).order_by("salary")
+    query = (
+        db.collection("employees")
+        .where(filter=FieldFilter("salary", ">", 100_000))
+        .order_by("salary")
+    )
     results = query.stream()
     # Order results by `experience`
     sorted_results = sorted(results, key=lambda x: x.get("experience"))
