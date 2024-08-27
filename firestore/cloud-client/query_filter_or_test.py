@@ -15,7 +15,6 @@
 import os
 
 import backoff
-from google.cloud import firestore
 import pytest
 
 from query_filter_or import query_or_compound_filter
@@ -68,7 +67,7 @@ def test_query_or_filter(capsys, data):
 
     try:
         create_document_collection(data, collection)
-        query_or_filter(PROJECT_ID)
+        query_or_filter(client)
     finally:
         delete_document_collection(data, collection)
 
@@ -89,7 +88,7 @@ def test_query_or_compound_filter(capsys, data):
 
     try:
         create_document_collection(data, collection)
-        query_or_compound_filter(PROJECT_ID)
+        query_or_compound_filter(client)
     finally:
         delete_document_collection(data, collection)
 

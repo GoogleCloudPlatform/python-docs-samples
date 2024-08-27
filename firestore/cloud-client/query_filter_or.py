@@ -15,9 +15,7 @@
 from google.cloud import firestore
 
 
-def query_or_filter(project_id: str) -> None:
-    # Instantiate the Firestore client
-    client = firestore.Client(project=project_id)
+def query_or_filter(client) -> None:
     # [START firestore_query_filter_or]
     from google.cloud.firestore_v1.base_query import FieldFilter, Or
 
@@ -39,9 +37,7 @@ def query_or_filter(project_id: str) -> None:
         print(f"ID: {doc.id}")
 
 
-def query_or_compound_filter(project_id: str) -> None:
-    # Instantiate the Firestore client
-    client = firestore.Client(project=project_id)
+def query_or_compound_filter(client) -> None:
     # [START firestore_query_filter_or_compound]
     from google.cloud.firestore_v1.base_query import FieldFilter, Or, And
 
