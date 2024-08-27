@@ -72,10 +72,9 @@ def create_regional_secret(
 
     # Print the new secret name.
     print(f"Created secret: {response.name}")
-    # [END secretmanager_v1_create_regional_secret]
 
     return response
-
+# [END secretmanager_v1_create_regional_secret]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

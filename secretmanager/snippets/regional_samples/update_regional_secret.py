@@ -49,10 +49,9 @@ def update_regional_secret(
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    # [END secretmanager_v1_update_regional_secret]
 
     return response
-
+# [END secretmanager_v1_update_regional_secret]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

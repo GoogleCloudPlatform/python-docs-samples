@@ -49,10 +49,9 @@ def get_regional_secret(
 
     # Print data about the secret.
     print(f"Got secret {response.name}")
-    # [END secretmanager_v1_get_regional_secret]
-
+    
     return response
-
+# [END secretmanager_v1_get_regional_secret]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
