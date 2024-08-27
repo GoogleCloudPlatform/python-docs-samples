@@ -12,80 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_tuning]
+# [START generativeaionvertexai_sdk_tuning]
 from __future__ import annotations
 
+import os
 
-from typing import Optional
-
-
-from google.auth import default
-from google.cloud import aiplatform
-import pandas as pd
-import vertexai
-from vertexai.language_models import TextGenerationModel
-from vertexai.preview.language_models import TuningEvaluationSpec
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+def tuning() -> None:
+    # [START generativeaionvertexai_tuning]
+    import vertexai
+    from vertexai.language_models import TextGenerationModel
 
+    # Initialize Vertex AI
+    # TODO(developer): update project_id & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-def tuning(
-    project_id: str,
-    location: str,
-    model_display_name: str,
-    training_data: pd.DataFrame | str,
-    train_steps: int = 10,
-    evaluation_dataset: Optional[str] = None,
-    tensorboard_instance_name: Optional[str] = None,
-) -> TextGenerationModel:
-    """Tune a new model, based on a prompt-response data.
+    model = TextGenerationModel.from_pretrained("text-bison@002")
 
-    "training_data" can be either the GCS URI of a file formatted in JSONL format
-    (for example: training_data=f'gs://{bucket}/{filename}.jsonl'), or a pandas
-    DataFrame. Each training example should be JSONL record with two keys, for
-    example:
-      {
-        "input_text": <input prompt>,
-        "output_text": <associated output>
-      },
-    or the pandas DataFame should contain two columns:
-      ['input_text', 'output_text']
-    with rows for each training example.
-
-    Args:
-      project_id: GCP Project ID, used to initialize vertexai
-      location: GCP Region, used to initialize vertexai
-      model_display_name: Customized Tuned LLM model name.
-      training_data: GCS URI of jsonl file or pandas dataframe of training data.
-      train_steps: Number of training steps to use when tuning the model.
-      evaluation_dataset: GCS URI of jsonl file of evaluation data.
-      tensorboard_instance_name: The full name of the existing Vertex AI TensorBoard instance:
-        projects/PROJECT_ID/locations/LOCATION_ID/tensorboards/TENSORBOARD_INSTANCE_ID
-        Note that this instance must be in the same region as your tuning job.
-    """
-    vertexai.init(project=project_id, location=location, credentials=credentials)
-    eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
-    eval_spec.tensorboard = aiplatform.Tensorboard(
-        tensorboard_name=tensorboard_instance_name
-    )
-    model = TextGenerationModel.from_pretrained("text-bison@001")
-
-    model.tune_model(
-        training_data=training_data,
-        # Optional:
-        model_display_name=model_display_name,
-        train_steps=train_steps,
+    # TODO(developer): Update the training data path
+    tuning_job = model.tune_model(
+        training_data="gs://cloud-samples-data/ai-platform/generative_ai/headline_classification.jsonl",
         tuning_job_location="europe-west4",
-        tuned_model_location=location,
-        tuning_evaluation_spec=eval_spec,
+        tuned_model_location="us-central1",
     )
 
-    print(model._job.status)
-
+    print(tuning_job._status)
+    # [END generativeaionvertexai_tuning]
     return model
 
 
+# [END generativeaionvertexai_sdk_tuning]
+
 if __name__ == "__main__":
     tuning()
-# [END aiplatform_sdk_tuning]

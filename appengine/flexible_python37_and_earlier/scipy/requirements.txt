@@ -1,8 +1,11 @@
-Flask==3.0.0; python_version > '3.6'
+Flask==3.0.3; python_version > '3.6'
 Flask==2.0.3; python_version < '3.7'
-gunicorn==20.1.0
-imageio==2.29.0
-numpy==1.21.6
-pillow==10.0.1
-scipy==1.7.3
-Werkzeug==2.3.7
+gunicorn==22.0.0
+imageio==2.34.2
+numpy==2.0.0; python_version > '3.9'
+numpy==1.26.4; python_version == '3.9'
+numpy==1.24.4; python_version == '3.8'
+numpy==1.21.6; python_version == '3.7'
+pillow==10.3.0
+scipy==1.14.0
+Werkzeug==3.0.3

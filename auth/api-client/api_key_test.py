@@ -67,7 +67,7 @@ def test_authenticate_with_api_key(api_key: Key, capsys: CaptureFixture) -> None
         "google.cloud.language_v1.LanguageServiceClient.analyze_sentiment",
         get_mock_sentiment_response(),
     ):
-        authenticate_with_api_key.authenticate_with_api_key(PROJECT, api_key.key_string)
+        authenticate_with_api_key.authenticate_with_api_key(api_key.key_string)
     out, _ = capsys.readouterr()
     assert re.search("Successfully authenticated using the API key", out)
 

@@ -140,14 +140,12 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
     });
     // [END auth_login]
 
-    // [START add_listener]
     // setup a database reference at path /channels/channelId
     channel = firebase.database().ref('channels/' + channelId);
     // add a listener to the path that fires any time the value of the data changes
     channel.on('value', function(data) {
       onMessage(data.val());
     });
-    // [END add_listener]
     onOpened();
     // let the server know that the channel is open
   }

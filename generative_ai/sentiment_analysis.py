@@ -11,29 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
-# [START aiplatform_sdk_sentiment_analysis]
-import vertexai
-from vertexai.language_models import TextGenerationModel
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def sentiment_analysis(
-    temperature: float,
-    project_id: str,
-    location: str,
-) -> str:
+def sentiment_analysis() -> str:
     """Sentiment analysis example with a Large Language Model."""
+    # [START aiplatform_sdk_sentiment_analysis]
+    import vertexai
 
-    vertexai.init(project=project_id, location=location)
-    # TODO developer - override these parameters as needed:
+    from vertexai.language_models import TextGenerationModel
+
+    # TODO(developer): update project_id, location & temperature
+    vertexai.init(project=PROJECT_ID, location="us-central1")
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 5,  # Token limit determines the maximum amount of text output.
         "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("google/text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
         """I had to compare two versions of Hamlet for my Shakespeare class and \
 unfortunately I picked this version. Everything from the acting (the actors \
@@ -75,10 +74,10 @@ Classify the sentiment of the message: """,
         **parameters,
     )
     print(f"Response from Model: {response.text}")
+    # [END aiplatform_sdk_sentiment_analysis]
 
     return response.text
 
 
 if __name__ == "__main__":
     sentiment_analysis()
-# [END aiplatform_sdk_sentiment_analysis]

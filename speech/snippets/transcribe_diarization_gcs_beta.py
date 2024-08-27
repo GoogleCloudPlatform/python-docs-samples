@@ -17,25 +17,24 @@
 from google.cloud import speech
 
 
-def transcribe_diarization_gcs_beta(gcs_uri: str) -> bool:
+def transcribe_diarization_gcs_beta(audio_uri: str) -> bool:
     """Transcribe a remote audio file (stored in Google Cloud Storage) using speaker diarization.
-
     Args:
-        gcs_uri: The Google Cloud Storage path to an audio file.
-
+        audio_uri (str): The Google Cloud Storage path to an audio file.
+            E.g., gs://[BUCKET]/[FILE]
     Returns:
         True if the operation successfully completed, False otherwise.
     """
 
     client = speech.SpeechClient()
-
+    # Enhance diarization config with more speaker counts and details
     speaker_diarization_config = speech.SpeakerDiarizationConfig(
         enable_speaker_diarization=True,
-        min_speaker_count=2,
-        max_speaker_count=2,
+        min_speaker_count=2,  # Set minimum number of speakers
+        max_speaker_count=2,  # Adjust max speakers based on expected number of speakers
     )
 
-    # Configure request to enable Speaker diarization
+    # Configure recognition with enhanced audio settings
     recognition_config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         language_code="en-US",
@@ -45,7 +44,7 @@ def transcribe_diarization_gcs_beta(gcs_uri: str) -> bool:
 
     # Set the remote path for the audio file
     audio = speech.RecognitionAudio(
-        uri=gcs_uri,
+        uri=audio_uri,
     )
 
     # Use non-blocking call for getting file transcription
@@ -67,3 +66,8 @@ def transcribe_diarization_gcs_beta(gcs_uri: str) -> bool:
 
 
 # [END speech_transcribe_diarization_gcs_beta]
+
+if __name__ == "__main__":
+    transcribe_diarization_gcs_beta(
+        audio_uri="gs://cloud-samples-data/speech/commercial_mono.wav"
+    )

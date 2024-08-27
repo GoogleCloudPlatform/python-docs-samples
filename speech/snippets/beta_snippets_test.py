@@ -29,6 +29,7 @@ from beta_snippets import (
     transcribe_file_with_word_level_confidence,
 )
 
+
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
@@ -74,7 +75,7 @@ def test_transcribe_multichannel_file(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_file_with_multichannel()
     out, err = capsys.readouterr()
 
-    assert "OK Google stream stranger things from Netflix to my TV" in out
+    assert "Okay Google stream stranger things from Netflix to my TV" in out
     assert result is not None
 
 
@@ -93,7 +94,7 @@ def test_transcribe_word_level_confidence(capsys: pytest.CaptureFixture) -> None
     result = transcribe_file_with_word_level_confidence()
     out, err = capsys.readouterr()
 
-    assert "OK Google stream stranger things from Netflix to my TV" in out
+    assert "Okay Google stream stranger things from Netflix to my TV" in out
     assert result is not None
 
 

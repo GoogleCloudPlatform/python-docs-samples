@@ -52,25 +52,35 @@ def services():
     )
 
     # Get the URL for the service
-    endpoint_url = subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "describe",
-            service_name,
-            "--project",
-            project,
-            "--region=us-central1",
-            "--format=value(status.url)",
-        ],
-        stdout=subprocess.PIPE,
-        check=True,
-    ).stdout.strip()
+    endpoint_url = (
+        subprocess.run(
+            [
+                "gcloud",
+                "run",
+                "services",
+                "describe",
+                service_name,
+                "--project",
+                project,
+                "--region=us-central1",
+                "--format=value(status.url)",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
-    token = subprocess.run(
-        ["gcloud", "auth", "print-identity-token"], stdout=subprocess.PIPE, check=True
-    ).stdout.strip()
+    token = (
+        subprocess.run(
+            ["gcloud", "auth", "print-identity-token"],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
 
     yield endpoint_url, token
 
@@ -92,8 +102,8 @@ def services():
 
 
 def test_auth(services):
-    url = services[0].decode()
-    token = services[1].decode()
+    url = services[0]
+    token = services[1]
 
     req = request.Request(url)
     try:

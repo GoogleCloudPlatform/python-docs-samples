@@ -19,20 +19,17 @@ specified payload to an existing secret.
 
 import argparse
 
+# [START secretmanager_add_secret_version]
 from google.cloud import secretmanager
 import google_crc32c  # type: ignore
 
 
-# [START secretmanager_add_secret_version]
 def add_secret_version(
     project_id: str, secret_id: str, payload: str
 ) -> secretmanager.SecretVersion:
     """
     Add a new secret version to the given secret with the provided payload.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()

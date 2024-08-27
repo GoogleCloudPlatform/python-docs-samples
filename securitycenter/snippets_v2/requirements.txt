@@ -1,0 +1,2 @@
+google-cloud-securitycenter==1.31.0
+google-cloud-bigquery==3.11.4

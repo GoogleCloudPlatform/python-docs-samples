@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # [START speech_transcribe_with_speech_to_storage_beta]
 
 from google.cloud import speech
@@ -21,25 +20,30 @@ from google.cloud.speech_v1 import types
 
 
 def export_transcript_to_storage_beta(
-    input_storage_uri,
-    output_storage_uri,
-    encoding,
-    sample_rate_hertz,
-    language_code,
-    bucket_name,
-    object_name,
-):
-    # input_uri URI for audio file in Cloud Storage, e.g. gs://[BUCKET]/[FILE]
-    audio = speech.RecognitionAudio(uri=input_storage_uri)
+    audio_uri: str,
+    output_bucket_name: str,
+    output_filename: str,
+) -> types.LongRunningRecognizeResponse:
+    """Transcribes an audio file from Cloud Storage and exports the transcript to Cloud Storage bucket.
+    Args:
+        audio_uri (str): The Cloud Storage URI of the input audio, e.g., gs://[BUCKET]/[FILE]
+        output_bucket_name (str): Name of the Cloud Storage bucket to store the output transcript.
+        output_filename (str): Name of the output file to store the transcript.
+    Returns:
+        types.LongRunningRecognizeResponse: The response containing the transcription results.
+    """
+
+    audio = speech.RecognitionAudio(uri=audio_uri)
+    output_storage_uri = f"gs://{output_bucket_name}/{output_filename}"
 
     # Pass in the URI of the Cloud Storage bucket to hold the transcription
     output_config = speech.TranscriptOutputConfig(gcs_uri=output_storage_uri)
 
     # Speech configuration object
     config = speech.RecognitionConfig(
-        encoding=encoding,
-        sample_rate_hertz=sample_rate_hertz,
-        language_code=language_code,
+        encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
+        sample_rate_hertz=8000,
+        language_code="en-US",
     )
 
     # Compose the long-running request
@@ -47,28 +51,24 @@ def export_transcript_to_storage_beta(
         audio=audio, config=config, output_config=output_config
     )
 
-    # create the speech client
+    # Create the speech client
     speech_client = speech.SpeechClient()
-
-    # create the storage client
+    # Create the storage client
     storage_client = storage.Client()
 
-    # run the recognizer to export transcript
+    # Run the recognizer to export transcript
     operation = speech_client.long_running_recognize(request=request)
-
     print("Waiting for operation to complete...")
     operation.result(timeout=90)
 
-    # get bucket with name
-    bucket = storage_client.get_bucket(bucket_name)
+    # Get bucket with name
+    bucket = storage_client.get_bucket(output_bucket_name)
+    # Get blob (file) from bucket
+    blob = bucket.get_blob(output_filename)
 
-    # get blob from bucket
-    blob = bucket.get_blob(object_name)
-
-    # get content as bytes
+    # Get content as bytes
     results_bytes = blob.download_as_bytes()
-
-    # get transcript exported in storage bucket
+    # Get transcript exported in storage bucket
     storage_transcript = types.LongRunningRecognizeResponse.from_json(
         results_bytes, ignore_unknown_fields=True
     )
@@ -82,3 +82,11 @@ def export_transcript_to_storage_beta(
 
     # [END speech_transcribe_with_speech_to_storage_beta]
     return storage_transcript.results
+
+
+if __name__ == "__main__":
+    export_transcript_to_storage_beta(
+        audio_uri="gs://cloud-samples-data/speech/commercial_mono.wav",
+        output_bucket_name="bucket-unique-name",
+        output_filename="output-transcript-filename",
+    )

@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_dictionary_replacement]
 from typing import List
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_dictionary_replacement]
 
 
 def deindentify_with_dictionary_replacement(

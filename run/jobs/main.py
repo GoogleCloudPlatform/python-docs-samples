@@ -51,7 +51,7 @@ def random_failure(rate):
     """Throws an error based on fail rate
 
     Args:
-        rate: an integer between 0 and 1
+        rate: a float between 0 and 1
     """
     if rate < 0 or rate > 1:
         # Return without retrying the Job Task

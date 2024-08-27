@@ -49,7 +49,6 @@ def test_auth_info(client):
     ]
 
     encoded_info = base64.b64encode(json.dumps({"id": "123"}).encode("utf-8"))
-
     for endpoint in endpoints:
         r = client.get(endpoint, headers={"Content-Type": "application/json"})
 

@@ -100,6 +100,27 @@ def test_push_endpoint(monkeypatch, client, fake_token):
     )
     assert r.status_code == 200
 
+    # Push request without JWT token validation
+    url = (
+        "/pubsub/push?token="
+        + os.environ["PUBSUB_VERIFICATION_TOKEN"]
+    )
+
+    r = client.post(
+        url,
+        data=json.dumps(
+            {
+                "message": {
+                    "data": base64.b64encode("Test message".encode("utf-8")).decode(
+                        "utf-8"
+                    )
+                }
+            }
+        ),
+    )
+
+    assert r.status_code == 200
+
     # Make sure the message is visible on the home page.
     r = client.get("/")
     assert r.status_code == 200
@@ -113,4 +134,12 @@ def test_push_endpoint_errors(client):
 
     # invalid token
     r = client.post("/push-handlers/receive_messages?token=bad")
+    assert r.status_code == 400
+
+    # no token
+    r = client.post("/pubsub/push")
+    assert r.status_code == 400
+
+    # invalid token
+    r = client.post("/pubsub/push?token=bad")
     assert r.status_code == 400

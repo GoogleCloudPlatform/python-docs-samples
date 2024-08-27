@@ -18,12 +18,12 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_redact]
 from typing import List
 
 import google.cloud.dlp
 
-
-# [START dlp_deidentify_redact]
 
 def deidentify_with_redact(
     project: str,
@@ -83,9 +83,9 @@ if __name__ == "__main__":
         "--info_types",
         nargs="+",
         help="Strings representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
-             "If unspecified, the three above examples will be used.",
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". '
+        "If unspecified, the three above examples will be used.",
         default=["FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS"],
     )
     parser.add_argument(

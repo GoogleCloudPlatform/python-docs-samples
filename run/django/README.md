@@ -8,8 +8,8 @@
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
 app on Google Cloud Run (fully managed). 
 
-The Django application used in this tutorial is the [Writing your first Django app](https://docs.djangoproject.com/en/3.2/#first-steps),
-after completing [Part 1](https://docs.djangoproject.com/en/3.2/intro/tutorial01/) and [Part 2](https://docs.djangoproject.com/en/3.2/intro/tutorial02/).
+The Django application used in this tutorial is the [Writing your first Django app](https://docs.djangoproject.com/en/stable/#first-steps),
+after completing [Part 1](https://docs.djangoproject.com/en/stable/intro/tutorial01/) and [Part 2](https://docs.djangoproject.com/en/stable/intro/tutorial02/).
 
 
 # Tutorial

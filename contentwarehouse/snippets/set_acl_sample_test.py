@@ -36,6 +36,9 @@ policy = {
 }
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/9821)
@@ -51,6 +54,9 @@ def test_set_project_acl(capsys: pytest.CaptureFixture) -> None:
         capsys.readouterr()
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_set_document_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/9821)

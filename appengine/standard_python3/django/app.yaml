@@ -14,7 +14,6 @@
 # limitations under the License.
 #
 
-# [START django_app]
 # [START gaestd_py_django_app_yaml]
 runtime: python39
 
@@ -34,4 +33,3 @@ handlers:
 - url: /.*
   script: auto
 # [END gaestd_py_django_app_yaml]
-# [END django_app]

@@ -96,26 +96,50 @@ def teardown_cluster(cluster_client):
     backoff.expo, (InternalServerError, ServiceUnavailable, Cancelled), max_tries=5
 )
 def test_update_cluster(capsys, cluster_client: ClusterControllerClient):
-    try:
-        setup_cluster(cluster_client)
-        request = GetClusterRequest(
-            project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
-        )
-        response = cluster_client.get_cluster(request=request)
-        # verify the cluster is in the RUNNING state before proceeding
-        # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
-        assert response.status.state == ClusterStatus.State.RUNNING
+    # using this inner function instead of backoff to retry on an Error in the created cluster
+    # means that we can retry on the AssertionError of an errored out cluster but not other
+    # AssertionErrors, and it means we don't have to retry on an InvalidArgument that would occur in
+    # update cluster if the cluster were in an error state
+    def test_update_cluster_inner(
+        cluster_client: ClusterControllerClient, update_retries: int
+    ):
+        try:
+            setup_cluster(cluster_client)
+            request = GetClusterRequest(
+                project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
+            )
+            response = cluster_client.get_cluster(request=request)
 
-        # Wrapper function for client library function
-        update_cluster.update_cluster(
-            PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES
-        )
-        new_num_cluster = cluster_client.get_cluster(
-            project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
-        )
-        out, _ = capsys.readouterr()
-        assert CLUSTER_NAME in out
-        assert new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES
+            # verify the cluster is in the RUNNING state before proceeding
+            # this prevents a retry on InvalidArgument if the cluster is in an ERROR state
+            assert response.status.state == ClusterStatus.State.RUNNING
 
-    finally:
-        teardown_cluster(cluster_client)
+            # Wrapper function for client library function
+            update_cluster.update_cluster(
+                PROJECT_ID, REGION, CLUSTER_NAME, NEW_NUM_INSTANCES
+            )
+            new_num_cluster = cluster_client.get_cluster(
+                project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
+            )
+            out, _ = capsys.readouterr()
+            assert CLUSTER_NAME in out
+            assert (
+                new_num_cluster.config.worker_config.num_instances == NEW_NUM_INSTANCES
+            )
+        except AssertionError as e:
+            if (
+                update_retries < 3
+                and response.status.state == ClusterStatus.State.ERROR
+            ):
+                teardown_cluster(cluster_client)
+                test_update_cluster_inner(
+                    cluster_client=cluster_client, update_retries=update_retries + 1
+                )
+            else:
+                # if we have exceeded the number of retries or the assertion error
+                # is not related to the cluster being in error, raise it
+                raise e
+        finally:
+            teardown_cluster(cluster_client)
+
+    test_update_cluster_inner(cluster_client=cluster_client, update_retries=0)

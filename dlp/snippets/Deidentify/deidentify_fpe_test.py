@@ -37,7 +37,7 @@ def test_deidentify_with_fpe(capsys: pytest.CaptureFixture) -> None:
         GCLOUD_PROJECT,
         HARMFUL_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
     )
@@ -54,7 +54,7 @@ def test_deidentify_with_fpe_uses_surrogate_info_types(
         GCLOUD_PROJECT,
         HARMFUL_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
         surrogate_type=SURROGATE_TYPE,
@@ -72,7 +72,7 @@ def test_deidentify_with_fpe_ignores_insensitive_data(
         GCLOUD_PROJECT,
         HARMLESS_STRING,
         ["US_SOCIAL_SECURITY_NUMBER"],
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
         wrapped_key=WRAPPED_KEY,
         key_name=KEY_NAME,
     )

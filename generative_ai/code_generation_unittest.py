@@ -12,18 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_code_generation_unittest]
-import textwrap
 
-from vertexai.language_models import CodeGenerationModel
-
-
-def generate_unittest(temperature: float = 0.5) -> object:
+def generate_unittest() -> object:
     """Example of using Codey for Code Generation to write a unit test."""
+    # [START aiplatform_sdk_code_generation_unittest]
+    import textwrap
+
+    from vertexai.language_models import CodeGenerationModel
 
     # TODO developer - override these parameters as needed:
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.5,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
 
@@ -49,10 +48,10 @@ def generate_unittest(temperature: float = 0.5) -> object:
     )
 
     print(f"Response from Model: {response.text}")
+    # [END aiplatform_sdk_code_generation_unittest]
 
     return response
 
 
 if __name__ == "__main__":
     generate_unittest()
-# [END aiplatform_sdk_code_generation_unittest]

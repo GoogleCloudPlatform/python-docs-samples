@@ -18,12 +18,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_free_text_with_fpe_using_surrogate]
 import base64
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_free_text_with_fpe_using_surrogate]
 
 
 def deidentify_free_text_with_fpe_using_surrogate(
@@ -111,8 +110,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--info_type",
         help="String representing info types to look for. A full list of "
-             "info categories and types is available from the API. Examples "
-             'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
+        "info categories and types is available from the API. Examples "
+        'include "FIRST_NAME", "LAST_NAME", "EMAIL_ADDRESS". ',
     )
     parser.add_argument(
         "project",
@@ -131,17 +130,17 @@ if __name__ == "__main__":
         "--alphabet",
         default="ALPHA_NUMERIC",
         help="The set of characters to replace sensitive ones with. Commonly "
-             'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
-             '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
-             '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
+        'used subsets of the alphabet include "NUMERIC", "HEXADECIMAL", '
+        '"UPPER_CASE_ALPHA_NUMERIC", "ALPHA_NUMERIC", '
+        '"FFX_COMMON_NATIVE_ALPHABET_UNSPECIFIED"',
     )
     parser.add_argument(
         "-s",
         "--surrogate_type",
         help="The name of the surrogate custom info type to use. Only "
-             "necessary if you want to reverse the de-identification process. Can "
-             "be essentially any arbitrary string, as long as it doesn't appear "
-             "in your dataset otherwise.",
+        "necessary if you want to reverse the de-identification process. Can "
+        "be essentially any arbitrary string, as long as it doesn't appear "
+        "in your dataset otherwise.",
     )
 
     args = parser.parse_args()

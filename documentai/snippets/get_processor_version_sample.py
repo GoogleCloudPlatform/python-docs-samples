@@ -45,7 +45,7 @@ def get_processor_version_sample(
     # Print the processor version information
     print(f"Processor Version: {processor_version_id}")
     print(f"Display Name: {processor_version.display_name}")
-    print(processor_version.state)
+    print(f"DEPLOYED: {processor_version.state}")
 
 
 # [END documentai_get_processor_version]

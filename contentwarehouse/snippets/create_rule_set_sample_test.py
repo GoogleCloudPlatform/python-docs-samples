@@ -23,6 +23,9 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "us"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_create_rule_set(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     create_rule_set_sample.create_rule_set(

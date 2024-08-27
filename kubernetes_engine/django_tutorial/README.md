@@ -7,7 +7,7 @@
 
 This repository is an example of how to run a [Django](https://www.djangoproject.com/) 
 app on Google Kubernetes Engine. It uses the
-[Writing your first Django app](https://docs.djangoproject.com/en/1.11/intro/tutorial01/)
+[Writing your first Django app](https://docs.djangoproject.com/en/stable/intro/tutorial01/)
 Polls application (parts 1 and 2) as the example app to deploy. From here on
 out, we refer to this app as the 'polls' application.
 

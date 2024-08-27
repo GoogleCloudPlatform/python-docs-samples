@@ -24,12 +24,13 @@ import pytest
 import transcribe_override_recognizer
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def delete_recognizer(project_id: str, recognizer_id: str) -> None:
+def delete_recognizer(recognizer_id: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(
-        name=f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
+        name=f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
     )
     client.delete_recognizer(request=request)
 
@@ -37,16 +38,15 @@ def delete_recognizer(project_id: str, recognizer_id: str) -> None:
 def test_transcribe_override_recognizer(
     capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
 ) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup():
-        delete_recognizer(project_id, recognizer_id)
+    def cleanup() -> None:
+        delete_recognizer(recognizer_id)
 
     request.addfinalizer(cleanup)
 
     response = transcribe_override_recognizer.transcribe_override_recognizer(
-        project_id, recognizer_id, os.path.join(_RESOURCES, "audio.wav")
+        os.path.join(_RESOURCES, "audio.wav"), recognizer_id
     )
 
     assert re.search(

@@ -23,11 +23,11 @@ search_query = "Google"
 
 def test_search():
     location = "global"
-    data_store_id = "test-search-engine_1689960780551"
+    engine_id = "test-search-engine_1689960780551"
     response = search_sample.search_sample(
         project_id=project_id,
         location=location,
-        data_store_id=data_store_id,
+        engine_id=engine_id,
         search_query=search_query,
     )
 
@@ -40,11 +40,11 @@ def test_search():
 
 def test_search_eu_endpoint():
     location = "eu"
-    data_store_id = "alphabet-earnings-reports-eu"
+    engine_id = "test-search-engine-eu_1695154596291"
     response = search_sample.search_sample(
         project_id=project_id,
         location=location,
-        data_store_id=data_store_id,
+        engine_id=engine_id,
         search_query=search_query,
     )
 

@@ -19,12 +19,11 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_table_row_suppress]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
-
-
-# [START dlp_deidentify_table_row_suppress]
 
 
 def deidentify_table_suppress_row(

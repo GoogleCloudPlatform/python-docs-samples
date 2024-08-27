@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_extraction]
-import vertexai
-from vertexai.language_models import TextGenerationModel
-
 
 def extractive_question_answering(
     temperature: float,
@@ -23,9 +19,12 @@ def extractive_question_answering(
     location: str,
 ) -> str:
     """Extractive Question Answering with a Large Language Model."""
+    # [START aiplatform_sdk_extraction]
+    import vertexai
+    from vertexai.language_models import TextGenerationModel
 
+    # TODO (developer): update project_id, location & temperature
     vertexai.init(project=project_id, location=location)
-    # TODO developer - override these parameters as needed:
     parameters = {
         "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
@@ -33,9 +32,9 @@ def extractive_question_answering(
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
     }
 
-    model = TextGenerationModel.from_pretrained("text-bison@001")
+    model = TextGenerationModel.from_pretrained("text-bison@002")
     response = model.predict(
-        """Background: There is evidence that there have been significant changes \
+        prompt="""Background: There is evidence that there have been significant changes \
 in Amazon rainforest vegetation over the last 21,000 years through the Last \
 Glacial Maximum (LGM) and subsequent deglaciation. Analyses of sediment \
 deposits from Amazon basin paleo lakes and from the Amazon Fan indicate that \
@@ -74,9 +73,9 @@ A:""",
     )
     print(f"Response from Model: {response.text}")
 
+    # [END aiplatform_sdk_extraction]
     return response.text
 
 
 if __name__ == "__main__":
     extractive_question_answering()
-# [END aiplatform_sdk_extraction]

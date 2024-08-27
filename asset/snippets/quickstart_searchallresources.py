@@ -42,7 +42,6 @@ def search_all_resources(
     )
     for resource in response:
         print(resource)
-        break
     # [END asset_quickstart_search_all_resources]
 
 

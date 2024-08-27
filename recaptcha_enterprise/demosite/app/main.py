@@ -28,9 +28,6 @@ app.add_url_rule(rule="/comment", methods=["GET"], view_func=urls.comment)
 app.add_url_rule(rule="/signup", methods=["GET"], view_func=urls.signup)
 
 # Submit action URL rules.
-app.add_url_rule(
-    rule="/on_homepage_load", methods=["POST"], view_func=urls.on_homepage_load
-)
 app.add_url_rule(rule="/on_login", methods=["POST"], view_func=urls.on_login)
 app.add_url_rule(rule="/on_signup", methods=["POST"], view_func=urls.on_signup)
 app.add_url_rule(

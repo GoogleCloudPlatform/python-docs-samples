@@ -1,2 +1,2 @@
-flask==2.2.5
-pytest==7.0.1
+flask==3.0.3
+pytest==8.2.0
