@@ -33,6 +33,7 @@ def translate_text(text: str, target_language_code: str = "fr"):
     """
     # Initializes the Vertex AI with the specified project and location
     vertexai.init(project=PROJECT_ID, location="europe-west2")
+
     model = GenerativeModel("gemini-1.0-pro")
 
     # Configuration for the text generation
@@ -62,4 +63,4 @@ def translate_text(text: str, target_language_code: str = "fr"):
 # [END aiplatform_gemini_translate]
 
 if __name__ == "__main__":
-    translate_text(text="Hello! How are you doing today?", target_language_code="uk")
+    translate_text(text="Hello! How are you doing today?", target_language_code="fr")
