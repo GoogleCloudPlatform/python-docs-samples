@@ -20,7 +20,7 @@ import pytest
 
 from query_filter_or import query_or_compound_filter
 from query_filter_or import query_or_filter
-from .snippets_test import TestFirestoreClient
+import snippets_test
 
 os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
 PROJECT_ID = os.environ["FIRESTORE_PROJECT"]
@@ -61,7 +61,9 @@ def delete_document_collection(data, collection):
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_query_or_filter(capsys, data):
-    client = TestFirestoreClient(project=PROJECT_ID, add_unique_string=False)
+    client = snippets_test.TestFirestoreClient(
+        project=PROJECT_ID, add_unique_string=False
+    )
     collection = client.collection("cities")
 
     try:
@@ -80,7 +82,9 @@ def test_query_or_filter(capsys, data):
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def test_query_or_compound_filter(capsys, data):
-    client = TestFirestoreClient(project=PROJECT_ID, add_unique_string=False)
+    client = snippets_test.TestFirestoreClient(
+        project=PROJECT_ID, add_unique_string=False
+    )
     collection = client.collection("cities")
 
     try:
