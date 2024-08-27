@@ -24,7 +24,7 @@ def query_or_filter(project_id: str) -> None:
     col_ref = client.collection("cities")
     # Execute the query
     query = col_ref.where(
-        Or(
+        filter=Or(
             [
                 FieldFilter("capital", "==", True),
                 FieldFilter("population", ">", 1_000_000),
@@ -48,7 +48,7 @@ def query_or_compound_filter(project_id: str) -> None:
     col_ref = client.collection("cities")
     # Execute the query
     query = col_ref.where(
-        And(
+        filter=And(
             [
                 FieldFilter("state", "==", "CA"),
                 Or(
