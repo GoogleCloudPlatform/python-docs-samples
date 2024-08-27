@@ -26,12 +26,10 @@ Relative cost of each bucket = deleted_bytes / total_byte_seconds
                                  x Relative Storage Cost
                                  x Storage Class Ratio
 """
-
 # [START storage_soft_delete_relative_cost]
-
+from __future__ import annotations
 import argparse
 import json
-from typing import Dict, List, Union
 import google.cloud.monitoring_v3 as monitoring_client
 
 
@@ -238,7 +236,7 @@ def soft_delete_relative_cost_analyzer(
     agg_days: int = 30,
     lookback_days: int = 360,
     list_buckets: bool = False,
-    ) -> Union[str, Dict[str, float]]: # Note potential string output
+    ) -> str | Dict[str, float]: # Note potential string output
     """Identifies buckets exceeding the relative cost threshold for enabling soft delete.
 
     Args:
