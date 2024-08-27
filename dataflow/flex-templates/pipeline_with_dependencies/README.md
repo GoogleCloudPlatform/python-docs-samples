@@ -38,7 +38,7 @@ the pipeline dependencies, and the input parameters. You can define multiple
 pipelines in the same package. The `my_package.launcher` module is used to
 submit the pipeline to a runner.
 
-The `src/main.py` file provides a top-level entrypoint to trigger the pipeline
+The `main.py` file provides a top-level entrypoint to trigger the pipeline
 launcher from a launch environment.
 
 The `Dockerfile` defines the runtime environment for the pipeline. It also
@@ -128,7 +128,7 @@ docker run --rm -it --entrypoint=/bin/bash $SDK_CONTAINER_IMAGE
 
 # Once the container is created, run:
 python3 -m pip list
-python3 ./src/main.py --input ./requirements.txt --output=/tmp/output
+python3 ./main.py --input ./requirements.txt --output=/tmp/output
 cat /tmp/output*
 ```
 
