@@ -12,30 +12,37 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_reuse_recognizer]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_reuse_recognizer(
-    project_id: str,
-    recognizer_id: str,
     audio_file: str,
+    recognizer_id: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file using an existing recognizer."""
+    """Transcribe an audio file using an existing recognizer.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+        recognizer_id (str): The ID of the existing recognizer to be used for transcription.
+    Returns:
+        cloud_speech.RecognizeResponse: The response containing the transcription results.
+    """
     # Instantiates a client
     client = SpeechClient()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/{recognizer_id}",
-        content=content,
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}",
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -51,11 +58,6 @@ def transcribe_reuse_recognizer(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    transcribe_reuse_recognizer(
+        audio_file="resources/audio.wav", recognizer_id="id-recognizer"
     )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("recognizer_id", help="Recognizer ID to use for recogniition")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    transcribe_reuse_recognizer(args.project_id, args.audio_file)

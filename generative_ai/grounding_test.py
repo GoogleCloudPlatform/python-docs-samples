@@ -12,24 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import grounding
 
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_grounding() -> None:
     data_store_id = "test-search-engine_1689960780551"
     response = grounding.grounding(
-        project_id=_PROJECT_ID,
-        location=_LOCATION,
         data_store_location="global",
         data_store_id=data_store_id,
     )
