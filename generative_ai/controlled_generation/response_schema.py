@@ -294,12 +294,12 @@ def generate_content7(project_id: str) -> str:
 
     response_schema = {"type": "STRING", "enum": ["drama", "comedy", "documentary"]}
 
-    prompt = "Movie name: The uncovered (2007)Movie context: The film's title refers not only to the un-recovered bodies at ground zero, "
-    "but also to the state of the nation at large. Set in the hallucinatory period of time between September 11 and Halloween of 2001, "
-    "The Unrecovered examines the effect of terror on the average mind, the way a state of heightened anxiety and/or alertness can cause "
-    "the average person to make the sort of imaginative connections that are normally made only by artists and conspiracy theorists-both "
-    "of whom figure prominently in this film. The Unrecovered explores the way in which irony, empathy, and paranoia relate to one another "
-    "in the wake of 9/11.Given the movie name and context, please classify the movie type."
+    prompt = (
+        "The film aims to educate and inform viewers about real-life subjects, events, or people."
+        "It offers a factual record of a particular topic by combining interviews, historical footage, "
+        "and narration. The primary purpose of a film is to present information and provide insights "
+        "into various aspects of reality."
+    )
 
     response = model.generate_content(
         prompt,
@@ -310,6 +310,6 @@ def generate_content7(project_id: str) -> str:
 
     print(response.text)
     # Example reponse:
-    #     documentary
+    #     'documentary'
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_7]
     return response
