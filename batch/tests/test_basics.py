@@ -35,6 +35,7 @@ from ..create.create_with_pubsub_notifications import (
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
+from ..create.create_with_specific_network import create_with_custom_network
 from ..create.create_with_ssd import create_local_ssd_job
 
 from ..delete.delete_job import delete_job
@@ -189,6 +190,17 @@ def _check_nfs_mounting(
     assert expected_script_text in job.task_groups[0].task_spec.runnables[0].script.text
 
 
+def _check_custom_networks(job, network_name, subnet_name):
+    assert (
+        f"/networks/{network_name}"
+        in job.allocation_policy.network.network_interfaces[0].network
+    )
+    assert (
+        f"/subnetworks/{subnet_name}"
+        in job.allocation_policy.network.network_interfaces[0].subnetwork
+    )
+
+
 @flaky(max_runs=3, min_passes=1)
 def test_script_job(job_name, capsys):
     job = create_script_job(PROJECT, REGION, job_name)
@@ -284,4 +296,14 @@ def test_check_nfs_job(job_name):
         ),
         region="us-central1",
         project=project_with_nfs_filestore,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_job_with_custom_network(job_name):
+    network_name = "default"
+    subnet = "default"
+    job = create_with_custom_network(PROJECT, REGION, network_name, subnet, job_name)
+    _test_body(
+        job, additional_test=lambda: _check_custom_networks(job, network_name, subnet)
     )
