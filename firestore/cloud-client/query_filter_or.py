@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud import firestore
-
 
 def query_or_filter(client) -> None:
     # [START firestore_query_filter_or]
