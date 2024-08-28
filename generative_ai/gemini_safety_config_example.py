@@ -64,3 +64,7 @@ def generate_text() -> str:
     # [END generativeaionvertexai_gemini_safety_settings]
 
     return "".join(text_responses)
+
+
+if __name__ == "__main__":
+    generate_text()

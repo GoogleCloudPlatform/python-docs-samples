@@ -60,6 +60,7 @@ def create_evaluation_task() -> EvalResult:
             MetricPromptTemplateExamples.Pointwise.SUMMARIZATION_QUALITY,
             MetricPromptTemplateExamples.Pointwise.GROUNDEDNESS,
             MetricPromptTemplateExamples.Pointwise.VERBOSITY,
+            MetricPromptTemplateExamples.Pointwise.INSTRUCTION_FOLLOWING
         ],
     )
 
@@ -78,3 +79,7 @@ def create_evaluation_task() -> EvalResult:
 
     # [END generativeaionvertexai_create_evaluation_task]
     return result
+
+
+if __name__ == "__main__":
+    create_evaluation_task()

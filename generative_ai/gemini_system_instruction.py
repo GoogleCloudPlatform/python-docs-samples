@@ -42,3 +42,7 @@ def set_system_instruction(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_system_instruction]
 
     return response.text
+
+
+if __name__ == "__main__":
+    set_system_instruction()
