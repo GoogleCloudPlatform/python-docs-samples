@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import function_calling_chat
 
-
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 summaries_expected = [
     "Pixel 8 Pro",
@@ -33,7 +29,7 @@ summaries_expected = [
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_chat() -> None:
-    chat = function_calling_chat.generate_function_call_chat(project_id=_PROJECT_ID)
+    chat = function_calling_chat.generate_function_call_chat()
 
     assert chat
     assert chat.history

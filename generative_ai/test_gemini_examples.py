@@ -84,11 +84,11 @@ def test_gemini_multi_image_example() -> None:
 
 
 def test_gemini_count_token_example() -> None:
-    response = gemini_count_token_example.count_tokens(PROJECT_ID)
+    response = gemini_count_token_example.count_tokens()
     assert response
     assert response.usage_metadata
 
-    response = gemini_count_token_example.count_tokens_multimodal(PROJECT_ID)
+    response = gemini_count_token_example.count_tokens_multimodal()
     assert response
     assert response.usage_metadata
 
@@ -116,12 +116,12 @@ def test_gemini_pdf_example() -> None:
 
 
 def test_gemini_chat_example() -> None:
-    text = gemini_chat_example.chat_text_example(PROJECT_ID)
+    text = gemini_chat_example.chat_text_example()
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
-    text = gemini_chat_example.chat_stream_example(PROJECT_ID)
+    text = gemini_chat_example.chat_stream_example()
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
@@ -131,28 +131,25 @@ def test_gemini_chat_example() -> None:
     "Unable to test Google Search grounding due to allowlist restrictions."
 )
 def test_gemini_grounding_web_example() -> None:
-    response = gemini_grounding_example.generate_text_with_grounding_web(
-        PROJECT_ID,
-    )
+    response = gemini_grounding_example.generate_text_with_grounding_web()
     assert response
 
 
 def test_gemini_grounding_vais_example() -> None:
     data_store_path = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
     response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
-        PROJECT_ID,
         data_store_path=data_store_path,
     )
     assert response
 
 
 def test_summarize_audio() -> None:
-    text = gemini_audio.summarize_audio(PROJECT_ID)
+    text = gemini_audio.summarize_audio()
     assert len(text) > 0
 
 
 def test_transcript_audio() -> None:
-    text = gemini_audio.transcript_audio(PROJECT_ID)
+    text = gemini_audio.transcript_audio()
     assert len(text) > 0
 
 
@@ -162,7 +159,7 @@ def test_analyze_video_with_audio() -> None:
 
 
 def test_analyze_all_modalities() -> None:
-    text = gemini_all_modalities.analyze_all_modalities(PROJECT_ID)
+    text = gemini_all_modalities.analyze_all_modalities()
     assert len(text) > 0
 
 

@@ -11,11 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 from vertexai.generative_models import GenerationResponse
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def generate_function_call(project_id: str) -> GenerationResponse:
+
+def generate_function_call() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_function_calling]
     import vertexai
     from vertexai.generative_models import (
@@ -28,9 +31,8 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     )
 
     # Initialize Vertex AI
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Initialize Gemini model
     model = GenerativeModel("gemini-1.5-flash-001")
@@ -106,7 +108,7 @@ def generate_function_call(project_id: str) -> GenerationResponse:
     return response
 
 
-def generate_function_call_advanced(project_id: str) -> GenerationResponse:
+def generate_function_call_advanced() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_function_calling_advanced]
     import vertexai
     from vertexai.preview.generative_models import (
@@ -116,11 +118,9 @@ def generate_function_call_advanced(project_id: str) -> GenerationResponse:
         ToolConfig,
     )
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
     # Initialize Vertex AI
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Specify a function declaration and parameters for an API request
     get_product_sku_func = FunctionDeclaration(

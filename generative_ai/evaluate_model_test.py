@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
@@ -23,10 +21,6 @@ import pytest
 import evaluate_model
 
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-central1"
-
-
 @pytest.mark.skip(
     reason="Model is giving 404 Not found error."
     "Need to investigate. Created an issue tracker is at "
@@ -34,9 +28,5 @@ _LOCATION = "us-central1"
 )
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_evaluate_model() -> None:
-    eval_metrics = evaluate_model.evaluate_model(
-        _PROJECT_ID,
-        _LOCATION,
-    )
-
+    eval_metrics = evaluate_model.evaluate_model()
     assert hasattr(eval_metrics, "auRoc")
