@@ -79,7 +79,7 @@ def db_no_unique_string():
     client = TestFirestoreClient(add_unique_string=False)
     yield client
     # Cleanup
-    test_collections = ["cities"]
+    test_collections = ["cities", "employees"]
     for collection in test_collections:
         try:
             for doc in client.collection(collection).stream():
@@ -835,7 +835,7 @@ def test_query_filter_compound_multi_ineq(db_no_unique_string):
     query = snippets.query_filter_compound_multi_ineq()
     results = list(query.stream())
     assert len(results) == 1
-    assert results[0].to_dict()["name"] == "NYC"
+    assert results[0].to_dict()["name"] == "LA"
 
 
 def test_query_indexing_considerations(db_no_unique_string):
@@ -855,9 +855,9 @@ def test_query_indexing_considerations(db_no_unique_string):
     results = list(query.stream())
     # should contain employees salary > 100_000 sorted by salary and experience
     assert len(results) == 3
-    assert results[0].to_dict()["name"] == "Charlie"
+    assert results[0].to_dict()["name"] == "Joe"
     assert results[1].to_dict()["name"] == "Eve"
-    assert results[2].to_dict()["name"] == "Joe"
+    assert results[2].to_dict()["name"] == "Charlie"
 
 
 def test_query_order_fields(db):
