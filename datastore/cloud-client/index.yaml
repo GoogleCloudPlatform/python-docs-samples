@@ -54,3 +54,6 @@ indexes:
 - kind: employees
   properties:
   - name: salary
+    direction: desc
+  - name: experience
+    direction: desc

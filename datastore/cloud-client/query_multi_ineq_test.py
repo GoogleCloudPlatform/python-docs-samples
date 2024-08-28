@@ -60,13 +60,17 @@ def entities():
 
     for entity in created_entities:
         client.delete(entity)
+    # cleanup
+    for kind in ["Task", "employees"]:
+        for entity in client.query(kind=kind).fetch():
+            client.delete(entity)
 
 
 def test_query_filter_compound_multi_ineq(entities):
-    query = snippets.query_indexing_considerations()
+    query = snippets.query_filter_compound_multi_ineq()
     results = list(query.fetch())
     assert len(results) == 1
-    assert results[0].to_dict()["description"] == "Play with dog"
+    assert results[0]["description"] == "Play with dog"
 
 
 def test_query_indexing_considerations(entities):
@@ -74,16 +78,15 @@ def test_query_indexing_considerations(entities):
     results = list(query.fetch())
     # should contain employees salary > 100_000 sorted by salary and experience
     assert len(results) == 3
-    assert results[0].to_dict()["name"] == "Charlie"
-    assert results[1].to_dict()["name"] == "Eve"
-    assert results[2].to_dict()["name"] == "Joe"
+    assert results[0]["name"] == "Charlie"
+    assert results[1]["name"] == "Eve"
+    assert results[2]["name"] == "Joe"
 
 
 def test_query_order_fields(entities):
-    query = snippets.query_indexing_considerations()
-    results = list(query.fetch())
+    results = snippets.query_order_fields()
     assert len(results) == 4
-    assert results[0].to_dict()["name"] == "Mallory"
-    assert results[1].to_dict()["name"] == "Joe"
-    assert results[2].to_dict()["name"] == "Eve"
-    assert results[3].to_dict()["name"] == "Charlie"
+    assert results[0]["name"] == "Mallory"
+    assert results[1]["name"] == "Joe"
+    assert results[2]["name"] == "Eve"
+    assert results[3]["name"] == "Charlie"
