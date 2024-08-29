@@ -17,7 +17,7 @@ import os
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import batch_predict
+import batch_predict1
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 DATASET_ID = "123test"
@@ -25,6 +25,6 @@ DATASET_ID = "123test"
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_batch_predict() -> None:
-    job = batch_predict.batch_prediction()
+    job = batch_predict1.batch_prediction()
     assert job
 
