@@ -17,6 +17,8 @@
 """This Apache Beam pipeline processes Landsat 8 satellite images and renders
 them as JPEG files.
 
+trigger test run
+
 A Landsat 8 image consists of 11 bands. Each band contains the data for a
 specific range of the electromagnetic spectrum.
 
