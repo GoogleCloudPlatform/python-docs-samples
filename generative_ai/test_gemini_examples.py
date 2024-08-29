@@ -136,8 +136,9 @@ def test_gemini_grounding_web_example() -> None:
 
 
 def test_gemini_grounding_vais_example() -> None:
-    os.environ.setdefault("DATA_STORE_ID", "grounding-test-datastore")
-    response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search()
+    response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
+        "grounding-test-datastore"
+    )
     assert response
 
 

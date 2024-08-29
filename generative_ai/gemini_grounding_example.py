@@ -16,7 +16,6 @@ import os
 from vertexai.generative_models import GenerationResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-DATA_STORE_ID = os.getenv("DATA_STORE_ID")
 
 
 def generate_text_with_grounding_web() -> GenerationResponse:
@@ -53,7 +52,9 @@ def generate_text_with_grounding_web() -> GenerationResponse:
     return response
 
 
-def generate_text_with_grounding_vertex_ai_search() -> GenerationResponse:
+def generate_text_with_grounding_vertex_ai_search(
+    data_store_id: str,
+) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_vais]
     import vertexai
 
@@ -70,10 +71,14 @@ def generate_text_with_grounding_vertex_ai_search() -> GenerationResponse:
     model = GenerativeModel("gemini-1.5-flash-001")
 
     # TODO(developer): Update project id, location, and data store id for your Vertex AI Search data store.
+    # data_store_id = "DATA_STORE_ID"
+
     tool = Tool.from_retrieval(
         grounding.Retrieval(
             grounding.VertexAISearch(
-                datastore=DATA_STORE_ID, project=PROJECT_ID, location="global"
+                datastore=data_store_id,
+                project=PROJECT_ID,
+                location="global",
             )
         )
     )
