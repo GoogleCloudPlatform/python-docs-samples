@@ -342,8 +342,10 @@ def test_iam_revoke_access_with_regional_secret(
 
 def test_list_regional_secret_versions(
     capsys: pytest.LogCaptureFixture,
-    regional_secret_version: Tuple[str, str, str, str, str],
-    another_regional_secret_version: Tuple[str, str, str, str, str],
+    regional_secret_version: Tuple[str, str, str],
+    another_regional_secret_version: Tuple[str, str, str],
+    project_id: str,
+    location_id: str,
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     version_1 = get_regional_secret_version.get_regional_secret_version(
@@ -363,8 +365,10 @@ def test_list_regional_secret_versions(
 
 def test_list_regional_secret_versions_with_filter(
     capsys: pytest.LogCaptureFixture,
-    regional_secret_version: Tuple[str, str, str, str, str],
-    another_regional_secret_version: Tuple[str, str, str, str, str],
+    regional_secret_version: Tuple[str, str, str],
+    another_regional_secret_version: Tuple[str, str, str],
+    project_id: str,
+    location_id: str,
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     enabled = get_regional_secret_version.get_regional_secret_version(
@@ -386,7 +390,10 @@ def test_list_regional_secret_versions_with_filter(
 
 
 def test_list_regional_secrets(
-    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+    capsys: pytest.LogCaptureFixture,
+    regional_secret: Tuple[str, str],
+    project_id: str,
+    location_id: str,
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     got_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
@@ -397,7 +404,10 @@ def test_list_regional_secrets(
 
 
 def test_list_regional_secrets_with_filter(
-    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+    capsys: pytest.LogCaptureFixture,
+    regional_secret: Tuple[str, str],
+    project_id: str,
+    location_id: str,
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     unlabeled = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
