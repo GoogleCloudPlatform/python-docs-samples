@@ -28,7 +28,6 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 def test_transcribe_streaming_voice_activity_events(
     capsys: pytest.CaptureFixture,
 ) -> None:
-
     responses = transcribe_streaming_voice_activity_events.transcribe_streaming_voice_activity_events(
         os.path.join(_RESOURCES, "audio.wav")
     )
