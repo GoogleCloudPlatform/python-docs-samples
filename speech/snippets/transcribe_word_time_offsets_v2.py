@@ -36,8 +36,8 @@ def transcribe_word_time_offsets_v2(
     client = SpeechClient()
 
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        audio_content = f.read()
+    with open(audio_file, "rb") as file:
+        audio_content = file.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),

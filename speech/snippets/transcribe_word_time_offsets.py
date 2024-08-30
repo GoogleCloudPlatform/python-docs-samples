@@ -31,8 +31,8 @@ def transcribe_file_with_word_time_offsets(
 
     client = speech.SpeechClient()
 
-    with open(audio_file, "rb") as f:
-        audio_content = f.read()
+    with open(audio_file, "rb") as file:
+        audio_content = file.read()
 
     audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(

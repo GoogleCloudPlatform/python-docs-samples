@@ -28,8 +28,8 @@ def transcribe_streaming(stream_file: str) -> speech.RecognitionConfig:
     client = speech.SpeechClient()
 
     # [START speech_python_migration_streaming_request]
-    with open(stream_file, "rb") as f:
-        audio_content = f.read()
+    with open(stream_file, "rb") as audio_file:
+        audio_content = audio_file.read()
 
     # In practice, stream should be a generator yielding chunks of audio data.
     stream = [audio_content]

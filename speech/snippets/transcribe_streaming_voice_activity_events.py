@@ -36,8 +36,8 @@ def transcribe_streaming_voice_activity_events(
     client = SpeechClient()
 
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        audio_content = f.read()
+    with open(audio_file, "rb") as file:
+        audio_content = file.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
     chunk_length = len(audio_content) // 5
