@@ -31,7 +31,7 @@ def create_assessment(
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
         user_ip_address: IP address of the user sending a request.
-        user_agent: User agent is included in the HTTP request in the request header. 
+        user_agent: User agent is included in the HTTP request in the request header.
         ja3: JA3 associated with the request.
     """
 
