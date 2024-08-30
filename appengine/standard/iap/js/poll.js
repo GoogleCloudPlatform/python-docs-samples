@@ -54,7 +54,13 @@ function sessionRefreshClicked() {
 
 function checkSessionRefresh() {
   if (iapSessionRefreshWindow != null && !iapSessionRefreshWindow.closed) {
-    fetch('/favicon.ico').then(function(response) {
+    fetch('/favicon.ico', {
+          method: "GET",
+          credentials: 'include',
+          headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+          }
+    }).then(function(response) {
       if (response.status === 401) {
         window.setTimeout(checkSessionRefresh, 500);
       } else {
