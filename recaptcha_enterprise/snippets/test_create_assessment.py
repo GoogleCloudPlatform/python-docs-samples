@@ -152,12 +152,15 @@ def get_token(recaptcha_site_key: str, browser: WebDriver) -> tuple:
     return token, action
 
 
-def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment:
+def assess_token(recaptcha_site_key: str, token: str, action: str, user_ip_address: str, user_agent: str, ja3: str) -> Assessment:
     return create_assessment(
         project_id=GOOGLE_CLOUD_PROJECT,
         recaptcha_site_key=recaptcha_site_key,
         token=token,
         recaptcha_action=action,
+        user_ip_address=user_ip_address,
+        user_agent=user_agent,
+        ja3=ja3
     )
 
 
