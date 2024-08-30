@@ -73,7 +73,7 @@ def autodelete_reservation_name():
 
 
 def test_create_reservation_from_template(
-        instance_template, autodelete_reservation_name
+    instance_template, autodelete_reservation_name
 ):
     reservation = create_reservation_from_template(
         PROJECT, autodelete_reservation_name, instance_template.self_link
