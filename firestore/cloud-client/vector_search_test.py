@@ -19,6 +19,9 @@ from google.cloud.firestore_v1.vector import Vector
 
 from vector_search import store_vectors
 from vector_search import vector_search_basic
+from vector_search import vector_search_distance_result_field
+from vector_search import vector_search_distance_result_field_with_mask
+from vector_search import vector_search_distance_threshold
 from vector_search import vector_search_prefilter
 
 
@@ -38,13 +41,13 @@ def test_store_vectors():
 def add_coffee_beans_data(db):
     coll = db.collection("coffee-beans")
     coll.document("bean1").set(
-        {"name": "Arabica", "embedding_field": Vector([5.0, 1.0, 2.0]), "color": "red"}
+        {"name": "Arabica", "embedding_field": Vector([10.0, 1.0, 2.0]), "color": "red"}
     )
     coll.document("bean2").set(
         {"name": "Robusta", "embedding_field": Vector([4.0, 1.0, 2.0]), "color": "blue"}
     )
     coll.document("bean3").set(
-        {"name": "Excelsa", "embedding_field": Vector([6.0, 1.0, 2.0]), "color": "red"}
+        {"name": "Excelsa", "embedding_field": Vector([11.0, 1.0, 2.0]), "color": "red"}
     )
     coll.document("bean4").set(
         {
@@ -83,3 +86,53 @@ def test_vector_search_prefilter():
     assert len(results) == 2
     assert results[0].to_dict()["name"] == "Arabica"
     assert results[1].to_dict()["name"] == "Excelsa"
+
+
+def test_vector_search_distance_result_field():
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
+    add_coffee_beans_data(db)
+
+    vector_query = vector_search_distance_result_field(db)
+    results = list(vector_query.stream())
+
+    assert len(results) == 4
+    assert results[0].to_dict()["name"] == "Liberica"
+    assert results[0].to_dict()["vector_distance"] == 0.0
+    assert results[1].to_dict()["name"] == "Robusta"
+    assert results[1].to_dict()["vector_distance"] == 1.0
+    assert results[2].to_dict()["name"] == "Arabica"
+    assert results[2].to_dict()["vector_distance"] == 7.0
+    assert results[3].to_dict()["name"] == "Excelsa"
+    assert results[3].to_dict()["vector_distance"] == 8.0
+
+
+def test_vector_search_distance_result_field_with_mask():
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
+    add_coffee_beans_data(db)
+
+    vector_query = vector_search_distance_result_field_with_mask(db)
+    results = list(vector_query.stream())
+
+    assert len(results) == 4
+    assert results[0].to_dict() == {"color": "green", "vector_distance": 0.0}
+    assert results[1].to_dict() == {"color": "blue", "vector_distance": 1.0}
+    assert results[2].to_dict() == {"color": "red", "vector_distance": 7.0}
+    assert results[3].to_dict() == {"color": "red", "vector_distance": 8.0}
+
+
+def test_vector_search_distance_threshold():
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
+    add_coffee_beans_data(db)
+
+    vector_query = vector_search_distance_threshold(db)
+    results = list(vector_query.stream())
+
+    assert len(results) == 2
+    assert results[0].to_dict()["name"] == "Liberica"
+    assert results[1].to_dict()["name"] == "Robusta"
