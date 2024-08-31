@@ -60,7 +60,7 @@ def create_evaluation_task() -> EvalResult:
             MetricPromptTemplateExamples.Pointwise.SUMMARIZATION_QUALITY,
             MetricPromptTemplateExamples.Pointwise.GROUNDEDNESS,
             MetricPromptTemplateExamples.Pointwise.VERBOSITY,
-            MetricPromptTemplateExamples.Pointwise.INSTRUCTION_FOLLOWING
+            MetricPromptTemplateExamples.Pointwise.INSTRUCTION_FOLLOWING,
         ],
     )
 

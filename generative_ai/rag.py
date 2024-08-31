@@ -279,7 +279,7 @@ def retrieval_query(
         rag_resources=[
             rag.RagResource(
                 rag_corpus=rag_corpus_id,
-                # Supply IDs from `rag.list_files()`.
+                # Optional: supply IDs from `rag.list_files()`.
                 # rag_file_ids=["rag-file-1", "rag-file-2", ...],
             )
         ],
@@ -315,7 +315,7 @@ def generate_content_with_rag(
                 rag_resources=[
                     rag.RagResource(
                         rag_corpus=rag_corpus_id,  # Currently only 1 corpus is allowed.
-                        # Supply IDs from `rag.list_files()`.
+                        # Optional: supply IDs from `rag.list_files()`.
                         # rag_file_ids=["rag-file-1", "rag-file-2", ...],
                     )
                 ],
@@ -379,7 +379,7 @@ def quickstart(
         rag_resources=[
             rag.RagResource(
                 rag_corpus=rag_corpus.name,
-                # Supply IDs from `rag.list_files()`.
+                # Optional: supply IDs from `rag.list_files()`.
                 # rag_file_ids=["rag-file-1", "rag-file-2", ...],
             )
         ],
@@ -397,7 +397,7 @@ def quickstart(
                 rag_resources=[
                     rag.RagResource(
                         rag_corpus=rag_corpus.name,  # Currently only 1 corpus is allowed.
-                        # Supply IDs from `rag.list_files()`.
+                        # Optional: supply IDs from `rag.list_files()`.
                         # rag_file_ids=["rag-file-1", "rag-file-2", ...],
                     )
                 ],
