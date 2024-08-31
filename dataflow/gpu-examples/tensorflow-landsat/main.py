@@ -169,7 +169,7 @@ def load_values(scene: str, band_paths: list[str]) -> tuple[str, np.ndarray]:
 
     def read_band(band_path: str) -> np.array:
         # Use rasterio to read the GeoTIFF values from the band files.
-        with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
+        with rasterio.open(band_path) as data:
             return data.read(1)
 
     logging.info(f"{scene}: load_values({band_paths})")
