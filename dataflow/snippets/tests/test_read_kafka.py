@@ -25,16 +25,18 @@ from kafka.errors import NoBrokersAvailable
 import pytest
 
 
-BOOTSTRAP_SERVER = 'localhost:9092'
-TOPIC_NAME = f'topic-{uuid.uuid4()}'
-CONTAINER_IMAGE_NAME = 'kafka-pipeline:1'
+BOOTSTRAP_SERVER = "localhost:9092"
+TOPIC_NAME = f"topic-{uuid.uuid4()}"
+CONTAINER_IMAGE_NAME = "kafka-pipeline:1"
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def kafka_container() -> None:
     # Start a containerized Kafka server.
     docker_client = docker.from_env()
-    container = docker_client.containers.run('apache/kafka:3.7.0', network_mode='host', detach=True)
+    container = docker_client.containers.run(
+        "apache/kafka:3.7.0", network_mode="host", detach=True
+    )
     try:
         create_topic()
         yield
@@ -48,7 +50,9 @@ def create_topic() -> None:
         try:
             client = KafkaAdminClient(bootstrap_servers=BOOTSTRAP_SERVER)
             topics = []
-            topics.append(NewTopic(name=TOPIC_NAME, num_partitions=1, replication_factor=1))
+            topics.append(
+                NewTopic(name=TOPIC_NAME, num_partitions=1, replication_factor=1)
+            )
             client.create_topics(topics)
             break
         except NoBrokersAvailable:
@@ -56,33 +60,33 @@ def create_topic() -> None:
 
 
 def test_read_from_kafka(tmp_path: Path) -> None:
-
-    file_name_prefix = f'output-{uuid.uuid4()}'
-    file_name = f'{tmp_path}/{file_name_prefix}-00000-of-00001.txt'
+    file_name_prefix = f"output-{uuid.uuid4()}"
+    file_name = f"{tmp_path}/{file_name_prefix}-00000-of-00001.txt"
 
     # Send some messages to Kafka
     producer = KafkaProducer(bootstrap_servers=BOOTSTRAP_SERVER)
     for i in range(0, 5):
-        message = f'event-{i}'
+        message = f"event-{i}"
         producer.send(TOPIC_NAME, message.encode())
 
     # Build a container image for the pipeline.
     client = docker.from_env()
-    client.images.build(path='./', tag=CONTAINER_IMAGE_NAME)
+    client.images.build(path="./", tag=CONTAINER_IMAGE_NAME)
 
     # Run the pipeline.
     client.containers.run(
         image=CONTAINER_IMAGE_NAME,
-        command=f'/pipeline/read_kafka.py --output /out/{file_name_prefix} --bootstrap_server {BOOTSTRAP_SERVER} --topic {TOPIC_NAME}',
-        volumes=['/var/run/docker.sock:/var/run/docker.sock', f'{tmp_path}/:/out'],
-        network_mode='host',
-        entrypoint='python')
+        command=f"/pipeline/read_kafka.py --output /out/{file_name_prefix} --bootstrap_server {BOOTSTRAP_SERVER} --topic {TOPIC_NAME}",
+        volumes=["/var/run/docker.sock:/var/run/docker.sock", f"{tmp_path}/:/out"],
+        network_mode="host",
+        entrypoint="python",
+    )
 
     # Verify the pipeline wrote the Kafka messages to the output file.
-    with open(file_name, 'r') as f:
+    with open(file_name, "r") as f:
         text = f.read()
         for i in range(0, 5):
-            assert f'event-{i}' in text
+            assert f"event-{i}" in text
 
 
 if __name__ == "__main__":
