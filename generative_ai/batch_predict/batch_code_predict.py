@@ -31,8 +31,9 @@ def batch_code_prediction(
     from vertexai.preview.language_models import CodeGenerationModel
 
     # Example of using Google Cloud Storage bucket as the input and output data source
-    input_uri = "gs://your-bucket-unique-name/promt_for_batch_code_predict.jsonl"
-    output_uri = "gs://your-bucket-unique-name/batch_text_predict_output"
+    # TODO (Developer): Replace the input_uri and output_uri with your own GCS paths
+    # input_uri = "gs://your-bucket-unique-name/prompt_for_batch_code_predict.jsonl"
+    # output_uri = "gs://your-bucket-unique-name/batch_text_predict_output"
 
     code_model = CodeGenerationModel.from_pretrained("code-bison")
 

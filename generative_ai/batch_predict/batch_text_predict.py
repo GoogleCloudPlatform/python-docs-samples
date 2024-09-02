@@ -31,8 +31,9 @@ def batch_text_prediction(
     from vertexai.preview.language_models import TextGenerationModel
 
     # Example of using Google Cloud Storage bucket as the input and output data source
-    input_uri = "gs://your-bucket-unique-name/prompt_for_batch_text_predict.jsonl"
-    output_uri = "gs://your-bucket-unique-name/batch_text_predict_output"
+    # TODO (Developer): Replace the input_uri and output_uri with your own GCS paths
+    # input_uri = "gs://your-bucket-unique-name/prompt_for_batch_text_predict.jsonl"
+    # output_uri = "gs://your-bucket-unique-name/batch_text_predict_output"
 
     # Initialize the text generation model from a pre-trained model named "text-bison"
     text_model = TextGenerationModel.from_pretrained("text-bison")
