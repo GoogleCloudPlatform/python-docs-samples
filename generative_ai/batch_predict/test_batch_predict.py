@@ -52,7 +52,7 @@ def _main_test(test_func: Callable) -> BatchPredictionJob:
 
 
 def test_batch_text_predict(output_folder: pytest.fixture()) -> None:
-    input_uri = f"gs://{BUCKET_NAME}/batch/batch_prompt_for_batch_text_predict.jsonl"
+    input_uri = f"gs://{BUCKET_NAME}/batch/prompt_for_batch_text_predict.jsonl"
     job = _main_test(
         test_func=lambda: batch_text_predict.batch_text_prediction(
             input_uri, output_folder
@@ -62,7 +62,7 @@ def test_batch_text_predict(output_folder: pytest.fixture()) -> None:
 
 
 def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
-    input_uri = f"gs://{BUCKET_NAME}/batch/batch_prompt_for_batch_code_predict.jsonl"
+    input_uri = f"gs://{BUCKET_NAME}/batch/prompt_for_batch_code_predict.jsonl"
     job = _main_test(
         test_func=lambda: batch_code_predict.batch_code_prediction(
             input_uri, output_folder
