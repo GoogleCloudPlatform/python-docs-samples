@@ -21,7 +21,8 @@ def batch_text_prediction(
     Args:
         input_uri (str, optional): URI of the input dataset. Could be a BigQuery table or a Google Cloud Storage file.
             E.g. "gs://[BUCKET]/[DATASET].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
-        output_uri (str, optional): URI where the output will be stored. Could be a BigQuery table.
+        output_uri (str, optional): URI where the output will be stored.
+            Could be a BigQuery table or a Google Cloud Storage file.
             E.g. "gs://[BUCKET]/[OUTPUT].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
@@ -32,8 +33,8 @@ def batch_text_prediction(
 
     # Example of using Google Cloud Storage bucket as the input and output data source
     # TODO (Developer): Replace the input_uri and output_uri with your own GCS paths
-    # input_uri = "gs://your-bucket-unique-name/prompt_for_batch_text_predict.jsonl"
-    # output_uri = "gs://your-bucket-unique-name/batch_text_predict_output"
+    # input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_text_predict.jsonl"
+    # output_uri = "gs://your-bucket-name/batch_text_predict_output"
 
     # Initialize the text generation model from a pre-trained model named "text-bison"
     text_model = TextGenerationModel.from_pretrained("text-bison")
