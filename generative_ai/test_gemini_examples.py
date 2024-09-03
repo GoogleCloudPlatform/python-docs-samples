@@ -136,9 +136,8 @@ def test_gemini_grounding_web_example() -> None:
 
 
 def test_gemini_grounding_vais_example() -> None:
-    data_store_path = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
     response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
-        data_store_path=data_store_path,
+        "grounding-test-datastore"
     )
     assert response
 
