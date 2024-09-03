@@ -53,23 +53,34 @@ def generate_text_with_grounding_web() -> GenerationResponse:
 
 
 def generate_text_with_grounding_vertex_ai_search(
-    data_store_path: str,
+    data_store_id: str,
 ) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_vais]
     import vertexai
 
-    from vertexai.preview.generative_models import grounding
-    from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
+    from vertexai.preview.generative_models import (
+        GenerationConfig,
+        GenerativeModel,
+        Tool,
+        grounding,
+    )
 
     # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
-    # TODO(developer): Update and un-comment below line with the correct data store path
-    # data_store_path = "projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}"
+    # TODO(developer): Update project id, location, and data store id for your Vertex AI Search data store.
+    # data_store_id = "DATA_STORE_ID"
+
     tool = Tool.from_retrieval(
-        grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
+        grounding.Retrieval(
+            grounding.VertexAISearch(
+                datastore=data_store_id,
+                project=PROJECT_ID,
+                location="global",
+            )
+        )
     )
 
     prompt = "How do I make an appointment to renew my driver's license?"
