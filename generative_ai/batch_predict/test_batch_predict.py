@@ -22,21 +22,22 @@ from google.cloud.aiplatform_v1 import JobState
 
 import pytest
 
-BUCKET_NAME = "cloud-samples-data"
-OUTPUT_FOLDER = "batch/batch_text_predict_output"
+INPUT_BUCKET = "cloud-samples-data"
+OUTPUT_BUCKET = "python-docs-samples-tests"
+OUTPUT_PATH = "batch/batch_text_predict_output"
 
 
 def _clean_resources() -> None:
     storage_client = storage.Client()
-    bucket = storage_client.get_bucket(BUCKET_NAME)
-    blobs = bucket.list_blobs(prefix=OUTPUT_FOLDER)
+    bucket = storage_client.get_bucket(OUTPUT_BUCKET)
+    blobs = bucket.list_blobs(prefix=OUTPUT_PATH)
     for blob in blobs:
         blob.delete()
 
 
 @pytest.fixture(scope="session")
 def output_folder() -> str:
-    yield f"gs://{BUCKET_NAME}/{OUTPUT_FOLDER}"
+    yield f"gs://{OUTPUT_BUCKET}/{OUTPUT_PATH}"
     _clean_resources()
 
 
@@ -52,20 +53,20 @@ def _main_test(test_func: Callable) -> BatchPredictionJob:
 
 
 def test_batch_text_predict(output_folder: pytest.fixture()) -> None:
-    input_uri = f"gs://{BUCKET_NAME}/batch/prompt_for_batch_text_predict.jsonl"
+    input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_text_predict.jsonl"
     job = _main_test(
         test_func=lambda: batch_text_predict.batch_text_prediction(
             input_uri, output_folder
         )
     )
-    assert job
+    assert OUTPUT_PATH in job.output_info.gcs_output_directory
 
 
 def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
-    input_uri = f"gs://{BUCKET_NAME}/batch/prompt_for_batch_code_predict.jsonl"
+    input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_code_predict.jsonl"
     job = _main_test(
         test_func=lambda: batch_code_predict.batch_code_prediction(
             input_uri, output_folder
         )
     )
-    assert job
+    assert OUTPUT_PATH in job.output_info.gcs_output_directory
