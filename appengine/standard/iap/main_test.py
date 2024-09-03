@@ -16,6 +16,7 @@ import webtest
 
 import main
 
+
 def test_index(testbed, login):
     app = webtest.TestApp(main.app)
 
