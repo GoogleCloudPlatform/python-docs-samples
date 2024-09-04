@@ -22,43 +22,32 @@ def create_job_with_custom_runnables_labels(
     project_id: str,
     region: str,
     job_name: str,
-    label_key1: str,
-    label_value1: str,
-    label_key2: str,
-    label_value2: str,
+    labels: dict,
 ) -> batch_v1.Job:
     """
-    This method creates a Batch job with custom labels for runnables.
+    This method creates a Batch job with custom labels for runnable.
     Args:
         project_id (str): project ID or project number of the Cloud project you want to use.
         region (str): name of the region you want to use to run the job. Regions that are
             available for Batch are listed on: https://cloud.google.com/batch/docs/locations
         job_name (str): the name of the job that will be created.
-        label_key1 (str): First custom label key.
-        label_value1 (str): First custom label value.
-        label_key2 (str): Second custom label key.
-        label_value2 (str): Second custom label value.
+        labels (dict): a dictionary of key-value pairs that will be used as labels
+            E.g., {"label_key1": "label_value2"}
     Returns:
         batch_v1.Job: The created Batch job object containing configuration details.
     """
     client = batch_v1.BatchServiceClient()
 
-    runn1 = batch_v1.Runnable()
-    runn1.display_name = "Script 1"
-    runn1.script = batch_v1.Runnable.Script()
-    runn1.script.text = "echo Hello world from Script 1 for task ${BATCH_TASK_INDEX}"
+    runnable = batch_v1.Runnable()
+    runnable.display_name = "Script 1"
+    runnable.script = batch_v1.Runnable.Script()
+    runnable.script.text = "echo Hello world from Script 1 for task ${BATCH_TASK_INDEX}"
     # Add custom labels to the first runnable
-    runn1.labels = {label_key1: label_value1}
-
-    runn2 = batch_v1.Runnable()
-    runn2.script = batch_v1.Runnable.Script()
-    runn2.script.text = "echo Hello world!"
-    # Add custom labels to the second runnable
-    runn2.labels = {label_key2: label_value2}
+    runnable.labels = labels
 
     # Create a task specification and assign the runnable and volume to it
     task = batch_v1.TaskSpec()
-    task.runnables = [runn1, runn2]
+    task.runnables = [runnable]
 
     # Specify what resources are requested by each task.
     resources = batch_v1.ComputeResource()
@@ -110,12 +99,5 @@ if __name__ == "__main__":
     PROJECT_ID = google.auth.default()[1]
     REGION = "us-central1"
     job_name = "your-job-name"
-    create_job_with_custom_runnables_labels(
-        PROJECT_ID,
-        REGION,
-        job_name,
-        label_key1="label1",
-        label_value1="value1",
-        label_key2="label2",
-        label_value2="value2",
-    )
+    labels = {"label1": "value1"}
+    create_job_with_custom_runnables_labels(PROJECT_ID, REGION, job_name, labels)

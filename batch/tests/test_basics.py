@@ -225,10 +225,6 @@ def _check_runnables_labels(job: batch_v1.Job):
         job.task_groups[0].task_spec.runnables[0].labels[LABELS_KEYS[0]]
         == LABELS_VALUES[0]
     )
-    assert (
-        job.task_groups[0].task_spec.runnables[1].labels[LABELS_KEYS[1]]
-        == LABELS_VALUES[1]
-    )
 
 
 @flaky(max_runs=3, min_passes=1)
@@ -353,13 +349,7 @@ def test_create_job_with_labels(job_name):
 @flaky(max_runs=3, min_passes=1)
 def test_create_job_with_labels_runnables(job_name):
     job = create_job_with_custom_runnables_labels(
-        PROJECT,
-        REGION,
-        job_name,
-        LABELS_KEYS[0],
-        LABELS_VALUES[0],
-        LABELS_KEYS[1],
-        LABELS_VALUES[1],
+        PROJECT, REGION, job_name, {LABELS_KEYS[0]: LABELS_VALUES[0]}
     )
     _test_body(job, additional_test=lambda: _check_runnables_labels(job))
 
