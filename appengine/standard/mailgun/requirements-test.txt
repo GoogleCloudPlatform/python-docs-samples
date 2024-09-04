@@ -5,3 +5,4 @@ google-api-python-client==1.12.11; python_version < '3.0'
 mock==3.0.5; python_version < '3.0'
 mock==5.1.0; python_version >= '3.0'
 WebTest==2.0.35; python_version < '3.0'
+six==1.16.0
