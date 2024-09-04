@@ -114,7 +114,6 @@ def test_view(
 
     project_id, dataset_id, table_id = view_id.split(".")
     overrides: view.OverridesDict = {
-        "analyst_group_email": "cloud-dpes-bigquery@google.com",
         "view_dataset_id": view_dataset_id,
         "source_dataset_id": source_dataset_id,
         "view_reference": {
@@ -127,5 +126,5 @@ def test_view(
     assert len(view_dataset.access_entries) != 0
     assert len(source_dataset.access_entries) != 0
     out, _ = capsys.readouterr()
-    assert "cloud-dpes-bigquery@google.com" in out
+    assert "example-analyst-group@google.com" in out
     assert table_id in out

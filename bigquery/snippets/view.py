@@ -147,7 +147,7 @@ def grant_access(
     # Make an API request to get the view dataset ACLs.
     view_dataset = client.get_dataset(view_dataset_id)
 
-    analyst_group_email = "data_analysts@example.com"
+    analyst_group_email = "example-analyst-group@google.com"
     # [END bigquery_grant_view_access]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
