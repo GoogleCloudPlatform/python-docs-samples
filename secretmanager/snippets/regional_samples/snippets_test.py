@@ -155,6 +155,7 @@ def test_delete_regional_secret(
             regional_client, request={"name": name}
         )
 
+
 def test_get_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret: Tuple[str, str, str, str],
@@ -162,6 +163,7 @@ def test_get_regional_secret(
     project_id, location_id, secret_id, _ = regional_secret
     snippet_regional_secret = get_regional_secret(project_id, location_id, secret_id)
     assert secret_id in snippet_regional_secret.name
+
 
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret
