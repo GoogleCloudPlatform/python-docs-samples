@@ -1,5 +1,5 @@
 functions-framework==3.5.0
 google-cloud-pubsub==2.21.5
 google-cloud-storage==2.9.0
-google-cloud-translate==3.11.1
+google-cloud-translate==3.16.0
 google-cloud-vision==3.4.2
