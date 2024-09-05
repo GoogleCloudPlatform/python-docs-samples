@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for deleting an existing regional
+Command line application and sample code for deleting an existing regional
 secret.
 """
 
@@ -21,22 +21,24 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret_with_etag]
-def delete_regional_secret_with_etag(project_id: str, location_id: str, secret_id: str, etag: str) -> None:
+def delete_regional_secret_with_etag(
+    project_id: str, location_id: str, secret_id: str, etag: str
+) -> None:
     """
-    Delete the regional secret with the given name, etag, and all of its versions.
+    Deletes the regional secret with the given name, etag, and all of its versions.
     """
 
     # Import the Secret Manager client library and types.
     from google.cloud import secretmanager_v1
     from google.cloud.secretmanager_v1.types import service
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"

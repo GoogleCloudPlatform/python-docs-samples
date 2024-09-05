@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for disabling a regional
+Command line application and sample code for disabling a regional
 secret version.
 """
 
@@ -27,7 +27,7 @@ def disable_regional_secret_version_with_etag(
     project_id: str, location_id: str, secret_id: str, version_id: str, etag: str
 ) -> secretmanager_v1.DisableSecretVersionRequest:
     """
-    Disable the given secret version. Future requests will throw an error until
+    Disables the given secret version. Future requests will throw an error until
     the secret version is enabled. Other secrets versions are unaffected.
     """
 
@@ -35,18 +35,18 @@ def disable_regional_secret_version_with_etag(
     from google.cloud import secretmanager_v1
     from google.cloud.secretmanager_v1.types import service
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
-    # Build the resource name of the secret version
+    # Build the resource name of the secret version.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
-    # Build the request
+    # Build the request.
     request = service.DisableSecretVersionRequest()
     request.name = name
     request.etag = etag
@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
     parser.add_argument("secret_id", help="id of the secret from which to act")
-    parser.add_argument("version_id", help="id of the version to disable")
+    parser.add_argument("version_id", help="id of the version of secret to disable")
     parser.add_argument("etag", help="current etag of the version")
     args = parser.parse_args()
 
