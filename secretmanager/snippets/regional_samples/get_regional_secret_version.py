@@ -13,33 +13,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-<<<<<<< HEAD
 Command line application and sample code for getting metadata about a regional
-=======
-command line application and sample code for getting metadata about a regional
->>>>>>> 657d605ae (fix:added regional samples for SM)
 secret version, but not the secret payload.
 """
 
 import argparse
 
-<<<<<<< HEAD
 
 # [START secretmanager_v1_get_regional_secret_version]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
-=======
-from google.cloud import secretmanager_v1
-
-
-# [START secretmanager_v1_get_regional_secret_version]
->>>>>>> 657d605ae (fix:added regional samples for SM)
 def get_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
 ) -> secretmanager_v1.GetSecretVersionRequest:
     """
-<<<<<<< HEAD
     Gets information about the given secret version. It does not include the
     payload data.
     """
@@ -51,22 +39,6 @@ def get_regional_secret_version(
     client = secretmanager_v1.SecretManagerServiceClient(
         client_options={"api_endpoint": api_endpoint},
     )
-=======
-    Get information about the given secret version. It does not include the
-    payload data.
-    """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
-
-    # Endpoint to call the regional secret manager sever
-    api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
-
-    # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
->>>>>>> 657d605ae (fix:added regional samples for SM)
 
     # Build the resource name of the secret version.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
@@ -77,16 +49,9 @@ def get_regional_secret_version(
     # Print information about the secret version.
     state = response.state.name
     print(f"Got secret version {response.name} with state {state}")
-<<<<<<< HEAD
 
     return response
 # [END secretmanager_v1_get_regional_secret_version]
-=======
-    # [END secretmanager_v1_get_regional_secret_version]
-
-    return response
-
->>>>>>> 657d605ae (fix:added regional samples for SM)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -95,11 +60,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
     parser.add_argument("secret_id", help="id of the secret from which to act")
-<<<<<<< HEAD
     parser.add_argument("version_id", help="id of the version of secret to get")
-=======
-    parser.add_argument("version_id", help="id of the version to get")
->>>>>>> 657d605ae (fix:added regional samples for SM)
     args = parser.parse_args()
 
     get_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
