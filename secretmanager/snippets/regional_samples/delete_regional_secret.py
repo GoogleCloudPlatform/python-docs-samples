@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for deleting an existing regional
+Command line application and sample code for deleting an existing regional
 secret.
 """
 
@@ -21,9 +21,13 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret]
-def delete_regional_secret(project_id: str, location_id: str, secret_id: str) -> None:
+def delete_regional_secret(
+    project_id: str,
+    location_id: str,
+    secret_id: str
+) -> None:
     """
-    Delete the secret with the given name and all of its versions.
+    Deletes the secret with the given name and all of its versions.
     """
 
     # Import the Secret Manager client library.
@@ -34,7 +38,7 @@ def delete_regional_secret(project_id: str, location_id: str, secret_id: str) ->
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(
-        client_options={"api_endpoint": api_endpoint}
+        client_options={"api_endpoint": api_endpoint},
     )
 
     # Build the resource name of the secret.

@@ -20,16 +20,16 @@ from google.api_core import exceptions, retry
 from google.cloud import secretmanager, secretmanager_v1
 import pytest
 
-from regional_samples.create_regional_secret import create_regional_secret
-from regional_samples.delete_regional_secret import delete_regional_secret
-from regional_samples.get_regional_secret import get_regional_secret
-from regional_samples.regional_quickstart import regional_quickstart
-from regional_samples.update_regional_secret import update_regional_secret
+from regional_samples import create_regional_secret
+from regional_samples import delete_regional_secret
+from regional_samples import get_regional_secret
+from regional_samples import regional_quickstart
+from regional_samples import update_regional_secret
 
 
 @pytest.fixture()
 def location_id() -> str:
-    return os.environ["GOOGLE_CLOUD_PROJECT_LOCATION"]
+    return "us-central1"
 
 
 @pytest.fixture()
@@ -128,7 +128,7 @@ def regional_secret(
 
 
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
-    regional_quickstart(project_id, location_id, secret_id)
+    regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
 
 def test_create_regional_secret(
@@ -138,7 +138,7 @@ def test_create_regional_secret(
     secret_id: str,
     ttl: Optional[str],
 ) -> None:
-    secret = create_regional_secret(project_id, location_id, secret_id, ttl)
+    secret = create_regional_secret.create_regional_secret(project_id, location_id, secret_id, ttl)
     assert secret_id in secret.name
 
 
@@ -147,7 +147,7 @@ def test_delete_regional_secret(
     regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    delete_regional_secret(project_id, location_id, secret_id)
+    delete_regional_secret.delete_regional_secret(project_id, location_id, secret_id)
     with pytest.raises(exceptions.NotFound):
         print(f"{regional_client}")
         name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
@@ -161,11 +161,11 @@ def test_get_regional_secret(
     regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    snippet_regional_secret = get_regional_secret(project_id, location_id, secret_id)
+    snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
     assert secret_id in snippet_regional_secret.name
 
 
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    updated_regional_secret = update_regional_secret(project_id, location_id, secret_id)
+    updated_regional_secret = update_regional_secret.update_regional_secret(project_id, location_id, secret_id)
     assert updated_regional_secret.labels["secretmanager"] == "rocks"

@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for creating an accessing a secret.
+Command line application and sample code for creating an accessing a secret.
 """
 
 
@@ -42,7 +42,7 @@ def regional_quickstart(_project_id: str, _location_id: str, _secret_id: str) ->
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(
-        client_options={"api_endpoint": api_endpoint}
+        client_options={"api_endpoint": api_endpoint},
     )
 
     # Build the parent name from the project.

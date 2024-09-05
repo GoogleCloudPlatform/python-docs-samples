@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for creating a new regional secret.
+Command line application and sample code for creating a new regional secret.
 """
 
 import argparse
@@ -24,27 +24,13 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_create_regional_secret]
 def create_regional_secret(
-    project_id: str, location_id: str, secret_id: str, ttl: Optional[str] = None
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    ttl: Optional[str] = None
 ) -> secretmanager_v1.Secret:
     """
-    Create a new regional secret with the given name. A secret is a logical wrapper
-    around a collection of secret versions. Secret versions hold the actual
-    secret material.
-     Args:
-        project_id (str): The project ID where the secret is to be created.
-        location_id(str): The location ID where the secret is to be created.
-        secret_id (str): The ID to assign to the new secret. This ID must be unique within the project.
-        ttl (Optional[str]): An optional string that specifies the secret's time-to-live in seconds with
-                             format (e.g., "900s" for 15 minutes). If specified, the secret
-                             versions will be automatically deleted upon reaching the end of the TTL period.
-    Returns:
-        secretmanager_v1.Secret: An object representing the newly created secret, containing details like the
-                              secret's name, replication settings, and optionally its TTL.
-    Example:
-        # Create a secret with automatic replication and no TTL
-        new_secret = create_secret("my-project", "location", "my-new-secret")
-        # Create a secret with a TTL of 30 days
-        new_secret_with_ttl = create_secret("my-project", "location", "my-timed-secret", "7776000s")
+    Creates a new regional secret with the given name.
     """
 
     # Import the Secret Manager client library.
@@ -55,7 +41,7 @@ def create_regional_secret(
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(
-        client_options={"api_endpoint": api_endpoint}
+        client_options={"api_endpoint": api_endpoint},
     )
 
     # Build the resource name of the parent project.

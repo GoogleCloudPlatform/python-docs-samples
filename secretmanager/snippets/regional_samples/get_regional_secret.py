@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for getting metadata about a regional secret.
+Command line application and sample code for getting metadata about a regional secret.
 """
 
 import argparse
@@ -23,10 +23,12 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_get_regional_secret]
 def get_regional_secret(
-    project_id: str, location_id: str, secret_id: str
+    project_id: str,
+    location_id: str,
+    secret_id: str
 ) -> secretmanager_v1.GetSecretRequest:
     """
-    Get information about the given secret. This only returns metadata about
+    Gets information about the given secret. This only returns metadata about
     the secret container, not any secret material.
     """
 
@@ -38,7 +40,7 @@ def get_regional_secret(
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(
-        client_options={"api_endpoint": api_endpoint}
+        client_options={"api_endpoint": api_endpoint},
     )
 
     # Build the resource name of the secret.

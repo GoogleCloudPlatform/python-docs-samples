@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,6 +12,9 @@
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
+"""
+Command line application and sample code to update a regional secret.
+"""
 
 import argparse
 
@@ -20,10 +23,12 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_update_regional_secret]
 def update_regional_secret(
-    project_id: str, location_id: str, secret_id: str
+    project_id: str,
+    location_id: str,
+    secret_id: str
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
-    Update the metadata about an existing secret.
+    Updates the metadata about an existing secret.
     """
 
     # Import the Secret Manager client library.
@@ -34,7 +39,7 @@ def update_regional_secret(
 
     # Create the Secret Manager client.
     client = secretmanager_v1.SecretManagerServiceClient(
-        client_options={"api_endpoint": api_endpoint}
+        client_options={"api_endpoint": api_endpoint},
     )
 
     # Build the resource name of the secret.
