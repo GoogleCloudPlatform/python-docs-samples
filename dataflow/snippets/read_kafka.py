@@ -25,7 +25,6 @@ from apache_beam.options.pipeline_options import PipelineOptions
 
 
 def read_from_kafka() -> None:
-
     # Parse the pipeline options passed into the application. Example:
     #     --topic=$KAFKA_TOPIC --bootstrap_server=$BOOTSTRAP_SERVER
     #     --output=$CLOUD_STORAGE_BUCKET --streaming
@@ -34,9 +33,9 @@ def read_from_kafka() -> None:
     class MyOptions(PipelineOptions):
         @staticmethod
         def _add_argparse_args(parser: argparse.ArgumentParser) -> None:
-            parser.add_argument('--topic')
-            parser.add_argument('--bootstrap_server')
-            parser.add_argument('--output')
+            parser.add_argument("--topic")
+            parser.add_argument("--bootstrap_server")
+            parser.add_argument("--output")
 
     options = MyOptions()
     with beam.Pipeline(options=options) as pipeline:
@@ -44,13 +43,11 @@ def read_from_kafka() -> None:
             pipeline
             # Read messages from an Apache Kafka topic.
             | ReadFromKafka(
-                consumer_config={
-                    "bootstrap.servers": options.bootstrap_server
-                },
+                consumer_config={"bootstrap.servers": options.bootstrap_server},
                 topics=[options.topic],
                 with_metadata=False,
                 max_num_records=5,
-                start_read_time=0
+                start_read_time=0,
             )
             # The previous step creates a key-value collection, keyed by message ID.
             # The values are the message payloads.
@@ -58,10 +55,11 @@ def read_from_kafka() -> None:
             # Subdivide the output into fixed 5-second windows.
             | beam.WindowInto(window.FixedWindows(5))
             | WriteToText(
-                file_path_prefix=options.output,
-                file_name_suffix='.txt',
-                num_shards=1)
+                file_path_prefix=options.output, file_name_suffix=".txt", num_shards=1
+            )
         )
+
+
 # [END dataflow_kafka_read]
 
 

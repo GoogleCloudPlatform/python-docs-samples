@@ -22,7 +22,7 @@ import pytest
 from ..batch_write_storage import write_to_cloud_storage
 
 
-bucket_name = f'test-bucket-{uuid.uuid4()}'
+bucket_name = f"test-bucket-{uuid.uuid4()}"
 storage_client = storage.Client()
 
 
@@ -39,7 +39,7 @@ def setup_and_teardown() -> None:
 
 
 def test_write_to_cloud_storage(setup_and_teardown: None) -> None:
-    sys.argv = ['', f'--output=gs://{bucket_name}/output/out-']
+    sys.argv = ["", f"--output=gs://{bucket_name}/output/out-"]
     write_to_cloud_storage()
 
     blobs = list(storage_client.list_blobs(bucket_name))
