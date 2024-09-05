@@ -282,12 +282,8 @@ def print_configuration_function(**context):
     logging.info("dag_run.conf: " + str(dag_run_conf))
     max_db_entry_age_in_days = None
     if dag_run_conf:
-        max_db_entry_age_in_days = dag_run_conf.get(
-                "maxDBEntryAgeInDays", None
-        )
-    logging.info(
-            "maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf)
-    )
+        max_db_entry_age_in_days = dag_run_conf.get("maxDBEntryAgeInDays", None)
+    logging.info("maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf))
     if max_db_entry_age_in_days is None or max_db_entry_age_in_days < 1:
         logging.info(
             "maxDBEntryAgeInDays conf variable isn't included or Variable "
@@ -352,8 +348,7 @@ def build_query(
         subquery = subquery.from_self()
 
         query = query.filter(
-            and_(age_check_column.notin_(subquery)),
-            and_(age_check_column <= max_date)
+            and_(age_check_column.notin_(subquery)), and_(age_check_column <= max_date)
         )
 
     return query
@@ -463,8 +458,7 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata." +
-            "Skipping..."
+            str(airflow_db_model) + " is not present in the metadata." + "Skipping..."
         )
 
     finally:
@@ -498,10 +492,7 @@ def analyze_db():
 
 
 analyze_op = PythonOperator(
-    task_id="analyze_query",
-    python_callable=analyze_db,
-    provide_context=True,
-    dag=dag
+    task_id="analyze_query", python_callable=analyze_db, provide_context=True, dag=dag
 )
 
 cleanup_session_op = PythonOperator(
