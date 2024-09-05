@@ -23,9 +23,7 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_get_regional_secret]
 def get_regional_secret(
-    project_id: str,
-    location_id: str,
-    secret_id: str
+    project_id: str, location_id: str, secret_id: str
 ) -> secretmanager_v1.GetSecretRequest:
     """
     Gets information about the given secret. This only returns metadata about

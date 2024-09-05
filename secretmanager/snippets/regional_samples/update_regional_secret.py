@@ -23,9 +23,7 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_update_regional_secret]
 def update_regional_secret(
-    project_id: str,
-    location_id: str,
-    secret_id: str
+    project_id: str, location_id: str, secret_id: str
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Updates the metadata about an existing secret.

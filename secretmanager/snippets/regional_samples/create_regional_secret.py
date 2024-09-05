@@ -24,10 +24,7 @@ from google.cloud import secretmanager_v1
 
 # [START secretmanager_v1_create_regional_secret]
 def create_regional_secret(
-    project_id: str,
-    location_id: str,
-    secret_id: str,
-    ttl: Optional[str] = None
+    project_id: str, location_id: str, secret_id: str, ttl: Optional[str] = None
 ) -> secretmanager_v1.Secret:
     """
     Creates a new regional secret with the given name.

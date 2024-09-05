@@ -138,7 +138,9 @@ def test_create_regional_secret(
     secret_id: str,
     ttl: Optional[str],
 ) -> None:
-    secret = create_regional_secret.create_regional_secret(project_id, location_id, secret_id, ttl)
+    secret = create_regional_secret.create_regional_secret(
+        project_id, location_id, secret_id, ttl
+    )
     assert secret_id in secret.name
 
 
@@ -161,11 +163,15 @@ def test_get_regional_secret(
     regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    snippet_regional_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
     assert secret_id in snippet_regional_secret.name
 
 
 def test_update_regional_secret(regional_secret: Tuple[str, str, str, str]) -> None:
     project_id, location_id, secret_id, _ = regional_secret
-    updated_regional_secret = update_regional_secret.update_regional_secret(project_id, location_id, secret_id)
+    updated_regional_secret = update_regional_secret.update_regional_secret(
+        project_id, location_id, secret_id
+    )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
