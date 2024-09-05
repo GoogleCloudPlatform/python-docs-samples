@@ -54,6 +54,8 @@ function sessionRefreshClicked() {
 
 function checkSessionRefresh() {
   if (iapSessionRefreshWindow != null && !iapSessionRefreshWindow.closed) {
+    // Attempting to start a new session.
+    // XMLHttpRequests is used by the server to identify AJAX requests
     fetch('/favicon.ico', {
           method: "GET",
           credentials: 'include',
@@ -61,9 +63,12 @@ function checkSessionRefresh() {
               'X-Requested-With': 'XMLHttpRequest'
           }
     }).then(function(response) {
+      // Checking if browser has a session for the requested app
       if (response.status === 401) {
+        // No new session detected. Try to get a session again
         window.setTimeout(checkSessionRefresh, 500);
       } else {
+        // Session retrieved.
         iapSessionRefreshWindow.close();
         iapSessionRefreshWindow = null;
       }
