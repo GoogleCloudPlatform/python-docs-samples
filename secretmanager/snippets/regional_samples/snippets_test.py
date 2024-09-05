@@ -148,8 +148,6 @@ def regional_secret_version(
     ], version.etag
 
 
-another_regional_secret_version = regional_secret_version
-
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
