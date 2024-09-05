@@ -118,11 +118,9 @@ def secret_id(
 @pytest.fixture()
 def regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
-) -> Iterator[Tuple[str, str, str]]:
-    secret_id, _ = regional_secret
+    regional_secret: Tuple[str, str, str, str],
+) -> Iterator[Tuple[str, str, str, str, str]]:
+    project_id, location_id, secret_id, _ = regional_secret
 
     print(f"adding secret version to {secret_id}")
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
@@ -132,7 +130,7 @@ def regional_secret_version(
         request={"parent": parent, "payload": {"data": payload}}
     )
 
-    yield secret_id, version.name.rsplit("/", 1)[
+    yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
         -1
     ], version.etag
 
@@ -146,7 +144,7 @@ def regional_secret(
     location_id: str,
     secret_id: str,
     ttl: Optional[str],
-) -> Iterator[Tuple[str, str]]:
+) -> Iterator[Tuple[str, str, str, str]]:
     print(f"creating secret {secret_id}")
 
     parent = f"projects/{project_id}/locations/{location_id}"
@@ -160,15 +158,13 @@ def regional_secret(
         },
     )
 
-    yield secret_id, regional_secret.etag
+    yield project_id, location_id, secret_id, regional_secret.etag
 
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
 def test_access_regional_secret_version(
-    regional_secret_version: Tuple[str, str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret_version: Tuple[str, str, str, str, str]
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     version = access_regional_secret_version.access_regional_secret_version(
@@ -177,11 +173,9 @@ def test_access_regional_secret_version(
     assert version.payload.data == b"hello world!"
 
 def test_add_regional_secret_version(
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret: Tuple[str, str, str, str]
 ) -> None:
-    secret_id, _ = regional_secret
+    project_id, location_id, secret_id, _ = regional_secret
     payload = "test123"
     version = add_regional_secret_version.add_regional_secret_version(project_id, location_id, secret_id, payload)
     assert secret_id in version.name
@@ -198,11 +192,9 @@ def test_create_regional_secret(
 
 def test_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret: Tuple[str, str, str, str],
 ) -> None:
-    secret_id, _ = regional_secret
+    project_id, location_id, secret_id, _ = regional_secret
     delete_regional_secret(project_id, location_id, secret_id)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
@@ -211,11 +203,10 @@ def test_delete_regional_secret(
             regional_client, request={"name": name}
         )
 
+
 def test_delete_regional_secret_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, etag = regional_secret
     delete_regional_secret_with_etag.delete_regional_secret_with_etag(project_id, location_id, secret_id, etag)
@@ -227,9 +218,7 @@ def test_delete_regional_secret_with_etag(
 
 def test_destroy_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret_version: Tuple[str, str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     version = destroy_regional_secret_version.destroy_regional_secret_version(
@@ -249,9 +238,7 @@ def test_destroy_regional_secret_version_with_etag(
 
 def test_enable_disable_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret_version: Tuple[str, str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     version = disable_regional_secret_version.disable_regional_secret_version(
@@ -266,9 +253,7 @@ def test_enable_disable_regional_secret_version(
 
 def test_enable_disable_regional_secret_version_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret_version: Tuple[str, str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, etag = regional_secret_version
     version = disable_regional_secret_version_with_etag.disable_regional_secret_version_with_etag(
@@ -283,9 +268,7 @@ def test_enable_disable_regional_secret_version_with_etag(
 
 def test_get_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret_version: Tuple[str, str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
     version = get_regional_secret_version.get_regional_secret_version(
@@ -293,28 +276,6 @@ def test_get_regional_secret_version(
     )
     assert secret_id in version.name
     assert version_id in version.name
-
-def test_delete_regional_secret(
-    regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str, str, str],
-) -> None:
-    project_id, location_id, secret_id, _ = regional_secret
-    delete_regional_secret.delete_regional_secret(project_id, location_id, secret_id)
-    with pytest.raises(exceptions.NotFound):
-        print(f"{regional_client}")
-        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_regional_secret_version(
-            regional_client, request={"name": name}
-        )
-
-
-def test_get_regional_secret(
-    regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str, str, str],
-) -> None:
-    project_id, location_id, secret_id, _ = regional_secret
-    snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
-    assert secret_id in snippet_regional_secret.name
 
 def test_iam_grant_access_with_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -420,17 +381,37 @@ def test_list_regional_secrets_with_filter(
 
     labeled = update_regional_secret.update_regional_secret(project_id, location_id, secret_id)
     assert labeled.labels["secretmanager"] == "rocks"
-    list_regional_secrets_with_filter(
+    list_regional_secrets_with_filter.list_regional_secrets_with_filter(
         project_id, location_id, "labels.secretmanager:rocks"
     )
 
     out, _ = capsys.readouterr()
     assert f"Found secret: {labeled.name}" in out
 
+def test_delete_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    delete_regional_secret.delete_regional_secret(project_id, location_id, secret_id)
+    with pytest.raises(exceptions.NotFound):
+        print(f"{regional_client}")
+        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_regional_secret_version(
+            regional_client, request={"name": name}
+        )
+
+
+def test_get_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    assert secret_id in snippet_regional_secret.name
+
 def test_update_regional_secret_with_etag(
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
+    regional_secret: Tuple[str, str, str, str]
 ) -> None:
     project_id, location_id, secret_id, etag = regional_secret
     updated_regional_secret = update_regional_secret_with_etag.update_regional_secret_with_etag(
