@@ -20,13 +20,13 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_LOCATION"                    # Values: "global", "us", "eu"
-# data_store_id = "YOUR_DATA_STORE_ID"
+# engine_id = "YOUR_APP_ID"
 
 
 def answer_query_sample(
     project_id: str,
     location: str,
-    data_store_id: str,
+    engine_id: str,
 ) -> discoveryengine.AnswerQueryResponse:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
@@ -42,7 +42,7 @@ def answer_query_sample(
     )
 
     # The full resource name of the Search serving config
-    serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}/servingConfigs/default_serving_config"
+    serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_serving_config"
 
     # Optional: Options for query phase
     query_understanding_spec = discoveryengine.AnswerQueryRequest.QueryUnderstandingSpec(
