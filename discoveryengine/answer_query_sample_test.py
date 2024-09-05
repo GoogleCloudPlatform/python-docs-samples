@@ -22,16 +22,12 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 def test_answer_query():
     location = "global"
-    data_store_id = "alphabet-earnings-reports_1697472013405"
-    serving_config_id = "default_config"
-    query = "What is Google?"
+    data_store_id = "google-cloud-documentation_1695249623961"
 
     response = answer_query_sample.answer_query_sample(
         project_id=project_id,
         location=location,
         data_store_id=data_store_id,
-        serving_config_id=serving_config_id,
-        query=query,
     )
 
     assert response
