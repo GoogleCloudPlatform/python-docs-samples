@@ -203,9 +203,8 @@ def test_delete_regional_secret_with_etag(
     regional_secret: Tuple[str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, etag = regional_secret
-    delete_regional_secret_with_etag(project_id, location_id, secret_id, etag)
+    delete_regional_secret_with_etag.delete_regional_secret_with_etag(project_id, location_id, secret_id, etag)
     with pytest.raises(exceptions.NotFound):
-        print(f"{client}")
         name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
         retry_client_access_regional_secret_version(
             regional_client, request={"name": name}
@@ -226,7 +225,7 @@ def test_destroy_regional_secret_version_with_etag(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, etag = regional_secret_version
-    version = destroy_regional_secret_version_with_etag(
+    version = destroy_regional_secret_version_with_etag.destroy_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, etag
     )
     assert version.destroy_time
@@ -251,12 +250,12 @@ def test_enable_disable_regional_secret_version_with_etag(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, etag = regional_secret_version
-    version = disable_regional_secret_version_with_etag(
+    version = disable_regional_secret_version_with_etag.disable_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, etag
     )
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
-    version = enable_regional_secret_version_with_etag(
+    version = enable_regional_secret_version_with_etag.enable_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, version.etag
     )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
@@ -298,7 +297,7 @@ def test_update_regional_secret_with_etag(
     regional_secret: Tuple[str, str, str, str]
 ) -> None:
     project_id, location_id, secret_id, etag = regional_secret
-    updated_regional_secret = update_regional_secret_with_etag(
+    updated_regional_secret = update_regional_secret_with_etag.update_regional_secret_with_etag(
         project_id, location_id, secret_id, etag
     )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
