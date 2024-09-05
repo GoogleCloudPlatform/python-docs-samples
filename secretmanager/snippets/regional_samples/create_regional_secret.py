@@ -13,11 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-<<<<<<< HEAD
 Command line application and sample code for creating a new regional secret.
-=======
-command line application and sample code for creating a new regional secret.
->>>>>>> 78fc39ff9 (Regional samples 2 (#12476))
 """
 
 import argparse
