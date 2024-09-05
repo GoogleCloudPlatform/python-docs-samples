@@ -33,6 +33,12 @@ from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
 from regional_samples import get_regional_secret
 from regional_samples import get_regional_secret_version
+from regional_samples import iam_grant_access_with_regional_secret
+from regional_samples import iam_revoke_access_with_regional_secret
+from regional_samples import list_regional_secret_versions
+from regional_samples import list_regional_secret_versions_with_filter
+from regional_samples import list_regional_secrets
+from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_etag
@@ -309,6 +315,107 @@ def test_get_regional_secret(
     project_id, location_id, secret_id, _ = regional_secret
     snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
     assert secret_id in snippet_regional_secret.name
+
+def test_iam_grant_access_with_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+    iam_user: str,
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    policy = iam_grant_access_with_regional_secret.iam_grant_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
+    assert any(iam_user in b.members for b in policy.bindings)
+
+
+def test_iam_revoke_access_with_regional_secret(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret: Tuple[str, str, str, str],
+    iam_user: str,
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    policy = iam_revoke_access_with_regional_secret.iam_revoke_access_with_regional_secret(
+        project_id, location_id, secret_id, iam_user
+    )
+    assert not any(iam_user in b.members for b in policy.bindings)
+
+
+def test_list_regional_secret_versions(
+    capsys: pytest.LogCaptureFixture,
+    regional_secret_version: Tuple[str, str, str, str, str],
+    another_regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    version_1 = get_regional_secret_version.get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    _, _, _, another_version_id, _ = another_regional_secret_version
+    version_2 = get_regional_secret_version.get_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
+    list_regional_secret_versions.list_regional_secret_versions(project_id, location_id, secret_id)
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert f"Found secret version: {version_1.name}" in out
+    assert f"Found secret version: {version_2.name}" in out
+
+
+def test_list_regional_secret_versions_with_filter(
+    capsys: pytest.LogCaptureFixture,
+    regional_secret_version: Tuple[str, str, str, str, str],
+    another_regional_secret_version: Tuple[str, str, str, str, str],
+) -> None:
+    project_id, location_id, secret_id, version_id, _ = regional_secret_version
+    enabled = get_regional_secret_version.get_regional_secret_version(
+        project_id, location_id, secret_id, version_id
+    )
+    _, _, _, another_version_id, _ = another_regional_secret_version
+    disabled = disable_regional_secret_version.disable_regional_secret_version(
+        project_id, location_id, secret_id, another_version_id
+    )
+    assert disabled.state == secretmanager.SecretVersion.State.DISABLED
+    list_regional_secret_versions_with_filter.list_regional_secret_versions_with_filter(
+        project_id, location_id, secret_id, "state:ENABLED"
+    )
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert f"Found secret version: {enabled.name}" in out
+    assert f"Found secret version: {disabled.name}" not in out
+
+
+def test_list_regional_secrets(
+    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    got_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    list_regional_secrets.list_regional_secrets(project_id, location_id)
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {got_regional_secret.name}" in out
+
+
+def test_list_regional_secrets_with_filter(
+    capsys: pytest.LogCaptureFixture, regional_secret: Tuple[str, str, str, str]
+) -> None:
+    project_id, location_id, secret_id, _ = regional_secret
+    unlabeled = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    list_regional_secrets_with_filter.list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {unlabeled.name}" not in out
+
+    labeled = update_regional_secret.update_regional_secret(project_id, location_id, secret_id)
+    assert labeled.labels["secretmanager"] == "rocks"
+    list_regional_secrets_with_filter(
+        project_id, location_id, "labels.secretmanager:rocks"
+    )
+
+    out, _ = capsys.readouterr()
+    assert f"Found secret: {labeled.name}" in out
 
 def test_update_regional_secret_with_etag(
     regional_secret: Tuple[str, str],

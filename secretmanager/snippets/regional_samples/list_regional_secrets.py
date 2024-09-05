@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for listing regional secrets
+Command line application and sample code for listing regional secrets
 in a project.
 """
 
@@ -21,21 +21,24 @@ import argparse
 
 
 # [START secretmanager_v1_list_regional_secrets]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
 def list_regional_secrets(project_id: str, location_id: str) -> None:
     """
-    List all regional secrets in the given project.
+    Lists all regional secrets in the given project.
     """
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the parent project.
     parent = f"projects/{project_id}/locations/{location_id}"

@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for listing secret versions of a
+Command line application and sample code for listing secret versions of a
 regional secret.
 """
 
@@ -21,28 +21,26 @@ import argparse
 
 
 # [START secretmanager_v1_list_regional_secret_versions_with_filter]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
 def list_regional_secret_versions_with_filter(
     project_id: str, location_id: str, secret_id: str, filter_str: str = "state:ENABLED"
 ) -> None:
     """
-    List all secret versions in the given secret and their metadata.
-    Args:
-      project_id: Parent project id
-      secret_id: Parent secret id
-      filter_str: Secret version filter, constructing according to
-                  https://cloud.google.com/secret-manager/docs/filtering
+    Lists all secret versions in the given secret and their metadata.
     """
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"

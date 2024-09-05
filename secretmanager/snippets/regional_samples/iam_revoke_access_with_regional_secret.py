@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for revoking access to a regional
+Command line application and sample code for revoking access to a regional
 secret.
 """
 
@@ -23,23 +23,23 @@ from google.iam.v1 import iam_policy_pb2  # type: ignore
 
 
 # [START secretmanager_v1_iam_revoke_access_regional_secret]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
 def iam_revoke_access_with_regional_secret(
     project_id: str, location_id: str, secret_id: str, member: str
 ) -> iam_policy_pb2.SetIamPolicyRequest:
     """
-    Revoke the given member access to a secret.
+    Revokes the given member access to a secret.
     """
 
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
-
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
