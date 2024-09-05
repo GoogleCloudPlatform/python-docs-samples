@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for adding a secret version to a
+Command line application and sample code for adding a secret version to a
 regional secret with the specified payload to an existing regional secret.
 """
 
@@ -28,16 +28,16 @@ def add_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, payload: str
 ) -> secretmanager_v1.SecretVersion:
     """
-    Add a new secret version to the given secret with the provided payload.
+    Adds a new secret version to the given secret with the provided payload.
     """
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"

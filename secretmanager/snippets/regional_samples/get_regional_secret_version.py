@@ -13,13 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for getting metadata about a regional
+Command line application and sample code for getting metadata about a regional
 secret version, but not the secret payload.
 """
 
 import argparse
-
-from google.cloud import secretmanager_v1
 
 
 # [START secretmanager_v1_get_regional_secret_version]
@@ -27,20 +25,20 @@ def get_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
 ) -> secretmanager_v1.GetSecretVersionRequest:
     """
-    Get information about the given secret version. It does not include the
+    Gets information about the given secret version. It does not include the
     payload data.
     """
 
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the secret version.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
@@ -62,7 +60,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
     parser.add_argument("secret_id", help="id of the secret from which to act")
-    parser.add_argument("version_id", help="id of the version to get")
+    parser.add_argument("version_id", help="id of the version of secret to get")
     args = parser.parse_args()
 
     get_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)

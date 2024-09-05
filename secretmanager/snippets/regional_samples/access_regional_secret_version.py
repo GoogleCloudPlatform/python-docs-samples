@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for accessing a regional secret version.
+Command line application and sample code for accessing a regional secret version.
 """
 
 import argparse
@@ -31,13 +31,13 @@ def access_regional_secret_version(
     can be a version number as a string (e.g. "5") or an alias (e.g. "latest").
     """
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager_v1.SecretManagerServiceClient(client_options={
-        "api_endpoint": api_endpoint
-            })
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the secret version.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("location_id", help="id of location where secret is stored")
     parser.add_argument("secret_id", help="id of the secret to access")
-    parser.add_argument("version_id", help="version to access")
+    parser.add_argument("version_id", help="version of the secret to access")
     args = parser.parse_args()
 
     access_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
