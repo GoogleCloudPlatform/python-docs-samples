@@ -21,6 +21,9 @@ import argparse
 
 
 # [START secretmanager_v1_get_regional_secret_version]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
 def get_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
 ) -> secretmanager_v1.GetSecretVersionRequest:
@@ -28,9 +31,6 @@ def get_regional_secret_version(
     Gets information about the given secret version. It does not include the
     payload data.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

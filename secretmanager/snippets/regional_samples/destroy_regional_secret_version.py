@@ -21,6 +21,9 @@ import argparse
 
 
 # [START secretmanager_v1_destroy_regional_secret_version]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
 def destroy_regional_secret_version(
     project_id: str, location_id: str, secret_id: str, version_id: str
 ) -> secretmanager_v1.DestroySecretVersionRequest:
@@ -28,9 +31,6 @@ def destroy_regional_secret_version(
     Destroys the given secret version, making the payload irrecoverable. Other
     secrets versions are unaffected.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

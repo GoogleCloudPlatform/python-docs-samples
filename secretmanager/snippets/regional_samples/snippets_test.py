@@ -28,7 +28,7 @@ from regional_samples import destroy_regional_secret_version
 from regional_samples import disable_regional_secret_version
 from regional_samples import enable_regional_secret_version
 from regional_samples import get_regional_secret
-from regional_samples import et_regional_secret_version
+from regional_samples import get_regional_secret_version
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 
@@ -155,7 +155,7 @@ def test_access_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str]
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = access_regional_secret_version(
+    version = access_regional_secret_version.access_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
     assert version.payload.data == b"hello world!"
@@ -165,7 +165,7 @@ def test_add_regional_secret_version(
 ) -> None:
     project_id, location_id, secret_id, _ = regional_secret
     payload = "test123"
-    version = add_regional_secret_version(project_id, location_id, secret_id, payload)
+    version = add_regional_secret_version.add_regional_secret_version(project_id, location_id, secret_id, payload)
     assert secret_id in version.name
 
 def test_create_regional_secret(
@@ -183,7 +183,7 @@ def test_destroy_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = destroy_regional_secret_version(
+    version = destroy_regional_secret_version.destroy_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
     assert version.destroy_time
@@ -193,12 +193,12 @@ def test_enable_disable_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = disable_regional_secret_version(
+    version = disable_regional_secret_version.disable_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
     assert version.state == secretmanager.SecretVersion.State.DISABLED
 
-    version = enable_regional_secret_version(
+    version = enable_regional_secret_version.enable_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
     assert version.state == secretmanager.SecretVersion.State.ENABLED
@@ -208,7 +208,7 @@ def test_get_regional_secret_version(
     regional_secret_version: Tuple[str, str, str, str, str],
 ) -> None:
     project_id, location_id, secret_id, version_id, _ = regional_secret_version
-    version = get_regional_secret_version(
+    version = get_regional_secret_version.get_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
     assert secret_id in version.name
