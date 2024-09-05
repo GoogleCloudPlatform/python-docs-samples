@@ -25,8 +25,8 @@ import pytest
 from ..write_pubsub import write_to_pubsub
 
 
-topic_id = f'test-topic-{uuid.uuid4()}'
-subscription_id = f'{topic_id}-sub'
+topic_id = f"test-topic-{uuid.uuid4()}"
+subscription_id = f"{topic_id}-sub"
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 publisher = pubsub_v1.PublisherClient()
@@ -48,8 +48,7 @@ def setup_and_teardown() -> None:
         )
         yield
     finally:
-        subscriber.delete_subscription(
-            request={"subscription": subscription_path})
+        subscriber.delete_subscription(request={"subscription": subscription_path})
         publisher.delete_topic(request={"topic": topic_path})
 
 
@@ -76,7 +75,7 @@ def read_messages() -> None:
             request={"subscription": subscription_path, "ack_ids": ack_ids}
         )
 
-        if (len(received_messages) >= NUM_MESSAGES):
+        if len(received_messages) >= NUM_MESSAGES:
             break
 
         time.sleep(5)
@@ -86,10 +85,10 @@ def read_messages() -> None:
 
 def test_write_to_pubsub(setup_and_teardown: None) -> None:
     topic_path = publisher.topic_path(project_id, topic_id)
-    with patch("sys.argv", ["", '--streaming', f'--topic={topic_path}']):
+    with patch("sys.argv", ["", "--streaming", f"--topic={topic_path}"]):
         write_to_pubsub()
 
         # Read from Pub/Sub to verify the pipeline successfully wrote messages.
         # Duplicate reads are possible.
         messages = read_messages()
-        assert (len(messages) >= NUM_MESSAGES)
+        assert len(messages) >= NUM_MESSAGES
