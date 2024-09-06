@@ -29,7 +29,7 @@ from regional_samples import update_regional_secret
 
 @pytest.fixture()
 def location_id() -> str:
-    return "us-central1"
+    return "us-east5"
 
 
 @pytest.fixture()
@@ -109,7 +109,7 @@ def regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
-    ttl: Optional[str],
+    ttl: str,
 ) -> Iterator[Tuple[str, str, str, str]]:
     print(f"creating secret {secret_id}")
 
@@ -136,7 +136,7 @@ def test_create_regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
-    ttl: Optional[str],
+    ttl: str,
 ) -> None:
     secret = create_regional_secret.create_regional_secret(
         project_id, location_id, secret_id, ttl
