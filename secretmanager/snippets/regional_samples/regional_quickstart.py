@@ -17,25 +17,21 @@ Command line application and sample code for creating an accessing a secret.
 """
 
 
-def regional_quickstart(_project_id: str, _location_id: str, _secret_id: str) -> None:
+def regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     # [START secretmanager_regional_quickstart]
     # Import the Secret Manager client library.
     from google.cloud import secretmanager_v1
 
+    # TODO (developer): uncomment variables and assign a value.
+
     # GCP project in which to store secrets in Secret Manager.
-    project_id = "YOUR_PROJECT_ID"
+    # project_id = "YOUR_PROJECT_ID"
 
     # Location where the secret is to be stored
-    location_id = "YOUR_LOCATION_ID"
+    # location_id = "YOUR_LOCATION_ID"
 
     # ID of the secret to create.
-    secret_id = "YOUR_SECRET_ID"
-
-    # [END secretmanager_regional_quickstart]
-    project_id = _project_id
-    location_id = _location_id
-    secret_id = _secret_id
-    # [START secretmanager_regional_quickstart]
+    # secret_id = "YOUR_SECRET_ID"
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

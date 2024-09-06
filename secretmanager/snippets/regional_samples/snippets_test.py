@@ -13,11 +13,11 @@
 
 import os
 import time
-from typing import Iterator, Optional, Tuple, Union
+from typing import Iterator, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
-from google.cloud import secretmanager, secretmanager_v1
+from google.cloud import secretmanager_v1
 import pytest
 
 from regional_samples import access_regional_secret_version
@@ -46,7 +46,7 @@ from regional_samples import update_regional_secret_with_etag
 
 @pytest.fixture()
 def location_id() -> str:
-    return "us-central1"
+    return "us-east5"
 
 
 @pytest.fixture()
@@ -68,13 +68,13 @@ def iam_user() -> str:
 
 
 @pytest.fixture()
-def ttl() -> Optional[str]:
+def ttl() -> str:
     return "300s"
 
 @retry.Retry()
 def retry_client_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.CreateSecretRequest, dict]],
+    request: Union[secretmanager_v1.CreateSecretRequest, dict],
 ) -> secretmanager_v1.Secret:
     # Retry to avoid 503 error & flaky issues
     return regional_client.create_secret(request=request)
@@ -82,7 +82,7 @@ def retry_client_create_regional_secret(
 @retry.Retry()
 def retry_client_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.DeleteSecretRequest, dict]],
+    request: Union[secretmanager_v1.DeleteSecretRequest, dict],
 ) -> None:
     # Retry to avoid 503 error & flaky issues
     return regional_client.delete_secret(request=request)
@@ -90,14 +90,14 @@ def retry_client_delete_regional_secret(
 @retry.Retry()
 def retry_client_access_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.AccessSecretVersionRequest, dict]],
+    request: Union[secretmanager_v1.AccessSecretVersionRequest, dict],
 ) -> secretmanager_v1.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return regional_client.access_secret_version(request=request)
 
 @pytest.fixture()
 def secret_id(
-    regional_client: secretmanager.SecretManagerServiceClient,
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
     location_id: str,
 ) -> Iterator[str]:
@@ -144,7 +144,7 @@ def regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
-    ttl: Optional[str],
+    ttl: str,
 ) -> Iterator[Tuple[str, str]]:
     print(f"creating secret {secret_id}")
 
@@ -190,9 +190,11 @@ def test_create_regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
-    ttl: Optional[str],
+    ttl: str,
 ) -> None:
-    secret = create_regional_secret.create_regional_secret(project_id, location_id, secret_id, ttl)
+    secret = create_regional_secret.create_regional_secret(
+        project_id, location_id, secret_id, ttl
+    )
     assert secret_id in secret.name
 
 def test_delete_regional_secret(
@@ -434,7 +436,9 @@ def test_get_regional_secret(
     location_id: str,
 ) -> None:
     secret_id, _ = regional_secret
-    snippet_regional_secret = get_regional_secret.get_regional_secret(project_id, location_id, secret_id)
+    snippet_regional_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
     assert secret_id in snippet_regional_secret.name
 
 def test_update_regional_secret_with_etag(
@@ -448,11 +452,14 @@ def test_update_regional_secret_with_etag(
     )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
 
+
 def test_update_regional_secret(
     regional_secret: Tuple[str, str],
     project_id: str,
     location_id: str,
 ) -> None:
     secret_id, _ = regional_secret
-    updated_regional_secret = update_regional_secret.update_regional_secret(project_id, location_id, secret_id)
+    updated_regional_secret = update_regional_secret.update_regional_secret(
+        project_id, location_id, secret_id
+    )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"

@@ -21,11 +21,7 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret]
-def delete_regional_secret(
-    project_id: str,
-    location_id: str,
-    secret_id: str
-) -> None:
+def delete_regional_secret(project_id: str, location_id: str, secret_id: str) -> None:
     """
     Deletes the secret with the given name and all of its versions.
     """
