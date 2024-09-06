@@ -21,7 +21,7 @@ import argparse
 
 # [START secretmanager_v1_add_regional_secret_version]
 from google.cloud import secretmanager_v1
-import google_crc32c  # type: ignore
+import google_crc32c
 
 
 def add_regional_secret_version(
