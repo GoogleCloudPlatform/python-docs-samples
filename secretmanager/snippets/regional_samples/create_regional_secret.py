@@ -19,22 +19,19 @@ Command line application and sample code for creating a new regional secret.
 import argparse
 from typing import Optional
 
-from google.cloud import secretmanager_v1
-
 
 # [START secretmanager_v1_create_regional_secret]
+from google.cloud import secretmanager_v1
+
 def create_regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
-    ttl: Optional[str] = None
+    ttl: Optional[str] = None,
 ) -> secretmanager_v1.Secret:
     """
     Creates a new regional secret with the given name.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

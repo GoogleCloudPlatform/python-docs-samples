@@ -13,7 +13,7 @@
 
 import os
 import time
-from typing import Iterator, Optional, Tuple, Union
+from typing import Iterator, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
@@ -51,14 +51,14 @@ def iam_user() -> str:
 
 
 @pytest.fixture()
-def ttl() -> Optional[str]:
+def ttl() -> str:
     return "300s"
 
 
 @retry.Retry()
 def retry_client_create_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.CreateSecretRequest, dict]],
+    request: Union[secretmanager_v1.CreateSecretRequest, dict],
 ) -> secretmanager_v1.Secret:
     # Retry to avoid 503 error & flaky issues
     return regional_client.create_secret(request=request)
@@ -67,7 +67,7 @@ def retry_client_create_regional_secret(
 @retry.Retry()
 def retry_client_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.DeleteSecretRequest, dict]],
+    request: Union[secretmanager_v1.DeleteSecretRequest, dict],
 ) -> None:
     # Retry to avoid 503 error & flaky issues
     return regional_client.delete_secret(request=request)
@@ -76,7 +76,7 @@ def retry_client_delete_regional_secret(
 @retry.Retry()
 def retry_client_access_regional_secret_version(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
-    request: Optional[Union[secretmanager_v1.AccessSecretVersionRequest, dict]],
+    request: Union[secretmanager_v1.AccessSecretVersionRequest, dict],
 ) -> secretmanager_v1.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return regional_client.access_secret_version(request=request)
