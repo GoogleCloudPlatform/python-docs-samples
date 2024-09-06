@@ -193,9 +193,14 @@ def list_sessions_with_filter(
     parent = client.data_store_path(
         project=project_id, location=location, data_store=data_store_id
     )
-    filter = f'userPseudoId="{user_pseudo_id}"'
 
-    response = client.list_sessions(parent=parent, filter=filter)
+    response = client.list_sessions(
+        request=discoveryengine.ListSessionsRequest(
+            parent=parent,
+            filter=f'user_pseudo_id="{user_pseudo_id}"',  # Optional: Filter requests by user pseudo ID.
+            order_by="update_time",  # Optional: Sort results
+        )
+    )
     print("Sessions:")
     for session in response.sessions:
         print(session)
