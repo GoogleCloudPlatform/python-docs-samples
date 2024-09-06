@@ -27,10 +27,13 @@ import argparse
 
 # [START tts_synthesize_text_audio_profile]
 # [START tts_synthesize_text_audio_profile_beta]
-def synthesize_text_with_audio_profile(text, output, effects_profile_id):
+def synthesize_text_with_audio_profile():
     """Synthesizes speech from the input string of text."""
     from google.cloud import texttospeech
 
+    text = "hello"
+    output = "output.mp3"
+    effects_profile_id = "telephony-class-application"
     client = texttospeech.TextToSpeechClient()
 
     input_text = texttospeech.SynthesisInput(text=text)
