@@ -23,6 +23,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def update_regional_secret_with_etag(
     project_id: str,
     location_id: str,
@@ -53,8 +54,10 @@ def update_regional_secret_with_etag(
 
     # Print the new secret name.
     print(f"Updated secret: {response.name}")
-    
+
     return response
+
+
 # [END secretmanager_v1_update_regional_secret_with_etag]
 
 if __name__ == "__main__":
@@ -67,4 +70,6 @@ if __name__ == "__main__":
     parser.add_argument("etag", help="current etag of the secret")
     args = parser.parse_args()
 
-    update_regional_secret_with_etag(args.project_id, args.location_id, args.secret_id, args.etag)
+    update_regional_secret_with_etag(
+        args.project_id, args.location_id, args.secret_id, args.etag
+    )

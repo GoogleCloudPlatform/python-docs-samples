@@ -23,6 +23,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def enable_regional_secret_version_with_etag(
     project_id: str,
     location_id: str,
@@ -48,8 +49,8 @@ def enable_regional_secret_version_with_etag(
 
     # Build the request
     request = secretmanager_v1.types.service.EnableSecretVersionRequest(
-        name = name,
-        etag = etag,
+        name=name,
+        etag=etag,
     )
 
     # Disable the secret version.

@@ -24,6 +24,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def destroy_regional_secret_version(
     project_id: str,
     location_id: str,
@@ -50,8 +51,10 @@ def destroy_regional_secret_version(
     response = client.destroy_secret_version(request={"name": name})
 
     print(f"Destroyed secret version: {response.name}")
-    
+
     return response
+
+
 # [END secretmanager_v1_destroy_regional_secret_version]
 
 if __name__ == "__main__":
@@ -64,4 +67,6 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="id of the version of secret to destroy")
     args = parser.parse_args()
 
-    destroy_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    destroy_regional_secret_version(
+        args.project_id, args.location_id, args.secret_id, args.version_id
+    )

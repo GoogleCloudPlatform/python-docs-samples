@@ -24,6 +24,7 @@ import argparse
 from google.cloud import secretmanager_v1
 from google import iam
 
+
 def iam_grant_access_with_regional_secret(
     project_id: str,
     location_id: str,
@@ -58,6 +59,8 @@ def iam_grant_access_with_regional_secret(
     print(f"Updated IAM policy on {secret_id}")
 
     return new_policy
+
+
 # [END secretmanager_v1_iam_grant_access_regional_secret]
 
 
@@ -71,4 +74,6 @@ if __name__ == "__main__":
     parser.add_argument("member", help="member to grant access")
     args = parser.parse_args()
 
-    iam_grant_access_with_regional_secret(args.project_id, args.location_id, args.secret_id, args.member)
+    iam_grant_access_with_regional_secret(
+        args.project_id, args.location_id, args.secret_id, args.member
+    )

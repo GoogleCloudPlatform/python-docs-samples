@@ -24,10 +24,9 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def list_regional_secret_versions(
-    project_id: str,
-    location_id: str,
-    secret_id: str
+    project_id: str, location_id: str, secret_id: str
 ) -> None:
     """
     Lists all secret versions in the given secret and their metadata.

@@ -24,6 +24,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def enable_regional_secret_version(
     project_id: str,
     location_id: str,
@@ -50,8 +51,10 @@ def enable_regional_secret_version(
     response = client.enable_secret_version(request={"name": name})
 
     print(f"Enabled secret version: {response.name}")
-    
+
     return response
+
+
 # [END secretmanager_enable_regional_secret_version]
 
 if __name__ == "__main__":
@@ -64,4 +67,6 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="id of the version of secret to enable")
     args = parser.parse_args()
 
-    enable_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    enable_regional_secret_version(
+        args.project_id, args.location_id, args.secret_id, args.version_id
+    )

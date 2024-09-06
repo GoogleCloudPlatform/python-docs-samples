@@ -63,6 +63,8 @@ def access_regional_secret_version(
     print(f"Plaintext: {payload}")
 
     return response
+
+
 # [END secretmanager_access_regional_secret_version]
 
 if __name__ == "__main__":
@@ -75,4 +77,6 @@ if __name__ == "__main__":
     parser.add_argument("version_id", help="version of the secret to access")
     args = parser.parse_args()
 
-    access_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.version_id)
+    access_regional_secret_version(
+        args.project_id, args.location_id, args.secret_id, args.version_id
+    )

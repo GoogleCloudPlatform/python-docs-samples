@@ -68,6 +68,8 @@ def add_regional_secret_version(
     # Print the new secret version name.
     print(f"Added secret version: {response.name}")
     return response
+
+
 # [END secretmanager_v1_add_regional_secret_version]
 
 if __name__ == "__main__":
@@ -80,4 +82,6 @@ if __name__ == "__main__":
     parser.add_argument("payload", help="secret material payload")
     args = parser.parse_args()
 
-    add_regional_secret_version(args.project_id, args.location_id, args.secret_id, args.payload)
+    add_regional_secret_version(
+        args.project_id, args.location_id, args.secret_id, args.payload
+    )

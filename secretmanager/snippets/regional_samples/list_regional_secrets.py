@@ -24,6 +24,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def list_regional_secrets(project_id: str, location_id: str) -> None:
     """
     Lists all regional secrets in the given project.

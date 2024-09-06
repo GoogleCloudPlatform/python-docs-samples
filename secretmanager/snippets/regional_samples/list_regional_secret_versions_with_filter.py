@@ -24,6 +24,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def list_regional_secret_versions_with_filter(
     project_id: str,
     location_id: str,
@@ -53,6 +54,7 @@ def list_regional_secret_versions_with_filter(
     for version in secret_versions:
         print(f"Found secret version: {version.name}")
 
+
 # [END secretmanager_v1_list_regional_secret_versions_with_filter]
 
 
@@ -66,4 +68,6 @@ if __name__ == "__main__":
     parser.add_argument("filter", help="filter string to apply")
     args = parser.parse_args()
 
-    list_regional_secret_versions_with_filter(args.project_id, args.secret_id, args.filter)
+    list_regional_secret_versions_with_filter(
+        args.project_id, args.secret_id, args.filter
+    )

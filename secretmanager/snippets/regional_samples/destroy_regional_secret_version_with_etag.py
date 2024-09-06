@@ -22,6 +22,7 @@ import argparse
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
+
 def destroy_regional_secret_version_with_etag(
     project_id: str,
     location_id: str,
@@ -47,16 +48,18 @@ def destroy_regional_secret_version_with_etag(
 
     # Build the request.
     request = secretmanager_v1.types.service.DestroySecretVersionRequest(
-        name = name,
-        etag = etag,
+        name=name,
+        etag=etag,
     )
 
     # Destroy the secret version.
     response = client.destroy_secret_version(request=request)
 
     print(f"Destroyed secret version: {response.name}")
-    
+
     return response
+
+
 # [END secretmanager_v1_destroy_regional_secret_version_with_etag]
 
 if __name__ == "__main__":
