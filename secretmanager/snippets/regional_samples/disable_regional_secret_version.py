@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2019 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,10 @@ import argparse
 from google.cloud import secretmanager_v1
 
 def disable_regional_secret_version(
-    project_id: str, location_id: str, secret_id: str, version_id: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_id: str,
 ) -> secretmanager_v1.DisableSecretVersionRequest:
     """
     Disables the given secret version. Future requests will throw an error until

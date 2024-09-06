@@ -24,7 +24,10 @@ import google_crc32c
 
 
 def access_regional_secret_version(
-    project_id: str, location_id: str, secret_id: str, version_id: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_id: str,
 ) -> secretmanager_v1.AccessSecretVersionResponse:
     """
     Access the payload for the given secret version if one exists. The version

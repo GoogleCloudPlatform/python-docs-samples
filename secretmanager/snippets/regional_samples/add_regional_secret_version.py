@@ -25,7 +25,10 @@ import google_crc32c  # type: ignore
 
 
 def add_regional_secret_version(
-    project_id: str, location_id: str, secret_id: str, payload: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    payload: str,
 ) -> secretmanager_v1.SecretVersion:
     """
     Adds a new secret version to the given secret with the provided payload.
