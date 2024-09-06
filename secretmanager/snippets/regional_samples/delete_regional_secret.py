@@ -21,13 +21,14 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret]
+# Import the Secret Manager client library.
+from google.cloud import secretmanager_v1
+
+
 def delete_regional_secret(project_id: str, location_id: str, secret_id: str) -> None:
     """
     Deletes the secret with the given name and all of its versions.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

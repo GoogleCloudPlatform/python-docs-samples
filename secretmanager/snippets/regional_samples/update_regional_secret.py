@@ -18,19 +18,17 @@ Command line application and sample code to update a regional secret.
 
 import argparse
 
+# [START secretmanager_v1_update_regional_secret]
+# Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_v1_update_regional_secret]
 def update_regional_secret(
     project_id: str, location_id: str, secret_id: str
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Updates the metadata about an existing secret.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

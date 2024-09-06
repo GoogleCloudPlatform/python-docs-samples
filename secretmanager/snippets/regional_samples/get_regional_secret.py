@@ -18,10 +18,11 @@ Command line application and sample code for getting metadata about a regional s
 
 import argparse
 
+# [START secretmanager_v1_get_regional_secret]
+# Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
 
-# [START secretmanager_v1_get_regional_secret]
 def get_regional_secret(
     project_id: str, location_id: str, secret_id: str
 ) -> secretmanager_v1.GetSecretRequest:
@@ -29,9 +30,6 @@ def get_regional_secret(
     Gets information about the given secret. This only returns metadata about
     the secret container, not any secret material.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

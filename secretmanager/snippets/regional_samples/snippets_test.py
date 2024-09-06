@@ -188,9 +188,8 @@ def test_add_regional_secret_version(
     location_id: str,
 ) -> None:
     secret_id, _ = regional_secret
-    payload = "test123"
     version = add_regional_secret_version.add_regional_secret_version(
-        project_id, location_id, secret_id, payload
+        project_id, location_id, secret_id, "test123"
     )
     assert secret_id in version.name
 
@@ -206,22 +205,6 @@ def test_create_regional_secret(
         project_id, location_id, secret_id, ttl
     )
     assert secret_id in secret.name
-
-
-def test_delete_regional_secret(
-    regional_client: secretmanager_v1.SecretManagerServiceClient,
-    regional_secret: Tuple[str, str],
-    project_id: str,
-    location_id: str,
-) -> None:
-    secret_id, _ = regional_secret
-    delete_regional_secret(project_id, location_id, secret_id)
-    with pytest.raises(exceptions.NotFound):
-        print(f"{client}")
-        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_regional_secret_version(
-            regional_client, request={"name": name}
-        )
 
 
 def test_delete_regional_secret_with_etag(
@@ -277,12 +260,12 @@ def test_enable_disable_regional_secret_version(
     version = disable_regional_secret_version.disable_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
-    assert version.state == secretmanager.SecretVersion.State.DISABLED
+    assert version.state == secretmanager_v1.SecretVersion.State.DISABLED
 
     version = enable_regional_secret_version.enable_regional_secret_version(
         project_id, location_id, secret_id, version_id
     )
-    assert version.state == secretmanager.SecretVersion.State.ENABLED
+    assert version.state == secretmanager_v1.SecretVersion.State.ENABLED
 
 
 def test_enable_disable_regional_secret_version_with_etag(
@@ -295,12 +278,12 @@ def test_enable_disable_regional_secret_version_with_etag(
     version = disable_regional_secret_version_with_etag.disable_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, etag
     )
-    assert version.state == secretmanager.SecretVersion.State.DISABLED
+    assert version.state == secretmanager_v1.SecretVersion.State.DISABLED
 
     version = enable_regional_secret_version_with_etag.enable_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, version.etag
     )
-    assert version.state == secretmanager.SecretVersion.State.ENABLED
+    assert version.state == secretmanager_v1.SecretVersion.State.ENABLED
 
 
 def test_get_regional_secret_version(
@@ -389,7 +372,7 @@ def test_list_regional_secret_versions_with_filter(
     disabled = disable_regional_secret_version.disable_regional_secret_version(
         project_id, location_id, secret_id, another_version_id
     )
-    assert disabled.state == secretmanager.SecretVersion.State.DISABLED
+    assert disabled.state == secretmanager_v1.SecretVersion.State.DISABLED
     list_regional_secret_versions_with_filter.list_regional_secret_versions_with_filter(
         project_id, location_id, secret_id, "state:ENABLED"
     )

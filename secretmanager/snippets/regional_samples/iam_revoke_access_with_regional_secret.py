@@ -21,8 +21,8 @@ import argparse
 
 # [START secretmanager_v1_iam_revoke_access_regional_secret]
 # Import the Secret Manager client library.
-from google.cloud import secretmanager_v1
 from google import iam
+from google.cloud import secretmanager_v1
 
 
 def iam_revoke_access_with_regional_secret(
