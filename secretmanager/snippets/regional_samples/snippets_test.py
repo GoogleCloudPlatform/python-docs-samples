@@ -17,7 +17,7 @@ from typing import Iterator, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
-from google.cloud import secretmanager, secretmanager_v1
+from google.cloud import secretmanager_v1
 import pytest
 
 from regional_samples import create_regional_secret
@@ -84,7 +84,7 @@ def retry_client_access_regional_secret_version(
 
 @pytest.fixture()
 def secret_id(
-    regional_client: secretmanager.SecretManagerServiceClient,
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
     location_id: str,
 ) -> Iterator[str]:
