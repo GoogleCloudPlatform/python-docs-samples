@@ -197,8 +197,8 @@ def list_sessions_with_filter(
     response = client.list_sessions(
         request=discoveryengine.ListSessionsRequest(
             parent=parent,
-            filter=f'user_pseudo_id="{user_pseudo_id}"', # Optional: Filter requests by user pseudo ID.
-            order_by="update_time", # Optional: Sort results
+            filter=f'user_pseudo_id="{user_pseudo_id}"',  # Optional: Filter requests by user pseudo ID.
+            order_by="update_time",  # Optional: Sort results
         )
     )
     print("Sessions:")
