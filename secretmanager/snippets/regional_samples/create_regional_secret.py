@@ -23,6 +23,7 @@ from typing import Optional
 # [START secretmanager_v1_create_regional_secret]
 from google.cloud import secretmanager_v1
 
+
 def create_regional_secret(
     project_id: str,
     location_id: str,
