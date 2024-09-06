@@ -21,7 +21,11 @@ Command line application and sample code for listing secrets in a project.
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
-def list_regional_secrets_with_filter(project_id: str, location_id: str,  filter_str: str) -> None:
+def list_regional_secrets_with_filter(
+    project_id: str,
+    location_id: str, 
+    filter_str: str
+) -> None:
     """
     Lists all regional secrets in the given project.
     """
