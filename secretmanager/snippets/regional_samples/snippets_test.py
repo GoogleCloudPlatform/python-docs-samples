@@ -118,10 +118,9 @@ def regional_secret_version(
 
     print(f"adding secret version to {secret_id}")
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
-    payload = b"hello world!"
     time.sleep(5)
     version = regional_client.add_secret_version(
-        request={"parent": parent, "payload": {"data": payload}}
+        request={"parent": parent, "payload": {"data": b"hello world!"}}
     )
 
     yield project_id, location_id, secret_id, version.name.rsplit("/", 1)[
