@@ -21,16 +21,18 @@ import argparse
 
 
 # [START secretmanager_v1_delete_regional_secret_with_etag]
+# Import the Secret Manager client library and types.
+from google.cloud import secretmanager_v1
+
 def delete_regional_secret_with_etag(
-    project_id: str, location_id: str, secret_id: str, etag: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    etag: str,
 ) -> None:
     """
     Deletes the regional secret with the given name, etag, and all of its versions.
     """
-
-    # Import the Secret Manager client library and types.
-    from google.cloud import secretmanager_v1
-    from google.cloud.secretmanager_v1.types import service
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
@@ -44,9 +46,10 @@ def delete_regional_secret_with_etag(
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
     # Build the request
-    request = service.DeleteSecretRequest()
-    request.name = name
-    request.etag = etag
+    request = secretmanager_v1.types.service.DeleteSecretRequest(
+        name = name,
+        etag = etag,
+    )
 
     # Delete the secret.
     client.delete_secret(request=request)

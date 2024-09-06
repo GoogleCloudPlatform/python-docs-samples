@@ -19,21 +19,21 @@ secret version.
 
 import argparse
 
+# [START secretmanager_v1_disable_regional_secret_version_with_etag]
+# Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
-
-# [START secretmanager_v1_disable_regional_secret_version_with_etag]
 def disable_regional_secret_version_with_etag(
-    project_id: str, location_id: str, secret_id: str, version_id: str, etag: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_id: str,
+    etag: str,
 ) -> secretmanager_v1.DisableSecretVersionRequest:
     """
     Disables the given secret version. Future requests will throw an error until
     the secret version is enabled. Other secrets versions are unaffected.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
-    from google.cloud.secretmanager_v1.types import service
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
@@ -47,9 +47,10 @@ def disable_regional_secret_version_with_etag(
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
     # Build the request.
-    request = service.DisableSecretVersionRequest()
-    request.name = name
-    request.etag = etag
+    request = secretmanager_v1.types.service.DisableSecretVersionRequest(
+        name = name,
+        etag = etag,
+    )
 
     # Disable the secret version.
     response = client.disable_secret_version(request=request)

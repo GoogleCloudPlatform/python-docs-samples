@@ -18,21 +18,21 @@ Command line application and sample code for destroying a secret version.
 
 import argparse
 
+# [START secretmanager_v1_destroy_regional_secret_version_with_etag]
+# Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
-
-# [START secretmanager_v1_destroy_regional_secret_version_with_etag]
 def destroy_regional_secret_version_with_etag(
-    project_id: str, location_id: str, secret_id: str, version_id: str, etag: str
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_id: str,
+    etag: str,
 ) -> secretmanager_v1.DestroySecretVersionRequest:
     """
     Destroys the given secret version, making the payload irrecoverable. Other
     secrets versions are unaffected.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
-    from google.cloud.secretmanager_v1.types import service
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
@@ -46,9 +46,10 @@ def destroy_regional_secret_version_with_etag(
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/{version_id}"
 
     # Build the request.
-    request = service.DestroySecretVersionRequest()
-    request.name = name
-    request.etag = etag
+    request = secretmanager_v1.types.service.DestroySecretVersionRequest(
+        name = name,
+        etag = etag,
+    )
 
     # Destroy the secret version.
     response = client.destroy_secret_version(request=request)
