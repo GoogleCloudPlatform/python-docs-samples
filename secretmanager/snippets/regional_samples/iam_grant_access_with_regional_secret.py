@@ -19,16 +19,17 @@ secret.
 
 import argparse
 
-from google.iam.v1 import iam_policy_pb2  # type: ignore
-
-
 # [START secretmanager_v1_iam_grant_access_regional_secret]]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
+from google import iam
 
 def iam_grant_access_with_regional_secret(
-    project_id: str, location_id: str, secret_id: str, member: str
-) -> iam_policy_pb2.SetIamPolicyRequest:
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    member: str,
+) -> iam.v1.iam_policy_pb2.SetIamPolicyRequest:
     """
     Grants the given member access to a secret.
     """

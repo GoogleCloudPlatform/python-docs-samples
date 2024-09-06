@@ -29,9 +29,6 @@ def list_regional_secrets(project_id: str, location_id: str) -> None:
     Lists all regional secrets in the given project.
     """
 
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
-
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 

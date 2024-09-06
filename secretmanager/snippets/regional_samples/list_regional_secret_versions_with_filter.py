@@ -25,14 +25,14 @@ import argparse
 from google.cloud import secretmanager_v1
 
 def list_regional_secret_versions_with_filter(
-    project_id: str, location_id: str, secret_id: str, filter_str: str = "state:ENABLED"
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    filter_str: str = "state:ENABLED",
 ) -> None:
     """
     Lists all secret versions in the given secret and their metadata.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager_v1
 
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
@@ -45,10 +45,12 @@ def list_regional_secret_versions_with_filter(
     # Build the resource name of the parent secret.
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # List all secret versions.
-    for version in client.list_secret_versions(
+    secret_versions = client.list_secret_versions(
         request={"parent": parent, "filter": filter_str}
-    ):
+    )
+
+    # List all secret versions.
+    for version in secret_versions:
         print(f"Found secret version: {version.name}")
 
 # [END secretmanager_v1_list_regional_secret_versions_with_filter]
