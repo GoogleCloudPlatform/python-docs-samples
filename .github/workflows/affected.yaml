@@ -36,7 +36,7 @@ jobs:
       - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.2
       - id: python
         run: |
-          PYTHON=$(affected .github/workflows/python/config.json)
+          PYTHON=$(affected .github/workflows/config/python.json)
           echo "$PYTHON"
           echo "affected=$PYTHON" >> "$GITHUB_OUTPUT"
 
