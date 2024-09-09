@@ -12,71 +12,56 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-name: 🪿
+name: PR
 
 on:
-  workflow_run:
-    workflows: ["PR"]
-    types: ["completed"]
+  push:
+    branches: main
+  pull_request:
+
+env:
+  PROJECT: jss-22p1-test
+  WORKLOAD_IDENTITY_PROVIDER: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
 
 jobs:
-  test:
+  affected:
+    name: Finding affected tests
     runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.python.outputs.affected }}
     steps:
-      - run: echo "Running tests"
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ^1.23.0
+      - run: go version
+      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.2
+      - id: python
+        run: |
+          PYTHON=$(affected .github/workflows/config/python.json)
+          echo "$PYTHON"
+          echo "affected=$PYTHON" >> "$GITHUB_OUTPUT"
 
-# on:
-#   push:
-#     branches: main
-#   pull_request:
-#   workflow_dispatch: # Manual runs
-
-# env:
-#   PROJECT: jss-22p1-test
-#   WORKLOAD_IDENTITY_PROVIDER: projects/886556137211/locations/global/workloadIdentityPools/github-actions/providers/github-actions-python
-
-# jobs:
-#   affected:
-#     name: Finding affected tests
-#     runs-on: ubuntu-latest
-#     outputs:
-#       python: ${{steps.python.outputs.affected}}
-#     defaults:
-#       run:
-#         working-directory: .github/testing
-#     steps:
-#       - uses: actions/checkout@v4
-#         with:
-#           fetch-depth: 0
-#       - uses: oven-sh/setup-bun@v2
-#       - run: bun install
-#       - id: python
-#         run: |
-#           AFFECTED_PYTHON=$(bun run affected python HEAD origin/main)
-#           echo "$AFFECTED_PYTHON"
-#           echo "affected=$AFFECTED_PYTHON" >> "$GITHUB_OUTPUT"
-
-#   python-lint:
-#     name: Lint Python
-#     needs: affected
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         affected: ${{fromJson(needs.affected.outputs.python)}}
-#     defaults:
-#       run:
-#         working-directory: .github/testing
-#     steps:
-#       - uses: actions/checkout@v4
-#       - uses: oven-sh/setup-bun@v2
-#       - uses: actions/setup-python@v5
-#         with:
-#           python-version: '3.12'
-#       - run: pip install nox
-#       - run: bun install
-#       - run: bun run ci-lint python AFFECTED
-#         env:
-#           AFFECTED: ${{toJson(matrix.affected)}}
+  python-lint:
+    name: Lint Python
+    needs: affected
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        affected: ${{ fromJson(needs.affected.outputs.python) }}
+    env:
+      PACKAGE: ${{ toJson(matrix.affected.packages) }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install nox
+      - run: echo "$PACKAGE"
+      - working-directory: ${{ env.PACKAGE }}
+        run: nox -s lint
 
 #   python-test:
 #     name: Test Python
