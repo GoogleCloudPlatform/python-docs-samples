@@ -1,0 +1,11 @@
+{
+  "match": [
+    "*/*.py"
+  ],
+  "ignore": [
+    "README.py"
+  ],
+  "package": [
+    "noxfile_config.py"
+  ]
+}
