@@ -28,7 +28,7 @@ jobs:
     name: Finding affected tests
     runs-on: ubuntu-latest
     outputs:
-      python: ${{ steps.python.outputs.affected }}
+      python: ${{ steps.python.outputs.AFFECTED }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,7 +42,7 @@ jobs:
         run: |
           PYTHON=$(affected .github/workflows/config/python.json)
           echo "$PYTHON"
-          echo "affected=$PYTHON" >> "$GITHUB_OUTPUT"
+          echo "AFFECTED=$PYTHON" >> "$GITHUB_OUTPUT"
 
   python-lint:
     name: Lint Python
@@ -63,6 +63,9 @@ jobs:
     #   - working-directory: ${{ env.PACKAGE }}
     #     run: nox -s lint
     steps:
+      - run: echo "$OUTPUTS"
+        env:
+          OUTPUTS: "${{ needs.affected.outputs }}"
       - run: echo "$AFFECTED"
         env:
           AFFECTED: "${{ needs.affected.outputs.python }}"
