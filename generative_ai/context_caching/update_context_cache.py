@@ -41,5 +41,5 @@ def update_context_cache(project_id: str, cache_id: str) -> str:
 if __name__ == "__main__":
     import google.auth
 
-    _, project_id = google.auth.default()
+    project_id = google.auth.default()[1]
     update_context_cache(project_id=project_id, cache_id="your-cache-id")
