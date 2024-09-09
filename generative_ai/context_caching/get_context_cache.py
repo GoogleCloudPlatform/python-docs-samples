@@ -31,3 +31,10 @@ def get_context_cache(project_id: str, cache_id: str) -> str:
     # [END generativeaionvertexai_gemini_get_context_cache]
 
     return cached_content.name
+
+
+if __name__ == "__main__":
+    import google.auth
+
+    _, project_id = google.auth.default()
+    get_context_cache(project_id=project_id, cache_id="your-cache-id")

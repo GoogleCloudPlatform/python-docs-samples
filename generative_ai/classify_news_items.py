@@ -59,9 +59,16 @@ The answer is:
     )
 
     print(response.text)
+    """
+    Response example:
+       business
+    """
     # [END generativeaionvertexai_classification]
 
     return response.text
 
 
 # [END aiplatform_sdk_classify_news_items]
+
+if __name__ == "__main__":
+    classify_news_items()

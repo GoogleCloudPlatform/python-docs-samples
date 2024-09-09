@@ -28,3 +28,10 @@ def delete_context_cache(project_id: str, cache_id: str) -> None:
     cached_content = caching.CachedContent(cached_content_name=cache_id)
     cached_content.delete()
     # [END generativeaionvertexai_gemini_delete_context_cache]
+
+
+if __name__ == "__main__":
+    import google.auth
+
+    _, project_id = google.auth.default()
+    delete_context_cache(project_id=project_id, cache_id="your-cache-id")
