@@ -28,7 +28,7 @@ jobs:
     name: Finding affected tests
     runs-on: ubuntu-latest
     outputs:
-      python: ${{ steps.python.outputs.AFFECTED }}
+      python: ${{ steps.python.outputs.jobs }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,9 +40,9 @@ jobs:
       - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.3
       - id: python
         run: |
-          PYTHON=$(affected .github/workflows/config/python.json)
-          echo "$PYTHON"
-          echo "AFFECTED=$PYTHON" >> "$GITHUB_OUTPUT"
+          JOBS=$(affected .github/workflows/config/python.json)
+          echo "$JOBS"
+          echo "jobs=$JOBS" >> "$GITHUB_OUTPUT"
 
   python-lint:
     name: Lint Python
@@ -65,10 +65,10 @@ jobs:
     steps:
       - run: echo "$OUTPUTS"
         env:
-          OUTPUTS: "${{ needs.affected.outputs }}"
-      - run: echo "$AFFECTED"
+          OUTPUTS: ${{ toJson(needs.affected.outputs) }}
+      - run: echo "$PYTHON"
         env:
-          AFFECTED: "${{ needs.affected.outputs.python }}"
+          PYTHON: ${{ toJson(needs.affected.outputs.python) }}
 
 #   python-test:
 #     name: Test Python
