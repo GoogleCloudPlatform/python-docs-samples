@@ -206,7 +206,7 @@ def load_as_rgb(
 
     def read_band(band_path: str) -> np.ndarray:
         # Use rasterio to read the GeoTIFF values from the band files.
-        with tf.io.gfile.GFile(band_path, "rb") as f, rasterio.open(f) as data:
+        with rasterio.open(band_path) as data:
             return data.read(1).astype(np.float32)
 
     logging.info(

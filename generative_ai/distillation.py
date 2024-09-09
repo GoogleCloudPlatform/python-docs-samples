@@ -15,45 +15,45 @@
 # [START generativeaionvertexai_sdk_distillation]
 from __future__ import annotations
 
-from typing import Optional
+import os
 
-from google.auth import default
+from typing import Optional
 
 import vertexai
 from vertexai.preview.language_models import TextGenerationModel, TuningEvaluationSpec
 
 
-credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def distill_model(
-    project_id: str,
-    location: str,
     dataset: str,
-    teacher_model: str,
-    train_steps: int = 300,
+    source_model: str,
     evaluation_dataset: Optional[str] = None,
 ) -> None:
-    """Distill a new model.
-
+    """Distill a new model using a teacher model and a dataset.
     Args:
-      project_id: GCP Project ID, used to initialize vertexai
-      location: GCP Region, used to initialize vertexai
-      dataset: GCS URI of jsonl file.
-      teacher_model: Name of the teacher model.
-      train_steps: Number of training steps to use when tuning the model.
-      evaluation_dataset: GCS URI of jsonl file of evaluation data.
+        dataset (str): GCS URI of the JSONL file containing the training data.
+            E.g., "gs://[BUCKET]/[FILENAME].jsonl".
+        source_model (str): Name of the teacher model to distill from.
+            E.g., "text-unicorn@001".
+        evaluation_dataset (Optional[str]): GCS URI of the JSONL file containing the evaluation data.
     """
-    vertexai.init(project=project_id, location=location, credentials=credentials)
+    # TODO developer - override these parameters as needed:
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
+    # Create a tuning evaluation specification with the evaluation dataset
     eval_spec = TuningEvaluationSpec(evaluation_data=evaluation_dataset)
 
+    # Load the student model from a pre-trained model
     student_model = TextGenerationModel.from_pretrained("text-bison@002")
+
+    # Start the distillation job using the teacher model and dataset
     distillation_job = student_model.distill_from(
-        teacher_model=teacher_model,
+        teacher_model=source_model,
         dataset=dataset,
         # Optional:
-        train_steps=train_steps,
+        train_steps=300,  # Number of training steps to use when tuning the model.
         evaluation_spec=eval_spec,
     )
 
@@ -62,4 +62,8 @@ def distill_model(
 
 # [END generativeaionvertexai_sdk_distillation]
 if __name__ == "__main__":
-    distill_model()
+    distill_model(
+        dataset="your-dataset-uri",
+        source_model="your-source-model",
+        evaluation_dataset="your-evaluation-dataset-uri",
+    )

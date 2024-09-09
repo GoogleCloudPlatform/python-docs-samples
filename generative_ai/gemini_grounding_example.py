@@ -11,12 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 
 from vertexai.generative_models import GenerationResponse
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def generate_text_with_grounding_web(project_id: str) -> GenerationResponse:
+
+def generate_text_with_grounding_web() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_web]
     import vertexai
 
@@ -27,10 +29,8 @@ def generate_text_with_grounding_web(project_id: str) -> GenerationResponse:
         grounding,
     )
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
@@ -46,31 +46,41 @@ def generate_text_with_grounding_web(project_id: str) -> GenerationResponse:
         ),
     )
 
-    print(response)
+    print(response.text)
 
     # [END generativeaionvertexai_gemini_grounding_with_web]
     return response
 
 
 def generate_text_with_grounding_vertex_ai_search(
-    project_id: str, data_store_path: str
+    data_store_id: str,
 ) -> GenerationResponse:
     # [START generativeaionvertexai_gemini_grounding_with_vais]
     import vertexai
 
-    from vertexai.preview.generative_models import grounding
-    from vertexai.generative_models import GenerationConfig, GenerativeModel, Tool
+    from vertexai.preview.generative_models import (
+        GenerationConfig,
+        GenerativeModel,
+        Tool,
+        grounding,
+    )
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # data_store_path = "projects/{project_id}/locations/{location}/collections/default_collection/dataStores/{data_store_id}"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
+    # TODO(developer): Update project id, location, and data store id for your Vertex AI Search data store.
+    # data_store_id = "DATA_STORE_ID"
+
     tool = Tool.from_retrieval(
-        grounding.Retrieval(grounding.VertexAISearch(datastore=data_store_path))
+        grounding.Retrieval(
+            grounding.VertexAISearch(
+                datastore=data_store_id,
+                project=PROJECT_ID,
+                location="global",
+            )
+        )
     )
 
     prompt = "How do I make an appointment to renew my driver's license?"
@@ -82,7 +92,7 @@ def generate_text_with_grounding_vertex_ai_search(
         ),
     )
 
-    print(response)
+    print(response.text)
 
     # [END generativeaionvertexai_gemini_grounding_with_vais]
     return response

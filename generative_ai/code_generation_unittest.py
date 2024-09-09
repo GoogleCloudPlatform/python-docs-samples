@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_unittest(temperature: float = 0.5) -> object:
+def generate_unittest() -> object:
     """Example of using Codey for Code Generation to write a unit test."""
     # [START aiplatform_sdk_code_generation_unittest]
     import textwrap
@@ -22,7 +22,7 @@ def generate_unittest(temperature: float = 0.5) -> object:
 
     # TODO developer - override these parameters as needed:
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0.5,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 256,  # Token limit determines the maximum amount of text output.
     }
 

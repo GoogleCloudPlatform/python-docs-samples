@@ -11,20 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def text_summarization(
-    project_id: str,
-) -> str:
+def text_summarization() -> str:
     """Summarization Example with a Large Language Model"""
     # [START aiplatform_sdk_summarization]
     import vertexai
     from vertexai.language_models import TextGenerationModel
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): update project_id & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     parameters = {
         "temperature": 0,

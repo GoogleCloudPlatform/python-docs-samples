@@ -29,7 +29,7 @@ def get_image_embeddings() -> MultiModalEmbeddingResponse:
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
-    # TODO(developer): Update project
+    # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")

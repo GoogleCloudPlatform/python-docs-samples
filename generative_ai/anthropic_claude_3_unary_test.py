@@ -12,20 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import anthropic_claude_3_unary
 
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_LOCATION = "us-east5"
-
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_text() -> None:
-    responses = anthropic_claude_3_unary.generate_text(
-        project_id=_PROJECT_ID, region=_LOCATION
-    )
+    responses = anthropic_claude_3_unary.generate_text()
     assert "bread" in responses.model_dump_json(indent=2)

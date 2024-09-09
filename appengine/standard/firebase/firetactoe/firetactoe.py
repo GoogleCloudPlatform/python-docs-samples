@@ -20,21 +20,19 @@ try:
     from functools import lru_cache
 except ImportError:
     from functools32 import lru_cache
+
 import json
 import os
 import re
 import time
 import urllib
 
-
 import flask
 from flask import request
-from google.appengine.api import app_identity
-from google.appengine.api import users
+from google.appengine.api import app_identity, users
 from google.appengine.ext import ndb
-from google.auth.transport.requests import AuthorizedSession
 import google.auth
-
+from google.auth.transport.requests import AuthorizedSession
 
 _FIREBASE_CONFIG = "_firebase_config.html"
 

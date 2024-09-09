@@ -19,9 +19,7 @@ def set_system_instruction(project_id: str) -> str:
 
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-
+    # TODO(developer): Update project_id and location
     vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(
@@ -44,3 +42,7 @@ def set_system_instruction(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_system_instruction]
 
     return response.text
+
+
+if __name__ == "__main__":
+    set_system_instruction()
