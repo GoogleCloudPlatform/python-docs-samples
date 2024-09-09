@@ -31,7 +31,7 @@ def delete_context_cache(project_id: str, cache_id: str) -> None:
 
 
 if __name__ == "__main__":
-    import google.auth
+    import os
 
-    project_id = google.auth.default()[1]
-    delete_context_cache(project_id=project_id, cache_id="your-cache-id")
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+    delete_context_cache(project_id=PROJECT_ID, cache_id="your-cache-id")
