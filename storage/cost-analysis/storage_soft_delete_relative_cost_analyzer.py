@@ -26,12 +26,11 @@ Relative cost of each bucket = deleted_bytes / total_byte_seconds
                                  x Relative Storage Cost
                                  x Storage Class Ratio
 """
-
 # [START storage_soft_delete_relative_cost]
+from __future__ import annotations
 
 import argparse
 import json
-from typing import Dict, List
 import google.cloud.monitoring_v3 as monitoring_client
 
 
@@ -60,7 +59,7 @@ def get_soft_delete_cost(
     soft_delete_window: float,
     agg_days: int,
     lookback_days: int,
-) -> Dict[str, List[Dict[str, float]]]:
+) -> dict[str, list[dict[str, float]]]:
     """Calculates soft delete costs for buckets in a Google Cloud project.
 
     Args:
@@ -99,10 +98,10 @@ def calculate_soft_delete_costs(
     project_name: str,
     query_client: monitoring_client.QueryServiceClient,
     soft_delete_window: float,
-    storage_ratios_by_bucket: Dict[str, float],
+    storage_ratios_by_bucket: dict[str, float],
     agg_days: int,
     lookback_days: int,
-) -> Dict[str, List[Dict[str, float]]]:
+) -> dict[str, list[dict[str, float]]]:
     """Calculates the relative cost of enabling soft delete for each bucket in a
        project for certain time frame in secs.
 
@@ -130,7 +129,7 @@ def calculate_soft_delete_costs(
                         | group_by [resource.bucket_name, metric.storage_class], window(), .sum;
 
                         # Fetch 2: Total byte-seconds (active objects)
-                        fetch gcs_bucket :: storage.googleapis.com/storage/v2/total_byte_seconds 
+                        fetch gcs_bucket :: storage.googleapis.com/storage/v2/total_byte_seconds
                         | filter metric.type != 'soft-deleted-object'
                         | group_by [resource.bucket_name, metric.storage_class], window(1d), .mean  # Daily average
                         | group_by [resource.bucket_name, metric.storage_class], window(), .sum  # Total over window
@@ -143,7 +142,7 @@ def calculate_soft_delete_costs(
         )
     )
 
-    buckets: Dict[str, List[Dict[str, float]]] = {}
+    buckets: dict[str, list[dict[str, float]]] = {}
     missing_distribution_storage_class = []
     for data_point in soft_deleted_bytes_time.time_series_data:
         bucket_name = data_point.label_values[0].string_value
@@ -184,7 +183,7 @@ def get_storage_class_ratio(
     query_client: monitoring_client.QueryServiceClient,
     agg_days: int,
     lookback_days: int,
-) -> Dict[str, float]:
+) -> dict[str, float]:
     """Calculates storage class ratios for each bucket in a project.
 
     This information helps determine the relative cost contribution of each
@@ -238,7 +237,7 @@ def soft_delete_relative_cost_analyzer(
     agg_days: int = 30,
     lookback_days: int = 360,
     list_buckets: bool = False,
-) -> str | Dict[str, float]:  # Note potential string output
+    ) -> str | dict[str, float]: # Note potential string output
     """Identifies buckets exceeding the relative cost threshold for enabling soft delete.
 
     Args:
@@ -256,7 +255,7 @@ def soft_delete_relative_cost_analyzer(
         *or* a space-separated string of bucket names.
     """
 
-    buckets: Dict[str, float] = {}
+    buckets: dict[str, float] = {}
     for bucket_name, storage_sources in get_soft_delete_cost(
         project_name, soft_delete_window, agg_days, lookback_days
     ).items():
