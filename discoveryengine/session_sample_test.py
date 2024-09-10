@@ -16,10 +16,9 @@
 import os
 from uuid import uuid4
 
-import pytest
-
 from discoveryengine import session_sample
 
+import pytest
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
