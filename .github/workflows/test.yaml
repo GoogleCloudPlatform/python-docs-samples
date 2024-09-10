@@ -37,7 +37,7 @@ jobs:
         with:
           go-version: ^1.23.0
       - run: go version
-      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.4
+      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.5
       - id: python
         run: |
           JOBS=$(affected .github/workflows/config/python.json)
