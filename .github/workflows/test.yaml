@@ -48,27 +48,20 @@ jobs:
     name: Lint Python
     needs: affected
     runs-on: ubuntu-latest
-    # strategy:
-    #   matrix:
-    #     affected: ${{ fromJson(needs.affected.outputs.python) }}
-    # env:
-    #   PACKAGE: ${{ toJson(matrix.affected.package) }}
-    # steps:
-    #   - uses: actions/checkout@v4
-    #   - uses: actions/setup-python@v5
-    #     with:
-    #       python-version: '3.12'
-    #   - run: pip install nox
-    #   - run: echo "$PACKAGE"
-    #   - working-directory: ${{ env.PACKAGE }}
-    #     run: nox -s lint
+    strategy:
+      matrix:
+        affected: ${{ fromJson(needs.affected.outputs.python) }}
+    env:
+      PACKAGE: ${{ toJson(matrix.affected.package) }}
     steps:
-      - run: echo "$OUTPUTS"
-        env:
-          OUTPUTS: ${{ toJson(needs.affected.outputs) }}
-      - run: echo "$PYTHON"
-        env:
-          PYTHON: ${{ toJson(needs.affected.outputs.python) }}
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install nox
+      - run: echo "$PACKAGE"
+      - working-directory: ${{ env.PACKAGE }}
+        run: nox -s lint
 
 #   python-test:
 #     name: Test Python
