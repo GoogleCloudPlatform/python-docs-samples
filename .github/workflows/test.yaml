@@ -61,9 +61,10 @@ jobs:
         with:
           python-version: '3.12'
       - run: pip install nox
-      - run: echo "$PACKAGE"
-      - working-directory: ${{ env.PACKAGE }}
-        run: nox -s lint
+      - run: |
+          cp noxfile-template.py ${{ env.PACKAGE }}/noxfile.py
+          cd ${{ env.PACKAGE }}
+          nox -s lint
 
 #   python-test:
 #     name: Test Python
