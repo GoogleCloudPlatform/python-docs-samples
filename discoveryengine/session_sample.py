@@ -1,3 +1,4 @@
+# noqa: E402,I100
 # Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -20,15 +21,15 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 def create_session(
     project_id: str,
     location: str,
-    data_store_id: str,
+    engine_id: str,
     user_pseudo_id: str,
 ) -> discoveryengine.Session:
     """Creates a session.
 
     Args:
         project_id: The ID of your Google Cloud project.
-        location: The location of the data store.
-        data_store_id: The ID of the data store.
+        location: The location of the app.
+        engine_id: The ID of the app.
         user_pseudo_id: A unique identifier for tracking visitors. For example, this
           could be implemented with an HTTP cookie, which should be able to
           uniquely identify a visitor on a single device.
@@ -38,17 +39,15 @@ def create_session(
 
     client = discoveryengine.ConversationalSearchServiceClient()
 
-    # The full resource name of the data store
-    parent = client.data_store_path(
-        project=project_id, location=location, data_store=data_store_id
+    session = client.create_session(
+        # The full resource name of the engine
+        parent=f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}",
+        session=discoveryengine.Session(user_pseudo_id=user_pseudo_id),
     )
 
-    session = discoveryengine.Session(user_pseudo_id=user_pseudo_id)
-
-    response = client.create_session(parent=parent, session=session)
-
-    print(f"Session: {response.name}")
-    return response
+    # Send Session name in `answer_query()`
+    print(f"Session: {session.name}")
+    return session
 
 
 # [END discoveryengine_create_session]
@@ -61,27 +60,22 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 def delete_session(
     project_id: str,
     location: str,
-    data_store_id: str,
+    engine_id: str,
     session_id: str,
 ) -> None:
     """Deletes a session.
 
     Args:
         project_id: The ID of your Google Cloud project.
-        location: The location of the data store.
-        data_store_id: The ID of the data store.
+        location: The location of the app.
+        engine_id: The ID of the app.
         session_id: The ID of the session.
     """
 
     client = discoveryengine.ConversationalSearchServiceClient()
 
     # The full resource name of the session
-    name = client.session_path(
-        project=project_id,
-        location=location,
-        data_store=data_store_id,
-        session=session_id,
-    )
+    name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
 
     client.delete_session(name=name)
 
@@ -99,36 +93,35 @@ from google.protobuf import field_mask_pb2
 def update_session(
     project_id: str,
     location: str,
-    data_store_id: str,
+    engine_id: str,
     session_id: str,
-    new_state: discoveryengine.Session.State,
 ) -> discoveryengine.Session:
     """Updates a session.
 
     Args:
         project_id: The ID of your Google Cloud project.
-        location: The location of the data store.
-        data_store_id: The ID of the data store.
+        location: The location of the app.
+        engine_id: The ID of the app.
         session_id: The ID of the session.
-        new_state: The new value for the state.
     Returns:
         discoveryengine.Session: The updated Session.
     """
     client = discoveryengine.ConversationalSearchServiceClient()
 
     # The full resource name of the session
-    name = client.session_path(
-        project=project_id,
-        location=location,
-        data_store=data_store_id,
-        session=session_id,
+    name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
+
+    session = discoveryengine.Session(
+        name=name,
+        state=discoveryengine.Session.State.IN_PROGRESS,  # Options: IN_PROGRESS, STATE_UNSPECIFIED
     )
 
-    session = discoveryengine.Session(name=name, state=new_state)
+    # Fields to Update
     update_mask = field_mask_pb2.FieldMask(paths=["state"])
-    response = client.update_session(session=session, update_mask=update_mask)
-    print(f"Updated session: {response.name}")
-    return response
+
+    session = client.update_session(session=session, update_mask=update_mask)
+    print(f"Updated session: {session.name}")
+    return session
 
 
 # [END discoveryengine_update_session]
@@ -139,26 +132,33 @@ from google.cloud import discoveryengine_v1 as discoveryengine
 
 
 def list_sessions(
-    project_id: str, location: str, data_store_id: str
+    project_id: str,
+    location: str,
+    engine_id: str,
 ) -> discoveryengine.ListSessionsResponse:
     """Lists all sessions associated with a data store.
 
     Args:
         project_id: The ID of your Google Cloud project.
-        location: The location of the data store.
-        data_store_id: The ID of the data store.
+        location: The location of the app.
+        engine_id: The ID of the app.
     Returns:
         discoveryengine.ListSessionsResponse: The list of sessions.
     """
 
     client = discoveryengine.ConversationalSearchServiceClient()
 
-    # The full resource name of the data store
-    parent = client.data_store_path(
-        project=project_id, location=location, data_store=data_store_id
+    # The full resource name of the engine
+    parent = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}"
+
+    response = client.list_sessions(
+        request=discoveryengine.ListSessionsRequest(
+            parent=parent,
+            filter='state="IN_PROGRESS"',  # Optional: Filter requests by userPseudoId or state
+            order_by="update_time",  # Optional: Sort results
+        )
     )
 
-    response = client.list_sessions(parent=parent)
     print("Sessions:")
     for session in response.sessions:
         print(session)
@@ -167,45 +167,3 @@ def list_sessions(
 
 
 # [END discoveryengine_list_sessions]
-
-
-# [START discoveryengine_list_sessions_with_filter]
-from google.cloud import discoveryengine_v1 as discoveryengine
-
-
-def list_sessions_with_filter(
-    project_id: str, location: str, data_store_id: str, user_pseudo_id: str
-) -> discoveryengine.ListSessionsResponse:
-    """Lists all sessions associated with a user or visitor.
-
-    Args:
-        project_id: The ID of your Google Cloud project.
-        location: The location of the data store.
-        data_store_id: The ID of the data store.
-        user_pseudo_id: The pseudo ID of the user whose sessions you want to list.
-    Returns:
-        discoveryengine.ListSessionsResponse: The list of sessions.
-    """
-
-    client = discoveryengine.ConversationalSearchServiceClient()
-
-    # The full resource name of the data store
-    parent = client.data_store_path(
-        project=project_id, location=location, data_store=data_store_id
-    )
-
-    response = client.list_sessions(
-        request=discoveryengine.ListSessionsRequest(
-            parent=parent,
-            filter=f'user_pseudo_id="{user_pseudo_id}"',  # Optional: Filter requests by user pseudo ID.
-            order_by="update_time",  # Optional: Sort results
-        )
-    )
-    print("Sessions:")
-    for session in response.sessions:
-        print(session)
-
-    return response
-
-
-# [END discoveryengine_list_sessions_with_filter]
