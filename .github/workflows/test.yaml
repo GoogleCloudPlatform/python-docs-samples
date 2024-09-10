@@ -51,7 +51,8 @@ jobs:
       matrix:
         affected: ${{ fromJson(needs.affected.outputs.python) }}
         exclude:
-          - package: "."
+          - affected:
+              package: "."
     env:
       PACKAGE: ${{ matrix.affected.package }}
     steps:
