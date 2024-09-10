@@ -36,8 +36,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ^1.22.0
-      - run: go version
-      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.5
+      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.6
       - id: python
         run: |
           JOBS=$(affected .github/workflows/config/python.json)
@@ -51,8 +50,10 @@ jobs:
     strategy:
       matrix:
         affected: ${{ fromJson(needs.affected.outputs.python) }}
+        exclude:
+          - package: "."
     env:
-      PACKAGE: ${{ toJson(matrix.affected.package) }}
+      PACKAGE: ${{ matrix.affected.package }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
