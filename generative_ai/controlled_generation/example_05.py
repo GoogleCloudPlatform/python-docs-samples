@@ -11,17 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
-# TODO: Delete after approving Example_05
-def generate_content(project_id: str) -> str:
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+
+def generate_content() -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_mime_type]
     import vertexai
 
     from vertexai.generative_models import GenerationConfig, GenerativeModel
 
     # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-    vertexai.init(project=project_id, location="us-central1")
+    # PROJECT_ID = "your-project-id"
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
 
@@ -37,6 +40,19 @@ def generate_content(project_id: str) -> str:
     )
 
     print(response.text)
+    # Example response:
+    # [
+    #     {"recipe_name": "Chocolate Chip Cookies"},
+    #     {"recipe_name": "Oatmeal Raisin Cookies"},
+    #     {"recipe_name": "Snickerdoodles"},
+    #     {"recipe_name": "Peanut Butter Cookies"},
+    #     {"recipe_name": "Sugar Cookies"},
+    # ]
+
     # [END generativeaionvertexai_gemini_controlled_generation_response_mime_type]
 
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()
