@@ -28,7 +28,7 @@ jobs:
     name: Finding affected tests
     runs-on: ubuntu-latest
     outputs:
-      python: ${{ steps.python.outputs.jobs }}
+      python: ${{ steps.python.outputs.packages }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -39,9 +39,9 @@ jobs:
       - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.7
       - id: python
         run: |
-          JOBS=$(affected .github/workflows/config/python.json)
-          echo "jobs=$JOBS"
-          echo "jobs=$JOBS" >> "$GITHUB_OUTPUT"
+          PACKAGES=$(affected .github/workflows/config/python.json)
+          echo "packages=$PACKAGES"
+          echo "packages=$PACKAGES " >> "$GITHUB_OUTPUT"
 
   python-lint:
     name: Lint Python
