@@ -53,6 +53,20 @@ def test_create_session(setup_teardown):
     assert session.user_pseudo_id == user_pseudo_id
 
 
+def test_get_session(setup_teardown):
+    session = setup_teardown
+
+    session_id = session.name.split("/")[-1]
+
+    response = session_sample.get_session(
+        project_id=project_id,
+        location=location,
+        engine_id=engine_id,
+        session_id=session_id,
+    )
+    assert response
+
+
 def test_update_session(setup_teardown):
     session = setup_teardown
     session_id = session.name.split("/")[-1]

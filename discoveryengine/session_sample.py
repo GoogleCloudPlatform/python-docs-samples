@@ -52,6 +52,38 @@ def create_session(
 
 # [END genappbuilder_create_session]
 
+# [START genappbuilder_get_session]
+from google.cloud import discoveryengine_v1 as discoveryengine
+
+
+def get_session(
+    project_id: str,
+    location: str,
+    engine_id: str,
+    session_id: str,
+) -> discoveryengine.Session:
+    """Retrieves a session.
+
+    Args:
+        project_id: The ID of your Google Cloud project.
+        location: The location of the app.
+        engine_id: The ID of the app.
+        session_id: The ID of the session.
+    """
+
+    client = discoveryengine.ConversationalSearchServiceClient()
+
+    # The full resource name of the session
+    name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
+
+    session = client.get_session(name=name)
+
+    print(f"Session details: {session}")
+    return session
+
+
+# [END genappbuilder_get_session]
+
 
 # [START genappbuilder_delete_session]
 from google.cloud import discoveryengine_v1 as discoveryengine
