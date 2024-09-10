@@ -1,7 +1,7 @@
 attrs==24.2.0
-certifi==2024.7.4
+certifi==2024.8.30
 cffi===1.15.1; python_version == '3.7'
-cffi==1.17.0; python_version >= '3.8'
+cffi==1.17.1; python_version >= '3.8'
 charset-normalizer==3.3.2
 click==8.1.7
 click-plugins==1.1.1
@@ -13,16 +13,17 @@ geojson==3.1.0
 geopandas===0.10.2; python_version == '3.7'
 geopandas===0.13.2; python_version == '3.8'
 geopandas==1.0.1; python_version >= '3.9'
-google-api-core==2.19.1
+google-api-core==2.19.2
 google-auth==2.34.0
 google-cloud-bigquery==3.25.0
-google-cloud-bigquery-storage==2.25.0
+google-cloud-bigquery-storage==2.26.0
 google-cloud-core==2.4.1
-google-crc32c==1.5.0
+google-crc32c==1.5.0; python_version < '3.9'
+google-crc32c==1.6.0; python_version >= '3.9'
 google-resumable-media==2.7.2
 googleapis-common-protos==1.65.0
 grpcio===1.62.2; python_version == '3.7'
-grpcio==1.66.0; python_version >= '3.8'
+grpcio==1.66.1; python_version >= '3.8'
 idna==3.8
 munch==4.0.0
 mypy-extensions==1.0.0
