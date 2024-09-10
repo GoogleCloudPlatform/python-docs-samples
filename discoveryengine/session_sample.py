@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-# [START discoveryengine_create_session]
+# [START genappbuilder_create_session]
 from google.cloud import discoveryengine_v1 as discoveryengine
 
 
@@ -50,10 +50,10 @@ def create_session(
     return session
 
 
-# [END discoveryengine_create_session]
+# [END genappbuilder_create_session]
 
 
-# [START discoveryengine_delete_session]
+# [START genappbuilder_delete_session]
 from google.cloud import discoveryengine_v1 as discoveryengine
 
 
@@ -82,10 +82,10 @@ def delete_session(
     print(f"Session {name} deleted.")
 
 
-# [END discoveryengine_delete_session]
+# [END genappbuilder_delete_session]
 
 
-# [START discoveryengine_update_session]
+# [START genappbuilder_update_session]
 from google.cloud import discoveryengine_v1 as discoveryengine
 from google.protobuf import field_mask_pb2
 
@@ -124,10 +124,10 @@ def update_session(
     return session
 
 
-# [END discoveryengine_update_session]
+# [END genappbuilder_update_session]
 
 
-# [START discoveryengine_list_sessions]
+# [START genappbuilder_list_sessions]
 from google.cloud import discoveryengine_v1 as discoveryengine
 
 
@@ -166,4 +166,4 @@ def list_sessions(
     return response
 
 
-# [END discoveryengine_list_sessions]
+# [END genappbuilder_list_sessions]
