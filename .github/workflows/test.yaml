@@ -36,7 +36,7 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ^1.22.0
-      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.6
+      - run: go install github.com/davidcavazos/testing-infra/cmd/affected@v0.0.7
       - id: python
         run: |
           JOBS=$(affected .github/workflows/config/python.json)
@@ -49,12 +49,9 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        affected: ${{ fromJson(needs.affected.outputs.python) }}
+        package: ${{ fromJson(needs.affected.outputs.python) }}
         exclude:
-          - affected:
-              package: "."
-    env:
-      PACKAGE: ${{ matrix.affected.package }}
+          - package: "."
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -62,8 +59,8 @@ jobs:
           python-version: '3.12'
       - run: pip install nox
       - run: |
-          cp noxfile-template.py ${{ env.PACKAGE }}/noxfile.py
-          cd ${{ env.PACKAGE }}
+          cp noxfile-template.py ${{ matrix.package }}/noxfile.py
+          cd ${{ matrix.package }}
           nox -s lint
 
 #   python-test:
