@@ -11,19 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_context_cache(project_id: str, cache_id: str) -> str:
+def get_context_cache(cache_id: str) -> str:
     # [START generativeaionvertexai_gemini_get_context_cache]
     import vertexai
 
     from vertexai.preview import caching
 
     # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # cache_id = "CACHE_ID"
+    # PROJECT_ID = "your-project-id"
+    # cache_id = "your-cache-id"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
@@ -34,7 +37,4 @@ def get_context_cache(project_id: str, cache_id: str) -> str:
 
 
 if __name__ == "__main__":
-    import os
-
-    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    get_context_cache(project_id=PROJECT_ID, cache_id="your-cache-id")
+    get_context_cache("your-cache-id")
