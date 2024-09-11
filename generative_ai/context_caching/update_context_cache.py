@@ -37,10 +37,9 @@ def update_context_cache(cache_id: str) -> str:
 
     print(cached_content.expire_time)
 
+    # [END generativeaionvertexai_gemini_update_context_cache]
     return cached_content.expire_time
 
-
-# [END generativeaionvertexai_gemini_update_context_cache]
 
 if __name__ == "__main__":
     update_context_cache("your-cache-id")
