@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+# TODO: Delete this file after approving /embeddings/multimodal_video_example.py
 import os
 
 from vertexai.vision_models import MultiModalEmbeddingResponse

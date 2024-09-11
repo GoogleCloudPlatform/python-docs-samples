@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# TODO: Delete this file after approving /embeddings/batch_example.py
 import os
 
 from google.cloud.aiplatform import BatchPredictionJob
