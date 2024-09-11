@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def update_context_cache(project_id: str, cache_id: str) -> str:
     # [START generativeaionvertexai_gemini_update_context_cache]
@@ -24,12 +28,12 @@ def update_context_cache(project_id: str, cache_id: str) -> str:
     # project_id = "PROJECT_ID"
     # cache_id = "CACHE_ID"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
-    # Update the expiration time by 1 hour
-    cached_content.update(ttl=datetime.timedelta(hours=1))
+    # Update the expiration time by 2 hour
+    cached_content.update(ttl=datetime.timedelta(hours=2))
 
     cached_content.refresh()
     print(cached_content.expire_time)
