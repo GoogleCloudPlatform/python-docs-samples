@@ -110,6 +110,10 @@ assign_issues_by:
 
   # AppEco individuals
   - labels:
+      - "api: aml-ai"
+    to:
+      - nickcook
+  - labels:
       - "api: bigquery"
     to:
       - shollyman
