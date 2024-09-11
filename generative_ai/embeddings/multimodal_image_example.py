@@ -24,7 +24,7 @@ def get_image_embeddings() -> MultiModalEmbeddingResponse:
 
     Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
     """
-    # [START generativeaionvertexai_sdk_multimodal_embedding_image]
+    # [START generativeaionvertexai_multimodal_embedding_image]
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
@@ -48,7 +48,7 @@ def get_image_embeddings() -> MultiModalEmbeddingResponse:
     # Image Embedding: [-0.0123147098, 0.0727171078, ...]
     # Text Embedding: [0.00230263756, 0.0278981831, ...]
 
-    # [END generativeaionvertexai_sdk_multimodal_embedding_image]
+    # [END generativeaionvertexai_multimodal_embedding_image]
 
     return embeddings
 

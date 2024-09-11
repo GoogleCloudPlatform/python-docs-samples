@@ -17,12 +17,12 @@ from google.api_core.exceptions import ResourceExhausted
 
 import multimodal_image_example
 import multimodal_video_example
-import multimopdal_example
+import multimodal_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_video_text() -> None:
-    embeddings = multimopdal_example.get_image_video_text_embeddings()
+    embeddings = multimodal_example.get_image_video_text_embeddings()
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert embeddings.video_embeddings is not None

@@ -14,7 +14,7 @@
 
 from __future__ import annotations
 
-# [START generativeaionvertexai_sdk_embedding_code_retrieval]
+# [START generativeaionvertexai_embedding_code_retrieval]
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 MODEL_NAME = "text-embedding-preview-0815"
@@ -57,4 +57,4 @@ if __name__ == "__main__":
         texts=texts, task=task, model_name=MODEL_NAME, dimensionality=DIMENSIONALITY
     )
 
-# [END generativeaionvertexai_sdk_embedding_code_retrieval]
+# [END generativeaionvertexai_embedding_code_retrieval]

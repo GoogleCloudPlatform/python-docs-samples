@@ -23,7 +23,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
 
     Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
-    # [START generativeaionvertexai_sdk_multimodal_embedding_video]
+    # [START generativeaionvertexai_multimodal_embedding_video]
     import vertexai
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
@@ -58,7 +58,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
     # Embedding: [-0.0206376351, 0.0123456789, ...]
     # Text Embedding: [-0.0207006913, -0.00251061679, ...]
 
-    # [END generativeaionvertexai_sdk_multimodal_embedding_video]
+    # [END generativeaionvertexai_multimodal_embedding_video]
 
     return embeddings
 

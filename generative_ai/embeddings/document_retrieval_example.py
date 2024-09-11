@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START generativeaionvertexai_sdk_embedding]
+# [START generativeaionvertexai_embedding]
 from typing import List, Optional
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
@@ -39,7 +39,7 @@ def embed_text(
     embeddings = model.get_embeddings(inputs, **kwargs)
     return [embedding.values for embedding in embeddings]
 
-# [END generativeaionvertexai_sdk_embedding]
+# [END generativeaionvertexai_embedding]
 
 
 if __name__ == "__main__":

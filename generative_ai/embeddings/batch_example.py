@@ -24,7 +24,7 @@ def embed_text_batch() -> BatchPredictionJob:
 
     Read more: https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/batch-prediction-genai-embeddings
     """
-    # [START generativeaionvertexai_sdk_embedding_batch]
+    # [START generativeaionvertexai_embedding_batch]
     import vertexai
     from vertexai.preview import language_models
 
@@ -53,7 +53,7 @@ def embed_text_batch() -> BatchPredictionJob:
     #   projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
     #   JobState.JOB_STATE_SUCCEEDED
 
-    # [END generativeaionvertexai_sdk_embedding_batch]
+    # [END generativeaionvertexai_embedding_batch]
 
     return batch_prediction_job
 
