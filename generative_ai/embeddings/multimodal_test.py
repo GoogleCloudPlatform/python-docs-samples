@@ -15,9 +15,9 @@
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
+import multimodal_example
 import multimodal_image_example
 import multimodal_video_example
-import multimodal_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
