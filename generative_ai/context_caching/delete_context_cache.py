@@ -34,4 +34,4 @@ def delete_context_cache(cache_id: str) -> None:
 
 
 if __name__ == "__main__":
-    delete_context_cache(cache_id="your-cache-id")
+    delete_context_cache("1234567890")
