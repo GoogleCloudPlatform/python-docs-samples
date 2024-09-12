@@ -28,7 +28,7 @@ def delete_extension(extension_id: str) -> None:
 
     extension = extensions.Extension(extension_id)
     extension.delete()
-    # Example output:
+    # Example response:
     # ...
     # Extension resource projects/[PROJECT_ID]/locations/us-central1/extensions/[extension_id] deleted.
 

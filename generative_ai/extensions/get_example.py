@@ -30,7 +30,7 @@ def get_extension(extension_id: str) -> extensions.Extension:
 
     extension = extensions.Extension(extension_id)
     print(extension.resource_name)
-    # Example output:
+    # Example response:
     # projects/[PROJECT_ID]/locations/us-central1/extensions/12345678901234567
 
     # [END generativeaionvertexai_get_extension]

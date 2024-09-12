@@ -33,7 +33,7 @@ def execute_extension(extension_id: str) -> object:
         operation_params={"query": "find the max value in the list: [1,2,3,4,-5]"},
     )
     print(response)
-    # Example output:
+    # Example response:
     # {
     #     "generated_code": "```python\n# Find the maximum value in the list\ndata = [1, 2,..", ..
     #     "execution_result": "The maximum value in the list is: 4\n",

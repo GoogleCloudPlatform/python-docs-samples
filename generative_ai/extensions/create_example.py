@@ -43,7 +43,7 @@ def create_extension() -> extensions.Extension:
         },
     )
     print(extension.resource_name)
-    # Example output:
+    # Example response:
     # projects/123456789012/locations/us-central1/extensions/12345678901234567
 
     # [END generativeaionvertexai_create_extension]

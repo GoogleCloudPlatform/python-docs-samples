@@ -31,7 +31,7 @@ def list_extensions() -> List[extensions.Extension]:
 
     extensions = extensions.Extension.list()
     print(extensions)
-    # Example output:
+    # Example response:
     # [<vertexai.extensions._extensions.Extension object at 0x76e8ced37af0>
     # resource name: projects/[PROJECT_ID]/locations/us-central1/extensions/1234567890123456]
 
