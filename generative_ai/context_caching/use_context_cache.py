@@ -36,9 +36,8 @@ def use_context_cache(cache_id: str) -> str:
     response = model.generate_content("What are the papers about?")
 
     print(response.text)
-    # Example output:
+    # Example response:
     # The provided text is about a new family of multimodal models called Gemini, developed by Google.
-    # ...
     # ...
 
     # [END generativeaionvertexai_gemini_use_context_cache]

@@ -57,10 +57,8 @@ The answer is:
     )
 
     print(response.text)
-    """
-    Example response:
-       business
-    """
+    # Example response:
+    #    business
     # [END generativeaionvertexai_classification]
 
     return response.text
