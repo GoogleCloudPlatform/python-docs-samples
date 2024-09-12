@@ -56,7 +56,7 @@ def generate_content() -> str:
     )
 
     print(response.text)
-    #    Example response:
+    # Example response:
     # [
     #     [
     #         {"flavor": "Strawberry Cheesecake", "rating": 4},

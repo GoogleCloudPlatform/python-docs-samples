@@ -49,7 +49,7 @@ def generate_content() -> str:
     )
 
     print(response.text)
-    #    Example response:
+    # Example response:
     # [
     #     {"recipe_name": "Chocolate Chip Cookies"},
     #     {"recipe_name": "Peanut Butter Cookies"},

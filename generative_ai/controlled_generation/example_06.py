@@ -62,25 +62,14 @@ def generate_content() -> str:
     # Example response:
     # [
     #     [
-    #         {"object": "globe"},
-    #         {"object": "tablet"},
-    #         {"object": "toy car"},
-    #         {"object": "airplane"},
-    #         {"object": "keyboard"},
-    #         {"object": "mouse"},
-    #         {"object": "passport"},
-    #         {"object": "sunglasses"},
-    #         {"object": "money"},
-    #         {"object": "notebook"},
-    #         {"object": "pen"},
-    #         {"object": "coffee cup"},
+    #         {"object": "globe"}, {"object": "tablet"}, {"object": "toy car"},
+    #         {"object": "airplane"}, {"object": "keyboard"}, {"object": "mouse"},
+    #         {"object": "passport"}, {"object": "sunglasses"}, {"object": "money"},
+    #         {"object": "notebook"}, {"object": "pen"}, {"object": "coffee cup"},
     #     ],
     #     [
-    #         {"object": "watering can"},
-    #         {"object": "plant"},
-    #         {"object": "flower pot"},
-    #         {"object": "gloves"},
-    #         {"object": "garden tool"},
+    #         {"object": "watering can"}, {"object": "plant"}, {"object": "flower pot"},
+    #         {"object": "gloves"}, {"object": "garden tool"},
     #     ],
     # ]
 
