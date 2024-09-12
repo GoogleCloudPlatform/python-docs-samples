@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 # TODO: Delete after approving Example_05
 def generate_content(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_mime_type]
