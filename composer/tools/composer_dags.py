@@ -63,7 +63,7 @@ class DAG:
             for line in command_output.split("\n"):
                 if re.compile("^[a-zA-Z].*").findall(line):
                     list_of_dags.append(line.split()[0])
-            return list_of_dags
+            return list_of_dags[1:]
 
     @staticmethod
     def _run_shell_command_locally_once(
