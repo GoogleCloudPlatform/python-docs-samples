@@ -44,7 +44,7 @@ def get_image_embeddings() -> MultiModalEmbeddingResponse:
     )
     print(f"Image Embedding: {embeddings.image_embedding}")
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # Example output:
+    # Example response:
     # Image Embedding: [-0.0123147098, 0.0727171078, ...]
     # Text Embedding: [0.00230263756, 0.0278981831, ...]
 

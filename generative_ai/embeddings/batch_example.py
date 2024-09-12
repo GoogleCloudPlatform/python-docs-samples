@@ -49,9 +49,9 @@ def embed_text_batch() -> BatchPredictionJob:
     print(batch_prediction_job.resource_name)
     print(batch_prediction_job.state)
     # Example response:
-    #   BatchPredictionJob 2024-09-10 15:47:51.336391
-    #   projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
-    #   JobState.JOB_STATE_SUCCEEDED
+    # BatchPredictionJob 2024-09-10 15:47:51.336391
+    # projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
+    # JobState.JOB_STATE_SUCCEEDED
 
     # [END generativeaionvertexai_embedding_batch]
 

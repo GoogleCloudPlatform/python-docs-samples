@@ -32,7 +32,8 @@ def embed_text(
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
-
+    # Example response:
+    # [[0.025890009477734566, -0.05553026497364044, 0.006374752148985863,...],
     return [embedding.values for embedding in embeddings]
 
 

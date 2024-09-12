@@ -37,7 +37,10 @@ def embed_text(
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
+    # Example response:
+    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...],
     return [embedding.values for embedding in embeddings]
+
 
 # [END generativeaionvertexai_embedding]
 

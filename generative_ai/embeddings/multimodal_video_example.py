@@ -52,7 +52,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # Example output:
+    # Example response:
     # Video Embeddings:
     # Video Segment: 0.0 - 1.0
     # Embedding: [-0.0206376351, 0.0123456789, ...]
