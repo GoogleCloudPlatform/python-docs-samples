@@ -11,9 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# TODO: Delete after approving Example_05.py
 
-
-# TODO: Delete after approving Example_05
 def generate_content(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_mime_type]
     import vertexai

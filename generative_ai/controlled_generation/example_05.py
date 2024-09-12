@@ -50,7 +50,6 @@ def generate_content() -> str:
     # ]
 
     # [END generativeaionvertexai_gemini_controlled_generation_response_mime_type]
-
     return response.text
 
 

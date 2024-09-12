@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-# TODO: Delete after approving Example_01
+# TODO: Delete after approving Example_01.py
 def generate_content(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema]
     import vertexai
@@ -52,7 +52,7 @@ def generate_content(project_id: str) -> str:
     return response.text
 
 
-# TODO: Delete after approving Example_02
+# TODO: Delete after approving Example_02.py
 def generate_content2(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_2]
     import vertexai
@@ -99,7 +99,7 @@ def generate_content2(project_id: str) -> str:
     return response.text
 
 
-# TODO: Delete after approving Example_03
+# TODO: Delete after approving Example_03.py
 def generate_content3(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_3]
     import vertexai
@@ -164,7 +164,7 @@ def generate_content3(project_id: str) -> str:
     return response
 
 
-# TODO: Delete after approving Example_04
+# TODO: Delete after approving Example_04.py
 def generate_content4(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_4]
     import vertexai
@@ -233,7 +233,7 @@ def generate_content4(project_id: str) -> str:
     return response.text
 
 
-# TODO: Delete after approving Example_06
+# TODO: Delete after approving Example_06.py
 def generate_content6(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_6]
     import vertexai
@@ -282,7 +282,7 @@ def generate_content6(project_id: str) -> str:
     return response.text
 
 
-# TODO: Delete after approving Example_07
+# TODO: Delete after approving Example_07.py
 def generate_content7(project_id: str) -> str:
     # [START generativeaionvertexai_gemini_controlled_generation_response_schema_7]
     import vertexai

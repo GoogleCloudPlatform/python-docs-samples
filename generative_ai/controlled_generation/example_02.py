@@ -65,7 +65,6 @@ def generate_content() -> str:
     # ]
 
     # [END generativeaionvertexai_gemini_controlled_generation_response_schema_2]
-
     return response.text
 
 
