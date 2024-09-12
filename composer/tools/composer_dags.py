@@ -169,6 +169,8 @@ def main(
         "Image version: %s",
         environment_info["config"]["softwareConfig"]["imageVersion"],
     )
+    # Split each version on '.' and pad with '0' to ensure minor and patch included
+    versions = [int(num) if num.isdigit() else 0 for version in versions for num in (version.split('.') + ['0', '0'])[:3]]
     airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
     list_of_dags = DAG.get_list_of_dags(
         project_name=project_name,
