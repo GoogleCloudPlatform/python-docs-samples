@@ -55,7 +55,7 @@ def create_context_cache() -> str:
 
     print(cached_content.name)
     # Example response:
-    # 6374036031984893952
+    # 1234567890
     # [END generativeaionvertexai_gemini_create_context_cache]
 
     return cached_content.name

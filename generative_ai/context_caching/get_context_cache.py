@@ -31,13 +31,11 @@ def get_context_cache(cache_id: str) -> str:
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
     print(cached_content.resource_name)
-    print(cached_content.name)
     # Example response:
-    # projects/[PROJECT_ID]/locations/us-central1/cachedContents/6374036031984893952
-    # 6374036031984893952
+    # projects/[PROJECT_ID]/locations/us-central1/cachedContents/1234567890
 
     # [END generativeaionvertexai_gemini_get_context_cache]
-    return cached_content.name
+    return cached_content.resource_name
 
 
 if __name__ == "__main__":
