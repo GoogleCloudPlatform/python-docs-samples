@@ -11,26 +11,27 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after aproving /extensions folder
-
 import os
 
 from typing import Generator
 
+import create_example
+import delete_example
+import execute_example
+import get_example
+import list_example
+
 import pytest
 
-import gemini_extensions
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-REGION = "us-central1"
 
 
 @pytest.fixture(scope="module")
 def extension_id() -> Generator[str, None, None]:
-    extension = gemini_extensions.create_extension()
+    extension = create_example.create_extension()
     yield extension.resource_name
     print("Deleting Extension...")
-    gemini_extensions.delete_extension(extension.resource_name)
+    delete_example.delete_extension(extension.resource_name)
 
 
 def test_create_extension_basic(extension_id: str) -> None:
@@ -38,15 +39,15 @@ def test_create_extension_basic(extension_id: str) -> None:
 
 
 def test_execute_extension(extension_id: str) -> None:
-    response = gemini_extensions.execute_extension(extension_id)
-    assert response
+    response = execute_example.execute_extension(extension_id)
+    assert "generated_code" in response
 
 
 def test_get_extension(extension_id: str) -> None:
-    response = gemini_extensions.get_extension(extension_id)
-    assert response
+    response = get_example.get_extension(extension_id)
+    assert "/extensions/" in response.resource_name
 
 
 def test_list_extensions() -> None:
-    response = gemini_extensions.list_extensions()
-    assert response
+    response = list_example.list_extensions()
+    assert "/extensions/" in response[1].resource_name
