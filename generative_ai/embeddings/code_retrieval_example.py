@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /embeddings/code_retrieval_example.py
+
 from __future__ import annotations
 
-# [START generativeaionvertexai_sdk_embedding]
+# [START generativeaionvertexai_embedding_code_retrieval]
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 MODEL_NAME = "text-embedding-preview-0815"
@@ -32,6 +32,8 @@ def embed_text(
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
+    # Example response:
+    # [[0.025890009477734566, -0.05553026497364044, 0.006374752148985863,...],
     return [embedding.values for embedding in embeddings]
 
 
@@ -56,4 +58,4 @@ if __name__ == "__main__":
         texts=texts, task=task, model_name=MODEL_NAME, dimensionality=DIMENSIONALITY
     )
 
-# [END generativeaionvertexai_sdk_embedding]
+# [END generativeaionvertexai_embedding_code_retrieval]

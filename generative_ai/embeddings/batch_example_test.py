@@ -11,18 +11,20 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /embeddings/multimopdal_example_test.py
+import os
 
 import backoff
+
+import batch_example
+
 from google.api_core.exceptions import ResourceExhausted
 
-import multimodal_embedding_image_video_text
+import pytest
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_multimodal_embedding_image_video_text() -> None:
-    embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings()
-    assert embeddings is not None
-    assert embeddings.image_embedding is not None
-    assert embeddings.video_embeddings is not None
-    assert embeddings.text_embedding is not None
+@pytest.fixture(scope="session", autouse=True)
+def test_embed_text_batch() -> None:
+    os.environ["GCS_OUTPUT_URI"] = "gs://python-docs-samples-tests/"
+    batch_prediction_job = batch_example.embed_text_batch()
+    assert batch_prediction_job

@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,9 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO Delete this file after approving /embeddings/document_retrieval_example.py
 
-# [START generativeaionvertexai_sdk_embedding]
+# [START generativeaionvertexai_embedding]
 from typing import List, Optional
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
@@ -38,10 +37,12 @@ def embed_text(
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
+    # Example response:
+    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...],
     return [embedding.values for embedding in embeddings]
 
 
-# [END generativeaionvertexai_sdk_embedding]
+# [END generativeaionvertexai_embedding]
 
 
 if __name__ == "__main__":

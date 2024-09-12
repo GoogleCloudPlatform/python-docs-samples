@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO Delete this file after approving /embeddings/model_tuning_test.py
+
 import os
 
 import backoff
@@ -23,7 +23,7 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
 
-import embedding_model_tuning
+import model_tuning_example
 
 
 @backoff.on_exception(backoff.expo, FailedPrecondition, max_time=300)
@@ -42,7 +42,7 @@ def test_tune_embedding_model() -> None:
         staging_bucket="gs://ucaip-samples-us-central1/training_pipeline_output",
         credentials=credentials,
     )
-    tuning_job = embedding_model_tuning.tune_embedding_model(
+    tuning_job = model_tuning_example.tune_embedding_model(
         aiplatform_init.global_config.api_endpoint
     )
     try:

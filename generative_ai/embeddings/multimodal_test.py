@@ -11,18 +11,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /embeddings/multimopdal_example_test.py
 
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
-import multimodal_embedding_image_video_text
+import multimodal_example
+import multimodal_image_example
+import multimodal_video_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_video_text() -> None:
-    embeddings = multimodal_embedding_image_video_text.get_image_video_text_embeddings()
+    embeddings = multimodal_example.get_image_video_text_embeddings()
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert embeddings.video_embeddings is not None
+    assert embeddings.text_embedding is not None
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_multimodal_embedding_video() -> None:
+    embeddings = multimodal_video_example.get_video_embeddings()
+    assert embeddings is not None
+    assert embeddings.video_embeddings is not None
+    assert embeddings.text_embedding is not None
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_multimodal_embedding_image() -> None:
+    embeddings = multimodal_image_example.get_image_embeddings()
+    assert embeddings is not None
+    assert embeddings.image_embedding is not None
     assert embeddings.text_embedding is not None
