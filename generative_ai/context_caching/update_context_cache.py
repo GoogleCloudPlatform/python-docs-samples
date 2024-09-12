@@ -38,7 +38,6 @@ def update_context_cache(cache_id: str) -> str:
     print(cached_content.expire_time)
     # Example response:
     # 2024-09-11 17:16:45.864520+00:00
-
     # [END generativeaionvertexai_gemini_update_context_cache]
     return cached_content.expire_time
 

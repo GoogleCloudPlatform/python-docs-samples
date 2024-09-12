@@ -39,7 +39,6 @@ def use_context_cache(cache_id: str) -> str:
     # Example response:
     # The provided text is about a new family of multimodal models called Gemini, developed by Google.
     # ...
-
     # [END generativeaionvertexai_gemini_use_context_cache]
 
     return response.text

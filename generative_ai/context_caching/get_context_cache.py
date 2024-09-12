@@ -33,7 +33,6 @@ def get_context_cache(cache_id: str) -> str:
     print(cached_content.resource_name)
     # Example response:
     # projects/[PROJECT_ID]/locations/us-central1/cachedContents/1234567890
-
     # [END generativeaionvertexai_gemini_get_context_cache]
     return cached_content.resource_name
 
