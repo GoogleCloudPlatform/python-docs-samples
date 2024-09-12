@@ -29,9 +29,9 @@ REGION = "us-central1"
 
 @pytest.fixture(scope="module")
 def cache_id() -> Generator[str, None, None]:
-    cached_content_name = create_context_cache.create_context_cache(PROJECT_ID)
+    cached_content_name = create_context_cache.create_context_cache()
     yield cached_content_name
-    delete_context_cache.delete_context_cache(PROJECT_ID, cached_content_name)
+    delete_context_cache.delete_context_cache(cached_content_name)
 
 
 def test_create_context_cache(cache_id: str) -> None:
@@ -39,15 +39,15 @@ def test_create_context_cache(cache_id: str) -> None:
 
 
 def test_use_context_cache(cache_id: str) -> None:
-    response = use_context_cache.use_context_cache(PROJECT_ID, cache_id)
+    response = use_context_cache.use_context_cache(cache_id)
     assert response
 
 
 def test_get_context_cache(cache_id: str) -> None:
-    response = get_context_cache.get_context_cache(PROJECT_ID, cache_id)
+    response = get_context_cache.get_context_cache(cache_id)
     assert response
 
 
 def test_update_context_cache(cache_id: str) -> None:
-    response = update_context_cache.update_context_cache(PROJECT_ID, cache_id)
+    response = update_context_cache.update_context_cache(cache_id)
     assert response
