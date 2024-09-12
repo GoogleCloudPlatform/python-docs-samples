@@ -18,7 +18,7 @@ google-auth==2.34.0
 google-cloud-bigquery==3.25.0
 google-cloud-bigquery-storage==2.26.0
 google-cloud-core==2.4.1
-google-crc32c==1.5.0; python_version < '3.9'
+google-crc32c===1.5.0; python_version < '3.9'
 google-crc32c==1.6.0; python_version >= '3.9'
 google-resumable-media==2.7.2
 googleapis-common-protos==1.65.0
@@ -36,14 +36,14 @@ proto-plus==1.24.0
 pyarrow==12.0.1; python_version == '3.7'
 pyarrow==17.0.0; python_version >= '3.8'
 pyasn1===0.5.1; python_version == '3.7'
-pyasn1==0.6.0; python_version >= '3.8'
+pyasn1==0.6.1; python_version >= '3.8'
 pyasn1-modules===0.3.0; python_version == '3.7'
-pyasn1-modules==0.4.0; python_version >= '3.8'
+pyasn1-modules==0.4.1; python_version >= '3.8'
 pycparser===2.21; python_version == '3.7'
 pycparser==2.22; python_version >= '3.8'
 pyparsing==3.1.4
 python-dateutil==2.9.0.post0
-pytz==2024.1
+pytz==2024.2
 PyYAML===6.0.1; python_version == '3.7'
 PyYAML==6.0.2; python_version >= '3.8'
 requests==2.31.0; python_version == '3.7'
