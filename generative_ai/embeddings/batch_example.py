@@ -11,12 +11,9 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-# TODO: Delete this file after approving /embeddings/batch_example.py
 import os
 
 from google.cloud.aiplatform import BatchPredictionJob
-
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 OUTPUT_URI = os.getenv("GCS_OUTPUT_URI")
@@ -27,16 +24,17 @@ def embed_text_batch() -> BatchPredictionJob:
 
     Read more: https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/batch-prediction-genai-embeddings
     """
-    # [START generativeaionvertexai_sdk_embedding_batch]
+    # [START generativeaionvertexai_embedding_batch]
     import vertexai
     from vertexai.preview import language_models
 
-    # TODO(developer): Update variables
+    # TODO(developer): Uncomment and set your project ID
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
     input_uri = (
         "gs://cloud-samples-data/generative-ai/embeddings/embeddings_input.jsonl"
     )
-    # Format: `gs://BUCKET_NAME/DIRECTORY/` or `bq://project_name.llm_dataset`
+    # Format: `"gs://your-bucket-unique-name/directory/` or `bq://project_name.llm_dataset`
     output_uri = OUTPUT_URI
 
     textembedding_model = language_models.TextEmbeddingModel.from_pretrained(
@@ -50,8 +48,12 @@ def embed_text_batch() -> BatchPredictionJob:
     print(batch_prediction_job.display_name)
     print(batch_prediction_job.resource_name)
     print(batch_prediction_job.state)
+    # Example response:
+    # BatchPredictionJob 2024-09-10 15:47:51.336391
+    # projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
+    # JobState.JOB_STATE_SUCCEEDED
 
-    # [END generativeaionvertexai_sdk_embedding_batch]
+    # [END generativeaionvertexai_embedding_batch]
 
     return batch_prediction_job
 

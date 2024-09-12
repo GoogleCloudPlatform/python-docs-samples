@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO Delete this file after approving /embeddings/model_tuning_example.py
-# [START generativeaionvertexai_sdk_embedding]
+
+# [START generativeaionvertexai_embedding_model_tuning]
 import re
 
 from google.cloud.aiplatform import initializer as aiplatform_init
@@ -54,6 +54,6 @@ def tune_embedding_model(
     return tuning_job
 
 
-# [END generativeaionvertexai_sdk_embedding]
+# [END generativeaionvertexai_embedding_model_tuning]
 if __name__ == "__main__":
     tune_embedding_model(aiplatform_init.global_config.api_endpoint)

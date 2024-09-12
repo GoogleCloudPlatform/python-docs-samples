@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /embeddings/multimodal_video_example.py
 import os
 
 from vertexai.vision_models import MultiModalEmbeddingResponse
@@ -24,13 +23,14 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
 
     Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
     """
-    # [START generativeaionvertexai_sdk_multimodal_embedding_video]
+    # [START generativeaionvertexai_multimodal_embedding_video]
     import vertexai
 
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
     from vertexai.vision_models import VideoSegmentConfig
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Uncomment and set your project ID
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
@@ -52,7 +52,13 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
         print(f"Embedding: {video_embedding.embedding}")
 
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # [END generativeaionvertexai_sdk_multimodal_embedding_video]
+    # Example response:
+    # Video Embeddings:
+    # Video Segment: 0.0 - 1.0
+    # Embedding: [-0.0206376351, 0.0123456789, ...]
+    # Text Embedding: [-0.0207006913, -0.00251061679, ...]
+
+    # [END generativeaionvertexai_multimodal_embedding_video]
 
     return embeddings
 
