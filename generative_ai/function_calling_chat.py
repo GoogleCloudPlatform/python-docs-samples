@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# TODO: Delete this file after approving /function_calling/chat_example.py
 import os
 
 from vertexai.generative_models import ChatSession

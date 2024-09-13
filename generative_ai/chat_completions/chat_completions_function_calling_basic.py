@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# TODO: Delete this file after approval generative_ai/function_calling/chat_function_calling_basic.py
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
