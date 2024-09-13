@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -27,6 +26,8 @@ def transcribe_model_selection_v2() -> cloud_speech.RecognizeResponse:
         speech.RecognizeResponse: The response containing the transcription results.
     """
     # [START speech_transcribe_model_selection_v2]
+    from google.cloud.speech_v2 import SpeechClient
+    from google.cloud.speech_v2.types import cloud_speech
 
     # Instantiates a client
     client = SpeechClient()

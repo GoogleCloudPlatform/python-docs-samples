@@ -14,7 +14,6 @@
 
 import os
 
-from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -27,7 +26,10 @@ def transcribe_file_v2() -> cloud_speech.RecognizeResponse:
     """
     # [START speech_transcribe_file_v2]
 
-    # TODO (Developer): Update the PROJECT_ID to the value of your project
+    from google.cloud.speech_v2 import SpeechClient
+    from google.cloud.speech_v2.types import cloud_speech
+
+    # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
 
     # Instantiates a client

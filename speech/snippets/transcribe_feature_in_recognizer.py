@@ -13,15 +13,11 @@
 # limitations under the License.
 import os
 
-from google.api_core.exceptions import NotFound
-
-from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-# noinspection PyTypeChecker
 def transcribe_feature_in_recognizer(
     audio_file: str,
     recognizer_id: str,
@@ -37,10 +33,15 @@ def transcribe_feature_in_recognizer(
     """
     # [START speech_transcribe_feature_in_recognizer]
 
+    from google.cloud.speech_v2 import SpeechClient
+    from google.cloud.speech_v2.types import cloud_speech
+
+    from google.api_core.exceptions import NotFound
+
     # Instantiates a client
     client = SpeechClient()
 
-    # TODO (Developer): uncomment and update the PROJECT_ID and recognizer_id
+    # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
     # recognizer_id = "id-recognizer"
     recognizer_name = (

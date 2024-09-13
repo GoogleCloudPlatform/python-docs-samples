@@ -13,7 +13,6 @@
 # limitations under the License.
 import os
 
-from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -26,10 +25,13 @@ def transcribe_gcs_v2() -> cloud_speech.RecognizeResponse:
     """
     # [START speech_transcribe_gcs_v2]
 
+    from google.cloud.speech_v2 import SpeechClient
+    from google.cloud.speech_v2.types import cloud_speech
+
     # Instantiates a client
     client = SpeechClient()
 
-    # TODO (Developer): Update the PROJECT_ID to the value of your project
+    # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
 
     config = cloud_speech.RecognitionConfig(
