@@ -35,7 +35,7 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
       Access the application with the JWT in the Authorization Header.
       curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
     """
-    iat = datetime.datetime.now(tz=datetime.timezone.utc)
+    iat = datetime.datetime.now(tz=datetime.timezone.utc).timestamp()
     exp = iat + 3600
     return json.dumps(
         {
