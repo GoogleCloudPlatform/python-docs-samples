@@ -29,9 +29,10 @@ def generate_function_call_chat() -> ChatSession:
         Tool,
     )
 
-    # Initialize Vertex AI
-    # TODO (developer): Uncomment and set the PROJECT_ID variable
+    # TODO(developer): Update & uncomment below line
     # PROJECT_ID = "your-project-id"
+
+    # Initialize Vertex AI
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Specify a function declaration and parameters for an API request

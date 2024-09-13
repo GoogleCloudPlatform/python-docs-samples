@@ -31,7 +31,7 @@ def generate_function_call() -> GenerationResponse:
         Tool,
     )
 
-    # TODO (developer): Uncomment and replace line with your project ID
+    # TODO(developer): Update & uncomment below line
     # PROJECT_ID = "your-project-id"
 
     # Initialize Vertex AI
