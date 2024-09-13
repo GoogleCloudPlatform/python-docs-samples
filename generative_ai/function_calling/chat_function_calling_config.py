@@ -24,7 +24,7 @@ def generate_text() -> object:
 
     from google.auth import default, transport
 
-    # TODO (developer): Uncomment and replace line with your project ID
+    # TODO(developer): Update & uncomment below line
     # PROJECT_ID = "PROJECT_ID"
     location = "us-central1"
 
