@@ -16,9 +16,9 @@ import backoff
 
 from google.api_core.exceptions import ResourceExhausted
 
+import palm_example
 import pytest
 
-import simple_example
 import vais_example
 import web_example
 
@@ -26,7 +26,7 @@ import web_example
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_grounding() -> None:
     data_store_id = "test-search-engine_1689960780551"
-    response = simple_example.grounding(
+    response = palm_example.grounding(
         data_store_location="global",
         data_store_id=data_store_id,
     )
