@@ -21,7 +21,7 @@ def generate_from_text_input() -> str:
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update project_id
+    # TODO(developer): check and update below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 

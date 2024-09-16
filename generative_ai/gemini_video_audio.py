@@ -22,7 +22,8 @@ def analyze_video_with_audio() -> str:
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update & uncomment below line
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-001")
