@@ -11,32 +11,36 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 
 import backoff
 
-import edit_image_mask
-
 from google.api_core.exceptions import ResourceExhausted
+
+import verify_image_watermark
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_INPUT_FILE = os.path.join(_RESOURCES, "dog_newspaper.png")
-_MASK_FILE = os.path.join(_RESOURCES, "dog_newspaper_mask.png")
-_OUTPUT_FILE = os.path.join(_RESOURCES, "dog_book.png")
-_PROMPT = "a big book"
+_INPUT_FILE_WATERMARK = os.path.join(_RESOURCES, "dog_newspaper.png")
+_INPUT_FILE_NO_WATERMARK = os.path.join(_RESOURCES, "dog_book.png")
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
-def test_edit_image_mask() -> None:
-    response = edit_image_mask.edit_image_mask(
-        _PROJECT_ID,
-        _INPUT_FILE,
-        _MASK_FILE,
-        _OUTPUT_FILE,
-        _PROMPT,
+def test_verify_image_watermark() -> None:
+    response = verify_image_watermark.verify_image_watermark(
+        _INPUT_FILE_WATERMARK,
     )
 
-    assert len(response[0]._image_bytes) > 1000
+    assert (
+        len(response.watermark_verification_result) > 0
+        and "ACCEPT" in response.watermark_verification_result
+    )
+
+    response = verify_image_watermark.verify_image_watermark(
+        _INPUT_FILE_NO_WATERMARK,
+    )
+
+    assert (
+        len(response.watermark_verification_result) > 0
+        and "REJECT" in response.watermark_verification_result
+    )

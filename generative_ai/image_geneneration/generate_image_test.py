@@ -16,25 +16,19 @@ import os
 
 import backoff
 
-import edit_image_inpainting_insert_mask
+import generate_image
 
 from google.api_core.exceptions import ResourceExhausted
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_INPUT_FILE = os.path.join(_RESOURCES, "woman.png")
-_MASK_FILE = os.path.join(_RESOURCES, "woman_inpainting_insert_mask.png")
-_OUTPUT_FILE = os.path.join(_RESOURCES, "woman_with_hat.png")
-_PROMPT = "hat"
+_OUTPUT_FILE = os.path.join(_RESOURCES, "dog_newspaper.png")
+_PROMPT = "a dog reading a newspaper"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
-def test_edit_image_inpainting_insert_mask() -> None:
-    response = edit_image_inpainting_insert_mask.edit_image_inpainting_insert_mask(
-        _PROJECT_ID,
-        _INPUT_FILE,
-        _MASK_FILE,
+def test_generate_image() -> None:
+    response = generate_image.generate_image(
         _OUTPUT_FILE,
         _PROMPT,
     )

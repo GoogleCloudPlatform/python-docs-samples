@@ -16,22 +16,20 @@ import os
 
 import backoff
 
-import edit_image_product_image
+import edit_image_mask_free
 
 from google.api_core.exceptions import ResourceExhausted
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_INPUT_FILE = os.path.join(_RESOURCES, "pillow.png")
-_OUTPUT_FILE = os.path.join(_RESOURCES, "pillow_on_beach.png")
-_PROMPT = "beach"
+_INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
+_OUTPUT_FILE = os.path.join(_RESOURCES, "dog.png")
+_PROMPT = "a dog"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
-def test_edit_image_product_image() -> None:
-    response = edit_image_product_image.edit_image_product_image(
-        _PROJECT_ID,
+def test_edit_image_mask_free() -> None:
+    response = edit_image_mask_free.edit_image_mask_free(
         _INPUT_FILE,
         _OUTPUT_FILE,
         _PROMPT,

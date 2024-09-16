@@ -16,21 +16,25 @@ import os
 
 import backoff
 
-import get_short_form_image_captions
+import edit_image_inpainting_remove_mask
 
 from google.api_core.exceptions import ResourceExhausted
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-_INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
+_INPUT_FILE = os.path.join(_RESOURCES, "volleyball_game.png")
+_MASK_FILE = os.path.join(_RESOURCES, "volleyball_game_inpainting_remove_mask.png")
+_OUTPUT_FILE = os.path.join(_RESOURCES, "volleyball_game_single_blue_player.png")
+_PROMPT = "volleyball game"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
-def test_get_short_form_image_captions() -> None:
-    response = get_short_form_image_captions.get_short_form_image_captions(
-        _PROJECT_ID,
+def test_edit_image_inpainting_remove_mask() -> None:
+    response = edit_image_inpainting_remove_mask.edit_image_inpainting_remove_mask(
         _INPUT_FILE,
+        _MASK_FILE,
+        _OUTPUT_FILE,
+        _PROMPT,
     )
 
-    assert len(response) > 0 and "cat" in response[0]
+    assert len(response[0]._image_bytes) > 1000
