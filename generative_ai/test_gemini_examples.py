@@ -126,7 +126,7 @@ def test_gemini_chat_example() -> None:
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
-
+# TODO: Delete this file after approval /grounding/web_example.py
 @pytest.mark.skip(
     "Unable to test Google Search grounding due to allowlist restrictions."
 )
@@ -134,7 +134,7 @@ def test_gemini_grounding_web_example() -> None:
     response = gemini_grounding_example.generate_text_with_grounding_web()
     assert response
 
-
+# TODO: Delete this file after approval /grounding/vais_example.py
 def test_gemini_grounding_vais_example() -> None:
     response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
         "grounding-test-datastore"
