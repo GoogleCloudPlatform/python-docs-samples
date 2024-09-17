@@ -13,11 +13,12 @@
 # limitations under the License.
 
 import os
+from typing import MutableSequence, Optional
 from unittest import mock
 from unittest.mock import MagicMock
 
 from google.cloud.aiplatform_v1.types import prediction_service
-from google.protobuf.struct_pb2 import Value
+from google.protobuf.struct_pb2 import struct_pb2, Value
 
 from gemma2_predict_gpu import gemma2_predict_gpu
 from gemma2_predict_tpu import gemma2_predict_tpu
@@ -52,7 +53,10 @@ The sky appears blue due to a phenomenon called **Rayleigh scattering**.
 
 
 # Mocked function - we check if proper format was used depending on selected architecture
-def mock_predict(endpoint, instances):
+def mock_predict(
+    endpoint: Optional[str] = None,
+    instances: Optional[MutableSequence[struct_pb2.Value]] = None,
+) -> prediction_service.PredictResponse:
     gpu_endpoint = f"projects/{PROJECT_ID}/locations/{GPU_ENDPOINT_REGION}/endpoints/{GPU_ENDPOINT_ID}"
     tpu_endpoint = f"projects/{PROJECT_ID}/locations/{TPU_ENDPOINT_REGION}/endpoints/{TPU_ENDPOINT_ID}"
     instance_fields = instances[0].struct_value.fields
