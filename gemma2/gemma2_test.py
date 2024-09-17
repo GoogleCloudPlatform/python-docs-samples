@@ -18,7 +18,8 @@ from unittest import mock
 from unittest.mock import MagicMock
 
 from google.cloud.aiplatform_v1.types import prediction_service
-from google.protobuf.struct_pb2 import struct_pb2, Value
+import google.protobuf.struct_pb2 as struct_pb2
+from google.protobuf.struct_pb2 import Value
 
 from gemma2_predict_gpu import gemma2_predict_gpu
 from gemma2_predict_tpu import gemma2_predict_tpu
