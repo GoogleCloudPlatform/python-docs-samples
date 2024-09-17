@@ -24,12 +24,7 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_transcribe_model_selection_v2() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-    response = transcribe_model_selection_v2.transcribe_model_selection_v2(
-        project_id, "long", os.path.join(_RESOURCES, "audio.wav")
-    )
-
+    response = transcribe_model_selection_v2.transcribe_model_selection_v2()
     assert re.search(
         r"how old is the Brooklyn Bridge",
         response.results[0].alternatives[0].transcript,
