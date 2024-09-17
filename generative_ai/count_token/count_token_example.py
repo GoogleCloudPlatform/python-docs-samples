@@ -40,7 +40,7 @@ def count_token_locally() -> int:
     #   Prompt Token Count: 12
 
     # Count tokens with a function declaration
-    def get_current_weather(location: str, unit: str = "centigrade"):
+    def get_current_weather(location: str, unit: str = "centigrade") -> dict:
         """Gets weather in the specified location.
         Args:
             location: The location for which to get the weather.

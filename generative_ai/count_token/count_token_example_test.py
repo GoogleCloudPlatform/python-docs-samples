@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-import count_token_example
 import compute_tokens_example
+import count_token_example
 
 
 def test_count_token() -> None:
