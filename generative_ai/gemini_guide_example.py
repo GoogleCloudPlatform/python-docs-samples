@@ -22,7 +22,7 @@ def generate_text() -> str:
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update & uncomment below line
+    # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
