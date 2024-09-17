@@ -14,8 +14,13 @@
 
 
 import count_token_example
+import compute_tokens_example
 
 
 def test_count_token() -> None:
     assert count_token_example.count_token_locally()
     assert count_token_example.count_token_service()
+
+
+def test_compute_token() -> None:
+    assert compute_tokens_example.compute_tokens_example()

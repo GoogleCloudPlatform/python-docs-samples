@@ -20,21 +20,48 @@ LOCATION = "us-central1"
 def count_token_locally() -> int:
     # [START generativeaionvertexai_token_count_sample_with_local_sdk]
     from vertexai.preview.tokenization import get_tokenizer_for_model
+    from vertexai.generative_models import FunctionDeclaration, Tool
 
-    # using local tokenzier
+    # init local tokenzier
     tokenizer = get_tokenizer_for_model("gemini-1.5-flash")
 
+    # simple text
     prompt = "hello world"
     response = tokenizer.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
+    # Example response:
+    #   Prompt Token Count: 2
 
+    # simple text with system instructions
     prompt = ["hello world", "what's the weather today"]
-    response = tokenizer.count_tokens(prompt)
+    response = tokenizer.count_tokens(prompt, system_instruction="you are a chatbot")
     print(f"Prompt Token Count: {response.total_tokens}")
+    # Example response:
+    #   Prompt Token Count: 12
+
+    # Count tokens with a function declaration
+    def get_current_weather(location: str, unit: str = "centigrade"):
+        """Gets weather in the specified location.
+        Args:
+            location: The location for which to get the weather.
+            unit: Optional. Temperature unit. Can be Centigrade or Fahrenheit. Defaults to Centigrade.
+        Returns:
+            The weather information as a dict.
+        """
+        return dict(
+            location="us-central1",
+            unit=unit,
+            weather="Super nice, but maybe a bit hot.",
+        )
+    weather_tool = Tool(function_declarations=[FunctionDeclaration.from_func(get_current_weather)])
+    print(tokenizer.count_tokens("hello", tools=[weather_tool]))
+    # Example response:
+    #     CountTokensResult(total_tokens=49)
     # [END generativeaionvertexai_token_count_sample_with_local_sdk]
     return response.total_tokens
 
 
+# TODO: Delete the following samples after API deprecation. `count_token_locally` is faster & recommended.
 def count_token_service() -> int:
     # [START generativeaionvertexai_token_count_sample_with_genai]
     import vertexai
@@ -50,11 +77,17 @@ def count_token_service() -> int:
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
+    # Example response:
+    #     Prompt Token Count: 2
+    #     Prompt Token Count: 10
 
     prompt = ["hello world", "what's the weather today"]
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
+    # Example response:
+    #     Prompt Token Count: 8
+    #     Prompt Token Count: 31
     # [END generativeaionvertexai_token_count_sample_with_genai]
     return response.total_tokens
 
