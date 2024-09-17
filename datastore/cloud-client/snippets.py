@@ -11,15 +11,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
-from collections import defaultdict
-import datetime
-from pprint import pprint
-
-from google.api_core.client_options import ClientOptions
-import google.cloud.exceptions
 from google.cloud import datastore  # noqa: I100
-from google.cloud.datastore.query import PropertyFilter
 
 
 def _preamble():
@@ -214,6 +206,7 @@ def entity_with_parent(client):
 
 def properties(client):
     # [START datastore_properties]
+    import datetime
     key = client.key("Task")
     task = datastore.Entity(key, exclude_from_indexes=("description",))
     task.update(
@@ -386,7 +379,7 @@ def unindexed_property_query(client):
 
     # [START datastore_unindexed_property_query]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("description", "=", "Learn Cloud Datastore"))
+    query.add_filter(filter=datastore.query.PropertyFilter("description", "=", "Learn Cloud Datastore"))
     # [END datastore_unindexed_property_query]
 
     return list(query.fetch())
@@ -398,8 +391,8 @@ def basic_query(client):
 
     # [START datastore_basic_query]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("done", "=", False))
-    query.add_filter(filter=PropertyFilter("priority", ">=", 4))
+    query.add_filter(filter=datastore.query.PropertyFilter("done", "=", False))
+    query.add_filter(filter=datastore.query.PropertyFilter("priority", ">=", 4))
     query.order = ["-priority"]
     # [END datastore_basic_query]
 
@@ -503,7 +496,7 @@ def property_filter(client):
 
     # [START datastore_property_filter]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("done", "=", False))
+    query.add_filter(filter=datastore.query.PropertyFilter("done", "=", False))
     # [END datastore_property_filter]
 
     return list(query.fetch())
@@ -515,8 +508,8 @@ def composite_filter(client):
 
     # [START datastore_composite_filter]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("done", "=", False))
-    query.add_filter(filter=PropertyFilter("priority", "=", 4))
+    query.add_filter(filter=datastore.query.PropertyFilter("done", "=", False))
+    query.add_filter(filter=datastore.query.PropertyFilter("priority", "=", 4))
     # [END datastore_composite_filter]
 
     return list(query.fetch())
@@ -538,6 +531,7 @@ def key_filter(client):
 
 def ascending_sort(client):
     # Create the entity that we're going to query.
+    import datetime
     task = upsert(client)
     task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
@@ -552,6 +546,7 @@ def ascending_sort(client):
 
 def descending_sort(client):
     # Create the entity that we're going to query.
+    import datetime
     task = upsert(client)
     task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
@@ -566,6 +561,7 @@ def descending_sort(client):
 
 def multi_sort(client):
     # Create the entity that we're going to query.
+    import datetime
     task = upsert(client)
     task["created"] = datetime.datetime.now(tz=datetime.timezone.utc)
     client.put(task)
@@ -620,23 +616,26 @@ def kindless_query(client):
 
 def inequality_range(client):
     # [START datastore_inequality_range]
+    import datetime
     start_date = datetime.datetime(1990, 1, 1)
     end_date = datetime.datetime(2000, 1, 1)
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("created", ">", start_date))
-    query.add_filter(filter=PropertyFilter("created", "<", end_date))
+    query.add_filter(filter=datastore.query.PropertyFilter("created", ">", start_date))
+    query.add_filter(filter=datastore.query.PropertyFilter("created", "<", end_date))
     # [END datastore_inequality_range]
 
     return list(query.fetch())
 
 
 def inequality_invalid(client):
+    import google.cloud.exceptions
     try:
         # [START datastore_inequality_invalid]
+        import datetime
         start_date = datetime.datetime(1990, 1, 1)
         query = client.query(kind="Task")
-        query.add_filter(filter=PropertyFilter("created", ">", start_date))
-        query.add_filter(filter=PropertyFilter("priority", ">", 3))
+        query.add_filter(filter=datastore.query.PropertyFilter("created", ">", start_date))
+        query.add_filter(filter=datastore.query.PropertyFilter("priority", ">", 3))
         # [END datastore_inequality_invalid]
 
         return list(query.fetch())
@@ -647,13 +646,14 @@ def inequality_invalid(client):
 
 def equal_and_inequality_range(client):
     # [START datastore_equal_and_inequality_range]
+    import datetime
     start_date = datetime.datetime(1990, 1, 1)
     end_date = datetime.datetime(2000, 12, 31, 23, 59, 59)
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("priority", "=", 4))
-    query.add_filter(filter=PropertyFilter("done", "=", False))
-    query.add_filter(filter=PropertyFilter("created", ">", start_date))
-    query.add_filter(filter=PropertyFilter("created", "<", end_date))
+    query.add_filter(filter=datastore.query.PropertyFilter("priority", "=", 4))
+    query.add_filter(filter=datastore.query.PropertyFilter("done", "=", False))
+    query.add_filter(filter=datastore.query.PropertyFilter("created", ">", start_date))
+    query.add_filter(filter=datastore.query.PropertyFilter("created", "<", end_date))
     # [END datastore_equal_and_inequality_range]
 
     return list(query.fetch())
@@ -662,7 +662,7 @@ def equal_and_inequality_range(client):
 def inequality_sort(client):
     # [START datastore_inequality_sort]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("priority", ">", 3))
+    query.add_filter(filter=datastore.query.PropertyFilter("priority", ">", 3))
     query.order = ["priority", "created"]
     # [END datastore_inequality_sort]
 
@@ -673,7 +673,7 @@ def inequality_sort_invalid_not_same(client):
     try:
         # [START datastore_inequality_sort_invalid_not_same]
         query = client.query(kind="Task")
-        query.add_filter(filter=PropertyFilter("priority", ">", 3))
+        query.add_filter(filter=datastore.query.PropertyFilter("priority", ">", 3))
         query.order = ["created"]
         # [END datastore_inequality_sort_invalid_not_same]
 
@@ -684,10 +684,11 @@ def inequality_sort_invalid_not_same(client):
 
 
 def inequality_sort_invalid_not_first(client):
+    import google.cloud.exceptions
     try:
         # [START datastore_inequality_sort_invalid_not_first]
         query = client.query(kind="Task")
-        query.add_filter(filter=PropertyFilter("priority", ">", 3))
+        query.add_filter(filter=datastore.query.PropertyFilter("priority", ">", 3))
         query.order = ["created", "priority"]
         # [END datastore_inequality_sort_invalid_not_first]
 
@@ -700,8 +701,8 @@ def inequality_sort_invalid_not_first(client):
 def array_value_inequality_range(client):
     # [START datastore_array_value_inequality_range]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("tag", ">", "learn"))
-    query.add_filter(filter=PropertyFilter("tag", "<", "math"))
+    query.add_filter(filter=datastore.query.PropertyFilter("tag", ">", "learn"))
+    query.add_filter(filter=datastore.query.PropertyFilter("tag", "<", "math"))
     # [END datastore_array_value_inequality_range]
 
     return list(query.fetch())
@@ -710,8 +711,8 @@ def array_value_inequality_range(client):
 def array_value_equality(client):
     # [START datastore_array_value_equality]
     query = client.query(kind="Task")
-    query.add_filter(filter=PropertyFilter("tag", "=", "fun"))
-    query.add_filter(filter=PropertyFilter("tag", "=", "programming"))
+    query.add_filter(filter=datastore.query.PropertyFilter("tag", "=", "fun"))
+    query.add_filter(filter=datastore.query.PropertyFilter("tag", "=", "programming"))
     # [END datastore_array_value_equality]
 
     return list(query.fetch())
@@ -719,6 +720,7 @@ def array_value_equality(client):
 
 def exploding_properties(client):
     # [START datastore_exploding_properties]
+    import datetime
     task = datastore.Entity(client.key("Task"))
     task.update(
         {
@@ -754,6 +756,7 @@ def transactional_update(client):
     # [END datastore_transactional_update]
 
     # [START datastore_transactional_retry]
+    import google.cloud.exceptions
     for _ in range(5):
         try:
             transfer_funds(client, account1.key, account2.key, 50)
@@ -769,6 +772,7 @@ def transactional_update(client):
 
 def transactional_get_or_create(client):
     # [START datastore_transactional_get_or_create]
+    import datetime
     with client.transaction():
         key = client.key(
             "Task", datetime.datetime.now(tz=datetime.timezone.utc).isoformat()
@@ -850,6 +854,7 @@ def property_run_query(client):
     upsert(client)
 
     # [START datastore_property_run_query]
+    from collections import defaultdict
     query = client.query(kind="__property__")
     query.keys_only()
 
@@ -887,6 +892,9 @@ def property_by_kind_run_query(client):
 
 def regional_endpoint():
     # [START datastore_regional_endpoints]
+    from google.cloud import datastore
+    from google.api_core.client_options import ClientOptions
+
     ENDPOINT = "https://nam5-datastore.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
@@ -1006,6 +1014,7 @@ def index_merge_queries(client):
 
 
 def main(project_id):
+    from pprint import pprint
     client = datastore.Client(project_id)
 
     for name, function in globals().items():
@@ -1018,6 +1027,7 @@ def main(project_id):
 
 
 if __name__ == "__main__":
+    import argparse
     parser = argparse.ArgumentParser(
         description="Demonstrates datastore API operations."
     )
