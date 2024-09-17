@@ -684,6 +684,8 @@ def inequality_sort(client):
 
 
 def inequality_sort_invalid_not_same(client):
+    import google.cloud.exceptions
+
     try:
         # [START datastore_inequality_sort_invalid_not_same]
         query = client.query(kind="Task")
