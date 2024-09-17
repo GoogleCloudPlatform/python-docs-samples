@@ -1,0 +1,2 @@
+google-cloud-aiplatform[all]==1.64.0
+protobuf==5.28.1
