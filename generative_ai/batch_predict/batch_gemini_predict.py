@@ -14,6 +14,7 @@
 import os
 import time
 from typing import Optional
+
 from vertexai.preview.batch_prediction import BatchPredictionJob
 
 
