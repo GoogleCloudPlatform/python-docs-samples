@@ -14,8 +14,9 @@
 from typing import Callable
 
 import batch_code_predict
-import batch_text_predict
 import batch_gemini_predict
+import batch_text_predict
+
 
 from google.cloud import storage
 from google.cloud.aiplatform import BatchPredictionJob
@@ -71,7 +72,7 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
         )
     )
     assert OUTPUT_PATH in job.output_info.gcs_output_directory
-    
+
 
 def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
     input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_code_predict.jsonl"
