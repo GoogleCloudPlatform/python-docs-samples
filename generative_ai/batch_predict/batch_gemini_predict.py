@@ -30,7 +30,7 @@ def batch_prediction_gemini_example(
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
-    
+
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
     from vertexai.preview.batch_prediction import BatchPredictionJob
 
