@@ -11,8 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from typing import Optional
 import os
+from typing import Optional
 import time
 
 import vertexai
@@ -22,7 +22,9 @@ def batch_prediction_gemini_example(input_uri: Optional[str] = None) -> vertexai
     """Perform batch text prediction using a Gemini AI model.
     Args:
         input_uri (str, optional): URI of the input dataset. Could be a BigQuery table or a Google Cloud Storage file.
-            E.g. "gs://[BUCKET]/[DATASET].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+            E.g. "bq://myproject.sampledataset.mypredictiontable OR gs://mybucket/sampledataset.json"
+        output_uri (str, optional): URI where the output will be stored. Could be a BigQuery table or a Google Cloud Storage file.
+            E.g. "bq://myproject.sampledataset.mypredictiontable OR gs://mybucket/sampledataset.jsonl"
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
@@ -62,10 +64,10 @@ def batch_prediction_gemini_example(input_uri: Optional[str] = None) -> vertexai
     # Example response:
     # bq://example_project.gen_ai_batch_prediction.predictions_2024-09-17-11-09-45-ABC123
     # gs://example_project.gen_ai_batch_prediction.predictions_2024-09-17-11-09-45-ABC123
-    
+
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
-    return job 
+    return job
 
 
 if __name__ == "__main__":
