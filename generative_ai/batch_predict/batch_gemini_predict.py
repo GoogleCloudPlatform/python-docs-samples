@@ -14,13 +14,12 @@
 import os
 import time
 from typing import Optional
-
-import vertexai
+from vertexai.preview.batch_prediction import BatchPredictionJob
 
 
 def batch_prediction_gemini_example(
     input_uri: Optional[str] = None
-) -> vertexai.preview.batch_prediction.BatchPredictionJob:
+) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
         input_uri (str, optional): URI of the input dataset. Could be a BigQuery table or a Google Cloud Storage file.
@@ -32,7 +31,8 @@ def batch_prediction_gemini_example(
     """
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
-    from vertexai.preview.batch_prediction import BatchPredictionJob
+    import vertexai
+    
 
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     LOCATION = "us-central1"
