@@ -33,7 +33,6 @@ def batch_prediction_gemini_example(
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
     import vertexai
 
-
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     LOCATION = "us-central1"
     # TODO (Developer): Update and un-comment below line
