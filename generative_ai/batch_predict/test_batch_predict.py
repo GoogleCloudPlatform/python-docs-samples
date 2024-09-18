@@ -20,6 +20,7 @@ import batch_text_predict
 
 from google.cloud import storage
 from google.cloud.aiplatform import BatchPredictionJob
+from vertexai.preview.batch_prediction import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
 
 import pytest
