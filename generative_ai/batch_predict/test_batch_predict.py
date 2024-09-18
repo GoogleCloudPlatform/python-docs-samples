@@ -77,6 +77,8 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
 def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
     input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_gemini_predict.jsonl"
     job = _main_test(
-        test_func=lambda: batch_gemini_predict.gemini_batch_prediction_example(input_uri, output_folder)
+        test_func=lambda: batch_gemini_predict.gemini_batch_prediction(
+            input_uri, output_folder
+        )
     )
     assert job.output_info.gcs_output_directory
