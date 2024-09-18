@@ -18,7 +18,7 @@ from typing import Optional
 from vertexai.preview.batch_prediction import BatchPredictionJob
 
 
-def batch_prediction_gemini_example(
+def batch_prediction_gemini(
     input_uri: Optional[str] = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
@@ -75,4 +75,4 @@ def batch_prediction_gemini_example(
 
 
 if __name__ == "__main__":
-    batch_prediction_gemini_example()
+    batch_prediction_gemini()
