@@ -80,3 +80,4 @@ def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
         test_func=lambda: batch_gemini_predict.gemini_batch_prediction_example(input_uri, output_folder)
     )
     assert job.output_info.gcs_output_directory
+
