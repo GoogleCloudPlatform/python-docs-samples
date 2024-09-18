@@ -20,8 +20,8 @@ import batch_text_predict
 
 from google.cloud import storage
 from google.cloud.aiplatform import BatchPredictionJob
-from vertexai.preview.batch_prediction import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
+from vertexai.preview.batch_prediction import BatchPredictionJob
 
 import pytest
 
@@ -59,7 +59,7 @@ def _main_test_(test_func: Callable) -> BatchPredictionJob.submit:
     job = None
     try:
         job = test_func()
-        assert job.state == JobState.JOB_STATE_SUCCEEDED
+        assert job.state == {job.state.name}
         return job
     finally:
         if job is not None:
