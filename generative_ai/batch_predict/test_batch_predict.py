@@ -82,4 +82,3 @@ def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
         )
     )
     assert OUTPUT_PATH in job.output_info.gcs_output_directory
-
