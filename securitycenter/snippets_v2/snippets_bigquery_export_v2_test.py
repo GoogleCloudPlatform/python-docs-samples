@@ -38,7 +38,10 @@ def bigquery_export_id():
     create_bigquery_dataset(BIGQUERY_DATASET_ID)
     export_filter = 'severity="LOW" OR severity="MEDIUM"'
     snippets_bigquery_export_v2.create_bigquery_export(
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", export_filter, f"projects/{PROJECT_ID}/datasets/{BIGQUERY_DATASET_ID}", bigquery_export_id
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
+        export_filter,
+        f"projects/{PROJECT_ID}/datasets/{BIGQUERY_DATASET_ID}",
+        bigquery_export_id,
     )
 
     yield bigquery_export_id
@@ -89,7 +92,9 @@ def test_get_bigquery_export(bigquery_export_id: str):
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_bigquery_exports(bigquery_export_id: str):
-    response = snippets_bigquery_export_v2.list_bigquery_exports(f"projects/{PROJECT_ID}/locations/{LOCATION_ID}")
+    response = snippets_bigquery_export_v2.list_bigquery_exports(
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}"
+    )
     names = []
     for bigquery_export in response:
         names.append(bigquery_export.name.split("/")[-1])
@@ -102,6 +107,8 @@ def test_list_bigquery_exports(bigquery_export_id: str):
 def test_update_bigquery_exports(bigquery_export_id: str):
     export_filter = 'severity="MEDIUM"'
     response = snippets_bigquery_export_v2.update_bigquery_export(
-        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}", export_filter, bigquery_export_id
+        f"projects/{PROJECT_ID}/locations/{LOCATION_ID}",
+        export_filter,
+        bigquery_export_id,
     )
     assert bigquery_export_id.split("/")[-1] == response.name.split("/")[-1]
