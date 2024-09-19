@@ -12,11 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-import time
 from typing import Optional
 
-from vertexai.preview.batch_prediction import BatchPredictionJob
-
+from google.cloud.aiplatform import BatchPredictionJob
 
 def batch_prediction_gemini(
     input_uri: Optional[str] = None
@@ -32,38 +30,29 @@ def batch_prediction_gemini(
     """
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
-    import vertexai
+    from google.cloud import aiplatform
 
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     LOCATION = "us-central1"
+    MODEL_ID = "gemini-1.5-flash-001"  # Replace with your model ID"
     # TODO (Developer): Update and un-comment below line
-    # input_uri = bq://example_project.example_dataset.example_table
-    # input_uri = gs://mybucket/example_dataset.jsonl"
+    # input_uri = bq://example_project.example_dataset.example_table or gs://mybucket/sampledataset.json
+    # output_uri = bq://example_project.example_dataset.example_table or gs://mybucket/sampledataset.json
 
-    # Initialize vertexai
-    vertexai.init(project=PROJECT_ID, location=LOCATION)
+    # Initialize
+    aiplatform.init(project=PROJECT_ID, location=LOCATION)
 
-    # Submit a batch prediction job with Gemini model
-    job = BatchPredictionJob.submit("gemini-1.5-flash-001", input_uri)
+    # Create the batch prediction job using BatchPredictionJob
+    batch_prediction_job = aiplatform.BatchPredictionJob.create(
+        job_display_name="displayname",  # Replace with your desired name
+        model_name=f"publishers/google/models/{MODEL_ID}",
+        bigquery_source=input_uri,
+        bigquery_destination_prefix=output_uri,
+    )
 
-    # Check job status
-    print(f"Job resource name: {job.resource_name}")
-    print(f"Model resource name with the job: {job.model_name}")
-    print(f"Job state: {job.state.name}")
-
-    # Refresh the job until complete
-    while not job.has_ended:
-        time.sleep(5)
-        job.refresh()
-
-    # Check if the job succeeds
-    if job.has_succeeded:
-        print("Job succeeded!")
-    else:
-        print(f"Job failed: {job.error}")
-
-    # Check the location of the output
-    print(f"Job output location: {job.output_location}")
+    print(batch_prediction_job.display_name)
+    print(batch_prediction_job.resource_name)
+    print(batch_prediction_job.state)
 
     # Example response:
     # bq://example_project.gen_ai_batch_prediction.predictions_2024-09-17-11-09-45-ABC123
@@ -71,7 +60,7 @@ def batch_prediction_gemini(
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
-    return job
+    return batch_prediction_job
 
 
 if __name__ == "__main__":
