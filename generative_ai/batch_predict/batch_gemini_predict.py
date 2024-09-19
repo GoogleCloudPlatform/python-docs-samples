@@ -16,8 +16,9 @@ from typing import Optional
 
 from google.cloud.aiplatform import BatchPredictionJob
 
-def batch_prediction_gemini(
-    input_uri: Optional[str] = None
+
+def batch_gemini_predict(
+    input_uri: Optional[str] = None, output_uri: str = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
@@ -46,8 +47,8 @@ def batch_prediction_gemini(
     batch_prediction_job = aiplatform.BatchPredictionJob.create(
         job_display_name="displayname",  # Replace with your desired name
         model_name=f"publishers/google/models/{MODEL_ID}",
-        bigquery_source=input_uri,
-        bigquery_destination_prefix=output_uri,
+        gcs_source=input_uri,
+        gcs_destination_prefix=output_uri,
     )
 
     print(batch_prediction_job.display_name)
@@ -55,8 +56,7 @@ def batch_prediction_gemini(
     print(batch_prediction_job.state)
 
     # Example response:
-    # bq://example_project.gen_ai_batch_prediction.predictions_2024-09-17-11-09-45-ABC123
-    # gs://example_project.gen_ai_batch_prediction.predictions_2024-09-17-11-09-45-ABC123
+    # BatchPredictionJob run completed. Resource name: projects/12345678/locations/yourlocation/batchPredictionJobs/1234567
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
@@ -64,4 +64,4 @@ def batch_prediction_gemini(
 
 
 if __name__ == "__main__":
-    batch_prediction_gemini()
+    batch_gemini_predict()
