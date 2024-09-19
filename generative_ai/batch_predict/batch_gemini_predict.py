@@ -17,7 +17,7 @@ from typing import Optional
 from google.cloud.aiplatform import BatchPredictionJob
 
 
-def batch_gemini_predict(
+def batch_gemini_prediction(
     input_uri: Optional[str] = None, output_uri: str = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
@@ -64,4 +64,4 @@ def batch_gemini_predict(
 
 
 if __name__ == "__main__":
-    batch_gemini_predict()
+    batch_gemini_prediction()
