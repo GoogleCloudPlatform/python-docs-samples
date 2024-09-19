@@ -16,10 +16,16 @@
 """Demos for working with notification configs."""
 import json
 from typing import Dict
-from google.cloud.securitycenter_v2 import NotificationConfig, ListNotificationConfigsResponse
+from google.cloud.securitycenter_v2 import (
+    NotificationConfig,
+    ListNotificationConfigsResponse,
+)
+
 
 # [START securitycenter_create_notification_config_v2]
-def create_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> NotificationConfig:
+def create_notification_config(
+    parent_id, location_id, pubsub_topic, notification_config_id
+) -> NotificationConfig:
     """
     This method is used to create the Notification Config.
     Args:
@@ -37,7 +43,7 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-    parent_id = parent_id+"/locations/"+location_id
+    parent_id = parent_id + "/locations/" + location_id
     response = client.create_notification_config(
         request={
             "parent": parent_id,
@@ -51,6 +57,8 @@ def create_notification_config(parent_id, location_id, pubsub_topic, notificatio
     )
     print(f"create notification config response:{response}")
     return response
+
+
 # [END securitycenter_create_notification_config_v2]
 
 
@@ -69,7 +77,7 @@ def delete_notification_config(parent_id, location_id, notification_config_id) -
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-    parent_id = parent_id+"/locations/"+location_id
+    parent_id = parent_id + "/locations/" + location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
@@ -80,7 +88,9 @@ def delete_notification_config(parent_id, location_id, notification_config_id) -
 
 
 # [START securitycenter_get_notification_config_v2]
-def get_notification_config(parent_id, location_id, notification_config_id) -> NotificationConfig:
+def get_notification_config(
+    parent_id, location_id, notification_config_id
+) -> NotificationConfig:
     """
     This method is used to get the Notification Config.
     Args:
@@ -94,7 +104,7 @@ def get_notification_config(parent_id, location_id, notification_config_id) -> N
     from google.cloud import securitycenter_v2 as securitycenter_v2
 
     client = securitycenter_v2.SecurityCenterClient()
-    parent_id = parent_id+"/locations/"+location_id
+    parent_id = parent_id + "/locations/" + location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
@@ -104,11 +114,15 @@ def get_notification_config(parent_id, location_id, notification_config_id) -> N
     )
     print(f"Got notification config: {response}")
     return response
+
+
 # [END securitycenter_get_notification_config_v2]
 
 
 # [START securitycenter_list_notification_configs_v2]
-def list_notification_configs(parent_id, location_id) -> ListNotificationConfigsResponse:
+def list_notification_configs(
+    parent_id, location_id
+) -> ListNotificationConfigsResponse:
     """
     This method is used to list the Notification Config.
     Args:
@@ -119,9 +133,10 @@ def list_notification_configs(parent_id, location_id) -> ListNotificationConfigs
         location_id: "global"
     """
     from google.cloud import securitycenter_v2 as securitycenter_v2
+
     all_config = []
     client = securitycenter_v2.SecurityCenterClient()
-    parent_id = parent_id+"/locations/"+location_id
+    parent_id = parent_id + "/locations/" + location_id
     notification_configs_iterator = client.list_notification_configs(
         request={"parent": parent_id, "page_size": 1000}
     )
@@ -130,17 +145,25 @@ def list_notification_configs(parent_id, location_id) -> ListNotificationConfigs
     next_page_token = notification_configs_iterator.next_page_token
     while next_page_token:
         iterator = client.list_notification_configs(
-            request={"parent": parent_id, "page_token": next_page_token, "page_size": 1000}
+            request={
+                "parent": parent_id,
+                "page_token": next_page_token,
+                "page_size": 1000,
+            }
         )
         for i, config in enumerate(iterator):
             all_config.append(config)
     print(all_config)
     return all_config
+
+
 # [END securitycenter_list_notification_configs_v2]
 
 
 # [START securitycenter_update_notification_config_v2]
-def update_notification_config(parent_id, location_id, pubsub_topic, notification_config_id) -> NotificationConfig:
+def update_notification_config(
+    parent_id, location_id, pubsub_topic, notification_config_id
+) -> NotificationConfig:
     """
     This method is used to update the Notification Config.
     Args:
@@ -160,7 +183,7 @@ def update_notification_config(parent_id, location_id, pubsub_topic, notificatio
     from google.protobuf import field_mask_pb2
 
     client = securitycenter_v2.SecurityCenterClient()
-    parent_id = parent_id+"/locations/"+location_id
+    parent_id = parent_id + "/locations/" + location_id
     notification_config_name = (
         f"{parent_id}/notificationConfigs/{notification_config_id}"
     )
@@ -187,20 +210,25 @@ def update_notification_config(parent_id, location_id, pubsub_topic, notificatio
 
     print(updated_notification_config)
     return updated_notification_config
+
+
 # [END securitycenter_update_notification_config_v2]
+
 
 # [START securitycenter_receive_notifications_v2]
 def receive_notifications(subscription_name) -> bool:
-        # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
+    # Requires https://cloud.google.com/pubsub/docs/quickstart-client-libraries#pubsub-client-libraries-python
     import concurrent
 
     from google.cloud import pubsub_v1
     from google.cloud.securitycenter_v2 import NotificationMessage
+
     """
     This method is used to receive the Notification Config.
     Args:
         subscription_name: "projects/{your-project-id}/subscriptions/{your-subscription-id}"
     """
+
     def callback(message):
         try:
             # Print the data received for debugging purpose if needed
@@ -229,5 +257,6 @@ def receive_notifications(subscription_name) -> bool:
     except concurrent.futures.TimeoutError:
         streaming_pull_future.cancel()
     return True
-# [END securitycenter_receive_notifications_v2]
 
+
+# [END securitycenter_receive_notifications_v2]

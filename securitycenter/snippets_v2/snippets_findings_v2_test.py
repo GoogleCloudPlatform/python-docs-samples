@@ -86,7 +86,9 @@ def finding_name(source_name):
 
 
 def test_list_all_findings(organization_id, finding_name, source_name):
-    finding_result_iterator = snippets_findings_v2.list_all_findings(organization_id, source_name.split("/")[-1], "global")
+    finding_result_iterator = snippets_findings_v2.list_all_findings(
+        organization_id, source_name.split("/")[-1], "global"
+    )
 
     names = []
     for finding_result in finding_result_iterator:
@@ -110,7 +112,9 @@ def test_group_filtered_findings(organization_id):
 
 
 def test_list_findings_with_security_marks(organization_id):
-    count = snippets_findings_v2.list_findings_with_security_marks(organization_id, "-", "global")
+    count = snippets_findings_v2.list_findings_with_security_marks(
+        organization_id, "-", "global"
+    )
     assert count > 0
 
 
@@ -120,12 +124,16 @@ def test_group_findings_by_state(organization_id):
 
 
 def test_create_finding(organization_id, source_name):
-    created_finding = snippets_findings_v2.create_finding(organization_id, "global", "samplefindingid", source_name, "MEDIUM_RISK_ONE")
+    created_finding = snippets_findings_v2.create_finding(
+        organization_id, "global", "samplefindingid", source_name, "MEDIUM_RISK_ONE"
+    )
     assert created_finding.name.split("/")[-1] == "samplefindingid"
 
 
 def test_update_finding(source_name):
-    snippets_findings_v2.create_finding(organization_id, "global", "samplefindingid2", source_name, "MEDIUM_RISK_ONE")
+    snippets_findings_v2.create_finding(
+        organization_id, "global", "samplefindingid2", source_name, "MEDIUM_RISK_ONE"
+    )
     updated_finding = snippets_findings_v2.update_finding(source_name, "global")
     source_properties = updated_finding.source_properties
     keys = source_properties.keys()
@@ -153,14 +161,18 @@ def test_update_source(source_name):
 
 
 def test_get_iam_policy(organization_id, source_name):
-    response = snippets_findings_v2.get_iam_policy(organization_id, source_name.split("/")[-1])
+    response = snippets_findings_v2.get_iam_policy(
+        organization_id, source_name.split("/")[-1]
+    )
     assert response is not None
 
 
 def test_set_source_iam_policy(organization_id, source_name):
     user_email = "csccclienttest@gmail.com"
     role_id = "roles/securitycenter.findingsEditor"
-    updated = snippets_findings_v2.set_source_iam_policy(organization_id, source_name.split("/")[-1], user_email, role_id)
+    updated = snippets_findings_v2.set_source_iam_policy(
+        organization_id, source_name.split("/")[-1], user_email, role_id
+    )
     assert any(
         member == "user:csccclienttest@gmail.com"
         for member in chain.from_iterable(
@@ -171,5 +183,7 @@ def test_set_source_iam_policy(organization_id, source_name):
 
 def test_troubleshoot_iam_permissions(organization_id, source_name):
     permissions = ["securitycenter.findings.update"]
-    response = snippets_findings_v2.troubleshoot_iam_permissions(organization_id, source_name.split("/")[-1], permissions)
+    response = snippets_findings_v2.troubleshoot_iam_permissions(
+        organization_id, source_name.split("/")[-1], permissions
+    )
     assert permissions == response.permissions
