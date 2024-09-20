@@ -14,7 +14,7 @@
 
 import api_example
 import local_sdk_example
-import multimodal_example
+import multimodal_token_count_example
 import simple_example
 
 
@@ -28,6 +28,6 @@ def test_gemini_count_token_example() -> None:
     assert response
     assert response.usage_metadata
 
-    response = multimodal_example.count_tokens_multimodal()
+    response = multimodal_token_count_example.count_tokens_multimodal()
     assert response
     assert response.usage_metadata
