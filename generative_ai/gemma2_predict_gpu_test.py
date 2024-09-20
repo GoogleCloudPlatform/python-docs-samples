@@ -18,8 +18,7 @@ from google.cloud import aiplatform
 from google.cloud.aiplatform import models
 
 # Interfaces defined here:
-# https://github.com/googleapis/googleapis/tree/master/google/cloud/aiplatform/v1
-# https://github.com/googleapis/googleapis-gen/tree/master/google/cloud/aiplatform/v1/aiplatform-v1-py
+# https://github.com/googleapis/python-aiplatform/blob/main/google/cloud/aiplatform/models.py
 
 from gemma2_predict_gpu import endpoint_predict_sample
 
@@ -52,8 +51,7 @@ def test_gemma2_predict_gpu(mock_init, mock_prediction, mock_endpoint):
     endpoint = "fake_endpoint_id"
 
     prediction = endpoint_predict_sample(
-        project=project_id, location=location, instances=[instance],
-        endpoint=endpoint
+        project=project_id, location=location, instances=[instance], endpoint=endpoint
     )
 
     assert prediction
