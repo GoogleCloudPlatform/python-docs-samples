@@ -39,18 +39,17 @@ def batch_gemini_predict(
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
 
     # TODO(developer): Update and un-comment below lines
-    # model_id ="gemini-1.5-flash-001"
     # input_uri ="gs://[BUCKET]/[OUTPUT].jsonl"
-    # output_uri_prefix ="gs://[BUCKET]"
+    # output_uri ="gs://[BUCKET]"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location=LOCATION)
 
     # Submit a batch prediction job with Gemini model
     job = BatchPredictionJob.submit(
-        source_model=model_id,
+        source_model="gemini-1.5-flash-001",
         input_dataset=input_uri,
-        output_uri_prefix=output_uri_prefix
+        output_uri_prefix=output_uri
     )
 
     # Check job status
