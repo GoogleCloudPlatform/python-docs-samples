@@ -13,10 +13,10 @@
 # limitations under the License.
 import os
 import time
+
 import vertexai
 
 from vertexai.preview.batch_prediction import BatchPredictionJob
-from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
@@ -39,9 +39,9 @@ def batch_gemini_predict(
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
 
     # TODO(developer): Update and un-comment below lines
-    #model_id ="gemini-1.5-flash-001"
-    #input_uri ="gs://[BUCKET]/[OUTPUT].jsonl"
-    #output_uri_prefix ="gs://[BUCKET]"
+    # model_id ="gemini-1.5-flash-001"
+    # input_uri ="gs://[BUCKET]/[OUTPUT].jsonl"
+    # output_uri_prefix ="gs://[BUCKET]"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location=LOCATION)
