@@ -19,7 +19,6 @@ import batch_text_predict
 
 
 from google.cloud import storage
-from google.cloud.aiplatform import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
 
 import pytest
@@ -81,4 +80,4 @@ def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
             input_uri, output_folder
         )
     )
-    assert job.output_info.gcs_output_directory
+    assert OUTPUT_PATH in job.output_info.gcs_output_directory
