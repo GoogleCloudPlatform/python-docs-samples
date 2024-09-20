@@ -39,15 +39,27 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
 
+
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
+# @pytest.fixture(scope="module", name="test_file")
+# def test_file_fixture() -> None:
+#     file_path = Path("./hello.txt")
+#     file_path.write_text("Hello World", encoding="utf-8")
+#     yield file_path.absolute().as_posix()
+#     file_path.unlink()  # Delete the file after tests
+
+
+# Try to work with existing file
 @pytest.fixture(scope="module", name="test_file")
-def test_file_fixture() -> None:
-    file_path = Path("./hello.txt")
-    file_path.write_text("Hello World", encoding="utf-8")
+def test_file_fixture():
+    file_path = Path(__file__).parent / "test_file.txt"
+    print(file_path.absolute().as_posix())
+    if not file_path.exists():
+        pytest.fail(f"Required file {file_path} does not exist.")
     yield file_path.absolute().as_posix()
-    file_path.unlink()  # Delete the file after tests
+
 
 
 @pytest.fixture(scope="module", name="test_corpus")
@@ -116,9 +128,7 @@ def test_get_file(uploaded_file: pytest.fixture) -> None:
     assert retrieved_file.name == uploaded_file.name
 
 
-def test_list_files(
-    test_corpus: pytest.fixture, uploaded_file: pytest.fixture
-) -> None:
+def test_list_files(test_corpus: pytest.fixture, uploaded_file: pytest.fixture) -> None:
     files = list_files_example.list_files(test_corpus.name)
     assert any(f.name == uploaded_file.name for f in files)
 
