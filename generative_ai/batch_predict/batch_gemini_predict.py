@@ -22,7 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 
 
-def batch_gemini_predict(
+def batch_gemini_prediction(
     input_uri: str = None, output_uri: str = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
