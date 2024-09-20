@@ -13,6 +13,8 @@
 # limitations under the License.
 from typing import Callable
 
+from typing import Optional
+
 import batch_code_predict
 import batch_gemini_predict
 import batch_text_predict
@@ -53,6 +55,16 @@ def _main_test(test_func: Callable) -> BatchPredictionJob:
         if job is not None:
             job.delete()
 
+def _main_test_gemini(test_func: Optional) -> BatchPredictionJob:
+    job = None
+    try:
+        job = test_func()
+        assert job.state == JobState.JOB_STATE_SUCCEEDED
+        return job
+    finally:
+        if job is not None:
+            job.delete()
+
 
 def test_batch_text_predict(output_folder: pytest.fixture()) -> None:
     input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_text_predict.jsonl"
@@ -76,7 +88,7 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
 
 def test_batch_gemini_predict(output_folder: pytest.fixture()) -> None:
     input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_gemini_predict.jsonl"
-    job = _main_test(
+    job = _main_test_gemini(
         test_func=lambda: batch_gemini_predict.batch_gemini_prediction(input_uri)
     )
     assert job.output_info.gcs_output_directory
