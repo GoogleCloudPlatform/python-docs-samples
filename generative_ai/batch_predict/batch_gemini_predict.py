@@ -46,37 +46,37 @@ def batch_gemini_prediction(
     vertexai.init(project=PROJECT_ID, location=LOCATION)
 
     # Submit a batch prediction job with Gemini model
-    job = BatchPredictionJob.submit(
+    batch_prediction_job = BatchPredictionJob.submit(
         source_model="gemini-1.5-flash-001",
         input_dataset=input_uri,
         output_uri_prefix=output_uri
     )
 
     # Check job status
-    print(f"Job resouce name: {job.resource_name}")
-    print(f"Model resource name with the job: {job.model_name}")
-    print(f"Job state: {job.state.name}")
+    print(f"Job resouce name: {batch_prediction_job.resource_name}")
+    print(f"Model resource name with the job: {batch_prediction_job.model_name}")
+    print(f"Job state: {batch_prediction_job.state.name}")
 
     # Refresh the job until complete
-    while not job.has_ended:
+    while not batch_prediction_job.has_ended:
         time.sleep(5)
-        job.refresh()
+        batch_prediction_job.refresh()
 
     # Check if the job succeeds
-    if job.has_succeeded:
+    if batch_prediction_job.has_succeeded:
         print("Job succeeded!")
     else:
-        print(f"Job failed: {job.error}")
+        print(f"Job failed: {batch_prediction_job.error}")
 
     # Check the location of the output
-    print(f"Job output location: {job.output_location}")
+    print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
     #  Job output location: gs://yourbucket/gen-ai-batch-prediction/prediction-model-year-month-dayThour:minute:second.12345
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
-    return BatchPredictionJob
+    return batch_prediction_job
 
 
 if __name__ == "__main__":
