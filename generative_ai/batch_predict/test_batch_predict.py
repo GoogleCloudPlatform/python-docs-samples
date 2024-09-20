@@ -13,7 +13,6 @@
 # limitations under the License.
 from typing import Callable
 
-from typing import Optional
 
 import batch_code_predict
 import batch_gemini_predict
@@ -46,17 +45,6 @@ def output_folder() -> str:
 
 
 def _main_test(test_func: Callable) -> BatchPredictionJob:
-    job = None
-    try:
-        job = test_func()
-        assert job.state == JobState.JOB_STATE_SUCCEEDED
-        return job
-    finally:
-        if job is not None:
-            job.delete()
-
-
-def _main_test_gemini(test_func: Optional) -> BatchPredictionJob:
     job = None
     try:
         job = test_func()

@@ -14,8 +14,6 @@
 import os
 import time
 
-from typing import Optional
-
 import vertexai
 
 from vertexai.preview.batch_prediction import BatchPredictionJob
@@ -25,7 +23,7 @@ LOCATION = "us-central1"
 
 
 def batch_gemini_prediction(
-    input_uri: str = Optional[str], output_uri: str = Optional[str]
+    input_uri: str = None, output_uri: str = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
@@ -82,4 +80,4 @@ def batch_gemini_prediction(
 
 
 if __name__ == "__main__":
-    batch_gemini_prediction(input_uri=input_uri, output_uri=output_uri)
+    batch_gemini_prediction()
