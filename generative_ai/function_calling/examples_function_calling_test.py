@@ -20,7 +20,6 @@ import basic_example
 
 from google.api_core.exceptions import ResourceExhausted
 
-import pytest
 
 summary_expected = [
     "Boston",
@@ -43,18 +42,9 @@ def test_function_calling() -> None:
     assert all(x in str(response) for x in response_expected)
 
 
-# TODO: Remove skip once b/336973838 is resolved.
-@pytest.mark.skip("Service currently returning INVALID_ARGUMENT")
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_function_calling_advanced() -> None:
-    response = advanced_example.generate_function_call_advanced()
-    assert all(x in str(response.text) for x in summary_expected)
-    assert all(x in str(response) for x in response_expected)
-
-
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_advanced_function_selection() -> None:
-    response = advanced_example.generate_function_call()
+    response = advanced_example.generate_function_call_advanced()
     assert (
         "Pixel 8 Pro 128GB"
         in response.candidates[0].function_calls[0].args["product_name"]
