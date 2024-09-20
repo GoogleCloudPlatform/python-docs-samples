@@ -38,10 +38,7 @@ def set_system_instruction() -> str:
     User input: I like bagels.
     Answer:
     """
-
-    contents = [prompt]
-
-    response = model.generate_content(contents)
+    response = model.generate_content([prompt])
     print(response.text)
     # Example response:
     # J'aime les bagels.
