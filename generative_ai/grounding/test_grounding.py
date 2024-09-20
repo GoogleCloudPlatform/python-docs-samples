@@ -17,8 +17,6 @@ import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import palm_example
-import pytest
-
 import vais_example
 import web_example
 
