@@ -42,9 +42,6 @@ def test_gemini_grounding_vais_example() -> None:
     assert response
 
 
-@pytest.mark.skip(
-    "Unable to test Google Search grounding due to allowlist restrictions."
-)
 def test_gemini_grounding_web_example() -> None:
     response = web_example.generate_text_with_grounding_web()
     assert response
