@@ -18,7 +18,7 @@ import create_advanced_example
 import create_example
 import delete_example
 import get_example
-import list_example
+from list_example import list_reasoning_engines
 
 import pytest
 
@@ -57,7 +57,7 @@ def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
 
 
 def test_list_reasoning_engines() -> None:
-    response = list_example.list_reasoning_engines()
+    response = list_reasoning_engines()
     assert response
 
 
