@@ -80,4 +80,4 @@ def batch_gemini_prediction(
 
 
 if __name__ == "__main__":
-    batch_gemini_predict()
+    batch_gemini_prediction()
