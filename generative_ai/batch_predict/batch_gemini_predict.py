@@ -17,8 +17,9 @@ import time
 
 import vertexai
 
-from vertexai.preview.batch_prediction import BatchPredictionJob
 from typing import Optional
+
+from vertexai.preview.batch_prediction import BatchPredictionJob
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
