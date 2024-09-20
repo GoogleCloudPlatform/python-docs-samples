@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#   https://www.apache.org/licenses/LICENSE-2.0
+#    https://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
@@ -12,56 +12,73 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
+import time
+import vertexai
+
+from vertexai.preview.batch_prediction import BatchPredictionJob
 from typing import Optional
 
-from google.cloud.aiplatform import BatchPredictionJob
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+LOCATION = "us-central1"
 
 
-def batch_gemini_prediction(
-    input_uri: Optional[str] = None, output_uri: str = None
+def batch_gemini_predict(
+    input_uri: str = None, output_uri: str = None
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
         input_uri (str, optional): URI of the input dataset. Could be a BigQuery table or a Google Cloud Storage file.
-            E.g. "bq://myproject.sampledataset.mypredictiontable OR gs://mybucket/sampledataset.json"
-        output_uri (str, optional): URI where the output will be stored. Could be a BigQuery table or a Google Cloud Storage file.
-            E.g. "bq://myproject.sampledataset.mypredictiontable OR gs://mybucket/sampledataset.jsonl"
+            E.g. "gs://[BUCKET]/[DATASET].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+        output_uri (str, optional): URI where the output will be stored.
+            Could be a BigQuery table or a Google Cloud Storage file.
+            E.g. "gs://[BUCKET]/[OUTPUT].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
-    from google.cloud import aiplatform
 
-    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    LOCATION = "us-central1"
-    MODEL_ID = "gemini-1.5-flash-001"  # Replace with your model ID"
-    # TODO (Developer): Update and un-comment below line
-    # input_uri = bq://example_project.example_dataset.example_table or gs://mybucket/sampledataset.json
-    # output_uri = bq://example_project.example_dataset.example_table or gs://mybucket/sampledataset.json
+    # TODO(developer): Update and un-comment below lines
+    #model_id ="gemini-1.5-flash-001"
+    #input_uri ="gs://[BUCKET]/[OUTPUT].jsonl"
+    #output_uri_prefix ="gs://[BUCKET]"
 
-    # Initialize
-    aiplatform.init(project=PROJECT_ID, location=LOCATION)
+    # Initialize vertexai
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
 
-    # Create the batch prediction job using BatchPredictionJob
-    batch_prediction_job = aiplatform.BatchPredictionJob.create(
-        job_display_name="displayname",  # Replace with your desired name
-        model_name=f"publishers/google/models/{MODEL_ID}",
-        gcs_source=input_uri,
-        gcs_destination_prefix=output_uri,
+    # Submit a batch prediction job with Gemini model
+    job = BatchPredictionJob.submit(
+        source_model=model_id,
+        input_dataset=input_uri,
+        output_uri_prefix=output_uri_prefix
     )
 
-    print(batch_prediction_job.display_name)
-    print(batch_prediction_job.resource_name)
-    print(batch_prediction_job.state)
+    # Check job status
+    print(f"Job resouce name: {job.resource_name}")
+    print(f"Model resource name with the job: {job.model_name}")
+    print(f"Job state: {job.state.name}")
+
+    # Refresh the job until complete
+    while not job.has_ended:
+        time.sleep(5)
+        job.refresh()
+
+    # Check if the job succeeds
+    if job.has_succeeded:
+        print("Job succeeded!")
+    else:
+        print(f"Job failed: {job.error}")
+
+    # Check the location of the output
+    print(f"Job output location: {job.output_location}")
 
     # Example response:
-    # BatchPredictionJob run completed. Resource name: projects/12345678/locations/yourlocation/batchPredictionJobs/1234567
+    #  Job output location: gs://yourbucket/gen-ai-batch-prediction/prediction-model-year-month-dayThour:minute:second.12345
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
-    return batch_prediction_job
+    return BatchPredictionJob
 
 
 if __name__ == "__main__":
-    batch_gemini_prediction()
+    batch_gemini_predict()
