@@ -42,7 +42,6 @@ def mock_endpoint():
 @mock.patch("google.cloud.aiplatform.models.Prediction")
 @mock.patch("google.cloud.aiplatform.init")
 def test_gemma2_predict_gpu(mock_init, mock_prediction, mock_endpoint):
-
     mock_endpoint.return_value.predict.return_value = mock_prediction
 
     project_id = "fake-proj"
