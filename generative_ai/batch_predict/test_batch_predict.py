@@ -55,6 +55,7 @@ def _main_test(test_func: Callable) -> BatchPredictionJob:
         if job is not None:
             job.delete()
 
+
 def _main_test_gemini(test_func: Optional) -> BatchPredictionJob:
     job = None
     try:
