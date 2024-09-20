@@ -24,7 +24,7 @@ google-resumable-media==2.7.2
 googleapis-common-protos==1.65.0
 grpcio===1.62.2; python_version == '3.7'
 grpcio==1.66.1; python_version >= '3.8'
-idna==3.8
+idna==3.10
 munch==4.0.0
 mypy-extensions==1.0.0
 packaging===24.0; python_version == '3.7'
