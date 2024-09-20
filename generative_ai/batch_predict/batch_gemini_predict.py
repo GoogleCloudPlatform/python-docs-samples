@@ -11,19 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from email.policy import default
 import os
 import time
 
 import vertexai
 
 from vertexai.preview.batch_prediction import BatchPredictionJob
+from typing import Optional
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 
 
 def batch_gemini_prediction(
-    input_uri: str = None, output_uri: str = None
+    input_uri: str = Optional[str], output_uri: str = Optional[str]
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
@@ -72,7 +74,7 @@ def batch_gemini_prediction(
     print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
-    #  Job output location: gs://yourbucket/gen-ai-batch-prediction/prediction-model-year-month-dayThour:minute:second.12345
+    #  Job output location: gs://yourbucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
