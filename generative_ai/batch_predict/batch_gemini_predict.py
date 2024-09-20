@@ -82,4 +82,4 @@ def batch_gemini_prediction(
 
 
 if __name__ == "__main__":
-    batch_gemini_prediction()
+    batch_gemini_prediction(input_uri=input_uri, output_uri=output_uri)
