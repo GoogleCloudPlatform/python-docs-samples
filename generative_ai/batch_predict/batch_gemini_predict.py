@@ -15,9 +15,9 @@ from email.policy import default
 import os
 import time
 
-import vertexai
-
 from typing import Optional
+
+import vertexai
 
 from vertexai.preview.batch_prediction import BatchPredictionJob
 
