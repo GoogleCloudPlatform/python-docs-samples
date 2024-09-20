@@ -14,25 +14,29 @@
 
 from typing import Generator
 
-import create_advanced_example
-import create_example
-import delete_example
-import get_example
-from list_example import list_reasoning_engines
+import create_reasoning_engine_advanced_example
+import create_reasoning_engine_example
+import delete_reasoning_engine_example
+import get_reasoning_engine_example
+import list_reasoning_engine_example
 
 import pytest
 
-import query_example
+import query_reasoning_engine_example
 
 STAGING_BUCKET = "gs://ucaip-samples-us-central1"
 
 
 @pytest.fixture(scope="module")
 def reasoning_engine_id() -> Generator[str, None, None]:
-    reasoning_engine = create_example.create_reasoning_engine_basic(STAGING_BUCKET)
+    reasoning_engine = create_reasoning_engine_example.create_reasoning_engine_basic(
+        STAGING_BUCKET
+    )
     yield reasoning_engine.resource_name
     print("Deleting Reasoning Engine...")
-    delete_example.delete_reasoning_engine(reasoning_engine.resource_name)
+    delete_reasoning_engine_example.delete_reasoning_engine(
+        reasoning_engine.resource_name
+    )
 
 
 @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
@@ -42,26 +46,32 @@ def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
 
 @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_advanced() -> None:
-    reasoning_engine = create_advanced_example.create_reasoning_engine_advanced(
-        STAGING_BUCKET
+    reasoning_engine = (
+        create_reasoning_engine_advanced_example.create_reasoning_engine_advanced(
+            STAGING_BUCKET
+        )
     )
     assert reasoning_engine
-    delete_example.delete_reasoning_engine(reasoning_engine.resource_name)
+    delete_reasoning_engine_example.delete_reasoning_engine(
+        reasoning_engine.resource_name
+    )
 
 
 @pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
-    response = query_example.query_reasoning_engine(reasoning_engine_id)
+    response = query_reasoning_engine_example.query_reasoning_engine(
+        reasoning_engine_id
+    )
     assert response
     assert response == "1 + 2 is 3"
 
 
 def test_list_reasoning_engines() -> None:
-    response = list_reasoning_engines()
+    response = list_reasoning_engine_example.list_reasoning_engines()
     assert response
 
 
 @pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_get_reasoning_engine(reasoning_engine_id: str) -> None:
-    response = get_example.get_reasoning_engine(reasoning_engine_id)
+    response = get_reasoning_engine_example.get_reasoning_engine(reasoning_engine_id)
     assert response
