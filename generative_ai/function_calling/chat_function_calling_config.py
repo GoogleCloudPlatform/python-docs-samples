@@ -11,30 +11,33 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approval generative_ai/function_calling/chat_function_calling_config.py
+
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_text(project_id: str, location: str = "us-central1") -> object:
+def generate_text() -> object:
     # [START generativeaionvertexai_gemini_chat_completions_function_calling_config]
     import vertexai
     import openai
 
     from google.auth import default, transport
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
-    # location = "us-central1"
+    # TODO(developer): Update & uncomment below line
+    # PROJECT_ID = "your-project-id"
+    location = "us-central1"
 
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=PROJECT_ID, location=location)
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
     auth_request = transport.requests.Request()
     credentials.refresh(auth_request)
 
-    # # OpenAI Client
+    # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{location}/endpoints/openapi",
         api_key=credentials.token,
     )
 
@@ -74,7 +77,15 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
         tool_choice="auto",
     )
 
-    print(response)
+    print("Function:", response.choices[0].message.tool_calls[0].id)
+    print("Arguments:", response.choices[0].message.tool_calls[0].function.arguments)
+    # Example response:
+    # Function: get_current_weather
+    # Arguments: {"location":"Boston"}
     # [END generativeaionvertexai_gemini_chat_completions_function_calling_config]
 
     return response
+
+
+if __name__ == "__main__":
+    generate_text()
