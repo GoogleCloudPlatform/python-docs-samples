@@ -74,7 +74,7 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPred
 
     # https://storage.googleapis.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
 
-    return batch_prediction_job
+    return batch_prediction_job.output_location
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
