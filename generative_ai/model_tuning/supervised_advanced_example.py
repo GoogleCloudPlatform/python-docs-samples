@@ -14,7 +14,7 @@
 
 import os
 
-from vertexai.preview.tuning import sft
+from vertexai.tuning import sft
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -25,21 +25,21 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     import time
 
     import vertexai
-    from vertexai.preview.tuning import sft
+    from vertexai.tuning import sft
 
     # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     sft_tuning_job = sft.train(
-        source_model="gemini-1.0-pro-002",
-        train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_train_data.jsonl",
+        source_model="gemini-1.5-pro-002",
+        train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
         # The following parameters are optional
-        validation_dataset="gs://cloud-samples-data/ai-platform/generative_ai/sft_validation_data.jsonl",
+        validation_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_validation_data.jsonl",
         epochs=4,
         adapter_size=4,
         learning_rate_multiplier=1.0,
-        tuned_model_display_name="tuned_gemini_pro",
+        tuned_model_display_name="tuned_gemini_1_5_pro",
     )
 
     # Polling for job completion
