@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approval function_calling/basic_example.py AND function_calling/advanced_example.py
 
 import os
 
@@ -32,8 +31,10 @@ def generate_function_call() -> GenerationResponse:
         Tool,
     )
 
+    # TODO(developer): Update & uncomment below line
+    # PROJECT_ID = "your-project-id"
+
     # Initialize Vertex AI
-    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Initialize Gemini model
@@ -52,7 +53,7 @@ def generate_function_call() -> GenerationResponse:
     get_current_weather_func = FunctionDeclaration(
         name=function_name,
         description="Get the current weather in a given location",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},
@@ -106,81 +107,13 @@ def generate_function_call() -> GenerationResponse:
 
     # Get the model response
     print(response.text)
+    # Example response:
+    # The weather in Boston is partly cloudy with a temperature of 38 degrees Fahrenheit.
+    # The humidity is 65% and the wind is blowing from the northwest at 10 mph.
+
     # [END generativeaionvertexai_gemini_function_calling]
     return response
 
 
-def generate_function_call_advanced() -> GenerationResponse:
-    # [START generativeaionvertexai_gemini_function_calling_advanced]
-    import vertexai
-    from vertexai.preview.generative_models import (
-        FunctionDeclaration,
-        GenerativeModel,
-        Tool,
-        ToolConfig,
-    )
-
-    # Initialize Vertex AI
-    # TODO (developer): update project & location
-    vertexai.init(project=PROJECT_ID, location="us-central1")
-
-    # Specify a function declaration and parameters for an API request
-    get_product_sku_func = FunctionDeclaration(
-        name="get_product_sku",
-        description="Get the available inventory for a Google products, e.g: Pixel phones, Pixel Watches, Google Home etc",
-        # Function parameters are specified in OpenAPI JSON schema format
-        parameters={
-            "type": "object",
-            "properties": {
-                "product_name": {"type": "string", "description": "Product name"}
-            },
-        },
-    )
-
-    # Specify another function declaration and parameters for an API request
-    get_store_location_func = FunctionDeclaration(
-        name="get_store_location",
-        description="Get the location of the closest store",
-        # Function parameters are specified in OpenAPI JSON schema format
-        parameters={
-            "type": "object",
-            "properties": {"location": {"type": "string", "description": "Location"}},
-        },
-    )
-
-    # Define a tool that includes the above functions
-    retail_tool = Tool(
-        function_declarations=[
-            get_product_sku_func,
-            get_store_location_func,
-        ],
-    )
-
-    # Define a tool config for the above functions
-    retail_tool_config = ToolConfig(
-        function_calling_config=ToolConfig.FunctionCallingConfig(
-            # ANY mode forces the model to predict a function call
-            mode=ToolConfig.FunctionCallingConfig.Mode.ANY,
-            # List of functions that can be returned when the mode is ANY.
-            # If the list is empty, any declared function can be returned.
-            allowed_function_names=["get_product_sku"],
-        )
-    )
-
-    model = GenerativeModel(
-        model_name="gemini-1.5-flash-001",
-        tools=[retail_tool],
-        tool_config=retail_tool_config,
-    )
-    response = model.generate_content(
-        "Do you have the Pixel 8 Pro 128GB in stock?",
-    )
-
-    print(response.text)
-    print(response.candidates[0].function_calls)
-    # [END generativeaionvertexai_gemini_function_calling_advanced]
-    return response
-
-
 if __name__ == "__main__":
-    generate_function_call_advanced()
+    generate_function_call()

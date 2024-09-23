@@ -47,6 +47,7 @@ def test_non_streaming_image() -> None:
     assert response
 
 
+# TODO: Delete this test after approval /function_calling/chat_function_calling_test.py::test_function_calling_basic
 def test_function_calling_basic() -> None:
     response = chat_completions_function_calling_basic.generate_text(
         PROJECT_ID, LOCATION
@@ -54,6 +55,7 @@ def test_function_calling_basic() -> None:
     assert response
 
 
+# TODO: Delete this test after approval /function_calling/chat_function_calling_test.py::test_function_calling_config
 def test_function_calling_config() -> None:
     response = chat_completions_function_calling_config.generate_text(
         PROJECT_ID, LOCATION

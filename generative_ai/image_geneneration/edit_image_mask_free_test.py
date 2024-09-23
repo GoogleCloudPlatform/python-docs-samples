@@ -11,27 +11,28 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /function_calling/chat_example_test.py
+
+import os
 
 import backoff
+
+import edit_image_mask_free
+
 from google.api_core.exceptions import ResourceExhausted
 
-import function_calling_chat
+
+_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+_INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
+_OUTPUT_FILE = os.path.join(_RESOURCES, "dog.png")
+_PROMPT = "a dog"
 
 
-summaries_expected = [
-    "Pixel 8 Pro",
-    "stock",
-    "store",
-    "2000 N Shoreline Blvd",
-    "Mountain View",
-]
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
+def test_edit_image_mask_free() -> None:
+    response = edit_image_mask_free.edit_image_mask_free(
+        _INPUT_FILE,
+        _OUTPUT_FILE,
+        _PROMPT,
+    )
 
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_function_calling_chat() -> None:
-    chat = function_calling_chat.generate_function_call_chat()
-
-    assert chat
-    assert chat.history
-    assert any(x in str(chat.history) for x in summaries_expected)
+    assert len(response[0]._image_bytes) > 1000

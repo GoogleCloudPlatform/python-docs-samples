@@ -11,27 +11,26 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /function_calling/chat_example_test.py
+
+import os
 
 import backoff
+
+import get_short_form_image_responses
+
 from google.api_core.exceptions import ResourceExhausted
 
-import function_calling_chat
+
+_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+_INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
+_QUESTION = "What breed of cat is this a picture of?"
 
 
-summaries_expected = [
-    "Pixel 8 Pro",
-    "stock",
-    "store",
-    "2000 N Shoreline Blvd",
-    "Mountain View",
-]
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
+def test_get_short_form_image_responses() -> None:
+    response = get_short_form_image_responses.get_short_form_image_responses(
+        _INPUT_FILE,
+        _QUESTION,
+    )
 
-
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_function_calling_chat() -> None:
-    chat = function_calling_chat.generate_function_call_chat()
-
-    assert chat
-    assert chat.history
-    assert any(x in str(chat.history) for x in summaries_expected)
+    assert len(response) > 0 and "tabby" in response[0]

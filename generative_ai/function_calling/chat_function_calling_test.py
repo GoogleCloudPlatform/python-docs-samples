@@ -11,13 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /function_calling/chat_example_test.py
-
 import backoff
+
+
+import chat_example
+
+import chat_function_calling_basic
+import chat_function_calling_config
+
 from google.api_core.exceptions import ResourceExhausted
-
-import function_calling_chat
-
 
 summaries_expected = [
     "Pixel 8 Pro",
@@ -29,8 +31,20 @@ summaries_expected = [
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_function_calling_basic() -> None:
+    response = chat_function_calling_basic.generate_text()
+    assert "get_current_weather" in response.choices[0].message.tool_calls[0].id
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_function_calling_config() -> None:
+    response = chat_function_calling_config.generate_text()
+    assert "Boston" in response.choices[0].message.tool_calls[0].function.arguments
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_chat() -> None:
-    chat = function_calling_chat.generate_function_call_chat()
+    chat = chat_example.generate_function_call_chat()
 
     assert chat
     assert chat.history

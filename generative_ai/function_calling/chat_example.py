@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approving /function_calling/chat_example.py
 import os
 
 from vertexai.generative_models import ChatSession
@@ -30,8 +29,10 @@ def generate_function_call_chat() -> ChatSession:
         Tool,
     )
 
+    # TODO(developer): Update & uncomment below line
+    # PROJECT_ID = "your-project-id"
+
     # Initialize Vertex AI
-    # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Specify a function declaration and parameters for an API request
@@ -52,7 +53,7 @@ def generate_function_call_chat() -> ChatSession:
     get_store_location_func = FunctionDeclaration(
         name="get_store_location",
         description="Get the location of the closest store",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},
@@ -92,7 +93,7 @@ def generate_function_call_chat() -> ChatSession:
         # api_response = requests.post(product_api_url, data={"product_name": product_name})
 
         # In this example, we'll use synthetic data to simulate a response payload from an external API
-        api_response = {"sku": "GA04834-US", "in_stock": "yes"}
+        api_response = {"sku": "GA04834-US", "in_stock": "Yes"}
 
     # Return the API response to Gemini, so it can generate a model response or request another function call
     response = chat.send_message(
@@ -137,6 +138,20 @@ def generate_function_call_chat() -> ChatSession:
 
     # Extract the text from the model response
     print(response.text)
+    # Example response:
+    # name: "get_product_sku"
+    # args {
+    #   fields { key: "product_name" value {string_value: "Pixel 8 Pro" }
+    #   }
+    # }
+    # Yes, we have the Pixel 8 Pro in stock.
+    # name: "get_store_location"
+    # args {
+    #   fields { key: "location" value { string_value: "Mountain View, CA" }
+    #   }
+    # }
+    # Yes, there is a store located at 2000 N Shoreline Blvd, Mountain View, CA 94043, US.
+
     # [END generativeaionvertexai_gemini_function_calling_chat]
 
     return chat
