@@ -15,8 +15,8 @@ from typing import Callable
 
 
 import batch_code_predict
-import gemini_batch_predict
 import batch_text_predict
+import gemini_batch_predict
 
 
 from google.cloud import storage
