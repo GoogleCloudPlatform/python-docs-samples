@@ -24,8 +24,6 @@ def get_list_of_context_caches() -> List[CachedContent]:
     # [START generativeaionvertexai_gemini_get_list_of_context_caches]
     import json
 
-    from datetime import datetime as dt, timezone as tz
-
     import vertexai
 
     from vertexai.preview import caching
@@ -36,13 +34,11 @@ def get_list_of_context_caches() -> List[CachedContent]:
     cached_content_list = caching.CachedContent.list()
     # Access individual properties of a CachedContent object
     for cc in cached_content_list:
-        expire_time_in_seconds = int((cc.expire_time - dt.now(tz.utc)).total_seconds())
-        model_name = cc.model_name.split("/")[-1]
         print(
-            f"Cached content '{cc.display_name}' for model '{model_name}' expires in {expire_time_in_seconds} s."
+            f"Cached content '{cc.display_name}' for model '{cc.model_name}' expires at {cc.expire_time}."
         )
         # Example output:
-        # Cached content 'scientific-articles' for model 'gemini-1.5-pro-001' expires in 3000 s.
+        # Cached content 'scientific-articles' for model '.../gemini-1.5-pro-001' expires at 2024-09-23 18:01:47.242036+00:00.
 
     # or convert the ContentCache object to a dictionary:
     for cc in cached_content_list:
@@ -55,6 +51,11 @@ def get_list_of_context_caches() -> List[CachedContent]:
         #      "updateTime": "2024-09-16T12:41:09.998635Z",
         #      "expireTime": "2024-09-16T13:41:09.989729Z",
         #      "displayName": "scientific-articles"
+        #      "usageMetadata": {
+        #          "totalTokenCount": 43130,
+        #          "textCount": 153,
+        #          "imageCount": 167
+        #      }
         #  }
 
     # [END generativeaionvertexai_gemini_get_list_of_context_caches]
