@@ -16,10 +16,12 @@ import os
 
 from typing import Generator
 
+import pytest
+
 import create_context_cache
 import delete_context_cache
 import get_context_cache
-import pytest
+import get_list_of_content_caches
 import update_context_cache
 import use_context_cache
 
@@ -46,6 +48,12 @@ def test_use_context_cache(cache_id: str) -> None:
 def test_get_context_cache(cache_id: str) -> None:
     response = get_context_cache.get_context_cache(cache_id)
     assert response
+
+
+def test_get_list_of_context_caches(cache_id: str) -> None:
+    response = get_list_of_content_caches.get_list_of_context_caches()
+    cache_id_is_in_response = any([cc for cc in response if cc.name == cache_id])
+    assert cache_id_is_in_response
 
 
 def test_update_context_cache(cache_id: str) -> None:
