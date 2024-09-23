@@ -52,23 +52,20 @@ def generate_text() -> str:
     )
 
     # Generate content
-    responses = model.generate_content(
+    response = model.generate_content(
         [image_file, "What is in this image?"],
         safety_settings=safety_config,
-        stream=True,
     )
 
-    text_responses = []
-    for response in responses:
-        print(response.text)
-        text_responses.append(response.text)
+    print(response.text)
+    print(response.candidates[0].safety_ratings)
     # Example response:
-    # The image contains a plate of blueberry scones with a cup of coffee and a spoon that
-    # says "let's jam". There are fresh blueberries in a bowl, and a bouquet of pink peonies.
-    # The image looks like a beautiful and delicious breakfast or brunch spread.
+    # The image contains a beautiful arrangement of blueberry scones, flowers, coffee, and blueberries.
+    # The scene is set on a rustic blue background. The image evokes a sense of comfort and indulgence.
+    # ...
 
     # [END generativeaionvertexai_gemini_safety_settings]
-    return "".join(text_responses)
+    return response.text
 
 
 if __name__ == "__main__":
