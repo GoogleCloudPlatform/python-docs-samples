@@ -53,7 +53,7 @@ def generate_function_call() -> GenerationResponse:
     get_current_weather_func = FunctionDeclaration(
         name=function_name,
         description="Get the current weather in a given location",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},

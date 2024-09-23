@@ -53,7 +53,7 @@ def generate_function_call_chat() -> ChatSession:
     get_store_location_func = FunctionDeclaration(
         name="get_store_location",
         description="Get the location of the closest store",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},

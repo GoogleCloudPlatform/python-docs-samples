@@ -25,7 +25,7 @@ def generate_text() -> object:
     from google.auth import default, transport
 
     # TODO(developer): Update & uncomment below line
-    # PROJECT_ID = "PROJECT_ID"
+    # PROJECT_ID = "your-project-id"
     location = "us-central1"
 
     vertexai.init(project=PROJECT_ID, location=location)

@@ -39,7 +39,7 @@ def generate_function_call_advanced() -> GenerationResponse:
     get_product_sku_func = FunctionDeclaration(
         name="get_product_sku",
         description="Get the available inventory for a Google products, e.g: Pixel phones, Pixel Watches, Google Home etc",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {
@@ -52,7 +52,7 @@ def generate_function_call_advanced() -> GenerationResponse:
     get_store_location_func = FunctionDeclaration(
         name="get_store_location",
         description="Get the location of the closest store",
-        # Function parameters are specified in OpenAPI JSON schema format
+        # Function parameters are specified in JSON schema format
         parameters={
             "type": "object",
             "properties": {"location": {"type": "string", "description": "Location"}},
