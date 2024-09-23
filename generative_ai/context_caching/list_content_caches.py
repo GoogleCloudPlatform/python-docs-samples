@@ -20,7 +20,7 @@ from google.cloud.aiplatform_v1beta1.types.cached_content import CachedContent
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_list_of_context_caches() -> List[CachedContent]:
+def list_content_caches() -> List[CachedContent]:
     # [START generativeaionvertexai_gemini_get_list_of_context_caches]
     import json
 
@@ -63,4 +63,4 @@ def get_list_of_context_caches() -> List[CachedContent]:
 
 
 if __name__ == "__main__":
-    get_list_of_context_caches()
+    list_content_caches()
