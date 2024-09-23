@@ -76,6 +76,7 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPred
 
     return batch_prediction_job.output_location
 
+ # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
 if __name__ == "__main__":
     # TODO(developer): Update gsc bucket and file paths
