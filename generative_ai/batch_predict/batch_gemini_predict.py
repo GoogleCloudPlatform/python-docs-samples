@@ -78,8 +78,9 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPred
 
  # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
+
 if __name__ == "__main__":
     # TODO(developer): Update gsc bucket and file paths
     GCS_BUCKET = "gs://yourbucket"
-    batch_predict_gemini_createjob(f"gs://<GCS_BUCKET>/batch_data/sample_input_file.jsonl",
-                                   f"gs://<GCS_BUCKET>/batch_preditions/sample_output/")
+    batch_predict_gemini_createjob(f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
+                                   f"gs://{GCS_BUCKET}/batch_preditions/sample_output/")
