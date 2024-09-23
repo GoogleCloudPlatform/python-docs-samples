@@ -11,9 +11,9 @@
 # python-samples-owners is in charge of infrastructure (Kokoro, noxfiles, etc.) in this repository
 # python-samples-reviewers reviews Python sample code for adherence to sample guidelines
 *                                      @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/.github/                              @GoogleCloudPlatform/python-samples-owners
-/.kokoro/                              @GoogleCloudPlatform/python-samples-owners
-/*                                     @GoogleCloudPlatform/python-samples-owners
+/.github/                              @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/cloud-samples-infra
+/.kokoro/                              @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/cloud-samples-infra
+/*                                     @GoogleCloudPlatform/python-samples-owners @GoogleCloudPlatform/cloud-samples-infra
 
 # DEE TORuS - Serverless, Orchestration, DevOps
 /cloudbuild/**/*                       @GoogleCloudPlatform/torus-dpe @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
