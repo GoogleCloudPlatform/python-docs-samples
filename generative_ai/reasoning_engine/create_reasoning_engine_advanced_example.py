@@ -72,15 +72,14 @@ def create_reasoning_engine_advanced(
     app.set_up()
     print(app.query("What is Vertex AI?"))
 
-    # Create a remote app with reasoning engine
-    # This may take 1-2 minutes to finish because it builds a container and turn up HTTP servers.
+    # Create a remote app with Reasoning Engine
+    # Deployment of the app should take a few minutes to complete.
     reasoning_engine = reasoning_engines.ReasoningEngine.create(
         LangchainApp(project=PROJECT_ID, location="us-central1"),
         requirements=[
-            "google-cloud-aiplatform==1.50.0",
-            "langchain-google-vertexai",
-            "langchain-core",
-            "cloudpickle==3",
+            "google-cloud-aiplatform[langchain,reasoningengine]",
+            "cloudpickle==3.0.0",
+            "pydantic==2.7.4",
         ],
         display_name="Demo LangChain App",
         description="This is a simple LangChain app.",
@@ -88,7 +87,7 @@ def create_reasoning_engine_advanced(
         extra_packages=[],
     )
     # Example response:
-    # Model_name will become a required arg for VertexAIEmbeddings starting
+    # Model_name will become a required arg for VertexAIEmbeddings starting...
     # ...
     # Create ReasoningEngine backing LRO: projects/123456789/locations/us-central1/reasoningEngines/...
     # ReasoningEngine created. Resource name: projects/123456789/locations/us-central1/reasoningEngines/...

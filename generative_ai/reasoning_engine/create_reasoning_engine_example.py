@@ -47,7 +47,7 @@ def create_reasoning_engine_basic(
     app = SimpleAdditionApp()
     app.query(a=1, b=2)
 
-    # Create a remote app with reasoning engine.
+    # Create a remote app with Reasoning Engine.
     # This may take 1-2 minutes to finish.
     reasoning_engine = reasoning_engines.ReasoningEngine.create(
         SimpleAdditionApp(),
@@ -58,7 +58,7 @@ def create_reasoning_engine_basic(
     )
     # Example response:
     # Using bucket YOUR_BUCKET_NAME
-    # Writing to gs://your-bucket-unique-name/reasoning_engine/reasoning_engine.pkl
+    # Writing to gs://YOUR_BUCKET_NAME/reasoning_engine/reasoning_engine.pkl
     # ...
     # ReasoningEngine created. Resource name: projects/123456789/locations/us-central1/reasoningEngines/123456
     # To use this ReasoningEngine in another session:
