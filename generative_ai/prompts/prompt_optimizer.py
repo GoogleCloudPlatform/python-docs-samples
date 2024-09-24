@@ -14,60 +14,57 @@
 
 import os
 
+PROJECT_ID = os.environ["PROJECT_ID"]
 
-def optimize_prompts(
-    project: str,
-    location: str,
-    staging_bucket: str,
-    configuration_path: str,
-) -> str:
+
+def prompts_custom_job_example(cloud_bucket: str, config_path: str, output_path: str) -> str:
     """Improve prompts by evaluating the model's response to sample prompts against specified evaluation metric(s).
     Args:
-        project: Google Cloud Project ID.
-        location: Location where you want to run the Vertex AI prompt optimizer.
-        staging_bucket: Specify the Google Cloud Storage bucket to store outputs and metadata. For example, gs://bucket-name
-        configuration_path: URI of the configuration file in your Google Cloud Storage bucket. For example, gs://bucket-name/configuration.json.
-    Returns:
-        custom_job.resource_name: Returns the resource name of the job created of type: projects/project-id/locations/location/customJobs/job-id
+        cloud_bucket(str): Specify the Google Cloud Storage bucket to store outputs and metadata. For example, gs://bucket-name
+        config_path(str): Filepath for config file in your Google Cloud Storage bucket. For example, prompts/custom_job/instructions/configuration.json
+        output_path(str): Filepath of the folder location in your Google Cloud Storage bucket. For example, prompts/custom_job/output
+    Returns(str):
+        Resource name of the job created. For example, projects/<project-id>/locations/location/customJobs/<job-id>
     """
     #  [START generativeaionvertexai_prompt_optimizer]
     from google.cloud import aiplatform
+    # Initialize Vertex AI platform
+    aiplatform.init(project=PROJECT_ID, location="us-central1")
 
-    # TODO(developer): Update & uncomment below line
-    # project = "your-gcp-project-id"
-    # location = "location"
-    # staging_bucket = "output-bucket-gcs-uri"
-    # configuration_path = "configuration-file-gcs-uri"
-    aiplatform.init(project=project, location=location, staging_bucket=staging_bucket)
-
-    worker_pool_specs = [
-        {
-            "replica_count": 1,
-            "container_spec": {
-                "image_uri": "us-docker.pkg.dev/vertex-ai-restricted/builtin-algorithm/apd:preview_v1_0",
-                "args": [f"--config={configuration_path}"],
-            },
-            "machine_spec": {
-                "machine_type": "n1-standard-4",
-            },
-        }
-    ]
+    # TODO(Developer): Check and update lines below
+    # cloud_bucket = "gs://cloud-samples-data"
+    # config_path = f"{cloud_bucket}/instructions/sample_configuration.json"
+    # output_path = f"{cloud_bucket}/output/"
 
     custom_job = aiplatform.CustomJob(
         display_name="Prompt Optimizer example",
-        worker_pool_specs=worker_pool_specs,
+        worker_pool_specs=[
+            {
+                "replica_count": 1,
+                "container_spec": {
+                    "image_uri": "us-docker.pkg.dev/vertex-ai-restricted/builtin-algorithm/apd:preview_v1_0",
+                    "args": [f"--config={cloud_bucket}/{config_path}"],
+                },
+                "machine_spec": {
+                    "machine_type": "n1-standard-4",
+                },
+            }
+        ],
+        staging_bucket=cloud_bucket,
+        base_output_dir=f"{cloud_bucket}/{output_path}",
     )
+
     custom_job.submit()
     print(f"Job resource name: {custom_job.resource_name}")
-
+    # Example response:
+    #    'projects/123412341234/locations/us-central1/customJobs/12341234123412341234'
     #  [END generativeaionvertexai_prompt_optimizer]
     return custom_job.resource_name
 
 
 if __name__ == "__main__":
-    optimize_prompts(
-        os.environ["PROJECT_ID"],
-        "us-central1",
-        os.environ["PROMPT_OPTIMIZER_BUCKET_NAME"],
+    prompts_custom_job_example(
+        os.environ["CLOUD_BUCKET"],
         os.environ["JSON_CONFIG_PATH"],
+        os.environ["OUTPUT_PATH"]
     )
