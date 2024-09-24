@@ -21,7 +21,7 @@ from google.cloud.aiplatform_v1 import JobState
 from prompt_optimizer import prompts_custom_job_example
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-CLOUD_BUCKET = "gs://cloud-samples-data"
+CLOUD_BUCKET = "gs://python-docs-samples-tests"
 CONFIG_PATH = "ai-platform/prompt_optimization/instructions/sample_configuration.json"
 OUTPUT_PATH = "ai-platform/prompt_optimization/output/"
 
