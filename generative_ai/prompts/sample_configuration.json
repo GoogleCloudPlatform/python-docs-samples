@@ -1,0 +1,11 @@
+{
+"project": "$PROJECT_ID",
+"system_instruction_path": "gs://$PROMPT_OPTIMIZER_BUCKET_NAME/system_instruction.txt",
+"prompt_template_path": "gs://$PROMPT_OPTIMIZER_BUCKET_NAME/prompt_template.txt",
+"target_model": "gemini-1.5-flash-001",
+"eval_metrics_types": ["safety"],
+"optimization_mode": "instruction",
+"input_data_path": "gs://$PROMPT_OPTIMIZER_BUCKET_NAME/sample_prompts.jsonl",
+"output_path": "gs://$PROMPT_OPTIMIZER_BUCKET_NAME",
+"eval_metrics_weights": [1]
+}
