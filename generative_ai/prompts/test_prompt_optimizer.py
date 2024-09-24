@@ -29,8 +29,7 @@ from prompt_optimizer import optimize_prompts
 import pytest
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-STAGING_BUCKET_NAME = "prompt_optimizer"
-CONFIG_SOURCE_DIRECTORY = "config"
+STAGING_BUCKET_NAME = "prompt_optimizer_bucket"
 CONFIGURATION_FILENAME = "sample_configuration.json"
 LOCATION = random.choice(["us-central1", "us-east4", "us-west4", "us-west1"])
 OUTPUT_PATH = "instruction"
@@ -68,7 +67,7 @@ def substitute_env_variable(data: dict, target_key: str, env_var_name: str) -> d
 
 def update_json() -> dict:
     # Load the JSON file
-    with open(f"/{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", "r") as f:
+    with open(f"{CONFIGURATION_FILENAME}", "r") as f:
         data = json.load(f)
     # Substitute only the "project" variable with the value of "PROJECT_ID"
     substituted_data = substitute_env_variable(data, "project", "PROJECT_ID")
@@ -98,7 +97,7 @@ def bucket_name() -> str:
     blob.upload_from_string(json_bytes)
     # upload config files to the bucket
     transfer_manager.upload_many_from_filenames(
-        new_bucket, filenames, source_directory=CONFIG_SOURCE_DIRECTORY
+        new_bucket, filenames, source_directory="."
     )
     yield new_bucket.name
     _clean_resources(new_bucket.name)
