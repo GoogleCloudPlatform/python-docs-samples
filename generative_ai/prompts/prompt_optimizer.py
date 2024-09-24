@@ -16,13 +16,14 @@ import os
 
 #  [START aiplatform_prompt_optimizer]
 
+
 def optimize_prompts(
-        project: str,
-        location: str,
-        staging_bucket: str,
-        configuration_path: str,
+    project: str,
+    location: str,
+    staging_bucket: str,
+    configuration_path: str,
 ) -> str:
-    """ Improve prompts by evaluating the model's response to sample prompts against specified evaluation metric(s).
+    """Improve prompts by evaluating the model's response to sample prompts against specified evaluation metric(s).
     Args:
         project: Google Cloud Project ID.
         location: Location where you want to run the Vertex AI prompt optimizer.
@@ -32,18 +33,21 @@ def optimize_prompts(
         custom_job.resource_name: Returns the resource name of the job created of type: projects/project-id/locations/location/customJobs/job-id
     """
     from google.cloud import aiplatform
+
     aiplatform.init(project=project, location=location, staging_bucket=staging_bucket)
 
-    worker_pool_specs = [{
-        "replica_count": 1,
-        "container_spec": {
-            "image_uri": "us-docker.pkg.dev/vertex-ai-restricted/builtin-algorithm/apd:preview_v1_0",
-            "args": [f"--config={configuration_path}"]
-        },
-        "machine_spec": {
-            "machine_type": "n1-standard-4",
-        },
-    }]
+    worker_pool_specs = [
+        {
+            "replica_count": 1,
+            "container_spec": {
+                "image_uri": "us-docker.pkg.dev/vertex-ai-restricted/builtin-algorithm/apd:preview_v1_0",
+                "args": [f"--config={configuration_path}"],
+            },
+            "machine_spec": {
+                "machine_type": "n1-standard-4",
+            },
+        }
+    ]
 
     custom_job = aiplatform.CustomJob(
         display_name="Prompt Optimizer example",
@@ -56,7 +60,9 @@ def optimize_prompts(
 #  [END aiplatform_prompt_optimizer]
 
 if __name__ == "__main__":
-    optimize_prompts(os.environ["PROJECT_ID"],
-                     "us-central1",
-                     os.environ["PROMPT_OPTIMIZER_BUCKET_NAME"],
-                     os.environ["JSON_CONFIG_PATH"])
+    optimize_prompts(
+        os.environ["PROJECT_ID"],
+        "us-central1",
+        os.environ["PROMPT_OPTIMIZER_BUCKET_NAME"],
+        os.environ["JSON_CONFIG_PATH"],
+    )

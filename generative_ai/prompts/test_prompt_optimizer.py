@@ -60,7 +60,7 @@ def substitute_env_variable(data, target_key, env_var_name) -> Any:
 
 def update_json() -> Any:
     # Load the JSON file
-    with open(f"{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", 'r') as f:
+    with open(f"{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", "r") as f:
         data = json.load(f)
     # Substitute only the "project" variable with the value of "PROJECT_ID"
     substituted_data = substitute_env_variable(data, "project", "PROJECT_ID")
@@ -69,7 +69,11 @@ def update_json() -> Any:
 
 @pytest.fixture(scope="session")
 def bucket_name() -> str:
-    filenames = ["sample_prompt_template.txt", "sample_prompts.jsonl", "sample_system_instruction.txt"]
+    filenames = [
+        "sample_prompt_template.txt",
+        "sample_prompts.jsonl",
+        "sample_system_instruction.txt",
+    ]
     # create bucket
     bucket = STORAGE_CLIENT.bucket(STAGING_BUCKET_NAME)
     bucket.storage_class = "STANDARD"
@@ -78,7 +82,7 @@ def bucket_name() -> str:
     substituted_data = update_json()
     # convert the JSON data to a byte string
     json_str = json.dumps(substituted_data, indent=2)
-    json_bytes = json_str.encode('utf-8')
+    json_bytes = json_str.encode("utf-8")
     # upload substituted JSON file to the bucket
     blob = bucket.blob(CONFIGURATION_FILENAME)
     blob.upload_from_string(json_bytes)
@@ -97,8 +101,11 @@ def _main_test(test_func: Callable) -> None:
     try:
         job_resource_name = test_func()
         start_time = time.time()
-        while get_job(job_resource_name).state not in [JobState.JOB_STATE_SUCCEEDED,
-                                                       JobState.JOB_STATE_FAILED] and time.time() - start_time < timeout:
+        while (
+            get_job(job_resource_name).state
+            not in [JobState.JOB_STATE_SUCCEEDED, JobState.JOB_STATE_FAILED]
+            and time.time() - start_time < timeout
+        ):
             time.sleep(10)
     finally:
         # delete job
@@ -107,11 +114,20 @@ def _main_test(test_func: Callable) -> None:
 
 def test_prompt_optimizer(bucket_name: pytest.fixture()) -> None:
     _main_test(
-        test_func=lambda: optimize_prompts(PROJECT_ID, LOCATION, f"gs://{bucket_name}",
-                                           f"gs://{bucket_name}/{CONFIGURATION_FILENAME}")
+        test_func=lambda: optimize_prompts(
+            PROJECT_ID,
+            LOCATION,
+            f"gs://{bucket_name}",
+            f"gs://{bucket_name}/{CONFIGURATION_FILENAME}",
+        )
     )
-    assert STORAGE_CLIENT.get_bucket(bucket_name).list_blobs(prefix=OUTPUT_PATH) is not None
+    assert (
+        STORAGE_CLIENT.get_bucket(bucket_name).list_blobs(prefix=OUTPUT_PATH)
+        is not None
+    )
 
 
 def get_job(job_resource_name: str) -> CustomJob:
-    return aiplatform.CustomJob.get(resource_name=job_resource_name, project=PROJECT_ID, location=LOCATION)
+    return aiplatform.CustomJob.get(
+        resource_name=job_resource_name, project=PROJECT_ID, location=LOCATION
+    )
