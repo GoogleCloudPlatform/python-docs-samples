@@ -20,10 +20,10 @@ from google.cloud.aiplatform_v1 import JobState
 
 from prompt_optimizer import prompts_custom_job_example
 
-PROJECT_ID = os.getenv('GOOGLE_CLOUD_PROJECT')
-CLOUD_BUCKET = 'gs://cloud-samples-data'
-CONFIG_PATH = 'ai-platform/prompt_optimization/instructions/sample_configuration.json'
-OUTPUT_PATH = 'ai-platform/prompt_optimization/output/'
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+CLOUD_BUCKET = "gs://cloud-samples-data"
+CONFIG_PATH = "ai-platform/prompt_optimization/instructions/sample_configuration.json"
+OUTPUT_PATH = "ai-platform/prompt_optimization/output/"
 
 
 def test_prompt_optimizer() -> None:
@@ -37,17 +37,19 @@ def test_prompt_optimizer() -> None:
     timeout = 1200
 
     try:
-        while (job.state not in [JobState.JOB_STATE_SUCCEEDED,
-                                 JobState.JOB_STATE_FAILED] and time.time() - start_time < timeout):
-            print(f'Waiting for the CustomJob({job.resource_name}) to be ready!')
+        while (
+            job.state not in [JobState.JOB_STATE_SUCCEEDED, JobState.JOB_STATE_FAILED]
+            and time.time() - start_time < timeout
+        ):
+            print(f"Waiting for the CustomJob({job.resource_name}) to be ready!")
             time.sleep(10)
         assert (
-                storage_client.get_bucket(CLOUD_BUCKET).list_blobs(prefix=OUTPUT_PATH)
-                is not None
+            storage_client.get_bucket(CLOUD_BUCKET).list_blobs(prefix=OUTPUT_PATH)
+            is not None
         )
     finally:
         # delete job
-        print(f'CustomJob({job.resource_name}) to be ready. Delete it now.')
+        print(f"CustomJob({job.resource_name}) to be ready. Delete it now.")
         job.delete()
         # delete output blob
         blobs = storage_client.get_bucket(CLOUD_BUCKET).list_blobs(prefix=OUTPUT_PATH)

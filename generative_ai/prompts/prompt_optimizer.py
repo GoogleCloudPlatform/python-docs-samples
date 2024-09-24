@@ -17,7 +17,9 @@ import os
 PROJECT_ID = os.environ["PROJECT_ID"]
 
 
-def prompts_custom_job_example(cloud_bucket: str, config_path: str, output_path: str) -> str:
+def prompts_custom_job_example(
+    cloud_bucket: str, config_path: str, output_path: str
+) -> str:
     """Improve prompts by evaluating the model's response to sample prompts against specified evaluation metric(s).
     Args:
         cloud_bucket(str): Specify the Google Cloud Storage bucket to store outputs and metadata. For example, gs://bucket-name
@@ -28,6 +30,7 @@ def prompts_custom_job_example(cloud_bucket: str, config_path: str, output_path:
     """
     #  [START generativeaionvertexai_prompt_optimizer]
     from google.cloud import aiplatform
+
     # Initialize Vertex AI platform
     aiplatform.init(project=PROJECT_ID, location="us-central1")
 
@@ -66,5 +69,5 @@ if __name__ == "__main__":
     prompts_custom_job_example(
         os.environ["CLOUD_BUCKET"],
         os.environ["JSON_CONFIG_PATH"],
-        os.environ["OUTPUT_PATH"]
+        os.environ["OUTPUT_PATH"],
     )
