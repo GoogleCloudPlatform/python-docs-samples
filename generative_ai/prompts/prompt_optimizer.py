@@ -14,7 +14,7 @@
 
 import os
 
-PROJECT_ID = os.environ["PROJECT_ID"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 def prompts_custom_job_example(cloud_bucket: str, config_path: str, output_path: str) -> str:
