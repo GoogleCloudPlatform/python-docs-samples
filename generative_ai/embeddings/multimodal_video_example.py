@@ -21,7 +21,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def get_video_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from video and text.
 
-    Read more at https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
+    Read more at https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#vid-embedding
     """
     # [START generativeaionvertexai_multimodal_embedding_video]
     import vertexai

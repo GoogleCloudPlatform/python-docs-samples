@@ -22,7 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def get_image_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image and text.
 
-    Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
+    Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#text-image-embedding
     """
     # [START generativeaionvertexai_multimodal_embedding_image]
     import vertexai
