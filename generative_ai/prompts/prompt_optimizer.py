@@ -37,7 +37,7 @@ def prompts_custom_job_example(
     # TODO(Developer): Check and update lines below
     # cloud_bucket = "gs://cloud-samples-data"
     # config_path = f"{cloud_bucket}/instructions/sample_configuration.json"
-    # output_path = f"{cloud_bucket}/output/"
+    # output_path = "custom_job/output/"
 
     custom_job = aiplatform.CustomJob(
         display_name="Prompt Optimizer example",
