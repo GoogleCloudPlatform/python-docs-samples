@@ -68,7 +68,9 @@ def substitute_env_variable(data: dict, target_key: str, env_var_name: str) -> d
 
 def update_json() -> dict:
     # Load the JSON file
-    file_path = os.path.join(os.path.dirname(__file__), CONFIGURATION_DIRECTORY, CONFIGURATION_FILENAME)
+    file_path = os.path.join(
+        os.path.dirname(__file__), CONFIGURATION_DIRECTORY, CONFIGURATION_FILENAME
+    )
     with open(file_path, "r") as f:
         data = json.load(f)
     # Substitute only the "project" variable with the value of "PROJECT_ID"
@@ -99,7 +101,11 @@ def bucket_name() -> str:
     blob.upload_from_string(json_bytes)
     # upload config files to the bucket
     transfer_manager.upload_many_from_filenames(
-        new_bucket, filenames, source_directory=os.path.join(os.path.dirname(__file__), CONFIGURATION_DIRECTORY)
+        new_bucket,
+        filenames,
+        source_directory=os.path.join(
+            os.path.dirname(__file__), CONFIGURATION_DIRECTORY
+        ),
     )
     yield new_bucket.name
     _clean_resources(new_bucket.name)
