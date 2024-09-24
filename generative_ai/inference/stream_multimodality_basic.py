@@ -15,6 +15,7 @@ import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+
 def generate_content() -> object:
     # [START generativeaionvertexai_stream_multimodality_basic]
     import vertexai
