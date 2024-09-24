@@ -16,11 +16,12 @@ import json
 import os
 import random
 import time
-from typing import Any, Callable
+from typing import Callable
 
 from google.cloud import aiplatform, storage
 from google.cloud.aiplatform import CustomJob
 from google.cloud.aiplatform_v1 import JobState
+from google.cloud.exceptions import NotFound
 from google.cloud.storage import transfer_manager
 
 from prompt_optimizer import optimize_prompts
@@ -38,8 +39,13 @@ STORAGE_CLIENT = storage.Client()
 
 
 def _clean_resources(bucket_resource_name: str) -> None:
-    # delete blobs and bucket
-    bucket = STORAGE_CLIENT.get_bucket(bucket_resource_name)
+    # delete blobs and bucket if exists
+    try:
+        bucket = STORAGE_CLIENT.get_bucket(bucket_resource_name)
+    except NotFound:
+        print(f"Bucket {bucket_resource_name} cannot be accessed")
+        return
+
     blobs = bucket.list_blobs()
     for blob in blobs:
         blob.delete()
@@ -76,6 +82,8 @@ def bucket_name() -> str:
         "sample_prompts.jsonl",
         "sample_system_instruction.txt",
     ]
+    # cleanup existing stale resources
+    _clean_resources(STAGING_BUCKET_NAME)
     # create bucket
     bucket = STORAGE_CLIENT.bucket(STAGING_BUCKET_NAME)
     bucket.storage_class = "STANDARD"
