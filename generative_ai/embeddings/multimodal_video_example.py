@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def get_video_embeddings() -> MultiModalEmbeddingResponse:
-    """Example of how to use multimodal embedding model to get embeddings only for video content.
+    """Example of how to use the multimodal embedding model to get embeddings only for video content.
 
     Read more at https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#vid-embedding
     """
