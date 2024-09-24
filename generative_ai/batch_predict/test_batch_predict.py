@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
 from typing import Callable
 
 import batch_code_predict
@@ -21,10 +23,17 @@ from google.cloud.aiplatform import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
 
 import pytest
+import request_batch_response
 
 INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
 OUTPUT_PATH = "batch/batch_text_predict_output"
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+BQ_INPUT_DATASET_ID = "vertexai_batch_predictions_inputs"
+BQ_INPUT_TABLE_NAME = "text_prompts_culinary"
+BQ_OUTPUT_DATASET_ID = "vertexai_batch_predictions_outputs"
+BQ_OUTPUT_TABLE_NAME = "results_culinary"
 
 
 def _clean_resources() -> None:
@@ -70,3 +79,15 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
         )
     )
     assert OUTPUT_PATH in job.output_info.gcs_output_directory
+
+
+def test_request_batch_response() -> None:
+    input_uri = f"bq://{PROJECT_ID}.{BQ_INPUT_DATASET_ID}.{BQ_INPUT_TABLE_NAME}"
+    output_uri = f"bq://{PROJECT_ID}.{BQ_OUTPUT_DATASET_ID}.{BQ_OUTPUT_TABLE_NAME}"
+    job = _main_test(
+        test_func=lambda: request_batch_response.request_batch_response(
+            input_uri=input_uri, output_uri=output_uri
+        )
+    )
+
+    assert output_uri == job.output_location
