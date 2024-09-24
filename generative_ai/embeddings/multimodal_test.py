@@ -16,7 +16,7 @@ import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import multimodal_example
-import multimodal_image_example
+import multimodal_image_text_example
 import multimodal_image_text_with_lower_dimension
 import multimodal_video_example
 
@@ -39,7 +39,7 @@ def test_multimodal_embedding_video() -> None:
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image() -> None:
-    embeddings = multimodal_image_example.get_image_embeddings()
+    embeddings = multimodal_image_text_example.get_image_text_embeddings()
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert embeddings.text_embedding is not None
