@@ -32,7 +32,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 STAGING_BUCKET_NAME = "prompt_optimizer_bucket"
 CONFIGURATION_DIRECTORY = "test_resources"
 CONFIGURATION_FILENAME = "sample_configuration.json"
-LOCATION = random.choice(["us-central1", "us-east4", "us-west4", "us-west1"])
+LOCATION = "us-central1"
 OUTPUT_PATH = "instruction"
 
 STORAGE_CLIENT = storage.Client()
