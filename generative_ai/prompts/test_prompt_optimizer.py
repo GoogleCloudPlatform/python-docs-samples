@@ -68,7 +68,7 @@ def substitute_env_variable(data: dict, target_key: str, env_var_name: str) -> d
 
 def update_json() -> dict:
     # Load the JSON file
-    with open(f"{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", "r") as f:
+    with open(f"/{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", "r") as f:
         data = json.load(f)
     # Substitute only the "project" variable with the value of "PROJECT_ID"
     substituted_data = substitute_env_variable(data, "project", "PROJECT_ID")
