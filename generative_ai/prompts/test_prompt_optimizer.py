@@ -44,7 +44,7 @@ def test_prompt_optimizer() -> None:
             print(f"Waiting for the CustomJob({job.resource_name}) to be ready!")
             time.sleep(10)
         assert (
-            storage_client.get_bucket(CLOUD_BUCKET).list_blobs(prefix=OUTPUT_PATH)
+            storage_client.get_bucket(CLOUD_BUCKET.split("gs://")[-1]).list_blobs(prefix=OUTPUT_PATH)
             is not None
         )
     finally:
