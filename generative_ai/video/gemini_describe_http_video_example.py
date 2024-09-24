@@ -32,7 +32,7 @@ def generate_content() -> str:
         # Example video ad for Pixel 8
         Part.from_uri(
             "https://storage.googleapis.com/cloud-samples-data/generative-ai/video/pixel8.mp4",
-            "video/map4",
+            "video/mp4",
         ),
     ]
 
