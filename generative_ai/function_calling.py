@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# TODO: Delete this file after approval function_calling/basic_example.py AND function_calling/advanced_example.py
+
 import os
 
 from vertexai.generative_models import GenerationResponse
@@ -178,3 +180,7 @@ def generate_function_call_advanced() -> GenerationResponse:
     print(response.candidates[0].function_calls)
     # [END generativeaionvertexai_gemini_function_calling_advanced]
     return response
+
+
+if __name__ == "__main__":
+    generate_function_call_advanced()

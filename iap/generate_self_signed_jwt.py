@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import datetime
 import json
+import time
 
 import google.auth
 from google.cloud import iam_credentials_v1
@@ -35,15 +35,15 @@ def generate_jwt_payload(service_account_email: str, resource_url: str) -> str:
       Access the application with the JWT in the Authorization Header.
       curl --verbose --header 'Authorization: Bearer SIGNED_JWT' URL
     """
-    iat = datetime.datetime.now(tz=datetime.timezone.utc)
-    exp = iat + 3600
+    now = int(time.time())
+
     return json.dumps(
         {
             "iss": service_account_email,
             "sub": service_account_email,
             "aud": resource_url,
-            "iat": iat,
-            "exp": exp,
+            "iat": now,
+            "exp": now + 3600,
         }
     )
 
