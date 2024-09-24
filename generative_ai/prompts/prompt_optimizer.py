@@ -14,7 +14,6 @@
 
 import os
 
-
 #  [START aiplatform_prompt_optimizer]
 
 def optimize_prompts(
