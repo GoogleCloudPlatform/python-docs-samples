@@ -71,7 +71,7 @@ def generate_text() -> object:
     messages.append({"role": "user", "content": "What is the weather in Boston?"})
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-001",
+        model="google/gemini-1.5-flash-002",
         messages=messages,
         tools=tools,
         tool_choice="auto",
