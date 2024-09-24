@@ -15,15 +15,15 @@
 import json
 import os
 import time
-from typing import Callable, Any
+from typing import Any, Callable
 
-import pytest
-from google.cloud import storage, aiplatform
+from google.cloud import aiplatform, storage
 from google.cloud.aiplatform import CustomJob
 from google.cloud.aiplatform_v1 import JobState
 from google.cloud.storage import transfer_manager
+import pytest
 
-from generative_ai.prompts.prompt_optimizer import optimize_prompts
+from prompt_optimizer import optimize_prompts
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 STAGING_BUCKET_NAME = "prompt_optimizer"
@@ -35,7 +35,7 @@ OUTPUT_PATH = "instruction"
 STORAGE_CLIENT = storage.Client()
 
 
-def _clean_resources(bucket_resource_name) -> None:
+def _clean_resources(bucket_resource_name: str) -> None:
     # delete blobs and bucket
     bucket = STORAGE_CLIENT.get_bucket(bucket_resource_name)
     blobs = bucket.list_blobs()
@@ -44,8 +44,8 @@ def _clean_resources(bucket_resource_name) -> None:
     bucket.delete()
 
 
-def substitute_env_variable(data, target_key, env_var_name) -> Any:
-    #   substitute env variables in the given config file with runtime values
+def substitute_env_variable(data: Any, target_key: Any, env_var_name: Any) -> Any:
+    # substitute env variables in the given config file with runtime values
     if isinstance(data, dict):
         for key, value in data.items():
             if key == target_key:

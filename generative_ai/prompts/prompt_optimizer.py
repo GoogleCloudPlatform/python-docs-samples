@@ -14,9 +14,7 @@
 
 import os
 
-#  [START aiplatform_prompt_optimizer]
-
-
+#  [START generativeaionvertexai_prompt_optimizer]
 def optimize_prompts(
     project: str,
     location: str,
@@ -55,9 +53,8 @@ def optimize_prompts(
     )
     custom_job.submit()
     return custom_job.resource_name
+#  [END generativeaionvertexai_prompt_optimizer]
 
-
-#  [END aiplatform_prompt_optimizer]
 
 if __name__ == "__main__":
     optimize_prompts(
