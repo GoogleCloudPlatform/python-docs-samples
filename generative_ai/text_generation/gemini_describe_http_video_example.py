@@ -45,3 +45,7 @@ def generate_content() -> str:
     response = model.generate_content(contents)
     print(response.text)
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()

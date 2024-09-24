@@ -40,3 +40,7 @@ def generate_content() -> str:
     #     ' the capabilities of the phone. The video starts with ...'
     # [END generativeaionvertexai_gemini_youtube_video_summarization]
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()

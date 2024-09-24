@@ -48,7 +48,6 @@ def generate_content() -> str:
                 "gs://cloud-samples-data/generative-ai/image/office-desk.jpeg",
                 "image/jpeg",
             ),
-
             # HTTP image
             Part.from_uri(
                 "https://storage.cloud.google.com/cloud-samples-data/generative-ai/image/gardening-tools.jpeg",

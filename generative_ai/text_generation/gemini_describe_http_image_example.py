@@ -43,3 +43,7 @@ def generate_content() -> str:
     #     'Close-up view of a young Jack Russell Terrier puppy sitting in short grass ...'
     # [END generativeaionvertexai_gemini_describe_http_image]
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()

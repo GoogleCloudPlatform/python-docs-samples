@@ -49,3 +49,7 @@ def generate_content() -> str:
     #    - [00:04:58–00:05:05] The video ends with a black screen and the words, “Sport. And More Than Sport.” written beneath the Olympic rings.
     # [END generativeaionvertexai_gemini_youtube_video_key_moments]
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()

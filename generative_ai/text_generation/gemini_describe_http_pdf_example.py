@@ -43,3 +43,7 @@ def generate_content() -> str:
     #     'sequence transduction, which uses an attention mechanism to learn global '
     #     'dependencies between input and output sequences. The Transformer ...
     return response.text
+
+
+if __name__ == "__main__":
+    generate_content()
