@@ -18,7 +18,9 @@ from vertexai.preview.batch_prediction import BatchPredictionJob
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPredictionJob:
+def batch_predict_gemini_createjob(
+    input_uri: str, output_uri: str
+) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
         input_uri (str): URI of the input file in BigQuery table or Google Cloud Storage.
@@ -47,7 +49,7 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPred
     batch_prediction_job = BatchPredictionJob.submit(
         source_model="gemini-1.5-flash-001",
         input_dataset=input_uri,
-        output_uri_prefix=output_uri
+        output_uri_prefix=output_uri,
     )
 
     # Check job status
@@ -82,5 +84,7 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> BatchPred
 if __name__ == "__main__":
     # TODO(developer): Update gsc bucket and file paths
     GCS_BUCKET = "gs://yourbucket"
-    batch_predict_gemini_createjob(f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
-                                   f"gs://{GCS_BUCKET}/batch_preditions/sample_output/")
+    batch_predict_gemini_createjob(
+        f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
+        f"gs://{GCS_BUCKET}/batch_preditions/sample_output/",
+    )
