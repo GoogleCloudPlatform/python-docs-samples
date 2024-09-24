@@ -14,6 +14,7 @@
 
 import json
 import os
+import random
 import time
 from typing import Any, Callable
 
@@ -21,15 +22,16 @@ from google.cloud import aiplatform, storage
 from google.cloud.aiplatform import CustomJob
 from google.cloud.aiplatform_v1 import JobState
 from google.cloud.storage import transfer_manager
-import pytest
 
 from prompt_optimizer import optimize_prompts
+
+import pytest
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 STAGING_BUCKET_NAME = "prompt_optimizer"
 CONFIG_SOURCE_DIRECTORY = "config"
 CONFIGURATION_FILENAME = "sample_configuration.json"
-LOCATION = "us-central1"
+LOCATION = random.choice(["us-central1", "us-east4", "us-west4", "us-west1"])
 OUTPUT_PATH = "instruction"
 
 STORAGE_CLIENT = storage.Client()
@@ -44,7 +46,7 @@ def _clean_resources(bucket_resource_name: str) -> None:
     bucket.delete()
 
 
-def substitute_env_variable(data: Any, target_key: Any, env_var_name: Any) -> Any:
+def substitute_env_variable(data: dict, target_key: str, env_var_name: str) -> dict:
     # substitute env variables in the given config file with runtime values
     if isinstance(data, dict):
         for key, value in data.items():
@@ -58,7 +60,7 @@ def substitute_env_variable(data: Any, target_key: Any, env_var_name: Any) -> An
     return data
 
 
-def update_json() -> Any:
+def update_json() -> dict:
     # Load the JSON file
     with open(f"{CONFIG_SOURCE_DIRECTORY}/{CONFIGURATION_FILENAME}", "r") as f:
         data = json.load(f)
