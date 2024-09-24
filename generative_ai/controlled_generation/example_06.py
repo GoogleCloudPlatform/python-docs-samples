@@ -43,17 +43,19 @@ def generate_content() -> str:
 
     response = model.generate_content(
         [
+            # Text prompt
+            "Generate a list of objects in the images.",
+
+            # HTTP image of gs://cloud-samples-data/generative-ai/image/office-desk.jpeg
+            Part.from_uri(
+                "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/office-desk.jpeg",
+                "image/jpeg",
+            ),
             # Cloud storage image object
             Part.from_uri(
-                "gs://cloud-samples-data/generative-ai/image/office-desk.jpeg",
+                "gs://cloud-samples-data/generative-ai/image/gardening-tools.jpeg",
                 "image/jpeg",
             ),
-            # HTTP image
-            Part.from_uri(
-                "https://storage.cloud.google.com/cloud-samples-data/generative-ai/image/gardening-tools.jpeg",
-                "image/jpeg",
-            ),
-            "Generate a list of objects in the images.",
         ],
         generation_config=GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
