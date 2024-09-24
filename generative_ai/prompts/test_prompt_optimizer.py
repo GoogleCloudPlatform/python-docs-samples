@@ -52,6 +52,6 @@ def test_prompt_optimizer() -> None:
         print(f"CustomJob({job.resource_name}) to be ready. Delete it now.")
         job.delete()
         # delete output blob
-        blobs = storage_client.get_bucket(CLOUD_BUCKET).list_blobs(prefix=OUTPUT_PATH)
+        blobs = storage_client.get_bucket(CLOUD_BUCKET.split("gs://")[-1]).list_blobs(prefix=OUTPUT_PATH)
         for blob in blobs:
             blob.delete()
