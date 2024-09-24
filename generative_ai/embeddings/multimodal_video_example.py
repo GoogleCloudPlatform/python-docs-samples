@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def get_video_embeddings() -> MultiModalEmbeddingResponse:
-    """Example of how to generate multimodal embeddings from video and text.
+    """Example of how to use multimodal embedding model to get embeddings only for video content.
 
     Read more at https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#vid-embedding
     """
@@ -40,7 +40,6 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
             "gs://cloud-samples-data/vertex-ai-vision/highway_vehicles.mp4"
         ),
         video_segment_config=VideoSegmentConfig(end_offset_sec=1),
-        contextual_text="Cars on Highway",
     )
 
     # Video Embeddings are segmented based on the video_segment_config.
@@ -51,12 +50,10 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
         )
         print(f"Embedding: {video_embedding.embedding}")
 
-    print(f"Text Embedding: {embeddings.text_embedding}")
     # Example response:
     # Video Embeddings:
     # Video Segment: 0.0 - 1.0
     # Embedding: [-0.0206376351, 0.0123456789, ...]
-    # Text Embedding: [-0.0207006913, -0.00251061679, ...]
 
     # [END generativeaionvertexai_multimodal_embedding_video]
 

@@ -35,7 +35,6 @@ def test_multimodal_embedding_video() -> None:
     embeddings = multimodal_video_example.get_video_embeddings()
     assert embeddings is not None
     assert embeddings.video_embeddings is not None
-    assert embeddings.text_embedding is not None
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
