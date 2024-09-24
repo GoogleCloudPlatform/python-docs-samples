@@ -15,7 +15,6 @@
 import os
 
 
-#  [START generativeaionvertexai_prompt_optimizer]
 def optimize_prompts(
     project: str,
     location: str,
@@ -31,8 +30,14 @@ def optimize_prompts(
     Returns:
         custom_job.resource_name: Returns the resource name of the job created of type: projects/project-id/locations/location/customJobs/job-id
     """
+    #  [START generativeaionvertexai_prompt_optimizer]
     from google.cloud import aiplatform
 
+    # TODO(developer): Update & uncomment below line
+    # project = "your-gcp-project-id"
+    # location = "location"
+    # staging_bucket = "output-bucket-gcs-uri"
+    # configuration_path = "configuration-file-gcs-uri"
     aiplatform.init(project=project, location=location, staging_bucket=staging_bucket)
 
     worker_pool_specs = [
@@ -53,10 +58,10 @@ def optimize_prompts(
         worker_pool_specs=worker_pool_specs,
     )
     custom_job.submit()
+    print(f"Job resource name: {custom_job.resource_name}")
+
+    #  [END generativeaionvertexai_prompt_optimizer]
     return custom_job.resource_name
-
-
-#  [END generativeaionvertexai_prompt_optimizer]
 
 
 if __name__ == "__main__":
