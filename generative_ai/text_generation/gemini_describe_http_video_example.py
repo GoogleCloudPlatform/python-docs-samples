@@ -42,8 +42,7 @@ def generate_content() -> str:
     #     'Here is a description of the video.'
     #     'This is a Google Pixel 8 advertisement featuring Saeko Shimada, a photographer'
     #     ' in Tokyo, Japan. The video opens with a view of a train passing ... '
-    response = model.generate_content(contents)
-    print(response.text)
+    # [END generativeaionvertexai_gemini_describe_http_video]
     return response.text
 
 
