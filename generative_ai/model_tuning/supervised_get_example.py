@@ -14,7 +14,7 @@
 
 import os
 
-from vertexai.preview.tuning import sft
+from vertexai.tuning import sft
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
@@ -23,7 +23,7 @@ LOCATION = "us-central1"
 def get_tuning_job() -> sft.SupervisedTuningJob:
     # [START generativeaionvertexai_get_tuning_job]
     import vertexai
-    from vertexai.preview.tuning import sft
+    from vertexai.tuning import sft
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
