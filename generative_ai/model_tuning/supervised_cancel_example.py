@@ -21,7 +21,7 @@ LOCATION = "us-central1"
 def cancel_tuning_job() -> None:
     # [START generativeaionvertexai_cancel_tuning_job]
     import vertexai
-    from vertexai.preview.tuning import sft
+    from vertexai.tuning import sft
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
