@@ -26,7 +26,7 @@ def generate_content() -> object:
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
     responses = model.generate_content(
         [
             Part.from_uri(
