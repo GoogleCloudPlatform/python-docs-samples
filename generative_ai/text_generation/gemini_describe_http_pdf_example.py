@@ -29,7 +29,7 @@ def generate_content() -> str:
     contents = [
         # Text prompt
         "Summarise this file",
-        # Example video ad for Pixel 8
+        # Example PDF document on Transformers, a neural network architecture.
         Part.from_uri(
             "https://storage.googleapis.com/cloud-samples-data/generative-ai/pdf/1706.03762v7.pdf",
             "application/pdf",
