@@ -53,7 +53,7 @@ def batch_predict_gemini_createjob(
     )
 
     # Check job status
-    print(f"Job resouce name: {batch_prediction_job.resource_name}")
+    print(f"Job resource name: {batch_prediction_job.resource_name}")
     print(f"Model resource name with the job: {batch_prediction_job.model_name}")
     print(f"Job state: {batch_prediction_job.state.name}")
 
@@ -72,7 +72,7 @@ def batch_predict_gemini_createjob(
     print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
-    #  Job output location: gs://yourbucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
+    #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
 
     # https://storage.googleapis.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
 
@@ -82,9 +82,9 @@ def batch_predict_gemini_createjob(
 
 
 if __name__ == "__main__":
-    # TODO(developer): Update gsc bucket and file paths
-    GCS_BUCKET = "gs://yourbucket"
+    # TODO(developer): Update your Cloud Storage bucket and uri file paths
+    GCS_BUCKET = "gs://your-bucket"
     batch_predict_gemini_createjob(
-        f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
-        f"gs://{GCS_BUCKET}/batch_preditions/sample_output/",
+        input_uri=f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
+        output_uri=f"gs://{GCS_BUCKET}/batch_predictions/sample_output/",
     )
