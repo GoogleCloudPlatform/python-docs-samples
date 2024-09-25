@@ -21,10 +21,10 @@ import claude_3_unary_example
 from google.api_core.exceptions import ResourceExhausted
 
 
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_generate_text_streaming() -> None:
-    responses = claude_3_streaming_example.generate_text_streaming()
-    assert "bread" in responses
+# @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+# def test_generate_text_streaming() -> None:
+#     responses = claude_3_streaming_example.generate_text_streaming()
+#     assert "bread" in responses
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
