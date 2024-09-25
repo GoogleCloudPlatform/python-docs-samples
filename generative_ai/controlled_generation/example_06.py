@@ -45,13 +45,11 @@ def generate_content() -> str:
         [
             # Text prompt
             "Generate a list of objects in the images.",
-
             # Http Image
             Part.from_uri(
                 "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/office-desk.jpeg",
                 "image/jpeg",
             ),
-
             # Cloud storage object
             Part.from_uri(
                 "gs://cloud-samples-data/generative-ai/image/gardening-tools.jpeg",
