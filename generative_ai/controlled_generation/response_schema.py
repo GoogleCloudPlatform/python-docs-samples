@@ -37,7 +37,7 @@ def generate_content(project_id: str) -> str:
         },
     }
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         "List a few popular cookie recipes",
@@ -84,7 +84,7 @@ def generate_content2(project_id: str) -> str:
         - "Quite good, but a bit too sweet for my taste." Rating: 1, Flavor: Mango Tango
     """
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         prompt,
@@ -142,7 +142,7 @@ def generate_content3(project_id: str) -> str:
         Finally, Saturday rounds off the week with sunny skies, a temperature of 80°F, and a humidity level of 40%. Winds will be gentle at 8 km/h.
     """
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         prompt,
@@ -218,7 +218,7 @@ def generate_content4(project_id: str) -> str:
         It has large questionable stains on it.
     """
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         prompt,
@@ -257,7 +257,7 @@ def generate_content6(project_id: str) -> str:
         },
     }
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         [
