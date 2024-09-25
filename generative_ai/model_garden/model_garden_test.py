@@ -14,7 +14,7 @@
 
 import backoff
 
-import claude_3_streaming_example
+# import claude_3_streaming_example
 import claude_3_tool_example
 import claude_3_unary_example
 
