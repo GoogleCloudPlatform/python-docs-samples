@@ -32,7 +32,7 @@ def generate_text_with_grounding_web() -> GenerationResponse:
     # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     # Use Google Search for grounding
     tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
@@ -68,7 +68,7 @@ def generate_text_with_grounding_vertex_ai_search(
     # TODO (developer): update project_id
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     # TODO(developer): Update project id, location, and data store id for your Vertex AI Search data store.
     # data_store_id = "DATA_STORE_ID"
