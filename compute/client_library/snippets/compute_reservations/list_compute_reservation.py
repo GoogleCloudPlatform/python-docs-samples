@@ -52,7 +52,6 @@ def list_compute_reservation(project_id: str, zone: str = "us-central1-a") -> Li
     # Name:  my-reservation_2
     # Machine type:  n1-standard-1
 
-    # [END compute_reservation_list]
     return reservations_list
 
 
