@@ -13,31 +13,31 @@
 # limitations under the License.
 
 import api_example
+import count_token_example
+import list_tokens_example
 import local_sdk_example
 import multimodal_example
 import simple_example
-import count_token_example
-import list_tokens_example
 
 
 def test_count_token_sdk_example() -> None:
-    assert local_sdk_example.count_token_locally()
-    assert count_token_example.count_token_locally()
+    assert local_sdk_example.count_token_sdk_example()
+    assert count_token_example.count_token_sdk_example()
 
 
 def test_count_token_api_example() -> None:
     assert api_example.count_token_api_example()
-    assert count_token_example.count_token_service()
+    assert count_token_example.count_token_api_example()
 
 
 def test_gemini_count_simple_example() -> None:
-    response = simple_example.count_tokens()
+    response = simple_example.count_tokens_example()
     assert response
     assert response.usage_metadata
 
 
-def test_gemini_count_simple_example() -> None:
-    response = multimodal_example.count_tokens_multimodal()
+def test_gemini_multimodal_example() -> None:
+    response = multimodal_example.count_tokens_multimodal_example()
     assert response
     assert response.usage_metadata
 

@@ -18,7 +18,7 @@ from vertexai.generative_models import GenerationResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def count_tokens_multimodal() -> GenerationResponse:
+def count_tokens_multimodal_example() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_token_count_multimodal]
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
@@ -62,4 +62,4 @@ def count_tokens_multimodal() -> GenerationResponse:
 
 
 if __name__ == "__main__":
-    count_tokens_multimodal()
+    count_tokens_multimodal_example()

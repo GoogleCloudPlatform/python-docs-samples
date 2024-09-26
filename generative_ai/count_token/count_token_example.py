@@ -16,7 +16,8 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def count_token_locally() -> int:
+# TODO: Delete this file after re-org of code samples
+def count_token_sdk_example() -> int:
     # [START generativeaionvertexai_token_count_sample_with_local_sdk]
     from vertexai.preview.tokenization import get_tokenizer_for_model
     from vertexai.generative_models import FunctionDeclaration, Tool
@@ -64,7 +65,7 @@ def count_token_locally() -> int:
 
 
 # TODO: Delete the following samples after API deprecation. `count_token_locally` is faster & recommended.
-def count_token_service() -> int:
+def count_token_api_example() -> int:
     # [START generativeaionvertexai_token_count_sample_with_genai]
     import vertexai
     from vertexai.generative_models import GenerativeModel
@@ -95,5 +96,5 @@ def count_token_service() -> int:
 
 
 if __name__ == "__main__":
-    count_token_locally()
-    count_token_service()
+    count_token_sdk_example()
+    count_token_api_example()
