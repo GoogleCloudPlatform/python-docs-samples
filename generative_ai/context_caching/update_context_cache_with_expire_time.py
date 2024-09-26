@@ -21,8 +21,9 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def update_context_cache_with_expire_time(cache_id: str) -> CachedContent:
     # [START generativeaionvertexai_gemini_update_context_cache_with_expire_time]
     import vertexai
-    # from datetime import datetime as dt, timezone as tz
-    import datetime as dt
+    from datetime import datetime as dt
+    from datetime import timezone as tz
+    from datetime import timedelta
 
     from vertexai.preview import caching
 
@@ -35,12 +36,12 @@ def update_context_cache_with_expire_time(cache_id: str) -> CachedContent:
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
     # Update the expiration to a specific time in the future
-    next_year_utc = dt.datetime.now(dt.timezone.utc) + dt.timedelta(days=365)
+    next_year_utc = dt.now(tz.utc) + timedelta(days=365)
     cached_content.update(expire_time=next_year_utc)
     cached_content.refresh()
 
     print("Expire time:", cached_content.expire_time)
-    # Example output:
+    # Example response:
     # Expire time: 2025-09-25 17:16:45.864520+00:00
     # [END generativeaionvertexai_gemini_update_context_cache_with_expire_time]
     return cached_content
