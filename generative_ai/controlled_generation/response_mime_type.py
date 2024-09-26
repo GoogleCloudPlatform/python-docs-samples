@@ -24,7 +24,7 @@ def generate_content(project_id: str) -> str:
     # project_id = "PROJECT_ID"
     vertexai.init(project=project_id, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     prompt = """
         List a few popular cookie recipes using this JSON schema:

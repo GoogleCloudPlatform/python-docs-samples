@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# TODO: Delete this file after approval generative_ai/function_calling/chat_function_calling_config.py
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
@@ -67,7 +68,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     messages.append({"role": "user", "content": "What is the weather in Boston?"})
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-001",
+        model="google/gemini-1.5-flash-002",
         messages=messages,
         tools=tools,
         tool_choice="auto",
