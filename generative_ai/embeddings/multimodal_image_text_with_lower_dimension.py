@@ -31,7 +31,8 @@ def get_image_text_embeddings_with_lower_dimension(embedding_dimension: int = 12
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
-    # TODO(developer): Update project id and location
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # TODO(developer): Try different dimenions: 128, 256, 512, 1408
