@@ -28,7 +28,8 @@ def list_content_caches() -> List[CachedContent]:
 
     from vertexai.preview import caching
 
-    # TODO(developer): Update project id and location
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     cached_content_list = caching.CachedContent.list()
@@ -37,13 +38,13 @@ def list_content_caches() -> List[CachedContent]:
         print(
             f"Cached content '{cc.display_name}' for model '{cc.model_name}' expires at {cc.expire_time}."
         )
-        # Example output:
+        # Example response:
         # Cached content 'scientific-articles' for model '.../gemini-1.5-pro-001' expires at 2024-09-23 18:01:47.242036+00:00.
 
     # or convert the ContentCache object to a dictionary:
     for cc in cached_content_list:
         print(json.dumps(cc.to_dict(), indent=2))
-        # Example output:
+        # Example response:
         #  {
         #      "name": "projects/[PROJECT_NUMBER]/locations/us-central1/cachedContents/4101407070023057408",
         #      "model": "projects/[PROJECT_ID]/locations/us-central1/publishers/google/models/gemini-1.5-pro-001",
