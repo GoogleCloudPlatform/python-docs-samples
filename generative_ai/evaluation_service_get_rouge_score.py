@@ -25,7 +25,8 @@ def get_rouge_score() -> EvalResult:
     import vertexai
     from vertexai.preview.evaluation import EvalTask
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     text_to_summarize = """
@@ -89,6 +90,11 @@ def get_rouge_score() -> EvalResult:
 
     print("\n\nMetrics Table:\n")
     print(result.metrics_table)
+    # Example response:
+    #                                 prompt    ...    rouge_1/score  rouge_2/score    ...
+    # 0  Summarize the following text:\n\n\n    ...         0.659794       0.484211    ...
+    # 1  Summarize the following text:\n\n\n    ...         0.704762       0.524272    ...
+    # ...
 
     # [END generativeaionvertexai_evaluation_get_rouge_score]
     return result
