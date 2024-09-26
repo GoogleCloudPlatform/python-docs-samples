@@ -30,7 +30,8 @@ def evaluate_output() -> EvalResult:
         MetricPromptTemplateExamples,
     )
 
-    # TODO(developer): Update project_id and location
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     prompt = """
