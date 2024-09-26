@@ -16,7 +16,7 @@ import os
 
 from typing import List
 
-from vertexai.preview.tuning import sft
+from vertexai.tuning import sft
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -24,7 +24,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def list_tuning_jobs() -> List[sft.SupervisedTuningJob]:
     # [START generativeaionvertexai_list_tuning_jobs]
     import vertexai
-    from vertexai.preview.tuning import sft
+    from vertexai.tuning import sft
 
     # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"

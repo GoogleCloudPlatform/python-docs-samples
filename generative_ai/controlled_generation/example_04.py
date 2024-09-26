@@ -69,7 +69,7 @@ def generate_content() -> str:
         It has large questionable stains on it.
     """
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         prompt,

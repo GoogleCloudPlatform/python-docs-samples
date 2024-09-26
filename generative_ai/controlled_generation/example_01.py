@@ -39,7 +39,7 @@ def generate_content() -> str:
         },
     }
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         "List a few popular cookie recipes",

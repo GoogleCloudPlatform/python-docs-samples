@@ -25,7 +25,7 @@ def generate_text() -> str:
     # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vision_model = GenerativeModel("gemini-1.5-flash-001")
+    vision_model = GenerativeModel("gemini-1.5-flash-002")
 
     # Generate text
     response = vision_model.generate_content(
