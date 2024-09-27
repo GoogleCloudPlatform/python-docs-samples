@@ -47,8 +47,6 @@ def run_streaming_tts_quickstart():
         # Just print the audio size. Replace with your logic to play audio. Note that audio_content is headerless LINEAR16 audio with a sample rate of 24000
         print("Audio content size in bytes is: " + len(response.audio_content))
 
-    
-
 
 if __name__ == "__main__":
     run_streaming_tts_quickstart()
