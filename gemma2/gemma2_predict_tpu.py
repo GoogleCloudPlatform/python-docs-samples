@@ -21,7 +21,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def gemma2_predict_tpu(ENDPOINT_REGION: str, ENDPOINT_ID: str) -> str:
     # [START generativeaionvertexai_gemma2_predict_tpu]
     """
-    Sample to run interference on a Gemma2 model deployed to a Vertex AI endpoint with TPU accellerators.
+    Sample to run inference on a Gemma2 model deployed to a Vertex AI endpoint with TPU accellerators.
     """
 
     from google.cloud import aiplatform
