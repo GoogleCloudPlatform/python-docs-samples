@@ -23,7 +23,6 @@ def generate_parallel_function_calls() -> ChatSession:
     import vertexai
     from vertexai.generative_models import (
         FunctionDeclaration,
-        GenerationConfig,
         GenerativeModel,
         Part,
         Tool,
@@ -63,14 +62,13 @@ def generate_parallel_function_calls() -> ChatSession:
 
     # Initialize Gemini model
     model = GenerativeModel(
-        model_name="gemini-1.5-pro-001",
-        generation_config=GenerationConfig(temperature=0),
+        model_name="gemini-1.5-pro-002",
         tools=[tools],
     )
 
     # Start a chat session
     chat = model.start_chat()
-    response = chat.send_message("Compare the weather in New Delhi and San Francisco")
+    response = chat.send_message("Get weather details in New Delhi and San Francisco?")
 
     function_calls = response.candidates[0].function_calls
     print("Suggested finction calls:\n", function_calls)
@@ -99,7 +97,7 @@ def generate_parallel_function_calls() -> ChatSession:
 
         print(response.text)
         # Example response:
-        # The weather in New Delhi is 35 degrees Celsius and the weather in San Francisco is 25 degrees Celsius. New Delhi is warmer than San Francisco.
+        # The current weather in New Delhi is 35°C. The current weather in San Francisco is 25°C.
 
         # [END generativeaionvertexai_gemini_parallel_function_calling_example]
         return response
