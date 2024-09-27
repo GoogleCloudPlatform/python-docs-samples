@@ -38,14 +38,14 @@ def run_streaming_tts_quickstart():
 
     # Placeholder request generator. Consider using Gemini or another LLM with output streaming as a generator instead.
     def request_generator():
-      for i in range(5):
-        yield texttospeech.StreamingSynthesizeRequest(input="Test sentence. ")
+        for i in range(5):
+            yield texttospeech.StreamingSynthesizeRequest(input="Test sentence. ")
 
     # Send your requests as a stream to be synthesized.
     streaming_responses = client.streaming_synthesize(itertools.chain([config_request], request_generator()))
     for response in streaming_responses:
-      # Just print the audio size. Replace with your logic to play audio. Note that audio_content is headerless LINEAR16 audio with a sample rate of 24000
-      print("Audio content size in bytes is: " + len(response.audio_content))
+        # Just print the audio size. Replace with your logic to play audio. Note that audio_content is headerless LINEAR16 audio with a sample rate of 24000
+        print("Audio content size in bytes is: " + len(response.audio_content))
 
     
 
