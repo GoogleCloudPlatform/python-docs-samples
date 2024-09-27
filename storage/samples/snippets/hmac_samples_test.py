@@ -64,7 +64,10 @@ def new_hmac_key():
     if not hmac_key.state == "INACTIVE":
         hmac_key.state = "INACTIVE"
         hmac_key.update()
-    hmac_key.delete()
+    try:
+        hmac_key.delete()
+    except google.api_core.exceptions.BadRequest:
+        pass
 
 
 def test_list_keys(capsys, new_hmac_key):
