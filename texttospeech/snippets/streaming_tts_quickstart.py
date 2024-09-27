@@ -23,7 +23,6 @@ Example usage:
 
 
 def run_streaming_tts_quickstart():
-    # [START streaming_tts_quickstart]
     """Synthesizes speech from a stream of input text.
     """
     from google.cloud import texttospeech
