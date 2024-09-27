@@ -32,7 +32,7 @@ def get_project_policy(project_id: str) -> policy_pb2.Policy:
 
     policy = client.get_iam_policy(request)
     print(f"Policy retrieved: {policy}")
-    
+
     return policy
 
 
