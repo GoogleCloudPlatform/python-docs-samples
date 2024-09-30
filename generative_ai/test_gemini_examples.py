@@ -142,11 +142,13 @@ def test_gemini_grounding_vais_example() -> None:
     assert response
 
 
+# Delete this test after approval /understand_audio/understand_audio_test.py
 def test_summarize_audio() -> None:
     text = gemini_audio.summarize_audio()
     assert len(text) > 0
 
 
+# Delete this test after approval /understand_audio/understand_audio_test.py
 def test_transcript_audio() -> None:
     text = gemini_audio.transcript_audio()
     assert len(text) > 0
