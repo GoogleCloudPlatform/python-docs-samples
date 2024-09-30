@@ -98,6 +98,7 @@ def test_gemini_safety_config_example() -> None:
     assert len(text) > 0
 
 
+# Delete after approval /understand_video/single_turn_video_example.py
 def test_gemini_single_turn_video_example() -> None:
     text = gemini_single_turn_video_example.generate_text()
     text = text.lower()
@@ -152,6 +153,7 @@ def test_transcript_audio() -> None:
     assert len(text) > 0
 
 
+# Delete after approval /understand_video/audio_video_example.py
 def test_analyze_video_with_audio() -> None:
     text = gemini_video_audio.analyze_video_with_audio()
     assert len(text) > 0
