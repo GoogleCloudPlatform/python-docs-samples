@@ -32,7 +32,7 @@ from snippets.service_account_set_policy import set_service_account_iam_policy
 PROJECT = google.auth.default()[1]
 
 
-@pytest.fixture(scope="function")
+@pytest.fixture(scope="module")
 def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
