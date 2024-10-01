@@ -60,4 +60,6 @@ def retrieval_query(
 
 
 if __name__ == "__main__":
-    retrieval_query("projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}")
+    retrieval_query(
+        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
+    )

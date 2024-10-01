@@ -14,7 +14,9 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import ListRagCorporaPager
+from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
+    ListRagCorporaPager,
+)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
