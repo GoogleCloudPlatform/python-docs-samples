@@ -28,7 +28,6 @@ def run_streaming_tts_quickstart():
     from google.cloud import texttospeech
     import itertools
 
-    # Instantiates a client
     client = texttospeech.TextToSpeechClient()
 
     # Set the config for your stream. The first request must contain your config, and then each subsequent request must contain text.
