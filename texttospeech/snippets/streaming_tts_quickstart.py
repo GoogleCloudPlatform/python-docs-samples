@@ -32,7 +32,7 @@ def run_streaming_tts_quickstart():
 
     # See https://cloud.google.com/text-to-speech/docs/voices for all voices.
     streaming_config = texttospeech.StreamingSynthesizeConfig(voice=texttospeech.VoiceSelectionParams(name="en-US-Journey-D", language_code="en-US"))
-    
+
     # Set the config for your stream. The first request must contain your config, and then each subsequent request must contain text.
     config_request = texttospeech.StreamingSynthesizeRequest(streaming_config=streaming_config)
 
