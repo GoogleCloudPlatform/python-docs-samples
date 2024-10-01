@@ -20,8 +20,6 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-from google.cloud import securitycenter_v2 as securitycenter_v2
-import pytest
 
 import snippets_notification_configs_v2
 

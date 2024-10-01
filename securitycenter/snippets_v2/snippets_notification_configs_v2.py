@@ -14,11 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """Demos for working with notification configs."""
-import json
-from typing import Dict
 from google.cloud.securitycenter_v2 import (
-    NotificationConfig,
     ListNotificationConfigsResponse,
+    NotificationConfig,
 )
 
 
