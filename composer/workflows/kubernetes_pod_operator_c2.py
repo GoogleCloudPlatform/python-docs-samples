@@ -75,7 +75,7 @@ with models.DAG(
         # Name of task you want to run, used to generate Pod ID.
         name="pod-ex-minimum",
         # Entrypoint of the container, if not specified the Docker container's
-        # entrypoint is used.
+        # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
         # The namespace to run within Kubernetes. In Composer 2 environments
         # after December 2022, the default namespace is
@@ -89,7 +89,7 @@ with models.DAG(
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
         image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
-        # Specifies path to Kubernetes config.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
@@ -106,19 +106,20 @@ with models.DAG(
         # the Airflow templates reference:
         # https://airflow.apache.org/docs/apache-airflow/stable/templates-ref.html
         # Entrypoint of the container, if not specified the Docker container's
-        # entrypoint is used.
+        # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
-        # DS in jinja is the execution date as YYYY-MM-DD, this docker image
-        # will echo the execution date. Arguments to the entrypoint. The docker
+        # DS in Jinja is the execution date as YYYY-MM-DD, this Docker image
+        # will echo the execution date. Arguments to the entrypoint. The Docker
         # image's CMD is used if this is not provided. The arguments parameter
         # is templated.
         arguments=["{{ ds }}"],
         # The var template variable allows you to access variables defined in
         # Airflow UI. In this case we are getting the value of my_value and
         # setting the environment variable `MY_VALUE`. The pod will fail if
-        # `my_value` is not set in the Airflow UI.
+        # `my_value` is not set in the Airflow UI. The env_vars parameter
+        # is templated.
         env_vars={"MY_VALUE": "{{ var.value.my_value }}"},
-        # Specifies path to Kubernetes config.
+        # Specifies path to Kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
@@ -134,14 +135,16 @@ with models.DAG(
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
         secrets=[secret_env, secret_volume],
+        # Entrypoint of the container, if not specified the Docker container's
+        # entrypoint is used. The cmds parameter is templated.
         cmds=["echo"],
         # env_vars allows you to specify environment variables for your
-        # container to use.
+        # container to use. The env_vars parameter is templated.
         env_vars={
             "EXAMPLE_VAR": "/example/value",
             "GOOGLE_APPLICATION_CREDENTIALS": "/var/secrets/google/service-account.json",
         },
-        # Specifies path to Kubernetes config.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
         kubernetes_conn_id="kubernetes_default",
@@ -154,10 +157,10 @@ with models.DAG(
         namespace="composer-user-workloads",
         image="perl:5.34.0",
         # Entrypoint of the container, if not specified the Docker container's
-        # entrypoint is used.
+        # entrypoint is used. The cmds parameter is templated.
         cmds=["perl"],
-        # Arguments to the entrypoint. The docker image's CMD is used if this
-        # is not provided.
+        # Arguments to the entrypoint. The Docker image's CMD is used if this
+        # is not provided. The arguments parameter is templated.
         arguments=["-Mbignum=bpi", "-wle", "print bpi(2000)"],
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
@@ -166,7 +169,8 @@ with models.DAG(
         labels={"pod-label": "label-name"},
         # Timeout to start up the Pod, default is 600.
         startup_timeout_seconds=600,
-        # The environment variables to be initialized in the container
+        # The environment variables to be initialized in the container.
+        # The env_vars parameter is templated.
         env_vars={"EXAMPLE_VAR": "/example/value"},
         # If true, logs stdout output of container. Defaults to True.
         get_logs=True,
@@ -190,7 +194,7 @@ with models.DAG(
             requests={"cpu": "1000m", "memory": "10G", "ephemeral-storage": "10G"},
             limits={"cpu": "1000m", "memory": "10G", "ephemeral-storage": "10G"},
         ),
-        # Specifies path to Kubernetes config.
+        # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # If true, the content of /airflow/xcom/return.json from container will
         # also be pushed to an XCom when the container ends.
