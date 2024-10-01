@@ -22,6 +22,7 @@ Example usage:
 
 
 def run_streaming_tts_quickstart():
+    # [START tts_synthezise_streaming]
     """Synthesizes speech from a stream of input text.
     """
     from google.cloud import texttospeech
@@ -29,9 +30,10 @@ def run_streaming_tts_quickstart():
 
     client = texttospeech.TextToSpeechClient()
 
-    # Set the config for your stream. The first request must contain your config, and then each subsequent request must contain text.
+    # See https://cloud.google.com/text-to-speech/docs/voices for all voices.
     streaming_config = texttospeech.StreamingSynthesizeConfig(voice=texttospeech.VoiceSelectionParams(name="en-US-Journey-D", language_code="en-US"))
-
+    
+    # Set the config for your stream. The first request must contain your config, and then each subsequent request must contain text.
     config_request = texttospeech.StreamingSynthesizeRequest(streaming_config=streaming_config)
 
     # Placeholder request generator. Consider using Gemini or another LLM with output streaming as a generator instead.
@@ -43,6 +45,7 @@ def run_streaming_tts_quickstart():
     for response in streaming_responses:
         # Just print the audio size. Replace with your logic to play audio. Note that audio_content is headerless LINEAR16 audio with a sample rate of 24000
         print("Audio content size in bytes is: " + len(response.audio_content))
+    # [END tts_synthezise_streaming]
 
 
 if __name__ == "__main__":
