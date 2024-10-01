@@ -17,7 +17,7 @@ import streaming_tts_quickstart
 
 
 def test_streaming_synthesize():
-  streaming_tts_quickstart.run_streaming_tts_quickstart()
+    streaming_tts_quickstart.run_streaming_tts_quickstart()
 
-  out, err = capsys.readouterr()
-  assert "Audio content size in bytes is" in out
+    out, err = capsys.readouterr()
+    assert "Audio content size in bytes is" in out
