@@ -16,7 +16,7 @@
 import streaming_tts_quickstart
 
 
-def test_streaming_synthesize():
+def test_streaming_synthesize(capsys):
     streaming_tts_quickstart.run_streaming_tts_quickstart()
 
     out, err = capsys.readouterr()
