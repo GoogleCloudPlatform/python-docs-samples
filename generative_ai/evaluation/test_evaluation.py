@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import evaluation_service_get_rouge_score
+import get_rouge_score
 
 
 def test_create_evaluation_task() -> None:
-    response = evaluation_service_get_rouge_score.get_rouge_score()
+    response = get_rouge_score.get_rouge_score()
     assert response
