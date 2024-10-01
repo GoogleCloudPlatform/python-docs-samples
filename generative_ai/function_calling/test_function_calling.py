@@ -11,18 +11,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import advanced_example
+
 import backoff
+
+import basic_example
+import chat_example
+import chat_function_calling_basic
+import chat_function_calling_config
 
 from google.api_core.exceptions import ResourceExhausted
 
-from . import (
-    advanced_example,
-    basic_example,
-    chat_example,
-    chat_function_calling_basic,
-    chat_function_calling_config,
-    parallel_function_calling_example,
-)
+import parallel_function_calling_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
