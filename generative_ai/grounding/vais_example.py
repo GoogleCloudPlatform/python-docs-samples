@@ -11,46 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-# TODO: Delete this file after approval /grounding/web_example.py & /grounding/vais_example.py
 import os
 
 from vertexai.generative_models import GenerationResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-
-def generate_text_with_grounding_web() -> GenerationResponse:
-    # [START generativeaionvertexai_gemini_grounding_with_web]
-    import vertexai
-
-    from vertexai.generative_models import (
-        GenerationConfig,
-        GenerativeModel,
-        Tool,
-        grounding,
-    )
-
-    # TODO (developer): update project_id
-    vertexai.init(project=PROJECT_ID, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-002")
-
-    # Use Google Search for grounding
-    tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
-
-    prompt = "When is the next total solar eclipse in US?"
-    response = model.generate_content(
-        prompt,
-        tools=[tool],
-        generation_config=GenerationConfig(
-            temperature=0.0,
-        ),
-    )
-
-    print(response.text)
-
-    # [END generativeaionvertexai_gemini_grounding_with_web]
-    return response
 
 
 def generate_text_with_grounding_vertex_ai_search(
@@ -66,13 +31,13 @@ def generate_text_with_grounding_vertex_ai_search(
         grounding,
     )
 
-    # TODO (developer): update project_id
+    # TODO(developer): Update and un-comment below lines
+    # PROJECT_ID = "your-project-id"
+    # data_store_id = "your-data-store-id"
+
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-002")
-
-    # TODO(developer): Update project id, location, and data store id for your Vertex AI Search data store.
-    # data_store_id = "DATA_STORE_ID"
+    model = GenerativeModel("gemini-1.5-flash-001")
 
     tool = Tool.from_retrieval(
         grounding.Retrieval(
@@ -97,3 +62,7 @@ def generate_text_with_grounding_vertex_ai_search(
 
     # [END generativeaionvertexai_gemini_grounding_with_vais]
     return response
+
+
+if __name__ == "__main__":
+    generate_text_with_grounding_vertex_ai_search("data-store_1234567890123")
