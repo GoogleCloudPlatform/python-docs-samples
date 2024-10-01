@@ -36,14 +36,15 @@ def run_streaming_tts_quickstart():
     # Set the config for your stream. The first request must contain your config, and then each subsequent request must contain text.
     config_request = texttospeech.StreamingSynthesizeRequest(streaming_config=streaming_config)
 
-    # Placeholder request generator. Consider using Gemini or another LLM with output streaming as a generator instead.
+    # Request generator. Consider using Gemini or another LLM with output streaming as a generator.
     def request_generator():
-        for i in range(5):
-            yield texttospeech.StreamingSynthesizeRequest(input="Test sentence. ")
+        yield texttospeech.StreamingSynthesizeRequest(input="Hello there. ")
+        yield texttospeech.StreamingSynthesizeRequest(input="How are you ")
+        yield texttospeech.StreamingSynthesizeRequest(input="today? It's ")
+        yield texttospeech.StreamingSynthesizeRequest(input="such nice weather outside.")
 
     streaming_responses = client.streaming_synthesize(itertools.chain([config_request], request_generator()))
     for response in streaming_responses:
-        # Just print the audio size. Replace with your logic to play audio. Note that audio_content is headerless LINEAR16 audio with a sample rate of 24000
         print("Audio content size in bytes is: " + len(response.audio_content))
     # [END tts_synthezise_streaming]
 
