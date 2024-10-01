@@ -4,6 +4,6 @@ python-tds==1.15.0
 pyopenssl==24.0.0
 SQLAlchemy==2.0.24
 cloud-sql-python-connector==1.9.1
-sqlalchemy-pytds==1.0.0
+sqlalchemy-pytds==1.0.2
 functions-framework==3.5.0
 Werkzeug==2.3.7
