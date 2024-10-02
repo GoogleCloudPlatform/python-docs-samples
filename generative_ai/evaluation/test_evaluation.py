@@ -12,9 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import gemini_pairwise_evaluation_summarization_quality
+import pairwise_summarization_quality
 
 
 def test_pairwise_evaluation_summarization_quality() -> None:
-    response = gemini_pairwise_evaluation_summarization_quality.evaluate_output()
+    response = pairwise_summarization_quality.evaluate_output()
     assert response
