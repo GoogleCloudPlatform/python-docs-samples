@@ -15,15 +15,11 @@ import os
 
 from typing import List
 
-from google.cloud.aiplatform_v1beta1.types.cached_content import CachedContent
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_content_caches() -> List[CachedContent]:
+def list_content_caches() -> List[str]:
     # [START generativeaionvertexai_gemini_get_list_of_context_caches]
-    import json
-
     import vertexai
 
     from vertexai.preview import caching
@@ -32,35 +28,19 @@ def list_content_caches() -> List[CachedContent]:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    cached_content_list = caching.CachedContent.list()
+    cache_list = caching.CachedContent.list()
     # Access individual properties of a CachedContent object
-    for cc in cached_content_list:
-        print(
-            f"Cached content '{cc.display_name}' for model '{cc.model_name}' expires at {cc.expire_time}."
-        )
+    for cached_content in cache_list:
+        print(f"Cache '{cached_content.name}' for model '{cached_content.model_name}'")
+        print(f"Last updated at: {cached_content.update_time}")
+        print(f"Expires at: {cached_content.expire_time}")
         # Example response:
-        # Cached content 'scientific-articles' for model '.../gemini-1.5-pro-001' expires at 2024-09-23 18:01:47.242036+00:00.
-
-    # or convert the ContentCache object to a dictionary:
-    for cc in cached_content_list:
-        print(json.dumps(cc.to_dict(), indent=2))
-        # Example response:
-        #  {
-        #      "name": "projects/[PROJECT_NUMBER]/locations/us-central1/cachedContents/4101407070023057408",
-        #      "model": "projects/[PROJECT_ID]/locations/us-central1/publishers/google/models/gemini-1.5-pro-001",
-        #      "createTime": "2024-09-16T12:41:09.998635Z",
-        #      "updateTime": "2024-09-16T12:41:09.998635Z",
-        #      "expireTime": "2024-09-16T13:41:09.989729Z",
-        #      "displayName": "scientific-articles"
-        #      "usageMetadata": {
-        #          "totalTokenCount": 43130,
-        #          "textCount": 153,
-        #          "imageCount": 167
-        #      }
-        #  }
+        # Context cache '[CACHE_ID]' for model '[MODEL_ID]'
+        # Last updated at: ...
+        # Expires at: ...
 
     # [END generativeaionvertexai_gemini_get_list_of_context_caches]
-    return cached_content_list
+    return [cached_content.name for cached_content in cache_list]
 
 
 if __name__ == "__main__":

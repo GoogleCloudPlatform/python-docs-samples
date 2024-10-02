@@ -52,8 +52,7 @@ def test_get_context_cache(cache_id: str) -> None:
 
 def test_get_list_of_context_caches(cache_id: str) -> None:
     response = list_content_caches.list_content_caches()
-    cache_id_is_in_response = any([cc for cc in response if cc.name == cache_id])
-    assert cache_id_is_in_response
+    assert cache_id in response
 
 
 def test_update_context_cache(cache_id: str) -> None:
