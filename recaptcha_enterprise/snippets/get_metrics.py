@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 # [START recaptcha_enterprise_get_metrics_site_key]
 from google.cloud import recaptchaenterprise_v1
