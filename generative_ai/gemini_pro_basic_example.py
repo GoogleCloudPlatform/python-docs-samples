@@ -25,7 +25,7 @@ def generate_text() -> None:
     # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     image_file = Part.from_uri(
         "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"

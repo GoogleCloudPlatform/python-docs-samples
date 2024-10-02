@@ -15,7 +15,6 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = "gemini-1.5-flash-001"
 
 
 def generate_content() -> object:
@@ -24,13 +23,10 @@ def generate_content() -> object:
 
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Set the following variables and un-comment the lines below
-    # PROJECT_ID = "your-project-id"
-    # MODEL_ID = "gemini-1.5-flash-001"
-
+    # TODO(developer): Update Project ID
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel(MODEL_ID)
+    model = GenerativeModel("gemini-1.5-flash-002")
     responses = model.generate_content(
         "Write a story about a magic backpack.", stream=True
     )
