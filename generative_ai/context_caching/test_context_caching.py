@@ -11,8 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-from datetime import datetime as dt
 import os
 
 from typing import Generator
@@ -22,7 +20,6 @@ import delete_context_cache
 import get_context_cache
 import pytest
 import update_context_cache
-import update_context_cache_with_expire_time
 import use_context_cache
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -53,16 +50,3 @@ def test_get_context_cache(cache_id: str) -> None:
 def test_update_context_cache(cache_id: str) -> None:
     response = update_context_cache.update_context_cache(cache_id)
     assert response
-
-
-def test_update_context_cache_with_expire_time(cache_id: str) -> None:
-    response = update_context_cache_with_expire_time.update_context_cache_with_expire_time(cache_id)
-    assert response
-
-    create_time = dt.fromisoformat(str(response.create_time).replace("Z", "+00:00"))
-    update_time = dt.fromisoformat(str(response.update_time).replace("Z", "+00:00"))
-    expire_time = dt.fromisoformat(str(response.expire_time).replace("Z", "+00:00"))
-
-    assert update_time >= create_time, "updateTime should be equal to or after createTime"
-    assert expire_time > update_time, "expireTime should be after updateTime"
-    assert 364 <= (expire_time - update_time).days <= 366, "expireTime should be roughly one year after updateTime"

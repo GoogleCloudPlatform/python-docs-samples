@@ -19,7 +19,9 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def update_context_cache(cache_id: str) -> str:
     # [START generativeaionvertexai_gemini_update_context_cache]
     import vertexai
-    import datetime
+    from datetime import datetime as dt
+    from datetime import timezone as tz
+    from datetime import timedelta
 
     from vertexai.preview import caching
 
@@ -31,8 +33,13 @@ def update_context_cache(cache_id: str) -> str:
 
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
-    # Update the expiration time by 1 hour
-    cached_content.update(ttl=datetime.timedelta(hours=1))
+    # Update the context cache to expire in 3 hours
+    cached_content.update(ttl=timedelta(hours=3))
+    cached_content.refresh()
+
+    # We can also set the cache expiration to a specific time in the future
+    next_week_utc = dt.now(tz.utc) + timedelta(days=7)
+    cached_content.update(expire_time=next_week_utc)
     cached_content.refresh()
 
     print(cached_content.expire_time)
