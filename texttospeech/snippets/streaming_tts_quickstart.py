@@ -38,10 +38,10 @@ def run_streaming_tts_quickstart():
 
     # Request generator. Consider using Gemini or another LLM with output streaming as a generator.
     def request_generator():
-        yield texttospeech.StreamingSynthesizeRequest(input="Hello there. ")
-        yield texttospeech.StreamingSynthesizeRequest(input="How are you ")
-        yield texttospeech.StreamingSynthesizeRequest(input="today? It's ")
-        yield texttospeech.StreamingSynthesizeRequest(input="such nice weather outside.")
+        yield texttospeech.StreamingSynthesizeRequest(input=texttospeech.StreamingSynthesisInput(text="Hello there. "))
+        yield texttospeech.StreamingSynthesizeRequest(input=texttospeech.StreamingSynthesisInput(text="How are you "))
+        yield texttospeech.StreamingSynthesizeRequest(input=texttospeech.StreamingSynthesisInput(text="today? It's "))
+        yield texttospeech.StreamingSynthesizeRequest(input=texttospeech.StreamingSynthesisInput(text="such nice weather outside."))
 
     streaming_responses = client.streaming_synthesize(itertools.chain([config_request], request_generator()))
     for response in streaming_responses:
