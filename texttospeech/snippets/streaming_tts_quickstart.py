@@ -45,7 +45,7 @@ def run_streaming_tts_quickstart():
 
     streaming_responses = client.streaming_synthesize(itertools.chain([config_request], request_generator()))
     for response in streaming_responses:
-        print("Audio content size in bytes is: " + len(response.audio_content))
+        print(f"Audio content size in bytes is: {len(response.audio_content)}")
     # [END tts_synthezise_streaming]
 
 
