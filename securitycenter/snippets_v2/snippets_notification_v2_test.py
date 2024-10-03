@@ -23,8 +23,8 @@ from google.api_core.exceptions import InternalServerError, NotFound, ServiceUna
 
 import snippets_notification_configs_v2
 
-ORG_ID = os.environ["SCC_PROJECT_ORG_ID"]
-PROJECT_ID = os.environ["SCC_PROJECT_ID"]
+ORG_ID = os.environ["GCLOUD_ORGANIZATION"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 PUBSUB_TOPIC = os.environ["GCLOUD_PUBSUB_TOPIC"]
 PUBSUB_SUBSCRIPTION = os.environ["GCLOUD_PUBSUB_SUBSCRIPTION"]
 LOCATION_ID = os.environ["GCLOUD_LOCATION"]
