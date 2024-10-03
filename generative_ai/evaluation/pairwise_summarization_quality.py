@@ -52,11 +52,11 @@ def evaluate_output() -> EvalResult:
     eval_dataset = pd.DataFrame({"prompt": [prompt]})
 
     # Baseline model for pairwise comparison
-    baseline_model = GenerativeModel("gemini-1.5-pro-002")
+    baseline_model = GenerativeModel("gemini-1.5-pro-001")
 
     # Candidate model for pairwise comparison
     candidate_model = GenerativeModel(
-        "gemini-1.5-pro", generation_config={"temperature": 0.4}
+        "gemini-1.5-pro-002", generation_config={"temperature": 0.4}
     )
 
     prompt_template = MetricPromptTemplateExamples.get_prompt_template(
@@ -85,11 +85,19 @@ def evaluate_output() -> EvalResult:
         "pairwise_summarization_quality/explanation"
     ].iloc[0]
 
-    print(f"Baseline's story:\n\n{baseline_model_response}\n")
-    print(f"Candidate's story:\n\n{candidate_model_response}\n")
-    print(f"Winner: {winner_model}\n")
-    print(f"Explanation: {explanation}\n")
+    print(f"Baseline's story:\n{baseline_model_response}")
+    print(f"Candidate's story:\n{candidate_model_response}")
+    print(f"Winner: {winner_model}")
+    print(f"Explanation: {explanation}")
     # Example response:
+    # Baseline's story:
+    # A big city wants to make it easier for people to get around without using cars! They're going to make buses and trains ...
+    #
+    # Candidate's story:
+    # A big city wants to make it easier for people to get around without using cars! ... This will help keep the air clean ...
+    #
+    # Winner: CANDIDATE
+    # Explanation: Both responses adhere to the prompt's constraints, are grounded in the provided text, and ... However, Response B ...
 
     # [END generativeaionvertexai_evaluation_pairwise_summarization_quality]
     return result
