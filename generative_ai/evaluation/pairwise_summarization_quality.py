@@ -52,7 +52,7 @@ def evaluate_output() -> EvalResult:
     eval_dataset = pd.DataFrame({"prompt": [prompt]})
 
     # Baseline model for pairwise comparison
-    baseline_model = GenerativeModel("gemini-1.5-pro")
+    baseline_model = GenerativeModel("gemini-1.5-pro-002")
 
     # Candidate model for pairwise comparison
     candidate_model = GenerativeModel(
