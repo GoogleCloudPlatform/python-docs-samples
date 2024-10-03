@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def evaluate_output() -> EvalResult:
-    # [START generativeaionvertexai_evaluate_output_pairwise_summarization_quality]
+    # [START generativeaionvertexai_evaluation_pairwise_summarization_quality]
     import pandas as pd
 
     import vertexai
@@ -89,8 +89,9 @@ def evaluate_output() -> EvalResult:
     print(f"Candidate's story:\n\n{candidate_model_response}\n")
     print(f"Winner: {winner_model}\n")
     print(f"Explanation: {explanation}\n")
+    # Example response:
 
-    # [END generativeaionvertexai_evaluate_output_pairwise_summarization_quality]
+    # [END generativeaionvertexai_evaluation_pairwise_summarization_quality]
     return result
 
 
