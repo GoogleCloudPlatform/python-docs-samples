@@ -33,7 +33,7 @@ def update_context_cache(cache_id: str) -> str:
 
     cached_content = caching.CachedContent(cached_content_name=cache_id)
 
-    # Option1: Update the context cache using ttl(time to live)
+    # Option1: Update the context cache using TTL (Time to live)
     cached_content.update(ttl=timedelta(hours=3))
     cached_content.refresh()
 
