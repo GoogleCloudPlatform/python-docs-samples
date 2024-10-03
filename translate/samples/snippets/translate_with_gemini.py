@@ -16,7 +16,7 @@
 import os
 
 import vertexai
-from vertexai.generative_models import GenerativeModel, Part, GenerationResponse
+from vertexai.generative_models import GenerationResponse, GenerativeModel, Part
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
