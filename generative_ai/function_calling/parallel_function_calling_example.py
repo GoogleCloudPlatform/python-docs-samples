@@ -18,8 +18,8 @@ from vertexai.generative_models import ChatSession
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_parallel_function_calls() -> ChatSession:
-    # [START generativeaionvertexai_gemini_parallel_function_calling_example]
+def parallel_function_calling_example() -> ChatSession:
+    # [START generativeaionvertexai_function_calling_parallel_function_calling]
     import vertexai
     from vertexai.generative_models import (
         FunctionDeclaration,
@@ -99,9 +99,9 @@ def generate_parallel_function_calls() -> ChatSession:
         # Example response:
         # The current weather in New Delhi is 35°C. The current weather in San Francisco is 25°C.
 
-        # [END generativeaionvertexai_gemini_parallel_function_calling_example]
+        # [END generativeaionvertexai_function_calling_parallel_function_calling]
         return response
 
 
 if __name__ == "__main__":
-    generate_parallel_function_calls()
+    parallel_function_calling_example()

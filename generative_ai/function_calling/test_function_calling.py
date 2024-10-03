@@ -84,5 +84,5 @@ def test_function_calling_chat() -> None:
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_parallel_function_calling() -> None:
-    response = parallel_function_calling_example.generate_parallel_function_calls()
+    response = parallel_function_calling_example.parallel_function_calling_example()
     assert response is not None
