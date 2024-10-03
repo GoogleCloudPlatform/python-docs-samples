@@ -80,7 +80,9 @@ def test_update_notification_config():
     assert updated_config is not None
     assert CREATE_CONFIG_ID in updated_config.name
 
-
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_receive_notifications():
     assert snippets_notification_configs_v2.receive_notifications(PUBSUB_SUBSCRIPTION)
 

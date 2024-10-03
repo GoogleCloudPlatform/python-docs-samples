@@ -251,7 +251,7 @@ def receive_notifications(subscription_name) -> bool:
 
     print(f"Listening for messages on {subscription_name}...\n")
     try:
-        streaming_pull_future.result(timeout=1)  # Block for 1 second
+        streaming_pull_future.result(timeout=10)  # Block for 1 second
     except concurrent.futures.TimeoutError:
         streaming_pull_future.cancel()
     return True
