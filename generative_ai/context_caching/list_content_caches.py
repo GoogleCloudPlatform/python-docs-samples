@@ -35,7 +35,7 @@ def list_content_caches() -> List[str]:
         print(f"Last updated at: {cached_content.update_time}")
         print(f"Expires at: {cached_content.expire_time}")
         # Example response:
-        # Context cache '[CACHE_ID]' for model '[MODEL_ID]'
+        # Cached content 'example-cache' for model '.../gemini-1.5-pro-001'
         # Last updated at: ...
         # Expires at: ...
 
