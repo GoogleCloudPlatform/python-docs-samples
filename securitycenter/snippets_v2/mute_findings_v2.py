@@ -77,6 +77,7 @@ def set_unmute_finding(finding_path: str) -> None:
 
 # [START securitycenter_bulk_mute_v2]
 
+
 def bulk_mute_findings(parent_path: str, location_id, mute_rule: str) -> None:
     """
       Kicks off a long-running operation (LRO) to bulk mute findings for a parent based on a filter.
@@ -102,5 +103,6 @@ def bulk_mute_findings(parent_path: str, location_id, mute_rule: str) -> None:
     response = client.bulk_mute_findings(request)
     print(f"Bulk mute findings completed successfully! : {response}")
     return response
+
 
 # [END securitycenter_bulk_mute_v2]
