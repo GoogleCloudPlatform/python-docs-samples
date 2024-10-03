@@ -80,6 +80,7 @@ def test_update_notification_config():
     assert updated_config is not None
     assert CREATE_CONFIG_ID in updated_config.name
 
+
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
