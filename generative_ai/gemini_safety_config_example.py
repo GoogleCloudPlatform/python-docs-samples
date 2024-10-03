@@ -32,7 +32,7 @@ def generate_text() -> str:
     # TODO(developer): Update project
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     # Safety config
     safety_config = [
@@ -64,3 +64,7 @@ def generate_text() -> str:
     # [END generativeaionvertexai_gemini_safety_settings]
 
     return "".join(text_responses)
+
+
+if __name__ == "__main__":
+    generate_text()

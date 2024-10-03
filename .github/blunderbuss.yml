@@ -18,18 +18,6 @@
 assign_issues_by:
   # DEE teams
   - labels:
-      - "api: appengine"
-      - "api: cloudbuild"
-      - "api: cloudscheduler"
-      - "api: cloudtasks"
-      - "api: containeranalysis"
-      - "api: eventarc"
-      - "api: functions"
-      - "api: run"
-      - "api: workflows"
-    to:
-      - GoogleCloudPlatform/torus-dpe
-  - labels:
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -43,35 +31,9 @@ assign_issues_by:
     to:
       - GoogleCloudPlatform/dee-infra
   - labels:
-      - "api: clouderrorreporting"
-      - "api: cloudtrace"
-      - "api: container"
-      - "api: logging"
-      - "api: monitoring"
-      - "api: trace"
-    to:
-      - GoogleCloudPlatform/dee-platform-ops
-  - labels:
       - "api: people-and-planet-ai"
     to:
       - davidcavazos
-  - labels:
-      - "api: datacatalog"
-      - 'api: dataflow'
-      - "api: datalabeling"
-      - "api: dataproc"
-      - "api: dialogflow"
-      - "api: enterpriseknowledgegraph"
-      - "api: language"
-      - "api: ml"
-      - "api: notebooks"
-      - "api: optimization"
-      - "api: talent"
-      - "api: texttospeech"
-      - "api: translate"
-      - "api: vision"
-    to:
-      - GoogleCloudPlatform/dee-data-ai
 
   # AppEco teams
   - labels:
@@ -110,6 +72,10 @@ assign_issues_by:
 
   # AppEco individuals
   - labels:
+      - "api: aml-ai"
+    to:
+      - nickcook
+  - labels:
       - "api: bigquery"
     to:
       - shollyman
@@ -124,7 +90,6 @@ assign_issues_by:
       - "api: asset"
     to:
       - GoogleCloudPlatform/cloud-asset-analysis-team
-      - GoogleCloudPlatform/cloud-asset-platform-team
   - labels:
       - "api: contentwarehouse"
       - "api: documentai"
@@ -137,7 +102,7 @@ assign_issues_by:
   - labels:
       - "api: functions"
     to:
-      - GoogleCloudPlatform/functions-framework-google
+      - GoogleCloudPlatform/cloud-functions-framework-github-role-write
   - labels:
       - "api: billingbudgets"
       - "api: cloudbilling"
@@ -159,7 +124,6 @@ assign_issues_by:
       - "api: speech"
     to:
       - GoogleCloudPlatform/cloud-speech-eng
-      - GoogleCloudPlatform/dee-data-ai
   - labels:
       - "api: serviceextensions"
     to:
@@ -182,17 +146,6 @@ assign_issues_by:
 assign_prs_by:
   # DEE teams
   - labels:
-      - "api: cloudbuild"
-      - "api: cloudscheduler"
-      - "api: cloudtasks"
-      - "api: containeranalysis"
-      - "api: eventarc"
-      - "api: functions"
-      - "api: run"
-      - "api: workflows"
-    to:
-      - GoogleCloudPlatform/torus-dpe
-  - labels:
       - "api: batch"
       - "api: compute"
       - "api: cloudkms"
@@ -205,38 +158,9 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/dee-infra
   - labels:
-      - "api: clouderrorreporting"
-      - "api: cloudtrace"
-      - "api: container"
-      - "api: logging"
-      - "api: monitoring"
-      - "api: trace"
-    to:
-      - GoogleCloudPlatform/dee-platform-ops
-  - labels:
       - "api: people-and-planet-ai"
     to:
       - davidcavazos
-  - labels:
-      - "api: datacatalog"
-      - 'api: dataflow'
-      - "api: datalabeling"
-      - "api: dataproc"
-      - "api: dialogflow"
-      - "api: enterpriseknowledgegraph"
-      - "api: discoveryengine"
-      - "api: language"
-      - "api: ml"
-      - "api: notebooks"
-      - "api: optimization"
-      - "api: talent"
-      - "api: texttospeech"
-      - "api: transcoder"
-      - "api: translate"
-      - "api: vision"
-      - "api: videointelligence"
-    to:
-      - GoogleCloudPlatform/dee-data-ai
 
   # AppEco teams
   - labels:
@@ -283,7 +207,6 @@ assign_prs_by:
       - "api: asset"
     to:
       - GoogleCloudPlatform/cloud-asset-analysis-team
-      - GoogleCloudPlatform/cloud-asset-platform-team  
   - labels:
       - "api: contentwarehouse"
       - "api: documentai"
@@ -296,7 +219,7 @@ assign_prs_by:
   - labels:
       - "api: functions"
     to:
-      - GoogleCloudPlatform/functions-framework-google
+      - GoogleCloudPlatform/cloud-functions-framework-github-role-write
   - labels:
       - "api: billingbudgets"
       - "api: cloudbilling"
@@ -320,7 +243,6 @@ assign_prs_by:
       - "api: speech"
     to:
       - GoogleCloudPlatform/cloud-speech-eng
-      - GoogleCloudPlatform/dee-data-ai
   - labels:
       - "api: serviceextensions"
     to:

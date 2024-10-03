@@ -244,7 +244,6 @@ def test_create_secret_with_label(
     label_value: str,
     ttl: Optional[str],
 ) -> None:
-
     labels = {label_key: label_value}
     secret = create_secret_with_labels(project_id, secret_id, labels, ttl)
     assert secret_id in secret.name

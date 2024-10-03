@@ -11,19 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def streaming_prediction(
-    project_id: str,
-    location: str,
-) -> str:
+def streaming_prediction() -> str:
     """Streaming Code Example with a Large Language Model."""
     # [START aiplatform_streaming_code]
     import vertexai
     from vertexai import language_models
 
     # TODO(developer): update project_id & location
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     code_generation_model = language_models.CodeGenerationModel.from_pretrained(
         "code-bison"

@@ -24,10 +24,11 @@
 
 ## from google.appengine.api import memcache
 import os
-import redis
 import time
 
 from flask import Flask, redirect, render_template, request
+import redis
+
 
 redis_host = os.environ.get("REDIS_HOST", "localhost")
 redis_port = os.environ.get("REDIS_PORT", "6379")

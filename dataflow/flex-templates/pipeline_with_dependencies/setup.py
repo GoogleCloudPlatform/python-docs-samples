@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Defines a Python package for an Apache Beam pipeline."""
+"""A setuptools configuration file stub for the pipeline package.
+
+Note that the package is completely defined by pyproject.toml.
+This file is optional. It is only necessary if you must use the --setup_file
+pipeline option or the FLEX_TEMPLATE_PYTHON_SETUP_FILE configuration option.
+"""
 
 import setuptools
-
-setuptools.setup(
-    name="my_package",
-    version="0.1.0",
-    install_requires=[
-        "apache-beam[gcp]==2.54.0",  # Must match the version in `Dockerfile``.
-        "pyfiglet",  # This is the only non-Beam dependency of this pipeline.
-    ],
-    packages=setuptools.find_packages(),
-)
+setuptools.setup()

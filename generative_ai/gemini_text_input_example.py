@@ -11,19 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_from_text_input(project_id: str) -> str:
+def generate_from_text_input() -> str:
     # [START generativeaionvertexai_gemini_generate_from_text_input]
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
+    # TODO(developer): Update & uncomment line below
+    # PROJECT_ID = "your-project-id"
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     response = model.generate_content(
         "What's a good name for a flower shop that specializes in selling bouquets of dried flowers?"
@@ -33,3 +35,7 @@ def generate_from_text_input(project_id: str) -> str:
     # [END generativeaionvertexai_gemini_generate_from_text_input]
 
     return response.text
+
+
+if __name__ == "__main__":
+    generate_from_text_input()

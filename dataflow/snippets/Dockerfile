@@ -22,7 +22,7 @@ FROM ubuntu:focal
 
 WORKDIR /pipeline
 
-COPY --from=apache/beam_python3.11_sdk:2.57.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.11_sdk:2.58.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 COPY requirements.txt .
@@ -38,3 +38,4 @@ RUN apt-get update \
 
 
 COPY read_kafka.py ./
+COPY read_kafka_multi_topic.py ./

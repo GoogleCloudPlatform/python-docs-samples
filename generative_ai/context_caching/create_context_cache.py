@@ -11,9 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def create_context_cache(project_id: str) -> str:
+def create_context_cache() -> str:
     # [START generativeaionvertexai_gemini_create_context_cache]
     import vertexai
     import datetime
@@ -22,9 +25,9 @@ def create_context_cache(project_id: str) -> str:
     from vertexai.preview import caching
 
     # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
+    # PROJECT_ID = "your-project-id"
 
-    vertexai.init(project=project_id, location="us-central1")
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     system_instruction = """
     You are an expert researcher. You always stick to the facts in the sources provided, and never make up new facts.
@@ -43,13 +46,20 @@ def create_context_cache(project_id: str) -> str:
     ]
 
     cached_content = caching.CachedContent.create(
-        model_name="gemini-1.5-pro-001",
+        model_name="gemini-1.5-pro-002",
         system_instruction=system_instruction,
         contents=contents,
         ttl=datetime.timedelta(minutes=60),
+        display_name="example-cache",
     )
 
     print(cached_content.name)
+    # Example response:
+    # 1234567890
     # [END generativeaionvertexai_gemini_create_context_cache]
 
     return cached_content.name
+
+
+if __name__ == "__main__":
+    create_context_cache()
