@@ -49,6 +49,8 @@ def translate_text(
     # Display the translation for each input text provided
     for translation in response.translations:
         print(f"Translated text: {translation.translated_text}")
+    # Example response:
+    # Translated text: Bonjour comment vas-tu aujourd'hui?
 
     return response
 

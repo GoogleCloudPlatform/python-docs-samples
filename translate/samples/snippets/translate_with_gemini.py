@@ -56,6 +56,8 @@ def translate_text(text: str, target_language_code: str = "fr"):
     )
 
     print(responses.candidates[0].content.text)
+    # Example response:
+    # Bonjour ! Comment allez-vous aujourd'hui ?
 
     return responses
 
