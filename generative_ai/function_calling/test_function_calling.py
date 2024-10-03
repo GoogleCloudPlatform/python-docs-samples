@@ -11,23 +11,46 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import advanced_example
+
 import backoff
 
-
+import basic_example
 import chat_example
-
 import chat_function_calling_basic
 import chat_function_calling_config
 
 from google.api_core.exceptions import ResourceExhausted
 
-summaries_expected = [
-    "Pixel 8 Pro",
-    "stock",
-    "store",
-    "2000 N Shoreline Blvd",
-    "Mountain View",
-]
+import parallel_function_calling_example
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_function_calling() -> None:
+    response = basic_example.generate_function_call()
+
+    expected_summary = [
+        "Boston",
+    ]
+    expected_responses = [
+        "candidates",
+        "content",
+        "role",
+        "model",
+        "parts",
+        "Boston",
+    ]
+    assert all(x in str(response.text) for x in expected_summary)
+    assert all(x in str(response) for x in expected_responses)
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_function_calling_advanced_function_selection() -> None:
+    response = advanced_example.generate_function_call_advanced()
+    assert (
+        "Pixel 8 Pro 128GB"
+        in response.candidates[0].function_calls[0].args["product_name"]
+    )
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
@@ -48,4 +71,18 @@ def test_function_calling_chat() -> None:
 
     assert chat
     assert chat.history
-    assert any(x in str(chat.history) for x in summaries_expected)
+
+    expected_summaries = [
+        "Pixel 8 Pro",
+        "stock",
+        "store",
+        "2000 N Shoreline Blvd",
+        "Mountain View",
+    ]
+    assert any(x in str(chat.history) for x in expected_summaries)
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_parallel_function_calling() -> None:
+    response = parallel_function_calling_example.parallel_function_calling_example()
+    assert response is not None
