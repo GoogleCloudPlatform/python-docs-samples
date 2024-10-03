@@ -21,7 +21,6 @@ from vertexai.generative_models import GenerationResponse, GenerativeModel, Part
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
-# [START aiplatform_gemini_translate]
 def translate_text(text: str, target_language_code: str = "fr") -> GenerationResponse:
     """Translates the given text to the specified target language using the Gemini model.
     Args:
