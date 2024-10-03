@@ -20,19 +20,19 @@ from typing import Dict
 # [START securitycenter_create_mute_config_v2]
 def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Dict:
     """
-     Creates a mute configuration under a given scope that will mute
-     all new findings that match a given filter.
-     Existing findings will NOT BE muted.
-     Args:
-         parent_path: use any one of the following options:
-                      - organizations/{organization_id}
-                      - folders/{folder_id}
-                      - projects/{project_id}
-         location_id: Gcp location id; example: 'global'
-         mute_config_id: Set a unique id; max of 63 chars.
-     Returns:
-         Dict: returns the mute rule details
-     """
+    Creates a mute configuration under a given scope that will mute
+    all new findings that match a given filter.
+    Existing findings will NOT BE muted.
+    Args:
+        parent_path: use any one of the following options:
+                     - organizations/{organization_id}
+                     - folders/{folder_id}
+                     - projects/{project_id}
+        location_id: Gcp location id; example: 'global'
+        mute_config_id: Set a unique id; max of 63 chars.
+    Returns:
+        Dict: returns the mute rule details
+    """
 
     from google.cloud import securitycenter_v2
 
@@ -51,13 +51,14 @@ def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     mute_config.type = "STATIC"
 
     request = securitycenter_v2.CreateMuteConfigRequest()
-    request.parent = parent_path+"/locations/"+location_id
+    request.parent = parent_path + "/locations/" + location_id
     request.mute_config_id = mute_config_id
     request.mute_config = mute_config
 
     mute_config = client.create_mute_config(request=request)
     print(f"Mute rule created successfully: {mute_config.name}")
     return mute_config
+
 
 # [END securitycenter_create_mute_config_v2]
 
@@ -82,7 +83,9 @@ def delete_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     client = securitycenter_v2.SecurityCenterClient()
 
     request = securitycenter_v2.DeleteMuteConfigRequest()
-    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
+    request.name = (
+        parent_path + "/locations/" + location_id + "/muteConfigs/" + mute_config_id
+    )
 
     client.delete_mute_config(request)
     print(f"Mute rule deleted successfully: {mute_config_id}")
@@ -110,11 +113,14 @@ def get_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Di
     client = securitycenter_v2.SecurityCenterClient()
 
     request = securitycenter_v2.GetMuteConfigRequest()
-    request.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
+    request.name = (
+        parent_path + "/locations/" + location_id + "/muteConfigs/" + mute_config_id
+    )
 
     mute_config = client.get_mute_config(request)
     print(f"Retrieved the mute rule: {mute_config.name}")
     return mute_config
+
 
 # [END securitycenter_get_mute_config_v2]
 
@@ -140,12 +146,13 @@ def list_mute_rules(parent: str, location_id: str) -> Dict:
     client = securitycenter_v2.SecurityCenterClient()
 
     request = securitycenter_v2.ListMuteConfigsRequest()
-    request.parent = parent+"/locations/"+location_id
+    request.parent = parent + "/locations/" + location_id
     response = client.list_mute_configs(request)
     # List all Mute Configs present in the resource.
     for mute_config in response:
         print(mute_config.name)
     return response
+
 
 # [END securitycenter_list_mute_configs_v2]
 
@@ -171,7 +178,9 @@ def update_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     client = securitycenter_v2.SecurityCenterClient()
 
     update_mute_config = securitycenter_v2.MuteConfig()
-    update_mute_config.name = parent_path+"/locations/"+location_id+"/muteConfigs/"+mute_config_id
+    update_mute_config.name = (
+        parent_path + "/locations/" + location_id + "/muteConfigs/" + mute_config_id
+    )
     update_mute_config.description = "Updated mute config description"
 
     field_mask = field_mask_pb2.FieldMask(paths=["description"])
@@ -188,5 +197,6 @@ def update_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     mute_config = client.update_mute_config(request)
     print(f"Updated mute rule : {mute_config}")
     return mute_config
+
 
 # [END securitycenter_update_mute_config_v2]

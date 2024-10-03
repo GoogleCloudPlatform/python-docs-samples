@@ -49,6 +49,8 @@ def add_to_asset(organization_id, asset_name) -> Dict:
     )
     print(updated_marks)
     return updated_marks, marks
+
+
 # [END securitycenter_add_security_marks_v2]
 
 
@@ -87,6 +89,8 @@ def delete_security_marks(organization_id, asset_name) -> Dict:
     )
     print(updated_marks)
     return updated_marks
+
+
 # [END securitycenter_delete_security_marks_v2]
 
 
@@ -122,6 +126,8 @@ def delete_and_update_marks(organization_id, asset_name) -> Dict:
     )
     print(updated_marks)
     return updated_marks
+
+
 # [END securitycenter_add_delete_security_marks_v2]
 
 
@@ -159,4 +165,6 @@ def add_to_finding(organization_id, source_name, location_id, finding_name):
         }
     )
     return updated_marks, marks
+
+
 # [END securitycenter_add_finding_security_marks_v2]
