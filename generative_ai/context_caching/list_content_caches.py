@@ -37,7 +37,7 @@ def list_content_caches() -> List[str]:
         # Example response:
         # Cached content 'example-cache' for model '.../gemini-1.5-pro-001'
         # Last updated at: 2024-09-16T12:41:09.998635Z
-        # Expires at: ...
+        # Expires at: 2024-09-16T13:41:09.989729Z
 
     # [END generativeaionvertexai_gemini_get_list_of_context_caches]
     return [cached_content.name for cached_content in cache_list]
