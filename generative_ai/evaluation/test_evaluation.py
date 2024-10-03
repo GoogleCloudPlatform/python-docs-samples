@@ -12,14 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import backoff
-from google.api_core.exceptions import ResourceExhausted
-
-import anthropic_claude_3_unary
+import get_rouge_score
 
 
-@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-def test_generate_text() -> None:
-    responses = anthropic_claude_3_unary.generate_text()
-    assert "bread" in responses.model_dump_json(indent=2)
+def test_create_evaluation_task() -> None:
+    response = get_rouge_score.get_rouge_score()
+    assert response
