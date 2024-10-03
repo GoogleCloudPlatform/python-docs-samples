@@ -13,14 +13,14 @@
 # limitations under the License.
 #
 
-from google.cloud import discoveryengine_v1alpha as discoveryengine
+from google.cloud import discoveryengine_v1 as discoveryengine
 
 
 def check_grounding_sample(
     project_id: str,
 ) -> discoveryengine.CheckGroundingResponse:
     # [START genappbuilder_check_grounding]
-    from google.cloud import discoveryengine_v1alpha as discoveryengine
+    from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
     # project_id = "YOUR_PROJECT_ID"
@@ -78,7 +78,7 @@ def rank_sample(
     project_id: str,
 ) -> discoveryengine.RankResponse:
     # [START genappbuilder_rank]
-    from google.cloud import discoveryengine_v1alpha as discoveryengine
+    from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
     # project_id = "YOUR_PROJECT_ID"
@@ -126,23 +126,22 @@ def rank_sample(
 
 
 def grounded_generation_inline_vais_sample(
-    project_id: str,
-    serving_config: str,
+    project_number: str,
+    engine_id: str,
 ) -> discoveryengine.GenerateGroundedContentResponse:
     # [START genappbuilder_grounded_generation_inline_vais]
     from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
-    # project_id = "YOUR_PROJECT_ID"
-    # The full resource name of the serving config for a Vertex AI Search App
-    # serving_config = "projects/{project_id}/locations/global/collections/default_collection/engines/{engine_id}/servingConfigs/default_search"
+    # project_number = "YOUR_PROJECT_NUMBER"
+    # engine_id = "YOUR_ENGINE_ID"
 
     client = discoveryengine.GroundedGenerationServiceClient()
 
     request = discoveryengine.GenerateGroundedContentRequest(
         # The full resource name of the location.
-        # Format: projects/{project_id}/locations/{location}
-        location=client.common_location_path(project=project_id, location="global"),
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
             model_id="gemini-1.5-flash",
         ),
@@ -182,8 +181,11 @@ def grounded_generation_inline_vais_sample(
                         ]
                     ),
                 ),
-                discoveryengine.GenerateGroundedContentRequest.GroundingSource.SearchSource(
-                    serving_config=serving_config,
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.SearchSource(
+                        # The full resource name of the serving config for a Vertex AI Search App
+                        serving_config=f"projects/{project_number}/locations/global/collections/default_collection/engines/{engine_id}/servingConfigs/default_search",
+                    ),
                 ),
             ]
         ),
@@ -198,20 +200,20 @@ def grounded_generation_inline_vais_sample(
 
 
 def grounded_generation_google_search_sample(
-    project_id: str,
+    project_number: str,
 ) -> discoveryengine.GenerateGroundedContentResponse:
     # [START genappbuilder_grounded_generation_google_search]
     from google.cloud import discoveryengine_v1 as discoveryengine
 
     # TODO(developer): Uncomment these variables before running the sample.
-    # project_id = "YOUR_PROJECT_ID"
+    # project_number = "YOUR_PROJECT_NUMBER"
 
     client = discoveryengine.GroundedGenerationServiceClient()
 
     request = discoveryengine.GenerateGroundedContentRequest(
         # The full resource name of the location.
-        # Format: projects/{project_id}/locations/{location}
-        location=client.common_location_path(project=project_id, location="global"),
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
             model_id="gemini-1.5-flash",
         ),
@@ -235,7 +237,14 @@ def grounded_generation_google_search_sample(
         grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
             grounding_sources=[
                 discoveryengine.GenerateGroundedContentRequest.GroundingSource(
-                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearch()
+                    google_search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearchSource(
+                        # Optional: For Dynamic Retrieval
+                        dynamic_retrieval_config=discoveryengine.GenerateGroundedContentRequest.DynamicRetrievalConfiguration(
+                            predictor=discoveryengine.GenerateGroundedContentRequest.DynamicRetrievalConfiguration.DynamicRetrievalPredictor(
+                                threshold=0.7
+                            )
+                        )
+                    )
                 ),
             ]
         ),
@@ -250,7 +259,7 @@ def grounded_generation_google_search_sample(
 
 
 def grounded_generation_streaming_sample(
-    project_id: str,
+    project_number: str,
 ) -> discoveryengine.GenerateGroundedContentResponse:
     # [START genappbuilder_grounded_generation_streaming]
     from google.cloud import discoveryengine_v1 as discoveryengine
@@ -262,8 +271,8 @@ def grounded_generation_streaming_sample(
 
     request = discoveryengine.GenerateGroundedContentRequest(
         # The full resource name of the location.
-        # Format: projects/{project_id}/locations/{location}
-        location=client.common_location_path(project=project_id, location="global"),
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
             model_id="gemini-1.5-flash",
         ),
@@ -281,15 +290,16 @@ def grounded_generation_streaming_sample(
         grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
             grounding_sources=[
                 discoveryengine.GenerateGroundedContentRequest.GroundingSource(
-                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearch()
+                    google_search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearchSource()
                 ),
             ]
         ),
     )
-    response = client.stream_generate_grounded_content(request)
+    responses = client.stream_generate_grounded_content(iter([request]))
 
-    # Handle the response
-    print(response)
+    for response in responses:
+        # Handle the response
+        print(response)
     # [END genappbuilder_grounded_generation_streaming]
 
     return response
