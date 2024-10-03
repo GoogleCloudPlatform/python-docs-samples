@@ -37,7 +37,7 @@ def update_context_cache(cache_id: str) -> str:
     cached_content.update(ttl=timedelta(hours=3))
     cached_content.refresh()
 
-    # We can also set the cache expiration to a specific time in the future
+    # Option2: Update the context cache using specific time
     next_week_utc = dt.now(tz.utc) + timedelta(days=7)
     cached_content.update(expire_time=next_week_utc)
     cached_content.refresh()
