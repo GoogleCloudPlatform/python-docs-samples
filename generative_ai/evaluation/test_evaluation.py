@@ -13,8 +13,14 @@
 # limitations under the License.
 
 import get_rouge_score
+import pairwise_summarization_quality
 
 
 def test_create_evaluation_task() -> None:
     response = get_rouge_score.get_rouge_score()
+    assert response
+
+
+def test_pairwise_evaluation_summarization_quality() -> None:
+    response = pairwise_summarization_quality.evaluate_output()
     assert response
