@@ -36,5 +36,6 @@ TEST_CONFIG_OVERRIDE = {
         "GCLOUD_PROJECT": "project-a-id",
         "GCLOUD_PUBSUB_TOPIC": "projects/project-a-id/topics/notifications-sample-topic",
         "GCLOUD_PUBSUB_SUBSCRIPTION": "notification-sample-subscription",
+        "GCLOUD_LOCATION": "global",
     },
 }
