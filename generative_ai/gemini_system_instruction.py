@@ -23,7 +23,7 @@ def set_system_instruction(project_id: str) -> str:
     vertexai.init(project=project_id, location="us-central1")
 
     model = GenerativeModel(
-        model_name="gemini-1.5-flash-001",
+        model_name="gemini-1.5-flash-002",
         system_instruction=[
             "You are a helpful language translator.",
             "Your mission is to translate text in English to French.",

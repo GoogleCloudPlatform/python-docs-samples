@@ -46,7 +46,7 @@ def create_context_cache() -> str:
     ]
 
     cached_content = caching.CachedContent.create(
-        model_name="gemini-1.5-pro-001",
+        model_name="gemini-1.5-pro-002",
         system_instruction=system_instruction,
         contents=contents,
         ttl=datetime.timedelta(minutes=60),

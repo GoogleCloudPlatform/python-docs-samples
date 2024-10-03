@@ -39,19 +39,22 @@ def generate_content() -> str:
         },
     }
 
-    model = GenerativeModel("gemini-1.5-pro-001")
+    model = GenerativeModel("gemini-1.5-pro-002")
 
     response = model.generate_content(
         [
+            # Text prompt
+            "Generate a list of objects in the images.",
+            # Http Image
             Part.from_uri(
-                "gs://cloud-samples-data/generative-ai/image/office-desk.jpeg",
+                "https://storage.googleapis.com/cloud-samples-data/generative-ai/image/office-desk.jpeg",
                 "image/jpeg",
             ),
+            # Cloud storage object
             Part.from_uri(
                 "gs://cloud-samples-data/generative-ai/image/gardening-tools.jpeg",
                 "image/jpeg",
             ),
-            "Generate a list of objects in the images.",
         ],
         generation_config=GenerationConfig(
             response_mime_type="application/json", response_schema=response_schema
