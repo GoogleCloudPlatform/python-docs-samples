@@ -41,6 +41,7 @@ def set_mute_finding(finding_path: str) -> None:
     print(f"Mute value for the finding: {finding.mute.name}")
     return finding
 
+
 # [END securitycenter_set_mute_v2]
 
 
@@ -70,10 +71,11 @@ def set_unmute_finding(finding_path: str) -> None:
     print(f"Mute value for the finding: {finding.mute.name}")
     return finding
 
+
 # [END securitycenter_set_unmute_v2]
 
 
-# # [START securitycenter_bulk_mute_v2]
+# [START securitycenter_bulk_mute_v2]
 # def bulk_mute_findings(parent_path: str, location_id, mute_rule: str) -> None:
 #     """
 #       Kicks off a long-running operation (LRO) to bulk mute findings for a parent based on a filter.
@@ -87,16 +89,17 @@ def set_unmute_finding(finding_path: str) -> None:
 #         mute_rule: Expression that identifies findings that should be updated.
 #     """
 #     from google.cloud import securitycenter_v2
-#
+
 #     client = securitycenter_v2.SecurityCenterClient()
-#
+
 #     request = securitycenter_v2.BulkMuteFindingsRequest()
-#     request.parent = parent_path+"/locations/"+location_id
+#     request.parent = parent_path + "/locations/" + location_id
 #     # To create mute rules, see:
 #     # https://cloud.google.com/security-command-center/docs/how-to-mute-findings#create_mute_rules
 #     request.filter = mute_rule
-#
+
 #     response = client.bulk_mute_findings(request)
 #     print(f"Bulk mute findings completed successfully! : {response}")
 #     return response
-# # [END securitycenter_bulk_mute_v2]
+
+# [END securitycenter_bulk_mute_v2]
