@@ -137,7 +137,8 @@ def import_documents_gcs_sample(
             input_uris=[gcs_uri],
             # Options:
             # - `content` - Unstructured documents (PDF, HTML, DOC, TXT, PPTX)
-            # - `custom` - Unstructured documents with JSONL metadata
+            # - `custom` - Unstructured documents with custom JSONL metadata
+            # - `document` - Structured documents in the discoveryengine.Document format.
             # - `csv` - Unstructured documents with CSV metadata
             data_schema="content",
         ),
