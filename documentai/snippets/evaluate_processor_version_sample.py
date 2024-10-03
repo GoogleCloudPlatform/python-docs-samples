@@ -77,7 +77,7 @@ def evaluate_processor_version_sample(
     # Wait for operation to complete
     response = documentai.EvaluateProcessorVersionResponse(operation.result())
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # Print evaluation ID from operation response
     print(f"Evaluation Complete: {response.evaluation}")
 

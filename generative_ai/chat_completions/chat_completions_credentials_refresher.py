@@ -15,6 +15,7 @@
 # Disable linting on `Any` type annotations (needed for OpenAI kwargs and attributes).
 # flake8: noqa ANN401
 
+# [START generativeaionvertexai_credentials_refresher_class]
 from typing import Any
 
 import google.auth
@@ -42,8 +43,11 @@ class OpenAICredentialsRefresher:
         return getattr(self.client, name)
 
 
+# [END generativeaionvertexai_credentials_refresher_class]
+
+
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_credentials_refresher]
+    # [START generativeaionvertexai_credentials_refresher_usage]
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -54,11 +58,11 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-001",
+        model="google/gemini-1.5-flash-002",
         messages=[{"role": "user", "content": "Why is the sky blue?"}],
     )
 
     print(response)
-    # [END generativeaionvertexai_credentials_refresher]
+    # [END generativeaionvertexai_credentials_refresher_usage]
 
     return response

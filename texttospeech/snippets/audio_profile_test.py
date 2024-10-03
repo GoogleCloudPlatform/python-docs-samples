@@ -18,16 +18,14 @@ import os.path
 
 import audio_profile
 
-TEXT = "hello"
 OUTPUT = "output.mp3"
-EFFECTS_PROFILE_ID = "telephony-class-application"
 
 
 def test_audio_profile(capsys):
     if os.path.exists(OUTPUT):
         os.remove(OUTPUT)
     assert not os.path.exists(OUTPUT)
-    audio_profile.synthesize_text_with_audio_profile(TEXT, OUTPUT, EFFECTS_PROFILE_ID)
+    audio_profile.synthesize_text_with_audio_profile()
     out, err = capsys.readouterr()
 
     assert ('Audio content written to file "%s"' % OUTPUT) in out

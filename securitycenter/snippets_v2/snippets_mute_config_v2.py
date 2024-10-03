@@ -16,6 +16,7 @@
 
 from typing import Dict
 
+
 # [START securitycenter_create_mute_config_v2]
 def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str) -> Dict:
     """
@@ -53,7 +54,6 @@ def create_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     request.parent = parent_path+"/locations/"+location_id
     request.mute_config_id = mute_config_id
     request.mute_config = mute_config
-
 
     mute_config = client.create_mute_config(request=request)
     print(f"Mute rule created successfully: {mute_config.name}")
@@ -190,4 +190,3 @@ def update_mute_rule(parent_path: str, location_id: str, mute_config_id: str) ->
     return mute_config
 
 # [END securitycenter_update_mute_config_v2]
-

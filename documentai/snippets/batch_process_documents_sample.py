@@ -112,7 +112,7 @@ def batch_process_documents(
     #
     # operation.add_done_callback(my_callback)
 
-    # Once the operation is complete,
+    # After the operation is complete,
     # get output document information from operation metadata
     metadata = documentai.BatchProcessMetadata(operation.metadata)
 

@@ -1,2 +1,0 @@
-pytest==8.2.0
-backoff==2.2.1

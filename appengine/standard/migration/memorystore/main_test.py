@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import uuid
+
 from mock import patch
 import pytest
 import redis
-import uuid
 
 import main
 

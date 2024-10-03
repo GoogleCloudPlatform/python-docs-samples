@@ -15,10 +15,11 @@
 import os
 
 import backoff
-from google.cloud import firestore
 import pytest
 
-from query_filter_or import query_or_composite_filter
+from query_filter_or import query_or_compound_filter
+from query_filter_or import query_or_filter
+import snippets_test
 
 os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
 PROJECT_ID = os.environ["FIRESTORE_PROJECT"]
@@ -27,10 +28,13 @@ PROJECT_ID = os.environ["FIRESTORE_PROJECT"]
 @pytest.fixture(scope="module")
 def data():
     return {
-        "aturing": {"birthYear": 1912},
-        "cbabbage": {"birthYear": 1791},
-        "ghopper": {"birthYear": 1906},
-        "alovelace": {"birthYear": 1815},
+        "San Francisco": {"capital": False, "population": 884_363, "state": "CA"},
+        "Los Angeles": {"capital": False, "population": 3_976_000, "state": "CA"},
+        "Sacramento": {"capital": True, "population": 508_529, "state": "CA"},
+        "New York City": {"capital": False, "population": 8_336_817, "state": "NY"},
+        "Seattle": {"capital": False, "population": 744_955, "state": "WA"},
+        "Olympia": {"capital": True, "population": 52_555, "state": "WA"},
+        "Phoenix": {"capital": True, "population": 1_445_632, "state": "AZ"},
     }
 
 
@@ -55,15 +59,44 @@ def delete_document_collection(data, collection):
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
-def test_query_or_composite_filter(capsys, data):
-    client = firestore.Client(project=PROJECT_ID)
-    collection = client.collection("users")
+def test_query_or_filter(capsys, data):
+    client = snippets_test.TestFirestoreClient(
+        project=PROJECT_ID, add_unique_string=False
+    )
+    collection = client.collection("cities")
 
     try:
         create_document_collection(data, collection)
-        query_or_composite_filter(PROJECT_ID)
+        query_or_filter(client)
     finally:
         delete_document_collection(data, collection)
 
     out, _ = capsys.readouterr()
-    assert "aturing" in out
+    for city in data:
+        if data[city]["capital"] or data[city]["population"] > 1_000_000:
+            assert city in out
+        else:
+            assert city not in out
+
+
+@backoff.on_exception(backoff.expo, Exception, max_tries=3)
+def test_query_or_compound_filter(capsys, data):
+    client = snippets_test.TestFirestoreClient(
+        project=PROJECT_ID, add_unique_string=False
+    )
+    collection = client.collection("cities")
+
+    try:
+        create_document_collection(data, collection)
+        query_or_compound_filter(client)
+    finally:
+        delete_document_collection(data, collection)
+
+    out, _ = capsys.readouterr()
+    for city in data:
+        if data[city]["state"] == "CA" and (
+            data[city]["capital"] or data[city]["population"] > 1_000_000
+        ):
+            assert city in out
+        else:
+            assert city not in out

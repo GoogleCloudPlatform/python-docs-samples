@@ -234,6 +234,35 @@ def set_unmute_finding(finding_path: str) -> None:
 # [END securitycenter_set_unmute]
 
 
+# [START securitycenter_set_mute_undefined]
+def set_undefined_finding(finding_path: str) -> None:
+    """
+      Reset mute state of an individual finding.
+      Resetting a finding that isn't muted or unmuted has no effect.
+      Various mute states are: UNDEFINED/MUTE/UNMUTE.
+    Args:
+        finding_path: The relative resource name of the finding. See:
+        https://cloud.google.com/apis/design/resource_names#relative_resource_name
+        Use any one of the following formats:
+        - organizations/{organization_id}/sources/{source_id}/finding/{finding_id},
+        - folders/{folder_id}/sources/{source_id}/finding/{finding_id},
+        - projects/{project_id}/sources/{source_id}/finding/{finding_id}.
+    """
+    from google.cloud import securitycenter
+
+    client = securitycenter.SecurityCenterClient()
+
+    request = securitycenter.SetMuteRequest()
+    request.name = finding_path
+    request.mute = securitycenter.Finding.Mute.UNDEFINED
+
+    finding = client.set_mute(request)
+    print(f"Reset mute value for the finding: {finding.mute.name}")
+
+
+# [END securitycenter_set_mute_undefined]
+
+
 # [START securitycenter_bulk_mute]
 def bulk_mute_findings(parent_path: str, mute_rule: str) -> None:
     """

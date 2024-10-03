@@ -14,27 +14,28 @@
 
 """Google Cloud Speech API sample that demonstrates enhanced models
 and recognition metadata.
-
-Example usage:
-    python transcribe_enhanced_model.py resources/commercial_mono.wav
 """
 # [START speech_transcribe_enhanced_model]
-
-import argparse
 
 from google.cloud import speech
 
 
-def transcribe_file_with_enhanced_model(path: str) -> speech.RecognizeResponse:
-    """Transcribe the given audio file using an enhanced model."""
+def transcribe_file_with_enhanced_model(audio_file: str) -> speech.RecognizeResponse:
+    """Transcribe the given audio file using an enhanced model.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/commercial_mono.wav"
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results.
+    """
 
     client = speech.SpeechClient()
 
-    # path = 'resources/commercial_mono.wav'
-    with open(path, "rb") as audio_file:
-        content = audio_file.read()
+    # audio_file = 'resources/commercial_mono.wav'
+    with open(audio_file, "rb") as f:
+        audio_content = f.read()
 
-    audio = speech.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=8000,
@@ -57,11 +58,4 @@ def transcribe_file_with_enhanced_model(path: str) -> speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("path", help="File to stream to the API")
-
-    args = parser.parse_args()
-
-    transcribe_file_with_enhanced_model(args.path)
+    transcribe_file_with_enhanced_model("resources/commercial_mono.wav")

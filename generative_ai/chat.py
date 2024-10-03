@@ -48,3 +48,6 @@ def send_chat() -> str:
 
 
 # [END generativeaionvertexai_sdk_chat]
+
+if __name__ == "__main__":
+    send_chat()

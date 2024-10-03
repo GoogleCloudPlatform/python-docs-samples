@@ -41,3 +41,19 @@ indexes:
   - name: done
   - name: created
     direction: desc
+- kind: Task
+  properties:
+  - name: priority
+  - name: days
+- kind: employees
+  properties:
+  - name: salary
+    direction: desc
+  - name: experience
+    direction: desc
+- kind: employees
+  properties:
+  - name: salary
+    direction: desc
+  - name: experience
+    direction: desc

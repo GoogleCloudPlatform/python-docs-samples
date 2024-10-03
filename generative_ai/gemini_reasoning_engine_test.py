@@ -12,29 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from typing import Generator
 
 import pytest
 
 import gemini_reasoning_engine
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-REGION = "us-central1"
 STAGING_BUCKET = "gs://ucaip-samples-us-central1"
 
 
 @pytest.fixture(scope="module")
 def reasoning_engine_id() -> Generator[str, None, None]:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_basic(
-        PROJECT_ID, STAGING_BUCKET
+        STAGING_BUCKET
     )
     yield reasoning_engine.resource_name
     print("Deleting Reasoning Engine...")
-    gemini_reasoning_engine.delete_reasoning_engine(
-        PROJECT_ID, reasoning_engine.resource_name
-    )
+    gemini_reasoning_engine.delete_reasoning_engine(reasoning_engine.resource_name)
 
 
 @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
@@ -45,31 +39,25 @@ def test_create_reasoning_engine_basic(reasoning_engine_id: str) -> None:
 @pytest.mark.skip("TODO: Reasoning Engine Deployment Issue b/339643184")
 def test_create_reasoning_engine_advanced() -> None:
     reasoning_engine = gemini_reasoning_engine.create_reasoning_engine_advanced(
-        PROJECT_ID, REGION, STAGING_BUCKET
+        STAGING_BUCKET
     )
     assert reasoning_engine
-    gemini_reasoning_engine.delete_reasoning_engine(
-        PROJECT_ID, reasoning_engine.resource_name
-    )
+    gemini_reasoning_engine.delete_reasoning_engine(reasoning_engine.resource_name)
 
 
 @pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_query_reasoning_engine(reasoning_engine_id: str) -> None:
-    response = gemini_reasoning_engine.query_reasoning_engine(
-        PROJECT_ID, reasoning_engine_id
-    )
+    response = gemini_reasoning_engine.query_reasoning_engine(reasoning_engine_id)
     assert response
     assert response == "1 + 2 is 3"
 
 
 def test_list_reasoning_engines() -> None:
-    response = gemini_reasoning_engine.list_reasoning_engines(PROJECT_ID)
+    response = gemini_reasoning_engine.list_reasoning_engines()
     assert response
 
 
 @pytest.mark.skip("TODO: Resolve issue b/348193408")
 def test_get_reasoning_engine(reasoning_engine_id: str) -> None:
-    response = gemini_reasoning_engine.get_reasoning_engine(
-        PROJECT_ID, reasoning_engine_id
-    )
+    response = gemini_reasoning_engine.get_reasoning_engine(reasoning_engine_id)
     assert response

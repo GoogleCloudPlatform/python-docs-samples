@@ -12,26 +12,33 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_override_recognizer]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from google.protobuf.field_mask_pb2 import FieldMask
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_override_recognizer(
-    project_id: str,
-    recognizer_id: str,
     audio_file: str,
+    recognizer_id: str,
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file using an existing recognizer."""
+    """Transcribe an audio file using an existing recognizer with overridden settings for the recognition request.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+        recognizer_id (str): The unique ID of the recognizer to be used for transcription.
+    Returns:
+        cloud_speech.RecognizeResponse: The response containing the transcription results.
+    """
     # Instantiates a client
     client = SpeechClient()
 
     request = cloud_speech.CreateRecognizerRequest(
-        parent=f"projects/{project_id}/locations/global",
+        parent=f"projects/{PROJECT_ID}/locations/global",
         recognizer_id=recognizer_id,
         recognizer=cloud_speech.Recognizer(
             default_recognition_config=cloud_speech.RecognitionConfig(
@@ -53,17 +60,17 @@ def transcribe_override_recognizer(
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/{recognizer_id}",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}",
         config=cloud_speech.RecognitionConfig(
             features=cloud_speech.RecognitionFeatures(
                 enable_word_time_offsets=False,
             ),
         ),
         config_mask=FieldMask(paths=["features.enable_word_time_offsets"]),
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -79,11 +86,6 @@ def transcribe_override_recognizer(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    transcribe_override_recognizer(
+        audio_file="resources/audio.wav", recognizer_id="id-recognizer"
     )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("recognizer_id", help="Recognizer ID to use for recogniition")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    transcribe_override_recognizer(args.project_id, args.audio_file)

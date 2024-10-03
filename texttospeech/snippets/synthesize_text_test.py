@@ -19,12 +19,9 @@ import os
 
 import synthesize_text
 
-TEXT = "Hello there."
-SSML = "<speak>Hello there.</speak>"
-
 
 def test_synthesize_text(capsys):
-    synthesize_text.synthesize_text(text=TEXT)
+    synthesize_text.synthesize_text()
     out, err = capsys.readouterr()
 
     assert "Audio content written to file" in out
@@ -33,7 +30,7 @@ def test_synthesize_text(capsys):
 
 
 def test_synthesize_ssml(capsys):
-    synthesize_text.synthesize_ssml(ssml=SSML)
+    synthesize_text.synthesize_ssml()
     out, err = capsys.readouterr()
 
     assert "Audio content written to file" in out

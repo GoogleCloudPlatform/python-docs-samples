@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import mock
 import re
 
 from google.appengine.api import users
 from google.appengine.ext import ndb
-from six.moves import http_client
+import mock
 import pytest
+from six.moves import http_client
 import webtest
 
 import firetactoe

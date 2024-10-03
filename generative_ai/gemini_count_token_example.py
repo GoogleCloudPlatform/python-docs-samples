@@ -11,25 +11,24 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import os
 
 from vertexai.generative_models import GenerationResponse
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def count_tokens(project_id: str) -> GenerationResponse:
+
+def count_tokens() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_token_count]
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     prompt = "Why is the sky blue?"
-
     # Prompt tokens count
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
@@ -48,17 +47,15 @@ def count_tokens(project_id: str) -> GenerationResponse:
     return response
 
 
-def count_tokens_multimodal(project_id: str) -> GenerationResponse:
+def count_tokens_multimodal() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_token_count_multimodal]
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     contents = [
         Part.from_uri(

@@ -12,15 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 import backoff
 from google.api_core.exceptions import ResourceExhausted
 
 import summarization
-
-
-_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 expected_response = """The efficient-market hypothesis"""
@@ -28,5 +23,5 @@ expected_response = """The efficient-market hypothesis"""
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_summarization() -> None:
-    content = summarization.text_summarization(project_id=_PROJECT_ID)
+    content = summarization.text_summarization()
     assert expected_response in content

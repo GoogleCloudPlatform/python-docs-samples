@@ -13,28 +13,26 @@
 # limitations under the License.
 
 """Google Cloud Speech API sample application using the streaming API.
-
-Example usage:
-    python transcribe_streaming.py resources/audio.raw
 """
-
-import argparse
 
 from google.cloud import speech
 
 
 # [START speech_transcribe_streaming]
 def transcribe_streaming(stream_file: str) -> speech.RecognitionConfig:
-    """Streams transcription of the given audio file."""
-
+    """Streams transcription of the given audio file using Google Cloud Speech-to-Text API.
+    Args:
+        stream_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.raw"
+    """
     client = speech.SpeechClient()
 
     # [START speech_python_migration_streaming_request]
     with open(stream_file, "rb") as audio_file:
-        content = audio_file.read()
+        audio_content = audio_file.read()
 
     # In practice, stream should be a generator yielding chunks of audio data.
-    stream = [content]
+    stream = [audio_content]
 
     requests = (
         speech.StreamingRecognizeRequest(audio_content=chunk) for chunk in stream
@@ -76,9 +74,4 @@ def transcribe_streaming(stream_file: str) -> speech.RecognitionConfig:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("stream", help="File to stream to the API")
-    args = parser.parse_args()
-    transcribe_streaming(args.stream)
+    transcribe_streaming("resources/audio.raw")

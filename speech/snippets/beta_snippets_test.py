@@ -29,6 +29,7 @@ from beta_snippets import (
     transcribe_file_with_word_level_confidence,
 )
 
+
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 

@@ -12,31 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_batch_gcs_input_gcs_output_v2]
+import os
+
 import re
 
 from google.cloud import storage
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_batch_gcs_input_gcs_output_v2(
-    project_id: str,
-    gcs_uri: str,
+    audio_uri: str,
     gcs_output_path: str,
 ) -> cloud_speech.BatchRecognizeResults:
-    """Transcribes audio from a Google Cloud Storage URI.
-
+    """Transcribes audio from a Google Cloud Storage URI using the Google Cloud Speech-to-Text API.
+    The transcription results are stored in another Google Cloud Storage bucket.
     Args:
-        project_id: The Google Cloud project ID.
-        gcs_uri: The Google Cloud Storage URI.
-        gcs_output_path: The Cloud Storage URI to which to write the transcript.
-
+        audio_uri (str): The Google Cloud Storage URI of the input audio file.
+            E.g., gs://[BUCKET]/[FILE]
+        gcs_output_path (str): The Google Cloud Storage bucket URI where the output transcript will be stored.
+            E.g., gs://[BUCKET]
     Returns:
-        The BatchRecognizeResults message.
+        cloud_speech.BatchRecognizeResults: The response containing the URI of the transcription results.
     """
     # Instantiates a client
     client = SpeechClient()
@@ -47,10 +47,10 @@ def transcribe_batch_gcs_input_gcs_output_v2(
         model="long",
     )
 
-    file_metadata = cloud_speech.BatchRecognizeFileMetadata(uri=gcs_uri)
+    file_metadata = cloud_speech.BatchRecognizeFileMetadata(uri=audio_uri)
 
     request = cloud_speech.BatchRecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
         files=[file_metadata],
         recognition_output_config=cloud_speech.RecognitionOutputConfig(
@@ -66,7 +66,7 @@ def transcribe_batch_gcs_input_gcs_output_v2(
     print("Waiting for operation to complete...")
     response = operation.result(timeout=120)
 
-    file_results = response.results[gcs_uri]
+    file_results = response.results[audio_uri]
 
     print(f"Operation finished. Fetching results from {file_results.uri}...")
     output_bucket, output_object = re.match(
@@ -94,15 +94,6 @@ def transcribe_batch_gcs_input_gcs_output_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("gcs_uri", help="URI to GCS file")
-    parser.add_argument(
-        "gcs_output_path", help="GCS URI to which to write the transcript"
-    )
-    args = parser.parse_args()
-    transcribe_batch_gcs_input_gcs_output_v2(
-        args.project_id, args.gcs_uri, args.gcs_output_path
-    )
+    audio_uri = "gs://cloud-samples-data/speech/audio.flac"
+    output_bucket_name = "gs://your-bucket-unique-name"
+    transcribe_batch_gcs_input_gcs_output_v2(audio_uri, output_bucket_name)

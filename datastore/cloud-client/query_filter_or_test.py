@@ -26,23 +26,24 @@ PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 def entities():
     client = datastore.Client(project=PROJECT_ID)
 
-    task_key = client.key("Task")
-    task1 = datastore.Entity(key=task_key)
-    task1["description"] = "Buy milk"
-    client.put(task1)
-
-    task_key2 = client.key("Task")
-    task2 = datastore.Entity(key=task_key2)
-    task2["description"] = "Feed cats"
-    client.put(task2)
+    entities = []
+    for description in ["Buy milk", "Feed cats", "Walk dog"]:
+        task_key = client.key("Task")
+        task_obj = datastore.Entity(key=task_key)
+        task_obj["description"] = description
+        client.put(task_obj)
+        entities.append(task_obj)
 
     yield entities
 
-    client.delete(task1)
-    client.delete(task2)
+    # delete all Tasks
+    for task in client.query(kind="Task").fetch():
+        client.delete(task)
 
 
 def test_query_filter_or(capsys, entities):
-    query_filter_or(project_id=PROJECT_ID)
-    out, _ = capsys.readouterr()
-    assert "Feed cats" in out
+    results = query_filter_or(project_id=PROJECT_ID)
+    descriptions = [result.popitem()[1] for result in results]
+    assert "Feed cats" in descriptions
+    assert "Buy milk" in descriptions
+    assert "Walk dog" not in descriptions

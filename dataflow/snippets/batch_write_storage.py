@@ -24,7 +24,7 @@ from apache_beam.options.pipeline_options import PipelineOptions
 from typing_extensions import Self
 
 
-def write_to_cloud_storage(argv : List[str] = None) -> None:
+def write_to_cloud_storage(argv: List[str] = None) -> None:
     # Parse the pipeline options passed into the application.
     class MyOptions(PipelineOptions):
         @classmethod
@@ -35,12 +35,14 @@ def write_to_cloud_storage(argv : List[str] = None) -> None:
     wordsList = ["1", "2", "3", "4"]
     options = MyOptions()
 
-    with beam.Pipeline(options=options) as pipeline:
+    with beam.Pipeline(options=options.view_as(PipelineOptions)) as pipeline:
         (
             pipeline
             | "Create elements" >> beam.Create(wordsList)
             | "Write Files" >> WriteToText(options.output, file_name_suffix=".txt")
         )
+
+
 # [END dataflow_batch_write_to_storage]
 
 

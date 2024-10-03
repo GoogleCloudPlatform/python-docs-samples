@@ -14,38 +14,47 @@
 
 import os
 
-import response_mime_type
-import response_schema
-
+import example_01
+import example_02
+import example_03
+import example_04
+import example_05
+import example_06
+import example_07
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def test_config_response_mime_type() -> None:
-    response = response_mime_type.generate_content(PROJECT_ID)
+    response = example_05.generate_content()
     assert response
 
 
 def test_config_response_schema() -> None:
-    response = response_schema.generate_content(PROJECT_ID)
+    response = example_01.generate_content()
     assert response
 
 
 def test_config_response_schema2() -> None:
-    response = response_schema.generate_content2(PROJECT_ID)
+    response = example_02.generate_content()
     assert response
 
 
 def test_config_response_schema3() -> None:
-    response = response_schema.generate_content3(PROJECT_ID)
+    response = example_03.generate_content()
     assert response
 
 
 def test_config_response_schema4() -> None:
-    response = response_schema.generate_content4(PROJECT_ID)
+    response = example_04.generate_content()
     assert response
 
 
 def test_config_response_schema6() -> None:
-    response = response_schema.generate_content6(PROJECT_ID)
+    response = example_06.generate_content()
+    assert response
+
+
+def test_config_response_schema7() -> None:
+    response = example_07.generate_content()
     assert response

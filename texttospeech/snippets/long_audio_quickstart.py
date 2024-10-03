@@ -15,17 +15,17 @@
 from google.cloud import texttospeech
 
 
-def synthesize_long_audio(project_id, location, output_gcs_uri):
+def synthesize_long_audio(project_id: str, output_gcs_uri: str) -> None:
     """
     Synthesizes long input, writing the resulting audio to `output_gcs_uri`.
 
-    Example usage: synthesize_long_audio('12345', 'us-central1', 'gs://{BUCKET_NAME}/{OUTPUT_FILE_NAME}.wav')
-
+    Args:
+        project_id: ID or number of the Google Cloud project you want to use.
+        output_gcs_uri: Specifies a Cloud Storage URI for the synthesis results.
+            Must be specified in the format:
+            ``gs://bucket_name/object_name``, and the bucket must
+            already exist.
     """
-    # TODO(developer): Uncomment and set the following variables
-    # project_id = 'YOUR_PROJECT_ID'
-    # location = 'YOUR_LOCATION'
-    # output_gcs_uri = 'YOUR_OUTPUT_GCS_URI'
 
     client = texttospeech.TextToSpeechLongAudioSynthesizeClient()
 
@@ -41,7 +41,7 @@ def synthesize_long_audio(project_id, location, output_gcs_uri):
         language_code="en-US", name="en-US-Standard-A"
     )
 
-    parent = f"projects/{project_id}/locations/{location}"
+    parent = f"projects/{project_id}/locations/us-central1"
 
     request = texttospeech.SynthesizeLongAudioRequest(
         parent=parent,

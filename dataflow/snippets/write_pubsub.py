@@ -32,17 +32,13 @@ def item_to_message(item: Dict[str, Any]) -> PubsubMessage:
     # https://cloud.google.com/dataflow/docs/guides/common-errors#name-error
     from apache_beam.io import PubsubMessage
 
-    attributes = {
-        'buyer': item['name'],
-        'timestamp': str(item['ts'])
-    }
-    data = bytes(item['product'], 'utf-8')
+    attributes = {"buyer": item["name"], "timestamp": str(item["ts"])}
+    data = bytes(item["product"], "utf-8")
 
     return PubsubMessage(data=data, attributes=attributes)
 
 
 def write_to_pubsub(argv: List[str] = None) -> None:
-
     # Parse the pipeline options passed into the application. Example:
     #     --topic=$TOPIC_PATH --streaming
     # For more information, see
@@ -54,10 +50,10 @@ def write_to_pubsub(argv: List[str] = None) -> None:
             parser.add_argument("--topic", required=True)
 
     example_data = [
-        {'name': 'Robert', 'product': 'TV', 'ts': 1613141590000},
-        {'name': 'Maria', 'product': 'Phone', 'ts': 1612718280000},
-        {'name': 'Juan', 'product': 'Laptop', 'ts': 1611618000000},
-        {'name': 'Rebeca', 'product': 'Video game', 'ts': 1610000000000}
+        {"name": "Robert", "product": "TV", "ts": 1613141590000},
+        {"name": "Maria", "product": "Phone", "ts": 1612718280000},
+        {"name": "Juan", "product": "Laptop", "ts": 1611618000000},
+        {"name": "Rebeca", "product": "Video game", "ts": 1610000000000},
     ]
     options = MyOptions()
 
@@ -66,12 +62,12 @@ def write_to_pubsub(argv: List[str] = None) -> None:
             pipeline
             | "Create elements" >> beam.Create(example_data)
             | "Convert to Pub/Sub messages" >> beam.Map(item_to_message)
-            | WriteToPubSub(
-                  topic=options.topic,
-                  with_attributes=True)
+            | WriteToPubSub(topic=options.topic, with_attributes=True)
         )
 
-    print('Pipeline ran successfully.')
+    print("Pipeline ran successfully.")
+
+
 # [END dataflow_pubsub_write_with_attributes]
 
 

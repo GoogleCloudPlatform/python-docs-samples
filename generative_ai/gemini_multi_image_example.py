@@ -11,18 +11,19 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_text_multimodal(project_id: str) -> str:
+def generate_text_multimodal() -> str:
     # [START generativeaionvertexai_gemini_single_turn_multi_image]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
-
-    vertexai.init(project=project_id, location="us-central1")
+    # TODO(developer): Update project_id and location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Load images from Cloud Storage URI
     image_file1 = Part.from_uri(
@@ -38,7 +39,7 @@ def generate_text_multimodal(project_id: str) -> str:
         mime_type="image/png",
     )
 
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
     response = model.generate_content(
         [
             image_file1,

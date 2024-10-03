@@ -24,16 +24,25 @@ import google.auth
 from google.cloud import batch_v1, resourcemanager_v3
 import pytest
 
+from ..create.create_with_allocation_policy_labels import (
+    create_job_with_custom_allocation_policy_labels,
+)
 from ..create.create_with_container_no_mounting import create_container_job
 from ..create.create_with_custom_status_events import create_job_with_status_events
 from ..create.create_with_gpu_no_mounting import create_gpu_job
+from ..create.create_with_job_labels import create_job_with_custom_job_labels
+from ..create.create_with_nfs import create_job_with_network_file_system
 from ..create.create_with_persistent_disk import create_with_pd_job
 from ..create.create_with_pubsub_notifications import (
     create_with_pubsub_notification_job,
 )
+from ..create.create_with_runnables_labels import (
+    create_job_with_custom_runnables_labels,
+)
 from ..create.create_with_script_no_mounting import create_script_job
 from ..create.create_with_secret_manager import create_with_secret_manager
 from ..create.create_with_service_account import create_with_custom_service_account_job
+from ..create.create_with_specific_network import create_with_custom_network
 from ..create.create_with_ssd import create_local_ssd_job
 
 from ..delete.delete_job import delete_job
@@ -52,6 +61,8 @@ PROJECT_NUMBER = (
     .get_project(name=f"projects/{PROJECT}")
     .name.split("/")[1]
 )
+LABELS_KEYS = ["label_key1", "label_key2"]
+LABELS_VALUES = ["label_value1", "label_value2"]
 
 TIMEOUT = 600  # 10 minutes
 
@@ -79,20 +90,25 @@ def disk_name():
     return f"test-disk-{uuid.uuid4().hex[:10]}"
 
 
-def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=REGION):
+def _test_body(
+    test_job: batch_v1.Job,
+    additional_test: Callable = None,
+    region=REGION,
+    project=PROJECT,
+):
     start_time = time.time()
     try:
         while test_job.status.state in WAIT_STATES:
             if time.time() - start_time > TIMEOUT:
                 pytest.fail("Timed out while waiting for job to complete!")
             test_job = get_job(
-                PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]
+                project, region, test_job.name.rsplit("/", maxsplit=1)[1]
             )
             time.sleep(5)
 
         assert test_job.status.state == batch_v1.JobStatus.State.SUCCEEDED
 
-        for job in list_jobs(PROJECT, region):
+        for job in list_jobs(project, region):
             if test_job.uid == job.uid:
                 break
         else:
@@ -101,9 +117,9 @@ def _test_body(test_job: batch_v1.Job, additional_test: Callable = None, region=
         if additional_test:
             additional_test()
     finally:
-        delete_job(PROJECT, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
+        delete_job(project, region, test_job.name.rsplit("/", maxsplit=1)[1]).result()
 
-    for job in list_jobs(PROJECT, region):
+    for job in list_jobs(project, region):
         if job.uid == test_job.uid:
             pytest.fail("The test job should be deleted at this point!")
 
@@ -171,6 +187,44 @@ def _check_custom_events(job: batch_v1.Job):
     assert not display_names
     assert custom_event_found
     assert barrier_name_found
+
+
+def _check_nfs_mounting(
+    job: batch_v1.Job, mount_path: str, nfc_ip_address: str, nfs_path: str
+):
+    expected_script_text = f"{mount_path}/output_task_${{BATCH_TASK_INDEX}}.txt"
+    assert job.task_groups[0].task_spec.volumes[0].nfs.server == nfc_ip_address
+    assert job.task_groups[0].task_spec.volumes[0].nfs.remote_path == nfs_path
+    assert job.task_groups[0].task_spec.volumes[0].mount_path == mount_path
+    assert expected_script_text in job.task_groups[0].task_spec.runnables[0].script.text
+
+
+def _check_custom_networks(job, network_name, subnet_name):
+    assert (
+        f"/networks/{network_name}"
+        in job.allocation_policy.network.network_interfaces[0].network
+    )
+    assert (
+        f"/subnetworks/{subnet_name}"
+        in job.allocation_policy.network.network_interfaces[0].subnetwork
+    )
+
+
+def _check_job_labels(job: batch_v1.Job):
+    assert job.labels[LABELS_KEYS[0]] == LABELS_VALUES[0]
+    assert job.labels[LABELS_KEYS[1]] == LABELS_VALUES[1]
+
+
+def _check_job_allocation_policy_labels(job: batch_v1.Job):
+    assert job.allocation_policy.labels[LABELS_KEYS[0]] == LABELS_VALUES[0]
+    assert job.allocation_policy.labels[LABELS_KEYS[1]] == LABELS_VALUES[1]
+
+
+def _check_runnables_labels(job: batch_v1.Job):
+    assert (
+        job.task_groups[0].task_spec.runnables[0].labels[LABELS_KEYS[0]]
+        == LABELS_VALUES[0]
+    )
 
 
 @flaky(max_runs=3, min_passes=1)
@@ -245,3 +299,68 @@ def test_check_notification_job(job_name):
     test_topic = "test_topic"
     job = create_with_pubsub_notification_job(PROJECT, REGION, job_name, test_topic)
     _test_body(job, additional_test=lambda: _check_notification(job, test_topic))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_check_nfs_job(job_name):
+    mount_path = "/mnt/nfs"
+    nfc_ip_address = "10.180.103.74"
+    nfs_path = "/vol1"
+    project_with_nfs_filestore = "python-docs-samples-tests"
+    job = create_job_with_network_file_system(
+        project_with_nfs_filestore,
+        "us-central1",
+        job_name,
+        mount_path,
+        nfc_ip_address,
+        nfs_path,
+    )
+    _test_body(
+        job,
+        additional_test=lambda: _check_nfs_mounting(
+            job, mount_path, nfc_ip_address, nfs_path
+        ),
+        region="us-central1",
+        project=project_with_nfs_filestore,
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_job_with_custom_network(job_name):
+    network_name = "default"
+    subnet = "default"
+    job = create_with_custom_network(PROJECT, REGION, network_name, subnet, job_name)
+    _test_body(
+        job, additional_test=lambda: _check_custom_networks(job, network_name, subnet)
+    )
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels(job_name):
+    job = create_job_with_custom_job_labels(
+        PROJECT,
+        REGION,
+        job_name,
+        labels={LABELS_KEYS[0]: LABELS_VALUES[0], LABELS_KEYS[1]: LABELS_VALUES[1]},
+    )
+    _test_body(job, additional_test=lambda: _check_job_labels(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels_runnables(job_name):
+    job = create_job_with_custom_runnables_labels(
+        PROJECT, REGION, job_name, {LABELS_KEYS[0]: LABELS_VALUES[0]}
+    )
+    _test_body(job, additional_test=lambda: _check_runnables_labels(job))
+
+
+@flaky(max_runs=3, min_passes=1)
+def test_create_job_with_labels_allocation_policy(job_name):
+    job = create_job_with_custom_allocation_policy_labels(
+        PROJECT,
+        REGION,
+        job_name,
+        labels={LABELS_KEYS[0]: LABELS_VALUES[0], LABELS_KEYS[1]: LABELS_VALUES[1]},
+    )
+    print(job.allocation_policy.labels)
+    _test_body(job, additional_test=lambda: _check_job_allocation_policy_labels(job))

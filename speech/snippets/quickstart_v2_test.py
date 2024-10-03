@@ -24,11 +24,7 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 @Retry()
 def test_quickstart_v2() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-    response = quickstart_v2.quickstart_v2(
-        project_id, os.path.join(_RESOURCES, "audio.wav")
-    )
+    response = quickstart_v2.quickstart_v2(os.path.join(_RESOURCES, "audio.wav"))
 
     assert re.search(
         r"how old is the Brooklyn Bridge",

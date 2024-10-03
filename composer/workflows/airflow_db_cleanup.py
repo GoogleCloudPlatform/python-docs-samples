@@ -20,7 +20,9 @@ having too much data in your Airflow MetaStore.
 
 ## Authors
 
-The DAG is a fork of [teamclairvoyant repository.](https://github.com/teamclairvoyant/airflow-maintenance-dags/tree/master/db-cleanup)
+The DAG is a fork of [teamclairvoyant repository.](
+https://github.com/teamclairvoyant/airflow-maintenance-dags/tree/master/db-cleanup
+)
 
 ## Usage
 
@@ -35,15 +37,16 @@ The DAG is a fork of [teamclairvoyant repository.](https://github.com/teamclairv
       date of data deletion
     - keep_last: Boolean to specify whether to preserve last run instance
         - keep_last_filters: List of filters to preserve data from deleting
-          during clean-up, such as DAG runs where the external trigger is set to 0.
+          during clean-up, such as DAG runs where the external trigger is set
+          to 0.
         - keep_last_group_by: Option to specify column by which to group the
           database entries and perform aggregate functions.
 
 3. Create and Set the following Variables in the Airflow Web Server
   (Admin -> Variables)
-    - airflow_db_cleanup__max_db_entry_age_in_days - integer - Length to retain
-      the log files if not already provided in the conf. If this is set to 30,
-      the job will remove those files that are 30 days old or older.
+    - airflow_db_cleanup__max_db_entry_age_in_days - integer - Length to
+      retain the log files if not already provided in the conf. If this is set
+      to 30, the job will remove those files that are 30 days old or older.
 
 4. Put the DAG in your gcs bucket.
 """
@@ -70,7 +73,6 @@ from airflow.version import version as airflow_version
 import dateutil.parser
 from sqlalchemy import and_, func, text
 from sqlalchemy.exc import ProgrammingError
-from sqlalchemy.orm import load_only
 
 now = timezone.utcnow
 
@@ -321,7 +323,7 @@ def build_query(
     keep_last_filters=None,
     keep_last_group_by=None,
 ):
-    query = session.query(airflow_db_model).options(load_only(age_check_column))
+    query = session.query(airflow_db_model)
 
     logging.info("INITIAL QUERY : " + str(query))
 
@@ -456,7 +458,7 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata. " "Skipping..."
+            str(airflow_db_model) + " is not present in the metadata." + "Skipping..."
         )
 
     finally:

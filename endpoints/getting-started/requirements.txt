@@ -1,5 +1,5 @@
 Flask==3.0.3
-flask-cors==4.0.1
+flask-cors==5.0.0
 gunicorn==22.0.0
 six==1.16.0
 pyyaml==6.0

@@ -21,8 +21,8 @@ except ImportError:
 # [START rest_writing_data]
 import json
 
-from google.auth.transport.requests import AuthorizedSession
 import google.auth
+from google.auth.transport.requests import AuthorizedSession
 
 _FIREBASE_SCOPES = [
     "https://www.googleapis.com/auth/firebase.database",

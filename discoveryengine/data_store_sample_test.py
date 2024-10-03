@@ -16,7 +16,12 @@
 import os
 from uuid import uuid4
 
-from discoveryengine import create_data_store_sample, delete_data_store_sample
+from discoveryengine import (
+    create_data_store_sample,
+    delete_data_store_sample,
+    get_data_store_sample,
+    list_data_stores_sample,
+)
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
@@ -28,6 +33,18 @@ def test_create_data_store():
         project_id, location, data_store_id
     )
     assert operation_name
+
+
+def test_get_data_store():
+    data_store = get_data_store_sample.get_data_store_sample(
+        project_id, location, data_store_id
+    )
+    assert data_store
+
+
+def test_list_data_stores():
+    response = list_data_stores_sample.list_data_stores_sample(project_id, location)
+    assert response
 
 
 def test_delete_data_store():

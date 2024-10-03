@@ -11,20 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_tuned_code_generation_models(
-    project_id: str,
-    location: str,
-) -> None:
+def list_tuned_code_generation_models() -> None:
     """List tuned models."""
     # [START aiplatform_sdk_list_tuned_code_generation_models]
 
     import vertexai
     from vertexai.preview.language_models import CodeGenerationModel
 
-    # TODO(developer): Update values for project_id & location
-    vertexai.init(project=project_id, location=location)
+    # TODO(developer): Update project_id
+    # PROJECT_ID = "your-project-id"
+    vertexai.init(project=PROJECT_ID, location="us-central1")
     model = CodeGenerationModel.from_pretrained("code-bison@001")
     tuned_model_names = model.list_tuned_model_names()
     print(tuned_model_names)
@@ -34,7 +35,4 @@ def list_tuned_code_generation_models(
 
 
 if __name__ == "__main__":
-    import google.auth
-
-    PROJECT = google.auth.default()[1]
-    list_tuned_code_generation_models(PROJECT, "us-central1")
+    list_tuned_code_generation_models()

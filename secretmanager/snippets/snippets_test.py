@@ -25,8 +25,11 @@ from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
+from create_secret_with_labels import create_secret_with_labels
 from create_secret_with_user_managed_replication import create_ummr_secret
+from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
+from delete_secret_label import delete_secret_label
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
@@ -46,6 +49,7 @@ from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_etag import update_secret_with_etag
+from view_secret_labels import view_secret_labels
 
 
 @pytest.fixture()
@@ -66,6 +70,16 @@ def iam_user() -> str:
 @pytest.fixture()
 def ttl() -> Optional[str]:
     return "300s"
+
+
+@pytest.fixture()
+def label_key() -> str:
+    return "googlecloud"
+
+
+@pytest.fixture()
+def label_value() -> str:
+    return "rocks"
 
 
 @retry.Retry()
@@ -126,8 +140,10 @@ def secret(
     client: secretmanager.SecretManagerServiceClient,
     project_id: str,
     secret_id: str,
+    label_key: str,
+    label_value: str,
     ttl: Optional[str],
-) -> Iterator[Tuple[str, str, str]]:
+) -> Iterator[Tuple[str, str, str, str]]:
     print(f"creating secret {secret_id}")
 
     parent = f"projects/{project_id}"
@@ -137,7 +153,11 @@ def secret(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {"replication": {"automatic": {}}, "ttl": ttl},
+            "secret": {
+                "replication": {"automatic": {}},
+                "ttl": ttl,
+                "labels": {label_key: label_value},
+            },
         },
     )
 
@@ -216,11 +236,37 @@ def test_create_secret_with_user_managed_replication(
     assert secret_id in secret.name
 
 
+def test_create_secret_with_label(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    label_key: str,
+    label_value: str,
+    ttl: Optional[str],
+) -> None:
+    labels = {label_key: label_value}
+    secret = create_secret_with_labels(project_id, secret_id, labels, ttl)
+    assert secret_id in secret.name
+
+
 def test_delete_secret(
     client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
 ) -> None:
     project_id, secret_id, _ = secret
     delete_secret(project_id, secret_id)
+    with pytest.raises(exceptions.NotFound):
+        print(f"{client}")
+        name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_secret_version(client, request={"name": name})
+
+
+def test_delete_secret_labels(
+    client: secretmanager.SecretManagerServiceClient,
+    secret: Tuple[str, str, str],
+    label_key: str,
+) -> None:
+    project_id, secret_id, _ = secret
+    delete_secret_label(project_id, secret_id, label_key)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
@@ -355,6 +401,16 @@ def test_list_secret_versions_with_filter(
     assert f"Found secret version: {disabled.name}" not in out
 
 
+def test_view_secret_labels(
+    capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str], label_key: str
+) -> None:
+    project_id, secret_id, _ = secret
+    view_secret_labels(project_id, secret_id)
+
+    out, _ = capsys.readouterr()
+    assert label_key in out
+
+
 def test_list_secrets(
     capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str]
 ) -> None:
@@ -382,6 +438,16 @@ def test_list_secrets_with_filter(
 
     out, _ = capsys.readouterr()
     assert f"Found secret: {labeled.name}" in out
+
+
+def test_create_update_secret_label(
+    secret: Tuple[str, str, str], label_key: str
+) -> None:
+    project_id, secret_id, _ = secret
+    updated_label_value = "vibes"
+    labels = {label_key: updated_label_value}
+    updated_secret = create_update_secret_label(project_id, secret_id, labels)
+    assert updated_secret.labels[label_key] == updated_label_value
 
 
 def test_update_secret(secret: Tuple[str, str, str]) -> None:

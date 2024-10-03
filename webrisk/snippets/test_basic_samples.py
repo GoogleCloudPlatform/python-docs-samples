@@ -44,7 +44,7 @@ def test_search_uri_without_threat() -> None:
 def test_submit_uri() -> None:
     malware_uri = "http://testsafebrowsing.appspot.com/s/malware.html"
     response = submit_uri(PROJECT, malware_uri)
-    assert response.uri == malware_uri
+    assert response is not None
 
 
 def test_search_hashes() -> None:

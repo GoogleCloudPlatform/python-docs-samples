@@ -17,14 +17,13 @@
 from google.cloud import speech_v1p1beta1 as speech
 
 
-def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
+def transcribe_file_with_word_level_confidence(audio_uri: str) -> str:
     """Transcribe a remote audio file with word level confidence.
-
     Args:
-        gcs_uri: The Google Cloud Storage path to an audio file.
-
+        audio_uri (str): The Cloud Storage URI of the input audio.
+            E.g., gs://[BUCKET]/[FILE]
     Returns:
-        The generated transcript from the audio file provided.
+        The generated transcript from the audio file provided with word level confidence.
     """
 
     client = speech.SpeechClient()
@@ -34,11 +33,11 @@ def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
         encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=44100,
         language_code="en-US",
-        enable_word_confidence=True,
+        enable_word_confidence=True,  # Enable word level confidence
     )
 
     # Set the remote path for the audio file
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=audio_uri)
 
     # Use non-blocking call for getting file transcription
     response = client.long_running_recognize(config=config, audio=audio).result(
@@ -64,3 +63,8 @@ def transcribe_file_with_word_level_confidence(gcs_uri: str) -> str:
 
 
 # [END speech_transcribe_word_level_confidence_gcs_beta]
+
+if __name__ == "__main__":
+    transcribe_file_with_word_level_confidence(
+        "gs://cloud-samples-data/speech/brooklyn_bridge.flac"
+    )

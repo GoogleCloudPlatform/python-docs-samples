@@ -11,21 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_text(project_id: str) -> None:
+def generate_text() -> None:
     # [START generativeaionvertexai_gemini_pro_config_example]
     import base64
     import vertexai
 
     from vertexai.generative_models import GenerationConfig, GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below line
-    # project_id = "PROJECT_ID"
+    # TODO(developer): Update project_id and location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     # Load example image from local storage
     encoded_image = base64.b64encode(open("scones.jpg", "rb").read()).decode("utf-8")
@@ -46,3 +47,7 @@ def generate_text(project_id: str) -> None:
     # [END generativeaionvertexai_gemini_pro_config_example]
 
     return response.text
+
+
+if __name__ == "__main__":
+    generate_text()

@@ -12,27 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_adaptation_v2_inline_phrase_set]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-def adaptation_v2_inline_phrase_set(
-    project_id: str,
-    audio_file: str,
-) -> cloud_speech.RecognizeResponse:
+
+def adaptation_v2_inline_phrase_set(audio_file: str) -> cloud_speech.RecognizeResponse:
+    """Enhances speech recognition accuracy using an inline phrase set.
+    The inline custom phrase set helps the recognizer produce more accurate transcriptions for specific terms.
+    Phrases are given a boost to increase their chances of being recognized correctly.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+    Returns:
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+    """
+
     # Instantiates a client
     client = SpeechClient()
 
     # Reads a file as bytes
     with open(audio_file, "rb") as f:
-        content = f.read()
+        audio_content = f.read()
 
     # Build inline phrase set to produce a more accurate transcript
-    phrase_set = cloud_speech.PhraseSet(phrases=[{"value": "fare", "boost": 10}])
+    phrase_set = cloud_speech.PhraseSet(
+        phrases=[{"value": "fare", "boost": 10}, {"value": "word", "boost": 20}]
+    )
     adaptation = cloud_speech.SpeechAdaptation(
         phrase_sets=[
             cloud_speech.SpeechAdaptation.AdaptationPhraseSet(
@@ -47,10 +56,11 @@ def adaptation_v2_inline_phrase_set(
         model="short",
     )
 
+    # Prepare the request which includes specifying the recognizer, configuration, and the audio content
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -66,13 +76,4 @@ def adaptation_v2_inline_phrase_set(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    adaptation_v2_inline_phrase_set(
-        args.project_id,
-        args.audio_file,
-    )
+    adaptation_v2_inline_phrase_set("resources/fair.wav")

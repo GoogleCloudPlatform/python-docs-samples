@@ -13,30 +13,38 @@
 # limitations under the License.
 
 
-import argparse
-
 # [START speech_change_speech_v2_location]
+import os
+
 from google.api_core.client_options import ClientOptions
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def change_speech_v2_location(
-    project_id: str,
-    location: str,
-    audio_file: str,
+    audio_file: str, location: str
 ) -> cloud_speech.RecognizeResponse:
-    """Transcribe an audio file in a specific region."""
+    """Transcribe an audio file in a specific region. It allows for specifying the location
+        to potentially reduce latency and meet data residency requirements.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+        location (str): The region where the Speech API will be accessed.
+            E.g., "europe-west3"
+    Returns:
+        cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
+    """
+    # Reads a file as bytes
+    with open(audio_file, "rb") as f:
+        audio_content = f.read()
+
     # Instantiates a client to a regionalized Speech endpoint.
     client = SpeechClient(
         client_options=ClientOptions(
             api_endpoint=f"{location}-speech.googleapis.com",
         )
     )
-
-    # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
 
     config = cloud_speech.RecognitionConfig(
         auto_decoding_config=cloud_speech.AutoDetectDecodingConfig(),
@@ -45,9 +53,9 @@ def change_speech_v2_location(
     )
 
     request = cloud_speech.RecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/{location}/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/{location}/recognizers/_",
         config=config,
-        content=content,
+        content=audio_content,
     )
 
     # Transcribes the audio into text
@@ -55,19 +63,10 @@ def change_speech_v2_location(
 
     for result in response.results:
         print(f"Transcript: {result.alternatives[0].transcript}")
-
     return response
 
 
 # [END speech_change_speech_v2_location]
 
-
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("location", help="The GCP region to which to connect")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
-    change_speech_v2_location(args.project_id, args.location, args.audio_file)
+    change_speech_v2_location(audio_file="resources/audio.wav", location="us-central1")

@@ -12,25 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_enable_cmek]
+import os
+
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def enable_cmek(
-    project_id: str,
     kms_key_name: str,
-) -> cloud_speech.RecognizeResponse:
-    """Enable CMEK in a project and region."""
+) -> cloud_speech.Config:
+    """Enable Customer-Managed Encryption Keys (CMEK) in a project and region.
+    Args:
+        kms_key_name (str): The full resource name of the KMS key to be used for encryption.
+            E.g,: projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{KEY_RING}/cryptoKeys/{KEY_NAME}
+    Returns:
+        cloud_speech.Config: The response from the update configuration request,
+        containing the updated configuration details.
+    """
     # Instantiates a client
     client = SpeechClient()
 
     request = cloud_speech.UpdateConfigRequest(
         config=cloud_speech.Config(
-            name=f"projects/{project_id}/locations/global/config",
+            name=f"projects/{PROJECT_ID}/locations/global/config",
             kms_key_name=kms_key_name,
         ),
         update_mask={"paths": ["kms_key_name"]},
@@ -40,7 +47,6 @@ def enable_cmek(
     response = client.update_config(request=request)
 
     print(f"Updated KMS key: {response.kms_key_name}")
-
     return response
 
 
@@ -48,10 +54,9 @@ def enable_cmek(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("kms_key_name", help="Resource path of a KMS key")
-    args = parser.parse_args()
-    enable_cmek(args.project_id, args.kms_key_name)
+    PROJECT_ID = "your-project-id"
+    LOCATION = "global"
+    KEY_RING = "your-key-ring"
+    KEY_NAME = "your-key-name"
+    key_name = f"projects/{PROJECT_ID}/locations/{LOCATION}/keyRings/{KEY_RING}/cryptoKeys/{KEY_NAME}"
+    enable_cmek(key_name)

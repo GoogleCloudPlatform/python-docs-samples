@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import re
 import uuid
 
 import backoff
@@ -32,8 +31,8 @@ from snippets.service_account_set_policy import set_service_account_iam_policy
 PROJECT = google.auth.default()[1]
 
 
-@pytest.fixture(scope="function")
-def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
+@pytest.fixture(scope="module")
+def service_account() -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
     try:
@@ -44,8 +43,12 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     finally:
         if created:
             delete_service_account(PROJECT, email)
-            out, _ = capsys.readouterr()
-            assert re.search(f"Deleted a service account: {email}", out)
+            try:
+                get_service_account(PROJECT, email)
+            except google.api_core.exceptions.NotFound:
+                pass
+            else:
+                pytest.fail(f"The {email} service account was not deleted.")
 
 
 def test_list_service_accounts(service_account: str) -> None:

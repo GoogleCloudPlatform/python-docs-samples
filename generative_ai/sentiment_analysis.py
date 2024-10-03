@@ -11,13 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def sentiment_analysis(
-    temperature: float,
-    project_id: str,
-    location: str,
-) -> str:
+def sentiment_analysis() -> str:
     """Sentiment analysis example with a Large Language Model."""
     # [START aiplatform_sdk_sentiment_analysis]
     import vertexai
@@ -25,9 +24,9 @@ def sentiment_analysis(
     from vertexai.language_models import TextGenerationModel
 
     # TODO(developer): update project_id, location & temperature
-    vertexai.init(project=project_id, location=location)
+    vertexai.init(project=PROJECT_ID, location="us-central1")
     parameters = {
-        "temperature": temperature,  # Temperature controls the degree of randomness in token selection.
+        "temperature": 0,  # Temperature controls the degree of randomness in token selection.
         "max_output_tokens": 5,  # Token limit determines the maximum amount of text output.
         "top_p": 0,  # Tokens are selected from most probable to least until the sum of their probabilities equals the top_p value.
         "top_k": 1,  # A top_k of 1 means the selected token is the most probable among all tokens.
