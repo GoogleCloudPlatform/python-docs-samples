@@ -11,20 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def summarize_audio(project_id: str) -> str:
+def summarize_audio() -> str:
+    """Summarizes the content of an audio file using a pre-trained generative model."""
     # [START generativeaionvertexai_gemini_audio_summarization]
 
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     prompt = """
     Please provide a summary for the audio.
@@ -44,18 +46,17 @@ def summarize_audio(project_id: str) -> str:
     return response.text
 
 
-def transcript_audio(project_id: str) -> str:
+def transcript_audio() -> str:
+    """Transcribes the content of an audio file using a pre-trained generative model."""
     # [START generativeaionvertexai_gemini_audio_transcription]
 
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project & location
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     prompt = """
     Can you transcribe this interview, in the format of timecode, speaker, caption.

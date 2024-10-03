@@ -794,6 +794,7 @@ class Utils:
         parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
+        additional_experiments: dict[str,str] = {},
     ) -> str:
         import yaml
 
@@ -815,6 +816,11 @@ class Utils:
             for name, value in {
                 **parameters,
             }.items()
+        ] + [
+            f"--additional-experiments={name}={value}"
+            for name, value in {
+                **additional_experiments,
+            }.items()
         ]
         logging.info(f"{cmd}")
 
@@ -825,7 +831,7 @@ class Utils:
         logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
-        Utils.dataflow_jobs_cancel(job_id)
+        Utils.dataflow_jobs_cancel(job_id, region=region)
 
     @staticmethod
     def dataflow_extensible_template_run(
@@ -849,7 +855,7 @@ class Utils:
             f"--gcs-location={template_path}",
             f"--project={project}",
             f"--region={region}",
-            f"--staging-location=gs://{bucket_name}/staging",
+            f"--temp-location=gs://{bucket_name}/staging",
         ] + [
             f"--parameters={name}={value}"
             for name, value in {

@@ -50,7 +50,7 @@ snippets.firestore.Client = TestFirestoreClient
 
 @pytest.fixture(scope="function")
 def db():
-    client = snippets.firestore.Client()
+    client = TestFirestoreClient()
     yield client
     # Cleanup
     try:
@@ -79,7 +79,7 @@ def db_no_unique_string():
     client = TestFirestoreClient(add_unique_string=False)
     yield client
     # Cleanup
-    test_collections = ["cities"]
+    test_collections = ["cities", "employees"]
     for collection in test_collections:
         try:
             for doc in client.collection(collection).stream():
@@ -188,6 +188,31 @@ def test_query_filter_in_query_with_array(db):
     result = snippets.in_query_with_array(db)
     results = list(result.stream())
     assert len(results) >= 2
+
+
+def test_not_in_query(db):
+    db.collection("cities").document("LA").set({"country": "USA"})
+    db.collection("cities").document("Tokyo").set({"country": "Japan"})
+    db.collection("cities").document("Saskatoon").set({"country": "Canada"})
+    result = snippets.not_in_query(db)
+    results = list(result.stream())
+    assert len(results) == 1
+    assert results[0].to_dict()["country"] == "Canada"
+
+
+def test_not_equal_query(db_no_unique_string):
+    db = db_no_unique_string
+    db.collection("cities").document("Ottawa").set(
+        {"capital": True, "country": "Canada"}
+    )
+    db.collection("cities").document("Kyoto").set(
+        {"capital": False, "country": "Japan"}
+    )
+    db.collection("cities").document("LA").set({"capital": False, "country": "USA"})
+    result = snippets.not_equal_query(db)
+    results = list(result.stream())
+    assert len(results) == 1
+    assert results[0].to_dict()["country"] == "Canada"
 
 
 def test_add_custom_class_with_id(db):
@@ -794,3 +819,62 @@ def test_regional_endpoint(db):
 
     cities_list = list(cities_query)
     assert len(cities_list) == 2
+
+
+def test_query_filter_compound_multi_ineq(db_no_unique_string):
+    db = db_no_unique_string
+    cities = [
+        {"name": "SF", "state": "CA", "population": 1_000_000, "density": 10_000},
+        {"name": "LA", "state": "CA", "population": 5_000_000, "density": 8_000},
+        {"name": "DC", "state": "WA", "population": 700_000, "density": 9_000},
+        {"name": "NYC", "state": "NY", "population": 8_000_000, "density": 12_000},
+        {"name": "SEA", "state": "WA", "population": 800_000, "density": 7_000},
+    ]
+    for city in cities:
+        db.collection("cities").add(city)
+    query = snippets.query_filter_compound_multi_ineq()
+    results = list(query.stream())
+    assert len(results) == 1
+    assert results[0].to_dict()["name"] == "LA"
+
+
+def test_query_indexing_considerations(db_no_unique_string):
+    db = db_no_unique_string
+    emplyees = [
+        {"name": "Alice", "salary": 100_000, "experience": 10},
+        {"name": "Bob", "salary": 80_000, "experience": 2},
+        {"name": "Charlie", "salary": 120_000, "experience": 10},
+        {"name": "David", "salary": 90_000, "experience": 3},
+        {"name": "Eve", "salary": 110_000, "experience": 9},
+        {"name": "Joe", "salary": 110_000, "experience": 7},
+        {"name": "Mallory", "salary": 200_000, "experience": 0},
+    ]
+    for employee in emplyees:
+        db.collection("employees").add(employee)
+    query = snippets.query_indexing_considerations()
+    results = list(query.stream())
+    # should contain employees salary > 100_000 sorted by salary and experience
+    assert len(results) == 3
+    assert results[0].to_dict()["name"] == "Joe"
+    assert results[1].to_dict()["name"] == "Eve"
+    assert results[2].to_dict()["name"] == "Charlie"
+
+
+def test_query_order_fields(db):
+    emplyees = [
+        {"name": "Alice", "salary": 100_000, "experience": 10},
+        {"name": "Bob", "salary": 80_000, "experience": 2},
+        {"name": "Charlie", "salary": 120_000, "experience": 10},
+        {"name": "David", "salary": 90_000, "experience": 3},
+        {"name": "Eve", "salary": 110_000, "experience": 9},
+        {"name": "Joe", "salary": 110_000, "experience": 7},
+        {"name": "Mallory", "salary": 200_000, "experience": 0},
+    ]
+    for employee in emplyees:
+        db.collection("employees").add(employee)
+    results = snippets.query_order_fields()
+    assert len(results) == 4
+    assert results[0].to_dict()["name"] == "Mallory"
+    assert results[1].to_dict()["name"] == "Joe"
+    assert results[2].to_dict()["name"] == "Eve"
+    assert results[3].to_dict()["name"] == "Charlie"

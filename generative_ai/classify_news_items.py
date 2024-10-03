@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START aiplatform_sdk_classify_news_items]
-
 
 def classify_news_items() -> str:
     """Text Classification Example with a Large Language Model"""
@@ -59,9 +57,12 @@ The answer is:
     )
 
     print(response.text)
+    # Example response:
+    #    business
     # [END generativeaionvertexai_classification]
 
     return response.text
 
 
-# [END aiplatform_sdk_classify_news_items]
+if __name__ == "__main__":
+    classify_news_items()

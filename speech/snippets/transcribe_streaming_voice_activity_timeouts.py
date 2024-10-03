@@ -12,31 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_streaming_voice_activity_timeouts]
+import os
 from time import sleep
 
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 from google.protobuf import duration_pb2  # type: ignore
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_streaming_voice_activity_timeouts(
-    project_id: str,
     speech_start_timeout: int,
     speech_end_timeout: int,
     audio_file: str,
 ) -> cloud_speech.StreamingRecognizeResponse:
     """Transcribes audio from audio file to text.
-
     Args:
-        project_id: The GCP project ID to use.
         speech_start_timeout: The timeout in seconds for speech start.
         speech_end_timeout: The timeout in seconds for speech end.
-        audio_file: The audio file to transcribe.
-
+        audio_file: Path to the local audio file to be transcribed.
+            Example: "resources/audio_silence_padding.wav"
     Returns:
         The streaming response containing the transcript.
     """
@@ -44,14 +41,14 @@ def transcribe_streaming_voice_activity_timeouts(
     client = SpeechClient()
 
     # Reads a file as bytes
-    with open(audio_file, "rb") as f:
-        content = f.read()
+    with open(audio_file, "rb") as file:
+        audio_content = file.read()
 
     # In practice, stream should be a generator yielding chunks of audio data
-    chunk_length = len(content) // 20
+    chunk_length = len(audio_content) // 20
     stream = [
-        content[start : start + chunk_length]
-        for start in range(0, len(content), chunk_length)
+        audio_content[start : start + chunk_length]
+        for start in range(0, len(audio_content), chunk_length)
     ]
     audio_requests = (
         cloud_speech.StreamingRecognizeRequest(audio=audio) for audio in stream
@@ -81,7 +78,7 @@ def transcribe_streaming_voice_activity_timeouts(
     )
 
     config_request = cloud_speech.StreamingRecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         streaming_config=streaming_config,
     )
 
@@ -119,19 +116,16 @@ def transcribe_streaming_voice_activity_timeouts(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument(
-        "speech_start_timeout", help="Timeout in seconds for speech start"
-    )
-    parser.add_argument("speech_end_timeout", help="Timeout in seconds for speech end")
-    parser.add_argument("audio_file", help="Audio file to stream")
-    args = parser.parse_args()
+    # Define the timeout duration for detecting the start of speech
+    # In this case this means the function will wait for up to 5 seconds to determine if speech has started
+    #   before it begins processing the audio stream.
+    speech_start_timeout = 5
+    # Define the timeout duration for detecting the end of speech
+    # This indicates that the function will continue to listen for up to 1 second
+    #     after the last detected speech segment to determine if speech has ended.
+    speech_end_timeout = 1
     transcribe_streaming_voice_activity_timeouts(
-        args.project_id,
-        args.speech_start_timeout,
-        args.speech_end_timeout,
-        args.audio_file,
+        speech_start_timeout=speech_start_timeout,
+        speech_end_timeout=speech_end_timeout,
+        audio_file="resources/audio_silence_padding.wav",
     )

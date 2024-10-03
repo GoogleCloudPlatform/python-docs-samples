@@ -17,6 +17,7 @@ import os
 from django.conf import settings
 from django.core.wsgi import get_wsgi_application
 from django.http import HttpResponse
+from django.urls import path
 from django.urls import re_path
 from google.appengine.api import mail, wrap_wsgi_app
 
@@ -105,9 +106,9 @@ def receive_bounce(request):
 
 
 urlpatterns = [
-    re_path(r"^$", home_page),
+    path("", home_page),
     re_path(r"^_ah/mail/.*$", receive_mail),
-    re_path(r"^_ah/bounce$", receive_bounce),
+    path("_ah/bounce", receive_bounce),
 ]
 
 settings.configure(

@@ -41,10 +41,11 @@ COPY --from=gcr.io/dataflow-templates-base/python311-template-launcher-base:2023
 ARG WORKDIR=/template
 WORKDIR ${WORKDIR}
 
+COPY main.py .
+COPY pyproject.toml .
 COPY requirements.txt .
 COPY setup.py .
-COPY main.py .
-COPY my_package my_package
+COPY src src
 
 # Installing exhaustive list of dependencies from a requirements.txt
 # helps to ensure that every time Docker container image is built,
@@ -60,7 +61,7 @@ RUN pip install -e .
 # For more informaiton, see: https://cloud.google.com/dataflow/docs/guides/templates/configuring-flex-templates
 ENV FLEX_TEMPLATE_PYTHON_PY_FILE="${WORKDIR}/main.py"
 
-# Because this image will be used as custom sdk container image, and it already 
+# Because this image will be used as custom sdk container image, and it already
 # installs the dependencies from the requirements.txt, we can omit
 # the FLEX_TEMPLATE_PYTHON_REQUIREMENTS_FILE directive here
 # to reduce pipeline submission time.

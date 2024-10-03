@@ -22,6 +22,7 @@ import google.auth
 import google.auth.transport.requests
 import openai
 
+
 class OpenAICredentialsRefresher:
     def __init__(self, **kwargs: Any) -> None:
         # Set a dummy key here
@@ -40,6 +41,8 @@ class OpenAICredentialsRefresher:
 
             self.client.api_key = self.creds.token
         return getattr(self.client, name)
+
+
 # [END generativeaionvertexai_credentials_refresher_class]
 
 
@@ -55,7 +58,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-001",
+        model="google/gemini-1.5-flash-002",
         messages=[{"role": "user", "content": "Why is the sky blue?"}],
     )
 

@@ -42,9 +42,9 @@ def query_filter_or(project_id: str) -> None:
 
     or_query.add_filter(filter=or_filter)
 
-    results = or_query.fetch()
+    results = list(or_query.fetch())
     for result in results:
         print(result["description"])
 
-
-# [END datastore_query_filter_or]
+    # [END datastore_query_filter_or]
+    return results

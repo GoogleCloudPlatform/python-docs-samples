@@ -15,7 +15,6 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MODEL_ID = "gemini-1.5-flash-001"
 
 
 def generate_content() -> object:
@@ -26,7 +25,7 @@ def generate_content() -> object:
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel(MODEL_ID)
+    model = GenerativeModel("gemini-1.5-flash-002")
     response = model.generate_content(
         [
             Part.from_uri(
@@ -40,7 +39,11 @@ def generate_content() -> object:
         ]
     )
 
-    print(response)
+    print(response.text)
     # [END generativeaionvertexai_non_stream_multimodality_basic]
 
     return response
+
+
+if __name__ == "__main__":
+    generate_content()

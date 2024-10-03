@@ -25,6 +25,8 @@ ignoreFiles:
   - "dlp/snippets/resources/harmless.txt"
   - "dlp/snippets/resources/test.txt"
   - "dlp/snippets/resources/term_list.txt"
+  - "generative_ai/prompts/test_resources/sample_prompt_template.txt"
+  - "generative_ai/prompts/test_resources/sample_system_instruction.txt"
   - "service_extensions/callouts/add_header/service_pb2.py"
   - "service_extensions/callouts/add_header/service_pb2_grpc.py"
 

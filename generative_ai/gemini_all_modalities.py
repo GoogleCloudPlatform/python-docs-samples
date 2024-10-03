@@ -11,20 +11,21 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def analyze_all_modalities(project_id: str) -> str:
+def analyze_all_modalities() -> str:
     # [START generativeaionvertexai_gemini_all_modalities]
 
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO(developer): Update and un-comment below lines
-    # project_id = "PROJECT_ID"
+    # TODO (developer): update project_id
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vertexai.init(project=project_id, location="us-central1")
-
-    model = GenerativeModel("gemini-1.5-flash-001")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     video_file_uri = (
         "gs://cloud-samples-data/generative-ai/video/behind_the_scenes_pixel.mp4"
@@ -56,3 +57,7 @@ def analyze_all_modalities(project_id: str) -> str:
 
     # [END generativeaionvertexai_gemini_all_modalities]
     return response.text
+
+
+if __name__ == "__main__":
+    analyze_all_modalities()

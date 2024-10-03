@@ -20,15 +20,14 @@ from google.api_core.retry import Retry
 import transcribe_chirp_auto_detect_language
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+REGION = "us-central1"
 
 
 @Retry()
 def test_transcribe_chirp() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     response = (
         transcribe_chirp_auto_detect_language.transcribe_chirp_auto_detect_language(
-            project_id, os.path.join(_RESOURCES, "audio.wav")
+            os.path.join(_RESOURCES, "audio.wav"), REGION
         )
     )
 
@@ -37,5 +36,4 @@ def test_transcribe_chirp() -> None:
         response.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )
-
     assert response.results[0].language_code == "en"

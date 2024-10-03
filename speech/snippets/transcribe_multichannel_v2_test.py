@@ -15,6 +15,8 @@
 import os
 import re
 
+from flaky import flaky
+
 from google.api_core.retry import Retry
 
 import transcribe_multichannel_v2
@@ -23,11 +25,10 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 
 
 @Retry()
+@flaky(max_runs=3, min_passes=1)
 def test_transcribe_multichannel_v2() -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     response = transcribe_multichannel_v2.transcribe_multichannel_v2(
-        project_id, os.path.join(_RESOURCES, "two_channel_16k.wav")
+        os.path.join(_RESOURCES, "two_channel_16k.wav")
     )
 
     assert re.search(
