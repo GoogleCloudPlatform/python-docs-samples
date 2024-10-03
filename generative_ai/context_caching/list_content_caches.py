@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def list_content_caches() -> List[str]:
-    # [START generativeaionvertexai_gemini_get_list_of_context_caches]
+    # [START generativeaionvertexai_context_caching_list_context_caches]
     import vertexai
 
     from vertexai.preview import caching
@@ -39,7 +39,7 @@ def list_content_caches() -> List[str]:
         # Last updated at: 2024-09-16T12:41:09.998635Z
         # Expires at: 2024-09-16T13:41:09.989729Z
 
-    # [END generativeaionvertexai_gemini_get_list_of_context_caches]
+    # [END generativeaionvertexai_context_caching_list_context_caches]
     return [cached_content.name for cached_content in cache_list]
 
 
