@@ -27,7 +27,7 @@ def get_image_text_embeddings_with_lower_dimension(embedding_dimension: int = 12
     Args:
         embedding_dimension (int, optional): This option allows to specify lower dimension embeddings (one of: 128, 256, 512 or 1408).
     """
-    # [START generativeaionvertexai_multimodal_specify_lower_dimension_embeddings]
+    # [START generativeaionvertexai_embeddings_specify_lower_dimension]
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
@@ -55,7 +55,7 @@ def get_image_text_embeddings_with_lower_dimension(embedding_dimension: int = 12
     # Image Embedding: [0.0622573346, -0.0406507477, 0.0260440577, ...]
     # Text Embedding: [0.27469793, -0.146258667, 0.0222803634, ...]
 
-    # [END generativeaionvertexai_multimodal_specify_lower_dimension_embeddings]
+    # [END generativeaionvertexai_embeddings_specify_lower_dimension]
 
     return embeddings
 
