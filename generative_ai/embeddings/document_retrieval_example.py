@@ -37,6 +37,7 @@ def embed_text() -> list[list[float]]:
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
 
+    print(embeddings)
     # Example response:
     # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...], [0.1234434666, ...]],
     return [embedding.values for embedding in embeddings]
