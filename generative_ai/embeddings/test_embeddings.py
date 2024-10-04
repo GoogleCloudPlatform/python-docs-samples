@@ -13,11 +13,13 @@
 # limitations under the License.
 
 import backoff
+
+import generate_embeddings_with_lower_dimension
+
 from google.api_core.exceptions import ResourceExhausted
 
 import multimodal_example
 import multimodal_image_example
-import multimodal_image_text_with_lower_dimension
 import multimodal_video_example
 
 
@@ -47,7 +49,7 @@ def test_multimodal_embedding_image() -> None:
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_multimodal_embedding_image_lower_dimension() -> None:
-    embeddings = multimodal_image_text_with_lower_dimension.get_image_text_embeddings_with_lower_dimension()
+    embeddings = generate_embeddings_with_lower_dimension.generate_embeddings_with_lower_dimension()
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert len(embeddings.image_embedding) == 128

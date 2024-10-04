@@ -19,7 +19,7 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_image_text_embeddings_with_lower_dimension(embedding_dimension: int = 128) -> MultiModalEmbeddingResponse:
+def generate_embeddings_with_lower_dimension(embedding_dimension: int = 128) -> MultiModalEmbeddingResponse:
     """Example of how to use lower dimensions when creating multimodal embeddings.
 
     Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#low-dimension
@@ -61,4 +61,4 @@ def get_image_text_embeddings_with_lower_dimension(embedding_dimension: int = 12
 
 
 if __name__ == "__main__":
-    get_image_text_embeddings_with_lower_dimension()
+    generate_embeddings_with_lower_dimension()
