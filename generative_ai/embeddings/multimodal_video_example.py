@@ -29,7 +29,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
     from vertexai.vision_models import MultiModalEmbeddingModel, Video
     from vertexai.vision_models import VideoSegmentConfig
 
-    # TODO(developer): Uncomment and set your project ID
+    # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
