@@ -14,20 +14,20 @@
 import backoff
 
 import chat_code_example
-import chat_example
 import chat_multiturn_example
 import chat_multiturn_stream_example
 import chat_openai_example
 import chat_openai_image_example
 import chat_openai_image_stream_example
 import chat_openai_stream_example
+import chat_simple_example
 
 from google.api_core.exceptions import ResourceExhausted
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_chat_example() -> None:
-    response = chat_example.send_chat()
+    response = chat_simple_example.send_chat()
     assert len(response) > 0
 
 
