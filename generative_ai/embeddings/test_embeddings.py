@@ -20,8 +20,14 @@ import code_retrieval_example
 import document_retrieval_example
 import generate_embeddings_with_lower_dimension
 
-from google.api_core.exceptions import ResourceExhausted
+from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
 
+import google.auth
+
+from google.cloud import aiplatform
+from google.cloud.aiplatform import initializer as aiplatform_init
+
+import model_tuning_example
 import multimodal_example
 import multimodal_image_example
 import multimodal_video_example
@@ -99,3 +105,28 @@ def test_code_embed_text() -> None:
         dimensionality=dimensionality,
     )
     assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
+
+
+@backoff.on_exception(backoff.expo, FailedPrecondition, max_time=300)
+def dispose(tuning_job) -> None:  # noqa: ANN001
+    if tuning_job._status.name == "PIPELINE_STATE_RUNNING":
+        tuning_job._cancel()
+
+
+def test_tune_embedding_model() -> None:
+    credentials, _ = google.auth.default(  # Set explicit credentials with Oauth scopes.
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
+    aiplatform.init(
+        api_endpoint="us-central1-aiplatform.googleapis.com:443",
+        project=os.getenv("GOOGLE_CLOUD_PROJECT"),
+        staging_bucket="gs://ucaip-samples-us-central1/training_pipeline_output",
+        credentials=credentials,
+    )
+    tuning_job = model_tuning_example.tune_embedding_model(
+        aiplatform_init.global_config.api_endpoint
+    )
+    try:
+        assert tuning_job._status.name != "PIPELINE_STATE_FAILED"
+    finally:
+        dispose(tuning_job)
