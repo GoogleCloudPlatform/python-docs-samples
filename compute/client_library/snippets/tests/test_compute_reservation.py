@@ -57,7 +57,7 @@ def reservation(request) -> str:
 
 
 @pytest.fixture(scope="session")
-def vm_instance(request):
+def vm_instance():
     """the fixture should create a VM instance"""
     boot_disk = compute_v1.AttachedDisk()
     boot_disk.auto_delete = True
@@ -81,14 +81,12 @@ def vm_instance(request):
         disks=[boot_disk, additional_disk],
         machine_type=MACHINE_TYPE,
     )
+    yield instance
 
-    def cleanup():
-        try:
-            delete_instance(PROJECT_ID, ZONE, INSTANCE_NAME)
-        except Exception as e:
-            print(f"Error during cleanup: {e}")
-
-    request.addfinalizer(cleanup)
+    try:
+        delete_instance(PROJECT_ID, ZONE, INSTANCE_NAME)
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
     return instance
 
