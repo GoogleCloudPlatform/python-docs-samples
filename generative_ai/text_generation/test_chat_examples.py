@@ -27,7 +27,8 @@ from google.api_core.exceptions import ResourceExhausted
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_chat_example() -> None:
-    assert len(chat_example.send_chat()) > 0
+    response = chat_example.send_chat()
+    assert len(response) > 0
 
 
 def test_gemini_chat_example() -> None:
