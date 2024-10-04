@@ -79,16 +79,8 @@ def test_generate_embeddings_with_lower_dimension() -> None:
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_embed_text() -> None:
-    texts = [
-        "banana bread?",
-        "banana muffin?",
-        "banana?",
-    ]
-    dimensionality = 256
-    embeddings = document_retrieval_example.embed_text(
-        texts, "RETRIEVAL_QUERY", dimensionality
-    )
-    assert [len(e) for e in embeddings] == [dimensionality or 768] * len(texts)
+    embeddings = document_retrieval_example.embed_text()
+    assert [len(e) for e in embeddings] == [256, 256]
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)

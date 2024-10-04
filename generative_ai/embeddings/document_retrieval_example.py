@@ -18,29 +18,27 @@ from __future__ import annotations
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
-def embed_text(
-    texts: list[str] | None = None,
-    task: str | None = "RETRIEVAL_DOCUMENT",
-    dimensionality: int | None = 256,
-) -> list[list[float]]:
+def embed_text() -> list[list[float]]:
     """Embeds texts with a pre-trained, foundational model.
-    Args:
-        texts: A list of texts to be embedded. If None, defaults to a list with two example phrases.
-        task: The task type for embedding. Defaults to "RETRIEVAL_DOCUMENT". Check the available
-              tasks in the model's documentation.
-        dimensionality: The dimensionality of the output embeddings. If None, the model's default
-                        dimensionality will be used.
+
     Returns:
         A list of lists containing the embedding vectors for each input text
     """
-    if texts is None:
-        texts = ["banana muffins? ", "banana bread? banana muffins?"]
+
+    # A list of texts to be embedded.
+    texts = ["banana muffins? ", "banana bread? banana muffins?"]
+    # The dimensionality of the output embeddings.
+    dimensionality = 256
+    # The task type for embedding. Check the available tasks in the model's documentation.
+    task = "RETRIEVAL_DOCUMENT"
+
     model = TextEmbeddingModel.from_pretrained("text-embedding-004")
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
+
     # Example response:
-    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...],
+    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...], [0.1234434666, ...]],
     return [embedding.values for embedding in embeddings]
 
 
