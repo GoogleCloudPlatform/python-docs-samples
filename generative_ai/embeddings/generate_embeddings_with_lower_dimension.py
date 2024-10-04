@@ -19,39 +19,47 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_image_text_embeddings() -> MultiModalEmbeddingResponse:
-    """Example of how to generate multimodal embeddings from image and text.
+def generate_embeddings_with_lower_dimension() -> MultiModalEmbeddingResponse:
+    """Example of how to use lower dimensions when creating multimodal embeddings.
 
-    Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#text-image-embedding
+    Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#low-dimension
+
+    Returns:
+        The multimodal embedding response.
     """
-    # [START generativeaionvertexai_multimodal_embedding_image]
+    # [START generativeaionvertexai_embeddings_specify_lower_dimension]
     import vertexai
+
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
     # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
+    # TODO(developer): Try different dimenions: 128, 256, 512, 1408
+    embedding_dimension = 128
+
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
     image = Image.load_from_file(
-        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
-    )
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png")
 
     embeddings = model.get_embeddings(
         image=image,
         contextual_text="Colosseum",
-        dimension=1408,
+        dimension=embedding_dimension,
     )
+
     print(f"Image Embedding: {embeddings.image_embedding}")
     print(f"Text Embedding: {embeddings.text_embedding}")
-    # Example response:
-    # Image Embedding: [-0.0123147098, 0.0727171078, ...]
-    # Text Embedding: [0.00230263756, 0.0278981831, ...]
 
-    # [END generativeaionvertexai_multimodal_embedding_image]
+    # Example response:
+    # Image Embedding: [0.0622573346, -0.0406507477, 0.0260440577, ...]
+    # Text Embedding: [0.27469793, -0.146258667, 0.0222803634, ...]
+
+    # [END generativeaionvertexai_embeddings_specify_lower_dimension]
 
     return embeddings
 
 
 if __name__ == "__main__":
-    get_image_text_embeddings()
+    generate_embeddings_with_lower_dimension()
