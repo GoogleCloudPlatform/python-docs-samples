@@ -36,7 +36,7 @@ def test_gemini_count_simple_example() -> None:
     assert response.usage_metadata
 
 
-def test_gemini_multimodal_example() -> None:
+def test_gemini_count_tokens_multimodal_example() -> None:
     response = multimodal_example.count_tokens_multimodal_example()
     assert response
     assert response.usage_metadata
