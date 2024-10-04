@@ -11,9 +11,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 import backoff
 
+import batch_example
 import code_retrieval_example
 import document_retrieval_example
 import generate_embeddings_with_lower_dimension
@@ -23,6 +25,16 @@ from google.api_core.exceptions import ResourceExhausted
 import multimodal_example
 import multimodal_image_example
 import multimodal_video_example
+
+import pytest
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+@pytest.fixture(scope="session")
+def test_embed_text_batch() -> None:
+    os.environ["GCS_OUTPUT_URI"] = "gs://python-docs-samples-tests/"
+    batch_prediction_job = batch_example.embed_text_batch()
+    assert batch_prediction_job
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
