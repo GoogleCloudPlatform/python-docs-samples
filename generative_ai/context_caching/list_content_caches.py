@@ -11,14 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import os
+from __future__ import annotations
 
-from typing import List
+import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_content_caches() -> List[str]:
+def list_content_caches() -> list[str]:
     # [START generativeaionvertexai_context_caching_list]
     import vertexai
 
