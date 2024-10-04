@@ -13,23 +13,25 @@
 # limitations under the License.
 
 # [START generativeaionvertexai_embedding]
-from typing import List, Optional
+from __future__ import annotations
 
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
 def embed_text(
-    texts: list = None,
-    task: str = "RETRIEVAL_DOCUMENT",
-    dimensionality: Optional[int] = 256,
-) -> List[List[float]]:
+    texts: list[str] | None = None,
+    task: str | None = "RETRIEVAL_DOCUMENT",
+    dimensionality: int | None = 256,
+) -> list[list[float]]:
     """Embeds texts with a pre-trained, foundational model.
     Args:
-        texts (List[str]): A list of texts to be embedded.
-        task (str): The task type for embedding. Check the available tasks in the model's documentation.
-        dimensionality (Optional[int]): The dimensionality of the output embeddings.
+        texts: A list of texts to be embedded. If None, defaults to a list with two example phrases.
+        task: The task type for embedding. Defaults to "RETRIEVAL_DOCUMENT". Check the available
+              tasks in the model's documentation.
+        dimensionality: The dimensionality of the output embeddings. If None, the model's default
+                        dimensionality will be used.
     Returns:
-        List[List[float]]: A list of lists containing the embedding vectors for each input text
+        A list of lists containing the embedding vectors for each input text
     """
     if texts is None:
         texts = ["banana muffins? ", "banana bread? banana muffins?"]
