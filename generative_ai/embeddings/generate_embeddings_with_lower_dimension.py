@@ -29,6 +29,7 @@ def generate_embeddings_with_lower_dimension() -> MultiModalEmbeddingResponse:
     """
     # [START generativeaionvertexai_embeddings_specify_lower_dimension]
     import vertexai
+
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
     # TODO(developer): Update & uncomment line below
@@ -38,7 +39,7 @@ def generate_embeddings_with_lower_dimension() -> MultiModalEmbeddingResponse:
     # TODO(developer): Try different dimenions: 128, 256, 512, 1408
     embedding_dimension = 128
 
-    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
     image = Image.load_from_file(
         "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png")
 

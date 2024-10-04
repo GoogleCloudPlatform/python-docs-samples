@@ -33,7 +33,7 @@ def get_video_embeddings() -> MultiModalEmbeddingResponse:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
 
     embeddings = model.get_embeddings(
         video=Video.load_from_file(

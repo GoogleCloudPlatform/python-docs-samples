@@ -34,7 +34,7 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
 
     image = Image.load_from_file(
         "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
