@@ -30,9 +30,6 @@ import multimodal_example02
 import multimodal_stream_example
 import pdf_example
 import pro_config_example
-
-import pytest
-
 import single_turn_multi_image_example
 
 
