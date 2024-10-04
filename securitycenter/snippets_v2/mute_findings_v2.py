@@ -105,4 +105,5 @@ def bulk_mute_findings(parent_path: str, location_id: str, mute_rule: str) -> No
     print(f"Bulk mute findings completed successfully: {response}")
     return response
 
+
 # [END securitycenter_bulk_mute_v2]
