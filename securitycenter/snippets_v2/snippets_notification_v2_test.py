@@ -20,13 +20,11 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-from google.cloud import securitycenter_v2 as securitycenter_v2
-import pytest
 
 import snippets_notification_configs_v2
 
-ORG_ID = os.environ["SCC_PROJECT_ORG_ID"]
-PROJECT_ID = os.environ["SCC_PROJECT_ID"]
+ORG_ID = os.environ["GCLOUD_ORGANIZATION"]
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 PUBSUB_TOPIC = os.environ["GCLOUD_PUBSUB_TOPIC"]
 PUBSUB_SUBSCRIPTION = os.environ["GCLOUD_PUBSUB_SUBSCRIPTION"]
 LOCATION_ID = os.environ["GCLOUD_LOCATION"]
@@ -38,7 +36,7 @@ CREATE_CONFIG_ID = "new-notification-pytest" + str(uuid.uuid1())
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_create_notification_config():
-    #create_config_id = "new-notification-pytest" + str(uuid.uuid1())
+    # create_config_id = "new-notification-pytest" + str(uuid.uuid1())
     created_notification_config = (
         snippets_notification_configs_v2.create_notification_config(
             f"organizations/{ORG_ID}", LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
@@ -72,21 +70,23 @@ def test_list_notification_configs():
     assert any(CREATE_CONFIG_ID in name for name in names), "not found"
 
 
-
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_update_notification_config():
     updated_config = snippets_notification_configs_v2.update_notification_config(
-        f"organizations/{ORG_ID}",LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
+        f"organizations/{ORG_ID}", LOCATION_ID, PUBSUB_TOPIC, CREATE_CONFIG_ID
     )
     assert updated_config is not None
     assert CREATE_CONFIG_ID in updated_config.name
 
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def test_receive_notifications():
-    assert snippets_notification_configs_v2.receive_notifications(
-        PUBSUB_SUBSCRIPTION
-    )
+    assert snippets_notification_configs_v2.receive_notifications(PUBSUB_SUBSCRIPTION)
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3

@@ -68,7 +68,7 @@ def generate_text() -> object:
             "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
         }
     )
-    messages.append({"role": "user", "content": "What is the weather in Boston?"})
+    messages.append({"role": "user", "content": "What is the weather in Boston, MA?"})
 
     response = client.chat.completions.create(
         model="google/gemini-1.5-flash-002",

@@ -61,6 +61,7 @@ def create_bigquery_export(
     print(f"BigQuery export request created successfully: {response.name}\n")
     return response
 
+
 # [END securitycenter_create_bigquery_export_v2]
 
 
@@ -86,6 +87,7 @@ def get_bigquery_export(parent: str, bigquery_export_id: str):
     response = client.get_big_query_export(request)
     print(f"Retrieved the BigQuery export: {response.name}")
     return response
+
 
 # [END securitycenter_get_bigquery_export_v2]
 
@@ -115,6 +117,7 @@ def list_bigquery_exports(parent: str):
     for bigquery_export in response:
         print(bigquery_export.name)
     return response
+
 
 # [END securitycenter_list_bigquery_export_v2]
 
@@ -163,6 +166,7 @@ def update_bigquery_export(parent: str, export_filter: str, bigquery_export_id: 
     print("BigQueryExport updated successfully!")
     return response
 
+
 # [END securitycenter_update_bigquery_export_v2]
 
 
@@ -186,4 +190,6 @@ def delete_bigquery_export(parent: str, bigquery_export_id: str):
 
     client.delete_big_query_export(request)
     print(f"BigQuery export request deleted successfully: {bigquery_export_id}")
+
+
 # [END securitycenter_delete_bigquery_export_v2]

@@ -114,21 +114,32 @@ def finding_name(source_name):
 
 
 def test_add_to_asset(organization_id, asset_name):
-    updated_marks, marks = snippets_security_marks_v2.add_to_asset(organization_id, asset_name.split("/")[-1])
+    updated_marks, marks = snippets_security_marks_v2.add_to_asset(
+        organization_id, asset_name.split("/")[-1]
+    )
     assert updated_marks.marks.keys() >= marks.keys()
 
 
 def test_delete_security_marks(organization_id, asset_name):
-    updated_marks = snippets_security_marks_v2.delete_security_marks(organization_id, asset_name.split("/")[-1])
+    updated_marks = snippets_security_marks_v2.delete_security_marks(
+        organization_id, asset_name.split("/")[-1]
+    )
     assert "other" in updated_marks.marks
     assert len(updated_marks.marks) == 1
 
 
 def test_delete_and_update_marks(organization_id, asset_name):
-    updated_marks = snippets_security_marks_v2.delete_and_update_marks(organization_id, asset_name.split("/")[-1])
+    updated_marks = snippets_security_marks_v2.delete_and_update_marks(
+        organization_id, asset_name.split("/")[-1]
+    )
     assert updated_marks.marks == {"key_a": "new_value_for_a", "other": "other_val"}
 
 
 def test_add_to_finding(organization_id, source_name, finding_name):
-    updated_marks, marks = snippets_security_marks_v2.add_to_finding(organization_id, source_name.split("/")[3], "global", finding_name.split("/")[-1])
+    updated_marks, marks = snippets_security_marks_v2.add_to_finding(
+        organization_id,
+        source_name.split("/")[3],
+        "global",
+        finding_name.split("/")[-1],
+    )
     assert updated_marks.marks == marks
