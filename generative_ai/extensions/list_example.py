@@ -29,14 +29,14 @@ def list_extensions() -> List[extensions.Extension]:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    extensions = extensions.Extension.list()
-    print(extensions)
+    extensions_list = extensions.Extension.list()
+    print(extensions_list)
     # Example response:
     # [<vertexai.extensions._extensions.Extension object at 0x76e8ced37af0>
     # resource name: projects/[PROJECT_ID]/locations/us-central1/extensions/1234567890123456]
 
     # [END generativeaionvertexai_list_extensions]
-    return extensions
+    return extensions_list
 
 
 if __name__ == "__main__":
