@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2023 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,35 +16,38 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_content() -> str:
-    # [START generativeaionvertexai_gemini_describe_http_image]
+def generate_text() -> str:
+    # [START generativeaionvertexai_gemini_get_started]
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO (developer): update project id
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-002")
 
-    contents = [
-        # Text prompt
-        "Describe this image.",
-        # Example image of a Jack Russell Terrier puppy from Wikipedia.
-        Part.from_uri(
-            "https://upload.wikimedia.org/wikipedia/commons/1/1d/Szczenie_Jack_Russell_Terrier.jpg",
-            "image/jpeg",
-        ),
-    ]
+    response = model.generate_content(
+        [
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/image/scones.jpg",
+                mime_type="image/jpeg",
+            ),
+            "What is shown in this image?",
+        ]
+    )
 
-    response = model.generate_content(contents)
     print(response.text)
-    # Example response:
-    #     'Here is a description of the image:'
-    #     'Close-up view of a young Jack Russell Terrier puppy sitting in short grass ...'
+    # That's a lovely overhead shot of a rustic-style breakfast or brunch spread.
+    # Here's what's in the image:
+    # * **Blueberry scones:** Several freshly baked blueberry scones are arranged on parchment paper.
+    # They look crumbly and delicious.
+    # ...
 
-    # [END generativeaionvertexai_gemini_describe_http_image]
+    # [END generativeaionvertexai_gemini_get_started]
     return response.text
 
 
 if __name__ == "__main__":
-    generate_content()
+    generate_text()

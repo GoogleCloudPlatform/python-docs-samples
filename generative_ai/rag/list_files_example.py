@@ -14,7 +14,9 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import ListRagFilesPager
+from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
+    ListRagFilesPager,
+)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -47,6 +49,4 @@ def list_files(corpus_name: str) -> ListRagFilesPager:
 
 
 if __name__ == "__main__":
-    list_files(
-        "projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}"
-    )
+    list_files("projects/{PROJECT_ID}/locations/us-central1/ragCorpora/{rag_corpus_id}")

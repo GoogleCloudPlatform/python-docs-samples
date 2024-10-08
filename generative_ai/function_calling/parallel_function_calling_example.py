@@ -44,7 +44,7 @@ def parallel_function_calling_example() -> ChatSession:
             "properties": {
                 "location": {
                     "type": "string",
-                    "description": "The location to whih to get the weather. Can be a city name, a city name and state, or a zip code. Examples: 'San Francisco', 'San Francisco, CA', '95616', etc."
+                    "description": "The location to whih to get the weather. Can be a city name, a city name and state, or a zip code. Examples: 'San Francisco', 'San Francisco, CA', '95616', etc.",
                 },
             },
         },
@@ -77,22 +77,26 @@ def parallel_function_calling_example() -> ChatSession:
         api_responses = []
         for func in function_calls:
             if func.name == function_name:
-                api_responses.append({
-                    "content": mock_weather_api_service(location=func.args["location"])
-                })
+                api_responses.append(
+                    {
+                        "content": mock_weather_api_service(
+                            location=func.args["location"]
+                        )
+                    }
+                )
 
         # Return the API response to Gemini
         response = chat.send_message(
-          [
-            Part.from_function_response(
-                name="get_current_weather",
-                response=api_responses[0],
-            ),
-            Part.from_function_response(
-                name="get_current_weather",
-                response=api_responses[1],
-            ),
-          ],
+            [
+                Part.from_function_response(
+                    name="get_current_weather",
+                    response=api_responses[0],
+                ),
+                Part.from_function_response(
+                    name="get_current_weather",
+                    response=api_responses[1],
+                ),
+            ],
         )
 
         print(response.text)

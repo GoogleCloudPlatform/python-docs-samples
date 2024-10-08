@@ -16,35 +16,40 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_content() -> str:
-    # [START generativeaionvertexai_gemini_describe_http_pdf]
+def generate_content() -> object:
+    # [START generativeaionvertexai_non_stream_multimodality_basic]
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO (developer): update project id
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
+
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-002")
+    response = model.generate_content(
+        [
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/video/animals.mp4", "video/mp4"
+            ),
+            Part.from_uri(
+                "gs://cloud-samples-data/generative-ai/image/character.jpg",
+                "image/jpeg",
+            ),
+            "Are these video and image correlated?",
+        ]
+    )
 
-    contents = [
-        # Text prompt
-        "Summarise this file",
-        # Example PDF document on Transformers, a neural network architecture.
-        Part.from_uri(
-            "https://storage.googleapis.com/cloud-samples-data/generative-ai/pdf/1706.03762v7.pdf",
-            "application/pdf",
-        ),
-    ]
-
-    response = model.generate_content(contents)
     print(response.text)
     # Example response:
-    #     'This paper introduces the Transformer, a new neural network architecture for '
-    #     'sequence transduction, which uses an attention mechanism to learn global '
-    #     'dependencies between input and output sequences. The Transformer ...
+    # No, the video and image are not correlated.
+    # The video shows a Google Photos project where animals at the
+    # Los Angeles Zoo take selfies using a specially designed camera rig.
+    # The image is a simple drawing of a wizard.
 
-    # [END generativeaionvertexai_gemini_describe_http_pdf]
-    return response.text
+    # [END generativeaionvertexai_non_stream_multimodality_basic]
+    return response
 
 
 if __name__ == "__main__":

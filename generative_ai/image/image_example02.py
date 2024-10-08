@@ -16,36 +16,35 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_content() -> str:
-    # [START generativeaionvertexai_gemini_describe_http_pdf]
+def generate_text() -> None:
+    # [START generativeaionvertexai_gemini_pro_example]
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO (developer): update project id
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-002")
 
-    contents = [
-        # Text prompt
-        "Summarise this file",
-        # Example PDF document on Transformers, a neural network architecture.
-        Part.from_uri(
-            "https://storage.googleapis.com/cloud-samples-data/generative-ai/pdf/1706.03762v7.pdf",
-            "application/pdf",
-        ),
-    ]
+    image_file = Part.from_uri(
+        "gs://cloud-samples-data/generative-ai/image/scones.jpg", "image/jpeg"
+    )
 
-    response = model.generate_content(contents)
+    # Query the model
+    response = model.generate_content([image_file, "what is this image?"])
     print(response.text)
     # Example response:
-    #     'This paper introduces the Transformer, a new neural network architecture for '
-    #     'sequence transduction, which uses an attention mechanism to learn global '
-    #     'dependencies between input and output sequences. The Transformer ...
+    # That's a lovely overhead flatlay photograph of blueberry scones.
+    # The image features:
+    # * **Several blueberry scones:** These are the main focus,
+    # arranged on parchment paper with some blueberry juice stains.
+    # ...
 
-    # [END generativeaionvertexai_gemini_describe_http_pdf]
+    # [END generativeaionvertexai_gemini_pro_example]
     return response.text
 
 
 if __name__ == "__main__":
-    generate_content()
+    generate_text()

@@ -11,40 +11,35 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
-
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
-    ListRagCorporaPager,
-)
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_corpora() -> ListRagCorporaPager:
-    # [START generativeaionvertexai_rag_list_corpora]
-
-    from vertexai.preview import rag
+def generate_content() -> object:
+    # [START generativeaionvertexai_non_stream_text_basic]
     import vertexai
 
-    # TODO(developer): Update and un-comment below lines
+    from vertexai.generative_models import GenerativeModel
+
+    # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
 
-    # Initialize Vertex AI API once per session
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    corpora = rag.list_corpora()
-    print(corpora)
+    model = GenerativeModel("gemini-1.5-flash-002")
+    response = model.generate_content("Write a story about a magic backpack.")
+
+    print(response.text)
     # Example response:
-    # ListRagCorporaPager<rag_corpora {
-    #   name: "projects/[PROJECT_ID]/locations/us-central1/ragCorpora/2305843009213693952"
-    #   display_name: "test_corpus"
-    #   create_time {
+    # Elara found the backpack nestled amongst the dusty relics in her grandmother's attic.
+    # It wasn't particularly flashy; a worn canvas, the colour of faded moss,
+    # with tarnished brass buckles.  But it hummed with a faint, ...
     # ...
 
-    # [END generativeaionvertexai_rag_list_corpora]
-    return corpora
+    # [END generativeaionvertexai_non_stream_text_basic]
+    return response
 
 
 if __name__ == "__main__":
-    list_corpora()
+    generate_content()
