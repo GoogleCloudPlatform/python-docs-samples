@@ -72,7 +72,7 @@ def test_set_unmute_finding(finding):
 )
 def test_bulk_mute_findings(finding):
     # Mute findings that belong to this project.
-    filter_value = "resource.project_display_name=\"{}\"".format(ORGANIZATION_ID)
+    filter_value = 'resource.project_display_name="{}"'.format(ORGANIZATION_ID)
     response = mute_findings_v2.bulk_mute_findings(
         f"organizations/{ORGANIZATION_ID}",
         "global",
