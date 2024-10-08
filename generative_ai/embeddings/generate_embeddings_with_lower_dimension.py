@@ -55,9 +55,7 @@ def generate_embeddings_with_lower_dimension() -> MultiModalEmbeddingResponse:
     # Example response:
     # Image Embedding: [0.0622573346, -0.0406507477, 0.0260440577, ...]
     # Text Embedding: [0.27469793, -0.146258667, 0.0222803634, ...]
-
     # [END generativeaionvertexai_embeddings_specify_lower_dimension]
-
     return embeddings
 
 

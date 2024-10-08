@@ -104,7 +104,6 @@ def parallel_function_calling_example() -> ChatSession:
         print(response.text)
         # Example response:
         # The current weather in New Delhi is 35°C. The current weather in San Francisco is 25°C.
-
         # [END generativeaionvertexai_function_calling_generate_parallel_calls]
         return response
 
