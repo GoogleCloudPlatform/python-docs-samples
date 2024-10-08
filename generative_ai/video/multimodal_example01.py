@@ -31,10 +31,8 @@ def analyze_all_modalities() -> str:
     video_file_uri = (
         "gs://cloud-samples-data/generative-ai/video/behind_the_scenes_pixel.mp4"
     )
-    video_file = Part.from_uri(video_file_uri, mime_type="video/mp4")
 
     image_file_uri = "gs://cloud-samples-data/generative-ai/image/a-man-and-a-dog.png"
-    image_file = Part.from_uri(image_file_uri, mime_type="image/png")
 
     prompt = """
     Watch each frame in the video carefully and answer the questions.
@@ -45,11 +43,11 @@ def analyze_all_modalities() -> str:
     Questions:
     - When is the moment in the image happening in the video? Provide a timestamp.
     - What is the context of the moment and what does the narrator say about it?
-  """
+    """
 
     contents = [
-        video_file,
-        image_file,
+        Part.from_uri(video_file_uri, mime_type="video/mp4"),
+        Part.from_uri(image_file_uri, mime_type="image/png"),
         prompt,
     ]
 

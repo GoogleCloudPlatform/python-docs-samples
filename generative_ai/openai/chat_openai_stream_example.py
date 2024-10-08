@@ -48,12 +48,9 @@ def generate_text() -> object:
     for chunk in response:
         print(chunk.choices[0].delta.content)
     # Example response:
-    # The
-    #  sky is blue due to a phenomenon called **Rayleigh scattering**.  Sunlight is
-    #  made up of all the colors of the rainbow.  When sunlight enters the Earth
-    # 's atmosphere, it collides with tiny air molecules (mostly nitrogen and oxygen).
-    # These molecules are much smaller than the wavelengths of visible light.
-    # ...
+    # The sky is blue due to a phenomenon called **Rayleigh scattering**. Sunlight is
+    # made up of all the colors of the rainbow. When sunlight enters the Earth 's atmosphere,
+    # it collides with tiny air molecules (mostly nitrogen and oxygen). ...
 
     # [END generativeaionvertexai_gemini_chat_completions_streaming]
 

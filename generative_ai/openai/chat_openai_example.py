@@ -50,7 +50,6 @@ def generate_text() -> object:
     # The sky is blue due to a phenomenon called **Rayleigh scattering**.
     # Sunlight is made up of all the colors of the rainbow.
     # As sunlight enters the Earth's atmosphere ...
-    # ...
 
     # [END generativeaionvertexai_gemini_chat_completions_non_streaming]
     return response

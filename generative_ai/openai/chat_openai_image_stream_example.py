@@ -59,11 +59,9 @@ def generate_text() -> object:
     for chunk in response:
         print(chunk.choices[0].delta.content)
     # Example response:
-    # Here
-    # 's a description of the image:
-    # High-angle, close-up
-    #  view of a rustic scene featuring several blueberry scones arranged on a piece of parchment paper
-    # ...
+    # Here's a description of the image:
+    # High-angle, close-up view of a rustic scene featuring several blueberry
+    # scones arranged on a piece of parchment paper...
 
     # [END generativeaionvertexai_gemini_chat_completions_streaming_image]
     return response

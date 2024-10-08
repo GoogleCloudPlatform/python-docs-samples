@@ -59,10 +59,8 @@ def generate_text() -> object:
     print(response.choices[0].message.content)
     # Example response:
     # Here's a description of the image:
-    # High-angle, close-up view of a rustic arrangement featuring several
-    # blueberry scones on a piece of parchment paper.
-    # The scones are golden-brown, speckled with blueberries ...
-    # ...
+    # High-angle, close-up view of a rustic arrangement featuring several blueberry scones
+    # on a piece of parchment paper. The scones are golden-brown...
 
     # [END generativeaionvertexai_gemini_chat_completions_non_streaming_image]
     return response

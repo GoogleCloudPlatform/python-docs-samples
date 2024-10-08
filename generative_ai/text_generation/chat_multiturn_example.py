@@ -29,29 +29,31 @@ def chat_text_example() -> str:
 
     model = GenerativeModel("gemini-1.5-flash-002")
 
-    chat = model.start_chat()
+    chat_session = model.start_chat()
 
     def get_chat_response(chat: ChatSession, prompt: str) -> str:
         response = chat.send_message(prompt)
         return response.text
 
     prompt = "Hello."
-    print(get_chat_response(chat, prompt))
+    print(get_chat_response(chat_session, prompt))
+    # Example response:
+    # Hello there! How can I help you today?
 
     prompt = "What are all the colors in a rainbow?"
-    print(get_chat_response(chat, prompt))
-
-    prompt = "Why does it appear when it rains?"
-    print(get_chat_response(chat, prompt))
+    print(get_chat_response(chat_session, prompt))
     # Example response:
     # The colors in a rainbow are often remembered using the acronym ROY G. BIV:
     # * **Red**
-    # * **Orange**
-    # * **Yellow**
-    # ...
+    # * **Orange** ...
+
+    prompt = "Why does it appear when it rains?"
+    print(get_chat_response(chat_session, prompt))
+    # Example response:
+    # It's important to note that these colors blend seamlessly into each other, ...
 
     # [END generativeaionvertexai_gemini_multiturn_chat]
-    return get_chat_response(chat, "Hello")
+    return get_chat_response(chat_session, "Hello")
 
 
 if __name__ == "__main__":

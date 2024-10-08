@@ -26,7 +26,7 @@ def send_chat() -> str:
         "top_k": 40,
     }
 
-    chat = chat_model.start_chat(
+    chat_session = chat_model.start_chat(
         context="My name is Miles. You are an astronomer, knowledgeable about the solar system.",
         examples=[
             InputOutputTextPair(
@@ -36,7 +36,7 @@ def send_chat() -> str:
         ],
     )
 
-    response = chat.send_message(
+    response = chat_session.send_message(
         "How many planets are there in the solar system?", **parameters
     )
     print(response.text)

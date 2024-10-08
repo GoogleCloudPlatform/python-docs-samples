@@ -41,8 +41,7 @@ def generate_text() -> object:
     # Example response:
     # The sky is blue due to a phenomenon called **Rayleigh scattering**.
     # Sunlight is made up of all the colors of the rainbow.
-    # When sunlight enters the Earth's atmosphere, it collides with
-    # ...
+    # When sunlight enters the Earth's atmosphere, it collides with ...
 
     # [END generativeaionvertexai_credentials_refresher_usage]
     return response

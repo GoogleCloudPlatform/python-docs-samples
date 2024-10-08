@@ -50,7 +50,7 @@ def generate_text() -> None:
     # Here's a breakdown of what's in the image:
     # * **Blueberry Scones:** Several freshly baked blueberry scones are arranged on
     # a piece of parchment paper. They appear to be homemade and slightly crumbly.
-    # ..
+    # ...
 
     # [END generativeaionvertexai_gemini_pro_config_example]
     return response.text

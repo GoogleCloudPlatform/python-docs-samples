@@ -25,9 +25,9 @@ def write_a_function() -> object:
     }
 
     code_chat_model = CodeChatModel.from_pretrained("codechat-bison@001")
-    chat = code_chat_model.start_chat()
+    chat_session = code_chat_model.start_chat()
 
-    response = chat.send_message(
+    response = chat_session.send_message(
         "Please help write a function to calculate the min of two numbers", **parameters
     )
     print(f"Response from Model: {response.text}")

@@ -45,10 +45,9 @@ def generate_content() -> object:
     for response in responses:
         print(response.candidates[0].content.text)
     # Example response:
-    # No
-    # , the video and image are not correlated.  The video shows a Google Photos
-    #  project where animals at the Los Angeles Zoo take selfies using modified cameras. The image
-    #  is a simple drawing of a wizard.
+    # No, the video and image are not correlated. The video shows a Google Photos
+    # project where animals at the Los Angeles Zoo take selfies using modified cameras.
+    # The image is a simple drawing of a wizard.
 
     # [END generativeaionvertexai_stream_multimodality_basic]
     return responses
