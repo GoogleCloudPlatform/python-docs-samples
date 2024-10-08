@@ -16,36 +16,41 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def generate_content() -> str:
-    # [START generativeaionvertexai_gemini_describe_http_pdf]
+def analyze_pdf() -> str:
+    # [START generativeaionvertexai_gemini_pdf]
     import vertexai
+
     from vertexai.generative_models import GenerativeModel, Part
 
-    # TODO (developer): update project id
+    # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("gemini-1.5-flash-002")
 
-    contents = [
-        # Text prompt
-        "Summarise this file",
-        # Example PDF document on Transformers, a neural network architecture.
-        Part.from_uri(
-            "https://storage.googleapis.com/cloud-samples-data/generative-ai/pdf/1706.03762v7.pdf",
-            "application/pdf",
-        ),
-    ]
+    prompt = """
+    You are a very professional document summarization specialist.
+    Please summarize the given document.
+    """
+
+    pdf_file = Part.from_uri(
+        uri="gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf",
+        mime_type="application/pdf",
+    )
+    contents = [pdf_file, prompt]
 
     response = model.generate_content(contents)
     print(response.text)
     # Example response:
-    #     'This paper introduces the Transformer, a new neural network architecture for '
-    #     'sequence transduction, which uses an attention mechanism to learn global '
-    #     'dependencies between input and output sequences. The Transformer ...
+    # Here's a summary of the provided text, which appears to be a research paper on the Gemini 1.5 Pro
+    # multimodal large language model:
+    # **Gemini 1.5 Pro: Key Advancements and Capabilities**
+    # The paper introduces Gemini 1.5 Pro, a highly compute-efficient multimodal model
+    # significantly advancing long-context capabilities
+    # ...
 
-    # [END generativeaionvertexai_gemini_describe_http_pdf]
+    # [END generativeaionvertexai_gemini_pdf]
     return response.text
 
 
 if __name__ == "__main__":
-    generate_content()
+    analyze_pdf()
