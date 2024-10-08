@@ -45,7 +45,7 @@ def parallel_function_calling_example() -> ChatSession:
                 "location": {
                     "type": "string",
                     "description": "The location for which to get the weather. \
-                      Can be a city name, a city name and state, or a zip code. \
+                      It can be a city name, a city name and state, or a zip code. \
                       Examples: 'San Francisco', 'San Francisco, CA', '95616', etc.",
                 },
             },
