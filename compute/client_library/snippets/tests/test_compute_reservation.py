@@ -24,12 +24,12 @@ from ..compute_reservations.create_compute_reservation import create_compute_res
 from ..compute_reservations.create_compute_reservation_from_vm import (
     create_compute_reservation_from_vm,
 )
-from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
-from ..compute_reservations.get_compute_reservation import get_compute_reservation
-from ..compute_reservations.list_compute_reservation import list_compute_reservation
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
 )
+from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
+from ..compute_reservations.get_compute_reservation import get_compute_reservation
+from ..compute_reservations.list_compute_reservation import list_compute_reservation
 
 
 from ..instances.create import create_instance
@@ -135,7 +135,7 @@ def test_delete_compute_reservation(reservation):
 
 
 def test_create_shared_reservation():
-    """ Test for creating a shared reservation.
+    """Test for creating a shared reservation.
 
     The reservation will be created in PROJECT_ID and shared with the project specified
     by SHARED_PROJECT_ID.
