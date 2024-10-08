@@ -17,9 +17,6 @@ import backoff
 import chat_code_example
 import chat_multiturn_example
 import chat_multiturn_stream_example
-import chat_openai_image_example
-import chat_openai_image_stream_example
-import chat_openai_stream_example
 import chat_simple_example
 import code_completion_example
 import codegen_example
@@ -111,18 +108,3 @@ def test_gemini_chat_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
-
-
-def test_non_streaming_image() -> None:
-    response = chat_openai_image_example.generate_text()
-    assert response
-
-
-def test_streaming_image() -> None:
-    response = chat_openai_image_stream_example.generate_text()
-    assert response
-
-
-def test_streaming_text() -> None:
-    response = chat_openai_stream_example.generate_text()
-    assert response

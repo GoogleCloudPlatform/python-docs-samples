@@ -13,6 +13,9 @@
 # limitations under the License.
 
 import chat_openai_example
+import chat_openai_image_example
+import chat_openai_image_stream_example
+import chat_openai_stream_example
 import credentials_refresher_usage_example
 
 
@@ -23,4 +26,19 @@ def test_credentials_refresher() -> None:
 
 def test_non_streaming_text() -> None:
     response = chat_openai_example.generate_text()
+    assert response
+
+
+def test_non_streaming_image() -> None:
+    response = chat_openai_image_example.generate_text()
+    assert response
+
+
+def test_streaming_image() -> None:
+    response = chat_openai_image_stream_example.generate_text()
+    assert response
+
+
+def test_streaming_text() -> None:
+    response = chat_openai_stream_example.generate_text()
     assert response
