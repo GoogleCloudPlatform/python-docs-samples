@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def count_token_locally() -> int:
+def local_tokenizer_example() -> int:
     # [START generativeaionvertexai_token_count_sample_with_local_sdk]
     from vertexai.preview.tokenization import get_tokenizer_for_model
 
@@ -37,4 +37,4 @@ def count_token_locally() -> int:
 
 
 if __name__ == "__main__":
-    count_token_locally()
+    local_tokenizer_example()

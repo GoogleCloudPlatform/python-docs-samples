@@ -14,20 +14,20 @@
 
 import api_example
 import local_sdk_example
-import multimodal_token_count_example
+import multimodal_example
 import simple_example
 
 
 def test_count_token() -> None:
-    assert local_sdk_example.count_token_locally()
-    assert api_example.count_token_service()
+    assert local_sdk_example.local_tokenizer_example()
+    assert api_example.count_token_api_example()
 
 
 def test_gemini_count_token_example() -> None:
-    response = simple_example.count_tokens()
+    response = simple_example.count_token_example()
     assert response
     assert response.usage_metadata
 
-    response = multimodal_token_count_example.count_tokens_multimodal()
+    response = multimodal_example.count_tokens_multimodal_example()
     assert response
     assert response.usage_metadata
