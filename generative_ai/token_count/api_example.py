@@ -16,36 +16,35 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def count_token_service() -> int:
+def count_token_api_example() -> int:
     # [START generativeaionvertexai_token_count_sample_with_genai]
     import vertexai
     from vertexai.generative_models import GenerativeModel
 
-    # TODO(developer): Update and un-comment below line
-    # PROJECT_ID = "your-project-id"
+    # TODO(developer): Update project & location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # using Vertex AI Model as tokenzier
-    model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-1.5-flash-002")
 
     prompt = "hello world"
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
+    # Example response:
+    #     Prompt Token Count: 2
+    #     Prompt Token Count: 10
 
     prompt = ["hello world", "what's the weather today"]
     response = model.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
     # Example response:
-    # Prompt Token Count: 2
-    # Prompt Character Count: 10
-    # Prompt Token Count: 8
-    # Prompt Character Count: 31
-
+    #     Prompt Token Count: 8
+    #     Prompt Token Count: 31
     # [END generativeaionvertexai_token_count_sample_with_genai]
     return response.total_tokens
 
 
 if __name__ == "__main__":
-    count_token_service()
+    count_token_api_example()

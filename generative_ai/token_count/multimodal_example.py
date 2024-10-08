@@ -18,7 +18,7 @@ from vertexai.generative_models import GenerationResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def count_tokens_multimodal() -> GenerationResponse:
+def count_tokens_multimodal_example() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_token_count_multimodal]
     import vertexai
     from vertexai.generative_models import GenerativeModel, Part
@@ -37,29 +37,30 @@ def count_tokens_multimodal() -> GenerationResponse:
         "Provide a description of the video.",
     ]
 
-    # Prompt tokens count
+    # tokens count for user prompt
     response = model.count_tokens(contents)
     print(f"Prompt Token Count: {response.total_tokens}")
     print(f"Prompt Character Count: {response.total_billable_characters}")
+    # Example response:
+    #     Prompt Token Count: 16822
+    #     Prompt Character Count: 30
 
     # Send text to Gemini
     response = model.generate_content(contents)
     usage_metadata = response.usage_metadata
 
-    # Response tokens count
+    # tokens count for model response
     print(f"Prompt Token Count: {usage_metadata.prompt_token_count}")
     print(f"Candidates Token Count: {usage_metadata.candidates_token_count}")
     print(f"Total Token Count: {usage_metadata.total_token_count}")
     # Example response:
-    # Prompt Token Count: 16822
-    # Prompt Character Count: 30
-    # Prompt Token Count: 16822
-    # Candidates Token Count: 71
-    # Total Token Count: 16893
+    #     Prompt Token Count: 16822
+    #     Candidates Token Count: 71
+    #     Total Token Count: 16893
 
     # [END generativeaionvertexai_gemini_token_count_multimodal]
     return response
 
 
 if __name__ == "__main__":
-    count_tokens_multimodal()
+    count_tokens_multimodal_example()

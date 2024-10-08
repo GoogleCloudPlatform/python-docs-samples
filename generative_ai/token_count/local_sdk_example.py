@@ -18,17 +18,18 @@ def count_token_locally() -> int:
     from vertexai.preview.tokenization import get_tokenizer_for_model
 
     # Using local tokenzier
-    tokenizer = get_tokenizer_for_model("gemini-1.5-flash")
+    tokenizer = get_tokenizer_for_model("gemini-1.5-flash-002")
 
     prompt = "hello world"
     response = tokenizer.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
+    # Example response:
+    # Prompt Token Count: 2
 
     prompt = ["hello world", "what's the weather today"]
     response = tokenizer.count_tokens(prompt)
     print(f"Prompt Token Count: {response.total_tokens}")
     # Example response:
-    # Prompt Token Count: 2
     # Prompt Token Count: 8
 
     # [END generativeaionvertexai_token_count_sample_with_local_sdk]
