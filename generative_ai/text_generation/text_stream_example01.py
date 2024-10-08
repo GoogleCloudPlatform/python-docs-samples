@@ -14,37 +14,35 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
-    ListRagCorporaPager,
-)
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_corpora() -> ListRagCorporaPager:
-    # [START generativeaionvertexai_rag_list_corpora]
-
-    from vertexai.preview import rag
+def generate_content() -> object:
+    # [START generativeaionvertexai_stream_text_basic]
     import vertexai
 
-    # TODO(developer): Update and un-comment below lines
-    # PROJECT_ID = "your-project-id"
+    from vertexai.generative_models import GenerativeModel
 
-    # Initialize Vertex AI API once per session
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    corpora = rag.list_corpora()
-    print(corpora)
+    model = GenerativeModel("gemini-1.5-flash-002")
+    responses = model.generate_content(
+        "Write a story about a magic backpack.", stream=True
+    )
+
+    for response in responses:
+        print(response.text)
     # Example response:
-    # ListRagCorporaPager<rag_corpora {
-    #   name: "projects/[PROJECT_ID]/locations/us-central1/ragCorpora/2305843009213693952"
-    #   display_name: "test_corpus"
-    #   create_time {
+    # El
+    # ara wasn't looking for magic. She was looking for rent money.
+    # Her tiny apartment, perched precariously on the edge of Whispering Woods,
     # ...
 
-    # [END generativeaionvertexai_rag_list_corpora]
-    return corpora
+    # [END generativeaionvertexai_stream_text_basic]
+    return responses
 
 
 if __name__ == "__main__":
-    list_corpora()
+    generate_content()
