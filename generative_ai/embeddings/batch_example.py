@@ -26,6 +26,7 @@ def embed_text_batch() -> BatchPredictionJob:
     """
     # [START generativeaionvertexai_embedding_batch]
     import vertexai
+
     from vertexai.preview import language_models
 
     # TODO(developer): Update & uncomment line below
@@ -52,9 +53,7 @@ def embed_text_batch() -> BatchPredictionJob:
     # BatchPredictionJob 2024-09-10 15:47:51.336391
     # projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
     # JobState.JOB_STATE_SUCCEEDED
-
     # [END generativeaionvertexai_embedding_batch]
-
     return batch_prediction_job
 
 

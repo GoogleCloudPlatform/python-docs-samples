@@ -21,6 +21,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def parallel_function_calling_example() -> ChatSession:
     # [START generativeaionvertexai_function_calling_generate_parallel_calls]
     import vertexai
+
     from vertexai.generative_models import (
         FunctionDeclaration,
         GenerativeModel,
