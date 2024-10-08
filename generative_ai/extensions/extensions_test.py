@@ -15,13 +15,13 @@ import os
 
 from typing import Generator
 
-import pytest
-
 import create_example
 import delete_example
 import execute_example
 import get_example
 import list_example
+
+import pytest
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
