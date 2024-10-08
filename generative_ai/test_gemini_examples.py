@@ -21,7 +21,6 @@ import gemini_all_modalities
 import gemini_audio
 import gemini_chat_example
 import gemini_count_token_example
-import gemini_grounding_example
 import gemini_guide_example
 import gemini_multi_image_example
 import gemini_pdf_example
@@ -40,22 +39,26 @@ LOCATION = "us-central1"
 vertexai.init(project=PROJECT_ID, location=LOCATION)
 
 
+# TODO: Delete this test after approval /text_generation/image_example01.py
 def test_gemini_guide_example() -> None:
     text = gemini_guide_example.generate_text()
     text = text.lower()
     assert len(text) > 0
 
 
+# TODO: Delete this test after approval /text_generation/text_example01.py
 def test_gemini_text_input_example() -> None:
     text = gemini_text_input_example.generate_from_text_input()
     assert len(text) > 0
 
 
+# TODO: Delete this test after approval /text_generation/image_example02.py
 def test_gemini_pro_basic_example() -> None:
     text = gemini_pro_basic_example.generate_text()
     assert len(text) > 0
 
 
+# TODO: Delete this test after approval /text_generation/pro_config_example.py
 def test_gemini_pro_config_example() -> None:
     import urllib.request
 
@@ -75,6 +78,7 @@ def test_gemini_pro_config_example() -> None:
         raise Exception("File(scones.jpg) not found!")
 
 
+# TODO: Delete this test after approval /text_generation/single_turn_multi_image_example.py
 def test_gemini_multi_image_example() -> None:
     text = gemini_multi_image_example.generate_text_multimodal()
     text = text.lower()
@@ -98,6 +102,7 @@ def test_gemini_safety_config_example() -> None:
     assert len(text) > 0
 
 
+# Delete after approval /understand_video/single_turn_video_example.py
 def test_gemini_single_turn_video_example() -> None:
     text = gemini_single_turn_video_example.generate_text()
     text = text.lower()
@@ -107,6 +112,7 @@ def test_gemini_single_turn_video_example() -> None:
     )
 
 
+# TODO: Delete this test after approval /text_generation/pdf_example.py
 @pytest.mark.skip(
     "TODO: Exception Logs indicate safety filters are likely blocking model output b/339985493"
 )
@@ -115,6 +121,7 @@ def test_gemini_pdf_example() -> None:
     assert len(text) > 0
 
 
+# TODO: Delete this test after approval /text_generation/multimodal_example01.py
 def test_gemini_chat_example() -> None:
     text = gemini_chat_example.chat_text_example()
     text = text.lower()
@@ -127,36 +134,25 @@ def test_gemini_chat_example() -> None:
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
 
-@pytest.mark.skip(
-    "Unable to test Google Search grounding due to allowlist restrictions."
-)
-def test_gemini_grounding_web_example() -> None:
-    response = gemini_grounding_example.generate_text_with_grounding_web()
-    assert response
-
-
-def test_gemini_grounding_vais_example() -> None:
-    response = gemini_grounding_example.generate_text_with_grounding_vertex_ai_search(
-        "grounding-test-datastore"
-    )
-    assert response
-
-
+# TODO: Delete this test after approval /understand_audio/understand_audio_test.py
 def test_summarize_audio() -> None:
     text = gemini_audio.summarize_audio()
     assert len(text) > 0
 
 
+# TODO:  Delete this test after approval /understand_audio/understand_audio_test.py
 def test_transcript_audio() -> None:
     text = gemini_audio.transcript_audio()
     assert len(text) > 0
 
 
+# Delete after approval /understand_video/audio_video_example.py
 def test_analyze_video_with_audio() -> None:
     text = gemini_video_audio.analyze_video_with_audio()
     assert len(text) > 0
 
 
+# TODO: Delete this test after approval /text_generation/multimodal_example01.py
 def test_analyze_all_modalities() -> None:
     text = gemini_all_modalities.analyze_all_modalities()
     assert len(text) > 0

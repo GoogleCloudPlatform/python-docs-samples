@@ -41,6 +41,7 @@ def generate_content() -> str:
     # Example response:
     #     'Here is a description of the image:'
     #     'Close-up view of a young Jack Russell Terrier puppy sitting in short grass ...'
+
     # [END generativeaionvertexai_gemini_describe_http_image]
     return response.text
 

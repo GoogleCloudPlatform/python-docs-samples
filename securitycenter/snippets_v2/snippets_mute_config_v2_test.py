@@ -31,10 +31,19 @@ GOOGLE_APPLICATION_CREDENTIALS = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 def mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
     mute_rule_update = f"random-mute-update-{uuid.uuid4()}"
-    resp_create = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
-    resp_update = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_update)
+    resp_create = snippets_mute_config_v2.create_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
+    )
+    resp_update = snippets_mute_config_v2.create_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_update
+    )
 
-    yield {"create": mute_rule_create, "create_resp": resp_create, "update": mute_rule_update, "update_resp": resp_update}
+    yield {
+        "create": mute_rule_create,
+        "create_resp": resp_create,
+        "update": mute_rule_update,
+        "update_resp": resp_update,
+    }
 
     snippets_mute_config_v2.delete_mute_rule(
         f"projects/{PROJECT_ID}", "global", mute_rule_create
@@ -49,9 +58,13 @@ def mute_rule():
 )
 def test_create_mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
-    response = snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+    response = snippets_mute_config_v2.create_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
+    )
     assert mute_rule_create in response.name
-    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+    snippets_mute_config_v2.delete_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
+    )
 
 
 @backoff.on_exception(
@@ -59,19 +72,21 @@ def test_create_mute_rule():
 )
 def test_get_mute_rule(mute_rule):
     response = snippets_mute_config_v2.get_mute_rule(
-        f"projects/{PROJECT_ID}", "global", mute_rule.get('create')
+        f"projects/{PROJECT_ID}", "global", mute_rule.get("create")
     )
-    assert response.name == mute_rule.get('create_resp').name
+    assert response.name == mute_rule.get("create_resp").name
 
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_mute_rules(mute_rule):
-    response = snippets_mute_config_v2.list_mute_rules(f"projects/{PROJECT_ID}", "global")
+    response = snippets_mute_config_v2.list_mute_rules(
+        f"projects/{PROJECT_ID}", "global"
+    )
     rule_names = [rule.name for rule in response]
-    assert mute_rule.get('create_resp').name in rule_names
-    assert mute_rule.get('update_resp').name in rule_names
+    assert mute_rule.get("create_resp").name in rule_names
+    assert mute_rule.get("update_resp").name in rule_names
 
 
 @backoff.on_exception(
@@ -79,7 +94,7 @@ def test_list_mute_rules(mute_rule):
 )
 def test_update_mute_rule(mute_rule):
     response = snippets_mute_config_v2.update_mute_rule(
-        f"projects/{PROJECT_ID}", "global", mute_rule.get('update')
+        f"projects/{PROJECT_ID}", "global", mute_rule.get("update")
     )
     assert response.description == "Updated mute config description"
 
@@ -89,5 +104,9 @@ def test_update_mute_rule(mute_rule):
 )
 def test_delete_mute_rule():
     mute_rule_create = f"random-mute-create-{uuid.uuid4()}"
-    snippets_mute_config_v2.create_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
-    snippets_mute_config_v2.delete_mute_rule(f"projects/{PROJECT_ID}", "global", mute_rule_create)
+    snippets_mute_config_v2.create_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
+    )
+    snippets_mute_config_v2.delete_mute_rule(
+        f"projects/{PROJECT_ID}", "global", mute_rule_create
+    )

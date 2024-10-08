@@ -2,3 +2,4 @@ Flask==1.1.4; python_version < '3.0'
 Flask==2.1.0; python_version > '3.0'
 Werkzeug==1.0.1; python_version < '3.0'
 Werkzeug==3.0.3; python_version > '3.0'
+six==1.16.0

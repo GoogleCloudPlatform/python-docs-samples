@@ -22,7 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image, video, and text.
 
-    Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
+    Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#img-txt-vid-embedding
     """
     # [START generativeaionvertexai_multimodal_embedding_image_video_text]
     import vertexai
@@ -30,11 +30,11 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
     from vertexai.vision_models import Image, MultiModalEmbeddingModel, Video
     from vertexai.vision_models import VideoSegmentConfig
 
-    # TODO(developer): Uncomment and set your project ID
+    # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
 
     image = Image.load_from_file(
         "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
