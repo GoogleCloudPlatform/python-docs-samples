@@ -19,7 +19,7 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
+def get_multimodal_embedding() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image, video, and text.
 
     Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#video-best-practices
@@ -73,4 +73,4 @@ def get_image_video_text_embeddings() -> MultiModalEmbeddingResponse:
 
 
 if __name__ == "__main__":
-    get_image_video_text_embeddings()
+    get_multimodal_embedding()
