@@ -84,10 +84,12 @@ def bulk_mute_findings(parent_path: str, location_id: str, mute_rule: str) -> No
       matched by the filter will be muted after the LRO is done.
 
     Args:
-        parent_path: use any one of the following options:
-                     - organizations/{organization}
-                     - folders/{folder}
-                     - projects/{project}
+        parent_path: Used to specify the resource under which the mute rule operates.
+          Use any one of the following options:
+            - organizations/{organization}
+            - folders/{folder}
+            - projects/{project}
+        location_id: Gcp location id; example: 'global'
         mute_rule: Expression that identifies findings that should be updated.
     """
     from google.cloud import securitycenter_v2
