@@ -89,7 +89,7 @@ def bulk_mute_findings(parent_path: str, location_id: str, mute_rule: str) -> No
             - organizations/{organization}
             - folders/{folder}
             - projects/{project}
-        location_id: Gcp location id; example: 'global'
+        location_id: The Google Cloud location ID, for example: 'global'.
         mute_rule: Expression that identifies findings that should be updated.
     """
     from google.cloud import securitycenter_v2
