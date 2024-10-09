@@ -98,7 +98,6 @@ def evaluate_output() -> EvalResult:
     #
     # Winner: CANDIDATE
     # Explanation: Both responses adhere to the prompt's constraints, are grounded in the provided text, and ... However, Response B ...
-
     # [END generativeaionvertexai_evaluation_pairwise_summarization_quality]
     return result
 
