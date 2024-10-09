@@ -41,7 +41,8 @@ def generate_embeddings_with_lower_dimension() -> MultiModalEmbeddingResponse:
 
     model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
     image = Image.load_from_file(
-        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png")
+        "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
+    )
 
     embeddings = model.get_embeddings(
         image=image,
