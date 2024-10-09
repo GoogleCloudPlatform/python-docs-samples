@@ -22,6 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def generate_function_call_advanced() -> GenerationResponse:
     # [START generativeaionvertexai_gemini_function_calling_advanced]
     import vertexai
+
     from vertexai.preview.generative_models import (
         FunctionDeclaration,
         GenerativeModel,
