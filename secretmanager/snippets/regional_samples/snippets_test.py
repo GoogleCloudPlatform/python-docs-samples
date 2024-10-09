@@ -23,7 +23,10 @@ import pytest
 from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
 from regional_samples import create_regional_secret
+from regional_samples import create_regional_secret_with_labels
+from regional_samples import create_update_regional_secret_label
 from regional_samples import delete_regional_secret
+from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
@@ -42,12 +45,21 @@ from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_etag
+from regional_samples import view_regional_secret_labels
 
 
 @pytest.fixture()
 def location_id() -> str:
     return "us-east5"
 
+@pytest.fixture()
+def label_key() -> str:
+    return "googlecloud"
+
+
+@pytest.fixture()
+def label_value() -> str:
+    return "rocks"
 
 @pytest.fixture()
 def regional_client(location_id: str) -> secretmanager_v1.SecretManagerServiceClient:
@@ -148,6 +160,8 @@ def regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
+    label_key: str,
+    label_value: str,
     ttl: str,
 ) -> Iterator[Tuple[str, str]]:
     print(f"creating secret {secret_id}")
@@ -159,7 +173,10 @@ def regional_secret(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {"ttl": ttl},
+            "secret": {
+                "ttl": ttl,
+                "labels": {label_key: label_value},
+            },
         },
     )
 
@@ -206,6 +223,35 @@ def test_create_regional_secret(
     )
     assert secret_id in secret.name
 
+def test_create_regional_secret_with_label(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    label_key: str,
+    label_value: str,
+    ttl: str,
+) -> None:
+    labels = {label_key: label_value}
+    secret = create_regional_secret_with_labels.create_regional_secret_with_labels(
+        project_id, location_id, secret_id, labels, ttl
+    )
+    assert secret_id in secret.name
+
+def test_delete_regional_secret_labels(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    label_key: str,
+) -> None:
+    secret_id, _ = regional_secret
+    delete_regional_secret_label.delete_regional_secret_label(
+        project_id, location_id, secret_id, label_key
+    )
+    with pytest.raises(exceptions.NotFound):
+        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_regional_secret_version(regional_client, request={"name": name})
 
 def test_delete_regional_secret_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -456,6 +502,19 @@ def test_get_regional_secret(
     )
     assert secret_id in snippet_regional_secret.name
 
+def test_create_update_regional_secret_label(
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    label_key: str
+) -> None:
+    secret_id, _ = regional_secret
+    updated_label_value = "updatedvalue"
+    labels = {label_key: updated_label_value}
+    updated_secret = create_update_regional_secret_label.create_update_regional_secret_label(
+        project_id, location_id, secret_id, labels
+    )
+    assert updated_secret.labels[label_key] == updated_label_value
 
 def test_update_regional_secret_with_etag(
     regional_secret: Tuple[str, str],
@@ -481,3 +540,18 @@ def test_update_regional_secret(
         project_id, location_id, secret_id
     )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
+
+def test_view_regional_secret_labels(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    label_key: str
+) -> None:
+    secret_id, _ = regional_secret
+    view_regional_secret_labels.view_regional_secret_labels(
+        project_id, location_id, secret_id
+    )
+
+    out, _ = capsys.readouterr()
+    assert label_key in out
