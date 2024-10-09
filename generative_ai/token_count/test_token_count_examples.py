@@ -14,7 +14,7 @@
 
 import api_example
 import local_sdk_example
-import multimodal_example
+import multimodal_token_count_example
 import simple_example
 
 
@@ -30,7 +30,7 @@ def test_simple_example() -> None:
 
 
 def test_multimodal_example() -> None:
-    print(dir(multimodal_example))
-    response = multimodal_example.count_tokens_multimodal_example()
+    print(dir(multimodal_token_count_example))
+    response = multimodal_token_count_example.count_tokens_multimodal_example()
     assert response
     assert response.usage_metadata
