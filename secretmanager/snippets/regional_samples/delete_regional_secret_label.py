@@ -21,10 +21,7 @@ from google.cloud import secretmanager_v1
 
 
 def delete_regional_secret_label(
-    project_id: str,
-    location_id: str,
-    secret_id: str,
-    label_key: str
+    project_id: str, location_id: str, secret_id: str, label_key: str
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Delete a label on an existing secret.
@@ -40,7 +37,6 @@ def delete_regional_secret_label(
 
     # Build the resource name of the parent secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
-
 
     # Get the secret.
     response = client.get_secret(request={"name": name})
@@ -77,4 +73,6 @@ if __name__ == "__main__":
     parser.add_argument("label_key", help="key of the label to be deleted")
     args = parser.parse_args()
 
-    delete_regional_secret_label(args.project_id, args.location_id, args.secret_id, args.label_key)
+    delete_regional_secret_label(
+        args.project_id, args.location_id, args.secret_id, args.label_key
+    )

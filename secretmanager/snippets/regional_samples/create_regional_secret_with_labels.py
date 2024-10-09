@@ -80,4 +80,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     labels = {args.label_key, args.label_value}
-    create_regional_secret_with_labels(args.project_id, args.location_id, args.secret_id, labels)
+    create_regional_secret_with_labels(
+        args.project_id, args.location_id, args.secret_id, labels
+    )

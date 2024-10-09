@@ -23,10 +23,7 @@ from google.cloud import secretmanager_v1
 
 
 def create_update_regional_secret_label(
-    project_id: str,
-    location_id: str,
-    secret_id: str,
-    new_labels: Dict[str, str]
+    project_id: str, location_id: str, secret_id: str, new_labels: Dict[str, str]
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Create or update a label on an existing secret.
@@ -81,4 +78,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     labels = {args.label_key, args.label_value}
-    create_update_regional_secret_label(args.project_id, args.location_id, args.secret_id, labels)
+    create_update_regional_secret_label(
+        args.project_id, args.location_id, args.secret_id, labels
+    )

@@ -24,9 +24,7 @@ from google.cloud import secretmanager_v1
 
 
 def view_regional_secret_labels(
-    project_id: str,
-    location_id: str,
-    secret_id: str
+    project_id: str, location_id: str, secret_id: str
 ) -> None:
     """
     List all secret versions in the given secret and their metadata.
