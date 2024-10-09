@@ -18,16 +18,19 @@ import multimodal_example
 import simple_example
 
 
-def test_count_token() -> None:
+def test_local_sdk_example() -> None:
     assert local_sdk_example.local_tokenizer_example()
     assert api_example.count_token_api_example()
 
 
-def test_token_count_examples() -> None:
+def test_simple_example() -> None:
     response = simple_example.count_token_example()
     assert response
     assert response.usage_metadata
 
+
+def test_multimodal_example() -> None:
+    print(dir(multimodal_example))
     response = multimodal_example.count_tokens_multimodal_example()
     assert response
     assert response.usage_metadata
