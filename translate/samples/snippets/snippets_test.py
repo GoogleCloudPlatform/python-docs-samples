@@ -28,13 +28,13 @@ def test_list_languages(capsys: pytest.LogCaptureFixture) -> None:
     out, _ = capsys.readouterr()
     for language in results:
         print("{name} ({language})".format(**language))
-    assert "Afrikaans" in [r["name"] for r in results]
+    assert "Abkhaz" in results[0]["name"]
 
 
 def test_list_languages_with_target(capsys: pytest.LogCaptureFixture) -> None:
     results = snippets.list_languages_with_target("is")
     out, _ = capsys.readouterr()
-    assert "afríkanska" in [r["name"] for r in results]
+    assert "abkasíska" in results[0]["name"]
 
 
 def test_translate_text(capsys: pytest.LogCaptureFixture) -> None:
