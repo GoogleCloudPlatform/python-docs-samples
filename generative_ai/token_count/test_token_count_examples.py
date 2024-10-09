@@ -23,7 +23,7 @@ def test_count_token() -> None:
     assert api_example.count_token_api_example()
 
 
-def test_gemini_count_token_example() -> None:
+def test_token_count_examples() -> None:
     response = simple_example.count_token_example()
     assert response
     assert response.usage_metadata
