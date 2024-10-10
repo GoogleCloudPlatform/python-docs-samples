@@ -37,7 +37,6 @@ def test_rank():
 
 
 def test_grounded_generation_inline_vais_sample():
-
     # Grounded Generation requires Project Number
     client = resourcemanager_v3.ProjectsClient()
     project = client.get_project(name=client.project_path(project_id))
@@ -50,7 +49,6 @@ def test_grounded_generation_inline_vais_sample():
 
 
 def test_grounded_generation_google_search_sample():
-
     # Grounded Generation requires Project Number
     client = resourcemanager_v3.ProjectsClient()
     project = client.get_project(name=client.project_path(project_id))
