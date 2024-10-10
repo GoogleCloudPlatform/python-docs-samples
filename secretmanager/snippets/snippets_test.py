@@ -488,6 +488,7 @@ def test_create_update_secret_label(
     updated_secret = create_update_secret_label(project_id, secret_id, labels)
     assert updated_secret.labels[label_key] == updated_label_value
 
+
 def test_edit_secret_annotations(
     secret: Tuple[str, str, str], annotation_key: str
 ) -> None:

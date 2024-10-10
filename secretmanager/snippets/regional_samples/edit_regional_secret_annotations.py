@@ -23,10 +23,7 @@ from google.cloud import secretmanager_v1
 
 
 def edit_regional_secret_annotations(
-    project_id: str,
-    location_id: str,
-    secret_id: str,
-    new_annotations: Dict[str, str]
+    project_id: str, location_id: str, secret_id: str, new_annotations: Dict[str, str]
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Create or update a annotation on an existing secret.

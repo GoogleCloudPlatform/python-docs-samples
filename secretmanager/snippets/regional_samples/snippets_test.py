@@ -508,6 +508,7 @@ def test_get_regional_secret(
     )
     assert secret_id in snippet_regional_secret.name
 
+
 def test_edit_regional_secret_annotations(
     project_id: str,
     location_id: str,
@@ -517,10 +518,8 @@ def test_edit_regional_secret_annotations(
     secret_id, _ = regional_secret
     updated_annotation_value = "updatedvalue"
     annotations = {annotation_key: updated_annotation_value}
-    updated_secret = (
-        edit_regional_secret_annotations.edit_regional_secret_annotations(
-            project_id, location_id, secret_id, annotations
-        )
+    updated_secret = edit_regional_secret_annotations.edit_regional_secret_annotations(
+        project_id, location_id, secret_id, annotations
     )
     assert updated_secret.annotations[annotation_key] == updated_annotation_value
 
