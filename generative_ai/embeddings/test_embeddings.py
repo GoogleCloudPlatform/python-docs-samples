@@ -69,7 +69,9 @@ def test_multimodal_embedding_image() -> None:
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_embeddings_with_lower_dimension() -> None:
-    embeddings = generate_embeddings_with_lower_dimension.generate_embeddings_with_lower_dimension()
+    embeddings = (
+        generate_embeddings_with_lower_dimension.generate_embeddings_with_lower_dimension()
+    )
     assert embeddings is not None
     assert embeddings.image_embedding is not None
     assert len(embeddings.image_embedding) == 128
