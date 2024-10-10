@@ -18,9 +18,10 @@ import create_tpu
 import delete_tpu
 import get_tpu
 
+from google.cloud.tpu_v2.types import Node
+
 import pytest
 
-from google.cloud.tpu_v2.types import Node
 
 TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
