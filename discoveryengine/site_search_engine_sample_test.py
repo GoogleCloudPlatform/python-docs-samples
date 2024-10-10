@@ -28,7 +28,7 @@ def test_create_target_site():
         project_id,
         location,
         data_store_id,
-        uri_pattern="https://cloud.google.com/generative-ai-app-builder/docs/*",
+        uri_pattern="cloud.google.com/generative-ai-app-builder/docs/*",
     )
     assert response, response
     match = re.search(r"\/targetSites\/([^\/]+)", response.name)
