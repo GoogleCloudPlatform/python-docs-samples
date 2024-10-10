@@ -14,17 +14,20 @@
 import os
 
 
-def delete_cloud_tpu(project_id: str, zone: str, name: str = "tpu-name") -> None:
+def delete_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> None:
     # [START tpu_vm_delete]
     from google.cloud import tpu_v2
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
     # zone = "us-central1-b"
+    # tpu_name = "tpu-name"
 
     client = tpu_v2.TpuClient()
     try:
-        client.delete_node(name=f"projects/{project_id}/locations/{zone}/nodes/{name}")
+        client.delete_node(
+            name=f"projects/{project_id}/locations/{zone}/nodes/{tpu_name}"
+        )
         print("The TPU node was deleted.")
     except Exception as e:
         print(e)

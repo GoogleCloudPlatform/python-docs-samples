@@ -27,7 +27,7 @@ def create_cloud_tpu(
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
     # zone = "us-central1-b"
-    # tpu_name = "tpu-name",
+    # tpu_name = "tpu-name"
     # tpu_type = "v2-8"
     # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
 

@@ -16,16 +16,19 @@ import os
 from google.cloud.tpu_v2 import Node
 
 
-def get_cloud_tpu(project_id: str, zone: str, name: str = "tpu-name") -> Node:
+def get_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> Node:
     # [START tpu_vm_get]
     from google.cloud import tpu_v2
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
     # zone = "us-central1-b"
+    # tpu_name = "tpu-name"
 
     client = tpu_v2.TpuClient()
-    node = client.get_node(name=f"projects/{project_id}/locations/{zone}/nodes/{name}")
+    node = client.get_node(
+        name=f"projects/{project_id}/locations/{zone}/nodes/{tpu_name}"
+    )
 
     print(node)
     # Example response:
