@@ -16,7 +16,7 @@
 # [START genappbuilder_create_data_store]
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import discoveryengine
+from google.cloud import discoveryengine_v1alpha as discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
 # project_id = "YOUR_PROJECT_ID"
@@ -55,7 +55,7 @@ def create_data_store_sample(
         # Options: SOLUTION_TYPE_RECOMMENDATION, SOLUTION_TYPE_SEARCH, SOLUTION_TYPE_CHAT, SOLUTION_TYPE_GENERATIVE_CHAT
         solution_types=[discoveryengine.SolutionType.SOLUTION_TYPE_SEARCH],
         # TODO(developer): Update content_config based on data store type.
-        # Options: NO_CONTENT, CONTENT_REQUIRED, PUBLIC_WEBSITE
+        # Options: NO_CONTENT, CONTENT_REQUIRED, PUBLIC_WEBSITE, GOOGLE_WORKSPACE
         content_config=discoveryengine.DataStore.ContentConfig.CONTENT_REQUIRED,
     )
 
