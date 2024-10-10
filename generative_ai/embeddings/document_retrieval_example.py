@@ -19,27 +19,41 @@ from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
 
 def embed_text() -> list[list[float]]:
-    """Embeds texts with a pre-trained, foundational model.
+    """Calculates embeddings for the given text inputs.
 
     Returns:
-        A list of lists containing the embedding vectors for each input text
+        A list of lists containing the embedding vectors for each input text.
     """
 
-    # A list of texts to be embedded.
-    texts = ["banana muffins? ", "banana bread? banana muffins?"]
-    # The dimensionality of the output embeddings.
-    dimensionality = 256
-    # The task type for embedding. Check the available tasks in the model's documentation.
-    task = "RETRIEVAL_DOCUMENT"
-
     model = TextEmbeddingModel.from_pretrained("text-embedding-004")
-    inputs = [TextEmbeddingInput(text, task) for text in texts]
-    kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
-    embeddings = model.get_embeddings(inputs, **kwargs)
 
-    print(embeddings)
-    # Example response:
-    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...], [0.1234434666, ...]],
+    inputs = [
+        # Option1: Use TextEmbeddingInput object as embedding input
+        TextEmbeddingInput(
+            text=(
+                "You'll find some apps on your Home screens, and all your apps in All Apps. "
+                "You can open apps, switch between apps, and find 2 apps at once."
+            ),
+            title="Find, open & close apps on a Pixel phone",
+            # The task type for embedding. Check the available tasks in the model's documentation.
+            task_type="RETRIEVAL_DOCUMENT"
+        ),
+        # Option2: Use plain text as embedding input
+        (
+            "You can download no-charge and paid apps from Google Play on your Android phone or tablet. "
+            "We recommend that you get apps from Google Play, but you can also get them from other sources."
+        )
+    ]
+
+    # The dimensionality of the output embeddings.
+    dimensionality = 128
+    embeddings = model.get_embeddings(inputs, output_dimensionality=dimensionality)
+
+    for embedding in embeddings:
+        print(embedding)
+        # Example response:
+        # TextEmbedding(values=[0.06830032169818878, 0.03944097459316254, ...], 'statistics': { ... }, ...)
+
     return [embedding.values for embedding in embeddings]
 
 
