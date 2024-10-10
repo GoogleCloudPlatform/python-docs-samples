@@ -15,9 +15,9 @@
 
 import os
 
-from google.cloud import resourcemanager_v3
-
 from discoveryengine import standalone_apis_sample
+
+from google.cloud import resourcemanager_v3
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
