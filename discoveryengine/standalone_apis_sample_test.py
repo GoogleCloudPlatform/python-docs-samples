@@ -17,6 +17,8 @@ import os
 
 from discoveryengine import standalone_apis_sample
 
+from google.cloud import resourcemanager_v3
+
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
@@ -32,3 +34,27 @@ def test_rank():
     response = standalone_apis_sample.rank_sample(project_id)
     assert response
     assert response.records
+
+
+def test_grounded_generation_inline_vais_sample():
+    # Grounded Generation requires Project Number
+    client = resourcemanager_v3.ProjectsClient()
+    project = client.get_project(name=client.project_path(project_id))
+    project_number = client.parse_project_path(project.name)["project"]
+
+    response = standalone_apis_sample.grounded_generation_inline_vais_sample(
+        project_number, engine_id="test-search-engine_1689960780551"
+    )
+    assert response
+
+
+def test_grounded_generation_google_search_sample():
+    # Grounded Generation requires Project Number
+    client = resourcemanager_v3.ProjectsClient()
+    project = client.get_project(name=client.project_path(project_id))
+    project_number = client.parse_project_path(project.name)["project"]
+
+    response = standalone_apis_sample.grounded_generation_google_search_sample(
+        project_number
+    )
+    assert response
