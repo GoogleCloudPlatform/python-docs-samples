@@ -18,19 +18,13 @@ import pytest
 import vertexai
 
 import gemini_all_modalities
-import gemini_audio
 import gemini_chat_example
-import gemini_count_token_example
 import gemini_guide_example
 import gemini_multi_image_example
 import gemini_pdf_example
 import gemini_pro_basic_example
 import gemini_pro_config_example
-import gemini_safety_config_example
-import gemini_single_turn_video_example
-import gemini_system_instruction
 import gemini_text_input_example
-import gemini_video_audio
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -87,31 +81,6 @@ def test_gemini_multi_image_example() -> None:
     assert "landmark" in text
 
 
-def test_gemini_count_token_example() -> None:
-    response = gemini_count_token_example.count_tokens()
-    assert response
-    assert response.usage_metadata
-
-    response = gemini_count_token_example.count_tokens_multimodal()
-    assert response
-    assert response.usage_metadata
-
-
-def test_gemini_safety_config_example() -> None:
-    text = gemini_safety_config_example.generate_text()
-    assert len(text) > 0
-
-
-# Delete after approval /understand_video/single_turn_video_example.py
-def test_gemini_single_turn_video_example() -> None:
-    text = gemini_single_turn_video_example.generate_text()
-    text = text.lower()
-    assert len(text) > 0
-    assert any(
-        [_ in text for _ in ("zoo", "tiger", "leaf", "water", "animals", "photos")]
-    )
-
-
 # TODO: Delete this test after approval /text_generation/pdf_example.py
 @pytest.mark.skip(
     "TODO: Exception Logs indicate safety filters are likely blocking model output b/339985493"
@@ -134,30 +103,7 @@ def test_gemini_chat_example() -> None:
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
 
 
-# TODO: Delete this test after approval /understand_audio/understand_audio_test.py
-def test_summarize_audio() -> None:
-    text = gemini_audio.summarize_audio()
-    assert len(text) > 0
-
-
-# TODO:  Delete this test after approval /understand_audio/understand_audio_test.py
-def test_transcript_audio() -> None:
-    text = gemini_audio.transcript_audio()
-    assert len(text) > 0
-
-
-# Delete after approval /understand_video/audio_video_example.py
-def test_analyze_video_with_audio() -> None:
-    text = gemini_video_audio.analyze_video_with_audio()
-    assert len(text) > 0
-
-
 # TODO: Delete this test after approval /text_generation/multimodal_example01.py
 def test_analyze_all_modalities() -> None:
     text = gemini_all_modalities.analyze_all_modalities()
-    assert len(text) > 0
-
-
-def test_set_system_instruction() -> None:
-    text = gemini_system_instruction.set_system_instruction(PROJECT_ID)
     assert len(text) > 0
