@@ -16,22 +16,29 @@
 command line application and sample code for listing labels of a
 secret.
 """
-# [START secretmanager_view_secret_labels]
+# [START secretmanager_view_regional_secret_labels]
 import argparse
 
 # Import the Secret Manager client library.
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 
 
-def view_secret_labels(project_id: str, secret_id: str) -> None:
+def view_regional_secret_labels(
+    project_id: str, location_id: str, secret_id: str
+) -> None:
     """
     List all secret labels in the given secret.
     """
+    # Endpoint to call the regional secret manager sever.
+    api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
+
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
     # Build the resource name of the parent secret.
-    name = client.secret_path(project_id, secret_id)
+    name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
     response = client.get_secret(request={"name": name})
 
@@ -40,7 +47,7 @@ def view_secret_labels(project_id: str, secret_id: str) -> None:
         print(f"{key} : {response.labels[key]}")
 
 
-# [END secretmanager_view_secret_labels]
+# [END secretmanager_view_regional_secret_labels]
 
 
 if __name__ == "__main__":
@@ -48,7 +55,10 @@ if __name__ == "__main__":
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument(
+        "location_id", help="id of the location where secret is to be created"
+    )
     parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
-    view_secret_labels(args.project_id, args.secret_id)
+    view_regional_secret_labels(args.project_id, args.location_id, args.secret_id)
