@@ -45,19 +45,13 @@ SHARED_PROJECT_ID = os.getenv("GOOGLE_CLOUD_SHARED_PROJECT")
 
 
 @pytest.fixture()
-def reservation(request) -> str:
+def reservation() -> str:
     create_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-
-    def cleanup():
-        try:
-            delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-        except Exception as e:
-            print(f"Error during cleanup: {e}")
-
-    request.addfinalizer(cleanup)
-
-    reservation = get_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-    return reservation
+    yield get_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+    try:
+        delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
 
 @pytest.fixture(scope="session")
@@ -91,8 +85,6 @@ def vm_instance():
         delete_instance(PROJECT_ID, ZONE, INSTANCE_NAME)
     except Exception as e:
         print(f"Error during cleanup: {e}")
-
-    return instance
 
 
 def test_create_compute_reservation_from_vm(vm_instance):
