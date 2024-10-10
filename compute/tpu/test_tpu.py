@@ -14,13 +14,13 @@
 import os
 import uuid
 
-import create_tpu
-import delete_tpu
-import get_tpu
-
 from google.cloud.tpu_v2.types import Node
 
 import pytest
+
+import create_tpu
+import delete_tpu
+import get_tpu
 
 
 TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
@@ -30,7 +30,7 @@ ZONE = "us-central1-a"
 
 # Instance of TPU
 @pytest.fixture(scope="session")
-def tpu_instance():
+def tpu_instance() -> Node:
     yield create_tpu.create_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
     try:
         delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
@@ -38,11 +38,11 @@ def tpu_instance():
         print(f"Error during cleanup: {e}")
 
 
-def test_creating_tpu(tpu_instance):
+def test_creating_tpu(tpu_instance: Node) -> None:
     assert tpu_instance.state == Node.State.READY
 
 
-def test_get_tpu(tpu_instance):
+def test_get_tpu(tpu_instance: Node) -> None:
     tpu = get_tpu.get_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
     assert tpu.state == Node.State.READY
     assert tpu.name == f"projects/{PROJECT_ID}/locations/{ZONE}/nodes/{TPU_NAME}"

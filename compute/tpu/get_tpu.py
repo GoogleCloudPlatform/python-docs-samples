@@ -13,8 +13,10 @@
 # limitations under the License.
 import os
 
+from google.cloud.tpu_v2 import Node
 
-def get_cloud_tpu(project_id: str, zone: str, name: str = "tpu-name"):
+
+def get_cloud_tpu(project_id: str, zone: str, name: str = "tpu-name") -> Node:
     # [START tpu_vm_get]
     from google.cloud import tpu_v2
 
