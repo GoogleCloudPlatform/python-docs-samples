@@ -36,7 +36,7 @@ from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
 from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
-from edit_secret_annotation import edit_secret_annotation
+from edit_secret_annotations import edit_secret_annotations
 from enable_secret_version import enable_secret_version
 from enable_secret_version_with_etag import enable_secret_version_with_etag
 from get_secret import get_secret
@@ -488,13 +488,13 @@ def test_create_update_secret_label(
     updated_secret = create_update_secret_label(project_id, secret_id, labels)
     assert updated_secret.labels[label_key] == updated_label_value
 
-def test_edit_secret_annotation(
+def test_edit_secret_annotations(
     secret: Tuple[str, str, str], annotation_key: str
 ) -> None:
     project_id, secret_id, _ = secret
     updated_annotation_value = "updatedannotationvalue"
     annotations = {annotation_key: updated_annotation_value}
-    updated_secret = edit_secret_annotation(project_id, secret_id, annotations)
+    updated_secret = edit_secret_annotations(project_id, secret_id, annotations)
     assert updated_secret.annotations[annotation_key] == updated_annotation_value
 
 

@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-# [START secretmanager_edit_regional_secret_annotation]
+# [START secretmanager_edit_regional_secret_annotations]
 
 import argparse
 from typing import Dict
@@ -22,7 +22,7 @@ from typing import Dict
 from google.cloud import secretmanager_v1
 
 
-def edit_regional_secret_annotation(
+def edit_regional_secret_annotations(
     project_id: str,
     location_id: str,
     secret_id: str,
@@ -65,7 +65,7 @@ def edit_regional_secret_annotation(
     return response
 
 
-# [END secretmanager_edit_regional_secret_annotation]
+# [END secretmanager_edit_regional_secret_annotations]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -81,6 +81,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     annotations = {args.annotation_key, args.annotation_value}
-    edit_regional_secret_annotation(
+    edit_regional_secret_annotations(
         args.project_id, args.location_id, args.secret_id, annotations
     )

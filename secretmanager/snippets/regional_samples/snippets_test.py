@@ -30,7 +30,7 @@ from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
-from regional_samples import edit_regional_secret_annotation
+from regional_samples import edit_regional_secret_annotations
 from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
 from regional_samples import get_regional_secret
@@ -502,7 +502,7 @@ def test_get_regional_secret(
     )
     assert secret_id in snippet_regional_secret.name
 
-def test_edit_regional_secret_annotation(
+def test_edit_regional_secret_annotations(
     project_id: str,
     location_id: str,
     regional_secret: Tuple[str, str],
@@ -512,7 +512,7 @@ def test_edit_regional_secret_annotation(
     updated_annotation_value = "updatedvalue"
     annotations = {annotation_key: updated_annotation_value}
     updated_secret = (
-        edit_regional_secret_annotation.edit_regional_secret_annotation(
+        edit_regional_secret_annotations.edit_regional_secret_annotations(
             project_id, location_id, secret_id, annotations
         )
     )
