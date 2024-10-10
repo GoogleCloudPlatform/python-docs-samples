@@ -27,7 +27,7 @@ def view_regional_secret_labels(
     project_id: str, location_id: str, secret_id: str
 ) -> None:
     """
-    List all secret versions in the given secret and their metadata.
+    List all secret labels in the given secret.
     """
     # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
