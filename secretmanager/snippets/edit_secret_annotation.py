@@ -65,8 +65,12 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret to act on")
-    parser.add_argument("annotation_key", help="key of the annotation to be added/updated")
-    parser.add_argument("annotation_value", help="value of the annotation to be added/updated")
+    parser.add_argument(
+        "annotation_key", help="key of the annotation to be added/updated"
+    )
+    parser.add_argument(
+        "annotation_value", help="value of the annotation to be added/updated"
+    )
     args = parser.parse_args()
 
     annotations = {args.annotation_key, args.annotation_value}

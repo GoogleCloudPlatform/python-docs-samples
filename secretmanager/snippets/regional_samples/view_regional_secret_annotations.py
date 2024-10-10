@@ -24,9 +24,7 @@ from google.cloud import secretmanager_v1
 
 
 def view_regional_secret_annotations(
-    project_id: str,
-    location_id: str,
-    secret_id: str
+    project_id: str, location_id: str, secret_id: str
 ) -> None:
     """
     List all secret annotations in the given secret.
@@ -63,6 +61,4 @@ if __name__ == "__main__":
     parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
-    view_regional_secret_annotations(
-        args.project_id, args.location_id, args.secret_id
-    )
+    view_regional_secret_annotations(args.project_id, args.location_id, args.secret_id)

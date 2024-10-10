@@ -23,10 +23,7 @@ from google.cloud import secretmanager_v1
 
 
 def edit_regional_secret_annotation(
-    project_id: str,
-    location_id: str,
-    secret_id: str,
-    new_annotations: Dict[str, str]
+    project_id: str, location_id: str, secret_id: str, new_annotations: Dict[str, str]
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Create or update a annotation on an existing secret.
@@ -76,8 +73,12 @@ if __name__ == "__main__":
         "location_id", help="id of the location where secret is to be created"
     )
     parser.add_argument("secret_id", help="id of the secret to act on")
-    parser.add_argument("annotation_key", help="key of the annotation to be added/updated")
-    parser.add_argument("annotation_value", help="value of the annotation to be added/updated")
+    parser.add_argument(
+        "annotation_key", help="key of the annotation to be added/updated"
+    )
+    parser.add_argument(
+        "annotation_value", help="value of the annotation to be added/updated"
+    )
     args = parser.parse_args()
 
     annotations = {args.annotation_key, args.annotation_value}
