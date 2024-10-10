@@ -54,10 +54,7 @@ def create_regional_secret_with_annotations(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {
-                "ttl": ttl,
-                "annotations": annotations
-            },
+            "secret": {"ttl": ttl, "annotations": annotations},
         }
     )
 
@@ -79,7 +76,9 @@ if __name__ == "__main__":
     )
     parser.add_argument("secret_id", help="id of the secret to create")
     parser.add_argument("annotation_key", help="key of the annotation you want to add")
-    parser.add_argument("annotation_value", help="value of the annotation you want to add")
+    parser.add_argument(
+        "annotation_value", help="value of the annotation you want to add"
+    )
     args = parser.parse_args()
 
     annotations = {args.annotation_key, args.annotation_value}

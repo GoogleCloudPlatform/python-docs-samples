@@ -74,6 +74,7 @@ def iam_user() -> str:
 def ttl() -> str:
     return "300s"
 
+
 @pytest.fixture()
 def annotation_key() -> str:
     return "annotationkey"
@@ -82,6 +83,7 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
 
 @retry.Retry()
 def retry_client_create_regional_secret(
@@ -174,9 +176,7 @@ def regional_secret(
             "secret_id": secret_id,
             "secret": {
                 "ttl": ttl,
-                "annotations":{
-                    annotation_key: annotation_value
-                },
+                "annotations": {annotation_key: annotation_value},
             },
         },
     )
@@ -224,6 +224,7 @@ def test_create_regional_secret(
     )
     assert secret_id in secret.name
 
+
 def test_create_regional_secret_with_annotations(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
@@ -234,10 +235,13 @@ def test_create_regional_secret_with_annotations(
     ttl: str,
 ) -> None:
     annotations = {annotation_key: annotation_value}
-    secret = create_regional_secret_with_annotations.create_regional_secret_with_annotations(
-        project_id, location_id, secret_id, annotations, ttl
+    secret = (
+        create_regional_secret_with_annotations.create_regional_secret_with_annotations(
+            project_id, location_id, secret_id, annotations, ttl
+        )
     )
     assert secret_id in secret.name
+
 
 def test_delete_regional_secret_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -459,6 +463,7 @@ def test_list_regional_secrets_with_filter(
     out, _ = capsys.readouterr()
     assert f"Found secret: {labeled.name}" in out
 
+
 def test_view_regional_secret_annotations(
     capsys: pytest.LogCaptureFixture,
     project_id: str,
@@ -473,6 +478,7 @@ def test_view_regional_secret_annotations(
 
     out, _ = capsys.readouterr()
     assert annotation_key in out
+
 
 def test_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -506,7 +512,7 @@ def test_edit_regional_secret_annotations(
     project_id: str,
     location_id: str,
     regional_secret: Tuple[str, str],
-    annotation_key: str
+    annotation_key: str,
 ) -> None:
     secret_id, _ = regional_secret
     updated_annotation_value = "updatedvalue"
@@ -517,7 +523,6 @@ def test_edit_regional_secret_annotations(
         )
     )
     assert updated_secret.annotations[annotation_key] == updated_annotation_value
-
 
 
 def test_update_regional_secret_with_etag(

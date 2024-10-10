@@ -84,6 +84,7 @@ def label_key() -> str:
 def label_value() -> str:
     return "rocks"
 
+
 @pytest.fixture()
 def annotation_key() -> str:
     return "annotationkey"
@@ -92,6 +93,7 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
 
 @retry.Retry()
 def retry_client_create_secret(
@@ -170,9 +172,7 @@ def secret(
                 "replication": {"automatic": {}},
                 "ttl": ttl,
                 "labels": {label_key: label_value},
-                "annotations":{
-                    annotation_key: annotation_value
-                },
+                "annotations": {annotation_key: annotation_value},
             },
         },
     )
@@ -263,6 +263,7 @@ def test_create_secret_with_label(
     labels = {label_key: label_value}
     secret = create_secret_with_labels(project_id, secret_id, labels, ttl)
     assert secret_id in secret.name
+
 
 def test_create_secret_with_annotations(
     client: secretmanager.SecretManagerServiceClient,
@@ -438,10 +439,9 @@ def test_view_secret_labels(
     out, _ = capsys.readouterr()
     assert label_key in out
 
+
 def test_view_secret_annotations(
-    capsys: pytest.LogCaptureFixture,
-    secret: Tuple[str, str, str],
-    annotation_key: str
+    capsys: pytest.LogCaptureFixture, secret: Tuple[str, str, str], annotation_key: str
 ) -> None:
     project_id, secret_id, _ = secret
     view_secret_annotations(project_id, secret_id)
