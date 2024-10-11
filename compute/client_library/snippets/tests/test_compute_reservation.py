@@ -132,10 +132,10 @@ def test_create_shared_reservation():
     The reservation will be created in PROJECT_ID and shared with the project specified
     by SHARED_PROJECT_ID.
 
-    Make sure to set the SHARED_PROJECT_ID environment variable before running this test,
+    Make sure to set the GOOGLE_CLOUD_SHARED_PROJECT environment variable before running this test,
     and ensure that the project is allowlisted in the organization policy for shared reservations.
 
-    If the SHARED_PROJECT_ID environment variable is not set, the test will be skipped.
+    If the GOOGLE_CLOUD_SHARED_PROJECT environment variable is not set, the test will be skipped.
     """
     if not SHARED_PROJECT_ID:
         pytest.skip(
@@ -147,4 +147,7 @@ def test_create_shared_reservation():
         )
         assert response.share_settings.project_map.values()
     finally:
-        delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+        try:
+            delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+        except Exception as e:
+            print(f"Failed to delete reservation: {e}")
