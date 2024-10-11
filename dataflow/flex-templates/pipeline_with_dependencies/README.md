@@ -80,9 +80,6 @@ gsutil mb -p $PROJECT gs://$BUCKET
 
 ```sh
 export REPOSITORY="your-repository"
-gcloud artifacts repositories create $REPOSITORY \
-    --repository-format=docker \
-    --location=$REGION
 
 gcloud artifacts repositories create $REPOSITORY \
     --repository-format=docker \
