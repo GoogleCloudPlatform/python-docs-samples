@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
-import translate_v3_translate_text
+import translate_with_gemini
 
 
-def test_translate_text(capsys: pytest.LogCaptureFixture) -> None:
-    response = translate_v3_translate_text.translate_text("Hello World!", "fr")
-    out, _ = capsys.readouterr()
-    assert "Bonjour le monde" in response.translations[0].translated_text
+def test_translate_text_with_gemini() -> None:
+    response = translate_with_gemini.translate_text("Hello World!", "fr")
+    assert "Bonjour le monde" in response.candidates[0].content.text
