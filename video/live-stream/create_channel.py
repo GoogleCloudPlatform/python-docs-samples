@@ -103,10 +103,16 @@ def create_channel(
             live_stream_v1.types.Manifest(
                 file_name="manifest.m3u8",
                 type_="HLS",
+                key="manifest_hls",
                 mux_streams=["mux_video", "mux_audio"],
                 max_segment_count=5,
             ),
         ],
+        retention_config=live_stream_v1.types.RetentionConfig(
+            retention_window_duration=duration.Duration(
+                seconds=86400,
+            ),
+        ),
     )
     operation = client.create_channel(
         parent=parent, channel=channel, channel_id=channel_id
