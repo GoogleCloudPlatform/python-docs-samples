@@ -38,7 +38,7 @@ def embed_text() -> list[list[float]]:
             # The task type for embedding. Check the available tasks in the model's documentation.
             task_type="RETRIEVAL_DOCUMENT"
         ),
-        # Option2: Use plain text as embedding input
+        # Option2: Use plain text as input
         (
             "You can download no-charge and paid apps from Google Play on your Android phone or tablet. "
             "We recommend that you get apps from Google Play, but you can also get them from other sources."
