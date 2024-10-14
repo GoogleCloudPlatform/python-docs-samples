@@ -27,7 +27,7 @@ def delete_regional_secret_label(
     Delete a label on an existing secret.
     """
 
-    # Endpoint to call the regional secret manager sever.
+    # Endpoint to call the regional Secret Manager API.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.

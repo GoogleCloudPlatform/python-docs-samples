@@ -38,7 +38,7 @@ def create_regional_secret_with_labels(
     secret material.
     """
 
-    # Endpoint to call the regional secret manager sever.
+    # Endpoint to call the regional Secret Manager API.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.

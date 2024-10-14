@@ -24,7 +24,6 @@ from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_labels
-from regional_samples import create_update_regional_secret_label
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
@@ -32,6 +31,7 @@ from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
+from regional_samples import edit_regional_secret_label
 from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
 from regional_samples import get_regional_secret
@@ -510,14 +510,14 @@ def test_get_regional_secret(
     assert secret_id in snippet_regional_secret.name
 
 
-def test_create_update_regional_secret_label(
+def test_edit_regional_secret_label(
     project_id: str, location_id: str, regional_secret: Tuple[str, str], label_key: str
 ) -> None:
     secret_id, _ = regional_secret
     updated_label_value = "updatedvalue"
     labels = {label_key: updated_label_value}
     updated_secret = (
-        create_update_regional_secret_label.create_update_regional_secret_label(
+        edit_regional_secret_label.edit_regional_secret_label(
             project_id, location_id, secret_id, labels
         )
     )

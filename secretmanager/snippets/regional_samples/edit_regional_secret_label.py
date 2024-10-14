@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-# [START secretmanager_create_update_regional_secret_label]
+# [START secretmanager_edit_regional_secret_label]
 
 import argparse
 from typing import Dict
@@ -22,14 +22,14 @@ from typing import Dict
 from google.cloud import secretmanager_v1
 
 
-def create_update_regional_secret_label(
+def edit_regional_secret_label(
     project_id: str, location_id: str, secret_id: str, new_labels: Dict[str, str]
 ) -> secretmanager_v1.UpdateSecretRequest:
     """
     Create or update a label on an existing secret.
     """
 
-    # Endpoint to call the regional secret manager sever.
+    # Endpoint to call the regional Secret Manager API.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
@@ -62,7 +62,7 @@ def create_update_regional_secret_label(
     return response
 
 
-# [END secretmanager_create_update_regional_secret_label]
+# [END secretmanager_edit_regional_secret_label]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -78,6 +78,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     labels = {args.label_key, args.label_value}
-    create_update_regional_secret_label(
+    edit_regional_secret_label(
         args.project_id, args.location_id, args.secret_id, labels
     )
