@@ -516,10 +516,8 @@ def test_edit_regional_secret_label(
     secret_id, _ = regional_secret
     updated_label_value = "updatedvalue"
     labels = {label_key: updated_label_value}
-    updated_secret = (
-        edit_regional_secret_label.edit_regional_secret_label(
-            project_id, location_id, secret_id, labels
-        )
+    updated_secret = edit_regional_secret_label.edit_regional_secret_label(
+        project_id, location_id, secret_id, labels
     )
     assert updated_secret.labels[label_key] == updated_label_value
 
