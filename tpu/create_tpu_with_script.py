@@ -23,6 +23,7 @@ def create_cloud_tpu_with_script(
     tpu_type: str = "v3-8",
     runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
 ) -> Node:
+    # [START tpu_vm_create_startup_script]
     from google.cloud import tpu_v2
 
     # TODO(developer): Update and un-comment below lines
@@ -32,7 +33,10 @@ def create_cloud_tpu_with_script(
     # tpu_type = "v2-8"
     # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
 
-    # [START tpu_vm_create_startup_script]
+    node = tpu_v2.Node()
+    node.accelerator_type = tpu_type
+    node.runtime_version = runtime_version
+
     # This startup script updates numpy to the latest version and logs the output to a file.
     metadata = {
         "startup-script": """#!/bin/bash
@@ -40,16 +44,11 @@ def create_cloud_tpu_with_script(
     sudo pip3 install --upgrade numpy >> /var/log/hello.log 2>&1
     """
     }
-    node = tpu_v2.Node()
+
     # Adding metadata with startup script to the TPU node.
     node.metadata = metadata
     # Enabling external IPs for internet access from the TPU node.
     node.network_config = tpu_v2.NetworkConfig(enable_external_ips=True)
-
-    # [END tpu_vm_create_startup_script]
-
-    node.accelerator_type = tpu_type
-    node.runtime_version = runtime_version
 
     request = tpu_v2.CreateNodeRequest(
         parent=f"projects/{project_id}/locations/{zone}",
@@ -57,7 +56,6 @@ def create_cloud_tpu_with_script(
         node=node,
     )
 
-    # Create a TPU client
     client = tpu_v2.TpuClient()
     operation = client.create_node(request=request)
     print("Waiting for operation to complete...")
@@ -67,10 +65,12 @@ def create_cloud_tpu_with_script(
     # Example response:
     # {'startup-script': '#!/bin/bash\n    echo "Hello World" > /var/log/hello.log\n
     # ...
+
+    # [END tpu_vm_create_startup_script]
     return response
 
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     ZONE = "us-central1-b"
-    create_cloud_tpu_with_script(PROJECT_ID, ZONE, "tpu-name2")
+    create_cloud_tpu_with_script(PROJECT_ID, ZONE, "tpu-name")
