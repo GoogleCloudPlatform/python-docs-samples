@@ -71,7 +71,9 @@ def parallel_function_calling_example() -> ChatSession:
 
     # Start a chat session
     chat_session = model.start_chat()
-    response = chat_session.send_message("Get weather details in New Delhi and San Francisco?")
+    response = chat_session.send_message(
+        "Get weather details in New Delhi and San Francisco?"
+    )
 
     function_calls = response.candidates[0].function_calls
     print("Suggested finction calls:\n", function_calls)
