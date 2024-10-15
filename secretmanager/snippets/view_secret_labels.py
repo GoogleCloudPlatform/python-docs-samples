@@ -25,7 +25,7 @@ from google.cloud import secretmanager
 
 def view_secret_labels(project_id: str, secret_id: str) -> None:
     """
-    List all secret versions in the given secret and their metadata.
+    List all secret labels in the given secret.
     """
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
