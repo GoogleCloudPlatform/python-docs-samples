@@ -38,7 +38,7 @@ from google.protobuf import timestamp_pb2
 def create_channel_clip(
     project_id: str, location: str, channel_id: str, clip_id: str, output_uri: str
 ) -> live_stream_v1.types.Clip:
-    """Creates a channel clip with a duration of 15 seconds.
+    """Creates a channel clip with a duration of 20 seconds.
     Args:
         project_id: The GCP project ID.
         location: The location of the channel.
@@ -49,8 +49,8 @@ def create_channel_clip(
     client = LivestreamServiceClient()
     parent = f"projects/{project_id}/locations/{location}/channels/{channel_id}"
     name = f"projects/{project_id}/locations/{location}/channels/{channel_id}/clips/{clip_id}"
-    # Create datetime values for now and 30 seconds earlier.
-    now = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(
+    # Create datetime values for 10 seconds ago and 30 seconds ago.
+    recent = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(
         seconds=10
     )
     earlier = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(
@@ -60,7 +60,7 @@ def create_channel_clip(
     markin_timestamp = timestamp_pb2.Timestamp()
     markin_timestamp.FromDatetime(earlier)
     markout_timestamp = timestamp_pb2.Timestamp()
-    markout_timestamp.FromDatetime(now)
+    markout_timestamp.FromDatetime(recent)
 
     clip = live_stream_v1.types.Clip(
         name=name,
