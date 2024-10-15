@@ -15,6 +15,13 @@ import os
 
 
 def delete_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> None:
+    """Deletes a Cloud TPU node.
+    Args:
+        project_id (str): The ID of the Google Cloud project.
+        zone (str): The zone where the TPU node is located.
+        tpu_name (str, optional): The name of the TPU node.
+    Returns: None
+    """
     # [START tpu_vm_delete]
     from google.cloud import tpu_v2
 

@@ -13,6 +13,8 @@
 # limitations under the License.
 import os
 
+from google.cloud.tpu_v2 import Node
+
 
 def create_cloud_tpu(
     project_id: str,
@@ -20,7 +22,17 @@ def create_cloud_tpu(
     tpu_name: str,
     tpu_type: str = "v3-8",
     runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
-) -> None:
+) -> Node:
+    """Creates a Cloud TPU node.
+    Args:
+        project_id (str): The ID of the Google Cloud project.
+        zone (str): The zone where the TPU node will be created.
+        tpu_name (str): The name of the TPU node.
+        tpu_type (str, optional): The type of TPU to create.
+        runtime_version (str, optional): The runtime version for the TPU.
+    Returns:
+        Node: The created TPU node.
+    """
     # [START tpu_vm_create]
     from google.cloud import tpu_v2
 
@@ -34,22 +46,9 @@ def create_cloud_tpu(
     # Create a TPU node
     node = tpu_v2.Node()
     node.accelerator_type = tpu_type
-    # To see available versions use command:
+    # To see available runtime version use command:
     # gcloud compute tpus versions list --zone={ZONE}
     node.runtime_version = runtime_version
-
-    # Optional. Adding metadata to the TPU node.
-    # This script updates numpy to the latest version and logs the output to a file.
-    metadata = {
-        "startup-script": """#!/bin/bash
-    echo "Hello World" > /var/log/hello.log
-    sudo pip3 install --upgrade numpy >> /var/log/hello.log 2>&1
-    """
-    }
-    node.metadata = metadata
-
-    # Optional. Enabling external IPs for internet access from the TPU node
-    node.network_config = tpu_v2.NetworkConfig(enable_external_ips=True)
 
     request = tpu_v2.CreateNodeRequest(
         parent=f"projects/{project_id}/locations/{zone}",
