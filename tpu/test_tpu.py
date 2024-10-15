@@ -43,7 +43,7 @@ def test_creating_tpu(tpu_instance: Node) -> None:
 
 
 def test_creating_with_startup_script() -> None:
-    tpu_name_with_script = "script-tpu" + uuid.uuid4().hex[:5]
+    tpu_name_with_script = "script-tpu-" + uuid.uuid4().hex[:5]
     try:
         tpu_with_script = create_tpu_with_script.create_cloud_tpu_with_script(
             PROJECT_ID, ZONE, tpu_name_with_script
