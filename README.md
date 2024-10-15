@@ -46,7 +46,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
 
 1. Install the dependencies needed to run the samples.
 
-    ```
+    ```shell
     pip install -r requirements.txt
     ```
 
