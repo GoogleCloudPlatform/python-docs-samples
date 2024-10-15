@@ -52,7 +52,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
 
 1. Run the sample:
 
-    ```
+    ```shell
     python snippets.py
     ```
 
