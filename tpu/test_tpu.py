@@ -25,7 +25,7 @@ import get_tpu
 
 TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-ZONE = "us-central1-a"
+ZONE = "us-central1-b"
 
 
 # Instance of TPU
