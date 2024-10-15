@@ -39,7 +39,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
 
 1. Create a virtualenv. Samples are compatible with Python 3.6+.
 
-    ```
+    ```shell
     python3 -m venv env
     source env/bin/activate
     ```
