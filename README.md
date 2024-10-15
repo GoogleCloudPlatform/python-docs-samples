@@ -14,7 +14,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
 
 1. Clone this repository:
 
-    ```
+    ```shell
     git clone https://github.com/GoogleCloudPlatform/python-docs-samples.git
     ```
 
@@ -23,7 +23,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
     Create local credentials by running the following command and following the
     oauth2 flow (read more about the command [here][auth_command]):
 
-    ```
+    ```shell
     gcloud auth application-default login
     ```
 
@@ -33,7 +33,7 @@ Check out some of the samples found on this repository on the [Google Cloud Samp
 
 1. Change directory to one of the sample folders, e.g. `logging/cloud-client`:
 
-    ```
+    ```shell
     cd logging/cloud-client/
     ```
 
