@@ -108,6 +108,7 @@ def create_channel(
                 max_segment_count=5,
             ),
         ],
+        # Optional, but required for VOD clipping
         retention_config=live_stream_v1.types.RetentionConfig(
             retention_window_duration=duration.Duration(
                 seconds=86400,
