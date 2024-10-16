@@ -20,7 +20,7 @@ def create_cloud_tpu(
     project_id: str,
     zone: str,
     tpu_name: str,
-    tpu_type: str = "v3-8",
+    tpu_type: str = "v2-8",
     runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
 ) -> Node:
     """Creates a Cloud TPU node.

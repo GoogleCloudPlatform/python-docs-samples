@@ -25,13 +25,15 @@ import get_tpu
 
 TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-ZONE = "us-central1-b"
+ZONE = "us-central1-f"
+TPU_TYPE = "v2-8"
+TPU_VERSION = "tpu-vm-tf-2.17.0-pjrt"
 
 
 # Instance of TPU
 @pytest.fixture(scope="session")
 def tpu_instance() -> Node:
-    yield create_tpu.create_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
+    yield create_tpu.create_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME, TPU_TYPE, TPU_VERSION)
     try:
         delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
     except Exception as e:
@@ -46,7 +48,7 @@ def test_creating_with_startup_script() -> None:
     tpu_name_with_script = "script-tpu-" + uuid.uuid4().hex[:5]
     try:
         tpu_with_script = create_tpu_with_script.create_cloud_tpu_with_script(
-            PROJECT_ID, ZONE, tpu_name_with_script
+            PROJECT_ID, ZONE, tpu_name_with_script, TPU_TYPE, TPU_VERSION
         )
         assert "--upgrade numpy" in tpu_with_script.metadata["startup-script"]
     finally:
