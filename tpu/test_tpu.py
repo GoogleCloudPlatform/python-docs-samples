@@ -25,8 +25,8 @@ import get_tpu
 
 TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-ZONE = "us-central1-f"
-TPU_TYPE = "v2-8"
+ZONE = "us-south1-a"
+TPU_TYPE = "v5litepod-1"
 TPU_VERSION = "tpu-vm-tf-2.17.0-pjrt"
 
 
