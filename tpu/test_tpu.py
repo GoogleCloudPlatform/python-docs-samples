@@ -77,8 +77,9 @@ def tpu_instance() -> Node:
 def test_list_tpu() -> None:
     nodes = list_tpu.list_cloud_tpu(PROJECT_ID, ZONE)
     for zone in list_of_zones:
-        list_tpu.list_cloud_tpu(PROJECT_ID, zone)
-    # assert len(list(nodes)) > 0
+        nodes = list_tpu.list_cloud_tpu(PROJECT_ID, zone)
+        print("KEYWORD: NODES", nodes)
+    assert len(list(nodes)) > 0
 
 
 # def test_stop_tpu() -> None:
