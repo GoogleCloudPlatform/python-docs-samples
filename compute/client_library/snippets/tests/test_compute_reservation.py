@@ -24,6 +24,9 @@ from ..compute_reservations.create_compute_reservation import create_compute_res
 from ..compute_reservations.create_compute_reservation_from_vm import (
     create_compute_reservation_from_vm,
 )
+from ..compute_reservations.create_compute_shared_reservation import (
+    create_compute_shared_reservation,
+)
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
 from ..compute_reservations.list_compute_reservation import list_compute_reservation
@@ -38,22 +41,17 @@ TIMEOUT = time.time() + 300  # 5 minutes
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 ZONE = "us-central1-a"
 MACHINE_TYPE = "n2-standard-2"
+SHARED_PROJECT_ID = os.getenv("GOOGLE_CLOUD_SHARED_PROJECT")
 
 
 @pytest.fixture()
-def reservation(request) -> str:
+def reservation() -> str:
     create_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-
-    def cleanup():
-        try:
-            delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-        except Exception as e:
-            print(f"Error during cleanup: {e}")
-
-    request.addfinalizer(cleanup)
-
-    reservation = get_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
-    return reservation
+    yield get_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+    try:
+        delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+    except Exception as e:
+        print(f"Error during cleanup: {e}")
 
 
 @pytest.fixture(scope="session")
@@ -87,8 +85,6 @@ def vm_instance():
         delete_instance(PROJECT_ID, ZONE, INSTANCE_NAME)
     except Exception as e:
         print(f"Error during cleanup: {e}")
-
-    return instance
 
 
 def test_create_compute_reservation_from_vm(vm_instance):
@@ -128,3 +124,30 @@ def test_list_compute_reservation(reservation):
 def test_delete_compute_reservation(reservation):
     response = delete_compute_reservation(PROJECT_ID, ZONE, reservation.name)
     assert response.status == Operation.Status.DONE
+
+
+def test_create_shared_reservation():
+    """Test for creating a shared reservation.
+
+    The reservation will be created in PROJECT_ID and shared with the project specified
+    by SHARED_PROJECT_ID.
+
+    Make sure to set the GOOGLE_CLOUD_SHARED_PROJECT environment variable before running this test,
+    and ensure that the project is allowlisted in the organization policy for shared reservations.
+
+    If the GOOGLE_CLOUD_SHARED_PROJECT environment variable is not set, the test will be skipped.
+    """
+    if not SHARED_PROJECT_ID:
+        pytest.skip(
+            "Skipping test because SHARED_PROJECT_ID environment variable is not set."
+        )
+    try:
+        response = create_compute_shared_reservation(
+            PROJECT_ID, ZONE, RESERVATION_NAME, SHARED_PROJECT_ID
+        )
+        assert response.share_settings.project_map.values()
+    finally:
+        try:
+            delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+        except Exception as e:
+            print(f"Failed to delete reservation: {e}")
