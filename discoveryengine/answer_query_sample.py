@@ -20,6 +20,8 @@ from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
 # TODO(developer): Uncomment these variables before running the sample.
+# NOTE: This sample shows all available answer phase options. Remove any options that you don't plan to use.
+
 # project_id = "YOUR_PROJECT_ID"
 # location = "YOUR_LOCATION"                    # Values: "global", "us", "eu"
 # engine_id = "YOUR_APP_ID"
