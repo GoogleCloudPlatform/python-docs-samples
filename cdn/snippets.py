@@ -26,8 +26,7 @@ at https://cloud.google.com/cdn/docs.
 # [START cloudcdn_sign_cookie]
 import argparse
 import base64
-from datetime import datetime
-from datetime import timezone
+from datetime import datetime, timezone
 import hashlib
 import hmac
 from urllib.parse import parse_qs, urlsplit
