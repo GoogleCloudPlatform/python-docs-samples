@@ -13,25 +13,23 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-Command line application and sample code for getting metadata about a regional secret.
+command line application and sample code for listing labels of a
+secret.
 """
-
+# [START secretmanager_view_regional_secret_labels]
 import argparse
 
-# [START secretmanager_v1_get_regional_secret]
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
 
 
-def get_regional_secret(
+def view_regional_secret_labels(
     project_id: str, location_id: str, secret_id: str
-) -> secretmanager_v1.GetSecretRequest:
+) -> None:
     """
-    Gets information about the given secret. This only returns metadata about
-    the secret container, not any secret material.
+    List all secret labels in the given secret.
     """
-
-    # Endpoint to call the regional Secret Manager API
+    # Endpoint to call the regional secret manager sever.
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
@@ -39,27 +37,28 @@ def get_regional_secret(
         client_options={"api_endpoint": api_endpoint},
     )
 
-    # Build the resource name of the secret.
+    # Build the resource name of the parent secret.
     name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
-    # Get the secret.
     response = client.get_secret(request={"name": name})
 
-    # Print data about the secret.
-    print(f"Got secret {response.name}")
+    print(f"Got secret {response.name} with labels :")
+    for key in response.labels:
+        print(f"{key} : {response.labels[key]}")
 
-    return response
 
+# [END secretmanager_view_regional_secret_labels]
 
-# [END secretmanager_v1_get_regional_secret]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("location_id", help="id of location where secret is stored")
-    parser.add_argument("secret_id", help="id of the secret to get")
+    parser.add_argument(
+        "location_id", help="id of the location where secret is to be created"
+    )
+    parser.add_argument("secret_id", help="id of the secret in which to list")
     args = parser.parse_args()
 
-    get_regional_secret(args.project_id, args.location_id, args.secret_id)
+    view_regional_secret_labels(args.project_id, args.location_id, args.secret_id)

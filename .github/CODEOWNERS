@@ -31,6 +31,7 @@
 /secretmanager/**/*                    @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/cloud-secrets-team
 /securitycenter/**/*                   @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers @GoogleCloudPlatform/gcp-security-command-center
 /service_extensions/**/*               @GoogleCloudPlatform/service-extensions-samples-reviewers @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/tpu/**/*                              @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /vmwareengine/**/*                     @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /webrisk/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
