@@ -18,9 +18,9 @@
 
 import datetime
 
-import snippets
-import unittest
 import pytest
+
+import snippets
 
 
 def test_sign_url() -> None:
@@ -53,6 +53,7 @@ def test_sign_url() -> None:
         == "http://www.example.com/some/path?some=query&another=param&Expires=1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o="
     )
 
+
 def test_sign_url_raise_exception_on_naive_expiration_datetime() -> None:
     with pytest.raises(TypeError):
         snippets.sign_url(
@@ -68,6 +69,7 @@ def test_sign_url_raise_exception_on_naive_expiration_datetime() -> None:
             "nZtRohdNF9m3cKM24IcK4w==",
             datetime.datetime.utcfromtimestamp(1549751401),
         )
+
 
 def test_sign_url_prefix() -> None:
     assert snippets.sign_url_prefix(
@@ -102,6 +104,7 @@ def test_sign_url_prefix() -> None:
         "Expires=1549751401&KeyName=my-key&Signature=3th4ThmpS95I1TAKYyYSCSq3dnQ="
     )
 
+
 def test_sign_url_prefix_raise_exception_on_naive_expiration_datetime() -> None:
     with pytest.raises(TypeError):
         snippets.sign_url_prefix(
@@ -119,6 +122,7 @@ def test_sign_url_prefix_raise_exception_on_naive_expiration_datetime() -> None:
             "nZtRohdNF9m3cKM24IcK4w==",
             datetime.datetime.utcfromtimestamp(1549751401),
         )
+
 
 def test_sign_cookie() -> None:
     assert (
@@ -140,6 +144,7 @@ def test_sign_cookie() -> None:
         )
         == "Cloud-CDN-Cookie=URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9mb28v:Expires=1549751401:KeyName=my-key:Signature=Z9uYAu73YHioRScZDxnP-TnS274="
     )
+
 
 def test_sign_cookie_raise_exception_on_naive_expiration_datetime() -> None:
     with pytest.raises(TypeError):
