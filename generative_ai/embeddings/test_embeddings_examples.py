@@ -15,11 +15,6 @@ import os
 
 import backoff
 
-import batch_example
-import code_retrieval_example
-import document_retrieval_example
-import generate_embeddings_with_lower_dimension
-
 from google.api_core.exceptions import FailedPrecondition, ResourceExhausted
 
 import google.auth
@@ -27,12 +22,16 @@ import google.auth
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
+import pytest
+
+import batch_example
+import code_retrieval_example
+import document_retrieval_example
+import generate_embeddings_with_lower_dimension
 import model_tuning_example
 import multimodal_example
 import multimodal_image_example
 import multimodal_video_example
-
-import pytest
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
