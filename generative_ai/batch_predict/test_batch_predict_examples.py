@@ -13,17 +13,16 @@
 # limitations under the License.
 from typing import Callable
 
-
-import batch_code_predict
-import batch_text_predict
-import gemini_batch_predict
-
-
 from google.cloud import storage
 from google.cloud.aiplatform import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
 
 import pytest
+
+import batch_code_predict
+import batch_text_predict
+import gemini_batch_predict
+
 
 INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
