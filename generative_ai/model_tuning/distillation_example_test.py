@@ -15,16 +15,16 @@
 import os
 import uuid
 
-import distillation_example
-
 from google.cloud import aiplatform
 from google.cloud import storage
-
 from google.cloud.aiplatform.compat.types import pipeline_state
 
 import pytest
 
 from vertexai.preview.language_models import TextGenerationModel
+
+import distillation_example
+
 
 _BUCKET = os.environ["CLOUD_STORAGE_BUCKET"]
 

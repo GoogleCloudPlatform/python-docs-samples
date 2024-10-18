@@ -16,9 +16,9 @@ import os
 
 import backoff
 
-import generate_image
-
 from google.api_core.exceptions import ResourceExhausted
+
+import generate_image
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
