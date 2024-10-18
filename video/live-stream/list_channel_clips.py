@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google LLC.
+# Copyright 2024 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,64 +14,63 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Live Stream sample for creating an input endpoint. You send an
-    input video stream to this endpoint.
+"""Google Cloud Live Stream sample for listing all clips for a channel.
 Example usage:
-    python create_input.py --project_id <project-id> --location <location> --input_id <input-id>
+    python list_channel_clips.py --project_id <project-id> --location <location> \
+        --channel_id <channel-id>
 """
 
-# [START livestream_create_input]
+# [START livestream_list_channel_clips]
 
 import argparse
 
-from google.cloud.video import live_stream_v1
 from google.cloud.video.live_stream_v1.services.livestream_service import (
     LivestreamServiceClient,
+    pagers,
 )
 
 
-def create_input(
-    project_id: str, location: str, input_id: str
-) -> live_stream_v1.types.Input:
-    """Creates an input.
+def list_channel_clips(
+    project_id: str, location: str, channel_id: str
+) -> pagers.ListClipsPager:
+    """Lists all clips for a channel.
     Args:
         project_id: The GCP project ID.
-        location: The location in which to create the input.
-        input_id: The user-defined input ID."""
+        location: The location of the channel.
+        channel_id: The user-defined channel ID."""
 
     client = LivestreamServiceClient()
 
-    parent = f"projects/{project_id}/locations/{location}"
+    parent = f"projects/{project_id}/locations/{location}/channels/{channel_id}"
+    page_result = client.list_clips(parent=parent)
+    print("Channel clips:")
 
-    input = live_stream_v1.types.Input(
-        type_="RTMP_PUSH",
-    )
-    operation = client.create_input(parent=parent, input=input, input_id=input_id)
-    response = operation.result(900)
-    print(f"Input: {response.name}")
-    print(f"Uri: {response.uri}")
+    responses = []
+    for response in page_result:
+        print(response.name)
+        responses.append(response)
 
-    return response
+    return responses
 
 
-# [END livestream_create_input]
+# [END livestream_list_channel_clips]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
-        help="The location in which to create the input.",
-        default="us-central1",
+        help="The location of the channel.",
+        required=True,
     )
     parser.add_argument(
-        "--input_id",
-        help="The user-defined input ID.",
+        "--channel_id",
+        help="The user-defined channel ID.",
         required=True,
     )
     args = parser.parse_args()
-    create_input(
+    list_channel_clips(
         args.project_id,
         args.location,
-        args.input_id,
+        args.channel_id,
     )
