@@ -127,3 +127,4 @@ def vector_search_distance_threshold(db):
         print(f"{doc.id}")
     # [END firestore_vector_search_distance_threshold]
     return vector_query
+
