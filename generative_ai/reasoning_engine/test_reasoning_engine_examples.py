@@ -14,15 +14,15 @@
 
 from typing import Generator
 
+import pytest
+
 import create_reasoning_engine_advanced_example
 import create_reasoning_engine_example
 import delete_reasoning_engine_example
 import get_reasoning_engine_example
 import list_reasoning_engine_example
-
-import pytest
-
 import query_reasoning_engine_example
+
 
 STAGING_BUCKET = "gs://ucaip-samples-us-central1"
 
