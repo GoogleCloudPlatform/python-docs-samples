@@ -353,5 +353,5 @@ def test_predict(
     ).json()
 
     # Check that we get non-empty predictions.
-    assert "predictions" in response["predictions"]
+    assert "predictions" in response["predictions"], response
     assert len(response["predictions"]) > 0
