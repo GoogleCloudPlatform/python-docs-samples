@@ -371,7 +371,7 @@ def test_parse_date() -> None:
     ), f"expected {TEST_DATE_STR}, got {test_date_str}"
 
 TEST_LOG_WITH_SERVICEDATA = {
-"logName": "projects/someproject/logs/somelog",
+    "logName": "projects/someproject/logs/somelog",
     "protoPayload": {
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "authenticationInfo": {
@@ -416,7 +416,7 @@ TEST_LOG_WITH_SERVICEDATA = {
     "severity": "NOTICE",
 }
 TEST_LOG_WITH_PATCHED_SERVICEDATA = {
-"logName": f"projects/{TEST_PROJECT_ID}/logs/imported_logs",
+    "logName": f"projects/{TEST_PROJECT_ID}/logs/imported_logs",
     "protoPayload": {
         "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
         "authenticationInfo": {
@@ -466,6 +466,6 @@ TEST_LOG_WITH_PATCHED_SERVICEDATA = {
 }
 
 def test_patch_serviceData_field() -> None:
-    patched_log = _patch_entry(TEST_LOG_WITH_SERVICEDATA, TEST_PROJECT_ID)
+    patched_log = main._patch_entry(TEST_LOG_WITH_SERVICEDATA, TEST_PROJECT_ID)
 
     assert (patched_log == TEST_LOG_WITH_PATCHED_SERVICEDATA)
