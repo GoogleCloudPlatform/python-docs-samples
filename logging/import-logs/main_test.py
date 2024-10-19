@@ -465,7 +465,9 @@ TEST_LOG_WITH_PATCHED_SERVICEDATA = {
     "severity": "NOTICE",
 }
 
-def test_patch_serviceData_field() -> None:
-    patched_log = main._patch_entry(TEST_LOG_WITH_SERVICEDATA, TEST_PROJECT_ID)
 
-    assert (patched_log == TEST_LOG_WITH_PATCHED_SERVICEDATA)
+def test_patch_serviceData_field() -> None:
+    log = dict(TEST_LOG_WITH_SERVICEDATA)
+    main._patch_entry(log, TEST_PROJECT_ID)
+
+    assert (log == TEST_LOG_WITH_PATCHED_SERVICEDATA)
