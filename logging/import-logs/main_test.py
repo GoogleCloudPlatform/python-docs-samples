@@ -370,6 +370,7 @@ def test_parse_date() -> None:
         test_date_str == TEST_DATE_STR
     ), f"expected {TEST_DATE_STR}, got {test_date_str}"
 
+
 TEST_LOG_WITH_SERVICEDATA = {
     "logName": "projects/someproject/logs/somelog",
     "protoPayload": {
