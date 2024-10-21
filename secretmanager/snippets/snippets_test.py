@@ -51,8 +51,8 @@ from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_etag import update_secret_with_etag
-from view_secret_labels import view_secret_labels
 from view_secret_annotations import view_secret_annotations
+from view_secret_labels import view_secret_labels
 
 
 @pytest.fixture()

@@ -241,6 +241,7 @@ def test_create_regional_secret(
     )
     assert secret_id in secret.name
 
+
 def test_create_regional_secret_with_annotations(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
@@ -257,6 +258,7 @@ def test_create_regional_secret_with_annotations(
         )
     )
     assert secret_id in secret.name
+
 
 def test_create_regional_secret_with_label(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -290,6 +292,7 @@ def test_delete_regional_secret_labels(
         retry_client_access_regional_secret_version(
             regional_client, request={"name": name}
         )
+
 
 def test_delete_regional_secret_with_etag(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
@@ -570,6 +573,7 @@ def test_edit_regional_secret_annotations(
         project_id, location_id, secret_id, annotations
     )
     assert updated_secret.annotations[annotation_key] == updated_annotation_value
+
 
 def test_edit_regional_secret_label(
     project_id: str, location_id: str, regional_secret: Tuple[str, str], label_key: str
