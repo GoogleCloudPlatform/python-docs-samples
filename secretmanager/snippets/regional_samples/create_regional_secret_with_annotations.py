@@ -64,7 +64,7 @@ def create_regional_secret_with_annotations(
     return response
 
 
-# [END secretmanager_create_regional_secret_with_annotation]
+# [END secretmanager_create_regional_secret_with_annotations]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
