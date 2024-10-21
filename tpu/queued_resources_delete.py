@@ -29,6 +29,7 @@ def delete_queued_resources(
     name = (
         f"projects/{project_id}/locations/{zone}/queuedResources/{queued_resource_name}"
     )
+
     try:
         op = client.delete_queued_resource(name=name)
         op.result()

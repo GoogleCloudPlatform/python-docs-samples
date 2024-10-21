@@ -76,5 +76,5 @@ if __name__ == "__main__":
         project_id=PROJECT_ID,
         zone=ZONE,
         tpu_name="tpu-name",
-        queued_resource_name="resource-name1",
+        queued_resource_name="resource-name",
     )
