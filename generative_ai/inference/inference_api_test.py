@@ -18,13 +18,11 @@ import stream_multimodality_basic
 import stream_text_basic
 
 
-# TODO: Delete this test after approval generative_ai/text_generation/text_example03.py
 def test_non_stream_text_basic() -> None:
     response = non_stream_text_basic.generate_content()
     assert response
 
 
-# TODO: Delete this test after approval generative_ai/text_generation/multimodal_example02.py
 def test_non_stream_multi_modality_basic() -> None:
     response = non_stream_multimodality_basic.generate_content()
     assert response

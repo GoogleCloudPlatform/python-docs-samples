@@ -27,6 +27,7 @@ assign_issues_by:
       - "api: recaptchaenterprise"
       - "api: secretmanager"
       - "api: securitycenter"
+      - "api: tpu"
       - "api: vmwareengine"
     to:
       - GoogleCloudPlatform/dee-infra
@@ -154,6 +155,7 @@ assign_prs_by:
       - "api: privateca"
       - "api: recaptchaenterprise"
       - "api: secretmanager"
+      - "api: tpu"
       - "api: securitycenter"
     to:
       - GoogleCloudPlatform/dee-infra

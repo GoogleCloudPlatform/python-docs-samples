@@ -29,7 +29,8 @@ def create_target_site(
     # project_id = "YOUR_PROJECT_ID"
     # location = "YOUR_LOCATION" # Values: "global"
     # data_store_id = "YOUR_DATA_STORE_ID"
-    # uri_pattern = "https://cloud.google.com/generative-ai-app-builder/docs/*"
+    # NOTE: Do not include http or https protocol in the URI pattern
+    # uri_pattern = "cloud.google.com/generative-ai-app-builder/docs/*"
 
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store

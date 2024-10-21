@@ -16,9 +16,9 @@ import os
 
 import backoff
 
-import edit_image_inpainting_remove_mask_mode
-
 from google.api_core.exceptions import ResourceExhausted
+
+import edit_image_inpainting_remove_mask_mode
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")

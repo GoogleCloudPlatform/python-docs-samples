@@ -14,11 +14,11 @@
 
 import backoff
 
+from google.api_core.exceptions import ResourceExhausted
+
 # import claude_3_streaming_example
 import claude_3_tool_example
 import claude_3_unary_example
-
-from google.api_core.exceptions import ResourceExhausted
 
 
 # @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)

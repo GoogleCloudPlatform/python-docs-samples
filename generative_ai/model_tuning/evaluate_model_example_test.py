@@ -14,11 +14,11 @@
 
 import backoff
 
-import evaluate_model_example
-
 from google.api_core.exceptions import ResourceExhausted
 
 import pytest
+
+import evaluate_model_example
 
 
 @pytest.mark.skip(
