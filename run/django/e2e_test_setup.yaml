@@ -59,7 +59,7 @@ steps:
         SECRET_KEY=$(cat /dev/urandom | LC_ALL=C tr -dc '[:alpha:]' | fold -w 30 | head -n1)
         PASSWORD_NAME=${_SECRET_PASSWORD_NAME}" > ${_SECRET_SETTINGS_NAME}
 
-        ./retry.sh "gcloud iam service-accounts create ${_SERVICE_ACCOUNT}"
+        sa_email=$(gcloud projects list --filter "name=${PROJECT_ID}" --format "value(projectNumber)")-compute@developer.gserviceaccount.com
 
         ./retry.sh "gcloud secrets create ${_SECRET_SETTINGS_NAME} \
           --project $PROJECT_ID \
@@ -72,17 +72,17 @@ steps:
           --data-file=${_SECRET_PASSWORD_NAME}"
 
         ./retry.sh "gcloud secrets add-iam-policy-binding ${_SECRET_SETTINGS_NAME} \
-        --member serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
+        --member serviceAccount:${sa_email} \
         --role roles/secretmanager.secretAccessor \
         --project ${PROJECT_ID}"
 
         ./retry.sh "gcloud secrets add-iam-policy-binding ${_SECRET_PASSWORD_NAME} \
-          --member serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
+          --member serviceAccount:${sa_email} \
           --role roles/secretmanager.secretAccessor \
           --project ${PROJECT_ID}"
 
         ./retry.sh "gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-          --member serviceAccount:${_SERVICE_ACCOUNT_EMAIL} \
+          --member serviceAccount:${sa_email} \
           --role roles/cloudsql.client \
           --project ${PROJECT_ID}"
 
@@ -107,7 +107,6 @@ steps:
       - |
         ./retry.sh "gcloud run jobs create ${_CLOUD_RUN_JOB_NAME} \
           --region ${_REGION} \
-          --service-account ${_SERVICE_ACCOUNT_EMAIL} \
           --image ${_IMAGE_NAME} \
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
@@ -125,7 +124,6 @@ steps:
           --image ${_IMAGE_NAME} \
           --no-allow-unauthenticated \
           --region ${_REGION} \
-          --service-account ${_SERVICE_ACCOUNT_EMAIL} \
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME}"
 
@@ -144,8 +142,6 @@ substitutions:
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
   _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
   _CLOUD_RUN_JOB_NAME: migrate-${_VERSION}
-  _SERVICE_ACCOUNT: django-sa-${_VERSION}
-  _SERVICE_ACCOUNT_EMAIL: ${_SERVICE_ACCOUNT}@${PROJECT_ID}.iam.gserviceaccount.com
   _DB_INSTANCE: django-instance-${_VERSION}
   _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_DB_INSTANCE}
   _DB_NAME: postgres-${_VERSION}
