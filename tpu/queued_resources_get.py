@@ -22,12 +22,21 @@ def get_queued_resources(
     # [START tpu_queued_resources_get]
     from google.cloud import tpu_v2alpha1
 
+    # TODO(developer): Update and un-comment below lines
+    # project_id = "your-project-id"
+    # zone = "us-central1-b"
+    # queued_resource_name = "resource-name"
+
     client = tpu_v2alpha1.TpuClient()
     name = (
         f"projects/{project_id}/locations/{zone}/queuedResources/{queued_resource_name}"
     )
     resource = client.get_queued_resource(name=name)
+    print("Resource name:", resource.name)
     print(resource.state.state)
+    # Example response:
+    # Resource name: projects/{project_id}/locations/{zone}/queuedResources/resource-name
+    # State.ACTIVE
 
     # [END tpu_queued_resources_get]
     return resource
