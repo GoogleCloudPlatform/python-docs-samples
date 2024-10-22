@@ -54,6 +54,7 @@ POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
 ADMIN_NAME = "admin"
 ADMIN_PASSWORD = uuid.uuid4().hex[:26]
 
+
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
     """
