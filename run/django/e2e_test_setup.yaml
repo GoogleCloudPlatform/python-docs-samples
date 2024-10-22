@@ -81,12 +81,6 @@ steps:
           --role roles/secretmanager.secretAccessor \
           --project ${PROJECT_ID}"
 
-        ./retry.sh "gcloud projects add-iam-policy-binding ${PROJECT_ID} \
-          --member serviceAccount:${sa_email} \
-          --role roles/cloudsql.client \
-          --project ${PROJECT_ID}"
-
-
   - id: "Build Container Image"
     name: gcr.io/k8s-skaffold/pack
     args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder"]
