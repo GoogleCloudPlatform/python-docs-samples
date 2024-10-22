@@ -13,10 +13,10 @@
 # limitations under the License.
 
 """Examples of working with clients for Security Command Center."""
+# [START securitycenter_set_client_endpoint_v2]
 from typing import Dict
 
 
-# [START securitycenter_set_client_endpoint_v2]
 def create_client_with_endpoint(api_endpoint) -> Dict:
     """
     Creates Security Command Center clients for a regional endpoint and the default endpoint.
