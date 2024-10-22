@@ -19,20 +19,20 @@ from vertexai.vision_models import MultiModalEmbeddingResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_image_embeddings() -> MultiModalEmbeddingResponse:
+def get_image_text_embeddings() -> MultiModalEmbeddingResponse:
     """Example of how to generate multimodal embeddings from image and text.
 
-    Read more @ https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-multimodal-embeddings#low-dimension
+    Read more @ https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/get-multimodal-embeddings#text-image-embedding
     """
     # [START generativeaionvertexai_multimodal_embedding_image]
     import vertexai
     from vertexai.vision_models import Image, MultiModalEmbeddingModel
 
-    # TODO(developer): Uncomment and set your project ID
+    # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding")
+    model = MultiModalEmbeddingModel.from_pretrained("multimodalembedding@001")
     image = Image.load_from_file(
         "gs://cloud-samples-data/vertex-ai/llm/prompts/landmark1.png"
     )
@@ -54,4 +54,4 @@ def get_image_embeddings() -> MultiModalEmbeddingResponse:
 
 
 if __name__ == "__main__":
-    get_image_embeddings()
+    get_image_text_embeddings()

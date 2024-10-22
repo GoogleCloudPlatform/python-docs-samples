@@ -26,9 +26,10 @@ def embed_text_batch() -> BatchPredictionJob:
     """
     # [START generativeaionvertexai_embedding_batch]
     import vertexai
+
     from vertexai.preview import language_models
 
-    # TODO(developer): Uncomment and set your project ID
+    # TODO(developer): Update & uncomment line below
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
     input_uri = (
@@ -38,7 +39,7 @@ def embed_text_batch() -> BatchPredictionJob:
     output_uri = OUTPUT_URI
 
     textembedding_model = language_models.TextEmbeddingModel.from_pretrained(
-        "textembedding-gecko"
+        "textembedding-gecko@003"
     )
 
     batch_prediction_job = textembedding_model.batch_predict(
@@ -52,9 +53,7 @@ def embed_text_batch() -> BatchPredictionJob:
     # BatchPredictionJob 2024-09-10 15:47:51.336391
     # projects/1234567890/locations/us-central1/batchPredictionJobs/123456789012345
     # JobState.JOB_STATE_SUCCEEDED
-
     # [END generativeaionvertexai_embedding_batch]
-
     return batch_prediction_job
 
 

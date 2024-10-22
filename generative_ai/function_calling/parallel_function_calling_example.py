@@ -21,6 +21,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def parallel_function_calling_example() -> ChatSession:
     # [START generativeaionvertexai_function_calling_generate_parallel_calls]
     import vertexai
+
     from vertexai.generative_models import (
         FunctionDeclaration,
         GenerativeModel,
@@ -44,7 +45,9 @@ def parallel_function_calling_example() -> ChatSession:
             "properties": {
                 "location": {
                     "type": "string",
-                    "description": "The location to whih to get the weather. Can be a city name, a city name and state, or a zip code. Examples: 'San Francisco', 'San Francisco, CA', '95616', etc."
+                    "description": "The location for which to get the weather. \
+                      It can be a city name, a city name and state, or a zip code. \
+                      Examples: 'San Francisco', 'San Francisco, CA', '95616', etc.",
                 },
             },
         },
@@ -67,8 +70,10 @@ def parallel_function_calling_example() -> ChatSession:
     )
 
     # Start a chat session
-    chat = model.start_chat()
-    response = chat.send_message("Get weather details in New Delhi and San Francisco?")
+    chat_session = model.start_chat()
+    response = chat_session.send_message(
+        "Get weather details in New Delhi and San Francisco?"
+    )
 
     function_calls = response.candidates[0].function_calls
     print("Suggested finction calls:\n", function_calls)
@@ -77,28 +82,31 @@ def parallel_function_calling_example() -> ChatSession:
         api_responses = []
         for func in function_calls:
             if func.name == function_name:
-                api_responses.append({
-                    "content": mock_weather_api_service(location=func.args["location"])
-                })
+                api_responses.append(
+                    {
+                        "content": mock_weather_api_service(
+                            location=func.args["location"]
+                        )
+                    }
+                )
 
         # Return the API response to Gemini
-        response = chat.send_message(
-          [
-            Part.from_function_response(
-                name="get_current_weather",
-                response=api_responses[0],
-            ),
-            Part.from_function_response(
-                name="get_current_weather",
-                response=api_responses[1],
-            ),
-          ],
+        response = chat_session.send_message(
+            [
+                Part.from_function_response(
+                    name="get_current_weather",
+                    response=api_responses[0],
+                ),
+                Part.from_function_response(
+                    name="get_current_weather",
+                    response=api_responses[1],
+                ),
+            ],
         )
 
         print(response.text)
         # Example response:
         # The current weather in New Delhi is 35°C. The current weather in San Francisco is 25°C.
-
         # [END generativeaionvertexai_function_calling_generate_parallel_calls]
         return response
 

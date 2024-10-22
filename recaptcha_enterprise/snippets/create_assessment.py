@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 # [START recaptcha_enterprise_create_assessment]
 
@@ -22,7 +21,13 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_assessment(
-    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str, user_ip_address: str, user_agent: str, ja3: str
+    project_id: str,
+    recaptcha_site_key: str,
+    token: str,
+    recaptcha_action: str,
+    user_ip_address: str,
+    user_agent: str,
+    ja3: str,
 ) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:

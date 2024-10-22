@@ -42,6 +42,7 @@ def generate_content() -> str:
     #     'This paper introduces the Transformer, a new neural network architecture for '
     #     'sequence transduction, which uses an attention mechanism to learn global '
     #     'dependencies between input and output sequences. The Transformer ...
+
     # [END generativeaionvertexai_gemini_describe_http_pdf]
     return response.text
 

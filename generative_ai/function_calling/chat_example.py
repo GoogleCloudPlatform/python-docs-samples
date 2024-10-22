@@ -21,6 +21,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def generate_function_call_chat() -> ChatSession:
     # [START generativeaionvertexai_gemini_function_calling_chat]
     import vertexai
+
     from vertexai.generative_models import (
         FunctionDeclaration,
         GenerationConfig,

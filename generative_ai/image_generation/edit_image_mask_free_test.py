@@ -16,9 +16,9 @@ import os
 
 import backoff
 
-import edit_image_mask_free
-
 from google.api_core.exceptions import ResourceExhausted
+
+import edit_image_mask_free
 
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")

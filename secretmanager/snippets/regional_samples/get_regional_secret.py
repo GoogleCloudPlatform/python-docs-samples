@@ -31,7 +31,7 @@ def get_regional_secret(
     the secret container, not any secret material.
     """
 
-    # Endpoint to call the regional secret manager sever
+    # Endpoint to call the regional Secret Manager API
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.

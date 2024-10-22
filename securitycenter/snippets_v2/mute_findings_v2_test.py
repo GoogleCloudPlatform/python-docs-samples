@@ -34,8 +34,12 @@ def finding():
 
     response = snippets_findings_v2.create_source(ORGANIZATION_ID)
     source_name = response.name
-    finding1_path = create_finding(ORGANIZATION_ID, "global", "1testingscc", source_name, "MEDIUM_RISK_ONE").name
-    finding2_path = create_finding(ORGANIZATION_ID, "global", "2testingscc", source_name, "MEDIUM_RISK_ONE").name
+    finding1_path = create_finding(
+        ORGANIZATION_ID, "global", "1testingscc", source_name, "MEDIUM_RISK_ONE"
+    ).name
+    finding2_path = create_finding(
+        ORGANIZATION_ID, "global", "2testingscc", source_name, "MEDIUM_RISK_ONE"
+    ).name
 
     yield {
         "source": source_name,
@@ -63,12 +67,14 @@ def test_set_unmute_finding(finding):
     assert response.mute.name == "UNMUTED"
 
 
-# @backoff.on_exception(
-#     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
-# )
-# def test_bulk_mute_findings(finding):
-#     # Mute findings that belong to this project.
-#     response = mute_findings_v2.bulk_mute_findings(
-#         f"organizations/{ORGANIZATION_ID}", "global", f'resource.project_display_name="{ORGANIZATION_ID}"'
-#     )
-#     assert response.done
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_bulk_mute_findings(finding):
+    # Mute findings that belong to this project.
+    response = mute_findings_v2.bulk_mute_findings(
+        f"organizations/{ORGANIZATION_ID}",
+        "global",
+        f'resource.project_display_name="{ORGANIZATION_ID}"',
+    )
+    assert response.done

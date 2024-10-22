@@ -82,6 +82,7 @@ path:
         storagetransfer: "storagetransfer"
         talent: "jobs"
         texttospeech: "texttospeech"
+        tpu: "tpu"
         trace: "cloudtrace"
         translate: "translate"
         vision: "vision"

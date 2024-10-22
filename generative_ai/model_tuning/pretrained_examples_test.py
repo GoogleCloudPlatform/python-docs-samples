@@ -18,13 +18,13 @@ from google.api_core.exceptions import ResourceExhausted
 
 from google.cloud import aiplatform
 
-import pretrained_codegen_example
-import pretrained_list_example
-import pretrained_textgen_example
-
 import pytest
 
 from vertexai.language_models import TextGenerationModel
+
+import pretrained_codegen_example
+import pretrained_list_example
+import pretrained_textgen_example
 
 
 def teardown_model(tuned_model: TextGenerationModel) -> None:
