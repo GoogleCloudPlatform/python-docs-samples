@@ -14,6 +14,9 @@
 import os
 
 import backoff
+
+from google.api_core.exceptions import ResourceExhausted
+
 import chat_code_example
 import chat_multiturn_example
 import chat_multiturn_stream_example
@@ -23,9 +26,6 @@ import codegen_example
 import gemini_describe_http_image_example
 import gemini_describe_http_pdf_example
 import generation_config_example
-
-from google.api_core.exceptions import ResourceExhausted
-
 import multimodal_stream_example
 import single_turn_multi_image_example
 
