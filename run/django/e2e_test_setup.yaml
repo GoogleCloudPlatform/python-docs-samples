@@ -136,11 +136,12 @@ substitutions:
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
   _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
   _CLOUD_RUN_JOB_NAME: migrate-${_VERSION}
-  _DB_INSTANCE: django-instance-${_VERSION}
-  _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_DB_INSTANCE}
-  _DB_NAME: postgres-${_VERSION}
-  _DB_USER: postgres-${_VERSION}
-  _DB_PASS: password1234
+  _DB_USER: django-${_VERSION}
+  _DB_NAME: django-${_VERSION}
+  _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings-${_VERSION}
   _SECRET_PASSWORD_NAME: admin_password-${_VERSION}
   _SECRET_PASSWORD_VALUE: password
+  _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_DB_INSTANCE}
+  _DB_PASS: password1234
+
