@@ -88,7 +88,7 @@ def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
 @pytest.fixture
 def deployed_service() -> str:
     substitutions = [
-        f"_VERSION=${SUFFIX},"
+        f"_VERSION={SUFFIX},"
         f"_SERVICE={SERVICE},"
         f"_REGION={REGION},"
         f"_DB_PASS={POSTGRES_PASSWORD},"
@@ -117,7 +117,7 @@ def deployed_service() -> str:
     # Cleanup
 
     substitutions = [
-        f"_VERSION=${SUFFIX},"
+        f"_VERSION={SUFFIX},"
         f"_SERVICE={SERVICE},"
         f"_REGION={REGION},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
