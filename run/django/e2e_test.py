@@ -30,7 +30,6 @@ SUFFIX = uuid.uuid4().hex[:10]
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-PLATFORM = "managed"
 
 SERVICE = f"polls-{SUFFIX}"
 
@@ -99,7 +98,6 @@ def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
 def deployed_service() -> str:
     substitutions = [
         f"_SERVICE={SERVICE},"
-        f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
         f"_DB_NAME={POSTGRES_DATABASE},"
@@ -134,7 +132,6 @@ def deployed_service() -> str:
 
     substitutions = [
         f"_SERVICE={SERVICE},"
-        f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
         f"_DB_USER={POSTGRES_USER},"
         f"_DB_NAME={POSTGRES_DATABASE},"
@@ -172,8 +169,6 @@ def service_url_auth_token(deployed_service: str) -> Iterator[tuple[str, str]]:
                 "services",
                 "describe",
                 deployed_service,
-                "--platform",
-                "managed",
                 "--region",
                 REGION,
                 "--format",
