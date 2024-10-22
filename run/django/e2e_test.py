@@ -92,6 +92,7 @@ def deployed_service() -> str:
         f"_SERVICE={SERVICE},"
         f"_REGION={REGION},"
         f"_DB_PASS={POSTGRES_PASSWORD},"
+        f"_SECRET_PASSWORD_VALUE={ADMIN_PASSWORD},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
         f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL},"
     ]
