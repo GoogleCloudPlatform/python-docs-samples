@@ -86,7 +86,7 @@ steps:
     args:
       - "-c"
       - |
-        ./retry.sh "gcloud run jobs create ${_CLOUD_RUN_JOB_NAME} \
+        ./retry.sh "gcloud run jobs create migrate-${_VERSION} \
           --region ${_REGION} \
           --image ${_IMAGE_NAME} \
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
@@ -100,7 +100,7 @@ steps:
     args:
       - "-c"
       - |
-        ./retry.sh "gcloud run jobs create ${_CLOUD_RUN_JOB_NAME} \
+        ./retry.sh "gcloud run jobs create superuser-${_VERSION} \
           --region ${_REGION} \
           --image ${_IMAGE_NAME} \
           --command createsuperuser \
@@ -138,7 +138,6 @@ substitutions:
   _ARTIFACT_REGISTRY: cloud-run-source-deploy
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
   _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
-  _CLOUD_RUN_JOB_NAME: migrate-${_VERSION}
   _DB_USER: django-${_VERSION}
   _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance

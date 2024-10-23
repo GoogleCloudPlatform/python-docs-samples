@@ -28,8 +28,11 @@ steps:
         ./retry.sh "gcloud artifacts docker images describe ${_IMAGE_NAME}" \
           "gcloud artifacts docker images delete ${_IMAGE_NAME} --quiet"
 
-        ./retry.sh "gcloud run jobs describe ${_CLOUD_RUN_JOB_NAME} --region ${_REGION}" \
-          "gcloud run jobs delete ${_CLOUD_RUN_JOB_NAME} --region ${_REGION} --async --quiet"
+        ./retry.sh "gcloud run jobs describe migrate-${_VERSION} --region ${_REGION}" \
+          "gcloud run jobs delete migrate-${_VERSION}  --region ${_REGION} --async --quiet"
+
+        ./retry.sh "gcloud run jobs describe superuser-${_VERSION} --region ${_REGION}" \
+          "gcloud run jobs delete superuser-${_VERSION}  --region ${_REGION} --async --quiet"
 
         ./retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION}" \
           "gcloud run services delete ${_SERVICE} --region ${_REGION} --async --quiet"
@@ -50,7 +53,6 @@ substitutions:
   _ARTIFACT_REGISTRY: cloud-run-source-deploy
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
   _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
-  _CLOUD_RUN_JOB_NAME: migrate-${_VERSION}
   _DB_USER: django-${_VERSION}
   _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance
