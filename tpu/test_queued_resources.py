@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 import time
 import uuid
@@ -19,20 +18,19 @@ import uuid
 from google.cloud.tpu_v2 import Node
 from google.cloud.tpu_v2alpha1 import QueuedResourceState as States
 
+import pytest
+
 import delete_tpu
 import get_tpu
 import queued_resources_create
 import queued_resources_delete
 import queued_resources_get
+import queued_resources_list
 
-
-TPU_NAME = "test-tpu-" + uuid.uuid4().hex[:10]
-RESOURCE_NAME = "test-resource-" + uuid.uuid4().hex[:5]
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 ZONE = "us-central1-b"
 TPU_TYPE = "v2-8"
 TPU_VERSION = "tpu-vm-tf-2.17.0-pjrt"
-
 
 STATUSES = [
     States.State.ACCEPTED,
@@ -42,20 +40,30 @@ STATUSES = [
 ]
 
 
+@pytest.fixture(scope="function")
+def test_resource_name() -> None:
+    yield "test-resource-" + uuid.uuid4().hex[:6]
+
+
+@pytest.fixture(scope="function")
+def test_tpu_name() -> None:
+    yield "test-tpu-" + uuid.uuid4().hex[:6]
+
+
 # Here we need to make sure that we have not left the working TPU.
 # The test is made so that if resources manage to create TPU before their
 # actual removal we wait until TPU is created, delete it and wait for changing
 # the status of queued_resources until one that will allow us to delete it
-def clean_resource() -> None:
+def clean_resource(resource_name: str, tpu_name: str) -> None:
     while True:
         resource = queued_resources_get.get_queued_resources(
-            PROJECT_ID, ZONE, RESOURCE_NAME
+            PROJECT_ID, ZONE, resource_name
         )
         if resource.state.state in STATUSES:
             try:
-                print(f"Attempting to delete resource '{RESOURCE_NAME}'...")
+                print(f"Attempting to delete resource '{resource_name}'...")
                 queued_resources_delete.delete_queued_resources(
-                    PROJECT_ID, ZONE, RESOURCE_NAME
+                    PROJECT_ID, ZONE, resource_name
                 )
                 print("Resource and TPU successfully deleted. Exiting...")
                 return True
@@ -64,20 +72,33 @@ def clean_resource() -> None:
                 continue
         time.sleep(60)
         try:
-            print(f"Attempting to delete TPU '{TPU_NAME}'...")
-            node = get_tpu.get_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
+            print(f"Attempting to delete TPU '{tpu_name}'...")
+            node = get_tpu.get_cloud_tpu(PROJECT_ID, ZONE, tpu_name)
             if node and node.state == Node.State.READY:
-                delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
+                delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, tpu_name)
         except Exception:
             print("TPU is not ready for deletion. Waiting...")
             continue
 
 
-def test_create_resource() -> None:
+def test_create_resource(test_resource_name: str, test_tpu_name: str) -> None:
     try:
         resource = queued_resources_create.create_queued_resources(
-            PROJECT_ID, ZONE, TPU_NAME, TPU_TYPE, TPU_VERSION, RESOURCE_NAME
+            PROJECT_ID, ZONE, test_tpu_name, TPU_TYPE, TPU_VERSION, test_resource_name
         )
-        assert RESOURCE_NAME in resource.name
+        assert test_resource_name in resource.name
     finally:
-        assert clean_resource()
+        assert clean_resource(test_resource_name, test_tpu_name)
+
+
+def test_list_queued_resources(test_resource_name: str, test_tpu_name: str) -> None:
+    try:
+        queued_resources_create.create_queued_resources(
+            PROJECT_ID, ZONE, test_tpu_name, TPU_TYPE, TPU_VERSION, test_resource_name
+        )
+        resources = queued_resources_list.list_queued_resources(PROJECT_ID, ZONE)
+        assert any(
+            test_resource_name in resource.name for resource in resources
+        ), f"Resources does not contain '{test_resource_name}'"
+    finally:
+        assert clean_resource(test_resource_name, test_tpu_name)
