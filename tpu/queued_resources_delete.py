@@ -37,8 +37,6 @@ def delete_queued_resources(
     except TypeError as e:
         print(f"Error deleting resource: {e}")
         print(f"Queued resource '{queued_resource_name}' successfully deleted.")
-    except Exception as e:
-        print(f"Error deleting resource: {e}")
 
     # [END tpu_queued_resource_delete]
 
@@ -46,4 +44,4 @@ def delete_queued_resources(
 if __name__ == "__main__":
     PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
     ZONE = "us-central1-b"
-    delete_queued_resources(PROJECT_ID, ZONE, "resource-name")
+    delete_queued_resources(PROJECT_ID, ZONE, "resource-name1")

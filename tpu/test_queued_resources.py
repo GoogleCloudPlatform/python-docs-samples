@@ -42,6 +42,10 @@ STATUSES = [
 ]
 
 
+# Here we need to make sure that we have not left the working TPU.
+# The test is made so that if resources manage to create TPU before their
+# actual removal we wait until TPU is created, delete it and wait for changing
+# the status of queued_resources until one that will allow us to delete it
 def clean_resource() -> None:
     while True:
         resource = queued_resources_get.get_queued_resources(
@@ -56,16 +60,16 @@ def clean_resource() -> None:
                 print("Resource and TPU successfully deleted. Exiting...")
                 return True
             except Exception:
+                print("Resource is not in a deletable state. Waiting...")
                 continue
-        print("Resource is not in a deletable state. Waiting...")
         time.sleep(60)
         try:
+            print(f"Attempting to delete TPU '{TPU_NAME}'...")
             node = get_tpu.get_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
-            print("NODE:", node.name)
             if node and node.state == Node.State.READY:
-                print(f"Attempting to delete TPU '{TPU_NAME}'...")
                 delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
         except Exception:
+            print("TPU is not ready for deletion. Waiting...")
             continue
 
 
