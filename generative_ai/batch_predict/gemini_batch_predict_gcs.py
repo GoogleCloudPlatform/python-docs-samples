@@ -23,11 +23,11 @@ def batch_predict_gemini_createjob(
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
-        input_uri (str): URI of the input file in BigQuery table or Google Cloud Storage.
-            Example: "gs://[BUCKET]/[DATASET].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+        input_uri (str): URI of the input file in Google Cloud Storage.
+            Example: "gs://[BUCKET]/[DATASET].jsonl"
 
-        output_uri (str): URI of the output folder,  in BigQuery table or Google Cloud Storage.
-            Example: "gs://[BUCKET]/[OUTPUT].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+        output_uri (str): URI of the output folder in Google Cloud Storage.
+            Example: "gs://[BUCKET]/[OUTPUT].jsonl"
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
