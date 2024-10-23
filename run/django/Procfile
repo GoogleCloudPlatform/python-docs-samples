@@ -9,4 +9,4 @@ migrate: python manage.py migrate && python manage.py collectstatic --verbosity 
 # [START cloudrun_django_procfile_superuser]
 # Create superuser (requires DJANGO_SUPERUSER_PASSWORD and DJANGO_SUPERUSER_EMAIL envvars)
 createsuperuser: python manage.py createsuperuser --username admin --noinput || echo "User already exists."
-# [END cloudrun_django_superuser]
+# [END cloudrun_django_procfile_superuser]
