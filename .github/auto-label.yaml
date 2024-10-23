@@ -36,6 +36,7 @@ path:
         container-analysis: "containeranalysis"
         contentwarehouse: "contentwarehouse"
         datacatalog: "datacatalog"
+        dataplex: "dataplex"
         datalabeling: "datalabeling"
         dataproc: "dataproc"
         datastore: "datastore"
