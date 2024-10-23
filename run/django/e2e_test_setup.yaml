@@ -143,8 +143,6 @@ substitutions:
   _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings-${_VERSION}
-  _SECRET_PASSWORD_NAME: admin_password-${_VERSION}
-  _SECRET_PASSWORD_VALUE: password
   _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_DB_INSTANCE}
   _DB_PASS: password1234
   _ADMIN_PASSWORD: superpass

@@ -22,9 +22,6 @@ steps:
         ./retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
 
-        ./retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
-          "gcloud secrets delete ${_SECRET_PASSWORD_NAME} --quiet --project $PROJECT_ID"
-
         ./retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
           "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
 
@@ -58,4 +55,3 @@ substitutions:
   _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance
   _SECRET_SETTINGS_NAME: django_settings-${_VERSION}
-  _SECRET_PASSWORD_NAME: admin_password-${_VERSION}
