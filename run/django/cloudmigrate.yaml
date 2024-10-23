@@ -14,6 +14,14 @@
 
 # [START cloudrun_django_cloudmigrate]
 steps:
+  - id: "Build Container Image"
+    name: gcr.io/k8s-skaffold/pack
+    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder"]
+
+  - id: "Push Container Image"
+    name: "gcr.io/cloud-builders/docker"
+    args: ["push", "${_IMAGE_NAME}"]
+
   - id: "build image"
     name: "gcr.io/cloud-builders/docker"
     args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
@@ -48,7 +56,7 @@ steps:
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
           --set-env-vars DJANGO_SUPERUSER_EMAIL=${_ADMIN_EMAIL} \
-          --set-secrets DJANGO_SUPERUSER_PASSWORD=$_ADMIN_PASSWORD_NAME}:latest \
+          --set-secrets DJANGO_SUPERUSER_PASSWORD=${_ADMIN_PASSWORD_NAME}:latest \
           --command createsuperuser \
           --execute-now
 
@@ -56,12 +64,13 @@ options:
   dynamicSubstitutions: true
 
 substitutions:
-  _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:django-instance
+  _INSTANCE_NAME: django-instance
+  _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}
   _REGION: us-central1
   _SERVICE_NAME: polls-service
   _SECRET_SETTINGS_NAME: django_settings
   _ARTIFACT_REGISTRY: cloud-run-source-deploy
-  _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
+  _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/${_SERVICE_NAME}
   _ADMIN_EMAIL: example@example.com
   _ADMIN_PASSWORD_NAME: superuser_password
 
