@@ -249,12 +249,11 @@ def test_create_regional_secret_with_annotations(
     secret_id: str,
     annotation_key: str,
     annotation_value: str,
-    ttl: str,
 ) -> None:
     annotations = {annotation_key: annotation_value}
     secret = (
         create_regional_secret_with_annotations.create_regional_secret_with_annotations(
-            project_id, location_id, secret_id, annotations, ttl
+            project_id, location_id, secret_id, annotations
         )
     )
     assert secret_id in secret.name

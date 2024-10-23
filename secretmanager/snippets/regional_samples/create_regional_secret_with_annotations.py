@@ -30,7 +30,6 @@ def create_regional_secret_with_annotations(
     location_id: str,
     secret_id: str,
     annotations: typing.Dict[str, str],
-    ttl: typing.Optional[str] = None,
 ) -> secretmanager_v1.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
@@ -54,7 +53,7 @@ def create_regional_secret_with_annotations(
         request={
             "parent": parent,
             "secret_id": secret_id,
-            "secret": {"ttl": ttl, "annotations": annotations},
+            "secret": {"annotations": annotations},
         }
     )
 

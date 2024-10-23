@@ -271,10 +271,9 @@ def test_create_secret_with_annotations(
     secret_id: str,
     annotation_key: str,
     annotation_value: str,
-    ttl: Optional[str],
 ) -> None:
     annotations = {annotation_key: annotation_value}
-    secret = create_secret_with_annotations(project_id, secret_id, annotations, ttl)
+    secret = create_secret_with_annotations(project_id, secret_id, annotations)
     assert secret_id in secret.name
 
 

@@ -29,7 +29,6 @@ def create_secret_with_annotations(
     project_id: str,
     secret_id: str,
     annotations: typing.Dict[str, str],
-    ttl: typing.Optional[str] = None,
 ) -> secretmanager.Secret:
     """
     Create a new secret with the given name. A secret is a logical wrapper
@@ -50,7 +49,6 @@ def create_secret_with_annotations(
             "secret_id": secret_id,
             "secret": {
                 "replication": {"automatic": {}},
-                "ttl": ttl,
                 "annotations": annotations,
             },
         }
