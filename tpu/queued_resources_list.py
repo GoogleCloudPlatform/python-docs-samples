@@ -13,36 +13,32 @@
 # limitations under the License.
 import os
 
+from google.cloud.tpu_v2alpha1.services.tpu.pagers import ListQueuedResourcesPager
 
-def delete_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> None:
-    """Deletes a Cloud TPU node.
-    Args:
-        project_id (str): The ID of the Google Cloud project.
-        zone (str): The zone where the TPU node is located.
-        tpu_name (str, optional): The name of the TPU node.
-    Returns: None
-    """
-    # [START tpu_vm_delete]
-    from google.cloud import tpu_v2
+
+def list_queued_resources(project_id: str, zone: str) -> ListQueuedResourcesPager:
+    # [START tpu_queued_resources_list]
+    from google.cloud import tpu_v2alpha1
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
     # zone = "us-central1-b"
-    # tpu_name = "tpu-name"
 
-    client = tpu_v2.TpuClient()
-    try:
-        client.delete_node(
-            name=f"projects/{project_id}/locations/{zone}/nodes/{tpu_name}"
-        )
-        print("The TPU node was deleted.")
-    except Exception as e:
-        print(e)
+    client = tpu_v2alpha1.TpuClient()
+    parent = f"projects/{project_id}/locations/{zone}"
+    resources = client.list_queued_resources(parent=parent)
+    for resource in resources:
+        print("Resource name:", resource.name)
+        print("TPU id:", resource.tpu.node_spec[0].node_id)
+    # Example response:
+    # Resource name: projects/{project_id}/locations/{zone}/queuedResources/resource-name
+    # TPU id: tpu-name
 
-    # [END tpu_vm_delete]
+    # [END tpu_queued_resources_list]
+    return resources
 
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     ZONE = "us-central1-b"
-    delete_cloud_tpu(PROJECT_ID, ZONE, "tpu-name")
+    list_queued_resources(PROJECT_ID, ZONE)
