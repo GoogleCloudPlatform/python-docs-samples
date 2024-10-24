@@ -403,10 +403,10 @@ def update_source(source_name) -> Dict:
     Returns:
          Dict: returns the details of updated source.
     """
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v2
     from google.protobuf import field_mask_pb2
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v2.SecurityCenterClient()
 
     # Field mask to only update the display name.
     field_mask = field_mask_pb2.FieldMask(paths=["display_name"])
@@ -440,10 +440,10 @@ def list_source(organization_id) -> int:
          Dict: returns the count of the findings source
     """
     count = -1
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v2
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v2.SecurityCenterClient()
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
