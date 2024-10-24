@@ -21,7 +21,7 @@ from vertexai.language_models import TextEmbeddingModel
 
 def tune_embedding_model(
     api_endpoint: str,
-    base_model_name: str = "text-embedding-004",
+    base_model_name: str = "text-embedding-005",
     corpus_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/corpus.jsonl",
     queries_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/queries.jsonl",
     train_label_path: str = "gs://cloud-samples-data/ai-platform/embedding/goog-10k-2024/r11/train.tsv",
