@@ -20,13 +20,8 @@ INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
 
 
-def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> str:
-    """Perform batch text prediction using a Gemini AI model and returns the output location
-
-    Args:
-      input_uri: Uri of the input Cloud Storage bucket.
-      output_uri: Uri of the output Cloud Storage bucket.
-    """
+def batch_predict_gemini_createjob() -> str:
+    "Perform batch text prediction using a Gemini AI model and returns the output location"
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
     import time
@@ -76,11 +71,8 @@ def batch_predict_gemini_createjob(input_uri: str, output_uri: str) -> str:
     # Example response:
     #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
-    return batch_prediction_job.output_location
+    return batch_prediction_job
 
 
 if __name__ == "__main__":
-    batch_predict_gemini_createjob(
-        input_uri=f"gs://{INPUT_BUCKET}/batch_data/sample_input_file.jsonl",
-        output_uri=f"gs://{OUTPUT_BUCKET}/batch_predictions/sample_output/",
-    )
+    batch_predict_gemini_createjob()
