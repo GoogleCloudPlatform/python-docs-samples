@@ -13,8 +13,6 @@
 # limitations under the License.
 
 # [START dataplex_create_aspect_type]
-from typing import List
-
 from google.cloud import dataplex_v1
 
 
@@ -23,7 +21,7 @@ def create_aspect_type(
     project_id: str,
     location: str,
     aspect_type_id: str,
-    aspect_fields: List[dataplex_v1.AspectType.MetadataTemplate],
+    aspect_fields: list,
 ) -> None:
     # The resource name of the Aspect Type location
     parent = f"projects/{project_id}/locations/{location}"
