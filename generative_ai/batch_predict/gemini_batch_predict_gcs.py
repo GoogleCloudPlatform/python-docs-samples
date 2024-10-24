@@ -39,8 +39,8 @@ def batch_predict_gemini_createjob() -> str:
 
     output_uri = f"gs://{OUTPUT_BUCKET}/batch/batch_text_predict_output"
     # Sample filedata for expected output file
-    #     .... (TODO: Please add some text here)
-    #     .... (TODO: Please add some text here)
+    #     {"candidates":[{"avgLogprobs":"NaN","citationMetadata":{"citations":[{"endIndex":310,"startIndex":179,"uri":"https://myhoustonmajic.com/tag/dessert/"},{"endIndex":414,"startIndex":284,"uri":"http://forums.soompi.com/en/topic/215719-stained-glass-window-cookies/"},{"endIndex":1045,"startIndex":919,"u...
+    #     {"candidates":[{"avgLogprobs":"NaN","citationMetadata":{"citations":[{"endIndex":310,"startIndex":179,"uri":"https://myhoustonmajic.com/tag/dessert/"},{"endIndex":414,"startIndex":284,"uri":"http://forums.soompi.com/en/topic/215719-stained-glass-window-cookies/"},{"endIndex":1045,"startIndex":919,"u...
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(

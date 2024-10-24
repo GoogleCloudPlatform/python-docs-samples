@@ -23,7 +23,6 @@ import batch_code_predict
 import batch_text_predict
 import gemini_batch_predict_gcs
 
-
 INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
 OUTPUT_PATH = "batch/batch_text_predict_output"
