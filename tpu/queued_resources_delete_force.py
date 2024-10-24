@@ -14,10 +14,10 @@
 import os
 
 
-def delete_queued_resource(
+def delete_force_queued_resource(
     project_id: str, zone: str, queued_resource_name: str
 ) -> None:
-    # [START tpu_queued_resource_delete]
+    # [START tpu_queued_resources_delete_force]
     from google.cloud import tpu_v2alpha1
 
     # TODO(developer): Update and un-comment below lines
@@ -26,22 +26,23 @@ def delete_queued_resource(
     # queued_resource_name = "resource-name"
 
     client = tpu_v2alpha1.TpuClient()
-    name = (
-        f"projects/{project_id}/locations/{zone}/queuedResources/{queued_resource_name}"
+    request = tpu_v2alpha1.DeleteQueuedResourceRequest(
+        name=f"projects/{project_id}/locations/{zone}/queuedResources/{queued_resource_name}",
+        force=True,  # Set force=True to delete the resource with tpu nodes.
     )
 
     try:
-        op = client.delete_queued_resource(name=name)
+        op = client.delete_queued_resource(request=request)
         op.result()
         print(f"Queued resource '{queued_resource_name}' successfully deleted.")
     except TypeError as e:
         print(f"Error deleting resource: {e}")
         print(f"Queued resource '{queued_resource_name}' successfully deleted.")
 
-    # [END tpu_queued_resource_delete]
+    # [END tpu_queued_resources_delete_force]
 
 
 if __name__ == "__main__":
     PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
     ZONE = "us-central1-b"
-    delete_queued_resource(PROJECT_ID, ZONE, "resource-name")
+    delete_force_queued_resource(PROJECT_ID, ZONE, "resource-name1")

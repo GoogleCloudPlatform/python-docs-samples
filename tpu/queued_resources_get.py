@@ -16,7 +16,7 @@ import os
 from google.cloud.tpu_v2alpha1 import QueuedResource
 
 
-def get_queued_resources(
+def get_queued_resource(
     project_id: str, zone: str, queued_resource_name: str
 ) -> QueuedResource:
     # [START tpu_queued_resources_get]
@@ -45,4 +45,4 @@ def get_queued_resources(
 if __name__ == "__main__":
     PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
     ZONE = "us-central1-b"
-    get_queued_resources(PROJECT_ID, ZONE, "resource-name")
+    get_queued_resource(PROJECT_ID, ZONE, "resource-name")

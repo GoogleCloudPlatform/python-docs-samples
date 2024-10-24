@@ -16,7 +16,7 @@ import os
 from google.cloud.tpu_v2alpha1 import CreateQueuedResourceRequest, Node
 
 
-def create_queued_resources(
+def create_queued_resource(
     project_id: str,
     zone: str,
     tpu_name: str,
@@ -72,7 +72,7 @@ def create_queued_resources(
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     ZONE = "us-central1-b"
-    create_queued_resources(
+    create_queued_resource(
         project_id=PROJECT_ID,
         zone=ZONE,
         tpu_name="tpu-name",
