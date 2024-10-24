@@ -23,9 +23,11 @@ import create_channel
 import create_channel_with_backup_input
 import create_input
 import delete_channel
+import delete_channel_clip
 import delete_channel_event
 import delete_input
 import get_channel
+import list_channel_clips
 import list_channel_events
 import list_channels
 import start_channel
@@ -42,7 +44,44 @@ output_bucket_name = f"python-test-bucket-{uuid.uuid4()}"
 output_uri = f"gs://{output_bucket_name}/channel-test/"
 
 
-def test_channel_operations(capsys: pytest.fixture) -> None:
+def delete_channel_events(next_channel_id: str) -> None:
+    try:
+        # Channel events
+        event_responses = list_channel_events.list_channel_events(
+            project_name, location, next_channel_id
+        )
+        for response in event_responses:
+            next_event_id = response.name.rsplit("/", 1)[-1]
+            try:
+                delete_channel_event.delete_channel_event(
+                    project_name, location, next_channel_id, next_event_id
+                )
+            except NotFound as e:
+                print(f"Ignoring NotFound, details: {e}")
+    except NotFound as e:
+        print(f"Ignoring NotFound, details: {e}")
+
+
+def delete_channel_clips(next_channel_id: str) -> None:
+    try:
+        # Channel clips
+        clip_responses = list_channel_clips.list_channel_clips(
+            project_name, location, next_channel_id
+        )
+        for response in clip_responses:
+            print(f"Clip found: {response.name}")
+            next_clip_id = response.name.rsplit("/", 1)[-1]
+            try:
+                delete_channel_clip.delete_channel_clip(
+                    project_name, location, next_channel_id, next_clip_id
+                )
+            except NotFound as e:
+                print(f"Ignoring NotFound, details: {e}")
+    except NotFound as e:
+        print(f"Ignoring NotFound, details: {e}")
+
+
+def delete_stale_channels() -> None:
     # Clean up old resources in the test project
     channel_responses = list_channels.list_channels(project_name, location)
 
@@ -50,36 +89,20 @@ def test_channel_operations(capsys: pytest.fixture) -> None:
         next_channel_id = response.name.rsplit("/", 1)[-1]
         input_attachments = response.input_attachments
         if utils.is_resource_stale(response.create_time):
+            delete_channel_events(next_channel_id)
+            delete_channel_clips(next_channel_id)
             try:
-                event_responses = list_channel_events.list_channel_events(
-                    project_name, location, next_channel_id
-                )
-                for response in event_responses:
-                    next_event_id = response.name.rsplit("/", 1)[-1]
-                    try:
-                        delete_channel_event.delete_channel_event(
-                            project_name, location, next_channel_id, next_event_id
-                        )
-                    except NotFound as e:
-                        print(f"Ignoring NotFound, details: {e}")
+                stop_channel.stop_channel(project_name, location, next_channel_id)
+            except FailedPrecondition as e:
+                print(f"Ignoring FailedPrecondition, details: {e}")
+            try:
+                delete_channel.delete_channel(project_name, location, next_channel_id)
+            except FailedPrecondition as e:
+                print(f"Ignoring FailedPrecondition, try to stop channel: {e}")
                 try:
                     stop_channel.stop_channel(project_name, location, next_channel_id)
                 except FailedPrecondition as e:
                     print(f"Ignoring FailedPrecondition, details: {e}")
-                try:
-                    delete_channel.delete_channel(
-                        project_name, location, next_channel_id
-                    )
-                except FailedPrecondition as e:
-                    print(f"Ignoring FailedPrecondition, try to stop channel: {e}")
-                    try:
-                        stop_channel.stop_channel(
-                            project_name, location, next_channel_id
-                        )
-                    except FailedPrecondition as e:
-                        print(f"Ignoring FailedPrecondition, details: {e}")
-                except NotFound as e:
-                    print(f"Ignoring NotFound, details: {e}")
             except NotFound as e:
                 print(f"Ignoring NotFound, details: {e}")
 
@@ -90,6 +113,9 @@ def test_channel_operations(capsys: pytest.fixture) -> None:
                 except NotFound as e:
                     print(f"Ignoring NotFound, details: {e}")
 
+
+def test_channel_operations(capsys: pytest.fixture) -> None:
+    delete_stale_channels()
     # Set up
 
     channel_name_project_id = (
