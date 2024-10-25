@@ -50,7 +50,7 @@ def test_get_context_cache(cache_id: str) -> None:
 
 
 def test_get_list_of_context_caches(cache_id: str) -> None:
-    response = list_context_caches.list_content_caches()
+    response = list_context_caches.list_context_caches()
     assert cache_id in response
 
 
