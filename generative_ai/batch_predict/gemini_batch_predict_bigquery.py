@@ -11,34 +11,34 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import datetime
 import os
+import time
+
+import vertexai
+from vertexai.preview.batch_prediction import BatchPredictionJob
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
-# TODO(developer): Add your Cloud Storage bucket details here
-output_uri = "gs://ucaip-samples-test-output"
+# TODO(developer): Add your BigQuery table details here
+output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions.output"
 
 
-def batch_predict_gemini_createjob(output_uri: str) -> str:
-    "Perform batch text prediction using a Gemini AI model and returns the output location"
+def batch_predict_gemini_createjob(output_uri: str) -> BatchPredictionJob:  # Changed return type
+    """Perform batch text prediction using a Gemini AI model and returns the output location"""
 
-    # [START generativeaionvertexai_batch_predict_gemini_createjob]
-    import time
-    import vertexai
-
-    from vertexai.preview.batch_prediction import BatchPredictionJob
-
-    # TODO(developer): Update and un-comment below lines
+    # [START generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl"
-    # Sample filedata
+    input_uri = "bq://storage-samples.generative_ai.batch_requests_for_multimodal_input"
+    # Sample filedata for input table
     #     {"id": 1, "request": {"contents": [{"parts": {"text": "Give me a recipe for banana bread."}, "role": "user"}]}}
     #     {"id": 2, "request": {"contents": [{"parts": {"text": "Give me a recipe for banana bread."}, "role": "user"}]}}
 
-    # Sample filedata for expected output file
+    # Sample filedata for expected output table
     #     {"candidates": [{ "content": { "parts": [{ "text": "## Classic Banana Bread\n\nThis recipe is a classic for a reason! It's simple, delicious, and perfect for using up those ripe bananas,...
     #     {"candidates": [{ "content": { "parts": [{ "text": "## Classic Banana Bread\n\nThis recipe is a classic for a reason! It's simple, delicious, and perfect for using up those ripe bananas,...
 
@@ -69,9 +69,9 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
-    #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
-    # [END generativeaionvertexai_batch_predict_gemini_createjob]
-    return batch_prediction_job
+    #  Job output location: bq://Project-ID/gen-ai-batch-prediction/predictions-model-year-month-day-hour:minute:second.12345
+    # [END generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
+    return batch_prediction_job  # Return the BatchPredictionJob object
 
 
 if __name__ == "__main__":

@@ -13,20 +13,25 @@
 # limitations under the License.
 from typing import Callable
 
+
 from google.cloud import storage
 from google.cloud.aiplatform import BatchPredictionJob
 from google.cloud.aiplatform_v1 import JobState
 
+
 import pytest
+
 
 import batch_code_predict
 import batch_text_predict
+import gemini_batch_predict_bigquery
 import gemini_batch_predict_gcs
 
 
 INPUT_BUCKET = "cloud-samples-data"
-OUTPUT_BUCKET = "python-docs-samples-tests"
-OUTPUT_PATH = "batch/batch_text_predict_output"
+OUTPUT_BUCKET = "gs://ucaip-samples-test-output"
+OUTPUT_PATH = "ucaip-samples-test-output"
+OUTPUT_TABLE = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions.output"
 
 
 def _clean_resources() -> None:
@@ -75,10 +80,20 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
 
 
 def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
-    input_uri = f"gs://{INPUT_BUCKET}/batch/prompt_for_batch_gemini_predict.jsonl"
+    output_uri = f"{OUTPUT_PATH}"
     job = _main_test(
         test_func=lambda: gemini_batch_predict_gcs.batch_predict_gemini_createjob(
-            input_uri, output_folder
+            output_uri
         )
     )
     assert OUTPUT_PATH in job.output_location
+
+
+def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
+    output_uri = f"{OUTPUT_TABLE}"
+    job = _main_test(
+        test_func=lambda: gemini_batch_predict_bigquery.batch_predict_gemini_createjob(
+            output_uri
+            )
+    )
+    assert OUTPUT_TABLE in job.output_location
