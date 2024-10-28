@@ -81,19 +81,19 @@ def test_batch_code_predict(output_folder: pytest.fixture()) -> None:
 
 def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
     output_uri = f"{OUTPUT_PATH}"
-    job = _main_test(
+    job_output_location = _main_test(
         test_func=lambda: gemini_batch_predict_gcs.batch_predict_gemini_createjob(
             output_uri
         )
     )
-    assert OUTPUT_PATH in job.output_location
+    assert OUTPUT_PATH in job_output_location
 
 
 def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
     output_uri = f"{OUTPUT_TABLE}"
-    job = _main_test(
+    job_output_location = _main_test(
         test_func=lambda: gemini_batch_predict_bigquery.batch_predict_gemini_createjob(
             output_uri
             )
     )
-    assert OUTPUT_TABLE in job.output_location
+    assert OUTPUT_TABLE in job_output_location
