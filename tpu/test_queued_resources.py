@@ -17,27 +17,21 @@ from typing import Callable
 import uuid
 
 from google.cloud.tpu_v2alpha1 import QueuedResource
-from google.cloud.tpu_v2alpha1 import QueuedResourceState as States
 
 import pytest
 
 import queued_resources_create
 import queued_resources_create_network
 import queued_resources_create_startup_script
+import queued_resources_create_time_bound
 import queued_resources_delete_force
 import queued_resources_list
+
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 ZONE = "us-central1-b"
 TPU_TYPE = "v2-8"
 TPU_VERSION = "tpu-vm-tf-2.17.0-pjrt"
-
-STATUSES = [
-    States.State.ACCEPTED,
-    States.State.WAITING_FOR_RESOURCES,
-    States.State.SUSPENDED,
-    States.State.FAILED,
-]
 
 
 @pytest.fixture(scope="function")
@@ -112,3 +106,14 @@ def test_create_resource_with_startup_script(
     assert (
         "--upgrade numpy" in resource.tpu.node_spec[0].node.metadata["startup-script"]
     )
+
+
+def test_create_queued_resource_time_bound(
+    create_resource: Callable, test_resource_name: str, test_tpu_name: str
+) -> None:
+    resource = create_resource(
+        queued_resources_create_time_bound.create_queued_resource_time_bound,
+        test_resource_name,
+        test_tpu_name,
+    )
+    assert resource.queueing_policy.valid_until_time
