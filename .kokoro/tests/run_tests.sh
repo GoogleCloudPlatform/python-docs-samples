@@ -98,6 +98,13 @@ fi
 # install nox for testing
 pip install --user -q nox
 
+# Use secrets acessor service account to get secrets
+if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
+    gcloud auth activate-service-account \
+	   --key-file="${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" \
+	   --project="cloud-devrel-kokoro-resources"
+fi
+
 # On kokoro, we should be able to use the default service account. We
 # need to somehow bootstrap the secrets on other CI systems.
 if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then
