@@ -32,7 +32,7 @@ def embed_text() -> list[list[float]]:
     # The task type for embedding. Check the available tasks in the model's documentation.
     task = "RETRIEVAL_DOCUMENT"
 
-    model = TextEmbeddingModel.from_pretrained("text-embedding-004")
+    model = TextEmbeddingModel.from_pretrained("text-embedding-005")
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
     embeddings = model.get_embeddings(inputs, **kwargs)
