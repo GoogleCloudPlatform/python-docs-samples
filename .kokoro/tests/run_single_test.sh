@@ -18,6 +18,7 @@
 # The current directory is the test target directory.
 # Env var `PROJECT_ROOT` is defined.
 
+# testing
 echo "------------------------------------------------------------"
 echo "- testing ${PWD}"
 echo "------------------------------------------------------------"
