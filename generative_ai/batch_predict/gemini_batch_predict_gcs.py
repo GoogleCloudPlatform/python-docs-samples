@@ -13,7 +13,7 @@
 # limitations under the License.
 import os
 
-from vertexai.preview.batch_prediction import BatchPredictionJob
+from vertexai.batch_prediction import BatchPredictionJob
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -36,7 +36,7 @@ def batch_predict_gemini_createjob(
     import time
     import vertexai
 
-    from vertexai.preview.batch_prediction import BatchPredictionJob
+    from vertexai.batch_prediction import BatchPredictionJob
 
     # TODO(developer): Update and un-comment below lines
     # input_uri ="gs://[BUCKET]/[OUTPUT].jsonl" # Example
