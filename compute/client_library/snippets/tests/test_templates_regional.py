@@ -28,29 +28,41 @@ from ..instance_templates.compute_regional_template import (
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 REGION = "us-central1"
-TEST_TEMPLATE_NAME = "test-template-" + uuid.uuid4().hex[:6]
 
 
-def test_create_regional_template():
+@pytest.fixture(scope="function")
+def regional_template():
+    test_template_name = "test-template-" + uuid.uuid4().hex[:6]
     template = create_compute_regional_template.create_regional_instance_template(
-        PROJECT_ID, REGION, TEST_TEMPLATE_NAME
+        PROJECT_ID, REGION, test_template_name
     )
-    assert template.name == TEST_TEMPLATE_NAME
+    yield template
+    delete_compute_regional_template.delete_regional_instance_template(
+        PROJECT_ID, REGION, test_template_name
+    )
 
 
-def test_get_regional_template():
+def test_create_regional_template(regional_template):
+    assert regional_template.name.startswith("test-template-")
+
+
+def test_get_regional_template(regional_template):
     template = get_compute_regional_template.get_regional_instance_template(
-        PROJECT_ID, REGION, TEST_TEMPLATE_NAME
+        PROJECT_ID, REGION, regional_template.name
     )
-    assert template.name == TEST_TEMPLATE_NAME
+    assert template.name == regional_template.name
 
 
 def test_delete_regional_template():
+    test_template_name = "test-template-" + uuid.uuid4().hex[:6]
+    create_compute_regional_template.create_regional_instance_template(
+        PROJECT_ID, REGION, test_template_name
+    )
     with pytest.raises(NotFound) as exc_info:
         delete_compute_regional_template.delete_regional_instance_template(
-            PROJECT_ID, REGION, TEST_TEMPLATE_NAME
+            PROJECT_ID, REGION, test_template_name
         )
         get_compute_regional_template.get_regional_instance_template(
-            PROJECT_ID, REGION, TEST_TEMPLATE_NAME
+            PROJECT_ID, REGION, test_template_name
         )
     assert "was not found" in str(exc_info.value)
