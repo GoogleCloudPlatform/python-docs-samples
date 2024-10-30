@@ -13,7 +13,7 @@
 # limitations under the License.
 import os
 
-from vertexai.preview.batch_prediction import BatchPredictionJob
+from vertexai.batch_prediction import BatchPredictionJob
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -23,11 +23,11 @@ def batch_predict_gemini_createjob(
 ) -> BatchPredictionJob:
     """Perform batch text prediction using a Gemini AI model.
     Args:
-        input_uri (str): URI of the input file in BigQuery table or Google Cloud Storage.
-            Example: "gs://[BUCKET]/[DATASET].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+        input_uri (str): URI of the input file in Google Cloud Storage.
+            Example: "gs://[BUCKET]/[DATASET].jsonl"
 
-        output_uri (str): URI of the output folder,  in BigQuery table or Google Cloud Storage.
-            Example: "gs://[BUCKET]/[OUTPUT].jsonl" OR "bq://[PROJECT].[DATASET].[TABLE]"
+        output_uri (str): URI of the output folder in Google Cloud Storage.
+            Example: "gs://[BUCKET]/[OUTPUT].jsonl"
     Returns:
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
@@ -36,7 +36,7 @@ def batch_predict_gemini_createjob(
     import time
     import vertexai
 
-    from vertexai.preview.batch_prediction import BatchPredictionJob
+    from vertexai.batch_prediction import BatchPredictionJob
 
     # TODO(developer): Update and un-comment below lines
     # input_uri ="gs://[BUCKET]/[OUTPUT].jsonl" # Example
@@ -77,7 +77,6 @@ def batch_predict_gemini_createjob(
     # https://storage.googleapis.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
 
     return batch_prediction_job
-
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
 
 
