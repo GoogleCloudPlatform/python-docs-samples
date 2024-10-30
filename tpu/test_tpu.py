@@ -84,12 +84,12 @@ def test_start_tpu() -> None:
 
 def test_with_topology() -> None:
     topology_tpu_name = "topology-tpu-" + uuid.uuid4().hex[:5]
-    topology_zone = "us-central1-a"
+    topology_zone = "us-central1-f"
     try:
         topology_tpu = create_tpu_topology.create_cloud_tpu_with_topology(
             PROJECT_ID, topology_zone, topology_tpu_name, TPU_VERSION
         )
-        assert topology_tpu.accelerator_config.type_ == AcceleratorConfig.Type.V3
+        assert topology_tpu.accelerator_config.type_ == AcceleratorConfig.Type.V2
         assert topology_tpu.accelerator_config.topology == "2x2"
     finally:
         delete_tpu.delete_cloud_tpu(PROJECT_ID, topology_zone, topology_tpu_name)

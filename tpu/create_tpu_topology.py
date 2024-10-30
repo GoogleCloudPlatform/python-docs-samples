@@ -44,7 +44,7 @@ def create_cloud_tpu_with_topology(
     node = tpu_v2.Node()
     # Here we are creating a TPU v3-8 with 2x2 topology.
     node.accelerator_config = tpu_v2.AcceleratorConfig(
-        type_=tpu_v2.AcceleratorConfig.Type.V3,
+        type_=tpu_v2.AcceleratorConfig.Type.V2,
         topology="2x2",
     )
     node.runtime_version = runtime_version
