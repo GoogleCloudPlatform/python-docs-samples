@@ -92,7 +92,7 @@ steps:
           --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
           --command migrate \
-          --execute-now"
+          --execute-now --wait"
 
   - id: "Create Superuser"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -108,7 +108,7 @@ steps:
           --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
           --set-env-vars DJANGO_SUPERUSER_PASSWORD=${_ADMIN_PASSWORD} \
           --set-env-vars DJANGO_SUPERUSER_EMAIL=${_ADMIN_EMAIL} \
-          --execute-now"
+          --execute-now --wait"
 
   - id: "Deploy to Cloud Run"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk:latest"
