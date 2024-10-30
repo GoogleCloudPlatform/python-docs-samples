@@ -13,13 +13,8 @@
 # limitations under the License.
 import os
 
-import vertexai
-
-from vertexai.batch_prediction import BatchPredictionJob
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-# TODO(developer): Add your BigQuery table details here
 output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions.output"
 
 
@@ -27,19 +22,18 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     """Perform batch text prediction using a Gemini AI model and returns the output location"""
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
+    import time
+    import vertexai
+
+    from vertexai.batch_prediction import BatchPredictionJob
+
+    # TODO(developer): Update and un-comment below lines
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     input_uri = "bq://storage-samples.generative_ai.batch_requests_for_multimodal_input"
-    # Sample filedata for input table
-    #     {"id": 1, "request": {"contents": [{"parts": {"text": "Give me a recipe for banana bread."}, "role": "user"}]}}
-    #     {"id": 2, "request": {"contents": [{"parts": {"text": "Give me a recipe for banana bread."}, "role": "user"}]}}
-
-    # Sample filedata for expected output table
-    #     {"candidates": [{ "content": { "parts": [{ "text": "## Classic Banana Bread\n\nThis recipe is a classic for a reason! It's simple, delicious, and perfect for using up those ripe bananas,...
-    #     {"candidates": [{ "content": { "parts": [{ "text": "## Classic Banana Bread\n\nThis recipe is a classic for a reason! It's simple, delicious, and perfect for using up those ripe bananas,...
-
+    
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
         source_model="gemini-1.5-flash-002",
