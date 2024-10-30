@@ -13,24 +13,23 @@
 # limitations under the License.
 
 # [START dataplex_list_aspect_types]
+from typing import List
+
 from google.cloud import dataplex_v1
 
 
-# Sample to list Aspect Types
-def list_aspect_types(project_id: str, location: str) -> None:
-    # The resource name of the Aspect Type location
-    parent = f"projects/{project_id}/locations/{location}"
-
+# Method to list Aspect Types located in project_id and location
+def list_aspect_types(project_id: str, location: str) -> List[dataplex_v1.AspectType]:
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
+        # The resource name of the Aspect Type location
+        parent = f"projects/{project_id}/locations/{location}"
         results = client.list_aspect_types(parent=parent)
-
-    for aspect_type in results:
-        print(f"Aspect type name: {aspect_type.name}")
+        return list(results)
 
 
 if __name__ == "__main__":
@@ -39,5 +38,7 @@ if __name__ == "__main__":
     # Available locations: https://cloud.google.com/dataplex/docs/locations
     location = "MY_LOCATION"
 
-    list_aspect_types(project_id, location)
+    aspect_types = list_aspect_types(project_id, location)
+    for aspect_type in aspect_types:
+        print(f"Aspect type name: {aspect_type.name}")
 # [END dataplex_list_aspect_types]

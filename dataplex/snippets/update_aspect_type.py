@@ -13,47 +13,46 @@
 # limitations under the License.
 
 # [START dataplex_update_aspect_type]
+from typing import List
+
 from google.cloud import dataplex_v1
 
 
-# Sample to update Aspect Type
+# Method to update Aspect Type located in project_id, location and with aspect_type_id and
+# aspect_fields specifying schema of the Aspect Type
 def update_aspect_type(
     project_id: str,
     location: str,
     aspect_type_id: str,
-    aspect_fields: list[dataplex_v1.AspectType.MetadataTemplate],
-) -> None:
-    # The resource name of the Aspect Type
-    name = f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
-
-    aspect_type = dataplex_v1.AspectType(
-        name=name,
-        description="updated description of the aspect type",
-        metadata_template=dataplex_v1.AspectType.MetadataTemplate(
-            # Because Record Fields is an array, it needs to be fully replaced.
-            # It is because you do not have a way to specify array elements in update mask.
-            record_fields=aspect_fields
-        ),
-    )
-
-    # Update mask specifies which fields will be updated.
-    # If empty mask is given, all modifiable fields from the request will be used for update.
-    # If update mask is specified as "*" it is treated as full update,
-    # that means fields not present in the request will be emptied.
-    update_mask = {"paths": ["description", "metadata_template.record_fields"]}
-
+    aspect_fields: List[dataplex_v1.AspectType.MetadataTemplate],
+) -> dataplex_v1.AspectType:
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
+        # The resource name of the Aspect Type
+        name = (
+            f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
+        )
+        aspect_type = dataplex_v1.AspectType(
+            name=name,
+            description="updated description of the aspect type",
+            metadata_template=dataplex_v1.AspectType.MetadataTemplate(
+                # Because Record Fields is an array, it needs to be fully replaced.
+                # It is because you do not have a way to specify array elements in update mask.
+                record_fields=aspect_fields
+            ),
+        )
+
+        # Update mask specifies which fields will be updated.
+        # For more information on update masks, see: https://google.aip.dev/161
+        update_mask = {"paths": ["description", "metadata_template.record_fields"]}
         update_operation = client.update_aspect_type(
             aspect_type=aspect_type, update_mask=update_mask
         )
-        updated_aspect_type = update_operation.result(60)
-
-    print(f"Successfully updated aspect type: {updated_aspect_type.name}")
+        return update_operation.result(60)
 
 
 if __name__ == "__main__":
@@ -82,5 +81,8 @@ if __name__ == "__main__":
     )
     aspect_fields = [aspect_field]
 
-    update_aspect_type(project_id, location, aspect_type_id, aspect_fields)
+    updated_aspect_type = update_aspect_type(
+        project_id, location, aspect_type_id, aspect_fields
+    )
+    print(f"Successfully updated aspect type: {updated_aspect_type.name}")
 # [END dataplex_update_aspect_type]

@@ -16,20 +16,21 @@
 from google.cloud import dataplex_v1
 
 
-# Sample to get Aspect Type
-def get_aspect_type(project_id: str, location: str, aspect_type_id: str) -> None:
-    # The resource name of the Aspect Type
-    name = f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
-
+#  Method to retrieve Aspect Type located in project_id, location and with aspect_type_id
+def get_aspect_type(
+    project_id: str, location: str, aspect_type_id: str
+) -> dataplex_v1.AspectType:
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
-        aspect_type = client.get_aspect_type(name=name)
-
-    print(f"Aspect type retrieved successfully: {aspect_type.name}")
+        # The resource name of the Aspect Type
+        name = (
+            f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
+        )
+        return client.get_aspect_type(name=name)
 
 
 if __name__ == "__main__":
@@ -39,5 +40,6 @@ if __name__ == "__main__":
     location = "MY_LOCATION"
     aspect_type_id = "MY_ASPECT_TYPE_ID"
 
-    get_aspect_type(project_id, location, aspect_type_id)
+    aspect_type = get_aspect_type(project_id, location, aspect_type_id)
+    print(f"Aspect type retrieved successfully: {aspect_type.name}")
 # [END dataplex_get_aspect_type]

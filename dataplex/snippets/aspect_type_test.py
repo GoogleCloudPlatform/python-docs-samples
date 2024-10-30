@@ -45,49 +45,48 @@ def setup_and_teardown_aspect_type() -> None:
 
 
 @Retry()
-def test_list_aspect_types(capsys: pytest.CaptureFixture) -> None:
-    list_aspect_types.list_aspect_types(PROJECT_ID, LOCATION)
-    out, _ = capsys.readouterr()
-    assert EXPECTED_ASPECT_TYPE in out
+def test_list_aspect_types() -> None:
+    aspect_types = list_aspect_types.list_aspect_types(PROJECT_ID, LOCATION)
+    assert EXPECTED_ASPECT_TYPE in [aspect_type.name for aspect_type in aspect_types]
 
 
 @Retry()
-def test_get_aspect_type(capsys: pytest.CaptureFixture) -> None:
-    get_aspect_type.get_aspect_type(PROJECT_ID, LOCATION, ASPECT_TYPE_ID)
-    out, _ = capsys.readouterr()
-    assert EXPECTED_ASPECT_TYPE in out
+def test_get_aspect_type() -> None:
+    aspect_type = get_aspect_type.get_aspect_type(PROJECT_ID, LOCATION, ASPECT_TYPE_ID)
+    assert EXPECTED_ASPECT_TYPE == aspect_type.name
 
 
 @Retry()
-def test_update_aspect_type(capsys: pytest.CaptureFixture) -> None:
-    update_aspect_type.update_aspect_type(PROJECT_ID, LOCATION, ASPECT_TYPE_ID, [])
-    out, _ = capsys.readouterr()
-    assert EXPECTED_ASPECT_TYPE in out
+def test_update_aspect_type() -> None:
+    aspect_type = update_aspect_type.update_aspect_type(
+        PROJECT_ID, LOCATION, ASPECT_TYPE_ID, []
+    )
+    assert EXPECTED_ASPECT_TYPE == aspect_type.name
 
 
 @Retry()
-def test_create_aspect_type(capsys: pytest.CaptureFixture) -> None:
+def test_create_aspect_type() -> None:
     aspect_type_id_to_create = f"test-aspect-type-{str(uuid.uuid4()).split('-')[0]}"
-    create_aspect_type.create_aspect_type(
+    expected_aspect_type_to_create = f"projects/{PROJECT_ID}/locations/{LOCATION}/aspectTypes/{aspect_type_id_to_create}"
+    aspect_type = create_aspect_type.create_aspect_type(
         PROJECT_ID, LOCATION, aspect_type_id_to_create, []
     )
     # Clean-up created Aspect Type
     delete_aspect_type.delete_aspect_type(
         PROJECT_ID, LOCATION, aspect_type_id_to_create
     )
-    out, _ = capsys.readouterr()
-    assert aspect_type_id_to_create in out
+
+    assert expected_aspect_type_to_create == aspect_type.name
 
 
 @Retry()
-def test_delete_aspect_type(capsys: pytest.CaptureFixture) -> None:
+def test_delete_aspect_type() -> None:
     aspect_type_id_to_delete = f"test-aspect-type-{str(uuid.uuid4()).split('-')[0]}"
     # Create Aspect Type to be deleted
     create_aspect_type.create_aspect_type(
         PROJECT_ID, LOCATION, aspect_type_id_to_delete, []
     )
+    # No exception means successful call
     delete_aspect_type.delete_aspect_type(
         PROJECT_ID, LOCATION, aspect_type_id_to_delete
     )
-    out, _ = capsys.readouterr()
-    assert "Successfully deleted aspect type" in out

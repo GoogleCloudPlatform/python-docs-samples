@@ -13,44 +13,43 @@
 # limitations under the License.
 
 # [START dataplex_create_aspect_type]
+from typing import List
+
 from google.cloud import dataplex_v1
 
 
-# Sample to create Aspect Type
+# Method to create Aspect Type located in project_id, location and with aspect_type_id and
+# aspect_fields specifying schema of the Aspect Type
 def create_aspect_type(
     project_id: str,
     location: str,
     aspect_type_id: str,
-    aspect_fields: list,
-) -> None:
-    # The resource name of the Aspect Type location
-    parent = f"projects/{project_id}/locations/{location}"
-
-    aspect_type = dataplex_v1.AspectType(
-        description="description of the aspect type",
-        metadata_template=dataplex_v1.AspectType.MetadataTemplate(
-            # The name must follow regex ^(([a-zA-Z]{1})([\\w\\-_]{0,62}))$
-            # That means name must only contain alphanumeric character or dashes or underscores,
-            # start with an alphabet, and must be less than 63 characters.
-            name="name_of_the_template",
-            type="record",
-            # Aspect Type fields, that themselves are Metadata Templates.
-            record_fields=aspect_fields,
-        ),
-    )
-
+    aspect_fields: List[dataplex_v1.AspectType.MetadataTemplate],
+) -> dataplex_v1.AspectType:
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
+        # The resource name of the Aspect Type location
+        parent = f"projects/{project_id}/locations/{location}"
+        aspect_type = dataplex_v1.AspectType(
+            description="description of the aspect type",
+            metadata_template=dataplex_v1.AspectType.MetadataTemplate(
+                # The name must follow regex ^(([a-zA-Z]{1})([\\w\\-_]{0,62}))$
+                # That means name must only contain alphanumeric character or dashes or underscores,
+                # start with an alphabet, and must be less than 63 characters.
+                name="name_of_the_template",
+                type="record",
+                # Aspect Type fields, that themselves are Metadata Templates.
+                record_fields=aspect_fields,
+            ),
+        )
         create_operation = client.create_aspect_type(
             parent=parent, aspect_type=aspect_type, aspect_type_id=aspect_type_id
         )
-        created_aspect_type = create_operation.result(60)
-
-    print(f"Successfully created aspect type: {created_aspect_type.name}")
+        return create_operation.result(60)
 
 
 if __name__ == "__main__":
@@ -59,6 +58,9 @@ if __name__ == "__main__":
     # Available locations: https://cloud.google.com/dataplex/docs/locations
     location = "MY_LOCATION"
     aspect_type_id = "MY_ASPECT_TYPE_ID"
+    project_id = "jspa-test"
+    location = "us-central1"
+    aspect_type_id = "test-aspect-type-999"
     aspect_field = dataplex_v1.AspectType.MetadataTemplate(
         # The name must follow regex ^(([a-zA-Z]{1})([\\w\\-_]{0,62}))$
         # That means name must only contain alphanumeric character or dashes or underscores,
@@ -79,5 +81,8 @@ if __name__ == "__main__":
     )
     aspect_fields = [aspect_field]
 
-    create_aspect_type(project_id, location, aspect_type_id, aspect_fields)
+    created_aspect_type = create_aspect_type(
+        project_id, location, aspect_type_id, aspect_fields
+    )
+    print(f"Successfully created aspect type: {created_aspect_type.name}")
 # [END dataplex_create_aspect_type]

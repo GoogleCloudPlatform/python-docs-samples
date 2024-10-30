@@ -16,20 +16,19 @@
 from google.cloud import dataplex_v1
 
 
-# Sample to delete Aspect Type
+# Method to delete Aspect Type located in project_id, location and with aspect_type_id
 def delete_aspect_type(project_id: str, location: str, aspect_type_id: str) -> None:
-    # The resource name of the Aspect Type
-    name = f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
-
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
+        # The resource name of the Aspect Type
+        name = (
+            f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
+        )
         client.delete_aspect_type(name=name)
-
-    print("Successfully deleted aspect type")
 
 
 if __name__ == "__main__":
@@ -40,4 +39,5 @@ if __name__ == "__main__":
     aspect_type_id = "MY_ASPECT_TYPE_ID"
 
     delete_aspect_type(project_id, location, aspect_type_id)
+    print("Successfully deleted aspect type")
 # [END dataplex_delete_aspect_type]
