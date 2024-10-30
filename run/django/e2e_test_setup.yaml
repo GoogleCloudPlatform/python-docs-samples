@@ -135,7 +135,7 @@ options:
 substitutions:
   _SERVICE: django
   _VERSION: manual
-  _PYTHON_VERSION: 3.12
+  _PYTHON_VERSION: "3.12"
   _REGION: us-central1
   _ARTIFACT_REGISTRY: cloud-run-source-deploy
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
