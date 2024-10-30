@@ -15,6 +15,8 @@ import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions"
+
 
 def batch_predict_gemini_createjob(output_uri: str) -> str:
     """Perform batch text prediction using a Gemini AI model and returns the output location"""
@@ -31,8 +33,6 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     input_uri = "bq://storage-samples.generative_ai.batch_requests_for_multimodal_input"
-
-    output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions"
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
