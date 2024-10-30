@@ -26,7 +26,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     import time
     import vertexai
 
-    from vertexai.preview.batch_prediction import BatchPredictionJob
+    from vertexai.batch_prediction import BatchPredictionJob
 
     # TODO(developer): Update and un-comment below lines
 

@@ -11,14 +11,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import datetime
 import os
-import time
 
 import vertexai
 
+from vertexai.batch_prediction import BatchPredictionJob
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S-%f")
 
 # TODO(developer): Add your BigQuery table details here
 output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions.output"
