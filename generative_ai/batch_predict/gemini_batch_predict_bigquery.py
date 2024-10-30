@@ -33,7 +33,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     input_uri = "bq://storage-samples.generative_ai.batch_requests_for_multimodal_input"
-    
+
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
         source_model="gemini-1.5-flash-002",
