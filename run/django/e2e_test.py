@@ -18,6 +18,7 @@
 from collections.abc import Iterator
 import os
 import subprocess
+import sys
 import uuid
 
 import backoff
@@ -27,6 +28,7 @@ import requests
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
 
+PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -89,6 +91,7 @@ def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
 def deployed_service() -> str:
     substitutions = [
         f"_VERSION={SUFFIX},"
+        f"_PYTHON_VERSION={PYTHON_VERSION},"
         f"_SERVICE={SERVICE},"
         f"_REGION={REGION},"
         f"_DB_PASS={POSTGRES_PASSWORD},"
