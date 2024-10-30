@@ -23,6 +23,7 @@ import pytest
 from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
 from regional_samples import create_regional_secret
+from regional_samples import create_regional_secret_with_annotations
 from regional_samples import create_regional_secret_with_labels
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_label
@@ -31,6 +32,7 @@ from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
+from regional_samples import edit_regional_secret_annotations
 from regional_samples import edit_regional_secret_label
 from regional_samples import enable_regional_secret_version
 from regional_samples import enable_regional_secret_version_with_etag
@@ -45,6 +47,7 @@ from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_with_etag
+from regional_samples import view_regional_secret_annotations
 from regional_samples import view_regional_secret_labels
 
 
@@ -84,6 +87,16 @@ def iam_user() -> str:
 @pytest.fixture()
 def ttl() -> str:
     return "300s"
+
+
+@pytest.fixture()
+def annotation_key() -> str:
+    return "annotationkey"
+
+
+@pytest.fixture()
+def annotation_value() -> str:
+    return "annotationvalue"
 
 
 @retry.Retry()
@@ -162,6 +175,8 @@ def regional_secret(
     project_id: str,
     location_id: str,
     secret_id: str,
+    annotation_key: str,
+    annotation_value: str,
     label_key: str,
     label_value: str,
     ttl: str,
@@ -177,6 +192,7 @@ def regional_secret(
             "secret_id": secret_id,
             "secret": {
                 "ttl": ttl,
+                "annotations": {annotation_key: annotation_value},
                 "labels": {label_key: label_value},
             },
         },
@@ -222,6 +238,23 @@ def test_create_regional_secret(
 ) -> None:
     secret = create_regional_secret.create_regional_secret(
         project_id, location_id, secret_id, ttl
+    )
+    assert secret_id in secret.name
+
+
+def test_create_regional_secret_with_annotations(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    annotation_key: str,
+    annotation_value: str,
+) -> None:
+    annotations = {annotation_key: annotation_value}
+    secret = (
+        create_regional_secret_with_annotations.create_regional_secret_with_annotations(
+            project_id, location_id, secret_id, annotations
+        )
     )
     assert secret_id in secret.name
 
@@ -481,6 +514,22 @@ def test_list_regional_secrets_with_filter(
     assert f"Found secret: {labeled.name}" in out
 
 
+def test_view_regional_secret_annotations(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    annotation_key: str,
+) -> None:
+    secret_id, _ = regional_secret
+    view_regional_secret_annotations.view_regional_secret_annotations(
+        project_id, location_id, secret_id
+    )
+
+    out, _ = capsys.readouterr()
+    assert annotation_key in out
+
+
 def test_delete_regional_secret(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     regional_secret: Tuple[str, str],
@@ -508,6 +557,21 @@ def test_get_regional_secret(
         project_id, location_id, secret_id
     )
     assert secret_id in snippet_regional_secret.name
+
+
+def test_edit_regional_secret_annotations(
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    annotation_key: str,
+) -> None:
+    secret_id, _ = regional_secret
+    updated_annotation_value = "updatedvalue"
+    annotations = {annotation_key: updated_annotation_value}
+    updated_secret = edit_regional_secret_annotations.edit_regional_secret_annotations(
+        project_id, location_id, secret_id, annotations
+    )
+    assert updated_secret.annotations[annotation_key] == updated_annotation_value
 
 
 def test_edit_regional_secret_label(
