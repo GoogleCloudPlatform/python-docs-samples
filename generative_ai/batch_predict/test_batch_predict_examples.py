@@ -29,7 +29,7 @@ import batch_text_predict
 import gemini_batch_predict_bigquery
 import gemini_batch_predict_gcs
 
-PROJECT_ID = os.environ["CAIP_PROJECT_ID"]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 INPUT_BUCKET = "cloud-samples-data"
