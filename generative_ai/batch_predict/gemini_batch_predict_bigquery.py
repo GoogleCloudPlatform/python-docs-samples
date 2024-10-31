@@ -13,16 +13,15 @@
 # limitations under the License.
 import os
 
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-output_uri = "gs://python-docs-samples-tests"
+output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions"
 
 
 def batch_predict_gemini_createjob(output_uri: str) -> str:
-    "Perform batch text prediction using a Gemini AI model and returns the output location"
+    """Perform batch text prediction using a Gemini AI model and returns the output location"""
 
-    # [START generativeaionvertexai_batch_predict_gemini_createjob]
+    # [START generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
     import time
     import vertexai
 
@@ -33,7 +32,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl"
+    input_uri = "bq://storage-samples.generative_ai.batch_requests_for_multimodal_input"
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
@@ -62,9 +61,8 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
-    #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
-
-    # [END generativeaionvertexai_batch_predict_gemini_createjob]
+    #  Job output location: bq://Project-ID/gen-ai-batch-prediction/predictions-model-year-month-day-hour:minute:second.12345
+    # [END generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
     return batch_prediction_job
 
 
