@@ -63,7 +63,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     # Example response:
     #  Job output location: bq://Project-ID/gen-ai-batch-prediction/predictions-model-year-month-day-hour:minute:second.12345
     # [END generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
-    return batch_prediction_job.output_location
+    return batch_prediction_job
 
 
 if __name__ == "__main__":

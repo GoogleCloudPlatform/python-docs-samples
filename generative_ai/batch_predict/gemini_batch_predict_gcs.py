@@ -33,7 +33,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    input_uri = "gs://cloud-samples-data/generative-ai/batch/batch_requests_for_multimodal_input.jsonl"
+    input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl"
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
@@ -65,7 +65,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
-    return batch_prediction_job.output_location
+    return batch_prediction_job
 
 
 if __name__ == "__main__":
