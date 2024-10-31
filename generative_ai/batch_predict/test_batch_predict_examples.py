@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
+
 from typing import Callable
 
 
@@ -26,6 +28,8 @@ import batch_code_predict
 import batch_text_predict
 import gemini_batch_predict_bigquery
 import gemini_batch_predict_gcs
+
+PROJECT_ID = os.environ["CAIP_PROJECT_ID"]
 
 
 INPUT_BUCKET = "cloud-samples-data"
