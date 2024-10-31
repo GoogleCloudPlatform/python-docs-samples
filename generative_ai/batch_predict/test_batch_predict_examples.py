@@ -35,6 +35,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
 OUTPUT_PATH = "batch/batch_text_predict_output"
+GCS_OUTPUT_PATH = "gs://python-docs-samples-tests/"
 OUTPUT_TABLE = f"bq://{PROJECT_ID}.gen_ai_batch_prediction.predictions"
 
 
@@ -90,7 +91,7 @@ def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
             output_uri
         )
     )
-    assert OUTPUT_PATH in job.output_location
+    assert GCS_OUTPUT_PATH in job.output_location
 
 
 def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
