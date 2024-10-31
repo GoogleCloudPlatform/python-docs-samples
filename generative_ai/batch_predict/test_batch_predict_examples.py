@@ -30,8 +30,8 @@ import gemini_batch_predict_gcs
 
 INPUT_BUCKET = "cloud-samples-data"
 OUTPUT_BUCKET = "python-docs-samples-tests"
-OUTPUT_PATH = "batch/batch_text_predict_output"
-OUTPUT_TABLE = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions"
+OUTPUT_PATH = "gs://ucaip-samples-test-output/"
+OUTPUT_TABLE = f"bq://{PROJECT_ID}.gen_ai_batch_prediction.predictions"
 
 
 def _clean_resources() -> None:
