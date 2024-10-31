@@ -28,8 +28,8 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
 
     from vertexai.batch_prediction import BatchPredictionJob
 
-    # TODO(developer): Update and un-comment below lines
-    # PROJECT_ID = "your-project-id
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
