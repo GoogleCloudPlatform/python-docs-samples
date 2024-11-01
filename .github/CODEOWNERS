@@ -38,7 +38,7 @@
 # Platform Ops
 /monitoring/opencensus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /monitoring/prometheus                 @yuriatgoogle @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/trace/**/*                            @ymotongpoo @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/trace/**/*                            @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
 # DEE Data & AI
 /speech/**/*                           @GoogleCloudPlatform/cloud-speech-eng @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
