@@ -30,6 +30,7 @@ from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
 from ..disks.regional_delete import delete_regional_disk
 from ..disks.resize_disk import resize_disk
+from ..disks.create_hyperdisk import create_hyperdisk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -333,3 +334,8 @@ def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
         ).size_gb
         == 23
     )
+
+
+def test_create_hyperdisk(autodelete_disk_name):
+    disk = create_hyperdisk(PROJECT, ZONE, autodelete_disk_name, 100)
+    assert "hyperdisk" in disk.type_.lower()
