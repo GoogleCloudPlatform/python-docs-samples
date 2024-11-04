@@ -24,13 +24,13 @@ from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encryp
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
+from ..disks.create_hyperdisk import create_hyperdisk
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
 from ..disks.regional_delete import delete_regional_disk
 from ..disks.resize_disk import resize_disk
-from ..disks.create_hyperdisk import create_hyperdisk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
