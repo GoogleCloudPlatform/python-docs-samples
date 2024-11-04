@@ -68,15 +68,16 @@ def test_update_aspect_type() -> None:
 def test_create_aspect_type() -> None:
     aspect_type_id_to_create = f"test-aspect-type-{str(uuid.uuid4()).split('-')[0]}"
     expected_aspect_type_to_create = f"projects/{PROJECT_ID}/locations/{LOCATION}/aspectTypes/{aspect_type_id_to_create}"
-    aspect_type = create_aspect_type.create_aspect_type(
-        PROJECT_ID, LOCATION, aspect_type_id_to_create, []
-    )
-    # Clean-up created Aspect Type
-    delete_aspect_type.delete_aspect_type(
-        PROJECT_ID, LOCATION, aspect_type_id_to_create
-    )
-
-    assert expected_aspect_type_to_create == aspect_type.name
+    try:
+        aspect_type = create_aspect_type.create_aspect_type(
+            PROJECT_ID, LOCATION, aspect_type_id_to_create, []
+        )
+        assert expected_aspect_type_to_create == aspect_type.name
+    finally:
+        # Clean-up created Aspect Type
+        delete_aspect_type.delete_aspect_type(
+            PROJECT_ID, LOCATION, aspect_type_id_to_create
+        )
 
 
 @Retry()
