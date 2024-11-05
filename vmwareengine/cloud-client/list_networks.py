@@ -21,7 +21,7 @@ def list_networks(
     project_id: str, region: str
 ) -> Iterable[vmwareengine_v1.VmwareEngineNetwork]:
     """
-    Retrieves a list of VMWare Engine networks defined in given region.
+    Retrieves a list of VMware Engine networks defined in given region.
 
     Args:
         project_id: name of the project you want to use.
