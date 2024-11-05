@@ -20,15 +20,15 @@ from google.cloud.compute_v1.types import Operation
 
 import pytest
 
+from ..compute_reservations.consume_single_project_reservation import (
+    consume_specific_single_project_reservation,
+)
 from ..compute_reservations.create_compute_reservation import create_compute_reservation
 from ..compute_reservations.create_compute_reservation_from_vm import (
     create_compute_reservation_from_vm,
 )
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
-)
-from ..compute_reservations.create_specific_single_project_reservation import (
-    consume_specific_single_project_reservation,
 )
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
