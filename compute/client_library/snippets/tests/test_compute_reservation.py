@@ -27,10 +27,12 @@ from ..compute_reservations.create_compute_reservation_from_vm import (
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
 )
+from ..compute_reservations.create_specific_single_project_reservation import (
+    consume_specific_single_project_reservation,
+)
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
 from ..compute_reservations.list_compute_reservation import list_compute_reservation
-
 
 from ..instances.create import create_instance
 from ..instances.delete import delete_instance
@@ -151,3 +153,19 @@ def test_create_shared_reservation():
             delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
         except Exception as e:
             print(f"Failed to delete reservation: {e}")
+
+
+def test_specific_single_project_reservation():
+    instance = consume_specific_single_project_reservation(
+        PROJECT_ID, ZONE, RESERVATION_NAME, INSTANCE_NAME
+    )
+    try:
+        assert instance.reservation_affinity.values[0] == RESERVATION_NAME
+        assert (
+            instance.reservation_affinity.consume_reservation_type
+            == "SPECIFIC_RESERVATION"
+        )
+    finally:
+        if instance:
+            delete_instance(PROJECT_ID, ZONE, instance.name)
+        delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
