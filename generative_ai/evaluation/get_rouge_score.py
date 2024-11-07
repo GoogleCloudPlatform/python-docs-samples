@@ -29,16 +29,6 @@ def get_rouge_score() -> EvalResult:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    text_to_summarize = """
-    The Great Barrier Reef, located off the coast of Queensland in northeastern
-    Australia, is the world's largest coral reef system. Stretching over 2,300
-    kilometers, it is composed of over 2,900 individual reefs and 900 islands.
-    The reef is home to a wide variety of marine life, including many endangered
-    species. However, climate change, ocean acidification, and coral bleaching
-    pose significant threats to its ecosystem."""
-
-    prompt = f"Summarize the following text:\n\n{text_to_summarize}"
-
     reference_summarization = """
     The Great Barrier Reef, the world's largest coral reef system, is
     located off the coast of Queensland, Australia. It's a vast
@@ -47,11 +37,9 @@ def get_rouge_score() -> EvalResult:
     life, including endangered species, it faces serious threats from
     climate change, ocean acidification, and coral bleaching."""
 
-    # Use pre-generated model responses to compare different summarization outputs
-    # against a consistent reference.
+    # Compare pre-generated model responses against the reference (ground truth).
     eval_dataset = pd.DataFrame(
         {
-            "prompt": [prompt] * 3,
             "response": [
                 """The Great Barrier Reef, the world's largest coral reef system located
             in Australia, is a vast and diverse ecosystem. However, it faces serious
@@ -71,7 +59,6 @@ def get_rouge_score() -> EvalResult:
             "reference": [reference_summarization] * 3,
         }
     )
-
     eval_task = EvalTask(
         dataset=eval_dataset,
         metrics=[
@@ -84,17 +71,26 @@ def get_rouge_score() -> EvalResult:
     result = eval_task.evaluate()
 
     print("Summary Metrics:\n")
-
     for key, value in result.summary_metrics.items():
         print(f"{key}: \t{value}")
 
     print("\n\nMetrics Table:\n")
     print(result.metrics_table)
     # Example response:
-    #                                 prompt    ...    rouge_1/score  rouge_2/score    ...
-    # 0  Summarize the following text:\n\n\n    ...         0.659794       0.484211    ...
-    # 1  Summarize the following text:\n\n\n    ...         0.704762       0.524272    ...
+    #
+    # Summary Metrics:
+    #
+    # row_count:      3
+    # rouge_1/mean:   0.7191161666666667
+    # rouge_1/std:    0.06765143922270488
+    # rouge_2/mean:   0.5441118566666666
     # ...
+    # Metrics Table:
+    #
+    #                                        response                         reference  ...  rouge_l/score  rouge_l_sum/score
+    # 0  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.577320           0.639175
+    # 1  The Great Barrier Reef, a vast coral...  \n    The Great Barrier Reef, the ...  ...       0.552381           0.666667
+    # 2  The Great Barrier Reef, the world's ...  \n    The Great Barrier Reef, the ...  ...       0.774775           0.774775
     # [END generativeaionvertexai_evaluation_get_rouge_score]
     return result
 
