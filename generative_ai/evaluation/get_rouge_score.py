@@ -23,6 +23,8 @@ def get_rouge_score() -> EvalResult:
     import pandas as pd
 
     import vertexai
+
+    from vertexai.generative_models import GenerativeModel
     from vertexai.preview.evaluation import EvalTask
 
     # TODO(developer): Update & uncomment line below
@@ -37,7 +39,37 @@ def get_rouge_score() -> EvalResult:
     life, including endangered species, it faces serious threats from
     climate change, ocean acidification, and coral bleaching."""
 
-    # Compare pre-generated model responses against the reference (ground truth).
+    # Option1: Run model inference and evaluate model response against the reference (ground truth)
+    model = GenerativeModel(model_name="gemini-1.5-flash-002")
+    eval_dataset = pd.DataFrame(
+        {
+            "prompt": [
+                """Summarize the following text:
+
+                The Great Barrier Reef, located off the coast of Queensland in northeastern
+                Australia, is the world's largest coral reef system. Stretching over 2,300
+                kilometers, it is composed of over 2,900 individual reefs and 900 islands.
+                The reef is home to a wide variety of marine life, including many endangered
+                species. However, climate change, ocean acidification, and coral bleaching
+                pose significant threats to its ecosystem."""
+            ],
+            "reference": [reference_summarization],
+        }
+    )
+    # Check the API reference for more details and examples:
+    # https://cloud.google.com/vertex-ai/generative-ai/docs/reference/python/latest/vertexai.evaluation.EvalTask
+    eval_task = EvalTask(
+        dataset=eval_dataset,
+        metrics=[
+            "rouge_1",
+            "rouge_2",
+            "rouge_l",
+            "rouge_l_sum",
+        ],
+    )
+    result = eval_task.evaluate(model=model)
+
+    # Option2: Bring-your-own-response (BYOR): use pre-generated model responses for evaluation
     eval_dataset = pd.DataFrame(
         {
             "response": [
