@@ -47,7 +47,11 @@ def create_cluster(
     cluster.name = client.cluster_path(project_id, region, cluster_id)
     cluster.capacity_config.vcpu_count = cpu
     cluster.capacity_config.memory_bytes = memory_bytes
-    cluster.gcp_config.access_config.network_configs.subnet = subnet
+    cluster.gcp_config.access_config.network_configs = [
+        managedkafka_v1.NetworkConfig(
+            subnet = subnet
+            )
+    ]
     cluster.rebalance_config.mode = (
         managedkafka_v1.RebalanceConfig.Mode.AUTO_REBALANCE_ON_SCALE_UP
     )
