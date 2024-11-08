@@ -21,7 +21,7 @@ def transcript_audio() -> str:
     # [START generativeaionvertexai_gemini_audio_transcription]
 
     import vertexai
-    from vertexai.generative_models import GenerativeModel, Part
+    from vertexai.generative_models import GenerativeModel, GenerationConfig, Part
 
     # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
@@ -40,14 +40,14 @@ def transcript_audio() -> str:
 
     contents = [audio_file, prompt]
 
-    response = model.generate_content(contents)
+    response = model.generate_content(contents, generation_config=GenerationConfig(audio_timestamp=True))
 
     print(response.text)
     # Example response:
-    # [00:00:00] Speaker A: your devices are getting better over time...
+    # [00:00:00] Speaker A: Your devices are getting better over time...
     # [00:00:16] Speaker B: Welcome to the Made by Google podcast, ...
     # [00:01:00] Speaker A: So many features. I am a singer. ...
-    # [00:01:33] Speaker B: Amazing. DeCarlos, same question to you. ...
+    # [00:01:33] Speaker B: Amazing. DeCarlos, same question to you, ...
 
     # [END generativeaionvertexai_gemini_audio_transcription]
     return response.text
