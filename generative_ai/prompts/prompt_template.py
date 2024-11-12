@@ -13,12 +13,11 @@
 # limitations under the License.
 import os
 
-
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template() -> str:
-    """Create prompt template"""
+def prompt_template() -> list:
+    """Build a parameterized prompt template to generate content with multiple variable sets"""
 
     # [START generativeaionvertexai_prompt_template]
     import vertexai
@@ -28,24 +27,27 @@ def prompt_template() -> str:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     variables = [
-        {
-            "animal": ["""Eagles, Coyotes, Squirrels"""],
-            "activity": ["""eat berries, jump, fly"""],
-        },
+        {"animal": "Eagles", "activity": "eat berries"},
+        {"animal": "Coyotes", "activity": "jump"},
+        {"animal": "Squirrels", "activity": "fly"}
     ]
+
     prompt = Prompt(
-        prompt_data=["Do {animal}{activity}?"],  # Includes placeholders for vars
-        model_name="gemini-1.5-flash-002",  # Model in use
-        variables=variables,  # Lists variables defined above
-        system_instruction=["You are a helpful zoolgist"]
+        prompt_data="Do {animal} {activity}?",
+        model_name="gemini-1.5-flash-002",
+        variables=variables,
+        system_instruction=["You are a helpful zoologist"]
         # generation_config=generation_config, # Optional
         # safety_settings=safety_settings, # Optional
     )
+
     # Generates content using the assembled prompt.
-    responses = prompt.generate_content(
-        contents=prompt.assemble_contents(**prompt.variables[0]),
-        stream=True,
-    )
+    responses = []
+    for i in range(len(prompt.variables)):
+        response = prompt.generate_content(
+            contents=prompt.assemble_contents(**prompt.variables[i])
+        )
+        responses.append(response)
 
     for response in responses:
         print(response.text, end="")
