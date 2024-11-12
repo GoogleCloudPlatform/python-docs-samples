@@ -60,8 +60,15 @@ def database_name() -> str:
 
 
 @pytest.fixture(scope="session")
+def username() -> str:
+    user = f"alloydb_user_{uuid.uuid4().hex[:10]}"
+    user_pw = password()
+
+    run_cmd("gcloud", "alloydb", "users", "create", user, "--password", user_pw, "--instance", instance_name)
+
+@pytest.fixture(scope="session")
 def password() -> str:
-    return get_env_var("ALLOYDB_PASSWORD")
+    return uuid.uuid4().hex[:24]
 
 
 @pytest_asyncio.fixture(scope="session")
