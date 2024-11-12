@@ -23,7 +23,7 @@ def create_client_with_endpoint(api_endpoint) -> securitycenter_v2.SecurityCente
     Args:
         api_endpoint: the regional endpoint's hostname, like 'securitycenter.REGION.rep.googleapis.com'
     Returns:
-        Dict: Returns clients with the default and regional endpoints; each key is a hostname
+        securitycenter_v2.SecurityCenterClient: returns a client for the regional endpoint
     """
     regional_client = securitycenter_v2.SecurityCenterClient(
         client_options={"api_endpoint": api_endpoint}
