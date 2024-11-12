@@ -13,8 +13,8 @@
 # limitations under the License.
 import snippets_create_client_v2
 
+
 def test_create_client_with_endpoint():
-    clients = snippets_create_client_v2.create_client_with_endpoint("securitycenter.me-central2.rep.googleapis.com")
-    assert len(clients.keys()) == 2
-    assert "securitycenter.googleapis.com" in clients.keys()
-    assert "securitycenter.me-central2.rep.googleapis.com" in clients.keys()
+    client = snippets_create_client_v2.create_client_with_endpoint(
+        "securitycenter.me-central2.rep.googleapis.com")
+    assert client.api_endpoint == "securitycenter.me-central2.rep.googleapis.com"

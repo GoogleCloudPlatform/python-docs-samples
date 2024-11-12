@@ -14,27 +14,20 @@
 
 """Examples of working with clients for Security Command Center."""
 # [START securitycenter_set_client_endpoint_v2]
-from typing import Dict
+from google.cloud import securitycenter_v2
 
 
-def create_client_with_endpoint(api_endpoint) -> Dict:
+def create_client_with_endpoint(api_endpoint) -> securitycenter_v2.SecurityCenterClient:
     """
-    Creates Security Command Center clients for a regional endpoint and the default endpoint.
+    Creates a Security Command Center client for a regional endpoint.
     Args:
         api_endpoint: the regional endpoint's hostname, like 'securitycenter.REGION.rep.googleapis.com'
     Returns:
         Dict: Returns clients with the default and regional endpoints; each key is a hostname
     """
-    from google.cloud import securitycenter
-
-    client = securitycenter.SecurityCenterClient()
-    regional_client = securitycenter.SecurityCenterClient(
+    regional_client = securitycenter_v2.SecurityCenterClient(
         client_options={"api_endpoint": api_endpoint}
     )
-    print("Client initiated with endpoint: {}".format(client.api_endpoint))
     print("Regional client initiated with endpoint: {}".format(regional_client.api_endpoint))
-    return {
-        client.api_endpoint: client,
-        regional_client.api_endpoint: regional_client,
-    }
+    return regional_client
 # [END securitycenter_set_client_endpoint_v2]
