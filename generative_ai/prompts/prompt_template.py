@@ -29,17 +29,17 @@ def prompt_template() -> str:
 
     variables = [
         {
-            "animal": ["""Eagels, Coyotes, Squirrels"""],
+            "animal": ["""Eagles, Coyotes, Squirrels"""],
             "activity": ["""eat berries, jump, fly"""],
         },
     ]
     prompt = Prompt(
-        prompt_data=["Do {animal}{activity}"],  # Includes placeholders vor vars
+        prompt_data=["Do {animal}{activity}?"],  # Includes placeholders for vars
         model_name="gemini-1.5-flash-002",  # Model in use
         variables=variables,  # Lists variables defined above
-        system_instruction=["You are a helpful zoolgist"]  # passes instructions for the llm
-        # optional - generation_config=generation_config,
-        # optional - safety_settings=safety_settings,
+        system_instruction=["You are a helpful zoolgist"]
+        # generation_config=generation_config, # Optional
+        # safety_settings=safety_settings, # Optional
     )
     # Generates content using the assembled prompt.
     responses = prompt.generate_content(
