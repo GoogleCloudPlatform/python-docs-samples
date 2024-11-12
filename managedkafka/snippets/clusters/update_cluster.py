@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def update_cluster(
     project_id: str, region: str, cluster_id: str, memory_bytes: int
 ) -> None:
@@ -22,12 +21,12 @@ def update_cluster(
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import managedkafka_v1
     from google.protobuf import field_mask_pb2
-    
+
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
-	# memory_bytes = 4295000000
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # memory_bytes = 4295000000
 
     client = managedkafka_v1.ManagedKafkaClient()
 

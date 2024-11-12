@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def update_consumer_group(
     project_id: str,
     region: str,
@@ -30,8 +29,8 @@ def update_consumer_group(
 
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
     # consumer_group_id = "my-consumer-group"
     # topic_path = "my-topic-path"
     # partition_offsets = {10: 10}

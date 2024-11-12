@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def create_cluster(
     project_id: str,
     region: str,
@@ -26,14 +25,14 @@ def create_cluster(
     # [START managedkafka_create_cluster]
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import managedkafka_v1
-    
+
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
-	# subnet = "projects/my-project-id/regions/us-central1/subnetworks/default"
-	# cpu = 3
-	# memory_bytes = 3221225472
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # subnet = "projects/my-project-id/regions/us-central1/subnetworks/default"
+    # cpu = 3
+    # memory_bytes = 3221225472
 
     client = managedkafka_v1.ManagedKafkaClient()
 

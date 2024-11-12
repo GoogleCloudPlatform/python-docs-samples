@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def get_cluster(
     project_id: str,
     region: str,

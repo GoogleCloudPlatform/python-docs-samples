@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def list_clusters(
     project_id: str,
     region: str,

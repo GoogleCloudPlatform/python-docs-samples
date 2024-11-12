@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def delete_cluster(
     project_id: str,
     region: str,
@@ -23,7 +22,7 @@ def delete_cluster(
     # [START managedkafka_delete_cluster]
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import managedkafka_v1
-    
+
     # TODO(developer)
     # project_id = "my-project-id"
     # region = "us-central1"

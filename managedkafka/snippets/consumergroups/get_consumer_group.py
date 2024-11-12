@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def get_consumer_group(
     project_id: str,
     region: str,
@@ -26,8 +25,8 @@ def get_consumer_group(
 
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
     # consumer_group_id = "my-consumer-group"
 
     client = managedkafka_v1.ManagedKafkaClient()

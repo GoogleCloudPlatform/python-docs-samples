@@ -24,8 +24,8 @@ def list_topics(
 
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
 
     client = managedkafka_v1.ManagedKafkaClient()
 

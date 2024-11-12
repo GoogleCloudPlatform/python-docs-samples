@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def delete_topic(
     project_id: str,
     region: str,
@@ -27,8 +26,8 @@ def delete_topic(
 
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
     # topic_id = "my-topic"
 
     client = managedkafka_v1.ManagedKafkaClient()

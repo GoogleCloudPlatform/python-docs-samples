@@ -13,7 +13,6 @@
 # limitations under the License.
 
 
-
 def create_topic(
     project_id: str,
     region: str,
@@ -27,11 +26,11 @@ def create_topic(
     # [START managedkafka_create_topic]
     from google.api_core.exceptions import AlreadyExists
     from google.cloud import managedkafka_v1
-    
+
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
     # topic_id = "my-topic"
     # partition_count = 10
     # replication_factor = 3

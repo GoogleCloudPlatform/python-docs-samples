@@ -29,8 +29,8 @@ def update_topic(
 
     # TODO(developer)
     # project_id = "my-project-id"
-	# region = "us-central1"
-	# cluster_id = "my-cluster"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
     # topic_id = "my-topic"
     # partition_count = 20
     # configs = {"min.insync.replicas": "1"}
