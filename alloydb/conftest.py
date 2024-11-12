@@ -56,7 +56,7 @@ def region() -> str:
 
 @pytest.fixture(scope="session")
 def database_name() -> str:
-    return get_env_var("ALLOYDB_DATABASE_NAME")
+    return get_env_var("ALLOYDB_DATABASE")
 
 
 @pytest.fixture(scope="session")
