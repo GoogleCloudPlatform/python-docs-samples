@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_update_consumergroup]
-from google.api_core.exceptions import NotFound
-from google.cloud import managedkafka_v1
-from google.protobuf import field_mask_pb2
 
 
 def update_consumer_group(
@@ -26,20 +22,19 @@ def update_consumer_group(
     topic_path: str,
     partition_offsets: dict[int, int],
 ) -> None:
-    """
-    Update a single partition's offset in a Kafka consumer group.
+    """Update a single partition's offset in a Kafka consumer group."""
+    # [START managedkafka_update_consumergroup]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+    from google.protobuf import field_mask_pb2
 
-    Args:
-        project_id: Google Cloud project ID.
-        region: Cloud region.
-        cluster_id: ID of the Kafka cluster.
-        consumer_group_id: ID of the Kafka consumer group.
-        topic_path: Name of the Kafka topic.
-        partition_offsets: Configuration of the topic, represented as a map of partition indexes to their offset value.
-
-    Raises:
-        This method will raise the exception if the consumer group is not found.
-    """
+    # TODO(developer)
+    # project_id = "my-project-id"
+	# region = "us-central1"
+	# cluster_id = "my-cluster"
+    # consumer_group_id = "my-consumer-group"
+    # topic_path = "my-topic-path"
+    # partition_offsets = {10: 10}
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -70,5 +65,4 @@ def update_consumer_group(
     except NotFound:
         print(f"Consumer group {consumer_group.name} not found")
 
-
-# [END managedkafka_update_consumergroup]
+    # [END managedkafka_update_consumergroup]

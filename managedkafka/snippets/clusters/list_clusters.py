@@ -12,23 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_list_clusters]
-from typing import List
-
-from google.cloud import managedkafka_v1
 
 
 def list_clusters(
     project_id: str,
     region: str,
-) -> List[str]:
-    """
-    List Kafka clusters in a given project ID and region.
+):
+    """List Kafka clusters in a given project ID and region."""
+    # [START managedkafka_list_clusters]
+    from google.cloud import managedkafka_v1
 
-    Args:
-        project_id: Google Cloud project ID.
-        region: Cloud region.
-    """
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -42,5 +38,4 @@ def list_clusters(
 
     return [cluster.name for cluster in response]
 
-
-# [END managedkafka_list_clusters]
+    # [END managedkafka_list_clusters]

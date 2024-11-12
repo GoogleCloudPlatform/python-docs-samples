@@ -12,25 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_list_topics]
-from typing import List
-
-from google.cloud import managedkafka_v1
-
 
 def list_topics(
     project_id: str,
     region: str,
     cluster_id: str,
-) -> List[str]:
-    """
-    List Kafka topics in a cluster.
+):
+    """List Kafka topics in a cluster."""
+    # [START managedkafka_list_topics]
+    from google.cloud import managedkafka_v1
 
-    Args:
-        project_id: Google Cloud project ID.
-        region: Cloud region.
-        cluster_id: ID of the Kafka cluster.
-    """
+    # TODO(developer)
+    # project_id = "my-project-id"
+	# region = "us-central1"
+	# cluster_id = "my-cluster"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -44,4 +39,4 @@ def list_topics(
 
     return [topic.name for topic in response]
 
-# [END managedkafka_list_topics]
+    # [END managedkafka_list_topics]

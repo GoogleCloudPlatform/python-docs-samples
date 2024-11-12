@@ -12,9 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_delete_topic]
-from google.api_core.exceptions import NotFound
-from google.cloud import managedkafka_v1
 
 
 def delete_topic(
@@ -23,18 +20,16 @@ def delete_topic(
     cluster_id: str,
     topic_id: str,
 ) -> None:
-    """
-    Delete a Kafka topic.
+    """Delete a Kafka topic."""
+    # [START managedkafka_delete_topic]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
 
-    Args:
-        project_id: Google Cloud project ID.
-        region: Cloud region.
-        cluster_id: ID of the Kafka cluster.
-        topic_id: ID of the Kafka topic.
-
-    Raises:
-        This method will raise the exception if the topic is not found.
-    """
+    # TODO(developer)
+    # project_id = "my-project-id"
+	# region = "us-central1"
+	# cluster_id = "my-cluster"
+    # topic_id = "my-topic"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -47,5 +42,4 @@ def delete_topic(
     except NotFound:
         print(f"Topic {topic_path} not found")
 
-
-# [END managedkafka_delete_topic]
+    # [END managedkafka_delete_topic]
