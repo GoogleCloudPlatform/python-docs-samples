@@ -28,6 +28,12 @@ def create_client_with_endpoint(api_endpoint) -> securitycenter_v2.SecurityCente
     regional_client = securitycenter_v2.SecurityCenterClient(
         client_options={"api_endpoint": api_endpoint}
     )
-    print("Regional client initiated with endpoint: {}".format(regional_client.api_endpoint))
+    print(
+        "Regional client initiated with endpoint: {}".format(
+            regional_client.api_endpoint
+        )
+    )
     return regional_client
+
+
 # [END securitycenter_set_client_endpoint_v2]
