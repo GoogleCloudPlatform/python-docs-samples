@@ -21,7 +21,20 @@ def update_topic(
     partition_count: int,
     configs: dict[str, str],
 ) -> None:
-    """Update a Kafka topic."""
+    """
+    Update a Kafka topic.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        topic_id: ID of the Kafka topic.
+        partition_count: Number of partitions in a topic..
+        configs: Configuration of the topic.
+
+    Raises:
+        This method will raise the exception if the topic is not found.
+    """
     # [START managedkafka_update_topic]
     from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1

@@ -19,7 +19,15 @@ def get_topic(
     cluster_id: str,
     topic_id: str,
 ):
-    """Get a Kafka topic."""
+    """
+    Get a Kafka topic.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        topic_id: ID of the Kafka topic.
+    """
     # [START managedkafka_get_topic]
     from google.cloud import managedkafka_v1
 

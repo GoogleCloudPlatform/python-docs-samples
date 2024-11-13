@@ -17,7 +17,13 @@ def list_clusters(
     project_id: str,
     region: str,
 ):
-    """List Kafka clusters in a given project ID and region."""
+    """
+    List Kafka clusters in a given project ID and region.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+    """
     # [START managedkafka_list_clusters]
     from google.cloud import managedkafka_v1
 

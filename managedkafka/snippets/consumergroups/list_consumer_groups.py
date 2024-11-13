@@ -18,7 +18,14 @@ def list_consumer_groups(
     region: str,
     cluster_id: str,
 ):
-    """List Kafka consumer groups in a cluster."""
+    """
+    List Kafka consumer groups in a cluster.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+    """
     # [START managedkafka_list_consumergroups]
     from google.cloud import managedkafka_v1
 

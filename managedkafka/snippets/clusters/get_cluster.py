@@ -18,7 +18,14 @@ def get_cluster(
     region: str,
     cluster_id: str,
 ):
-    """Get a Kafka cluster."""
+    """
+    Get a Kafka cluster.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+    """
     # [START managedkafka_get_cluster]
     from google.cloud import managedkafka_v1
 

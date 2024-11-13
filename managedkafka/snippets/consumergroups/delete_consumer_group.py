@@ -19,7 +19,18 @@ def delete_consumer_group(
     cluster_id: str,
     consumer_group_id: str,
 ) -> None:
-    """Delete a Kafka consumer group."""
+    """
+    Delete a Kafka consumer group.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        consumer_group_id: ID of the Kafka consumer group.
+
+    Raises:
+        This method will raise the exception if the consumer group is not found.
+    """
     # [START managedkafka_delete_consumergroup]
     from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1

@@ -22,7 +22,21 @@ def create_topic(
     replication_factor: int,
     configs: dict[str, str],
 ) -> None:
-    """Create a Kafka topic."""
+    """
+    Create a Kafka topic.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        topic_id: ID of the Kafka topic.
+        partition_count: Number of partitions in a topic..
+        replication_factor: Number of replicas of each partition.
+        configs: Configuration of the topic.
+
+    Raises:
+        This method will raise the exception if the topic already exists.
+    """
     # [START managedkafka_create_topic]
     from google.api_core.exceptions import AlreadyExists
     from google.cloud import managedkafka_v1

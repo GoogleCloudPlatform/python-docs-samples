@@ -19,7 +19,15 @@ def get_consumer_group(
     cluster_id: str,
     consumer_group_id: str,
 ):
-    """Get a Kafka consumer group."""
+    """
+    Get a Kafka consumer group.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        consumer_group_id: ID of the Kafka consumer group.
+    """
     # [START managedkafka_get_consumergroup]
     from google.cloud import managedkafka_v1
 

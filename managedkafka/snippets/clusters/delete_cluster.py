@@ -18,7 +18,18 @@ def delete_cluster(
     region: str,
     cluster_id: str,
 ) -> None:
-    """Delete a Kafka cluster."""
+    """
+    Delete a Kafka cluster.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+
+    Raises:
+        This method will raise the exception if the operation errors or
+        the timeout before the operation completes is reached.
+    """
     # [START managedkafka_delete_cluster]
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import managedkafka_v1

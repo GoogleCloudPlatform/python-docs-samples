@@ -18,7 +18,14 @@ def list_topics(
     region: str,
     cluster_id: str,
 ):
-    """List Kafka topics in a cluster."""
+    """
+    List Kafka topics in a cluster.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+    """
     # [START managedkafka_list_topics]
     from google.cloud import managedkafka_v1
 

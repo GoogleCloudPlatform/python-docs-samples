@@ -21,7 +21,20 @@ def update_consumer_group(
     topic_path: str,
     partition_offsets: dict[int, int],
 ) -> None:
-    """Update a single partition's offset in a Kafka consumer group."""
+    """
+    Update a single partition's offset in a Kafka consumer group.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        consumer_group_id: ID of the Kafka consumer group.
+        topic_path: Name of the Kafka topic.
+        partition_offsets: Configuration of the topic, represented as a map of partition indexes to their offset value.
+
+    Raises:
+        This method will raise the exception if the consumer group is not found.
+    """
     # [START managedkafka_update_consumergroup]
     from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1

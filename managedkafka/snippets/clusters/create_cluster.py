@@ -21,7 +21,21 @@ def create_cluster(
     cpu: int,
     memory_bytes: int,
 ) -> None:
-    """Create a Kafka cluster."""
+    """
+    Create a Kafka cluster.
+
+    Args:
+        project_id: Google Cloud project ID.
+        region: Cloud region.
+        cluster_id: ID of the Kafka cluster.
+        subnet: VPC subnet from which the cluster is accessible. The expected format is projects/{project_id}/regions{region}/subnetworks/{subnetwork}.
+        cpu: Number of vCPUs to provision for the cluster.
+        memory_bytes: The memory to provision for the cluster in bytes.
+
+    Raises:
+        This method will raise the exception if the operation errors or
+        the timeout before the operation completes is reached.
+    """
     # [START managedkafka_create_cluster]
     from google.api_core.exceptions import GoogleAPICallError
     from google.cloud import managedkafka_v1
