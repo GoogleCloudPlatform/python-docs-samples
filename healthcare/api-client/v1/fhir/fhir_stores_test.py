@@ -241,7 +241,7 @@ def test_get_fhir_store_metadata(test_dataset, test_fhir_store, capsys):
 
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
-    fhir_stores.patch_fhir_store(project_id, location, dataset_id, fhir_store_id)
+    fhir_stores.patch_fhir_store(project_id, location, dataset_id, fhir_store_id, pubsub_topic)
 
     out, _ = capsys.readouterr()
 
