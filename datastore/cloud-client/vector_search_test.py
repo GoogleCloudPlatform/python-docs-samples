@@ -107,3 +107,28 @@ def test_vector_search_distance_threshold(db):
     assert len(results) == 2
     assert results[0].key.name == "Liberica"
     assert results[1].key.name == "Robusta"
+
+def test_vector_search_large_query(db):
+    key_list, vector_results, full_results = vector_search_large_query(db)
+    assert len(key_list) == 4
+    # each list should have same number of elements
+    assert len(key_list) == len(vector_results)
+    assert len(key_list) == len(full_results)
+    # should all have the same keys
+    vector_map = {entity.key: entity for entity in vector_results}
+    full_map = {entity.key: entity for entity in full_results}
+    for key in key_list:
+        assert key in vector_map.keys()
+        assert key in full_map.keys()
+    # vector_results should just contain key and distance
+    for entity in vector_results:
+        assert entity.key is not None
+        assert entity["vector_distance"] is not None
+        with pytest.raises(KeyError):
+            entity["embedding_field"]
+    # full_results should have other fields, but no vector_distance
+    for entity in full_results:
+        assert entity.key is not None
+        assert isinstance(entity["embedding_field"], Vector)
+        with pytest.raises(KeyError):
+            entity["vector_distance"]

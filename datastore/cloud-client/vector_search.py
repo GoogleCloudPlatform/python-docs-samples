@@ -117,3 +117,34 @@ def vector_search_distance_threshold(db):
         print(f"{entity.id}")
     # [END datastore_vector_search_distance_threshold]
     return vector_query
+
+
+def vector_search_large_query(db):
+    # [START datastore_vector_search_large_query]
+    from google.cloud.datastore.vector import DistanceMeasure
+    from google.cloud.datastore.vector import Vector
+    from google.cloud.datastore.vector import FindNearest
+
+    # first, perform a vector search query retrieving just the keys
+    vector_query = db.query(
+        kind="coffee-beans",
+        find_nearest=FindNearest(
+            vector_property="embedding_field",
+            query_vector=Vector([3.0, 1.0, 2.0]),
+            distance_measure=DistanceMeasure.EUCLIDEAN,
+            limit=100,
+            distance_result_property="vector_distance",
+        )
+    )
+    vector_query.keys_only()
+    vector_results = list(vector_query.fetch())
+    key_list = [entity.key for entity in vector_results]
+    # next, perfrom a second query for the remaining data
+    full_results = db.get_multi(key_list)
+    # combine and print results
+    vector_map = {entity.key: entity for entity in vector_results}
+    full_map = {entity.key: entity for entity in full_results}
+    for key in key_list:
+        print(f"distance: {vector_map[key]['vector_distance']} entity: {full_map[key]}")
+    # [END datastore_vector_search_large_query]
+    return key_list, vector_results, full_results
