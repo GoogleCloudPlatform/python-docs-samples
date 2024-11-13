@@ -23,7 +23,7 @@ import pytest
 import create_cluster as gke_create
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-ZONE = "us-central1-b"
+REGION = "us-central1"
 CLUSTER_NAME = f"py-container-repo-test-{uuid.uuid4().hex[:10]}"
 
 
@@ -37,7 +37,7 @@ def setup_and_tear_down() -> None:
     try:
         # delete the cluster
         client = gke.ClusterManagerClient()
-        cluster_location = client.common_location_path(PROJECT_ID, ZONE)
+        cluster_location = client.common_location_path(PROJECT_ID, REGION)
         cluster_name = f"{cluster_location}/clusters/{CLUSTER_NAME}"
         op = client.delete_cluster({"name": cluster_name})
         op_id = f"{cluster_location}/operations/{op.name}"
@@ -54,14 +54,14 @@ def setup_and_tear_down() -> None:
 
 
 def test_create_clusters(capsys: object) -> None:
-    gke_create.create_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
+    gke_create.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
     out, _ = capsys.readouterr()
 
     assert "Backing off " in out
     assert "Successfully created cluster after" in out
 
     client = gke.ClusterManagerClient()
-    cluster_location = client.common_location_path(PROJECT_ID, ZONE)
+    cluster_location = client.common_location_path(PROJECT_ID, REGION)
     list_response = client.list_clusters({"parent": cluster_location})
 
     list_of_clusters = []

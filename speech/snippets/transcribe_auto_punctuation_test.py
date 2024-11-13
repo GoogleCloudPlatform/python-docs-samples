@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import os
 
 from google.api_core.retry import Retry
@@ -25,7 +24,7 @@ RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
 @Retry()
 def test_transcribe_file_with_auto_punctuation(capsys: pytest.CaptureFixture) -> None:
     result = transcribe_auto_punctuation.transcribe_file_with_auto_punctuation(
-        "resources/commercial_mono.wav"
+        os.path.join(RESOURCES, "commercial_mono.wav")
     )
     out, _ = capsys.readouterr()
 

@@ -18,16 +18,18 @@
 
 import datetime
 
+import pytest
+
 import snippets
 
 
-def test_sign_url():
+def test_sign_url() -> None:
     assert (
         snippets.sign_url(
             "http://35.186.234.33/index.html",
             "my-key",
             "nZtRohdNF9m3cKM24IcK4w==",
-            datetime.datetime.utcfromtimestamp(1549751401),
+            datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
         )
         == "http://35.186.234.33/index.html?Expires=1549751401&KeyName=my-key&Signature=CRFqQnVfFyiUyR63OQf-HRUpIwc="
     )
@@ -37,7 +39,7 @@ def test_sign_url():
             "http://www.example.com/",
             "my-key",
             "nZtRohdNF9m3cKM24IcK4w==",
-            datetime.datetime.utcfromtimestamp(1549751401),
+            datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
         )
         == "http://www.example.com/?Expires=1549751401&KeyName=my-key&Signature=OqDUFfHpN5Vxga6r80bhsgxKves="
     )
@@ -46,19 +48,36 @@ def test_sign_url():
             "http://www.example.com/some/path?some=query&another=param",
             "my-key",
             "nZtRohdNF9m3cKM24IcK4w==",
-            datetime.datetime.utcfromtimestamp(1549751401),
+            datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
         )
         == "http://www.example.com/some/path?some=query&another=param&Expires=1549751401&KeyName=my-key&Signature=9Q9TCxSju8-W5nUkk5CuTrun2_o="
     )
 
 
-def test_sign_url_prefix():
+def test_sign_url_raise_exception_on_naive_expiration_datetime() -> None:
+    with pytest.raises(TypeError):
+        snippets.sign_url(
+            "http://www.example.com/some/path?some=query&another=param",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.fromtimestamp(1549751401),
+        )
+    with pytest.raises(TypeError):
+        snippets.sign_url(
+            "http://www.example.com/some/path?some=query&another=param",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.utcfromtimestamp(1549751401),
+        )
+
+
+def test_sign_url_prefix() -> None:
     assert snippets.sign_url_prefix(
         "http://35.186.234.33/index.html",
         "http://35.186.234.33/",
         "my-key",
         "nZtRohdNF9m3cKM24IcK4w==",
-        datetime.datetime.utcfromtimestamp(1549751401),
+        datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
     ) == (
         "http://35.186.234.33/index.html?URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMv&"
         "Expires=1549751401&KeyName=my-key&Signature=j7HYgoQ8dIOVsW3Rw4cpkjWfRMA="
@@ -68,7 +87,7 @@ def test_sign_url_prefix():
         "http://www.example.com/",
         "my-key",
         "nZtRohdNF9m3cKM24IcK4w==",
-        datetime.datetime.utcfromtimestamp(1549751401),
+        datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
     ) == (
         "http://www.example.com/?URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS8=&"
         "Expires=1549751401&KeyName=my-key&Signature=UdT5nVks6Hh8QFMJI9kmXuXYBk0="
@@ -78,7 +97,7 @@ def test_sign_url_prefix():
         "http://www.example.com/some/",
         "my-key",
         "nZtRohdNF9m3cKM24IcK4w==",
-        datetime.datetime.utcfromtimestamp(1549751401),
+        datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
     ) == (
         "http://www.example.com/some/path?some=query&another=param&"
         "URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9zb21lLw==&"
@@ -86,13 +105,32 @@ def test_sign_url_prefix():
     )
 
 
-def test_sign_cookie():
+def test_sign_url_prefix_raise_exception_on_naive_expiration_datetime() -> None:
+    with pytest.raises(TypeError):
+        snippets.sign_url_prefix(
+            "http://www.example.com/some/path?some=query&another=param",
+            "http://www.example.com/some/",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.fromtimestamp(1549751401),
+        )
+    with pytest.raises(TypeError):
+        snippets.sign_url_prefix(
+            "http://www.example.com/some/path?some=query&another=param",
+            "http://www.example.com/some/",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.utcfromtimestamp(1549751401),
+        )
+
+
+def test_sign_cookie() -> None:
     assert (
         snippets.sign_cookie(
             "http://35.186.234.33/index.html",
             "my-key",
             "nZtRohdNF9m3cKM24IcK4w==",
-            datetime.datetime.utcfromtimestamp(1549751401),
+            datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
         )
         == "Cloud-CDN-Cookie=URLPrefix=aHR0cDovLzM1LjE4Ni4yMzQuMzMvaW5kZXguaHRtbA==:Expires=1549751401:KeyName=my-key:Signature=uImwlOBCPs91mlCyG9vyyZRrNWU="
     )
@@ -102,7 +140,24 @@ def test_sign_cookie():
             "http://www.example.com/foo/",
             "my-key",
             "nZtRohdNF9m3cKM24IcK4w==",
-            datetime.datetime.utcfromtimestamp(1549751401),
+            datetime.datetime.fromtimestamp(1549751401, datetime.timezone.utc),
         )
         == "Cloud-CDN-Cookie=URLPrefix=aHR0cDovL3d3dy5leGFtcGxlLmNvbS9mb28v:Expires=1549751401:KeyName=my-key:Signature=Z9uYAu73YHioRScZDxnP-TnS274="
     )
+
+
+def test_sign_cookie_raise_exception_on_naive_expiration_datetime() -> None:
+    with pytest.raises(TypeError):
+        snippets.sign_cookie(
+            "http://www.example.com/foo/",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.fromtimestamp(1549751401),
+        )
+    with pytest.raises(TypeError):
+        snippets.sign_cookie(
+            "http://www.example.com/foo/",
+            "my-key",
+            "nZtRohdNF9m3cKM24IcK4w==",
+            datetime.datetime.utcfromtimestamp(1549751401),
+        )

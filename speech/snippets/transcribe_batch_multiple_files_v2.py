@@ -12,10 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-import argparse
-
 # [START speech_transcribe_batch_multiple_files_v2]
+import os
 import re
 from typing import List
 
@@ -23,21 +21,22 @@ from google.cloud import storage
 from google.cloud.speech_v2 import SpeechClient
 from google.cloud.speech_v2.types import cloud_speech
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
 
 def transcribe_batch_multiple_files_v2(
-    project_id: str,
-    gcs_uris: List[str],
+    audio_uris: List[str],
     gcs_output_path: str,
 ) -> cloud_speech.BatchRecognizeResponse:
-    """Transcribes audio from a Google Cloud Storage URI.
-
+    """Transcribes audio from multiple Google Cloud Storage URIs using the Google Cloud Speech-to-Text API.
+    The transcription results are stored in another Google Cloud Storage bucket.
     Args:
-        project_id: The Google Cloud project ID.
-        gcs_uris: The Google Cloud Storage URIs to transcribe.
-        gcs_output_path: The Cloud Storage URI to which to write the transcript.
-
+        audio_uris (List[str]): The list of Google Cloud Storage URIs of the input audio files.
+            E.g., ["gs://[BUCKET]/[FILE]", "gs://[BUCKET]/[FILE]"]
+        gcs_output_path (str): The Google Cloud Storage bucket URI where the output transcript will be stored.
+            E.g., gs://[BUCKET]
     Returns:
-        The BatchRecognizeResponse message.
+        cloud_speech.BatchRecognizeResponse: The response containing the URIs of the transcription results.
     """
     # Instantiates a client
     client = SpeechClient()
@@ -48,13 +47,10 @@ def transcribe_batch_multiple_files_v2(
         model="long",
     )
 
-    files = [
-        cloud_speech.BatchRecognizeFileMetadata(uri=uri)
-        for uri in gcs_uris
-    ]
+    files = [cloud_speech.BatchRecognizeFileMetadata(uri=uri) for uri in audio_uris]
 
     request = cloud_speech.BatchRecognizeRequest(
-        recognizer=f"projects/{project_id}/locations/global/recognizers/_",
+        recognizer=f"projects/{PROJECT_ID}/locations/global/recognizers/_",
         config=config,
         files=files,
         recognition_output_config=cloud_speech.RecognitionOutputConfig(
@@ -71,7 +67,7 @@ def transcribe_batch_multiple_files_v2(
     response = operation.result(timeout=120)
 
     print("Operation finished. Fetching results from:")
-    for uri in gcs_uris:
+    for uri in audio_uris:
         file_results = response.results[uri]
         print(f"  {file_results.uri}...")
         output_bucket, output_object = re.match(
@@ -99,15 +95,8 @@ def transcribe_batch_multiple_files_v2(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="GCP Project ID")
-    parser.add_argument("gcs_uri", nargs="+", help="URI to GCS file")
-    parser.add_argument(
-        "gcs_output_path", help="GCS URI to which to write the transcript"
-    )
-    args = parser.parse_args()
-    transcribe_batch_multiple_files_v2(
-        args.project_id, args.gcs_uri, args.gcs_output_path
-    )
+    audio1 = "gs://cloud-samples-data/speech/audio.flac"
+    audio2 = "gs://cloud-samples-data/speech/corbeau_renard.flac"
+    uris_list = [audio1, audio2]
+    output_bucket_name = "gs://your-bucket-name"
+    transcribe_batch_multiple_files_v2(uris_list, output_bucket_name)

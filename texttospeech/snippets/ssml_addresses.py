@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 
 # [START tts_ssml_address_imports]
@@ -25,20 +24,17 @@ from google.cloud import texttospeech
 
 
 # [START tts_ssml_address_audio]
-def ssml_to_audio(ssml_text, outfile):
-    # Generates SSML text from plaintext.
-    #
-    # Given a string of SSML text and an output file name, this function
-    # calls the Text-to-Speech API. The API returns a synthetic audio
-    # version of the text, formatted according to the SSML commands. This
-    # function saves the synthetic audio to the designated output file.
-    #
-    # Args:
-    # ssml_text: string of SSML text
-    # outfile: string name of file under which to save audio output
-    #
-    # Returns:
-    # nothing
+def ssml_to_audio(ssml_text: str) -> None:
+    """
+    Generates SSML text from plaintext.
+    Given a string of SSML text and an output file name, this function
+    calls the Text-to-Speech API. The API returns a synthetic audio
+    version of the text, formatted according to the SSML commands. This
+    function saves the synthetic audio to the designated output file.
+
+    Args:
+        ssml_text: string of SSML text
+    """
 
     # Instantiates a client
     client = texttospeech.TextToSpeechClient()
@@ -64,26 +60,26 @@ def ssml_to_audio(ssml_text, outfile):
     )
 
     # Writes the synthetic audio to the output file.
-    with open(outfile, "wb") as out:
+    with open("test_example.mp3", "wb") as out:
         out.write(response.audio_content)
-        print("Audio content written to file " + outfile)
+        print("Audio content written to file " + "test_example.mp3")
     # [END tts_ssml_address_audio]
 
 
 # [START tts_ssml_address_ssml]
-def text_to_ssml(inputfile):
-    # Generates SSML text from plaintext.
-    # Given an input filename, this function converts the contents of the text
-    # file into a string of formatted SSML text. This function formats the SSML
-    # string so that, when synthesized, the synthetic audio will pause for two
-    # seconds between each line of the text file. This function also handles
-    # special text characters which might interfere with SSML commands.
-    #
-    # Args:
-    # inputfile: string name of plaintext file
-    #
-    # Returns:
-    # A string of SSML text based on plaintext input
+def text_to_ssml(inputfile: str) -> str:
+    """
+    Generates SSML text from plaintext.
+    Given an input filename, this function converts the contents of the text
+    file into a string of formatted SSML text. This function formats the SSML
+    string so that, when synthesized, the synthetic audio will pause for two
+    seconds between each line of the text file. This function also handles
+    special text characters which might interfere with SSML commands.
+
+    Args:
+        inputfile: name of plaintext file
+    Returns: SSML text based on plaintext input
+    """
 
     # Parses lines of input file
     with open(inputfile) as f:

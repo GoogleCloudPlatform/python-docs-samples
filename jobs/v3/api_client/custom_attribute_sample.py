@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,7 +15,6 @@
 # limitations under the License.
 
 
-# [START instantiate]
 import os
 import random
 import string
@@ -25,10 +24,9 @@ from googleapiclient.discovery import build
 
 client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
 
 
-# [START custom_attribute_job]
+# [START job_custom_attribute_job]
 def generate_job_with_custom_attributes(company_name):
     # Requisition id should be a unique Id in your system.
     requisition_id = "job_with_custom_attributes:" + "".join(
@@ -56,7 +54,7 @@ def generate_job_with_custom_attributes(company_name):
     return job
 
 
-# [END custom_attribute_job]
+# [END job_custom_attribute_job]
 
 
 # [START custom_attribute_filter_string_value]

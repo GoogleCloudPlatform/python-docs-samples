@@ -56,48 +56,6 @@ def home() -> str:
     return render_template(template_name_or_list="home.html", context=context)
 
 
-# On homepage load, execute reCAPTCHA Enterprise assessment and take action according to the score.
-def on_homepage_load() -> Response:
-    try:
-        reason = ""
-        recaptcha_action = config["recaptcha_actions"]["home"]
-        json_data = json.loads(request.data)
-
-        # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Starts -->
-        assessment_response = create_assessment(
-            context.get("project_id"),
-            context.get("site_key"),
-            json_data["token"],
-        )
-
-        # Check if the token is valid, score is above threshold score and the action equals expected.
-        # Take action based on the result (BAD/ NOT_BAD).
-        #
-        # If 'label' is NOT_BAD:
-        # Load the home page.
-        # Business logic.
-        #
-        # If 'label' is BAD:
-        # Trigger email/ phone verification flow.
-        label, reason = check_for_bad_action(assessment_response, recaptcha_action)
-        # <!-- ATTENTION: reCAPTCHA Example (Server Part 1/2) Ends -->
-
-        # Below code is only used to send response to the client for demo purposes.
-        # DO NOT send scores or other assessment response to the client.
-        # Return the response.
-        return jsonify(
-            {
-                "data": {
-                    "score": f"{assessment_response.risk_analysis.score:.1f}",
-                    "label": label,
-                    "reason": reason,
-                }
-            }
-        )
-    except ValueError or Exception as e:
-        return jsonify({"data": {"error_msg": str(e.__dict__)}})
-
-
 # Return signup template.
 def signup() -> str:
     return render_template(template_name_or_list="signup.html", context=context)
@@ -114,6 +72,7 @@ def on_signup() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -162,6 +121,7 @@ def on_login() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -210,6 +170,7 @@ def on_store_checkout() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.
@@ -257,6 +218,7 @@ def on_comment_submit() -> Response:
             context.get("project_id"),
             context.get("site_key"),
             json_data["token"],
+            recaptcha_action,
         )
 
         # Check if the token is valid, score is above threshold score and the action equals expected.

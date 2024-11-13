@@ -487,7 +487,9 @@ def compound_query_single_clause():
 
 
 def compound_query_valid_multi_clause():
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_filter_compound_multi_eq]
     cities_ref = db.collection("cities")
 
@@ -500,6 +502,7 @@ def compound_query_valid_multi_clause():
     # [END firestore_query_filter_compound_multi_eq]
     print(denver_query)
     print(large_us_cities_query)
+    return denver_query, large_us_cities_query
 
 
 def compound_query_valid_single_field():
@@ -525,8 +528,9 @@ def compound_query_invalid_multi_field():
 def order_simple_limit():
     db = firestore.Client()
     # [START firestore_order_simple_limit]
-    db.collection("cities").order_by("name").limit(3).stream()
+    query = db.collection("cities").order_by("name").limit(3).stream()
     # [END firestore_order_simple_limit]
+    return query
 
 
 def order_simple_limit_desc():
@@ -537,16 +541,20 @@ def order_simple_limit_desc():
     results = query.stream()
     # [END firestore_query_order_desc_limit]
     print(results)
+    return results
 
 
 def order_multiple():
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_order_multi]
     cities_ref = db.collection("cities")
-    cities_ref.order_by("state").order_by(
+    ordered_city_ref = cities_ref.order_by("state").order_by(
         "population", direction=firestore.Query.DESCENDING
     )
     # [END firestore_query_order_multi]
+    return ordered_city_ref
 
 
 def order_where_limit():
@@ -561,6 +569,7 @@ def order_where_limit():
     results = query.stream()
     # [END firestore_query_order_limit_field_valid]
     print(results)
+    return results
 
 
 def order_limit_to_last():
@@ -571,6 +580,7 @@ def order_limit_to_last():
     results = query.get()
     # [END firestore_query_order_limit]
     print(results)
+    return results
 
 
 def order_where_valid():
@@ -583,10 +593,13 @@ def order_where_valid():
     results = query.stream()
     # [END firestore_query_order_with_filter]
     print(results)
+    return results
 
 
 def order_where_invalid():
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_order_field_invalid]
     cities_ref = db.collection("cities")
     query = cities_ref.where(filter=FieldFilter("population", ">", 2500000)).order_by(
@@ -595,6 +608,7 @@ def order_where_invalid():
     results = query.stream()
     # [END firestore_query_order_field_invalid]
     print(results)
+    return results
 
 
 def cursor_simple_start_at():
@@ -628,9 +642,6 @@ def snapshot_cursors():
     )
     # [END firestore_query_cursor_start_at_document]
     results = start_at_snapshot.limit(10).stream()
-    for doc in results:
-        print(f"{doc.id}")
-
     return results
 
 
@@ -790,7 +801,9 @@ def listen_for_changes():
 
 
 def cursor_multiple_conditions():
-    db = firestore.Client()
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
     # [START firestore_query_cursor_start_at_field_value_multi]
     start_at_name = (
         db.collection("cities").order_by("name").start_at({"name": "Springfield"})
@@ -827,6 +840,9 @@ def delete_full_collection():
 
     # [START firestore_data_delete_collection]
     def delete_collection(coll_ref, batch_size):
+        if batch_size == 0:
+            return
+
         docs = coll_ref.list_documents(page_size=batch_size)
         deleted = 0
 
@@ -844,6 +860,7 @@ def delete_full_collection():
     delete_collection(db.collection("data"), 10)
     delete_collection(db.collection("objects"), 10)
     delete_collection(db.collection("users"), 10)
+    delete_collection(db.collection("users"), 0)
 
 
 def collection_group_query(db):
@@ -917,6 +934,24 @@ def in_query_with_array(db):
     # [END firestore_query_filter_in_with_array]
 
 
+def not_in_query(db):
+    # [START firestore_query_filter_not_in]
+    cities_ref = db.collection("cities")
+
+    query = cities_ref.where(filter=FieldFilter("country", "not-in", ["USA", "Japan"]))
+    return query
+    # [END firestore_query_filter_not_in]
+
+
+def not_equal_query(db):
+    # [START firestore_query_filter_not_equal]
+    cities_ref = db.collection("cities")
+
+    query = cities_ref.where(filter=FieldFilter("capital", "!=", False))
+    return query
+    # [END firestore_query_filter_not_equal]
+
+
 def update_document_increment(db):
     # [START firestore_data_set_numeric_increment]
     washington_ref = db.collection("cities").document("DC")
@@ -928,7 +963,8 @@ def update_document_increment(db):
 def list_document_subcollections():
     db = firestore.Client()
     # [START firestore_data_get_sub_collections]
-    collections = db.collection("cities").document("SF").collections()
+    city_ref = db.collection("cities").document("SF")
+    collections = city_ref.collections()
     for collection in collections:
         for doc in collection.stream():
             print(f"{doc.id} => {doc.to_dict()}")
@@ -979,3 +1015,51 @@ def regional_endpoint():
     for r in cities_query:
         print(r)
     # [END firestore_regional_endpoint]
+    return cities_query
+
+
+def query_filter_compound_multi_ineq():
+    from google.cloud import firestore
+
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
+    # [START firestore_query_filter_compound_multi_ineq]
+    query = (
+        db.collection("cities")
+        .where(filter=FieldFilter("population", ">", 1_000_000))
+        .where(filter=FieldFilter("density", "<", 10_000))
+    )
+    # [END firestore_query_filter_compound_multi_ineq]
+    return query
+
+
+def query_indexing_considerations():
+    db = firestore.Client(
+        add_unique_string=False
+    )  # Flag for testing purposes, needs index to be precreated
+    # [START firestore_query_indexing_considerations]
+    query = (
+        db.collection("employees")
+        .where(filter=FieldFilter("salary", ">", 100_000))
+        .where(filter=FieldFilter("experience", ">", 0))
+        .order_by("salary")
+        .order_by("experience")
+    )
+    # [END firestore_query_indexing_considerations]
+    return query
+
+
+def query_order_fields():
+    db = firestore.Client()
+    # [START firestore_query_order_fields]
+    query = (
+        db.collection("employees")
+        .where(filter=FieldFilter("salary", ">", 100_000))
+        .order_by("salary")
+    )
+    results = query.stream()
+    # Order results by `experience`
+    sorted_results = sorted(results, key=lambda x: x.get("experience"))
+    # [END firestore_query_order_fields]
+    return sorted_results

@@ -13,35 +13,27 @@
 # limitations under the License.
 
 """Google Cloud Speech API sample that demonstrates multichannel recognition.
-
-Example usage:
-    python transcribe_multichannel.py resources/multi.wav
-    python transcribe_multichannel.py \
-        gs://cloud-samples-tests/speech/multi.wav
 """
 
 # [START speech_transcribe_multichannel]
-import argparse
 
 from google.cloud import speech
 
 
-def transcribe_file_with_multichannel(speech_file: str) -> speech.RecognizeResponse:
-    """Transcribe the given audio file synchronously with
-    multi channel.
-
+def transcribe_file_with_multichannel(audio_file: str) -> speech.RecognizeResponse:
+    """Transcribe the given audio file synchronously with multi channel.
     Args:
-        speech_file: A path to audio file to be recognized.
-
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/multi.wav"
     Returns:
-        The RecognizeResponse results.
+         cloud_speech.RecognizeResponse: The full response object which includes the transcription results.
     """
     client = speech.SpeechClient()
 
-    with open(speech_file, "rb") as audio_file:
-        content = audio_file.read()
+    with open(audio_file, "rb") as f:
+        audio_content = f.read()
 
-    audio = speech.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=audio_content)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -64,22 +56,20 @@ def transcribe_file_with_multichannel(speech_file: str) -> speech.RecognizeRespo
     # [END speech_transcribe_multichannel]
 
 
-def transcribe_gcs_with_multichannel(gcs_uri: str) -> speech.RecognizeResponse:
-    """Transcribe the given audio file on GCS with
-    multi channel.
-
+def transcribe_gcs_with_multichannel(audio_uri: str) -> speech.RecognizeResponse:
+    """Transcribe the given audio file from Google Cloud Storage synchronously with multichannel.
     Args:
-        gcs_uri: A path to audio file to be recognized.
-
+        audio_uri (str): The Cloud Storage URI of the input audio.
+            E.g., gs://cloud-samples-data/speech/multi.wav
     Returns:
-        The RecognizeResponse results.
+        speech.RecognizeResponse: The full response object which includes the transcription results.
     """
     # [START speech_transcribe_multichannel_gcs]
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=audio_uri)
 
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
@@ -103,12 +93,9 @@ def transcribe_gcs_with_multichannel(gcs_uri: str) -> speech.RecognizeResponse:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
-    args = parser.parse_args()
-    if args.path.startswith("gs://"):
-        transcribe_gcs_with_multichannel(args.path)
+    # It could be a local path like: path_to_file = "resources/multi.wav"
+    path_to_file = "gs://cloud-samples-data/speech/multi.wav"
+    if path_to_file.startswith("gs://"):
+        transcribe_gcs_with_multichannel(path_to_file)
     else:
-        transcribe_file_with_multichannel(args.path)
+        transcribe_file_with_multichannel(path_to_file)

@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 # [START recaptcha_enterprise_create_assessment]
 
@@ -22,7 +21,13 @@ from google.cloud.recaptchaenterprise_v1 import Assessment
 
 
 def create_assessment(
-    project_id: str, recaptcha_site_key: str, token: str, recaptcha_action: str
+    project_id: str,
+    recaptcha_site_key: str,
+    token: str,
+    recaptcha_action: str,
+    user_ip_address: str,
+    user_agent: str,
+    ja3: str,
 ) -> Assessment:
     """Create an assessment to analyze the risk of a UI action.
     Args:
@@ -30,6 +35,9 @@ def create_assessment(
         recaptcha_site_key: Site key obtained by registering a domain/app to use recaptcha services.
         token: The token obtained from the client on passing the recaptchaSiteKey.
         recaptcha_action: Action name corresponding to the token.
+        user_ip_address: IP address of the user sending a request.
+        user_agent: User agent is included in the HTTP request in the request header.
+        ja3: JA3 associated with the request.
     """
 
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
@@ -38,6 +46,9 @@ def create_assessment(
     event = recaptchaenterprise_v1.Event()
     event.site_key = recaptcha_site_key
     event.token = token
+    event.user_ip_address = user_ip_address
+    event.user_agent = user_agent
+    event.ja3 = ja3
 
     assessment = recaptchaenterprise_v1.Assessment()
     assessment.event = event

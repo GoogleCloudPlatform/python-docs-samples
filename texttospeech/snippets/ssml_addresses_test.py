@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 import os
 
@@ -37,7 +36,7 @@ def test_ssml_to_audio(capsys):
         input_ssml = f.read()
 
     # Assert audio file generated
-    ssml_to_audio(input_ssml, "test_example.mp3")
+    ssml_to_audio(input_ssml)
     out, err = capsys.readouterr()
 
     # Assert MP3 file created

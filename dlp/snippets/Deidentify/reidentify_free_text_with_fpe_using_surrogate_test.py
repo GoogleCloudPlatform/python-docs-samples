@@ -31,7 +31,7 @@ def test_reidentify_free_text_with_fpe_using_surrogate(
         labeled_fpe_string,
         surrogate_type="PHONE_TOKEN",
         unwrapped_key=UNWRAPPED_KEY,
-        alphabet='NUMERIC',
+        alphabet="NUMERIC",
     )
 
     out, _ = capsys.readouterr()

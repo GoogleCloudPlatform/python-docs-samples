@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 # [END instantiate]
 
 
-# [START commute_search]
+# [START job_discovery_commute_search]
 def commute_search(client_service, company_name):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -54,7 +54,7 @@ def commute_search(client_service, company_name):
     print(response)
 
 
-# [END commute_search]
+# [END job_discovery_commute_search]
 
 
 def set_up():

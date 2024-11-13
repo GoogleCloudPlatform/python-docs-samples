@@ -12,31 +12,29 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Speech API sample that demonstrates word time offsets.
-
-Example usage:
-    python transcribe_word_time_offsets.py resources/audio.raw
-    python transcribe_word_time_offsets.py \
-        gs://cloud-samples-tests/speech/vr.flac
-"""
-
-import argparse
+"""Google Cloud Speech API sample that demonstrates word time offsets."""
 
 from google.cloud import speech
 
 
 def transcribe_file_with_word_time_offsets(
-    speech_file: str,
+    audio_file: str,
 ) -> speech.RecognizeResponse:
     """Transcribe the given audio file synchronously and output the word time
-    offsets."""
+    offsets.
+    Args:
+        audio_file (str): Path to the local audio file to be transcribed.
+            Example: "resources/audio.wav"
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results with word time offsets.
+    """
 
     client = speech.SpeechClient()
 
-    with open(speech_file, "rb") as audio_file:
-        content = audio_file.read()
+    with open(audio_file, "rb") as file:
+        audio_content = file.read()
 
-    audio = speech.RecognitionAudio(content=content)
+    audio = speech.RecognitionAudio(content=audio_content)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.LINEAR16,
         sample_rate_hertz=16000,
@@ -64,15 +62,21 @@ def transcribe_file_with_word_time_offsets(
 
 # [START speech_transcribe_async_word_time_offsets_gcs]
 def transcribe_gcs_with_word_time_offsets(
-    gcs_uri: str,
+    audio_uri: str,
 ) -> speech.RecognizeResponse:
     """Transcribe the given audio file asynchronously and output the word time
-    offsets."""
+    offsets.
+    Args:
+        audio_uri (str): The Google Cloud Storage URI of the input audio file.
+            E.g., gs://[BUCKET]/[FILE]
+    Returns:
+        speech.RecognizeResponse: The response containing the transcription results with word time offsets.
+    """
     from google.cloud import speech
 
     client = speech.SpeechClient()
 
-    audio = speech.RecognitionAudio(uri=gcs_uri)
+    audio = speech.RecognitionAudio(uri=audio_uri)
     config = speech.RecognitionConfig(
         encoding=speech.RecognitionConfig.AudioEncoding.FLAC,
         sample_rate_hertz=16000,
@@ -106,12 +110,9 @@ def transcribe_gcs_with_word_time_offsets(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("path", help="File or GCS path for audio file to be recognized")
-    args = parser.parse_args()
-    if args.path.startswith("gs://"):
-        transcribe_gcs_with_word_time_offsets(args.path)
+    # It could be a local path like: path_to_file = "resources/audio.raw"
+    path_to_file = "gs://cloud-samples-data/speech/audio.flac"
+    if path_to_file.startswith("gs://"):
+        transcribe_gcs_with_word_time_offsets(path_to_file)
     else:
-        transcribe_file_with_word_time_offsets(args.path)
+        transcribe_file_with_word_time_offsets(path_to_file)

@@ -1,4 +1,4 @@
-# Copyright 2018 Google LLC All Rights Reserved.
+# Copyright 2018 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -140,10 +140,6 @@ def test_dicomweb_store_instance(test_dataset, test_dicom_store, capsys):
 
 
 def test_dicomweb_search_instance_studies(test_dataset, test_dicom_store, capsys):
-    dicomweb.dicomweb_store_instance(
-        project_id, location, dataset_id, dicom_store_id, dcm_file
-    )
-
     dicomweb.dicomweb_search_instance(project_id, location, dataset_id, dicom_store_id)
 
     dicomweb.dicomweb_search_studies(project_id, location, dataset_id, dicom_store_id)
@@ -158,10 +154,6 @@ def test_dicomweb_search_instance_studies(test_dataset, test_dicom_store, capsys
 
 def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
     try:
-        dicomweb.dicomweb_store_instance(
-            project_id, location, dataset_id, dicom_store_id, dcm_file
-        )
-
         dicomweb.dicomweb_retrieve_study(
             project_id, location, dataset_id, dicom_store_id, study_uid
         )
@@ -181,10 +173,6 @@ def test_dicomweb_retrieve_study(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
     try:
-        dicomweb.dicomweb_store_instance(
-            project_id, location, dataset_id, dicom_store_id, dcm_file
-        )
-
         dicomweb.dicomweb_retrieve_instance(
             project_id,
             location,
@@ -210,10 +198,6 @@ def test_dicomweb_retrieve_instance(test_dataset, test_dicom_store, capsys):
 
 def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
     try:
-        dicomweb.dicomweb_store_instance(
-            project_id, location, dataset_id, dicom_store_id, dcm_file
-        )
-
         dicomweb.dicomweb_retrieve_rendered(
             project_id,
             location,
@@ -238,10 +222,6 @@ def test_dicomweb_retrieve_rendered(test_dataset, test_dicom_store, capsys):
 
 
 def test_dicomweb_delete_study(test_dataset, test_dicom_store, capsys):
-    dicomweb.dicomweb_store_instance(
-        project_id, location, dataset_id, dicom_store_id, dcm_file
-    )
-
     dicomweb.dicomweb_delete_study(
         project_id, location, dataset_id, dicom_store_id, study_uid
     )

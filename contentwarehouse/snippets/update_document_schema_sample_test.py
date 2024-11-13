@@ -24,6 +24,9 @@ location = "us"
 document_schema_id = "0gc5eijqsb18g"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_update_document_schema_sample(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     update_document_schema_sample.update_document_schema(

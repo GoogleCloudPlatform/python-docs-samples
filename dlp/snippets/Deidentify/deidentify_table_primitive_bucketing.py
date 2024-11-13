@@ -19,9 +19,8 @@ from __future__ import annotations
 
 import argparse
 
-import google.cloud.dlp
-
 # [START dlp_deidentify_table_primitive_bucketing]
+import google.cloud.dlp
 
 
 def deidentify_table_primitive_bucketing(

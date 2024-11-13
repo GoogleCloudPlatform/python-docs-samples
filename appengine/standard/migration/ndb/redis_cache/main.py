@@ -13,9 +13,10 @@
 # limitations under the License.
 
 # [START all]
+import logging
+
 from flask import Flask, redirect, render_template, request
 from google.cloud import ndb
-import logging
 
 try:
     from urllib import urlencode

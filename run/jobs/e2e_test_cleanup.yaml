@@ -23,8 +23,8 @@ steps:
       ./retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
         "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
 
-      ./retry.sh "gcloud alpha run jobs describe ${_SERVICE} --region ${_REGION}" \
-        "gcloud alpha run jobs delete ${_SERVICE} --region ${_REGION} --quiet"
+      ./retry.sh "gcloud run jobs describe ${_SERVICE} --region ${_REGION}" \
+        "gcloud run jobs delete ${_SERVICE} --region ${_REGION} --quiet"
 
 substitutions:
   _SERVICE: logger-job

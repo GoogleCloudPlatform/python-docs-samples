@@ -25,6 +25,7 @@ import pytest
 import transcribe_reuse_recognizer
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def create_recognizer(project_id: str, recognizer_id: str) -> None:
@@ -55,18 +56,18 @@ def delete_recognizer(project_id: str, recognizer_id: str) -> None:
 def test_transcribe_reuse_recognizer(
     capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
 ) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup():
-        delete_recognizer(project_id, recognizer_id)
+    def cleanup() -> None:
+        delete_recognizer(PROJECT_ID, recognizer_id)
 
     request.addfinalizer(cleanup)
 
-    create_recognizer(project_id, recognizer_id)
+    create_recognizer(PROJECT_ID, recognizer_id)
 
     response = transcribe_reuse_recognizer.transcribe_reuse_recognizer(
-        project_id, recognizer_id, os.path.join(_RESOURCES, "audio.wav")
+        os.path.join(_RESOURCES, "audio.wav"),
+        recognizer_id,
     )
 
     assert re.search(

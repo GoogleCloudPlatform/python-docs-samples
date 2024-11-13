@@ -39,11 +39,12 @@ _is_healthy = True
 _cpu_burner = None
 
 
-@app.before_first_request
+@app.before_request
 def init():
     """Initialize the application."""
     global _cpu_burner
-    _cpu_burner = CpuBurner()
+    if _cpu_burner is None:
+        _cpu_burner = CpuBurner()
 
 
 @app.route("/")

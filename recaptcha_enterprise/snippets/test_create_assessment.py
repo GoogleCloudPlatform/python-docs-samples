@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 import multiprocessing
 import os
 import re
@@ -93,7 +92,14 @@ def test_assessment(
     # Get token.
     token, action = get_token(recaptcha_site_key, browser)
     # Create assessment.
-    assessment_response = assess_token(recaptcha_site_key, token=token, action=action)
+    assessment_response = assess_token(
+        recaptcha_site_key,
+        token=token,
+        action=action,
+        user_ip_address="",
+        user_agent="",
+        ja3="",
+    )
     score = str(assessment_response.risk_analysis.score)
     client = recaptchaenterprise_v1.RecaptchaEnterpriseServiceClient()
     # Parse the assessment_response.name which is of the format:
@@ -152,12 +158,22 @@ def get_token(recaptcha_site_key: str, browser: WebDriver) -> tuple:
     return token, action
 
 
-def assess_token(recaptcha_site_key: str, token: str, action: str) -> Assessment:
+def assess_token(
+    recaptcha_site_key: str,
+    token: str,
+    action: str,
+    user_ip_address: str,
+    user_agent: str,
+    ja3: str,
+) -> Assessment:
     return create_assessment(
         project_id=GOOGLE_CLOUD_PROJECT,
         recaptcha_site_key=recaptcha_site_key,
         token=token,
         recaptcha_action=action,
+        user_ip_address=user_ip_address,
+        user_agent=user_agent,
+        ja3=ja3,
     )
 
 

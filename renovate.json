@@ -1,10 +1,14 @@
 {
-  "extends": ["config:base"],
+  "extends": [
+    "config:recommended"
+  ],
   "prConcurrentLimit": 0,
   "rebaseWhen": "never",
-  "masterIssue": true,
+  "dependencyDashboard": true,
   "poetry": {
-    "fileMatch": ["pyproject.toml"]
+    "fileMatch": [
+      "pyproject.toml"
+    ]
   },
   "pip_requirements": {
     "fileMatch": [
@@ -18,28 +22,46 @@
     "composer/**/constraints.txt",
     "composer/blog/**/constraints.txt",
     "composer/airflow_1_samples/requirements.txt",
-    "appengine/standard"
+    "appengine/standard",
+    "dataflow/flex-templates/pipeline_with_dependencies/**",
+    "dataflow/gemma/**"
   ],
   "packageRules": [
     {
-      "packagePatterns": ["pytest"],
-      "separateMinorPatch": true
+      "separateMinorPatch": true,
+      "matchPackageNames": [
+        "/pytest/"
+      ]
     },
     {
-      "packagePatterns": ["pytest"],
-      "updateTypes": ["patch"],
-      "enabled": false
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "enabled": false,
+      "matchPackageNames": [
+        "/pytest/"
+      ]
     },
     {
-      "matchUpdateTypes": ["minor"],
-      "extends": ["schedule:monthly"]
+      "matchUpdateTypes": [
+        "minor"
+      ],
+      "extends": [
+        "schedule:monthly"
+      ]
     },
     {
-      "matchUpdateTypes": ["patch"],
-      "extends": ["schedule:quarterly"]
+      "matchUpdateTypes": [
+        "patch"
+      ],
+      "extends": [
+        "schedule:quarterly"
+      ]
     }
   ],
   "vulnerabilityAlerts": {
-    "schedule": ["at any time"]
+    "schedule": [
+      "at any time"
+    ]
   }
 }

@@ -24,12 +24,13 @@ import pytest
 import transcribe_feature_in_recognizer
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def delete_recognizer(project_id: str, recognizer_id: str) -> None:
+def delete_recognizer(recognizer_id: str) -> None:
     client = SpeechClient()
     request = cloud_speech.DeleteRecognizerRequest(
-        name=f"projects/{project_id}/locations/global/recognizers/{recognizer_id}"
+        name=f"projects/{PROJECT_ID}/locations/global/recognizers/{recognizer_id}"
     )
     client.delete_recognizer(request=request)
 
@@ -37,20 +38,32 @@ def delete_recognizer(project_id: str, recognizer_id: str) -> None:
 def test_transcribe_feature_in_recognizer(
     capsys: pytest.CaptureFixture, request: pytest.FixtureRequest
 ) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
     recognizer_id = "recognizer-" + str(uuid4())
 
-    def cleanup():
-        delete_recognizer(project_id, recognizer_id)
+    def cleanup() -> None:
+        delete_recognizer(recognizer_id)
 
     request.addfinalizer(cleanup)
 
-    response = transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
-        project_id, recognizer_id, os.path.join(_RESOURCES, "audio.wav")
+    response_with_new_recognizer = (
+        transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
+            os.path.join(_RESOURCES, "audio.wav"), recognizer_id
+        )
     )
-
+    # Call function one more time to test work with the existing recognizer
+    response_with_existing_recognizer = (
+        transcribe_feature_in_recognizer.transcribe_feature_in_recognizer(
+            os.path.join(_RESOURCES, "fair.wav"), recognizer_id
+        )
+    )
+    out, _ = capsys.readouterr()
     assert re.search(
         r"How old is the Brooklyn Bridge?",
-        response.results[0].alternatives[0].transcript,
+        response_with_new_recognizer.results[0].alternatives[0].transcript,
+        re.DOTALL | re.I,
+    )
+    assert re.search(
+        r"is fair",
+        response_with_existing_recognizer.results[0].alternatives[0].transcript,
         re.DOTALL | re.I,
     )

@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
 import re
 from uuid import uuid4
 
@@ -43,10 +42,8 @@ def test_transcribe_batch_gcs_input_gcs_output_v2(
     gcs_bucket: pytest.CaptureFixture,
     capsys: pytest.CaptureFixture,
 ) -> None:
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
-
     response = transcribe_batch_gcs_input_gcs_output_v2.transcribe_batch_gcs_input_gcs_output_v2(
-        project_id, _TEST_AUDIO_FILE_PATH, f"gs://{gcs_bucket}"
+        _TEST_AUDIO_FILE_PATH, f"gs://{gcs_bucket}"
     )
 
     assert re.search(

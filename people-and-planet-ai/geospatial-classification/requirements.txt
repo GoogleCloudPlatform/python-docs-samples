@@ -1,5 +1,5 @@
-earthengine-api==0.1.358
-folium==0.14.0
-google-cloud-aiplatform==1.25.0
+earthengine-api==0.1.395
+folium==0.16.0
+google-cloud-aiplatform==1.47.0
 pandas==2.0.1
 tensorflow==2.12.0

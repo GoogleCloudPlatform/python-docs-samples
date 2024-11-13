@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All rights reserved.
 
 # [START error_reporting_fluent_on_compute]
 import traceback

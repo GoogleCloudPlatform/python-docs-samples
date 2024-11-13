@@ -1,4 +1,5 @@
 isort==5.12.0; python_version > "3.7"
 isort==5.11.4; python_version <= "3.7"
-black==23.3.0
-google-cloud-compute==1.11.0
+black==24.8.0; python_version < "3.9"
+black==24.10.0; python_version >= "3.9"
+google-cloud-compute==1.19.1

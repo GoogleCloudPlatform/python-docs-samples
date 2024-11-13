@@ -37,11 +37,11 @@ def test_notify_slack(slack_client):
     assert slack_client.api_call.called
 
 
-@patch("main.PROJECT_ID")
+@patch("main.PROJECT_ID", "my-project")
+@patch("main.PROJECT_NAME", "projects/my-project")
 @patch("main.discovery")
-def test_disable_billing(discovery_mock, PROJECT_ID):
-    PROJECT_ID = "my-project"
-    PROJECT_NAME = f"projects/{PROJECT_ID}"
+def test_disable_billing(discovery_mock):
+    PROJECT_NAME = f"projects/{main.PROJECT_ID}"
 
     data = {"budgetAmount": 400, "costAmount": 500}
 
@@ -60,21 +60,18 @@ def test_disable_billing(discovery_mock, PROJECT_ID):
 
     main.stop_billing(pubsub_message, None)
 
-    assert projects_mock.getBillingInfo.called_with(name=PROJECT_NAME)
-    assert projects_mock.updateBillingInfo.called_with(
+    projects_mock.getBillingInfo.assert_called_with(name=PROJECT_NAME)
+    projects_mock.updateBillingInfo.assert_called_with(
         name=PROJECT_NAME, body={"billingAccountName": ""}
     )
     assert projects_mock.execute.call_count == 2
 
 
-@patch("main.PROJECT_ID")
-@patch("main.ZONE")
+@patch("main.PROJECT_ID", "my-project")
+@patch("main.PROJECT_NAME", "projects/my-project")
+@patch("main.ZONE", "my-zone")
 @patch("main.discovery")
-def test_limit_use(discovery_mock, ZONE, PROJECT_ID):
-    PROJECT_ID = "my-project"
-    PROJECT_NAME = f"projects/{PROJECT_ID}"
-    ZONE = "my-zone"
-
+def test_limit_use(discovery_mock):
     data = {"budgetAmount": 400, "costAmount": 500}
 
     pubsub_message = {
@@ -110,18 +107,18 @@ def test_limit_use(discovery_mock, ZONE, PROJECT_ID):
 
     main.limit_use(pubsub_message, None)
 
-    assert projects_mock.getBillingInfo.called_with(name=PROJECT_NAME)
-    assert instances_mock.list.calledWith(project=PROJECT_ID, zone=ZONE)
+    instances_mock.list.assert_called_with(project=main.PROJECT_ID, zone=main.ZONE)
     assert instances_mock.stop.call_count == 1
     assert instances_mock.execute.call_count == 2
 
 
-@patch("main.PROJECT_ID")
-@patch("main.ZONE")
+@patch("main.PROJECT_ID", "my-project")
+@patch("main.APP_NAME", "my-project")
+@patch("main.PROJECT_NAME", "projects/my-project")
+@patch("main.ZONE", "my-zone")
 @patch("main.discovery")
-def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
-    PROJECT_ID = "my-project"
-    PROJECT_NAME = f"projects/{PROJECT_ID}"
+def test_limit_use_appengine(discovery_mock):
+    PROJECT_ID = main.PROJECT_ID
 
     data = {"budgetAmount": 400, "costAmount": 500}
 
@@ -135,17 +132,17 @@ def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
     projects_mock.getBillingInfo = MagicMock(return_value=projects_mock)
     projects_mock.updateBillingInfo = MagicMock(return_value=projects_mock)
 
-    apps_list = [{"servingStatus": "SERVING"}]
+    apps_list = {"servingStatus": "SERVING"}
     app_patch_mock = MagicMock()
     apps_mock = MagicMock()
     apps_mock.get.return_value.execute.return_value = apps_list
-    apps_mock.patch.return_value.execute = app_patch_mock
+    apps_mock.patch.return_value.execute.return_value = app_patch_mock
     appengine_mock = MagicMock()
     appengine_mock.apps.return_value = apps_mock
 
     def discovery_mocker(x, *args, **kwargs):
         if x == "appengine":
-            return apps_mock
+            return appengine_mock
         else:
             return projects_mock
 
@@ -155,8 +152,7 @@ def test_limit_use_appengine(discovery_mock, ZONE, PROJECT_ID):
 
     patch_body = {"servingStatus": "USER_DISABLED"}
 
-    assert projects_mock.getBillingInfo.called_with(name=PROJECT_NAME)
-    assert apps_mock.get.calledWith(appsId=PROJECT_ID)
-    assert apps_mock.stop.calledWith(
+    apps_mock.get.assert_called_with(appsId=PROJECT_ID)
+    apps_mock.patch.assert_called_with(
         appsId=PROJECT_ID, updateMask="serving_status", body=patch_body
     )

@@ -19,13 +19,12 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_table_bucketing]
 from typing import Dict, List, Union
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
-
-
-# [START dlp_deidentify_table_bucketing]
 
 
 def deidentify_table_bucketing(

@@ -18,7 +18,7 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
+# See https://docs.djangoproject.com/en/stable/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "pf-@jxtojga)z+4s*uwbgjrq$aep62-thd0q7f&o77xtpka!_m"
@@ -28,7 +28,7 @@ DEBUG = True
 
 # SECURITY WARNING: If you deploy a Django app to production, make sure to set
 # an appropriate host here.
-# See https://docs.djangoproject.com/en/1.10/ref/settings/
+# See https://docs.djangoproject.com/en/stable/ref/settings/
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
@@ -74,7 +74,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
+# https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
 # [START dbconfig]
 # [START gke_django_database_config]
@@ -94,7 +94,7 @@ DATABASES = {
 # [END dbconfig]
 
 # Internationalization
-# https://docs.djangoproject.com/en/1.8/topics/i18n/
+# https://docs.djangoproject.com/en/stable/topics/i18n/
 
 LANGUAGE_CODE = "en-us"
 
@@ -116,6 +116,6 @@ STATIC_URL = "/static/"
 STATIC_ROOT = "static/"
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

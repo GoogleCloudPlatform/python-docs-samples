@@ -47,7 +47,7 @@ def list_processor_versions_sample(
 
         print(f"Processor Version: {processor_version_id}")
         print(f"Display Name: {processor_version.display_name}")
-        print(processor_version.state)
+        print(f"DEPLOYED: {processor_version.state}")
         print("")
 
 

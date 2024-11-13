@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2022 Google LLC. All Rights Reserved.
+# Copyright 2022 Google LLC.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,11 +58,12 @@ class DAG:
                 command_output_parsed.index("DAGS") + 2 : len(command_output_parsed) - 1
             ]
         else:
+            # Collecting names of DAGs for output
             list_of_dags = []
             for line in command_output.split("\n"):
-                if re.compile("[a-z_]+|[a-z]+|[a-z]+|[a-z_]+").findall(line):
+                if re.compile("^[a-zA-Z].*").findall(line):
                     list_of_dags.append(line.split()[0])
-            return list_of_dags[1:-1]
+            return list_of_dags[1:]
 
     @staticmethod
     def _run_shell_command_locally_once(

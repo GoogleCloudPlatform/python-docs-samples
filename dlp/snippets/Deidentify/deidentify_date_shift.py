@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import argparse
 
+
+# [START dlp_deidentify_date_shift]
 import base64
 import csv
 from datetime import datetime
@@ -25,9 +27,6 @@ from typing import List
 
 import google.cloud.dlp
 from google.cloud.dlp_v2 import types
-
-
-# [START dlp_deidentify_date_shift]
 
 
 def deidentify_with_date_shift(
@@ -194,8 +193,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "input_csv_file",
         help="The path to the CSV file to deidentify. The first row of the "
-             "file must specify column names, and all other rows must contain "
-             "valid values.",
+        "file must specify column names, and all other rows must contain "
+        "valid values.",
     )
     parser.add_argument(
         "output_csv_file", help="The path to save the date-shifted CSV file."
@@ -214,27 +213,27 @@ if __name__ == "__main__":
         "date_fields",
         nargs="+",
         help="The list of date fields in the CSV file to date shift. Example: "
-             "['birth_date', 'register_date']",
+        "['birth_date', 'register_date']",
     )
     parser.add_argument(
         "--context_field_id",
         help="(Optional) The column to determine date shift amount based on. "
-             "If this is not specified, a random shift amount will be used for "
-             "every row. If this is specified, then 'wrappedKey' and 'keyName' "
-             "must also be set.",
+        "If this is not specified, a random shift amount will be used for "
+        "every row. If this is specified, then 'wrappedKey' and 'keyName' "
+        "must also be set.",
     )
     parser.add_argument(
         "--key_name",
         help="(Optional) The name of the Cloud KMS key used to encrypt "
-             "('wrap') the AES-256 key. Example: "
-             "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
-             "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
+        "('wrap') the AES-256 key. Example: "
+        "key_name = 'projects/YOUR_GCLOUD_PROJECT/locations/YOUR_LOCATION/"
+        "keyRings/YOUR_KEYRING_NAME/cryptoKeys/YOUR_KEY_NAME'",
     )
     parser.add_argument(
         "--wrapped_key",
         help="(Optional) The encrypted ('wrapped') AES-256 key to use. This "
-             "key should be encrypted using the Cloud KMS key specified by"
-             "key_name.",
+        "key should be encrypted using the Cloud KMS key specified by"
+        "key_name.",
     )
 
     args = parser.parse_args()

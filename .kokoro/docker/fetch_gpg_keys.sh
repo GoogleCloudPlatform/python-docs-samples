@@ -51,3 +51,7 @@ retry 3 gpg --keyserver keyserver.ubuntu.com --recv-keys \
 # 3.10.x and 3.11.x (Pablo Galindo Salgado)
 retry 3 gpg --keyserver keyserver.ubuntu.com --recv-keys \
       A035C8C19219BA821ECEA86B64E628F8D684696D
+
+# 3.12.x and 3.13.x source files and tags (Thomas Wouters)
+retry 3 gpg --keyserver keyserver.ubuntu.com --recv-keys \
+       A821E680E5FA6305

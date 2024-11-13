@@ -43,7 +43,7 @@ def _make_disk(raw_key: bytes = None):
     disk = compute_v1.AttachedDisk()
     initialize_params = compute_v1.AttachedDiskInitializeParams()
     initialize_params.source_image = (
-        "projects/debian-cloud/global/images/family/debian-10"
+        "projects/debian-cloud/global/images/family/debian-12"
     )
     initialize_params.disk_size_gb = 10
     disk.initialize_params = initialize_params

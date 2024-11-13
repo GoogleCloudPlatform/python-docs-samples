@@ -1,7 +1,9 @@
-cryptography==41.0.4
-Flask==2.1.0
+cryptography==43.0.1
+Flask==3.0.3
 google-auth==2.19.1
-gunicorn==20.1.0
-requests==2.31.0
+gunicorn==22.0.0
+requests==2.32.2
 requests-toolbelt==1.0.0
-Werkzeug==2.3.7
+Werkzeug==3.0.3
+google-cloud-iam~=2.3.0
+PyJWT~=2.8.0

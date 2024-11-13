@@ -1,2 +1,2 @@
 ../../serving/weather-data
-folium==0.14.0
+folium==0.16.0

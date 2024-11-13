@@ -1,4 +1,4 @@
-# Copyright 2016 Google Inc. All Rights Reserved.
+# Copyright 2016 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,7 +49,6 @@ def test_auth_info(client):
     ]
 
     encoded_info = base64.b64encode(json.dumps({"id": "123"}).encode("utf-8"))
-
     for endpoint in endpoints:
         r = client.get(endpoint, headers={"Content-Type": "application/json"})
 

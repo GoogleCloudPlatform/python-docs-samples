@@ -14,9 +14,11 @@
 
 import os
 
-from flask import escape, Flask, request
+from flask import Flask, request
 from google.appengine.api import mail
 from google.appengine.api import wrap_wsgi_app
+from markupsafe import escape
+
 
 app = Flask(__name__)
 

@@ -1,0 +1,6 @@
+protobuf==5.27.2
+pytest==8.2.2
+google-api-core==2.23.0
+google-auth==2.36.0
+google-cloud-managedkafka==0.1.4
+googleapis-common-protos==1.65.0

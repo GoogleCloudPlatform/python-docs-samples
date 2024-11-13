@@ -38,8 +38,11 @@ else
 fi
 
 # Use nox to execute the tests for the project.
-nox -s "$RUN_TESTS_SESSION"
+test_subdir=$(realpath --relative-to ${PROJECT_ROOT} ${PWD})
+pushd $PROJECT_ROOT
+RUN_TESTS_SESSION=${RUN_TESTS_SESSION} make test dir=${test_subdir}
 EXIT=$?
+popd
 
 echo "PWD: ${PWD}"
 

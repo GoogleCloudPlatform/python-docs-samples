@@ -1,4 +1,4 @@
-Flask==3.0.0; python_version > '3.6'
-Flask==2.0.3; python_version < '3.7'
-gunicorn==20.1.0
-Werkzeug==2.3.7
+Flask==3.0.3; python_version > '3.6'
+Flask==2.3.3; python_version < '3.7'
+gunicorn==22.0.0
+Werkzeug==3.0.3

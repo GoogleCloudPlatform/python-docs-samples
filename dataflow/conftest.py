@@ -527,6 +527,7 @@ class Utils:
         cmd = ["gcloud", "auth", "configure-docker"]
         logging.info(f"{cmd}")
         subprocess.check_call(cmd)
+        gcr_project = project.replace(':', '/')
 
         if substitutions:
             cmd_substitutions = [
@@ -561,13 +562,14 @@ class Utils:
                 "builds",
                 "submit",
                 f"--project={project}",
-                f"--tag=gcr.io/{project}/{image_name}:{UUID}",
+                f"--tag=gcr.io/{gcr_project}/{image_name}:{UUID}",
                 *cmd_substitutions,
                 source,
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(f"Created image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(
+                f"Created image: gcr.io/{gcr_project}/{image_name}:{UUID}")
             yield f"{image_name}:{UUID}"
         else:
             raise ValueError("must specify either `config` or `image_name`")
@@ -578,14 +580,15 @@ class Utils:
                 "container",
                 "images",
                 "delete",
-                f"gcr.io/{project}/{image_name}:{UUID}",
+                f"gcr.io/{gcr_project}/{image_name}:{UUID}",
                 f"--project={project}",
                 "--force-delete-tags",
                 "--quiet",
             ]
             logging.info(f"{cmd}")
             subprocess.check_call(cmd)
-            logging.info(f"Deleted image: gcr.io/{project}/{image_name}:{UUID}")
+            logging.info(
+                f"Deleted image: gcr.io/{gcr_project}/{image_name}:{UUID}")
 
     @staticmethod
     def dataflow_job_url(
@@ -756,12 +759,13 @@ class Utils:
     def dataflow_flex_template_build(
         bucket_name: str,
         image_name: str,
-        metadata_file: str = "metadata.json",
+        metadata_file: str | None = "metadata.json",
         template_file: str = "template.json",
         project: str = PROJECT,
     ) -> str:
         # https://cloud.google.com/sdk/gcloud/reference/dataflow/flex-template/build
         template_gcs_path = f"gs://{bucket_name}/{template_file}"
+        gcr_project = project.replace(':', '/')
         cmd = [
             "gcloud",
             "dataflow",
@@ -769,10 +773,12 @@ class Utils:
             "build",
             template_gcs_path,
             f"--project={project}",
-            f"--image=gcr.io/{project}/{image_name}",
-            "--sdk-language=PYTHON",
-            f"--metadata-file={metadata_file}",
+            f"--image=gcr.io/{gcr_project}/{image_name}",
+            "--sdk-language=PYTHON"
         ]
+        if metadata_file:
+            cmd.append(f"--metadata-file={metadata_file}")
+
         logging.info(f"{cmd}")
         subprocess.check_call(cmd)
 
@@ -788,6 +794,7 @@ class Utils:
         parameters: dict[str, str] = {},
         project: str = PROJECT,
         region: str = REGION,
+        additional_experiments: dict[str,str] = {},
     ) -> str:
         import yaml
 
@@ -809,6 +816,11 @@ class Utils:
             for name, value in {
                 **parameters,
             }.items()
+        ] + [
+            f"--additional-experiments={name}={value}"
+            for name, value in {
+                **additional_experiments,
+            }.items()
         ]
         logging.info(f"{cmd}")
 
@@ -819,7 +831,7 @@ class Utils:
         logging.info(f">> {Utils.dataflow_job_url(job_id, project, region)}")
         yield job_id
 
-        Utils.dataflow_jobs_cancel(job_id)
+        Utils.dataflow_jobs_cancel(job_id, region=region)
 
     @staticmethod
     def dataflow_extensible_template_run(
@@ -843,7 +855,6 @@ class Utils:
             f"--gcs-location={template_path}",
             f"--project={project}",
             f"--region={region}",
-            f"--staging-location=gs://{bucket_name}/staging",
         ] + [
             f"--parameters={name}={value}"
             for name, value in {

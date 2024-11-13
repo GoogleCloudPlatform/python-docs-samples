@@ -18,9 +18,8 @@ from __future__ import annotations
 
 import argparse
 
-import google.cloud.dlp
-
 # [START dlp_deidentify_simple_word_list]
+import google.cloud.dlp
 
 
 def deidentify_with_simple_word_list(

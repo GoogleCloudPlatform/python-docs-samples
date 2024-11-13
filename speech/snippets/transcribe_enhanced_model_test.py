@@ -29,5 +29,7 @@ def test_transcribe_file_with_enhanced_model(capsys: pytest.CaptureFixture) -> N
     )
     out, _ = capsys.readouterr()
 
-    assert "Chrome" in out
     assert result is not None
+    assert "Chrome" in out
+    assert "First alternative" in out
+    assert "result 7" in out

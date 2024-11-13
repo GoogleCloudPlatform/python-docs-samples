@@ -21,14 +21,20 @@ For more information, see the README.md under /cdn and the documentation
 at https://cloud.google.com/cdn/docs.
 """
 
+# [START cloudcdn_sign_url]
+# [START cloudcdn_sign_url_prefix]
+# [START cloudcdn_sign_cookie]
 import argparse
 import base64
-from datetime import datetime
+from datetime import datetime, timezone
 import hashlib
 import hmac
 from urllib.parse import parse_qs, urlsplit
 
 
+# [END cloudcdn_sign_url]
+# [END cloudcdn_sign_url_prefix]
+# [END cloudcdn_sign_cookie]
 # [START cloudcdn_sign_url]
 def sign_url(
     url: str,
@@ -42,7 +48,7 @@ def sign_url(
         url: URL to sign.
         key_name: name of the signing key.
         base64_key: signing key as a base64 encoded string.
-        expiration_time: expiration time.
+        expiration_time: expiration time as time-zone aware datetime.
 
     Returns:
         Returns the Signed URL appended with the query parameters based on the
@@ -51,7 +57,7 @@ def sign_url(
     stripped_url = url.strip()
     parsed_url = urlsplit(stripped_url)
     query_params = parse_qs(parsed_url.query, keep_blank_values=True)
-    epoch = datetime.utcfromtimestamp(0)
+    epoch = datetime.fromtimestamp(0, timezone.utc)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
@@ -81,7 +87,7 @@ def sign_url_prefix(
         url_prefix: URL prefix to sign.
         key_name: name of the signing key.
         base64_key: signing key as a base64 encoded string.
-        expiration_time: expiration time.
+        expiration_time: expiration time as time-zone aware datetime.
 
     Returns:
         Returns the Signed URL appended with the query parameters based on the
@@ -93,7 +99,7 @@ def sign_url_prefix(
     encoded_url_prefix = base64.urlsafe_b64encode(
         url_prefix.strip().encode("utf-8")
     ).decode("utf-8")
-    epoch = datetime.utcfromtimestamp(0)
+    epoch = datetime.fromtimestamp(0, timezone.utc)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
@@ -121,7 +127,7 @@ def sign_cookie(
         url_prefix: URL prefix to sign.
         key_name: name of the signing key.
         base64_key: signing key as a base64 encoded string.
-        expiration_time: expiration time.
+        expiration_time: expiration time as time-zone aware datetime.
 
     Returns:
         Returns the Cloud-CDN-Cookie value based on the specified configuration.
@@ -129,7 +135,7 @@ def sign_cookie(
     encoded_url_prefix = base64.urlsafe_b64encode(
         url_prefix.strip().encode("utf-8")
     ).decode("utf-8")
-    epoch = datetime.utcfromtimestamp(0)
+    epoch = datetime.fromtimestamp(0, timezone.utc)
     expiration_timestamp = int((expiration_time - epoch).total_seconds())
     decoded_key = base64.urlsafe_b64decode(base64_key)
 
@@ -161,7 +167,7 @@ if __name__ == "__main__":
     sign_url_parser.add_argument("base64_key", help="The base64 encoded signing key.")
     sign_url_parser.add_argument(
         "expiration_time",
-        type=lambda d: datetime.utcfromtimestamp(float(d)),
+        type=lambda d: datetime.fromtimestamp(float(d), timezone.utc),
         help="Expiration time expessed as seconds since the epoch.",
     )
 
@@ -179,7 +185,7 @@ if __name__ == "__main__":
     )
     sign_url_prefix_parser.add_argument(
         "expiration_time",
-        type=lambda d: datetime.utcfromtimestamp(float(d)),
+        type=lambda d: datetime.fromtimestamp(float(d), timezone.utc),
         help="Expiration time expessed as seconds since the epoch.",
     )
 
@@ -194,7 +200,7 @@ if __name__ == "__main__":
     )
     sign_cookie_parser.add_argument(
         "expiration_time",
-        type=lambda d: datetime.utcfromtimestamp(float(d)),
+        type=lambda d: datetime.fromtimestamp(float(d), timezone.utc),
         help="Expiration time expressed as seconds since the epoch.",
     )
 

@@ -28,6 +28,9 @@ document_id = "2bq3m8uih3j78"
 user_id = "user:xxxx@example.com"
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_fetch_project_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # TODO: Update when test project issue is resolved.
@@ -38,6 +41,9 @@ def test_fetch_project_acl(capsys: pytest.CaptureFixture) -> None:
         out, _ = capsys.readouterr()
 
 
+@pytest.mark.skip(
+    "Document AI Warehouse is deprecated and will no longer be available on Google Cloud after January 16, 2025."
+)
 def test_fetch_document_acl(capsys: pytest.CaptureFixture) -> None:
     project_number = test_utilities.get_project_number(project_id)
     # Project can only support Document or Project ACLs

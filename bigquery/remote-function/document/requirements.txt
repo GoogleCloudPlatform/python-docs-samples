@@ -1,4 +1,4 @@
 Flask==2.2.2
-functions-framework==3.3.0
-google-cloud-documentai==2.15.0
+functions-framework==3.5.0
+google-cloud-documentai==3.0.0
 Werkzeug==2.3.7

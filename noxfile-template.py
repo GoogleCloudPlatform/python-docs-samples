@@ -40,7 +40,7 @@ import nox
 
 TEST_CONFIG = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
@@ -88,7 +88,7 @@ def get_pytest_env_vars() -> dict[str, str]:
 
 
 # All versions used to tested samples.
-ALL_VERSIONS = ["2.7", "3.8", "3.9", "3.10", "3.11"]
+ALL_VERSIONS = ["2.7", "3.8", "3.9", "3.10", "3.11", "3.12"]
 
 # Any default versions that should be ignored.
 IGNORED_VERSIONS = TEST_CONFIG["ignored_versions"]
@@ -108,7 +108,7 @@ nox.options.error_on_missing_interpreters = True
 def _determine_local_import_names(start_dir: str) -> list[str]:
     """Determines all import names that should be considered "local".
 
-    This is used when running the linter to insure that import order is
+    This is used when running the linter to ensure that import order is
     properly checked.
     """
     file_ext_pairs = [os.path.splitext(path) for path in os.listdir(start_dir)]
@@ -124,7 +124,8 @@ def _determine_local_import_names(start_dir: str) -> list[str]:
 # Linting with flake8.
 #
 # We ignore the following rules:
-#   ANN101: missing type annotation for self in method
+#   ANN101: missing type annotation for `self` in method
+#   ANN102: missing type annotation for `cls` in method
 #   E203: whitespace before ‘:’
 #   E266: too many leading ‘#’ for block comment
 #   E501: line too long
@@ -132,13 +133,15 @@ def _determine_local_import_names(start_dir: str) -> list[str]:
 #
 # We also need to specify the rules which are ignored by default:
 # ['E226', 'W504', 'E126', 'E123', 'W503', 'E24', 'E704', 'E121']
+#
+# For more information see: https://pypi.org/project/flake8-annotations
 FLAKE8_COMMON_ARGS = [
     "--show-source",
     "--builtin=gettext",
     "--max-complexity=20",
     "--import-order-style=google",
     "--exclude=.nox,.cache,env,lib,generated_pb2,*_pb2.py,*_pb2_grpc.py",
-    "--ignore=ANN101,E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
+    "--ignore=ANN101,ANN102,E121,E123,E126,E203,E226,E24,E266,E501,E704,W503,W504,I202",
     "--max-line-length=88",
 ]
 

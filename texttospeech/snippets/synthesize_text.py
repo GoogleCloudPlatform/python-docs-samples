@@ -13,7 +13,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-# All Rights Reserved.
 
 """Google Cloud Text-To-Speech API sample application .
 
@@ -26,10 +25,11 @@ import argparse
 
 
 # [START tts_synthesize_text]
-def synthesize_text(text):
+def synthesize_text():
     """Synthesizes speech from the input string of text."""
     from google.cloud import texttospeech
 
+    text = "Hello there."
     client = texttospeech.TextToSpeechClient()
 
     input_text = texttospeech.SynthesisInput(text=text)
@@ -60,16 +60,16 @@ def synthesize_text(text):
 
 
 # [START tts_synthesize_ssml]
-def synthesize_ssml(ssml):
+def synthesize_ssml():
     """Synthesizes speech from the input string of ssml.
 
     Note: ssml must be well-formed according to:
         https://www.w3.org/TR/speech-synthesis/
 
-    Example: <speak>Hello there.</speak>
     """
     from google.cloud import texttospeech
 
+    ssml = "<speak>Hello there.</speak>"
     client = texttospeech.TextToSpeechClient()
 
     input_text = texttospeech.SynthesisInput(ssml=ssml)
