@@ -57,3 +57,18 @@ indexes:
     direction: desc
   - name: experience
     direction: desc
+- kind: coffee-beans
+  properties:
+  - name: __key__
+  - name: embedding_field
+    vectorConfig:
+      dimension: 3
+      flat: {}
+- kind: coffee-beans
+  properties:
+  - name: color
+  - name: __key__
+  - name: embedding_field
+    vectorConfig:
+      dimension: 3
+      flat: {}
