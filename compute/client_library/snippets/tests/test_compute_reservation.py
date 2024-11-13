@@ -211,7 +211,9 @@ def test_consume_shared_reservaton():
         PROJECT_ID, SHARED_PROJECT_ID, ZONE, RESERVATION_NAME, INSTANCE_NAME
     )
     try:
+        shared_reservation = get_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
         assert instance
+        assert shared_reservation.share_settings.share_type == "SPECIFIC_PROJECTS"
     finally:
         if instance:
             delete_instance(SHARED_PROJECT_ID, ZONE, instance.name)
