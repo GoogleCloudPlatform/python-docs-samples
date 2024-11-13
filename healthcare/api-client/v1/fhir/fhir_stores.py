@@ -248,7 +248,7 @@ def patch_fhir_store(project_id, location, dataset_id, fhir_store_id, pubsub_top
     )
     fhir_store_name = f"{fhir_store_parent}/fhirStores/{fhir_store_id}"
 
-    patch = {"notificationConfigs": [{"pubsubTopic": None}] if pubsub_topic else []}
+    patch = {"notificationConfigs": [{"pubsubTopic": pubsub_topic}] if pubsub_topic else []}
 
     request = (
         client.projects()
