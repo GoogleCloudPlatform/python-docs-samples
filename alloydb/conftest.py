@@ -71,6 +71,11 @@ def password() -> str:
     return uuid.uuid4().hex[:24]
 
 
+@pytest.fixture(scope="session")
+def table_name() -> str:
+    return f"sample_table_{uuid.uuid4().hex[:24]}"
+
+
 @pytest_asyncio.fixture(scope="session")
 def project_id() -> str:
     gcp_project = get_env_var("GOOGLE_CLOUD_PROJECT")
