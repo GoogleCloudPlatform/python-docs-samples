@@ -435,8 +435,8 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + 
-            " is not present in the metadata." + 
+            str(airflow_db_model) +
+            " is not present in the metadata." +
             "Skipping..."
         )
 
@@ -450,7 +450,8 @@ def cleanup_sessions():
     try:
         logging.info("Deleting sessions...")
         count_statement = (
-            "SELECT COUNT(*) AS cnt FROM session WHERE expiry < now()::timestamp(0);"
+            "SELECT COUNT(*) AS cnt FROM session " +
+            "WHERE expiry < now()::timestamp(0);"
         )
         before = session.execute(text(count_statement)).one_or_none()["cnt"]
         session.execute(
