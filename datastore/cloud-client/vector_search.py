@@ -61,7 +61,7 @@ def vector_search_prefilter(db):
 
     vector_query = db.query(
         kind="coffee-beans",
-        filters=PropertyFilter("color", "=", "red"),
+        filters=[PropertyFilter("color", "=", "red")],
         find_nearest=FindNearest(
             vector_property="embedding_field",
             query_vector=Vector([3.0, 1.0, 2.0]),
@@ -91,7 +91,7 @@ def vector_search_distance_result_field(db):
     )
 
     for entity in vector_query.fetch():
-        print(f"{entity.id}, Distance: {entity['distance']}")
+        print(f"{entity.id}, Distance: {entity['vector_distance']}")
     # [END datastore_vector_search_distance_result_field]
     return vector_query
 
