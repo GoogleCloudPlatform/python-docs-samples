@@ -65,7 +65,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import and_, func, text, tuple_
+from sqlalchemy import text
 from sqlalchemy.exc import ProgrammingError
 
 now = timezone.utcnow
@@ -85,11 +85,11 @@ AIRFLOW_VERSION = airflow_version[: -len("+composer")].split(".")
 # Length to retain the log files if not already provided in the conf. If this
 # is set to 30, the job will remove those files that arE 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
-    Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 2)
+    Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30)
 )
 # Prints the database entries which will be getting deleted; set to False
 # to avoid printing large lists and slowdown process
-PRINT_DELETES = True
+PRINT_DELETES = False
 # Whether the job should delete the db entries or not. Included if you want to
 # temporarily avoid deleting the db entries.
 ENABLE_DELETE = True
@@ -276,7 +276,9 @@ def print_configuration_function(**context):
     logging.info("dag_run.conf: " + str(dag_run_conf))
     max_db_entry_age_in_days = None
     if dag_run_conf:
-        max_db_entry_age_in_days = dag_run_conf.get("maxDBEntryAgeInDays", None)
+        max_db_entry_age_in_days = dag_run_conf.get(
+            "maxDBEntryAgeInDays", None
+        )
     logging.info("maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf))
     if max_db_entry_age_in_days is None or max_db_entry_age_in_days < 1:
         logging.info(
@@ -319,10 +321,13 @@ def build_query(
 
     logging.info("INITIAL QUERY : " + str(query))
 
-
     if airflow_db_model == DagRun:
-        newest_dagrun = session.query(airflow_db_model).order_by(airflow_db_model.execution_date).first()
-        query = query.filter(DagRun.external_trigger.is_(False)).filter(airflow_db_model.dag_id == dag_id).filter(age_check_column < max_date).filter(airflow_db_model.id != newest_dagrun.id)
+        newest_dagrun = session.query(airflow_db_model) \
+            .order_by(airflow_db_model.execution_date).first()
+        query = query.filter(DagRun.external_trigger.is_(False)) \
+            .filter(airflow_db_model.dag_id == dag_id) \
+            .filter(age_check_column < max_date) \
+            .filter(airflow_db_model.id != newest_dagrun.id)
     else:
         query = query.filter(age_check_column <= max_date)
 
@@ -430,7 +435,9 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata." + "Skipping..."
+            str(airflow_db_model) + 
+            " is not present in the metadata." + 
+            "Skipping..."
         )
 
     finally:
@@ -446,7 +453,11 @@ def cleanup_sessions():
             "SELECT COUNT(*) AS cnt FROM session WHERE expiry < now()::timestamp(0);"
         )
         before = session.execute(text(count_statement)).one_or_none()["cnt"]
-        session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
+        session.execute(
+            text(
+                "DELETE FROM session WHERE expiry < now()::timestamp(0);"
+            )
+        )
         after = session.execute(text(count_statement)).one_or_none()["cnt"]
         logging.info("Deleted %s expired sessions.", (before - after))
     except Exception as err:
@@ -464,7 +475,10 @@ def analyze_db():
 
 
 analyze_op = PythonOperator(
-    task_id="analyze_query", python_callable=analyze_db, provide_context=True, dag=dag
+    task_id="analyze_query",
+    python_callable=analyze_db,
+    provide_context=True,
+    dag=dag
 )
 
 cleanup_session_op = PythonOperator(
