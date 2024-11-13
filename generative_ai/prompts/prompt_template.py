@@ -50,10 +50,14 @@ def prompt_template() -> list:
         )
         responses.append(response)
 
-    # Example response
     for response in responses:
         print(response.text, end="")
 
+    # Example response
+        # Assembled prompt replacing: 1 instances of variable animal, 1 instances of variable activity
+        # WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+        # I0000 00:00:1731452465.383223  241384 config.cc:230] gRPC experiments enabled .....
+        # No, eagles are carnivores.  Their diet primarily consists of fish, small mammals, reptiles, and other birds......
     # [END generativeaionvertexai_prompt_template]
     return responses
 
