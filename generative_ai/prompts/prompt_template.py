@@ -32,6 +32,7 @@ def prompt_template() -> list:
         {"animal": "Squirrels", "activity": "fly"}
     ]
 
+    # define prompt template
     prompt = Prompt(
         prompt_data="Do {animal} {activity}?",
         model_name="gemini-1.5-flash-002",
@@ -43,12 +44,13 @@ def prompt_template() -> list:
 
     # Generates content using the assembled prompt.
     responses = []
-    for i in range(len(prompt.variables)):
+    for variable_set in prompt.variables:
         response = prompt.generate_content(
-            contents=prompt.assemble_contents(**prompt.variables[i])
+            contents=prompt.assemble_contents(**variable_set)
         )
         responses.append(response)
 
+    # Example response
     for response in responses:
         print(response.text, end="")
 
