@@ -16,7 +16,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template() -> list:
+def prompt_template_example() -> list:
     """Build a parameterized prompt template to generate content with multiple variable sets"""
 
     # [START generativeaionvertexai_prompt_template]
@@ -63,4 +63,4 @@ def prompt_template() -> list:
 
 
 if __name__ == "__main__":
-    prompt_template()
+    prompt_template_example()
