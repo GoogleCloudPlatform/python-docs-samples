@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_update_consumergroup]
-from google.api_core.exceptions import NotFound
-from google.cloud import managedkafka_v1
-from google.protobuf import field_mask_pb2
-
 
 def update_consumer_group(
     project_id: str,
@@ -40,6 +35,18 @@ def update_consumer_group(
     Raises:
         This method will raise the exception if the consumer group is not found.
     """
+    # [START managedkafka_update_consumergroup]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+    from google.protobuf import field_mask_pb2
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # consumer_group_id = "my-consumer-group"
+    # topic_path = "my-topic-path"
+    # partition_offsets = {10: 10}
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -70,5 +77,4 @@ def update_consumer_group(
     except NotFound:
         print(f"Consumer group {consumer_group.name} not found")
 
-
-# [END managedkafka_update_consumergroup]
+    # [END managedkafka_update_consumergroup]

@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_delete_consumergroup]
-from google.api_core.exceptions import NotFound
-from google.cloud import managedkafka_v1
-
 
 def delete_consumer_group(
     project_id: str,
@@ -35,6 +31,15 @@ def delete_consumer_group(
     Raises:
         This method will raise the exception if the consumer group is not found.
     """
+    # [START managedkafka_delete_consumergroup]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # consumer_group_id = "my-consumer-group"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -51,5 +56,4 @@ def delete_consumer_group(
     except NotFound:
         print(f"Consumer group {consumer_group_path} not found")
 
-
-# [END managedkafka_delete_consumergroup]
+    # [END managedkafka_delete_consumergroup]
