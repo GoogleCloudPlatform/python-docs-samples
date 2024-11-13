@@ -331,7 +331,7 @@ def build_query(
     else:
         query = query.filter(age_check_column <= max_date)
 
-    logging.info("FINAL DAG_RUN STATEMENT: " + str(query))
+    logging.info("FINAL QUERY: " + str(query))
 
     return query
 
