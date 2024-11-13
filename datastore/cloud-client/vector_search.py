@@ -30,7 +30,7 @@ def store_vectors():
 
     client.put(entity)
     # [END datastore_store_vectors]
-    return client
+    return client, entity
 
 
 def vector_search_basic(db):
