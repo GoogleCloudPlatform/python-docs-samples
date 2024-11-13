@@ -71,6 +71,7 @@ async def test_embeddings_batch_processing(
     instance_name: str,
     region: str,
     database_name: str,
+    username: str,
     password: str,
     table_name: str,
 ) -> None:
@@ -81,6 +82,7 @@ async def test_embeddings_batch_processing(
             "project_id": project_id,
             "cluster_name": cluster_name,
             "database_name": database_name,
+            "username": username,
             "region": region,
             "instance_name": instance_name,
             "table_name": table_name,
