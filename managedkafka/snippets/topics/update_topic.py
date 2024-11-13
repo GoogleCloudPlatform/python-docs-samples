@@ -31,12 +31,8 @@ def update_topic(
         topic_id: ID of the Kafka topic.
         partition_count: Number of partitions in a topic..
         configs: Configuration of the topic.
-
-    Raises:
-        This method will raise the exception if the topic is not found.
     """
     # [START managedkafka_update_topic]
-    from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1
     from google.protobuf import field_mask_pb2
 
@@ -63,10 +59,7 @@ def update_topic(
         topic=topic,
     )
 
-    try:
-        response = client.update_topic(request=request)
-        print("Updated topic:", response)
-    except NotFound:
-        print(f"Topic {topic.name} not found")
+    response = client.update_topic(request=request)
+    print("Updated topic:", response)
 
     # [END managedkafka_update_topic]

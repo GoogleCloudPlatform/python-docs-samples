@@ -27,12 +27,8 @@ def delete_topic(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         topic_id: ID of the Kafka topic.
-
-    Raises:
-        This method will raise the exception if the topic is not found.
     """
     # [START managedkafka_delete_topic]
-    from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1
 
     # TODO(developer)
@@ -46,10 +42,7 @@ def delete_topic(
     topic_path = client.topic_path(project_id, region, cluster_id, topic_id)
     request = managedkafka_v1.DeleteTopicRequest(name=topic_path)
 
-    try:
-        client.delete_topic(request=request)
-        print("Deleted topic")
-    except NotFound:
-        print(f"Topic {topic_path} not found")
+    client.delete_topic(request=request)
+    print("Deleted topic")
 
     # [END managedkafka_delete_topic]

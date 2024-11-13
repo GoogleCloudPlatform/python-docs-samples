@@ -33,12 +33,8 @@ def create_topic(
         partition_count: Number of partitions in a topic..
         replication_factor: Number of replicas of each partition.
         configs: Configuration of the topic.
-
-    Raises:
-        This method will raise the exception if the topic already exists.
     """
     # [START managedkafka_create_topic]
-    from google.api_core.exceptions import AlreadyExists
     from google.cloud import managedkafka_v1
 
     # TODO(developer)
@@ -65,10 +61,7 @@ def create_topic(
         topic=topic,
     )
 
-    try:
-        response = client.create_topic(request=request)
-        print("Created topic:", response.name)
-    except AlreadyExists:
-        print(f"{topic.name} already exists")
+    response = client.create_topic(request=request)
+    print("Created topic:", response.name)
 
     # [END managedkafka_create_topic]

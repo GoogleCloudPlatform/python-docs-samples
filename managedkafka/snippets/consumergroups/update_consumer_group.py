@@ -31,12 +31,8 @@ def update_consumer_group(
         consumer_group_id: ID of the Kafka consumer group.
         topic_path: Name of the Kafka topic.
         partition_offsets: Configuration of the topic, represented as a map of partition indexes to their offset value.
-
-    Raises:
-        This method will raise the exception if the consumer group is not found.
     """
     # [START managedkafka_update_consumergroup]
-    from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1
     from google.protobuf import field_mask_pb2
 
@@ -71,10 +67,7 @@ def update_consumer_group(
         consumer_group=consumer_group,
     )
 
-    try:
-        response = client.update_consumer_group(request=request)
-        print("Updated consumer group:", response)
-    except NotFound:
-        print(f"Consumer group {consumer_group.name} not found")
+    response = client.update_consumer_group(request=request)
+    print("Updated consumer group:", response)
 
     # [END managedkafka_update_consumergroup]

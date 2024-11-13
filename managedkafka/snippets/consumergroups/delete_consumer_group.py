@@ -27,12 +27,8 @@ def delete_consumer_group(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         consumer_group_id: ID of the Kafka consumer group.
-
-    Raises:
-        This method will raise the exception if the consumer group is not found.
     """
     # [START managedkafka_delete_consumergroup]
-    from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1
 
     # TODO(developer)
@@ -50,10 +46,7 @@ def delete_consumer_group(
         name=consumer_group_path,
     )
 
-    try:
-        client.delete_consumer_group(request=request)
-        print("Deleted consumer group")
-    except NotFound:
-        print(f"Consumer group {consumer_group_path} not found")
+    client.delete_consumer_group(request=request)
+    print("Deleted consumer group")
 
     # [END managedkafka_delete_consumergroup]
