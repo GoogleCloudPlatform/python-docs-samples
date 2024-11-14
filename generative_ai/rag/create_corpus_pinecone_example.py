@@ -70,7 +70,7 @@ def create_corpus_pinecone(
 
 if __name__ == "__main__":
     create_corpus_pinecone(
-        pinecone_index_name="pinecone-index-name","
+        pinecone_index_name="pinecone-index-name",
         pinecone_api_key_secret_manager_version="projects/{PROJECT_ID}/secrets/{SECRET_NAME}/versions/latest",
         display_name="test_corpus",
         description="Corpus Description",
