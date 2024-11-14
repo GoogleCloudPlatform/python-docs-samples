@@ -14,55 +14,58 @@
 
 # [START cloudrun_django_cloudmigrate]
 steps:
-  - id: "build image"
+  - id: "Build Container Image"
+    name: buildpacksio/pack
+    args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder"]
+
+  - id: "Push Container Image"
     name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
+    args: ["push", "${_IMAGE_NAME}"]
 
-  - id: "push image"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
-
-  - id: "apply migrations"
-    name: "gcr.io/google-appengine/exec-wrapper"
+  - id: "Migrate database"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: /bin/bash
     args:
-      [
-        "-i",
-        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
-        "-s",
-        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
-        "-e",
-        "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
-        "--",
-        "python",
-        "manage.py",
-        "migrate",
-      ]
+      - "-c"
+      - |
+        gcloud run jobs create migrate-job \
+          --region ${_REGION} \
+          --image ${_IMAGE_NAME} \
+          --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
+          --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
+          --command migrate \
+          --execute-now
 
-  - id: "collect static"
-    name: "gcr.io/google-appengine/exec-wrapper"
+  - id: "Create superuser"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: /bin/bash
     args:
-      [
-        "-i",
-        "gcr.io/$PROJECT_ID/${_SERVICE_NAME}",
-        "-s",
-        "${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}",
-        "-e",
-        "SETTINGS_NAME=${_SECRET_SETTINGS_NAME}",
-        "--",
-        "python",
-        "manage.py",
-        "collectstatic",
-        "--verbosity",
-        "2",
-        "--no-input",
-      ]
+      - "-c"
+      - |
+        gcloud run jobs create superuser-job \
+          --region ${_REGION} \
+          --image ${_IMAGE_NAME} \
+          --set-cloudsql-instances ${_CLOUD_SQL_CONNECTION_NAME} \
+          --set-env-vars SETTINGS_NAME=${_SECRET_SETTINGS_NAME} \
+          --set-env-vars DJANGO_SUPERUSER_EMAIL=${_ADMIN_EMAIL} \
+          --set-secrets DJANGO_SUPERUSER_PASSWORD=${_ADMIN_PASSWORD_NAME}:latest \
+          --command createsuperuser \
+          --execute-now
+
+options:
+  dynamicSubstitutions: true
 
 substitutions:
   _INSTANCE_NAME: django-instance
+  _CLOUD_SQL_CONNECTION_NAME: ${PROJECT_ID}:${_REGION}:${_INSTANCE_NAME}
   _REGION: us-central1
   _SERVICE_NAME: polls-service
   _SECRET_SETTINGS_NAME: django_settings
+  _ARTIFACT_REGISTRY: cloud-run-source-deploy
+  _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/${_SERVICE_NAME}
+  _ADMIN_EMAIL: example@example.com
+  _ADMIN_PASSWORD_NAME: superuser_password
 
 images:
-  - "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"
+  - "${_IMAGE_NAME}"
 # [END cloudrun_django_cloudmigrate]
