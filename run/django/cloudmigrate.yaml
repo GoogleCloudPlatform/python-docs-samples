@@ -15,7 +15,7 @@
 # [START cloudrun_django_cloudmigrate]
 steps:
   - id: "Build Container Image"
-    name: gcr.io/k8s-skaffold/pack
+    name: buildpacksio/pack
     args: ["build", "${_IMAGE_NAME}", "--builder=gcr.io/buildpacks/builder"]
 
   - id: "Push Container Image"
