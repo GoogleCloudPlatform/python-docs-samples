@@ -20,17 +20,19 @@ from vertexai.preview.rag import RagCorpus
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def create_corpus(
+def create_corpus_feature_store(
+    feature_view_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
 ) -> RagCorpus:
-    # [START generativeaionvertexai_rag_create_corpus]
+    # [START generativeaionvertexai_rag_create_corpus_feature_store]
 
     from vertexai.preview import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
+    # feature_view_name = "projects/{PROJECT_ID}/locations/{LOCATION}/featureOnlineStores/{FEATURE_ONLINE_STORE_ID}/featureViews/{FEATURE_VIEW_ID}"
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
@@ -42,10 +44,14 @@ def create_corpus(
         publisher_model="publishers/google/models/text-embedding-004"
     )
 
+    # Configure Vector DB
+    vector_db = rag.VertexFeatureStore(resource_name=feature_view_name)
+
     corpus = rag.create_corpus(
         display_name=display_name,
         description=description,
         embedding_model_config=embedding_model_config,
+        vector_db=vector_db,
     )
     print(corpus)
     # Example response:
@@ -53,9 +59,13 @@ def create_corpus(
     # display_name='test_corpus', description='Corpus Description', embedding_model_config=...
     # ...
 
-    # [END generativeaionvertexai_rag_create_corpus]
+    # [END generativeaionvertexai_rag_create_corpus_feature_store]
     return corpus
 
 
 if __name__ == "__main__":
-    create_corpus(display_name="test_corpus", description="Corpus Description")
+    create_corpus_feature_store(
+        feature_view_name="projects/{PROJECT_ID}/locations/{LOCATION}/featureOnlineStores/{FEATURE_ONLINE_STORE_ID}/featureViews/{FEATURE_VIEW_ID}",
+        display_name="test_corpus",
+        description="Corpus Description",
+    )
