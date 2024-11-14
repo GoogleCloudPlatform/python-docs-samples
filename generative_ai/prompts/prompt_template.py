@@ -13,10 +13,13 @@
 # limitations under the License.
 import os
 
+from vertexai.generative_models import GenerationResponse
+
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template_example() -> list:
+def prompt_template_example() -> GenerationResponse:
     """Build a parameterized prompt template to generate content with multiple variable sets"""
 
     # [START generativeaionvertexai_prompt_template]
@@ -37,7 +40,7 @@ def prompt_template_example() -> list:
         prompt_data="Do {animal} {activity}?",
         model_name="gemini-1.5-flash-002",
         variables=variables,
-        system_instruction=["You are a helpful zoologist"]
+        system_instruction="You are a helpful zoologist"
         # generation_config=generation_config, # Optional
         # safety_settings=safety_settings, # Optional
     )
@@ -55,9 +58,7 @@ def prompt_template_example() -> list:
 
     # Example response
         # Assembled prompt replacing: 1 instances of variable animal, 1 instances of variable activity
-        # WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-        # I0000 00:00:1731452465.383223  241384 config.cc:230] gRPC experiments enabled .....
-        # No, eagles are carnivores.  Their diet primarily consists of fish, small mammals, reptiles, and other birds......
+        # Eagles are primarily carnivorous.  While they might *accidentally* ingest a berry......
     # [END generativeaionvertexai_prompt_template]
     return responses
 
