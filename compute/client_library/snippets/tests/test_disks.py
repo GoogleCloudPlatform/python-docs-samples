@@ -24,6 +24,7 @@ from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encryp
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
+from ..disks.create_hyperdisk import create_hyperdisk
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
@@ -333,3 +334,8 @@ def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
         ).size_gb
         == 23
     )
+
+
+def test_create_hyperdisk(autodelete_disk_name):
+    disk = create_hyperdisk(PROJECT, ZONE, autodelete_disk_name, 100)
+    assert "hyperdisk" in disk.type_.lower()
