@@ -65,7 +65,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import text
+from sqlalchemy import text, sql
 from sqlalchemy.exc import ProgrammingError
 
 now = timezone.utcnow
@@ -325,10 +325,13 @@ def build_query(
         newest_dagrun = session.query(airflow_db_model) \
             .filter(airflow_db_model.dag_id == dag_id) \
             .order_by(airflow_db_model.execution_date).first()
-        query = query.filter(DagRun.external_trigger.is_(False)) \
-            .filter(airflow_db_model.dag_id == dag_id) \
-            .filter(age_check_column < max_date) \
-            .filter(airflow_db_model.id != newest_dagrun.id)
+        if newest_dagrun != None:
+            query = query.filter(DagRun.external_trigger.is_(False)) \
+                .filter(airflow_db_model.dag_id == dag_id) \
+                .filter(age_check_column <= max_date) \
+                .filter(airflow_db_model.id != newest_dagrun.id)
+        else:
+            query = query.filter(sql.false())
     else:
         query = query.filter(age_check_column <= max_date)
 
