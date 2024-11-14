@@ -323,6 +323,7 @@ def build_query(
 
     if airflow_db_model == DagRun:
         newest_dagrun = session.query(airflow_db_model) \
+            .filter(airflow_db_model.dag_id == dag_id) \
             .order_by(airflow_db_model.execution_date).first()
         query = query.filter(DagRun.external_trigger.is_(False)) \
             .filter(airflow_db_model.dag_id == dag_id) \
