@@ -26,6 +26,7 @@ from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
 from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
 from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
+from ..disks.create_hyperdisk import create_hyperdisk
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
@@ -345,7 +346,6 @@ def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
         == 23
     )
 
-
 def test_create_hyperdisk_pool(autodelete_hyperdisk_pool):
     assert "hyperdisk" in autodelete_hyperdisk_pool.storage_pool_type
 
@@ -356,3 +356,7 @@ def test_create_hyperdisk_from_pool(autodelete_hyperdisk_pool, autodelete_disk_n
     )
     assert disk.storage_pool == autodelete_hyperdisk_pool.self_link
     assert "hyperdisk" in disk.type
+
+def test_create_hyperdisk(autodelete_disk_name):
+    disk = create_hyperdisk(PROJECT, ZONE, autodelete_disk_name, 100)
+    assert "hyperdisk" in disk.type_.lower()

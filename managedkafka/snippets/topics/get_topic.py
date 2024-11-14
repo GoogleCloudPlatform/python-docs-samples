@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_get_topic]
-from google.cloud import managedkafka_v1
-
 
 def get_topic(
     project_id: str,
     region: str,
     cluster_id: str,
     topic_id: str,
-) -> managedkafka_v1.Topic:
+):
     """
     Get a Kafka topic.
 
@@ -31,6 +28,14 @@ def get_topic(
         cluster_id: ID of the Kafka cluster.
         topic_id: ID of the Kafka topic.
     """
+    # [START managedkafka_get_topic]
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # topic_id = "my-topic"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -44,5 +49,4 @@ def get_topic(
 
     return topic
 
-
-# [END managedkafka_get_topic]
+    # [END managedkafka_get_topic]

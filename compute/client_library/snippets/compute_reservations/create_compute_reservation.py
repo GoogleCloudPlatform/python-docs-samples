@@ -120,7 +120,6 @@ def create_compute_reservation(
             # source_instance_template="projects/[PROJECT_ID]/global/instanceTemplates/my-instance-template",
             instance_properties=instance_properties,
         ),
-        specific_reservation_required=True,
     )
 
     # Create a client

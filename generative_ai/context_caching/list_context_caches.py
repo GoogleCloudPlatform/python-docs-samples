@@ -18,7 +18,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_content_caches() -> list[str]:
+def list_context_caches() -> list[str]:
     # [START generativeaionvertexai_context_caching_list]
     import vertexai
 
@@ -43,4 +43,4 @@ def list_content_caches() -> list[str]:
 
 
 if __name__ == "__main__":
-    list_content_caches()
+    list_context_caches()

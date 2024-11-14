@@ -47,6 +47,8 @@ def answer_query_sample(
     serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_serving_config"
 
     # Optional: Options for query phase
+    # The `query_understanding_spec` below includes all available query phase options.
+    # For more details, refer to https://cloud.google.com/generative-ai-app-builder/docs/reference/rest/v1/QueryUnderstandingSpec
     query_understanding_spec = discoveryengine.AnswerQueryRequest.QueryUnderstandingSpec(
         query_rephraser_spec=discoveryengine.AnswerQueryRequest.QueryUnderstandingSpec.QueryRephraserSpec(
             disable=False,  # Optional: Disable query rephraser
@@ -62,6 +64,8 @@ def answer_query_sample(
     )
 
     # Optional: Options for answer phase
+    # The `answer_generation_spec` below includes all available query phase options.
+    # For more details, refer to https://cloud.google.com/generative-ai-app-builder/docs/reference/rest/v1/AnswerGenerationSpec
     answer_generation_spec = discoveryengine.AnswerQueryRequest.AnswerGenerationSpec(
         ignore_adversarial_query=False,  # Optional: Ignore adversarial query
         ignore_non_answer_seeking_query=False,  # Optional: Ignore non-answer seeking query

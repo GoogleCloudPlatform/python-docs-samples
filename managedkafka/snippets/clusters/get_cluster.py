@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_get_cluster]
-from google.cloud import managedkafka_v1
-
 
 def get_cluster(
     project_id: str,
     region: str,
     cluster_id: str,
-) -> managedkafka_v1.Cluster:
+):
     """
     Get a Kafka cluster.
 
@@ -29,6 +26,13 @@ def get_cluster(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
     """
+    # [START managedkafka_get_cluster]
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -42,5 +46,4 @@ def get_cluster(
 
     return cluster
 
-
-# [END managedkafka_get_cluster]
+    # [END managedkafka_get_cluster]
