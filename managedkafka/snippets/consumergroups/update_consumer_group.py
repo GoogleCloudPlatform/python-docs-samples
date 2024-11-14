@@ -33,7 +33,7 @@ def update_consumer_group(
         partition_offsets: Configuration of the topic, represented as a map of partition indexes to their offset value.
 
     Raises:
-        This method will raise the exception if the consumer group is not found.
+        This method will raise the NotFound exception if the consumer group or the parent resource is not found.
     """
     # [START managedkafka_update_consumergroup]
     from google.api_core.exceptions import NotFound
@@ -74,7 +74,7 @@ def update_consumer_group(
     try:
         response = client.update_consumer_group(request=request)
         print("Updated consumer group:", response)
-    except NotFound:
-        print(f"Consumer group {consumer_group.name} not found")
+    except NotFound as e:
+        print(f"Failed to update consumer group {consumer_group_id} with error: {e.message}")
 
     # [END managedkafka_update_consumergroup]

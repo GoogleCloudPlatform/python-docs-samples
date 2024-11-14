@@ -27,7 +27,7 @@ def delete_cluster(
         cluster_id: ID of the Kafka cluster.
 
     Raises:
-        This method will raise the exception if the operation errors or
+        This method will raise the GoogleAPICallError exception if the operation errors or
         the timeout before the operation completes is reached.
     """
     # [START managedkafka_delete_cluster]

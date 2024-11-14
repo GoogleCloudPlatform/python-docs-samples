@@ -27,8 +27,12 @@ def get_topic(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         topic_id: ID of the Kafka topic.
+
+    Raises:
+        This method will raise the NotFound exception if the topic or the parent resource is not found.
     """
     # [START managedkafka_get_topic]
+    from google.api_core.exceptions import NotFound
     from google.cloud import managedkafka_v1
 
     # TODO(developer)
@@ -44,9 +48,11 @@ def get_topic(
         name=topic_path,
     )
 
-    topic = client.get_topic(request=request)
-    print("Got topic:", topic)
-
-    return topic
+    try:
+        topic = client.get_topic(request=request)
+        print("Got topic:", topic)
+        return topic
+    except NotFound as e:
+        print(f"Failed to get topic {topic_id} with error: {e.message}")
 
     # [END managedkafka_get_topic]

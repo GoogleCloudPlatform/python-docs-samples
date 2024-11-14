@@ -29,7 +29,7 @@ def delete_topic(
         topic_id: ID of the Kafka topic.
 
     Raises:
-        This method will raise the exception if the topic is not found.
+        This method will raise the NotFound exception if the topic or the parent resource is not found.
     """
     # [START managedkafka_delete_topic]
     from google.api_core.exceptions import NotFound
@@ -49,7 +49,7 @@ def delete_topic(
     try:
         client.delete_topic(request=request)
         print("Deleted topic")
-    except NotFound:
-        print(f"Topic {topic_path} not found")
+    except NotFound as e:
+        print(f"Failed to delete topic {topic_id} with error: {e.message}")
 
     # [END managedkafka_delete_topic]

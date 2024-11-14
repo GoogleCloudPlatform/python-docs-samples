@@ -26,7 +26,7 @@ def update_cluster(
         memory_bytes: The memory to provision for the cluster in bytes.
 
     Raises:
-        This method will raise the exception if the operation errors or
+        This method will raise the GoogleAPICallError exception if the operation errors or
         the timeout before the operation completes is reached.
     """
     # [START managedkafka_update_cluster]

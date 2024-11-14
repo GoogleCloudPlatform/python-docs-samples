@@ -33,7 +33,7 @@ def create_cluster(
         memory_bytes: The memory to provision for the cluster in bytes.
 
     Raises:
-        This method will raise the exception if the operation errors or
+        This method will raise the GoogleAPICallError exception if the operation errors or
         the timeout before the operation completes is reached.
     """
     # [START managedkafka_create_cluster]
@@ -71,6 +71,7 @@ def create_cluster(
         # The duration of this operation can vary considerably, typically taking 10-40 minutes.
         # We can set a timeout of 3000s (50 minutes).
         operation = client.create_cluster(request=request, timeout=3000)
+        print("Waiting for operation to finish...")
         response = operation.result()
         print("Created cluster:", response)
     except GoogleAPICallError:
