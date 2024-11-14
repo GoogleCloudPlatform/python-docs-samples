@@ -223,7 +223,7 @@ def list_fhir_stores(project_id, location, dataset_id):
 
 
 # [START healthcare_patch_fhir_store]
-def patch_fhir_store(project_id, location, dataset_id, fhir_store_id):
+def patch_fhir_store(project_id, location, dataset_id, fhir_store_id, pubsub_topic):
     """Updates the FHIR store.
 
     See https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/healthcare/api-client/v1/fhir
@@ -242,24 +242,28 @@ def patch_fhir_store(project_id, location, dataset_id, fhir_store_id):
     # location = 'us-central1'  # replace with the dataset's location
     # dataset_id = 'my-dataset'  # replace with your dataset ID
     # fhir_store_id = 'my-fhir-store'  # replace with the FHIR store's ID
+    # pubsub_topic = 'projects/{project_id}/topics/{topic_id}'  # replace with your Pub/Sub topic
     fhir_store_parent = "projects/{}/locations/{}/datasets/{}".format(
         project_id, location, dataset_id
     )
     fhir_store_name = f"{fhir_store_parent}/fhirStores/{fhir_store_id}"
 
-    # TODO(developer): Replace with the full URI of an existing Pub/Sub topic
-    patch = {"notificationConfig": None}
+    patch = {
+        "notificationConfigs": [{"pubsubTopic": pubsub_topic}] if pubsub_topic else []
+    }
 
     request = (
         client.projects()
         .locations()
         .datasets()
         .fhirStores()
-        .patch(name=fhir_store_name, updateMask="notificationConfig", body=patch)
+        .patch(name=fhir_store_name, updateMask="notificationConfigs", body=patch)
     )
 
     response = request.execute()
-    print(f"Patched FHIR store {fhir_store_id} with Cloud Pub/Sub topic: None")
+    print(
+        f"Patched FHIR store {fhir_store_id} with Cloud Pub/Sub topic: {pubsub_topic or 'None'}"
+    )
 
     return response
 
