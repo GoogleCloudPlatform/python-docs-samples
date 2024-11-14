@@ -19,8 +19,8 @@
 import asyncpg  # type: ignore
 import conftest as conftest  # python-docs-samples/alloydb/conftest.py
 import pytest
-import sqlalchemy
 from google.cloud.alloydb.connector import AsyncConnector, IPTypes
+import sqlalchemy
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 
