@@ -19,7 +19,7 @@ from vertexai.generative_models import GenerationResponse
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template_example() -> GenerationResponse:
+def prompt_template_example() -> list[GenerationResponse]:
     """Build a parameterized prompt template to generate content with multiple variable sets"""
 
     # [START generativeaionvertexai_prompt_template]

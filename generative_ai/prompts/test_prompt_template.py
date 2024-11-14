@@ -17,4 +17,4 @@ import prompt_template
 
 def test_prompt_template() -> None:
     text = prompt_template.prompt_template_example()
-    assert len(text) > 0
+    assert len(text) > 2
