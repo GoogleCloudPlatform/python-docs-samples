@@ -17,7 +17,7 @@
 # to test that they interact properly together.
 
 import asyncpg  # type: ignore
-import conftest as conftest  # python-docs-samples/alloydb/conftest.py
+import alloydb.conftest as conftest  # python-docs-samples/alloydb/conftest.py
 import pytest
 import sqlalchemy
 from google.cloud.alloydb.connector import AsyncConnector, IPTypes
@@ -74,6 +74,7 @@ async def test_embeddings_batch_processing(
     password: str,
     table_name: str,
 ) -> None:
+    # TODO: Create new table
     # Populate the table with embeddings by running the notebook
     conftest.run_notebook(
         "alloydb/notebooks/embeddings_batch_processing.ipynb",
