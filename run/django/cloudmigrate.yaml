@@ -22,14 +22,6 @@ steps:
     name: "gcr.io/cloud-builders/docker"
     args: ["push", "${_IMAGE_NAME}"]
 
-  - id: "build image"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["build", "-t", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}", "."]
-
-  - id: "push image"
-    name: "gcr.io/cloud-builders/docker"
-    args: ["push", "gcr.io/${PROJECT_ID}/${_SERVICE_NAME}"]
-
   - id: "Migrate database"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: /bin/bash
