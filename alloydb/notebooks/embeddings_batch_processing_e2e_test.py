@@ -17,7 +17,7 @@
 # to test that they interact properly together.
 
 import asyncpg  # type: ignore
-import alloydb.conftest as conftest  # python-docs-samples/alloydb/conftest.py
+import conftest as conftest  # python-docs-samples/alloydb/conftest.py
 import pytest
 import sqlalchemy
 from google.cloud.alloydb.connector import AsyncConnector, IPTypes
