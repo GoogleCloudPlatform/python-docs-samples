@@ -12,11 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_update_topic]
-from google.api_core.exceptions import NotFound
-from google.cloud import managedkafka_v1
-from google.protobuf import field_mask_pb2
-
 
 def update_topic(
     project_id: str,
@@ -27,7 +22,7 @@ def update_topic(
     configs: dict[str, str],
 ) -> None:
     """
-    Update a Kafka topic. For a list of editable fields, one can check https://cloud.google.com/managed-kafka/docs/create-topic#properties.
+    Update a Kafka topic.
 
     Args:
         project_id: Google Cloud project ID.
@@ -40,6 +35,18 @@ def update_topic(
     Raises:
         This method will raise the exception if the topic is not found.
     """
+    # [START managedkafka_update_topic]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+    from google.protobuf import field_mask_pb2
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # topic_id = "my-topic"
+    # partition_count = 20
+    # configs = {"min.insync.replicas": "1"}
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -50,6 +57,7 @@ def update_topic(
     update_mask = field_mask_pb2.FieldMask()
     update_mask.paths.extend(["partition_count", "configs"])
 
+    # For a list of editable fields, one can check https://cloud.google.com/managed-kafka/docs/create-topic#properties.
     request = managedkafka_v1.UpdateTopicRequest(
         update_mask=update_mask,
         topic=topic,
@@ -61,5 +69,4 @@ def update_topic(
     except NotFound:
         print(f"Topic {topic.name} not found")
 
-
-# [END managedkafka_update_topic]
+    # [END managedkafka_update_topic]
