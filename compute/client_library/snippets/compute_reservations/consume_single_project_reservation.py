@@ -18,7 +18,7 @@
 # directory and apply your changes there.
 
 
-# [START compute_reservation_create]
+# [START compute_consume_single_project_reservation]
 from __future__ import annotations
 
 import sys
@@ -76,55 +76,44 @@ def wait_for_extended_operation(
     return result
 
 
-def create_compute_reservation(
+def consume_specific_single_project_reservation(
     project_id: str,
-    zone: str = "us-central1-a",
-    reservation_name="your-reservation-name",
-) -> compute_v1.Reservation:
-    """Creates a compute reservation in GCP.
+    zone: str,
+    reservation_name: str,
+    instance_name: str,
+    machine_type: str = "n1-standard-1",
+    min_cpu_platform: str = "Intel Ivy Bridge",
+) -> compute_v1.Instance:
+    """
+    Creates a specific reservation in a single project and launches a VM
+    that consumes the newly created reservation.
     Args:
         project_id (str): The ID of the Google Cloud project.
         zone (str): The zone to create the reservation.
         reservation_name (str): The name of the reservation to create.
-    Returns:
-        Reservation object that represents the new reservation.
+        instance_name (str): The name of the instance to create.
+        machine_type (str): The machine type for the instance.
+        min_cpu_platform (str): The minimum CPU platform for the instance.
     """
-
-    instance_properties = compute_v1.AllocationSpecificSKUAllocationReservedInstanceProperties(
-        machine_type="n1-standard-1",
-        # Optional. Specifies the minimum CPU platform for the VM instance.
-        min_cpu_platform="Intel Ivy Bridge",
-        # Optional. Specifies amount of local ssd to reserve with each instance.
-        local_ssds=[
-            compute_v1.AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk(
-                disk_size_gb=375, interface="NVME"
-            ),
-            compute_v1.AllocationSpecificSKUAllocationAllocatedInstancePropertiesReservedDisk(
-                disk_size_gb=375, interface="SCSI"
-            ),
-        ],
-        # Optional. Specifies the GPUs allocated to each instance.
-        # guest_accelerators=[
-        #     compute_v1.AcceleratorConfig(
-        #         accelerator_count=1, accelerator_type="nvidia-tesla-t4"
-        #     )
-        # ],
+    instance_properties = (
+        compute_v1.AllocationSpecificSKUAllocationReservedInstanceProperties(
+            machine_type=machine_type,
+            min_cpu_platform=min_cpu_platform,
+        )
     )
 
     reservation = compute_v1.Reservation(
         name=reservation_name,
         specific_reservation=compute_v1.AllocationSpecificSKUReservation(
-            count=3,  # Number of resources that are allocated.
-            # If you use source_instance_template, you must exclude the instance_properties field.
-            # It can be a full or partial URL.
-            # source_instance_template="projects/[PROJECT_ID]/global/instanceTemplates/my-instance-template",
+            count=3,
             instance_properties=instance_properties,
         ),
+        # Only VMs that target the reservation by name can consume from this reservation
+        specific_reservation_required=True,
     )
 
-    # Create a client
+    # Create a reservation client
     client = compute_v1.ReservationsClient()
-
     operation = client.insert(
         project=project_id,
         zone=zone,
@@ -132,26 +121,52 @@ def create_compute_reservation(
     )
     wait_for_extended_operation(operation, "Reservation creation")
 
-    reservation = client.get(
-        project=project_id, zone=zone, reservation=reservation_name
+    instance = compute_v1.Instance()
+    instance.name = instance_name
+    instance.machine_type = f"zones/{zone}/machineTypes/{machine_type}"
+    instance.min_cpu_platform = min_cpu_platform
+    instance.zone = zone
+
+    # Set the reservation affinity to target the specific reservation
+    instance.reservation_affinity = compute_v1.ReservationAffinity(
+        consume_reservation_type="SPECIFIC_RESERVATION",  # Type of reservation to consume
+        key="compute.googleapis.com/reservation-name",  # Key for the reservation
+        values=[reservation_name],  # Reservation name to consume
     )
+    # Define the disks for the instance
+    instance.disks = [
+        compute_v1.AttachedDisk(
+            boot=True,  # Indicates that this is a boot disk
+            auto_delete=True,  # The disk will be deleted when the instance is deleted
+            initialize_params=compute_v1.AttachedDiskInitializeParams(
+                source_image="projects/debian-cloud/global/images/family/debian-11",
+                disk_size_gb=10,
+            ),
+        )
+    ]
+    instance.network_interfaces = [
+        compute_v1.NetworkInterface(
+            network="global/networks/default",  # The network to use
+            access_configs=[
+                compute_v1.AccessConfig(
+                    name="External NAT",  # Name of the access configuration
+                    type="ONE_TO_ONE_NAT",  # Type of access configuration
+                )
+            ],
+        )
+    ]
+    # Create a request to insert the instance
+    request = compute_v1.InsertInstanceRequest()
+    request.zone = zone
+    request.project = project_id
+    request.instance_resource = instance
 
-    print("Name: ", reservation.name)
-    print("STATUS: ", reservation.status)
-    print(reservation.specific_reservation)
-    # Example response:
-    # Name:  your-reservation-name
-    # STATUS:  READY
-    # count: 3
-    # instance_properties {
-    #   machine_type: "n1-standard-1"
-    #   local_ssds {
-    #     disk_size_gb: 375
-    #     interface: "NVME"
-    #   }
-    # ...
+    vm_client = compute_v1.InstancesClient()
+    operation = vm_client.insert(request)
+    wait_for_extended_operation(operation, "instance creation")
+    print(f"Instance {instance_name} with specific reservation created successfully.")
 
-    return reservation
+    return vm_client.get(project=project_id, zone=zone, instance=instance_name)
 
 
-# [END compute_reservation_create]
+# [END compute_consume_single_project_reservation]
