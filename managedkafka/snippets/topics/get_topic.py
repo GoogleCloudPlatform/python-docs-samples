@@ -51,7 +51,6 @@ def get_topic(
     try:
         topic = client.get_topic(request=request)
         print("Got topic:", topic)
-        return topic
     except NotFound as e:
         print(f"Failed to get topic {topic_id} with error: {e.message}")
 

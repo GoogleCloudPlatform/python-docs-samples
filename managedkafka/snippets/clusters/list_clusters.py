@@ -41,6 +41,4 @@ def list_clusters(
     for cluster in response:
         print("Got cluster:", cluster)
 
-    return [cluster.name for cluster in response]
-
     # [END managedkafka_list_clusters]

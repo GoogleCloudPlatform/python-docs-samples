@@ -48,7 +48,6 @@ def get_cluster(
     try:
         cluster = client.get_cluster(request=request)
         print("Got cluster:", cluster)
-        return cluster
     except NotFound as e:
         print(f"Failed to get cluster {cluster_id} with error: {e.message}")
 

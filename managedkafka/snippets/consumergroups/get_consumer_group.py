@@ -53,7 +53,6 @@ def get_consumer_group(
     try:
         consumer_group = client.get_consumer_group(request=request)
         print("Got consumer group:", consumer_group)
-        return consumer_group
     except NotFound as e:
         print(f"Failed to get consumer group {consumer_group_id} with error: {e.message}")
 
