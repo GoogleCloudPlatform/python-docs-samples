@@ -44,6 +44,4 @@ def list_topics(
     for topic in response:
         print("Got topic:", topic)
 
-    return [topic.name for topic in response]
-
     # [END managedkafka_list_topics]

@@ -33,7 +33,7 @@ def update_topic(
         configs: Configuration of the topic.
 
     Raises:
-        This method will raise the exception if the topic is not found.
+        This method will raise the NotFound exception if the topic or the parent resource is not found.
     """
     # [START managedkafka_update_topic]
     from google.api_core.exceptions import NotFound
@@ -66,7 +66,7 @@ def update_topic(
     try:
         response = client.update_topic(request=request)
         print("Updated topic:", response)
-    except NotFound:
-        print(f"Topic {topic.name} not found")
+    except NotFound as e:
+        print(f"Failed to update topic {topic_id} with error: {e.message}")
 
     # [END managedkafka_update_topic]

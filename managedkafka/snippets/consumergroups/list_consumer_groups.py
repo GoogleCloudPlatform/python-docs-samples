@@ -44,6 +44,4 @@ def list_consumer_groups(
     for consumer_group in response:
         print("Got consumer group:", consumer_group)
 
-    return [consumer_group.name for consumer_group in response]
-
     # [END managedkafka_list_consumergroups]

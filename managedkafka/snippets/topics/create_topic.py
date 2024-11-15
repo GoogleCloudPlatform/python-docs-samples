@@ -35,7 +35,7 @@ def create_topic(
         configs: Configuration of the topic.
 
     Raises:
-        This method will raise the exception if the topic already exists.
+        This method will raise the AlreadyExists exception if the topic already exists.
     """
     # [START managedkafka_create_topic]
     from google.api_core.exceptions import AlreadyExists
@@ -68,7 +68,7 @@ def create_topic(
     try:
         response = client.create_topic(request=request)
         print("Created topic:", response.name)
-    except AlreadyExists:
-        print(f"{topic.name} already exists")
+    except AlreadyExists as e:
+        print(f"Failed to create topic {topic.name} with error: {e.message}")
 
     # [END managedkafka_create_topic]
