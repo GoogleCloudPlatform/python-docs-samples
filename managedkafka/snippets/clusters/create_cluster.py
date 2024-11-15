@@ -71,10 +71,10 @@ def create_cluster(
         # The duration of this operation can vary considerably, typically taking 10-40 minutes.
         # We can set a timeout of 3000s (50 minutes).
         operation = client.create_cluster(request=request, timeout=3000)
-        print("Waiting for operation to finish...")
+        print(f"Waiting for operation {operation.operation.name} to complete...")
         response = operation.result()
         print("Created cluster:", response)
-    except GoogleAPICallError:
-        print("The operation failed with error:", operation.operation.error)
+    except GoogleAPICallError as e:
+        print(f"The operation failed with error: {e.message}")
 
     # [END managedkafka_create_cluster]

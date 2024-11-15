@@ -56,9 +56,11 @@ def update_cluster(
 
     try:
         operation = client.update_cluster(request=request)
+        print(f"Waiting for operation {operation.operation.name} to complete...")
+
         response = operation.result()
         print("Updated cluster:", response)
-    except GoogleAPICallError:
-        print("The operation failed with error:", operation.operation.error)
+    except GoogleAPICallError as e:
+        print(f"The operation failed with error: {e.message}")
 
     # [END managedkafka_update_cluster]
