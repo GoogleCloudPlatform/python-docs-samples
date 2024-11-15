@@ -57,7 +57,6 @@ def update_cluster(
     try:
         operation = client.update_cluster(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
-
         response = operation.result()
         print("Updated cluster:", response)
     except GoogleAPICallError as e:
