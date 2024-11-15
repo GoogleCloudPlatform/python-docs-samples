@@ -65,7 +65,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import text, sql
+from sqlalchemy import text, sql, desc
 from sqlalchemy.exc import ProgrammingError
 
 now = timezone.utcnow
@@ -317,19 +317,41 @@ def build_query(
     max_date,
     dag_id=None
 ):
+    """
+    Build a database query to retrieve and filter Airflow data.
+
+    Args:
+        session: SQLAlchemy session object for database interaction.
+        airflow_db_model: The Airflow model class to query (e.g., DagRun).
+        age_check_column: The column representing the age of the data.
+        max_date: The maximum allowed age for the data.
+        dag_id (optional): The ID of the DAG to filter by. Defaults to None.
+
+    Returns:
+        SQLAlchemy query object: The constructed query.
+    """
     query = session.query(airflow_db_model)
 
     logging.info("INITIAL QUERY : " + str(query))
 
-    if airflow_db_model == DagRun:
-        newest_dagrun = session.query(airflow_db_model) \
-            .filter(airflow_db_model.dag_id == dag_id) \
-            .order_by(airflow_db_model.execution_date).first()
+    if dag_id:
+        query = query.filter(airflow_db_model.dag_id == dag_id)
+
+    if airflow_db_model == DagRun:     
+        # For DaRus we want to leave last DagRun regardless of its age   
+        newest_dagrun = (
+            session
+            .query(airflow_db_model)
+            .order_by(desc(airflow_db_model.execution_date))
+            .first()
+        )
         if newest_dagrun is not None:
-            query = query.filter(DagRun.external_trigger.is_(False)) \
-                .filter(airflow_db_model.dag_id == dag_id) \
-                .filter(age_check_column <= max_date) \
+            query = (
+                query
+                .filter(DagRun.external_trigger.is_(False))
+                .filter(age_check_column <= max_date)
                 .filter(airflow_db_model.id != newest_dagrun.id)
+            )
         else:
             query = query.filter(sql.false())
     else:
@@ -400,7 +422,6 @@ def cleanup_function(**context):
                 airflow_db_model=airflow_db_model,
                 age_check_column=age_check_column,
                 max_date=max_date,
-                dag_id=None,
             )
             if PRINT_DELETES:
                 print_query(query, airflow_db_model, age_check_column)
