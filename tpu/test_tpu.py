@@ -74,7 +74,7 @@ def test_creating_tpu(mock_tpu_client: MagicMock, operation: MagicMock) -> None:
 
 def test_delete_tpu(mock_tpu_client: MagicMock) -> None:
     delete_tpu.delete_cloud_tpu(PROJECT_ID, ZONE, TPU_NAME)
-    mock_tpu_client.delete_node.called_once()
+    mock_tpu_client.delete_node.assert_called_once()
 
 
 def test_creating_with_startup_script(
