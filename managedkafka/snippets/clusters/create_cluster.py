@@ -68,11 +68,11 @@ def create_cluster(
     )
 
     try:
+        operation = client.create_cluster(request=request)
+        print(f"Waiting for operation {operation.operation.name} to complete...")
         # The duration of this operation can vary considerably, typically taking 10-40 minutes.
         # We can set a timeout of 3000s (50 minutes).
-        operation = client.create_cluster(request=request, timeout=3000)
-        print(f"Waiting for operation {operation.operation.name} to complete...")
-        response = operation.result()
+        response = operation.result(timeout=3000)
         print("Created cluster:", response)
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e.message}")
