@@ -47,9 +47,10 @@ def delete_cluster(
 
     try:
         operation = client.delete_cluster(request=request)
+        print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result()
         print("Deleted cluster")
-    except GoogleAPICallError:
-        print("The operation failed with error:", operation.operation.error)
+    except GoogleAPICallError as e:
+        print(f"The operation failed with error: {e.message}")
 
     # [END managedkafka_delete_cluster]
