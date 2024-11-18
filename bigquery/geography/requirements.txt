@@ -24,7 +24,7 @@ google-crc32c==1.6.0; python_version >= '3.9'
 google-resumable-media==2.7.2
 googleapis-common-protos==1.66.0
 grpcio===1.62.2; python_version == '3.7'
-grpcio==1.67.1; python_version >= '3.8'
+grpcio==1.68.0; python_version >= '3.8'
 idna==3.10
 munch==4.0.0
 mypy-extensions==1.0.0
