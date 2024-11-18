@@ -18,10 +18,11 @@ from typing import List
 from google.cloud import dataplex_v1
 
 
-# Method to list Entries located in project_id, location and entry_group_id
 def list_entries(
     project_id: str, location: str, entry_group_id: str
 ) -> List[dataplex_v1.Entry]:
+    """Method to list Entries located in project_id, location and entry_group_id"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely

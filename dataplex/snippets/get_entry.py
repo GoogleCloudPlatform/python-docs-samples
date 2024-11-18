@@ -16,14 +16,17 @@
 from google.cloud import dataplex_v1
 
 
-# Method to retrieve Entry located in project_id, location, entry_group_id and with entry_id
-# When Entry is created in Dataplex for example for BigQuery table,
-# access permissions might differ between Dataplex and source system.
-# "Get" method checks permissions in Dataplex.
-# Please also refer how to lookup an Entry, which checks permissions in source system.
 def get_entry(
     project_id: str, location: str, entry_group_id: str, entry_id: str
 ) -> dataplex_v1.Entry:
+    """Method to retrieve Entry located in project_id, location, entry_group_id and with entry_id
+
+    When Entry is created in Dataplex for example for BigQuery table,
+    access permissions might differ between Dataplex and source system.
+    "Get" method checks permissions in Dataplex.
+    Please also refer how to lookup an Entry, which checks permissions in source system.
+    """
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely

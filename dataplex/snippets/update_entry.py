@@ -17,10 +17,11 @@ from google.cloud import dataplex_v1
 from google.protobuf import struct_pb2
 
 
-# Method to update Entry located in project_id, location, entry_group_id and with entry_id
 def update_entry(
     project_id: str, location: str, entry_group_id: str, entry_id: str
 ) -> dataplex_v1.Entry:
+    """Method to update Entry located in project_id, location, entry_group_id and with entry_id"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
