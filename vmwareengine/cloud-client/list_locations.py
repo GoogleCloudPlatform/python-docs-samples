@@ -20,7 +20,7 @@ from google.cloud.location.locations_pb2 import ListLocationsRequest
 
 def list_locations(project_id: str) -> str:
     """
-    Prints a list of available locations for use in VMWare Engine.
+    Prints a list of available locations for use in VMware Engine.
 
     Args:
         project_id: name of the project you want to use.

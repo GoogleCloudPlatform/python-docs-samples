@@ -24,7 +24,7 @@ def create_private_cloud(
     project_id: str, zone: str, network_name: str, cloud_name: str, cluster_name: str
 ) -> operation.Operation:
     """
-    Creates a new Private Cloud using VMWare Engine.
+    Creates a new Private Cloud using VMware Engine.
 
     Creating a new Private Cloud is a long-running operation and it may take over an hour.
 
