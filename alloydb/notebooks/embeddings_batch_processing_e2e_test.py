@@ -18,9 +18,9 @@
 
 import asyncpg  # type: ignore
 import conftest as conftest  # python-docs-samples/alloydb/conftest.py
+from google.cloud.alloydb.connector import AsyncConnector, IPTypes
 import pytest
 import sqlalchemy
-from google.cloud.alloydb.connector import AsyncConnector, IPTypes
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine
 
 
@@ -43,7 +43,11 @@ async def _init_connection_pool(
     region: str,
     password: str,
 ) -> AsyncEngine:
-    connection_string = f"projects/{project_id}/locations/{region}/clusters/{cluster_name}/instances/{instance_name}"
+    connection_string = (
+        f"projects/{project_id}/locations/"
+        f"{region}/clusters/{cluster_name}/"
+        f"instances/{instance_name}"
+    )
 
     async def getconn() -> asyncpg.Connection:
         conn: asyncpg.Connection = await connector.connect(
@@ -71,10 +75,10 @@ async def test_embeddings_batch_processing(
     instance_name: str,
     region: str,
     database_name: str,
-    username: str,
     password: str,
     table_name: str,
 ) -> None:
+    # TODO: Create new table
     # Populate the table with embeddings by running the notebook
     conftest.run_notebook(
         "embeddings_batch_processing.ipynb",
@@ -82,7 +86,6 @@ async def test_embeddings_batch_processing(
             "project_id": project_id,
             "cluster_name": cluster_name,
             "database_name": database_name,
-            "username": username,
             "region": region,
             "instance_name": instance_name,
             "table_name": table_name,
@@ -90,8 +93,16 @@ async def test_embeddings_batch_processing(
         preprocess=preprocess,
         skip_shell_commands=True,
         replace={
-            "password = input(\"Please provide a password to be used for 'postgres' database user: \")": f"password = '{password}'",
-            "await create_db(database_name=database_name, connector=connector)": "",
+            (
+                "password = input(\"Please provide "
+                "a password to be used for 'postgres' "
+                "database user: \")"
+            ): f"password = '{password}'",
+            (
+                "await create_db("
+                "database_name=database_name, "
+                "connector=connector)"
+            ): "",
         },
         until_end=True,
     )
@@ -111,14 +122,18 @@ async def test_embeddings_batch_processing(
             # Validate that embeddings are non-empty for all rows
             result = await conn.execute(
                 sqlalchemy.text(
-                    f"SELECT COUNT(*) FROM {table_name} WHERE analysis_embedding IS NULL"
+                    f"SELECT COUNT(*) FROM "
+                    f"{table_name} WHERE "
+                    f"analysis_embedding IS NULL"
                 )
             )
             row = result.fetchone()
             assert row[0] == 0
             result = await conn.execute(
                 sqlalchemy.text(
-                    f"SELECT COUNT(*) FROM {table_name} WHERE overview_embedding IS NULL"
+                    f"SELECT COUNT(*) FROM "
+                    f"{table_name} WHERE "
+                    f"overview_embedding IS NULL"
                 )
             )
             row = result.fetchone()
@@ -126,10 +141,16 @@ async def test_embeddings_batch_processing(
 
             # Get the table back to the original state
             await conn.execute(
-                sqlalchemy.text(f"UPDATE {table_name} set analysis_embedding = NULL")
+                sqlalchemy.text(
+                    f"UPDATE {table_name} set "
+                    f"analysis_embedding = NULL"
+                )
             )
             await conn.execute(
-                sqlalchemy.text(f"UPDATE {table_name} set overview_embedding = NULL")
+                sqlalchemy.text(
+                    f"UPDATE {table_name} set "
+                    f"overview_embedding = NULL"
+                )
             )
             await conn.commit()
         await pool.dispose()
