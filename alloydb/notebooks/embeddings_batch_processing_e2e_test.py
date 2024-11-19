@@ -81,7 +81,7 @@ async def test_embeddings_batch_processing(
     # TODO: Create new table
     # Populate the table with embeddings by running the notebook
     conftest.run_notebook(
-        "alloydb/notebooks/embeddings_batch_processing.ipynb",
+        "embeddings_batch_processing.ipynb",
         variables={
             "project_id": project_id,
             "cluster_name": cluster_name,
