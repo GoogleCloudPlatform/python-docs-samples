@@ -1,1 +1,1 @@
-google-cloud-discoveryengine==0.13.3
+google-cloud-discoveryengine==0.13.4
