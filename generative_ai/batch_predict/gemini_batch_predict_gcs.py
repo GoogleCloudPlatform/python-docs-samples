@@ -23,47 +23,31 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     "Perform batch text prediction using a Gemini AI model and returns the output location"
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
-    import time
-    import vertexai
-
-    from vertexai.batch_prediction import BatchPredictionJob
+    import google.cloud.aiplatform as aiplatform
 
     # TODO(developer): Update and un-comment below line
     # PROJECT_ID = "your-project-id"
 
-    # Initialize vertexai
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    # Initialize aiplatform
+    aiplatform.init(project=PROJECT_ID, location="us-central1")
 
     input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl"
 
     # Submit a batch prediction job with Gemini model
-    batch_prediction_job = BatchPredictionJob.submit(
-        source_model="gemini-1.5-flash-002",
-        input_dataset=input_uri,
-        output_uri_prefix=output_uri,
+    batch_prediction_job = aiplatform.BatchPredictionJob.create(
+        model_name=f"projects/{PROJECT_ID}/locations/us-central1/publishers/google/models/gemini-1.5-flash-002",
+        job_display_name="Batch predict with Gemini - GCS",
+        gcs_source=input_uri,
+        gcs_destination_prefix=output_uri,
     )
 
     # Check job status
     print(f"Job resource name: {batch_prediction_job.resource_name}")
-    print(f"Model resource name with the job: {batch_prediction_job.model_name}")
-    print(f"Job state: {batch_prediction_job.state.name}")
-
-    # Refresh the job until complete
-    while not batch_prediction_job.has_ended:
-        time.sleep(5)
-        batch_prediction_job.refresh()
-
-    # Check if the job succeeds
-    if batch_prediction_job.has_succeeded:
-        print("Job succeeded!")
-    else:
-        print(f"Job failed: {batch_prediction_job.error}")
-
-    # Check the location of the output
-    print(f"Job output location: {batch_prediction_job.output_location}")
 
     # Example response:
-    #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
+    # View Batch Prediction Job: https://console.cloud.google.com/ai/platform/locations/us-central1/batch-predictions/12345678?project=projectid
+    # BatchPredictionJob created. Resource name: projects/1234567/locations/us-central1/batchPredictionJobs/1234567
+    # BatchPredictionJob run completed. Resource name: projects/650231661283/locations/us-central1/batchPredictionJobs/2544655663456321536
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
     return batch_prediction_job

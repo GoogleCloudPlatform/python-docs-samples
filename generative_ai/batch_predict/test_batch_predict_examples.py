@@ -91,7 +91,7 @@ def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
             output_uri
         )
     )
-    assert GCS_OUTPUT_PATH in job.output_location
+    assert GCS_OUTPUT_PATH in job.output_info.gcs_output_directory
 
 
 def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
@@ -101,4 +101,5 @@ def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
             output_uri
             )
     )
-    assert OUTPUT_TABLE in job.output_location
+    assert OUTPUT_TABLE in job.output_info.bigquery_output_table
+
