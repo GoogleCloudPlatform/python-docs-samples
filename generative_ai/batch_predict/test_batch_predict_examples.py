@@ -102,4 +102,3 @@ def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
             )
     )
     assert OUTPUT_TABLE in job.output_info.bigquery_output_table
-
