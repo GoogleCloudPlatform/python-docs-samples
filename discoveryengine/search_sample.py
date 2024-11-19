@@ -84,10 +84,13 @@ def search_sample(
         ),
     )
 
-    response = client.search(request)
-    print(response)
+    page_result = client.search(request)
 
-    return response
+    # Handle the response
+    for response in page_result:
+        print(response)
+
+    return page_result
 
 
 # [END genappbuilder_search]
