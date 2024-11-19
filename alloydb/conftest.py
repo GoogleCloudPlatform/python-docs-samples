@@ -56,24 +56,12 @@ def region() -> str:
 
 @pytest.fixture(scope="session")
 def database_name() -> str:
-    return get_env_var("ALLOYDB_DATABASE")
+    return get_env_var("ALLOYDB_DATABASE_NAME")
 
-
-@pytest.fixture(scope="session")
-def username() -> str:
-    user = f"alloydb_user_{uuid.uuid4().hex[:10]}"
-    user_pw = password()
-
-    run_cmd("gcloud", "alloydb", "users", "create", user, "--password", user_pw, "--instance", instance_name)
 
 @pytest.fixture(scope="session")
 def password() -> str:
-    return uuid.uuid4().hex[:24]
-
-
-@pytest.fixture(scope="session")
-def table_name() -> str:
-    return f"sample_table_{uuid.uuid4().hex[:24]}"
+    return get_env_var("ALLOYDB_PASSWORD")
 
 
 @pytest_asyncio.fixture(scope="session")
