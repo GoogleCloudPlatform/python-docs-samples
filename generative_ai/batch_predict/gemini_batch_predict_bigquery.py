@@ -44,9 +44,8 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
     print(f"Job resource name: {batch_prediction_job.resource_name}")
 
     # Example response:
-    # View Batch Prediction Job: https://console.cloud.google.com/ai/platform/locations/us-central1/batch-predictions/12345678?project=projectid
-    # BatchPredictionJob created. Resource name: projects/1234567/locations/us-central1/batchPredictionJobs/1234567
-    # BatchPredictionJob run completed. Resource name: projects/650231661283/locations/us-central1/batchPredictionJobs/2544655663456321536
+    # BatchPredictionJob created. Resource name: projects/12345678/locations/us-central1/batchPredictionJobs/12345678
+    # BatchPredictionJob run completed. Resource name: projects/12345678/locations/us-central1/batchPredictionJobs/12345678
 
     # [END generativeaionvertexai_batch_predict_gemini_createjob_bigquery]
     return batch_prediction_job
