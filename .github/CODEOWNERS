@@ -53,7 +53,7 @@
 /storagetransfer/**/*                  @GoogleCloudPlatform/cloud-storage-dpes @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 # ---* Infra DB
 /alloydb/**/*                          @GoogleCloudPlatform/alloydb-connectors-code-owners @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/cloud-sql/**/*                        @GoogleCloudPlatform/infra-db-sdk @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/cloud-sql/**/*                        @GoogleCloudPlatform/cloud-sql-connectors @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 
 # Self-service
 # ---* Shared with DevRel Teams
