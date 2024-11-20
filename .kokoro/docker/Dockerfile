@@ -145,7 +145,8 @@ RUN set -ex \
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
-RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+  && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
   && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.10/site-packages")
@@ -161,7 +162,7 @@ RUN python3.12 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip.py
-RUN python3.7 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
@@ -196,7 +197,8 @@ RUN sudo systemctl enable redis-server.service
 # Create a user and allow sudo
 
 # kbuilder uid on the default Kokoro image
-ARG UID=1000
+# UID 1000 is taken in Ubuntu 24.04
+ARG UID=10000
 ARG USERNAME=kbuilder
 
 # Add a new user to the container image.
