@@ -36,10 +36,12 @@ from ..compute_reservations.create_compute_reservation_from_vm import (
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
 )
+from ..compute_reservations.create_vm_template_not_consume_reservation import (
+    create_instance_template_not_consume_reservation,
+)
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
 from ..compute_reservations.list_compute_reservation import list_compute_reservation
-
 
 from ..instances.create import create_instance
 from ..instances.delete import delete_instance
@@ -218,3 +220,22 @@ def test_consume_shared_reservaton():
         if instance:
             delete_instance(SHARED_PROJECT_ID, ZONE, instance.name)
         delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+
+
+def test_create_template_not_consume_reservation():
+    template_name = "test-template-" + uuid.uuid4().hex[:10]
+    try:
+        template = create_instance_template_not_consume_reservation(
+            PROJECT_ID, template_name, MACHINE_TYPE
+        )
+        assert (
+            template.properties.reservation_affinity.consume_reservation_type
+            == "NO_RESERVATION"
+        )
+    finally:
+        try:
+            compute_v1.InstanceTemplatesClient().delete(
+                project=PROJECT_ID, instance_template=template_name
+            )
+        except Exception as e:
+            print(f"Failed to delete template: {e}")
