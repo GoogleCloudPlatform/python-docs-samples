@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample creates a secure two-service application running on Cloud Run.
-# This test builds and deploys the two secure services
-# to test that they interact properly together.
+# Maintainer Note: this sample presumes data exists in 
+# ALLOYDB_TABLE_NAME within the ALLOYDB_(cluster/instance/database)
 
 import asyncpg  # type: ignore
 import conftest as conftest  # python-docs-samples/alloydb/conftest.py
