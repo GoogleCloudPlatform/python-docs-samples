@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Maintainer Note: this sample presumes data exists in 
+# Maintainer Note: this sample presumes data exists in
 # ALLOYDB_TABLE_NAME within the ALLOYDB_(cluster/instance/database)
 
 import asyncpg  # type: ignore
