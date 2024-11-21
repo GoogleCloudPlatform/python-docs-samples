@@ -16,8 +16,9 @@
 from google.cloud import dataplex_v1
 
 
-# Method to delete Entry Group located in project_id, location and with entry_group_id
 def delete_entry_group(project_id: str, location: str, entry_group_id: str) -> None:
+    """Method to delete Entry Group located in project_id, location and with entry_group_id"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
