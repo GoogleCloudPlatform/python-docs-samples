@@ -16,5 +16,6 @@ import snippets_create_client_v2
 
 def test_create_client_with_endpoint():
     client = snippets_create_client_v2.create_client_with_endpoint(
-        "securitycenter.me-central2.rep.googleapis.com")
+        "securitycenter.me-central2.rep.googleapis.com"
+    )
     assert client.api_endpoint == "securitycenter.me-central2.rep.googleapis.com"
