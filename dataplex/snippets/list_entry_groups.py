@@ -18,8 +18,9 @@ from typing import List
 from google.cloud import dataplex_v1
 
 
-# Method to list Entry Groups located in project_id and location
 def list_entry_groups(project_id: str, location: str) -> List[dataplex_v1.EntryGroup]:
+    """Method to list Entry Groups located in project_id and location"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely

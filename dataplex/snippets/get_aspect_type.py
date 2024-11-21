@@ -16,10 +16,11 @@
 from google.cloud import dataplex_v1
 
 
-#  Method to retrieve Aspect Type located in project_id, location and with aspect_type_id
 def get_aspect_type(
     project_id: str, location: str, aspect_type_id: str
 ) -> dataplex_v1.AspectType:
+    """Method to retrieve Aspect Type located in project_id, location and with aspect_type_id"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely

@@ -18,14 +18,15 @@ from typing import List
 from google.cloud import dataplex_v1
 
 
-# Method to update Aspect Type located in project_id, location and with aspect_type_id and
-# aspect_fields specifying schema of the Aspect Type
 def update_aspect_type(
     project_id: str,
     location: str,
     aspect_type_id: str,
     aspect_fields: List[dataplex_v1.AspectType.MetadataTemplate],
 ) -> dataplex_v1.AspectType:
+    """Method to update Aspect Type located in project_id, location and with aspect_type_id and
+    aspect_fields specifying schema of the Aspect Type"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely
