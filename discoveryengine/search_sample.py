@@ -93,3 +93,56 @@ def search_sample(
 
 
 # [END genappbuilder_search]
+
+# [START genappbuilder_search_tuned_model]
+
+from google.api_core.client_options import ClientOptions
+from google.cloud import discoveryengine_v1alpha as discoveryengine
+
+# TODO(developer): Uncomment these variables before running the sample.
+# project_id = "YOUR_PROJECT_ID"
+# location = "YOUR_LOCATION"          # Values: "global", "us", "eu"
+# engine_id = "YOUR_APP_ID"
+# search_query = "YOUR_SEARCH_QUERY"
+
+
+def search_tuned_model_sample(
+    project_id: str,
+    location: str,
+    engine_id: str,
+    search_query: str,
+) -> discoveryengine.services.search_service.pagers.SearchPager:
+    #  For more information, refer to:
+    # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
+    client_options = (
+        ClientOptions(api_endpoint=f"{location}-discoveryengine.googleapis.com")
+        if location != "global"
+        else None
+    )
+
+    # Create a client
+    client = discoveryengine.SearchServiceClient(client_options=client_options)
+
+    # The full resource name of the search app serving config
+    serving_config = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/servingConfigs/default_config"
+
+    # Refer to the `SearchRequest` reference for all supported fields:
+    # https://cloud.google.com/python/docs/reference/discoveryengine/latest/google.cloud.discoveryengine_v1.types.SearchRequest
+    request = discoveryengine.SearchRequest(
+        serving_config=serving_config,
+        query=search_query,
+        custom_fine_tuning_spec=discoveryengine.CustomFineTuningSpec(
+            enable_search_adaptor=True
+        ),
+    )
+
+    page_result = client.search(request)
+
+    # Handle the response
+    for response in page_result:
+        print(response)
+
+    return page_result
+
+
+# [END genappbuilder_search_tuned_model]
