@@ -20,6 +20,7 @@ import pytest
 import vertexai
 
 import create_corpus_example
+import create_corpus_feature_store_example
 import delete_corpus_example
 import delete_file_example
 import generate_content_example
@@ -74,6 +75,17 @@ def uploaded_file_fixture(
 def test_create_corpus() -> None:
     corpus = create_corpus_example.create_corpus("test_create_corpus")
     assert corpus.display_name == "test_create_corpus"
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_feature_store() -> None:
+    FEATURE_ONLINE_STORE_ID = "rag_test_feature_store"
+    FEATURE_VIEW_ID = "rag_test_feature_view"
+    feature_view_name = f"projects/{PROJECT_ID}/locations/{LOCATION}/featureOnlineStores/{FEATURE_ONLINE_STORE_ID}/featureViews/{FEATURE_VIEW_ID}"
+    corpus = create_corpus_feature_store_example.create_corpus_feature_store(
+        feature_view_name,
+    )
+    assert corpus
     delete_corpus_example.delete_corpus(corpus.name)
 
 
