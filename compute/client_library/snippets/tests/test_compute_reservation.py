@@ -36,6 +36,9 @@ from ..compute_reservations.create_compute_reservation_from_vm import (
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
 )
+from ..compute_reservations.create_not_consume_reservation import (
+    create_vm_not_consume_reservation,
+)
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
 from ..compute_reservations.list_compute_reservation import list_compute_reservation
@@ -218,3 +221,16 @@ def test_consume_shared_reservaton():
         if instance:
             delete_instance(SHARED_PROJECT_ID, ZONE, instance.name)
         delete_compute_reservation(PROJECT_ID, ZONE, RESERVATION_NAME)
+
+
+def test_create_vm_not_consume_reservations():
+    instance = create_vm_not_consume_reservation(
+        PROJECT_ID, ZONE, INSTANCE_NAME, MACHINE_TYPE
+    )
+    try:
+        assert (
+            instance.reservation_affinity.consume_reservation_type == "NO_RESERVATION"
+        )
+    finally:
+        if instance:
+            delete_instance(PROJECT_ID, ZONE, instance.name)
