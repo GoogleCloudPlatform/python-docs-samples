@@ -36,11 +36,11 @@ from ..compute_reservations.create_compute_reservation_from_vm import (
 from ..compute_reservations.create_compute_shared_reservation import (
     create_compute_shared_reservation,
 )
-from ..compute_reservations.create_vm_template_not_consume_reservation import (
-    create_instance_template_not_consume_reservation,
-)
 from ..compute_reservations.create_not_consume_reservation import (
     create_vm_not_consume_reservation,
+)
+from ..compute_reservations.create_vm_template_not_consume_reservation import (
+    create_instance_template_not_consume_reservation,
 )
 from ..compute_reservations.delete_compute_reservation import delete_compute_reservation
 from ..compute_reservations.get_compute_reservation import get_compute_reservation
