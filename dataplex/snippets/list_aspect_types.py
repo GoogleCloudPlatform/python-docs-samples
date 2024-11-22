@@ -18,8 +18,9 @@ from typing import List
 from google.cloud import dataplex_v1
 
 
-# Method to list Aspect Types located in project_id and location
 def list_aspect_types(project_id: str, location: str) -> List[dataplex_v1.AspectType]:
+    """Method to list Aspect Types located in project_id and location"""
+
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
     # After completing all of your requests, call the "__exit__()" method to safely

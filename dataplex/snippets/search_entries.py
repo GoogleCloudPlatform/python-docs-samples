@@ -12,14 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START dataplex_get_aspect_type]
+# [START dataplex_search_entries]
+from typing import List
+
 from google.cloud import dataplex_v1
+from google.cloud.dataplex_v1 import Entry
 
 
-def get_aspect_type(
-    project_id: str, location: str, aspect_type_id: str
-) -> dataplex_v1.AspectType:
-    """Method to retrieve Aspect Type located in project_id, location and with aspect_type_id"""
+def search_entries(project_id: str, query: str) -> List[Entry]:
+    """Method to search Entries located in project_id and matching query"""
 
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
@@ -27,20 +28,29 @@ def get_aspect_type(
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
-        # The resource name of the Aspect Type
-        name = (
-            f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
+        search_entries_request = dataplex_v1.SearchEntriesRequest(
+            page_size=100,
+            # Required field, will by default limit search scope to organization under which the project is located
+            name=f"projects/{project_id}/locations/global",
+            # Optional field, will further limit search scope only to specified project
+            scope=f"projects/{project_id}",
+            query=query,
         )
-        return client.get_aspect_type(name=name)
+
+        search_entries_response = client.search_entries(search_entries_request)
+        return [
+            result.dataplex_entry
+            for result in search_entries_response._response.results
+        ]
 
 
 if __name__ == "__main__":
     # TODO(developer): Replace these variables before running the sample.
     project_id = "MY_PROJECT_ID"
-    # Available locations: https://cloud.google.com/dataplex/docs/locations
-    location = "MY_LOCATION"
-    aspect_type_id = "MY_ASPECT_TYPE_ID"
+    # How to write query for search: https://cloud.google.com/dataplex/docs/search-syntax
+    query = "MY_QUERY"
 
-    aspect_type = get_aspect_type(project_id, location, aspect_type_id)
-    print(f"Aspect type retrieved successfully: {aspect_type.name}")
-# [END dataplex_get_aspect_type]
+    entries = search_entries(project_id, query)
+    for entry in entries:
+        print(f"Entry name found in search: {entry.name}")
+# [END dataplex_search_entries]

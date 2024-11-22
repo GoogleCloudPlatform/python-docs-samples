@@ -12,14 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START dataplex_get_aspect_type]
+# [START dataplex_list_entries]
+from typing import List
+
 from google.cloud import dataplex_v1
 
 
-def get_aspect_type(
-    project_id: str, location: str, aspect_type_id: str
-) -> dataplex_v1.AspectType:
-    """Method to retrieve Aspect Type located in project_id, location and with aspect_type_id"""
+def list_entries(
+    project_id: str, location: str, entry_group_id: str
+) -> List[dataplex_v1.Entry]:
+    """Method to list Entries located in project_id, location and entry_group_id"""
 
     # Initialize client that will be used to send requests across threads. This
     # client only needs to be created once, and can be reused for multiple requests.
@@ -27,11 +29,23 @@ def get_aspect_type(
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     with dataplex_v1.CatalogServiceClient() as client:
-        # The resource name of the Aspect Type
-        name = (
-            f"projects/{project_id}/locations/{location}/aspectTypes/{aspect_type_id}"
+        # The resource name of the Entries location
+        parent = (
+            f"projects/{project_id}/locations/{location}/entryGroups/{entry_group_id}"
         )
-        return client.get_aspect_type(name=name)
+        list_entries_request = dataplex_v1.ListEntriesRequest(
+            parent=parent,
+            # A filter on the entries to return. Filters are case-sensitive.
+            # You can filter the request by the following fields:
+            # * entry_type
+            # * entry_source.display_name
+            # To learn more about filters in general, see:
+            # https://cloud.google.com/sdk/gcloud/reference/topic/filters
+            filter="entry_type=projects/dataplex-types/locations/global/entryTypes/generic",
+        )
+
+        results = client.list_entries(request=list_entries_request)
+        return list(results)
 
 
 if __name__ == "__main__":
@@ -39,8 +53,9 @@ if __name__ == "__main__":
     project_id = "MY_PROJECT_ID"
     # Available locations: https://cloud.google.com/dataplex/docs/locations
     location = "MY_LOCATION"
-    aspect_type_id = "MY_ASPECT_TYPE_ID"
+    entry_group_id = "MY_ENTRY_GROUP_ID"
 
-    aspect_type = get_aspect_type(project_id, location, aspect_type_id)
-    print(f"Aspect type retrieved successfully: {aspect_type.name}")
-# [END dataplex_get_aspect_type]
+    entries = list_entries(project_id, location, entry_group_id)
+    for entry in entries:
+        print(f"Entry name: {entry.name}")
+# [END dataplex_list_entries]
