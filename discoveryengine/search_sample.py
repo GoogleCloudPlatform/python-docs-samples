@@ -82,6 +82,10 @@ def search_sample(
         spell_correction_spec=discoveryengine.SearchRequest.SpellCorrectionSpec(
             mode=discoveryengine.SearchRequest.SpellCorrectionSpec.Mode.AUTO
         ),
+        # Optional: Use fine-tuned model for this request
+        # custom_fine_tuning_spec=discoveryengine.CustomFineTuningSpec(
+        #     enable_search_adaptor=True
+        # ),
     )
 
     page_result = client.search(request)
