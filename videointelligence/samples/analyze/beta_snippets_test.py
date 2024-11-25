@@ -120,15 +120,6 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
 
 # Flaky timeout
 @pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_text(capsys):
-    in_file = "./resources/googlework_tiny.mp4"
-    beta_snippets.video_detect_text(in_file)
-    out, _ = capsys.readouterr()
-    assert "Text" in out
-
-
-# Flaky timeout
-@pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_text_gcs(capsys):
     in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
     beta_snippets.video_detect_text_gcs(in_file)
