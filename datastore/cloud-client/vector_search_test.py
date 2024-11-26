@@ -20,9 +20,10 @@ from google.cloud.datastore.vector import Vector
 
 from vector_search import store_vectors
 from vector_search import vector_search_basic
-from vector_search import vector_search_distance_result_field
+from vector_search import vector_search_distance_result_property
 from vector_search import vector_search_distance_threshold
 from vector_search import vector_search_prefilter
+from vector_search import vector_search_large_response
 
 
 os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
@@ -85,8 +86,8 @@ def test_vector_search_prefilter(db):
     assert results[1].key.name == "Excelsa"
 
 
-def test_vector_search_distance_result_field(db):
-    vector_query = vector_search_distance_result_field(db)
+def test_vector_search_distance_result_property(db):
+    vector_query = vector_search_distance_result_property(db)
     results = list(vector_query.fetch())
 
     assert len(results) == 4
@@ -108,8 +109,8 @@ def test_vector_search_distance_threshold(db):
     assert results[0].key.name == "Liberica"
     assert results[1].key.name == "Robusta"
 
-def test_vector_search_large_query(db):
-    key_list, vector_results, full_results = vector_search_large_query(db)
+def test_vector_search_large_response(db):
+    key_list, vector_results, full_results = vector_search_large_response(db)
     assert len(key_list) == 4
     # each list should have same number of elements
     assert len(key_list) == len(vector_results)

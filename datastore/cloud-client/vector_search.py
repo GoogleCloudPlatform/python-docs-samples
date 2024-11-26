@@ -73,8 +73,8 @@ def vector_search_prefilter(db):
     return vector_query
 
 
-def vector_search_distance_result_field(db):
-    # [START datastore_vector_search_distance_result_field]
+def vector_search_distance_result_property(db):
+    # [START datastore_vector_search_distance_result_property]
     from google.cloud.datastore.vector import DistanceMeasure
     from google.cloud.datastore.vector import Vector
     from google.cloud.datastore.vector import FindNearest
@@ -92,7 +92,7 @@ def vector_search_distance_result_field(db):
 
     for entity in vector_query.fetch():
         print(f"{entity.id}, Distance: {entity['vector_distance']}")
-    # [END datastore_vector_search_distance_result_field]
+    # [END datastore_vector_search_distance_result_property]
     return vector_query
 
 
@@ -119,8 +119,8 @@ def vector_search_distance_threshold(db):
     return vector_query
 
 
-def vector_search_large_query(db):
-    # [START datastore_vector_search_large_reqponse]
+def vector_search_large_response(db):
+    # [START datastore_vector_search_large_response]
     from google.cloud.datastore.vector import DistanceMeasure
     from google.cloud.datastore.vector import Vector
     from google.cloud.datastore.vector import FindNearest
