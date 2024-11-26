@@ -93,12 +93,33 @@ def test_vector_search_distance_result_property(db):
     assert len(results) == 4
     assert results[0].key.name == "Liberica"
     assert results[0]["vector_distance"] == 0.0
+    assert results[0]["embedding_field"] == Vector([3.0, 1.0, 2.0])
+    assert results[1].key.name == "Robusta"
+    assert results[1]["vector_distance"] == 1.0
+    assert results[1]["embedding_field"] == Vector([4.0, 1.0, 2.0])
+    assert results[2].key.name == "Arabica"
+    assert results[2]["vector_distance"] == 7.0
+    assert results[2]["embedding_field"] == Vector([10.0, 1.0, 2.0])
+    assert results[3].key.name == "Excelsa"
+    assert results[3]["vector_distance"] == 8.0
+    assert results[3]["embedding_field"] == Vector([11.0, 1.0, 2.0])
+
+
+def test_vector_search_distance_result_property_projection(db):
+    vector_query = vector_search_distance_result_property_projection(db)
+    results = list(vector_query.fetch())
+
+    assert len(results) == 4
+    assert results[0].key.name == "Liberica"
+    assert results[0]["vector_distance"] == 0.0
     assert results[1].key.name == "Robusta"
     assert results[1]["vector_distance"] == 1.0
     assert results[2].key.name == "Arabica"
     assert results[2]["vector_distance"] == 7.0
     assert results[3].key.name == "Excelsa"
     assert results[3]["vector_distance"] == 8.0
+
+    assert all("embedding_field" not in d for d in results)
 
 
 def test_vector_search_distance_threshold(db):

@@ -95,6 +95,29 @@ def vector_search_distance_result_property(db):
     # [END datastore_vector_search_distance_result_property]
     return vector_query
 
+def vector_search_distance_result_property_projection(db):
+    # [START datastore_vector_search_distance_result_property_projection]
+    from google.cloud.datastore.vector import DistanceMeasure
+    from google.cloud.datastore.vector import Vector
+    from google.cloud.datastore.vector import FindNearest
+
+    vector_query = db.query(
+        kind="coffee-beans",
+        find_nearest=FindNearest(
+            vector_property="embedding_field",
+            query_vector=Vector([3.0, 1.0, 2.0]),
+            distance_measure=DistanceMeasure.EUCLIDEAN,
+            limit=5,
+            distance_result_property="vector_distance",
+        )
+    )
+    vector_query.projection = ["color"]
+
+    for entity in vector_query.fetch():
+        print(f"{entity.id}, Distance: {entity['vector_distance']}")
+    # [END datastore_vector_search_distance_result_property_projection]
+    return vector_query
+
 
 def vector_search_distance_threshold(db):
     # [START datastore_vector_search_distance_threshold]
