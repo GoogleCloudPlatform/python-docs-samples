@@ -7,7 +7,7 @@ If you are looking for colab notebook, then this [link](https://github.com/Googl
 
 ## Getting Started
 
-To try and run these Code samples, we have following recommend using Google Cloud IDE or Google Colab.
+To try and run these Code samples, we recommend using Google Cloud IDE or Google Colab.
 
 Note: A Google Cloud Project is a pre-requisite.
 
