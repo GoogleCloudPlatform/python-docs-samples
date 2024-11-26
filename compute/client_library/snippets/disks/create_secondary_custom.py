@@ -107,10 +107,9 @@ def create_secondary_custom_disk(
         disk=f"projects/{primary_disk_project}/zones/{primary_disk_zone}/disks/{primary_disk_name}"
     )
 
-    # Specify additional guest OS features for the secondary disk
-    # Set to one or more of the following values: - VIRTIO_SCSI_MULTIQUEUE - WINDOWS - MULTI_IP_SUBNET
-    # - UEFI_COMPATIBLE - GVNIC - SEV_CAPABLE - SUSPEND_RESUME_COMPATIBLE
-    # - SEV_LIVE_MIGRATABLE_V2 - SEV_SNP_CAPABLE - TDX_CAPABLE - IDPF
+    # Add guest OS features to the secondary dis
+    # For possible values, visit:
+    # https://cloud.google.com/compute/docs/images/create-custom#guest-os-features
     disk.guest_os_features = [compute_v1.GuestOsFeature(type="MULTI_IP_SUBNET")]
 
     # Assign additional labels to the secondary disk
