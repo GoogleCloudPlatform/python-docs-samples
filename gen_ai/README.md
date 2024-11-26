@@ -3,7 +3,7 @@
 Welcome to the Python samples folder for Generative AI on Vertex AI! In this folder, you can find the Python samples
 used in [Google Cloud Generative AI documentation](https://cloud.google.com/ai/generative-ai?hl=en).
 
-If you are looking for colab notebook, then this [link](https://github.com/GoogleCloudPlatform/generative-ai/tree/main).
+If you are looking for colab notebook, then please check https://github.com/GoogleCloudPlatform/generative-ai.
 
 ## Getting Started
 
