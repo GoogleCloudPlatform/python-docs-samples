@@ -120,7 +120,7 @@ def vector_search_distance_threshold(db):
 
 
 def vector_search_large_query(db):
-    # [START datastore_vector_search_large_query]
+    # [START datastore_vector_search_large_reqponse]
     from google.cloud.datastore.vector import DistanceMeasure
     from google.cloud.datastore.vector import Vector
     from google.cloud.datastore.vector import FindNearest
@@ -146,5 +146,5 @@ def vector_search_large_query(db):
     full_map = {entity.key: entity for entity in full_results}
     for key in key_list:
         print(f"distance: {vector_map[key]['vector_distance']} entity: {full_map[key]}")
-    # [END datastore_vector_search_large_query]
+    # [END datastore_vector_search_large_response]
     return key_list, vector_results, full_results
