@@ -15,7 +15,7 @@
 #
 # def simple_example() -> int:
 #     "Simple example for <template_folder> feature."
-#     # [START generativeaionvertexai_token_count_sample_with_local_sdk]
+#     # TODO: <ADD-START-REGION-TAG-HERE>
 #     from vertexai.preview.tokenization import get_tokenizer_for_model
 #
 #     # Using local tokenzier
@@ -33,7 +33,7 @@
 #     # Example response:
 #     # Prompt Token Count: 8
 #
-#     # [END generativeaionvertexai_token_count_sample_with_local_sdk]
+#     # TODO: <ADD-END-REGION-TAG-HERE>
 #     return response.total_tokens
 #
 #

@@ -19,7 +19,7 @@
 #
 #
 # def advanced_example() -> GenerationResponse:
-#     # [START generativeaionvertexai_gemini_token_count_multimodal]
+#     # TODO: <ADD-START-REGION-TAG-HERE>
 #     import vertexai
 #     from vertexai.generative_models import GenerativeModel, Part
 #
@@ -58,7 +58,7 @@
 #     #     Candidates Token Count: 71
 #     #     Total Token Count: 16893
 #
-#     # [END generativeaionvertexai_gemini_token_count_multimodal]
+#     # TODO: <ADD-END-REGION-TAG-HERE>
 #     return response
 #
 #
