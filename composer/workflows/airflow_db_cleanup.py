@@ -342,9 +342,11 @@ def build_query(
         newest_dagrun = (
             session
             .query(airflow_db_model)
+            .filter(airflow_db_model.dag_id == dag_id)
             .order_by(desc(airflow_db_model.execution_date))
             .first()
         )
+        logging.info("Newest dagrun: " + str(newest_dagrun))
         if newest_dagrun is not None:
             query = (
                 query
