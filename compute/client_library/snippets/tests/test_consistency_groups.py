@@ -17,12 +17,19 @@ import uuid
 
 import pytest
 
+from .test_disks import autodelete_regional_blank_disk  # noqa: F401
+from ..disks.сonsistency_groups.add_disk_consistency_group import (
+    add_disk_consistency_group,
+)
 from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
 from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.сonsistency_groups.list_disks_consistency_group import (
+    list_disks_consistency_group,
+)
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-REGION = "us-central1"
+REGION = "europe-west2"
 DESCRIPTION = "Test description"
 
 
@@ -47,3 +54,24 @@ def test_delete_consistency_group() -> None:
         assert group.status == "READY"
     finally:
         delete_consistency_group(PROJECT_ID, REGION, group_name)
+
+
+def test_add_and_list_disks_consistency_group(
+    autodelete_consistency_group, autodelete_regional_blank_disk  # noqa: F811
+):
+    add_disk_consistency_group(
+        project_id=PROJECT_ID,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        disk_region_flag=True,
+        consistency_group_name=autodelete_consistency_group.name,
+        consistency_group_region=REGION,
+    )
+    disks = list_disks_consistency_group(
+        project_id=PROJECT_ID,
+        disk_location=REGION,
+        disk_region_flag=True,
+        consistency_group_name=autodelete_consistency_group.name,
+        consistency_group_region=REGION,
+    )
+    assert disks[0].name == autodelete_regional_blank_disk.name
