@@ -13,7 +13,7 @@ Note: A Google Cloud Project is a pre-requisite.
 
 ## Features folders
 
-All GenAI code samples are organised into folder, referred as Feature folder.
+All GenAI code samples are organised into folders, referred as Feature folders.
 
 ### Features
 
