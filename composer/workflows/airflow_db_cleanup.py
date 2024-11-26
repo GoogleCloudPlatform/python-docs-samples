@@ -337,8 +337,8 @@ def build_query(
     if dag_id:
         query = query.filter(airflow_db_model.dag_id == dag_id)
 
-    if airflow_db_model == DagRun:     
-        # For DaRus we want to leave last DagRun regardless of its age   
+    if airflow_db_model == DagRun:
+        # For DaRus we want to leave last DagRun regardless of its age
         newest_dagrun = (
             session
             .query(airflow_db_model)
