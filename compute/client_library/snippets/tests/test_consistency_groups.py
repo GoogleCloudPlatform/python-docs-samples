@@ -26,6 +26,9 @@ from ..disks.сonsistency_groups.delete_consistency_group import delete_consiste
 from ..disks.сonsistency_groups.list_disks_consistency_group import (
     list_disks_consistency_group,
 )
+from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -56,9 +59,10 @@ def test_delete_consistency_group() -> None:
         delete_consistency_group(PROJECT_ID, REGION, group_name)
 
 
-def test_add_and_list_disks_consistency_group(
+def test_add_remove_and_list_disks_consistency_group(
     autodelete_consistency_group, autodelete_regional_blank_disk  # noqa: F811
 ):
+    # Add disk to consistency group
     add_disk_consistency_group(
         project_id=PROJECT_ID,
         disk_name=autodelete_regional_blank_disk.name,
@@ -75,3 +79,22 @@ def test_add_and_list_disks_consistency_group(
         consistency_group_region=REGION,
     )
     assert disks[0].name == autodelete_regional_blank_disk.name
+    # Remove disk from consistency group
+    remove_disk_consistency_group(
+        project_id=PROJECT_ID,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        disk_region_flag=True,
+        consistency_group_name=autodelete_consistency_group.name,
+        consistency_group_region=REGION,
+    )
+
+    # Checking that disk was removed - the list should be empty
+    disks = list_disks_consistency_group(
+        project_id=PROJECT_ID,
+        disk_location=REGION,
+        disk_region_flag=True,
+        consistency_group_name=autodelete_consistency_group.name,
+        consistency_group_region=REGION,
+    )
+    assert not disks

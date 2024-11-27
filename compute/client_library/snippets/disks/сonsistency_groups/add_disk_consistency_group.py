@@ -30,7 +30,7 @@ def add_disk_consistency_group(
     disk_region_flag: bool,
     consistency_group_name: str,
     consistency_group_region: str,
-) -> compute_v1.ResourcePolicy:
+) -> None:
     """Adds a disk to a specified consistency group.
     Args:
         project_id (str): The ID of the Google Cloud project.
@@ -40,7 +40,7 @@ def add_disk_consistency_group(
         consistency_group_name (str): The name of the consistency group.
         consistency_group_region (str): The region of the consistency group.
     Returns:
-        compute_v1.ResourcePolicy: The consistency group object
+        None
     """
     consistency_group_link = (
         f"regions/{consistency_group_region}/resourcePolicies/{consistency_group_name}"
@@ -71,11 +71,7 @@ def add_disk_consistency_group(
             disks_add_resource_policies_request_resource=policy,
         )
 
-    return compute_v1.ResourcePoliciesClient().get(
-        project=project_id,
-        region=consistency_group_region,
-        resource_policy=consistency_group_name,
-    )
+    print(f"Disk {disk_name} added to consistency group {consistency_group_name}")
 
 
 # [END compute_consistency_group_add_disk]
