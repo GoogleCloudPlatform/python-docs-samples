@@ -19,7 +19,7 @@ from google.cloud import vmwareengine_v1
 
 def delete_legacy_network(project_id: str, region: str) -> operation.Operation:
     """
-    Deletes a legacy VMWare Network.
+    Deletes a legacy VMware Network.
 
     Args:
         project_id: name of the project hosting the network.

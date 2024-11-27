@@ -28,7 +28,7 @@ def batch_text_prediction(
         batch_prediction_job: The batch prediction job object containing details of the job.
     """
 
-    # [START aiplatform_batch_text_predict]
+    # [START generativeaionvertexai_batch_text_predict]
     from vertexai.preview.language_models import TextGenerationModel
 
     # Example of using Google Cloud Storage bucket as the input and output data source
@@ -54,7 +54,7 @@ def batch_text_prediction(
     print(batch_prediction_job.resource_name)
     print(batch_prediction_job.state)
 
-    # [END aiplatform_batch_text_predict]
+    # [END generativeaionvertexai_batch_text_predict]
     return batch_prediction_job
 
 

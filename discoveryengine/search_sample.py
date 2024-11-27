@@ -14,8 +14,6 @@
 #
 
 # [START genappbuilder_search]
-from typing import List
-
 from google.api_core.client_options import ClientOptions
 from google.cloud import discoveryengine_v1 as discoveryengine
 
@@ -31,7 +29,7 @@ def search_sample(
     location: str,
     engine_id: str,
     search_query: str,
-) -> List[discoveryengine.SearchResponse]:
+) -> discoveryengine.services.search_service.pagers.SearchPager:
     #  For more information, refer to:
     # https://cloud.google.com/generative-ai-app-builder/docs/locations#specify_a_multi-region_for_your_data_store
     client_options = (
@@ -84,12 +82,19 @@ def search_sample(
         spell_correction_spec=discoveryengine.SearchRequest.SpellCorrectionSpec(
             mode=discoveryengine.SearchRequest.SpellCorrectionSpec.Mode.AUTO
         ),
+        # Optional: Use fine-tuned model for this request
+        # custom_fine_tuning_spec=discoveryengine.CustomFineTuningSpec(
+        #     enable_search_adaptor=True
+        # ),
     )
 
-    response = client.search(request)
-    print(response)
+    page_result = client.search(request)
 
-    return response
+    # Handle the response
+    for response in page_result:
+        print(response)
+
+    return page_result
 
 
 # [END genappbuilder_search]

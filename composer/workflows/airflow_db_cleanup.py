@@ -35,12 +35,6 @@ https://github.com/teamclairvoyant/airflow-maintenance-dags/tree/master/db-clean
       a table in the airflow metadata database
     - age_check_column: Column in the model/table to use for calculating max
       date of data deletion
-    - keep_last: Boolean to specify whether to preserve last run instance
-        - keep_last_filters: List of filters to preserve data from deleting
-          during clean-up, such as DAG runs where the external trigger is set
-          to 0.
-        - keep_last_group_by: Option to specify column by which to group the
-          database entries and perform aggregate functions.
 
 3. Create and Set the following Variables in the Airflow Web Server
   (Admin -> Variables)
@@ -71,7 +65,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import and_, func, text
+from sqlalchemy import desc, sql, text
 from sqlalchemy.exc import ProgrammingError
 
 now = timezone.utcnow
@@ -282,7 +276,9 @@ def print_configuration_function(**context):
     logging.info("dag_run.conf: " + str(dag_run_conf))
     max_db_entry_age_in_days = None
     if dag_run_conf:
-        max_db_entry_age_in_days = dag_run_conf.get("maxDBEntryAgeInDays", None)
+        max_db_entry_age_in_days = dag_run_conf.get(
+            "maxDBEntryAgeInDays", None
+        )
     logging.info("maxDBEntryAgeInDays from dag_run.conf: " + str(dag_run_conf))
     if max_db_entry_age_in_days is None or max_db_entry_age_in_days < 1:
         logging.info(
@@ -319,37 +315,51 @@ def build_query(
     airflow_db_model,
     age_check_column,
     max_date,
-    keep_last,
-    keep_last_filters=None,
-    keep_last_group_by=None,
+    dag_id=None
 ):
+    """
+    Build a database query to retrieve and filter Airflow data.
+
+    Args:
+        session: SQLAlchemy session object for database interaction.
+        airflow_db_model: The Airflow model class to query (e.g., DagRun).
+        age_check_column: The column representing the age of the data.
+        max_date: The maximum allowed age for the data.
+        dag_id (optional): The ID of the DAG to filter by. Defaults to None.
+
+    Returns:
+        SQLAlchemy query object: The constructed query.
+    """
     query = session.query(airflow_db_model)
 
     logging.info("INITIAL QUERY : " + str(query))
 
-    if not keep_last:
-        query = query.filter(
-            age_check_column <= max_date,
+    if dag_id:
+        query = query.filter(airflow_db_model.dag_id == dag_id)
+
+    if airflow_db_model == DagRun:
+        # For DaRus we want to leave last DagRun regardless of its age
+        newest_dagrun = (
+            session
+            .query(airflow_db_model)
+            .filter(airflow_db_model.dag_id == dag_id)
+            .order_by(desc(airflow_db_model.execution_date))
+            .first()
         )
+        logging.info("Newest dagrun: " + str(newest_dagrun))
+        if newest_dagrun is not None:
+            query = (
+                query
+                .filter(DagRun.external_trigger.is_(False))
+                .filter(age_check_column <= max_date)
+                .filter(airflow_db_model.id != newest_dagrun.id)
+            )
+        else:
+            query = query.filter(sql.false())
     else:
-        subquery = session.query(func.max(DagRun.execution_date))
-        # workaround for MySQL "table specified twice" issue
-        # https://github.com/teamclairvoyant/airflow-maintenance-dags/issues/41
-        if keep_last_filters is not None:
-            for entry in keep_last_filters:
-                subquery = subquery.filter(entry)
+        query = query.filter(age_check_column <= max_date)
 
-            logging.info("SUB QUERY [keep_last_filters]: " + str(subquery))
-
-        if keep_last_group_by is not None:
-            subquery = subquery.group_by(keep_last_group_by)
-            logging.info("SUB QUERY [keep_last_group_by]: " + str(subquery))
-
-        subquery = subquery.from_self()
-
-        query = query.filter(
-            and_(age_check_column.notin_(subquery)), and_(age_check_column <= max_date)
-        )
+    logging.info("FINAL QUERY: " + str(query))
 
     return query
 
@@ -410,13 +420,10 @@ def cleanup_function(**context):
     try:
         if context["params"].get("do_not_delete_by_dag_id"):
             query = build_query(
-                session,
-                airflow_db_model,
-                age_check_column,
-                max_date,
-                keep_last,
-                keep_last_filters,
-                keep_last_group_by,
+                session=session,
+                airflow_db_model=airflow_db_model,
+                age_check_column=age_check_column,
+                max_date=max_date,
             )
             if PRINT_DELETES:
                 print_query(query, airflow_db_model, age_check_column)
@@ -429,17 +436,14 @@ def cleanup_function(**context):
             session.commit()
 
             list_dags = [str(list(dag)[0]) for dag in dags] + [None]
-            for dag in list_dags:
+            for dag_id in list_dags:
                 query = build_query(
-                    session,
-                    airflow_db_model,
-                    age_check_column,
-                    max_date,
-                    keep_last,
-                    keep_last_filters,
-                    keep_last_group_by,
+                    session=session,
+                    airflow_db_model=airflow_db_model,
+                    age_check_column=age_check_column,
+                    max_date=max_date,
+                    dag_id=dag_id,
                 )
-                query = query.filter(airflow_db_model.dag_id == dag)
                 if PRINT_DELETES:
                     print_query(query, airflow_db_model, age_check_column)
                 if ENABLE_DELETE:
@@ -448,7 +452,7 @@ def cleanup_function(**context):
                 session.commit()
 
         if not ENABLE_DELETE:
-            logging.warn(
+            logging.warning(
                 "You've opted to skip deleting the db entries. "
                 "Set ENABLE_DELETE to True to delete entries!!!"
             )
@@ -458,7 +462,9 @@ def cleanup_function(**context):
     except ProgrammingError as e:
         logging.error(e)
         logging.error(
-            str(airflow_db_model) + " is not present in the metadata." + "Skipping..."
+            str(airflow_db_model) +
+            " is not present in the metadata." +
+            "Skipping..."
         )
 
     finally:
@@ -471,10 +477,15 @@ def cleanup_sessions():
     try:
         logging.info("Deleting sessions...")
         count_statement = (
-            "SELECT COUNT(*) AS cnt FROM session WHERE expiry < now()::timestamp(0);"
+            "SELECT COUNT(*) AS cnt FROM session " +
+            "WHERE expiry < now()::timestamp(0);"
         )
         before = session.execute(text(count_statement)).one_or_none()["cnt"]
-        session.execute(text("DELETE FROM session WHERE expiry < now()::timestamp(0);"))
+        session.execute(
+            text(
+                "DELETE FROM session WHERE expiry < now()::timestamp(0);"
+            )
+        )
         after = session.execute(text(count_statement)).one_or_none()["cnt"]
         logging.info("Deleted %s expired sessions.", (before - after))
     except Exception as err:
@@ -492,7 +503,10 @@ def analyze_db():
 
 
 analyze_op = PythonOperator(
-    task_id="analyze_query", python_callable=analyze_db, provide_context=True, dag=dag
+    task_id="analyze_query",
+    python_callable=analyze_db,
+    provide_context=True,
+    dag=dag
 )
 
 cleanup_session_op = PythonOperator(

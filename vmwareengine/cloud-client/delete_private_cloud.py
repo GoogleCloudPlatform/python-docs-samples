@@ -19,7 +19,7 @@ from google.cloud import vmwareengine_v1
 
 def delete_private_cloud_by_full_name(cloud_name: str) -> operation.Operation:
     """
-    Deletes VMWare Private Cloud.
+    Deletes VMware Private Cloud.
 
     Args:
         cloud_name: identifier of the Private Cloud you want to delete.

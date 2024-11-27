@@ -108,14 +108,16 @@ fi
 # On kokoro, we should be able to use the default service account. We
 # need to somehow bootstrap the secrets on other CI systems.
 if [[ "${TRAMPOLINE_CI}" == "kokoro" ]]; then
-    # This script will create 3 files:
+    # This script will create 4 files:
     # - testing/test-env.sh
     # - testing/service-account.json
     # - testing/client-secrets.json
+    # - testing/cloudai-samples-secrets.sh
     ./scripts/decrypt-secrets.sh
 fi
 
 source ./testing/test-env.sh
+source ./testing/cloudai-samples-secrets.sh
 export GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/testing/service-account.json
 
 # For cloud-run session, we activate the service account for gcloud sdk.
@@ -207,7 +209,7 @@ cd "$ROOT"
 
 # Remove secrets if we used decrypt-secrets.sh.
 if [[ -f "${KOKORO_GFILE_DIR}/secrets_viewer_service_account.json" ]]; then
-    rm testing/{test-env.sh,client-secrets.json,service-account.json}
+    rm testing/{test-env.sh,client-secrets.json,service-account.json,cloudai-samples-secrets.sh}
 fi
 
 exit "$RTN"

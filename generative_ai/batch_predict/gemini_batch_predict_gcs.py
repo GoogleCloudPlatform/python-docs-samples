@@ -13,24 +13,14 @@
 # limitations under the License.
 import os
 
-from vertexai.batch_prediction import BatchPredictionJob
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
+output_uri = "gs://python-docs-samples-tests"
 
-def batch_predict_gemini_createjob(
-    input_uri: str, output_uri: str
-) -> BatchPredictionJob:
-    """Perform batch text prediction using a Gemini AI model.
-    Args:
-        input_uri (str): URI of the input file in Google Cloud Storage.
-            Example: "gs://[BUCKET]/[DATASET].jsonl"
 
-        output_uri (str): URI of the output folder in Google Cloud Storage.
-            Example: "gs://[BUCKET]/[OUTPUT].jsonl"
-    Returns:
-        batch_prediction_job: The batch prediction job object containing details of the job.
-    """
+def batch_predict_gemini_createjob(output_uri: str) -> str:
+    "Perform batch text prediction using a Gemini AI model and returns the output location"
 
     # [START generativeaionvertexai_batch_predict_gemini_createjob]
     import time
@@ -38,12 +28,13 @@ def batch_predict_gemini_createjob(
 
     from vertexai.batch_prediction import BatchPredictionJob
 
-    # TODO(developer): Update and un-comment below lines
-    # input_uri ="gs://[BUCKET]/[OUTPUT].jsonl" # Example
-    # output_uri ="gs://[BUCKET]"
+    # TODO(developer): Update and un-comment below line
+    # PROJECT_ID = "your-project-id"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
+
+    input_uri = "gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl"
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
@@ -74,16 +65,9 @@ def batch_predict_gemini_createjob(
     # Example response:
     #  Job output location: gs://your-bucket/gen-ai-batch-prediction/prediction-model-year-month-day-hour:minute:second.12345
 
-    # https://storage.googleapis.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
-
-    return batch_prediction_job
     # [END generativeaionvertexai_batch_predict_gemini_createjob]
+    return batch_prediction_job
 
 
 if __name__ == "__main__":
-    # TODO(developer): Update your Cloud Storage bucket and uri file paths
-    GCS_BUCKET = "gs://your-bucket"
-    batch_predict_gemini_createjob(
-        input_uri=f"gs://{GCS_BUCKET}/batch_data/sample_input_file.jsonl",
-        output_uri=f"gs://{GCS_BUCKET}/batch_predictions/sample_output/",
-    )
+    batch_predict_gemini_createjob(output_uri)

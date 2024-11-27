@@ -36,6 +36,7 @@ project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 dataset_id = f"test_dataset_{uuid.uuid4()}"
 fhir_store_id = f"test_fhir_store-{uuid.uuid4()}"
 version = "R4"
+pubsub_topic = ""
 
 gcs_uri = os.environ["CLOUD_STORAGE_BUCKET"]
 RESOURCES = os.path.join(os.path.dirname(__file__), "resources")
@@ -241,7 +242,9 @@ def test_get_fhir_store_metadata(test_dataset, test_fhir_store, capsys):
 
 
 def test_patch_fhir_store(test_dataset, test_fhir_store, capsys):
-    fhir_stores.patch_fhir_store(project_id, location, dataset_id, fhir_store_id)
+    fhir_stores.patch_fhir_store(
+        project_id, location, dataset_id, fhir_store_id, pubsub_topic
+    )
 
     out, _ = capsys.readouterr()
 

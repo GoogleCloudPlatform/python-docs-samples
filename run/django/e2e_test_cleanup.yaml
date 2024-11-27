@@ -22,17 +22,20 @@ steps:
         ./retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
 
-        ./retry.sh "gcloud secrets describe ${_SECRET_PASSWORD_NAME}" \
-          "gcloud secrets delete ${_SECRET_PASSWORD_NAME} --quiet --project $PROJECT_ID"
-
         ./retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
           "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
 
-        ./retry.sh "gcloud container images describe gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION}" \
-          "gcloud container images delete gcr.io/${PROJECT_ID}/${_SERVICE}:${_VERSION} --quiet"
+        ./retry.sh "gcloud artifacts docker images describe ${_IMAGE_NAME}" \
+          "gcloud artifacts docker images delete ${_IMAGE_NAME} --quiet"
 
-        ./retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM}" \
-          "gcloud run services delete ${_SERVICE} --region ${_REGION} --platform ${_PLATFORM} --async --quiet"
+        ./retry.sh "gcloud run jobs describe migrate-${_VERSION} --region ${_REGION}" \
+          "gcloud run jobs delete migrate-${_VERSION}  --region ${_REGION} --async --quiet"
+
+        ./retry.sh "gcloud run jobs describe superuser-${_VERSION} --region ${_REGION}" \
+          "gcloud run jobs delete superuser-${_VERSION}  --region ${_REGION} --async --quiet"
+
+        ./retry.sh "gcloud run services describe ${_SERVICE} --region ${_REGION}" \
+          "gcloud run services delete ${_SERVICE} --region ${_REGION} --async --quiet"
 
         WAIT=30 ./retry.sh "gcloud sql databases describe ${_DB_NAME} --instance ${_DB_INSTANCE} --project $PROJECT_ID" \
           "gcloud sql databases delete ${_DB_NAME} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
@@ -40,14 +43,17 @@ steps:
         ./retry.sh "gcloud sql users list --filter \"name=${_DB_USER}\" --instance ${_DB_INSTANCE}" \
           "gcloud sql users delete ${_DB_USER} --instance ${_DB_INSTANCE} --quiet --project $PROJECT_ID"
 
+options:
+  dynamicSubstitutions: true
+
 substitutions:
   _SERVICE: django
   _VERSION: manual
   _REGION: us-central1
-  _PLATFORM: managed
-  _DB_USER: django
-  _DB_NAME: django
+  _ARTIFACT_REGISTRY: cloud-run-source-deploy
+  _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
+  _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
+  _DB_USER: django-${_VERSION}
+  _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance
-  _SECRET_SETTINGS_NAME: django_settings
-  _SECRET_PASSWORD_NAME: admin_password
-  _STORAGE_BUCKET: ${PROJECT_ID}-bucket
+  _SECRET_SETTINGS_NAME: django_settings-${_VERSION}

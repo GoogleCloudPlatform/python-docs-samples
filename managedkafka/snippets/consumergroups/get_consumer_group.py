@@ -12,16 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_get_consumergroup]
-from google.cloud import managedkafka_v1
-
 
 def get_consumer_group(
     project_id: str,
     region: str,
     cluster_id: str,
     consumer_group_id: str,
-) -> managedkafka_v1.ConsumerGroup:
+):
     """
     Get a Kafka consumer group.
 
@@ -30,7 +27,19 @@ def get_consumer_group(
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
         consumer_group_id: ID of the Kafka consumer group.
+
+    Raises:
+        This method will raise the NotFound exception if the consumer group or the parent resource is not found.
     """
+    # [START managedkafka_get_consumergroup]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # consumer_group_id = "my-consumer-group"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -41,10 +50,10 @@ def get_consumer_group(
         name=consumer_group_path,
     )
 
-    consumer_group = client.get_consumer_group(request=request)
-    print("Got consumer group:", consumer_group)
+    try:
+        consumer_group = client.get_consumer_group(request=request)
+        print("Got consumer group:", consumer_group)
+    except NotFound as e:
+        print(f"Failed to get consumer group {consumer_group_id} with error: {e.message}")
 
-    return consumer_group
-
-
-# [END managedkafka_get_consumergroup]
+    # [END managedkafka_get_consumergroup]

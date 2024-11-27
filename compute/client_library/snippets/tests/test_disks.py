@@ -24,6 +24,9 @@ from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encryp
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
+from ..disks.create_hyperdisk import create_hyperdisk
+from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
+from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
@@ -195,6 +198,15 @@ def autodelete_compute_instance():
     delete_instance(PROJECT, ZONE, instance_name)
 
 
+@pytest.fixture(scope="session")
+def autodelete_hyperdisk_pool():
+    pool_name = "test-pool-" + uuid.uuid4().hex[:6]
+    pool = create_hyperdisk_storage_pool(PROJECT, ZONE, pool_name)
+    yield pool
+    pool_client = compute_v1.StoragePoolsClient()
+    pool_client.delete(project=PROJECT, zone=ZONE, storage_pool=pool_name)
+
+
 def test_disk_create_delete(autodelete_disk_name):
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
     debian_image = get_image_from_family("debian-cloud", "debian-11")
@@ -333,3 +345,20 @@ def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
         ).size_gb
         == 23
     )
+
+
+def test_create_hyperdisk_pool(autodelete_hyperdisk_pool):
+    assert "hyperdisk" in autodelete_hyperdisk_pool.storage_pool_type
+
+
+def test_create_hyperdisk_from_pool(autodelete_hyperdisk_pool, autodelete_disk_name):
+    disk = create_hyperdisk_from_pool(
+        PROJECT, ZONE, autodelete_disk_name, autodelete_hyperdisk_pool.name
+    )
+    assert disk.storage_pool == autodelete_hyperdisk_pool.self_link
+    assert "hyperdisk" in disk.type
+
+
+def test_create_hyperdisk(autodelete_disk_name):
+    disk = create_hyperdisk(PROJECT, ZONE, autodelete_disk_name, 100)
+    assert "hyperdisk" in disk.type_.lower()

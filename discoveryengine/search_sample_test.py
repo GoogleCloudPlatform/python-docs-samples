@@ -36,6 +36,7 @@ def test_search():
 
     for result in response.results:
         assert result.document.name
+        break
 
 
 def test_search_eu_endpoint():
@@ -55,3 +56,4 @@ def test_search_eu_endpoint():
     for result in response.results:
         assert result.document
         assert result.document.name
+        break

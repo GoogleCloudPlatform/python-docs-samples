@@ -139,7 +139,6 @@ same dependencies at submission and at runtime.
 
 ```sh
 export TEMPLATE_FILE=gs://$BUCKET/longest-word-$TAG.json
-export TEMPLATE_IMAGE=$REGION-docker.pkg.dev/$PROJECT/$REPOSITORY/my_template_image:$TAG
 ```
 
 ```sh

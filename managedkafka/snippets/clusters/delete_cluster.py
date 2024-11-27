@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_delete_cluster]
-from google.api_core.exceptions import GoogleAPICallError
-from google.cloud import managedkafka_v1
-
 
 def delete_cluster(
     project_id: str,
@@ -31,9 +27,17 @@ def delete_cluster(
         cluster_id: ID of the Kafka cluster.
 
     Raises:
-        This method will raise the exception if the operation errors or
+        This method will raise the GoogleAPICallError exception if the operation errors or
         the timeout before the operation completes is reached.
     """
+    # [START managedkafka_delete_cluster]
+    from google.api_core.exceptions import GoogleAPICallError
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -43,10 +47,10 @@ def delete_cluster(
 
     try:
         operation = client.delete_cluster(request=request)
+        print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result()
         print("Deleted cluster")
-    except GoogleAPICallError:
-        print(operation.operation.error)
+    except GoogleAPICallError as e:
+        print(f"The operation failed with error: {e.message}")
 
-
-# [END managedkafka_delete_cluster]
+    # [END managedkafka_delete_cluster]

@@ -14,7 +14,7 @@
 
 # We want to use LTS ubuntu from our mirror because dockerhub has a
 # rate limit.
-FROM mirror.gcr.io/library/ubuntu:20.04
+FROM mirror.gcr.io/library/ubuntu:24.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -28,6 +28,7 @@ ENV LANG C.UTF-8
 
 # Install dependencies.
 RUN apt-get update \
+  && apt -y upgrade \
   && apt-get install -y --no-install-recommends \
   apt-transport-https \
   build-essential \
@@ -115,7 +116,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.7.17 3.8.18 3.9.18 3.10.13 3.11.6 3.12.0; do \
+  && for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -144,7 +145,8 @@ RUN set -ex \
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
-RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
+RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+  && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
   && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
   # ("Requirement already up-to-date: pip==8.1.2 in /usr/local/lib/python3.10/site-packages")
@@ -155,11 +157,12 @@ RUN wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/ge
   && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
+RUN python3.13 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip.py
-RUN python3.7 /tmp/get-pip.py
+RUN python3.7 /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
 
 # Test Pip
@@ -170,15 +173,17 @@ RUN python3.9 -m pip
 RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
+RUN python3.13 -m pip
 
 # Install "setuptools" for Python 3.12+ (see https://docs.python.org/3/whatsnew/3.12.html#distutils)
 RUN python3.12 -m pip install --no-cache-dir setuptools
+RUN python3.13 -m pip install --no-cache-dir setuptools
 
 # Install "virtualenv", since the vast majority of users of this image will want it.
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 389.0.0
+ENV CLOUD_SDK_VERSION 502.0.0
 # Use system python for cloud sdk.
 ENV CLOUDSDK_PYTHON python3.10
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
@@ -192,7 +197,8 @@ RUN sudo systemctl enable redis-server.service
 # Create a user and allow sudo
 
 # kbuilder uid on the default Kokoro image
-ARG UID=1000
+# UID 1000 is taken in Ubuntu 24.04
+ARG UID=10000
 ARG USERNAME=kbuilder
 
 # Add a new user to the container image.
