@@ -27,7 +27,6 @@ def add_disk_consistency_group(
     project_id: str,
     disk_name: str,
     disk_location: str,
-    disk_region_flag: bool,
     consistency_group_name: str,
     consistency_group_region: str,
 ) -> None:
@@ -36,7 +35,6 @@ def add_disk_consistency_group(
         project_id (str): The ID of the Google Cloud project.
         disk_name (str): The name of the disk to be added.
         disk_location (str): The region or zone of the disk
-        disk_region_flag (bool): Flag indicating if the disk is regional.
         consistency_group_name (str): The name of the consistency group.
         consistency_group_region (str): The region of the consistency group.
     Returns:
@@ -45,8 +43,10 @@ def add_disk_consistency_group(
     consistency_group_link = (
         f"regions/{consistency_group_region}/resourcePolicies/{consistency_group_name}"
     )
-    # If the disk is regional we use RegionDisksClient
-    if disk_region_flag:
+
+    # Checking if the disk is zonal or regional
+    # If the final character of the disk_location is a digit, it is a regional disk
+    if disk_location[-1].isdigit():
         policy = compute_v1.RegionDisksAddResourcePoliciesRequest(
             resource_policies=[consistency_group_link]
         )
@@ -57,9 +57,9 @@ def add_disk_consistency_group(
             disk=disk_name,
             region_disks_add_resource_policies_request_resource=policy,
         )
-
     # For zonal disks we use DisksClient
     else:
+        print("Using DisksClient")
         policy = compute_v1.DisksAddResourcePoliciesRequest(
             resource_policies=[consistency_group_link]
         )

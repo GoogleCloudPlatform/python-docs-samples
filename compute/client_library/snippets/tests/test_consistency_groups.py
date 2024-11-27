@@ -67,14 +67,12 @@ def test_add_remove_and_list_disks_consistency_group(
         project_id=PROJECT_ID,
         disk_name=autodelete_regional_blank_disk.name,
         disk_location=REGION,
-        disk_region_flag=True,
         consistency_group_name=autodelete_consistency_group.name,
         consistency_group_region=REGION,
     )
     disks = list_disks_consistency_group(
         project_id=PROJECT_ID,
         disk_location=REGION,
-        disk_region_flag=True,
         consistency_group_name=autodelete_consistency_group.name,
         consistency_group_region=REGION,
     )
@@ -84,7 +82,6 @@ def test_add_remove_and_list_disks_consistency_group(
         project_id=PROJECT_ID,
         disk_name=autodelete_regional_blank_disk.name,
         disk_location=REGION,
-        disk_region_flag=True,
         consistency_group_name=autodelete_consistency_group.name,
         consistency_group_region=REGION,
     )
@@ -93,7 +90,6 @@ def test_add_remove_and_list_disks_consistency_group(
     disks = list_disks_consistency_group(
         project_id=PROJECT_ID,
         disk_location=REGION,
-        disk_region_flag=True,
         consistency_group_name=autodelete_consistency_group.name,
         consistency_group_region=REGION,
     )

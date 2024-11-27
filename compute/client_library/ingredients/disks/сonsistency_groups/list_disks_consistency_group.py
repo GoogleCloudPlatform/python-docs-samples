@@ -24,7 +24,6 @@ from google.cloud import compute_v1
 def list_disks_consistency_group(
     project_id: str,
     disk_location: str,
-    disk_region_flag: bool,
     consistency_group_name: str,
     consistency_group_region: str,
 ) -> list:
@@ -43,11 +42,10 @@ def list_disks_consistency_group(
         f"https://www.googleapis.com/compute/v1/projects/{project_id}/regions/"
         f"{consistency_group_region}/resourcePolicies/{consistency_group_name}"
     )
-    # If the disk is regional we use RegionDisksClient
-    if disk_region_flag:
+    # If the final character of the disk_location is a digit, it is a regional disk
+    if disk_location[-1].isdigit():
         region_client = compute_v1.RegionDisksClient()
         disks = region_client.list(project=project_id, region=disk_location)
-
     # For zonal disks we use DisksClient
     else:
         client = compute_v1.DisksClient()
