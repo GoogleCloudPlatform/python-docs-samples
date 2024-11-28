@@ -33,7 +33,7 @@
 #     # Example response:
 #     # Prompt Token Count: 8
 #
-#     # TODO: <ADD-END-REGION-TAG-HERE>
+#     # TODO: <ADD-START-REGION-TAG-HERE>
 #     return response.total_tokens
 #
 #
