@@ -31,6 +31,7 @@ from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
 from ..disks.create_secondary_custom import create_secondary_custom_disk
 from ..disks.create_secondary_disk import create_secondary_disk
 from ..disks.create_secondary_region_disk import create_secondary_region_disk
+from ..disks.create_replicated_disk import create_regional_replicated_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
@@ -443,3 +444,14 @@ def test_create_custom_secondary_disk(
     )
     assert disk.labels["secondary-disk-for-replication"] == "true"
     assert disk.labels["source-disk"] == test_empty_pd_balanced_disk.name
+
+
+def test_create_replicated_disk(autodelete_regional_disk_name):
+    disk = create_regional_replicated_disk(
+        project_id=PROJECT,
+        region=REGION_SECONDARY,
+        disk_name=autodelete_regional_disk_name,
+        size_gb=DISK_SIZE,
+    )
+    assert f"{PROJECT}/zones/{REGION_SECONDARY}-" in disk.replica_zones[0]
+    assert f"{PROJECT}/zones/{REGION_SECONDARY}-" in disk.replica_zones[1]
