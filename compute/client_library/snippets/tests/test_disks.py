@@ -28,10 +28,10 @@ from ..disks.create_hyperdisk import create_hyperdisk
 from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
 from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
+from ..disks.create_replicated_disk import create_regional_replicated_disk
 from ..disks.create_secondary_custom import create_secondary_custom_disk
 from ..disks.create_secondary_disk import create_secondary_disk
 from ..disks.create_secondary_region_disk import create_secondary_region_disk
-from ..disks.create_replicated_disk import create_regional_replicated_disk
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
