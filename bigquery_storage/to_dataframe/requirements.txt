@@ -3,7 +3,7 @@ google-cloud-bigquery-storage==2.27.0
 google-cloud-bigquery==3.27.0
 pyarrow===12.0.1; python_version == '3.7'
 pyarrow===17.0.0; python_version == '3.8'
-pyarrow==18.0.0; python_version >= '3.9'
+pyarrow==18.1.0; python_version >= '3.9'
 ipython===7.31.1; python_version == '3.7'
 ipython===8.10.0; python_version == '3.8'
 ipython===8.18.1; python_version == '3.9'
