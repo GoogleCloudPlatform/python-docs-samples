@@ -21,6 +21,7 @@ import vertexai
 
 import create_corpus_example
 import create_corpus_feature_store_example
+import create_corpus_vector_search_example
 import delete_corpus_example
 import delete_file_example
 import generate_content_example
@@ -84,6 +85,22 @@ def test_create_corpus_feature_store() -> None:
     feature_view_name = f"projects/{PROJECT_ID}/locations/{LOCATION}/featureOnlineStores/{FEATURE_ONLINE_STORE_ID}/featureViews/{FEATURE_VIEW_ID}"
     corpus = create_corpus_feature_store_example.create_corpus_feature_store(
         feature_view_name,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_vector_search() -> None:
+    VECTOR_SEARCH_INDEX_ID = "8048667007878430720"
+    VECTOR_SEARCH_INDEX_ENDPOINT_ID = "8971201244047605760"
+    vector_search_index_name = (
+        f"projects/{PROJECT_ID}/locations/us-central1/indexes/{VECTOR_SEARCH_INDEX_ID}"
+    )
+    vector_search_index_endpoint_name = f"projects/{PROJECT_ID}/locations/us-central1/indexEndpoints/{VECTOR_SEARCH_INDEX_ENDPOINT_ID}"
+
+    corpus = create_corpus_vector_search_example.create_corpus_vector_search(
+        vector_search_index_name,
+        vector_search_index_endpoint_name,
     )
     assert corpus
     delete_corpus_example.delete_corpus(corpus.name)
