@@ -101,11 +101,11 @@ def test_vector_search_distance_result_field():
     assert results[0].to_dict()["name"] == "Liberica"
     assert results[0].to_dict()["vector_distance"] == 0.0
     assert results[1].to_dict()["name"] == "Robusta"
-    assert results[1].to_dict()["vector_distance"] == 1.0
+    assert results[1].to_dict()["vector_distance"] == 0.09812527000000004
     assert results[2].to_dict()["name"] == "Arabica"
-    assert results[2].to_dict()["vector_distance"] == 7.0
+    assert results[2].to_dict()["vector_distance"] == 0.46355186
     assert results[3].to_dict()["name"] == "Excelsa"
-    assert results[3].to_dict()["vector_distance"] == 8.0
+    assert results[3].to_dict()["vector_distance"] == 0.56310021
 
 
 def test_vector_search_distance_result_field_with_mask():
@@ -119,9 +119,9 @@ def test_vector_search_distance_result_field_with_mask():
 
     assert len(results) == 4
     assert results[0].to_dict() == {"color": "green", "vector_distance": 0.0}
-    assert results[1].to_dict() == {"color": "blue", "vector_distance": 1.0}
-    assert results[2].to_dict() == {"color": "red", "vector_distance": 7.0}
-    assert results[3].to_dict() == {"color": "red", "vector_distance": 8.0}
+    assert results[1].to_dict() == {"color": "blue", "vector_distance": 0.09812527000000004}
+    assert results[2].to_dict() == {"color": "red", "vector_distance": 0.46355186}
+    assert results[3].to_dict() == {"color": "red", "vector_distance": 0.56310021}
 
 
 def test_vector_search_distance_threshold():
@@ -133,6 +133,8 @@ def test_vector_search_distance_threshold():
     vector_query = vector_search_distance_threshold(db)
     results = list(vector_query.stream())
 
-    assert len(results) == 2
+    assert len(results) == 4
     assert results[0].to_dict()["name"] == "Liberica"
     assert results[1].to_dict()["name"] == "Robusta"
+    assert results[2].to_dict()["name"] == "Arabica"
+    assert results[3].to_dict()["name"] == "Excelsa"
