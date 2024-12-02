@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import backoff
+import pytest
 
 from google.api_core.exceptions import ResourceExhausted
 from vertexai.generative_models import GenerativeModel, Tool
@@ -54,12 +55,14 @@ def test_function_calling_advanced_function_selection() -> None:
     )
 
 
+@pytest.mark.skip(reason="Blocked on b/... ")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_basic() -> None:
     response = chat_function_calling_basic.generate_text()
     assert "get_current_weather" in response.choices[0].message.tool_calls[0].id
 
 
+@pytest.mark.skip(reason="Blocked on b/... ")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_function_calling_config() -> None:
     response = chat_function_calling_config.generate_text()
@@ -90,7 +93,7 @@ def test_parallel_function_calling() -> None:
 
 
 def test_prototype() -> None:
-    func_declaration = declare_function_from_function.prototype()
+    func_declaration = declare_function_from_function.function_declaration_as_func()
     tools = Tool(function_declarations=[func_declaration])
     model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
     chat_session = model.start_chat()

@@ -22,7 +22,7 @@ from vertexai.generative_models import FunctionDeclaration
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prototype():
+def function_declaration_from_func():
     # [START generativeaionvertexai_gemini_function_calling_declare_from_function]
     # Define a function. Could be a local function or you can import the requests library to call an API
     def multiply_numbers(numbers: List[int]) -> int:
@@ -71,4 +71,4 @@ def prototype():
 
 
 if __name__ == "__main__":
-    prototype()
+    function_declaration_from_func()
