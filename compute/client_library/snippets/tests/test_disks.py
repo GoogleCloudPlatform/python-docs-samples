@@ -201,7 +201,7 @@ def autodelete_regional_blank_disk():
 
 @pytest.fixture
 def autodelete_blank_disk():
-    disk_name = "regional-disk-" + uuid.uuid4().hex[:10]
+    disk_name = "test-disk-" + uuid.uuid4().hex[:10]
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
 
     disk = create_empty_disk(PROJECT, ZONE, disk_name, disk_type, 12)
