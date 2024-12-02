@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import backoff
+
 import pytest
 
 from google.api_core.exceptions import ResourceExhausted
@@ -23,8 +24,8 @@ import basic_example
 import chat_example
 import chat_function_calling_basic
 import chat_function_calling_config
-import function_declaration_from_func
 import function_declaration_from_dict
+import function_declaration_from_func
 import parallel_function_calling_example
 
 
