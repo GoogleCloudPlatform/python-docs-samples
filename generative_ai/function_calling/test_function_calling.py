@@ -92,8 +92,8 @@ def test_parallel_function_calling() -> None:
     assert response is not None
 
 
-def test_function_declaration_as_func() -> None:
-    func_declaration = declare_function_from_function.function_declaration_as_func()
+def test_function_declaration_from_func() -> None:
+    func_declaration = declare_function_from_function.function_declaration_from_func()
     tools = Tool(function_declarations=[func_declaration])
     model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
     chat_session = model.start_chat()
