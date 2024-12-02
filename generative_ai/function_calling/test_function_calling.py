@@ -14,9 +14,10 @@
 
 import backoff
 
+from google.api_core.exceptions import ResourceExhausted
+
 import pytest
 
-from google.api_core.exceptions import ResourceExhausted
 from vertexai.generative_models import GenerativeModel, Tool
 
 import advanced_example
