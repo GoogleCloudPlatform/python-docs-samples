@@ -839,8 +839,6 @@ if __name__ == "__main__":
 
     if args.command == "transcription":
         speech_transcription(args.gcs_uri)
-    elif args.command == "video-text-gcs":
-        video_detect_text_gcs(args.gcs_uri)
     elif args.command == "video-text":
         video_detect_text(args.path)
     elif args.command == "streaming-labels":
