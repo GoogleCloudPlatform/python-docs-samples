@@ -15,6 +15,7 @@
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
+from vertexai.generative_models import GenerativeModel, Tool
 
 import advanced_example
 import basic_example
@@ -22,6 +23,7 @@ import chat_example
 import chat_function_calling_basic
 import chat_function_calling_config
 import parallel_function_calling_example
+import declare_function_from_function
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
@@ -84,4 +86,14 @@ def test_function_calling_chat() -> None:
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_parallel_function_calling() -> None:
     response = parallel_function_calling_example.parallel_function_calling_example()
+    assert response is not None
+
+
+def test_prototype() -> None:
+    func_declaration = declare_function_from_function.prototype()
+    tools = Tool(function_declarations=[func_declaration])
+    model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
+    chat_session = model.start_chat()
+    response = chat_session.send_message("What will be 1 multiplied by 2?")
+
     assert response is not None
