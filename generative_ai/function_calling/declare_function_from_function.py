@@ -23,7 +23,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def prototype():
-    # [START TBD]
+    # [START generativeaionvertexai_gemini_function_calling_declare_from_function]
     # Define a function. Could be a local function or you can import the requests library to call an API
     def multiply_numbers(numbers: List[int]) -> int:
         """
@@ -66,7 +66,7 @@ def prototype():
     title: "multiply_numbers"
     }
     '''
-    # [END TBD]
+    # [END generativeaionvertexai_gemini_function_calling_declare_from_function]
     return multiply_number_func
 
 
