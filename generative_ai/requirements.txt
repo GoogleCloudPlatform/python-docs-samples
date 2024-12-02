@@ -7,7 +7,7 @@ google-cloud-aiplatform[all]==1.64.0
 sentencepiece==0.2.0
 google-auth==2.29.0
 anthropic[vertex]==0.28.0
-langchain-google-vertexai==2.0.8
+langchain-google-vertexai==1.0.6
 numpy<2
 openai==1.30.5
 immutabledict==4.2.0
