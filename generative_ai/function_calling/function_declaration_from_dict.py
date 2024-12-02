@@ -34,7 +34,7 @@ def function_declaration_from_dict() -> object:
             },
         },
     )
-    # [END generativeaionvertexai_gemini_function_calling_declare_from_dict]
+    # [END generativeaionvertexai_gemini_function_calling_declare_from_dict1]
     # [START generativeaionvertexai_gemini_function_calling_declare_from_dict2]
     extract_sale_records_func = FunctionDeclaration(
         name="extract_sale_records",
@@ -62,7 +62,7 @@ def function_declaration_from_dict() -> object:
             "required": ["records"],
         },
     )
-    # [END generativeaionvertexai_gemini_function_calling_declare_from_dic2]
+    # [END generativeaionvertexai_gemini_function_calling_declare_from_dict2]
     return [get_current_weather_func, extract_sale_records_func]
 
 
