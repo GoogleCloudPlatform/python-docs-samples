@@ -778,11 +778,6 @@ if __name__ == "__main__":
     )
     video_text_gcs_parser.add_argument("gcs_uri")
 
-    video_text_parser = subparsers.add_parser(
-        "video-text", help=video_detect_text.__doc__
-    )
-    video_text_parser.add_argument("path")
-
     video_streaming_labels_parser = subparsers.add_parser(
         "streaming-labels", help=detect_labels_streaming.__doc__
     )
