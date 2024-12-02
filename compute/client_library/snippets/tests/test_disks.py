@@ -35,6 +35,8 @@ from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
 from ..disks.regional_delete import delete_regional_disk
+from ..disks.replication_disk_start import start_disk_replication
+from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
@@ -443,3 +445,57 @@ def test_create_custom_secondary_disk(
     )
     assert disk.labels["secondary-disk-for-replication"] == "true"
     assert disk.labels["source-disk"] == test_empty_pd_balanced_disk.name
+
+
+def test_start_stop_region_replication(
+    autodelete_regional_blank_disk, autodelete_regional_disk_name
+):
+    create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+    assert start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=autodelete_regional_disk_name,
+    )
+    assert stop_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+    )
+    # Wait for the replication to stop
+    time.sleep(20)
+
+
+def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_disk_name):
+    create_secondary_disk(
+        test_empty_pd_balanced_disk.name,
+        PROJECT,
+        ZONE_SECONDARY,
+        autodelete_disk_name,
+        PROJECT,
+        ZONE,
+        DISK_SIZE,
+    )
+    assert start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=ZONE_SECONDARY,
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+        secondary_disk_location=ZONE,
+        secondary_disk_name=autodelete_disk_name,
+    )
+    assert stop_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=ZONE_SECONDARY,
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+    )
+    # Wait for the replication to stop
+    time.sleep(20)
