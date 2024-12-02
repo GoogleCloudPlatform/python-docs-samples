@@ -23,8 +23,9 @@ import basic_example
 import chat_example
 import chat_function_calling_basic
 import chat_function_calling_config
+import function_declaration_from_func
+import function_declaration_from_dict
 import parallel_function_calling_example
-import declare_function_from_function
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
@@ -93,10 +94,20 @@ def test_parallel_function_calling() -> None:
 
 
 def test_function_declaration_from_func() -> None:
-    func_declaration = declare_function_from_function.function_declaration_from_func()
+    func_declaration = function_declaration_from_func.function_declaration_from_func()
     tools = Tool(function_declarations=[func_declaration])
     model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
     chat_session = model.start_chat()
     response = chat_session.send_message("What will be 1 multiplied by 2?")
+
+    assert response is not None
+
+
+def test_function_declaration_as_func() -> None:
+    function_declarations = function_declaration_from_dict.function_declaration_from_dict()
+    tools = Tool(function_declarations=function_declarations)
+    model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
+    chat_session = model.start_chat()
+    response = chat_session.send_message("What is the weather in Boston?")
 
     assert response is not None
