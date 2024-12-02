@@ -24,7 +24,7 @@ def store_vectors():
         {
             "name": "Kahawa coffee beans",
             "description": "Information about the Kahawa coffee beans.",
-            "embedding_field": Vector([1.0, 2.0, 3.0]),
+            "embedding_field": Vector([0.18332680, 0.24160706, 0.3416704]),
         }
     )
 
@@ -43,7 +43,7 @@ def vector_search_basic(db):
         kind="coffee-beans",
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=5,
         )
@@ -64,7 +64,7 @@ def vector_search_prefilter(db):
         filters=[PropertyFilter("color", "=", "red")],
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=5,
         )
@@ -83,7 +83,7 @@ def vector_search_distance_result_property(db):
         kind="coffee-beans",
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=5,
             distance_result_property="vector_distance",
@@ -105,7 +105,7 @@ def vector_search_distance_result_property_projection(db):
         kind="coffee-beans",
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=5,
             distance_result_property="vector_distance",
@@ -129,10 +129,10 @@ def vector_search_distance_threshold(db):
         kind="coffee-beans",
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=10,
-            distance_threshold=4.5
+            distance_threshold=0.4
         )
     )
 
@@ -153,7 +153,7 @@ def vector_search_large_response(db):
         kind="coffee-beans",
         find_nearest=FindNearest(
             vector_property="embedding_field",
-            query_vector=Vector([3.0, 1.0, 2.0]),
+            query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
             distance_measure=DistanceMeasure.EUCLIDEAN,
             limit=100,
             distance_result_property="vector_distance",

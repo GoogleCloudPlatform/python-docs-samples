@@ -21,6 +21,7 @@ from google.cloud.datastore.vector import Vector
 from vector_search import store_vectors
 from vector_search import vector_search_basic
 from vector_search import vector_search_distance_result_property
+from vector_search import vector_search_distance_result_property_projection
 from vector_search import vector_search_distance_threshold
 from vector_search import vector_search_prefilter
 from vector_search import vector_search_large_response
@@ -49,13 +50,13 @@ def _clear_db(db):
 
 def add_coffee_beans_data(db):
     entity1 = datastore.Entity(db.key("coffee-beans", "Arabica"))
-    entity1.update({"embedding_field": Vector([10.0, 1.0, 2.0]), "color": "red"})
+    entity1.update({"embedding_field": Vector([0.80522226, 0.18332680, 0.24160706]), "color": "red"})
     entity2 = datastore.Entity(db.key("coffee-beans", "Robusta"))
-    entity2.update({"embedding_field": Vector([4.0, 1.0, 2.0]), "color": ""})
+    entity2.update({"embedding_field": Vector([0.43979567, 0.18332680, 0.24160706]), "color": ""})
     entity3 = datastore.Entity(db.key("coffee-beans", "Excelsa"))
-    entity3.update({"embedding_field": Vector([11.0, 1.0, 2.0]), "color": "red"})
+    entity3.update({"embedding_field": Vector([0.90477061, 0.18332680, 0.24160706]), "color": "red"})
     entity4 = datastore.Entity(db.key("coffee-beans", "Liberica"))
-    entity4.update({"embedding_field": Vector([3.0, 1.0, 2.0]), "color": "green"})
+    entity4.update({"embedding_field": Vector([0.3416704, 0.18332680, 0.24160706]), "color": "green"})
 
     entity_list = [entity1, entity2, entity3, entity4]
     db.put_multi(entity_list)
@@ -93,16 +94,16 @@ def test_vector_search_distance_result_property(db):
     assert len(results) == 4
     assert results[0].key.name == "Liberica"
     assert results[0]["vector_distance"] == 0.0
-    assert results[0]["embedding_field"] == Vector([3.0, 1.0, 2.0])
+    assert results[0]["embedding_field"] == Vector([0.3416704, 0.18332680, 0.24160706])
     assert results[1].key.name == "Robusta"
-    assert results[1]["vector_distance"] == 1.0
-    assert results[1]["embedding_field"] == Vector([4.0, 1.0, 2.0])
+    assert results[1]["vector_distance"] == pytest.approx(0.09812527)
+    assert results[1]["embedding_field"] == Vector([0.43979567, 0.18332680, 0.24160706])
     assert results[2].key.name == "Arabica"
-    assert results[2]["vector_distance"] == 7.0
-    assert results[2]["embedding_field"] == Vector([10.0, 1.0, 2.0])
+    assert results[2]["vector_distance"] == pytest.approx(0.46355186)
+    assert results[2]["embedding_field"] == Vector([0.80522226, 0.18332680, 0.24160706])
     assert results[3].key.name == "Excelsa"
-    assert results[3]["vector_distance"] == 8.0
-    assert results[3]["embedding_field"] == Vector([11.0, 1.0, 2.0])
+    assert results[3]["vector_distance"] == pytest.approx(0.56310021)
+    assert results[3]["embedding_field"] == Vector([0.90477061, 0.18332680, 0.24160706])
 
 
 def test_vector_search_distance_result_property_projection(db):
@@ -113,11 +114,11 @@ def test_vector_search_distance_result_property_projection(db):
     assert results[0].key.name == "Liberica"
     assert results[0]["vector_distance"] == 0.0
     assert results[1].key.name == "Robusta"
-    assert results[1]["vector_distance"] == 1.0
+    assert results[1]["vector_distance"] == pytest.approx(0.09812527)
     assert results[2].key.name == "Arabica"
-    assert results[2]["vector_distance"] == 7.0
+    assert results[2]["vector_distance"] == pytest.approx(0.46355186)
     assert results[3].key.name == "Excelsa"
-    assert results[3]["vector_distance"] == 8.0
+    assert results[3]["vector_distance"] == pytest.approx(0.56310021)
 
     assert all("embedding_field" not in d for d in results)
 
