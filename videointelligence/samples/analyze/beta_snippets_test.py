@@ -19,11 +19,12 @@ from urllib.request import urlopen
 import uuid
 
 import backoff
+
+import beta_snippets
+
 from google.api_core.exceptions import Conflict
 from google.cloud import storage
 import pytest
-
-import beta_snippets
 
 POSSIBLE_TEXTS = [
     "Google",
