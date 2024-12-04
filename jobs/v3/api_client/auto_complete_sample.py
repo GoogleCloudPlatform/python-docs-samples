@@ -25,6 +25,7 @@ name = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 # [END instantiate]
 
 
+# [START job_auto_complete_job_title]
 # [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
     complete = client_service.projects().complete(
@@ -38,6 +39,7 @@ def job_title_auto_complete(client_service, query, company_name):
 
 
 # [END auto_complete_job_title]
+# [START job_auto_complete_job_title]
 
 
 # [START auto_complete_default]
