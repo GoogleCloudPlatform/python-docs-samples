@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def generate_translation() -> GenerationResponse:
-    # [START generativeaionvertexai_translate_text_gemini]
+    # [START generativeaionvertexai_text_generation_gemini_translate]
     import vertexai
 
     from vertexai.generative_models import GenerativeModel, HarmBlockThreshold, HarmCategory
@@ -71,7 +71,7 @@ def generate_translation() -> GenerationResponse:
     #     candidates_token_count: 32
     #     total_token_count: 95
 
-    # [END generativeaionvertexai_translate_text_gemini]
+    # [END generativeaionvertexai_text_generation_gemini_translate]
     return response
 
 
