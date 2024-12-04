@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import example_syntax
 import get_rouge_score
 import pairwise_summarization_quality
 
@@ -23,4 +24,9 @@ def test_create_evaluation_task() -> None:
 
 def test_pairwise_evaluation_summarization_quality() -> None:
     response = pairwise_summarization_quality.evaluate_output()
+    assert response
+
+
+def test_example_syntax() -> None:
+    response = example_syntax.send_evaluation_request_gapic()
     assert response
