@@ -5,5 +5,5 @@ six==1.16.0
 pyyaml==6.0.2
 requests==2.31.0
 google-auth==2.19.1
-google-auth-oauthlib==1.0.0
+google-auth-oauthlib==1.2.1
 Werkzeug==3.0.3
