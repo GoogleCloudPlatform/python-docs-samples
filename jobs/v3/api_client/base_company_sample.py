@@ -15,6 +15,7 @@
 # limitations under the License.
 
 
+# [START job_instantiate]
 # [START jobs_instantiate]
 import os
 import random
@@ -27,8 +28,10 @@ client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 
 # [END jobs_instantiate]
+# [END job_instantiate]
 
 
+# [START job_basic_company]
 # [START jobs_basic_company]
 def generate_company():
     # external id should be a unique Id in your system.
@@ -49,8 +52,10 @@ def generate_company():
 
 
 # [END jobs_basic_company]
+# [END job_basic_company]
 
 
+# [START job_create_company]
 # [START jobs_create_company]
 def create_company(client_service, company_to_be_created):
     try:
@@ -69,8 +74,10 @@ def create_company(client_service, company_to_be_created):
 
 
 # [END jobs_create_company]
+# [END job_create_company]
 
 
+# [START job_get_company]
 # [START jobs_get_company]
 def get_company(client_service, company_name):
     try:
@@ -85,8 +92,10 @@ def get_company(client_service, company_name):
 
 
 # [END jobs_get_company]
+# [END job_get_company]
 
 
+# [START job_update_company]
 # [START jobs_update_company]
 def update_company(client_service, company_name, company_to_be_updated):
     try:
@@ -105,8 +114,10 @@ def update_company(client_service, company_name, company_to_be_updated):
 
 
 # [END jobs_update_company]
+# [END job_update_company]
 
 
+# [START job_update_company_with_field_mask]
 # [START jobs_update_company_with_field_mask]
 def update_company_with_field_mask(
     client_service, company_name, company_to_be_updated, field_mask
@@ -127,8 +138,10 @@ def update_company_with_field_mask(
 
 
 # [END jobs_update_company_with_field_mask]
+# [END job_update_company_with_field_mask]
 
 
+# [START job_delete_company]
 # [START jobs_delete_company]
 def delete_company(client_service, company_name):
     try:
@@ -140,6 +153,7 @@ def delete_company(client_service, company_name):
 
 
 # [END jobs_delete_company]
+# [END job_delete_company]
 
 
 def run_sample():
