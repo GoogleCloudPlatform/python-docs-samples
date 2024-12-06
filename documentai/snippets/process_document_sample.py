@@ -14,7 +14,6 @@
 #
 
 # [START documentai_process_document]
-# [START documentai_process_document_processor_version]
 from typing import Optional
 
 from google.api_core.client_options import ClientOptions
@@ -90,5 +89,4 @@ def process_document_sample(
     print(document.text)
 
 
-# [END documentai_process_document_processor_version]
 # [END documentai_process_document]
