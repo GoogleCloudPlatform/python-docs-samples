@@ -3,4 +3,4 @@ google-auth==2.19.1
 google-auth-httplib2==0.2.0
 google-cloud-compute==1.11.0
 google-cloud-os-login==2.9.1
-requests==2.31.0
+requests==2.32.2

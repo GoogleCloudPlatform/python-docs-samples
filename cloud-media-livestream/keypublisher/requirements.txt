@@ -4,7 +4,7 @@ google-cloud-secret-manager==2.12.1
 lxml==4.9.4
 pycryptodome==3.19.1
 pyOpenSSL==24.0.0
-requests==2.31.0
+requests==2.32.2
 signxml==3.2.0
 pytest==8.2.0
 pytest-mock==3.10.0
