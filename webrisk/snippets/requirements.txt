@@ -1,1 +1,1 @@
-google-cloud-webrisk==1.12.0
+google-cloud-webrisk==1.15.1
