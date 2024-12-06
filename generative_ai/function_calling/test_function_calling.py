@@ -18,15 +18,14 @@ from google.api_core.exceptions import ResourceExhausted
 
 import pytest
 
-from vertexai.generative_models import GenerativeModel, Tool
+from vertexai.generative_models import GenerativeModel
 
 import advanced_example
 import basic_example
 import chat_example
 import chat_function_calling_basic
 import chat_function_calling_config
-import function_declaration_from_dict
-import function_declaration_from_func
+import function_calling_application
 import parallel_function_calling_example
 
 
@@ -95,21 +94,15 @@ def test_parallel_function_calling() -> None:
     assert response is not None
 
 
-def test_function_declaration_from_func() -> None:
-    func_declaration = function_declaration_from_func.function_declaration_from_func()
-    tools = Tool(function_declarations=[func_declaration])
-    model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
+def test_function_calling_app() -> None:
+    result = function_calling_application.create_app()
+    assert result["weather_response"] is not None
+
+    tool = result["tool"]
+    model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tool])
     chat_session = model.start_chat()
+
     response = chat_session.send_message("What will be 1 multiplied by 2?")
-
     assert response is not None
 
-
-def test_function_declaration_as_func() -> None:
-    function_declarations = function_declaration_from_dict.function_declaration_from_dict()
-    tools = Tool(function_declarations=function_declarations)
-    model = GenerativeModel(model_name="gemini-1.5-pro-002", tools=[tools])
-    chat_session = model.start_chat()
-    response = chat_session.send_message("What is the weather in Boston?")
-
-    assert response is not None
+    response = chat_session.send_message("I have a PDF document with a series of sale transactions from our store, but I need to parse it for our accounting system. Each transaction includes information like sale ID numbers, dates in MMDDYY format, monetary amounts, and sometimes customer details. What's the best way to extract this structured data from the document? I need to maintain the relationships between IDs, dates, and amounts for each sale.")
