@@ -105,4 +105,14 @@ def test_function_calling_app() -> None:
     response = chat_session.send_message("What will be 1 multiplied by 2?")
     assert response is not None
 
-    response = chat_session.send_message("I have a PDF document with a series of sale transactions from our store, but I need to parse it for our accounting system. Each transaction includes information like sale ID numbers, dates in MMDDYY format, monetary amounts, and sometimes customer details. What's the best way to extract this structured data from the document? I need to maintain the relationships between IDs, dates, and amounts for each sale.")
+    extract_sales_prompt = """
+    I need to parse a series of sale transactions written down in a text editor and extract
+     full sales records for each transaction.
+    1 / 031023 / $123,02
+    2 / 031123 / $12,99
+    3 / 031123 / $12,99
+    4 / 031223 / $15,99
+    5 / 031223 / $2,20
+    """
+    response = chat_session.send_message(extract_sales_prompt)
+    assert response
