@@ -14,13 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Live Stream sample for creating an input endpoint. You send an
-    input video stream to this endpoint.
+"""Google Cloud Live Stream sample for getting a channel clip.
 Example usage:
-    python create_input.py --project_id <project-id> --location <location> --input_id <input-id>
+    python get_channel_clip.py --project_id <project-id> --location <location> \
+        --channel_id <channel-id> --clip_id <clip-id>
 """
 
-# [START livestream_create_input]
+# [START livestream_get_channel_clip]
 
 import argparse
 
@@ -30,48 +30,49 @@ from google.cloud.video.live_stream_v1.services.livestream_service import (
 )
 
 
-def create_input(
-    project_id: str, location: str, input_id: str
-) -> live_stream_v1.types.Input:
-    """Creates an input.
+def get_channel_clip(
+    project_id: str, location: str, channel_id: str, clip_id: str
+) -> live_stream_v1.types.Clip:
+    """Gets a channel clip.
     Args:
         project_id: The GCP project ID.
-        location: The location in which to create the input.
-        input_id: The user-defined input ID."""
+        location: The location of the channel.
+        channel_id: The user-defined channel ID.
+        clip_id: The user-defined clip ID."""
 
     client = LivestreamServiceClient()
 
-    parent = f"projects/{project_id}/locations/{location}"
-
-    input = live_stream_v1.types.Input(
-        type_="RTMP_PUSH",
-    )
-    operation = client.create_input(parent=parent, input=input, input_id=input_id)
-    response = operation.result(900)
-    print(f"Input: {response.name}")
-    print(f"Uri: {response.uri}")
+    name = f"projects/{project_id}/locations/{location}/channels/{channel_id}/clips/{clip_id}"
+    response = client.get_clip(name=name)
+    print(f"Channel clip: {response.name}")
 
     return response
 
 
-# [END livestream_create_input]
+# [END livestream_get_channel_clip]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--project_id", help="Your Cloud project ID.", required=True)
     parser.add_argument(
         "--location",
-        help="The location in which to create the input.",
-        default="us-central1",
+        help="The location of the channel.",
+        required=True,
     )
     parser.add_argument(
-        "--input_id",
-        help="The user-defined input ID.",
+        "--channel_id",
+        help="The user-defined channel ID.",
+        required=True,
+    )
+    parser.add_argument(
+        "--clip_id",
+        help="The user-defined clip ID.",
         required=True,
     )
     args = parser.parse_args()
-    create_input(
+    get_channel_clip(
         args.project_id,
         args.location,
-        args.input_id,
+        args.channel_id,
+        args.clip_id,
     )
