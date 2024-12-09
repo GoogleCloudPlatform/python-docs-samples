@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
 import os
 import time
 
@@ -22,7 +21,6 @@ from googleapiclient.discovery import build
 
 client_service = build("jobs", "v3")
 name = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
 
 
 # [START job_auto_complete_job_title]
