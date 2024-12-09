@@ -57,6 +57,7 @@ def generate_job_with_custom_attributes(company_name):
 # [END job_custom_attribute_job]
 
 
+# [START job_custom_attribute_filter_string_value]
 # [START custom_attribute_filter_string_value]
 def custom_attribute_filter_string_value(client_service):
     request_metadata = {
@@ -80,8 +81,10 @@ def custom_attribute_filter_string_value(client_service):
 
 
 # [END custom_attribute_filter_string_value]
+# [END job_custom_attribute_filter_string_value]
 
 
+# [START job_custom_attribute_filter_long_value]
 # [START custom_attribute_filter_long_value]
 def custom_attribute_filter_long_value(client_service):
     request_metadata = {
@@ -105,8 +108,10 @@ def custom_attribute_filter_long_value(client_service):
 
 
 # [END custom_attribute_filter_long_value]
+# [END job_custom_attribute_filter_long_value]
 
 
+# [START job_custom_attribute_filter_multi_attributes]
 # [START custom_attribute_filter_multi_attributes]
 def custom_attribute_filter_multi_attributes(client_service):
     request_metadata = {
@@ -133,6 +138,7 @@ def custom_attribute_filter_multi_attributes(client_service):
 
 
 # [END custom_attribute_filter_multi_attributes]
+# [END job_custom_attribute_filter_multi_attributes]
 
 
 def set_up():
