@@ -1,2 +1,2 @@
-google-cloud-batch==0.17.22
+google-cloud-batch==0.17.31
 google-cloud-logging==3.5.0
