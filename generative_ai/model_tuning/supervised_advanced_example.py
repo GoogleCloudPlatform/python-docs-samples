@@ -31,6 +31,12 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
+    # TODO(developer): If you need to use BYOSA, Update and un-comment the below line
+    # vertexai.init(service_account="your-service-account")
+
+    # TODO(developer): If you need to use CMEK, Update and un-comment the below line
+    # vertexai.init(encryption_spec_key_name="your-kms-key")
+
     sft_tuning_job = sft.train(
         source_model="gemini-1.5-pro-002",
         train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
