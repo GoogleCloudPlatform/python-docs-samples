@@ -83,4 +83,4 @@ def delete_ca_monitor_policy(policy_name: str) -> None:
     """
 
     alert_policy_client = monitoring_v3.AlertPolicyServiceClient()
-    alert_policy_client.delete_alert_policy(name=policy_name.name)
+    alert_policy_client.delete_alert_policy(name=policy_name)
