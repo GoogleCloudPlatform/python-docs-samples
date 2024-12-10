@@ -30,6 +30,7 @@ import document_retrieval_example
 import generate_embeddings_with_lower_dimension
 import model_tuning_example
 import multimodal_example
+import multimodal_example_syntax
 import multimodal_image_example
 import multimodal_video_example
 
@@ -76,6 +77,12 @@ def test_generate_embeddings_with_lower_dimension() -> None:
     assert len(embeddings.image_embedding) == 128
     assert embeddings.text_embedding is not None
     assert len(embeddings.text_embedding) == 128
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_create_embeddings() -> None:
+    embeddings = multimodal_example_syntax.create_embeddings()
+    assert embeddings is not None
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
