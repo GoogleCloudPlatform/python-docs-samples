@@ -233,8 +233,8 @@ def test_upload_blob_from_memory(test_bucket, capsys):
 
 
 def test_upload_blob_from_stream(test_bucket, capsys):
-    file_obj = io.StringIO()
-    file_obj.write("This is test data.")
+    file_obj = io.BytesIO()
+    file_obj.write(b"This is test data.")
     storage_upload_from_stream.upload_blob_from_stream(
         test_bucket.name, file_obj, "test_upload_blob"
     )
