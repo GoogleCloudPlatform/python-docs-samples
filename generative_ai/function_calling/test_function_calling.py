@@ -21,6 +21,7 @@ import basic_example
 import chat_example
 import chat_function_calling_basic
 import chat_function_calling_config
+import example_syntax
 import parallel_function_calling_example
 
 
@@ -85,3 +86,8 @@ def test_function_calling_chat() -> None:
 def test_parallel_function_calling() -> None:
     response = parallel_function_calling_example.parallel_function_calling_example()
     assert response is not None
+
+
+def test_example_syntax() -> None:
+    model = example_syntax.create_model_with_toolbox()
+    assert model is not None
