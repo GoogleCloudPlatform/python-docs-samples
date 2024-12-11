@@ -553,7 +553,7 @@ def test_clone_disks_in_consistency_group(
         secondary_disk_location=REGION_SECONDARY,
         secondary_disk_name=autodelete_regional_disk_name,
     )
-    time.sleep(45)
+    time.sleep(60)
     try:
         assert clone_disks_to_consistency_group(PROJECT, second, REGION_SECONDARY)
     finally:
@@ -570,7 +570,7 @@ def test_clone_disks_in_consistency_group(
         if disks:
             for disk in disks:
                 delete_regional_disk(PROJECT, REGION_SECONDARY, disk.name)
-        time.sleep(20)
+        time.sleep(25)
         remove_disk_consistency_group(PROJECT, autodelete_regional_blank_disk.name, REGION, first, REGION)
         delete_consistency_group(PROJECT, REGION, first)
         delete_consistency_group(PROJECT, REGION_SECONDARY, second)
