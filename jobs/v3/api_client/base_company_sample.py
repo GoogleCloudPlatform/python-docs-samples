@@ -86,7 +86,7 @@ def get_company(client_service, company_name):
 
 # [END jobs_get_company]
 
-
+# [START job_update_company]
 # [START jobs_update_company]
 def update_company(client_service, company_name, company_to_be_updated):
     try:
@@ -105,7 +105,7 @@ def update_company(client_service, company_name, company_to_be_updated):
 
 
 # [END jobs_update_company]
-
+# [END job_update_company]
 
 # [START jobs_update_company_with_field_mask]
 def update_company_with_field_mask(
