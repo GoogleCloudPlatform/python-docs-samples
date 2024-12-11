@@ -43,7 +43,9 @@ from ..disks.сonsistency_groups.add_disk_consistency_group import (
 )
 from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
 from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.remove_disk_consistency_group import remove_disk_consistency_group
+from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
 from ..disks.сonsistency_groups.stop_replication_consistency_group import (
     stop_replication_consistency_group,
 )
@@ -551,4 +553,3 @@ def test_stop_replications_in_consistency_group(
         )
         time.sleep(10)
         delete_consistency_group(PROJECT, REGION, group_name)
-
