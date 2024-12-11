@@ -13,6 +13,8 @@
 # limitations under the License.
 import os
 
+from unittest.mock import patch
+
 import uuid
 
 import pytest
@@ -20,6 +22,9 @@ import pytest
 from .test_disks import autodelete_regional_blank_disk  # noqa: F401
 from ..disks.сonsistency_groups.add_disk_consistency_group import (
     add_disk_consistency_group,
+)
+from ..disks.сonsistency_groups.clone_disks_consistency_group import (
+    clone_disks_to_consistency_group,
 )
 from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
 from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
@@ -94,3 +99,10 @@ def test_add_remove_and_list_disks_consistency_group(
         consistency_group_region=REGION,
     )
     assert not disks
+
+
+def test_clone_disk_consistency_group():
+    with patch("google.cloud.compute_v1.RegionDisksClient") as mock_client:
+        client = mock_client.return_value
+        clone_disks_to_consistency_group(PROJECT_ID, "group-4", "us-east1")
+        client.bulk_insert.assert_called_once()
