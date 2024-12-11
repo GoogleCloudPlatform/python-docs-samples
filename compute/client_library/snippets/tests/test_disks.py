@@ -38,6 +38,15 @@ from ..disks.regional_delete import delete_regional_disk
 from ..disks.replication_disk_start import start_disk_replication
 from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
+from ..disks.сonsistency_groups.add_disk_consistency_group import (
+    add_disk_consistency_group,
+)
+from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
+from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.сonsistency_groups.remove_disk_consistency_group import remove_disk_consistency_group
+from ..disks.сonsistency_groups.stop_replication_consistency_group import (
+    stop_replication_consistency_group,
+)
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -499,3 +508,47 @@ def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_dis
     )
     # Wait for the replication to stop
     time.sleep(20)
+
+
+def test_stop_replications_in_consistency_group(
+    autodelete_regional_blank_disk, autodelete_regional_disk_name
+):
+    group_name = "test-consistency-group" + uuid.uuid4().hex[:5]
+    create_consistency_group(PROJECT, REGION, group_name, "DESCRIPTION")
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        consistency_group_name=group_name,
+        consistency_group_region=REGION,
+    )
+    second_disk = create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+    start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=second_disk.name,
+    )
+    time.sleep(15)
+    try:
+        assert stop_replication_consistency_group(PROJECT, REGION, group_name)
+    finally:
+        remove_disk_consistency_group(
+            project_id=PROJECT,
+            disk_name=autodelete_regional_blank_disk.name,
+            disk_location=REGION,
+            consistency_group_name=group_name,
+            consistency_group_region=REGION,
+        )
+        time.sleep(10)
+        delete_consistency_group(PROJECT, REGION, group_name)
+
