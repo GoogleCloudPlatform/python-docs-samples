@@ -104,6 +104,7 @@ def update_company(client_service, company_name, company_to_be_updated):
         print("Got exception while updating company")
         raise e
 
+
 # [END jobs_update_company]
 # [END job_update_company]
 
