@@ -2,4 +2,4 @@
 google-cloud-ndb==2.3.2
 # [END ndb_version]
 Flask==3.0.3
-Werkzeug==3.0.3
+Werkzeug==3.0.6
