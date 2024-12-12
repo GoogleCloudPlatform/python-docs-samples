@@ -47,7 +47,7 @@ def attach_regional_disk(
         instance=instance_name,
         attached_disk_resource=disk_resource,
     )
-    wait_for_extended_operation(operation, "regional disk attachement")
+    wait_for_extended_operation(operation, "regional disk attachment")
 
 
 # </INGREDIENT>
