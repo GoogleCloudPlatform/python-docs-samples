@@ -1,6 +1,6 @@
 Flask==2.2.5
 functions-framework==3.5.0
-google-cloud-secret-manager==2.12.1
+google-cloud-secret-manager==2.21.1
 lxml==4.9.4
 pycryptodome==3.21.0
 pyOpenSSL==24.0.0
