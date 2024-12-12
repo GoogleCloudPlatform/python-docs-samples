@@ -516,7 +516,7 @@ def test_stop_replications_in_consistency_group(
     autodelete_regional_blank_disk, autodelete_regional_disk_name
 ):
     group_name = "test-consistency-group" + uuid.uuid4().hex[:5]
-    create_consistency_group(PROJECT, REGION, group_name, "DESCRIPTION")
+    create_consistency_group(PROJECT, REGION, group_name, "description")
     add_disk_consistency_group(
         project_id=PROJECT,
         disk_name=autodelete_regional_blank_disk.name,
