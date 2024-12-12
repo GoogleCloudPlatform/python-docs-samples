@@ -22,9 +22,11 @@ function getStatus() {
       return response.text();
     }
     // [START handle_error]
+    // [START gae_handle_error]
     if (response.status === 401) {
       statusElm.innerHTML = 'Login stale. <input type="button" value="Refresh" onclick="sessionRefreshClicked();"/>';
     }
+    // [END gae_handle_error]
     // [END handle_error]
     else {
       statusElm.innerHTML = response.statusText;
@@ -42,6 +44,7 @@ getStatus();
 setInterval(getStatus, 10000); // 10 seconds
 
 // [START refresh_session]
+// [START gae_refresh_session]
 var iapSessionRefreshWindow = null;
 
 function sessionRefreshClicked() {
@@ -77,4 +80,5 @@ function checkSessionRefresh() {
     iapSessionRefreshWindow = null;
   }
 }
+// [END gae_refresh_session]
 // [END refresh_session]
