@@ -19,7 +19,7 @@
 # directory and apply your changes there.
 
 
-# [START compute_consistency_group_remove_disk]
+# [START compute_consistency_group_stop_replication]
 from __future__ import annotations
 
 import sys
@@ -101,4 +101,4 @@ def stop_replication_consistency_group(project_id, location, consistency_group_n
     return True
 
 
-# [END compute_consistency_group_remove_disk]
+# [END compute_consistency_group_stop_replication]

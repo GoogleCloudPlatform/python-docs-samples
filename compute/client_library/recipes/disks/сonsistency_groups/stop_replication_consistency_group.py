@@ -14,11 +14,11 @@
 # flake8: noqa
 
 
-# <REGION compute_consistency_group_remove_disk>
+# <REGION compute_consistency_group_stop_replication>
 # <IMPORTS/>
 
 # <INGREDIENT wait_for_extended_operation />
 
 # <INGREDIENT stop_replication_in_consistency_group />
 
-# </REGION compute_consistency_group_remove_disk>
+# </REGION compute_consistency_group_stop_replication>
