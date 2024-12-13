@@ -20,6 +20,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
+    # test: trigger Ci
     # [START generativeaionvertexai_tuning_advanced]
 
     import time
