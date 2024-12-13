@@ -21,13 +21,13 @@ from google.cloud import compute_v1
 
 
 # <INGREDIENT consistency_group_clone_disks>
-def clone_disks_to_consistency_group(project_id, group_name, group_region):
+def clone_disks_to_consistency_group(project_id, group_region, group_name):
     """
     Clones disks to a consistency group in the specified region.
     Args:
         project_id (str): The ID of the Google Cloud project.
-        group_name (str): The name of the consistency group.
         group_region (str): The region where the consistency group is located.
+        group_name (str): The name of the consistency group.
     Returns:
         bool: True if the disks were successfully cloned to the consistency group.
     """

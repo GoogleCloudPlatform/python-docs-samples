@@ -46,7 +46,9 @@ from ..disks.сonsistency_groups.clone_disks_consistency_group import (
 )
 from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
 from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.remove_disk_consistency_group import remove_disk_consistency_group
+from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -514,14 +516,16 @@ def test_clone_disks_in_consistency_group(
     autodelete_regional_disk_name,
     autodelete_regional_blank_disk,
 ):
-    first = "first-group" + uuid.uuid4().hex[:5]
-    create_consistency_group(PROJECT, REGION, first, "description")
+    group_name1 = "first-group" + uuid.uuid4().hex[:5]
+    group_name2 = "second-group" + uuid.uuid4().hex[:5]
+    create_consistency_group(PROJECT, REGION, group_name1, "description")
+    create_consistency_group(PROJECT, REGION_SECONDARY, group_name2, "description")
 
     add_disk_consistency_group(
         project_id=PROJECT,
         disk_name=autodelete_regional_blank_disk.name,
         disk_location=REGION,
-        consistency_group_name=first,
+        consistency_group_name=group_name1,
         consistency_group_region=REGION,
     )
 
@@ -535,14 +539,11 @@ def test_clone_disks_in_consistency_group(
         DISK_SIZE,
     )
 
-    second = "second-group" + uuid.uuid4().hex[:5]
-    create_consistency_group(PROJECT, REGION_SECONDARY, second, "description")
-
     add_disk_consistency_group(
         project_id=PROJECT,
         disk_name=second_disk.name,
         disk_location=REGION_SECONDARY,
-        consistency_group_name=second,
+        consistency_group_name=group_name2,
         consistency_group_region=REGION_SECONDARY,
     )
 
@@ -555,7 +556,7 @@ def test_clone_disks_in_consistency_group(
     )
     time.sleep(60)
     try:
-        assert clone_disks_to_consistency_group(PROJECT, second, REGION_SECONDARY)
+        assert clone_disks_to_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
     finally:
         stop_disk_replication(
             project_id=PROJECT,
@@ -571,6 +572,8 @@ def test_clone_disks_in_consistency_group(
             for disk in disks:
                 delete_regional_disk(PROJECT, REGION_SECONDARY, disk.name)
         time.sleep(25)
-        remove_disk_consistency_group(PROJECT, autodelete_regional_blank_disk.name, REGION, first, REGION)
-        delete_consistency_group(PROJECT, REGION, first)
-        delete_consistency_group(PROJECT, REGION_SECONDARY, second)
+        remove_disk_consistency_group(
+            PROJECT, autodelete_regional_blank_disk.name, REGION, group_name1, REGION
+        )
+        delete_consistency_group(PROJECT, REGION, group_name1)
+        delete_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
