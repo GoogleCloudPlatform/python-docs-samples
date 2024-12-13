@@ -123,3 +123,4 @@ def test_tune_embedding_model() -> None:
         assert tuning_job._status.name != "PIPELINE_STATE_FAILED"
     finally:
         dispose(tuning_job)
+# test
