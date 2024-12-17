@@ -39,6 +39,17 @@ from ..disks.regional_delete import delete_regional_disk
 from ..disks.replication_disk_start import start_disk_replication
 from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
+from ..disks.сonsistency_groups.add_disk_consistency_group import (
+    add_disk_consistency_group,
+)
+from ..disks.сonsistency_groups.clone_disks_consistency_group import (
+    clone_disks_to_consistency_group,
+)
+from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
+from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -51,7 +62,7 @@ PROJECT = google.auth.default()[1]
 ZONE = "europe-west2-c"
 ZONE_SECONDARY = "europe-west1-c"
 REGION = "europe-west2"
-REGION_SECONDARY = "europe-central2"
+REGION_SECONDARY = "europe-west3"
 KMS_KEYRING_NAME = "compute-test-keyring"
 KMS_KEY_NAME = "compute-test-key"
 DISK_SIZE = 11
@@ -511,3 +522,70 @@ def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_dis
     )
     # Wait for the replication to stop
     time.sleep(20)
+
+
+def test_clone_disks_in_consistency_group(
+    autodelete_regional_disk_name,
+    autodelete_regional_blank_disk,
+):
+    group_name1 = "first-group" + uuid.uuid4().hex[:5]
+    group_name2 = "second-group" + uuid.uuid4().hex[:5]
+    create_consistency_group(PROJECT, REGION, group_name1, "description")
+    create_consistency_group(PROJECT, REGION_SECONDARY, group_name2, "description")
+
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        consistency_group_name=group_name1,
+        consistency_group_region=REGION,
+    )
+
+    second_disk = create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=second_disk.name,
+        disk_location=REGION_SECONDARY,
+        consistency_group_name=group_name2,
+        consistency_group_region=REGION_SECONDARY,
+    )
+
+    start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=autodelete_regional_disk_name,
+    )
+    time.sleep(60)
+    try:
+        assert clone_disks_to_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
+    finally:
+        stop_disk_replication(
+            project_id=PROJECT,
+            primary_disk_location=REGION,
+            primary_disk_name=autodelete_regional_blank_disk.name,
+        )
+        # Wait for the replication to stop
+        time.sleep(30)
+        disks = compute_v1.RegionDisksClient().list(
+            project=PROJECT, region=REGION_SECONDARY
+        )
+        if disks:
+            for disk in disks:
+                delete_regional_disk(PROJECT, REGION_SECONDARY, disk.name)
+        time.sleep(25)
+        remove_disk_consistency_group(
+            PROJECT, autodelete_regional_blank_disk.name, REGION, group_name1, REGION
+        )
+        delete_consistency_group(PROJECT, REGION, group_name1)
+        delete_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
