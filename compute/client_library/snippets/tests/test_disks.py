@@ -17,6 +17,7 @@ import uuid
 from google.api_core.exceptions import NotFound
 import google.auth
 from google.cloud import compute_v1, kms_v1
+
 import pytest
 
 from ..disks.attach_disk import attach_disk
@@ -50,14 +51,6 @@ from ..disks.сonsistency_groups.delete_consistency_group import delete_consiste
 from ..disks.сonsistency_groups.remove_disk_consistency_group import (
     remove_disk_consistency_group,
 )
-from ..disks.сonsistency_groups.add_disk_consistency_group import (
-    add_disk_consistency_group,
-)
-from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
-from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.remove_disk_consistency_group import (
-    remove_disk_consistency_group,
-)
 from ..disks.сonsistency_groups.stop_replication_consistency_group import (
     stop_replication_consistency_group,
 )
@@ -67,7 +60,6 @@ from ..instances.delete import delete_instance
 from ..instances.get import get_instance
 from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
-
 
 PROJECT = google.auth.default()[1]
 ZONE = "europe-west2-c"
