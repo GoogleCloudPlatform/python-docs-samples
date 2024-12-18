@@ -25,7 +25,7 @@ parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 # [END instantiate]
 
 
-# [START basic_location_search]
+# [START job_basic_location_search]
 def basic_location_search(client_service, company_name, location, distance):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -47,10 +47,10 @@ def basic_location_search(client_service, company_name, location, distance):
     print(response)
 
 
-# [END basic_location_search]
+# [END job_basic_location_search]
 
 
-# [START keyword_location_search]
+# [START job_keyword_location_search]
 def keyword_location_search(client_service, company_name, location, distance, keyword):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -72,10 +72,10 @@ def keyword_location_search(client_service, company_name, location, distance, ke
     print(response)
 
 
-# [END keyword_location_search]
+# [END job_keyword_location_search]
 
 
-# [START city_location_search]
+# [START job_city_location_search]
 def city_location_search(client_service, company_name, location):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -97,10 +97,10 @@ def city_location_search(client_service, company_name, location):
     print(response)
 
 
-# [END city_location_search]
+# [END job_city_location_search]
 
 
-# [START multi_locations_search]
+# [START job_multi_locations_search]
 def multi_locations_search(
     client_service, company_name, location1, distance1, location2
 ):
@@ -125,10 +125,10 @@ def multi_locations_search(
     print(response)
 
 
-# [END multi_locations_search]
+# [END job_multi_locations_search]
 
 
-# [START broadening_location_search]
+# [START job_broadening_location_search]
 def broadening_location_search(client_service, company_name, location):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -151,7 +151,7 @@ def broadening_location_search(client_service, company_name, location):
     print(response)
 
 
-# [END broadening_location_search]
+# [END job_broadening_location_search]
 
 
 location = "Mountain View, CA"
