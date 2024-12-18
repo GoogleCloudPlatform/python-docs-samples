@@ -18,8 +18,8 @@ import random
 import time
 from typing import Dict
 
-from google.cloud import securitycentermanagement_v1
 from google.api_core.exceptions import NotFound
+from google.cloud import securitycentermanagement_v1
 
 
 # [START securitycenter_create_security_health_analytics_custom_module]
@@ -52,14 +52,14 @@ def create_security_health_analytics_custom_module(parent: str) -> Dict:
             "description": (
                 "Sample custom module for testing purposes. This custom module evaluates "
                 "Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds)."
-            ),            
+            ),
             "predicate": {
                 "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
                 "title": "Cloud KMS CryptoKey Rotation Period",
                 "description": (
                     "Evaluates whether the rotation period of a Cloud KMS CryptoKey exceeds 30 days. "
                     "A longer rotation period might increase the risk of exposure."
-                ),                
+                ),
             },
             "recommendation": (
                 "Review and adjust the rotation period for Cloud KMS CryptoKeys to align with your security policies. "
@@ -151,7 +151,7 @@ def list_security_health_analytics_custom_module(parent: str):
         custom_modules = []
         for custom_module in response:
             print(f"Custom Module: {custom_module.name}")
-            custom_modules.append(custom_module)        
+            custom_modules.append(custom_module)
         return custom_modules
     except NotFound as e:
         print(f"Parent resource not found: {parent}")

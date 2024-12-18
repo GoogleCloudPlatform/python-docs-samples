@@ -17,10 +17,12 @@ import os
 
 import backoff
 
-from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable 
-from google.cloud import securitycentermanagement_v1
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 
 import random
+
+from google.cloud import securitycentermanagement_v1
+
 import time
 
 import pytest
@@ -114,7 +116,6 @@ def add_custom_module(org_id: str):
     print(f"Created Security Health Analytics Custom Module: {response.name}")
     module_name = response.name
     module_id = module_name.split("/")[-1]
-    
     return module_name, module_id
 
 
