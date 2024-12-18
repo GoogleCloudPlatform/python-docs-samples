@@ -14,19 +14,25 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 import os
-import uuid
-import backoff
-from google.api_core.exceptions import InternalServerError, ServiceUnavailable, NotFound
-from google.cloud import securitycentermanagement_v1
-import security_health_analytics_custom_modules
-import pytest
-import time
-import random
 
-#Replace these variables before running the sample.
+import backoff
+
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable 
+from google.cloud import securitycentermanagement_v1
+
+import random
+import time
+
+import pytest
+
+import security_health_analytics_custom_modules
+
+# Replace these variables before running the sample.
+# GCLOUD_ORGANIZATION: The organization ID.
 ORGANIZATION_ID = os.environ["GCLOUD_ORGANIZATION"]
 LOCATION = "global"
 PREFIX = "python_sample_sha_custom_module"  # Prefix used for identifying test modules
+
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_environment():
@@ -36,6 +42,7 @@ def setup_environment():
 
     print(f"Cleaning up existing custom modules for organization: {ORGANIZATION_ID}")
     cleanup_existing_custom_modules(ORGANIZATION_ID)
+
 
 def cleanup_existing_custom_modules(org_id: str):
     """
@@ -58,6 +65,7 @@ def cleanup_existing_custom_modules(org_id: str):
                 print(f"Deleted custom module: {module.name}")
     except NotFound:
         print(f"Custom Module not found for deletion: {module.name}")
+
 
 def add_custom_module(org_id: str):
 
@@ -99,16 +107,16 @@ def add_custom_module(org_id: str):
     }
 
     request = securitycentermanagement_v1.CreateSecurityHealthAnalyticsCustomModuleRequest(
-        parent= parent,
-        security_health_analytics_custom_module= custom_module,
+        parent=parent,
+        security_health_analytics_custom_module=custom_module,
     )
-
     response = client.create_security_health_analytics_custom_module(request=request)
     print(f"Created Security Health Analytics Custom Module: {response.name}")
     module_name = response.name
     module_id = module_name.split("/")[-1]
     
     return module_name, module_id
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -123,6 +131,7 @@ def test_create_security_health_analytics_custom_module():
     # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -139,8 +148,8 @@ def test_get_security_health_analytics_custom_module():
     # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
-    
     print(f"Retrieved Custom Module: {response.name}")
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -159,6 +168,7 @@ def test_delete_security_health_analytics_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -183,6 +193,7 @@ def test_list_security_health_analytics_custom_module():
         created_module.enablement_state
         == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
     )
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3

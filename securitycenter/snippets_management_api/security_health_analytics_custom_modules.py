@@ -14,15 +14,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict
-import time
 import random
+import time
+from typing import Dict
+
 from google.cloud import securitycentermanagement_v1
+from google.api_core.exceptions import NotFound
+
 
 # [START securitycenter_create_security_health_analytics_custom_module]
 def create_security_health_analytics_custom_module(parent: str) -> Dict:
     """
     Creates a Security Health Analytics custom module.
+
+    This custom module evaluates Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds),
+    as per security best practices. A shorter rotation period helps reduce the risk of exposure in the event of a compromise.
+
     Args:
         parent: Use any one of the following options:
                 - organizations/{organization_id}/locations/{location_id}
@@ -42,13 +49,22 @@ def create_security_health_analytics_custom_module(parent: str) -> Dict:
         "display_name": display_name,
         "enablement_state": "ENABLED",
         "custom_config": {
-            "description": "Sample custom module for testing purpose. Please do not delete.",
+            "description": (
+                "Sample custom module for testing purposes. This custom module evaluates "
+                "Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds)."
+            ),            
             "predicate": {
                 "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
-                "title": "GCE Instance High Severity",
-                "description": "Custom module to detect high severity issues on GCE instances.",
+                "title": "Cloud KMS CryptoKey Rotation Period",
+                "description": (
+                    "Evaluates whether the rotation period of a Cloud KMS CryptoKey exceeds 30 days. "
+                    "A longer rotation period might increase the risk of exposure."
+                ),                
             },
-            "recommendation": "Ensure proper security configurations on GCE instances.",
+            "recommendation": (
+                "Review and adjust the rotation period for Cloud KMS CryptoKeys to align with your security policies. "
+                "Consider setting a shorter rotation period if possible."
+            ),
             "resource_selector": {"resource_types": ["cloudkms.googleapis.com/CryptoKey"]},
             "severity": "CRITICAL",
             "custom_output": {
@@ -56,10 +72,10 @@ def create_security_health_analytics_custom_module(parent: str) -> Dict:
                     {
                         "name": "example_property",
                         "value_expression": {
-                            "description": "The name of the instance",
+                            "description": "The resource name of the CryptoKey being evaluated.",
                             "expression": "resource.name",
                             "location": "global",
-                            "title": "Instance Name",
+                            "title": "CryptoKey Resource Name",
                         },
                     }
                 ]
@@ -68,14 +84,15 @@ def create_security_health_analytics_custom_module(parent: str) -> Dict:
     }
 
     request = securitycentermanagement_v1.CreateSecurityHealthAnalyticsCustomModuleRequest(
-        parent= parent,
-        security_health_analytics_custom_module= custom_module,
+        parent=parent,
+        security_health_analytics_custom_module=custom_module,
     )
 
     response = client.create_security_health_analytics_custom_module(request=request)
     print(f"Created Security Health Analytics Custom Module: {response.name}")
     return response
 # [END securitycenter_create_security_health_analytics_custom_module]
+
 
 # [START securitycenter_get_security_health_analytics_custom_module]
 def get_security_health_analytics_custom_module(parent: str, module_id: str):
@@ -95,7 +112,7 @@ def get_security_health_analytics_custom_module(parent: str, module_id: str):
 
     try:
         request = securitycentermanagement_v1.GetSecurityHealthAnalyticsCustomModuleRequest(
-            name= f"{parent}/securityHealthAnalyticsCustomModules/{module_id}",
+            name=f"{parent}/securityHealthAnalyticsCustomModules/{module_id}",
         )
 
         response = client.get_security_health_analytics_custom_module(request=request)
@@ -105,7 +122,6 @@ def get_security_health_analytics_custom_module(parent: str, module_id: str):
         print(f"Custom Module not found: {response.name}")
         raise e
 # [END securitycenter_get_security_health_analytics_custom_module]
-
 
 
 # [START securitycenter_list_security_health_analytics_custom_module]
@@ -122,13 +138,12 @@ def list_security_health_analytics_custom_module(parent: str):
     Raises:
         NotFound: If the specified custom module does not exist.
     """
-    from google.api_core.exceptions import NotFound
 
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
     try:
         request = securitycentermanagement_v1.ListSecurityHealthAnalyticsCustomModulesRequest(
-            parent= parent,
+            parent=parent,
         )
 
         response = client.list_security_health_analytics_custom_modules(request=request)
@@ -136,8 +151,7 @@ def list_security_health_analytics_custom_module(parent: str):
         custom_modules = []
         for custom_module in response:
             print(f"Custom Module: {custom_module.name}")
-            custom_modules.append(custom_module)
-        
+            custom_modules.append(custom_module)        
         return custom_modules
     except NotFound as e:
         print(f"Parent resource not found: {parent}")
@@ -146,6 +160,7 @@ def list_security_health_analytics_custom_module(parent: str):
         print(f"An error occurred while listing custom modules: {e}")
         raise e
 # [END securitycenter_list_security_health_analytics_custom_module]
+
 
 # [START securitycenter_delete_security_health_analytics_custom_module]
 def delete_security_health_analytics_custom_module(parent: str, module_id: str):
@@ -165,7 +180,7 @@ def delete_security_health_analytics_custom_module(parent: str, module_id: str):
 
     try:
         request = securitycentermanagement_v1.DeleteSecurityHealthAnalyticsCustomModuleRequest(
-            name= f"{parent}/securityHealthAnalyticsCustomModules/{module_id}",
+            name=f"{parent}/securityHealthAnalyticsCustomModules/{module_id}",
         )
 
         client.delete_security_health_analytics_custom_module(request=request)
@@ -174,6 +189,7 @@ def delete_security_health_analytics_custom_module(parent: str, module_id: str):
         print(f"Custom Module not found: {module_id}")
         raise e
 # [END securitycenter_delete_security_health_analytics_custom_module]
+
 
 # [START securitycenter_update_security_health_analytics_custom_module]
 def update_security_health_analytics_custom_module(parent: str, module_id: str):
@@ -190,7 +206,6 @@ def update_security_health_analytics_custom_module(parent: str, module_id: str):
         NotFound: If the specified custom module does not exist.
     """
     from google.protobuf.field_mask_pb2 import FieldMask
-    from google.api_core.exceptions import NotFound, InternalServerError, ServiceUnavailable
 
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
     try:
