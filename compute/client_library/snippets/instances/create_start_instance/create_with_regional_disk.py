@@ -218,7 +218,7 @@ def create_with_regional_boot_disk(
     project_id: str,
     zone: str,
     instance_name: str,
-    source_snapshot,
+    source_snapshot: str,
     disk_region: str,
     disk_type: str = "pd-balanced",
 ) -> compute_v1.Instance:
@@ -246,10 +246,10 @@ def create_with_regional_boot_disk(
         f"projects/{project_id}/zones/{disk_region}-a",
         f"projects/{project_id}/zones/{disk_region}-b",
     ]
-    initialize_params.disk_size_gb = 100
 
     disk.initialize_params = initialize_params
     disk.boot = True
+    disk.auto_delete = True
 
     instance = create_instance(project_id, zone, instance_name, [disk])
 

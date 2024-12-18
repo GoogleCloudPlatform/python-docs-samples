@@ -18,6 +18,7 @@ from google.cloud import compute_v1
 import pytest
 
 from .test_disks import autodelete_regional_blank_disk  # noqa: F401
+from .test_disks import DISK_SIZE
 
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
@@ -261,7 +262,7 @@ def test_create_with_ssd():
         delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
 
 
-def test_with_regional_boot_disk(autodelete_regional_blank_disk):  # noqa: F811
+def test_create_with_regional_boot_disk(autodelete_regional_blank_disk):  # noqa: F811
     snapshot_name = "test-snap-" + uuid.uuid4().hex[:10]
     instance_name = "test-vm-" + uuid.uuid4().hex[:10]
     test_snapshot = create_snapshot(
@@ -273,9 +274,9 @@ def test_with_regional_boot_disk(autodelete_regional_blank_disk):  # noqa: F811
     instance = create_with_regional_boot_disk(
         PROJECT, INSTANCE_ZONE_SECOND, instance_name, test_snapshot.name, REGION_SECOND
     )
-    # Disk size from fixture is 15
+    # Disk size takes from test_disk.py
     try:
-        assert any(disk.disk_size_gb == 11 for disk in instance.disks)
+        assert any(disk.disk_size_gb == DISK_SIZE for disk in instance.disks)
     finally:
         delete_instance(PROJECT, INSTANCE_ZONE_SECOND, instance_name)
         op = compute_v1.SnapshotsClient().delete_unary(
