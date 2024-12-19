@@ -17,13 +17,13 @@ import os
 
 import backoff
 
-from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-
 import random
 
-from google.cloud import securitycentermanagement_v1
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 
 import time
+
+from google.cloud import securitycentermanagement_v1
 
 import pytest
 
@@ -54,7 +54,8 @@ def cleanup_existing_custom_modules(org_id: str):
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
     parent = f"organizations/{org_id}/locations/global"
-
+    print(f"Parent path: {parent}")
+    
     try:
         custom_modules = client.list_security_health_analytics_custom_modules(
             request={"parent": parent}
@@ -65,8 +66,11 @@ def cleanup_existing_custom_modules(org_id: str):
                     request={"name": module.name}
                 )
                 print(f"Deleted custom module: {module.name}")
-    except NotFound:
-        print(f"Custom Module not found for deletion: {module.name}")
+    except NotFound as e:
+        print(f"Resource not found: {e}")
+    except Exception as e:
+        print(f"Unexpected error during cleanup: {e}")
+        raise
 
 
 def add_custom_module(org_id: str):
