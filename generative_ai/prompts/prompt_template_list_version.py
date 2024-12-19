@@ -16,10 +16,10 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def load_prompt_generate() -> str:
-    """Loads or retreives a prompt that has been saved to the online resource"""
+def list_prompt_version_generate() -> list:
+    """Display version information for specified prompt."""
 
-    # [START generativeaionvertexai_prompt_template_load_or_retreive_prompt]
+    # [START generativeaionvertexai_prompt_list_prompt_version]
     import vertexai
     from vertexai.preview import prompts
 
@@ -29,17 +29,22 @@ def load_prompt_generate() -> str:
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Get prompt
-    get_prompt = prompts.get(prompt_id="8363163067550269440")
+    # Get prompt a prompt from list
 
-    print(get_prompt)
+    prompt_versions_metadata = prompts.list_versions(prompt_id="8363163067550269440")
 
-    # Example response
-    # Compare the movies {movie1} and {movie2}
+    # Get a specific prompt version from the versions metadata list
+    list_versions = prompts.get(
+        prompt_id=prompt_versions_metadata[1].prompt_id,
+        version_id=prompt_versions_metadata[1].version_id
+    )
 
-    # [END generativeaionvertexai_prompt_template_load_or_retreive_prompt]
-    return get_prompt
+    print(list_versions)
+    # Example response:
+    # [PromptVersionMetadata(display_name='my_prompt', prompt_id='12345678910', version_id='1')
+    # [END generativeaionvertexai_prompt_list_prompt_version]
+    return list_versions
 
 
 if __name__ == "__main__":
-    load_prompt_generate()
+    list_prompt_version_generate()

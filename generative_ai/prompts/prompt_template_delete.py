@@ -16,15 +16,13 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template_local_prompt_generate() -> str:
-    """Create a local prompt, generates content and saves prompt"""
+def delete_prompt_version_generate() -> str:
+    """Deletes specified prompt."""
 
-    # [START generativeaionvertexai_prompt_template_create_generate_save]
+    # [START generativeaionvertexai_prompt_delete_prompt_version]
     import vertexai
     from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
-
-    # from vertexai.generative_models import GenerationConfig, SafetySetting # Optional
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
@@ -39,29 +37,21 @@ def prompt_template_local_prompt_generate() -> str:
         ],
         model_name="gemini-1.5-pro-002",
         system_instruction="You are a movie critic. Answer in a short sentence.",
-        # generation_config=GenerationConfig, # Optional,
-        # safety_settings=SafetySetting, # Optional,
+
     )
-
-    # Generate content using the assembled prompt for each variable set.
-    for i in range(len(prompt.variables)):
-        response = prompt.generate_content(
-            contents=prompt.assemble_contents(**prompt.variables[i])
-        )
-
     # Save a version
     prompt1 = prompts.create_version(prompt=prompt)
 
-    print(prompt1)
-    print(response)
+    prompt_id = prompt1.prompt_id
 
-    # Example response
-    # Assembled prompt replacing: 1 instances of variable movie1, 1 instances of variable movie2
-    # Created prompt resource with id 12345678910.....
+    # Delete to prompt
+    delete_prompt = prompts.delete(prompt_id=prompt_id)
 
-    # [END generativeaionvertexai_prompt_template_create_generate_save]
-    return response
+    # Example response:
+    # Deleted prompt resource with id 12345678910
+    # [END generativeaionvertexai_prompt_delete_prompt_version]
+    return delete_prompt
 
 
 if __name__ == "__main__":
-    prompt_template_local_prompt_generate()
+    delete_prompt_version_generate()
