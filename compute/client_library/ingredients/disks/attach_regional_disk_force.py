@@ -49,7 +49,7 @@ def attach_disk_force(
         zone=vm_zone,
     )
     operation = client.attach_disk(request=request)
-    wait_for_extended_operation(operation, "force disk attachement")
+    wait_for_extended_operation(operation, "force disk attachment")
 
 
 # </INGREDIENT>
