@@ -53,7 +53,6 @@ def generate_job_with_required_fields(company_name):
 
 
 # [START job_create_job]
-# [START create_job]
 def create_job(client_service, job_to_be_created):
     try:
         request = {"job": job_to_be_created}
@@ -70,7 +69,6 @@ def create_job(client_service, job_to_be_created):
         raise e
 
 
-# [END create_job]
 # [END job_create_job]
 
 
