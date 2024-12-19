@@ -15,13 +15,13 @@
 # limitations under the License.
 import os
 
-import backoff
-
 import random
 
-from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
+import backoff
 
 import time
+
+from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 
 from google.cloud import securitycentermanagement_v1
 
@@ -54,8 +54,7 @@ def cleanup_existing_custom_modules(org_id: str):
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
     parent = f"organizations/{org_id}/locations/global"
-    print(f"Parent path: {parent}")
-    
+    print(f"Parent path: {parent}")    
     try:
         custom_modules = client.list_security_health_analytics_custom_modules(
             request={"parent": parent}
