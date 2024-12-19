@@ -13,8 +13,14 @@
 # limitations under the License.
 
 import prompt_template
+import prompt_template_create_save_generate
 
 
 def test_prompt_template() -> None:
     text = prompt_template.prompt_template_example()
     assert len(text) > 2
+
+
+def test_prompt_template_create_save_generate() -> None:
+    response = prompt_template_create_save_generate.prompt_template_local_prompt_generate()
+    assert response
