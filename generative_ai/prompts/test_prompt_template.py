@@ -11,10 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 import prompt_template
 import prompt_template_create_save_generate
 import prompt_template_list_prompts
+import prompt_template_load_or_retrieve
 
 
 def test_prompt_template() -> None:
@@ -30,3 +30,8 @@ def test_prompt_template_create_save_generate() -> None:
 def test_prompt_template_list_prompts() -> list:
     list_prompts = prompt_template_list_prompts.list_prompt_generate()
     assert list_prompts
+
+
+def test_prompt_template_load_or_retrieve() -> str:
+    get_prompt = prompt_template_load_or_retrieve.load_prompt_generate()
+    assert get_prompt
