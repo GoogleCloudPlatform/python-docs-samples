@@ -17,9 +17,9 @@ import os
 
 import random
 
-import backoff
-
 import time
+
+import backoff
 
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
 
@@ -54,7 +54,7 @@ def cleanup_existing_custom_modules(org_id: str):
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
     parent = f"organizations/{org_id}/locations/global"
-    print(f"Parent path: {parent}")    
+    print(f"Parent path: {parent}")
     try:
         custom_modules = client.list_security_health_analytics_custom_modules(
             request={"parent": parent}
