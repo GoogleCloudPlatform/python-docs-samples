@@ -14,6 +14,7 @@
 
 import prompt_template
 import prompt_template_create_save_generate
+import prompt_template_list_prompts
 
 
 def test_prompt_template() -> None:
@@ -24,3 +25,8 @@ def test_prompt_template() -> None:
 def test_prompt_template_create_save_generate() -> None:
     response = prompt_template_create_save_generate.prompt_template_local_prompt_generate()
     assert response
+
+
+def test_prompt_template_list_prompts() -> list:
+    list_prompts = prompt_template_list_prompts.list_prompt_generate()
+    assert list_prompts
