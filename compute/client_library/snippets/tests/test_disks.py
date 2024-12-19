@@ -21,6 +21,7 @@ from google.cloud import compute_v1, kms_v1
 import pytest
 
 from ..disks.attach_disk import attach_disk
+from ..disks.attach_regional_disk_to_vm import attach_regional_disk
 from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encrypted_disk
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
@@ -68,7 +69,7 @@ REGION = "europe-west2"
 REGION_SECONDARY = "europe-west3"
 KMS_KEYRING_NAME = "compute-test-keyring"
 KMS_KEY_NAME = "compute-test-key"
-DISK_SIZE = 11
+DISK_SIZE = 15
 
 
 @pytest.fixture()
@@ -525,6 +526,21 @@ def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_dis
     )
     # Wait for the replication to stop
     time.sleep(20)
+
+
+def test_attach_regional_disk_to_vm(
+    autodelete_regional_blank_disk, autodelete_compute_instance
+):
+    attach_regional_disk(
+        PROJECT,
+        ZONE,
+        autodelete_compute_instance.name,
+        REGION,
+        autodelete_regional_blank_disk.name,
+    )
+
+    instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
+    assert len(list(instance.disks)) == 2
 
 
 def test_clone_disks_in_consistency_group(
