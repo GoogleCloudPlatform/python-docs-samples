@@ -13,10 +13,12 @@
 # limitations under the License.
 import os
 
+from vertexai.preview.prompts import Prompt
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_prompt_version() -> list:
+def list_prompt_version() -> Prompt:
     """Displays a specific prompt version from the versions metadata list."""
 
     # [START generativeaionvertexai_prompt_list_prompt_version]
@@ -51,7 +53,7 @@ def list_prompt_version() -> list:
     # Example response:
     # Which animal is the fastest on earth?
     # [END generativeaionvertexai_prompt_list_prompt_version]
-    return prompt1
+    return prompt_versions_metadata
 
 
 if __name__ == "__main__":

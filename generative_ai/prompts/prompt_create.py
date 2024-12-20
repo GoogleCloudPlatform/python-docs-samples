@@ -24,6 +24,7 @@ def prompt_create() -> Prompt:
     # [START generativeaionvertexai_prompt_template_create_generate_save]
     import vertexai
     from vertexai.preview import prompts
+    from vertexai.preview.prompts import Prompt
 
     # from vertexai.generative_models import GenerationConfig, SafetySetting # Optional
 

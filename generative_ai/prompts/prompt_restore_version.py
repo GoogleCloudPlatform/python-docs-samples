@@ -25,9 +25,6 @@ def restore_prompt_version() -> Prompt:
     import vertexai
     from vertexai.preview import prompts
 
-    # TODO(developer): Update and un-comment below line
-    # prompt_id = "your-prompt"
-
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
