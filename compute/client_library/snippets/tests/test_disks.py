@@ -21,6 +21,7 @@ from google.cloud import compute_v1, kms_v1
 import pytest
 
 from ..disks.attach_disk import attach_disk
+from ..disks.attach_regional_disk_force import attach_disk_force
 from ..disks.attach_regional_disk_to_vm import attach_regional_disk
 from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encrypted_disk
 from ..disks.create_empty_disk import create_empty_disk
@@ -378,6 +379,23 @@ def test_disk_attachment(
     instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
 
     assert len(list(instance.disks)) == 3
+
+
+def test_regional_disk_force_attachment(
+    autodelete_regional_blank_disk, autodelete_compute_instance
+):
+    attach_disk_force(
+        project_id=PROJECT,
+        vm_name=autodelete_compute_instance.name,
+        vm_zone=ZONE,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_region=REGION,
+    )
+
+    instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
+    assert any(
+        [autodelete_regional_blank_disk.name in disk.source for disk in instance.disks]
+    )
 
 
 def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
