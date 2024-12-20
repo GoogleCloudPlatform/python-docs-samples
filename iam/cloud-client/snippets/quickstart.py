@@ -19,20 +19,20 @@ from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
 def quickstart(project_id: str, member: str) -> None:
-    """Gets a policy, adds a member, prints their permissions, and removes the member.
+    """Gets a policy, adds a principal, prints their permissions, and removes the principal.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    member: The principals requesting the access.
+    member: The principal requesting the access.
     """
 
     # Role to be granted.
     role = "roles/logging.logWriter"
     crm_service = resourcemanager_v3.ProjectsClient()
 
-    # Grants your member the 'Log Writer' role for the project.
+    # Grants your principal the 'Log Writer' role for the project.
     modify_policy_add_role(crm_service, project_id, role, member)
 
-    # Gets the project's policy and prints all members with the 'Log Writer' role.
+    # Gets the project's policy and prints all principals with the 'Log Writer' role.
     policy = get_policy(crm_service, project_id)
     binding = next(b for b in policy.bindings if b.role == role)
     print(f"Role: {(binding.role)}")
@@ -40,7 +40,7 @@ def quickstart(project_id: str, member: str) -> None:
     for m in binding.members:
         print(f"[{m}]")
 
-    # Removes the member from the 'Log Writer' role.
+    # Removes the principal from the 'Log Writer' role.
     modify_policy_remove_member(crm_service, project_id, role, member)
 
 
@@ -115,7 +115,8 @@ def modify_policy_remove_member(
 if __name__ == "__main__":
     # TODO: replace with your project ID
     project_id = "your-project-id"
-    # TODO: Replace with the ID of your member in the form 'user:member@example.com'.
-    member = "your-member"
+    # TODO: Replace with the ID of your principal.
+    # For examples, see https://cloud.google.com/iam/docs/principal-identifiers
+    member = "your-principal"
     quickstart(project_id, member)
 # [END iam_quickstart]
