@@ -13,15 +13,16 @@
 # limitations under the License.
 import os
 
+from vertexai.preview.prompts import Prompt
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_local_prompt_create() -> str:
+def prompt_create() -> Prompt:
     """Create a local prompt, generates content and saves prompt"""
 
     # [START generativeaionvertexai_prompt_template_create_generate_save]
     import vertexai
-    from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
     # from vertexai.generative_models import GenerationConfig, SafetySetting # Optional
@@ -30,7 +31,7 @@ def prompt_local_prompt_create() -> str:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Create local Prompt
-    prompt = Prompt(
+    local_prompt = Prompt(
         prompt_name="movie-critic",
         prompt_data="Compare the movies {movie1} and {movie2}.",
         variables=[
@@ -44,14 +45,14 @@ def prompt_local_prompt_create() -> str:
     )
 
     # Generate content using the assembled prompt for each variable set.
-    for i in range(len(prompt.variables)):
-        response = prompt.generate_content(
-            contents=prompt.assemble_contents(**prompt.variables[i])
+    for i in range(len(local_prompt.variables)):
+        response = local_prompt.generate_content(
+            contents=local_prompt.assemble_contents(**local_prompt.variables[i])
         )
         print(response)
 
     # Save a version
-    prompt1 = prompts.create_version(prompt=prompt)
+    prompt1 = prompts.create_version(prompt=local_prompt)
 
     print(prompt1)
 
@@ -61,8 +62,8 @@ def prompt_local_prompt_create() -> str:
     # Created prompt resource with id 12345678910.....
 
     # [END generativeaionvertexai_prompt_template_create_generate_save]
-    return response
+    return prompt1
 
 
 if __name__ == "__main__":
-    prompt_local_prompt_create()
+    prompt_create()

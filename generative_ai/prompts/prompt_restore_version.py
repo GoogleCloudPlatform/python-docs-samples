@@ -13,15 +13,16 @@
 # limitations under the License.
 import os
 
+from vertexai.preview.prompts import Prompt
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def restore_prompt_version() -> str:
+def restore_prompt_version() -> Prompt:
     """Restores specified version for specified prompt."""
 
     # [START generativeaionvertexai_prompt_restore_version]
     import vertexai
-    from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
     # TODO(developer): Update and un-comment below line

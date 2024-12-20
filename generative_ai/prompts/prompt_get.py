@@ -24,9 +24,6 @@ def get_prompt() -> str:
     from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
-    # TODO(developer): Update and un-comment below line
-    # prompt_id = "your-prompt"
-
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 

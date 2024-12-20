@@ -16,7 +16,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def delete_prompt() -> str:
+def delete_prompt() -> None:
     """Deletes specified prompt."""
 
     # [START generativeaionvertexai_prompt_delete]

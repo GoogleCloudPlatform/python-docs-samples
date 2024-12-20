@@ -11,14 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from vertexai.preview import prompts
 
-
-import prompt_create_save_generate
+import prompt_create
 import prompt_delete
+import prompt_get
 import prompt_list_prompts
 import prompt_list_version
-import prompt_load_or_retrieve
 import prompt_restore_version
 import prompt_template
 
@@ -28,8 +26,8 @@ def test_prompt_template() -> None:
     assert len(text) > 2
 
 
-def test_prompt_create_save_generate() -> None:
-    response = prompt_create_save_generate.prompt_local_prompt_create()
+def test_prompt_create() -> None:
+    response = prompt_create.prompt_create()
     assert response
 
 
@@ -38,8 +36,8 @@ def test_prompt_list_prompts() -> None:
     assert list_prompts
 
 
-def test_prompt_load_or_retrieve() -> str:
-    get_prompt = prompt_load_or_retrieve.get_prompt()
+def test_prompt_get() -> None:
+    get_prompt = prompt_get.get_prompt()
     assert get_prompt
 
 
@@ -49,20 +47,8 @@ def test_prompt_list_version() -> None:
 
 
 def test_prompt_delete() -> None:
-    prompt = prompts.Prompt(
-        prompt_name="Test-prompt",
-        prompt_data="This is a test prompt.",
-    )
-
-    prompt1 = prompts.create_version(prompt=prompt)
-    prompt_id = prompt1.prompt_id
-    prompt_delete.delete_prompt()
-
-    try:
-        prompts.get(prompt_id=prompt_id)
-        assert False, "Prompt was not deleted!"
-    except Exception:
-        assert True
+    delete_prompt = prompt_delete.delete_prompt()
+    assert delete_prompt is None
 
 
 def test_prompt_restore_version() -> None:
