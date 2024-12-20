@@ -22,8 +22,7 @@
 # For more info about Deployments:
 #   https://kubernetes.io/docs/user-guide/deployments/
 
-# [START gke_kubernetes_deployment]
-# [START kubernetes_deployment]
+# [START gke_kubernetes_deployment_python]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -50,7 +49,6 @@ spec:
         imagePullPolicy: Always
         env:
             # [START gke_cloudsql_secrets_python]
-            # [START cloudsql_secrets]
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -66,13 +64,11 @@ spec:
                 secretKeyRef:
                   name: cloudsql
                   key: password
-            # [END cloudsql_secrets]
             # [END gke_cloudsql_secrets_python]
         ports:
         - containerPort: 8080
       
       # [START gke_proxy_container_python]
-      # [START proxy_container]
       - image: gcr.io/cloudsql-docker/gce-proxy:1.16
         name: cloudsql-proxy
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
@@ -86,10 +82,8 @@ spec:
             mountPath: /etc/ssl/certs
           - name: cloudsql
             mountPath: /cloudsql
-      # [END proxy_container]
       # [END gke_proxy_container_python]
       # [START gke_volumes_python]
-      # [START volumes]
       volumes:
         - name: cloudsql-oauth-credentials
           secret:
@@ -99,15 +93,12 @@ spec:
             path: /etc/ssl/certs
         - name: cloudsql
           emptyDir: {}
-      # [END volumes]
       # [END gke_volumes_python]
-# [END kubernetes_deployment]
-# [END gke_kubernetes_deployment]
+# [END gke_kubernetes_deployment_python]
 
 ---
 
 # [START gke_container_poll_service_python]
-# [START container_poll_service]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
 # create an external HTTP load balancer.
@@ -128,5 +119,4 @@ spec:
     targetPort: 8080
   selector:
     app: polls
-# [END container_poll_service]
 # [END gke_container_poll_service_python]
