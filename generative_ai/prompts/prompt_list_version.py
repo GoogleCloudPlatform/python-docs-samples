@@ -13,12 +13,11 @@
 # limitations under the License.
 import os
 
-from vertexai.preview.prompts import Prompt
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_prompt_version() -> Prompt:
+def list_prompt_version() -> list:
     """Displays a specific prompt version from the versions metadata list."""
 
     # [START generativeaionvertexai_prompt_list_prompt_version]

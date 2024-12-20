@@ -13,10 +13,12 @@
 # limitations under the License.
 import os
 
+from vertexai.preview.prompts import Prompt
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def get_prompt() -> str:
+def get_prompt() -> Prompt:
     """Retrieves a prompt that has been saved to the online resource"""
 
     # [START generativeaionvertexai_prompt_template_load_or_retrieve_prompt]
