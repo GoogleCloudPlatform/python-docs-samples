@@ -23,9 +23,15 @@ from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
 from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
+from ..snapshots.schedule_create import snapshot_schedule_create
+from ..snapshots.schedule_delete import snapshot_schedule_delete
+from ..snapshots.schedule_get import snapshot_schedule_get
+from ..snapshots.schedule_list import snapshot_schedule_list
+
 
 PROJECT = google.auth.default()[1]
 ZONE = "europe-west1-c"
+REGION = "europe-west1"
 
 
 @pytest.fixture
@@ -66,3 +72,24 @@ def test_snapshot_create_delete(test_disk):
             pytest.fail(
                 "Test snapshot found on snapshot list, while it should already be gone."
             )
+
+
+def test_create_get_list_delete_schedule_snapshot():
+    test_snapshot_name = "test-disk-" + uuid.uuid4().hex[:5]
+    assert snapshot_schedule_create(
+        PROJECT,
+        REGION,
+        test_snapshot_name,
+        "test description",
+        {"env": "dev", "media": "images"},
+    )
+    try:
+        snapshot = snapshot_schedule_get(PROJECT, REGION, test_snapshot_name)
+        assert snapshot.name == test_snapshot_name
+        assert (
+            snapshot.snapshot_schedule_policy.snapshot_properties.labels["env"] == "dev"
+        )
+        assert len(list(snapshot_schedule_list(PROJECT, REGION))) > 0
+    finally:
+        snapshot_schedule_delete(PROJECT, REGION, test_snapshot_name)
+        assert len(list(snapshot_schedule_list(PROJECT, REGION))) == 0
