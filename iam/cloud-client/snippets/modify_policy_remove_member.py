@@ -22,20 +22,13 @@ def modify_policy_remove_member(
     project_id: str, role: str, member: str
 ) -> policy_pb2.Policy:
     """
-    Remove a member from certain role in project policy.
+    Remove a principal from certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    role: role to which member need to be added.
-    member: The principals requesting access.
+    role: role to revoke.
+    member: The principal to revoke access from.
 
-    Possible format for member:
-        * user:{emailid}
-        * serviceAccount:{emailid}
-        * group:{emailid}
-        * deleted:user:{emailid}?uid={uniqueid}
-        * deleted:serviceAccount:{emailid}?uid={uniqueid}
-        * deleted:group:{emailid}?uid={uniqueid}
-        * domain:{domain}
+    For principal ID formats, see https://cloud.google.com/iam/docs/principal-identifiers
     """
     policy = get_project_policy(project_id)
 
