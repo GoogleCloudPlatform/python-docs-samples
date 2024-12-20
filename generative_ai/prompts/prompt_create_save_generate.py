@@ -16,7 +16,7 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def prompt_template_local_prompt_generate() -> str:
+def prompt_local_prompt_create() -> str:
     """Create a local prompt, generates content and saves prompt"""
 
     # [START generativeaionvertexai_prompt_template_create_generate_save]
@@ -48,14 +48,15 @@ def prompt_template_local_prompt_generate() -> str:
         response = prompt.generate_content(
             contents=prompt.assemble_contents(**prompt.variables[i])
         )
+        print(response)
 
     # Save a version
     prompt1 = prompts.create_version(prompt=prompt)
 
     print(prompt1)
-    print(response)
 
     # Example response
+    # Assembled prompt replacing: 1 instances of variable movie1, 1 instances of variable movie2
     # Assembled prompt replacing: 1 instances of variable movie1, 1 instances of variable movie2
     # Created prompt resource with id 12345678910.....
 
@@ -64,4 +65,4 @@ def prompt_template_local_prompt_generate() -> str:
 
 
 if __name__ == "__main__":
-    prompt_template_local_prompt_generate()
+    prompt_local_prompt_create()

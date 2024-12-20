@@ -16,10 +16,10 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def delete_prompt_version_generate() -> str:
+def delete_prompt() -> str:
     """Deletes specified prompt."""
 
-    # [START generativeaionvertexai_prompt_delete_prompt_version]
+    # [START generativeaionvertexai_prompt_delete]
     import vertexai
     from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
@@ -45,13 +45,13 @@ def delete_prompt_version_generate() -> str:
     prompt_id = prompt1.prompt_id
 
     # Delete to prompt
-    delete_prompt = prompts.delete(prompt_id=prompt_id)
+    prompts.delete(prompt_id=prompt_id)
+    print(f"Deleted prompt with ID: {prompt_id}")
 
     # Example response:
     # Deleted prompt resource with id 12345678910
-    # [END generativeaionvertexai_prompt_delete_prompt_version]
-    return delete_prompt
+    # [END generativeaionvertexai_prompt_delete]
 
 
 if __name__ == "__main__":
-    delete_prompt_version_generate()
+    delete_prompt()

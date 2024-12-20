@@ -14,28 +14,27 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+MY_PROMPT = os.getenv("MY_PROMPT")
 
 
-def list_prompt_generate() -> list:
-    """Lists the all prompts saved in the current Google Cloud Project"""
+def restore_prompt_version() -> str:
+    """Restores specified version for specified prompt."""
 
-    # [START generativeaionvertexai_prompt_template_list_prompt]
+    # [START generativeaionvertexai_prompt_restore_prompt_version]
     import vertexai
     from vertexai.preview import prompts
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Get prompt a prompt from list
-    list_prompts = prompts.list()
+    # Restore to prompt version id 1 (original)
+    prompt_version_metadata = prompts.restore_version(prompt_id=MY_PROMPT, version_id="1")
 
-    print(list_prompts)
+    # Fetch the newly restored latest version of the prompt
+    prompt1 = prompts.get(prompt_id=prompt_version_metadata.prompt_id)
 
-    # Example Response:
-    # [PromptMetadata(display_name='movie-critic', prompt_id='12345678910'), PromptMetadata(display_name='movie-critic-2', prompt_id='12345678910'
-    # [END generativeaionvertexai_prompt_template_list_prompt]
-    return list_prompts
+    return prompt1
 
 
 if __name__ == "__main__":
-    list_prompt_generate()
+    restore_prompt_version()

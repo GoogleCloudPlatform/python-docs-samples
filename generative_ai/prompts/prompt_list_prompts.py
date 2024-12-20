@@ -16,35 +16,26 @@ import os
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def list_prompt_version_generate() -> list:
-    """Display version information for specified prompt."""
+def list_prompt() -> list:
+    """Lists the all prompts saved in the current Google Cloud Project"""
 
-    # [START generativeaionvertexai_prompt_list_prompt_version]
+    # [START generativeaionvertexai_prompt_template_list_prompt]
     import vertexai
     from vertexai.preview import prompts
-
-    # TODO(developer): Update and un-comment below line
-    # prompt_id = "your-prompt"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Get prompt a prompt from list
+    list_prompts_metadata = prompts.list()
 
-    prompt_versions_metadata = prompts.list_versions(prompt_id="8363163067550269440")
+    print(list_prompts_metadata)
 
-    # Get a specific prompt version from the versions metadata list
-    list_versions = prompts.get(
-        prompt_id=prompt_versions_metadata[1].prompt_id,
-        version_id=prompt_versions_metadata[1].version_id
-    )
-
-    print(list_versions)
-    # Example response:
-    # [PromptVersionMetadata(display_name='my_prompt', prompt_id='12345678910', version_id='1')
-    # [END generativeaionvertexai_prompt_list_prompt_version]
-    return list_versions
+    # Example Response:
+    # [PromptMetadata(display_name='movie-critic', prompt_id='12345678910'), PromptMetadata(display_name='movie-critic-2', prompt_id='12345678910'
+    # [END generativeaionvertexai_prompt_template_list_prompt]
+    return list_prompts_metadata
 
 
 if __name__ == "__main__":
-    list_prompt_version_generate()
+    list_prompt()

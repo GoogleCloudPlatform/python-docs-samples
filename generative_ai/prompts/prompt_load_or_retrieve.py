@@ -14,10 +14,11 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+MY_PROMPT = os.getenv("MY_PROMPT")
 
 
-def load_prompt_generate() -> str:
-    """Loads or retreives a prompt that has been saved to the online resource"""
+def get_prompt() -> str:
+    """Retrieves a prompt that has been saved to the online resource"""
 
     # [START generativeaionvertexai_prompt_template_load_or_retreive_prompt]
     import vertexai
@@ -30,7 +31,7 @@ def load_prompt_generate() -> str:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Get prompt
-    get_prompt = prompts.get(prompt_id="8363163067550269440")
+    get_prompt = prompts.get(prompt_id=MY_PROMPT)
 
     print(get_prompt)
 
@@ -42,4 +43,4 @@ def load_prompt_generate() -> str:
 
 
 if __name__ == "__main__":
-    load_prompt_generate()
+    get_prompt()
