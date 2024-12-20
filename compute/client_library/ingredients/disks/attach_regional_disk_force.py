@@ -26,7 +26,9 @@ def attach_disk_force(
     project_id: str, vm_name: str, vm_zone: str, disk_name: str, disk_region: str
 ) -> None:
     """
-    Attaches a regional disk to a compute instance with force attachment.
+    Force-attaches a regional disk to a compute instance, even if it is
+    still attached to another instance. Useful when the original instance
+    cannot be reached or disconnected.
     Args:
         project_id (str): The ID of the Google Cloud project.
         vm_name (str): The name of the compute instance you want to attach a disk to.
