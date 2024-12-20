@@ -24,9 +24,6 @@ def list_prompt_version() -> list:
     from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
-    # TODO(developer): Update and un-comment below line
-    # prompt_id = "your-prompt"
-
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
@@ -47,7 +44,7 @@ def list_prompt_version() -> list:
     # Get a specific prompt version from the versions metadata list
     prompt1 = prompts.get(
         prompt_id=prompt_versions_metadata[0].prompt_id,
-        version_id=prompt_versions_metadata[0].version_id
+        version_id=prompt_versions_metadata[0].version_id,
     )
 
     print(prompt1)
