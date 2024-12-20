@@ -19,7 +19,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def restore_prompt_version() -> str:
     """Restores specified version for specified prompt."""
 
-    # [START generativeaionvertexai_prompt_restore_prompt_version]
+    # [START generativeaionvertexai_prompt_restore_version]
     import vertexai
     from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
@@ -49,6 +49,7 @@ def restore_prompt_version() -> str:
 
     # Example response:
     # Restored prompt version 1 under prompt id 12345678910 as version number 2
+    # [END generativeaionvertexai_prompt_restore_version]
     return prompt1
 
 
