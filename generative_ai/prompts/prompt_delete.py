@@ -41,10 +41,9 @@ def delete_prompt() -> str:
     )
     # Save a version
     prompt1 = prompts.create_version(prompt=prompt)
-
     prompt_id = prompt1.prompt_id
 
-    # Delete to prompt
+    # Delete prompt
     prompts.delete(prompt_id=prompt_id)
     print(f"Deleted prompt with ID: {prompt_id}")
 

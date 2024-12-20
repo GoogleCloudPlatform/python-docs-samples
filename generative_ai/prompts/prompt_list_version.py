@@ -14,7 +14,6 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MY_PROMPT = os.getenv("MY_PROMPT")
 
 
 def list_prompt_version() -> list:
@@ -22,6 +21,7 @@ def list_prompt_version() -> list:
 
     # [START generativeaionvertexai_prompt_list_prompt_version]
     import vertexai
+    from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
     # TODO(developer): Update and un-comment below line
@@ -30,19 +30,29 @@ def list_prompt_version() -> list:
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Get prompt a prompt from list
+    # Create local Prompt
+    prompt = Prompt(
+        prompt_name="zoologist",
+        prompt_data="Which animal is the fastest on earth?",
+        model_name="gemini-1.5-pro-002",
+        system_instruction="You are a zoologist. Answer in a short sentence.",
+    )
+    # Save Prompt to online resource.
+    prompt1 = prompts.create_version(prompt=prompt)
+    prompt_id = prompt1.prompt_id
 
-    prompt_versions_metadata = prompts.list_versions(prompt_id=MY_PROMPT)
+    # Get prompt a prompt from list
+    prompt_versions_metadata = prompts.list_versions(prompt_id=prompt_id)
 
     # Get a specific prompt version from the versions metadata list
     prompt1 = prompts.get(
-        prompt_id=prompt_versions_metadata[1].prompt_id,
-        version_id=prompt_versions_metadata[1].version_id
+        prompt_id=prompt_versions_metadata[0].prompt_id,
+        version_id=prompt_versions_metadata[0].version_id
     )
 
     print(prompt1)
     # Example response:
-    # Give me a suggestion for an action packaged thriller.
+    # Which animal is the fastest on earth?
     # [END generativeaionvertexai_prompt_list_prompt_version]
     return prompt1
 

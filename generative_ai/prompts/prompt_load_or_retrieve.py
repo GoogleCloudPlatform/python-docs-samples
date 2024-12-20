@@ -14,14 +14,14 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MY_PROMPT = os.getenv("MY_PROMPT")
 
 
 def get_prompt() -> str:
     """Retrieves a prompt that has been saved to the online resource"""
 
-    # [START generativeaionvertexai_prompt_template_load_or_retreive_prompt]
+    # [START generativeaionvertexai_prompt_template_load_or_retrieve_prompt]
     import vertexai
+    from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
 
     # TODO(developer): Update and un-comment below line
@@ -30,15 +30,26 @@ def get_prompt() -> str:
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
+    # Create local Prompt
+    prompt = Prompt(
+        prompt_name="meteorologist",
+        prompt_data="How should I dress for weather in August?",
+        model_name="gemini-1.5-pro-002",
+        system_instruction="You are a meteorologist. Answer in a short sentence.",
+
+    )
+    # Save Prompt to online resource.
+    prompt1 = prompts.create_version(prompt=prompt)
+    prompt_id = prompt1.prompt_id
+
     # Get prompt
-    get_prompt = prompts.get(prompt_id=MY_PROMPT)
+    get_prompt = prompts.get(prompt_id=prompt_id)
 
     print(get_prompt)
 
     # Example response
-    # Compare the movies {movie1} and {movie2}
-
-    # [END generativeaionvertexai_prompt_template_load_or_retreive_prompt]
+    # How should I dress for weather in August?
+    # [END generativeaionvertexai_prompt_template_load_or_retrieve_prompt]
     return get_prompt
 
 

@@ -14,7 +14,6 @@
 import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-MY_PROMPT = os.getenv("MY_PROMPT")
 
 
 def restore_prompt_version() -> str:
@@ -22,17 +21,34 @@ def restore_prompt_version() -> str:
 
     # [START generativeaionvertexai_prompt_restore_prompt_version]
     import vertexai
+    from vertexai.preview.prompts import Prompt
     from vertexai.preview import prompts
+
+    # TODO(developer): Update and un-comment below line
+    # prompt_id = "your-prompt"
 
     # Initialize vertexai
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
+    # Create local Prompt
+    prompt = Prompt(
+        prompt_name="zoologist",
+        prompt_data="Which animal is the fastest on earth?",
+        model_name="gemini-1.5-pro-002",
+        system_instruction="You are a zoologist. Answer in a short sentence.",
+    )
+    # Save Prompt to online resource.
+    prompt1 = prompts.create_version(prompt=prompt)
+    prompt_id = prompt1.prompt_id
+
     # Restore to prompt version id 1 (original)
-    prompt_version_metadata = prompts.restore_version(prompt_id=MY_PROMPT, version_id="1")
+    prompt_version_metadata = prompts.restore_version(prompt_id=prompt_id, version_id="1")
 
     # Fetch the newly restored latest version of the prompt
     prompt1 = prompts.get(prompt_id=prompt_version_metadata.prompt_id)
 
+    # Example response:
+    # Restored prompt version 1 under prompt id 12345678910 as version number 2
     return prompt1
 
 
