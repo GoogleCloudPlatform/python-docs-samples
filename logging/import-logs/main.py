@@ -173,7 +173,8 @@ def _patch_entry(log: dict, project_id: str) -> None:
     """Modify entry fields to allow importing entry to destination project.
 
     Save logName as a user label.
-    Replace logName with the fixed value "projects/PROJECT_ID/logs/imported_logs"
+    Replace logName with the fixed value "projects/PROJECT_ID/logs/imported_logs".
+    Rename the obsolete key "serviceData" with "metadata".
     """
     log_name = log.get("logName")
     labels = log.get("labels")
@@ -182,6 +183,13 @@ def _patch_entry(log: dict, project_id: str) -> None:
         labels = dict()
         log["labels"] = labels
     labels["original_logName"] = log_name
+    # TODO: remove after the following issue is fixed:
+    # https://github.com/googleapis/python-logging/issues/945
+    if "protoPayload" in log:
+        payload = log.get("protoPayload")
+        if "serviceData" in payload:
+            # the following line changes the place of metadata in the dictionary
+            payload["metadata"] = payload.pop("serviceData")
     # uncomment the following 2 lines if import range includes dates older than 29 days from now
     # labels["original_timestamp"] = log["timestamp"]
     # log["timestamp"] = None
