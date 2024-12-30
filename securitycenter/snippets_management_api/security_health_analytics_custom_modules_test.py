@@ -121,6 +121,7 @@ def add_custom_module(org_id: str):
     module_id = module_name.split("/")[-1]
     return module_name, module_id
 
+
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
@@ -137,3 +138,69 @@ def test_get_effective_security_health_analytics_custom_module():
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EffectiveSecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
     print(f"Retrieved Custom Module: {response.name}")
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_descendant_security_health_analytics_custom_module():
+
+    module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the list descendant custom modules
+    custom_modules = security_health_analytics_custom_modules.list_descendant_security_health_analytics_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+    # Verify the created module is in the list
+    created_module = next(
+        (module for module in custom_modules if module.name == module_name), None
+    )
+    assert created_module is not None, "Created custom module not found in the list."
+    assert created_module.display_name.startswith(PREFIX)
+    assert (
+        created_module.enablement_state
+        == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+    )
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_effective_security_health_analytics_custom_module():
+
+    module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the list of custom modules
+    custom_modules = security_health_analytics_custom_modules.list_effective_security_health_analytics_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+    # Verify the created module is in the list
+    created_module = next(
+        (module for module in custom_modules if (module.name.split("/")[-1]) == module_id), None
+    )
+    assert created_module is not None, "Created custom module not found in the list."
+    assert created_module.display_name.startswith(PREFIX)
+    assert (
+        created_module.enablement_state
+        == securitycentermanagement_v1.EffectiveSecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+    )
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_simulate_security_health_analytics_custom_module():
+
+    module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+
+    simulated_custom_module = security_health_analytics_custom_modules.simulate_security_health_analytics_custom_module(parent)
+
+    assert simulated_custom_module is not None, "Failed to retrieve the simulated custom module."
+    assert simulated_custom_module.result.no_violation is not None, (
+        f"Expected no_violation to be present, got {simulated_custom_module.result}."
+    )
