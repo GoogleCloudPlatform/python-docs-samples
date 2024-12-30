@@ -30,6 +30,7 @@ from ..snapshots.schedule_create import snapshot_schedule_create
 from ..snapshots.schedule_delete import snapshot_schedule_delete
 from ..snapshots.schedule_get import snapshot_schedule_get
 from ..snapshots.schedule_list import snapshot_schedule_list
+from ..snapshots.schedule_remove_disk import snapshot_schedule_detach_disk
 
 
 PROJECT = google.auth.default()[1]
@@ -113,9 +114,19 @@ def test_create_get_list_delete_schedule_snapshot():
 
 
 def test_attach_disk_to_snapshot(test_schedule_snapshot, test_disk):
-    assert not test_disk.resource_policies
     snapshot_schedule_attach(
         PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
     )
     disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
     assert test_schedule_snapshot.name in disk.resource_policies[0]
+
+
+def test_remove_disk_from_snapshot(test_schedule_snapshot, test_disk):
+    snapshot_schedule_attach(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    snapshot_schedule_detach_disk(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
+    assert not disk.resource_policies
