@@ -14,6 +14,8 @@
 import uuid
 
 import google.auth
+from google.cloud import compute_v1
+
 import pytest
 
 from ..disks.create_from_image import create_disk_from_image
@@ -23,6 +25,7 @@ from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
 from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
+from ..snapshots.schedule_attach_disk import snapshot_schedule_attach
 from ..snapshots.schedule_create import snapshot_schedule_create
 from ..snapshots.schedule_delete import snapshot_schedule_delete
 from ..snapshots.schedule_get import snapshot_schedule_get
@@ -48,6 +51,20 @@ def test_disk():
     yield disk
 
     delete_disk(PROJECT, ZONE, test_disk_name)
+
+
+@pytest.fixture
+def test_schedule_snapshot():
+    test_schedule_snapshot_name = "test-snapshot-" + uuid.uuid4().hex[:5]
+    schedule_snapshot = snapshot_schedule_create(
+        PROJECT,
+        REGION,
+        test_schedule_snapshot_name,
+        "test description",
+        {"env": "dev", "media": "images"},
+    )
+    yield schedule_snapshot
+    snapshot_schedule_delete(PROJECT, REGION, test_schedule_snapshot_name)
 
 
 def test_snapshot_create_delete(test_disk):
@@ -93,3 +110,12 @@ def test_create_get_list_delete_schedule_snapshot():
     finally:
         snapshot_schedule_delete(PROJECT, REGION, test_snapshot_name)
         assert len(list(snapshot_schedule_list(PROJECT, REGION))) == 0
+
+
+def test_attach_disk_to_snapshot(test_schedule_snapshot, test_disk):
+    assert not test_disk.resource_policies
+    snapshot_schedule_attach(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
+    assert test_schedule_snapshot.name in disk.resource_policies[0]
