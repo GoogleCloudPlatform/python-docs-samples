@@ -31,6 +31,7 @@ from ..snapshots.schedule_delete import snapshot_schedule_delete
 from ..snapshots.schedule_get import snapshot_schedule_get
 from ..snapshots.schedule_list import snapshot_schedule_list
 from ..snapshots.schedule_remove_disk import snapshot_schedule_detach_disk
+from ..snapshots.schedule_update import snapshot_schedule_update
 
 
 PROJECT = google.auth.default()[1]
@@ -130,3 +131,16 @@ def test_remove_disk_from_snapshot(test_schedule_snapshot, test_disk):
     )
     disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
     assert not disk.resource_policies
+
+
+def test_update_schedule_snapshot(test_schedule_snapshot):
+    new_labels = {"env": "prod", "media": "videos"}
+    snapshot_schedule_update(
+        project_id=PROJECT,
+        region=REGION,
+        schedule_name=test_schedule_snapshot.name,
+        schedule_description="updated description",
+        labels=new_labels,
+    )
+    snapshot = snapshot_schedule_get(PROJECT, REGION, test_schedule_snapshot.name)
+    assert snapshot.snapshot_schedule_policy.snapshot_properties.labels["env"] == "prod"

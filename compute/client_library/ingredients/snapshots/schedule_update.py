@@ -20,8 +20,8 @@
 from google.cloud import compute_v1
 
 
-# <INGREDIENT create_schedule_snapshots>
-def snapshot_schedule_create(
+# <INGREDIENT edit_schedule_snapshots>
+def snapshot_schedule_update(
     project_id: str,
     region: str,
     schedule_name: str,
@@ -29,40 +29,30 @@ def snapshot_schedule_create(
     labels: dict,
 ) -> compute_v1.ResourcePolicy:
     """
-    Creates a snapshot schedule for disks for a specified project and region.
+    Updates a snapshot schedule for a specified project and region.
     Args:
         project_id (str): The ID of the Google Cloud project.
-        region (str): The region where the snapshot schedule will be created.
-        schedule_name (str): The name of the snapshot schedule group.
-        schedule_description (str): The description of the snapshot schedule group.
-        labels (dict): The labels to apply to the snapshots. Example: {"env": "dev", "media": "images"}
+        region (str): The region where the snapshot schedule is located.
+        schedule_name (str): The name of the snapshot schedule to update.
+        schedule_description (str): The new description for the snapshot schedule.
+        labels (dict): A dictionary of new labels to apply to the snapshot schedule.
     Returns:
-        compute_v1.ResourcePolicy: The created resource policy.
+        compute_v1.ResourcePolicy: The updated snapshot schedule.
     """
 
-    # # Every hour, starts at 12:00 AM
-    # hourly_schedule = compute_v1.ResourcePolicyHourlyCycle(
-    #     hours_in_cycle=1, start_time="00:00"
-    # )
-    #
-    # # Every Monday, starts between 12:00 AM and 1:00 AM
-    # day = compute_v1.ResourcePolicyWeeklyCycleDayOfWeek(
-    #     day="MONDAY", start_time="00:00"
-    # )
-    # weekly_schedule = compute_v1.ResourcePolicyWeeklyCycle(day_of_weeks=[day])
-
-    # In this example we use daily_schedule - every day, starts between 12:00 AM and 1:00 AM
-    daily_schedule = compute_v1.ResourcePolicyDailyCycle(
-        days_in_cycle=1, start_time="00:00"
+    # Every Monday, starts between 12:00 AM and 1:00 AM
+    day = compute_v1.ResourcePolicyWeeklyCycleDayOfWeek(
+        day="MONDAY", start_time="00:00"
     )
+    weekly_schedule = compute_v1.ResourcePolicyWeeklyCycle(day_of_weeks=[day])
 
     schedule = compute_v1.ResourcePolicySnapshotSchedulePolicySchedule()
     # You can change the schedule type to daily_schedule, weekly_schedule, or hourly_schedule
-    schedule.daily_schedule = daily_schedule
+    schedule.weekly_schedule = weekly_schedule
 
-    # Autodelete snapshots after 5 days
+    # Autodelete snapshots after 10 days
     retention_policy = compute_v1.ResourcePolicySnapshotSchedulePolicyRetentionPolicy(
-        max_retention_days=5
+        max_retention_days=10
     )
     snapshot_properties = (
         compute_v1.ResourcePolicySnapshotSchedulePolicySnapshotProperties(
@@ -82,12 +72,13 @@ def snapshot_schedule_create(
     )
 
     client = compute_v1.ResourcePoliciesClient()
-    operation = client.insert(
+    operation = client.patch(
         project=project_id,
         region=region,
+        resource_policy=schedule_name,
         resource_policy_resource=resource_policy_resource,
     )
-    wait_for_extended_operation(operation, "Resource Policy creation")
+    wait_for_extended_operation(operation, "Resource Policy updating")
 
     return client.get(project=project_id, region=region, resource_policy=schedule_name)
 
