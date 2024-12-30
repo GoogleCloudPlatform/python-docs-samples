@@ -42,18 +42,18 @@ from ..disks.regional_delete import delete_regional_disk
 from ..disks.replication_disk_start import start_disk_replication
 from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
-from ..disks.сonsistency_groups.add_disk_consistency_group import (
+from ..disks.consistency_groups.add_disk_consistency_group import (
     add_disk_consistency_group,
 )
-from ..disks.сonsistency_groups.clone_disks_consistency_group import (
+from ..disks.consistency_groups.clone_disks_consistency_group import (
     clone_disks_to_consistency_group,
 )
-from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
-from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+from ..disks.consistency_groups.create_consistency_group import create_consistency_group
+from ..disks.consistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.consistency_groups.remove_disk_consistency_group import (
     remove_disk_consistency_group,
 )
-from ..disks.сonsistency_groups.stop_replication_consistency_group import (
+from ..disks.consistency_groups.stop_replication_consistency_group import (
     stop_replication_consistency_group,
 )
 from ..images.get import get_image_from_family
