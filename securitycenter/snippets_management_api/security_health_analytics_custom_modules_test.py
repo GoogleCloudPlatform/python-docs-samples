@@ -38,7 +38,12 @@ PREFIX = "python_sample_sha_custom_module"  # Prefix used for identifying test m
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_environment():
-    """Fixture to ensure a clean environment by removing test modules before running tests."""
+    """
+    Fixture to ensure a clean environment by removing test modules before running tests.
+
+    This fixture lists all SHA custom modules in the organization and deletes any
+    that were created by previous test runs, identified by the PREFIX.
+    """
     if not ORGANIZATION_ID:
         pytest.fail("GCLOUD_ORGANIZATION environment variable is not set.")
 
@@ -73,7 +78,13 @@ def cleanup_existing_custom_modules(org_id: str):
 
 
 def add_custom_module(org_id: str):
-
+    """
+    Adds a new SHA custom module.
+    Args:
+        org_id (str): The organization ID.
+    Returns:
+        Tuple[str, str]: The name and ID of the created custom module.
+    """
     parent = f"organizations/{org_id}/locations/global"
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
@@ -86,13 +97,13 @@ def add_custom_module(org_id: str):
         "display_name": display_name,
         "enablement_state": "ENABLED",
         "custom_config": {
-            "description": "Sample custom module for testing purpose. Please do not delete.",
+            "description": "Sample custom module for testing purposes. Please do not delete.",
             "predicate": {
                 "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
-                "title": "GCE Instance High Severity",
-                "description": "Custom module to detect high severity issues on GCE instances.",
+                "title": "Cloud KMS CryptoKey Rotation Period",
+                "description": "Custom module to detect CryptoKeys with rotation period greater than 30 days.",
             },
-            "recommendation": "Ensure proper security configurations on GCE instances.",
+            "recommendation": "Review and adjust the rotation period for Cloud KMS CryptoKeys.",
             "resource_selector": {"resource_types": ["cloudkms.googleapis.com/CryptoKey"]},
             "severity": "CRITICAL",
             "custom_output": {
@@ -100,10 +111,10 @@ def add_custom_module(org_id: str):
                     {
                         "name": "example_property",
                         "value_expression": {
-                            "description": "The name of the instance",
+                            "description": "The resource name of the CryptoKey",
                             "expression": "resource.name",
                             "location": "global",
-                            "title": "Instance Name",
+                            "title": "CryptoKey Resource Name",
                         },
                     }
                 ]
@@ -126,7 +137,7 @@ def add_custom_module(org_id: str):
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_get_effective_security_health_analytics_custom_module():
-
+    """Tests getting an effective SHA custom module."""
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
@@ -144,7 +155,7 @@ def test_get_effective_security_health_analytics_custom_module():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_descendant_security_health_analytics_custom_module():
-
+    """Tests listing descendant SHA custom modules."""
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the list descendant custom modules
@@ -169,7 +180,7 @@ def test_list_descendant_security_health_analytics_custom_module():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_list_effective_security_health_analytics_custom_module():
-
+    """Tests listing effective SHA custom modules."""
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the list of custom modules
@@ -194,7 +205,7 @@ def test_list_effective_security_health_analytics_custom_module():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_simulate_security_health_analytics_custom_module():
-
+    """Tests simulating an SHA custom module."""
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 

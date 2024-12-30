@@ -22,12 +22,13 @@ from google.cloud import securitycentermanagement_v1
 
 def get_effective_security_health_analytics_custom_module(parent: str, module_id: str):
     """
-    Retrieves a Security Health Analytics custom module.
+    Retrieves a Security Health Analytics custom module using parent and module id as parameters.
     Args:
         parent: Use any one of the following options:
                 - organizations/{organization_id}/locations/{location_id}
                 - folders/{folder_id}/locations/{location_id}
                 - projects/{project_id}/locations/{location_id}
+        module_id: The unique identifier of the custom module.
     Returns:
         The retrieved Security Health Analytics custom module.
     Raises:
@@ -44,7 +45,7 @@ def get_effective_security_health_analytics_custom_module(parent: str, module_id
         print(f"Retrieved Effective Security Health Analytics Custom Module: {response.name}")
         return response
     except NotFound as e:
-        print(f"Custom Module not found: {response.name}")
+        print(f"Custom Module not found: {e}")
         raise e
 # [END securitycenter_get_effective_security_health_analytics_custom_module]
 
@@ -60,9 +61,9 @@ def list_descendant_security_health_analytics_custom_module(parent: str):
                 - folders/{folder_id}/locations/{location_id}
                 - projects/{project_id}/locations/{location_id}
     Returns:
-        List of retrieved all resident Security Health Analytics custom modules and all of its descendants.
+        A list of all resident Security Health Analytics custom modules and all of its descendants.
     Raises:
-        NotFound: If the specified custom module does not exist.
+        NotFound: If the parent resource is not found.
     """
 
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
@@ -104,7 +105,7 @@ def list_effective_security_health_analytics_custom_module(parent: str):
     Returns:
         List of retrieved all Security Health Analytics custom modules.
     Raises:
-        NotFound: If the specified custom module does not exist.
+        NotFound: If the parent resource is not found.
     """
 
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
@@ -142,7 +143,7 @@ def simulate_security_health_analytics_custom_module(parent: str):
                 - folders/{folder_id}/locations/{location_id}
                 - projects/{project_id}/locations/{location_id}
     Returns:
-        Simulated Security Health Analytics custom module.
+        The simulation response of Security Health Analytics custom module.
     """
 
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
