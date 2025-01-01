@@ -1,1 +1,1 @@
-pyspark[sql]==3.5.3
+pyspark[sql]==3.5.4
