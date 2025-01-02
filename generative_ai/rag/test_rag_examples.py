@@ -23,6 +23,7 @@ import create_corpus_example
 import create_corpus_feature_store_example
 import create_corpus_pinecone_example
 import create_corpus_vector_search_example
+import create_corpus_vertex_ai_search_example
 import create_corpus_weaviate_example
 import delete_corpus_example
 import delete_file_example
@@ -133,6 +134,16 @@ def test_create_corpus_weaviate() -> None:
         WEAVIATE_HTTP_ENDPOINT,
         WEAVIATE_COLLECTION_NAME,
         weaviate_api_key_secret_manager_version,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_vertex_ai_search() -> None:
+    VAIS_LOCATION = "us"
+    ENGINE_ID = "test-engine"
+    corpus = create_corpus_vertex_ai_search_example.create_corpus_vertex_ai_search(
+        f"projects/{PROJECT_ID}/locations/{VAIS_LOCATION}/collections/default_collection/engines/{ENGINE_ID}"
     )
     assert corpus
     delete_corpus_example.delete_corpus(corpus.name)
