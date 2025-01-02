@@ -24,24 +24,6 @@ from ..disks.attach_disk import attach_disk
 from ..disks.attach_regional_disk_force import attach_disk_force
 from ..disks.attach_regional_disk_to_vm import attach_regional_disk
 from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encrypted_disk
-from ..disks.create_empty_disk import create_empty_disk
-from ..disks.create_from_image import create_disk_from_image
-from ..disks.create_from_source import create_disk_from_disk
-from ..disks.create_hyperdisk import create_hyperdisk
-from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
-from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
-from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
-from ..disks.create_replicated_disk import create_regional_replicated_disk
-from ..disks.create_secondary_custom import create_secondary_custom_disk
-from ..disks.create_secondary_disk import create_secondary_disk
-from ..disks.create_secondary_region_disk import create_secondary_region_disk
-from ..disks.delete import delete_disk
-from ..disks.list import list_disks
-from ..disks.regional_create_from_source import create_regional_disk
-from ..disks.regional_delete import delete_regional_disk
-from ..disks.replication_disk_start import start_disk_replication
-from ..disks.replication_disk_stop import stop_disk_replication
-from ..disks.resize_disk import resize_disk
 from ..disks.consistency_groups.add_disk_consistency_group import (
     add_disk_consistency_group,
 )
@@ -56,6 +38,25 @@ from ..disks.consistency_groups.remove_disk_consistency_group import (
 from ..disks.consistency_groups.stop_replication_consistency_group import (
     stop_replication_consistency_group,
 )
+from ..disks.create_empty_disk import create_empty_disk
+from ..disks.create_from_image import create_disk_from_image
+from ..disks.create_from_source import create_disk_from_disk
+from ..disks.create_hyperdisk import create_hyperdisk
+from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
+from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
+from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
+from ..disks.create_replicated_disk import create_regional_replicated_disk
+from ..disks.create_secondary_custom import create_secondary_custom_disk
+from ..disks.create_secondary_disk import create_secondary_disk
+from ..disks.create_secondary_region_disk import create_secondary_region_disk
+
+from ..disks.delete import delete_disk
+from ..disks.list import list_disks
+from ..disks.regional_create_from_source import create_regional_disk
+from ..disks.regional_delete import delete_regional_disk
+from ..disks.replication_disk_start import start_disk_replication
+from ..disks.replication_disk_stop import stop_disk_replication
+from ..disks.resize_disk import resize_disk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
