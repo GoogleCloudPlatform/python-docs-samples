@@ -13,14 +13,12 @@
 # limitations under the License.
 
 # [START endpoints_swagger_yaml_python]
-# [START swagger]
 swagger: "2.0"
 info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
-# [END swagger]
 # [END endpoints_swagger_yaml_python]
 consumes:
 - "application/json"
@@ -106,14 +104,12 @@ definitions:
       email:
         type: "string"
 # [START endpoints_security_definitions_yaml_python]
-# [START securityDef]
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
     type: "apiKey"
     name: "key"
     in: "query"
-# [END securityDef]
 # [END endpoints_security_definitions_yaml_python]
   # This section configures authentication using Google API Service Accounts
   # to sign a json web token. This is mostly used for server-to-server
