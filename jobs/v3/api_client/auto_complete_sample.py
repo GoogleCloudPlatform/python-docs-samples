@@ -24,7 +24,6 @@ name = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 # [START job_auto_complete_job_title]
-# [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
     complete = client_service.projects().complete(
         name=name, query=query, languageCode="en-US", type="JOB_TITLE", pageSize=10
@@ -36,12 +35,10 @@ def job_title_auto_complete(client_service, query, company_name):
     print(results)
 
 
-# [END auto_complete_job_title]
 # [END job_auto_complete_job_title]
 
 
 # [START job_auto_complete_default]
-# [START auto_complete_default]
 def auto_complete_default(client_service, query, company_name):
     complete = client_service.projects().complete(
         name=name, query=query, languageCode="en-US", pageSize=10
@@ -53,7 +50,6 @@ def auto_complete_default(client_service, query, company_name):
     print(results)
 
 
-# [END auto_complete_default]
 # [END job_auto_complete_default]
 
 
