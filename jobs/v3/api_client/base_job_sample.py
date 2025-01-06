@@ -14,8 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START job_instantiate]
-# [START instantiate]
 import os
 import random
 import string
@@ -25,8 +23,6 @@ from googleapiclient.errors import Error
 
 client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
-# [END job_instantiate]
 
 
 # [START job_basic_job]
