@@ -5,7 +5,7 @@ lxml==4.9.4
 pycryptodome==3.21.0
 pyOpenSSL==24.0.0
 requests==2.31.0
-signxml==3.2.0
+signxml==4.0.3
 pytest==8.2.0
 pytest-mock==3.14.0
 Werkzeug==3.0.6
