@@ -65,7 +65,7 @@ function checkSessionRefresh() {
           headers: {
               'X-Requested-With': 'XMLHttpRequest'
           }
-    }).then(function(response) {
+.then((response) => {
       // Checking if browser has a session for the requested app
       if (response.status === 401) {
         // No new session detected. Try to get a session again
@@ -75,6 +75,7 @@ function checkSessionRefresh() {
         iapSessionRefreshWindow.close();
         iapSessionRefreshWindow = null;
       }
+    })
     });
   } else {
     iapSessionRefreshWindow = null;
