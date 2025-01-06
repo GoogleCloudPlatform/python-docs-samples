@@ -14,6 +14,8 @@
 import uuid
 
 import google.auth
+from google.cloud import compute_v1
+
 import pytest
 
 from ..disks.create_from_image import create_disk_from_image
@@ -23,9 +25,18 @@ from ..snapshots.create import create_snapshot
 from ..snapshots.delete import delete_snapshot
 from ..snapshots.get import get_snapshot
 from ..snapshots.list import list_snapshots
+from ..snapshots.schedule_attach_disk import snapshot_schedule_attach
+from ..snapshots.schedule_create import snapshot_schedule_create
+from ..snapshots.schedule_delete import snapshot_schedule_delete
+from ..snapshots.schedule_get import snapshot_schedule_get
+from ..snapshots.schedule_list import snapshot_schedule_list
+from ..snapshots.schedule_remove_disk import snapshot_schedule_detach_disk
+from ..snapshots.schedule_update import snapshot_schedule_update
+
 
 PROJECT = google.auth.default()[1]
 ZONE = "europe-west1-c"
+REGION = "europe-west1"
 
 
 @pytest.fixture
@@ -42,6 +53,20 @@ def test_disk():
     yield disk
 
     delete_disk(PROJECT, ZONE, test_disk_name)
+
+
+@pytest.fixture
+def test_schedule_snapshot():
+    test_schedule_snapshot_name = "test-snapshot-" + uuid.uuid4().hex[:5]
+    schedule_snapshot = snapshot_schedule_create(
+        PROJECT,
+        REGION,
+        test_schedule_snapshot_name,
+        "test description",
+        {"env": "dev", "media": "images"},
+    )
+    yield schedule_snapshot
+    snapshot_schedule_delete(PROJECT, REGION, test_schedule_snapshot_name)
 
 
 def test_snapshot_create_delete(test_disk):
@@ -66,3 +91,56 @@ def test_snapshot_create_delete(test_disk):
             pytest.fail(
                 "Test snapshot found on snapshot list, while it should already be gone."
             )
+
+
+def test_create_get_list_delete_schedule_snapshot():
+    test_snapshot_name = "test-disk-" + uuid.uuid4().hex[:5]
+    assert snapshot_schedule_create(
+        PROJECT,
+        REGION,
+        test_snapshot_name,
+        "test description",
+        {"env": "dev", "media": "images"},
+    )
+    try:
+        snapshot = snapshot_schedule_get(PROJECT, REGION, test_snapshot_name)
+        assert snapshot.name == test_snapshot_name
+        assert (
+            snapshot.snapshot_schedule_policy.snapshot_properties.labels["env"] == "dev"
+        )
+        assert len(list(snapshot_schedule_list(PROJECT, REGION))) > 0
+    finally:
+        snapshot_schedule_delete(PROJECT, REGION, test_snapshot_name)
+        assert len(list(snapshot_schedule_list(PROJECT, REGION))) == 0
+
+
+def test_attach_disk_to_snapshot(test_schedule_snapshot, test_disk):
+    snapshot_schedule_attach(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
+    assert test_schedule_snapshot.name in disk.resource_policies[0]
+
+
+def test_remove_disk_from_snapshot(test_schedule_snapshot, test_disk):
+    snapshot_schedule_attach(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    snapshot_schedule_detach_disk(
+        PROJECT, ZONE, REGION, test_disk.name, test_schedule_snapshot.name
+    )
+    disk = compute_v1.DisksClient().get(project=PROJECT, zone=ZONE, disk=test_disk.name)
+    assert not disk.resource_policies
+
+
+def test_update_schedule_snapshot(test_schedule_snapshot):
+    new_labels = {"env": "prod", "media": "videos"}
+    snapshot_schedule_update(
+        project_id=PROJECT,
+        region=REGION,
+        schedule_name=test_schedule_snapshot.name,
+        schedule_description="updated description",
+        labels=new_labels,
+    )
+    snapshot = snapshot_schedule_get(PROJECT, REGION, test_schedule_snapshot.name)
+    assert snapshot.snapshot_schedule_policy.snapshot_properties.labels["env"] == "prod"
