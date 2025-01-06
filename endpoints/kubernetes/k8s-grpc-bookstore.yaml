@@ -42,12 +42,12 @@ spec:
       labels:
         app: esp-grpc-bookstore
     spec:
-      # [START secret-1]
+      # [START endpoints_secret_1]
       volumes:
         - name: service-account-creds
           secret:
             secretName: service-account-creds
-      # [END secret-1]
+      # [END endpoints_secret_1]
       # [START endpoints_service]
       containers:
         - name: esp

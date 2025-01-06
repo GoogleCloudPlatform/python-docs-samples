@@ -1,5 +1,6 @@
 Flask==3.0.3
 gunicorn==22.0.0
-Markdown==3.6
-bleach==6.1.0
+Markdown==3.7
+bleach==6.2.0; python_version >= "3.9"
+bleach==6.1.0; python_version <= "3.8"
 Werkzeug==3.0.3
