@@ -72,6 +72,15 @@ def create_ca_monitor_policy(project_id: str) -> None:
     )
 
     print("Monitoring policy successfully created!", policy.name)
+    # [END privateca_monitor_ca_expiry]
+    return policy.name
 
 
-# [END privateca_monitor_ca_expiry]
+def delete_ca_monitor_policy(policy_name: str) -> None:
+    """Deletes a named policy in the project
+    Args:
+        policy_name: fully qualified name of a policy
+    """
+
+    alert_policy_client = monitoring_v3.AlertPolicyServiceClient()
+    alert_policy_client.delete_alert_policy(name=policy_name)
