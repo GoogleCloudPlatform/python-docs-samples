@@ -76,7 +76,7 @@ def test_add_remove_and_list_disks_consistency_group(
         consistency_group_name=autodelete_consistency_group.name,
         consistency_group_region=REGION,
     )
-    assert disks[0].name == autodelete_regional_blank_disk.name
+    assert any(disk.name == autodelete_regional_blank_disk.name for disk in disks)
     # Remove disk from consistency group
     remove_disk_consistency_group(
         project_id=PROJECT_ID,
