@@ -52,13 +52,10 @@ def generate_job_with_custom_attributes(company_name):
     }
     print("Job generated: %s" % job)
     return job
-
-
 # [END job_custom_attribute_job]
 
 
 # [START job_custom_attribute_filter_string_value]
-# [START custom_attribute_filter_string_value]
 def custom_attribute_filter_string_value(client_service):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -78,14 +75,10 @@ def custom_attribute_filter_string_value(client_service):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
-# [END custom_attribute_filter_string_value]
 # [END job_custom_attribute_filter_string_value]
 
 
 # [START job_custom_attribute_filter_long_value]
-# [START custom_attribute_filter_long_value]
 def custom_attribute_filter_long_value(client_service):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -105,14 +98,10 @@ def custom_attribute_filter_long_value(client_service):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
-# [END custom_attribute_filter_long_value]
 # [END job_custom_attribute_filter_long_value]
 
 
 # [START job_custom_attribute_filter_multi_attributes]
-# [START custom_attribute_filter_multi_attributes]
 def custom_attribute_filter_multi_attributes(client_service):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -135,9 +124,6 @@ def custom_attribute_filter_multi_attributes(client_service):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
-# [END custom_attribute_filter_multi_attributes]
 # [END job_custom_attribute_filter_multi_attributes]
 
 
