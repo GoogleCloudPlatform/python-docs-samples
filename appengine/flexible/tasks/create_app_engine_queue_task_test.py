@@ -16,6 +16,7 @@ import os
 import uuid
 
 import create_app_engine_queue_task
+from google.cloud import tasks_v2
 
 TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
@@ -23,14 +24,21 @@ TEST_QUEUE_NAME = f"my-appengine-queue-{uuid.uuid4()}"
 
 
 def test_create_task():
+    client = tasks_v2.CloudTasksClient()
+
+    # created expected queue
+    tasks_v2.CreateQueueRequest(
+            parent=client.common_location_path(TEST_PROJECT_ID, TEST_LOCATION),
+            queue=tasks_v2.Queue(name=client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME)),
+        )
+
+    # test sample
     result = create_app_engine_queue_task.create_task(
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION
     )
     assert TEST_QUEUE_NAME in result.name
 
     # delete created queue
-    from google.cloud import tasks_v2
-    client = tasks_v2.CloudTasksClient()
     client.delete_queue(
         tasks_v2.DeleteQueueRequest(name=client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME))
     )
