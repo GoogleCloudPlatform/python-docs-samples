@@ -15,8 +15,9 @@
 import os
 import uuid
 
-import create_app_engine_queue_task
 from google.cloud import tasks_v2
+
+import create_app_engine_queue_task
 
 TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
