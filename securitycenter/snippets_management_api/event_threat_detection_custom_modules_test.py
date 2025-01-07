@@ -131,6 +131,7 @@ def test_create_event_threat_detection_custom_module():
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
 
+
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
@@ -147,6 +148,7 @@ def test_get_event_threat_detection_custom_module():
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
     print(f"Retrieved Custom Module: {response.name}")
+
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
@@ -172,6 +174,7 @@ def test_list_event_threat_detection_custom_module():
         == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
     )
 
+
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
@@ -187,3 +190,20 @@ def test_update_event_threat_detection_custom_module():
     # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.DISABLED
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_delete_event_threat_detection_custom_module():
+
+    module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    try:
+        response = event_threat_detection_custom_modules.delete_event_threat_detection_custom_module(parent, module_id)
+    except Exception as e:
+        pytest.fail(f"delete_event_threat_detection_custom_module() failed: {e}")
+        return
+    assert response is None
+
+    print(f"Custom module was deleted successfully: {module_id}")

@@ -18,9 +18,10 @@ import random
 import time
 from typing import Dict
 
+from google.api_core.exceptions import NotFound
 from google.cloud import securitycentermanagement_v1
-from google.protobuf.struct_pb2 import Struct
 from google.protobuf.field_mask_pb2 import FieldMask
+from google.protobuf.struct_pb2 import Struct
 
 
 # [START securitycenter_create_event_threat_detection_custom_module]
@@ -89,6 +90,7 @@ def create_event_threat_detection_custom_module(parent: str) -> Dict:
 
 # [END securitycenter_create_event_threat_detection_custom_module]
 
+
 # [START securitycenter_get_event_threat_detection_custom_module]
 def get_event_threat_detection_custom_module(parent: str, module_id: str):
     """
@@ -117,6 +119,7 @@ def get_event_threat_detection_custom_module(parent: str, module_id: str):
         print(f"Custom Module not found: {response.name}")
         raise e
 # [END securitycenter_get_event_threat_detection_custom_module]
+
 
 # [START securitycenter_list_event_threat_detection_custom_module]
 def list_event_threat_detection_custom_module(parent: str):
@@ -154,6 +157,7 @@ def list_event_threat_detection_custom_module(parent: str):
         print(f"An error occurred while listing custom modules: {e}")
         raise e
 # [END securitycenter_list_event_threat_detection_custom_module]
+
 
 # [START securitycenter_update_event_threat_detection_custom_module]
 def update_event_threat_detection_custom_module(parent: str, module_id: str):
@@ -194,3 +198,32 @@ def update_event_threat_detection_custom_module(parent: str, module_id: str):
         raise
 
 # [END securitycenter_update_event_threat_detection_custom_module]
+
+
+# [START securitycenter_delete_event_threat_detection_custom_module]
+def delete_event_threat_detection_custom_module(parent: str, module_id: str):
+    """
+    Deletes an Event Threat Detection custom module.
+    Args:
+        parent: Use any one of the following options:
+                - organizations/{organization_id}/locations/{location_id}
+                - folders/{folder_id}/locations/{location_id}
+                - projects/{project_id}/locations/{location_id}
+    Returns:
+        Message that Event Threat Detection custom module is deleted.
+    Raises:
+        NotFound: If the specified custom module does not exist.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    try:
+        request = securitycentermanagement_v1.DeleteEventThreatDetectionCustomModuleRequest(
+            name=f"{parent}/eventThreatDetectionCustomModules/{module_id}",
+        )
+
+        client.delete_event_threat_detection_custom_module(request=request)
+        print(f"Deleted Event Threat Detection Custom Module Successfully: {module_id}")
+    except NotFound as e:
+        print(f"Custom Module not found: {module_id}")
+        raise e
+# [END securitycenter_delete_event_threat_detection_custom_module]
