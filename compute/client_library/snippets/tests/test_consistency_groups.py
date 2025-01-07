@@ -18,15 +18,15 @@ import uuid
 import pytest
 
 from .test_disks import autodelete_regional_blank_disk  # noqa: F401
-from ..disks.сonsistency_groups.add_disk_consistency_group import (
+from ..disks.consistency_groups.add_disk_consistency_group import (
     add_disk_consistency_group,
 )
-from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
-from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.list_disks_consistency_group import (
+from ..disks.consistency_groups.create_consistency_group import create_consistency_group
+from ..disks.consistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.consistency_groups.list_disks_consistency_group import (
     list_disks_consistency_group,
 )
-from ..disks.сonsistency_groups.remove_disk_consistency_group import (
+from ..disks.consistency_groups.remove_disk_consistency_group import (
     remove_disk_consistency_group,
 )
 
