@@ -46,7 +46,6 @@ def generate_featured_job(company_name):
     }
     print("Job generated: %s" % job)
     return job
-# [END featured_job]
 # [END job_generate_featured_job]
 
 
