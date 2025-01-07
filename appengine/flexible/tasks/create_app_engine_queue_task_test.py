@@ -13,12 +13,13 @@
 # limitations under the License.
 
 import os
+import uuid
 
 import create_app_engine_queue_task
 
 TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
-TEST_QUEUE_NAME = os.getenv("TEST_QUEUE_NAME", "my-appengine-queue")
+TEST_QUEUE_NAME = os.getenv("TEST_QUEUE_NAME", f"my-appengine-queue-{uuid.uuid4()}")
 
 
 def test_create_task():
@@ -26,3 +27,10 @@ def test_create_task():
         TEST_PROJECT_ID, TEST_QUEUE_NAME, TEST_LOCATION
     )
     assert TEST_QUEUE_NAME in result.name
+
+    # delete created queue
+    from google.cloud import tasks_v2
+    client = tasks_v2.CloudTasksClient()
+    client.delete_queue(
+        tasks_v2.DeleteQueueRequest(name=client.queue_path(TEST_PROJECT_ID, TEST_LOCATION, TEST_QUEUE_NAME))
+    )
