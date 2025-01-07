@@ -18,7 +18,7 @@ import create_app_engine_queue_task
 
 TEST_PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 TEST_LOCATION = os.getenv("TEST_QUEUE_LOCATION", "us-central1")
-TEST_QUEUE_NAME = f"my-static-appengine-queue"
+TEST_QUEUE_NAME = "my-static-appengine-queue"
 
 
 def test_create_task():
