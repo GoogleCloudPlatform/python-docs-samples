@@ -24,7 +24,6 @@ parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 # [START job_search_for_alerts]
-# [START search_for_alerts]
 def search_for_alerts(client_service, company_name):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -44,7 +43,6 @@ def search_for_alerts(client_service, company_name):
         .execute()
     )
     print(response)
-# [END search_for_alerts]
 # [END job_search_for_alerts]
 
 
