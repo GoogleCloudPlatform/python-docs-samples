@@ -1,0 +1,196 @@
+#!/usr/bin/env python
+#
+# Copyright 2024 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import random
+import time
+from typing import Dict
+
+from google.cloud import securitycentermanagement_v1
+from google.protobuf.struct_pb2 import Struct
+from google.protobuf.field_mask_pb2 import FieldMask
+
+
+# [START securitycenter_create_event_threat_detection_custom_module]
+def create_event_threat_detection_custom_module(parent: str) -> Dict:
+    """
+    Creates a Event Threat Detection Custom Module.
+
+    This custom module evaluates Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds),
+    as per security best practices. A shorter rotation period helps reduce the risk of exposure in the event of a compromise.
+
+    Args:
+        parent: Use any one of the following options:
+                - organizations/{organization_id}/locations/{location_id}
+                - folders/{folder_id}/locations/{location_id}
+                - projects/{project_id}/locations/{location_id}
+    Returns:
+        Dict: Created custom module details.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    try:
+        # Seed the random number generator
+        random.seed(time.time())
+        # Generate a unique suffix
+        unique_suffix = f"{int(time.time())}-{random.randint(0, 999)}"
+        # Create unique display name
+        display_name = f"python_sample_etd_custom_module_{unique_suffix}"
+
+        # Define the metadata and other config parameters as a dictionary
+        config_map = {
+            "metadata": {
+                "severity": "MEDIUM",
+                "description": "Sample custom module for testing purposes. Please do not delete.",
+                "recommendation": "na",
+            },
+            "ips": ["0.0.0.0"],
+        }
+
+        # Convert the dictionary to a Struct
+        config_struct = Struct()
+        config_struct.update(config_map)
+
+        # Define the Event Threat Detection custom module configuration
+        custom_module = securitycentermanagement_v1.EventThreatDetectionCustomModule(
+            config=config_struct,
+            display_name=display_name,
+            enablement_state=securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED,
+            type_="CONFIGURABLE_BAD_IP",
+        )
+
+        # Create the request
+        request = securitycentermanagement_v1.CreateEventThreatDetectionCustomModuleRequest(
+            parent=parent,
+            event_threat_detection_custom_module=custom_module,
+        )
+
+        # Make the API call
+        response = client.create_event_threat_detection_custom_module(request=request)
+
+        print(f"Created EventThreatDetectionCustomModule: {response.name}")
+        return response
+
+    except Exception as e:
+        print(f"Failed to create EventThreatDetectionCustomModule: {e}")
+        raise
+
+# [END securitycenter_create_event_threat_detection_custom_module]
+
+# [START securitycenter_get_event_threat_detection_custom_module]
+def get_event_threat_detection_custom_module(parent: str, module_id: str):
+    """
+    Retrieves a Event Threat Detection custom module.
+    Args:
+        parent: Use any one of the following options:
+                - organizations/{organization_id}/locations/{location_id}
+                - folders/{folder_id}/locations/{location_id}
+                - projects/{project_id}/locations/{location_id}
+    Returns:
+        The retrieved Event Threat Detection custom module.
+    Raises:
+        NotFound: If the specified custom module does not exist.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    try:
+        request = securitycentermanagement_v1.GetEventThreatDetectionCustomModuleRequest(
+            name=f"{parent}/eventThreatDetectionCustomModules/{module_id}",
+        )
+
+        response = client.get_event_threat_detection_custom_module(request=request)
+        print(f"Retrieved Event Threat Detection Custom Module: {response.name}")
+        return response
+    except NotFound as e:
+        print(f"Custom Module not found: {response.name}")
+        raise e
+# [END securitycenter_get_event_threat_detection_custom_module]
+
+# [START securitycenter_list_event_threat_detection_custom_module]
+def list_event_threat_detection_custom_module(parent: str):
+    """
+    Retrieves list of Event Threat Detection custom module.
+    Args:
+        parent: Use any one of the following options:
+                - organizations/{organization_id}/locations/{location_id}
+                - folders/{folder_id}/locations/{location_id}
+                - projects/{project_id}/locations/{location_id}
+    Returns:
+        List of retrieved Event Threat Detection custom modules.
+    Raises:
+        NotFound: If the specified custom module does not exist.
+    """
+
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    try:
+        request = securitycentermanagement_v1.ListEventThreatDetectionCustomModulesRequest(
+            parent=parent,
+        )
+
+        response = client.list_event_threat_detection_custom_modules(request=request)
+
+        custom_modules = []
+        for custom_module in response:
+            print(f"Custom Module: {custom_module.name}")
+            custom_modules.append(custom_module)
+        return custom_modules
+    except NotFound as e:
+        print(f"Parent resource not found: {parent}")
+        raise e
+    except Exception as e:
+        print(f"An error occurred while listing custom modules: {e}")
+        raise e
+# [END securitycenter_list_event_threat_detection_custom_module]
+
+# [START securitycenter_update_event_threat_detection_custom_module]
+def update_event_threat_detection_custom_module(parent: str, module_id: str):
+    """
+    Updates an Event Threat Detection Custom Module.
+
+    Args:
+        parent: Use any one of the following options:
+                - organizations/{organization_id}/locations/{location_id}
+                - folders/{folder_id}/locations/{location_id}
+                - projects/{project_id}/locations/{location_id}
+    Returns:
+        Dict: Created custom module details.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    try:
+
+        custom_module = securitycentermanagement_v1.EventThreatDetectionCustomModule(
+            name=f"{parent}/eventThreatDetectionCustomModules/{module_id}",
+            enablement_state=securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.DISABLED,
+        )
+
+        # Create the request
+        request = securitycentermanagement_v1.UpdateEventThreatDetectionCustomModuleRequest(
+            event_threat_detection_custom_module=custom_module,
+            update_mask=FieldMask(paths=["enablement_state"]),
+        )
+
+        # Make the API call
+        response = client.update_event_threat_detection_custom_module(request=request)
+
+        print(f"Updated EventThreatDetectionCustomModule: {response.name}")
+        return response
+
+    except Exception as e:
+        print(f"Failed to update EventThreatDetectionCustomModule: {e}")
+        raise
+
+# [END securitycenter_update_event_threat_detection_custom_module]
