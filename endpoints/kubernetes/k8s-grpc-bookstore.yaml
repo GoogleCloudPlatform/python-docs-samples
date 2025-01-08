@@ -47,7 +47,7 @@ spec:
         - name: service-account-creds
           secret:
             secretName: service-account-creds
-      # [START endpoints_secret2_yaml_python]
+      # [END endpoints_secret1_yaml_python]
       # [START endpoints_service_yaml_python]
       containers:
         - name: esp
