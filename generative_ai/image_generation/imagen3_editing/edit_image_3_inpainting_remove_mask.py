@@ -37,7 +37,7 @@ def edit_image_3_inpainting_remove_mask(
     # PROJECT_ID = "your-project-id"
     # input_file = "input-image.png"
     # mask_file = "mask-image.png"
-    # output_file = "outpur-image.png"
+    # output_file = "output-image.png"
     # prompt = "" # The text prompt describing the entire image.
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
