@@ -38,41 +38,26 @@ ORGANIZATION_ID = os.environ["GCLOUD_ORGANIZATION"]
 LOCATION = "global"
 PREFIX = "python_sample_etd_custom_module"  # Prefix used for identifying test modules
 
+# Global list to track created modules
+created_modules = []
+
 
 @pytest.fixture(scope="session", autouse=True)
 def setup_environment():
-    """Fixture to ensure a clean environment by removing test modules before running tests."""
     if not ORGANIZATION_ID:
         pytest.fail("GCLOUD_ORGANIZATION environment variable is not set.")
 
-    print(f"Cleaning up existing custom modules for organization: {ORGANIZATION_ID}")
-    cleanup_existing_custom_modules(ORGANIZATION_ID)
 
+@pytest.fixture(scope="session", autouse=True)
+def cleanup_after_tests(request):
+    """Fixture to clean up created custom modules after the test session."""
+    def teardown():
+        print("\nCreated Custom Modules:")
+        print_all_created_modules()
+        print("Cleaning up created custom modules...")
+        cleanup_created_custom_modules()
 
-def cleanup_existing_custom_modules(org_id: str):
-    """
-    Deletes all custom modules matching a specific naming pattern.
-    Args:
-        org_id: The organization ID.
-    """
-    client = securitycentermanagement_v1.SecurityCenterManagementClient()
-    parent = f"organizations/{org_id}/locations/global"
-    print(f"Parent path: {parent}")
-    try:
-        custom_modules = client.list_event_threat_detection_custom_modules(
-            request={"parent": parent}
-        )
-        for module in custom_modules:
-            if module.display_name.startswith(PREFIX):
-                client.delete_event_threat_detection_custom_module(
-                    request={"name": module.name}
-                )
-                print(f"Deleted custom module: {module.name}")
-    except NotFound as e:
-        print(f"Resource not found: {e}")
-    except Exception as e:
-        print(f"Unexpected error during cleanup: {e}")
-        raise
+    request.addfinalizer(teardown)
 
 
 def add_custom_module(org_id: str):
@@ -125,6 +110,7 @@ def test_create_event_threat_detection_custom_module():
 
     # Run the function to create the custom module
     response = event_threat_detection_custom_modules.create_event_threat_detection_custom_module(parent)
+    created_modules.append(response.name)
 
     assert response is not None, "Custom module creation failed."
     # Verify that the custom module was created
@@ -138,6 +124,7 @@ def test_create_event_threat_detection_custom_module():
 def test_get_event_threat_detection_custom_module():
 
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    created_modules.append(module_name)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
     # Retrieve the custom module
@@ -156,6 +143,7 @@ def test_get_event_threat_detection_custom_module():
 def test_list_event_threat_detection_custom_module():
 
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    created_modules.append(module_name)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the custom modules
     custom_modules = event_threat_detection_custom_modules.list_event_threat_detection_custom_module(parent)
@@ -181,6 +169,7 @@ def test_list_event_threat_detection_custom_module():
 def test_update_event_threat_detection_custom_module():
 
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    created_modules.append(module_name)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
     # Retrieve the custom module
@@ -198,6 +187,7 @@ def test_update_event_threat_detection_custom_module():
 def test_delete_event_threat_detection_custom_module():
 
     module_name, module_id = add_custom_module(ORGANIZATION_ID)
+    created_modules.append(module_name)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     try:
         response = event_threat_detection_custom_modules.delete_event_threat_detection_custom_module(parent, module_id)
@@ -207,3 +197,47 @@ def test_delete_event_threat_detection_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
+
+
+def print_all_created_modules():
+    """Print all created custom modules."""
+    if not created_modules:
+        print("No custom modules were created.")
+    else:
+        for module in created_modules:
+            print(module)
+
+
+def cleanup_created_custom_modules():
+    """
+    Deletes all created custom modules in this test session.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    for module in list(created_modules):
+        if not custom_module_exists(module):
+            print(f"Module not found (already deleted): {module}")
+            created_modules.remove(module)
+            continue
+        try:
+            client.delete_event_threat_detection_custom_module(
+                    request={"name": module}
+                )
+            print(f"Deleted custom module: {module}")
+            created_modules.remove(module)
+        except Exception as e:
+            print(f"Failed to delete module {module}: {e}")
+            raise
+
+
+def custom_module_exists(module_name):
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+    try:
+        client.get_event_threat_detection_custom_module(
+                request={"name": module_name}
+            )
+        return True
+    except Exception as e:
+        if "404" in str(e):
+            return False
+        raise
