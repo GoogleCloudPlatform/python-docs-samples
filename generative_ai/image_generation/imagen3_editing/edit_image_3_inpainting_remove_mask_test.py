@@ -21,7 +21,7 @@ import edit_image_3_inpainting_remove_mask
 from google.api_core.exceptions import ResourceExhausted
 
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "../test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "volleyball_game.png")
 _MASK_FILE = os.path.join(_RESOURCES, "volleyball_game_inpainting_remove_mask.png")
 _OUTPUT_FILE = os.path.join(_RESOURCES, "volleyball_game_single_blue_player.png")

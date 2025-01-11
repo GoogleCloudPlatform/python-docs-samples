@@ -21,7 +21,7 @@ import edit_image_3_inpainting_remove_mask_mode
 from google.api_core.exceptions import ResourceExhausted
 
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "../test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "woman.png")
 _MASK_MODE = "foreground"
 _OUTPUT_FILE = os.path.join(_RESOURCES, "background.png")

@@ -21,7 +21,7 @@ import edit_image_3_outpainting_mask
 from google.api_core.exceptions import ResourceExhausted
 
 
-_RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+_RESOURCES = os.path.join(os.path.dirname(__file__), "../test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "roller_skaters.png")
 _MASK_FILE = os.path.join(_RESOURCES, "roller_skaters_mask.png")
 _OUTPUT_FILE = os.path.join(_RESOURCES, "roller_skaters_downtown.png")

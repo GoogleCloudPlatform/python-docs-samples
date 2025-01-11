@@ -73,8 +73,8 @@ def edit_image_3_inpainting_remove_mask_mode(
 
 if __name__ == "__main__":
     edit_image_3_inpainting_remove_mask_mode(
-        input_file="test_resources/woman.png",
+        input_file="../test_resources/woman.png",
         mask_mode="foreground",
-        output_file="test_resources/background.png",
+        output_file="../test_resources/background.png",
         prompt="",
     )

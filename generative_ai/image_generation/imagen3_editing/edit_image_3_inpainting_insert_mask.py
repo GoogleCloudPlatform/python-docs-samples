@@ -73,8 +73,8 @@ def edit_image_3_inpainting_insert_mask(
 
 if __name__ == "__main__":
     edit_image_3_inpainting_insert_mask(
-        input_file="test_resources/woman.png",
-        mask_file="test_resources/woman_inpainting_insert_mask.png",
-        output_file="test_resources/woman_with_hat.png",
+        input_file="../test_resources/woman.png",
+        mask_file="../test_resources/woman_inpainting_insert_mask.png",
+        output_file="../test_resources/woman_with_hat.png",
         prompt="red hat",
     )

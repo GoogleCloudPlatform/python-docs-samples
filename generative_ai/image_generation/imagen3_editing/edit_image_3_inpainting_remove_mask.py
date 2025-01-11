@@ -74,9 +74,8 @@ def edit_image_3_inpainting_remove_mask(
 
 if __name__ == "__main__":
     edit_image_3_inpainting_remove_mask(
-        input_file="test_resources/volleyball_game.png",
-        mask_file="test_resources/volleyball_game_inpainting_remove_mask.png",
-        output_file="test_resources/volleyball_game_single_blue_player.png",
+        input_file="../test_resources/volleyball_game.png",
+        mask_file="../test_resources/volleyball_game_inpainting_remove_mask.png",
+        output_file="../test_resources/volleyball_game_single_blue_player.png",
         prompt="volleyball game",
     )
-    

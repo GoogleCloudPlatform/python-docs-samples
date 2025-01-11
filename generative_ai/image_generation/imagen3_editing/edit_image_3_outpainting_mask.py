@@ -73,8 +73,8 @@ def edit_image_3_outpainting_mask(
 
 if __name__ == "__main__":
     edit_image_3_outpainting_mask(
-        input_file="test_resources/roller_skaters.png",
-        mask_file="test_resources/roller_skaters_mask.png",
-        output_file="test_resources/roller_skaters_downtown.png",
+        input_file="../test_resources/roller_skaters.png",
+        mask_file="../test_resources/roller_skaters_mask.png",
+        output_file="../test_resources/roller_skaters_downtown.png",
         prompt="city with skyscrapers",
     )
