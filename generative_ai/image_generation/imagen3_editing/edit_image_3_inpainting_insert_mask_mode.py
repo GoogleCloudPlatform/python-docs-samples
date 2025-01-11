@@ -51,7 +51,6 @@ def edit_image_3_inpainting_insert_mask_mode(
         reference_id=1, image=None, mask_mode=mask_mode
     )
 
-
     images = model.edit_image(
         reference_images=[base_ref_image, mask_ref_image],
         prompt=prompt,

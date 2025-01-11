@@ -16,10 +16,9 @@ import os
 
 import backoff
 
-from google.api_core.exceptions import ResourceExhausted
-
 import edit_image_3_inpainting_insert_mask_mode
 
+from google.api_core.exceptions import ResourceExhausted
 
 _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "woman.png")
@@ -31,7 +30,7 @@ _PROMPT = "beach"
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_3_inpainting_insert_mask_mode() -> None:
     response = (
-        edit_image_3_inpainting_insert_mask_mode.edit_3_image_inpainting_insert_mask_mode(
+        edit_image_3_inpainting_insert_mask_mode.edit_image_3_inpainting_insert_mask_mode(
             _INPUT_FILE,
             _MASK_MODE,
             _OUTPUT_FILE,

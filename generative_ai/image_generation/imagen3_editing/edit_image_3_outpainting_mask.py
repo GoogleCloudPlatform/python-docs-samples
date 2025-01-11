@@ -48,7 +48,7 @@ def edit_image_3_outpainting_mask(
     mask_img = Image.load_from_file(location=mask_file)
     base_ref_image = RawReferenceImage(image=base_img, reference_id=0)
     mask_ref_image = MaskReferenceImage(
-        reference_id=1, image=mask_img, mask_mode="user_provided", dilation =0.03,
+        reference_id=1, image=mask_img, mask_mode="user_provided", dilation=0.03,
     )
 
     images = model.edit_image(

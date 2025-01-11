@@ -66,7 +66,7 @@ def edit_image_3_inpainting_insert_mask(
     # Example response:
     # Created output image using 1400814 bytes
 
-    # [END generativeaionvertexai_imagen_edit_image_3_inpainting_insert_mask]
+    # [END generativeaionvertexai_imagen_3_edit_image_inpainting_insert_mask]
 
     return images
 

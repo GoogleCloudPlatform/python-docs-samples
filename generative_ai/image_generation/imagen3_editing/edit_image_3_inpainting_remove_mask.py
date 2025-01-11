@@ -79,3 +79,4 @@ if __name__ == "__main__":
         output_file="test_resources/volleyball_game_single_blue_player.png",
         prompt="volleyball game",
     )
+    
