@@ -179,6 +179,7 @@ class AudioIO:
             output=True,
             frames_per_buffer=self.chunk_size,
         )
+        self._output_audio_stream.stop_stream()
 
     def __enter__(self) -> "AudioIO":
         """Opens the stream."""
@@ -211,7 +212,9 @@ class AudioIO:
         if self.start_time is None:
             self.start_time = get_current_time()
 
-        self._buff.put_nowait(in_data)
+        # only capture microphone input when output audio stream is stopped
+        if self._output_audio_stream.is_stopped():
+            self._buff.put_nowait(in_data)
         self.audio_input.append(in_data)
 
         return None, pyaudio.paContinue
@@ -279,7 +282,11 @@ class AudioIO:
         audio = self._extract_wav_header(audio)
 
         # Play the raw PCM audio
-        self._output_audio_stream.write(audio)
+        try:
+            self._output_audio_stream.start_stream()
+            self._output_audio_stream.write(audio)            
+        finally:
+            self._output_audio_stream.stop_stream()
 
     def reset_stream(self):
         """Resets the stream parameters for a new request."""
