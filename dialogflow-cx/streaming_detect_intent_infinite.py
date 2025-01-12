@@ -490,7 +490,8 @@ async def listen_print_loop(
                 if response.detect_intent_response.query_result.intent.display_name:
                     logger.info(f"Detected intent: {response.detect_intent_response.query_result.intent.display_name}")
 
-                continue
+                # ensure audio stream restarts
+                return True
 
             transcript = response.recognition_result.transcript
             if transcript:
