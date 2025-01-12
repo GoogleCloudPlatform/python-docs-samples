@@ -288,14 +288,6 @@ class AudioIO:
         finally:
             self._output_audio_stream.stop_stream()
 
-    def reset_stream(self):
-        """Resets the stream parameters for a new request."""
-        self.audio_input = []
-        self.result_end_time = None
-        self.is_final_end_time = None
-        self.last_transcript_was_final = False
-        logger.info("Stream reset")
-
 class DialogflowCXStreaming:
     """Manages the interaction with the Dialogflow CX Streaming API."""
 
