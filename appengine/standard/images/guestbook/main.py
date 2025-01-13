@@ -123,16 +123,12 @@ class Guestbook(webapp2.RequestHandler):
 
         greeting.content = self.request.get("content")
 
-        # [START gae_images_guestbook_sign_handler_1]
         avatar = self.request.get("img")
-        # [END gae_images_guestbook_sign_handler_1]
         # [START gae_images_guestbook_transform]
         avatar = images.resize(avatar, 32, 32)
         # [END gae_images_guestbook_transform]
-        # [START gae_images_guestbook_sign_handler_2]
         greeting.avatar = avatar
         greeting.put()
-        # [END gae_images_guestbook_sign_handler_2]
 
         self.redirect("/?" + urllib.urlencode({"guestbook_name": guestbook_name}))
 # [END gae_images_guestbook_sign_handler]
