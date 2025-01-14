@@ -313,10 +313,13 @@ class DialogflowCXStreaming:
         single_utterance: bool = False,
     ) -> None:
         """Initializes the Dialogflow CX Streaming API client."""
-        _, project, _, location, _, agent_id = agent_name.split("/")
-        if location != "global":
+        try:
+            _, project, _, location, _, agent_id = agent_name.split('/')
+        except ValueError:
+            raise ValueError('Invalid agent name format. Expected format: projects/<project>/locations/<location>/agents/<agent_id>')
+        if location != 'global':
             client_options: ClientOptions = ClientOptions(
-                api_endpoint=f"{location}-dialogflow.googleapis.com",
+                api_endpoint=f'{location}-dialogflow.googleapis.com',
                 quota_project_id=project,
             )
         else:
