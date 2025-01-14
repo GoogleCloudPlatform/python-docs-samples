@@ -193,7 +193,6 @@ def test_delete_event_threat_detection_custom_module():
         response = event_threat_detection_custom_modules.delete_event_threat_detection_custom_module(parent, module_id)
     except Exception as e:
         pytest.fail(f"delete_event_threat_detection_custom_module() failed: {e}")
-        return
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")

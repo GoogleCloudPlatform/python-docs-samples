@@ -16,21 +16,19 @@
 
 import random
 import time
-from typing import Dict
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import GoogleAPICallError, NotFound
 from google.cloud import securitycentermanagement_v1
 from google.protobuf.field_mask_pb2 import FieldMask
 from google.protobuf.struct_pb2 import Struct
 
 
 # [START securitycenter_create_event_threat_detection_custom_module]
-def create_event_threat_detection_custom_module(parent: str) -> Dict:
+def create_event_threat_detection_custom_module(parent: str) -> securitycentermanagement_v1.EventThreatDetectionCustomModule:
     """
     Creates a Event Threat Detection Custom Module.
 
-    This custom module evaluates Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds),
-    as per security best practices. A shorter rotation period helps reduce the risk of exposure in the event of a compromise.
+    This custom module creates a configurable bad IP type custom module, which can be used to detect and block malicious IP addresses.
 
     Args:
         parent: Use any one of the following options:
@@ -38,7 +36,7 @@ def create_event_threat_detection_custom_module(parent: str) -> Dict:
                 - folders/{folder_id}/locations/{location_id}
                 - projects/{project_id}/locations/{location_id}
     Returns:
-        Dict: Created custom module details.
+        EventThreatDetectionCustomModule
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
@@ -84,7 +82,7 @@ def create_event_threat_detection_custom_module(parent: str) -> Dict:
         print(f"Created EventThreatDetectionCustomModule: {response.name}")
         return response
 
-    except Exception as e:
+    except GoogleAPICallError as e:
         print(f"Failed to create EventThreatDetectionCustomModule: {e}")
         raise
 
@@ -116,7 +114,7 @@ def get_event_threat_detection_custom_module(parent: str, module_id: str):
         print(f"Retrieved Event Threat Detection Custom Module: {response.name}")
         return response
     except NotFound as e:
-        print(f"Custom Module not found: {response.name}")
+        print(f"Custom Module not found: {e.message}")
         raise e
 # [END securitycenter_get_event_threat_detection_custom_module]
 
@@ -153,9 +151,7 @@ def list_event_threat_detection_custom_module(parent: str):
     except NotFound as e:
         print(f"Parent resource not found: {parent}")
         raise e
-    except Exception as e:
-        print(f"An error occurred while listing custom modules: {e}")
-        raise e
+
 # [END securitycenter_list_event_threat_detection_custom_module]
 
 
@@ -170,7 +166,7 @@ def update_event_threat_detection_custom_module(parent: str, module_id: str):
                 - folders/{folder_id}/locations/{location_id}
                 - projects/{project_id}/locations/{location_id}
     Returns:
-        Dict: Created custom module details.
+        EventThreatDetectionCustomModule
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
