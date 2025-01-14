@@ -95,7 +95,7 @@ class MainPage(webapp2.RequestHandler):
             cloudstorage_file.write("abcde\n")
             cloudstorage_file.write("f" * 1024 * 4 + "\n")
         self.tmp_filenames_to_clean_up.append(filename)
-    # [END wrigae_storage_writete]
+    # [END gae_storage_write]
 
     # [START gae_storage_read]
     def read_file(self, filename):
