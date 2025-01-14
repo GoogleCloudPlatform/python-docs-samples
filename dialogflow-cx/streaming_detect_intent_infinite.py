@@ -44,7 +44,7 @@ To Run:
        arguments:
 
     ```bash
-    python dialogflow_cx_streaming.py <agent_name> [options]
+python streaming_detect_intent_infinite.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
     ```
 
     Example:
