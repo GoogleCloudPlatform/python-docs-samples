@@ -46,7 +46,7 @@ def execute_workflow(project: str, location: str, workflow: str) -> Execution:
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
     # [END workflows_api_quickstart_client_libraries]
-    
+
     # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project, location, workflow)
