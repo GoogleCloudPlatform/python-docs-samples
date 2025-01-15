@@ -22,8 +22,8 @@ from google.cloud.workflows.executions_v1 import Execution
 from google.cloud.workflows.executions_v1.types import executions
 
 PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = "us-central1"
-WORKFLOW_ID = "myFirstWorkflow"
+LOCATION = os.getenv("LOCATION", "us-central1")
+WORKFLOW_ID = os.getenv("WORKFLOW", "myFirstWorkflow")
 
 
 def execute_workflow(project: str, location: str, workflow: str) -> Execution:
