@@ -23,7 +23,6 @@
 #   https://kubernetes.io/docs/user-guide/deployments/
 
 # [START gke_kubernetes_deployment_yaml_python]
-# [START gke_kubernetes_deployment_python]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -95,7 +94,6 @@ spec:
         - name: cloudsql
           emptyDir: {}
       # [END gke_volumes_python]
-# [END gke_kubernetes_deployment_python]
 # [END gke_kubernetes_deployment_yaml_python]
 ---
 
