@@ -19,14 +19,14 @@ from snippets.set_policy import set_project_policy
 
 
 def modify_policy_add_member(
-    project_id: str, role: str, member: str
+    project_id: str, role: str, principal: str
 ) -> policy_pb2.Policy:
     """
     Add a principal to certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
     role: role to which principal need to be added.
-    member: The principal requesting access.
+    principal: The principal requesting access.
 
     For principal ID formats, see https://cloud.google.com/iam/docs/principal-identifiers
     """
@@ -34,7 +34,7 @@ def modify_policy_add_member(
 
     for bind in policy.bindings:
         if bind.role == role:
-            bind.members.append(member)
+            bind.members.append(principal)
             break
 
     return set_project_policy(project_id, policy)
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     role = "roles/viewer"
     member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
 
-    modify_policy_add_member(project_id, role, member)
+    modify_policy_add_member(project_id, role, principal)
