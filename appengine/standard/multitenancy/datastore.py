@@ -19,7 +19,7 @@ API with Datastore.
 For more information, see README.md.
 """
 
-# [START all]
+# [START gae_multitenancy_datastore]
 from google.appengine.api import namespace_manager
 from google.appengine.ext import ndb
 import webapp2
@@ -73,4 +73,4 @@ app = webapp2.WSGIApplication(
     ],
     debug=True,
 )
-# [END all]
+# [END gae_multitenancy_datastore]

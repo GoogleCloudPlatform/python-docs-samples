@@ -15,7 +15,6 @@
 # limitations under the License.
 
 # [START job_search_quick_start]
-# [START quickstart]
 import os
 
 from googleapiclient.discovery import build
@@ -44,5 +43,4 @@ def run_sample():
 
 if __name__ == "__main__":
     run_sample()
-# [END quickstart]
 # [END job_search_quick_start]

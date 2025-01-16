@@ -20,42 +20,48 @@ from vertexai.preview.rag import RagCorpus
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def create_corpus(
+def create_corpus_vertex_ai_search(
+    vertex_ai_search_engine_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
 ) -> RagCorpus:
-    # [START generativeaionvertexai_rag_create_corpus]
+    # [START generativeaionvertexai_rag_create_corpus_vertex_ai_search]
 
     from vertexai.preview import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
+    # vertex_ai_search_engine_name = "projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/engines/{ENGINE_ID}"
     # display_name = "test_corpus"
     # description = "Corpus Description"
 
     # Initialize Vertex AI API once per session
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Configure embedding model (Optional)
-    embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/text-embedding-004"
+    # Configure Search
+    vertex_ai_search_config = rag.VertexAiSearchConfig(
+        serving_config=f"{vertex_ai_search_engine_name}/servingConfigs/default_search",
     )
 
     corpus = rag.create_corpus(
         display_name=display_name,
         description=description,
-        embedding_model_config=embedding_model_config,
+        vertex_ai_search_config=vertex_ai_search_config,
     )
     print(corpus)
     # Example response:
     # RagCorpus(name='projects/1234567890/locations/us-central1/ragCorpora/1234567890',
-    # display_name='test_corpus', description='Corpus Description', embedding_model_config=...
+    # display_name='test_corpus', description='Corpus Description'.
     # ...
 
-    # [END generativeaionvertexai_rag_create_corpus]
+    # [END generativeaionvertexai_rag_create_corpus_vertex_ai_search]
     return corpus
 
 
 if __name__ == "__main__":
-    create_corpus(display_name="test_corpus", description="Corpus Description")
+    create_corpus_vertex_ai_search(
+        vertex_ai_search_engine_name="projects/{PROJECT_ID}/locations/{LOCATION}/collections/default_collection/engines/{ENGINE_ID}",
+        display_name="test_corpus",
+        description="Corpus Description",
+    )
