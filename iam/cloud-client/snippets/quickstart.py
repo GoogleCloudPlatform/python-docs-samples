@@ -18,19 +18,19 @@ from google.cloud import resourcemanager_v3
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
-def quickstart(project_id: str, member: str) -> None:
+def quickstart(project_id: str, principal: str) -> None:
     """Demonstrates basic IAM operations.
 
 This quickstart shows how to get a project's IAM policy, add a principal to a role, list members of a role, and remove a principal from a role.
 
 Args:
     project_id: The ID or number of the Google Cloud project.
-    member: The principal ID.
+    principal: The principal ID.
 """
     """Gets a policy, adds a principal, prints their permissions, and removes the principal.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    member: The principal requesting the access.
+    principal: The principal requesting the access.
     """
 
     # Role to be granted.
@@ -38,7 +38,7 @@ Args:
     crm_service = resourcemanager_v3.ProjectsClient()
 
     # Grants your principal the 'Log Writer' role for the project.
-    modify_policy_add_role(crm_service, project_id, role, member)
+    modify_policy_add_role(crm_service, project_id, role, principal)
 
     # Gets the project's policy and prints all principals with the 'Log Writer' role.
     policy = get_policy(crm_service, project_id)
@@ -49,7 +49,7 @@ Args:
         print(f"[{m}]")
 
     # Removes the principal from the 'Log Writer' role.
-    modify_policy_remove_member(crm_service, project_id, role, member)
+    modify_policy_remove_member(crm_service, project_id, role, principal)
 
 
 def get_policy(
@@ -82,7 +82,7 @@ def modify_policy_add_role(
     crm_service: resourcemanager_v3.ProjectsClient,
     project_id: str,
     role: str,
-    member: str,
+    principal: str,
 ) -> None:
     """Adds a new role binding to a policy."""
 
@@ -90,12 +90,12 @@ def modify_policy_add_role(
 
     for bind in policy.bindings:
         if bind.role == role:
-            bind.members.append(member)
+            bind.members.append(principal)
             break
     else:
         binding = policy_pb2.Binding()
         binding.role = role
-        binding.members.append(member)
+        binding.members.append(principal)
         policy.bindings.append(binding)
 
     set_policy(crm_service, project_id, policy)
@@ -105,16 +105,16 @@ def modify_policy_remove_member(
     crm_service: resourcemanager_v3.ProjectsClient,
     project_id: str,
     role: str,
-    member: str,
+    principal: str,
 ) -> None:
-    """Removes a  member from a role binding."""
+    """Removes a  principal from a role binding."""
 
     policy = get_policy(crm_service, project_id)
 
     for bind in policy.bindings:
         if bind.role == role:
-            if member in bind.members:
-                bind.members.remove(member)
+            if principal in bind.members:
+                bind.members.remove(principal)
             break
 
     set_policy(crm_service, project_id, policy)
@@ -125,6 +125,6 @@ if __name__ == "__main__":
     project_id = "your-project-id"
     # TODO: Replace with the ID of your principal.
     # For examples, see https://cloud.google.com/iam/docs/principal-identifiers
-    member = "your-principal"
-    quickstart(project_id, member)
+    principal = "your-principal"
+    quickstart(project_id, principal)
 # [END iam_quickstart]
