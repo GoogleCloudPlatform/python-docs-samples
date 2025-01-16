@@ -50,6 +50,6 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "test-project-id"
     role = "roles/viewer"
-    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+    principal = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
 
     modify_policy_add_member(project_id, role, principal)
