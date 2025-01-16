@@ -19,6 +19,14 @@ from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
 def quickstart(project_id: str, member: str) -> None:
+    """Demonstrates basic IAM operations.
+
+This quickstart shows how to get a project's IAM policy, add a principal to a role, list members of a role, and remove a principal from a role.
+
+Args:
+    project_id: The ID or number of the Google Cloud project.
+    member: The principal ID.
+"""
     """Gets a policy, adds a principal, prints their permissions, and removes the principal.
 
     project_id: ID or number of the Google Cloud project you want to use.
