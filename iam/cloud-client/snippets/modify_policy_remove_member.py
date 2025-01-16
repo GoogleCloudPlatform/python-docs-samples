@@ -19,14 +19,14 @@ from snippets.set_policy import set_project_policy
 
 
 def modify_policy_remove_member(
-    project_id: str, role: str, member: str
+    project_id: str, role: str, principal: str
 ) -> policy_pb2.Policy:
     """
     Remove a principal from certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
     role: role to revoke.
-    member: The principal to revoke access from.
+    principal: The principal to revoke access from.
 
     For principal ID formats, see https://cloud.google.com/iam/docs/principal-identifiers
     """
@@ -35,7 +35,7 @@ def modify_policy_remove_member(
     for bind in policy.bindings:
         if bind.role == role:
             if member in bind.members:
-                bind.members.remove(member)
+                bind.members.remove(principal)
             break
 
     return set_project_policy(project_id, policy, False)
@@ -51,6 +51,6 @@ if __name__ == "__main__":
     # Your Google Cloud project ID.
     project_id = "test-project-id"
     role = "roles/viewer"
-    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+    principal = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
 
-    modify_policy_remove_member(project_id, role, member)
+    modify_policy_remove_member(project_id, role, principal)
