@@ -645,9 +645,6 @@ async def main(
     logger.info(f"Using input device: {audioIO.input_device_name}")
     if hasattr(audioIO, "output_device_name"):
         logger.info(f"Using output device: {audioIO.output_device_name}")
-    sys.stdout.write(
-        colored('\nListening, say "Quit" or "Exit" to stop.\n\n', "yellow")
-    )
     sys.stdout.write(colored("End (ms)       Transcript Results/Status\n", "yellow"))
     sys.stdout.write(
         colored("=====================================================\n", "yellow")
