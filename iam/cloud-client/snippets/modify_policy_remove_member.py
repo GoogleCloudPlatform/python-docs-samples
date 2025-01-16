@@ -34,7 +34,7 @@ def modify_policy_remove_member(
 
     for bind in policy.bindings:
         if bind.role == role:
-            if member in bind.members:
+            if principal in bind.members:
                 bind.members.remove(principal)
             break
 
