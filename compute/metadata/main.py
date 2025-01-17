@@ -19,13 +19,12 @@
 For more information, see the README.md under /compute.
 """
 
+# [START compute_metadata_watch_maintenance_notices]
 # [START all]
-
 import time
 from typing import Callable, NoReturn, Optional
 
 import requests
-
 
 METADATA_URL = "http://metadata.google.internal/computeMetadata/v1/"
 METADATA_HEADERS = {"Metadata-Flavor": "Google"}
@@ -44,6 +43,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
     url = METADATA_URL + "instance/maintenance-event"
     last_maintenance_event = None
     # [START hanging_get]
+    # [START compute_metadata_hanging_get_etag]
     last_etag = "0"
 
     while True:
@@ -62,6 +62,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
 
         last_etag = r.headers["etag"]
         # [END hanging_get]
+        # [END compute_metadata_hanging_get_etag]
 
         if r.text == "NONE":
             maintenance_event = None
@@ -93,3 +94,4 @@ def main():
 if __name__ == "__main__":
     main()
 # [END all]
+# [END compute_metadata_watch_maintenance_notices]
