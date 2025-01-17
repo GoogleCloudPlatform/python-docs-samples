@@ -16,16 +16,17 @@
 Example of verifying Google Compute Engine virtual machine identity.
 
 This sample will work only on a GCE virtual machine, as it relies on
-communication with metadata server (https://cloud.google.com/compute/docs/storing-retrieving-metadata).
+communication with metadata server
+(https://cloud.google.com/compute/docs/storing-retrieving-metadata).
 
-Example is used on: https://cloud.google.com/compute/docs/instances/verifying-instance-identity
+Example is used on:
+https://cloud.google.com/compute/docs/instances/verifying-instance-identity
 """
 import pprint
 
 # [START compute_vm_identity_verify_token]
 import google.auth.transport.requests
 from google.oauth2 import id_token
-
 # [END compute_vm_identity_verify_token]
 
 # [START compute_vm_identity_acquire_token]
@@ -78,14 +79,10 @@ def acquire_token(
     # Extract and return the token from the response.
     r.raise_for_status()
     return r.text
-
-
 # [END compute_vm_identity_acquire_token]
 
 
 # [START compute_vm_identity_verify_token]
-
-
 def verify_token(token: str, audience: str) -> dict:
     """
     Verify token signature and return the token payload.
@@ -102,8 +99,6 @@ def verify_token(token: str, audience: str) -> dict:
     request = google.auth.transport.requests.Request()
     payload = id_token.verify_token(token, request=request, audience=audience)
     return payload
-
-
 # [END compute_vm_identity_verify_token]
 
 
