@@ -26,13 +26,13 @@ from typing import Callable, NoReturn, Optional
 
 import requests
 
+
 METADATA_URL = "http://metadata.google.internal/computeMetadata/v1/"
 METADATA_HEADERS = {"Metadata-Flavor": "Google"}
 
 
 def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
-    """
-    Start an infinite loop waiting for maintenance signal.
+    """Start an infinite loop waiting for maintenance signal.
 
     Args:
         callback: Function to be called when a maintenance is scheduled.
@@ -75,8 +75,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
 
 
 def maintenance_callback(event: Optional[str]) -> None:
-    """
-    Example callback function to handle the maintenance event.
+    """Example callback function to handle the maintenance event.
 
     Args:
         event: details about scheduled maintenance.
