@@ -24,7 +24,7 @@ from google.api_core.exceptions import ResourceExhausted
 _RESOURCES = os.path.join(os.path.dirname(__file__), "../test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "pillow.png")
 _OUTPUT_FILE = os.path.join(_RESOURCES, "pillow_on_beach.png")
-_PROMPT = "beach"
+_PROMPT = "a beach with sand and water"
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
