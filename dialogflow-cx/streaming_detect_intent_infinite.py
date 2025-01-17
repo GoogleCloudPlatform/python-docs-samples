@@ -71,6 +71,8 @@ to Dialogflow CX, and play back the audio responses. Press Ctrl+C to exit the
 program gracefully.
 """
 
+# [START streaming_detect_intent_infinite]
+
 import argparse
 import asyncio
 import logging
@@ -725,3 +727,5 @@ if __name__ == "__main__":
             args.single_utterance,
         )
     )
+
+# [END streaming_detect_intent_infinite]
