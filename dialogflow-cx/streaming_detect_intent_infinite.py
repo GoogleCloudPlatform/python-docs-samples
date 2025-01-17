@@ -22,53 +22,42 @@ processing, and plays back the synthesized audio responses from Dialogflow
 CX through the user's speakers.
 
 Dependencies:
+  - google-cloud-dialogflow-cx: Cloud Dialogflow CX API client library.
+  - termcolor: For colored terminal output.
+  - pyaudio: For interfacing with audio input/output devices.
 
-    - google-cloud-dialogflow-cx: Cloud Dialogflow CX API client library.
-    - termcolor: For colored terminal output.
-    - pyaudio: For interfacing with audio input/output devices.
+NOTE: pyaudio may have additional dependencies depending on your platform.
 
-    Install dependencies using pip:
+Install dependencies using pip:
 
-    ```bash
-    pip install -r requirements.txt
-    ```
+```bash
+pip install -r requirements.txt
+```
 
 Before Running:
 
-    - Set up a Dialogflow CX agent and obtain the agent name.
-    - Ensure you have properly configured Google Cloud authentication
-      (e.g., using a service account key).
+  - Set up a Dialogflow CX agent and obtain the agent name.
+  - Ensure you have properly configured Google Cloud authentication
+    (e.g., using a service account key).
 
-To Run:
-    - Execute the script from the command line, providing the necessary
-       arguments:
+Example usage:
 
-    ```bash
-    ./streaming_detect_intent_infinite.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
-    ```
+```bash
+python streaming_detect_intent_infinite.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
+```
 
-    Example:
+Replace `projects/your-project/locations/your-location/agents/your-agent-id`
+with your Dialogflow CX agent name.
 
-    ```bash
-    python dialogflow_cx_streaming.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
-    ```
+Further information is provided via:
 
-    Replace `projects/your-project/locations/your-location/agents/your-agent-id`
-    with your Dialogflow CX agent name.
-
-    Optional Arguments:
-        --help: Get help about command line arguments.
-        --debug: Enable debug logging.
-        --model: Specify the speech recognition model.
-        --language_code: Specify the language code (default: en-US).
-        --dialogflow_timeout: Set the Dialogflow API timeout in seconds (default: 60).
-        --sample_rate: Set the audio sample rate in Hz (default: 16000).
-        --voice: Specify the voice for output audio.
-        --single_utterance: Enable single utterance mode. NO_INPUT events only work with single_utterance enabled!
+```bash
+python streaming_detect_intent_infinite.py --help
+```
 
 The script will start capturing audio from the default microphone, stream it
 to Dialogflow CX, and play back the audio responses. Press Ctrl+C to exit the
-program gracefully.
+program gracefully. Say "Hello" to trigger the Default Intent.
 """
 
 # [START streaming_detect_intent_infinite]
