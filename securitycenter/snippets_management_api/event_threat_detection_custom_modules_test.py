@@ -20,6 +20,8 @@ import random
 
 import time
 
+import uuid
+
 import backoff
 
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
@@ -36,10 +38,10 @@ import event_threat_detection_custom_modules
 # GCLOUD_ORGANIZATION: The organization ID.
 ORGANIZATION_ID = os.environ["GCLOUD_ORGANIZATION"]
 LOCATION = "global"
-PREFIX = "python_sample_etd_custom_module"  # Prefix used for identifying test modules
+PREFIX = "python_sample_etd_custom_module"
 
-# Global list to track created modules
-created_modules = []
+# Global list to track created shared modules
+shared_modules = []
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -47,17 +49,90 @@ def setup_environment():
     if not ORGANIZATION_ID:
         pytest.fail("GCLOUD_ORGANIZATION environment variable is not set.")
 
+    setup_shared_modules()
+
 
 @pytest.fixture(scope="session", autouse=True)
 def cleanup_after_tests(request):
     """Fixture to clean up created custom modules after the test session."""
     def teardown():
-        print("\nCreated Custom Modules:")
-        print_all_created_modules()
-        print("Cleaning up created custom modules...")
-        cleanup_created_custom_modules()
+        print_all_shared_modules()
+        cleanup_shared_modules()
 
     request.addfinalizer(teardown)
+
+
+def setup_shared_modules():
+    for _ in range(3) :
+        _, module_id = add_custom_module(ORGANIZATION_ID)
+        if module_id != "" :
+            shared_modules.append(module_id)
+
+
+def add_module_to_cleanup(module_id):
+    shared_modules.append(module_id)
+
+
+def print_all_shared_modules():
+    """Print all created custom modules."""
+    if not shared_modules:
+        print("No custom modules were created.")
+    else:
+        print("\nCreated Custom Modules:")
+        for module_id in shared_modules:
+            print(module_id)
+
+
+def cleanup_shared_modules():
+    """
+    Deletes all created custom modules in this test session.
+    """
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+
+    print("Cleaning up created custom modules...")
+
+    for module_id in list(shared_modules):
+        if not custom_module_exists(module_id):
+            print(f"Module not found (already deleted): {module_id}")
+            shared_modules.remove(module_id)
+            continue
+        try:
+            client.delete_event_threat_detection_custom_module(
+                    request={"name": f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}/eventThreatDetectionCustomModules/{module_id}"}
+                )
+            print(f"Deleted custom module: {module_id}")
+            shared_modules.remove(module_id)
+        except Exception as e:
+            print(f"Failed to delete module {module_id}: {e}")
+            raise
+
+
+def custom_module_exists(module_id):
+    client = securitycentermanagement_v1.SecurityCenterManagementClient()
+    try:
+        client.get_event_threat_detection_custom_module(
+                request={"name": f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}/eventThreatDetectionCustomModules/{module_id}"}
+            )
+        return True
+    except Exception as e:
+        if "404" in str(e):
+            return False
+        raise
+
+
+def get_random_shared_module():
+    if not shared_modules:
+        return ""
+    random.seed(int(time.time() * 1000000))
+    return shared_modules[random.randint(0, len(shared_modules) - 1)]
+
+
+def extract_custom_module_id(module_name):
+    trimmed_full_name = module_name.strip()
+    parts = trimmed_full_name.split("/")
+    if parts:
+        return parts[-1]
+    return ""
 
 
 def add_custom_module(org_id: str):
@@ -66,7 +141,7 @@ def add_custom_module(org_id: str):
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
     # Generate a unique display name
-    unique_suffix = f"{int(time.time())}_{random.randint(0, 999)}"
+    unique_suffix = str(uuid.uuid4()).replace("-", "_")
     display_name = f"python_sample_etd_custom_module_test_{unique_suffix}"
 
     # Define the metadata and other config parameters as a dictionary
@@ -98,7 +173,7 @@ def add_custom_module(org_id: str):
     response = client.create_event_threat_detection_custom_module(request=request)
     print(f"Created Event Threat Detection Custom Module: {response.name}")
     module_name = response.name
-    module_id = module_name.split("/")[-1]
+    module_id = extract_custom_module_id(module_name)
     return module_name, module_id
 
 
@@ -110,7 +185,7 @@ def test_create_event_threat_detection_custom_module():
 
     # Run the function to create the custom module
     response = event_threat_detection_custom_modules.create_event_threat_detection_custom_module(parent)
-    created_modules.append(response.name)
+    add_module_to_cleanup(extract_custom_module_id(response.name))
 
     assert response is not None, "Custom module creation failed."
     # Verify that the custom module was created
@@ -123,18 +198,15 @@ def test_create_event_threat_detection_custom_module():
 )
 def test_get_event_threat_detection_custom_module():
 
-    module_name, module_id = add_custom_module(ORGANIZATION_ID)
-    created_modules.append(module_name)
+    module_id = get_random_shared_module()
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
     # Retrieve the custom module
     response = event_threat_detection_custom_modules.get_event_threat_detection_custom_module(parent, module_id)
 
     assert response is not None, "Failed to retrieve the custom module."
-    # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
-    print(f"Retrieved Custom Module: {response.name}")
 
 
 @backoff.on_exception(
@@ -142,8 +214,8 @@ def test_get_event_threat_detection_custom_module():
 )
 def test_list_event_threat_detection_custom_module():
 
-    module_name, module_id = add_custom_module(ORGANIZATION_ID)
-    created_modules.append(module_name)
+    module_id = get_random_shared_module()
+
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the custom modules
     custom_modules = event_threat_detection_custom_modules.list_event_threat_detection_custom_module(parent)
@@ -153,7 +225,7 @@ def test_list_event_threat_detection_custom_module():
 
     # Verify the created module is in the list
     created_module = next(
-        (module for module in custom_modules if module.name == module_name), None
+        (module for module in custom_modules if extract_custom_module_id(module.name) == module_id), None
     )
     assert created_module is not None, "Created custom module not found in the list."
     assert created_module.display_name.startswith(PREFIX)
@@ -168,15 +240,14 @@ def test_list_event_threat_detection_custom_module():
 )
 def test_update_event_threat_detection_custom_module():
 
-    module_name, module_id = add_custom_module(ORGANIZATION_ID)
-    created_modules.append(module_name)
+    module_id = get_random_shared_module()
+
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
     # Retrieve the custom module
     response = event_threat_detection_custom_modules.update_event_threat_detection_custom_module(parent, module_id)
 
     assert response is not None, "Failed to retrieve the custom module."
-    # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
     assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.DISABLED
 
@@ -186,8 +257,8 @@ def test_update_event_threat_detection_custom_module():
 )
 def test_delete_event_threat_detection_custom_module():
 
-    module_name, module_id = add_custom_module(ORGANIZATION_ID)
-    created_modules.append(module_name)
+    module_id = get_random_shared_module()
+
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     try:
         response = event_threat_detection_custom_modules.delete_event_threat_detection_custom_module(parent, module_id)
@@ -196,47 +267,3 @@ def test_delete_event_threat_detection_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
-
-
-def print_all_created_modules():
-    """Print all created custom modules."""
-    if not created_modules:
-        print("No custom modules were created.")
-    else:
-        for module in created_modules:
-            print(module)
-
-
-def cleanup_created_custom_modules():
-    """
-    Deletes all created custom modules in this test session.
-    """
-    client = securitycentermanagement_v1.SecurityCenterManagementClient()
-
-    for module in list(created_modules):
-        if not custom_module_exists(module):
-            print(f"Module not found (already deleted): {module}")
-            created_modules.remove(module)
-            continue
-        try:
-            client.delete_event_threat_detection_custom_module(
-                    request={"name": module}
-                )
-            print(f"Deleted custom module: {module}")
-            created_modules.remove(module)
-        except Exception as e:
-            print(f"Failed to delete module {module}: {e}")
-            raise
-
-
-def custom_module_exists(module_name):
-    client = securitycentermanagement_v1.SecurityCenterManagementClient()
-    try:
-        client.get_event_threat_detection_custom_module(
-                request={"name": module_name}
-            )
-        return True
-    except Exception as e:
-        if "404" in str(e):
-            return False
-        raise

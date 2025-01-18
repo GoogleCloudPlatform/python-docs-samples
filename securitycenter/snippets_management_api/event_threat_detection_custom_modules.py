@@ -14,8 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
-import time
+import uuid
 
 from google.api_core.exceptions import GoogleAPICallError, NotFound
 from google.cloud import securitycentermanagement_v1
@@ -41,10 +40,8 @@ def create_event_threat_detection_custom_module(parent: str) -> securitycenterma
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
     try:
-        # Seed the random number generator
-        random.seed(time.time())
         # Generate a unique suffix
-        unique_suffix = f"{int(time.time())}-{random.randint(0, 999)}"
+        unique_suffix = str(uuid.uuid4()).replace("-", "_")
         # Create unique display name
         display_name = f"python_sample_etd_custom_module_{unique_suffix}"
 
