@@ -12,9 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import main
-import pytest
 import sys
+
+import pytest
+
+import main
 
 
 @pytest.mark.skipif(sys.version_info < (3, 0), reason="no urlfetch adapter in test env")
