@@ -60,7 +60,7 @@ to Dialogflow CX, and play back the audio responses. Press Ctrl+C to exit the
 program gracefully. Say "Hello" to trigger the Default Intent.
 """
 
-# [START streaming_detect_intent_infinite]
+# [START dialogflow_streaming_detect_intent_infinite]
 
 import argparse
 import asyncio
@@ -717,4 +717,4 @@ if __name__ == "__main__":
         )
     )
 
-# [END streaming_detect_intent_infinite]
+# [END dialogflow_streaming_detect_intent_infinite]
