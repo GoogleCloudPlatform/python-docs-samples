@@ -14,16 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import random
-import time
-from typing import Dict
+import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import GoogleAPICallError, NotFound
 from google.cloud import securitycentermanagement_v1
 
 
 # [START securitycenter_create_security_health_analytics_custom_module]
-def create_security_health_analytics_custom_module(parent: str) -> Dict:
+def create_security_health_analytics_custom_module(parent: str) -> securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule:
     """
     Creates a Security Health Analytics custom module.
 
@@ -40,57 +38,63 @@ def create_security_health_analytics_custom_module(parent: str) -> Dict:
     """
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
 
-    # Generate a unique display name
-    unique_suffix = f"{int(time.time())}_{random.randint(0, 999)}"
-    display_name = f"python_sample_sha_custom_module_{unique_suffix}"
+    try:
+        # Generate a unique suffix
+        unique_suffix = str(uuid.uuid4()).replace("-", "_")
+        # Generate a unique display name
+        display_name = f"python_sample_sha_custom_module_{unique_suffix}"
 
-    # Define the custom module configuration
-    custom_module = {
-        "display_name": display_name,
-        "enablement_state": "ENABLED",
-        "custom_config": {
-            "description": (
-                "Sample custom module for testing purposes. This custom module evaluates "
-                "Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds)."
-            ),
-            "predicate": {
-                "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
-                "title": "Cloud KMS CryptoKey Rotation Period",
+        # Define the custom module configuration
+        custom_module = {
+            "display_name": display_name,
+            "enablement_state": "ENABLED",
+            "custom_config": {
                 "description": (
-                    "Evaluates whether the rotation period of a Cloud KMS CryptoKey exceeds 30 days. "
-                    "A longer rotation period might increase the risk of exposure."
+                    "Sample custom module for testing purposes. This custom module evaluates "
+                    "Cloud KMS CryptoKeys to ensure their rotation period exceeds 30 days (2592000 seconds)."
                 ),
+                "predicate": {
+                    "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
+                    "title": "Cloud KMS CryptoKey Rotation Period",
+                    "description": (
+                        "Evaluates whether the rotation period of a Cloud KMS CryptoKey exceeds 30 days. "
+                        "A longer rotation period might increase the risk of exposure."
+                    ),
+                },
+                "recommendation": (
+                    "Review and adjust the rotation period for Cloud KMS CryptoKeys to align with your security policies. "
+                    "Consider setting a shorter rotation period if possible."
+                ),
+                "resource_selector": {"resource_types": ["cloudkms.googleapis.com/CryptoKey"]},
+                "severity": "CRITICAL",
+                "custom_output": {
+                    "properties": [
+                        {
+                            "name": "example_property",
+                            "value_expression": {
+                                "description": "The resource name of the CryptoKey being evaluated.",
+                                "expression": "resource.name",
+                                "location": "global",
+                                "title": "CryptoKey Resource Name",
+                            },
+                        }
+                    ]
+                },
             },
-            "recommendation": (
-                "Review and adjust the rotation period for Cloud KMS CryptoKeys to align with your security policies. "
-                "Consider setting a shorter rotation period if possible."
-            ),
-            "resource_selector": {"resource_types": ["cloudkms.googleapis.com/CryptoKey"]},
-            "severity": "CRITICAL",
-            "custom_output": {
-                "properties": [
-                    {
-                        "name": "example_property",
-                        "value_expression": {
-                            "description": "The resource name of the CryptoKey being evaluated.",
-                            "expression": "resource.name",
-                            "location": "global",
-                            "title": "CryptoKey Resource Name",
-                        },
-                    }
-                ]
-            },
-        },
-    }
+        }
 
-    request = securitycentermanagement_v1.CreateSecurityHealthAnalyticsCustomModuleRequest(
-        parent=parent,
-        security_health_analytics_custom_module=custom_module,
-    )
+        request = securitycentermanagement_v1.CreateSecurityHealthAnalyticsCustomModuleRequest(
+            parent=parent,
+            security_health_analytics_custom_module=custom_module,
+        )
 
-    response = client.create_security_health_analytics_custom_module(request=request)
-    print(f"Created Security Health Analytics Custom Module: {response.name}")
-    return response
+        response = client.create_security_health_analytics_custom_module(request=request)
+        print(f"Created SecurityHealthAnalytics Custom Module: {response.name}")
+        return response
+
+    except GoogleAPICallError as e:
+        print(f"Failed to create EventThreatDetectionCustomModule: {e}")
+        raise
 # [END securitycenter_create_security_health_analytics_custom_module]
 
 
@@ -210,9 +214,8 @@ def update_security_health_analytics_custom_module(parent: str, module_id: str):
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
     try:
         # Define the custom module configuration
-        custom_module_name = f"{parent}/securityHealthAnalyticsCustomModules/{module_id}"
         custom_module = securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule(
-            name=custom_module_name,
+            name=f"{parent}/securityHealthAnalyticsCustomModules/{module_id}",
             enablement_state=securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.DISABLED,
         )
 
@@ -228,7 +231,7 @@ def update_security_health_analytics_custom_module(parent: str, module_id: str):
         print(f"Updated Security Health Analytics Custom Module: {response.name}")
         return response
     except NotFound:
-        print(f"Custom Module not found: {custom_module_name}")
+        print(f"Custom Module not found: {custom_module.name}")
         raise
     except Exception as e:
         print(f"An error occurred while updating the custom module: {e}")
