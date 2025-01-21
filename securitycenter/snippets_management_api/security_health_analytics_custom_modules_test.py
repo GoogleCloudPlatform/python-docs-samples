@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -236,24 +236,12 @@ def test_delete_security_health_analytics_custom_module():
 )
 def test_list_security_health_analytics_custom_module():
 
-    # module_id = get_random_shared_module()
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the custom modules
     custom_modules = security_health_analytics_custom_modules.list_security_health_analytics_custom_module(parent)
 
     assert custom_modules is not None, "Failed to retrieve the custom modules."
     assert len(custom_modules) > 0, "No custom modules were retrieved."
-
-    # # Verify the created module is in the list
-    # created_module = next(
-    #     (module for module in custom_modules if extract_custom_module_id(module.name) == module_id), None
-    # )
-    # assert created_module is not None, "Created custom module not found in the list."
-    # assert created_module.display_name.startswith(PREFIX)
-    # assert (
-    #     created_module.enablement_state
-    #     == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
-    # )
 
 
 @backoff.on_exception(
