@@ -11,11 +11,6 @@ with the [Google Cloud NDB library](https://googleapis.dev/python/python-ndb/lat
 This library can be used not only on App Engine, but also other Python 3
 platforms.
 
-To deploy and run this sample in App Engine standard for Python 2.7:
-
-    pip install -t lib -r requirements.txt
-    gcloud app deploy
-
-To deploy and run this sample in App Engine standard for Python 3.7:
+To deploy and run this sample in App Engine standard for Python 3.8:
 
     gcloud app deploy app3.yaml
