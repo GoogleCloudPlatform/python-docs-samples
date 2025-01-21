@@ -12,14 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from unittest.mock import patch
-from vertexai.generative_models import GenerativeModel, GenerationResponse
+from unittest.mock import patch, MagicMock
+
+from vertexai.generative_models import (
+    GenerationResponse,
+    GenerativeModel,
+)
 
 import api_key_example
 
 
 @patch.object(GenerativeModel, "generate_content")
-def test_api_key_example(mock_generate_content):
+def test_api_key_example(mock_generate_content: MagicMock) -> None:
     # Mock the API response
     mock_generate_content.return_value = GenerationResponse.from_dict(
         {

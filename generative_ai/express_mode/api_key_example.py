@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> None:
+def generate_content() -> str:
 
     # [START generativeaionvertexai_gemini_express_mode]
     import vertexai
