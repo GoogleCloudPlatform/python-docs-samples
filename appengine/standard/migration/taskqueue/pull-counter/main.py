@@ -21,10 +21,12 @@
 import os
 import time
 
-from flask import Flask, redirect, render_template, request
+from flask import Flask
+from flask import redirect
+from flask import render_template
+from flask import request
 from google.cloud import datastore
 from google.cloud import pubsub_v1 as pubsub
-
 
 app = Flask(__name__)
 datastore_client = datastore.Client()
