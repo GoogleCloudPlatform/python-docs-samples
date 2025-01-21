@@ -21,7 +21,6 @@ For more information, see README.md
 """
 
 # [START gae_ndb_overview]
-# [START all]
 import cgi
 import textwrap
 import urllib
@@ -32,17 +31,14 @@ import webapp2
 
 
 # [START gae_ndb_overview_greeting]
-# [START greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
 
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-    # [END greeting]
     # [END gae_ndb_overview_greeting]
 
     # [START gae_ndb_overview_query]
-    # [START query]
     @classmethod
     def query_book(cls, ancestor_key):
         return cls.query(ancestor=ancestor_key).order(-cls.date)
@@ -54,7 +50,6 @@ class MainPage(webapp2.RequestHandler):
         guestbook_name = self.request.get("guestbook_name")
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
-        # [END query]
         # [END gae_ndb_overview_query]
 
         greeting_blockquotes = []
@@ -95,7 +90,6 @@ class MainPage(webapp2.RequestHandler):
 
 
 # [START gae_ndb_overview_submit]
-# [START submit]
 class SubmitForm(webapp2.RequestHandler):
     def post(self):
         # We set the parent key on each 'Greeting' to ensure each guestbook's
@@ -106,11 +100,9 @@ class SubmitForm(webapp2.RequestHandler):
             content=self.request.get("content"),
         )
         greeting.put()
-        # [END submit]
         # [END gae_ndb_overview_submit]
         self.redirect("/?" + urllib.urlencode({"guestbook_name": guestbook_name}))
 
 
 app = webapp2.WSGIApplication([("/", MainPage), ("/sign", SubmitForm)])
-# [END all]
 # [END gae_ndb_overview]

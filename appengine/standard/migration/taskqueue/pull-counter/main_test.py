@@ -13,11 +13,9 @@
 # limitations under the License.
 
 import uuid
-
 import pytest
 
 import main
-
 
 TEST_NAME = "taskqueue-migration-" + str(uuid.uuid4())
 TEST_TASKS = {"alpha": 2, "beta": 1, "gamma": 3}
