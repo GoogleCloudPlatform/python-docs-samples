@@ -44,8 +44,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
     # [START compute_metadata_hanging_get_etag]
     last_etag = "0"
 
-    while True:    # [START hanging_get]
-
+    while True:
         r = requests.get(
             url,
             params={"last_etag": last_etag, "wait_for_change": True},
