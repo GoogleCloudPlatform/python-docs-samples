@@ -13,8 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
-
+def generate_content() -> None:
     # [START generativeaionvertexai_gemini_express_mode]
     import vertexai
     from vertexai.generative_models import GenerativeModel
@@ -29,6 +28,5 @@ def generate_content() -> str:
     print(response.text)
     # Example response:
     # Bubble Sort is a simple sorting algorithm that repeatedly steps through the list
-
     # [END generativeaionvertexai_gemini_express_mode]
     return response.text
