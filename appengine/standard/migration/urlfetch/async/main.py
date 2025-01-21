@@ -14,12 +14,12 @@
 
 # [START app]
 import logging
+from time import sleep
 
-from flask import Flask, make_response
-
+from flask import Flask
+from flask import make_response
 # [START imports]
 from requests_futures.sessions import FuturesSession
-from time import sleep
 
 # [END imports]
 
