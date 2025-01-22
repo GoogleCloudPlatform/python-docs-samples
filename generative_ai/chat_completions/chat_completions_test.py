@@ -18,10 +18,10 @@ import chat_completions_authentication
 import chat_completions_credentials_refresher
 import chat_completions_non_streaming_image
 import chat_completions_non_streaming_text
+import chat_completions_non_streaming_text_self_deployed
 import chat_completions_streaming_image
 import chat_completions_streaming_text
 import chat_completions_streaming_text_self_deployed
-import chat_completions_non_streaming_text_self_deployed
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
