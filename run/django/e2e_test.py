@@ -18,6 +18,7 @@
 from collections.abc import Iterator
 import os
 import subprocess
+import sys
 import uuid
 
 import backoff
@@ -27,10 +28,10 @@ import requests
 # Unique suffix to create distinct service names
 SUFFIX = uuid.uuid4().hex[:10]
 
+PYTHON_VERSION = f"{sys.version_info.major}.{sys.version_info.minor}"
 SAMPLE_VERSION = os.environ.get("SAMPLE_VERSION", None)
 GOOGLE_CLOUD_PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-PLATFORM = "managed"
 
 SERVICE = f"polls-{SUFFIX}"
 
@@ -50,19 +51,10 @@ else:
     POSTGRES_INSTANCE_FULL = f"{GOOGLE_CLOUD_PROJECT}:{REGION}:{POSTGRES_INSTANCE}"
     POSTGRES_INSTANCE_NAME = POSTGRES_INSTANCE
 
-POSTGRES_DATABASE = f"django-database-{SUFFIX}"
-
-CLOUD_STORAGE_BUCKET = f"{GOOGLE_CLOUD_PROJECT}-media-{SUFFIX}"
-
-POSTGRES_DATABASE = f"polls-{SUFFIX}"
-POSTGRES_USER = f"django-{SUFFIX}"
 POSTGRES_PASSWORD = uuid.uuid4().hex[:26]
 
 ADMIN_NAME = "admin"
 ADMIN_PASSWORD = uuid.uuid4().hex[:26]
-
-SECRET_SETTINGS_NAME = f"django_settings-{SUFFIX}"
-SECRET_PASSWORD_NAME = f"superuser_password-{SUFFIX}"
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
@@ -98,18 +90,14 @@ def run_shell_cmd(args: list) -> subprocess.CompletedProcess:
 @pytest.fixture
 def deployed_service() -> str:
     substitutions = [
+        f"_VERSION={SUFFIX},"
+        f"_PYTHON_VERSION={PYTHON_VERSION},"
         f"_SERVICE={SERVICE},"
-        f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
-        f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
-        f"_DB_NAME={POSTGRES_DATABASE},"
-        f"_DB_USER={POSTGRES_USER},"
         f"_DB_PASS={POSTGRES_PASSWORD},"
+        f"_ADMIN_PASSWORD={ADMIN_PASSWORD},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
-        f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
-        f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
-        f"_SECRET_PASSWORD_VALUE={ADMIN_PASSWORD},"
-        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL}"
+        f"_CLOUD_SQL_CONNECTION_NAME={POSTGRES_INSTANCE_FULL},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f",_VERSION={SAMPLE_VERSION}")
@@ -133,15 +121,10 @@ def deployed_service() -> str:
     # Cleanup
 
     substitutions = [
+        f"_VERSION={SUFFIX},"
         f"_SERVICE={SERVICE},"
-        f"_PLATFORM={PLATFORM},"
         f"_REGION={REGION},"
-        f"_DB_USER={POSTGRES_USER},"
-        f"_DB_NAME={POSTGRES_DATABASE},"
         f"_DB_INSTANCE={POSTGRES_INSTANCE_NAME},"
-        f"_SECRET_SETTINGS_NAME={SECRET_SETTINGS_NAME},"
-        f"_SECRET_PASSWORD_NAME={SECRET_PASSWORD_NAME},"
-        f"_STORAGE_BUCKET={CLOUD_STORAGE_BUCKET},"
     ]
     if SAMPLE_VERSION:
         substitutions.append(f"_SAMPLE_VERSION={SAMPLE_VERSION}")
@@ -172,8 +155,6 @@ def service_url_auth_token(deployed_service: str) -> Iterator[tuple[str, str]]:
                 "services",
                 "describe",
                 deployed_service,
-                "--platform",
-                "managed",
                 "--region",
                 REGION,
                 "--format",

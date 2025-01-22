@@ -40,7 +40,7 @@ assign_issues_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-sdk
+      - GoogleCloudPlatform/cloud-sql-connectors
   - labels:
       - "api: bigtable"
       - "api: datastore"
@@ -129,6 +129,10 @@ assign_issues_by:
       - "api: serviceextensions"
     to:
       - GoogleCloudPlatform/service-extensions-samples-reviewers
+  - labels:
+      - "api: dataplex"
+    to:
+      - GoogleCloudPlatform/googleapi-dataplex
 
   # Self-service individuals
   - labels:
@@ -168,7 +172,7 @@ assign_prs_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-sdk
+      - GoogleCloudPlatform/cloud-sql-connectors
   - labels:
       - "api: bigtable"
       - "api: datastore"
@@ -250,6 +254,10 @@ assign_prs_by:
     to:
       - GoogleCloudPlatform/service-extensions-samples-reviewers
       - GoogleCloudPlatform/dee-infra
+  - labels:
+      - "api: dataplex"
+    to:
+      - GoogleCloudPlatform/googleapi-dataplex
   # Self-service individuals
   - labels:
       - "api: auth"

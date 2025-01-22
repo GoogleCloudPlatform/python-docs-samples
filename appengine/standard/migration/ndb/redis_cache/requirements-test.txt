@@ -1,2 +1,7 @@
 # pin pytest to 4.6.11 for Python2.
 pytest==4.6.11; python_version < '3.0'
+
+# 2025-01-14 Adds support for Python3.
+pytest==8.3.2; python_version >= '3.0'
+WebTest==3.0.1; python_version >= '3.0'
+six==1.16.0

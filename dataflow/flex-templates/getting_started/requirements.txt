@@ -1,1 +1,1 @@
-apache-beam[gcp]==2.48.0
+apache-beam[gcp] # Version not pinned to use the latest Beam SDK provided by the base image

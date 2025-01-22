@@ -26,7 +26,7 @@ from delete_ca_pool import delete_ca_pool
 from delete_certificate_authority import delete_certificate_authority
 from disable_certificate_authority import disable_certificate_authority
 from enable_certificate_authority import enable_certificate_authority
-from monitor_certificate_authority import create_ca_monitor_policy
+from monitor_certificate_authority import create_ca_monitor_policy, delete_ca_monitor_policy
 from undelete_certificate_authority import undelete_certificate_authority
 from update_certificate_authority import update_ca_label
 
@@ -126,8 +126,10 @@ def test_update_certificate_authority(
 
 @backoff.on_exception(backoff_expo_wrapper, Exception, max_tries=3)
 def test_create_monitor_ca_policy(capsys: typing.Any) -> None:
-    create_ca_monitor_policy(PROJECT)
+    policy = create_ca_monitor_policy(PROJECT)
 
     out, _ = capsys.readouterr()
 
     assert "Monitoring policy successfully created!" in out
+
+    delete_ca_monitor_policy(policy)

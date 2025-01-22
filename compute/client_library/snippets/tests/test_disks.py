@@ -17,18 +17,45 @@ import uuid
 from google.api_core.exceptions import NotFound
 import google.auth
 from google.cloud import compute_v1, kms_v1
+
 import pytest
 
 from ..disks.attach_disk import attach_disk
+from ..disks.attach_regional_disk_force import attach_disk_force
+from ..disks.attach_regional_disk_to_vm import attach_regional_disk
 from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encrypted_disk
+from ..disks.consistency_groups.add_disk_consistency_group import (
+    add_disk_consistency_group,
+)
+from ..disks.consistency_groups.clone_disks_consistency_group import (
+    clone_disks_to_consistency_group,
+)
+from ..disks.consistency_groups.create_consistency_group import create_consistency_group
+from ..disks.consistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.consistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
+from ..disks.consistency_groups.stop_replication_consistency_group import (
+    stop_replication_consistency_group,
+)
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
+from ..disks.create_hyperdisk import create_hyperdisk
+from ..disks.create_hyperdisk_from_pool import create_hyperdisk_from_pool
+from ..disks.create_hyperdisk_storage_pool import create_hyperdisk_storage_pool
 from ..disks.create_kms_encrypted_disk import create_kms_encrypted_disk
+from ..disks.create_replicated_disk import create_regional_replicated_disk
+from ..disks.create_secondary_custom import create_secondary_custom_disk
+from ..disks.create_secondary_disk import create_secondary_disk
+from ..disks.create_secondary_region_disk import create_secondary_region_disk
+
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
 from ..disks.regional_delete import delete_regional_disk
+from ..disks.replication_disk_start import start_disk_replication
+from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
@@ -39,9 +66,12 @@ from ..snapshots.delete import delete_snapshot
 
 PROJECT = google.auth.default()[1]
 ZONE = "europe-west2-c"
+ZONE_SECONDARY = "europe-west1-c"
 REGION = "europe-west2"
+REGION_SECONDARY = "europe-west3"
 KMS_KEYRING_NAME = "compute-test-keyring"
 KMS_KEY_NAME = "compute-test-key"
+DISK_SIZE = 15
 
 
 @pytest.fixture()
@@ -90,6 +120,23 @@ def test_disk():
 
 
 @pytest.fixture
+def test_empty_pd_balanced_disk():
+    """
+    Creates and deletes a pd_balanced disk in secondary zone.
+    """
+    disk_name = "test-pd-balanced-disk" + uuid.uuid4().hex[:4]
+    disk = create_empty_disk(
+        PROJECT,
+        ZONE_SECONDARY,
+        disk_name,
+        f"zones/{ZONE_SECONDARY}/diskTypes/pd-balanced",
+        disk_size_gb=DISK_SIZE,
+    )
+    yield disk
+    delete_disk(PROJECT, ZONE_SECONDARY, disk_name)
+
+
+@pytest.fixture
 def test_snapshot(test_disk):
     """
     Make a snapshot that will be deleted when tests are done.
@@ -100,6 +147,17 @@ def test_snapshot(test_disk):
     )
     yield snap
     delete_snapshot(PROJECT, snap.name)
+
+
+@pytest.fixture()
+def autodelete_regional_disk_name():
+    disk_name = "secondary-region-disk" + uuid.uuid4().hex[:4]
+    yield disk_name
+    try:
+        delete_regional_disk(PROJECT, REGION_SECONDARY, disk_name)
+    except NotFound:
+        # The disk was already deleted
+        pass
 
 
 @pytest.fixture()
@@ -147,7 +205,7 @@ def autodelete_regional_blank_disk():
     disk_type = f"regions/{REGION}/diskTypes/pd-balanced"
 
     disk = create_regional_disk(
-        PROJECT, REGION, replica_zones, disk_name, disk_type, 11
+        PROJECT, REGION, replica_zones, disk_name, disk_type, DISK_SIZE
     )
 
     yield disk
@@ -163,7 +221,7 @@ def autodelete_regional_blank_disk():
 
 @pytest.fixture
 def autodelete_blank_disk():
-    disk_name = "regional-disk-" + uuid.uuid4().hex[:10]
+    disk_name = "test-disk-" + uuid.uuid4().hex[:10]
     disk_type = f"zones/{ZONE}/diskTypes/pd-standard"
 
     disk = create_empty_disk(PROJECT, ZONE, disk_name, disk_type, 12)
@@ -193,6 +251,15 @@ def autodelete_compute_instance():
     yield instance
 
     delete_instance(PROJECT, ZONE, instance_name)
+
+
+@pytest.fixture(scope="session")
+def autodelete_hyperdisk_pool():
+    pool_name = "test-pool-" + uuid.uuid4().hex[:6]
+    pool = create_hyperdisk_storage_pool(PROJECT, ZONE, pool_name)
+    yield pool
+    pool_client = compute_v1.StoragePoolsClient()
+    pool_client.delete(project=PROJECT, zone=ZONE, storage_pool=pool_name)
 
 
 def test_disk_create_delete(autodelete_disk_name):
@@ -315,6 +382,23 @@ def test_disk_attachment(
     assert len(list(instance.disks)) == 3
 
 
+def test_regional_disk_force_attachment(
+    autodelete_regional_blank_disk, autodelete_compute_instance
+):
+    attach_disk_force(
+        project_id=PROJECT,
+        vm_name=autodelete_compute_instance.name,
+        vm_zone=ZONE,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_region=REGION,
+    )
+
+    instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
+    assert any(
+        [autodelete_regional_blank_disk.name in disk.source for disk in instance.disks]
+    )
+
+
 def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
     resize_disk(PROJECT, autodelete_blank_disk.self_link, 22)
     resize_disk(PROJECT, autodelete_regional_blank_disk.self_link, 23)
@@ -333,3 +417,256 @@ def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
         ).size_gb
         == 23
     )
+
+
+def test_create_hyperdisk_pool(autodelete_hyperdisk_pool):
+    assert "hyperdisk" in autodelete_hyperdisk_pool.storage_pool_type
+
+
+def test_create_hyperdisk_from_pool(autodelete_hyperdisk_pool, autodelete_disk_name):
+    disk = create_hyperdisk_from_pool(
+        PROJECT, ZONE, autodelete_disk_name, autodelete_hyperdisk_pool.name
+    )
+    assert disk.storage_pool == autodelete_hyperdisk_pool.self_link
+    assert "hyperdisk" in disk.type
+
+
+def test_create_hyperdisk(autodelete_disk_name):
+    disk = create_hyperdisk(PROJECT, ZONE, autodelete_disk_name, 100)
+    assert "hyperdisk" in disk.type_.lower()
+
+
+def test_create_secondary_region(
+    autodelete_regional_blank_disk, autodelete_regional_disk_name
+):
+    disk = create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+    assert disk.async_primary_disk.disk == autodelete_regional_blank_disk.self_link
+
+
+def test_create_secondary(test_empty_pd_balanced_disk, autodelete_disk_name):
+    disk = create_secondary_disk(
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+        primary_disk_project=PROJECT,
+        primary_disk_zone=ZONE_SECONDARY,
+        secondary_disk_name=autodelete_disk_name,
+        secondary_disk_project=PROJECT,
+        secondary_disk_zone=ZONE,
+        disk_size_gb=DISK_SIZE,
+        disk_type="pd-ssd",
+    )
+    assert disk.async_primary_disk.disk == test_empty_pd_balanced_disk.self_link
+
+
+def test_create_custom_secondary_disk(
+    test_empty_pd_balanced_disk, autodelete_disk_name
+):
+    disk = create_secondary_custom_disk(
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+        primary_disk_project=PROJECT,
+        primary_disk_zone=ZONE_SECONDARY,
+        secondary_disk_name=autodelete_disk_name,
+        secondary_disk_project=PROJECT,
+        secondary_disk_zone=ZONE,
+        disk_size_gb=DISK_SIZE,
+        disk_type="pd-ssd",
+    )
+    assert disk.labels["secondary-disk-for-replication"] == "true"
+    assert disk.labels["source-disk"] == test_empty_pd_balanced_disk.name
+
+
+def test_create_replicated_disk(autodelete_regional_disk_name):
+    disk = create_regional_replicated_disk(
+        project_id=PROJECT,
+        region=REGION_SECONDARY,
+        disk_name=autodelete_regional_disk_name,
+        size_gb=DISK_SIZE,
+    )
+    assert f"{PROJECT}/zones/{REGION_SECONDARY}-" in disk.replica_zones[0]
+    assert f"{PROJECT}/zones/{REGION_SECONDARY}-" in disk.replica_zones[1]
+
+
+def test_start_stop_region_replication(
+    autodelete_regional_blank_disk, autodelete_regional_disk_name
+):
+    create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+    assert start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=autodelete_regional_disk_name,
+    )
+    assert stop_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+    )
+    # Wait for the replication to stop
+    time.sleep(20)
+
+
+def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_disk_name):
+    create_secondary_disk(
+        test_empty_pd_balanced_disk.name,
+        PROJECT,
+        ZONE_SECONDARY,
+        autodelete_disk_name,
+        PROJECT,
+        ZONE,
+        DISK_SIZE,
+    )
+    assert start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=ZONE_SECONDARY,
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+        secondary_disk_location=ZONE,
+        secondary_disk_name=autodelete_disk_name,
+    )
+    assert stop_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=ZONE_SECONDARY,
+        primary_disk_name=test_empty_pd_balanced_disk.name,
+    )
+    # Wait for the replication to stop
+    time.sleep(20)
+
+
+def test_attach_regional_disk_to_vm(
+    autodelete_regional_blank_disk, autodelete_compute_instance
+):
+    attach_regional_disk(
+        PROJECT,
+        ZONE,
+        autodelete_compute_instance.name,
+        REGION,
+        autodelete_regional_blank_disk.name,
+    )
+
+    instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
+    assert len(list(instance.disks)) == 2
+
+
+def test_clone_disks_in_consistency_group(
+    autodelete_regional_disk_name,
+    autodelete_regional_blank_disk,
+):
+    group_name1 = "first-group" + uuid.uuid4().hex[:5]
+    group_name2 = "second-group" + uuid.uuid4().hex[:5]
+    create_consistency_group(PROJECT, REGION, group_name1, "description")
+    create_consistency_group(PROJECT, REGION_SECONDARY, group_name2, "description")
+
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        consistency_group_name=group_name1,
+        consistency_group_region=REGION,
+    )
+
+    second_disk = create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=second_disk.name,
+        disk_location=REGION_SECONDARY,
+        consistency_group_name=group_name2,
+        consistency_group_region=REGION_SECONDARY,
+    )
+
+    start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=autodelete_regional_disk_name,
+    )
+    time.sleep(70)
+    try:
+        assert clone_disks_to_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
+    finally:
+        stop_disk_replication(
+            project_id=PROJECT,
+            primary_disk_location=REGION,
+            primary_disk_name=autodelete_regional_blank_disk.name,
+        )
+        # Wait for the replication to stop
+        time.sleep(45)
+        disks = compute_v1.RegionDisksClient().list(
+            project=PROJECT, region=REGION_SECONDARY
+        )
+        if disks:
+            for disk in disks:
+                delete_regional_disk(PROJECT, REGION_SECONDARY, disk.name)
+        time.sleep(30)
+        remove_disk_consistency_group(
+            PROJECT, autodelete_regional_blank_disk.name, REGION, group_name1, REGION
+        )
+        delete_consistency_group(PROJECT, REGION, group_name1)
+        delete_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
+
+
+def test_stop_replications_in_consistency_group(
+    autodelete_regional_blank_disk, autodelete_regional_disk_name
+):
+    group_name = "test-consistency-group" + uuid.uuid4().hex[:5]
+    create_consistency_group(PROJECT, REGION, group_name, "description")
+    add_disk_consistency_group(
+        project_id=PROJECT,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_location=REGION,
+        consistency_group_name=group_name,
+        consistency_group_region=REGION,
+    )
+    second_disk = create_secondary_region_disk(
+        autodelete_regional_blank_disk.name,
+        PROJECT,
+        REGION,
+        autodelete_regional_disk_name,
+        PROJECT,
+        REGION_SECONDARY,
+        DISK_SIZE,
+    )
+    start_disk_replication(
+        project_id=PROJECT,
+        primary_disk_location=REGION,
+        primary_disk_name=autodelete_regional_blank_disk.name,
+        secondary_disk_location=REGION_SECONDARY,
+        secondary_disk_name=second_disk.name,
+    )
+    time.sleep(15)
+    try:
+        assert stop_replication_consistency_group(PROJECT, REGION, group_name)
+    finally:
+        remove_disk_consistency_group(
+            project_id=PROJECT,
+            disk_name=autodelete_regional_blank_disk.name,
+            disk_location=REGION,
+            consistency_group_name=group_name,
+            consistency_group_region=REGION,
+        )
+        time.sleep(10)
+        delete_consistency_group(PROJECT, REGION, group_name)

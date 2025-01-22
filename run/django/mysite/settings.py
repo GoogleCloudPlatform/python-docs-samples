@@ -68,12 +68,14 @@ DEBUG = env("DEBUG")
 
 # [START cloudrun_django_csrf]
 # SECURITY WARNING: It's recommended that you use this when
-# running in production. The URL will be known once you first deploy
-# to Cloud Run. This code takes the URL and converts it to both these settings formats.
-CLOUDRUN_SERVICE_URL = env("CLOUDRUN_SERVICE_URL", default=None)
-if CLOUDRUN_SERVICE_URL:
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+# running in production. The URLs will be known once you first deploy
+# to Cloud Run. This code takes the URLs and converts it to both these settings formats.
+CLOUDRUN_SERVICE_URLS = env("CLOUDRUN_SERVICE_URLS", default=None)
+if CLOUDRUN_SERVICE_URLS:
+    CSRF_TRUSTED_ORIGINS = env("CLOUDRUN_SERVICE_URLS").split(",")
+    # Remove the scheme from URLs for ALLOWED_HOSTS
+    ALLOWED_HOSTS = [urlparse(url).netloc for url in CSRF_TRUSTED_ORIGINS]
+
     SECURE_SSL_REDIRECT = True
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 else:

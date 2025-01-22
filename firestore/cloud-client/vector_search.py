@@ -24,7 +24,7 @@ def store_vectors():
     doc = {
         "name": "Kahawa coffee beans",
         "description": "Information about the Kahawa coffee beans.",
-        "embedding_field": Vector([1.0, 2.0, 3.0]),
+        "embedding_field": Vector([0.18332680, 0.24160706, 0.3416704]),
     }
 
     collection.add(doc)
@@ -41,7 +41,7 @@ def vector_search_basic(db):
     # Requires a single-field vector index
     vector_query = collection.find_nearest(
         vector_field="embedding_field",
-        query_vector=Vector([3.0, 1.0, 2.0]),
+        query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=5,
     )
@@ -60,7 +60,7 @@ def vector_search_prefilter(db):
     # Requires a composite vector index
     vector_query = collection.where("color", "==", "red").find_nearest(
         vector_field="embedding_field",
-        query_vector=Vector([3.0, 1.0, 2.0]),
+        query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=5,
     )
@@ -77,7 +77,7 @@ def vector_search_distance_result_field(db):
 
     vector_query = collection.find_nearest(
         vector_field="embedding_field",
-        query_vector=Vector([3.0, 1.0, 2.0]),
+        query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=10,
         distance_result_field="vector_distance",
@@ -97,7 +97,7 @@ def vector_search_distance_result_field_with_mask(db):
     # [START firestore_vector_search_distance_result_field_masked]
     vector_query = collection.select(["color", "vector_distance"]).find_nearest(
         vector_field="embedding_field",
-        query_vector=Vector([3.0, 1.0, 2.0]),
+        query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=10,
         distance_result_field="vector_distance",
@@ -115,7 +115,7 @@ def vector_search_distance_threshold(db):
 
     vector_query = collection.find_nearest(
         vector_field="embedding_field",
-        query_vector=Vector([3.0, 1.0, 2.0]),
+        query_vector=Vector([0.3416704, 0.18332680, 0.24160706]),
         distance_measure=DistanceMeasure.EUCLIDEAN,
         limit=10,
         distance_threshold=4.5,

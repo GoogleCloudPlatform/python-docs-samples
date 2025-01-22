@@ -12,15 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_get_cluster]
-from google.cloud import managedkafka_v1
-
 
 def get_cluster(
     project_id: str,
     region: str,
     cluster_id: str,
-) -> managedkafka_v1.Cluster:
+):
     """
     Get a Kafka cluster.
 
@@ -28,7 +25,18 @@ def get_cluster(
         project_id: Google Cloud project ID.
         region: Cloud region.
         cluster_id: ID of the Kafka cluster.
+
+    Raises:
+        This method will raise the NotFound exception if the cluster is not found.
     """
+    # [START managedkafka_get_cluster]
+    from google.api_core.exceptions import NotFound
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -37,10 +45,10 @@ def get_cluster(
         name=cluster_path,
     )
 
-    cluster = client.get_cluster(request=request)
-    print("Got cluster:", cluster)
+    try:
+        cluster = client.get_cluster(request=request)
+        print("Got cluster:", cluster)
+    except NotFound as e:
+        print(f"Failed to get cluster {cluster_id} with error: {e.message}")
 
-    return cluster
-
-
-# [END managedkafka_get_cluster]
+    # [END managedkafka_get_cluster]

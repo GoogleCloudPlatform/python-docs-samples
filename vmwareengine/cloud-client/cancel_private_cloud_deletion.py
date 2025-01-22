@@ -19,7 +19,7 @@ from google.cloud import vmwareengine_v1
 
 def cancel_private_cloud_deletion_by_full_name(cloud_name: str) -> operation.Operation:
     """
-    Cancels in progress deletion of VMWare Private Cloud.
+    Cancels in progress deletion of VMware Private Cloud.
 
     Args:
         cloud_name: identifier of the Private Cloud you want to cancel deletion for.

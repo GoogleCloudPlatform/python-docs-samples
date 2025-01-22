@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
 import os
 import time
 
@@ -22,9 +21,9 @@ from googleapiclient.discovery import build
 
 client_service = build("jobs", "v3")
 name = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
 
 
+# [START job_auto_complete_job_title]
 # [START auto_complete_job_title]
 def job_title_auto_complete(client_service, query, company_name):
     complete = client_service.projects().complete(
@@ -38,8 +37,10 @@ def job_title_auto_complete(client_service, query, company_name):
 
 
 # [END auto_complete_job_title]
+# [END job_auto_complete_job_title]
 
 
+# [START job_auto_complete_default]
 # [START auto_complete_default]
 def auto_complete_default(client_service, query, company_name):
     complete = client_service.projects().complete(
@@ -53,6 +54,7 @@ def auto_complete_default(client_service, query, company_name):
 
 
 # [END auto_complete_default]
+# [END job_auto_complete_default]
 
 
 def set_up():

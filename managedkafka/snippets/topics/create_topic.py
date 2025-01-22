@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START managedkafka_create_topic]
-from google.api_core.exceptions import AlreadyExists
-from google.cloud import managedkafka_v1
-
 
 def create_topic(
     project_id: str,
@@ -36,11 +32,23 @@ def create_topic(
         topic_id: ID of the Kafka topic.
         partition_count: Number of partitions in a topic..
         replication_factor: Number of replicas of each partition.
-        configs: Configuration of the topic. For a list of configs, one can check https://kafka.apache.org/documentation/#topicconfigs.
+        configs: Configuration of the topic.
 
     Raises:
-        This method will raise the exception if the topic already exists.
+        This method will raise the AlreadyExists exception if the topic already exists.
     """
+    # [START managedkafka_create_topic]
+    from google.api_core.exceptions import AlreadyExists
+    from google.cloud import managedkafka_v1
+
+    # TODO(developer)
+    # project_id = "my-project-id"
+    # region = "us-central1"
+    # cluster_id = "my-cluster"
+    # topic_id = "my-topic"
+    # partition_count = 10
+    # replication_factor = 3
+    # configs = {"min.insync.replicas": "1"}
 
     client = managedkafka_v1.ManagedKafkaClient()
 
@@ -48,6 +56,7 @@ def create_topic(
     topic.name = client.topic_path(project_id, region, cluster_id, topic_id)
     topic.partition_count = partition_count
     topic.replication_factor = replication_factor
+    # For a list of configs, one can check https://kafka.apache.org/documentation/#topicconfigs
     topic.configs = configs
 
     request = managedkafka_v1.CreateTopicRequest(
@@ -59,8 +68,7 @@ def create_topic(
     try:
         response = client.create_topic(request=request)
         print("Created topic:", response.name)
-    except AlreadyExists:
-        print(f"{topic.name} already exists")
+    except AlreadyExists as e:
+        print(f"Failed to create topic {topic.name} with error: {e.message}")
 
-
-# [END managedkafka_create_topic]
+    # [END managedkafka_create_topic]
