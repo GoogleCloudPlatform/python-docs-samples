@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import uuid
 
-import main
+import pytest
 
+import main
 
 TEST_NAME = "taskqueue-migration-" + str(uuid.uuid4())
 TEST_TASKS = {"alpha": 2, "beta": 1, "gamma": 3}

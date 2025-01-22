@@ -19,7 +19,7 @@ API with Memcache.
 For more information, see README.md.
 """
 
-# [START all]
+# [START gae_multitenancy_memcache]
 from google.appengine.api import memcache
 from google.appengine.api import namespace_manager
 import webapp2
@@ -56,4 +56,4 @@ app = webapp2.WSGIApplication(
     ],
     debug=True,
 )
-# [END all]
+# [END gae_multitenancy_memcache]

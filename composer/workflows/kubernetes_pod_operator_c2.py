@@ -18,7 +18,7 @@ import datetime
 
 from airflow import models
 from airflow.kubernetes.secret import Secret
-from airflow.providers.cncf.kubernetes.operators.kubernetes_pod import (
+from airflow.providers.cncf.kubernetes.operators.pod import (
     KubernetesPodOperator,
 )
 from kubernetes.client import models as k8s_models
