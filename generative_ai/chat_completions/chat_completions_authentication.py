@@ -14,11 +14,11 @@
 
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_gemini_chat_completions_streaming_image]
+    # [START generativeaionvertexai_gemini_chat_completions_authentication]
+    import openai
+
     from google.auth import default
     import google.auth.transport.requests
-
-    import openai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
@@ -27,31 +27,24 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
     credentials.refresh(google.auth.transport.requests.Request())
+    # Note: the credential lives for 1 hour by default (https://cloud.google.com/docs/authentication/token-types#at-lifetime); after expiration, it must be refreshed.
+
+    ##############################
+    # Choose one of the following:
+    ##############################
+
+    # If you are calling a Gemini model, set the ENDPOINT_ID variable to use openapi.
+    ENDPOINT_ID = "openapi"
+
+    # If you are calling a self-deployed model from Model Garden, set the
+    # ENDPOINT_ID variable and set the client's base URL to use your endpoint.
+    ENDPOINT_ID = "YOUR_ENDPOINT_ID"
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/{ENDPOINT_ID}",
         api_key=credentials.token,
     )
+    # [END generativeaionvertexai_gemini_chat_completions_authentication]
 
-    response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-002",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "Describe the following image:"},
-                    {
-                        "type": "image_url",
-                        "image_url": "gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                    },
-                ],
-            }
-        ],
-        stream=True,
-    )
-    for chunk in response:
-        print(chunk)
-    # [END generativeaionvertexai_gemini_chat_completions_streaming_image]
-
-    return response
+    return client
