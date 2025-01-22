@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
 """A simple counter with a Pub/Sub pull subscription, replacing a
    TaskQueue pull queue, which is not available in Python 3 App Engine
    runtimes.
@@ -97,9 +96,6 @@ def start_handling_tasks():
         time.sleep(1)
 
     return "Done"  # Never reached except under test
-
-
-# [END all]
 
 
 if __name__ == "__main__":
