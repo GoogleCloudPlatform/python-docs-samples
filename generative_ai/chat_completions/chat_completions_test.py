@@ -27,7 +27,7 @@ import chat_completions_streaming_text_self_deployed
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 SELF_HOSTED_MODEL_ID = "gemma2-9b-it-mg-one-click-deploy"
-ENDPOINT_ID = "6443623023395209216"
+ENDPOINT_ID = "5558665696616906752"
 
 
 def test_authentication() -> None:
