@@ -210,7 +210,7 @@ class AudioIO:
             self.start_time = get_current_time()
 
         # only capture microphone input when output audio stream is stopped
-        if self._output_audio_stream.is_stopped():
+        if self._output_audio_stream and self._output_audio_stream.is_stopped():
             self._buff.put_nowait(in_data)
         self.audio_input.append(in_data)
 
