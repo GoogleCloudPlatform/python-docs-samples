@@ -1,4 +1,4 @@
-# Copyright 2020 Google, LLC.
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
-FROM python:3.11-buster
+FROM python:3.13
 
 RUN apt-get update
 
