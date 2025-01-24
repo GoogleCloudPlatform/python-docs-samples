@@ -26,7 +26,7 @@ from snippets.delete_service_account import delete_service_account
 from snippets.get_policy import get_project_policy
 from snippets.modify_policy_add_member import modify_policy_add_member
 from snippets.modify_policy_remove_member import modify_policy_remove_member
-from snippets.query_testable_permissions import query_testable_permissions
+# from snippets.query_testable_permissions import query_testable_permissions
 from snippets.set_policy import set_project_policy
 
 PROJECT = google.auth.default()[1]
