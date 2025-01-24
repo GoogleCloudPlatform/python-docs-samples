@@ -31,7 +31,7 @@ from snippets.edit_role import edit_role
 from snippets.get_role import get_role
 
 PROJECT = google.auth.default()[1]
-GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("IAM_CREDENTIALS", "")
 
 
 @pytest.fixture

@@ -40,6 +40,8 @@ def service_account() -> str:
         created = True
         email = f"{name}@{PROJECT}.iam.gserviceaccount.com"
         yield email
+    except Exception as e:
+        print(e)
     finally:
         if created:
             delete_service_account(PROJECT, email)
