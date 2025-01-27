@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_vertexai_express_mode]
+    # [START googlegenaisdk_vertexai_express_mode]
     from google import genai
 
     # TODO(developer): Update below line
@@ -30,5 +30,5 @@ def generate_content() -> str:
     print(response.text)
     # Example response:
     # Bubble Sort is a simple sorting algorithm that repeatedly steps through the list
-    # [END genai_vertexai_express_mode]
+    # [END googlegenaisdk_vertexai_express_mode]
     return response.text
