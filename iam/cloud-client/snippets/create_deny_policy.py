@@ -14,9 +14,12 @@
 
 # This file contains code samples that demonstrate how to create IAM deny policies.
 
+import os
+
+
 # [START iam_create_deny_policy]
 def create_deny_policy(project_id: str, policy_id: str) -> None:
-    """ Create a deny policy.
+    """Create a deny policy.
 
     You can add deny policies to organizations, folders, and projects.
     Each of these resources can have up to 5 deny policies.
@@ -107,10 +110,11 @@ if __name__ == "__main__":
     import uuid
 
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Any unique ID (0 to 63 chars) starting with a lowercase letter.
     policy_id = f"deny-{uuid.uuid4()}"
 
     # Test the policy lifecycle.
-    create_deny_policy(project_id, policy_id)
+    create_deny_policy(PROJECT_ID, policy_id)
 # [END iam_create_deny_policy]

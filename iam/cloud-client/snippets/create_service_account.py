@@ -31,7 +31,8 @@ def create_service_account(
 
     project_id: ID or number of the Google Cloud project you want to use.
     account_id: ID which will be unique identifier of the service account
-    display_name (optional): human-readable name, which will be assigned to the service account
+    display_name (optional): human-readable name, which will be assigned
+        to the service account
 
     return: ServiceAccount
     """

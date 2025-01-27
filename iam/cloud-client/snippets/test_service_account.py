@@ -30,7 +30,6 @@ from snippets.service_account_get_policy import get_service_account_iam_policy
 from snippets.service_account_rename import rename_service_account
 from snippets.service_account_set_policy import set_service_account_iam_policy
 
-# Your Google Cloud project ID.
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 

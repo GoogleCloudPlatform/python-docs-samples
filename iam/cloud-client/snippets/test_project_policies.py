@@ -33,7 +33,6 @@ from snippets.modify_policy_remove_member import modify_policy_remove_member
 from snippets.query_testable_permissions import query_testable_permissions
 from snippets.set_policy import set_project_policy
 
-# Your Google Cloud project ID.
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 

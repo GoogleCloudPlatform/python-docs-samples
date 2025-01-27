@@ -43,11 +43,12 @@ def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
 def get_service_account(project_id: str, account: str) -> iam_admin_v1.ServiceAccount:
     """Get certain service account.
 
-    project_id: ID or number of the Google Cloud project you want to use.
-    account_id: ID or email which will be unique identifier
-    of the service account.
+    Args:
+        project_id: ID or number of the Google Cloud project you want to use.
+        account_id: ID or email which will be unique identifier
+        of the service account.
 
-    returns iam_admin_v1.ServiceAccount
+    Returns: iam_admin_v1.ServiceAccount
     """
 
     iam_admin_client = iam_admin_v1.IAMClient()

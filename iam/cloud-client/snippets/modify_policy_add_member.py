@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 # [START iam_modify_policy_add_member]
 from google.iam.v1 import policy_pb2
 from snippets.get_policy import get_project_policy
@@ -52,8 +54,9 @@ if __name__ == "__main__":
     # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "test-project-id"
-    role = "roles/viewer"
-    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    modify_policy_add_member(project_id, role, member)
+    role = "roles/viewer"
+    member = f"serviceAccount:test-service-account@{PROJECT_ID}.iam.gserviceaccount.com"
+
+    modify_policy_add_member(PROJECT_ID, role, member)
