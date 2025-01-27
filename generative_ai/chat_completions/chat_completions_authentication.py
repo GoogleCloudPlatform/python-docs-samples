@@ -38,7 +38,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # If you are calling a self-deployed model from Model Garden, set the
     # ENDPOINT_ID variable and set the client's base URL to use your endpoint.
-    ENDPOINT_ID = "YOUR_ENDPOINT_ID"
+    # ENDPOINT_ID = "YOUR_ENDPOINT_ID"
 
     # OpenAI Client
     client = openai.OpenAI(
