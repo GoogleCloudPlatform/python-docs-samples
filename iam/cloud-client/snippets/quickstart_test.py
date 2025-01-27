@@ -14,18 +14,18 @@
 
 import os
 import re
-import uuid
 import time
+import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound
+from google.api_core.exceptions import Aborted
 import google.auth
 import pytest
 
 from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
-from snippets.quickstart import quickstart
 from snippets.list_service_accounts import get_service_account
+from snippets.quickstart import quickstart
 
 # Your Google Cloud project ID.
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
