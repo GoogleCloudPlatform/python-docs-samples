@@ -21,8 +21,7 @@ from snippets.set_policy import set_project_policy
 def modify_policy_add_member(
     project_id: str, role: str, member: str
 ) -> policy_pb2.Policy:
-    """
-    Add a member to certain role in project policy.
+    """Add a member to certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
     role: role to which member need to be added.
@@ -45,8 +44,6 @@ def modify_policy_add_member(
             break
 
     return set_project_policy(project_id, policy)
-
-
 # [END iam_modify_policy_add_member]
 
 
