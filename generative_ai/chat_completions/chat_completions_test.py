@@ -26,7 +26,7 @@ import chat_completions_streaming_text_self_deployed
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
-SELF_HOSTED_MODEL_ID = "perm-gemma-2-9b-it-testing"
+SELF_HOSTED_MODEL_ID = "google/gemma-2-9b-it"
 ENDPOINT_ID = "6714120476014149632"
 
 
