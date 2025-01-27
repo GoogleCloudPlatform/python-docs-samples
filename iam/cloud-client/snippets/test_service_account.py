@@ -35,14 +35,13 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
 @pytest.fixture
-def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
+def service_account_email(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
 
     create_service_account(PROJECT_ID, name)
     created = False
     email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
-    member = f"serviceAccount:{email}"
 
     # Check if the account was created correctly using exponential backoff.
     execution_finished = False
@@ -69,11 +68,12 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
         if time.time() > starting_time + timeout_secs:
             raise TimeoutError
 
-    yield member
+    yield email
 
     # Cleanup after running the test
     if created:
         delete_service_account(PROJECT_ID, email)
+        time.sleep(5)
 
         try:
             get_service_account(PROJECT_ID, email)
@@ -83,13 +83,13 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
             pytest.fail(f"The {email} service account was not deleted.")
 
 
-def test_list_service_accounts(service_account: str) -> None:
+def test_list_service_accounts(service_account_email: str) -> None:
     accounts = list_service_accounts(PROJECT_ID)
     assert len(accounts) > 0
 
     account_found = False
     for account in accounts:
-        if account.email == service_account:
+        if account.email == service_account_email:
             account_found = True
             break
     try:
@@ -99,34 +99,34 @@ def test_list_service_accounts(service_account: str) -> None:
 
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
-def test_disable_service_account(service_account: str) -> None:
-    account_before = get_service_account(PROJECT_ID, service_account)
+def test_disable_service_account(service_account_email: str) -> None:
+    account_before = get_service_account(PROJECT_ID, service_account_email)
     assert not account_before.disabled
 
-    account_after = disable_service_account(PROJECT_ID, service_account)
+    account_after = disable_service_account(PROJECT_ID, service_account_email)
     assert account_after.disabled
 
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
-def test_enable_service_account(service_account: str) -> None:
-    account_before = disable_service_account(PROJECT_ID, service_account)
+def test_enable_service_account(service_account_email: str) -> None:
+    account_before = disable_service_account(PROJECT_ID, service_account_email)
     assert account_before.disabled
 
-    account_after = enable_service_account(PROJECT_ID, service_account)
+    account_after = enable_service_account(PROJECT_ID, service_account_email)
     assert not account_after.disabled
 
 
-def test_service_account_set_policy(service_account: str) -> None:
-    policy = get_service_account_iam_policy(PROJECT_ID, service_account)
+def test_service_account_set_policy(service_account_email: str) -> None:
+    policy = get_service_account_iam_policy(PROJECT_ID, service_account_email)
 
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
     test_binding.role = role
-    test_binding.members.append(f"serviceAccount:{service_account}")
+    test_binding.members.append(f"serviceAccount:{service_account_email}")
     policy.bindings.append(test_binding)
 
     try:
-        new_policy = set_service_account_iam_policy(PROJECT_ID, service_account, policy)
+        new_policy = set_service_account_iam_policy(PROJECT_ID, service_account_email, policy)
     except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
@@ -139,10 +139,10 @@ def test_service_account_set_policy(service_account: str) -> None:
     assert new_policy.etag != policy.etag
 
 
-def test_service_account_rename(service_account: str) -> None:
+def test_service_account_rename(service_account_email: str) -> None:
     new_name = "New Name"
     try:
-        account = rename_service_account(PROJECT_ID, service_account, new_name)
+        account = rename_service_account(PROJECT_ID, service_account_email, new_name)
     except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
