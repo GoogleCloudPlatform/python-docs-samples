@@ -72,7 +72,7 @@ def service_account_email(capsys: "pytest.CaptureFixture[str]") -> str:
     # Cleanup after running the test
     if created:
         delete_service_account(PROJECT_ID, email)
-        time.sleep(5)
+        time.sleep(10)
 
         try:
             get_service_account(PROJECT_ID, email)
