@@ -18,31 +18,64 @@ import re
 import time
 import uuid
 
-from google.api_core.exceptions import NotFound
+from google.api_core.exceptions import InvalidArgument, NotFound
 import pytest
 from snippets.create_key import create_key
 from snippets.create_service_account import create_service_account
 from snippets.delete_key import delete_key
 from snippets.delete_service_account import delete_service_account
 from snippets.list_keys import list_keys
+from snippets.list_service_accounts import get_service_account
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
-@pytest.fixture
-def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
+def service_account_email(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
-    try:
-        create_service_account(PROJECT_ID, name)
-        created = True
-        email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
-        yield email
-    finally:
-        if created:
-            delete_service_account(PROJECT_ID, email)
-            out, _ = capsys.readouterr()
-            assert re.search(f"Deleted a service account: {email}", out)
+
+    create_service_account(PROJECT_ID, name)
+    created = False
+    email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
+
+    # Check if the account was created correctly using exponential backoff.
+    execution_finished = False
+    backoff_delay_secs = 1  # Start wait with delay of 1 second
+    starting_time = time.time()
+    timeout_secs = 90
+
+    while not execution_finished:
+        try:
+            get_service_account(PROJECT_ID, email)
+            execution_finished = True
+            created = True
+        except (NotFound, InvalidArgument):
+            # Account not created yet, retry
+            pass
+
+        # If we haven't seen the result yet, wait again.
+        if not execution_finished:
+            print("- Waiting for the service account to be available...")
+            time.sleep(backoff_delay_secs)
+            # Double the delay to provide exponential backoff.
+            backoff_delay_secs *= 2
+
+        if time.time() > starting_time + timeout_secs:
+            raise TimeoutError
+
+    yield email
+
+    # Cleanup after running the test
+    if created:
+        delete_service_account(PROJECT_ID, email)
+        time.sleep(5)
+
+        try:
+            get_service_account(PROJECT_ID, email)
+        except google.api_core.exceptions.NotFound:
+            pass
+        else:
+            pytest.fail(f"The {email} service account was not deleted.")
 
 
 def key_found(project_id: str, account: str, key_id: str) -> bool:
@@ -67,5 +100,5 @@ def test_delete_service_account_key(service_account: str) -> None:
     assert key_found(PROJECT_ID, service_account, key_id)
 
     delete_key(PROJECT_ID, service_account, key_id)
-    time.sleep(5)
+    time.sleep(10)
     assert not key_found(PROJECT_ID, service_account, key_id)
