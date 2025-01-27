@@ -28,6 +28,7 @@ def query_testable_permissions(
     """Tests IAM permissions of the caller.
 
     project_id: ID or number of the Google Cloud project you want to use.
+    permissions: List of permissions to get.
     """
 
     client = resourcemanager_v3.ProjectsClient()
@@ -46,11 +47,11 @@ if __name__ == "__main__":
     # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
 
     # Your Google Cloud project ID.
-    project_id = os.getenv("GOOGLE_CLOUD_PROJECT", "test-project-id")
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "test-project-id")
 
     permissions = [
         "resourcemanager.projects.get",
         "resourcemanager.projects.delete",
     ]
 
-    query_testable_permissions(project_id, permissions)
+    query_testable_permissions(PROJECT_ID, permissions)
