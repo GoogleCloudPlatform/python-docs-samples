@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+import re
+import time
 import uuid
 
 import backoff
@@ -28,33 +31,61 @@ from snippets.service_account_get_policy import get_service_account_iam_policy
 from snippets.service_account_rename import rename_service_account
 from snippets.service_account_set_policy import set_service_account_iam_policy
 
-PROJECT = google.auth.default()[1]
+# Your Google Cloud project ID.
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
-@pytest.fixture(scope="module")
-def service_account() -> str:
+@pytest.fixture
+def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
-    try:
-        create_service_account(PROJECT, name)
-        created = True
-        email = f"{name}@{PROJECT}.iam.gserviceaccount.com"
-        yield email
-    except Exception as e:
-        print(e)
-    finally:
-        if created:
-            delete_service_account(PROJECT, email)
-            try:
-                get_service_account(PROJECT, email)
-            except google.api_core.exceptions.NotFound:
-                pass
-            else:
-                pytest.fail(f"The {email} service account was not deleted.")
+
+    create_service_account(PROJECT_ID, name)
+    created = False
+    email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
+    member = f"serviceAccount:{email}"
+
+    # Check if the account was created correctly using exponential backoff.
+    execution_finished = False
+    backoff_delay_secs = 1  # Start wait with delay of 1 second
+    starting_time = time.time()
+    timeout_secs = 90
+
+    while not execution_finished:
+        try:
+            get_service_account(PROJECT_ID, email)
+            execution_finished = True
+            created = True
+        except (NotFound, InvalidArgument):
+            # Account not created yet, retry
+            pass
+
+        # If we haven't seen the result yet, wait again.
+        if not execution_finished:
+            print("- Waiting for the service account to be available...")
+            time.sleep(backoff_delay_secs)
+            # Double the delay to provide exponential backoff.
+            backoff_delay_secs *= 2
+
+        if time.time() > starting_time + timeout_secs:
+            raise TimeoutError
+
+    yield member
+
+    # Cleanup after running the test
+    if created:
+        delete_service_account(PROJECT_ID, email)
+
+        try:
+            get_service_account(PROJECT_ID, email)
+        except google.api_core.exceptions.NotFound:
+            pass
+        else:
+            pytest.fail(f"The {email} service account was not deleted.")
 
 
 def test_list_service_accounts(service_account: str) -> None:
-    accounts = list_service_accounts(PROJECT)
+    accounts = list_service_accounts(PROJECT_ID)
     assert len(accounts) > 0
 
     account_found = False
@@ -70,24 +101,24 @@ def test_list_service_accounts(service_account: str) -> None:
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
 def test_disable_service_account(service_account: str) -> None:
-    account_before = get_service_account(PROJECT, service_account)
+    account_before = get_service_account(PROJECT_ID, service_account)
     assert not account_before.disabled
 
-    account_after = disable_service_account(PROJECT, service_account)
+    account_after = disable_service_account(PROJECT_ID, service_account)
     assert account_after.disabled
 
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
 def test_enable_service_account(service_account: str) -> None:
-    account_before = disable_service_account(PROJECT, service_account)
+    account_before = disable_service_account(PROJECT_ID, service_account)
     assert account_before.disabled
 
-    account_after = enable_service_account(PROJECT, service_account)
+    account_after = enable_service_account(PROJECT_ID, service_account)
     assert not account_after.disabled
 
 
 def test_service_account_set_policy(service_account: str) -> None:
-    policy = get_service_account_iam_policy(PROJECT, service_account)
+    policy = get_service_account_iam_policy(PROJECT_ID, service_account)
 
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
@@ -96,7 +127,7 @@ def test_service_account_set_policy(service_account: str) -> None:
     policy.bindings.append(test_binding)
 
     try:
-        new_policy = set_service_account_iam_policy(PROJECT, service_account, policy)
+        new_policy = set_service_account_iam_policy(PROJECT_ID, service_account, policy)
     except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
@@ -112,7 +143,7 @@ def test_service_account_set_policy(service_account: str) -> None:
 def test_service_account_rename(service_account: str) -> None:
     new_name = "New Name"
     try:
-        account = rename_service_account(PROJECT, service_account, new_name)
+        account = rename_service_account(PROJECT_ID, service_account, new_name)
     except (InvalidArgument, NotFound):
         pytest.skip("Service account was removed from outside, skipping")
 
