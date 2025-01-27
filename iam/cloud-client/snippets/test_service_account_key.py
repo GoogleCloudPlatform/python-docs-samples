@@ -14,7 +14,6 @@
 
 import json
 import os
-import re
 import time
 import uuid
 
@@ -72,7 +71,7 @@ def service_account_email(capsys: "pytest.CaptureFixture[str]") -> str:
 
         try:
             get_service_account(PROJECT_ID, email)
-        except google.api_core.exceptions.NotFound:
+        except NotFound:
             pass
         else:
             pytest.fail(f"The {email} service account was not deleted.")
