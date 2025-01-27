@@ -18,8 +18,7 @@ import time
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted, NotFound, InvalidArgument
-import google.auth
+from google.api_core.exceptions import Aborted, InvalidArgument, NotFound
 import pytest
 
 from snippets.create_service_account import create_service_account
