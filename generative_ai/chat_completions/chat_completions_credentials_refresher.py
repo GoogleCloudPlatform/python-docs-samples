@@ -51,7 +51,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     # location = "us-central1"
 
     client = OpenAICredentialsRefresher(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/openapi",
     )
 
     response = client.chat.completions.create(

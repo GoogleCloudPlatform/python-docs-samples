@@ -37,7 +37,7 @@ def generate_text(
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}",
         api_key=credentials.token,
     )
 

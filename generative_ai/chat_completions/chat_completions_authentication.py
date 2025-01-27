@@ -42,7 +42,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/{ENDPOINT_ID}",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/{ENDPOINT_ID}",
         api_key=credentials.token,
     )
     # [END generativeaionvertexai_gemini_chat_completions_authentication]
