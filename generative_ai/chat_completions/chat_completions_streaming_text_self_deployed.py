@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,9 +13,13 @@
 # limitations under the License.
 
 
-def generate_text(project_id: str, location: str = "us-central1") -> object:
-    # [START generativeaionvertexai_gemini_chat_completions_non_streaming_image]
-
+def generate_text(
+    project_id: str,
+    location: str = "us-central1",
+    model_id: str = "gemma-2-9b-it",
+    endpoint_id: str = "YOUR_ENDPOINT_ID",
+) -> object:
+    # [START generativeaionvertexai_gemini_chat_completions_streaming_self_deployed]
     from google.auth import default
     import google.auth.transport.requests
 
@@ -24,6 +28,8 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # location = "us-central1"
+    # model_id = "gemma-2-9b-it"
+    # endpoint_id = "YOUR_ENDPOINT_ID"
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
@@ -31,27 +37,18 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
 
     # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/{endpoint_id}",
         api_key=credentials.token,
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-002",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "Describe the following image:"},
-                    {
-                        "type": "image_url",
-                        "image_url": "gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                    },
-                ],
-            }
-        ],
+        model=model_id,
+        messages=[{"role": "user", "content": "Why is the sky blue?"}],
+        stream=True,
     )
+    for chunk in response:
+        print(chunk)
 
-    print(response)
-    # [END generativeaionvertexai_gemini_chat_completions_non_streaming_image]
+    # [END generativeaionvertexai_gemini_chat_completions_streaming_self_deployed]
 
     return response
