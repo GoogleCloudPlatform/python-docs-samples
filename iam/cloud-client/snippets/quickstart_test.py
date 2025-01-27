@@ -18,7 +18,7 @@ import time
 import uuid
 
 import backoff
-from google.api_core.exceptions import Aborted
+from google.api_core.exceptions import Aborted, NotFound, InvalidArgument
 import google.auth
 import pytest
 
@@ -35,41 +35,44 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 def test_member(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
-    try:
-        create_service_account(PROJECT_ID, name)
-        created = True
-        email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
-        member = f"serviceAccount:{email}"
 
-        # Check if the account was created correctly using exponential backoff.
-        execution_finished = False
-        backoff_delay_secs = 1  # Start wait with delay of 1 second
-        starting_time = time.time()
-        timeout_secs = 90
+    create_service_account(PROJECT_ID, name)
+    created = False
+    email = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
+    member = f"serviceAccount:{email}"
 
-        while not execution_finished:
-            try:
-                get_service_account(PROJECT_ID, email)
-                execution_finished = True
-            except google.api_core.exceptions.NotFound:
-                # Account not created yet
-                pass
+    # Check if the account was created correctly using exponential backoff.
+    execution_finished = False
+    backoff_delay_secs = 1  # Start wait with delay of 1 second
+    starting_time = time.time()
+    timeout_secs = 90
 
-            # If we haven't seen the result yet, wait again.
-            if not execution_finished:
-                print("- Waiting for the service account to be available...")
-                time.sleep(backoff_delay_secs)
-                # Double the delay to provide exponential backoff.
-                backoff_delay_secs *= 2
+    while not execution_finished:
+        try:
+            get_service_account(PROJECT_ID, email)
+            execution_finished = True
+            created = True
+        except (NotFound, InvalidArgument):
+            # Account not created yet, retry
+            pass
 
-            if time.time() > starting_time + timeout_secs:
-                raise TimeoutError
-        yield member
-    finally:
-        if created:
-            delete_service_account(PROJECT_ID, email)
-            out, _ = capsys.readouterr()
-            assert re.search(f"Deleted a service account: {email}", out)
+        # If we haven't seen the result yet, wait again.
+        if not execution_finished:
+            print("- Waiting for the service account to be available...")
+            time.sleep(backoff_delay_secs)
+            # Double the delay to provide exponential backoff.
+            backoff_delay_secs *= 2
+
+        if time.time() > starting_time + timeout_secs:
+            raise TimeoutError
+
+    yield member
+
+    # Cleanup after running the test
+    if created:
+        delete_service_account(PROJECT_ID, email)
+        out, _ = capsys.readouterr()
+        assert re.search(f"Deleted a service account: {email}", out)
 
 
 def test_quickstart(test_member: str, capsys: pytest.CaptureFixture) -> None:
