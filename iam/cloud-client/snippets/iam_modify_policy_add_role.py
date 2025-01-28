@@ -21,6 +21,4 @@ def modify_policy_add_role(policy: dict, role: str, member: str) -> dict:
     policy["bindings"].append(binding)
     print(policy)
     return policy
-
-
 # [END iam_modify_policy_add_role]

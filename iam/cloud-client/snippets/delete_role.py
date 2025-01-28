@@ -12,6 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+
 # [START iam_delete_role]
 # [START iam_undelete_role]
 from google.api_core.exceptions import FailedPrecondition, NotFound
@@ -21,15 +24,13 @@ from google.cloud.iam_admin_v1 import (
     Role,
     UndeleteRoleRequest,
 )
-
 # [END iam_undelete_role]
 # [END iam_delete_role]
 
 
 # [START iam_delete_role]
 def delete_role(project_id: str, role_id: str) -> Role:
-    """
-    Deletes iam role in GCP project. Can be undeleted later
+    """Deletes iam role in GCP project. Can be undeleted later.
     Args:
         project_id: GCP project id
         role_id: id of GCP iam role
@@ -47,20 +48,16 @@ def delete_role(project_id: str, role_id: str) -> Role:
         print(f"Role with id [{role_id}] not found, take some actions")
     except FailedPrecondition as err:
         print(f"Role with id [{role_id}] already deleted, take some actions)", err)
-
-
 # [END iam_delete_role]
 
 
 # [START iam_undelete_role]
 def undelete_role(project_id: str, role_id: str) -> Role:
-    """
-    Undeleted deleted iam role in GCP project
+    """Undeleted deleted iam role in GCP project.
+
     Args:
         project_id: GCP project id
         role_id: id of GCP iam role
-
-    Returns: google.cloud.iam_admin_v1.Role object
     """
     client = IAMClient()
     name = f"projects/{project_id}/roles/{role_id}"
@@ -73,15 +70,13 @@ def undelete_role(project_id: str, role_id: str) -> Role:
         print(f"Role with id [{role_id}] not found, take some actions")
     except FailedPrecondition as err:
         print(f"Role with id [{role_id}] is not deleted, take some actions)", err)
-
-
 # [END iam_undelete_role]
 
 
 if __name__ == "__main__":
-    import google.auth
+    # Your Google Cloud project ID.
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    PROJECT = google.auth.default()[1]
     role_id = "custom1_python"
-    delete_role(PROJECT, role_id)
-    undelete_role(PROJECT, role_id)
+    delete_role(PROJECT_ID, role_id)
+    undelete_role(PROJECT_ID, role_id)

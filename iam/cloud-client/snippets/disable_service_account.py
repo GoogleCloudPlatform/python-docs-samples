@@ -22,8 +22,7 @@ from google.cloud.iam_admin_v1 import types
 
 
 def disable_service_account(project_id: str, account: str) -> types.ServiceAccount:
-    """
-    Disables a service account.
+    """Disables a service account.
 
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
@@ -44,8 +43,6 @@ def disable_service_account(project_id: str, account: str) -> types.ServiceAccou
     if service_account.disabled:
         print(f"Disabled service account: {account}")
     return service_account
-
-
 # [END iam_disable_service_account]
 
 
