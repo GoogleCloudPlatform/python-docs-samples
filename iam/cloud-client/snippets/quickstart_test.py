@@ -48,6 +48,7 @@ def test_member(capsys: "pytest.CaptureFixture[str]") -> str:
 
     while not execution_finished:
         try:
+            print("- Checking if the service account is available...")
             get_service_account(PROJECT_ID, email)
             execution_finished = True
             created = True
@@ -65,6 +66,7 @@ def test_member(capsys: "pytest.CaptureFixture[str]") -> str:
         if time.time() > starting_time + timeout_secs:
             raise TimeoutError
 
+    print("- Service account is ready to be used")
     yield member
 
     # Cleanup after running the test
