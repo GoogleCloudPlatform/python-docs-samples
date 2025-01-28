@@ -14,9 +14,9 @@
 
 import os
 
-from google.api_core.exceptions import NotFound
 
 # [START iam_disable_role]
+from google.api_core.exceptions import NotFound
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, Role, UpdateRoleRequest
 
 

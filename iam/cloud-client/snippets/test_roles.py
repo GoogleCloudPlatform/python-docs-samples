@@ -82,7 +82,8 @@ def test_edit_role(iam_role: str) -> None:
     assert updated_role.title == title
 
 
-@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
+@backoff.on_exception(backoff.expo, Aborted, max_tries=5)
+@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=5)
 def test_disable_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
     disable_role(PROJECT_ID, iam_role)
     client = IAMClient()
