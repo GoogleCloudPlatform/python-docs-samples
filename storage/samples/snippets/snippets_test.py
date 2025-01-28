@@ -75,6 +75,7 @@ import storage_set_bucket_default_kms_key
 import storage_set_client_endpoint
 import storage_set_object_retention_policy
 import storage_set_metadata
+import storage_trace_quickstart
 import storage_transfer_manager_download_bucket
 import storage_transfer_manager_download_chunks_concurrently
 import storage_transfer_manager_download_many
@@ -850,3 +851,15 @@ def test_create_bucket_hierarchical_namespace(test_bucket_create, capsys):
     )
     out, _ = capsys.readouterr()
     assert f"Created bucket {test_bucket_create.name} with hierarchical namespace enabled" in out
+
+
+def test_storage_trace_quickstart(test_bucket, capsys):
+    blob_name = f"trace_quickstart_{uuid.uuid4().hex}"
+    contents = "The quick brown fox jumps over the lazy dog."
+    storage_trace_quickstart.run_quickstart(test_bucket.name, blob_name, contents)
+    out, _ = capsys.readouterr()
+
+    assert f"{blob_name} uploaded to {test_bucket.name}" in out
+    assert (
+        f"Downloaded storage object {blob_name} from bucket {test_bucket.name}" in out
+    )
