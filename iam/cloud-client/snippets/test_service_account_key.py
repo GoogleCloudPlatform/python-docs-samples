@@ -29,7 +29,8 @@ from snippets.list_service_accounts import get_service_account
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
-def service_account_email(capsys: "pytest.CaptureFixture[str]") -> str:
+@pytest.fixture
+def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
     created = False
 
