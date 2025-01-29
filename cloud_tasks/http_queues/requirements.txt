@@ -1,2 +1,2 @@
-google-cloud-tasks==2.14.2
+google-cloud-tasks==2.18.0
 requests==2.32.2
