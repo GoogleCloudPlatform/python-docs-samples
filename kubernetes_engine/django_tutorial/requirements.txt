@@ -5,7 +5,7 @@ Django==5.1.5; python_version < "3.8"
 # PostgreSQL. You must also have a MySQL client installed in that case.
 #mysqlclient==1.4.1
 wheel==0.40.0
-gunicorn==22.0.0; python_version > '3.0'
-gunicorn==19.10.0; python_version < '3.0'
+gunicorn==23.0.0; python_version > '3.0'
+gunicorn==23.0.0; python_version < '3.0'
 # psycopg2==2.8.4 # uncomment if you prefer to build from source
 psycopg2-binary==2.9.10
