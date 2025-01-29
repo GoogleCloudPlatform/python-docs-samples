@@ -1,0 +1,28 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#    https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+import genai_ctrlgen_with_nullable_schema
+import genai_ctrlgen_with_enum_schema
+import genai_ctrlgen_with_nested_class_schema
+import genai_ctrlgen_with_class_schema
+
+
+def test_controlled_generation_samples_in_vertexai() -> None:
+    # TODO: set-up env variables
+    assert genai_ctrlgen_with_nullable_schema.generate_content()
+    assert genai_ctrlgen_with_enum_schema.generate_content()
+    assert genai_ctrlgen_with_nested_class_schema.generate_content()
+    assert genai_ctrlgen_with_class_schema.generate_content()
+
+
