@@ -18,8 +18,13 @@ import genai_ctrlgen_with_nested_class_schema
 import genai_ctrlgen_with_class_schema
 
 
-def test_controlled_generation_samples_in_vertexai() -> None:
-    # TODO: set-up env variables
+def test_vertexai_ctrlgen_samples() -> None:
+    import os
+
+    os.environ['GOOGLE_GENAI_USE_VERTEXAI'] = "True"
+    os.environ['GOOGLE_CLOUD_LOCATION'] = "us-central1"
+    # The project name is included in the CICD pipeline
+    # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
     assert genai_ctrlgen_with_nullable_schema.generate_content()
     assert genai_ctrlgen_with_enum_schema.generate_content()
     assert genai_ctrlgen_with_nested_class_schema.generate_content()
