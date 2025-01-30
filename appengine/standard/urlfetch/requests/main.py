@@ -12,31 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
+# [START gae_urlfetch_requests]
 import logging
 
 from flask import Flask
 
-# [START imports]
+# [START gae_urlfech_requests_imports]
 import requests
 import requests_toolbelt.adapters.appengine
 
-# Use the App Engine Requests adapter. This makes sure that Requests uses
-# URLFetch.
+# Use the App Engine Requests adapter.
+# This makes sure that Requests uses URLFetch.
 requests_toolbelt.adapters.appengine.monkeypatch()
-# [END imports]
+# [END gae_urlfech_requests_imports]
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
-    # [START requests_get]
+    # [START gae_urlfetch_requests_get]
     url = "http://www.google.com/humans.txt"
     response = requests.get(url)
     response.raise_for_status()
     return response.text
-    # [END requests_get]
+    # [END gae_urlfetch_requests_get]
 
 
 @app.errorhandler(500)
@@ -51,6 +51,4 @@ def server_error(e):
         ),
         500,
     )
-
-
-# [END app]
+# [END gae_urlfetch_requests]
