@@ -12,22 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import textgen_config_with_txt
-import textgen_sys_instr_with_txt
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
 import textgen_with_video
-
-
-def test_textgen_config_with_txt() -> None:
-    response = textgen_config_with_txt.generate_content()
-    assert response
-
-
-def test_textgen_sys_instr_with_txt() -> None:
-    response = textgen_sys_instr_with_txt.generate_content()
-    assert response
 
 
 def test_textgen_with_multi_img() -> None:
