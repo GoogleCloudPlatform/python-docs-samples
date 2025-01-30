@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_ctrlgen_with_class_schema]
+    # [START googlegenaisdk_ctrlgen_with_class_schema]
     from google import genai
     from pydantic import BaseModel, TypeAdapter
 
@@ -54,7 +54,7 @@ def generate_content() -> str:
     # To convert the response.text to Recipe class objects.
     my_recipes = TypeAdapter(list[Recipe]).validate_json(response.text)
     assert all(isinstance(r, Recipe) for r in my_recipes)
-    # [END genai_ctrlgen_with_class_schema]
+    # [END googlegenaisdk_ctrlgen_with_class_schema]
     return response.text
 
 

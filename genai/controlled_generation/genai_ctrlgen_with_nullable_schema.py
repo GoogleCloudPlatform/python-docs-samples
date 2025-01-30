@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_ctrlgen_with_nullable_schema]
+    # [START googlegenaisdk_ctrlgen_with_nullable_schema]
     from google import genai
 
     response_schema = {
@@ -68,7 +68,7 @@ def generate_content() -> str:
     #   {"Day": "Friday", "Forecast": "partly cloudy", "Temperature": 73, "Wind Speed": 12},
     #   {"Day": "Saturday", "Forecast": "sunny", "Temperature": 80, "Wind Speed": 8, "Humidity": "40%"}]}
 
-    # [END genai_ctrlgen_with_nullable_schema]
+    # [END googlegenaisdk_ctrlgen_with_nullable_schema]
     return response.text
 
 

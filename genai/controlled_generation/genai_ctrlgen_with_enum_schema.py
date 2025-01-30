@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_ctrlgen_with_enum_schema]
+    # [START googlegenaisdk_ctrlgen_with_enum_schema]
     from google import genai
 
     client = genai.Client()
@@ -34,7 +34,7 @@ def generate_content() -> str:
     # Example output:
     # Woodwind
 
-    # [END genai_ctrlgen_with_enum_schema]
+    # [END googlegenaisdk_ctrlgen_with_enum_schema]
     return response.text
 
 

@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_ctrlgen_with_nested_class_schema]
+    # [START googlegenaisdk_ctrlgen_with_nested_class_schema]
     from google import genai
 
     import enum
@@ -46,7 +46,7 @@ def generate_content() -> str:
     # Example output:
     # [{"rating": "a+", "recipe_name": "Classic Chocolate Chip Cookies"}, ...]
 
-    # [END genai_ctrlgen_with_nested_class_schema]
+    # [END googlegenaisdk_ctrlgen_with_nested_class_schema]
     return response.text
 
 

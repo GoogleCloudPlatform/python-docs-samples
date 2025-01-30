@@ -12,10 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import genai_ctrlgen_with_nullable_schema
-import genai_ctrlgen_with_enum_schema
-import genai_ctrlgen_with_nested_class_schema
-import genai_ctrlgen_with_class_schema
+import googlegenaisdk_ctrlgen_with_nullable_schema
+import googlegenaisdk_ctrlgen_with_enum_schema
+import googlegenaisdk_ctrlgen_with_nested_class_schema
+import googlegenaisdk_ctrlgen_with_class_schema
 
 
 def test_vertexai_ctrlgen_samples() -> None:
@@ -25,9 +25,9 @@ def test_vertexai_ctrlgen_samples() -> None:
     os.environ['GOOGLE_CLOUD_LOCATION'] = "us-central1"
     # The project name is included in the CICD pipeline
     # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
-    assert genai_ctrlgen_with_nullable_schema.generate_content()
-    assert genai_ctrlgen_with_enum_schema.generate_content()
-    assert genai_ctrlgen_with_nested_class_schema.generate_content()
-    assert genai_ctrlgen_with_class_schema.generate_content()
+    assert googlegenaisdk_ctrlgen_with_nullable_schema.generate_content()
+    assert googlegenaisdk_ctrlgen_with_enum_schema.generate_content()
+    assert googlegenaisdk_ctrlgen_with_nested_class_schema.generate_content()
+    assert googlegenaisdk_ctrlgen_with_class_schema.generate_content()
 
 
