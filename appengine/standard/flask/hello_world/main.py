@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 
 from flask import Flask
@@ -31,6 +30,3 @@ def server_error(e):
     # Log the error and stacktrace.
     logging.exception("An error occurred during a request.")
     return "An internal error occurred.", 500
-
-
-# [END app]
