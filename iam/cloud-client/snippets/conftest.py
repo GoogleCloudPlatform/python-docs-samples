@@ -31,7 +31,7 @@ from snippets.edit_role import edit_role
 from snippets.get_role import get_role
 
 PROJECT = google.auth.default()[1]
-GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("IAM_CREDENTIALS", "")
 
 
 @pytest.fixture
@@ -87,6 +87,7 @@ def iam_role() -> str:
     role_id = f"{role_prefix}_{uuid.uuid4().hex[:10]}"
     permissions = ["iam.roles.get", "iam.roles.list"]
     title = "test_role_title"
+
     # Delete any iam roles with `role_prefix` prefix. Otherwise, it might throw quota issue.
     delete_iam_roles_by_prefix(PROJECT, role_prefix)
     created = False
@@ -103,12 +104,12 @@ def iam_role() -> str:
 
 
 def delete_iam_roles_by_prefix(iam_role: str, delete_name_prefix: str) -> None:
-    """
-    Helper function to clean-up roles starting with a prefix
+    """Helper function to clean-up roles starting with a prefix.
+
     Args:
         iam_role: project id
-        delete_name_prefix: start of the role id to be deleted. F.e. "test-role" in role id "test-role-123"
-
+        delete_name_prefix: start of the role id to be deleted.
+        F.e. "test-role" in role id "test-role-123"
     """
     client = IAMClient()
     parent = f"projects/{PROJECT}"

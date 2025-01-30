@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 # [START iam_create_role]
 from typing import List, Optional
 
@@ -22,8 +24,8 @@ from google.cloud.iam_admin_v1 import CreateRoleRequest, IAMClient, Role
 def create_role(
     project_id: str, role_id: str, permissions: List[str], title: Optional[str] = None
 ) -> Role:
-    """
-    Creates iam role with given parameters.
+    """Creates iam role with given parameters.
+
     Args:
         project_id: GCP project id
         role_id: id of GCP iam role
@@ -51,16 +53,14 @@ def create_role(
         print(
             f"Role with id [{role_id}] already exists and in deleted state, take some actions"
         )
-
-
 # [END iam_create_role]
 
 
 if __name__ == "__main__":
-    import google.auth
+    # Your Google Cloud project ID.
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    PROJECT = google.auth.default()[1]
     role_id = "custom1_python"
     permissions = ["iam.roles.get", "iam.roles.list"]
     title = "custom1_python_title"
-    create_role(PROJECT, role_id, permissions, title)
+    create_role(PROJECT_ID, role_id, permissions, title)

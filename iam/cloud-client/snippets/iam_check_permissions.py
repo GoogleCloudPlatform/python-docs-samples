@@ -32,6 +32,4 @@ def test_permissions(project_id: str) -> List[str]:
 
     print("Currently authenticated user has following permissions:", owned_permissions)
     return owned_permissions
-
-
 # [END iam_test_permissions]
