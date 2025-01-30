@@ -30,7 +30,7 @@ def generate_content() -> str:
         contents=[
             prompt,
             Part.from_uri(
-                "gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
+                file_uri="gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
                 mime_type="video/mp4"
             )
         ]
