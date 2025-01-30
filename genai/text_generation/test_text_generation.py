@@ -14,18 +14,60 @@
 
 import os
 
+import textgen_chat_with_txt
+import textgen_chat_with_txt_stream
+import textgen_config_with_txt
+import textgen_sys_instr_with_txt
 import textgen_transcript_with_gcs_audio
 import textgen_with_gcs_audio
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
 import textgen_with_video
+import textgen_with_txt
+import textgen_with_txt_img
+import textgen_with_txt_stream
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
+
+
+def test_textgen_with_txt_stream() -> None:
+    response = textgen_with_txt_stream.generate_content()
+    assert response
+
+
+def test_textgen_with_txt() -> None:
+    response = textgen_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_chat_with_txt() -> None:
+    response = textgen_chat_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_chat_with_txt_stream() -> None:
+    response = textgen_chat_with_txt_stream.generate_content()
+    assert response
+
+
+def test_textgen_config_with_txt() -> None:
+    response = textgen_config_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_sys_instr_with_txt() -> None:
+    response = textgen_sys_instr_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_with_txt_img() -> None:
+    response = textgen_with_txt_img.generate_content()
+    assert response
 
 
 def test_textgen_with_multi_img() -> None:
