@@ -12,10 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
+import textgen_transcript_with_gcs_audio
+import textgen_with_gcs_audio
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
 import textgen_with_video
+
+
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+# The project name is included in the CICD pipeline
+# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
 def test_textgen_with_multi_img() -> None:
@@ -35,4 +45,14 @@ def test_textgen_with_mute_video() -> None:
 
 def test_textgen_with_video() -> None:
     response = textgen_with_video.generate_content()
+    assert response
+
+
+def test_textgen_with_gcs_audio() -> None:
+    response = textgen_with_gcs_audio.generate_content()
+    assert response
+
+
+def test_textgen_transcript_with_gcs_audio() -> None:
+    response = textgen_transcript_with_gcs_audio.generate_content()
     assert response
