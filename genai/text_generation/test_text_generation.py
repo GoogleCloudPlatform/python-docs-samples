@@ -16,6 +16,8 @@ import os
 
 import textgen_chat_with_txt
 import textgen_chat_with_txt_stream
+import textgen_config_with_txt
+import textgen_sys_instr_with_txt
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
@@ -49,4 +51,14 @@ def test_textgen_chat_with_txt() -> None:
 
 def test_textgen_chat_with_txt_stream() -> None:
     response = textgen_chat_with_txt_stream.generate_content()
+    assert response
+
+
+def test_textgen_config_with_txt() -> None:
+    response = textgen_config_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_sys_instr_with_txt() -> None:
+    response = textgen_sys_instr_with_txt.generate_content()
     assert response
