@@ -14,6 +14,8 @@
 
 import os
 
+from typing import Any, Generator
+
 from google import genai
 
 import pytest
@@ -29,11 +31,11 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 @pytest.fixture(autouse=True)
-def setup_client():
+def setup_client() -> Generator[None, None, None]:
     original_Client = genai.Client
 
     class AutoInitClient(original_Client):
-        def __new__(cls, *args, **kwargs):
+        def __new__(cls, *args: Any, **kwargs: Any) -> genai.Client:
             return original_Client(
                 vertexai=True,
                 project=PROJECT_ID,
