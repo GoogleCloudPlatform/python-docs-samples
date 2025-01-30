@@ -14,12 +14,6 @@
 
 import os
 
-from typing import Generator
-
-from google import genai
-
-import pytest
-
 import textgen_chat_with_txt
 import textgen_chat_with_txt_stream
 import textgen_with_txt
@@ -27,26 +21,10 @@ import textgen_with_txt_img
 import textgen_with_txt_stream
 
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-
-
-@pytest.fixture(autouse=True)
-def setup_client() -> Generator[None, None, None]:
-    original_Client = genai.Client
-
-    class AutoInitClient(original_Client):
-        def __new__(cls, *args, **kwargs) -> genai.Client:  # noqa: ANN002 ANN003
-            return original_Client(
-                vertexai=True,
-                project=PROJECT_ID,
-                location="us-central1"
-            )
-
-    genai.Client = AutoInitClient
-
-    yield
-
-    genai.Client = original_Client
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+# The project name is included in the CICD pipeline
+# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
 def test_textgen_with_txt() -> None:
