@@ -34,7 +34,10 @@ def test_textgen_with_multi_img() -> None:
 
 
 def test_textgen_with_multi_local_img() -> None:
-    response = textgen_with_multi_local_img.generate_content()
+    response = textgen_with_multi_local_img.generate_content(
+        "./test_data/latte.jpg",
+        "./test_data/scones.jpg",
+    )
     assert response
 
 

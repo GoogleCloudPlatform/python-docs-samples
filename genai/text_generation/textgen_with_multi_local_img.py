@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def generate_content(image_path_1: str, image_path_2: str) -> str:
     # [START googlegenaisdk_textgen_with_multi_local_img]
     from google import genai
     from google.genai.types import Part
@@ -21,9 +21,11 @@ def generate_content() -> str:
     client = genai.Client()
 
     # TODO(Developer): Update the below file paths to your images
-    with open("path/to/your/image1.jpeg", "rb") as f:
+    # image_path_1 = "path/to/your/image1.jpg"
+    # image_path_2 = "path/to/your/image2.jpg"
+    with open(image_path_1, "rb") as f:
         image_1_bytes = f.read()
-    with open("path/to/your/image2.jpeg", "rb") as f:
+    with open(image_path_2, "rb") as f:
         image_2_bytes = f.read()
 
     response = client.models.generate_content(
@@ -49,4 +51,7 @@ def generate_content() -> str:
 
 
 if __name__ == "__main__":
-    generate_content()
+    generate_content(
+        "./test_data/latte.jpg",
+        "./test_data/scones.jpg",
+    )
