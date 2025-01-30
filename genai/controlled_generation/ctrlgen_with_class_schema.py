@@ -35,7 +35,7 @@ def generate_content() -> str:
     print(response.text)
 
     # Example output:
-    # [
+    # [Recipe(recipe_name='Chocolate Chip Cookies', ingredients=['2 1/4 cups all-purpose flour'
     #   {
     #     "ingredients": [
     #       "2 1/4 cups all-purpose flour",
@@ -51,9 +51,6 @@ def generate_content() -> str:
     #     "recipe_name": "Classic Chocolate Chip Cookies"
     #   }, ... ]
 
-    # To convert the response.text to Recipe class objects.
-    my_recipes = TypeAdapter(list[Recipe]).validate_json(response.text)
-    assert all(isinstance(r, Recipe) for r in my_recipes)
     # [END googlegenaisdk_ctrlgen_with_class_schema]
     return response.text
 
