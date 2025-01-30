@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
 import os
 import time
 
@@ -22,7 +21,6 @@ from googleapiclient.discovery import build
 
 client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
 
 
 # [START job_discovery_basic_keyword_search]
@@ -45,8 +43,6 @@ def basic_keyword_search(client_service, company_name, keyword):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_basic_keyword_search]
 
 
@@ -70,8 +66,6 @@ def category_search(client_service, company_name, categories):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_category_filter_search]
 
 
@@ -95,8 +89,6 @@ def employment_types_search(client_service, company_name, employment_types):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_employment_types_filter_search]
 
 
@@ -120,8 +112,6 @@ def date_range_search(client_service, company_name, date_range):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_date_range_filter_search]
 
 
@@ -145,8 +135,6 @@ def language_code_search(client_service, company_name, language_codes):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_language_code_filter_search]
 
 
@@ -170,8 +158,6 @@ def company_display_name_search(client_service, company_name, company_display_na
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_company_display_name_search]
 
 
@@ -204,8 +190,6 @@ def compensation_search(client_service, company_name):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
 # [END job_discovery_compensation_search]
 
 

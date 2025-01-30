@@ -12,7 +12,7 @@
 # limitations under the License.
 # [START memorystore_requirements]
 Flask==3.0.3
-gunicorn==22.0.0
-redis==5.0.1
+gunicorn==23.0.0
+redis==5.2.1
 Werkzeug==3.0.3
 # [END memorystore_requirements]
