@@ -23,10 +23,10 @@ import textgen_with_gcs_audio
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
-import textgen_with_video
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
+import textgen_with_video
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -88,11 +88,6 @@ def test_textgen_with_mute_video() -> None:
     assert response
 
 
-def test_textgen_with_video() -> None:
-    response = textgen_with_video.generate_content()
-    assert response
-
-
 def test_textgen_with_gcs_audio() -> None:
     response = textgen_with_gcs_audio.generate_content()
     assert response
@@ -100,4 +95,9 @@ def test_textgen_with_gcs_audio() -> None:
 
 def test_textgen_transcript_with_gcs_audio() -> None:
     response = textgen_transcript_with_gcs_audio.generate_content()
+    assert response
+
+
+def test_textgen_with_video() -> None:
+    response = textgen_with_video.generate_content()
     assert response
