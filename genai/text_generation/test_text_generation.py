@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import textgen_chat_with_txt
+import textgen_chat_with_txt_stream
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
-import textgen_chat_with_txt
-import textgen_chat_with_txt_stream
 
 
 def test_textgen_with_txt() -> None:
