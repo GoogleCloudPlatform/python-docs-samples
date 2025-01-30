@@ -14,7 +14,7 @@
 
 import os
 
-from typing import Any, Generator
+from typing import Generator
 
 from google import genai
 
@@ -35,7 +35,7 @@ def setup_client() -> Generator[None, None, None]:
     original_Client = genai.Client
 
     class AutoInitClient(original_Client):
-        def __new__(cls, *args: Any, **kwargs: Any) -> genai.Client:
+        def __new__(cls, *args, **kwargs) -> genai.Client:  # noqa: ANN002 ANN003
             return original_Client(
                 vertexai=True,
                 project=PROJECT_ID,
