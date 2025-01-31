@@ -23,7 +23,7 @@ from google.appengine.ext import ndb
 import webapp2
 
 
-# [START send-confirm-email]
+# [START gae_mail_send_confirm_email]
 class UserSignupHandler(webapp2.RequestHandler):
     """Serves the email address sign up form."""
 
@@ -46,7 +46,7 @@ Please confirm your email address by clicking on the link below:
                 confirmation_url
             )
             mail.send_mail(sender_address, user_address, subject, body)
-            # [END send-confirm-email]
+            # [END gae_mail_send_confirm_email]
             self.response.content_type = "text/plain"
             self.response.write("An email has been sent to {}.".format(user_address))
 
