@@ -12,7 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from datetime import datetime as dt, UTC
+from datetime import datetime as dt
+try:
+    from datetime import UTC  # Python 3.11+
+except ImportError:
+    from datetime import timezone as _timezone
+    UTC = _timezone.utc  # Python 3.7-3.10
 import os
 
 from google.cloud import bigquery, storage
