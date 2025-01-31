@@ -369,3 +369,106 @@ def test_parse_date() -> None:
     assert (
         test_date_str == TEST_DATE_STR
     ), f"expected {TEST_DATE_STR}, got {test_date_str}"
+
+
+TEST_LOG_WITH_SERVICEDATA = {
+    "logName": "projects/someproject/logs/somelog",
+    "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+            "principalEmail": "service@gcp-sa-scc-notification.iam.gserviceaccount.com"
+        },
+        "authorizationInfo": [
+            {
+                "granted": True,
+                "permission": "bigquery.tables.update",
+                "resource": "projects/someproject/datasets/someds/tables/sometbl",
+                "resourceAttributes": {}
+            }
+        ],
+        "serviceData": {
+            '@type': 'type.googleapis.com/google.cloud.bigquery.logging.v1.AuditData',
+            'tableUpdateRequest': {
+                'resource': {
+                    'info': {},
+                    'schemaJson': '{}',
+                    'updateTime': '2024-08-20T15:01:48.399Z',
+                    'view': {}
+                }
+            }
+        },
+        "methodName": "google.cloud.bigquery.v2.TableService.PatchTable",
+        "requestMetadata": {
+            "callerIp": "private",
+            "destinationAttributes": {},
+            "requestAttributes": {}
+        },
+        "resourceName": "projects/someproject/datasets/someds/tables/sometbl",
+        "serviceName": "bigquery.googleapis.com",
+        "status": {}
+    },
+    "resource": {
+        "labels": {
+            "dataset_id": "someds",
+            "project_id": "someproject"
+        },
+        "type": "bigquery_dataset"
+    },
+    "severity": "NOTICE",
+}
+TEST_LOG_WITH_PATCHED_SERVICEDATA = {
+    "logName": f"projects/{TEST_PROJECT_ID}/logs/imported_logs",
+    "protoPayload": {
+        "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+        "authenticationInfo": {
+            "principalEmail": "service@gcp-sa-scc-notification.iam.gserviceaccount.com"
+        },
+        "authorizationInfo": [
+            {
+                "granted": True,
+                "permission": "bigquery.tables.update",
+                "resource": "projects/someproject/datasets/someds/tables/sometbl",
+                "resourceAttributes": {}
+            }
+        ],
+        # this field is renamed from 'serviceData'
+        "metadata": {
+            '@type': 'type.googleapis.com/google.cloud.bigquery.logging.v1.AuditData',
+            'tableUpdateRequest': {
+                'resource': {
+                    'info': {},
+                    'schemaJson': '{}',
+                    'updateTime': '2024-08-20T15:01:48.399Z',
+                    'view': {}
+                }
+            }
+        },
+        "methodName": "google.cloud.bigquery.v2.TableService.PatchTable",
+        "requestMetadata": {
+            "callerIp": "private",
+            "destinationAttributes": {},
+            "requestAttributes": {}
+        },
+        "resourceName": "projects/someproject/datasets/someds/tables/sometbl",
+        "serviceName": "bigquery.googleapis.com",
+        "status": {}
+    },
+    "resource": {
+        "labels": {
+            "dataset_id": "someds",
+            "project_id": "someproject"
+        },
+        "type": "bigquery_dataset"
+    },
+    "labels": {
+        "original_logName": "projects/someproject/logs/somelog",
+    },
+    "severity": "NOTICE",
+}
+
+
+def test_patch_serviceData_field() -> None:
+    log = dict(TEST_LOG_WITH_SERVICEDATA)
+    main._patch_entry(log, TEST_PROJECT_ID)
+
+    assert (log == TEST_LOG_WITH_PATCHED_SERVICEDATA)
