@@ -20,7 +20,7 @@ from snippets.get_policy import get_project_policy
 from snippets.set_policy import set_project_policy
 
 
-def modify_policy_remove_member(
+def modify_policy_remove_principal(
     project_id: str, role: str, principal: str
 ) -> policy_pb2.Policy:
     """Remove a principal from certain role in project policy.
@@ -51,6 +51,6 @@ if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
     role = "roles/viewer"
-    member = f"serviceAccount:test-service-account@{PROJECT_ID}.iam.gserviceaccount.com"
+    principal = f"serviceAccount:test-service-account@{PROJECT_ID}.iam.gserviceaccount.com"
 
-    modify_policy_remove_member(PROJECT_ID, role, member)
+    modify_policy_remove_principal(PROJECT_ID, role, principal)

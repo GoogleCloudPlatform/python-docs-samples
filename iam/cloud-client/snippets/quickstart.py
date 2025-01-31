@@ -46,7 +46,7 @@ def quickstart(project_id: str, principal: str) -> None:
         print(f"[{m}]")
 
     # Removes the principal from the 'Log Writer' role.
-    modify_policy_remove_member(crm_service, project_id, role, principal)
+    modify_policy_remove_principal(crm_service, project_id, role, principal)
 
 
 def get_policy(
@@ -98,7 +98,7 @@ def modify_policy_add_role(
     set_policy(crm_service, project_id, policy)
 
 
-def modify_policy_remove_member(
+def modify_policy_remove_principal(
     crm_service: resourcemanager_v3.ProjectsClient,
     project_id: str,
     role: str,

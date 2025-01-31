@@ -20,7 +20,7 @@ from snippets.get_policy import get_project_policy
 from snippets.set_policy import set_project_policy
 
 
-def modify_policy_add_member(
+def modify_policy_add_principal(
     project_id: str, role: str, principal: str
 ) -> policy_pb2.Policy:
     """Add a principal to certain role in project policy.
@@ -52,4 +52,4 @@ if __name__ == "__main__":
     role = "roles/viewer"
     principal = f"serviceAccount:test-service-account@{PROJECT_ID}.iam.gserviceaccount.com"
 
-    modify_policy_add_member(PROJECT_ID, role, principal)
+    modify_policy_add_principal(PROJECT_ID, role, principal)

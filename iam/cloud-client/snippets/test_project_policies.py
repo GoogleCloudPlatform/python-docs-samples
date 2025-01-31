@@ -28,8 +28,8 @@ from snippets.create_service_account import create_service_account
 from snippets.delete_service_account import delete_service_account
 from snippets.get_policy import get_project_policy
 from snippets.list_service_accounts import get_service_account
-from snippets.modify_policy_add_member import modify_policy_add_member
-from snippets.modify_policy_remove_member import modify_policy_remove_member
+from snippets.modify_policy_add_member import modify_policy_add_principal
+from snippets.modify_policy_remove_member import modify_policy_remove_principal
 from snippets.query_testable_permissions import query_testable_permissions
 from snippets.set_policy import set_project_policy
 
@@ -119,7 +119,7 @@ def test_set_project_policy(project_policy: policy_pb2.Policy) -> None:
     assert binding_found
 
 
-def test_modify_policy_add_member(
+def test_modify_policy_add_principal(
     project_policy: policy_pb2.Policy, service_account: str
 ) -> None:
     role = "roles/viewer"
@@ -141,7 +141,7 @@ def test_modify_policy_add_member(
     assert binding_found
 
     member = f"serviceAccount:{service_account}"
-    policy = execute_wrapped(modify_policy_add_member, PROJECT_ID, role, member)
+    policy = execute_wrapped(modify_policy_add_principal, PROJECT_ID, role, member)
 
     member_added = False
     for bind in policy.bindings:
@@ -175,7 +175,7 @@ def test_modify_policy_remove_member(
             break
     assert binding_found
 
-    policy = execute_wrapped(modify_policy_remove_member, PROJECT_ID, role, member)
+    policy = execute_wrapped(modify_policy_remove_principal, PROJECT_ID, role, member)
 
     member_removed = False
     for bind in policy.bindings:
