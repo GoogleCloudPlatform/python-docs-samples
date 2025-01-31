@@ -16,7 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_ctrlgen_with_class_schema]
     from google import genai
-    from pydantic import BaseModel, TypeAdapter
+    from pydantic import BaseModel
 
     class Recipe(BaseModel):
         recipe_name: str

@@ -12,22 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.genai.types import BatchJob
 
-
-def create_job(output_uri: str) -> BatchJob:
-    # [START googlegenaisdk_batch_prediction_with_gcs]
+def generate_content(output_uri: str) -> str:
+    # [START googlegenaisdk_batchpredict_with_bq]
     import time
 
     from google import genai
 
     client = genai.Client()
     # TODO(developer): Update and un-comment below line
-    # output_uri = "gs://your-bucket/your-prefix/..."
+    # output_uri = f"bq://your-project.your_dataset.your_table"
 
     job = client.batches.create(
-        model="gemini-2.0-flash-001",
-        src="gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl",
+        model="gemini-1.5-pro-002",
+        src="bq://storage-samples.generative_ai.batch_requests_for_multimodal_input",
         config={
             "dest": output_uri
         }
@@ -56,11 +54,11 @@ def create_job(output_uri: str) -> BatchJob:
     # ...
     # Job state: JOB_STATE_SUCCEEDED
 
-    # [END googlegenaisdk_batch_prediction_with_gcs]
-    return job
+    # [END googlegenaisdk_batchpredict_with_bq]
+    return job.state
 
 
 if __name__ == "__main__":
-    create_job(
-        output_uri="gs://your-bucket/your-prefix/..."
+    generate_content(
+        output_uri="bq://your-project.your_dataset.your_table"
     )
