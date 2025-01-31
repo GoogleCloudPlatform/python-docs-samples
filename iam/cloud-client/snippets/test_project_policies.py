@@ -98,6 +98,7 @@ def execute_wrapped(
         pytest.skip("Service account wasn't created")
 
 
+@backoff.on_exception(backoff.expo, Aborted, max_tries=6)
 def test_set_project_policy(project_policy: policy_pb2.Policy) -> None:
     role = "roles/viewer"
     test_binding = policy_pb2.Binding()
@@ -119,6 +120,7 @@ def test_set_project_policy(project_policy: policy_pb2.Policy) -> None:
     assert binding_found
 
 
+@backoff.on_exception(backoff.expo, Aborted, max_tries=6)
 def test_modify_policy_add_principal(
     project_policy: policy_pb2.Policy, service_account: str
 ) -> None:
@@ -151,6 +153,7 @@ def test_modify_policy_add_principal(
     assert member_added
 
 
+@backoff.on_exception(backoff.expo, Aborted, max_tries=6)
 def test_modify_policy_remove_member(
     project_policy: policy_pb2.Policy, service_account: str
 ) -> None:

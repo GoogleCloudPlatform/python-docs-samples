@@ -29,7 +29,7 @@ from snippets.list_service_accounts import get_service_account
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
-def delete_service_account_with_backoff(email: str):
+def delete_service_account_with_backoff(email: str) -> None:
     """Check if the account was deleted correctly using exponential backoff."""
 
     delete_service_account(PROJECT_ID, email)

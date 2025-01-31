@@ -98,6 +98,7 @@ def test_list_service_accounts(service_account_email: str) -> None:
 
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=6)
+@backoff.on_exception(backoff.expo, NotFound, max_tries=6)
 def test_disable_service_account(service_account_email: str) -> None:
     account_before = get_service_account(PROJECT_ID, service_account_email)
     assert not account_before.disabled
