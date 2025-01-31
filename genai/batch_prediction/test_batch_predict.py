@@ -12,27 +12,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from datetime import datetime as dt, UTC
+from datetime import datetime as dt
 import os
 
-from google.cloud import storage
+from google.cloud import bigquery, storage
 from google.genai.types import JobState
+
 import pytest
 
-import batch_prediction_with_gcs
+import submit_with_bq
+import submit_with_gcs
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
+BQ_OUTPUT_DATASET = f"{os.environ['GOOGLE_CLOUD_PROJECT']}.gen_ai_batch_prediction"
 GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
-GCS_OUTPUT_BUCKET = "gemini-batch-prediction-results"
+
+
+@pytest.fixture(scope="session")
+def bq_output_uri():
+    table_name = f"text_output_{dt.now().strftime('%Y_%m_%d_T%H_%M_%S')}"
+    table_uri = f"{BQ_OUTPUT_DATASET}.{table_name}"
+
+    yield f"bq://{table_uri}"
+
+    bq_client = bigquery.Client()
+    bq_client.delete_table(table_uri, not_found_ok=True)
 
 
 @pytest.fixture(scope="session")
 def gcs_output_uri():
-    prefix = f"text_output/{dt.now(UTC)}"
+    prefix = f"text_output/{dt.now()}"
 
     yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
 
@@ -43,9 +56,11 @@ def gcs_output_uri():
         blob.delete()
 
 
+def test_batch_prediction_with_bq(bq_output_uri) -> None:
+    response = submit_with_bq.generate_content(output_uri=bq_output_uri)
+    assert response == JobState.JOB_STATE_SUCCEEDED
+
+
 def test_batch_prediction_with_gcs(gcs_output_uri) -> None:
-    job = batch_prediction_with_gcs.create_job(output_uri=gcs_output_uri)
-    assert job
-    assert job.state == "JOB_STATE_SUCCEEDED"
-    assert job.dest.gcs_uri == gcs_output_uri
-    assert job.state == JobState.JOB_STATE_SUCCEEDED
+    response = submit_with_gcs.generate_content(output_uri=gcs_output_uri)
+    assert response == JobState.JOB_STATE_SUCCEEDED
