@@ -27,7 +27,6 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
 # [START cloudrun_imageproc_imagemagick_dockerfile_python]
-# [START cloudrun_imageproc_dockerfile_imagemagick]
 # Install Imagemagick into the container image.
 # For more on system packages review the system packages tutorial.
 # https://cloud.google.com/run/docs/tutorials/system-packages#dockerfile
@@ -35,7 +34,6 @@ RUN set -ex; \
   apt-get -y update; \
   apt-get -y install imagemagick; \
   rm -rf /var/lib/apt/lists/*
-# [END cloudrun_imageproc_dockerfile_imagemagick]
 # [END cloudrun_imageproc_imagemagick_dockerfile_python]
 
 # Copy local code to the container image.
