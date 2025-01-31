@@ -109,7 +109,6 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 
 # Database
 
-# [START dbconfig]
 # [START gaeflex_py_django_database_config]
 # Use django-environ to parse the connection string
 DATABASES = {"default": env.db()}
@@ -120,7 +119,6 @@ if os.getenv("USE_CLOUD_SQL_AUTH_PROXY", None):
     DATABASES["default"]["PORT"] = 5432
 
 # [END gaeflex_py_django_database_config]
-# [END dbconfig]
 
 # Use a in-memory sqlite3 database when testing in CI systems
 if os.getenv("TRAMPOLINE_CI", None):
@@ -162,7 +160,6 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
-# [START staticurl]
 # [START gaeflex_py_django_static_config]
 # Define static storage via django-storages[google]
 GS_BUCKET_NAME = env("GS_BUCKET_NAME")
@@ -177,7 +174,6 @@ STORAGES = {
 }
 GS_DEFAULT_ACL = "publicRead"
 # [END gaeflex_py_django_static_config]
-# [END staticurl]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/stable/ref/settings/#default-auto-field
