@@ -13,11 +13,6 @@
 # limitations under the License.
 
 from datetime import datetime as dt
-try:
-    from datetime import UTC  # Python 3.11+
-except ImportError:
-    from datetime import timezone as _timezone
-    UTC = _timezone.utc  # Python 3.7-3.10
 import os
 
 from google.cloud import bigquery, storage
@@ -39,7 +34,7 @@ GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
 
 @pytest.fixture(scope="session")
 def bq_output_uri():
-    table_name = f"text_output_{dt.now(UTC).strftime('%Y_%m_%d_T%H_%M_%S')}"
+    table_name = f"text_output_{dt.now().strftime('%Y_%m_%d_T%H_%M_%S')}"
     table_uri = f"{BQ_OUTPUT_DATASET}.{table_name}"
 
     yield f"bq://{table_uri}"
@@ -50,7 +45,7 @@ def bq_output_uri():
 
 @pytest.fixture(scope="session")
 def gcs_output_uri():
-    prefix = f"text_output/{dt.now(UTC)}"
+    prefix = f"text_output/{dt.now()}"
 
     yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
 
