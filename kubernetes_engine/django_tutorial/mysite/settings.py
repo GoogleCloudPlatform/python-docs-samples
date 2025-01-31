@@ -76,7 +76,6 @@ WSGI_APPLICATION = "mysite.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/stable/ref/settings/#databases
 
-# [START dbconfig]
 # [START gke_django_database_config]
 DATABASES = {
     "default": {
@@ -91,7 +90,6 @@ DATABASES = {
     }
 }
 # [END gke_django_database_config]
-# [END dbconfig]
 
 # Internationalization
 # https://docs.djangoproject.com/en/stable/topics/i18n/
