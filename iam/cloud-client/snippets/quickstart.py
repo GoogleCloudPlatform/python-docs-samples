@@ -104,7 +104,7 @@ def modify_policy_remove_member(
     role: str,
     principal: str,
 ) -> None:
-    """Removes a  member from a role binding."""
+    """Removes a principal from a role binding."""
 
     policy = get_policy(crm_service, project_id)
 
