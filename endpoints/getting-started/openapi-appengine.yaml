@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START endpoints_swagger_appengine_yaml_python]
 # [START endpoints_swagger_yaml_python]
 swagger: "2.0"
 info:
@@ -20,6 +21,7 @@ info:
   version: "1.0.0"
 host: "YOUR-PROJECT-ID.appspot.com"
 # [END endpoints_swagger_yaml_python]
+# [END endpoints_swagger_appengine_yaml_python]
 consumes:
 - "application/json"
 produces:
