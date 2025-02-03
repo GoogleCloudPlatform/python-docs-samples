@@ -19,8 +19,7 @@ def generate_content() -> str:
 
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
-        contents="How does AI work?"
+        model="gemini-2.0-flash-001", contents="How does AI work?"
     )
     print(response.text)
     # Example response:

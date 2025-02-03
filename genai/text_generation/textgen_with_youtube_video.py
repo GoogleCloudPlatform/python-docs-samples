@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,36 +12,38 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# !This sample works with Google Cloud Vertex AI API only.
+
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_config_with_txt]
+    # [START genai_text_generation_youtube]
     from google import genai
     from google.genai import types
 
     client = genai.Client()
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
-        contents="Why is the sky blue?",
-        # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.types.GenerateContentConfig
-        config=types.GenerateContentConfig(
-            temperature=0,
-            candidate_count=1,
-            response_mime_type="application/json",
-            top_p=0.95,
-            top_k=20,
-            seed=5,
-            max_output_tokens=100,
-            stop_sequences=["STOP!"],
-            presence_penalty=0.0,
-            frequency_penalty=0.0,
-        ),
+    model_id = "gemini-2.0-flash-exp"
+
+    # You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
+    video = types.Part.from_uri(
+        file_uri="https://www.youtube.com/watch?v=3KtWfp0UopM",
+        mime_type="video/mp4",
     )
+
+    response = client.models.generate_content(
+        model=model_id,
+        contents=[
+            video,
+            "Write a short and engaging blog post based on this video.",
+        ],
+    )
+
     print(response.text)
     # Example response:
-    # {
-    #   "explanation": "The sky appears blue due to a phenomenon called Rayleigh scattering. When ...
-    # }
-    # [END googlegenaisdk_textgen_config_with_txt]
+    # Lunchtime Level Up: Easy & Delicious Meal Prep
+    # We all know the struggle:  you're rushing in the morning, and lunch is the
+    # last thing on your mind...
+
+    # [END genai_text_generation_youtube]
     return response.text
 
 

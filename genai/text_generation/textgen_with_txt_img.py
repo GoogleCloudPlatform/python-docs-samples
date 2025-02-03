@@ -25,9 +25,9 @@ def generate_content() -> str:
             "What is shown in this image?",
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                mime_type="image/jpeg"
-            )
-        ]
+                mime_type="image/jpeg",
+            ),
+        ],
     )
     print(response.text)
     # Example response:

@@ -25,9 +25,9 @@ def generate_content() -> str:
         config=types.GenerateContentConfig(
             system_instruction=[
                 "You're a language translator.",
-                "Your mission is to translate text in English to French."
+                "Your mission is to translate text in English to French.",
             ]
-        )
+        ),
     )
     print(response.text)
     # Example response:
