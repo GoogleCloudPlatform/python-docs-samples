@@ -26,7 +26,8 @@ def generate_content(output_uri: str) -> str:
     # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.batches.Batches.create
     job = client.batches.create(
         model="gemini-1.5-pro-002",
-        src="gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl",
+27:        model="gemini-1.5-pro-002",
+28:        src="gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl", # Source link: https://storage.cloud.google.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
         config={
             "dest": output_uri
         }
