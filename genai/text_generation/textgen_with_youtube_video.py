@@ -16,7 +16,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_text_generation_youtube]
+    # [START genai_text_generation_youtube_video]
     from google import genai
     from google.genai import types
 
@@ -43,7 +43,7 @@ def generate_content() -> str:
     # We all know the struggle:  you're rushing in the morning, and lunch is the
     # last thing on your mind...
 
-    # [END genai_text_generation_youtube]
+    # [END genai_text_generation_youtube_video]
     return response.text
 
 
