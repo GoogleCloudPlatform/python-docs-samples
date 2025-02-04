@@ -1,0 +1,4 @@
+google-api-core==2.24.0
+google-cloud-bigquery==3.29.0
+google-cloud-storage==2.19.0
+pytest==8.2.0
