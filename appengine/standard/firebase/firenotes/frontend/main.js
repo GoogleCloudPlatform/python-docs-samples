@@ -104,7 +104,6 @@ $(function(){
       });
     });
   }
-  // [END gae_python_fetch_notes]
 
   // Sign out a user
   var signOutBtn =$('#sign-out');
