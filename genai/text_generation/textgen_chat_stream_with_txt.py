@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_chat_with_txt_stream]
+    # [START googlegenaisdk_textgen_chat_stream_with_txt]
     from google import genai
 
     client = genai.Client()
@@ -29,7 +29,7 @@ def generate_content() -> str:
     #  sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's
     #  a breakdown of why:
     # ...
-    # [END googlegenaisdk_textgen_chat_with_txt_stream]
+    # [END googlegenaisdk_textgen_chat_stream_with_txt]
     return response_text
 
 

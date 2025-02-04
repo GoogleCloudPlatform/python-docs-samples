@@ -31,9 +31,9 @@ def generate_content() -> str:
             prompt,
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/audio/pixel.mp3",
-                mime_type="audio/mpeg"
-            )
-        ]
+                mime_type="audio/mpeg",
+            ),
+        ],
     )
     print(response.text)
     # Example response:

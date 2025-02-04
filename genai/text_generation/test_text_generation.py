@@ -14,12 +14,15 @@
 
 import os
 
+import textgen_async_with_txt
+import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
-import textgen_chat_with_txt_stream
+import textgen_code_with_pdf
 import textgen_config_with_txt
 import textgen_sys_instr_with_txt
 import textgen_transcript_with_gcs_audio
 import textgen_with_gcs_audio
+import textgen_with_local_video
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
@@ -27,6 +30,7 @@ import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
 import textgen_with_video
+import textgen_with_youtube_video
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -51,7 +55,7 @@ def test_textgen_chat_with_txt() -> None:
 
 
 def test_textgen_chat_with_txt_stream() -> None:
-    response = textgen_chat_with_txt_stream.generate_content()
+    response = textgen_chat_stream_with_txt.generate_content()
     assert response
 
 
@@ -100,4 +104,24 @@ def test_textgen_transcript_with_gcs_audio() -> None:
 
 def test_textgen_with_video() -> None:
     response = textgen_with_video.generate_content()
+    assert response
+
+
+def test_textgen_async_with_txt() -> None:
+    response = textgen_async_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_with_local_video() -> None:
+    response = textgen_with_local_video.generate_content()
+    assert response
+
+
+def test_textgen_with_youtube_video() -> None:
+    response = textgen_with_youtube_video.generate_content()
+    assert response
+
+
+def test_textgen_code_with_pdf() -> None:
+    response = textgen_code_with_pdf.generate_content()
     assert response

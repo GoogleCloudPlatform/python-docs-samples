@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,31 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
 
-def generate_content() -> str:
-    # [START googlegenaisdk_textgen_chat_with_txt]
+
+async def generate_content() -> str:
+    # [START googlegenaisdk_textgen_async_with_txt]
     from google import genai
-    from google.genai.types import Content, Part
+    from google.genai.types import GenerateContentConfig
 
     client = genai.Client()
-    chat = client.chats.create(
-        model="gemini-2.0-flash-001",
-        history=[
-            Content(parts=[Part(text="Hello")], role="user"),
-            Content(
-                parts=[Part(text="Great to meet you. What would you like to know?")],
-                role="model",
-            ),
-        ],
+    model_id = "gemini-2.0-flash-exp"
+
+    response = await client.aio.models.generate_content(
+        model=model_id,
+        contents="Compose a song about the adventures of a time-traveling squirrel.",
+        config=GenerateContentConfig(
+            response_modalities=["TEXT"],
+        ),
     )
-    response = chat.send_message("tell me a story")
+
     print(response.text)
     # Example response:
-    # Okay, here's a story for you:
-    # ...
-    # [END googlegenaisdk_textgen_chat_with_txt]
+    # (Verse 1)
+    # Sammy the squirrel, a furry little friend
+    # Had a knack for adventure, beyond all comprehend
+
+    # [END googlegenaisdk_textgen_async_with_txt]
     return response.text
 
 
 if __name__ == "__main__":
-    generate_content()
+    asyncio.run(generate_content())

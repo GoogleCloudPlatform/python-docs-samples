@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,29 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# !This sample works with Google Cloud Vertex AI API only.
+
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_chat_with_txt]
+    # [START googlegenaisdk_textgen_code_with_pdf]
     from google import genai
-    from google.genai.types import Content, Part
+    from google.genai import types
 
     client = genai.Client()
-    chat = client.chats.create(
-        model="gemini-2.0-flash-001",
-        history=[
-            Content(parts=[Part(text="Hello")], role="user"),
-            Content(
-                parts=[Part(text="Great to meet you. What would you like to know?")],
-                role="model",
-            ),
+    model_id = "gemini-2.0-flash-exp"
+
+    python_code = types.Part.from_uri(
+        file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf",
+        mime_type="application/pdf",
+    )
+
+    response = client.models.generate_content(
+        model=model_id,
+        contents=[
+            python_code,
+            "Convert this python code to use Google Python Style Guide.",
         ],
     )
-    response = chat.send_message("tell me a story")
+
     print(response.text)
     # Example response:
-    # Okay, here's a story for you:
+    # ```python
+    # def fibonacci(n: int) -> list[int] | str:
     # ...
-    # [END googlegenaisdk_textgen_chat_with_txt]
+    # [END googlegenaisdk_textgen_code_with_pdf]
     return response.text
 
 

@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,34 +14,32 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_config_with_txt]
+    # [START googlegenaisdk_textgen_code_with_local_video]
     from google import genai
     from google.genai import types
 
     client = genai.Client()
+    model_id = "gemini-2.0-flash-exp"
+
+    # Read local video file content
+    with open("test_data/describe_video_content.mp4", "rb") as fp:
+        # Video source: https://storage.googleapis.com/cloud-samples-data/generative-ai/video/describe_video_content.mp4
+        video_content = fp.read()
+
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
-        contents="Why is the sky blue?",
-        # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.types.GenerateContentConfig
-        config=types.GenerateContentConfig(
-            temperature=0,
-            candidate_count=1,
-            response_mime_type="application/json",
-            top_p=0.95,
-            top_k=20,
-            seed=5,
-            max_output_tokens=100,
-            stop_sequences=["STOP!"],
-            presence_penalty=0.0,
-            frequency_penalty=0.0,
-        ),
+        model=model_id,
+        contents=[
+            "Write a short and engaging blog post based on this video.",
+            types.Part.from_bytes(data=video_content, mime_type="video/mp4"),
+        ],
     )
+
     print(response.text)
     # Example response:
-    # {
-    #   "explanation": "The sky appears blue due to a phenomenon called Rayleigh scattering. When ...
-    # }
-    # [END googlegenaisdk_textgen_config_with_txt]
+    # Okay, here's a short and engaging blog post based on the climbing video:
+    # **Title: Conquering the Wall: A Glimpse into the World of Indoor Climbing**
+    # ...
+    # [END googlegenaisdk_textgen_code_with_local_video]
     return response.text
 
 

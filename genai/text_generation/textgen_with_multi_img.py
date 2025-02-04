@@ -19,23 +19,32 @@ def generate_content() -> str:
     from google.genai.types import Part
 
     client = genai.Client()
+
+    # Read content from GCS
+    gcs_file_img_path = "gs://cloud-samples-data/generative-ai/image/scones.jpg"
+
+    # Read content from a local file
+    with open("test_data/latte.jpg", "rb") as f:
+        local_file_img_bytes = f.read()
+
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            "Generate a list of all the objects contained in both images.",
+            "Write an advertising jingle based on the items in both images.",
             Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                mime_type="image/jpeg"
+                file_uri=gcs_file_img_path,
+                mime_type="image/jpeg",
             ),
-            Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/latte.jpg",
-                mime_type="image/jpeg"
-            )
-        ]
+            Part.from_bytes(
+                data=local_file_img_bytes,
+                mime_type="image/jpeg",
+            ),
+        ],
     )
     print(response.text)
     # Example response:
-    # Okay, here's the list of objects present in both images:
+    # Okay, here's an advertising jingle based on the blueberry scones, coffee, and
+    #  flowers from the first image, and the cake and latte in the second image:
     # ...
     # [END googlegenaisdk_textgen_with_multi_img]
     return response.text

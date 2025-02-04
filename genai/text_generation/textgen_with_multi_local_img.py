@@ -31,16 +31,10 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            "Write an advertising jingle based on the items in both images.",
-            Part.from_bytes(
-                data=image_1_bytes,
-                mime_type="image/jpeg"
-            ),
-            Part.from_bytes(
-                data=image_2_bytes,
-                mime_type="image/jpeg"
-            )
-        ]
+            "Generate a list of all the objects contained in both images.",
+            Part.from_bytes(data=image_1_bytes, mime_type="image/jpeg"),
+            Part.from_bytes(data=image_2_bytes, mime_type="image/jpeg"),
+        ],
     )
     print(response.text)
     # Example response:

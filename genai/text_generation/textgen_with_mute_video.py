@@ -26,9 +26,9 @@ def generate_content() -> str:
             "What is in the video?",
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/ad_copy_from_video.mp4",
-                mime_type="video/mp4"
-            )
-        ]
+                mime_type="video/mp4",
+            ),
+        ],
     )
     print(response.text)
     # Example response:
