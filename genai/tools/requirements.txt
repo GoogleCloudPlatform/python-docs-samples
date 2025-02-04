@@ -1,0 +1,4 @@
+google-genai==0.8.0
+# PIl is required for tools_code_execution_with_txt_img.py
+pillow==10.3.0; python_version < '3.8'
+pillow==10.3.0; python_version >= '3.8'
