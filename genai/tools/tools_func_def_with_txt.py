@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_function_calling_direct_code]
+    # [START googlegenaisdk_tools_func_def_with_txt]
     from google import genai
     from google.genai.types import GenerateContentConfig
 
@@ -43,7 +43,7 @@ def generate_content() -> str:
     print(response.text)
     # Example response:
     # The weather in Boston is sunny.
-    # [END genai_function_calling_direct_code]
+    # [END googlegenaisdk_tools_func_def_with_txt]
     return response.text
 
 

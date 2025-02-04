@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_function_calling01]
+    # [START googlegenaisdk_tools_func_desc_with_txt]
     from google import genai
     from google.genai.types import FunctionDeclaration, Tool, GenerateContentConfig
 
@@ -83,7 +83,7 @@ def generate_content() -> str:
     #     },
     # )]
 
-    # [END genai_function_calling01]
+    # [END googlegenaisdk_tools_func_desc_with_txt]
     return str(response.candidates[0].content.parts[0].function_call)
 
 

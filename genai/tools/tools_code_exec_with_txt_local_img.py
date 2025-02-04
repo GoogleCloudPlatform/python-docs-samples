@@ -16,7 +16,7 @@ from google.genai.types import GenerateContentResponse
 
 
 def generate_content() -> GenerateContentResponse:
-    # [START googlegenaisdk_tools_code_execution_with_txt_local_img]
+    # [START googlegenaisdk_tools_code_exec_with_txt_local_img]
     from PIL import Image
     from google import genai
     from google.genai.types import Tool, ToolCodeExecution, GenerateContentConfig
@@ -67,7 +67,7 @@ def generate_content() -> GenerateContentResponse:
     # ...
     # # Outcome:
     # outcome=<Outcome.OUTCOME_OK: 'OUTCOME_OK'> output='Win percentage when switching: 65.90%\nWin percentage when not switching: 34.10%\n'
-    # [END tools_code_execution_with_txt_local_img]
+    # [END googlegenaisdk_tools_code_exec_with_txt_local_img]
     return response
 
 

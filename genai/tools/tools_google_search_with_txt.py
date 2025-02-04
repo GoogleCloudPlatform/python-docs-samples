@@ -14,6 +14,7 @@
 
 
 def generate_content() -> str:
+    # [START googlegenaisdk_tools_google_search_with_txt]
     from google import genai
     from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
 
@@ -33,6 +34,7 @@ def generate_content() -> str:
     print(response.candidates[0].content.parts[0].text)
     # Example response:
     # 'The next total solar eclipse in the United States will occur on ...'
+    # [END googlegenaisdk_tools_google_search_with_txt]
     return response.candidates[0].content.parts[0].text
 
 

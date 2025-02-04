@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START genai_function_calling_code_execution]
+    # [START googlegenaisdk_tools_code_exec_with_txt]
     from google import genai
     from google.genai.types import Tool, ToolCodeExecution, GenerateContentConfig
 
@@ -41,7 +41,7 @@ def generate_content() -> str:
     # code='...' language='PYTHON'
     # outcome='OUTCOME_OK' output='Lower Palindrome: 6666\nHigher Palindrome: 6776\nNearest Palindrome to 6765: 6776\n'
 
-    # [END genai_function_calling_code_execution]
+    # [END googlegenaisdk_tools_code_exec_with_txt]
     return str(response.candidates[0].content.parts)
 
 
