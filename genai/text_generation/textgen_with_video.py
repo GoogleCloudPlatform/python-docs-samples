@@ -18,8 +18,7 @@ def generate_content() -> str:
     from google import genai
     from google.genai.types import Part
 
-    client = genai.Client()
-
+    client = genai.Client(http_options={'api_version': 'v1'})
     prompt = """
     Analyze the provided video file, including its audio.
     Summarize the main points of the video concisely.

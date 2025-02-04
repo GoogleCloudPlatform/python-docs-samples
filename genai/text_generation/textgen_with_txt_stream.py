@@ -17,9 +17,8 @@ def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_txt_stream]
     from google import genai
 
-    client = genai.Client()
+    client = genai.Client(http_options={'api_version': 'v1'})
     response_text = ""
-
     for chunk in client.models.generate_content_stream(
         model="gemini-2.0-flash-001",
         contents="Why is the sky blue?"

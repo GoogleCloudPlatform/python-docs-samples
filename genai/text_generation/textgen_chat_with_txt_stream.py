@@ -17,7 +17,7 @@ def generate_content() -> str:
     # [START googlegenaisdk_textgen_chat_with_txt_stream]
     from google import genai
 
-    client = genai.Client()
+    client = genai.Client(http_options={'api_version': 'v1'})
     chat = client.chats.create(model="gemini-2.0-flash-001")
     response_text = ""
 

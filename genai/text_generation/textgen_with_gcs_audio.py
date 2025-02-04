@@ -18,8 +18,7 @@ def generate_content() -> str:
     from google import genai
     from google.genai.types import Part
 
-    client = genai.Client()
-
+    client = genai.Client(http_options={'api_version': 'v1'})
     prompt = """
     Provide the summary of the audio file.
     Summarize the main points of the audio concisely.

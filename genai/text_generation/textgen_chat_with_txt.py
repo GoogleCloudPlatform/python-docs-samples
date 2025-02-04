@@ -18,7 +18,7 @@ def generate_content() -> str:
     from google import genai
     from google.genai.types import Content, Part
 
-    client = genai.Client()
+    client = genai.Client(http_options={'api_version': 'v1'})
     chat = client.chats.create(
         model="gemini-2.0-flash-001",
         history=[
