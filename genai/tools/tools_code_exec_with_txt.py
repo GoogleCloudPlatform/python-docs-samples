@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.genai.types import Part
-
 
 def generate_content() -> str:
     # [START genai_function_calling_code_execution]

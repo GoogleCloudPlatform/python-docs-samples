@@ -37,7 +37,7 @@ def generate_content() -> GenerateContentResponse:
 
     # Pass multimedia input as additional context to the model.
     # File source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
-    image_data = Image.open(open('./test_data/640px-Monty_open_door.svg.png', 'rb'))
+    image_data = Image.open(open("./test_data/640px-Monty_open_door.svg.png", "rb"))
 
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
 
@@ -50,11 +50,11 @@ def generate_content() -> GenerateContentResponse:
         ),
     )
 
-    print('# Code:')
+    print("# Code:")
     for part in response.candidates[0].content.parts:
         if part.executable_code:
             print(part.executable_code)
-    print('# Outcome:')
+    print("# Outcome:")
     for part in response.candidates[0].content.parts:
         if part.code_execution_result:
             print(part.code_execution_result)

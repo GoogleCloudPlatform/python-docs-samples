@@ -14,16 +14,26 @@
 
 import os
 
-import tools_code_exec_with_txt_local_img
 import tools_code_exec_with_txt
-import tools_func_desc_with_txt
+import tools_code_exec_with_txt_local_img
 import tools_func_def_with_txt
+import tools_func_desc_with_txt
 import tools_google_search_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
+
+
+def test_tools_code_exec_with_txt() -> None:
+    response = tools_code_exec_with_txt.generate_content()
+    assert response
+
+
+def test_tools_code_exec_with_txt_local_img() -> None:
+    response = tools_code_exec_with_txt_local_img.generate_content()
+    assert response
 
 
 def test_tools_func_def_with_txt() -> None:
@@ -38,14 +48,4 @@ def test_tools_func_desc_with_txt() -> None:
 
 def test_tools_google_search_with_txt() -> None:
     response = tools_google_search_with_txt.generate_content()
-    assert response
-
-
-def test_tools_code_exec_with_txt_local_img() -> None:
-    response = tools_code_exec_with_txt_local_img.generate_content()
-    assert response
-
-
-def test_tools_code_exec_with_txt() -> None:
-    response = tools_code_exec_with_txt.generate_content()
     assert response
