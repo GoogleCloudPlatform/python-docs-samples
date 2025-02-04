@@ -18,7 +18,6 @@ try:
     from functools import lru_cache
 except ImportError:
     from functools32 import lru_cache
-# [START rest_writing_data]
 import json
 
 import google.auth
@@ -83,9 +82,6 @@ def firebase_post(path, value=None):
     """
     response, content = _get_session().post(path, body=value)
     return json.loads(content)
-
-
-# [END rest_writing_data]
 
 
 def firebase_get(path):
