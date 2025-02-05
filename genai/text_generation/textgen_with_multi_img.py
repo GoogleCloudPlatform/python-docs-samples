@@ -19,6 +19,14 @@ def generate_content() -> str:
     from google.genai.types import Part
 
     client = genai.Client(http_options={'api_version': 'v1'})
+
+    # Read content from GCS
+    gcs_file_img_path = "gs://cloud-samples-data/generative-ai/image/scones.jpg"
+
+    # Read content from a local file
+    with open("test_data/latte.jpg", "rb") as f:
+        local_file_img_bytes = f.read()
+
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[

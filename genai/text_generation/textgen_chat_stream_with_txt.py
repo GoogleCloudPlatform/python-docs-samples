@@ -14,26 +14,23 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_with_txt_img]
+    # [START googlegenaisdk_textgen_chat_stream_with_txt]
     from google import genai
-    from google.genai.types import Part
 
     client = genai.Client(http_options={'api_version': 'v1'})
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
-        contents=[
-            "What is shown in this image?",
-            Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                mime_type="image/jpeg",
-            ),
-        ],
-    )
-    print(response.text)
+    chat = client.chats.create(model="gemini-2.0-flash-001")
+    response_text = ""
+
+    for chunk in chat.send_message_stream("Why is the sky blue?"):
+        print(chunk.text)
+        response_text += chunk.text
     # Example response:
-    # The image shows a flat lay of blueberry scones arranged on parchment paper. There are ...
-    # [END googlegenaisdk_textgen_with_txt_img]
-    return response.text
+    # The
+    #  sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's
+    #  a breakdown of why:
+    # ...
+    # [END googlegenaisdk_textgen_chat_stream_with_txt]
+    return response_text
 
 
 if __name__ == "__main__":

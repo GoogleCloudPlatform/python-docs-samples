@@ -26,8 +26,15 @@ def generate_content() -> str:
         config=types.GenerateContentConfig(
             temperature=0,
             candidate_count=1,
-            response_mime_type="application/json"
-        )
+            response_mime_type="application/json",
+            top_p=0.95,
+            top_k=20,
+            seed=5,
+            max_output_tokens=100,
+            stop_sequences=["STOP!"],
+            presence_penalty=0.0,
+            frequency_penalty=0.0,
+        ),
     )
     print(response.text)
     # Example response:

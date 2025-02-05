@@ -20,8 +20,7 @@ def generate_content() -> str:
     client = genai.Client(http_options={'api_version': 'v1'})
     response_text = ""
     for chunk in client.models.generate_content_stream(
-        model="gemini-2.0-flash-001",
-        contents="Why is the sky blue?"
+        model="gemini-2.0-flash-001", contents="Why is the sky blue?"
     ):
         print(chunk.text)
         response_text += chunk.text

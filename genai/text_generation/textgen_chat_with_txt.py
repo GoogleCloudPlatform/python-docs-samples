@@ -22,15 +22,12 @@ def generate_content() -> str:
     chat = client.chats.create(
         model="gemini-2.0-flash-001",
         history=[
-            Content(
-                parts=[Part(text="Hello")],
-                role="user"
-            ),
+            Content(parts=[Part(text="Hello")], role="user"),
             Content(
                 parts=[Part(text="Great to meet you. What would you like to know?")],
-                role="model"
-            )
-        ]
+                role="model",
+            ),
+        ],
     )
     response = chat.send_message("tell me a story")
     print(response.text)

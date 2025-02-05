@@ -29,6 +29,31 @@ from snippets.list_service_accounts import get_service_account
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
+def delete_service_account_with_backoff(email: str) -> None:
+    """Check if the account was deleted correctly using exponential backoff."""
+
+    delete_service_account(PROJECT_ID, email)
+
+    backoff_delay_secs = 1  # Start wait with delay of 1 second
+    starting_time = time.time()
+    timeout_secs = 90
+
+    while time.time() < starting_time + timeout_secs:
+        try:
+            get_service_account(PROJECT_ID, email)
+        except (NotFound, InvalidArgument):
+            # Service account deleted successfully
+            return
+
+        # In case the account still exists, wait again.
+        print("- Waiting for the service account to be deleted...")
+        time.sleep(backoff_delay_secs)
+        # Double the delay to provide exponential backoff
+        backoff_delay_secs *= 2
+
+    pytest.fail(f"The {email} service account was not deleted.")
+
+
 @pytest.fixture
 def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
     name = f"test-{uuid.uuid4().hex[:25]}"
@@ -50,14 +75,14 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
             execution_finished = True
             created = True
         except (NotFound, InvalidArgument):
-            # Account not created yet, retry
+            # Account not created yet, retry getting it.
             pass
 
-        # If we haven't seen the result yet, wait again.
+        # If account is not found yet, wait again.
         if not execution_finished:
             print("- Waiting for the service account to be available...")
             time.sleep(backoff_delay_secs)
-            # Double the delay to provide exponential backoff.
+            # Double the delay to provide exponential backoff
             backoff_delay_secs *= 2
 
         if time.time() > starting_time + timeout_secs:
@@ -67,15 +92,7 @@ def service_account(capsys: "pytest.CaptureFixture[str]") -> str:
 
     # Cleanup after running the test
     if created:
-        delete_service_account(PROJECT_ID, email)
-        time.sleep(5)
-
-        try:
-            get_service_account(PROJECT_ID, email)
-        except NotFound:
-            pass
-        else:
-            pytest.fail(f"The {email} service account was not deleted.")
+        delete_service_account_with_backoff(email)
 
 
 def key_found(project_id: str, account: str, key_id: str) -> bool:

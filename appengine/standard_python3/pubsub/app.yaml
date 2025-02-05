@@ -14,6 +14,7 @@
 
 runtime: python39
 
+# [START gae_standard_pubsub_env]
 #[START env]
 env_variables:
   PUBSUB_TOPIC: '<YOUR_TOPIC>'
@@ -21,3 +22,4 @@ env_variables:
   # application. It can be any sufficiently random string.
   PUBSUB_VERIFICATION_TOKEN: '<YOUR_VERIFICATION_TOKEN>'
 #[END env]
+# [END gae_standard_pubsub_env]

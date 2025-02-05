@@ -78,6 +78,7 @@ def test_member(capsys: "pytest.CaptureFixture[str]") -> str:
 
 def test_quickstart(test_member: str, capsys: pytest.CaptureFixture) -> None:
     @backoff.on_exception(backoff.expo, Aborted, max_tries=6)
+    @backoff.on_exception(backoff.expo, InvalidArgument, max_tries=6)
     def test_call() -> None:
         quickstart(PROJECT_ID, test_member)
         out, _ = capsys.readouterr()

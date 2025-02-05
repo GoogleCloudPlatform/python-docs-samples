@@ -1,4 +1,4 @@
-# Copyright 2025 Google LLC
+# Copyright 2024 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,27 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# !This sample works with Google Cloud Vertex AI API only.
+
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_with_txt_img]
+    # [START googlegenaisdk_textgen_code_with_pdf]
     from google import genai
-    from google.genai.types import Part
+    from google.genai import types
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client()
+    model_id = "gemini-2.0-flash-exp"
+
+    python_code = types.Part.from_uri(
+        file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf",
+        mime_type="application/pdf",
+    )
+
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model=model_id,
         contents=[
-            "What is shown in this image?",
-            Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
-                mime_type="image/jpeg",
-            ),
+            python_code,
+            "Convert this python code to use Google Python Style Guide.",
         ],
     )
+
     print(response.text)
     # Example response:
-    # The image shows a flat lay of blueberry scones arranged on parchment paper. There are ...
-    # [END googlegenaisdk_textgen_with_txt_img]
+    # ```python
+    # def fibonacci(n: int) -> list[int] | str:
+    # ...
+    # [END googlegenaisdk_textgen_code_with_pdf]
     return response.text
 
 
