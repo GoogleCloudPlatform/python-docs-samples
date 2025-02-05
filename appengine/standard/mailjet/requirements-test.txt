@@ -1,9 +1,0 @@
-# pin pytest to 4.6.11 for Python2.
-pytest==4.6.11; python_version < '3.0'
-
-responses==0.17.0; python_version < '3.7'
-responses==0.23.1; python_version > '3.6'
-
-# pytest==8.3.4 and six==1.17.0 for Python3.
-pytest==8.3.4; python_version >= '3.0'
-six==1.17.0
