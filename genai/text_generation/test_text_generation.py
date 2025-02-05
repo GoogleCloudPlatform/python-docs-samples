@@ -31,6 +31,7 @@ import textgen_with_txt_img
 import textgen_with_txt_stream
 import textgen_with_video
 import textgen_with_youtube_video
+import txt_gen 
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -38,6 +39,9 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
+def test_txt_gen() -> None:
+    response = txt_gen.generate_content()
+    assert response
 
 def test_textgen_with_txt_stream() -> None:
     response = textgen_with_txt_stream.generate_content()
