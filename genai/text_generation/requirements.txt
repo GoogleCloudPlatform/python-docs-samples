@@ -1,2 +1,1 @@
-# google-genai==0.7.0
-git+https://github.com/googleapis/python-genai.git
+google-genai==1.0.0
