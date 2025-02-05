@@ -37,8 +37,7 @@ def generate_content() -> GenerateContentResponse:
     """
 
     # Image source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
-    with open("test_data/640px-Monty_open_door.svg.png", "rb") as fp:
-        image_data = Image.open(fp)
+    image_data = Image.open(open("test_data/640px-Monty_open_door.svg.png", "rb"))
 
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp",
