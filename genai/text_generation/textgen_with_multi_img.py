@@ -32,11 +32,11 @@ def generate_content() -> str:
         contents=[
             "Generate a list of all the objects contained in both images.",
             Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/scones.jpg",
+                file_uri=gcs_file_img_path,
                 mime_type="image/jpeg"
             ),
-            Part.from_uri(
-                file_uri="gs://cloud-samples-data/generative-ai/image/latte.jpg",
+            Part.from_bytes(
+                data=local_file_img_bytes,
                 mime_type="image/jpeg"
             )
         ]
