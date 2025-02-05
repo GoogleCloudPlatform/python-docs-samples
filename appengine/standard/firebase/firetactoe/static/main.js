@@ -132,13 +132,11 @@ function initGame(gameKey, me, token, channelId, initialMessage) {
    * finally, it calls onOpened() to let the server know it is ready to receive messages
    */
   function openChannel() {
-    // [START auth_login]
     // sign into Firebase with the token passed from the server
     firebase.auth().signInWithCustomToken(token).catch(function(error) {
       console.log('Login Failed!', error.code);
       console.log('Error message: ', error.message);
     });
-    // [END auth_login]
 
     // setup a database reference at path /channels/channelId
     channel = firebase.database().ref('channels/' + channelId);
