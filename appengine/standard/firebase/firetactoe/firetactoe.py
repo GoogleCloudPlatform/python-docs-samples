@@ -202,6 +202,7 @@ class Game(ndb.Model):
                 return
 
 
+# [START gae_standard_firebase_move_route]
 # [START move_route]
 @app.route("/move", methods=["POST"])
 def move():
@@ -211,12 +212,10 @@ def move():
         return "Game not found, or invalid position", 400
     game.make_move(position, users.get_current_user())
     return ""
-
-
 # [END move_route]
+# [END gae_standard_firebase_move_route]
 
 
-# [START route_delete]
 @app.route("/delete", methods=["POST"])
 def delete():
     game = Game.get_by_id(request.args.get("g"))
@@ -225,9 +224,6 @@ def delete():
     user = users.get_current_user()
     _send_firebase_message(user.user_id() + game.key.id(), message=None)
     return ""
-
-
-# [END route_delete]
 
 
 @app.route("/opened", methods=["POST"])
@@ -258,6 +254,7 @@ def main_page():
             game.userO = user
             game.put()
 
+    # [START gae_standard_firebase_pass_token]
     # [START pass_token]
     # choose a unique identifier for channel_id
     channel_id = user.user_id() + game_key
@@ -285,3 +282,4 @@ def main_page():
 
     return flask.render_template("fire_index.html", **template_values)
     # [END pass_token]
+    # [END gae_standard_firebase_pass_token]
