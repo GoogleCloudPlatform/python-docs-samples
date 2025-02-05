@@ -75,7 +75,7 @@ def services():
             f"helloworld-{suffix}",
             "--project",
             project,
-            "--runtime=python38",
+            "--runtime=python312",
             "--region=us-central1",
             "--trigger-http",
             "--no-allow-unauthenticated",
