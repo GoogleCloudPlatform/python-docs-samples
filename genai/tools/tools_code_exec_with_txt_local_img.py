@@ -22,6 +22,7 @@ def generate_content() -> GenerateContentResponse:
     from google.genai.types import Tool, ToolCodeExecution, GenerateContentConfig
 
     client = genai.Client()
+    code_execution_tool = Tool(code_execution=ToolCodeExecution())
 
     prompt = """
     Run a simulation of the Monty Hall Problem with 1,000 trials.
@@ -35,11 +36,9 @@ def generate_content() -> GenerateContentResponse:
     Thank you!
     """
 
-    # Pass multimedia input as additional context to the model.
-    # File source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
-    image_data = Image.open(open("./test_data/640px-Monty_open_door.svg.png", "rb"))
-
-    code_execution_tool = Tool(code_execution=ToolCodeExecution())
+    # Image source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
+    with open("test_data/640px-Monty_open_door.svg.png", "rb") as fp:
+        image_data = Image.open(fp.read())
 
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp",
@@ -54,10 +53,12 @@ def generate_content() -> GenerateContentResponse:
     for part in response.candidates[0].content.parts:
         if part.executable_code:
             print(part.executable_code)
+
     print("# Outcome:")
     for part in response.candidates[0].content.parts:
         if part.code_execution_result:
             print(part.code_execution_result)
+
     # Example response:
     # # Code:
     # code='\nimport random\n\ndef monty_hall_simulation(num_trials):\n
