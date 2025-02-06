@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START swagger]
+# [START endpoints_swagger_yaml_python]
 swagger: "2.0"
 info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
 host: "echo-api.endpoints.YOUR-PROJECT-ID.cloud.goog"
-# [END swagger]
+# [END endpoints_swagger_yaml_python]
 consumes:
 - "application/json"
 produces:
@@ -103,14 +103,14 @@ definitions:
         type: "string"
       email:
         type: "string"
-# [START securityDef]
+# [START endpoints_security_definitions_yaml_python]
 securityDefinitions:
   # This section configures basic authentication with an API key.
   api_key:
     type: "apiKey"
     name: "key"
     in: "query"
-# [END securityDef]
+# [END endpoints_security_definitions_yaml_python]
   # This section configures authentication using Google API Service Accounts
   # to sign a json web token. This is mostly used for server-to-server
   # communication.
@@ -162,7 +162,6 @@ securityDefinitions:
     # Your OAuth2 client's Client ID must be added here. You can add multiple client IDs to accept tokens form multiple clients.
     x-google-audiences: "YOUR-CLIENT-ID"
   # This section configures authentication using Firebase Auth.
-  # [START firebaseAuth]
   firebase:
     authorizationUrl: ""
     flow: "implicit"
@@ -170,4 +169,3 @@ securityDefinitions:
     x-google-issuer: "https://securetoken.google.com/YOUR-PROJECT-ID"
     x-google-jwks_uri: "https://www.googleapis.com/service_accounts/v1/metadata/x509/securetoken@system.gserviceaccount.com"
     x-google-audiences: "YOUR-PROJECT-ID"
-  # [END firebaseAuth]

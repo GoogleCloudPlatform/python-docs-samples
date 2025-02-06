@@ -14,14 +14,16 @@
 
 # This file contains code samples that demonstrate how to get IAM deny policies.
 
+import os
+import uuid
+
 # [START iam_get_deny_policy]
 from google.cloud import iam_v2
 from google.cloud.iam_v2 import Policy, types
 
 
 def get_deny_policy(project_id: str, policy_id: str) -> Policy:
-    """
-    Retrieve the deny policy given the project ID and policy ID.
+    """Retrieve the deny policy given the project ID and policy ID.
 
     project_id: ID or number of the Google Cloud project you want to use.
     policy_id: The ID of the deny policy you want to retrieve.
@@ -52,13 +54,11 @@ def get_deny_policy(project_id: str, policy_id: str) -> Policy:
 
 
 if __name__ == "__main__":
-    import uuid
-
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Any unique ID (0 to 63 chars) starting with a lowercase letter.
     policy_id = f"deny-{uuid.uuid4()}"
 
-    policy = get_deny_policy(project_id, policy_id)
-
+    policy = get_deny_policy(PROJECT_ID, policy_id)
 # [END iam_get_deny_policy]

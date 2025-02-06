@@ -22,7 +22,7 @@
 # For more info about Deployments:
 #   https://kubernetes.io/docs/user-guide/deployments/
 
-# [START kubernetes_deployment]
+# [START gke_kubernetes_deployment_yaml_python]
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -48,7 +48,6 @@ spec:
         # off in production.
         imagePullPolicy: Always
         env:
-            # [START cloudsql_secrets]
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -64,11 +63,9 @@ spec:
                 secretKeyRef:
                   name: cloudsql
                   key: password
-            # [END cloudsql_secrets]
         ports:
         - containerPort: 8080
-
-      # [START proxy_container]
+      
       - image: gcr.io/cloudsql-docker/gce-proxy:1.16
         name: cloudsql-proxy
         command: ["/cloud_sql_proxy", "--dir=/cloudsql",
@@ -82,8 +79,6 @@ spec:
             mountPath: /etc/ssl/certs
           - name: cloudsql
             mountPath: /cloudsql
-      # [END proxy_container]
-      # [START volumes]
       volumes:
         - name: cloudsql-oauth-credentials
           secret:
@@ -93,12 +88,10 @@ spec:
             path: /etc/ssl/certs
         - name: cloudsql
           emptyDir: {}
-      # [END volumes]
-# [END kubernetes_deployment]
-
+# [END gke_kubernetes_deployment_yaml_python]
 ---
 
-# [START container_poll_service]
+# [START gke_kubernetes_service_yaml_python]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
 # create an external HTTP load balancer.
@@ -119,4 +112,4 @@ spec:
     targetPort: 8080
   selector:
     app: polls
-# [END container_poll_service]
+# [END gke_kubernetes_service_yaml_python]

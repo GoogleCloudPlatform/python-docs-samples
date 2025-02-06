@@ -1,2 +1,0 @@
-# pin pytest to 4.6.11 for Python2.
-pytest==4.6.11; python_version < '3.0'

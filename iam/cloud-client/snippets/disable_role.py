@@ -12,15 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.api_core.exceptions import NotFound
+import os
+
 
 # [START iam_disable_role]
+from google.api_core.exceptions import NotFound
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, Role, UpdateRoleRequest
 
 
 def disable_role(project_id: str, role_id: str) -> Role:
-    """
-    Disables an IAM role in a GCP project.
+    """Disables an IAM role in a GCP project.
+
     Args:
         project_id: GCP project ID
         role_id: ID of GCP IAM role
@@ -37,16 +39,14 @@ def disable_role(project_id: str, role_id: str) -> Role:
         client.update_role(update_request)
         print(f"Disabled role: {role_id}: {role}")
         return role
-    except NotFound:
-        raise f"Role with id [{role_id}] not found, take some actions"
-
-
+    except NotFound as exc:
+        raise NotFound(f'Role with id [{role_id}] not found, take some actions') from exc
 # [END iam_disable_role]
 
 
 if __name__ == "__main__":
-    import os
+    # Your Google Cloud project ID.
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    PROJECT_ID = os.environ["IAM_PROJECT_ID"]
     role_id = "custom1_python"
     disable_role(PROJECT_ID, role_id)

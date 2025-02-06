@@ -25,6 +25,7 @@ import code_completion_example
 import codegen_example
 import gemini_describe_http_image_example
 import gemini_describe_http_pdf_example
+import gemini_translate_text
 import generation_config_example
 import multimodal_stream_example
 import single_turn_multi_image_example
@@ -108,3 +109,9 @@ def test_gemini_chat_example() -> None:
     text = text.lower()
     assert len(text) > 0
     assert any([_ in text for _ in ("hi", "hello", "greeting")])
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_translate_text_gemini() -> None:
+    response = gemini_translate_text.generate_translation
+    assert response
