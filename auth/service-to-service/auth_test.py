@@ -87,7 +87,7 @@ def services():
     )
 
     function_url = (
-        f"https://us-central1-{project}.cloudfunctions.net/helloworld-{suffix}"
+        f"https://us-central1-{project}.cloudfunctions.net/helloworld-fn-{suffix}"
     )
 
     token = subprocess.run(
