@@ -39,7 +39,6 @@ CLAIMS = []
 
 
 # [START gae_standard_pubsub_index]
-# [START index]
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -58,7 +57,6 @@ def index():
     future = publisher.publish(topic_path, data)
     future.result()
     return "OK", 200
-# [END index]
 # [END gae_standard_pubsub_index]
 
 
