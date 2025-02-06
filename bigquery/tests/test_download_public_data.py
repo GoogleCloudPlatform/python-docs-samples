@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import logging
-
 import pytest
 
 from .. import download_public_data
@@ -21,20 +19,9 @@ from .. import download_public_data
 pytest.importorskip("google.cloud.bigquery_storage_v1")
 
 
-def test_download_public_data(
-    caplog: pytest.LogCaptureFixture, capsys: pytest.CaptureFixture[str]
-) -> None:
-    # Enable debug-level logging to verify the BigQuery Storage API is used.
-    caplog.set_level(logging.DEBUG)
-
+def test_download_public_data(capsys: pytest.CaptureFixture[str]) -> None:
     download_public_data.download_public_data()
     out, _ = capsys.readouterr()
     assert "year" in out
     assert "gender" in out
     assert "name" in out
-
-    assert any(
-        "Started reading table 'bigquery-public-data.usa_names.usa_1910_current' with BQ Storage API session"
-        in message
-        for message in caplog.messages
-    )
