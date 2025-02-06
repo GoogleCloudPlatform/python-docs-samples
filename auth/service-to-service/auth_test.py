@@ -75,6 +75,7 @@ def services():
             f"helloworld-fn-{suffix}",
             "--project",
             project,
+            "--gen2",
             "--runtime=python312",
             "--region=us-central1",
             "--trigger-http",
