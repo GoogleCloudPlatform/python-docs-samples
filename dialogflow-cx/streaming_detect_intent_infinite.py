@@ -30,9 +30,9 @@ NOTE: pyaudio may have additional dependencies depending on your platform.
 
 Install dependencies using pip:
 
-```bash
-pip install -r requirements.txt
-```
+.. code-block:: sh
+
+   pip install -r requirements.txt
 
 Before Running:
 
@@ -42,18 +42,18 @@ Before Running:
 
 Example usage:
 
-```bash
-python streaming_detect_intent_infinite.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
-```
+.. code-block:: sh
+
+   python streaming_detect_intent_infinite.py projects/your-project/locations/your-location/agents/your-agent-id --language_code en-US --sample_rate 16000  --single_utterance
 
 Replace `projects/your-project/locations/your-location/agents/your-agent-id`
 with your Dialogflow CX agent name.
 
 Further information is provided via:
 
-```bash
-python streaming_detect_intent_infinite.py --help
-```
+.. code-block:: sh
+
+   python streaming_detect_intent_infinite.py --help
 
 The script will start capturing audio from the default microphone, stream it
 to Dialogflow CX, and play back the audio responses. Press Ctrl+C to exit the
