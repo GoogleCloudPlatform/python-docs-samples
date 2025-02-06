@@ -20,11 +20,9 @@ FROM python:3.11
 ENV PYTHONUNBUFFERED True
 
 # [START cloudrun_system_package_ubuntu_dockerfile_python]
-# [START cloudrun_system_package_ubuntu]
 RUN apt-get update -y && apt-get install -y \
   graphviz \
   && apt-get clean
-# [END cloudrun_system_package_ubuntu]
 # [END cloudrun_system_package_ubuntu_dockerfile_python]
 
 # Copy application dependency manifests to the container image.
