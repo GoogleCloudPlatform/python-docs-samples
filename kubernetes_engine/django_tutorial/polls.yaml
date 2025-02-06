@@ -92,7 +92,6 @@ spec:
 ---
 
 # [START gke_kubernetes_service_yaml_python]
-# [START gke_container_poll_service_python]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
 # create an external HTTP load balancer.
@@ -113,5 +112,4 @@ spec:
     targetPort: 8080
   selector:
     app: polls
-# [END gke_container_poll_service_python]
 # [END gke_kubernetes_service_yaml_python]
