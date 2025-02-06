@@ -64,13 +64,13 @@ program gracefully. Say "Hello" to trigger the Default Intent.
 
 import argparse
 import asyncio
+from collections.abc import AsyncGenerator
 import logging
 import os
 import signal
 import struct
 import sys
 import time
-from typing import Any, AsyncGenerator, List, Optional, Tuple
 import uuid
 
 from google.api_core import retry as retries
@@ -106,30 +106,20 @@ class AudioIO:
         self,
         rate: int,
         chunk_size: int,
-        audio_encoding: str = "LINEAR16",
-        output_audio_encoding: str = "LINEAR16",
     ) -> None:
         self._rate: int = rate
         self.chunk_size: int = chunk_size
         self._num_channels: int = 1
-        self._buff: asyncio.Queue[Optional[bytes]] = asyncio.Queue()
+        self._buff: asyncio.Queue[bytes | None] = asyncio.Queue()
         self.closed: bool = True
-        self.start_time: Optional[int] = None  # only set when first audio received
-        self.restart_counter: int = 0
-        self.audio_input: List[bytes] = []
-        self.last_audio_input: List[bytes] = []
-        self.result_end_time: Optional[float] = None
-        self.is_final_end_time: Optional[float] = None
-        self.final_request_end_time: Optional[float] = None
-        self.bridging_offset: int = 0
+        self.start_time: int | None = None  # only set when first audio received
+        self.audio_input: list[bytes] = []
+        self.result_end_time: float | None = None
+        self.is_final_end_time: float | None = None
         self.last_transcript_was_final: bool = False
-        self.new_stream: bool = True
         self._audio_interface: pyaudio.PyAudio = pyaudio.PyAudio()
-        self._input_audio_stream: Optional[pyaudio.Stream] = None
-        self._output_audio_stream: Optional[pyaudio.Stream] = None
-        self.audio_encoding: str = audio_encoding
-        self.output_audio_encoding: str = output_audio_encoding
-        self.audio_format: int = pyaudio.paInt16
+        self._input_audio_stream: pyaudio.Stream | None = None
+        self._output_audio_stream: pyaudio.Stream | None = None
         self.input_device_name: str
         self.output_device_name: str
 
@@ -146,8 +136,8 @@ class AudioIO:
             self.input_device_name = input_device_info["name"]
             logger.info(f"Using input device: {self.input_device_name}")
         except IOError:
-            self.input_device_name = "Could not get default input device name"
-            logger.warning("Could not get default input device info.")
+            logger.error("Could not get default input device info. Exiting.")
+            sys.exit(1)
 
         # Get default output device info
         try:
@@ -157,33 +147,41 @@ class AudioIO:
             self.output_device_name = output_device_info["name"]
             logger.info(f"Using output device: {self.output_device_name}")
         except IOError:
-            self.output_device_name = "Could not get default output device name"
-            logger.warning("Could not get default output device info.")
+            logger.error("Could not get default output device info. Exiting.")
+            sys.exit(1)
 
-        self._input_audio_stream = self._audio_interface.open(
-            format=self.audio_format,
-            channels=self._num_channels,
-            rate=self._rate,
-            input=True,
-            frames_per_buffer=self.chunk_size,
-            stream_callback=self._fill_buffer,
-        )
+        try:
+            self._input_audio_stream = self._audio_interface.open(
+                format=pyaudio.paInt16,
+                channels=self._num_channels,
+                rate=self._rate,
+                input=True,
+                frames_per_buffer=self.chunk_size,
+                stream_callback=self._fill_buffer,
+            )
+        except OSError as e:
+            logger.error(f"Could not open input stream: {e}. Exiting.")
+            sys.exit(1)
 
-        self._output_audio_stream = self._audio_interface.open(
-            format=self.audio_format,
-            channels=self._num_channels,
-            rate=self._rate,
-            output=True,
-            frames_per_buffer=self.chunk_size,
-        )
-        self._output_audio_stream.stop_stream()
+        try:
+            self._output_audio_stream = self._audio_interface.open(
+                format=pyaudio.paInt16,
+                channels=self._num_channels,
+                rate=self._rate,
+                output=True,
+                frames_per_buffer=self.chunk_size,
+            )
+            self._output_audio_stream.stop_stream()
+        except OSError as e:
+            logger.error(f"Could not open output stream: {e}. Exiting.")
+            sys.exit(1)
 
     def __enter__(self) -> "AudioIO":
         """Opens the stream."""
         self.closed = False
         return self
 
-    def __exit__(self, type: Any, value: Any, traceback: Any) -> None:
+    def __exit__(self, *args: any) -> None:
         """Closes the stream and releases resources."""
         self.closed = True
         if self._input_audio_stream:
@@ -202,7 +200,7 @@ class AudioIO:
 
     def _fill_buffer(
         self, in_data: bytes, frame_count: int, time_info: dict, status_flags: int
-    ) -> Tuple[None, int]:
+    ) -> tuple[None, int]:
         """Continuously collect data from the audio stream, into the buffer."""
 
         # Capture the true start time when the first chunk is received
@@ -220,7 +218,7 @@ class AudioIO:
         """Stream Audio from microphone to API and to local buffer."""
         while not self.closed:
             try:
-                chunk: Optional[bytes] = await asyncio.wait_for(
+                chunk: bytes | None = await asyncio.wait_for(
                     self._buff.get(), timeout=1
                 )
 
@@ -228,7 +226,7 @@ class AudioIO:
                     logger.debug("[generator] Received None chunk, ending stream")
                     return
 
-                data: List[bytes] = [chunk]
+                data: list[bytes] = [chunk]
 
                 while True:
                     try:
@@ -251,38 +249,24 @@ class AudioIO:
                 )
                 continue
 
-    def _extract_wav_header(self, audio_data: bytes) -> bytes:
-        """Extracts the WAV header from the audio data.
-
-        Args:
-            audio_data: The audio data potentially containing a WAV header.
-
-        Returns:
-            The audio data without the WAV header.
-        """
-        if audio_data[:4] == b"RIFF":
+    def play_audio(self, audio_data: bytes) -> None:
+        """Plays audio from the given bytes data, removing WAV header if needed."""
+        # Remove WAV header if present
+        if audio_data.startswith(b"RIFF"):
             try:
-                header: Tuple[
-                    bytes, int, bytes, bytes, int, int, int, int, int, int, bytes, int
-                ] = struct.unpack("<4sI4s4sIHHIIHH4sI", audio_data[:44])
+                # Attempt to unpack the WAV header to determine header size.
+                header_size = struct.calcsize("<4sI4s4sIHHIIHH4sI")
+                header = struct.unpack("<4sI4s4sIHHIIHH4sI", audio_data[:header_size])
                 logger.debug(f"WAV header detected: {header}")
-                return audio_data[44:]
+                audio_data = audio_data[header_size:]  # Remove the header
             except struct.error as e:
                 logger.error(f"Error unpacking WAV header: {e}")
-                return audio_data
-        else:
-            logger.warning("No WAV header found.")
-            return audio_data
-
-    def play_audio(self, audio: bytes) -> None:
-        """Plays audio from the given bytes data and removes WAV header."""
-        # Remove WAV header if present
-        audio = self._extract_wav_header(audio)
+                # If header parsing fails, play the original data; may not be a valid WAV
 
         # Play the raw PCM audio
         try:
             self._output_audio_stream.start_stream()
-            self._output_audio_stream.write(audio)
+            self._output_audio_stream.write(audio_data)
         finally:
             self._output_audio_stream.stop_stream()
 
@@ -294,41 +278,40 @@ class DialogflowCXStreaming:
         self,
         agent_name: str,
         language_code: str,
-        model: str,
+        single_utterance: bool,
+        model: str | None,
+        voice: str | None,
+        sample_rate: int,
         dialogflow_timeout: float,
-        debug: bool = False,
-        sample_rate: int = 16000,
-        audio_encoding: str = "LINEAR16",
-        output_audio_encoding: str = "LINEAR16",
-        voice: Optional[str] = None,
-        single_utterance: bool = False,
+        debug: bool,
     ) -> None:
         """Initializes the Dialogflow CX Streaming API client."""
         try:
-            _, project, _, location, _, agent_id = agent_name.split('/')
+            _, project, _, location, _, agent_id = agent_name.split("/")
         except ValueError:
-            raise ValueError('Invalid agent name format. Expected format: projects/<project>/locations/<location>/agents/<agent_id>')
-        if location != 'global':
+            raise ValueError(
+                "Invalid agent name format. Expected format: projects/<project>/locations/<location>/agents/<agent_id>"
+            )
+        if location != "global":
             client_options: ClientOptions = ClientOptions(
-                api_endpoint=f'{location}-dialogflow.googleapis.com',
+                api_endpoint=f"{location}-dialogflow.googleapis.com",
                 quota_project_id=project,
             )
         else:
             client_options = ClientOptions(quota_project_id=project)
+
         self.client: dialogflowcx_v3.SessionsAsyncClient = (
             dialogflowcx_v3.SessionsAsyncClient(client_options=client_options)
         )
         self.agent_name: str = agent_name
         self.language_code: str = language_code
-        self.model: str = model
+        self.single_utterance: bool = single_utterance
+        self.model: str | None = model
         self.session_id: str = str(uuid.uuid4())
         self.dialogflow_timeout: float = dialogflow_timeout
         self.debug: bool = debug
         self.sample_rate: int = sample_rate
-        self.audio_encoding: str = audio_encoding
-        self.voice: Optional[str] = voice
-        self.output_audio_encoding: str = output_audio_encoding
-        self.single_utterance: bool = single_utterance
+        self.voice: str | None = voice
 
         if self.debug:
             logger.setLevel(logging.DEBUG)
@@ -364,7 +347,7 @@ class DialogflowCXStreaming:
             )
         )
 
-        # First request contains session ID, query input audio config, and output audio config with audio_encoding
+        # First request contains session ID, query input audio config, and output audio config
         request: dialogflowcx_v3.StreamingDetectIntentRequest = (
             dialogflowcx_v3.StreamingDetectIntentRequest(
                 session=f"{self.agent_name}/sessions/{self.session_id}",
@@ -380,7 +363,7 @@ class DialogflowCXStreaming:
         # Subsequent requests contain audio only
         while True:
             try:
-                chunk: Optional[bytes] = await audio_queue.get()
+                chunk: bytes | None = await audio_queue.get()
                 if chunk is None:
                     logger.debug(
                         "[generate_streaming_detect_intent_requests] Received None chunk, signaling end of utterance"
@@ -421,37 +404,27 @@ class DialogflowCXStreaming:
         async def streaming_request_with_retry() -> (
             AsyncGenerator[dialogflowcx_v3.StreamingDetectIntentResponse, None]
         ):
-            async def api_call() -> (
-                dialogflowcx_v3.SessionsAsyncClient.streaming_detect_intent
-            ):
+            async def api_call():
                 logger.debug("Initiating streaming request")
                 return await self.client.streaming_detect_intent(
                     requests=requests_generator
                 )
-
-            return await retry_policy(api_call)()
+            response_stream = await retry_policy(api_call)()
+            return response_stream
 
         try:
-            responses: Optional[
+            responses: (
                 AsyncGenerator[dialogflowcx_v3.StreamingDetectIntentResponse, None]
-            ] = await streaming_request_with_retry()
+            ) = await streaming_request_with_retry()
 
-            if responses is None:
-                logger.error("Failed after multiple retries.")
-                return
-
-            # Use __aiter__() and __anext__() for iteration
-            response_iterator = responses.__aiter__()
+            # Use async for to iterate over the responses, WITH timeout
+            response_iterator = responses.__aiter__() # Get the iterator
             while True:
                 try:
-                    response: dialogflowcx_v3.StreamingDetectIntentResponse = (
-                        await asyncio.wait_for(
-                            response_iterator.__anext__(),
-                            timeout=self.dialogflow_timeout,
-                        )
+                    response = await asyncio.wait_for(
+                        response_iterator.__anext__(), timeout=self.dialogflow_timeout
                     )
                     if self.debug and response:
-                        # Create a copy of the response for logging
                         response_copy: dict = MessageToDict(response._pb)
                         if response_copy.get("detectIntentResponse"):
                             response_copy["detectIntentResponse"][
@@ -464,19 +437,18 @@ class DialogflowCXStreaming:
                     break
                 except asyncio.TimeoutError:
                     logger.warning("Timeout waiting for response from Dialogflow.")
-                    continue
-                except GoogleAPIError as e:
+                    continue # Continue to the next iteration, don't break
+                except GoogleAPIError as e:  # Keep error handling
                     logger.error(f"Error: {e}")
-                    if e.code == 500:
+                    if e.code == 500:  # Consider making this more robust
                         logger.warning("Encountered a 500 error during iteration.")
+
 
         except GoogleAPIError as e:
             logger.error(f"Error: {e}")
             if e.code == 500:
                 logger.warning("Encountered a 500 error during iteration.")
 
-        finally:
-            logger.debug("streaming_detect_intent finally block reached")
 
 
 async def push_to_audio_queue(
@@ -494,7 +466,7 @@ async def listen_print_loop(
     responses: AsyncGenerator[dialogflowcx_v3.StreamingDetectIntentResponse, None],
     audioIO: AudioIO,
     audio_queue: asyncio.Queue,
-    dialogflow_timeout: float,
+    dialogflow_timeout: float
 ) -> bool:
     """Iterates through server responses and prints them."""
     response_iterator = responses.__aiter__()
@@ -506,56 +478,64 @@ async def listen_print_loop(
                 )
             )
 
-            if response.detect_intent_response:
-                if response.detect_intent_response.output_audio:
-                    audioIO.play_audio(response.detect_intent_response.output_audio)
+            if (
+                response
+                and response.detect_intent_response
+                and response.detect_intent_response.output_audio
+            ):
+                audioIO.play_audio(response.detect_intent_response.output_audio)
 
+            if (
+                response
+                and response.detect_intent_response
+                and response.detect_intent_response.query_result
+            ):
+                query_result = response.detect_intent_response.query_result
                 # Check for end_interaction in response messages
-                for (
-                    message
-                ) in response.detect_intent_response.query_result.response_messages:
-                    if message._pb.HasField("end_interaction"):
-                        logger.info("End interaction detected.")
-                        return False  # Signal to not restart the loop
-                    if message.text:
-                        logger.info(f"Dialogflow output: {message.text.text[0]}")
+                if query_result.response_messages:
+                    for message in query_result.response_messages:
+                        if message._pb.HasField("end_interaction"):
+                            logger.info("End interaction detected.")
+                            return False  # Signal to *not* restart the loop (exit)
+                        if message.text:
+                            logger.info(f"Dialogflow output: {message.text.text[0]}")
 
-                if response.detect_intent_response.query_result.intent.display_name:
-                    logger.info(
-                        f"Detected intent: {response.detect_intent_response.query_result.intent.display_name}"
-                    )
+                if query_result.intent and query_result.intent.display_name:
+                    logger.info(f"Detected intent: {query_result.intent.display_name}")
 
                 # ensure audio stream restarts
                 return True
-
-            transcript: str = response.recognition_result.transcript
-            if transcript:
-                if response.recognition_result.is_final:
-                    logger.info(f"Final transcript: {transcript}")
-                    audioIO.is_final_end_time = get_current_time() / 1000
-                    audioIO.last_transcript_was_final = True
-                    await audio_queue.put(None)
-                else:
-                    audioIO.result_end_time = get_current_time() / 1000
-                    print(
-                        colored(f"{audioIO.result_end_time}: {transcript}", "yellow"),
-                        end="\r",
-                    )
-                    audioIO.last_transcript_was_final = False
+            elif response and response.recognition_result:
+                transcript: str = response.recognition_result.transcript
+                if transcript:
+                    if response.recognition_result.is_final:
+                        logger.info(f"Final transcript: {transcript}")
+                        audioIO.is_final_end_time = get_current_time() / 1000
+                        audioIO.last_transcript_was_final = True
+                        await audio_queue.put(None)  # Signal end of input
+                    else:
+                        audioIO.result_end_time = get_current_time() / 1000
+                        print(
+                            colored(
+                                f"{audioIO.result_end_time}: {transcript}", "yellow"
+                            ),
+                            end="\r",
+                        )
+                        audioIO.last_transcript_was_final = False
             else:
                 logger.debug("No transcript in recognition result.")
 
         except StopAsyncIteration:
             logger.debug("End of response stream in listen_print_loop")
-            return True  # Restart loop if the stream ends without end_interaction
+            break
         except asyncio.TimeoutError:
             logger.warning("Timeout waiting for response in listen_print_loop")
-            continue
+            continue  # Crucial: Continue, don't return, on timeout
         except Exception as e:
             logger.error(f"Error in listen_print_loop: {e}")
-            break
+            return False  # Exit on any error within the loop
 
-    return True  # Default to restarting the loop
+    return True  # Always return after the async for loop completes
 
 
 async def handle_audio_input_output(
@@ -565,7 +545,7 @@ async def handle_audio_input_output(
 ) -> None:
     """Handles audio input and output concurrently."""
 
-    async def cancel_push_task(push_task: Optional[asyncio.Task]) -> None:
+    async def cancel_push_task(push_task: asyncio.Task | None) -> None:
         """Helper function to cancel push task safely."""
         if push_task is not None and not push_task.done():
             push_task.cancel()
@@ -574,29 +554,33 @@ async def handle_audio_input_output(
             except asyncio.CancelledError:
                 logger.debug("Push task cancelled successfully")
 
-    push_task: Optional[asyncio.Task] = None
+    push_task: asyncio.Task | None = None
     try:
         async with asyncio.TaskGroup() as tg:
             push_task = tg.create_task(
                 push_to_audio_queue(audioIO.generator(), audio_queue)
             )
-            while True:
+            while True: #restart streaming here.
                 responses: AsyncGenerator[
                     dialogflowcx_v3.StreamingDetectIntentResponse, None
                 ] = dialogflow_streaming.streaming_detect_intent(audio_queue)
+
                 should_continue: bool = await listen_print_loop(
                     responses,
                     audioIO,
                     audio_queue,
-                    dialogflow_streaming.dialogflow_timeout,
+                    dialogflow_streaming.dialogflow_timeout
                 )
                 if not should_continue:
                     logger.debug(
                         "End interaction detected, exiting handle_audio_input_output"
                     )
                     await cancel_push_task(push_task)
-                    break
-                logger.debug("Restarting listen_print_loop")
+                    break #exit while loop
+
+                logger.debug("Restarting audio streaming loop")
+
+
     except asyncio.CancelledError:
         logger.warning("Handling of audio input/output was cancelled.")
         await cancel_push_task(push_task)
@@ -606,13 +590,13 @@ async def handle_audio_input_output(
 
 async def main(
     agent_name: str,
-    debug: bool,
-    model: str,
     language_code: str,
-    dialogflow_timeout: float,
-    sample_rate: int,
-    voice: Optional[str],
     single_utterance: bool,
+    model: str | None,
+    voice: str | None,
+    sample_rate: int,
+    dialogflow_timeout: float,
+    debug: bool,
 ) -> None:
     """Start bidirectional streaming from microphone input to speech API"""
 
@@ -622,14 +606,12 @@ async def main(
     dialogflow_streaming: DialogflowCXStreaming = DialogflowCXStreaming(
         agent_name,
         language_code,
+        single_utterance,
         model,
+        voice,
+        sample_rate,
         dialogflow_timeout,
         debug,
-        sample_rate,
-        "LINEAR16",
-        "LINEAR16",
-        voice,
-        single_utterance,
     )
 
     logger.info(f"Chunk size: {audioIO.chunk_size}")
@@ -642,7 +624,7 @@ async def main(
     )
 
     # Signal handler function
-    def signal_handler(sig: int, frame: Any) -> None:
+    def signal_handler(sig: int, frame: any) -> None:
         print(colored("\nExiting gracefully...", "yellow"))
         audioIO.closed = True  # Signal to stop the main loop
         sys.exit(0)
@@ -652,11 +634,18 @@ async def main(
 
     with audioIO:
         logger.info(f"NEW REQUEST: {get_current_time() / 1000}")
-
         audio_queue: asyncio.Queue = asyncio.Queue()
 
-        await handle_audio_input_output(dialogflow_streaming, audioIO, audio_queue)
-
+        try:
+            # Apply overall timeout to the entire interaction
+            await asyncio.wait_for(
+                handle_audio_input_output(dialogflow_streaming, audioIO, audio_queue),
+                timeout=dialogflow_streaming.dialogflow_timeout,
+            )
+        except asyncio.TimeoutError:
+            logger.error(
+                f"Dialogflow interaction timed out after {dialogflow_streaming.dialogflow_timeout} seconds."
+            )
 
 if __name__ == "__main__":
     parser: argparse.ArgumentParser = argparse.ArgumentParser(
@@ -664,9 +653,15 @@ if __name__ == "__main__":
     )
     parser.add_argument("agent_name", help="Agent Name")
     parser.add_argument(
-        "--debug",
+        "--language_code",
+        type=str,
+        default="en-US",
+        help="Specify the language code (default: en-US)",
+    )
+    parser.add_argument(
+        "--single_utterance",
         action="store_true",
-        help="Enable debug logging",
+        help="Enable single utterance mode (default: False)",
     )
     parser.add_argument(
         "--model",
@@ -675,10 +670,16 @@ if __name__ == "__main__":
         help="Specify the speech recognition model to use (default: None)",
     )
     parser.add_argument(
-        "--language_code",
+        "--voice",
         type=str,
-        default="en-US",
-        help="Specify the language code (default: en-US)",
+        default=None,
+        help="Specify the voice for output audio (default: None)",
+    )
+    parser.add_argument(
+        "--sample_rate",
+        type=int,
+        default=16000,
+        help="Specify the sample rate in Hz (default: 16000)",
     )
     parser.add_argument(
         "--dialogflow_timeout",
@@ -687,33 +688,22 @@ if __name__ == "__main__":
         help="Specify the Dialogflow API timeout in seconds (default: 60)",
     )
     parser.add_argument(
-        "--sample_rate",
-        type=int,
-        default=16000,
-        help="Specify the sample rate in Hz (default: 16000 for LINEAR16 audio encoding)",
-    )
-    parser.add_argument(
-        "--voice",
-        type=str,
-        default=None,
-        help="Specify the voice for output audio (default: None)",
-    )
-    parser.add_argument(
-        "--single_utterance",
+        "--debug",
         action="store_true",
-        help="Enable single utterance mode (default: False)",
+        help="Enable debug logging",
     )
+
     args: argparse.Namespace = parser.parse_args()
     asyncio.run(
         main(
             args.agent_name,
-            args.debug,
-            args.model,
             args.language_code,
-            args.dialogflow_timeout,
-            args.sample_rate,
-            args.voice,
             args.single_utterance,
+            args.model,
+            args.voice,
+            args.sample_rate,
+            args.dialogflow_timeout,
+            args.debug,
         )
     )
 
