@@ -13,14 +13,12 @@
 # limitations under the License.
 
 # [START endpoints_swagger_appengine_yaml_python]
-# [START endpoints_swagger_yaml_python]
 swagger: "2.0"
 info:
   description: "A simple Google Cloud Endpoints API example."
   title: "Endpoints Example"
   version: "1.0.0"
 host: "YOUR-PROJECT-ID.appspot.com"
-# [END endpoints_swagger_yaml_python]
 # [END endpoints_swagger_appengine_yaml_python]
 consumes:
 - "application/json"
