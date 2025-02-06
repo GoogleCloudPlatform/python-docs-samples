@@ -18,8 +18,7 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
     from google import genai
     from google.genai.types import Part
 
-    client = genai.Client()
-
+    client = genai.Client(http_options={'api_version': 'v1'})
     # TODO(Developer): Update the below file paths to your images
     # image_path_1 = "path/to/your/image1.jpg"
     # image_path_2 = "path/to/your/image2.jpg"
