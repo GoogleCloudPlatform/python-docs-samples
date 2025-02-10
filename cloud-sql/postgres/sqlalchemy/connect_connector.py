@@ -15,7 +15,7 @@
 # [START cloud_sql_postgres_sqlalchemy_connect_connector]
 import os
 
-from google.cloud.sql.connector import Connector, IPTypes
+from google.cloud.sql.connector import Connector, IPTypes, RefreshStrategy
 import pg8000
 
 import sqlalchemy
@@ -40,9 +40,10 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
+    refresh_strategy = RefreshStrategy.LAZY
 
     # initialize Cloud SQL Python Connector object
-    connector = Connector()
+    connector = Connector(refresh_strategy = refresh_strategy)
 
     def getconn() -> pg8000.dbapi.Connection:
         conn: pg8000.dbapi.Connection = connector.connect(
