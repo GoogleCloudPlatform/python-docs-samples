@@ -20,7 +20,6 @@ instance over SSH. This example uses zonal DNS names to address instances
 on the same internal VPC network.
 """
 
-# [START imports_and_variables]
 import argparse
 import logging
 import subprocess
@@ -38,10 +37,7 @@ SERVICE_ACCOUNT_METADATA_URL = (
 )
 HEADERS = {"Metadata-Flavor": "Google"}
 
-# [END imports_and_variables]
 
-
-# [START run_command_local]
 def execute(
     cmd: List[str],
     cwd: Optional[str] = None,
@@ -49,8 +45,7 @@ def execute(
     env: Optional[dict] = None,
     raise_errors: bool = True,
 ) -> (int, str):
-    """
-    Execute an external command (wrapper for Python subprocess).
+    """Execute an external command (wrapper for Python subprocess).
 
     Args:
         cmd: command to be executed, presented as list of strings.
@@ -78,18 +73,13 @@ def execute(
     return returncode, output
 
 
-# [END run_command_local]
-
-
-# [START create_key]
 def create_ssh_key(
     oslogin: googleapiclient.discovery.Resource,
     account: str,
     private_key_file: Optional[str] = None,
     expire_time: int = 300,
 ) -> str:
-    """
-    Generate an SSH key pair and apply it to the specified account.
+    """Generate an SSH key pair and apply it to the specified account.
 
     Args:
         oslogin: the OSLogin resource object, needed to communicate with API.
@@ -129,13 +119,8 @@ def create_ssh_key(
     return private_key_file
 
 
-# [END create_key]
-
-
-# [START run_command_remote]
 def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> List[str]:
-    """
-    Run a command on a remote system.
+    """Run a command on a remote system.
 
     Args:
         cmd: the command to be run on remote system.
@@ -166,10 +151,6 @@ def run_ssh(cmd: str, private_key_file: str, username: str, hostname: str) -> Li
     return result if result else ssh.stderr.readlines()
 
 
-# [END run_command_remote]
-
-
-# [START main]
 def main(
     cmd: str,
     project: str,
@@ -179,8 +160,7 @@ def main(
     account: Optional[str] = None,
     hostname: Optional[str] = None,
 ) -> List[str]:
-    """
-    Run a command on a remote system.
+    """Run a command on a remote system.
 
     This method will first create a new SSH key and then use it to
     execute a specified command over SSH on remote machine.
@@ -273,5 +253,3 @@ if __name__ == "__main__":
         account=args.account,
         hostname=args.hostname,
     )
-
-# [END main]

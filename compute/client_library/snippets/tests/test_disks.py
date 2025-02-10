@@ -21,8 +21,23 @@ from google.cloud import compute_v1, kms_v1
 import pytest
 
 from ..disks.attach_disk import attach_disk
+from ..disks.attach_regional_disk_force import attach_disk_force
 from ..disks.attach_regional_disk_to_vm import attach_regional_disk
 from ..disks.clone_encrypted_disk_managed_key import create_disk_from_kms_encrypted_disk
+from ..disks.consistency_groups.add_disk_consistency_group import (
+    add_disk_consistency_group,
+)
+from ..disks.consistency_groups.clone_disks_consistency_group import (
+    clone_disks_to_consistency_group,
+)
+from ..disks.consistency_groups.create_consistency_group import create_consistency_group
+from ..disks.consistency_groups.delete_consistency_group import delete_consistency_group
+from ..disks.consistency_groups.remove_disk_consistency_group import (
+    remove_disk_consistency_group,
+)
+from ..disks.consistency_groups.stop_replication_consistency_group import (
+    stop_replication_consistency_group,
+)
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.create_from_source import create_disk_from_disk
@@ -34,6 +49,7 @@ from ..disks.create_replicated_disk import create_regional_replicated_disk
 from ..disks.create_secondary_custom import create_secondary_custom_disk
 from ..disks.create_secondary_disk import create_secondary_disk
 from ..disks.create_secondary_region_disk import create_secondary_region_disk
+
 from ..disks.delete import delete_disk
 from ..disks.list import list_disks
 from ..disks.regional_create_from_source import create_regional_disk
@@ -41,20 +57,6 @@ from ..disks.regional_delete import delete_regional_disk
 from ..disks.replication_disk_start import start_disk_replication
 from ..disks.replication_disk_stop import stop_disk_replication
 from ..disks.resize_disk import resize_disk
-from ..disks.сonsistency_groups.add_disk_consistency_group import (
-    add_disk_consistency_group,
-)
-from ..disks.сonsistency_groups.clone_disks_consistency_group import (
-    clone_disks_to_consistency_group,
-)
-from ..disks.сonsistency_groups.create_consistency_group import create_consistency_group
-from ..disks.сonsistency_groups.delete_consistency_group import delete_consistency_group
-from ..disks.сonsistency_groups.remove_disk_consistency_group import (
-    remove_disk_consistency_group,
-)
-from ..disks.сonsistency_groups.stop_replication_consistency_group import (
-    stop_replication_consistency_group,
-)
 from ..images.get import get_image_from_family
 from ..instances.create import create_instance, disk_from_image
 from ..instances.delete import delete_instance
@@ -380,6 +382,23 @@ def test_disk_attachment(
     assert len(list(instance.disks)) == 3
 
 
+def test_regional_disk_force_attachment(
+    autodelete_regional_blank_disk, autodelete_compute_instance
+):
+    attach_disk_force(
+        project_id=PROJECT,
+        vm_name=autodelete_compute_instance.name,
+        vm_zone=ZONE,
+        disk_name=autodelete_regional_blank_disk.name,
+        disk_region=REGION,
+    )
+
+    instance = get_instance(PROJECT, ZONE, autodelete_compute_instance.name)
+    assert any(
+        [autodelete_regional_blank_disk.name in disk.source for disk in instance.disks]
+    )
+
+
 def test_disk_resize(autodelete_blank_disk, autodelete_regional_blank_disk):
     resize_disk(PROJECT, autodelete_blank_disk.self_link, 22)
     resize_disk(PROJECT, autodelete_regional_blank_disk.self_link, 23)
@@ -585,7 +604,7 @@ def test_clone_disks_in_consistency_group(
         secondary_disk_location=REGION_SECONDARY,
         secondary_disk_name=autodelete_regional_disk_name,
     )
-    time.sleep(60)
+    time.sleep(70)
     try:
         assert clone_disks_to_consistency_group(PROJECT, REGION_SECONDARY, group_name2)
     finally:
@@ -595,14 +614,14 @@ def test_clone_disks_in_consistency_group(
             primary_disk_name=autodelete_regional_blank_disk.name,
         )
         # Wait for the replication to stop
-        time.sleep(30)
+        time.sleep(45)
         disks = compute_v1.RegionDisksClient().list(
             project=PROJECT, region=REGION_SECONDARY
         )
         if disks:
             for disk in disks:
                 delete_regional_disk(PROJECT, REGION_SECONDARY, disk.name)
-        time.sleep(25)
+        time.sleep(30)
         remove_disk_consistency_group(
             PROJECT, autodelete_regional_blank_disk.name, REGION, group_name1, REGION
         )

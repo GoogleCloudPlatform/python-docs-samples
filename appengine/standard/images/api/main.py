@@ -18,8 +18,8 @@ Sample application that demonstrates how to use the App Engine Images API.
 For more information, see README.md.
 """
 
-# [START all]
-# [START thumbnailer]
+# [START gae_images_api_ndb]
+# [START gae_images_api_ndb_thumbnailer]
 from google.appengine.api import images
 from google.appengine.ext import ndb
 
@@ -51,8 +51,8 @@ class Thumbnailer(webapp2.RequestHandler):
         self.error(404)
 
 
-# [END thumbnailer]
+# [END gae_images_api_ndb_thumbnailer]
 
 
 app = webapp2.WSGIApplication([("/img", Thumbnailer)], debug=True)
-# [END all]
+# [END gae_images_api_ndb]
