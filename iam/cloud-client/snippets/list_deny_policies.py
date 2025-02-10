@@ -14,18 +14,22 @@
 
 # This file contains code samples that demonstrate how to list IAM deny policies.
 
+import os
+import uuid
+
 
 # [START iam_list_deny_policy]
 def list_deny_policy(project_id: str) -> None:
-    from google.cloud import iam_v2
-    from google.cloud.iam_v2 import types
+    """List all the deny policies that are attached to a resource.
 
-    """
-    List all the deny policies that are attached to a resource.
     A resource can have up to 5 deny policies.
 
     project_id: ID or number of the Google Cloud project you want to use.
     """
+
+    from google.cloud import iam_v2
+    from google.cloud.iam_v2 import types
+
     policies_client = iam_v2.PoliciesClient()
 
     # Each deny policy is attached to an organization, folder, or project.
@@ -54,13 +58,11 @@ def list_deny_policy(project_id: str) -> None:
 
 
 if __name__ == "__main__":
-    import uuid
-
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Any unique ID (0 to 63 chars) starting with a lowercase letter.
     policy_id = f"deny-{uuid.uuid4()}"
 
-    list_deny_policy(project_id)
-
+    list_deny_policy(PROJECT_ID)
 # [END iam_list_deny_policy]

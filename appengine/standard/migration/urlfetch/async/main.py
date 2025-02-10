@@ -12,16 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
-
-from flask import Flask, make_response
-
-# [START imports]
-from requests_futures.sessions import FuturesSession
 from time import sleep
 
-# [END imports]
+from flask import Flask
+from flask import make_response
+from requests_futures.sessions import FuturesSession
 
 
 TIMEOUT = 10  # Wait this many seconds for background calls to finish
@@ -30,7 +26,6 @@ app = Flask(__name__)
 
 @app.route("/")  # Fetch and return remote page asynchronously
 def get_async():
-    # [START requests_get]
     session = FuturesSession()
     url = "http://www.google.com/humans.txt"
 
@@ -41,7 +36,6 @@ def get_async():
     resp = make_response(rpc.result().text)
     resp.headers["Content-type"] = "text/plain"
     return resp
-    # [END requests_get]
 
 
 @app.route("/callback")  # Fetch and return remote pages using callback
@@ -103,6 +97,3 @@ def server_error(e):
         ),
         500,
     )
-
-
-# [END app]

@@ -12,27 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import logging
 
 from flask import Flask
 
-# [START imports]
 import requests
 
-# [END imports]
 
 app = Flask(__name__)
 
 
 @app.route("/")
 def index():
-    # [START requests_get]
     url = "http://www.google.com/humans.txt"
     response = requests.get(url)
     response.raise_for_status()
     return response.text
-    # [END requests_get]
 
 
 @app.errorhandler(500)
@@ -47,9 +42,6 @@ def server_error(e):
         ),
         500,
     )
-
-
-# [END app]
 
 
 if __name__ == "__main__":

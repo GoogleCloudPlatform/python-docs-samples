@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import re
 
 import backoff
 from google.api_core.exceptions import Aborted, InvalidArgument
-import google.auth
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, ListRolesRequest, Role
 import pytest
 
@@ -26,14 +26,14 @@ from snippets.edit_role import edit_role
 from snippets.get_role import get_role
 from snippets.list_roles import list_roles
 
-PROJECT = google.auth.default()[1]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
 def test_retrieve_role(iam_role: str) -> None:
     # Test role retrieval, given the iam role id.
-    get_role(PROJECT, iam_role)
+    get_role(PROJECT_ID, iam_role)
     client = IAMClient()
-    parent = f"projects/{PROJECT}"
+    parent = f"projects/{PROJECT_ID}"
     request = ListRolesRequest(parent=parent, show_deleted=False)
     roles = client.list_roles(request)
     found = False
@@ -50,21 +50,21 @@ def test_retrieve_role(iam_role: str) -> None:
 
 def test_delete_undelete_role(iam_role: str) -> None:
     client = IAMClient()
-    name = f"projects/{PROJECT}/roles/{iam_role}"
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
     request = GetRoleRequest(name=name)
 
-    delete_role(PROJECT, iam_role)
+    delete_role(PROJECT_ID, iam_role)
     deleted_role = client.get_role(request)
     assert deleted_role.deleted
 
-    undelete_role(PROJECT, iam_role)
+    undelete_role(PROJECT_ID, iam_role)
     undeleted_role = client.get_role(request)
     assert not undeleted_role.deleted
 
 
 def test_list_roles(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
     # Test role list retrieval, given the iam role id should be listed.
-    list_roles(PROJECT)
+    list_roles(PROJECT_ID)
     out, _ = capsys.readouterr()
     assert re.search(iam_role, out)
 
@@ -72,7 +72,7 @@ def test_list_roles(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None
 @backoff.on_exception(backoff.expo, Aborted, max_tries=3)
 def test_edit_role(iam_role: str) -> None:
     client = IAMClient()
-    name = f"projects/{PROJECT}/roles/{iam_role}"
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
     request = GetRoleRequest(name=name)
     role = client.get_role(request)
     title = "updated role title"
@@ -82,11 +82,12 @@ def test_edit_role(iam_role: str) -> None:
     assert updated_role.title == title
 
 
-@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=3)
+@backoff.on_exception(backoff.expo, Aborted, max_tries=5)
+@backoff.on_exception(backoff.expo, InvalidArgument, max_tries=5)
 def test_disable_role(capsys: "pytest.CaptureFixture[str]", iam_role: str) -> None:
-    disable_role(PROJECT, iam_role)
+    disable_role(PROJECT_ID, iam_role)
     client = IAMClient()
-    name = f"projects/{PROJECT}/roles/{iam_role}"
+    name = f"projects/{PROJECT_ID}/roles/{iam_role}"
     request = GetRoleRequest(name=name)
     role = client.get_role(request)
     assert role.stage == Role.RoleLaunchStage.DISABLED
