@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_django_cloudmigrate]
+# [START cloudrun_django_cloudmigrate_yaml_python]
 steps:
   - id: "Build Container Image"
     name: buildpacksio/pack
@@ -68,4 +68,4 @@ substitutions:
 
 images:
   - "${_IMAGE_NAME}"
-# [END cloudrun_django_cloudmigrate]
+# [END cloudrun_django_cloudmigrate_yaml_python]

@@ -20,6 +20,11 @@ import pytest
 import vertexai
 
 import create_corpus_example
+import create_corpus_feature_store_example
+import create_corpus_pinecone_example
+import create_corpus_vector_search_example
+import create_corpus_vertex_ai_search_example
+import create_corpus_weaviate_example
 import delete_corpus_example
 import delete_file_example
 import generate_content_example
@@ -74,6 +79,73 @@ def uploaded_file_fixture(
 def test_create_corpus() -> None:
     corpus = create_corpus_example.create_corpus("test_create_corpus")
     assert corpus.display_name == "test_create_corpus"
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_feature_store() -> None:
+    FEATURE_ONLINE_STORE_ID = "rag_test_feature_store"
+    FEATURE_VIEW_ID = "rag_test_feature_view"
+    feature_view_name = f"projects/{PROJECT_ID}/locations/{LOCATION}/featureOnlineStores/{FEATURE_ONLINE_STORE_ID}/featureViews/{FEATURE_VIEW_ID}"
+    corpus = create_corpus_feature_store_example.create_corpus_feature_store(
+        feature_view_name,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_pinecone() -> None:
+    PINECONE_INDEX_NAME = "pinecone_index_name"
+    SECRET_NAME = "rag_test_pinecone"
+    pinecone_api_key_secret_manager_version = (
+        f"projects/{PROJECT_ID}/secrets/{SECRET_NAME}/versions/latest"
+    )
+    corpus = create_corpus_pinecone_example.create_corpus_pinecone(
+        PINECONE_INDEX_NAME,
+        pinecone_api_key_secret_manager_version,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_vector_search() -> None:
+    VECTOR_SEARCH_INDEX_ID = "8048667007878430720"
+    VECTOR_SEARCH_INDEX_ENDPOINT_ID = "8971201244047605760"
+    vector_search_index_name = (
+        f"projects/{PROJECT_ID}/locations/us-central1/indexes/{VECTOR_SEARCH_INDEX_ID}"
+    )
+    vector_search_index_endpoint_name = f"projects/{PROJECT_ID}/locations/us-central1/indexEndpoints/{VECTOR_SEARCH_INDEX_ENDPOINT_ID}"
+
+    corpus = create_corpus_vector_search_example.create_corpus_vector_search(
+        vector_search_index_name,
+        vector_search_index_endpoint_name,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_weaviate() -> None:
+    WEAVIATE_HTTP_ENDPOINT = "https://weaviate.com/xxxx"
+    WEAVIATE_COLLECTION_NAME = "rag_engine_weaviate_test"
+    SECRET_NAME = "rag_test_weaviate"
+    weaviate_api_key_secret_manager_version = (
+        f"projects/{PROJECT_ID}/secrets/{SECRET_NAME}/versions/latest"
+    )
+    corpus = create_corpus_weaviate_example.create_corpus_weaviate(
+        WEAVIATE_HTTP_ENDPOINT,
+        WEAVIATE_COLLECTION_NAME,
+        weaviate_api_key_secret_manager_version,
+    )
+    assert corpus
+    delete_corpus_example.delete_corpus(corpus.name)
+
+
+def test_create_corpus_vertex_ai_search() -> None:
+    VAIS_LOCATION = "us"
+    ENGINE_ID = "test-engine"
+    corpus = create_corpus_vertex_ai_search_example.create_corpus_vertex_ai_search(
+        f"projects/{PROJECT_ID}/locations/{VAIS_LOCATION}/collections/default_collection/engines/{ENGINE_ID}"
+    )
+    assert corpus
     delete_corpus_example.delete_corpus(corpus.name)
 
 

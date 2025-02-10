@@ -12,13 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Sample Google App Engine application that demonstrates using the Users API
+"""Sample Google App Engine application that demonstrates using the Users API.
 
 For more information about App Engine, see README.md under /appengine.
 """
-
-# [START all]
 
 from google.appengine.api import users
 import webapp2
@@ -26,7 +23,7 @@ import webapp2
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        # [START user_details]
+        # [START gae_users_get_details]
         user = users.get_current_user()
         if user:
             nickname = user.nickname()
@@ -37,7 +34,7 @@ class MainPage(webapp2.RequestHandler):
         else:
             login_url = users.create_login_url("/")
             greeting = '<a href="{}">Sign in</a>'.format(login_url)
-        # [END user_details]
+        # [END gae_users_get_details]
         self.response.write("<html><body>{}</body></html>".format(greeting))
 
 
@@ -54,5 +51,3 @@ class AdminPage(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([("/", MainPage), ("/admin", AdminPage)], debug=True)
-
-# [END all]

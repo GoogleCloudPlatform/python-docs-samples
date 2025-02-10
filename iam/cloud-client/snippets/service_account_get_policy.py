@@ -14,14 +14,16 @@
 
 # This file contains code samples that demonstrate how to get policy for service account.
 
+import os
+
 # [START iam_service_account_get_policy]
 from google.cloud import iam_admin_v1
 from google.iam.v1 import iam_policy_pb2, policy_pb2
 
 
 def get_service_account_iam_policy(project_id: str, account: str) -> policy_pb2.Policy:
-    """
-    Get policy for service account.
+    """Get policy for service account.
+
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
     """
@@ -32,8 +34,6 @@ def get_service_account_iam_policy(project_id: str, account: str) -> policy_pb2.
 
     policy = iam_client.get_iam_policy(request)
     return policy
-
-
 # [END iam_service_account_get_policy]
 
 
@@ -42,10 +42,11 @@ if __name__ == "__main__":
     # iam.serviceAccounts.getIamPolicy permission (roles/iam.serviceAccountAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "test-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Existing service account name within the project specified above.
     name = "test-account-name"
-    service_account = f"{name}@{project_id}.iam.gserviceaccount.com"
+    service_account = f"{name}@{PROJECT_ID}.iam.gserviceaccount.com"
 
-    policy = get_service_account_iam_policy(project_id, service_account)
+    policy = get_service_account_iam_policy(PROJECT_ID, service_account)
     print(policy)

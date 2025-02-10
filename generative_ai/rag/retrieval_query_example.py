@@ -45,6 +45,7 @@ def retrieval_query(
         text="Hello World!",
         similarity_top_k=10,  # Optional
         vector_distance_threshold=0.5,  # Optional
+        # vector_search_alpha=0.5, # Optional - Only supported for Weaviate
     )
     print(response)
     # Example response:

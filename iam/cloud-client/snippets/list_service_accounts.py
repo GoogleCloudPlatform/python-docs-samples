@@ -14,6 +14,7 @@
 
 # This file contains code samples that demonstrate how to get list of service account.
 
+import os
 
 # [START iam_list_service_accounts]
 from typing import List
@@ -23,10 +24,11 @@ from google.cloud.iam_admin_v1 import types
 
 
 def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
-    """
-    Get list of project service accounts.
+    """Get list of project service accounts.
 
     project_id: ID or number of the Google Cloud project you want to use.
+
+    returns a list of iam_admin_v1.ServiceAccount
     """
 
     iam_admin_client = iam_admin_v1.IAMClient()
@@ -35,16 +37,18 @@ def list_service_accounts(project_id: str) -> List[iam_admin_v1.ServiceAccount]:
 
     accounts = iam_admin_client.list_service_accounts(request=request)
     return accounts.accounts
-
-
 # [END iam_list_service_accounts]
 
 
 def get_service_account(project_id: str, account: str) -> iam_admin_v1.ServiceAccount:
-    """
-    Get certain service account.
-    project_id: ID or number of the Google Cloud project you want to use.
-    account_id: ID or email which will be unique identifier of the service account.
+    """Get certain service account.
+
+    Args:
+        project_id: ID or number of the Google Cloud project you want to use.
+        account_id: ID or email which will be unique identifier
+        of the service account.
+
+    Returns: iam_admin_v1.ServiceAccount
     """
 
     iam_admin_client = iam_admin_v1.IAMClient()
@@ -60,6 +64,8 @@ if __name__ == "__main__":
     # iam.serviceAccounts.list permission (roles/iam.serviceAccountViewer))
 
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    list_service_accounts(project_id)
+    list_service_accounts(PROJECT_ID)
+
+    get_service_account(PROJECT_ID, "account_id")

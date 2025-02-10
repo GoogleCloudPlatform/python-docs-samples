@@ -17,7 +17,7 @@ import os
 def delete_queued_resource(
     project_id: str, zone: str, queued_resource_name: str
 ) -> None:
-    # [START tpu_queued_resource_delete]
+    # [START tpu_queued_resources_delete]
     from google.cloud import tpu_v2alpha1
 
     # TODO(developer): Update and un-comment below lines
@@ -38,7 +38,7 @@ def delete_queued_resource(
         print(f"Error deleting resource: {e}")
         print(f"Queued resource '{queued_resource_name}' successfully deleted.")
 
-    # [END tpu_queued_resource_delete]
+    # [END tpu_queued_resources_delete]
 
 
 if __name__ == "__main__":
