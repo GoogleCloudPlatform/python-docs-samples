@@ -41,7 +41,7 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     refresh_strategy = RefreshStrategy.LAZY
 
     # initialize Cloud SQL Python Connector object
-    connector = Connector(refresh_strategy = refresh_strategy)
+    connector = Connector(refresh_strategy=refresh_strategy)
 
     def getconn() -> pymysql.connections.Connection:
         conn: pymysql.connections.Connection = connector.connect(

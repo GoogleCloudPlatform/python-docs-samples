@@ -42,7 +42,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
     refresh_strategy = RefreshStrategy.LAZY
 
-    connector = Connector(ip_type = ip_type, refresh_strategy = refresh_strategy)
+    connector = Connector(ip_type=ip_type, refresh_strategy=refresh_strategy)
 
     def getconn() -> pymysql.connections.Connection:
         conn: pymysql.connections.Connection = connector.connect(

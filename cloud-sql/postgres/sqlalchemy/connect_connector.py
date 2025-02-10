@@ -43,7 +43,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
     refresh_strategy = RefreshStrategy.LAZY
 
     # initialize Cloud SQL Python Connector object
-    connector = Connector(refresh_strategy = refresh_strategy)
+    connector = Connector(refresh_strategy=refresh_strategy)
 
     def getconn() -> pg8000.dbapi.Connection:
         conn: pg8000.dbapi.Connection = connector.connect(
