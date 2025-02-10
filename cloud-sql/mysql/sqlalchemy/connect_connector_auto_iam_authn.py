@@ -15,7 +15,7 @@
 # [START cloud_sql_mysql_sqlalchemy_auto_iam_authn]
 import os
 
-from google.cloud.sql.connector import Connector, IPTypes, RefreshStrategy
+from google.cloud.sql.connector import Connector, IPTypes
 import pymysql
 
 import sqlalchemy
@@ -38,10 +38,14 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
-    refresh_strategy = RefreshStrategy.LAZY
+    
+    # setting the refresh strategy to LAZY
+    # to refresh the tokens when they are needed, rather than on a regular interval
+    # this is recommended for serverless environments to 
+    # avoid background refreshes from throttling CPU.
 
     # initialize Cloud SQL Python Connector object
-    connector = Connector(refresh_strategy=refresh_strategy)
+    connector = Connector(refresh_strategy="LAZY")
 
     def getconn() -> pymysql.connections.Connection:
         conn: pymysql.connections.Connection = connector.connect(
