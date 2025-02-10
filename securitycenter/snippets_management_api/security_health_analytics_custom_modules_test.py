@@ -192,7 +192,6 @@ def add_custom_module(org_id: str):
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
-
 def test_create_security_health_analytics_custom_module():
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
