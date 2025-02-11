@@ -14,7 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 from typing import Dict, Optional
+
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 
 def view_table_or_view_access_policy(override_values: Optional[Dict[str, str]] = None) -> None:
@@ -25,37 +28,38 @@ def view_table_or_view_access_policy(override_values: Optional[Dict[str, str]] =
     # Imports the Google Cloud client library
     from google.cloud import bigquery
 
-    # Instantiates a client
-    bigquery_client = bigquery.Client()
-
-    # Dataset where the table or view is
+    # TODO: Set these values before running the sample.
+    # Google Cloud Platform project.
+    project_id = "my_project_id"
+    # Dataset where the table or view is.
     dataset_id = "my_new_dataset"
-
-    # Table or view name to get the access policy
+    # Table or view name to get the access policy.
     resource_name = "my_table"
 
     # [END bigquery_view_table_or_view_access_policy]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
+    project_id = PROJECT_ID
     dataset_id = override_values.get("dataset_id", dataset_id)
     resource_name = override_values.get("resource_name", resource_name)
     # [START bigquery_view_table_or_view_access_policy]
 
-    # Prepares a reference to the dataset
-    dataset = bigquery_client.get_dataset(dataset_id)
+    # Instantiates a client.
+    bigquery_client = bigquery.Client()
 
-    # Shows the Access policy as a list of Access Entries
-    print(dataset.access_entries)
+    # Get the full table name.
+    full_resource_name = f"{project_id}.{dataset_id}.{resource_name}"
 
-    # More details about AccessEntry object here:
-    # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.dataset.AccessEntry
+    # Get the IAM access policy for the table or view.
+    policy = bigquery_client.get_iam_policy(full_resource_name)
 
-    # Get properties for an AccessEntry
-    if dataset.access_entries:
-        print(f"Details for Access entry 0 in Table or View '{resource_name}'.")
-        print(f"Role: {dataset.access_entries[0].role}")
-        print(f"Special group: {dataset.access_entries[0].special_group}")
-        print(f"User by Email: {dataset.access_entries[0].user_by_email}")
+    # Show policy details.
+    # Find more details for the Policy object here:
+    # https://cloud.google.com/bigquery/docs/reference/rest/v2/Policy
+    print(f"Access Policy details for table or view '{resource_name}'.")
+    print(f"Bindings: {policy.bindings}")
+    print(f"etag: {policy.etag}")
+    print(f"Version: {policy.version}")
     # [END bigquery_view_table_or_view_access_policy]
 
 
