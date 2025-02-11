@@ -89,12 +89,12 @@ def datasets_to_delete(client: bigquery.Client) -> Iterator[List[str]]:
 
 
 def test_view_dataset_access_policies_with_table(
-        capsys: "pytest.CaptureFixture[str]",
-        client: bigquery.Client,
-        create_dataset: None,
-        create_table: None,
-        datasets_to_delete: List[str],
-    ) -> None:
+    capsys: "pytest.CaptureFixture[str]",
+    client: bigquery.Client,
+    create_dataset: None,
+    create_table: None,
+    datasets_to_delete: List[str],
+) -> None:
     override_values = {"dataset_id": DATASET_ID, "resource_name": TABLE_NAME}
     datasets_to_delete.append(override_values["dataset_id"])
 
@@ -104,12 +104,12 @@ def test_view_dataset_access_policies_with_table(
 
 
 def test_view_dataset_access_policies_with_view(
-        capsys: "pytest.CaptureFixture[str]",
-        client: bigquery.Client,
-        create_dataset: None,
-        create_table_for_view: None,
-        create_view: None,    datasets_to_delete: List[str],
-    ) -> None:
+    capsys: "pytest.CaptureFixture[str]",
+    client: bigquery.Client,
+    create_dataset: None,
+    create_table_for_view: None,
+    create_view: None,    datasets_to_delete: List[str],
+) -> None:
     override_values = {"dataset_id": DATASET_ID, "resource_name": VIEW_NAME}
     datasets_to_delete.append(override_values["dataset_id"])
 
