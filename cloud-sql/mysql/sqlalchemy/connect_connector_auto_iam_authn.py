@@ -38,7 +38,7 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     db_name = os.environ["DB_NAME"]  # e.g. 'my-database'
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
-    
+
     # setting the refresh strategy to LAZY
     # to refresh the tokens when they are needed, rather than on a regular interval
     # this is recommended for serverless environments to
