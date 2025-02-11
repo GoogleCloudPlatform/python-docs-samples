@@ -113,5 +113,3 @@ def test_view_dataset_access_policies_with_view(
     view_table_or_view_access_policy(override_values)
     out, _ = capsys.readouterr()
     assert f"Details for Access entry 0 in Table or View '{VIEW_NAME}'" in out
-
-
