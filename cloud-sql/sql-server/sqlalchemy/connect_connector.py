@@ -41,11 +41,7 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
-    # setting the refresh strategy to LAZY
-    # to refresh the tokens when they are needed, rather than on a regular interval
-    # this is recommended for serverless environments to
-    # avoid background refreshes from throttling CPU.
-
+    # initialize Cloud SQL Python Connector object
     connector = Connector(ip_type=ip_type, refresh_strategy="LAZY")
 
     connect_args = {}
