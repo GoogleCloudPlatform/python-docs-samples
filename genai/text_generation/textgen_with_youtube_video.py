@@ -39,9 +39,10 @@ def generate_content() -> str:
 
     print(response.text)
     # Example response:
-    # Lunchtime Level Up: Easy & Delicious Meal Prep
-    # We all know the struggle:  you're rushing in the morning, and lunch is the
-    # last thing on your mind...
+    # Here's a short blog post based on the video provided:
+    #
+    # **Google Turns 25: A Quarter Century of Search!**
+    # ...
 
     # [END googlegenaisdk_textgen_with_youtube_video]
     return response.text
