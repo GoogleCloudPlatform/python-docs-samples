@@ -17,41 +17,43 @@
 from typing import Dict, Optional
 
 
-def view_dataset_access_policies(override_values: Optional[Dict[str, str]] = None) -> None:
+def view_dataset_access_policy(override_values: Optional[Dict[str, str]] = None) -> None:
     if override_values is None:
         override_values = {}
 
-    # [START bigquery_view_dataset_access_policies]
+    # [START bigquery_view_dataset_access_policy]
     # Imports the Google Cloud client library
     from google.cloud import bigquery
 
     # Instantiates a client
     bigquery_client = bigquery.Client()
 
-    # Dataset from which to get access policies
+    # Dataset from which to get the access policy
     dataset_id = "my_new_dataset"
 
-    # [END bigquery_view_dataset_access_policies]
+    # [END bigquery_view_dataset_access_policy]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     dataset_id = override_values.get("dataset_id", dataset_id)
-    # [START bigquery_view_dataset_access_policies]
+    # [START bigquery_view_dataset_access_policy]
 
     # Prepares a reference to the dataset
     dataset = bigquery_client.get_dataset(dataset_id)
 
-    # Shows a list of Access Entries for this dataset
+    # Shows the Access policy as a list of Access Entries
     print(dataset.access_entries)
 
-    # More details about AccessEntry objects here:
+    # More details about AccessEntry object here:
     # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.dataset.AccessEntry
 
     # Get properties for an AccessEntry
-    print("Access entry 0 - Role: '{}'.".format(dataset.access_entries[0].role))
-    print("Access entry 0 - Special group: '{}'.".format(dataset.access_entries[0].special_group))
-    print("Access entry 0 - User by Email: '{}'.".format(dataset.access_entries[0].user_by_email))
-    # [END bigquery_view_dataset_access_policies]
+    if dataset.access_entries:
+        print("Details for Access entry 0 in dataset '{}'.".format(dataset_id))
+        print("Role: {}".format(dataset.access_entries[0].role))
+        print("Special group: {}".format(dataset.access_entries[0].special_group))
+        print("User by Email: {}".format(dataset.access_entries[0].user_by_email))
+    # [END bigquery_view_dataset_access_policy]
 
 
 if __name__ == "__main__":
-    view_dataset_access_policies()
+    view_dataset_access_policy()

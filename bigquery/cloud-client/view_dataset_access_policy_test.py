@@ -19,7 +19,7 @@ import pytest
 
 from conftest import prefixer
 
-from view_dataset_access_policy import view_dataset_access_policies
+from view_dataset_access_policy import view_dataset_access_policy
 
 DATASET_ID = f"{prefixer.create_prefix()}_view_dataset_access_policies"
 
@@ -51,6 +51,6 @@ def test_view_dataset_access_policies(
     override_values = {"dataset_id": DATASET_ID}
     datasets_to_delete.append(override_values["dataset_id"])
 
-    view_dataset_access_policies(override_values)
+    view_dataset_access_policy(override_values)
     out, _ = capsys.readouterr()
     assert "AccessEntry:" in out
