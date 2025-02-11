@@ -48,10 +48,10 @@ def view_dataset_access_policy(override_values: Optional[Dict[str, str]] = None)
 
     # Get properties for an AccessEntry
     if dataset.access_entries:
-        print("Details for Access entry 0 in dataset '{}'.".format(dataset_id))
-        print("Role: {}".format(dataset.access_entries[0].role))
-        print("Special group: {}".format(dataset.access_entries[0].special_group))
-        print("User by Email: {}".format(dataset.access_entries[0].user_by_email))
+        print(f"Details for Access entry 0 in dataset '{dataset_id}'.")
+        print(f"Role: {dataset.access_entries[0].role}")
+        print(f"Special group: {dataset.access_entries[0].special_group}")
+        print(f"User by Email: {dataset.access_entries[0].user_by_email}")
     # [END bigquery_view_dataset_access_policy]
 
 
