@@ -16,9 +16,9 @@
 def count_tokens() -> int:
     # [START googlegenaisdk_count_tokens_with_txt_img_vid]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     contents = [
         Part.from_uri(

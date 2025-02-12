@@ -16,8 +16,9 @@
 def count_tokens() -> int:
     # [START googlegenaisdk_count_tokens_with_txt]
     from google import genai
+    from google.genai.types import HttpOptions
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.count_tokens(
         model="gemini-2.0-flash-001",
         contents="What's the highest mountain in Africa?",

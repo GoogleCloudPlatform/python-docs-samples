@@ -16,8 +16,9 @@
 def generate_content() -> int:
     # [START googlegenaisdk_count_tokens_resp_with_txt]
     from google import genai
+    from google.genai.types import HttpOptions
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     prompt = "Why is the sky blue?"
 
