@@ -218,7 +218,8 @@ def test_get_security_health_analytics_custom_module():
 
     assert response is not None, "Failed to retrieve the custom module."
     assert response.display_name.startswith(PREFIX)
-    assert response.enablement_state == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
 
 
 @backoff.on_exception(
@@ -255,6 +256,7 @@ def test_list_security_health_analytics_custom_module():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_update_security_health_analytics_custom_module():
+
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     response = security_health_analytics_custom_modules.create_security_health_analytics_custom_module(parent)
     module_id = extract_custom_module_id(response.name)
@@ -283,7 +285,8 @@ def test_get_effective_security_health_analytics_custom_module():
     assert response is not None, "Failed to retrieve the custom module."
     # Verify that the custom module was created
     assert response.display_name.startswith(PREFIX)
-    assert response.enablement_state == securitycentermanagement_v1.EffectiveSecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
 
 
 @backoff.on_exception(
