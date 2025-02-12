@@ -16,7 +16,7 @@
 
 from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
-from google.cloud.bigquery.dataset import Dataset
+from google.cloud.bigquery.dataset import AccessEntry, Dataset
 import pytest
 
 from conftest import prefixer
@@ -31,7 +31,7 @@ def client() -> bigquery.Client:
 
 
 @pytest.fixture()
-def create_dataset(client: bigquery.Client) -> Dataset:
+def dataset(client: bigquery.Client) -> Dataset:
     dataset = client.create_dataset(DATASET_ID)
     yield dataset
     client.delete_dataset(dataset, delete_contents=True)
@@ -45,8 +45,8 @@ def create_dataset(client: bigquery.Client) -> Dataset:
 
 def test_view_dataset_access_policies(
     client: bigquery.Client,
-    create_dataset: Dataset,
+    dataset: Dataset,
 ) -> None:
-    dataset = view_dataset_access_policy(dataset_id=create_dataset.dataset_id)
+    access_policy: list[AccessEntry] = view_dataset_access_policy(dataset.dataset_id)
 
-    assert dataset.dataset_id == DATASET_ID
+    assert access_policy

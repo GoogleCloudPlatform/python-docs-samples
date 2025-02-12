@@ -14,10 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud.bigquery.dataset import Dataset
+from google.cloud.bigquery.dataset import AccessEntry
 
 
-def view_dataset_access_policy(dataset_id: str) -> Dataset:
+def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # [START bigquery_view_dataset_access_policy]
     # Imports the Google Cloud client library
     from google.cloud import bigquery
@@ -46,4 +46,4 @@ def view_dataset_access_policy(dataset_id: str) -> Dataset:
         print(f"User by Email: {dataset.access_entries[0].user_by_email}")
     # [END bigquery_view_dataset_access_policy]
 
-    return dataset
+    return dataset.access_entries
