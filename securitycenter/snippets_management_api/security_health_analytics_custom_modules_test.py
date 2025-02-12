@@ -255,9 +255,11 @@ def test_list_security_health_analytics_custom_module():
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_update_security_health_analytics_custom_module():
-
-    module_id = get_random_shared_module()
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    response = security_health_analytics_custom_modules.create_security_health_analytics_custom_module(parent)
+    module_id = extract_custom_module_id(response.name)
+    add_module_to_cleanup(module_id)
+
     # Retrieve the custom modules
     updated_custom_module = security_health_analytics_custom_modules.update_security_health_analytics_custom_module(parent, module_id)
 
