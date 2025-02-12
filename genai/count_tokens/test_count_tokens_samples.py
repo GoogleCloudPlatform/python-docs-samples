@@ -12,15 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import advanced_example
-import simple_example
+#
+# Using Google Cloud Vertex AI to test the code samples.
+#
+
+import os
+
+import count_tokens_compute_with_txt
+import count_tokens_resp_with_txt
+import count_tokens_with_txt
+import count_tokens_with_txt_img_vid
+
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+# The project name is included in the CICD pipeline
+# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_simple_example() -> None:
-    response = simple_example.simple_example()
-    assert response
+def test_count_tokens_compute_with_txt() -> None:
+    assert count_tokens_compute_with_txt.compute_tokens()
 
 
-def test_advanced_example() -> None:
-    response = advanced_example.advanced_example()
-    assert response
+def test_count_tokens_resp_with_txt() -> None:
+    assert count_tokens_resp_with_txt.generate_content()
+
+
+def test_count_tokens_with_txt() -> None:
+    assert count_tokens_with_txt.count_tokens()
+
+
+def test_count_tokens_with_txt_img_vid() -> None:
+    assert count_tokens_with_txt_img_vid.count_tokens()
