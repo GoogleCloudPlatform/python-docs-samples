@@ -14,13 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Dict, Optional
 
-
-def view_dataset_access_policy(override_values: Optional[Dict[str, str]] = None) -> None:
-    if override_values is None:
-        override_values = {}
-
+def view_dataset_access_policy(dataset_id: str) -> None:
     # [START bigquery_view_dataset_access_policy]
     # Imports the Google Cloud client library
     from google.cloud import bigquery
@@ -28,14 +23,9 @@ def view_dataset_access_policy(override_values: Optional[Dict[str, str]] = None)
     # Instantiates a client
     bigquery_client = bigquery.Client()
 
+    # TODO(developer): Update and un-comment below lines
     # Dataset from which to get the access policy
-    dataset_id = "my_new_dataset"
-
-    # [END bigquery_view_dataset_access_policy]
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    dataset_id = override_values.get("dataset_id", dataset_id)
-    # [START bigquery_view_dataset_access_policy]
+    # dataset_id = "my_new_dataset"
 
     # Prepares a reference to the dataset
     dataset = bigquery_client.get_dataset(dataset_id)
@@ -53,7 +43,3 @@ def view_dataset_access_policy(override_values: Optional[Dict[str, str]] = None)
         print(f"Special group: {dataset.access_entries[0].special_group}")
         print(f"User by Email: {dataset.access_entries[0].user_by_email}")
     # [END bigquery_view_dataset_access_policy]
-
-
-if __name__ == "__main__":
-    view_dataset_access_policy()

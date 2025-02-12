@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Iterator, List
+from collections.abc import Iterator
 
 from google.cloud import bigquery
 import pytest
@@ -35,8 +35,8 @@ def create_dataset(client: bigquery.Client):
 
 
 @pytest.fixture
-def datasets_to_delete(client: bigquery.Client) -> Iterator[List[str]]:
-    datasets: List[str] = []
+def datasets_to_delete(client: bigquery.Client) -> Iterator[list[str]]:
+    datasets: list[str] = []
     yield datasets
     for item in datasets:
         client.delete_dataset(item, delete_contents=True)
@@ -46,11 +46,8 @@ def test_view_dataset_access_policies(
     capsys: "pytest.CaptureFixture[str]",
     client: bigquery.Client,
     create_dataset: None,
-    datasets_to_delete: List[str],
+    datasets_to_delete: list[str],
 ) -> None:
-    override_values = {"dataset_id": DATASET_ID}
-    datasets_to_delete.append(override_values["dataset_id"])
-
-    view_dataset_access_policy(override_values)
+    view_dataset_access_policy(dataset_id=DATASET_ID)
     out, _ = capsys.readouterr()
     assert "AccessEntry:" in out
