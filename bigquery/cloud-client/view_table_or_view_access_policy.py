@@ -49,7 +49,3 @@ def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_
     # [END bigquery_view_table_or_view_access_policy]
 
     return policy
-
-
-if __name__ == "__main__":
-    view_table_or_view_access_policy('samples-xwf-01', 'my_new_dataset', 'my_table')
