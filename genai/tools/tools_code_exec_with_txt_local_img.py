@@ -20,10 +20,10 @@ def generate_content() -> GenerateContentResponse:
     from PIL import Image
     from google import genai
     from google.genai.types import (
+        GenerateContentConfig,
         HttpOptions,
         Tool,
         ToolCodeExecution,
-        GenerateContentConfig,
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
@@ -45,14 +45,14 @@ def generate_content() -> GenerateContentResponse:
     with open("test_data/640px-Monty_open_door.svg.png", "rb") as image_file:
         image_data = Image.open(image_file)
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
-        contents=[image_data, prompt],
-        config=GenerateContentConfig(
-            tools=[code_execution_tool],
-            temperature=0,
-        ),
-    )
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-001",
+            contents=[image_data, prompt],
+            config=GenerateContentConfig(
+                tools=[code_execution_tool],
+                temperature=0,
+            ),
+        )
 
     print("# Code:")
     for part in response.candidates[0].content.parts:
