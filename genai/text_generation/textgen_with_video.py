@@ -16,9 +16,9 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_video]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
     Analyze the provided video file, including its audio.
     Summarize the main points of the video concisely.

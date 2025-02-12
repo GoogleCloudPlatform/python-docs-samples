@@ -19,9 +19,14 @@ def generate_content() -> GenerateContentResponse:
     # [START googlegenaisdk_tools_code_exec_with_txt_local_img]
     from PIL import Image
     from google import genai
-    from google.genai.types import Tool, ToolCodeExecution, GenerateContentConfig
+    from google.genai.types import (
+        HttpOptions,
+        Tool,
+        ToolCodeExecution,
+        GenerateContentConfig,
+    )
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
 
     prompt = """
@@ -37,10 +42,11 @@ def generate_content() -> GenerateContentResponse:
     """
 
     # Image source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
-    image_data = Image.open(open("test_data/640px-Monty_open_door.svg.png", "rb"))
+    with open("test_data/640px-Monty_open_door.svg.png", "rb") as image_file:
+        image_data = Image.open(image_file)
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
+        model="gemini-2.0-flash-001",
         contents=[image_data, prompt],
         config=GenerateContentConfig(
             tools=[code_execution_tool],

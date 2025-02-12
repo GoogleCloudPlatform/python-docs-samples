@@ -18,13 +18,13 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_youtube_video]
     from google import genai
-    from google.genai import types
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
     # You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
-    video = types.Part.from_uri(
+    video = Part.from_uri(
         file_uri="https://www.youtube.com/watch?v=3KtWfp0UopM",
         mime_type="video/mp4",
     )
