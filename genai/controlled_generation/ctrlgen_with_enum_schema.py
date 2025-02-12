@@ -16,18 +16,19 @@
 def generate_content() -> str:
     # [START googlegenaisdk_ctrlgen_with_enum_schema]
     from google import genai
+    from google.genai.types import GenerateContentConfig, HttpOptions
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents="What type of instrument is an oboe?",
-        config={
-            "response_mime_type": "text/x.enum",
-            "response_schema": {
+        config=GenerateContentConfig(
+            response_mime_type="text/x.enum",
+            response_schema={
                 "type": "STRING",
                 "enum": ["Percussion", "String", "Woodwind", "Brass", "Keyboard"],
             },
-        },
+        ),
     )
 
     print(response.text)

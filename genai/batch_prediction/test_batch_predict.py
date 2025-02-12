@@ -20,8 +20,8 @@ from google.genai.types import JobState
 
 import pytest
 
-import submit_with_bq
-import submit_with_gcs
+import batchpredict_with_bq
+import batchpredict_with_gcs
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -57,10 +57,10 @@ def gcs_output_uri():
 
 
 def test_batch_prediction_with_bq(bq_output_uri) -> None:
-    response = submit_with_bq.generate_content(output_uri=bq_output_uri)
+    response = batchpredict_with_bq.generate_content(output_uri=bq_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
 def test_batch_prediction_with_gcs(gcs_output_uri) -> None:
-    response = submit_with_gcs.generate_content(output_uri=gcs_output_uri)
+    response = batchpredict_with_gcs.generate_content(output_uri=gcs_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED

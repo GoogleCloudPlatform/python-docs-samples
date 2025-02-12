@@ -18,12 +18,12 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_code_with_pdf]
     from google import genai
-    from google.genai import types
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
-    python_code = types.Part.from_uri(
+    python_code = Part.from_uri(
         file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf",
         mime_type="application/pdf",
     )

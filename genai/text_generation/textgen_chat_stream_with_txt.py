@@ -16,13 +16,14 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_chat_stream_with_txt]
     from google import genai
+    from google.genai.types import HttpOptions
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     chat = client.chats.create(model="gemini-2.0-flash-001")
     response_text = ""
 
     for chunk in chat.send_message_stream("Why is the sky blue?"):
-        print(chunk.text)
+        print(chunk.text, end="")
         response_text += chunk.text
     # Example response:
     # The
