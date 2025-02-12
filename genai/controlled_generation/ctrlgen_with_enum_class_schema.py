@@ -15,8 +15,10 @@
 
 def generate_content() -> str:
     # [START googlegenaisdk_ctrlgen_with_enum_class_schema]
-    from google import genai
     import enum
+
+    from google import genai
+    from google.genai.types import HttpOptions
 
     class InstrumentClass(enum.Enum):
         PERCUSSION = "Percussion"
@@ -25,7 +27,7 @@ def generate_content() -> str:
         BRASS = "Brass"
         KEYBOARD = "Keyboard"
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents="What type of instrument is a guitar?",
