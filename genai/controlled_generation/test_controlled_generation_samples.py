@@ -20,8 +20,10 @@ import os
 
 import ctrlgen_with_class_schema
 import ctrlgen_with_enum_schema
+import ctrlgen_with_enum_class_schema
 import ctrlgen_with_nested_class_schema
 import ctrlgen_with_nullable_schema
+import ctrlgen_with_resp_schema
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -37,9 +39,17 @@ def test_ctrlgen_with_enum_schema() -> None:
     assert ctrlgen_with_enum_schema.generate_content()
 
 
+def test_ctrlgen_with_enum_class_schema() -> None:
+    assert ctrlgen_with_enum_class_schema.generate_content()
+
+
 def test_ctrlgen_with_nested_class_schema() -> None:
     assert ctrlgen_with_nested_class_schema.generate_content()
 
 
 def test_ctrlgen_with_nullable_schema() -> None:
     assert ctrlgen_with_nullable_schema.generate_content()
+
+
+def test_ctrlgen_with_resp_schema() -> None:
+    assert ctrlgen_with_resp_schema.generate_content()
