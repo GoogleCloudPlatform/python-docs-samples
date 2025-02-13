@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from distlib.compat import raw_input
 
 
 def generate_content(cache_name: str) -> str:
@@ -39,5 +38,5 @@ def generate_content(cache_name: str) -> str:
 
 
 if __name__ == "__main__":
-    cache_name = raw_input("Cache Name: ")
+    cache_name = input("Cache Name: ")
     generate_content(cache_name)
