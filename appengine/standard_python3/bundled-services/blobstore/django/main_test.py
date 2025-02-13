@@ -40,20 +40,27 @@ def gcloud_cli(command):
     full_command = f"gcloud {command} --quiet --format=json"
     print("Running command:", full_command)
 
-    output = subprocess.run(
-        full_command,
-        capture_output=True,
-        shell=True,
-        check=True,
-    )
     try:
-        entries = json.loads(output.stdout)
-        return entries
-    except Exception:
-        print("Failed to read log")
-        print(f"gcloud stderr was {output.stderr}")
+        output = subprocess.run(
+            full_command,
+            capture_output=True,
+            shell=True,
+            check=True,
+        )
 
-    raise Exception(output.stderr)
+        try:
+            entries = json.loads(output.stdout)
+            return entries
+        except Exception:
+            print("Failed to read log")
+            print(f"gcloud stderr was {output.stderr}")
+
+        raise Exception(output.stderr + "POTATO")
+    except subprocess.CalledProcessError as e:
+        print(" Output: ", e.output)
+        print(" StdOut: ", e.stdout)
+        print(" StdErr: ", e.stderr)
+        raise subprocess.CalledProcessError(e)
 
 
 # Wait for app to initialize
