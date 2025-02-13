@@ -12,11 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 import contentcache_create_with_txt_gcs_pdf
 import contentcache_delete
 import contentcache_list
 import contentcache_update
 import contentcache_use_with_txt
+
+
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+# The project name is included in the CICD pipeline
+# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
 def test_content_cache() -> None:
