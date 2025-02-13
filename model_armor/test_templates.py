@@ -21,15 +21,14 @@ from google.cloud.modelarmor_v1 import (
     FilterMatchState,
     RaiFilterType,
 )
-
-from model_armor.create_template import create_model_armor_template
-from model_armor.delete_template import delete_model_armor_template
-from model_armor.get_template import get_model_armor_template
-from model_armor.list_templates import list_model_armor_templates
-from model_armor.sanitize_user_prompt import sanitize_user_prompt
-from model_armor.update_template import update_model_armor_template
-
 import pytest
+
+from create_template import create_model_armor_template
+from delete_template import delete_model_armor_template
+from get_template import get_model_armor_template
+from list_templates import list_model_armor_templates
+from sanitize_user_prompt import sanitize_user_prompt
+from update_template import update_model_armor_template
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 LOCATION = "us-central1"
