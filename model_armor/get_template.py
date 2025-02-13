@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def get_model_armor_template(project_id: str, location: str, template_id: str):
+from google.cloud.modelarmor_v1 import Template
+
+
+def get_model_armor_template(project_id: str, location: str, template_id: str) -> Template:
     # [START modelarmor_get_template]
 
+    from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
-    client = modelarmor_v1.ModelArmorClient(transport="rest", client_options={
-        "api_endpoint": "modelarmor.us-central1.rep.googleapis.com"})
+
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
+    )
 
     # TODO(Developer): Uncomment these variables and initialize
     # project_id = "your-google-cloud-project-id"
@@ -34,4 +41,6 @@ def get_model_armor_template(project_id: str, location: str, template_id: str):
 
     # Handle the response
     return response
+
+
 # [END modelarmor_get_template]

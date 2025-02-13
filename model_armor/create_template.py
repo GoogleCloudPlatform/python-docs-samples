@@ -12,12 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def create_model_armor_template(project_id: str, location: str, template_id: str):
+from google.cloud.modelarmor_v1 import Template
+
+
+def create_model_armor_template(project_id: str, location: str, template_id: str) -> Template:
     # [START modelarmor_create_template]
 
+    from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
-    client = modelarmor_v1.ModelArmorClient(transport="rest", client_options={
-        "api_endpoint": "modelarmor.us-central1.rep.googleapis.com"})
+
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
+    )
 
     # TODO(Developer): Uncomment these variables and initialize
     # project_id = "your-google-cloud-project-id"
@@ -29,30 +36,23 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
         "filter_config": {
             "rai_settings": {
                 "rai_filters": [
-                    {
-                        "filter_type": "HATE_SPEECH",
-                        "confidence_level": "LOW_AND_ABOVE"
-                    }
+                    {"filter_type": "HATE_SPEECH", "confidence_level": "LOW_AND_ABOVE"}
                 ]
             },
-            "pi_and_jailbreak_filter_settings": {
-                "filter_enforcement": "ENABLED"
-            },
-            "malicious_uri_filter_settings": {
-                "filter_enforcement": "ENABLED"
-            }
+            "pi_and_jailbreak_filter_settings": {"filter_enforcement": "ENABLED"},
+            "malicious_uri_filter_settings": {"filter_enforcement": "ENABLED"},
         },
         "template_metadata": {
             "log_template_operations": False,
-            "log_sanitize_operations": False
-        }
+            "log_sanitize_operations": False,
+        },
     }
 
     # Initialize request arguments
     request = modelarmor_v1.CreateTemplateRequest(
         parent=f"projects/{project_id}/locations/{location}",
         template_id=template_id,
-        template=template
+        template=template,
     )
 
     # Make the request
@@ -60,4 +60,6 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
 
     # Response
     return response
+
+
 # [END modelarmor_create_template]

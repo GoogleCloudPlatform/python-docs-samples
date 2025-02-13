@@ -12,12 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.cloud.modelarmor_v1.services.model_armor.pagers import ListTemplatesPager
 
-def list_model_armor_templates(project_id: str, location: str):
+
+def list_model_armor_templates(project_id: str, location: str) -> ListTemplatesPager:
     # [START modelarmor_list_templates]
+    from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
-    client = modelarmor_v1.ModelArmorClient(transport="rest", client_options={
-        "api_endpoint": "modelarmor.us-central1.rep.googleapis.com"})
+
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
+    )
 
     # TODO(Developer): Uncomment these variables and initialize
     # project_id = "your-google-cloud-project-id"
@@ -35,4 +41,6 @@ def list_model_armor_templates(project_id: str, location: str):
 
     # Handle the response
     return response
+
+
 # [END modelarmor_list_templates]

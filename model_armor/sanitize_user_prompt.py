@@ -15,12 +15,18 @@
 from google.cloud.modelarmor_v1 import SanitizeUserPromptResponse
 
 
-def sanitize_user_prompt(project_id: str, location: str, template_id: str) -> SanitizeUserPromptResponse:
+def sanitize_user_prompt(
+    project_id: str, location: str, template_id: str
+) -> SanitizeUserPromptResponse:
     # [START modelarmor_sanitize_user_prompt]
 
+    from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
-    client = modelarmor_v1.ModelArmorClient(transport="rest", client_options={
-        "api_endpoint": "modelarmor.us-central1.rep.googleapis.com"})
+
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
+    )
 
     # TODO(Developer): Uncomment these variables and initialize
     # project_id = "your-google-cloud-project-id"
@@ -46,4 +52,6 @@ def sanitize_user_prompt(project_id: str, location: str, template_id: str) -> Sa
 
     # Handle the response
     return response
+
+
 # [END modelarmor_sanitize_user_prompt]

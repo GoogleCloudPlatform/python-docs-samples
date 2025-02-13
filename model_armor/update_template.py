@@ -12,13 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.cloud.modelarmor_v1 import Template
 
-def update_model_armor_template(project_id: str, location: str, template_id: str):
+
+def update_model_armor_template(project_id: str, location: str, template_id: str) -> Template:
     # [START modelarmor_update_template]
 
+    from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
-    client = modelarmor_v1.ModelArmorClient(transport="rest", client_options={
-        "api_endpoint": "modelarmor.us-central1.rep.googleapis.com"})
+
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
+    )
 
     # TODO(Developer): Uncomment these variables and initialize
     # project_id = "your-google-cloud-project-id"
@@ -32,26 +38,25 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
                 "rai_filters": [
                     {
                         "filter_type": "HATE_SPEECH",
-                        "confidence_level": "MEDIUM_AND_ABOVE"
+                        "confidence_level": "MEDIUM_AND_ABOVE",
                     },
                 ]
             },
         },
         "template_metadata": {
             "log_template_operations": True,
-            "log_sanitize_operations": True
-        }
-
+            "log_sanitize_operations": True,
+        },
     }
 
     # Initialize request argument(s)
-    request = modelarmor_v1.UpdateTemplateRequest(
-        template=updated_template
-    )
+    request = modelarmor_v1.UpdateTemplateRequest(template=updated_template)
 
     # Make the request
     response = client.update_template(request=request)
 
     # Response
     return response
+
+
 # [END modelarmor_update_template]
