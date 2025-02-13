@@ -24,8 +24,7 @@ def generate_content() -> str:
     model_id = "gemini-2.0-flash-001"
 
     prompt = """
-    You are a very professional document summarization specialist.
-    Please summarize the given document.
+    You are a highly skilled document summarization specialist. Your task is to provide a concise executive summary of no more than 300 words. Please summarize the given document for a general audience.
     """
 
     pdf_file = Part.from_uri(
