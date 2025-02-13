@@ -43,7 +43,7 @@ async def generate_content() -> list[str]:
 
     # Yes, I'm here. What would you like to talk about?
 
-    # [END googlegenaisdk_live_with_text]
+    # [END googlegenaisdk_live_with_txt]
     return response
 
 
