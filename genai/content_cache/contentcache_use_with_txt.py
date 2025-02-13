@@ -33,7 +33,7 @@ def generate_content(cache_name: str) -> str:
     # Example response
     #   The Gemini family of multimodal models from Google DeepMind demonstrates remarkable capabilities across various
     #   modalities, including image, audio, video, and text....
-    # [END googlegenaisdk_contentcache_usage_with_txt]
+    # [END googlegenaisdk_contentcache_use_with_txt]
     return response.text
 
 
