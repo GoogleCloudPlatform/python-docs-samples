@@ -26,7 +26,11 @@ def compute_tokens() -> int:
     print(response)
 
     # Example output:
-    # tokens_info=[TokensInfo(role='user', token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336], tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?'])]
+    # tokens_info=[TokensInfo(
+    #    role='user', 
+    #    token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336],
+    #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
+    #  )]
 
     # [END googlegenaisdk_count_tokens_compute_with_txt]
     return response.tokens_info
