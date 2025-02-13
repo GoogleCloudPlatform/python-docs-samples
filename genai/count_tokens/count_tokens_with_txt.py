@@ -24,7 +24,6 @@ def count_tokens() -> int:
         contents="What's the highest mountain in Africa?",
     )
     print(response)
-
     # Example output:
     # total_tokens=10
     # cached_content_token_count=None
