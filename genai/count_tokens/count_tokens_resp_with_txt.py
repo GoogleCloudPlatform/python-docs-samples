@@ -31,7 +31,10 @@ def generate_content() -> int:
     print(response.usage_metadata)
 
     # Example output:
-    # cached_content_token_count=None candidates_token_count=311 prompt_token_count=6 total_token_count=317
+    #  cached_content_token_count=None
+    #  candidates_token_count=311
+    #  prompt_token_count=6
+    #  total_token_count=317
 
     # [END googlegenaisdk_count_tokens_resp_with_txt]
     return response.usage_metadata
