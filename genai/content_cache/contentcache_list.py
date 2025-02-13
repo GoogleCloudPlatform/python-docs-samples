@@ -24,7 +24,7 @@ def list_context_caches() -> str:
 
     # Access individual properties of a ContentCache object(s)
     for content_cache in content_cache_list:
-        print(f"Cache '{content_cache.name}' for model '{content_cache.model}'")
+        print(f"Cache `{content_cache.name}` for model `{content_cache.model}`")
         print(f"Last updated at: {content_cache.update_time}")
         print(f"Expires at: {content_cache.expire_time}")
 
