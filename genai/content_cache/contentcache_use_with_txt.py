@@ -16,7 +16,7 @@
 def generate_content(cache_name: str) -> str:
     # [START googlegenaisdk_contentcache_use_with_txt]
     from google import genai
-    from google.genai.types import HttpOptions, GenerateContentConfig
+    from google.genai.types import GenerateContentConfig, HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 

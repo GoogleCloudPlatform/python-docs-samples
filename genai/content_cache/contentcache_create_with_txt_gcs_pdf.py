@@ -16,7 +16,7 @@
 def create_content_cache() -> str:
     # [START googlegenaisdk_contentcache_create_with_txt_gcs_pdf]
     from google import genai
-    from google.genai.types import HttpOptions, Part, Content, CreateCachedContentConfig
+    from google.genai.types import Content, CreateCachedContentConfig, HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
