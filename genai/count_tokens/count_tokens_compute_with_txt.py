@@ -27,7 +27,7 @@ def compute_tokens() -> int:
 
     # Example output:
     # tokens_info=[TokensInfo(
-    #    role='user', 
+    #    role='user',
     #    token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336],
     #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
     #  )]
