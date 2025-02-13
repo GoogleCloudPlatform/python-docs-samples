@@ -16,7 +16,7 @@ import asyncio
 
 
 async def generate_content() -> list[str]:
-    # [START googlegenaisdk_live_with_text]
+    # [START googlegenaisdk_live_with_txt]
     from google import genai
     from google.genai.types import LiveConnectConfig, HttpOptions, Modality
 
