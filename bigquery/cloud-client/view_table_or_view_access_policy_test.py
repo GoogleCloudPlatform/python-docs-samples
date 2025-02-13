@@ -16,7 +16,6 @@
 
 import os
 
-from google.api_core.exceptions import NotFound
 from google.api_core.iam import Policy
 from google.cloud import bigquery
 from google.cloud.bigquery.dataset import Dataset
@@ -38,8 +37,7 @@ FULL_TABLE_NAME = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_NAME}"
 VIEW_NAME = f"{PREFIX}_view_access_policies_view"
 FULL_VIEW_NAME = f"{PROJECT_ID}.{DATASET_ID}.{VIEW_NAME}"
 
-TABLE_FOR_VIEW_NAME = f"{PREFIX}_view_access_policies_table_for_view"
-TABLE_FOR_VIEW_FULL_NAME = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_FOR_VIEW_NAME}"
+EMPTY_POLICY_ETAG = "ACAB"
 
 
 @pytest.fixture(scope="module")
@@ -52,44 +50,27 @@ def dataset(client: bigquery.Client) -> Dataset:
     dataset = client.create_dataset(DATASET_ID)
     yield dataset
     client.delete_dataset(dataset, delete_contents=True)
-    try:
-        client.get_dataset(DATASET_ID)
-    except NotFound:
-        return
-
-    pytest.fail(f"The dataset '{DATASET_ID}' was not deleted.")
 
 
-def create_table(
-    client: bigquery.Client,
-    full_table_name: str
-) -> None:
+@pytest.fixture(scope="module")
+def table(client: bigquery.Client) -> Table:
     sample_schema = [
         bigquery.SchemaField("id", "INTEGER", mode="REQUIRED"),
     ]
 
-    table = bigquery.Table(full_table_name, schema=sample_schema)
+    table = bigquery.Table(FULL_TABLE_NAME, schema=sample_schema)
     client.create_table(table)
 
     return table
 
 
 @pytest.fixture()
-def table(client: bigquery.Client) -> Table:
-    return create_table(client, FULL_TABLE_NAME)
-
-
-@pytest.fixture()
-def table_for_view(client: bigquery.Client) -> Table:
-    return create_table(client, TABLE_FOR_VIEW_FULL_NAME)
-
-
-@pytest.fixture()
-def view(client: bigquery.Client, table_for_view: str) -> str:
+def view(client: bigquery.Client, table: str) -> str:
     view = bigquery.Table(FULL_VIEW_NAME)
-    # 'table_for_view' will inject the full view name,
-    # with project_id and dataset_id
-    view.view_query = f"SELECT * FROM `{table_for_view}`"
+    # f"{table}" will inject the full table name,
+    # with project_id and dataset_id, as required by
+    # .create_table()
+    view.view_query = f"SELECT * FROM `{table}`"
     view = client.create_table(view)
     return view
 
@@ -100,7 +81,7 @@ def test_view_dataset_access_policies_with_table(
 ) -> None:
     policy: Policy = view_table_or_view_access_policy(PROJECT_ID, dataset.dataset_id, table.table_id)
 
-    assert policy.etag == "ACAB"  # An empty policy
+    assert policy.etag == EMPTY_POLICY_ETAG
 
 
 def test_view_dataset_access_policies_with_view(
@@ -110,4 +91,4 @@ def test_view_dataset_access_policies_with_view(
     print(view)
     policy: Policy = view_table_or_view_access_policy(PROJECT_ID, dataset.dataset_id, view.table_id)
 
-    assert policy.etag == "ACAB"  # An empty policy
+    assert policy.etag == EMPTY_POLICY_ETAG

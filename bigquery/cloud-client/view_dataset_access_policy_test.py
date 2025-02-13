@@ -14,7 +14,6 @@
 
 # pylint: disable=redefined-outer-name
 
-from google.api_core.exceptions import NotFound
 from google.cloud import bigquery
 from google.cloud.bigquery.dataset import AccessEntry, Dataset
 import pytest
@@ -35,16 +34,9 @@ def dataset(client: bigquery.Client) -> Dataset:
     dataset = client.create_dataset(DATASET_ID)
     yield dataset
     client.delete_dataset(dataset, delete_contents=True)
-    try:
-        client.get_dataset(DATASET_ID)
-    except NotFound:
-        return
-
-    pytest.fail(f"The dataset '{DATASET_ID}' was not deleted.")
 
 
 def test_view_dataset_access_policies(
-    client: bigquery.Client,
     dataset: Dataset,
 ) -> None:
     access_policy: list[AccessEntry] = view_dataset_access_policy(dataset.dataset_id)
