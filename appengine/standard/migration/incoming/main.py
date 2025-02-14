@@ -17,10 +17,10 @@ Authenticate requests coming from other App Engine instances.
 """
 
 # [START gae_python_app_identity_incoming]
-from google.oauth2 import id_token
-from google.auth.transport import requests
-
 import logging
+
+from google.auth.transport import requests
+from google.oauth2 import id_token
 import webapp2
 
 

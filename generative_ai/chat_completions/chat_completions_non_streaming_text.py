@@ -15,30 +15,27 @@
 
 def generate_text(project_id: str, location: str = "us-central1") -> object:
     # [START generativeaionvertexai_gemini_chat_completions_non_streaming]
-    import vertexai
-    import openai
+    from google.auth import default
+    import google.auth.transport.requests
 
-    from google.auth import default, transport
+    import openai
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "PROJECT_ID"
     # location = "us-central1"
 
-    vertexai.init(project=project_id, location=location)
-
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
-    auth_request = transport.requests.Request()
-    credentials.refresh(auth_request)
+    credentials.refresh(google.auth.transport.requests.Request())
 
-    # # OpenAI Client
+    # OpenAI Client
     client = openai.OpenAI(
-        base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{project_id}/locations/{location}/endpoints/openapi",
+        base_url=f"https://{location}-aiplatform.googleapis.com/v1/projects/{project_id}/locations/{location}/endpoints/openapi",
         api_key=credentials.token,
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-002",
+        model="google/gemini-2.0-flash-001",
         messages=[{"role": "user", "content": "Why is the sky blue?"}],
     )
 

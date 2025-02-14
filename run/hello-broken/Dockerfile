@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_broken_dockerfile]
-# [START run_broken_dockerfile]
+# [START cloudrun_broken_dockerfile_python]
 
 # Use the official Python image.
 # https://hub.docker.com/_/python
@@ -41,5 +40,4 @@ COPY . ./
 # Timeout is set to 0 to disable the timeouts of the workers to allow Cloud Run to handle instance scaling.
 CMD exec gunicorn --bind :$PORT --workers 1 --threads 8 --timeout 0 main:app
 
-# [END run_broken_dockerfile]
-# [END cloudrun_broken_dockerfile]
+# [END cloudrun_broken_dockerfile_python]

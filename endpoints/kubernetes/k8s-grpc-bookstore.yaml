@@ -42,13 +42,13 @@ spec:
       labels:
         app: esp-grpc-bookstore
     spec:
-      # [START secret-1]
+      # [START endpoints_secret1_yaml_python]
       volumes:
         - name: service-account-creds
           secret:
             secretName: service-account-creds
-      # [END secret-1]
-      # [START endpoints_service]
+      # [END endpoints_secret1_yaml_python]
+      # [START endpoints_service_yaml_python]
       containers:
         - name: esp
           image: gcr.io/endpoints-release/endpoints-runtime:1
@@ -59,15 +59,15 @@ spec:
             "--backend=grpc://127.0.0.1:8000",
             "--service_account_key=/etc/nginx/creds/service-account-creds.json"
           ]
-      # [END endpoints_service]
+      # [END endpoints_service_yaml_python]
         ports:
           - containerPort: 9000
-          # [START endpoints_secret_2]
+          # [START endpoints_secret2_yaml_python]
           volumeMounts:
             - mountPath: /etc/nginx/creds
               name: service-account-creds
               readOnly: true
-          # [END endpoints_secret_2]
+          # [END endpoints_secret2_yaml_python]
       - name: bookstore
         image: gcr.io/endpointsv2/python-grpc-bookstore-server:1
         ports:

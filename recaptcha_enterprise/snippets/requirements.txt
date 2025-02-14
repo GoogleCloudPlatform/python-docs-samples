@@ -1,1 +1,1 @@
-google-cloud-recaptcha-enterprise==1.22.1
+google-cloud-recaptcha-enterprise==1.25.0
