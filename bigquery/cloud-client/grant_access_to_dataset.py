@@ -17,7 +17,7 @@ from google.cloud.bigquery.dataset import AccessEntry
 
 def grant_access_to_dataset(
     dataset_id: str,
-    user_email: str,
+    entity_id: str,
     role: str
 ) -> list[AccessEntry]:
     # [START bigquery_grant_access_to_dataset]
@@ -28,21 +28,19 @@ def grant_access_to_dataset(
     # ID of the dataset to fetch.
     # dataset_id = "my_project_id.my_dataset"
 
-    # ID of the email or group from whom you are adding access.
+    # ID of the user or group from whom you are adding access.
     # Alternatively, the JSON REST API representation of the entity,
     # such as a view's table reference.
-    # user_email = "user-or-group-to-add@example.com"
+    # entity_id = "user-or-group-to-add@example.com"
 
     # One of the "Basic roles for datasets" described here:
     # https://cloud.google.com/bigquery/docs/access-control-basic-roles#dataset-basic-roles
     # role = "READER"
 
     # Type of entity you are granting access to.
+    # Find allowed allowed entity type names here:
     # https://cloud.google.com/python/docs/reference/bigquery/latest/enums#class-googlecloudbigqueryenumsentitytypesvalue
-    #
-    # For a complete reference, see the REST API reference documentation:
-    # https://cloud.google.com/bigquery/docs/reference/rest/v2/datasets#Dataset.FIELDS.access
-    entity_type = EntityTypes.USER_BY_EMAIL
+    entity_type = EntityTypes.GROUP_BY_EMAIL
 
     # Instantiate a client.
     client = bigquery.Client()
@@ -62,7 +60,7 @@ def grant_access_to_dataset(
         bigquery.AccessEntry(
             role=role,
             entity_type=entity_type,
-            entity_id=user_email,
+            entity_id=entity_id,
         )
     )
 
@@ -73,7 +71,7 @@ def grant_access_to_dataset(
     # Show a success message.
     full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
     print(
-        f"Role '{role}' granted for user '{user_email}'"
+        f"Role '{role}' granted for user '{entity_id}'"
         f" in dataset '{full_dataset_id}'."
     )
     # [END bigquery_grant_access_to_dataset]

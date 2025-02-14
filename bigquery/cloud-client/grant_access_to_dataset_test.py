@@ -13,7 +13,6 @@
 # limitations under the License.
 
 from google.cloud.bigquery.dataset import Dataset
-from google.cloud.bigquery.enums import EntityTypes
 
 from conftest import prefixer
 from grant_access_to_dataset import grant_access_to_dataset
@@ -28,7 +27,6 @@ def test_grant_access_to_dataset(
     dataset_access_entries = grant_access_to_dataset(
         dataset_id=dataset.dataset_id,
         entity_id=ENTITY_ID,
-        entity_type=EntityTypes.GROUP_BY_EMAIL,
         role="READER"
     )
 
