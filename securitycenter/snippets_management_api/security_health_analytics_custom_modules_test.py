@@ -132,6 +132,9 @@ def extract_custom_module_id(module_name):
     return ""
 
 
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def add_custom_module(org_id: str):
     """
     Adds a new SHA custom module.
