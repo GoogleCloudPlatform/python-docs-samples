@@ -18,7 +18,7 @@ def delete_context_caches(cache_name: str) -> str:
     from google import genai
     from google.genai.types import HttpOptions
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
     # Delete content cache using name
     # E.g cache_name = 'projects/111111111111/locations/us-central1/cachedContents/1111111111111111111'

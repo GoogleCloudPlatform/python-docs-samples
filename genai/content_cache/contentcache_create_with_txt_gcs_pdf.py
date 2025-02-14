@@ -18,7 +18,7 @@ def create_content_cache() -> str:
     from google import genai
     from google.genai.types import Content, CreateCachedContentConfig, HttpOptions, Part
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
     system_instruction = """
     You are an expert researcher. You always stick to the facts in the sources provided, and never make up new facts.

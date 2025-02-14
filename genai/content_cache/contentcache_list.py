@@ -18,7 +18,7 @@ def list_context_caches() -> str:
     from google import genai
     from google.genai.types import HttpOptions
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
     content_cache_list = client.caches.list()
 
