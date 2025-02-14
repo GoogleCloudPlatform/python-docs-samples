@@ -12,12 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Using Google Cloud Vertex AI to test the code samples.
+#
+
 import os
 
 import textgen_async_with_txt
 import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
-import textgen_code_with_pdf
 import textgen_config_with_txt
 import textgen_sys_instr_with_txt
 import textgen_transcript_with_gcs_audio
@@ -26,6 +29,7 @@ import textgen_with_local_video
 import textgen_with_multi_img
 import textgen_with_multi_local_img
 import textgen_with_mute_video
+import textgen_with_pdf
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
@@ -66,6 +70,11 @@ def test_textgen_config_with_txt() -> None:
 
 def test_textgen_sys_instr_with_txt() -> None:
     response = textgen_sys_instr_with_txt.generate_content()
+    assert response
+
+
+def test_textgen_with_pdf() -> None:
+    response = textgen_with_pdf.generate_content()
     assert response
 
 
@@ -119,9 +128,4 @@ def test_textgen_with_local_video() -> None:
 
 def test_textgen_with_youtube_video() -> None:
     response = textgen_with_youtube_video.generate_content()
-    assert response
-
-
-def test_textgen_code_with_pdf() -> None:
-    response = textgen_code_with_pdf.generate_content()
     assert response

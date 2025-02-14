@@ -18,17 +18,17 @@ def generate_content(output_uri: str) -> str:
     import time
 
     from google import genai
+    from google.genai.types import CreateBatchJobConfig, JobState, HttpOptions
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+
     # TODO(developer): Update and un-comment below line
     # output_uri = f"bq://your-project.your_dataset.your_table"
 
     job = client.batches.create(
-        model="gemini-1.5-pro-002",
+        model="gemini-2.0-flash-001",
         src="bq://storage-samples.generative_ai.batch_requests_for_multimodal_input",
-        config={
-            "dest": output_uri
-        }
+        config=CreateBatchJobConfig(dest=output_uri),
     )
     print(f"Job name: {job.name}")
     print(f"Job state: {job.state}")
@@ -37,12 +37,13 @@ def generate_content(output_uri: str) -> str:
     # Job state: JOB_STATE_PENDING
 
     # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.types.BatchJob
-    completed_states = [
-        "JOB_STATE_SUCCEEDED",
-        "JOB_STATE_FAILED",
-        "JOB_STATE_CANCELLED",
-        "JOB_STATE_PAUSED",
-    ]
+    completed_states = {
+        JobState.JOB_STATE_SUCCEEDED,
+        JobState.JOB_STATE_FAILED,
+        JobState.JOB_STATE_CANCELLED,
+        JobState.JOB_STATE_PAUSED,
+    }
+
     while job.state not in completed_states:
         time.sleep(30)
         job = client.batches.get(name=job.name)
@@ -59,6 +60,4 @@ def generate_content(output_uri: str) -> str:
 
 
 if __name__ == "__main__":
-    generate_content(
-        output_uri="bq://your-project.your_dataset.your_table"
-    )
+    generate_content(output_uri="bq://your-project.your_dataset.your_table")

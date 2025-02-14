@@ -12,7 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Using Google Cloud Vertex AI to test the code samples.
+#
+
 from datetime import datetime as dt
+
 import os
 
 from google.cloud import bigquery, storage
@@ -20,8 +25,8 @@ from google.genai.types import JobState
 
 import pytest
 
-import submit_with_bq
-import submit_with_gcs
+import batchpredict_with_bq
+import batchpredict_with_gcs
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -33,7 +38,7 @@ GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
 
 
 @pytest.fixture(scope="session")
-def bq_output_uri():
+def bq_output_uri() -> str:
     table_name = f"text_output_{dt.now().strftime('%Y_%m_%d_T%H_%M_%S')}"
     table_uri = f"{BQ_OUTPUT_DATASET}.{table_name}"
 
@@ -44,7 +49,7 @@ def bq_output_uri():
 
 
 @pytest.fixture(scope="session")
-def gcs_output_uri():
+def gcs_output_uri() -> str:
     prefix = f"text_output/{dt.now()}"
 
     yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
@@ -56,11 +61,11 @@ def gcs_output_uri():
         blob.delete()
 
 
-def test_batch_prediction_with_bq(bq_output_uri) -> None:
-    response = submit_with_bq.generate_content(output_uri=bq_output_uri)
+def test_batch_prediction_with_bq(bq_output_uri: str) -> None:
+    response = batchpredict_with_bq.generate_content(output_uri=bq_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
-def test_batch_prediction_with_gcs(gcs_output_uri) -> None:
-    response = submit_with_gcs.generate_content(output_uri=gcs_output_uri)
+def test_batch_prediction_with_gcs(gcs_output_uri: str) -> None:
+    response = batchpredict_with_gcs.generate_content(output_uri=gcs_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED

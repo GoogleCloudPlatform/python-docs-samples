@@ -16,13 +16,13 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_sys_instr_with_txt]
     from google import genai
-    from google.genai import types
+    from google.genai.types import GenerateContentConfig, HttpOptions
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents="Why is the sky blue?",
-        config=types.GenerateContentConfig(
+        config=GenerateContentConfig(
             system_instruction=[
                 "You're a language translator.",
                 "Your mission is to translate text in English to French.",

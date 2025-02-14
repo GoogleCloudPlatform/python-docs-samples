@@ -18,13 +18,13 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_youtube_video]
     from google import genai
-    from google.genai import types
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
     # You can include text, PDF documents, images, audio and video in your prompt requests and get text or code responses.
-    video = types.Part.from_uri(
+    video = Part.from_uri(
         file_uri="https://www.youtube.com/watch?v=3KtWfp0UopM",
         mime_type="video/mp4",
     )
@@ -39,9 +39,10 @@ def generate_content() -> str:
 
     print(response.text)
     # Example response:
-    # Lunchtime Level Up: Easy & Delicious Meal Prep
-    # We all know the struggle:  you're rushing in the morning, and lunch is the
-    # last thing on your mind...
+    # Here's a short blog post based on the video provided:
+    #
+    # **Google Turns 25: A Quarter Century of Search!**
+    # ...
 
     # [END googlegenaisdk_textgen_with_youtube_video]
     return response.text

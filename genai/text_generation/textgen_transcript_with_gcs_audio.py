@@ -16,9 +16,9 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_transcript_with_gcs_audio]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
     Transcribe the interview, in the format of timecode, speaker, caption.
     Use speaker A, speaker B, etc. to identify speakers.

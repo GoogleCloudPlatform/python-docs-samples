@@ -16,12 +16,17 @@
 def generate_content() -> str:
     # [START googlegenaisdk_tools_google_search_with_txt]
     from google import genai
-    from google.genai.types import Tool, GenerateContentConfig, GoogleSearch
+    from google.genai.types import (
+        GenerateContentConfig,
+        GoogleSearch,
+        HttpOptions,
+        Tool,
+    )
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
+        model="gemini-2.0-flash-001",
         contents="When is the next total solar eclipse in the United States?",
         config=GenerateContentConfig(
             tools=[
@@ -31,11 +36,11 @@ def generate_content() -> str:
         ),
     )
 
-    print(response.candidates[0].content.parts[0].text)
+    print(response.text)
     # Example response:
     # 'The next total solar eclipse in the United States will occur on ...'
     # [END googlegenaisdk_tools_google_search_with_txt]
-    return response.candidates[0].content.parts[0].text
+    return response.text
 
 
 if __name__ == "__main__":
