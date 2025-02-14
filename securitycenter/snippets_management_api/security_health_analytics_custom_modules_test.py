@@ -60,7 +60,7 @@ def cleanup_after_tests(request):
 
 
 def setup_shared_modules():
-    for _ in range(3) :
+    for _ in range(1) :
         _, module_id = add_custom_module(ORGANIZATION_ID)
         if module_id != "" :
             shared_modules.append(module_id)
@@ -201,6 +201,7 @@ def test_create_security_health_analytics_custom_module():
     # Run the function to create the custom module
     response = security_health_analytics_custom_modules.create_security_health_analytics_custom_module(parent)
     add_module_to_cleanup(extract_custom_module_id(response.name))
+    print("Create module id::", extract_custom_module_id(response.name))
 
     assert response is not None, "Custom module creation failed."
     # Verify that the custom module was created
@@ -214,6 +215,7 @@ def test_create_security_health_analytics_custom_module():
 def test_get_security_health_analytics_custom_module():
 
     module_id = get_random_shared_module()
+    print("Get module id::", module_id)
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
     # Retrieve the custom module
@@ -240,6 +242,7 @@ def test_delete_security_health_analytics_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
+    shared_modules.remove(module_id)
 
 
 @backoff.on_exception(
@@ -265,6 +268,7 @@ def test_update_security_health_analytics_custom_module():
     module_id = extract_custom_module_id(response.name)
     add_module_to_cleanup(module_id)
 
+    print("Update module id::", module_id)
     # Retrieve the custom modules
     updated_custom_module = security_health_analytics_custom_modules.update_security_health_analytics_custom_module(parent, module_id)
 
@@ -282,6 +286,7 @@ def test_get_effective_security_health_analytics_custom_module():
     module_id = get_random_shared_module()
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
 
+    print("Get Effective module id::", module_id)
     # Retrieve the custom module
     response = security_health_analytics_custom_modules.get_effective_security_health_analytics_custom_module(parent, module_id)
 
