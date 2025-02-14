@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import os
 import re
 import subprocess
 import uuid
@@ -21,6 +22,7 @@ import backoff
 import pytest
 import requests
 
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def gcloud_cli(command):
@@ -37,7 +39,7 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
-    full_command = f"gcloud {command} --quiet --format=json"
+    full_command = f"gcloud {command} --quiet --format=json --project {project_id}"
     print("Running command:", full_command)
 
     try:
@@ -89,7 +91,8 @@ def version():
         wait_for_app(f"https://{version_hostname}/")
         yield project_id, version_id
     finally:
-        gcloud_cli(f"app versions delete {version_id}")
+        #gcloud_cli(f"app versions delete {version_id}")
+        pass
 
 
 def test_upload_and_view(version):
