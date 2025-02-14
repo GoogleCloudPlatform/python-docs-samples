@@ -13,28 +13,27 @@
 # limitations under the License.
 
 
-def compute_tokens() -> int:
-    # [START googlegenaisdk_count_tokens_compute_with_txt]
+def count_tokens() -> int:
+    # TODO: Remove `count_tokens` region tags after Feb 2025
+    # [START googlegenaisdk_count_tokens_with_txt]
+    # [START googlegenaisdk_counttoken_with_txt]
     from google import genai
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    response = client.models.compute_tokens(
+    response = client.models.count_tokens(
         model="gemini-2.0-flash-001",
-        contents="What's the longest word in the English language?",
+        contents="What's the highest mountain in Africa?",
     )
     print(response)
-
     # Example output:
-    # tokens_info=[TokensInfo(
-    #    role='user',
-    #    token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336],
-    #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
-    #  )]
+    # total_tokens=10
+    # cached_content_token_count=None
 
-    # [END googlegenaisdk_count_tokens_compute_with_txt]
-    return response.tokens_info
+    # [END googlegenaisdk_counttoken_with_txt]
+    # [END googlegenaisdk_count_tokens_with_txt]
+    return response.total_tokens
 
 
 if __name__ == "__main__":
-    compute_tokens()
+    count_tokens()
