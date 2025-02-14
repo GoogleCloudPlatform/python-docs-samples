@@ -11,14 +11,15 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import os
 
 import templatefolder_with_txt
 
+os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+# The project name is included in the CICD pipeline
+# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
+
 
 def test_templatefolder_with_txt() -> None:
-    assert response
-
-
-def test_advanced_example() -> None:
-    response = advanced_example.advanced_example()
-    assert response
+    assert templatefolder_with_txt.generate_content()
