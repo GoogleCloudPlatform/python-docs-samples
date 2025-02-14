@@ -14,6 +14,8 @@
 
 
 def compute_tokens_example() -> int:
+    # TODO: Remove `count_tokens` region tags after Feb 2025
+    # [START googlegenaisdk_count_tokens_compute_with_txt]
     # [START googlegenaisdk_counttoken_compute_with_txt]
     from google import genai
     from google.genai.types import HttpOptions
@@ -33,6 +35,7 @@ def compute_tokens_example() -> int:
     #  )]
 
     # [END googlegenaisdk_counttoken_compute_with_txt]
+    # [END googlegenaisdk_count_tokens_compute_with_txt]
     return response.tokens_info
 
 

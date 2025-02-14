@@ -14,7 +14,9 @@
 
 
 def count_tokens() -> int:
-    # [START googlegenaisdk_counttoken_with_txt_img_vid]
+    # TODO: Remove `count_tokens` region tags after Feb 2025
+    # [START googlegenaisdk_count_tokens_with_txt_img_vid]
+    # [START googlegenaisdk_counttoken_with_txt_vid]
     from google import genai
     from google.genai.types import HttpOptions, Part
 
@@ -38,6 +40,7 @@ def count_tokens() -> int:
     # total_tokens=10 cached_content_token_count=None
 
     # [END googlegenaisdk_counttoken_with_txt_img_vid]
+    # [END googlegenaisdk_count_tokens_with_txt_vid]
     return response.total_tokens
 
 
