@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Using Google Cloud Vertex AI to test the code samples.
+#
+
 import os
 
 import textgen_async_with_txt

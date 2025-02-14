@@ -22,4 +22,4 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 
 
 def test_templatefolder_with_txt() -> None:
-    assert templatefolder_with_txt.generate_content()
+    assert templatefolder_with_txt.greetings("Sampath")

@@ -34,12 +34,12 @@ def test_api_key_example(mock_genai_client: MagicMock) -> None:
         },
         kwargs={},
     )
-    mock_genai_client.return_value.models.generate_content.return_value = mock_response
+    mock_genai_client.return_value.models.count_tokens_example.return_value = mock_response
 
     response = api_key_example.generate_content()
 
     mock_genai_client.assert_called_once_with(vertexai=True, api_key="YOUR_API_KEY")
-    mock_genai_client.return_value.models.generate_content.assert_called_once_with(
+    mock_genai_client.return_value.models.count_tokens_example.assert_called_once_with(
         model="gemini-2.0-flash-001",
         contents="Explain bubble sort to me.",
     )

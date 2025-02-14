@@ -14,7 +14,7 @@
 
 
 def count_tokens() -> int:
-    # [START googlegenaisdk_count_tokens_with_txt_img_vid]
+    # [START googlegenaisdk_counttoken_with_txt_img_vid]
     from google import genai
     from google.genai.types import HttpOptions, Part
 
@@ -37,7 +37,7 @@ def count_tokens() -> int:
     # Example output:
     # total_tokens=10 cached_content_token_count=None
 
-    # [END googlegenaisdk_count_tokens_with_txt_img_vid]
+    # [END googlegenaisdk_counttoken_with_txt_img_vid]
     return response.total_tokens
 
 

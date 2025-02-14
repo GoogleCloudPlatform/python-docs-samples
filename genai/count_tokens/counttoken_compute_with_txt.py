@@ -13,24 +13,28 @@
 # limitations under the License.
 
 
-def count_tokens() -> int:
-    # [START googlegenaisdk_count_tokens_with_txt]
+def compute_tokens_example() -> int:
+    # [START googlegenaisdk_counttoken_compute_with_txt]
     from google import genai
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    response = client.models.count_tokens(
+    response = client.models.compute_tokens(
         model="gemini-2.0-flash-001",
-        contents="What's the highest mountain in Africa?",
+        contents="What's the longest word in the English language?",
     )
     print(response)
-    # Example output:
-    # total_tokens=10
-    # cached_content_token_count=None
 
-    # [END googlegenaisdk_count_tokens_with_txt]
-    return response.total_tokens
+    # Example output:
+    # tokens_info=[TokensInfo(
+    #    role='user',
+    #    token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336],
+    #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
+    #  )]
+
+    # [END googlegenaisdk_counttoken_compute_with_txt]
+    return response.tokens_info
 
 
 if __name__ == "__main__":
-    count_tokens()
+    compute_tokens_example()
