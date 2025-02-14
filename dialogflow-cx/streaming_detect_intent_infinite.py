@@ -83,6 +83,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 CHUNK_SECONDS = 0.1
+DEFAULT_LANGUAGE_CODE = "en-US"
+DEFAULT_SAMPLE_RATE = 16000
+DEFAULT_DIALOGFLOW_TIMEOUT = 60.0
 
 
 def get_current_time() -> int:
@@ -540,13 +543,13 @@ async def handle_audio_input_output(
 
 async def main(
     agent_name: str,
-    language_code: str,
-    single_utterance: bool,
-    model: str | None,
-    voice: str | None,
-    sample_rate: int,
-    dialogflow_timeout: float,
-    debug: bool,
+    language_code: str = DEFAULT_LANGUAGE_CODE,
+    single_utterance: bool = False,
+    model: str | None = None,
+    voice: str | None = None,
+    sample_rate: int = DEFAULT_SAMPLE_RATE,
+    dialogflow_timeout: float = DEFAULT_DIALOGFLOW_TIMEOUT,
+    debug: bool = False,
 ) -> None:
     """Start bidirectional streaming from microphone input to speech API"""
 
@@ -601,7 +604,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--language_code",
         type=str,
-        default="en-US",
+        default=DEFAULT_LANGUAGE_CODE,
         help="Specify the language code (default: en-US)",
     )
     parser.add_argument(
@@ -624,13 +627,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--sample_rate",
         type=int,
-        default=16000,
+        default=DEFAULT_SAMPLE_RATE,
         help="Specify the sample rate in Hz (default: 16000)",
     )
     parser.add_argument(
         "--dialogflow_timeout",
         type=float,
-        default=60.0,
+        default=DEFAULT_DIALOGFLOW_TIMEOUT,
         help="Specify the Dialogflow API timeout in seconds (default: 60)",
     )
     parser.add_argument(
