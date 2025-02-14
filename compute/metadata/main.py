@@ -19,8 +19,7 @@
 For more information, see the README.md under /compute.
 """
 
-# [START all]
-
+# [START compute_metadata_watch_maintenance_notices]
 import time
 from typing import Callable, NoReturn, Optional
 
@@ -32,8 +31,7 @@ METADATA_HEADERS = {"Metadata-Flavor": "Google"}
 
 
 def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
-    """
-    Start an infinite loop waiting for maintenance signal.
+    """Start an infinite loop waiting for maintenance signal.
 
     Args:
         callback: Function to be called when a maintenance is scheduled.
@@ -43,7 +41,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
     """
     url = METADATA_URL + "instance/maintenance-event"
     last_maintenance_event = None
-    # [START hanging_get]
+    # [START compute_metadata_hanging_get_etag]
     last_etag = "0"
 
     while True:
@@ -61,7 +59,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
         r.raise_for_status()
 
         last_etag = r.headers["etag"]
-        # [END hanging_get]
+        # [END compute_metadata_hanging_get_etag]
 
         if r.text == "NONE":
             maintenance_event = None
@@ -74,8 +72,7 @@ def wait_for_maintenance(callback: Callable[[Optional[str]], None]) -> NoReturn:
 
 
 def maintenance_callback(event: Optional[str]) -> None:
-    """
-    Example callback function to handle the maintenance event.
+    """Example callback function to handle the maintenance event.
 
     Args:
         event: details about scheduled maintenance.
@@ -92,4 +89,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-# [END all]
+# [END compute_metadata_watch_maintenance_notices]

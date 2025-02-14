@@ -14,6 +14,8 @@
 
 # This file contains code samples that demonstrate how to get create IAM key for service account.
 
+import os
+
 # [START iam_list_keys]
 from typing import List
 
@@ -22,8 +24,7 @@ from google.cloud.iam_admin_v1 import types
 
 
 def list_keys(project_id: str, account: str) -> List[iam_admin_v1.ServiceAccountKey]:
-    """
-    Creates a key for a service account.
+    """Creates a key for a service account.
 
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
@@ -35,8 +36,6 @@ def list_keys(project_id: str, account: str) -> List[iam_admin_v1.ServiceAccount
 
     response = iam_admin_client.list_service_account_keys(request=request)
     return response.keys
-
-
 # [END iam_list_keys]
 
 
@@ -45,10 +44,11 @@ if __name__ == "__main__":
     # iam.serviceAccountKeys.list permission (roles/iam.serviceAccountKeyAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Existing service account name within the project specified above.
     account_name = "test-account-name"
     # Note: If you have different email format, you can just paste it directly
-    email = f"{account_name}@{project_id}.iam.gserviceaccount.com"
+    email = f"{account_name}@{PROJECT_ID}.iam.gserviceaccount.com"
 
-    list_keys(project_id, email)
+    list_keys(PROJECT_ID, email)

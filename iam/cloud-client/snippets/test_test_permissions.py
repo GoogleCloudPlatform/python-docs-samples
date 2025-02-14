@@ -11,13 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-import google.auth
+
+import os
 
 from .iam_check_permissions import test_permissions as sample_test_permissions
 
-PROJECT = google.auth.default()[1]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
 
 def test_test_permissions() -> None:
-    perms = sample_test_permissions(PROJECT)
+    perms = sample_test_permissions(PROJECT_ID)
     assert "resourcemanager.projects.get" in perms

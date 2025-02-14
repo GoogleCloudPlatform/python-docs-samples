@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
-
 from google.appengine.ext import ndb
 import webapp2
 
@@ -41,4 +39,3 @@ class UpdateCounterHandler(webapp2.RequestHandler):
 
 
 app = webapp2.WSGIApplication([("/update_counter", UpdateCounterHandler)], debug=True)
-# [END all]

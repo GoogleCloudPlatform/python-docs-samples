@@ -15,7 +15,6 @@
 # limitations under the License.
 
 
-# [START jobs_instantiate]
 import os
 import random
 import string
@@ -26,10 +25,8 @@ from googleapiclient.errors import Error
 client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
 
-# [END jobs_instantiate]
 
-
-# [START jobs_basic_company]
+# [START job_basic_company]
 def generate_company():
     # external id should be a unique Id in your system.
     external_id = "company:" + "".join(
@@ -46,12 +43,10 @@ def generate_company():
     }
     print("Company generated: %s" % company)
     return company
+# [END job_basic_company]
 
 
-# [END jobs_basic_company]
-
-
-# [START jobs_create_company]
+# [START job_create_company]
 def create_company(client_service, company_to_be_created):
     try:
         request = {"company": company_to_be_created}
@@ -66,12 +61,10 @@ def create_company(client_service, company_to_be_created):
     except Error as e:
         print("Got exception while creating company")
         raise e
+# [END job_create_company]
 
 
-# [END jobs_create_company]
-
-
-# [START jobs_get_company]
+# [START job_get_company]
 def get_company(client_service, company_name):
     try:
         company_existed = (
@@ -82,12 +75,10 @@ def get_company(client_service, company_name):
     except Error as e:
         print("Got exception while getting company")
         raise e
+# [END job_get_company]
 
 
-# [END jobs_get_company]
-
-
-# [START jobs_update_company]
+# [START job_update_company]
 def update_company(client_service, company_name, company_to_be_updated):
     try:
         request = {"company": company_to_be_updated}
@@ -102,12 +93,10 @@ def update_company(client_service, company_name, company_to_be_updated):
     except Error as e:
         print("Got exception while updating company")
         raise e
+# [END job_update_company]
 
 
-# [END jobs_update_company]
-
-
-# [START jobs_update_company_with_field_mask]
+# [START job_update_company_with_field_mask]
 def update_company_with_field_mask(
     client_service, company_name, company_to_be_updated, field_mask
 ):
@@ -124,12 +113,10 @@ def update_company_with_field_mask(
     except Error as e:
         print("Got exception while updating company with field mask")
         raise e
+# [END job_update_company_with_field_mask]
 
 
-# [END jobs_update_company_with_field_mask]
-
-
-# [START jobs_delete_company]
+# [START job_delete_company]
 def delete_company(client_service, company_name):
     try:
         client_service.projects().companies().delete(name=company_name).execute()
@@ -137,9 +124,7 @@ def delete_company(client_service, company_name):
     except Error as e:
         print("Got exception while deleting company")
         raise e
-
-
-# [END jobs_delete_company]
+# [END job_delete_company]
 
 
 def run_sample():

@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 # [START iam_get_role]
 from google.api_core.exceptions import NotFound
 from google.cloud.iam_admin_v1 import GetRoleRequest, IAMClient, Role
@@ -25,16 +27,14 @@ def get_role(project_id: str, role_id: str) -> Role:
         role = client.get_role(request)
         print(f"Retrieved role: {role_id}: {role}")
         return role
-    except NotFound:
-        raise f"Role with id [{role_id}] not found, take some actions"
-
-
+    except NotFound as exc:
+        raise NotFound(f"Role with id [{role_id}] not found, take some actions") from exc
 # [END iam_get_role]
 
 
 if __name__ == "__main__":
-    import google.auth
+    # Your Google Cloud project ID.
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    PROJECT = google.auth.default()[1]
     role_id = "custom1_python"
-    get_role(PROJECT, role_id)
+    get_role(PROJECT_ID, role_id)

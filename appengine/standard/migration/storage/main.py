@@ -12,11 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from flask import Flask, make_response
 import os
 
+from flask import Flask
+from flask import make_response
 from google.cloud import storage
-
 
 app = Flask(__name__)
 

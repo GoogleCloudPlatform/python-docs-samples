@@ -15,7 +15,7 @@ import os
 
 from typing import Optional
 
-from google.cloud.aiplatform_v1beta1 import RagCorpus
+from vertexai.preview.rag import RagCorpus
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -37,7 +37,7 @@ def create_corpus(
     # Initialize Vertex AI API once per session
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Configure embedding model
+    # Configure embedding model (Optional)
     embedding_model_config = rag.EmbeddingModelConfig(
         publisher_model="publishers/google/models/text-embedding-004"
     )

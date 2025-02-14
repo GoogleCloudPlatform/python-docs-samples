@@ -24,7 +24,7 @@ TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
     # google-cloud-translate==3.12.1 is incompatible with Python 12.
     # Staying with 3.11 testing for now.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.12"],
+    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.12", "3.13"],
     # Declare optional test sessions you want to opt-in. Currently we
     # have the following optional test sessions:
     #     'cloud_run' # Test session for Cloud Run application.

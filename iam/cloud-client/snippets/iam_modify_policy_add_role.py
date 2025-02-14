@@ -14,13 +14,11 @@
 
 
 # [START iam_modify_policy_add_role]
-def modify_policy_add_role(policy: dict, role: str, member: str) -> dict:
+def modify_policy_add_role(policy: dict, role: str, principal: str) -> dict:
     """Adds a new role binding to a policy."""
 
-    binding = {"role": role, "members": [member]}
+    binding = {"role": role, "members": [principal]}
     policy["bindings"].append(binding)
     print(policy)
     return policy
-
-
 # [END iam_modify_policy_add_role]

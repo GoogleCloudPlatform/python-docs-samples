@@ -21,8 +21,9 @@ from snippets.get_deny_policy import get_deny_policy
 from snippets.list_deny_policies import list_deny_policy
 from snippets.update_deny_policy import update_deny_policy
 
-PROJECT_ID = os.environ["IAM_PROJECT_ID"]
-GOOGLE_APPLICATION_CREDENTIALS = os.environ["IAM_CREDENTIALS"]
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
+GOOGLE_APPLICATION_CREDENTIALS = os.getenv("IAM_CREDENTIALS", "")
 
 
 def test_retrieve_policy(

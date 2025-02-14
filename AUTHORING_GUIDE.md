@@ -119,7 +119,7 @@ started with using a service or API — it should be in a _quickstart_ folder.
 
 ### Python Versions
 
-Samples should support Python 3.6, 3.7, 3.8, and 3.9.
+Samples should support Python 3.9, 3.10, 3.11, 3.12 and 3.13.
 
 If the API or service your sample works with has specific Python version
 requirements different from those mentioned above, the sample should support
@@ -923,7 +923,7 @@ Add the new environment variables to the `envs` dictionary.
 ```py
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    "ignored_versions": ["2.7", "3.7", "3.9", "3.10", "3.11"],
+    "ignored_versions": ["2.7", "3.8", "3.10", "3.11", "3.12"],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": True,

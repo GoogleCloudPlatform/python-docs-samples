@@ -14,10 +14,10 @@
 
 runtime: python39
 
-#[START env]
+# [START gae_standard_pubsub_env]
 env_variables:
   PUBSUB_TOPIC: '<YOUR_TOPIC>'
   # This token is used to verify that requests originate from your
   # application. It can be any sufficiently random string.
   PUBSUB_VERIFICATION_TOKEN: '<YOUR_VERIFICATION_TOKEN>'
-#[END env]
+# [END gae_standard_pubsub_env]

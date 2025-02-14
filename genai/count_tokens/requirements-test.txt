@@ -1,0 +1,4 @@
+backoff==2.2.1
+google-api-core==2.19.0
+pytest==8.2.0
+pytest-asyncio==0.23.6

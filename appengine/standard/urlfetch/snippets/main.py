@@ -12,45 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Sample application that demonstrates different ways of fetching
-URLS on App Engine
+"""Sample application that demonstrates different ways of fetching
+URLS on App Engine.
 """
 
 import logging
 import urllib
 
-# [START urllib2-imports]
+# [START gae_urlfetch_snippets_imports_urllib2]
 import urllib2
+# [END gae_urlfetch_snippets_imports_urllib2]
 
-# [END urllib2-imports]
-
-# [START urlfetch-imports]
+# [START gae_urlfetch_snippets_imports_urlfetch]
 from google.appengine.api import urlfetch
+# [END gae_urlfetch_snippets_imports_urlfetch]
 
-# [END urlfetch-imports]
 import webapp2
 
 
 class UrlLibFetchHandler(webapp2.RequestHandler):
-    """Demonstrates an HTTP query using urllib2"""
+    """Demonstrates an HTTP query using urllib2."""
 
     def get(self):
-        # [START urllib-get]
+        # [START gae_urlfetch_snippets_urllib2_get]
         url = "http://www.google.com/humans.txt"
         try:
             result = urllib2.urlopen(url)
             self.response.write(result.read())
         except urllib2.URLError:
             logging.exception("Caught exception fetching url")
-        # [END urllib-get]
+        # [END gae_urlfetch_snippets_urllib2_get]
 
 
 class UrlFetchHandler(webapp2.RequestHandler):
-    """Demonstrates an HTTP query using urlfetch"""
+    """Demonstrates an HTTP query using urlfetch."""
 
     def get(self):
-        # [START urlfetch-get]
+        # [START gae_urlfetch_snippets_urlfetch_get]
         url = "http://www.google.com/humans.txt"
         try:
             result = urlfetch.fetch(url)
@@ -60,11 +58,11 @@ class UrlFetchHandler(webapp2.RequestHandler):
                 self.response.status_code = result.status_code
         except urlfetch.Error:
             logging.exception("Caught exception fetching url")
-        # [END urlfetch-get]
+        # [END gae_urlfetch_snippets_urlfetch_get]
 
 
 class UrlPostHandler(webapp2.RequestHandler):
-    """Demonstrates an HTTP POST form query using urlfetch"""
+    """Demonstrates an HTTP POST form query using urlfetch."""
 
     form_fields = {
         "first_name": "Albert",
@@ -72,7 +70,7 @@ class UrlPostHandler(webapp2.RequestHandler):
     }
 
     def get(self):
-        # [START urlfetch-post]
+        # [START gae_urlfetch_snippets_urlfetch_post]
         try:
             form_data = urllib.urlencode(UrlPostHandler.form_fields)
             headers = {"Content-Type": "application/x-www-form-urlencoded"}
@@ -85,11 +83,11 @@ class UrlPostHandler(webapp2.RequestHandler):
             self.response.write(result.content)
         except urlfetch.Error:
             logging.exception("Caught exception fetching url")
-        # [END urlfetch-post]
+        # [END gae_urlfetch_snippets_urlfetch_post]
 
 
 class SubmitHandler(webapp2.RequestHandler):
-    """Handler that receives UrlPostHandler POST request"""
+    """Handler that receives UrlPostHandler POST request."""
 
     def post(self):
         self.response.out.write((self.request.get("first_name")))

@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START instantiate]
 import os
 import random
 import string
@@ -24,10 +23,9 @@ from googleapiclient.discovery import build
 
 client_service = build("jobs", "v3")
 parent = "projects/" + os.environ["GOOGLE_CLOUD_PROJECT"]
-# [END instantiate]
 
 
-# [START featured_job]
+# [START job_generate_featured_job]
 def generate_featured_job(company_name):
     # Requisition id should be a unique Id in your system.
     requisition_id = "job_with_required_fields:" + "".join(
@@ -48,12 +46,10 @@ def generate_featured_job(company_name):
     }
     print("Job generated: %s" % job)
     return job
+# [END job_generate_featured_job]
 
 
-# [END featured_job]
-
-
-# [START search_featured_job]
+# [START job_search_featured_job]
 def search_featured_job(client_service, company_name):
     request_metadata = {
         "user_id": "HashedUserId",
@@ -73,9 +69,7 @@ def search_featured_job(client_service, company_name):
         client_service.projects().jobs().search(parent=parent, body=request).execute()
     )
     print(response)
-
-
-# [END search_featured_job]
+# [END job_search_featured_job]
 
 
 def set_up():

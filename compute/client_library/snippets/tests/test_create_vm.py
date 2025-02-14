@@ -17,6 +17,9 @@ import google.auth
 from google.cloud import compute_v1
 import pytest
 
+from .test_disks import autodelete_regional_blank_disk  # noqa: F401
+from .test_disks import DISK_SIZE
+
 from ..disks.create_empty_disk import create_empty_disk
 from ..disks.create_from_image import create_disk_from_image
 from ..disks.delete import delete_disk
@@ -35,16 +38,23 @@ from ..instances.create_start_instance.create_with_existing_disks import (
     create_with_existing_disks,
 )
 from ..instances.create_start_instance.create_with_local_ssd import create_with_ssd
+from ..instances.create_start_instance.create_with_regional_disk import (
+    create_with_regional_boot_disk,
+)
 from ..instances.create_start_instance.create_with_snapshotted_data_disk import (
     create_with_snapshotted_data_disk,
 )
 from ..instances.create_with_subnet import create_with_subnet
 from ..instances.delete import delete_instance
 from ..operations.operation_check import wait_for_operation
+from ..snapshots.create import create_snapshot
+
 
 PROJECT = google.auth.default()[1]
 REGION = "us-central1"
+REGION_SECOND = "europe-west2"
 INSTANCE_ZONE = "us-central1-b"
+INSTANCE_ZONE_SECOND = "europe-west2-b"
 
 
 def get_active_debian():
@@ -250,3 +260,26 @@ def test_create_with_ssd():
         assert len(instance.disks) == 2
     finally:
         delete_instance(PROJECT, INSTANCE_ZONE, instance_name)
+
+
+def test_create_with_regional_boot_disk(autodelete_regional_blank_disk):  # noqa: F811
+    snapshot_name = "test-snap-" + uuid.uuid4().hex[:10]
+    instance_name = "test-vm-" + uuid.uuid4().hex[:10]
+    test_snapshot = create_snapshot(
+        project_id=PROJECT,
+        disk_name=autodelete_regional_blank_disk.name,
+        snapshot_name=snapshot_name,
+        region=REGION_SECOND,
+    )
+    instance = create_with_regional_boot_disk(
+        PROJECT, INSTANCE_ZONE_SECOND, instance_name, test_snapshot.name, REGION_SECOND
+    )
+    # Disk size takes from test_disk.py
+    try:
+        assert any(disk.disk_size_gb == DISK_SIZE for disk in instance.disks)
+    finally:
+        delete_instance(PROJECT, INSTANCE_ZONE_SECOND, instance_name)
+        op = compute_v1.SnapshotsClient().delete_unary(
+            project=PROJECT, snapshot=snapshot_name
+        )
+        wait_for_operation(op, PROJECT)

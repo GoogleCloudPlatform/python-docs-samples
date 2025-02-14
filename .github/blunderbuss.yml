@@ -40,7 +40,7 @@ assign_issues_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-sdk
+      - GoogleCloudPlatform/cloud-sql-connectors
   - labels:
       - "api: bigtable"
       - "api: datastore"
@@ -172,7 +172,7 @@ assign_prs_by:
   - labels:
       - "api: cloudsql"
     to:
-      - GoogleCloudPlatform/infra-db-sdk
+      - GoogleCloudPlatform/cloud-sql-connectors
   - labels:
       - "api: bigtable"
       - "api: datastore"

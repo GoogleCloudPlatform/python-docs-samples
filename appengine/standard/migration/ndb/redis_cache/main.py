@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
+# [START gae_ndb_redis_cache]
 import logging
 
 from flask import Flask, redirect, render_template, request
@@ -33,15 +33,15 @@ except Exception:
     global_cache = None
 
 
-# [START greeting]
+# [START gae_ndb_redis_cache_greeting]
 class Greeting(ndb.Model):
     """Models an individual Guestbook entry with content and date."""
 
     content = ndb.StringProperty()
     date = ndb.DateTimeProperty(auto_now_add=True)
-    # [END greeting]
+    # [END gae_ndb_redis_cache_greeting]
 
-    # [START query]
+    # [START gae_ndb_redis_cache_query]
     with client.context(global_cache=global_cache):
 
         @classmethod
@@ -56,7 +56,7 @@ def display_guestbook():
     with client.context(global_cache=global_cache):
         ancestor_key = ndb.Key("Book", guestbook_name or "*notitle*")
         greetings = Greeting.query_book(ancestor_key).fetch(20)
-    # [END query]
+    # [END gae_ndb_redis_cache_query]
 
     greeting_blockquotes = [greeting.content for greeting in greetings]
     return render_template(
@@ -66,7 +66,7 @@ def display_guestbook():
     )
 
 
-# [START submit]
+# [START gae_ndb_redis_cache_submit]
 @app.route("/sign", methods=["POST"])
 def update_guestbook():
     # We set the parent key on each 'Greeting' to ensure each guestbook's
@@ -81,7 +81,7 @@ def update_guestbook():
             content=request.form.get("content", None),
         )
         greeting.put()
-    # [END submit]
+    # [END gae_ndb_redis_cache_submit]
 
     return redirect("/?" + urlencode({"guestbook_name": guestbook_name}))
 
@@ -89,4 +89,4 @@ def update_guestbook():
 if __name__ == "__main__":
     # This is used when running locally.
     app.run(host="127.0.0.1", port=8080, debug=True)
-# [END all]
+# [END gae_ndb_redis_cache]

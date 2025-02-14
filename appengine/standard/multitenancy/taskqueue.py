@@ -19,7 +19,7 @@ API with Memcache.
 For more information, see README.md.
 """
 
-# [START all]
+# [START gae_multitenancy_taskqueue]
 from google.appengine.api import namespace_manager
 from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
@@ -91,4 +91,4 @@ app = webapp2.WSGIApplication(
     ],
     debug=True,
 )
-# [END all]
+# [END gae_multitenancy_taskqueue]

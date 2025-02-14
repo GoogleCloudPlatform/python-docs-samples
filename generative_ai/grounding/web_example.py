@@ -36,7 +36,14 @@ def generate_text_with_grounding_web() -> GenerationResponse:
     model = GenerativeModel("gemini-1.5-flash-001")
 
     # Use Google Search for grounding
-    tool = Tool.from_google_search_retrieval(grounding.GoogleSearchRetrieval())
+    tool = Tool.from_google_search_retrieval(
+        grounding.GoogleSearchRetrieval(
+            # Optional: For Dynamic Retrieval
+            dynamic_retrieval_config=grounding.DynamicRetrievalConfig(
+                dynamic_threshold=0.7,
+            )
+        )
+    )
 
     prompt = "When is the next total solar eclipse in US?"
     response = model.generate_content(

@@ -15,8 +15,7 @@
 """Sample app that uses the Google App Engine Remote API to make calls to the
 live App Engine APIs."""
 
-# [START all]
-
+# [START gae_remoteapi_client_app]
 import argparse
 
 try:
@@ -52,4 +51,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(args.project_id)
-# [END all]
+# [END gae_remoteapi_client_app]

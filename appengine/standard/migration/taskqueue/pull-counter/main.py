@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START all]
 """A simple counter with a Pub/Sub pull subscription, replacing a
    TaskQueue pull queue, which is not available in Python 3 App Engine
    runtimes.
@@ -21,10 +20,12 @@
 import os
 import time
 
-from flask import Flask, redirect, render_template, request
+from flask import Flask
+from flask import redirect
+from flask import render_template
+from flask import request
 from google.cloud import datastore
 from google.cloud import pubsub_v1 as pubsub
-
 
 app = Flask(__name__)
 datastore_client = datastore.Client()
@@ -95,9 +96,6 @@ def start_handling_tasks():
         time.sleep(1)
 
     return "Done"  # Never reached except under test
-
-
-# [END all]
 
 
 if __name__ == "__main__":
