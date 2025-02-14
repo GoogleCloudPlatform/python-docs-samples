@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START app]
 import base64
 import json
 import logging
@@ -39,7 +38,7 @@ TOKENS = []
 CLAIMS = []
 
 
-# [START index]
+# [START gae_standard_pubsub_index]
 @app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "GET":
@@ -58,9 +57,7 @@ def index():
     future = publisher.publish(topic_path, data)
     future.result()
     return "OK", 200
-
-
-# [END index]
+# [END gae_standard_pubsub_index]
 
 
 # [START gae_standard_pubsub_auth_push]
@@ -104,9 +101,8 @@ def receive_messages_handler():
     MESSAGES.append(payload)
     # Returning any 2xx status indicates successful receipt of the message.
     return "OK", 200
-
-
 # [END gae_standard_pubsub_auth_push]
+
 
 # [START gae_standard_pubsub_push]
 @app.route("/pubsub/push", methods=["POST"])
@@ -118,9 +114,9 @@ def receive_pubsub_messages_handler():
     envelope = json.loads(request.data.decode("utf-8"))
     payload = base64.b64decode(envelope["message"]["data"])
     MESSAGES.append(payload)
+
     # Returning any 2xx status indicates successful receipt of the message.
     return "OK", 200
-
 # [END gae_standard_pubsub_push]
 
 
@@ -142,4 +138,3 @@ if __name__ == "__main__":
     # This is used when running locally. Gunicorn is used to run the
     # application on Google App Engine. See entrypoint in app.yaml.
     app.run(host="127.0.0.1", port=8080, debug=True)
-# [END app]

@@ -13,6 +13,7 @@
 # limitations under the License.
 
 import json
+import os
 import subprocess
 import time
 import uuid
@@ -20,6 +21,8 @@ import uuid
 import backoff
 import pytest
 import requests
+
+project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
@@ -37,7 +40,7 @@ def gcloud_cli(command):
 
     Raises Exception with the stderr output of the last attempt on failure.
     """
-    full_command = f"gcloud {command} --quiet --format=json"
+    full_command = f"gcloud {command} --quiet --format=json --project {project_id}"
     print("Running command:", full_command)
 
     output = subprocess.run(

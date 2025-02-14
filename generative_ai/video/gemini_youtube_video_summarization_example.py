@@ -30,7 +30,7 @@ def generate_content() -> str:
         # Text prompt
         "Summarize this video.",
         # YouTube video of Google Pixel 9
-        Part.from_uri("https://youtu.be/sXrasaDZxw0", "video/mp4"),
+        Part.from_uri("https://youtu.be/MsAPm8TCFhU", "video/mp4"),
     ]
 
     response = model.generate_content(contents)

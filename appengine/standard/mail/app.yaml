@@ -16,11 +16,11 @@ runtime: python27
 api_version: 1
 threadsafe: yes
 
-# [START mail_service]
+# [START gae_mail_service_yaml_python]
 inbound_services:
 - mail
 - mail_bounce # Handle bounced mail notifications
-# [END mail_service]
+# [END gae_mail_service_yaml_python]
 
 handlers:
 - url: /user/.+
@@ -29,12 +29,12 @@ handlers:
   script: send_mail.app
 - url: /send_message
   script: send_message.app
-# [START handle_incoming_email]
+# [START gae_handle_incoming_email_yaml_python]
 - url: /_ah/mail/.+
   script: handle_incoming_email.app
   login: admin
-# [END handle_incoming_email]
-# [START handle_all_email]
+# [END gae_handle_incoming_email_yaml_python]
+# [START gae_handle_all_email_yaml_python]
 - url: /_ah/mail/owner@.*your_app_id\.appspotmail\.com
   script: handle_owner.app
   login: admin
@@ -44,12 +44,12 @@ handlers:
 - url: /_ah/mail/.+
   script: handle_catchall.app
   login: admin
-# [END handle_all_email]
-# [START handle_bounced_email]
+# [END gae_handle_all_email_yaml_python]
+# [START gae_handle_bounced_email_yaml_python]
 - url: /_ah/bounce
   script: handle_bounced_email.app
   login: admin
-# [END handle_bounced_email]
+# [END gae_handle_bounced_email_yaml_python]
 - url: /attachment
   script: attachment.app
 - url: /header

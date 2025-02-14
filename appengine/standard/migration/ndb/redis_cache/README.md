@@ -20,14 +20,8 @@ Prior to deploying this sample, a
 must be created and then a
 [Memorystore for Redis instance](https://cloud.google.com/memorystore/docs/redis/quickstart-console)
 on the same VPC. The IP address and port number of the Redis instance, and
-the name of the VPC connector should be entered in either app.yaml
-(for Python 2.7) or app3.yaml (for Python 3).
+the name of the VPC connector should be entered in `app3.yaml`.
 
-To deploy and run this sample in App Engine standard for Python 2.7:
-
-    pip install -t lib -r requirements.txt
-    gcloud app deploy app.yaml index.yaml
-
-To deploy and run this sample in App Engine standard for Python 3.7:
+To deploy and run this sample in App Engine standard for Python 3.8:
 
     gcloud app deploy app3.yaml index.yaml

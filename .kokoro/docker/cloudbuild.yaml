@@ -22,3 +22,6 @@ steps:
       args: ['tag', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', 'gcr.io/$PROJECT_ID/python-samples-testing-docker:$SHORT_SHA']
 images:
      - 'gcr.io/$PROJECT_ID/python-samples-testing-docker'
+
+options:
+  logging: CLOUD_LOGGING_ONLY

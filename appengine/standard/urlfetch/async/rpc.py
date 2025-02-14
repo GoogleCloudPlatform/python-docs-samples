@@ -15,18 +15,18 @@
 import functools
 import logging
 
-# [START urlfetch-import]
+# [START gae_urlfetch_async_import]
 from google.appengine.api import urlfetch
+# [END gae_urlfetch_async_import]
 
-# [END urlfetch-import]
 import webapp2
 
 
 class UrlFetchRpcHandler(webapp2.RequestHandler):
-    """Demonstrates an asynchronous HTTP query using urlfetch"""
+    """Demonstrates an asynchronous HTTP query using urlfetch."""
 
     def get(self):
-        # [START urlfetch-rpc]
+        # [START gae_urlfetch_async_rpc]
         rpc = urlfetch.create_rpc()
         urlfetch.make_fetch_call(rpc, "http://www.google.com/")
 
@@ -44,15 +44,15 @@ class UrlFetchRpcHandler(webapp2.RequestHandler):
         except urlfetch.DownloadError:
             self.response.status_int = 500
             self.response.write("Error fetching URL")
-        # [END urlfetch-rpc]
+        # [END gae_urlfetch_async_rpc]
 
 
 class UrlFetchRpcCallbackHandler(webapp2.RequestHandler):
     """Demonstrates an asynchronous HTTP query with a callback using
-    urlfetch"""
+    urlfetch."""
 
     def get(self):
-        # [START urlfetch-rpc-callback]
+        # [START gae_urlfetch_async_rpc_callback]
         def handle_result(rpc):
             result = rpc.get_result()
             self.response.write(result.content)
@@ -78,7 +78,7 @@ class UrlFetchRpcCallbackHandler(webapp2.RequestHandler):
             rpc.wait()
 
         logging.info("Done waiting for RPCs")
-        # [END urlfetch-rpc-callback]
+        # [END gae_urlfetch_async_rpc_callback]
 
 
 app = webapp2.WSGIApplication(

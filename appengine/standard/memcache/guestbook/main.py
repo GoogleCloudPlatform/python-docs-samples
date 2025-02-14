@@ -18,8 +18,7 @@ Sample application that demonstrates how to use the App Engine Memcache API.
 For more information, see README.md.
 """
 
-# [START all]
-
+# [START gae_memcache_guestbook_all]
 import cgi
 import cStringIO
 import logging
@@ -73,7 +72,7 @@ class MainPage(webapp2.RequestHandler):
             )
         )
 
-    # [START check_memcache]
+    # [START gae_memcache_guestbook_check_memcache]
     def get_greetings(self, guestbook_name):
         """
         get_greetings()
@@ -98,10 +97,9 @@ class MainPage(webapp2.RequestHandler):
             except ValueError:
                 logging.error("Memcache set failed - data larger than 1MB")
         return greetings
+    # [END gae_memcache_guestbook_check_memcache]
 
-    # [END check_memcache]
-
-    # [START query_datastore]
+    # [START gae_memcache_guestbook_query_datastore]
     def render_greetings(self, guestbook_name):
         """
         render_greetings()
@@ -131,8 +129,7 @@ class MainPage(webapp2.RequestHandler):
                 "<blockquote>{}</blockquote>".format(cgi.escape(greeting.content))
             )
         return output.getvalue()
-
-    # [END query_datastore]
+    # [END gae_memcache_guestbook_query_datastore]
 
 
 class Guestbook(webapp2.RequestHandler):
@@ -155,4 +152,4 @@ class Guestbook(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([("/", MainPage), ("/sign", Guestbook)], debug=True)
 
-# [END all]
+# [END gae_memcache_guestbook_all]

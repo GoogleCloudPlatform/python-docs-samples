@@ -40,7 +40,7 @@ def connect_with_connector_auto_iam_authn() -> sqlalchemy.engine.base.Engine:
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
     # initialize Cloud SQL Python Connector object
-    connector = Connector()
+    connector = Connector(refresh_strategy="LAZY")
 
     def getconn() -> pg8000.dbapi.Connection:
         conn: pg8000.dbapi.Connection = connector.connect(

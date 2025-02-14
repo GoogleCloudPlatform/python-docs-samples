@@ -11,8 +11,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START docker]
-
 # The Google App Engine python runtime is Debian Jessie with Python installed
 # and various os-level packages to allow installation of popular Python
 # libraries. The source is on github at:
@@ -29,4 +27,3 @@ RUN /env/bin/pip install --upgrade pip && /env/bin/pip install -r /app/requireme
 ADD . /app
 
 CMD gunicorn -b :$PORT mysite.wsgi
-# [END docker]

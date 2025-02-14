@@ -15,6 +15,7 @@
 # This file contains code samples that demonstrate how to set policy for project.
 
 # [START iam_query_testable_permissions]
+import os
 from typing import List
 
 from google.cloud import resourcemanager_v3
@@ -24,10 +25,10 @@ from google.iam.v1 import iam_policy_pb2, policy_pb2
 def query_testable_permissions(
     project_id: str, permissions: List[str]
 ) -> policy_pb2.Policy:
-    """
-    Tests IAM permissions of the caller.
+    """Tests IAM permissions of the caller.
 
     project_id: ID or number of the Google Cloud project you want to use.
+    permissions: List of permissions to get.
     """
 
     client = resourcemanager_v3.ProjectsClient()
@@ -38,8 +39,6 @@ def query_testable_permissions(
     permissions_reponse = client.test_iam_permissions(request)
     print(permissions_reponse)
     return permissions_reponse.permissions
-
-
 # [END iam_query_testable_permissions]
 
 
@@ -48,6 +47,11 @@ if __name__ == "__main__":
     # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "test-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "test-project-id")
 
-    query_testable_permissions(project_id)
+    permissions = [
+        "resourcemanager.projects.get",
+        "resourcemanager.projects.delete",
+    ]
+
+    query_testable_permissions(PROJECT_ID, permissions)

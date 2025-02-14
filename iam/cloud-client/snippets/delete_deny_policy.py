@@ -14,18 +14,20 @@
 
 # This file contains code samples that demonstrate how to delete IAM deny policies.
 
+import os
+
 
 # [START iam_delete_deny_policy]
 def delete_deny_policy(project_id: str, policy_id: str) -> None:
-    from google.cloud import iam_v2
-    from google.cloud.iam_v2 import types
-
-    """
-    Delete the policy if you no longer want to enforce the rules in a deny policy.
+    """Delete the policy if you no longer want to enforce the rules in a deny policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
     policy_id: The ID of the deny policy you want to retrieve.
     """
+
+    from google.cloud import iam_v2
+    from google.cloud.iam_v2 import types
+
     policies_client = iam_v2.PoliciesClient()
 
     # Each deny policy is attached to an organization, folder, or project.
@@ -54,10 +56,10 @@ if __name__ == "__main__":
     import uuid
 
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Any unique ID (0 to 63 chars) starting with a lowercase letter.
     policy_id = f"deny-{uuid.uuid4()}"
 
-    delete_deny_policy(project_id, policy_id)
-
+    delete_deny_policy(PROJECT_ID, policy_id)
 # [END iam_delete_deny_policy]

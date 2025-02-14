@@ -19,13 +19,13 @@ from google.cloud.workflows.executions_v1.types import executions
 
 import main
 
-PROJECT = os.environ["GOOGLE_CLOUD_PROJECT"]
+PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 WORKFLOW_ID = "myFirstWorkflow"
 
 
 def test_workflow_execution() -> None:
-    assert PROJECT != ""
+    assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
 
     if not workflow_exists():
         workflow_file = open("myFirstWorkflow.workflows.yaml").read()
@@ -37,20 +37,25 @@ def test_workflow_execution() -> None:
                 # https://github.com/googleapis/python-workflows/issues/21
                 "parent": f"projects/{PROJECT}/locations/{LOCATION}",
                 "workflow_id": WORKFLOW_ID,
-                "workflow": {"name": WORKFLOW_ID, "source_contents": workflow_file},
+                "workflow": {
+                    "name": WORKFLOW_ID,
+                    "source_contents": workflow_file
+                },
             }
         )
 
-    result = main.execute_workflow(PROJECT)
+    result = main.execute_workflow(PROJECT, LOCATION, WORKFLOW_ID)
     assert result.state == executions.Execution.State.SUCCEEDED
-    assert len(result.result) > 0
+    assert result.result  # Result not empty
 
 
 def workflow_exists() -> bool:
-    """Returns True if the workflow exists in this project"""
+    """Returns True if the workflow exists in this project."""
     try:
         workflows_client = workflows_v1.WorkflowsClient()
-        workflow_name = workflows_client.workflow_path(PROJECT, LOCATION, WORKFLOW_ID)
+        workflow_name = workflows_client.workflow_path(
+            PROJECT, LOCATION, WORKFLOW_ID
+        )
         workflows_client.get_workflow(request={"name": workflow_name})
         return True
     except Exception as e:

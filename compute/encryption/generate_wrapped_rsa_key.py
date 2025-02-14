@@ -19,7 +19,6 @@
 For more information, see the README.md under /compute.
 """
 
-# [START all]
 # [START compute_generate_wrapped_rsa_key]
 import argparse
 import base64
@@ -119,4 +118,3 @@ if __name__ == "__main__":
 
     main(args.key_file)
 # [END compute_generate_wrapped_rsa_key]
-# [END all]

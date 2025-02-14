@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 # [START iam_rename_service_account]
 from google.cloud import iam_admin_v1
 from google.cloud.iam_admin_v1 import types
@@ -20,8 +22,7 @@ from google.cloud.iam_admin_v1 import types
 def rename_service_account(
     project_id: str, account: str, new_name: str
 ) -> types.ServiceAccount:
-    """
-    Renames service account display name.
+    """Renames service account display name.
 
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
@@ -38,16 +39,16 @@ def rename_service_account(
 
     request = types.PatchServiceAccountRequest()
     request.service_account = service_account
-    # You can patch only the `display_name` and `description` fields. You must use
-    # the `update_mask` field to specify which of these fields you want to patch.
-    # To successfully set update mask you need to transform snake_case field to camelCase.
+    # You can patch only the `display_name` and `description` fields.
+    # You must use the `update_mask` field to specify which of these fields
+    # you want to patch.
+    # To successfully set update mask you need to transform
+    # snake_case field to camelCase.
     # e.g. `display_name` will become `displayName`
     request.update_mask = "displayName"
 
     updated_account = iam_admin_client.patch_service_account(request=request)
     return updated_account
-
-
 # [END iam_rename_service_account]
 
 
@@ -56,10 +57,11 @@ if __name__ == "__main__":
     # iam.serviceAccounts.update permission (roles/iam.serviceAccountAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "your-google-cloud-project-id"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
+
     # Existing service account name within the project specified above.
     account_name = "test-service-account"
-    account_id = f"{account_name}@{project_id}.iam.gserviceaccount.com"
+    account_id = f"{account_name}@{PROJECT_ID}.iam.gserviceaccount.com"
     new_name = "New Name"
 
-    rename_service_account(project_id, account_id, new_name)
+    rename_service_account(PROJECT_ID, account_id, new_name)

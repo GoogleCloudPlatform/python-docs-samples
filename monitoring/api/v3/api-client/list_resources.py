@@ -13,8 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-""" Sample command-line program for retrieving Stackdriver Monitoring API V3
+"""Sample command-line program for retrieving Stackdriver Monitoring API V3
 data.
 
 See README.md for instructions on setting up your development environment.
@@ -25,7 +24,6 @@ To run locally:
 
 """
 
-# [START all]
 import argparse
 import datetime
 import pprint
@@ -126,5 +124,3 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
     main(args.project_id)
-
-# [END all]

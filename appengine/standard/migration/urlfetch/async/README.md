@@ -1,6 +1,6 @@
 ## App Engine async urlfetch Replacement
 
-The runtime for App Engine standard for Python 2.7 includes the `urlfetch`
+The runtime for App Engine standard for Python 3 includes the `urlfetch`
 library, which is used to make HTTP(S) requests. There are several related
 capabilities provided by that library:
 
@@ -10,13 +10,7 @@ capabilities provided by that library:
 
 The sample in this directory provides a way to make asynchronous web requests
 using only generally available Python libraries that work in either App Engine
-standard for Python runtime, version 2.7 or 3.7. The sample code is the same
-for each environment.
-
-To deploy and run this sample in App Engine standard for Python 2.7:
-
-    pip install -t lib -r requirements.txt
-    gcloud app deploy
+standard for Python runtime, version 3.7.
 
 To deploy and run this sample in App Engine standard for Python 3.7:
 

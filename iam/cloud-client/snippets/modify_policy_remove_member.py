@@ -12,42 +12,34 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
+
 # [START iam_modify_policy_remove_member]
 from google.iam.v1 import policy_pb2
 from snippets.get_policy import get_project_policy
 from snippets.set_policy import set_project_policy
 
 
-def modify_policy_remove_member(
-    project_id: str, role: str, member: str
+def modify_policy_remove_principal(
+    project_id: str, role: str, principal: str
 ) -> policy_pb2.Policy:
-    """
-    Remove a member from certain role in project policy.
+    """Remove a principal from certain role in project policy.
 
     project_id: ID or number of the Google Cloud project you want to use.
-    role: role to which member need to be added.
-    member: The principals requesting access.
+    role: role to revoke.
+    principal: The principal to revoke access from.
 
-    Possible format for member:
-        * user:{emailid}
-        * serviceAccount:{emailid}
-        * group:{emailid}
-        * deleted:user:{emailid}?uid={uniqueid}
-        * deleted:serviceAccount:{emailid}?uid={uniqueid}
-        * deleted:group:{emailid}?uid={uniqueid}
-        * domain:{domain}
+    For principal ID formats, see https://cloud.google.com/iam/docs/principal-identifiers
     """
     policy = get_project_policy(project_id)
 
     for bind in policy.bindings:
         if bind.role == role:
-            if member in bind.members:
-                bind.members.remove(member)
+            if principal in bind.members:
+                bind.members.remove(principal)
             break
 
     return set_project_policy(project_id, policy, False)
-
-
 # [END iam_modify_policy_remove_member]
 
 
@@ -56,8 +48,9 @@ if __name__ == "__main__":
     # resourcemanager.projects.setIamPolicy (roles/resourcemanager.projectIamAdmin)
 
     # Your Google Cloud project ID.
-    project_id = "test-project-id"
-    role = "roles/viewer"
-    member = f"serviceAccount:test-service-account@{project_id}.iam.gserviceaccount.com"
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-google-cloud-project-id")
 
-    modify_policy_remove_member(project_id, role, member)
+    role = "roles/viewer"
+    principal = f"serviceAccount:test-service-account@{PROJECT_ID}.iam.gserviceaccount.com"
+
+    modify_policy_remove_principal(PROJECT_ID, role, principal)
