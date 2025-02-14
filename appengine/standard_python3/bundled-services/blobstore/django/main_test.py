@@ -24,6 +24,7 @@ import requests
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 
+
 @backoff.on_exception(backoff.expo, Exception, max_tries=3)
 def gcloud_cli(command):
     """
@@ -91,7 +92,7 @@ def version():
         wait_for_app(f"https://{version_hostname}/")
         yield project_id, version_id
     finally:
-        #gcloud_cli(f"app versions delete {version_id}")
+        # gcloud_cli(f"app versions delete {version_id}")
         pass
 
 
