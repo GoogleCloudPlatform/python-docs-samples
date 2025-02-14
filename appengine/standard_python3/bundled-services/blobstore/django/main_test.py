@@ -77,6 +77,9 @@ def version():
     project and version number so tests can invoke it, then delete it.
     """
 
+    print(gcloud_cli("config get-value project"))
+    print(gcloud_cli("auth list"))
+
     result = gcloud_cli(f"app deploy --no-promote --version={uuid.uuid4().hex}")
     version_id = result["versions"][0]["id"]
     project_id = result["versions"][0]["project"]
