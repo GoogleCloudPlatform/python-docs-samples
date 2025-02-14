@@ -12,10 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from collections.abc import Iterator
+# from collections.abc import Iterator
+
+import os
 
 from google.cloud import bigquery
 from google.cloud.bigquery.dataset import Dataset
+from google.cloud.bigquery.table import Table
+
 import pytest
 
 import test_utils.prefixer
@@ -24,19 +28,56 @@ prefixer = test_utils.prefixer.Prefixer("python-bigquery", "samples/snippets")
 DATASET_ID = f"{prefixer.create_prefix()}_cloud_client"
 ENTITY_ID = "cloud-developer-relations@google.com"
 
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+PREFIX = prefixer.create_prefix()
+
+TABLE_NAME = f"{PREFIX}_view_access_policies_table"
+FULL_TABLE_NAME = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_NAME}"
+
+VIEW_NAME = f"{PREFIX}_view_access_policies_view"
+FULL_VIEW_NAME = f"{PROJECT_ID}.{DATASET_ID}.{VIEW_NAME}"
+
 # NOTE: Test that this approach works with paralel tests
 
 
 @pytest.fixture(scope="module")
-def bigquery_client() -> bigquery.Client:
+def client() -> bigquery.Client:
     return bigquery.Client()
 
 
-@pytest.fixture()
-def dataset(bigquery_client: bigquery.Client) -> Dataset:
-    dataset = bigquery_client.create_dataset(DATASET_ID)
+@pytest.fixture(scope="module")
+def project_id() -> str:
+    return PROJECT_ID
+
+
+@pytest.fixture(scope="module")
+def dataset(client: bigquery.Client) -> Dataset:
+    dataset = client.create_dataset(DATASET_ID)
     yield dataset
-    bigquery_client.delete_dataset(dataset, delete_contents=True)
+    client.delete_dataset(dataset, delete_contents=True)
+
+
+@pytest.fixture(scope="module")
+def table(client: bigquery.Client) -> Table:
+    sample_schema = [
+        bigquery.SchemaField("id", "INTEGER", mode="REQUIRED"),
+    ]
+
+    table = bigquery.Table(FULL_TABLE_NAME, schema=sample_schema)
+    client.create_table(table)
+
+    return table
+
+
+@pytest.fixture()
+def view(client: bigquery.Client, table: str) -> str:
+    view = bigquery.Table(FULL_VIEW_NAME)
+    # f"{table}" will inject the full table name,
+    # with project_id and dataset_id, as required by
+    # .create_table()
+    view.view_query = f"SELECT * FROM `{table}`"
+    view = client.create_table(view)
+    return view
 
 # @pytest.fixture(scope="session", autouse=True)
 # def cleanup_datasets(bigquery_client: bigquery.Client) -> None:

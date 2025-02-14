@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -19,20 +17,20 @@ from google.cloud.bigquery.dataset import AccessEntry
 
 def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # [START bigquery_view_dataset_access_policy]
-    # Imports the Google Cloud client library
+    # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
-    # Instantiates a client
+    # Instantiate a client.
     bigquery_client = bigquery.Client()
 
     # TODO(developer): Update and un-comment below lines
     # Dataset from which to get the access policy
-    # dataset_id = "my_new_dataset"
+    # dataset_id = "my_dataset"
 
-    # Prepares a reference to the dataset
+    # Prepare a reference to the dataset.
     dataset = bigquery_client.get_dataset(dataset_id)
 
-    # Shows list of AccessEntry objects
+    # Show the list of AccessEntry objects.
     # More details about the AccessEntry object here:
     # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.dataset.AccessEntry
     print(f"{len(dataset.access_entries)} Access entries in dataset '{dataset_id}':")
@@ -41,9 +39,6 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
         print(f"Role: {access_entry.role}")
         print(f"Special group: {access_entry.special_group}")
         print(f"User by Email: {access_entry.user_by_email}")
-
     # [END bigquery_view_dataset_access_policy]
 
     return dataset.access_entries
-
-view_dataset_access_policy("my_new_dataset")

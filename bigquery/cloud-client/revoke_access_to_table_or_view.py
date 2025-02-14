@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 # Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -26,7 +24,7 @@ def revoke_access_to_table_or_view(project_id: str, dataset_id: str, resource_na
     # Google Cloud Platform project.
     # project_id = "my_project_id"
     # Dataset where the table or view is.
-    # dataset_id = "my_new_dataset"
+    # dataset_id = "my_dataset"
     # Table or view name to get the access policy.
     # resource_name = "my_table"
 
@@ -44,43 +42,23 @@ def revoke_access_to_table_or_view(project_id: str, dataset_id: str, resource_na
     # To revoke access to a table or view,
     # remove bindings from the Table or View policy.
     # You may remove a binding by role or by principal.
+    #
+    # Find more details about Policy and Bindings objects here:
+    # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Policy
+    # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
+
     # For this example remove all bindings for the role 'dataViewer'.
     role_to_remove = "roles/bigquery.dataViewer"
 
     # Create a new list removing all bindings for role 'dataViewer'
+    # and assign it back to the policy.
     policy.bindings = [b for b in policy.bindings if b["role"] != role_to_remove]
 
-    print(policy.bindings)  # DEBUG: Check that we've removed the bindings
     new_policy = bigquery_client.set_iam_policy(full_resource_name, policy)
-    print(new_policy.bindings)  # DEBUG: Check that the new policy is right
 
     print(f"Role '{role_to_remove}' has been revoked from '{full_resource_name}'")
     # [END bigquery_revoke_access_to_table_or_view]
 
-    # Minor detail to discuss:
-    # Although the library documentation says that bindings
-    # may be returned as a dict, looking into the source code
-    # I can only see it being returned as a list, which results
-    # in a different logic than on Java which uses a HashMap/Dictionary
-    # https://github.com/googleapis/python-api-core/blob/7fbd5fda207d856b5835d0e0166df52e4819522a/google/api_core/iam.py#L189-L190
-
-    # Java code this sample is based on:
-    # Map<Role, Set<Identity>> binding = new HashMap<>(policy.getBindings());
-    # binding.remove(Role.of("roles/bigquery.dataViewer"));
-    #
-    # policy.toBuilder().setBindings(binding).build();
-    # bigquery.setIamPolicy(tableId, policy);
-    #
-    # System.out.println("Iam policy updated successfully");
-
     # Get the policy again for testing purposes
     new_policy = bigquery_client.get_iam_policy(full_resource_name)
     return new_policy
-
-
-table_policy = revoke_access_to_table_or_view(
-    "samples-xwf-01",
-    "my_new_dataset",
-    "my_table"
-)
-print(table_policy.bindings)

@@ -12,28 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# pylint: disable=redefined-outer-name
-
-from google.cloud import bigquery
 from google.cloud.bigquery.dataset import AccessEntry, Dataset
-import pytest
 
-from conftest import prefixer
 from view_dataset_access_policy import view_dataset_access_policy
-
-DATASET_ID = f"{prefixer.create_prefix()}_view_dataset_access_policies"
-
-
-@pytest.fixture(scope="module")
-def client() -> bigquery.Client:
-    return bigquery.Client()
-
-
-@pytest.fixture()
-def dataset(client: bigquery.Client) -> Dataset:
-    dataset = client.create_dataset(DATASET_ID)
-    yield dataset
-    client.delete_dataset(dataset, delete_contents=True)
 
 
 def test_view_dataset_access_policies(
