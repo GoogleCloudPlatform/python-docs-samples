@@ -108,6 +108,8 @@ class AudioIO:
         self.start_time = None  # only set when first audio received
         self.audio_input = []
         self._audio_interface = pyaudio.PyAudio()
+        self._input_audio_stream = None
+        self._output_audio_stream = None
 
         # Get default input device info
         try:
@@ -116,6 +118,15 @@ class AudioIO:
             logger.info(f"Using input device: {self.input_device_name}")
         except IOError:
             logger.error("Could not get default input device info. Exiting.")
+            sys.exit(1)
+
+        # Get default output device info
+        try:
+            output_device_info = self._audio_interface.get_default_output_device_info()
+            self.output_device_name = output_device_info["name"]
+            logger.info(f"Using output device: {self.output_device_name}")
+        except IOError:
+            logger.error("Could not get default output device info. Exiting.")
             sys.exit(1)
 
         # setup input audio stream
@@ -130,15 +141,6 @@ class AudioIO:
             )
         except OSError as e:
             logger.error(f"Could not open input stream: {e}. Exiting.")
-            sys.exit(1)
-
-        # Get default output device info
-        try:
-            output_device_info = self._audio_interface.get_default_output_device_info()
-            self.output_device_name = output_device_info["name"]
-            logger.info(f"Using output device: {self.output_device_name}")
-        except IOError:
-            logger.error("Could not get default output device info. Exiting.")
             sys.exit(1)
 
         # setup output audio stream
