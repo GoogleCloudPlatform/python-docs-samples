@@ -25,6 +25,7 @@ def grant_access_to_dataset(
     from google.cloud.bigquery.enums import EntityTypes
 
     # TODO(developer): Update and un-comment below lines
+
     # ID of the dataset to fetch.
     # dataset_id = "my_project_id.my_dataset"
 

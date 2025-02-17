@@ -40,7 +40,7 @@ def grant_access_to_table_or_view(
     # The principal requesting access to the table or view.
     # Find more details about principal identifiers here:
     # https://cloud.google.com/iam/docs/principal-identifiers
-    # principal_id = "email:bob@example.com"
+    # principal_id = "user:bob@example.com"
 
     # Role to assign to the member.
     # role = "roles/bigquery.dataViewer"
