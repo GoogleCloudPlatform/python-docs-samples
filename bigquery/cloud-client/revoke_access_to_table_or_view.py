@@ -15,9 +15,15 @@
 from google.api_core.iam import Policy
 
 
-def revoke_access_to_table_or_view(project_id: str, dataset_id: str, resource_name: str) -> Policy:
+def revoke_access_to_table_or_view(
+    project_id: str,
+    dataset_id: str,
+    resource_name: str,
+    role_to_remove: str | None = None,
+    principal_to_remove: str | None = None,
+) -> Policy:
     # [START bigquery_revoke_access_to_table_or_view]
-    # Imports the Google Cloud client library
+    # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
     # TODO(developer): Update and un-comment below lines
@@ -27,6 +33,13 @@ def revoke_access_to_table_or_view(project_id: str, dataset_id: str, resource_na
     # dataset_id = "my_dataset"
     # Table or view name to get the access policy.
     # resource_name = "my_table"
+    # (Optional) Role to remove from the table or view.
+    # role_to_remove = "roles/bigquery.dataViewer"
+    # (Optional) Principal to revoke access to the table or view.
+    # principal_to_remove = "user:alice@example.com"
+
+    # Find more information about roles and principals (refered as members) here:
+    # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
 
     # Instantiates a client.
     bigquery_client = bigquery.Client()
@@ -41,18 +54,30 @@ def revoke_access_to_table_or_view(project_id: str, dataset_id: str, resource_na
 
     # To revoke access to a table or view,
     # remove bindings from the Table or View policy.
-    # You may remove a binding by role or by principal.
     #
-    # Find more details about Policy and Bindings objects here:
+    # Find more details about the Policy object here:
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Policy
-    # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
 
-    # For this example remove all bindings for the role 'dataViewer'.
-    role_to_remove = "roles/bigquery.dataViewer"
+    if role_to_remove:
+        # Create a new list removing all bindings for role 'dataViewer'
+        # and assign it back to the policy.
+        policy.bindings = [b for b in policy.bindings if b["role"] != role_to_remove]
 
-    # Create a new list removing all bindings for role 'dataViewer'
-    # and assign it back to the policy.
-    policy.bindings = [b for b in policy.bindings if b["role"] != role_to_remove]
+    if principal_to_remove:
+        # Create a new list.
+        bindings = list(policy.bindings)
+        print("Bindings before:")
+        print(bindings)
+
+        # Remove the members from the new list.
+        for binding in bindings:
+            binding["members"] = [m for m in binding["members"] if m != principal_to_remove]
+
+        print("Bindings after:")
+        print(bindings)
+
+        # Assign back the modified binding list.
+        policy.bindings = bindings
 
     new_policy = bigquery_client.set_iam_policy(full_resource_name, policy)
 
