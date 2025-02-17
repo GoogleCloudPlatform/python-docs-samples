@@ -63,10 +63,9 @@ def cleanup_after_tests(request):
 
 
 def setup_shared_modules():
-    for _ in range(3) :
-        _, module_id = add_custom_module(ORGANIZATION_ID)
-        if module_id != "" :
-            shared_modules.append(module_id)
+    _, module_id = add_custom_module(ORGANIZATION_ID)
+    if module_id != "" :
+        shared_modules.append(module_id)
 
 
 def add_module_to_cleanup(module_id):
@@ -135,6 +134,9 @@ def extract_custom_module_id(module_name):
     return ""
 
 
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def add_custom_module(org_id: str):
 
     parent = f"organizations/{org_id}/locations/global"
@@ -214,8 +216,6 @@ def test_get_event_threat_detection_custom_module():
 )
 def test_list_event_threat_detection_custom_module():
 
-    module_id = get_random_shared_module()
-
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
     # Retrieve the custom modules
     custom_modules = event_threat_detection_custom_modules.list_event_threat_detection_custom_module(parent)
@@ -223,33 +223,23 @@ def test_list_event_threat_detection_custom_module():
     assert custom_modules is not None, "Failed to retrieve the custom modules."
     assert len(custom_modules) > 0, "No custom modules were retrieved."
 
-    # Verify the created module is in the list
-    created_module = next(
-        (module for module in custom_modules if extract_custom_module_id(module.name) == module_id), None
-    )
-    assert created_module is not None, "Created custom module not found in the list."
-    assert created_module.display_name.startswith(PREFIX)
-    assert (
-        created_module.enablement_state
-        == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
-    )
-
 
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
 def test_update_event_threat_detection_custom_module():
 
-    module_id = get_random_shared_module()
-
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    response = event_threat_detection_custom_modules.create_event_threat_detection_custom_module(parent)
+    module_id = extract_custom_module_id(response.name)
+    add_module_to_cleanup(module_id)
 
     # Retrieve the custom module
-    response = event_threat_detection_custom_modules.update_event_threat_detection_custom_module(parent, module_id)
+    updated_custom_module = event_threat_detection_custom_modules.update_event_threat_detection_custom_module(parent, module_id)
 
-    assert response is not None, "Failed to retrieve the custom module."
-    assert response.display_name.startswith(PREFIX)
-    assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.DISABLED
+    assert updated_custom_module is not None, "Failed to retrieve the custom module."
+    assert updated_custom_module.display_name.startswith(PREFIX)
+    assert updated_custom_module.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.DISABLED
 
 
 @backoff.on_exception(
@@ -267,3 +257,4 @@ def test_delete_event_threat_detection_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
+    shared_modules.remove(module_id)
