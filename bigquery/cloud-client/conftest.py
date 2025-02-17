@@ -37,8 +37,6 @@ FULL_TABLE_NAME = f"{PROJECT_ID}.{DATASET_ID}.{TABLE_NAME}"
 VIEW_NAME = f"{PREFIX}_view_access_policies_view"
 FULL_VIEW_NAME = f"{PROJECT_ID}.{DATASET_ID}.{VIEW_NAME}"
 
-# NOTE: Test that this approach works with paralel tests
-
 
 @pytest.fixture(scope="module")
 def client() -> bigquery.Client:
@@ -55,6 +53,11 @@ def dataset(client: bigquery.Client) -> Dataset:
     dataset = client.create_dataset(DATASET_ID)
     yield dataset
     client.delete_dataset(dataset, delete_contents=True)
+
+
+@pytest.fixture(scope="module")
+def entity_id() -> str:
+    return ENTITY_ID
 
 
 @pytest.fixture(scope="module")
