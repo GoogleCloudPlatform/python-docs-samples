@@ -15,9 +15,12 @@
 
 import re
 
+import pytest
+
 import create_fileset_entry
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_create_fileset_entry(capsys, client, random_entry_name):
     entry_name_pattern = "(?P<entry_group_name>.+?)/entries/(?P<entry_id>.+?$)"
     entry_name_matches = re.match(entry_name_pattern, random_entry_name)

@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import create_fileset
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_create_fileset(
     capsys,
     client,

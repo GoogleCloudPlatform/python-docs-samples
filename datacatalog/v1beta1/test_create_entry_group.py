@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import create_entry_group
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_create_entry_group(capsys, client, project_id, random_entry_group_id):
     create_entry_group.create_entry_group(project_id, random_entry_group_id)
     out, err = capsys.readouterr()

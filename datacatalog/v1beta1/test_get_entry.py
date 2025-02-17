@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import get_entry
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_get_entry(client, entry):
     # break entry name into parts
     name = client.parse_entry_path(entry)

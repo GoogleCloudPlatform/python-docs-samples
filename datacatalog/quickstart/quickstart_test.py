@@ -11,10 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import pytest
 
 import quickstart
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_quickstart(
     capsys, client, project_id, dataset_id, table_id, random_tag_template_id
 ):

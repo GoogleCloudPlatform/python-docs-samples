@@ -16,6 +16,8 @@
 
 import re
 
+import pytest
+
 import lookup_entry
 
 BIGQUERY_PROJECT = "bigquery-public-data"
@@ -26,6 +28,7 @@ PUBSUB_PROJECT = "pubsub-public-data"
 PUBSUB_TOPIC = "taxirides-realtime"
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_lookup_entry(capsys):
     override_values = {
         "bigquery_project_id": BIGQUERY_PROJECT,

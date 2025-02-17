@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import search
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_search_catalog(client, project_id, entry_group_name):
     results = search.sample_search_catalog(
         project_id, False, f"name:{entry_group_name}"

@@ -11,11 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import grant_tag_template_user_role
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_grant_tag_template_user_role(
     capsys, project_id, random_existing_tag_template_id, valid_member_id
 ):

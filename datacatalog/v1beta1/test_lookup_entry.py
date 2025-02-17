@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+import pytest
 
 import lookup_entry
 
@@ -19,6 +19,7 @@ BIGQUERY_PROJECT = "bigquery-public-data"
 BIGQUERY_DATASET = "new_york_taxi_trips"
 
 
+@pytest.mark.skip(reason="deprecated service")
 def test_lookup_entry(client, entry, project_id):
     bigquery_dataset = f"projects/{BIGQUERY_PROJECT}/datasets/{BIGQUERY_DATASET}"
     resource_name = f"//bigquery.googleapis.com/{bigquery_dataset}"
