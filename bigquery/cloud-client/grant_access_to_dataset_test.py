@@ -18,19 +18,19 @@ from conftest import prefixer
 from grant_access_to_dataset import grant_access_to_dataset
 
 DATASET_ID = f"{prefixer.create_prefix()}_grant_access_to_dataset"
-ENTITY_ID = "cloud-developer-relations@google.com"
 
 
 def test_grant_access_to_dataset(
     dataset: Dataset,
+    entity_id: str
 ) -> None:
     dataset_access_entries = grant_access_to_dataset(
         dataset_id=dataset.dataset_id,
-        entity_id=ENTITY_ID,
+        entity_id=entity_id,
         role="READER"
     )
 
     updated_dataset_entity_ids = {
         entry.entity_id for entry in dataset_access_entries
     }
-    assert ENTITY_ID in updated_dataset_entity_ids
+    assert entity_id in updated_dataset_entity_ids

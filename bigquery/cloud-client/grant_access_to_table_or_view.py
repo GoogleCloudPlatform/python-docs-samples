@@ -66,10 +66,14 @@ def grant_access_to_table_or_view(
     }
     policy.bindings.append(binding)
 
+    # Set the IAM acces spolicy with updated bindings
     updated_policy = bqclient.set_iam_policy(full_resource_name, policy)
 
-    for binding in updated_policy.bindings:
-        print(repr(binding))
+    # Show a success message.
+    print(
+        f"Role '{role}' granted for principal '{principal_id}'"
+        f" on resource '{full_resource_name}'."
+    )
     # [END bigquery_grant_access_to_table_or_view]
 
     return updated_policy.bindings

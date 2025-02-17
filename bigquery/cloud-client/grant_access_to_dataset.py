@@ -72,7 +72,7 @@ def grant_access_to_dataset(
     # Show a success message.
     full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
     print(
-        f"Role '{role}' granted for user '{entity_id}'"
+        f"Role '{role}' granted for entity '{entity_id}'"
         f" in dataset '{full_dataset_id}'."
     )
     # [END bigquery_grant_access_to_dataset]

@@ -36,7 +36,6 @@ def test_view_dataset_access_policies_with_view(
     dataset: Dataset,
     view: Table,
 ) -> None:
-    print(view)
     policy: Policy = view_table_or_view_access_policy(project_id, dataset.dataset_id, view.table_id)
 
     assert policy.etag == EMPTY_POLICY_ETAG

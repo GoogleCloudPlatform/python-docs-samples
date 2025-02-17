@@ -50,8 +50,6 @@ def revoke_access_to_table_or_view(
     # Get the IAM access policy for the table or view.
     policy = bigquery_client.get_iam_policy(full_resource_name)
 
-    print(policy.bindings)  # DEBUG: Show the binding list before making changes
-
     # To revoke access to a table or view,
     # remove bindings from the Table or View policy.
     #
@@ -66,22 +64,15 @@ def revoke_access_to_table_or_view(
     if principal_to_remove:
         # Create a new list.
         bindings = list(policy.bindings)
-        print("Bindings before:")
-        print(bindings)
 
         # Remove the members from the new list.
         for binding in bindings:
             binding["members"] = [m for m in binding["members"] if m != principal_to_remove]
 
-        print("Bindings after:")
-        print(bindings)
-
         # Assign back the modified binding list.
         policy.bindings = bindings
 
     new_policy = bigquery_client.set_iam_policy(full_resource_name, policy)
-
-    print(f"Role '{role_to_remove}' has been revoked from '{full_resource_name}'")
     # [END bigquery_revoke_access_to_table_or_view]
 
     # Get the policy again for testing purposes
