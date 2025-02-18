@@ -59,21 +59,3 @@ def list_regional_param(
         print(f"Found Regional Parameter: {parameter.name}")
 
     # [END parametermanager_list_regional_param]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "location_id",
-        help="name of the region where the parameter is to be created"
-    )
-    args = parser.parse_args()
-
-    list_regional_param(
-        args.project_id,
-        args.location_id
-    )

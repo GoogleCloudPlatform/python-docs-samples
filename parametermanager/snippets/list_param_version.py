@@ -64,18 +64,3 @@ def list_param_version(
         print(f"Version Name: {response.name}")
 
     # [END parametermanager_list_param_version]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("param_id", help="id of the parameter to create")
-    args = parser.parse_args()
-
-    list_param_version(
-        args.project_id,
-        args.param_id
-    )

@@ -59,29 +59,11 @@ def get_regional_param(
     # Retrieve the parameter.
     parameter = client.get_parameter(name=name)
 
-    # Print the retrieved parameter details.
+    # Show parameter details.
+    # Find more details for the Parameter object here:
+    # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters#Parameter
     print(f"Fetched the Regional Parameter {parameter.name}")
     print(parameter)
     # [END parametermanager_get_regional_param]
 
     return parameter
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "location_id",
-        help="name of the region where the parameter is to be created"
-    )
-    parser.add_argument("param_id", help="id of the parameter to create")
-    args = parser.parse_args()
-
-    get_regional_param(
-        args.project_id,
-        args.location_id,
-        args.param_id
-    )

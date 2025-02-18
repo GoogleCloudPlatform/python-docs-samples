@@ -87,28 +87,3 @@ def create_param_version_with_secret(
     # [END parametermanager_create_param_version_with_secret]
 
     return response
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("param_id", help="id of the parameter to create")
-    parser.add_argument(
-        "version_id",
-        help="id of the version of the parameter to create"
-    )
-    parser.add_argument(
-        "secret_id",
-        help="id of the secret to be referenced in the payload"
-    )
-    args = parser.parse_args()
-
-    create_param_version_with_secret(
-        args.project_id,
-        args.param_id,
-        args.version_id,
-        args.secret_id
-    )

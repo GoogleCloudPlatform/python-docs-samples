@@ -63,23 +63,3 @@ def delete_regional_param(
     # Print confirmation of deletion.
     print(f"Deleted Regional Parameter: {name}")
     # [END parametermanager_delete_regional_param]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "location_id",
-        help="name of the region where the parameter is to be created"
-    )
-    parser.add_argument("param_id", help="id of the parameter to create")
-    args = parser.parse_args()
-
-    delete_regional_param(
-        args.project_id,
-        args.location_id,
-        args.param_id
-    )
