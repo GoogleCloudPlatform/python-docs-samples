@@ -71,7 +71,7 @@ def revoke_access_to_table_or_view(
         # The `bindings` list is immutable. Create a copy for modifications.
         bindings = list(policy.bindings)
 
-        # Remove the members from the new list.
+        # Filter out the principal for each binding.
         for binding in bindings:
             binding["members"] = [m for m in binding["members"] if m != principal_to_remove]
 
