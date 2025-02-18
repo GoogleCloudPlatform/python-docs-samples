@@ -83,17 +83,3 @@ def enable_param_version(
     # [END parametermanager_enable_param_version]
 
     return response
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("param_id", help="id of the parameter to create")
-    parser.add_argument(
-        "version_id", help="id of the version of the parameter to create"
-    )
-    args = parser.parse_args()
-
-    enable_param_version(args.project_id, args.param_id, args.version_id)

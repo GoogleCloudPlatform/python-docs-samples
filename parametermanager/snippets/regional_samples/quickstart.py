@@ -106,20 +106,3 @@ def quickstart(
     payload = get_param_response.payload.data.decode("utf-8")
     print(f"Payload: {payload}")
     # [END parametermanager_quickstart]
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "location_id", help="name of the region where the parameter is to be created"
-    )
-    parser.add_argument("param_id", help="id of the parameter to create")
-    parser.add_argument(
-        "version_id", help="id of the version of the parameter to create"
-    )
-    args = parser.parse_args()
-
-    quickstart(args.project_id, args.location_id, args.param_id, args.version_id)

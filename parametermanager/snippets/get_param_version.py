@@ -66,28 +66,10 @@ def get_param_version(
     # Get the parameter version details.
     response = client.get_parameter_version(request=request)
 
-    # Print the parameter version payload.
+    # Show parameter version details.
+    # Find more details for the Parameter Version object here:
+    # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters.versions#ParameterVersion
     print(f"Parameter Version Payload: {response.payload.data.decode('utf-8')}")
     # [END parametermanager_get_param_version]
 
     return response
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument("param_id", help="id of the parameter to create")
-    parser.add_argument(
-        "version_id",
-        help="id of the version of the parameter to create"
-    )
-    args = parser.parse_args()
-
-    get_param_version(
-        args.project_id,
-        args.param_id,
-        args.version_id
-    )

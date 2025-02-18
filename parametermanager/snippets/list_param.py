@@ -54,15 +54,3 @@ def list_param(
 
     # [END parametermanager_list_param]
 
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description=__doc__,
-        formatter_class=argparse.RawDescriptionHelpFormatter
-    )
-    parser.add_argument("project_id", help="id of the GCP project")
-    args = parser.parse_args()
-
-    list_param(
-        args.project_id
-    )
