@@ -63,12 +63,12 @@ def revoke_access_to_table_or_view(
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Policy
 
     if role_to_remove:
-        # Create a new list removing all bindings for role 'dataViewer'
-        # and assign it back to the policy.
+        # Filter out all bindings with the `role_to_remove`
+        # and assign a new list back to the policy bindings.
         policy.bindings = [b for b in policy.bindings if b["role"] != role_to_remove]
 
     if principal_to_remove:
-        # Create a new list.
+        # The `bindings` list is immutable. Create a copy for modifications.
         bindings = list(policy.bindings)
 
         # Remove the members from the new list.
