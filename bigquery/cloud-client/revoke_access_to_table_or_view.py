@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from __future__ import annotations
+
 from google.api_core.iam import Policy
 
 
@@ -29,12 +31,16 @@ def revoke_access_to_table_or_view(
     # TODO(developer): Update and un-comment below lines
     # Google Cloud Platform project.
     # project_id = "my_project_id"
+
     # Dataset where the table or view is.
     # dataset_id = "my_dataset"
+
     # Table or view name to get the access policy.
     # resource_name = "my_table"
+
     # (Optional) Role to remove from the table or view.
     # role_to_remove = "roles/bigquery.dataViewer"
+
     # (Optional) Principal to revoke access to the table or view.
     # principal_to_remove = "user:alice@example.com"
 

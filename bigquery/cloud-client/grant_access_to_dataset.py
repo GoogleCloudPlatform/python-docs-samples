@@ -21,12 +21,13 @@ def grant_access_to_dataset(
     role: str
 ) -> list[AccessEntry]:
     # [START bigquery_grant_access_to_dataset]
+    from google.api_core.exceptions import PreconditionFailed
     from google.cloud import bigquery
     from google.cloud.bigquery.enums import EntityTypes
 
     # TODO(developer): Update and un-comment below lines
 
-    # ID of the dataset to fetch.
+    # ID of the dataset to revoke access to.
     # dataset_id = "my_project_id.my_dataset"
 
     # ID of the user or group from whom you are adding access.
@@ -46,15 +47,13 @@ def grant_access_to_dataset(
     # Instantiate a client.
     client = bigquery.Client()
 
-    # Prepare a reference to the dataset.
+    # Get a reference to the dataset.
     dataset = client.get_dataset(dataset_id)
 
-    # Copy the list of access_entries in order to add new roles.
-    # Don't try to append AccessEntries directly
-    # to dataset.access_entries as it won't work.
+    # The `access_entries` list is immutable. Create a copy for modifications.
     entries = list(dataset.access_entries)
 
-    # Add an AccessEntry to grant the role to a dataset.
+    # Append an AccessEntry to grant the role to a dataset.
     # Find more details about the AccessEntry object here:
     # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.dataset.AccessEntry
     entries.append(
@@ -65,16 +64,32 @@ def grant_access_to_dataset(
         )
     )
 
-    # Assign the list of AccessEntries back to the dataset and update it.
+    # Assign the list of AccessEntries back to the dataset.
     dataset.access_entries = entries
-    dataset = client.update_dataset(dataset, ["access_entries"])
 
-    # Show a success message.
-    full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
-    print(
-        f"Role '{role}' granted for entity '{entity_id}'"
-        f" in dataset '{full_dataset_id}'."
-    )
+    # Update will only succeed if the dataset
+    # has not been modified externally since retrieval.
+    #
+    # See the BigQuery client library documentation for more details on `update_dataset`:
+    # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.client.Client#google_cloud_bigquery_client_Client_update_dataset
+    try:
+        # Update just the `access_entries` property of the dataset.
+        dataset = client.update_dataset(
+            dataset,
+            ["access_entries"],
+        )
+
+        # Show a success message.
+        full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
+        print(
+            f"Role '{role}' granted for entity '{entity_id}'"
+            f" in dataset '{full_dataset_id}'."
+        )
+    except PreconditionFailed:  # A read-modify-write error
+        print(
+            f"Dataset '{dataset.dataset_id}' was modified remotely before this update. "
+            "Fetch the latest version and retry."
+        )
     # [END bigquery_grant_access_to_dataset]
 
     return dataset.access_entries

@@ -46,13 +46,13 @@ def grant_access_to_table_or_view(
     # role = "roles/bigquery.dataViewer"
 
     # Instantiate a client.
-    bqclient = bigquery.Client()
+    client = bigquery.Client()
 
     # Get the full table or view name.
     full_resource_name = f"{project_id}.{dataset_id}.{resource_name}"
 
     # Get the IAM access policy for the table or view.
-    policy = bqclient.get_iam_policy(full_resource_name)
+    policy = client.get_iam_policy(full_resource_name)
 
     # To grant access to a table or view,
     # add bindings to the Table or View policy.
@@ -62,12 +62,12 @@ def grant_access_to_table_or_view(
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
     binding = {
         "role": role,
-        "members": [principal_id,],
+        "members": [principal_id, ],
     }
     policy.bindings.append(binding)
 
     # Set the IAM acces spolicy with updated bindings
-    updated_policy = bqclient.set_iam_policy(full_resource_name, policy)
+    updated_policy = client.set_iam_policy(full_resource_name, policy)
 
     # Show a success message.
     print(

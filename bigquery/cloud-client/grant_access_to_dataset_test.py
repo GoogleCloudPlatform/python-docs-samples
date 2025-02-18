@@ -14,10 +14,7 @@
 
 from google.cloud.bigquery.dataset import Dataset
 
-from conftest import prefixer
 from grant_access_to_dataset import grant_access_to_dataset
-
-DATASET_ID = f"{prefixer.create_prefix()}_grant_access_to_dataset"
 
 
 def test_grant_access_to_dataset(
