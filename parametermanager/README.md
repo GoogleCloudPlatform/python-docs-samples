@@ -4,7 +4,7 @@ Sample Snippets for Parameter Manager API
 Quick Start
 -----------
 
-In order to use run these samples, you first need to go through the following steps:
+In order to run these samples, you first need to go through the following steps:
 
 1. `Select or create a Cloud Platform project.`_
 2. `Enable billing for your project.`_
