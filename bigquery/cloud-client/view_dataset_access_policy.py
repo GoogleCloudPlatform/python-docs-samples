@@ -21,14 +21,14 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     from google.cloud import bigquery
 
     # Instantiate a client.
-    bigquery_client = bigquery.Client()
+    client = bigquery.Client()
 
     # TODO(developer): Update and un-comment below lines
     # Dataset from which to get the access policy
     # dataset_id = "my_dataset"
 
     # Get a reference to the dataset.
-    dataset = bigquery_client.get_dataset(dataset_id)
+    dataset = client.get_dataset(dataset_id)
 
     # Show the list of AccessEntry objects.
     # More details about the AccessEntry object here:

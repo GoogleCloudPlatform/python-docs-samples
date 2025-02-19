@@ -22,7 +22,7 @@ import test_utils.prefixer
 prefixer = test_utils.prefixer.Prefixer("python-docs-samples", "bigquery/cloud-client")
 
 PREFIX = prefixer.create_prefix()
-ENTITY_ID = "cloud-developer-relations@google.com"
+ENTITY_ID = "cloud-developer-relations@google.com"  # Group account
 DATASET_ID = f"{PREFIX}_cloud_client"
 TABLE_NAME = f"{PREFIX}_view_access_policies_table"
 VIEW_NAME = f"{PREFIX}_view_access_policies_view"

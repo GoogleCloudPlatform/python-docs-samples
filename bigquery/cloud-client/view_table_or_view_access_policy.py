@@ -24,18 +24,18 @@ def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_
     # Google Cloud Platform project.
     # project_id = "my_project_id"
     # Dataset where the table or view is.
-    # dataset_id = "my_dataset"
+    # dataset_id = "my_dataset_id"
     # Table or view name to get the access policy.
-    # resource_name = "my_table"
+    # resource_name = "my_table_name"
 
     # Instantiate a client.
-    bigquery_client = bigquery.Client()
+    client = bigquery.Client()
 
     # Get the full table or view name.
     full_resource_name = f"{project_id}.{dataset_id}.{resource_name}"
 
     # Get the IAM access policy for the table or view.
-    policy = bigquery_client.get_iam_policy(full_resource_name)
+    policy = client.get_iam_policy(full_resource_name)
 
     # Show policy details.
     # Find more details for the Policy object here:

@@ -48,13 +48,13 @@ def revoke_access_to_table_or_view(
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
 
     # Instantiates a client.
-    bigquery_client = bigquery.Client()
+    client = bigquery.Client()
 
     # Get the full table name.
     full_resource_name = f"{project_id}.{dataset_id}.{resource_name}"
 
     # Get the IAM access policy for the table or view.
-    policy = bigquery_client.get_iam_policy(full_resource_name)
+    policy = client.get_iam_policy(full_resource_name)
 
     # To revoke access to a table or view,
     # remove bindings from the Table or View policy.
@@ -78,9 +78,9 @@ def revoke_access_to_table_or_view(
         # Assign back the modified binding list.
         policy.bindings = bindings
 
-    new_policy = bigquery_client.set_iam_policy(full_resource_name, policy)
+    new_policy = client.set_iam_policy(full_resource_name, policy)
     # [END bigquery_revoke_access_to_table_or_view]
 
     # Get the policy again for testing purposes
-    new_policy = bigquery_client.get_iam_policy(full_resource_name)
+    new_policy = client.get_iam_policy(full_resource_name)
     return new_policy
