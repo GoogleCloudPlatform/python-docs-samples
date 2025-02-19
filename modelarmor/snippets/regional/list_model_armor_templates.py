@@ -14,8 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 from typing import List
 
+# [START list_model_armor_templates]
 def list_model_armor_templates(project_id: str, location_id: str) -> List[str]:
     """
     Lists all model armor templates in the specified project and location.
@@ -30,22 +32,34 @@ def list_model_armor_templates(project_id: str, location_id: str) -> List[str]:
     from google.cloud import modelarmor_v1
     from google.api_core.client_options import ClientOptions
 
+    # Create Model Armor Client
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
+
+    # Preparing the parent path
     parent = f"projects/{project_id}/locations/{location_id}"
-    
+
+    # List templates request
     templates = client.list_templates(parent=parent)
     
+    # Print templates name only
     templates_name = [template.name for template in templates]
     print(f"Templates Found: {', '.join(template_name for template_name in templates_name)}")
+    # [END list_model_armor_templates]
     
     return templates
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument("project_id", help="Google Cloud project ID")
+    parser.add_argument("location_id", help="Google Cloud location")
+
+    args = parser.parse_args()
 
     # Call the function to list templates
-    list_model_armor_templates(project_id, location_id)
+    list_model_armor_templates(args.project_id, args.location_id)

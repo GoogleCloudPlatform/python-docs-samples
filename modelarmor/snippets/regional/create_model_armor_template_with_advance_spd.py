@@ -15,6 +15,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
+
+# [START modelarmor_create_model_armor_template_with_advance_sdp]
 def create_model_armor_template(project_id, location_id, template_id, filter_config_data):
     """
     Creates a new model armor template.
@@ -30,6 +33,7 @@ def create_model_armor_template(project_id, location_id, template_id, filter_con
     """
     from google.cloud import modelarmor_v1
     from google.api_core.client_options import ClientOptions
+
     # Model Armor client creation
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
@@ -42,54 +46,35 @@ def create_model_armor_template(project_id, location_id, template_id, filter_con
         filter_config=filter_config
     )
 
-    # Template creation request
-    response = client.create_template(
+    # Creat the create template request
+    create_template = modelarmor_v1.CreateTemplateRequest(
         parent=parent,
         template_id=template_id,
         template=template
     )
 
+    # Template creation request
+    response = client.create_template(
+        request=create_template
+    )
+
     print(f"Created Model Armor Template: {response.name}")
+    # [END modelarmor_create_model_armor_template_with_advance_sdp]
+
     return response.name
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template-sdp-adv"
-    filter_config_data = {
-        "rai_settings": {
-            "rai_filters": [
-                {
-                    "filter_type": "HATE_SPEECH",
-                    "confidence_level": "MEDIUM_AND_ABOVE"
-                }, 
-                {
-                    "filter_type": "HARASSMENT",
-                    "confidence_level": "HIGH"
-                }, 
-                {
-                    "filter_type": "DANGEROUS",
-                    "confidence_level": "MEDIUM_AND_ABOVE"
-                },
-                {
-                    "filter_type": "SEXUALLY_EXPLICIT",
-                    "confidence_level": "MEDIUM_AND_ABOVE"
-                }
-            ]
-        },
-        "sdp_settings": {
-            "basic_config": {
-                "filter_enforcement": "ENABLED"
-            },
-            "advanced_config": {
-                "inspect_template": "projects/gma-api-53286/locations/us-central1/inspectTemplates/sdp-test-template",
-                "deidentify_template": "projects/gma-api-53286/locations/us-central1/deidentifyTemplates/sdp-deidentify-template"
-            }
-        },
-        "pi_and_jailbreak_filter_settings": {},
-        "malicious_uri_filter_settings": {}
-    }
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    
+    parser.add_argument("project_id", help="GCP project ID")
+    parser.add_argument("location_id", help="GCP location")
+    parser.add_argument("template_id", help="Template ID")
+    parser.add_argument("filter_config_data", help="Filter config data")
+    
+    args = parser.parse_args()
 
     # Call the function with sample data
-    create_model_armor_template(project_id, location_id, template_id, filter_config_data)
+    create_model_armor_template(args.project_id, args.location_id, args.template_id, args.filter_config_data)

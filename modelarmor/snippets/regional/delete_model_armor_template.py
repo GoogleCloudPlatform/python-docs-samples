@@ -14,7 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 
+# [START delete_model_armor_template]
 def delete_model_armor_template(project_id: str, location_id: str, template_id: str) -> None:
     """
     Deletes a model armor template.
@@ -27,21 +29,30 @@ def delete_model_armor_template(project_id: str, location_id: str, template_id: 
     from google.cloud import modelarmor_v1
     from google.api_core.client_options import ClientOptions
 
+    # Create the Model Armor client
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
-
+    
+    # Prepare the template name
     template_name = f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
     
+    # Delete the template by its name
     client.delete_template(name=template_name)
     
     print(f"Model Armor Template '{template_id}' has been deleted.")
+    # [END delete_model_armor_template]
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template-sdp-basic"
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Google Cloud project ID")
+    parser.add_argument("location_id", help="Google Cloud location ID")
+    parser.add_argument("template_id", help="ID of the template to delete")
+
+    args = parser.parse_args()
 
     # Call the function to delete the template
-    delete_model_armor_template(project_id, location_id, template_id)
+    delete_model_armor_template(args.project_id, args.location_id, args.template_id)
