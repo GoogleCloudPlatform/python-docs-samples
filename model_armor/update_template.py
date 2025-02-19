@@ -20,6 +20,8 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
 
     from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
+    from google.cloud.modelarmor_v1 import Template, DetectionConfidenceLevel, FilterConfig, PiAndJailbreakFilterSettings, \
+        MaliciousUriFilterSettings
 
     client = modelarmor_v1.ModelArmorClient(
         transport="rest",
@@ -31,23 +33,18 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
     # location = "us-central1"
     # template_id = "template_id"
 
-    updated_template = {
-        "name": f"projects/{project_id}/locations/{location}/templates/{template_id}",
-        "filter_config": {
-            "rai_settings": {
-                "rai_filters": [
-                    {
-                        "filter_type": "HATE_SPEECH",
-                        "confidence_level": "MEDIUM_AND_ABOVE",
-                    },
-                ]
-            },
-        },
-        "template_metadata": {
-            "log_template_operations": True,
-            "log_sanitize_operations": True,
-        },
-    }
+    updated_template = Template(
+        name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
+        filter_config=FilterConfig(
+            pi_and_jailbreak_filter_settings=PiAndJailbreakFilterSettings(
+                filter_enforcement=PiAndJailbreakFilterSettings.PiAndJailbreakFilterEnforcement.ENABLED,
+                confidence_level=DetectionConfidenceLevel.LOW_AND_ABOVE,
+            ),
+            malicious_uri_filter_settings=MaliciousUriFilterSettings(
+                filter_enforcement=MaliciousUriFilterSettings.MaliciousUriFilterEnforcement.ENABLED,
+            )
+        ),
+    )
 
     # Initialize request argument(s)
     request = modelarmor_v1.UpdateTemplateRequest(template=updated_template)

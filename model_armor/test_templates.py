@@ -19,7 +19,6 @@ from google.api_core.exceptions import NotFound
 from google.cloud.modelarmor_v1 import (
     DetectionConfidenceLevel,
     FilterMatchState,
-    RaiFilterType,
 )
 import pytest
 
@@ -60,10 +59,7 @@ def test_user_prompt() -> None:
 def test_update_templates() -> None:
     template = update_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
     assert (
-        template.filter_config.rai_settings.rai_filters[0].filter_type
-        == RaiFilterType.HATE_SPEECH
-        and template.filter_config.rai_settings.rai_filters[0].confidence_level
-        == DetectionConfidenceLevel.MEDIUM_AND_ABOVE
+        template.filter_config.pi_and_jailbreak_filter_settings.confidence_level == DetectionConfidenceLevel.LOW_AND_ABOVE
     )
 
 
