@@ -14,8 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 from typing import Dict
 
+# [START view_modelarmor_template]
 def view_model_armor_template(project_id: str, location_id: str, template_id: str) -> Dict:
     """
     Retrieves details for a model armor template.
@@ -31,26 +33,32 @@ def view_model_armor_template(project_id: str, location_id: str, template_id: st
     from google.cloud import modelarmor_v1
     from google.api_core.client_options import ClientOptions
 
+    # Create Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
 
+    # Build the fully qualified name of the template.
     template_name = f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    template = client.get_template(name=template_name)
 
-    template_details = {
-        "name": template.name,
-        "filter_config": template.filter_config  # Assuming the template has a `filter_config` attribute
-    }
+    # Get the template details using the client.
+    template = client.get_template(name=template_name)
     
-    print(f"Model Armor Template Details: {template.name}")
+    # Print the template name and details.
+    print(f"Model Armor Template Details: {template}")
+    # [END view_modelarmor_template]
     return template
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template1"
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="The project ID where the template exists.")
+    parser.add_argument("location_id", help="The location where the template exists.")
+    parser.add_argument("template_id", help="The ID of the template to view.")
+    
+    args = parser.parse_args()
 
     # Call the function to view template details
-    view_model_armor_template(project_id, location_id, template_id)
+    view_model_armor_template(args.project_id, args.location_id, args.template_id)

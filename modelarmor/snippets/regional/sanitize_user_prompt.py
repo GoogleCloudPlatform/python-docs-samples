@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
+
+# [START sanitize_user_prompt]
 def sanitize_user_prompt(project_id: str, location_id: str, template_id: str, payload: dict = None):
     """
     Sanitizes a user prompt using the Model Armor API.
@@ -29,29 +32,34 @@ def sanitize_user_prompt(project_id: str, location_id: str, template_id: str, pa
     from google.cloud.modelarmor_v1.types import SanitizeUserPromptRequest
     from google.api_core.client_options import ClientOptions
 
+    # Initialize the Model Armor client
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
 
+    # Sanitize the user prompt
     request = SanitizeUserPromptRequest(
         name=f"projects/{project_id}/locations/{location_id}/templates/{template_id}",
         user_prompt_data=payload["user_prompt_data"]
     )
     
+    # Sanitize the user prompt
     response = client.sanitize_user_prompt(request=request)
     
-    print(f"Sanitized prompt: {response}")    
+    print(f"Sanitized prompt: {response}")
+    # [END sanitize_user_prompt] 
     return response
 
 if __name__ == "__main__":
     # Sample usage with text data
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template-sdp-basic"
-    payload = {
-        "user_prompt_data": {
-            "text": "can you remember my ITIN : 988-86-1234"
-        },
-        "filter_config": {}
-    }
-    sanitize_user_prompt(project_id=project_id, location_id=location_id, template_id=template_id, payload=payload)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Google Cloud project ID")
+    parser.add_argument("location_id", help="Google Cloud location")
+    parser.add_argument("template_id", help="The template ID used for sanitization")
+    parser.add_argument("model_response", help="The model response data to sanitize")
+
+    args = parser.parse_args()
+
+    sanitize_user_prompt(args.project_id, args.location_id, args.template_id, args.payload)

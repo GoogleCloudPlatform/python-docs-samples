@@ -14,8 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
 from typing import Dict
 
+# [START update_modelarmor_template]
 def update_model_armor_template(project_id: str, location_id: str, template_id: str, updated_filter_config_data: Dict) -> str:
     """
     Updates an existing model armor template.
@@ -31,59 +33,47 @@ def update_model_armor_template(project_id: str, location_id: str, template_id: 
     """
     from google.cloud import modelarmor_v1
     from google.api_core.client_options import ClientOptions
-
+    
+    # Create a client for the Model Armor.
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
 
+    # Build the full resource path for the template.
     template_name = f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    # updated_filter_config = modelarmor_v1.FilterConfig(**updated_filter_config_data)
 
+    # Build the updated template config.
     template = modelarmor_v1.Template(
         name=template_name,
         filter_config=updated_filter_config_data
     )
 
+    # Build the request to update the template.
     updated_template = modelarmor_v1.UpdateTemplateRequest(
         template=template
     )
-    
+
+    # Update the template.
     response = client.update_template(
         request=updated_template
     )
+
     print(f"Updated Model Armor Template: {response.name}")
+    # [END update_modelarmor_template]
     return response.name
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template1"
-    updated_filter_config_data = {
-        "rai_settings": {
-            "rai_filters": [
-                {
-                    "filter_type": "HATE_SPEECH",
-                    "confidence_level": "HIGH" # changed to high from medium
-                }, 
-                {
-                    "filter_type": "HARASSMENT",
-                    "confidence_level": "HIGH"
-                }, 
-                {
-                    "filter_type": "DANGEROUS",
-                    "confidence_level": "LOW_AND_ABOVE" # changed to low from medium
-                },
-                {
-                    "filter_type": "SEXUALLY_EXPLICIT",
-                    "confidence_level": "MEDIUM_AND_ABOVE"
-                }
-            ]
-        },
-        "sdp_settings": {},
-        "pi_and_jailbreak_filter_settings": {},
-        "malicious_uri_filter_settings": {}
-    }
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+
+    parser.add_argument("project_id", help="The project ID where the template exists.")
+    parser.add_argument("location_id", help="The location ID where the template exists.")
+    parser.add_argument("template_id", help="The ID of the template to update.")
+    parser.add_argument("updated_filter_config_data", help="The updated configuration for the filter settings of the template.")
+
+    args = parser.parse_args()
 
     # Call the function with updated data
-    update_model_armor_template(project_id, location_id, template_id, updated_filter_config_data)
+    update_model_armor_template(args.project_id, args.location_id, args.template_id, args.updated_filter_config_data)

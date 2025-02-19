@@ -14,6 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import argparse
+
+# [START sanitize_model_response]
 def sanitize_model_response(project_id: str, location_id: str, template_id: str, model_response: dict = None):
     """
     Sanitizes a model response using the Model Armor API.
@@ -31,29 +34,36 @@ def sanitize_model_response(project_id: str, location_id: str, template_id: str,
     from google.cloud.modelarmor_v1.types import SanitizeModelResponseRequest
     from google.api_core.client_options import ClientOptions
 
+    # Create Model Armor Client
     client = modelarmor_v1.ModelArmorClient(
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com")
     )
 
+    # Create Sanitize Model Response Request
     request = SanitizeModelResponseRequest(
         name=f"projects/{project_id}/locations/{location_id}/templates/{template_id}",
         model_response_data=model_response["model_response_data"]
     )
     
+    # Sanitize Model Response
     response = client.sanitize_model_response(request=request)
     
-    print(f"Sanitized model response: {response}")    
+    print(f"Sanitized model response: {response}")  
+    # [END sanitize_model_response]
+
     return response
+
 
 if __name__ == "__main__":
     # Sample usage
-    project_id = "gma-api-53286"
-    location_id = "us-central1"
-    template_id = "test-template-sdp-adv"
-    model_response = {
-        "model_response_data": {
-            # Assuming a structure similar to user_prompt_data
-            "text": "This is my email: gEjgV@example.com",
-        },
-    }
-    sanitize_model_response(project_id=project_id, location_id=location_id, template_id=template_id, model_response=model_response)
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
+    parser.add_argument("project_id", help="Google Cloud project ID")
+    parser.add_argument("location_id", help="Google Cloud location")
+    parser.add_argument("template_id", help="The template ID used for sanitization")
+    parser.add_argument("model_response", help="The model response data to sanitize")
+
+    args = parser.parse_args()
+
+    sanitize_model_response(args.project_id, args.location_id, args.template_id, args.model_response)
