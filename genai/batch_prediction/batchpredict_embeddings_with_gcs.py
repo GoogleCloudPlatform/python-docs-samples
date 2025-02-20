@@ -65,4 +65,4 @@ def generate_content(output_uri: str) -> str:
 
 
 if __name__ == "__main__":
-    generate_content(output_uri="gs://python-docs-samples-tests/embeddings_output")
+    generate_content(output_uri="gs://your-bucket/your-prefix")
