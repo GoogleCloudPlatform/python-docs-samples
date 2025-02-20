@@ -20,9 +20,7 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
-    Provide the summary of the audio file.
-    Summarize the main points of the audio concisely.
-    Create a chapter breakdown with timestamps for key sections or topics discussed.
+    Provide a concise summary of the main points in the audio file.
     """
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
@@ -33,18 +31,12 @@ def generate_content() -> str:
                 mime_type="audio/mpeg",
             ),
         ],
-        # Required to enable timestamp understanding for audio-only files
-        config=GenerateContentConfig(audio_timestamp=True),
     )
     print(response.text)
     # Example response:
-    # This episode of the Made by Google podcast features product managers ...
-    #
-    # **Chapter Breakdown:**
-    #
-    # *   **0:00-0:13:** Introduction to the podcast and the topic of Pixel Feature Drops
-    # *   **0:14-0:27:** Introduces the guest speaker, Aisha Sheriff and DeCarlos Love
-    # ...
+    # Here's a summary of the main points from the audio file:
+
+    # The Made by Google podcast discusses the Pixel feature drops with product managers Aisha Sheriff and De Carlos Love.  The key idea is that devices should improve over time, with a connected experience across phones, watches, earbuds, and tablets.
     # [END googlegenaisdk_textgen_with_gcs_audio]
     return response.text
 
