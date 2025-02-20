@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_with_txt_thinking]
+    # [START googlegenaisdk_thinking_textgen_with_txt]
     from google import genai
     from google.genai.types import HttpOptions
 
@@ -58,7 +58,7 @@ def generate_content() -> str:
 
     #     Final Answer: The final answer is $\boxed{-2}$
 
-    # [END googlegenaisdk_textgen_with_txt_thinking]
+    # [END googlegenaisdk_thinking_textgen_with_txt]
     return response.text
 
 
