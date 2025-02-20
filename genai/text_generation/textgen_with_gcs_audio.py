@@ -16,7 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_gcs_audio]
     from google import genai
-    from google.genai.types import HttpOptions, Part
+    from google.genai.types import GenerateContentConfig, HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
@@ -33,6 +33,8 @@ def generate_content() -> str:
                 mime_type="audio/mpeg",
             ),
         ],
+        # Required to enable timestamp understanding for audio-only files
+        config=GenerateContentConfig(audio_timestamp=True),
     )
     print(response.text)
     # Example response:
@@ -40,8 +42,8 @@ def generate_content() -> str:
     #
     # **Chapter Breakdown:**
     #
-    # * **[0:00-1:14] Introduction:** Host Rasheed Finch introduces Aisha and DeCarlos and ...
-    # * **[1:15-2:44] Transformative Features:** Aisha and DeCarlos discuss their ...
+    # *   **0:00-0:13:** Introduction to the podcast and the topic of Pixel Feature Drops
+    # *   **0:14-0:27:** Introduces the guest speaker, Aisha Sheriff and DeCarlos Love
     # ...
     # [END googlegenaisdk_textgen_with_gcs_audio]
     return response.text

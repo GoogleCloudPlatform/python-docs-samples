@@ -16,7 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_transcript_with_gcs_audio]
     from google import genai
-    from google.genai.types import HttpOptions, Part
+    from google.genai.types import GenerateContentConfig, HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
@@ -32,6 +32,8 @@ def generate_content() -> str:
                 mime_type="audio/mpeg",
             ),
         ],
+        # Required to enable timestamp understanding for audio-only files
+        config=GenerateContentConfig(audio_timestamp=True),
     )
     print(response.text)
     # Example response:
