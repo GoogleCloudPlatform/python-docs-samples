@@ -33,9 +33,9 @@ import textgen_with_pdf
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
-import thinking_textgen_with_txt
 import textgen_with_video
 import textgen_with_youtube_video
+import thinking_textgen_with_txt
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
