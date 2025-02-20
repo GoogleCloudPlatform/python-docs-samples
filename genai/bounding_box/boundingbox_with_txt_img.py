@@ -30,8 +30,17 @@ def generate_content() -> str:
     from pydantic import BaseModel
 
     class BoundingBox(BaseModel):
+        """
+        Represents a bounding box with its 2D coordinates and associated label.
+
+        Attributes:
+            box_2d (list[int]): A list of integers representing the 2D coordinates of the bounding box,
+                                typically in the format [x_min, y_min, x_max, y_max].
+            label (str): Optional: A string representing the label or class associated with the object within the bounding box.
+        """
+
         box_2d: list[int]
-        label: str
+        label: str | None = None
 
     def plot_bounding_boxes(image_uri: str, bounding_boxes: list[BoundingBox]) -> None:
         """
@@ -56,7 +65,6 @@ def generate_content() -> str:
                 abs_y2 = int(y2 / 1000 * height)
                 abs_x2 = int(x2 / 1000 * width)
 
-                # Use a single color selection:
                 color = colors[i % len(colors)]
 
                 draw.rectangle(
@@ -70,8 +78,12 @@ def generate_content() -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     config = GenerateContentConfig(
-        system_instruction="""Return bounding boxes as an array with labels. Never return masks. Limit to 25 objects.
-        If an object is present multiple times, give each object a unique label according to its distinct characteristics (colors, size, position, etc..).""",
+        system_instruction="""
+        Return bounding boxes as an array with labels.
+        Never return masks. Limit to 25 objects.
+        If an object is present multiple times, give each object a unique label
+        according to its distinct characteristics (colors, size, position, etc..).
+        """,
         temperature=0.5,
         safety_settings=[
             SafetySetting(
