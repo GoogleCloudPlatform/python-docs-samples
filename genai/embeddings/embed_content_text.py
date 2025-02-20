@@ -14,7 +14,7 @@
 
 
 def embed_content() -> str:
-    # [START googlegenaisdk_embed_content_text]
+    # [START googlegenaisdk_embeddings_docretrieval_with_txt]
     from google import genai
     from google.genai.types import EmbedContentConfig
 
@@ -37,7 +37,7 @@ def embed_content() -> str:
     # embeddings=[ContentEmbedding(values=[-0.06302902102470398, 0.00928034819662571, 0.014716853387653828, -0.028747491538524628, ... ],
     # statistics=ContentEmbeddingStatistics(truncated=False, token_count=13.0))]
     # metadata=EmbedContentMetadata(billable_character_count=112)
-    # [END googlegenaisdk_embed_content_text]
+    # [END googlegenaisdk_embeddings_docretrieval_with_txt]
     return response
 
 
