@@ -33,6 +33,7 @@ import textgen_with_pdf
 import textgen_with_txt
 import textgen_with_txt_img
 import textgen_with_txt_stream
+import textgen_with_txt_thinking
 import textgen_with_video
 import textgen_with_youtube_video
 
@@ -80,6 +81,11 @@ def test_textgen_with_pdf() -> None:
 
 def test_textgen_with_txt_img() -> None:
     response = textgen_with_txt_img.generate_content()
+    assert response
+
+
+def test_textgen_with_txt_thinking() -> None:
+    response = textgen_with_txt_thinking.generate_content()
     assert response
 
 
