@@ -19,9 +19,12 @@ def get_model_armor_template(project_id: str, location: str, template_id: str) -
     # [START modelarmor_get_template]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud import modelarmor_v1
+    from google.cloud.modelarmor_v1 import (
+        ModelArmorClient,
+        GetTemplateRequest,
+    )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -32,7 +35,7 @@ def get_model_armor_template(project_id: str, location: str, template_id: str) -
     # template_id = "template_id"
 
     # Initialize request arguments
-    request = modelarmor_v1.GetTemplateRequest(
+    request = GetTemplateRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
     )
 

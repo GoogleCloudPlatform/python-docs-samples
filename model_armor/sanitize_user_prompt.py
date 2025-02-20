@@ -21,9 +21,13 @@ def sanitize_user_prompt(
     # [START modelarmor_sanitize_user_prompt]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud import modelarmor_v1
+    from google.cloud.modelarmor_v1 import (
+        ModelArmorClient,
+        DataItem,
+        SanitizeUserPromptRequest
+    )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -37,11 +41,11 @@ def sanitize_user_prompt(
     user_prompt = "Can you describe this link? https://testsafebrowsing.appspot.com/s/malware.html"
 
     # Initialize request argument(s)
-    user_prompt_data = modelarmor_v1.DataItem(
+    user_prompt_data = DataItem(
         text=user_prompt
     )
 
-    request = modelarmor_v1.SanitizeUserPromptRequest(
+    request = SanitizeUserPromptRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
         user_prompt_data=user_prompt_data,
     )

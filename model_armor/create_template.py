@@ -25,9 +25,11 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
         FilterConfig,
         PiAndJailbreakFilterSettings,
         MaliciousUriFilterSettings,
+        ModelArmorClient,
+        CreateTemplateRequest
     )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -50,7 +52,7 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
     )
 
     # Initialize request arguments
-    request = modelarmor_v1.CreateTemplateRequest(
+    request = CreateTemplateRequest(
         parent=f"projects/{project_id}/locations/{location}",
         template_id=template_id,
         template=template,

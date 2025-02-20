@@ -22,7 +22,7 @@ def delete_model_armor_template(project_id: str, location: str, template_id: str
         DeleteTemplateRequest,
     )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -32,7 +32,7 @@ def delete_model_armor_template(project_id: str, location: str, template_id: str
     # location = "us-central1"
     # template_id = "template_id"
 
-    request = modelarmor_v1.DeleteTemplateRequest(
+    request = DeleteTemplateRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
     )
 

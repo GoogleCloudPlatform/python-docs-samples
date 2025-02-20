@@ -18,9 +18,12 @@ from google.cloud.modelarmor_v1.services.model_armor.pagers import ListTemplates
 def list_model_armor_templates(project_id: str, location: str) -> ListTemplatesPager:
     # [START modelarmor_list_templates]
     from google.api_core.client_options import ClientOptions
-    from google.cloud import modelarmor_v1
+    from google.cloud.modelarmor_v1 import (
+        ModelArmorClient,
+        ListTemplatesRequest,
+    )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -30,7 +33,7 @@ def list_model_armor_templates(project_id: str, location: str) -> ListTemplatesP
     # location = "us-central1"
 
     # Initialize request argument(s)
-    request = modelarmor_v1.ListTemplatesRequest(
+    request = ListTemplatesRequest(
         parent=f"projects/{project_id}/locations/{location}"
     )
 

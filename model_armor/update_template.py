@@ -19,11 +19,17 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
     # [START modelarmor_update_template]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud import modelarmor_v1
-    from google.cloud.modelarmor_v1 import Template, DetectionConfidenceLevel, FilterConfig, PiAndJailbreakFilterSettings, \
-        MaliciousUriFilterSettings
+    from google.cloud.modelarmor_v1 import (
+        Template,
+        DetectionConfidenceLevel,
+        FilterConfig,
+        PiAndJailbreakFilterSettings,
+        MaliciousUriFilterSettings,
+        ModelArmorClient,
+        UpdateTemplateRequest
+    )
 
-    client = modelarmor_v1.ModelArmorClient(
+    client = ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
     )
@@ -47,7 +53,7 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
     )
 
     # Initialize request argument(s)
-    request = modelarmor_v1.UpdateTemplateRequest(template=updated_template)
+    request = UpdateTemplateRequest(template=updated_template)
 
     # Make the request
     response = client.update_template(request=request)
