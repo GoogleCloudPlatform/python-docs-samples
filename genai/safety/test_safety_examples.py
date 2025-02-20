@@ -18,10 +18,8 @@
 
 import os
 
-import ctrlgen_with_class_schema
-import ctrlgen_with_enum_schema
-import ctrlgen_with_nested_class_schema
-import ctrlgen_with_nullable_schema
+import safety_with_txt
+
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -29,17 +27,6 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_ctrlgen_with_class_schema() -> None:
-    assert ctrlgen_with_class_schema.generate_content()
-
-
-def test_ctrlgen_with_enum_schema() -> None:
-    assert ctrlgen_with_enum_schema.generate_content()
-
-
-def test_ctrlgen_with_nested_class_schema() -> None:
-    assert ctrlgen_with_nested_class_schema.generate_content()
-
-
-def test_ctrlgen_with_nullable_schema() -> None:
-    assert ctrlgen_with_nullable_schema.generate_content()
+def test_safety_with_txt() -> None:
+    response = safety_with_txt.generate_content()
+    assert response

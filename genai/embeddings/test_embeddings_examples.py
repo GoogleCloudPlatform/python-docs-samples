@@ -12,13 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+#
+# Using Google Cloud Vertex AI to test the code samples.
+#
+
 import os
 
-import tools_code_exec_with_txt
-import tools_code_exec_with_txt_local_img
-import tools_func_def_with_txt
-import tools_func_desc_with_txt
-import tools_google_search_with_txt
+import embeddings_docretrieval_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -26,26 +26,6 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_tools_code_exec_with_txt() -> None:
-    response = tools_code_exec_with_txt.generate_content()
-    assert response
-
-
-def test_tools_code_exec_with_txt_local_img() -> None:
-    response = tools_code_exec_with_txt_local_img.generate_content()
-    assert response
-
-
-def test_tools_func_def_with_txt() -> None:
-    response = tools_func_def_with_txt.generate_content()
-    assert response
-
-
-def test_tools_func_desc_with_txt() -> None:
-    response = tools_func_desc_with_txt.generate_content()
-    assert response
-
-
-def test_tools_google_search_with_txt() -> None:
-    response = tools_google_search_with_txt.generate_content()
+def test_embeddings_docretrieval_with_txt() -> None:
+    response = embeddings_docretrieval_with_txt.embed_content()
     assert response

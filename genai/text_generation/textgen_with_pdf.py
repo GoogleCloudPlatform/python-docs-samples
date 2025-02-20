@@ -16,32 +16,33 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_code_with_pdf]
+    # [START googlegenaisdk_textgen_with_pdf]
     from google import genai
     from google.genai.types import HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     model_id = "gemini-2.0-flash-001"
 
-    python_code = Part.from_uri(
-        file_uri="https://storage.googleapis.com/cloud-samples-data/generative-ai/text/inefficient_fibonacci_series_python_code.pdf",
+    prompt = """
+    You are a highly skilled document summarization specialist. Your task is to provide a concise executive summary of no more than 300 words. Please summarize the given document for a general audience.
+    """
+
+    pdf_file = Part.from_uri(
+        file_uri="gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf",
         mime_type="application/pdf",
     )
 
     response = client.models.generate_content(
         model=model_id,
-        contents=[
-            python_code,
-            "Convert this python code to use Google Python Style Guide.",
-        ],
+        contents=[pdf_file, prompt],
     )
 
     print(response.text)
     # Example response:
-    # ```python
-    # def fibonacci(n: int) -> list[int] | str:
-    # ...
-    # [END googlegenaisdk_textgen_code_with_pdf]
+    # Here's a summary of the Google DeepMind Gemini 1.5 report:
+    #
+    # This report introduces Gemini 1.5 Pro...
+    # [END googlegenaisdk_textgen_with_pdf]
     return response.text
 
 
