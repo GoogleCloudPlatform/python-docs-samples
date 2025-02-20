@@ -35,6 +35,7 @@ import textgen_with_txt_img
 import textgen_with_txt_stream
 import textgen_with_video
 import textgen_with_youtube_video
+import thinking_textgen_with_txt
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -80,6 +81,11 @@ def test_textgen_with_pdf() -> None:
 
 def test_textgen_with_txt_img() -> None:
     response = textgen_with_txt_img.generate_content()
+    assert response
+
+
+def test_textgen_with_txt_thinking() -> None:
+    response = thinking_textgen_with_txt.generate_content()
     assert response
 
 
