@@ -18,7 +18,7 @@
 
 import os
 
-import embed_content_text
+import embeddings_docretrieval_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -26,6 +26,6 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_embed_content_text() -> None:
-    response = embed_content_text.embed_content()
+def test_embeddings_docretrieval_with_txt() -> None:
+    response = embeddings_docretrieval_with_txt.embed_content()
     assert response
