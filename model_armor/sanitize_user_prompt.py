@@ -50,8 +50,7 @@ def sanitize_user_prompt(
     # Match state is TRUE when the prompt is caught by one of the safety policies in the template.
     print(response.sanitization_result.filter_match_state)
 
+# [END modelarmor_sanitize_user_prompt]
+
     # Handle the response
     return response
-
-
-# [END modelarmor_sanitize_user_prompt]

@@ -55,9 +55,9 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
 
     # Make the request
     response = client.create_template(request=request)
-
     # Response
-    return response
-
+    print(response.name)
 
 # [END modelarmor_create_template]
+
+    return response

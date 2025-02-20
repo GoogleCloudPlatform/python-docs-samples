@@ -38,9 +38,9 @@ def get_model_armor_template(project_id: str, location: str, template_id: str) -
 
     # Make the request
     response = client.get_template(request=request)
+    print(response.name)
+
+# [END modelarmor_get_template]
 
     # Handle the response
     return response
-
-
-# [END modelarmor_get_template]

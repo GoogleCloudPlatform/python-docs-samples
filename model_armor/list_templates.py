@@ -39,8 +39,7 @@ def list_model_armor_templates(project_id: str, location: str) -> ListTemplatesP
     for template in response:
         print(template.name)
 
+# [END modelarmor_list_templates]
+
     # Handle the response
     return response
-
-
-# [END modelarmor_list_templates]

@@ -51,9 +51,10 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
 
     # Make the request
     response = client.update_template(request=request)
+    # Print the updated config
+    print(response.filter_config)
+
+# [END modelarmor_update_template]
 
     # Response
     return response
-
-
-# [END modelarmor_update_template]
