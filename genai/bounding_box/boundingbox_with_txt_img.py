@@ -36,11 +36,11 @@ def generate_content() -> str:
         Attributes:
             box_2d (list[int]): A list of integers representing the 2D coordinates of the bounding box,
                                 typically in the format [x_min, y_min, x_max, y_max].
-            label (str): Optional: A string representing the label or class associated with the object within the bounding box.
+            label (str): A string representing the label or class associated with the object within the bounding box.
         """
 
         box_2d: list[int]
-        label: str | None = None
+        label: str
 
     def plot_bounding_boxes(image_uri: str, bounding_boxes: list[BoundingBox]) -> None:
         """
