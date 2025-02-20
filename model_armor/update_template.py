@@ -29,7 +29,7 @@ def update_model_armor_template(project_id: str, location: str, template_id: str
     )
 
     # TODO(Developer): Uncomment these variables and initialize
-    # project_id = "your-google-cloud-project-id"
+    # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
     # template_id = "template_id"
 

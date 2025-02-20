@@ -19,9 +19,13 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
     # [START modelarmor_create_template]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud import modelarmor_v1
-    from google.cloud.modelarmor_v1 import Template, DetectionConfidenceLevel, FilterConfig, PiAndJailbreakFilterSettings, \
-        MaliciousUriFilterSettings
+    from google.cloud.modelarmor_v1 import (
+        Template,
+        DetectionConfidenceLevel,
+        FilterConfig,
+        PiAndJailbreakFilterSettings,
+        MaliciousUriFilterSettings,
+    )
 
     client = modelarmor_v1.ModelArmorClient(
         transport="rest",
@@ -34,7 +38,6 @@ def create_model_armor_template(project_id: str, location: str, template_id: str
     # template_id = "template_id"
 
     template = Template(
-        name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
         filter_config=FilterConfig(
             pi_and_jailbreak_filter_settings=PiAndJailbreakFilterSettings(
                 filter_enforcement=PiAndJailbreakFilterSettings.PiAndJailbreakFilterEnforcement.ENABLED,

@@ -29,7 +29,7 @@ def sanitize_user_prompt(
     )
 
     # TODO(Developer): Uncomment these variables and initialize
-    # project_id = "your-google-cloud-project-id"
+    # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
     # template_id = "template_id"
 
@@ -37,8 +37,9 @@ def sanitize_user_prompt(
     user_prompt = "Can you describe this link? https://testsafebrowsing.appspot.com/s/malware.html"
 
     # Initialize request argument(s)
-    user_prompt_data = modelarmor_v1.DataItem()
-    user_prompt_data.text = user_prompt
+    user_prompt_data = modelarmor_v1.DataItem(
+        text=user_prompt
+    )
 
     request = modelarmor_v1.SanitizeUserPromptRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",

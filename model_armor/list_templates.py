@@ -26,7 +26,7 @@ def list_model_armor_templates(project_id: str, location: str) -> ListTemplatesP
     )
 
     # TODO(Developer): Uncomment these variables and initialize
-    # project_id = "your-google-cloud-project-id"
+    # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
 
     # Initialize request argument(s)
