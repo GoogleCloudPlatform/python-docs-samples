@@ -23,7 +23,7 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # Instantiate a client.
     client = bigquery.Client()
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below lines.
     # Dataset from which to get the access policy.
     # dataset_id = "my_dataset"
 
