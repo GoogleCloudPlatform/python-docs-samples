@@ -15,32 +15,32 @@
 from google.api_core.iam import Policy
 
 
-def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_name: str) -> Policy:
+def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_id: str) -> Policy:
     # [START bigquery_view_table_or_view_access_policy]
-    # Imports the Google Cloud client library
+    # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below lines.
     # Google Cloud Platform project.
     # project_id = "my_project_id"
     # Dataset where the table or view is.
     # dataset_id = "my_dataset_id"
-    # Table or view name to get the access policy.
-    # resource_name = "my_table_name"
+    # Table or view id to get the access policy.
+    # resource_id = "my_table_id"
 
     # Instantiate a client.
     client = bigquery.Client()
 
-    # Get the full table or view name.
-    full_resource_name = f"{project_id}.{dataset_id}.{resource_name}"
+    # Get the full table or view id.
+    full_resource_id = f"{project_id}.{dataset_id}.{resource_id}"
 
     # Get the IAM access policy for the table or view.
-    policy = client.get_iam_policy(full_resource_name)
+    policy = client.get_iam_policy(full_resource_id)
 
     # Show policy details.
     # Find more details for the Policy object here:
     # https://cloud.google.com/bigquery/docs/reference/rest/v2/Policy
-    print(f"Access Policy details for table or view '{resource_name}'.")
+    print(f"Access Policy details for table or view '{resource_id}'.")
     print(f"Bindings: {policy.bindings}")
     print(f"etag: {policy.etag}")
     print(f"Version: {policy.version}")
