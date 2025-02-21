@@ -27,7 +27,7 @@ def send_evaluation_request_gapic() -> Response:
     from google import auth
     from google.auth.transport import requests as google_auth_requests
 
-    # TODO(developer): Update & uncomment line below
+    # TODO(developer): Update & uncomment the lines below
     # PROJECT_ID = "your-project-id"
     # LOCATION = "us-central1"
 
