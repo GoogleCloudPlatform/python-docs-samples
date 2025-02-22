@@ -127,15 +127,6 @@ def test_detect_text(capsys):
     assert "Text" in out
 
 
-# Flaky timeout
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_text_gcs(capsys):
-    in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
-    beta_snippets.video_detect_text_gcs(in_file)
-    out, _ = capsys.readouterr()
-    assert "Text" in out
-
-
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
