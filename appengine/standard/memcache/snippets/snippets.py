@@ -12,20 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START get_data]
-# [START add_values]
-from google.appengine.api import memcache
-
-# [END get_data]
-# [END add_values]
-
-
 def query_for_data():
     return "data"
 
 
-# [START get_data]
+# [START gae_standard_memcache_get_data]
 def get_data():
+    from google.appengine.api import memcache
+
     data = memcache.get("key")
     if data is not None:
         return data
@@ -33,13 +27,13 @@ def get_data():
         data = query_for_data()
         memcache.add("key", data, 60)
     return data
-
-
-# [END get_data]
+# [END gae_standard_memcache_get_data]
 
 
 def add_values():
-    # [START add_values]
+    # [START gae_standard_memcache_add_values]
+    from google.appengine.api import memcache
+
     # Add a value if it doesn't exist in the cache
     # with a cache expiration of 1 hour.
     memcache.add(key="weather_USA_98105", value="raining", time=3600)
@@ -56,4 +50,4 @@ def add_values():
     memcache.incr("counter")
     memcache.incr("counter")
     memcache.incr("counter")
-    # [END add_values]
+    # [END gae_standard_memcache_add_values]
