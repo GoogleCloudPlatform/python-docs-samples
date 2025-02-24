@@ -26,7 +26,7 @@ def grant_access_to_table_or_view(
     # [START bigquery_grant_access_to_table_or_view]
     from google.cloud import bigquery
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below lines.
 
     # Google Cloud Platform project.
     # project_id = "my_project_id"
@@ -66,7 +66,7 @@ def grant_access_to_table_or_view(
     }
     policy.bindings.append(binding)
 
-    # Set the IAM acces spolicy with updated bindings
+    # Set the IAM access spolicy with updated bindings.
     updated_policy = client.set_iam_policy(full_resource_name, policy)
 
     # Show a success message.

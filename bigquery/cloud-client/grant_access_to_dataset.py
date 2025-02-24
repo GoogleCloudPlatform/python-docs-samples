@@ -25,7 +25,7 @@ def grant_access_to_dataset(
     from google.cloud import bigquery
     from google.cloud.bigquery.enums import EntityTypes
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and un-comment below lines.
 
     # ID of the dataset to revoke access to.
     # dataset_id = "my_project_id.my_dataset"
