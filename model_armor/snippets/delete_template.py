@@ -11,33 +11,47 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Sample code for deleting a model armor template.
+"""
 
 
-def delete_model_armor_template(project_id: str, location: str, template_id: str) -> None:
+def delete_model_armor_template(
+    project_id: str,
+    location: str,
+    template_id: str,
+) -> None:
+    """Delete a model armor template.
+
+    Args:
+        project_id (str): Google Cloud project ID.
+        location (str): Google Cloud location.
+        template_id (str): ID for the template to be deleted.
+    """
     # [START modelarmor_delete_template]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud.modelarmor_v1 import (
-        ModelArmorClient,
-        DeleteTemplateRequest,
-    )
+    from google.cloud import modelarmor_v1
 
-    client = ModelArmorClient(
-        transport="rest",
-        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
-    )
-
-    # TODO(Developer): Uncomment these variables and initialize
+    # TODO(Developer): Uncomment these variables.
     # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
     # template_id = "template_id"
 
-    request = DeleteTemplateRequest(
+    # Create the Model Armor client.
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(
+            api_endpoint=f"modelarmor.{location}.rep.googleapis.com"
+        ),
+    )
+
+    # Build the request for deleting the template.
+    request = modelarmor_v1.DeleteTemplateRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
     )
 
-    # Make the request
+    # Delete the template.
     client.delete_template(request=request)
 
-
-# [END modelarmor_delete_template]
+    # [END modelarmor_delete_template]

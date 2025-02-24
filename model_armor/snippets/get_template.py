@@ -11,39 +11,55 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+"""
+Sample code for getting a model armor template.
+"""
 
-from google.cloud.modelarmor_v1 import Template
+from google.cloud import modelarmor_v1
 
 
-def get_model_armor_template(project_id: str, location: str, template_id: str) -> Template:
+def get_model_armor_template(
+    project_id: str,
+    location: str,
+    template_id: str,
+) -> modelarmor_v1.Template:
+    """Get model armor template.
+
+    Args:
+        project_id (str): Google Cloud project ID.
+        location_id (str): Google Cloud location.
+        template_id (str): ID for the template to create.
+
+    Returns:
+        Template: Fetched model armor template
+    """
     # [START modelarmor_get_template]
 
     from google.api_core.client_options import ClientOptions
-    from google.cloud.modelarmor_v1 import (
-        ModelArmorClient,
-        GetTemplateRequest,
-    )
+    from google.cloud import modelarmor_v1
 
-    client = ModelArmorClient(
-        transport="rest",
-        client_options=ClientOptions(api_endpoint=f"modelarmor.{location}.rep.googleapis.com"),
-    )
-
-    # TODO(Developer): Uncomment these variables and initialize
+    # TODO(Developer): Uncomment these variables.
     # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
     # template_id = "template_id"
 
-    # Initialize request arguments
-    request = GetTemplateRequest(
+    # Create the Model Armor client.
+    client = modelarmor_v1.ModelArmorClient(
+        transport="rest",
+        client_options=ClientOptions(
+            api_endpoint=f"modelarmor.{location}.rep.googleapis.com"
+        ),
+    )
+
+    # Initialize request arguments.
+    request = modelarmor_v1.GetTemplateRequest(
         name=f"projects/{project_id}/locations/{location}/templates/{template_id}",
     )
 
-    # Make the request
+    # Get the template.
     response = client.get_template(request=request)
     print(response.name)
 
-# [END modelarmor_get_template]
+    # [END modelarmor_get_template]
 
-    # Handle the response
     return response
