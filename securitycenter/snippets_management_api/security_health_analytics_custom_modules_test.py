@@ -60,10 +60,9 @@ def cleanup_after_tests(request):
 
 
 def setup_shared_modules():
-    for _ in range(3) :
-        _, module_id = add_custom_module(ORGANIZATION_ID)
-        if module_id != "" :
-            shared_modules.append(module_id)
+    _, module_id = add_custom_module(ORGANIZATION_ID)
+    if module_id != "" :
+        shared_modules.append(module_id)
 
 
 def add_module_to_cleanup(module_id):
@@ -132,7 +131,17 @@ def extract_custom_module_id(module_name):
     return ""
 
 
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
 def add_custom_module(org_id: str):
+    """
+    Adds a new SHA custom module.
+    Args:
+        org_id (str): The organization ID.
+    Returns:
+        Tuple[str, str]: The name and ID of the created custom module.
+    """
 
     parent = f"organizations/{org_id}/locations/global"
     client = securitycentermanagement_v1.SecurityCenterManagementClient()
@@ -146,13 +155,13 @@ def add_custom_module(org_id: str):
         "display_name": display_name,
         "enablement_state": "ENABLED",
         "custom_config": {
-            "description": "Sample custom module for testing purpose. Please do not delete.",
+            "description": "Sample custom module for testing purposes. Please do not delete.",
             "predicate": {
                 "expression": "has(resource.rotationPeriod) && (resource.rotationPeriod > duration('2592000s'))",
-                "title": "GCE Instance High Severity",
-                "description": "Custom module to detect high severity issues on GCE instances.",
+                "title": "Cloud KMS CryptoKey Rotation Period",
+                "description": "Custom module to detect CryptoKeys with rotation period greater than 30 days.",
             },
-            "recommendation": "Ensure proper security configurations on GCE instances.",
+            "recommendation": "Review and adjust the rotation period for Cloud KMS CryptoKeys.",
             "resource_selector": {"resource_types": ["cloudkms.googleapis.com/CryptoKey"]},
             "severity": "CRITICAL",
             "custom_output": {
@@ -160,10 +169,10 @@ def add_custom_module(org_id: str):
                     {
                         "name": "example_property",
                         "value_expression": {
-                            "description": "The name of the instance",
+                            "description": "The resource name of the CryptoKey",
                             "expression": "resource.name",
                             "location": "global",
-                            "title": "Instance Name",
+                            "title": "CryptoKey Resource Name",
                         },
                     }
                 ]
@@ -211,7 +220,8 @@ def test_get_security_health_analytics_custom_module():
 
     assert response is not None, "Failed to retrieve the custom module."
     assert response.display_name.startswith(PREFIX)
-    assert response.enablement_state == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.ENABLED
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
 
 
 @backoff.on_exception(
@@ -229,6 +239,7 @@ def test_delete_security_health_analytics_custom_module():
     assert response is None
 
     print(f"Custom module was deleted successfully: {module_id}")
+    shared_modules.remove(module_id)
 
 
 @backoff.on_exception(
@@ -249,8 +260,11 @@ def test_list_security_health_analytics_custom_module():
 )
 def test_update_security_health_analytics_custom_module():
 
-    module_id = get_random_shared_module()
     parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    response = security_health_analytics_custom_modules.create_security_health_analytics_custom_module(parent)
+    module_id = extract_custom_module_id(response.name)
+    add_module_to_cleanup(module_id)
+
     # Retrieve the custom modules
     updated_custom_module = security_health_analytics_custom_modules.update_security_health_analytics_custom_module(parent, module_id)
 
@@ -258,3 +272,62 @@ def test_update_security_health_analytics_custom_module():
     response_org_id = updated_custom_module.name.split("/")[1]  # Extract organization ID from the name field
     assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
     assert updated_custom_module.enablement_state == securitycentermanagement_v1.SecurityHealthAnalyticsCustomModule.EnablementState.DISABLED
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_get_effective_security_health_analytics_custom_module():
+    """Tests getting an effective SHA custom module."""
+    module_id = get_random_shared_module()
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+
+    # Retrieve the custom module
+    response = security_health_analytics_custom_modules.get_effective_security_health_analytics_custom_module(parent, module_id)
+
+    assert response is not None, "Failed to retrieve the custom module."
+    # Verify that the custom module was created
+    assert response.display_name.startswith(PREFIX)
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_descendant_security_health_analytics_custom_module():
+    """Tests listing descendant SHA custom modules."""
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the list descendant custom modules
+    custom_modules = security_health_analytics_custom_modules.list_descendant_security_health_analytics_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_effective_security_health_analytics_custom_module():
+    """Tests listing effective SHA custom modules."""
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the list of custom modules
+    custom_modules = security_health_analytics_custom_modules.list_effective_security_health_analytics_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_simulate_security_health_analytics_custom_module():
+    """Tests simulating an SHA custom module."""
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+
+    simulated_custom_module = security_health_analytics_custom_modules.simulate_security_health_analytics_custom_module(parent)
+
+    assert simulated_custom_module is not None, "Failed to retrieve the simulated custom module."
+    assert simulated_custom_module.result.no_violation is not None, (
+        f"Expected no_violation to be present, got {simulated_custom_module.result}."
+    )
