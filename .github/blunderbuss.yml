@@ -23,6 +23,7 @@ assign_issues_by:
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
+      - "api: modelarmor"
       - "api: parametermanager" 
       - "api: privateca"
       - "api: recaptchaenterprise"
@@ -157,7 +158,11 @@ assign_prs_by:
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
+<<<<<<< HEAD
       - "api: parametermanager"
+=======
+      - "api: modelarmor"
+>>>>>>> c034d0cd5 (Added codeowners)
       - "api: privateca"
       - "api: recaptchaenterprise"
       - "api: secretmanager"
