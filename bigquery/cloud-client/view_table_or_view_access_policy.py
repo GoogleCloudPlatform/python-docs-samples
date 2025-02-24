@@ -27,7 +27,7 @@ def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_
 
     # Dataset where the table or view is.
     # dataset_id = "my_dataset_id"
-    
+
     # Table or view from which to get the access policy.
     # resource_id = "my_table_id"
 
