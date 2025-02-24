@@ -22,11 +22,11 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            "What is in the video?",
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/ad_copy_from_video.mp4",
                 mime_type="video/mp4",
             ),
+            "What is in the video?",
         ],
     )
     print(response.text)

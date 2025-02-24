@@ -29,8 +29,8 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model=model_id,
         contents=[
-            "Write a short and engaging blog post based on this video.",
             Part.from_bytes(data=video_content, mime_type="video/mp4"),
+            "Write a short and engaging blog post based on this video.",
         ],
     )
 

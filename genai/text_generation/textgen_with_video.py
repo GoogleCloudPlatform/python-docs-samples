@@ -27,11 +27,11 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            prompt,
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
                 mime_type="video/mp4",
             ),
+            prompt,
         ],
     )
 
