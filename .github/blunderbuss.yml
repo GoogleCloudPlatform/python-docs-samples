@@ -258,6 +258,10 @@ assign_prs_by:
       - "api: dataplex"
     to:
       - GoogleCloudPlatform/googleapi-dataplex
+  - labels:
+      - "api: routeoptimization"
+    to:
+      - GoogleCloudPlatform/geo-routeoptimization
   # Self-service individuals
   - labels:
       - "api: auth"
