@@ -21,7 +21,7 @@ def revoke_dataset_access(dataset_id: str, entity_id: str) -> list[AccessEntry]:
     from google.cloud import bigquery
     from google.api_core.exceptions import PreconditionFailed
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and uncomment the lines below.
 
     # ID of the dataset to revoke access to.
     # dataset_id = "your-project.your_dataset"
@@ -63,7 +63,7 @@ def revoke_dataset_access(dataset_id: str, entity_id: str) -> list[AccessEntry]:
 
         full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
         print(f"Revoked dataset access for '{entity_id}' to ' dataset '{full_dataset_id}.'")
-    except PreconditionFailed:  # A read-modify-write error
+    except PreconditionFailed:  # A read-modify-write error.
         print(
             f"Dataset '{dataset.dataset_id}' was modified remotely before this update. "
             "Fetch the latest version and retry."

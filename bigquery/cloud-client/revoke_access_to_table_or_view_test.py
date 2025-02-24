@@ -23,7 +23,6 @@ from revoke_access_to_table_or_view import revoke_access_to_table_or_view
 def test_revoke_access_to_table_or_view_for_role(
     client: bigquery.Client,
     dataset: Dataset,
-    project_id: str,
     table: Table,
     entity_id: str,
 ) -> None:
@@ -34,7 +33,7 @@ def test_revoke_access_to_table_or_view_for_role(
     assert not empty_policy.bindings
 
     policy_with_role = grant_access_to_table_or_view(
-        project_id,
+        dataset.project,
         dataset.dataset_id,
         table.table_id,
         principal_id=PRINCIPAL_ID,
@@ -45,7 +44,7 @@ def test_revoke_access_to_table_or_view_for_role(
     assert any(p for p in policy_with_role if p["role"] == ROLE)
 
     policy_with_revoked_role = revoke_access_to_table_or_view(
-        project_id,
+        dataset.project,
         dataset.dataset_id,
         resource_name=table.table_id,
         role_to_remove=ROLE,

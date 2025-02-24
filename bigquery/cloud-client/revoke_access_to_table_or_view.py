@@ -28,7 +28,8 @@ def revoke_access_to_table_or_view(
     # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
-    # TODO(developer): Update and un-comment below lines
+    # TODO(developer): Update and uncomment the lines below.
+
     # Google Cloud Platform project.
     # project_id = "my_project_id"
 
@@ -44,7 +45,7 @@ def revoke_access_to_table_or_view(
     # (Optional) Principal to revoke access to the table or view.
     # principal_to_remove = "user:alice@example.com"
 
-    # Find more information about roles and principals (refered as members) here:
+    # Find more information about roles and principals (referred to as members) here:
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
 
     # Instantiates a client.

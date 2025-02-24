@@ -23,8 +23,9 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # Instantiate a client.
     client = bigquery.Client()
 
-    # TODO(developer): Update and un-comment below lines
-    # Dataset from which to get the access policy
+    # TODO(developer): Update and uncomment the lines below.
+
+    # Dataset from which to get the access policy.
     # dataset_id = "my_dataset"
 
     # Get a reference to the dataset.
@@ -33,7 +34,10 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # Show the list of AccessEntry objects.
     # More details about the AccessEntry object here:
     # https://cloud.google.com/python/docs/reference/bigquery/latest/google.cloud.bigquery.dataset.AccessEntry
-    print(f"{len(dataset.access_entries)} Access entries in dataset '{dataset_id}':")
+    print(
+        f"{len(dataset.access_entries)} Access entries found "
+        f"in dataset '{dataset_id}':"
+    )
     for access_entry in dataset.access_entries:
         print()
         print(f"Role: {access_entry.role}")

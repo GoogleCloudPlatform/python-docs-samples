@@ -29,7 +29,7 @@ def test_view_dataset_access_policies_with_table(
     policy: Policy = view_table_or_view_access_policy(project_id, dataset.dataset_id, table.table_id)
 
     assert policy.etag == EMPTY_POLICY_ETAG
-    assert not policy.bindings  # Bindings list is empty
+    assert not policy.bindings  # Empty bindings list
 
 
 def test_view_dataset_access_policies_with_view(
@@ -40,4 +40,4 @@ def test_view_dataset_access_policies_with_view(
     policy: Policy = view_table_or_view_access_policy(project_id, dataset.dataset_id, view.table_id)
 
     assert policy.etag == EMPTY_POLICY_ETAG
-    assert not policy.bindings  # Bindings list is empty
+    assert not policy.bindings  # Empty bindings list
