@@ -21,7 +21,7 @@ def revoke_dataset_access(dataset_id: str, entity_id: str) -> list[AccessEntry]:
     from google.cloud import bigquery
     from google.api_core.exceptions import PreconditionFailed
 
-    # TODO(developer): Update and un-comment below lines.
+    # TODO(developer): Update and uncomment the lines below.
 
     # ID of the dataset to revoke access to.
     # dataset_id = "your-project.your_dataset"

@@ -26,7 +26,7 @@ def grant_access_to_table_or_view(
     # [START bigquery_grant_access_to_table_or_view]
     from google.cloud import bigquery
 
-    # TODO(developer): Update and un-comment below lines.
+    # TODO(developer): Update and uncomment the lines below.
 
     # Google Cloud Platform project.
     # project_id = "my_project_id"

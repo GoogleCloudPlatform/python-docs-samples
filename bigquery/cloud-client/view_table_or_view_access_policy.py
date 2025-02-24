@@ -20,12 +20,14 @@ def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_
     # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
-    # TODO(developer): Update and un-comment below lines.
+    # TODO(developer): Update and uncomment the lines below.
 
     # Google Cloud Platform project.
     # project_id = "my_project_id"
+
     # Dataset where the table or view is.
     # dataset_id = "my_dataset_id"
+    
     # Table or view from which to get the access policy.
     # resource_id = "my_table_id"
 
