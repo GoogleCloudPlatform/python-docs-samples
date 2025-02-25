@@ -482,10 +482,10 @@ def test_list_regional_param(
 ) -> None:
     project_id, param_id, _ = parameter
     got_param = get_regional_param.get_regional_param(project_id, location_id, param_id)
-    list_regional_param(project_id, location_id)
+    list_regional_param.list_regional_param(project_id, location_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found Regional Parameter: {got_param.name}" in out
+    assert f"Found Regional Parameter {got_param.name} with format {got_param.format_.name}" in out
 
 
 def test_list_param_regional_version(
@@ -497,11 +497,11 @@ def test_list_param_regional_version(
     version_1 = get_regional_param_version.get_regional_param_version(
         project_id, location_id, param_id, version_id
     )
-    list_regional_param_version(project_id, location_id, param_id)
+    list_regional_param_version.list_regional_param_version(project_id, location_id, param_id)
 
     out, _ = capsys.readouterr()
     assert param_id in out
-    assert f"Regional Parameter Version Name: {version_1.name}" in out
+    assert f"Found Regional Parameter Version: {version_1.name}" in out
 
 
 def test_render_regional_param_version(

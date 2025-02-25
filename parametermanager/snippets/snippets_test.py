@@ -434,7 +434,7 @@ def test_list_param(
     list_param(project_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found Parameter: {got_param.name}" in out
+    assert f"Found Parameter {got_param.name} with format {got_param.format_.name}" in out
 
 
 def test_list_param_version(
@@ -447,7 +447,7 @@ def test_list_param_version(
 
     out, _ = capsys.readouterr()
     assert param_id in out
-    assert f"Version Name: {version_1.name}" in out
+    assert f"Found Parameter Version: {version_1.name}" in out
 
 
 def test_render_param_version(
