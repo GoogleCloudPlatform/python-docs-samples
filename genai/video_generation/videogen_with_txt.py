@@ -20,7 +20,7 @@ def generate_videos(output_gcs_uri: str) -> str:
     from google.genai.types import GenerateVideosConfig
 
     client = genai.Client()
-    prompt = "A person skiing down a snow covered mountain."
+    prompt = "a cat reading a book"
 
     # TODO(developer): Update and un-comment below line
     # output_gcs_uri = "gs://your-bucket/your-prefix"
@@ -34,19 +34,18 @@ def generate_videos(output_gcs_uri: str) -> str:
         ),
     )
 
-    print(operation)
     while not operation.done:
-        time.sleep(20)
-        operation = client.models.get_generate_videos_operation(operation.name)
+        time.sleep(15)
+        operation = client.operations.get(operation)
         print(operation)
 
     if operation.response:
-        print(operation.generate_videos_response.videos[0].uri)
+        print(operation.result.generated_videos[0].video.uri)
 
     # Example response:
     # gs://your-bucket/your-prefix
     # [END googlegenaisdk_videogen_with_txt]
-    return operation.generate_videos_response.videos[0].uri
+    return operation.result.generated_videos[0].video.uri
 
 
 if __name__ == "__main__":
