@@ -21,7 +21,7 @@ import os
 import counttoken_compute_with_txt
 import counttoken_resp_with_txt
 import counttoken_with_txt
-import counttoken_with_txt_img_vid
+import counttoken_with_txt_vid
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -41,5 +41,5 @@ def test_counttoken_with_txt() -> None:
     assert counttoken_with_txt.count_tokens()
 
 
-def test_counttoken_with_txt_img_vid() -> None:
-    assert counttoken_with_txt_img_vid.count_tokens()
+def test_counttoken_with_txt_vid() -> None:
+    assert counttoken_with_txt_vid.count_tokens()
