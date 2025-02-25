@@ -158,11 +158,8 @@ assign_prs_by:
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
-<<<<<<< HEAD
-      - "api: parametermanager"
-=======
       - "api: modelarmor"
->>>>>>> c034d0cd5 (Added codeowners)
+      - "api: parametermanager"
       - "api: privateca"
       - "api: recaptchaenterprise"
       - "api: secretmanager"
