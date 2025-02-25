@@ -55,7 +55,7 @@ def get_cart_plus_offers_async(acct):
     return cart, offers
 
 
-# [START gae_ndb_cart_offers_tasklets]
+# [START gae_ndb_async_cart_offers_tasklets]
 @ndb.tasklet
 def get_cart_tasklet(acct):
     cart = yield CartItem.query(CartItem.account == acct.key).fetch_async()
@@ -74,7 +74,7 @@ def get_offers_tasklet(acct):
 def get_cart_plus_offers_tasklet(acct):
     cart, offers = yield get_cart_tasklet(acct), get_offers_tasklet(acct)
     raise ndb.Return((cart, offers))
-# [END gae_ndb_cart_offers_tasklets]
+# [END gae_ndb_async_cart_offers_tasklets]
 
 
 @ndb.tasklet
