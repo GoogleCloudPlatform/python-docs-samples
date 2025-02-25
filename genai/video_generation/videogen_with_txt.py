@@ -26,7 +26,7 @@ def generate_videos(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
-        model="veo-2.0-generate-exp",
+        model="veo-2.0-generate-001",
         prompt=prompt,
         config=GenerateVideosConfig(
             aspect_ratio="16:9",

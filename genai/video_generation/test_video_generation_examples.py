@@ -20,9 +20,9 @@ from datetime import datetime as dt
 
 import os
 
-import pytest
-
 from google.cloud import storage
+
+import pytest
 
 import videogen_with_txt
 
