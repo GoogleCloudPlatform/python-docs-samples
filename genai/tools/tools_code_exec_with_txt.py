@@ -35,19 +35,32 @@ def generate_content() -> str:
             temperature=0,
         ),
     )
-    for part in response.candidates[0].content.parts:
-        if part.executable_code:
-            print(part.executable_code)
-        if part.code_execution_result:
-            print(part.code_execution_result)
+    print("# Code:")
+    print(response.executable_code)
+    print("# Outcome:")
+    print(response.code_execution_result)
+
     # Example response:
-    # code='...' language='PYTHON'
-    # outcome='OUTCOME_OK' output='The 20th Fibonacci number is: 6765\n'
-    # code='...' language='PYTHON'
-    # outcome='OUTCOME_OK' output='Lower Palindrome: 6666\nHigher Palindrome: 6776\nNearest Palindrome to 6765: 6776\n'
+    # # Code:
+    # def fibonacci(n):
+    #     if n <= 0:
+    #         return 0
+    #     elif n == 1:
+    #         return 1
+    #     else:
+    #         a, b = 0, 1
+    #         for _ in range(2, n + 1):
+    #             a, b = b, a + b
+    #         return b
+    #
+    # fib_20 = fibonacci(20)
+    # print(f'{fib_20=}')
+    #
+    # # Outcome:
+    # fib_20=6765
 
     # [END googlegenaisdk_tools_code_exec_with_txt]
-    return str(response.candidates[0].content.parts)
+    return response.executable_code
 
 
 if __name__ == "__main__":

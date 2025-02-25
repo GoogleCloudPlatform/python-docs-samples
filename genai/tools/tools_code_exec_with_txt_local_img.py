@@ -55,24 +55,24 @@ def generate_content() -> GenerateContentResponse:
         )
 
     print("# Code:")
-    for part in response.candidates[0].content.parts:
-        if part.executable_code:
-            print(part.executable_code)
-
+    print(response.executable_code)
     print("# Outcome:")
-    for part in response.candidates[0].content.parts:
-        if part.code_execution_result:
-            print(part.code_execution_result)
+    print(response.code_execution_result)
 
-    # Example response:
     # # Code:
-    # code='\nimport random\n\ndef monty_hall_simulation(num_trials):\n
-    # """Simulates the Monty Hall problem and returns the win rates for switching and not switching."""\n\n
-    # wins_switching = 0\n    wins_not_switching = 0\n\n    for _ in range(num_trials):\n        # 1. Set up the game:\n
-    #   - Randomly place the car behind one of the three doors.\n        car_door = random.randint(0, 2)\n
+    # import random
+
+    # def monty_hall_simulation(num_trials=1000):
+    #     wins_switching = 0
+    #     wins_not_switching = 0
+
+    #     for _ in range(num_trials):
+    #         # Randomly assign the car to a door (0, 1, or 2)
+    #         car_door = random.randint(0, 2)
     # ...
     # # Outcome:
-    # outcome=<Outcome.OUTCOME_OK: 'OUTCOME_OK'> output='Win percentage when switching: 65.90%\nWin percentage when not switching: 34.10%\n'
+    # Win percentage when switching: 65.50%
+    # Win percentage when not switching: 34.50%
     # [END googlegenaisdk_tools_code_exec_with_txt_local_img]
     return response
 
