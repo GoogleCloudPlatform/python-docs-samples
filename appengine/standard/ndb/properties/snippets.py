@@ -14,10 +14,10 @@ from __future__ import print_function
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START gae_ndb_note_store_imports]
+# [START gae_ndb_properties_note_store_imports]
 from google.appengine.ext import ndb
 from google.appengine.ext.ndb import msgprop
-# [END gae_ndb_note_store_imports]
+# [END gae_ndb_properties_note_store_imports]
 
 from protorpc import messages
 
