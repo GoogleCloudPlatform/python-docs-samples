@@ -17,8 +17,6 @@ command line application and sample code for
 quickstart with regional parameter manager.
 """
 
-import argparse
-
 
 # [START parametermanager_quickstart]
 def quickstart(

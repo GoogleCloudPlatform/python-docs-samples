@@ -17,15 +17,12 @@ command line application and sample code for
 creating unformatted regional parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_create_regional_param_version]
 def create_regional_param_version(
-    project_id: str, location_id: str,
-    parameter_id: str, version_id: str, payload: str
+    project_id: str, location_id: str, parameter_id: str, version_id: str, payload: str
 ) -> parametermanager_v1.ParameterVersion:
     """
     Creates a new version of an existing parameter in the specified region
@@ -74,7 +71,7 @@ def create_regional_param_version(
             payload=parametermanager_v1.ParameterVersionPayload(
                 data=payload.encode("utf-8")  # Encoding the payload to bytes.
             )
-        )
+        ),
     )
 
     # Create the parameter version.

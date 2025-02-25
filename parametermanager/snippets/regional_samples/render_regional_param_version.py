@@ -17,8 +17,6 @@ command line application and sample code for
 render the regional parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -60,12 +58,12 @@ def render_regional_param_version(
     )
 
     # Build the resource name of the parameter version.
-    name = client.parameter_version_path(project_id, location_id, parameter_id, version_id)
+    name = client.parameter_version_path(
+        project_id, location_id, parameter_id, version_id
+    )
 
     # Define the request to render the parameter version.
-    request = parametermanager_v1.RenderParameterVersionRequest(
-        name=name
-    )
+    request = parametermanager_v1.RenderParameterVersionRequest(name=name)
 
     # Get the rendered parameter version details.
     response = client.render_parameter_version(request=request)

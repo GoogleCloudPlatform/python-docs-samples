@@ -17,8 +17,6 @@ command line application and sample code for
 creating a new unformatted parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -68,7 +66,7 @@ def create_param_version(
             payload=parametermanager_v1.ParameterVersionPayload(
                 data=payload.encode("utf-8")  # Encoding the payload to bytes.
             )
-        )
+        ),
     )
 
     # Create the parameter version.

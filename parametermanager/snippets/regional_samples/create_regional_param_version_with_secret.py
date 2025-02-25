@@ -17,15 +17,16 @@ command line application and sample code for
 creating a regional parameter version with secret reference.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_create_regional_param_version_with_secret]
 def create_regional_param_version_with_secret(
-    project_id: str, location_id: str,
-    parameter_id: str, version_id: str, secret_id: str
+    project_id: str,
+    location_id: str,
+    parameter_id: str,
+    version_id: str,
+    secret_id: str,
 ) -> parametermanager_v1.ParameterVersion:
     """
     Creates a new version of an existing parameter in the specified region
@@ -71,7 +72,7 @@ def create_regional_param_version_with_secret(
     # Create the JSON payload with a secret reference.
     payload_dict = {
         "username": "test-user",
-        "password": f"__REF__('//secretmanager.googleapis.com/{secret_id}')"
+        "password": f"__REF__('//secretmanager.googleapis.com/{secret_id}')",
     }
     payload_json = json.dumps(payload_dict)
 
@@ -83,7 +84,7 @@ def create_regional_param_version_with_secret(
             payload=parametermanager_v1.ParameterVersionPayload(
                 data=payload_json.encode("utf-8")
             )
-        )
+        ),
     )
 
     # Create the parameter version.

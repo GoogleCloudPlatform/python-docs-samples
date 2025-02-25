@@ -17,15 +17,15 @@ command line application and sample code
 for creating a new formatted regional parameter.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_create_structured_regional_param]
 def create_structured_regional_param(
-    project_id: str, location_id: str, parameter_id: str,
-    format_type: parametermanager_v1.ParameterFormat
+    project_id: str,
+    location_id: str,
+    parameter_id: str,
+    format_type: parametermanager_v1.ParameterFormat,
 ) -> parametermanager_v1.Parameter:
     """
     Creates a parameter in the specified region of the specified
@@ -70,17 +70,17 @@ def create_structured_regional_param(
     request = parametermanager_v1.CreateParameterRequest(
         parent=parent,
         parameter_id=parameter_id,
-        parameter=parametermanager_v1.Parameter(
-            format_=format_type
-        )
+        parameter=parametermanager_v1.Parameter(format_=format_type),
     )
 
     # Create the parameter.
     response = client.create_parameter(request=request)
 
     # Print the newly created parameter name.
-    print(f"Created Regional Parameter: {response.name} "
-          f"with Format {response.format_.name}")
+    print(
+        f"Created Regional Parameter: {response.name} "
+        f"with Format {response.format_.name}"
+    )
     # [END parametermanager_create_structured_regional_param]
 
     return response

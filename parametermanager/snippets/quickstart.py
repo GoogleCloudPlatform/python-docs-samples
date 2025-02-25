@@ -16,8 +16,6 @@
 command line application and sample code for quickstart with parameter manager.
 """
 
-import argparse
-
 
 # [START parametermanager_quickstart]
 def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) -> None:
@@ -63,10 +61,7 @@ def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) ->
 
     # Create the parameter
     response = client.create_parameter(request=create_param_request)
-    print(
-        f"Created Parameter {response.name} "
-        f"with Format {response.format_.name}"
-    )
+    print(f"Created Parameter {response.name} with Format {response.format_.name}")
 
     # Define the payload with a secret reference
     payload_data = {"username": "test-user", "host": "localhost"}

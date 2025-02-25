@@ -16,13 +16,9 @@
 command line application and sample code for listing the parameters.
 """
 
-import argparse
-
 
 # [START parametermanager_list_param]
-def list_param(
-    project_id: str
-) -> None:
+def list_param(project_id: str) -> None:
     """
     Lists all parameters in the global location for the specified
     project using the Google Cloud Parameter Manager SDK.
@@ -50,7 +46,6 @@ def list_param(
 
     # List all parameters in the specified parent project.
     for parameter in client.list_parameters(parent=parent):
-        print(f"Found Parameter: {parameter.name}")
+        print(f"Found Parameter {parameter.name} with format {parameter.format_.name}")
 
     # [END parametermanager_list_param]
-

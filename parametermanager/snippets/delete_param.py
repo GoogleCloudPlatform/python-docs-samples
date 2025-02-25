@@ -17,13 +17,9 @@ command line application and sample code for
 deleting a parameter.
 """
 
-import argparse
-
 
 # [START parametermanager_delete_param]
-def delete_param(
-    project_id: str, parameter_id: str
-) -> None:
+def delete_param(project_id: str, parameter_id: str) -> None:
     """
     Deletes a parameter from the global location of the specified
     project using the Google Cloud Parameter Manager SDK.

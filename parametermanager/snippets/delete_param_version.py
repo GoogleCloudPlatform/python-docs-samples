@@ -16,8 +16,6 @@
 command line application and sample code for deleting a parameter version.
 """
 
-import argparse
-
 
 # [START parametermanager_delete_param_version]
 def delete_param_version(project_id: str, parameter_id: str, version_id: str) -> None:
@@ -48,9 +46,7 @@ def delete_param_version(project_id: str, parameter_id: str, version_id: str) ->
     client = parametermanager_v1.ParameterManagerClient()
 
     # Build the resource name of the parameter version.
-    name = client.parameter_version_path(
-            project_id, "global", parameter_id, version_id
-    )
+    name = client.parameter_version_path(project_id, "global", parameter_id, version_id)
 
     # Define the request to delete the parameter version.
     request = parametermanager_v1.DeleteParameterVersionRequest(name=name)

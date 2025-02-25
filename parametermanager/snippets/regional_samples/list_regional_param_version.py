@@ -17,8 +17,6 @@ command line application and sample code for
 listing the regional parameter versions.
 """
 
-import argparse
-
 
 # [START parametermanager_list_regional_param_version]
 def list_regional_param_version(
@@ -60,15 +58,12 @@ def list_regional_param_version(
     parent = client.parameter_path(project_id, location_id, parameter_id)
 
     # Define the request to list parameter versions.
-    request = parametermanager_v1.ListParameterVersionsRequest(
-        parent=parent
-    )
+    request = parametermanager_v1.ListParameterVersionsRequest(parent=parent)
 
     # List the parameter versions.
     page_result = client.list_parameter_versions(request=request)
 
     # Print the versions of the parameter.
-    print("Regional Parameter Versions:")
     for response in page_result:
-        print(f"Regional Parameter Version Name: {response.name}")
+        print(f"Found Regional Parameter Version: {response.name}")
     # [END parametermanager_list_regional_param_version]

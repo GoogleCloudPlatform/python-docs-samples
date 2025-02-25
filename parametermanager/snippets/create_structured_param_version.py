@@ -17,15 +17,12 @@ command line application and sample code for
 creating a new formatted parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_create_structured_param_version]
 def create_structured_param_version(
-    project_id: str, parameter_id: str,
-    version_id: str, payload: dict
+    project_id: str, parameter_id: str, version_id: str, payload: dict
 ) -> parametermanager_v1.ParameterVersion:
     """
     Creates a new version of an existing parameter in the global location
@@ -71,10 +68,8 @@ def create_structured_param_version(
         parent=parent,
         parameter_version_id=version_id,
         parameter_version=parametermanager_v1.ParameterVersion(
-            payload=parametermanager_v1.ParameterVersionPayload(
-                data=payload_bytes
-            )
-        )
+            payload=parametermanager_v1.ParameterVersionPayload(data=payload_bytes)
+        ),
     )
 
     # Create the parameter version.

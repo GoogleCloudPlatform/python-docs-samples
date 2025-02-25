@@ -17,8 +17,6 @@ command line application and sample code for
 creating a new default format regional parameter.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -69,9 +67,7 @@ def create_regional_param(
     )
 
     # Create the parameter.
-    response = client.create_parameter(
-        request=request
-    )
+    response = client.create_parameter(request=request)
 
     # Print the newly created parameter name.
     print(f"Created Regional Parameter: {response.name}")

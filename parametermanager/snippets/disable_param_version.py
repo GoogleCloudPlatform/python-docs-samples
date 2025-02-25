@@ -16,8 +16,6 @@
 command line application and sample code for disabling the parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -54,9 +52,7 @@ def disable_param_version(
     client = parametermanager_v1.ParameterManagerClient()
 
     # Build the resource name of the parameter version.
-    name = client.parameter_version_path(
-            project_id, "global", parameter_id, version_id
-    )
+    name = client.parameter_version_path(project_id, "global", parameter_id, version_id)
 
     # Get the current parameter version details.
     parameter_version = client.get_parameter_version(name=name)
@@ -69,18 +65,14 @@ def disable_param_version(
 
     # Define the request to update the parameter version.
     request = parametermanager_v1.UpdateParameterVersionRequest(
-        parameter_version=parameter_version,
-        update_mask=update_mask
+        parameter_version=parameter_version, update_mask=update_mask
     )
 
     # Call the API to update (disable) the parameter version.
     response = client.update_parameter_version(request=request)
 
     # Print the parameter version ID that it was disabled.
-    print(
-        f"Disabled Parameter Version {version_id} "
-        f"for Parameter {parameter_id}"
-    )
+    print(f"Disabled Parameter Version {version_id} for Parameter {parameter_id}")
     # [END parametermanager_disable_param_version]
 
     return response

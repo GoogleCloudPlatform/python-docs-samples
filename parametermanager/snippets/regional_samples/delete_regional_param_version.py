@@ -17,8 +17,6 @@ command line application and sample code for
 deleting a regional parameter version.
 """
 
-import argparse
-
 
 # [START parametermanager_delete_regional_param_version]
 def delete_regional_param_version(
@@ -56,7 +54,9 @@ def delete_regional_param_version(
     )
 
     # Build the resource name of the parameter version.
-    name = client.parameter_version_path(project_id, location_id, parameter_id, version_id)
+    name = client.parameter_version_path(
+        project_id, location_id, parameter_id, version_id
+    )
 
     # Define the request to delete the parameter version.
     request = parametermanager_v1.DeleteParameterVersionRequest(name=name)

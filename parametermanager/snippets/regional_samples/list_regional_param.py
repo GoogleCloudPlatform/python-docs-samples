@@ -16,13 +16,9 @@
 command line application and sample code for listing regional parameters.
 """
 
-import argparse
-
 
 # [START parametermanager_list_regional_param]
-def list_regional_param(
-    project_id: str, location_id: str
-) -> None:
+def list_regional_param(project_id: str, location_id: str) -> None:
     """
     Lists all parameters in the specified region for the specified
     project using the Google Cloud Parameter Manager SDK.
@@ -56,6 +52,6 @@ def list_regional_param(
 
     # List all parameters in the specified parent project and region.
     for parameter in client.list_parameters(parent=parent):
-        print(f"Found Regional Parameter: {parameter.name}")
+        print(f"Found Regional Parameter {parameter.name} with format {parameter.format_.name}")
 
     # [END parametermanager_list_regional_param]

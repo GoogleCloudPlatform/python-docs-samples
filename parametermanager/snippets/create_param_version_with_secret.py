@@ -17,8 +17,6 @@ command line application and sample code for
 creating a new parameter version with secret reference.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -64,7 +62,7 @@ def create_param_version_with_secret(
     # Create the JSON payload with a secret reference.
     payload_dict = {
         "username": "test-user",
-        "password": f"__REF__('//secretmanager.googleapis.com/{secret_id}')"
+        "password": f"__REF__('//secretmanager.googleapis.com/{secret_id}')",
     }
     payload_json = json.dumps(payload_dict)
 
@@ -76,7 +74,7 @@ def create_param_version_with_secret(
             payload=parametermanager_v1.ParameterVersionPayload(
                 data=payload_json.encode("utf-8")
             )
-        )
+        ),
     )
 
     # Create the parameter version.

@@ -17,8 +17,6 @@ command line application and sample code for
 disabling a regional parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -63,7 +61,9 @@ def disable_regional_param_version(
     )
 
     # Build the resource name of the parameter version for the specified region.
-    name = client.parameter_version_path(project_id, location_id, parameter_id, version_id)
+    name = client.parameter_version_path(
+        project_id, location_id, parameter_id, version_id
+    )
 
     # Get the current parameter version to update its state.
     parameter_version = client.get_parameter_version(request={"name": name})

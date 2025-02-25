@@ -16,8 +16,6 @@
 command line application and sample code for get the regional parameter details.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
@@ -62,8 +60,7 @@ def get_regional_param(
     # Show parameter details.
     # Find more details for the Parameter object here:
     # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters#Parameter
-    print(f"Fetched the Regional Parameter {parameter.name}")
-    print(parameter)
+    print(f"Found the Regional Parameter {parameter.name} with format {parameter.format_.name}")
     # [END parametermanager_get_regional_param]
 
     return parameter

@@ -16,13 +16,9 @@
 command line application and sample code for listing the parameter versions.
 """
 
-import argparse
-
 
 # [START parametermanager_list_param_version]
-def list_param_version(
-    project_id: str, parameter_id: str
-) -> None:
+def list_param_version(project_id: str, parameter_id: str) -> None:
     """
     Lists all versions of an existing parameter in the global location
     of the specified project using the Google Cloud Parameter Manager SDK.
@@ -51,16 +47,13 @@ def list_param_version(
     parent = client.parameter_path(project_id, "global", parameter_id)
 
     # Define the request to list parameter versions.
-    request = parametermanager_v1.ListParameterVersionsRequest(
-        parent=parent
-    )
+    request = parametermanager_v1.ListParameterVersionsRequest(parent=parent)
 
     # List the parameter versions.
     page_result = client.list_parameter_versions(request=request)
 
     # Print the versions of the parameter.
-    print("Parameter Versions:")
     for response in page_result:
-        print(f"Version Name: {response.name}")
+        print(f"Found Parameter Version: {response.name}")
 
     # [END parametermanager_list_param_version]

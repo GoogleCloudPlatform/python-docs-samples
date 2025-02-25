@@ -21,25 +21,25 @@ from google.cloud import parametermanager_v1, secretmanager
 import pytest
 
 # Import the methods to be tested
-from create_regional_param import create_regional_param
-from create_regional_param_version import create_regional_param_version
-from create_regional_param_version_with_secret import (
+from regional_samples import create_regional_param
+from regional_samples import create_regional_param_version
+from regional_samples import (
     create_regional_param_version_with_secret,
 )
-from create_structured_regional_param import create_structured_regional_param
-from create_structured_regional_param_version import (
+from regional_samples import create_structured_regional_param
+from regional_samples import (
     create_structured_regional_param_version,
 )
-from delete_regional_param import delete_regional_param
-from delete_regional_param_version import delete_regional_param_version
-from disable_regional_param_version import disable_regional_param_version
-from enable_regional_param_version import enable_regional_param_version
-from get_regional_param import get_regional_param
-from get_regional_param_version import get_regional_param_version
-from list_regional_param import list_regional_param
-from list_regional_param_version import list_regional_param_version
-from quickstart import quickstart
-from render_regional_param_version import render_regional_param_version
+from regional_samples import delete_regional_param
+from regional_samples import delete_regional_param_version
+from regional_samples import disable_regional_param_version
+from regional_samples import enable_regional_param_version
+from regional_samples import get_regional_param
+from regional_samples import get_regional_param_version
+from regional_samples import list_regional_param
+from regional_samples import list_regional_param_version
+from regional_samples import quickstart
+from regional_samples import render_regional_param_version
 
 
 @pytest.fixture()
@@ -281,7 +281,7 @@ def parameter_id(
 def secret_id(
     secret_manager_client: secretmanager.SecretManagerServiceClient,
     project_id: str,
-    location_id: str
+    location_id: str,
 ) -> Iterator[str]:
     secret_id = f"python-secret-{uuid.uuid4()}"
 
@@ -332,10 +332,7 @@ def secret_version(
     project_id, secret_id, _ = secret
 
     print(f"adding secret version to {secret_id}")
-    parent = (
-        f"projects/{project_id}/locations/{location_id}"
-        f"/secrets/{secret_id}"
-    )
+    parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
     payload = b"hello world!"
     time.sleep(5)
     version = secret_manager_client.add_secret_version(
@@ -349,7 +346,7 @@ def test_quickstart(
     project_id: str, location_id: str, parameter_id: Tuple[str, str]
 ) -> None:
     param_id, version_id = parameter_id
-    quickstart(project_id, location_id, param_id, version_id)
+    quickstart.quickstart(project_id, location_id, param_id, version_id)
 
 
 def test_create_regional_param(
@@ -358,7 +355,7 @@ def test_create_regional_param(
     parameter_id: str,
 ) -> None:
     param_id, _ = parameter_id
-    parameter = create_regional_param(project_id, location_id, param_id)
+    parameter = create_regional_param.create_regional_param(project_id, location_id, param_id)
     assert param_id in parameter.name
 
 
@@ -367,7 +364,7 @@ def test_create_regional_param_version(
 ) -> None:
     project_id, param_id, version_id = parameter
     payload = "test123"
-    version = create_regional_param_version(
+    version = create_regional_param_version.create_regional_param_version(
         project_id, location_id, param_id, version_id, payload
     )
     assert param_id in version.name
@@ -381,7 +378,7 @@ def test_create_regional_param_version_with_secret(
 ) -> None:
     project_id, secret_id, version_id, _ = secret_version
     project_id, param_id, version_id, _ = structured_parameter
-    version = create_regional_param_version_with_secret(
+    version = create_regional_param_version_with_secret.create_regional_param_version_with_secret(
         project_id, location_id, param_id, version_id, secret_id
     )
     assert param_id in version.name
@@ -394,7 +391,7 @@ def test_create_structured_regional_param(
     parameter_id: str,
 ) -> None:
     param_id, _ = parameter_id
-    parameter = create_structured_regional_param(
+    parameter = create_structured_regional_param.create_structured_regional_param(
         project_id, location_id, param_id, parametermanager_v1.ParameterFormat.JSON
     )
     assert param_id in parameter.name
@@ -405,7 +402,7 @@ def test_create_structured_regional_param_version(
 ) -> None:
     project_id, param_id, version_id = parameter
     payload = {"test-key": "test-value"}
-    version = create_structured_regional_param_version(
+    version = create_structured_regional_param_version.create_structured_regional_param_version(
         project_id, location_id, param_id, version_id, payload
     )
     assert param_id in version.name
@@ -418,10 +415,12 @@ def test_delete_regional_parameter(
     location_id: str,
 ) -> None:
     project_id, param_id, version_id = parameter
-    delete_regional_param(project_id, location_id, param_id)
+    delete_regional_param.delete_regional_param(project_id, location_id, param_id)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
-        name = client.parameter_version_path(project_id, location_id, param_id, version_id)
+        name = client.parameter_version_path(
+            project_id, location_id, param_id, version_id
+        )
         retry_client_get_parameter_version(client, request={"name": name})
 
 
@@ -431,10 +430,12 @@ def test_delete_regional_param_version(
     parameter_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
-    delete_regional_param_version(project_id, location_id, param_id, version_id)
+    delete_regional_param_version.delete_regional_param_version(project_id, location_id, param_id, version_id)
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
-        name = client.parameter_version_path(project_id, location_id, param_id, version_id)
+        name = client.parameter_version_path(
+            project_id, location_id, param_id, version_id
+        )
         retry_client_get_parameter_version(client, request={"name": name})
 
 
@@ -442,7 +443,7 @@ def test_disable_regional_param_version(
     parameter_version: Tuple[str, str, str, str], location_id: str
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
-    version = disable_regional_param_version(
+    version = disable_regional_param_version.disable_regional_param_version(
         project_id, location_id, param_id, version_id
     )
     assert version.disabled is True
@@ -452,7 +453,7 @@ def test_enable_regional_param_version(
     parameter_version: Tuple[str, str, str, str], location_id: str
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
-    version = enable_regional_param_version(
+    version = enable_regional_param_version.enable_regional_param_version(
         project_id, location_id, param_id, version_id
     )
     assert version.disabled is False
@@ -460,7 +461,7 @@ def test_enable_regional_param_version(
 
 def test_get_regional_param(parameter: Tuple[str, str, str], location_id: str) -> None:
     project_id, param_id, _ = parameter
-    snippet_param = get_regional_param(project_id, location_id, param_id)
+    snippet_param = get_regional_param.get_regional_param(project_id, location_id, param_id)
     assert param_id in snippet_param.name
 
 
@@ -468,7 +469,7 @@ def test_get_regional_param_version(
     parameter_version: Tuple[str, str, str, str], location_id: str
 ) -> None:
     project_id, param_id, version_id, payload = parameter_version
-    version = get_regional_param_version(project_id, location_id, param_id, version_id)
+    version = get_regional_param_version.get_regional_param_version(project_id, location_id, param_id, version_id)
     assert param_id in version.name
     assert version_id in version.name
     assert version.payload.data == payload
@@ -480,7 +481,7 @@ def test_list_regional_param(
     parameter: Tuple[str, str, str],
 ) -> None:
     project_id, param_id, _ = parameter
-    got_param = get_regional_param(project_id, location_id, param_id)
+    got_param = get_regional_param.get_regional_param(project_id, location_id, param_id)
     list_regional_param(project_id, location_id)
 
     out, _ = capsys.readouterr()
@@ -493,7 +494,7 @@ def test_list_param_regional_version(
     parameter_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
-    version_1 = get_regional_param_version(
+    version_1 = get_regional_param_version.get_regional_param_version(
         project_id, location_id, param_id, version_id
     )
     list_regional_param_version(project_id, location_id, param_id)
@@ -510,12 +511,12 @@ def test_render_regional_param_version(
     project_id, param_id, version_id, _ = parameter_version_with_secret
     time.sleep(120)
     try:
-        version = render_regional_param_version(
+        version = render_regional_param_version.render_regional_param_version(
             project_id, location_id, param_id, version_id
         )
     except exceptions.RetryError:
         time.sleep(120)
-        version = render_regional_param_version(
+        version = render_regional_param_version.render_regional_param_version(
             project_id, location_id, param_id, version_id
         )
     assert param_id in version.parameter_version

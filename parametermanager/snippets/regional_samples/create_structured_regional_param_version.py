@@ -17,8 +17,6 @@ command line application and sample code for
 creating a new formatted regional parameter version.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 

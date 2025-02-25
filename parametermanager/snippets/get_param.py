@@ -16,15 +16,11 @@
 command line application and sample code for getting the parameter details.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_get_param]
-def get_param(
-    project_id: str, parameter_id: str
-) -> parametermanager_v1.Parameter:
+def get_param(project_id: str, parameter_id: str) -> parametermanager_v1.Parameter:
     """
     Retrieves a parameter from the global location of the specified
     project using the Google Cloud Parameter Manager SDK.
@@ -57,7 +53,7 @@ def get_param(
     # Show parameter details.
     # Find more details for the Parameter object here:
     # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters#Parameter
-    print(f"Fetched the Parameter {parameter.name}")
+    print(f"Found the Parameter {parameter.name} with format {parameter.format_.name}")
     print(parameter)
     # [END parametermanager_get_param]
 

@@ -17,15 +17,11 @@ command line application and sample code for
 creating a new default format parameter.
 """
 
-import argparse
-
 from google.cloud import parametermanager_v1
 
 
 # [START parametermanager_create_param]
-def create_param(
-    project_id: str, parameter_id: str
-) -> parametermanager_v1.Parameter:
+def create_param(project_id: str, parameter_id: str) -> parametermanager_v1.Parameter:
     """
     Creates a parameter with default format (Unformatted)
     in the global location of the specified
