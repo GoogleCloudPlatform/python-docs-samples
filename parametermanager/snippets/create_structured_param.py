@@ -67,7 +67,7 @@ def create_structured_param(
     response = client.create_parameter(request=request)
 
     # Print the newly created parameter name.
-    print(f"Created Parameter: {response.name} with Format {response.format_.name}")
+    print(f"Created Parameter {response.name} with Format {response.format_.name}")
     # [END parametermanager_create_structured_param]
 
     return response
