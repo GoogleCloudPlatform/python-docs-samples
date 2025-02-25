@@ -41,5 +41,5 @@ def test_counttoken_with_txt() -> None:
     assert counttoken_with_txt.count_tokens()
 
 
-def test_counttoken_with_txt_img_vid() -> None:
+def test_counttoken_with_txt_vid() -> None:
     assert counttoken_with_txt_vid.count_tokens()
