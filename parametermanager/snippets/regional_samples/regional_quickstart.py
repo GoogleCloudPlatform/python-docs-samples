@@ -18,8 +18,8 @@ quickstart with regional parameter manager.
 """
 
 
-# [START parametermanager_quickstart]
-def quickstart(
+# [START parametermanager_regional_quickstart]
+def regional_quickstart(
     project_id: str, location_id: str, parameter_id: str, version_id: str
 ) -> None:
     """
@@ -38,7 +38,7 @@ def quickstart(
         None
 
     Example:
-        quickstart(
+        regional_quickstart(
             "my-project",
             "us-central1",
             "my-regional-parameter",
@@ -103,4 +103,4 @@ def quickstart(
     # Print the simple and rendered payload
     payload = get_param_response.payload.data.decode("utf-8")
     print(f"Payload: {payload}")
-    # [END parametermanager_quickstart]
+    # [END parametermanager_regional_quickstart]

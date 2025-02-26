@@ -38,7 +38,7 @@ from regional_samples import get_regional_param
 from regional_samples import get_regional_param_version
 from regional_samples import list_regional_param_versions
 from regional_samples import list_regional_params
-from regional_samples import quickstart
+from regional_samples import regional_quickstart
 from regional_samples import render_regional_param_version
 
 
@@ -342,11 +342,11 @@ def secret_version(
     yield project_id, version.name, version.name.rsplit("/", 1)[-1], parent
 
 
-def test_quickstart(
+def test_regional_quickstart(
     project_id: str, location_id: str, parameter_id: Tuple[str, str]
 ) -> None:
     param_id, version_id = parameter_id
-    quickstart.quickstart(project_id, location_id, param_id, version_id)
+    regional_quickstart.regional_quickstart(project_id, location_id, param_id, version_id)
 
 
 def test_create_regional_param(

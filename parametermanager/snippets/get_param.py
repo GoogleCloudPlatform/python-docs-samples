@@ -54,7 +54,6 @@ def get_param(project_id: str, parameter_id: str) -> parametermanager_v1.Paramet
     # Find more details for the Parameter object here:
     # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters#Parameter
     print(f"Found the Parameter {parameter.name} with format {parameter.format_.name}")
-    print(parameter)
     # [END parametermanager_get_param]
 
     return parameter
