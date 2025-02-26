@@ -26,7 +26,7 @@ def create_regional_param(
 ) -> parametermanager_v1.Parameter:
     """
     Creates a regional parameter with default format (Unformatted)
-    in the global location of the specified
+    in the specified location and
     project using the Google Cloud Parameter Manager SDK.
 
     Args:

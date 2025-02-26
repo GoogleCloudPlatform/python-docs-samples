@@ -32,8 +32,8 @@ from disable_param_version import disable_param_version
 from enable_param_version import enable_param_version
 from get_param import get_param
 from get_param_version import get_param_version
-from list_param import list_param
-from list_param_version import list_param_version
+from list_param_versions import list_param_versions
+from list_params import list_params
 from quickstart import quickstart
 from render_param_version import render_param_version
 
@@ -426,24 +426,26 @@ def test_get_param_version(
     assert version.payload.data == payload
 
 
-def test_list_param(
+def test_list_params(
     capsys: pytest.LogCaptureFixture, parameter: Tuple[str, str, str]
 ) -> None:
     project_id, param_id, _ = parameter
     got_param = get_param(project_id, param_id)
-    list_param(project_id)
+    list_params(project_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found Parameter {got_param.name} with format {got_param.format_.name}" in out
+    assert (
+        f"Found Parameter {got_param.name} with format {got_param.format_.name}" in out
+    )
 
 
-def test_list_param_version(
+def test_list_param_versions(
     capsys: pytest.LogCaptureFixture,
     parameter_version: Tuple[str, str, str, str],
 ) -> None:
     project_id, param_id, version_id, _ = parameter_version
     version_1 = get_param_version(project_id, param_id, version_id)
-    list_param_version(project_id, param_id)
+    list_param_versions(project_id, param_id)
 
     out, _ = capsys.readouterr()
     assert param_id in out

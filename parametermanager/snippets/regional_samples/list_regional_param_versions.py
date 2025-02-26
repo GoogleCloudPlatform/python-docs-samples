@@ -18,8 +18,8 @@ listing the regional parameter versions.
 """
 
 
-# [START parametermanager_list_regional_param_version]
-def list_regional_param_version(
+# [START parametermanager_list_regional_param_versions]
+def list_regional_param_versions(
     project_id: str, location_id: str, parameter_id: str
 ) -> None:
     """
@@ -39,7 +39,7 @@ def list_regional_param_version(
         None
 
     Example:
-        list_regional_param_version(
+        list_regional_param_versions(
             "my-project",
             "us-central1",
             "my-regional-parameter"
@@ -66,4 +66,4 @@ def list_regional_param_version(
     # Print the versions of the parameter.
     for response in page_result:
         print(f"Found Regional Parameter Version: {response.name}")
-    # [END parametermanager_list_regional_param_version]
+    # [END parametermanager_list_regional_param_versions]

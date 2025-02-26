@@ -36,8 +36,8 @@ from regional_samples import disable_regional_param_version
 from regional_samples import enable_regional_param_version
 from regional_samples import get_regional_param
 from regional_samples import get_regional_param_version
-from regional_samples import list_regional_param
-from regional_samples import list_regional_param_version
+from regional_samples import list_regional_param_versions
+from regional_samples import list_regional_params
 from regional_samples import quickstart
 from regional_samples import render_regional_param_version
 
@@ -475,20 +475,20 @@ def test_get_regional_param_version(
     assert version.payload.data == payload
 
 
-def test_list_regional_param(
+def test_list_regional_params(
     capsys: pytest.LogCaptureFixture,
     location_id: str,
     parameter: Tuple[str, str, str],
 ) -> None:
     project_id, param_id, _ = parameter
     got_param = get_regional_param.get_regional_param(project_id, location_id, param_id)
-    list_regional_param.list_regional_param(project_id, location_id)
+    list_regional_params.list_regional_params(project_id, location_id)
 
     out, _ = capsys.readouterr()
     assert f"Found Regional Parameter {got_param.name} with format {got_param.format_.name}" in out
 
 
-def test_list_param_regional_version(
+def test_list_param_regional_versions(
     capsys: pytest.LogCaptureFixture,
     location_id: str,
     parameter_version: Tuple[str, str, str, str],
@@ -497,7 +497,7 @@ def test_list_param_regional_version(
     version_1 = get_regional_param_version.get_regional_param_version(
         project_id, location_id, param_id, version_id
     )
-    list_regional_param_version.list_regional_param_version(project_id, location_id, param_id)
+    list_regional_param_versions.list_regional_param_versions(project_id, location_id, param_id)
 
     out, _ = capsys.readouterr()
     assert param_id in out

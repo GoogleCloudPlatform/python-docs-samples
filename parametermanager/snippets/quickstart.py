@@ -36,7 +36,7 @@ def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) ->
     Example:
         quickstart(
             "my-project",
-            "my-regional-parameter",
+            "my-parameter",
             "v1"
         )
     """
@@ -63,7 +63,7 @@ def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) ->
     response = client.create_parameter(request=create_param_request)
     print(f"Created Parameter {response.name} with Format {response.format_.name}")
 
-    # Define the payload with a secret reference
+    # Define the payload
     payload_data = {"username": "test-user", "host": "localhost"}
     payload = parametermanager_v1.ParameterVersionPayload(
         data=json.dumps(payload_data).encode("utf-8")

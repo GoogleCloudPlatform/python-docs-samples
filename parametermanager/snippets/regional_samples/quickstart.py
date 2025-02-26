@@ -76,7 +76,7 @@ def quickstart(
         f"with Format {response.format_.name}"
     )
 
-    # Define the payload with a secret reference
+    # Define the payload
     payload_data = {"username": "test-user", "host": "localhost"}
     payload = parametermanager_v1.ParameterVersionPayload(
         data=json.dumps(payload_data).encode("utf-8")
