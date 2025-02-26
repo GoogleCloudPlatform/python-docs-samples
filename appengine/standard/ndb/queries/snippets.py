@@ -60,12 +60,12 @@ def query_article_inequality_explicit():
 
 
 def articles_with_tags_example():
-    # [START included_in_inequality]
+    # [START gae_ndb_query_included_in_inequality]
     Article(title="Perl + Python = Parrot", stars=5, tags=["python", "perl"])
-    # [END included_in_inequality]
-    # [START excluded_from_inequality]
+    # [END gae_ndb_query_included_in_inequality]
+    # [START gae_ndb_query_excluded_from_inequality]
     Article(title="Introduction to Perl", stars=3, tags=["perl"])
-    # [END excluded_from_inequality]
+    # [END gae_ndb_query_excluded_from_inequality]
 
 
 def query_article_in():
@@ -104,15 +104,14 @@ def query_greeting_multiple_orders():
 
 
 def query_purchase_with_customer_key():
-    # [START purchase_with_customer_key_models]
+    # [START gae_ndb_query_purchase_with_customer_key_models]
     class Customer(ndb.Model):
         name = ndb.StringProperty()
 
     class Purchase(ndb.Model):
         customer = ndb.KeyProperty(kind=Customer)
         price = ndb.IntegerProperty()
-
-    # [END purchase_with_customer_key_models]
+    # [END gae_ndb_query_purchase_with_customer_key_models]
 
     def query_purchases_for_customer_via_key(customer_entity):
         purchases = Purchase.query(Purchase.customer == customer_entity.key).fetch()
@@ -122,14 +121,13 @@ def query_purchase_with_customer_key():
 
 
 def query_purchase_with_ancestor_key():
-    # [START purchase_with_ancestor_key_models]
+    # [START gae_ndb_query_purchase_with_ancestor_key_models]
     class Customer(ndb.Model):
         name = ndb.StringProperty()
 
     class Purchase(ndb.Model):
         price = ndb.IntegerProperty()
-
-    # [END purchase_with_ancestor_key_models]
+    # [END gae_ndb_query_purchase_with_ancestor_key_models]
 
     def create_purchase_for_customer_with_ancestor(customer_entity):
         purchase = Purchase(parent=customer_entity.key)
