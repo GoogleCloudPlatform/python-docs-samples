@@ -73,7 +73,7 @@ def create_param_version(
     response = client.create_parameter_version(request=request)
 
     # Print the newly created parameter version name.
-    print(f"Created Parameter Version: {response.name}")
+    print(f"Created parameter version: {response.name}")
     # [END parametermanager_create_param_version]
 
     return response

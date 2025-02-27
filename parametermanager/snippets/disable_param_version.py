@@ -72,7 +72,7 @@ def disable_param_version(
     response = client.update_parameter_version(request=request)
 
     # Print the parameter version ID that it was disabled.
-    print(f"Disabled Parameter Version {version_id} for Parameter {parameter_id}")
+    print(f"Disabled parameter version {version_id} for parameter {parameter_id}")
     # [END parametermanager_disable_param_version]
 
     return response

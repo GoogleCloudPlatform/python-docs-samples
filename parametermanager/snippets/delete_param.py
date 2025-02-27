@@ -51,5 +51,5 @@ def delete_param(project_id: str, parameter_id: str) -> None:
     client.delete_parameter(name=name)
 
     # Print confirmation of deletion.
-    print(f"Deleted Parameter: {name}")
+    print(f"Deleted parameter: {name}")
     # [END parametermanager_delete_param]

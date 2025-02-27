@@ -60,7 +60,7 @@ def get_regional_param(
     # Show parameter details.
     # Find more details for the Parameter object here:
     # https://cloud.google.com/secret-manager/parameter-manager/docs/reference/rest/v1/projects.locations.parameters#Parameter
-    print(f"Found the Regional Parameter {parameter.name} with format {parameter.format_.name}")
+    print(f"Found the regional parameter {parameter.name} with format {parameter.format_.name}")
     # [END parametermanager_get_regional_param]
 
     return parameter

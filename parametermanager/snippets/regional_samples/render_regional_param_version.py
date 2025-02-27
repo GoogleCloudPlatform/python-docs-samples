@@ -70,7 +70,7 @@ def render_regional_param_version(
 
     # Print the response payload.
     print(
-        f"Rendered Regional Parameter Version Payload: "
+        f"Rendered regional parameter version payload: "
         f"{response.rendered_payload.decode('utf-8')}"
     )
     # [END parametermanager_render_regional_param_version]

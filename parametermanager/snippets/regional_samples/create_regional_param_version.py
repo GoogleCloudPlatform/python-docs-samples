@@ -78,7 +78,7 @@ def create_regional_param_version(
     response = client.create_parameter_version(request=request)
 
     # Print the newly created parameter version name.
-    print(f"Created Regional Parameter Version: {response.name}")
+    print(f"Created regional parameter version: {response.name}")
     # [END parametermanager_create_regional_param_version]
 
     return response

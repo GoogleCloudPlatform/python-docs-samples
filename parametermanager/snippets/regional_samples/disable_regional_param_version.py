@@ -85,8 +85,8 @@ def disable_regional_param_version(
 
     # Print the parameter version ID that it was disabled.
     print(
-        f"Disabled Regional Parameter Version {version_id} "
-        f"for Regional Parameter {parameter_id}"
+        f"Disabled regional parameter version {version_id} "
+        f"for regional parameter {parameter_id}"
     )
     # [END parametermanager_disable_regional_param_version]
 

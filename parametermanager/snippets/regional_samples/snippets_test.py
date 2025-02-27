@@ -149,7 +149,7 @@ def parameter(
     parameter_id: str,
 ) -> Iterator[Tuple[str, str, str]]:
     param_id, version_id = parameter_id
-    print(f"creating parameter {param_id}")
+    print(f"Creating regional parameter {param_id}")
 
     parent = client.common_location_path(project_id, location_id)
     time.sleep(5)
@@ -172,7 +172,7 @@ def structured_parameter(
     parameter_id: str,
 ) -> Iterator[Tuple[str, str, str, parametermanager_v1.Parameter]]:
     param_id, version_id = parameter_id
-    print(f"creating parameter {param_id}")
+    print(f"Creating regional parameter {param_id}")
 
     parent = client.common_location_path(project_id, location_id)
     time.sleep(5)
@@ -196,7 +196,7 @@ def parameter_version(
 ) -> Iterator[Tuple[str, str, str, str]]:
     project_id, param_id, version_id = parameter
 
-    print(f"adding secret version to {param_id}")
+    print(f"Adding regional secret version to {param_id}")
     parent = client.parameter_path(project_id, location_id, param_id)
     payload = b"hello world!"
     time.sleep(5)
@@ -222,7 +222,7 @@ def parameter_version_with_secret(
     project_id, param_id, version_id, member = structured_parameter
     project_id, secret_id, version_id, secret_parent = secret_version
 
-    print(f"adding parameter version to {param_id}")
+    print(f"Adding regional parameter version to {param_id}")
     parent = client.parameter_path(project_id, location_id, param_id)
     payload = {
         "username": "temp-user",
@@ -262,14 +262,14 @@ def parameter_id(
 
     yield param_id, param_version_id
     param_path = client.parameter_path(project_id, location_id, param_id)
-    print(f"deleting parameter {param_id}")
+    print(f"Deleting regional parameter {param_id}")
     try:
         time.sleep(5)
         list_versions = retry_client_list_param_version(
             client, request={"parent": param_path}
         )
         for version in list_versions:
-            print(f"deleting version {version}")
+            print(f"Deleting regional version {version}")
             retry_client_delete_param_version(client, request={"name": version.name})
         retry_client_delete_param(client, request={"name": param_path})
     except exceptions.NotFound:
@@ -287,7 +287,7 @@ def secret_id(
 
     yield secret_id
     secret_path = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
-    print(f"deleting secret {secret_id}")
+    print(f"Deleting regional secret {secret_id}")
     try:
         time.sleep(5)
         retry_client_delete_secret(secret_manager_client, request={"name": secret_path})
@@ -305,7 +305,7 @@ def secret(
     label_key: str,
     label_value: str,
 ) -> Iterator[Tuple[str, str, str, str]]:
-    print(f"creating secret {secret_id}")
+    print(f"Creating regional secret {secret_id}")
 
     parent = secret_manager_client.common_location_path(project_id, location_id)
     time.sleep(5)
@@ -331,7 +331,7 @@ def secret_version(
 ) -> Iterator[Tuple[str, str, str, str]]:
     project_id, secret_id, _ = secret
 
-    print(f"adding secret version to {secret_id}")
+    print(f"Adding regional secret version to {secret_id}")
     parent = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
     payload = b"hello world!"
     time.sleep(5)
@@ -485,7 +485,7 @@ def test_list_regional_params(
     list_regional_params.list_regional_params(project_id, location_id)
 
     out, _ = capsys.readouterr()
-    assert f"Found Regional Parameter {got_param.name} with format {got_param.format_.name}" in out
+    assert f"Found regional parameter {got_param.name} with format {got_param.format_.name}" in out
 
 
 def test_list_param_regional_versions(
@@ -501,7 +501,7 @@ def test_list_param_regional_versions(
 
     out, _ = capsys.readouterr()
     assert param_id in out
-    assert f"Found Regional Parameter Version: {version_1.name}" in out
+    assert f"Found regional parameter version: {version_1.name}" in out
 
 
 def test_render_regional_param_version(

@@ -61,7 +61,7 @@ def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) ->
 
     # Create the parameter
     response = client.create_parameter(request=create_param_request)
-    print(f"Created Parameter {response.name} with Format {response.format_.name}")
+    print(f"Created parameter {response.name} with format {response.format_.name}")
 
     # Define the payload
     payload_data = {"username": "test-user", "host": "localhost"}
@@ -78,8 +78,7 @@ def quickstart(project_id: str, parameter_id: str, parameter_version_id: str) ->
 
     # Create the parameter version
     version_response = client.create_parameter_version(request=create_version_request)
-    print(f"Created Parameter Version: {version_response.name}")
-    print(version_response)
+    print(f"Created parameter version: {version_response.name}")
 
     # Render the parameter version to get the simple and rendered payload
     get_param_request = parametermanager_v1.GetParameterVersionRequest(

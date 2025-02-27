@@ -54,6 +54,6 @@ def list_param_versions(project_id: str, parameter_id: str) -> None:
 
     # Print the versions of the parameter.
     for response in page_result:
-        print(f"Found Parameter Version: {response.name}")
+        print(f"Found parameter version: {response.name}")
 
     # [END parametermanager_list_param_versions]

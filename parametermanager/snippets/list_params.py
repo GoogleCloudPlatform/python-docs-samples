@@ -46,6 +46,6 @@ def list_params(project_id: str) -> None:
 
     # List all parameters in the specified parent project.
     for parameter in client.list_parameters(parent=parent):
-        print(f"Found Parameter {parameter.name} with format {parameter.format_.name}")
+        print(f"Found parameter {parameter.name} with format {parameter.format_.name}")
 
     # [END parametermanager_list_params]

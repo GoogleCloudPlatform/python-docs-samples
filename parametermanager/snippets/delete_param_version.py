@@ -55,5 +55,5 @@ def delete_param_version(project_id: str, parameter_id: str, version_id: str) ->
     client.delete_parameter_version(request=request)
 
     # Print a confirmation message.
-    print(f"Deleted Parameter Version: {name}")
+    print(f"Deleted parameter version: {name}")
     # [END parametermanager_delete_param_version]

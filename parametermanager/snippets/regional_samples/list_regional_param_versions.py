@@ -65,5 +65,5 @@ def list_regional_param_versions(
 
     # Print the versions of the parameter.
     for response in page_result:
-        print(f"Found Regional Parameter Version: {response.name}")
+        print(f"Found regional parameter version: {response.name}")
     # [END parametermanager_list_regional_param_versions]

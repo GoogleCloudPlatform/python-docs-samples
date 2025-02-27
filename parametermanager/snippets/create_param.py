@@ -62,7 +62,7 @@ def create_param(project_id: str, parameter_id: str) -> parametermanager_v1.Para
     response = client.create_parameter(request=request)
 
     # Print the newly created parameter name.
-    print(f"Created Parameter: {response.name}")
+    print(f"Created parameter: {response.name}")
     # [END parametermanager_create_param]
 
     return response

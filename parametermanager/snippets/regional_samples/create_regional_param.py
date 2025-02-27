@@ -70,7 +70,7 @@ def create_regional_param(
     response = client.create_parameter(request=request)
 
     # Print the newly created parameter name.
-    print(f"Created Regional Parameter: {response.name}")
+    print(f"Created regional parameter: {response.name}")
     # [END parametermanager_create_regional_param]
 
     return response

@@ -72,8 +72,8 @@ def regional_quickstart(
     # Create the parameter
     response = client.create_parameter(request=create_param_request)
     print(
-        f"Created Regional Parameter {response.name} "
-        f"with Format {response.format_.name}"
+        f"Created regional parameter {response.name} "
+        f"with format {response.format_.name}"
     )
 
     # Define the payload
@@ -91,8 +91,7 @@ def regional_quickstart(
 
     # Create the parameter version
     version_response = client.create_parameter_version(request=create_version_request)
-    print(f"Created Regional Parameter Version: {version_response.name}")
-    print(version_response)
+    print(f"Created regional parameter version: {version_response.name}")
 
     # Render the parameter version to get the simple and rendered payload
     get_param_request = parametermanager_v1.GetParameterVersionRequest(

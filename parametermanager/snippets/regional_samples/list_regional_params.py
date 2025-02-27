@@ -52,6 +52,6 @@ def list_regional_params(project_id: str, location_id: str) -> None:
 
     # List all parameters in the specified parent project and region.
     for parameter in client.list_parameters(parent=parent):
-        print(f"Found Regional Parameter {parameter.name} with format {parameter.format_.name}")
+        print(f"Found regional parameter {parameter.name} with format {parameter.format_.name}")
 
     # [END parametermanager_list_regional_params]

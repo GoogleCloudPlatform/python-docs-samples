@@ -85,8 +85,8 @@ def enable_regional_param_version(
 
     # Print the parameter version ID that it was enabled.
     print(
-        f"Enabled Regional Parameter Version {version_id} "
-        f"for Regional Parameter {parameter_id}"
+        f"Enabled regional parameter version {version_id} "
+        f"for regional parameter {parameter_id}"
     )
     # [END parametermanager_enable_regional_param_version]
 

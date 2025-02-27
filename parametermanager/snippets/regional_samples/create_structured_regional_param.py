@@ -78,8 +78,8 @@ def create_structured_regional_param(
 
     # Print the newly created parameter name.
     print(
-        f"Created Regional Parameter: {response.name} "
-        f"with Format {response.format_.name}"
+        f"Created regional parameter: {response.name} "
+        f"with format {response.format_.name}"
     )
     # [END parametermanager_create_structured_regional_param]
 

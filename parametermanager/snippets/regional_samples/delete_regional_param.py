@@ -57,5 +57,5 @@ def delete_regional_param(project_id: str, location_id: str, parameter_id: str) 
     client.delete_parameter(name=name)
 
     # Print confirmation of deletion.
-    print(f"Deleted Regional Parameter: {name}")
+    print(f"Deleted regional parameter: {name}")
     # [END parametermanager_delete_regional_param]

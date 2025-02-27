@@ -72,7 +72,7 @@ def enable_param_version(
     response = client.update_parameter_version(request=request)
 
     # Print the parameter version ID that it was enabled.
-    print(f"Enabled Parameter Version {version_id} for Parameter {parameter_id}")
+    print(f"Enabled parameter version {version_id} for parameter {parameter_id}")
     # [END parametermanager_enable_param_version]
 
     return response

@@ -62,7 +62,7 @@ def render_param_version(
 
     # Print the rendered parameter version payload.
     print(
-        f"Rendered Parameter Version Payload: "
+        f"Rendered parameter version payload: "
         f"{response.rendered_payload.decode('utf-8')}"
     )
     # [END parametermanager_render_param_version]

@@ -65,5 +65,5 @@ def delete_regional_param_version(
     client.delete_parameter_version(request=request)
 
     # Print a confirmation message.
-    print(f"Deleted Regional Parameter Version: {name}")
+    print(f"Deleted regional parameter version: {name}")
     # [END parametermanager_delete_regional_param_version]
