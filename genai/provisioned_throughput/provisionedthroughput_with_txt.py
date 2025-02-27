@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_provisioned_throughput_with_txt]
+    # [START googlegenaisdk_provisionedthroughput_with_txt]
 
     from google import genai
     from google.genai.types import HttpOptions
@@ -26,6 +26,7 @@ def generate_content() -> str:
                 # Options:
                 # - "dedicated": Use Provisioned Throughput
                 # - "shared": Use pay-as-you-go
+                # https://cloud.google.com/vertex-ai/generative-ai/docs/use-provisioned-throughput
                 "X-Vertex-AI-LLM-Request-Type": "shared"
             },
         )
@@ -41,7 +42,7 @@ def generate_content() -> str:
     #
     # Here's a simplified overview:
     # ...
-    # [END googlegenaisdk_provisioned_throughput_with_txt]
+    # [END googlegenaisdk_provisionedthroughput_with_txt]
     return response.text
 
 

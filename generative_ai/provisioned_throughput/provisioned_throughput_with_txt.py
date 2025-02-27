@@ -29,6 +29,7 @@ def generate_content() -> str:
         # Options:
         # - "dedicated": Use Provisioned Throughput
         # - "shared": Use pay-as-you-go
+        # https://cloud.google.com/vertex-ai/generative-ai/docs/use-provisioned-throughput
         request_metadata=[("x-vertex-ai-llm-request-type", "shared")],
     )
 

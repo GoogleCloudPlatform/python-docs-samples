@@ -18,7 +18,7 @@
 
 import os
 
-import provisioned_throughput_with_txt
+import provisionedthroughput_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -26,6 +26,6 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
-def test_provisioned_throughput_with_txt() -> None:
-    response = provisioned_throughput_with_txt.generate_content()
+def test_provisionedthroughput_with_txt() -> None:
+    response = provisionedthroughput_with_txt.generate_content()
     assert response
