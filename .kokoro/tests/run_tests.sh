@@ -132,16 +132,16 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
 # Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
-     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
-${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306,"${MYSQL_INSTANCE}" -dir "${HOME}" &>> \
-       ${HOME}/cloud_sql_proxy.log &
+wget --quiet https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 \
+     -O ${HOME}/cloud-sql-proxy && chmod +x ${HOME}/cloud-sql-proxy
+${HOME}/cloud-sql-proxy --port 3306 ${MYSQL_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy.log &
 echo -e "\Cloud SQL proxy started for MySQL."
-${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432,"${POSTGRES_INSTANCE}" -dir "${HOME}" &>> \
-       ${HOME}/cloud_sql_proxy-postgres.log &
+${HOME}/cloud-sql-proxy --port 5432 ${POSTGRES_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-postgres.log &
 echo -e "\Cloud SQL proxy started for Postgres."
-${HOME}/cloud_sql_proxy -instances="${SQLSERVER_INSTANCE}"=tcp:1433 &>> \
-       ${HOME}/cloud_sql_proxy-sqlserver.log &
+${HOME}/cloud-sql-proxy --port 1433 ${SQLSERVER_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-sqlserver.log &
 echo -e "\Cloud SQL proxy started for SQL Server."
 
 echo -e "\n******************** TESTING PROJECTS ********************"

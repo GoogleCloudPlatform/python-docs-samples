@@ -50,7 +50,7 @@ def connect_to_cloudsql():
     # will work if you're running a local MySQL server or using the Cloud SQL
     # proxy, for example:
     #
-    #   $ cloud_sql_proxy -instances=your-connection-name=tcp:3306
+    #   $ cloud-sql-proxy --port 3306 <your-connection-name>
     #
     else:
         db = MySQLdb.connect(
