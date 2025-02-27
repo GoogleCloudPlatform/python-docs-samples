@@ -70,15 +70,6 @@ def bucket():
 
 
 @pytest.mark.skip(reason="b/330632499")
-def test_speech_transcription(capsys):
-    beta_snippets.speech_transcription(
-        "gs://python-docs-samples-tests/video/googlework_short.mp4", timeout=240
-    )
-    out, _ = capsys.readouterr()
-    assert "cultural" in out
-
-
-@pytest.mark.skip(reason="b/330632499")
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_labels_streaming(capsys, video_path):
     beta_snippets.detect_labels_streaming(video_path)
