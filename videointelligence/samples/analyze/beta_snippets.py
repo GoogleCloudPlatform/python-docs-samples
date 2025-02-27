@@ -21,9 +21,6 @@ Usage Examples:
     python beta_snippets.py transcription \
         gs://python-docs-samples-tests/video/googlework_tiny.mp4
 
-    python beta_snippets.py video-text-gcs \
-        gs://python-docs-samples-tests/video/googlework_tiny.mp4
-
     python beta_snippets.py streaming-labels resources/cat.mp4
 
     python beta_snippets.py streaming-shot-change resources/cat.mp4
@@ -102,56 +99,6 @@ def speech_transcription(input_uri, timeout=180):
                     )
                 )
     # [END video_speech_transcription_gcs_beta]
-
-
-def video_detect_text_gcs(input_uri):
-    # [START video_detect_text_gcs_beta]
-    """Detect text in a video stored on GCS."""
-    from google.cloud import videointelligence_v1p2beta1 as videointelligence
-
-    video_client = videointelligence.VideoIntelligenceServiceClient()
-    features = [videointelligence.Feature.TEXT_DETECTION]
-
-    operation = video_client.annotate_video(
-        request={"features": features, "input_uri": input_uri}
-    )
-
-    print("\nProcessing video for text detection.")
-    result = operation.result(timeout=300)
-
-    # The first result is retrieved because a single video was processed.
-    annotation_result = result.annotation_results[0]
-
-    # Get only the first result
-    text_annotation = annotation_result.text_annotations[0]
-    print("\nText: {}".format(text_annotation.text))
-
-    # Get the first text segment
-    text_segment = text_annotation.segments[0]
-    start_time = text_segment.segment.start_time_offset
-    end_time = text_segment.segment.end_time_offset
-    print(
-        "start_time: {}, end_time: {}".format(
-            start_time.seconds + start_time.microseconds * 1e-6,
-            end_time.seconds + end_time.microseconds * 1e-6,
-        )
-    )
-
-    print("Confidence: {}".format(text_segment.confidence))
-
-    # Show the result for the first frame in this segment.
-    frame = text_segment.frames[0]
-    time_offset = frame.time_offset
-    print(
-        "Time offset for the first frame: {}".format(
-            time_offset.seconds + time_offset.microseconds * 1e-6
-        )
-    )
-    print("Rotated Bounding Box Vertices:")
-    for vertex in frame.rotated_bounding_box.vertices:
-        print("\tVertex.x: {}, Vertex.y: {}".format(vertex.x, vertex.y))
-    # [END video_detect_text_gcs_beta]
-    return annotation_result.text_annotations
 
 
 def detect_labels_streaming(path):
@@ -773,11 +720,6 @@ if __name__ == "__main__":
     )
     speech_transcription_parser.add_argument("gcs_uri")
 
-    video_text_gcs_parser = subparsers.add_parser(
-        "video-text-gcs", help=video_detect_text_gcs.__doc__
-    )
-    video_text_gcs_parser.add_argument("gcs_uri")
-
     video_streaming_labels_parser = subparsers.add_parser(
         "streaming-labels", help=detect_labels_streaming.__doc__
     )
@@ -831,8 +773,6 @@ if __name__ == "__main__":
 
     if args.command == "transcription":
         speech_transcription(args.gcs_uri)
-    elif args.command == "video-text-gcs":
-        video_detect_text_gcs(args.gcs_uri)
     elif args.command == "streaming-labels":
         detect_labels_streaming(args.path)
     elif args.command == "streaming-shot-change":

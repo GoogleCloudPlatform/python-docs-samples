@@ -125,16 +125,6 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
 
 
 @pytest.mark.skip(reason="b/330632499")
-# Flaky timeout
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_text_gcs(capsys):
-    in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
-    beta_snippets.video_detect_text_gcs(in_file)
-    out, _ = capsys.readouterr()
-    assert "Text" in out
-
-
-@pytest.mark.skip(reason="b/330632499")
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
