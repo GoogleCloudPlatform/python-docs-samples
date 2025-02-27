@@ -20,14 +20,13 @@ def generate_videos(output_gcs_uri: str) -> str:
     from google.genai.types import GenerateVideosConfig
 
     client = genai.Client()
-    prompt = "a cat reading a book"
 
     # TODO(developer): Update and un-comment below line
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
         model="veo-2.0-generate-001",
-        prompt=prompt,
+        prompt="a cat reading a book",
         config=GenerateVideosConfig(
             aspect_ratio="16:9",
             output_gcs_uri=output_gcs_uri,
