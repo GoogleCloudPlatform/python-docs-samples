@@ -330,9 +330,11 @@ def floor_settings_project_id(project_id: str) -> Generator[str, None, None]:
     except GoogleAPIError:
         print("Floor settings not set or not authorized to set floor settings")
 
+
 @pytest.fixture()
 def pdf_content_base64() -> str:
-   return ("JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PC9UaXRsZSAoVW50aXRsZWQgZG9jdW1lbnQpCi9Qcm9kdWNlciAoU2tp"
+    return (
+        "JVBERi0xLjQKJdPr6eEKMSAwIG9iago8PC9UaXRsZSAoVW50aXRsZWQgZG9jdW1lbnQpCi9Qcm9kdWNlciAoU2tp"
         "YS9QREYgbTEzNSBHb29nbGUgRG9jcyBSZW5kZXJlcik+PgplbmRvYmoKMyAwIG9iago8PC9jYSAxCi9CTSAvTm9y"
         "bWFsPj4KZW5kb2JqCjUgMCBvYmoKPDwvRmlsdGVyIC9GbGF0ZURlY29kZQovTGVuZ3RoIDExMzA+PiBzdHJlYW0K"
         "eJytWdtuG0cMfd+v2B/IeHgbzgCGAUuJgz4EaAv9QdsEKNCHJP8PlCO52d2Io2rHYxmytOOleDkkDymYoz3egT1p"
@@ -639,7 +641,8 @@ def pdf_content_base64() -> str:
         "IDAwMDAwIG4gCjAwMDAwMDE3NTMgMDAwMDAgbiAKMDAwMDAwMTkwNSAwMDAwMCBuIAowMDAwMDAxOTQzIDAwMDAw"
         "IG4gCjAwMDAwMDIwODggMDAwMDAgbiAKMDAwMDAwMjI4MiAwMDAwMCBuIAowMDAwMDE4Njc4IDAwMDAwIG4gCjAw"
         "MDAwMTg5MTQgMDAwMDAgbiAKMDAwMDAxOTMyOSAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgMTkKL1Jvb3QgMTQg"
-        "MCBSCi9JbmZvIDEgMCBSPj4Kc3RhcnR4cmVmCjE5ODQ0CiUlRU9GCg==")
+        "MCBSCi9JbmZvIDEgMCBSPj4Kc3RhcnR4cmVmCjE5ODQ0CiUlRU9GCg=="
+    )
 
 
 def test_create_template() -> None:
@@ -984,9 +987,7 @@ def test_screen_pdf_file(
 ) -> None:
     template_id, _ = basic_sdp_template
 
-    response = screen_pdf_file(
-        project_id, location_id, template_id, pdf_content_base64
-    )
+    response = screen_pdf_file(project_id, location_id, template_id, pdf_content_base64)
 
     assert (
         response.sanitization_result.filter_match_state
