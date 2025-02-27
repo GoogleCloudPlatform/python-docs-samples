@@ -60,6 +60,11 @@ TEMPLATE_ID = f"test-model-armor-{uuid.uuid4()}"
 
 
 @pytest.fixture()
+def organization_id() -> str:
+    return os.environ["GCLOUD_ORGANIZATION"]
+
+
+@pytest.fixture()
 def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
 
@@ -1019,8 +1024,7 @@ def test_quickstart(project_id: str, location_id: str, template_id: str) -> None
     quickstart(project_id, location_id, template_id)
 
 
-def test_update_organization_floor_settings() -> None:
-    organization_id = "123456789"
+def test_update_organization_floor_settings(organization_id: str) -> None:
     response = update_organization_floor_settings(organization_id)
 
     assert response.enable_floor_setting_enforcement
@@ -1040,8 +1044,7 @@ def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
     assert response.enable_floor_setting_enforcement
 
 
-def test_get_organization_floor_settings() -> None:
-    organization_id = "123456789"
+def test_get_organization_floor_settings(organization_id: str) -> None:
     expected_floor_settings_name = (
         f"organizations/{organization_id}/locations/global/floorSetting"
     )
