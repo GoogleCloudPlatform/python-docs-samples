@@ -136,13 +136,13 @@ wget --quiet https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy
      -O ${HOME}/cloud-sql-proxy && chmod +x ${HOME}/cloud-sql-proxy
 ${HOME}/cloud-sql-proxy --port 3306 ${MYSQL_INSTANCE} &>> \
        ${HOME}/cloud-sql-proxy.log &
-echo -e "\Cloud SQL proxy started for MySQL."
+echo -e "Cloud SQL proxy started for MySQL."
 ${HOME}/cloud-sql-proxy --port 5432 ${POSTGRES_INSTANCE} &>> \
        ${HOME}/cloud-sql-proxy-postgres.log &
-echo -e "\Cloud SQL proxy started for Postgres."
+echo -e "Cloud SQL proxy started for Postgres."
 ${HOME}/cloud-sql-proxy --port 1433 ${SQLSERVER_INSTANCE} &>> \
        ${HOME}/cloud-sql-proxy-sqlserver.log &
-echo -e "\Cloud SQL proxy started for SQL Server."
+echo -e "Cloud SQL proxy started for SQL Server."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
