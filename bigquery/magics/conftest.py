@@ -18,7 +18,7 @@ from typing import Iterator
 import pytest
 
 if typing.TYPE_CHECKING:
-    from IPython.core.interactiveshell import TerminalInteractiveShell
+    from IPython.terminal.interactiveshell import TerminalInteractiveShell
 
 interactiveshell = pytest.importorskip("IPython.terminal.interactiveshell")
 tools = pytest.importorskip("IPython.testing.tools")
@@ -40,5 +40,7 @@ def ipython_interactive(
 
     for the duration of the test scope.
     """
-    with ipython.builtin_trap:
+
+    trap = typing.cast(typing.ContextManager, ipython.builtin_trap)
+    with trap:
         yield ipython

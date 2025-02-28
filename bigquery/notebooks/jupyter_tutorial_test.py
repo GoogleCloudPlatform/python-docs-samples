@@ -45,7 +45,9 @@ def ipython_interactive(
 
     for the duration of the test scope.
     """
-    with ipython.builtin_trap:
+
+    trap = typing.cast(typing.ContextManager, ipython.builtin_trap)
+    with trap:
         yield ipython
 
 
