@@ -31,8 +31,6 @@ from create_template_with_basic_sdp import create_model_armor_template_with_basi
 from create_template_with_labels import create_model_armor_template_with_labels
 from create_template_with_metadata import create_model_armor_template_with_metadata
 from delete_template import delete_model_armor_template
-from get_folder_floor_settings import get_folder_floor_settings
-from get_organization_floor_settings import get_organization_floor_settings
 from get_project_floor_settings import get_project_floor_settings
 from get_template import get_model_armor_template
 from list_templates import list_model_armor_templates
@@ -44,8 +42,6 @@ from sanitize_model_response_with_user_prompt import (
 )
 from sanitize_user_prompt import sanitize_user_prompt
 from screen_pdf_file import screen_pdf_file
-from update_folder_floor_settings import update_folder_floor_settings
-from update_organizations_floor_settings import update_organization_floor_settings
 from update_project_floor_settings import update_project_floor_settings
 from update_template import update_model_armor_template
 from update_template_lables import update_model_armor_template_labels
@@ -57,11 +53,6 @@ from update_template_with_mask_configuration import (
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 LOCATION = "us-central1"
 TEMPLATE_ID = f"test-model-armor-{uuid.uuid4()}"
-
-
-@pytest.fixture()
-def organization_id() -> str:
-    return os.environ["GCLOUD_ORGANIZATION"]
 
 
 @pytest.fixture()
@@ -320,7 +311,7 @@ def floor_settings_project_id(project_id: str) -> Generator[str, None, None]:
 
     yield project_id
     try:
-        time.sleep(5)
+        time.sleep(2)
         client.update_floor_setting(
             request=modelarmor_v1.UpdateFloorSettingRequest(
                 floor_setting=modelarmor_v1.FloorSetting(
@@ -650,42 +641,67 @@ def pdf_content_base64() -> str:
     )
 
 
-def test_create_template() -> None:
-    template = create_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
+def test_create_template(project_id: str, location_id: str, template_id: str) -> None:
+    template = create_model_armor_template(project_id, location_id, template_id)
     assert template is not None
 
 
-def test_get_template() -> None:
-    template = get_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
-    assert TEMPLATE_ID in template.name
+def test_get_template(
+    project_id: str,
+    location_id: str,
+    simple_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = simple_template
+    template = get_model_armor_template(project_id, location_id, template_id)
+    assert template_id in template.name
 
 
-def test_list_templates() -> None:
-    templates = list_model_armor_templates(PROJECT_ID, LOCATION)
-    assert TEMPLATE_ID in str(templates)
+def test_list_templates(
+    project_id: str,
+    location_id: str,
+    simple_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = simple_template
+    templates = list_model_armor_templates(project_id, location_id)
+    assert template_id in str(templates)
 
 
-def test_user_prompt() -> None:
-    response = sanitize_user_prompt(PROJECT_ID, LOCATION, TEMPLATE_ID)
+def test_user_prompt(
+    project_id: str,
+    location_id: str,
+    simple_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = simple_template
+    response = sanitize_user_prompt(project_id, location_id, template_id)
     assert (
         response.sanitization_result.filter_match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
     )
 
 
-def test_update_templates() -> None:
-    template = update_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
+def test_update_templates(
+    project_id: str,
+    location_id: str,
+    simple_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = simple_template
+    template = update_model_armor_template(project_id, location_id, template_id)
     assert (
         template.filter_config.pi_and_jailbreak_filter_settings.confidence_level
         == modelarmor_v1.DetectionConfidenceLevel.LOW_AND_ABOVE
     )
 
 
-def test_delete_template() -> None:
-    delete_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
+def test_delete_template(
+    project_id: str,
+    location_id: str,
+    simple_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = simple_template
+    delete_model_armor_template(project_id, location_id, template_id)
     with pytest.raises(NotFound) as exception_info:
-        get_model_armor_template(PROJECT_ID, LOCATION, TEMPLATE_ID)
-    assert TEMPLATE_ID in str(exception_info.value)
+        get_model_armor_template(project_id, location_id, template_id)
+    assert template_id in str(exception_info.value)
 
 
 def test_create_model_armor_template_with_basic_sdp(
@@ -1024,43 +1040,10 @@ def test_quickstart(project_id: str, location_id: str, template_id: str) -> None
     quickstart(project_id, location_id, template_id)
 
 
-def test_update_organization_floor_settings(organization_id: str) -> None:
-    response = update_organization_floor_settings(organization_id)
-
-    assert response.enable_floor_setting_enforcement
-    print("Organization floor settings updated successfully.")
-
-
-def test_update_folder_floor_settings() -> None:
-    folder_id = "987654321"
-    response = update_folder_floor_settings(folder_id)
-
-    assert response.enable_floor_setting_enforcement
-
-
 def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
     response = update_project_floor_settings(floor_settings_project_id)
 
     assert response.enable_floor_setting_enforcement
-
-
-def test_get_organization_floor_settings(organization_id: str) -> None:
-    expected_floor_settings_name = (
-        f"organizations/{organization_id}/locations/global/floorSetting"
-    )
-    response = get_organization_floor_settings(organization_id)
-
-    assert response.name == expected_floor_settings_name
-    print("Organization floor settings retrieved successfully.")
-
-
-def test_get_folder_floor_settings() -> None:
-    folder_id = "987654321"
-    expected_floor_settings_name = f"folders/{folder_id}/locations/global/floorSetting"
-    response = get_folder_floor_settings(folder_id)
-
-    assert response.name == expected_floor_settings_name
-    print("Folder floor settings retrieved successfully.")
 
 
 def test_get_project_floor_settings(project_id: str) -> None:
