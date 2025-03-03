@@ -260,7 +260,7 @@ def test_delete_event_threat_detection_custom_module():
     print(f"Custom module was deleted successfully: {module_id}")
     shared_modules.remove(module_id)
 
-  
+
 @backoff.on_exception(
     backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
 )
