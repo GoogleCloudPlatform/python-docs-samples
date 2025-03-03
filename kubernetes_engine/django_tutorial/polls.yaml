@@ -65,10 +65,13 @@ spec:
                   key: password
           ports:
             - containerPort: 8080
-
+      initContainers:
         - image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
           name: cloud-sql-proxy
           args:
+            # If connecting from a VPC-native GKE cluster, you can use the
+            # following flag to have the proxy connect over private IP
+            # - "--private-ip"
             - "--port=5432"
             - "--credentials-file=/secrets/cloudsql/credentials.json"
             - "<your-cloudsql-connection-string>"
@@ -78,8 +81,6 @@ spec:
               readOnly: true
             - name: ssl-certs
               mountPath: /etc/ssl/certs
-            - name: cloudsql
-              mountPath: /cloudsql
       volumes:
         - name: cloudsql-oauth-credentials
           secret:
@@ -87,8 +88,6 @@ spec:
         - name: ssl-certs
           hostPath:
             path: /etc/ssl/certs
-        - name: cloudsql
-          emptyDir: {}
 # [END gke_kubernetes_deployment_yaml_python]
 ---
 # [START gke_kubernetes_service_yaml_python]
