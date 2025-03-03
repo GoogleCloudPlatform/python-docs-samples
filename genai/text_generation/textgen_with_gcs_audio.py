@@ -16,13 +16,11 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_gcs_audio]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
-    Provide the summary of the audio file.
-    Summarize the main points of the audio concisely.
-    Create a chapter breakdown with timestamps for key sections or topics discussed.
+    Provide a concise summary of the main points in the audio file.
     """
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
@@ -36,13 +34,9 @@ def generate_content() -> str:
     )
     print(response.text)
     # Example response:
-    # This episode of the Made by Google podcast features product managers ...
-    #
-    # **Chapter Breakdown:**
-    #
-    # * **[0:00-1:14] Introduction:** Host Rasheed Finch introduces Aisha and DeCarlos and ...
-    # * **[1:15-2:44] Transformative Features:** Aisha and DeCarlos discuss their ...
-    # ...
+    # Here's a summary of the main points from the audio file:
+
+    # The Made by Google podcast discusses the Pixel feature drops with product managers Aisha Sheriff and De Carlos Love.  The key idea is that devices should improve over time, with a connected experience across phones, watches, earbuds, and tablets.
     # [END googlegenaisdk_textgen_with_gcs_audio]
     return response.text
 

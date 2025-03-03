@@ -1,0 +1,2 @@
+pytest==8.2.0
+google-cloud-secret-manager==2.21.1

@@ -15,7 +15,7 @@
 from google.appengine.ext import ndb
 
 
-# [START models]
+# [START gae_ndb_async_model_classes]
 class Account(ndb.Model):
     pass
 
@@ -32,9 +32,7 @@ class CartItem(ndb.Model):
 
 class SpecialOffer(ndb.Model):
     inventory = ndb.KeyProperty(kind=InventoryItem)
-
-
-# [END models]
+# [END gae_ndb_async_model_classes]
 
 
 def get_cart_plus_offers(acct):
@@ -57,7 +55,7 @@ def get_cart_plus_offers_async(acct):
     return cart, offers
 
 
-# [START cart_offers_tasklets]
+# [START gae_ndb_async_cart_offers_tasklets]
 @ndb.tasklet
 def get_cart_tasklet(acct):
     cart = yield CartItem.query(CartItem.account == acct.key).fetch_async()
@@ -76,9 +74,7 @@ def get_offers_tasklet(acct):
 def get_cart_plus_offers_tasklet(acct):
     cart, offers = yield get_cart_tasklet(acct), get_offers_tasklet(acct)
     raise ndb.Return((cart, offers))
-
-
-# [END cart_offers_tasklets]
+# [END gae_ndb_async_cart_offers_tasklets]
 
 
 @ndb.tasklet

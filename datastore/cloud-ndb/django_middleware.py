@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START datastore_ndb_django_middleware]
-# [START ndb_django_middleware]
 from google.cloud import ndb
 
 
@@ -27,7 +26,4 @@ def ndb_django_middleware(get_response):
             return get_response(request)
 
     return middleware
-
-
-# [END ndb_django_middleware]
 # [END datastore_ndb_django_middleware]

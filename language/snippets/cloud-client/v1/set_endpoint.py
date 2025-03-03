@@ -13,24 +13,24 @@
 # limitations under the License.
 
 
-def set_endpoint():
-    """Change your endpoint"""
+def set_endpoint() -> None:
+    """Change your endpoint."""
     # [START language_set_endpoint]
     # Imports the Google Cloud client library
     from google.cloud import language_v1
 
     client_options = {"api_endpoint": "eu-language.googleapis.com:443"}
 
-    # Instantiates a client
+    # Instantiates a client.
     client = language_v1.LanguageServiceClient(client_options=client_options)
     # [END language_set_endpoint]
 
-    # The text to analyze
+    # The text to analyze.
     document = language_v1.Document(
         content="Hello, world!", type_=language_v1.Document.Type.PLAIN_TEXT
     )
 
-    # Detects the sentiment of the text
+    # Detects the sentiment of the text.
     sentiment = client.analyze_sentiment(
         request={"document": document}
     ).document_sentiment
