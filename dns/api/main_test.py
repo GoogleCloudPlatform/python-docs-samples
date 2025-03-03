@@ -15,7 +15,7 @@ import os
 import time
 import uuid
 
-from google.cloud import dns
+from google.cloud.dns import Client, ManagedZone
 from google.cloud.exceptions import NotFound
 
 import pytest
@@ -28,14 +28,14 @@ TEST_ZONE_DNS_NAME = "theadora.is."
 TEST_ZONE_DESCRIPTION = "Test zone"
 
 
-def delay_rerun(*args):
+def delay_rerun(*args: str) -> bool:
     time.sleep(5)
     return True
 
 
 @pytest.fixture
-def client():
-    client = dns.Client(PROJECT)
+def client() -> Client:
+    client = Client(PROJECT)
 
     yield client
 
@@ -48,7 +48,7 @@ def client():
 
 
 @pytest.fixture
-def zone(client):
+def zone(client: Client) -> ManagedZone:
     zone = client.zone(TEST_ZONE_NAME, TEST_ZONE_DNS_NAME)
     zone.description = TEST_ZONE_DESCRIPTION
     zone.create()
@@ -58,12 +58,12 @@ def zone(client):
     if zone.exists():
         try:
             zone.delete()
-        except NotFound:  # May have been under way
+        except NotFound:
             pass
 
 
 @pytest.mark.flaky
-def test_create_zone(client):
+def test_create_zone(client: Client) -> None:
     zone = main.create_zone(
         PROJECT, TEST_ZONE_NAME, TEST_ZONE_DNS_NAME, TEST_ZONE_DESCRIPTION
     )
@@ -74,7 +74,7 @@ def test_create_zone(client):
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_get_zone(client, zone):
+def test_get_zone(client: Client, zone: ManagedZone) -> None:
     zone = main.get_zone(PROJECT, TEST_ZONE_NAME)
 
     assert zone.name == TEST_ZONE_NAME
@@ -83,26 +83,26 @@ def test_get_zone(client, zone):
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_zones(client, zone):
+def test_list_zones(client: Client, zone: ManagedZone) -> None:
     zones = main.list_zones(PROJECT)
 
     assert TEST_ZONE_NAME in zones
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_resource_records(client, zone):
+def test_list_resource_records(client: Client, zone: ManagedZone) -> None:
     records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
     assert records
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_changes(client, zone):
+def test_list_changes(client: Client, zone: ManagedZone) -> None:
     changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_delete_zone(client, zone):
+def test_delete_zone(client: Client, zone: ManagedZone) -> None:
     main.delete_zone(PROJECT, TEST_ZONE_NAME)

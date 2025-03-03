@@ -12,30 +12,59 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 
-import argparse
+from __future__ import annotations
 
-from google.cloud import dns
+from google.cloud.dns import Client, ManagedZone
 from google.cloud.exceptions import NotFound
 
 
-# [START create_zone]
-def create_zone(project_id, name, dns_name, description):
-    client = dns.Client(project=project_id)
+# [START dns_create_zone]
+def create_zone(project_id: str, name: str, dns_name: str, description: str) -> ManagedZone:
+    """Creates a Cloud DNS ManagedZone.
+
+    Find more information about the ManagedZone object at:
+    https://cloud.google.com/dns/docs/reference/rest/v1/managedZones#ManagedZone
+
+    Args:
+        project_id: The project ID to use.
+        name: The name of the zone to create. Must be unique within the project.
+        dns_name: The DNS name of the zone.
+        description: A description of the zone.
+
+    Returns:
+        The created zone object.
+    """
+
+    client = Client(project=project_id)
     zone = client.zone(
-        name,  # examplezonename
+        name,  # example_zone_name
         dns_name=dns_name,  # example.com.
         description=description,
     )
     zone.create()
     return zone
+# [END dns_create_zone]
 
 
-# [END create_zone]
+# [START dns_get_zone]
+def get_zone(project_id: str, name: str) -> ManagedZone | None:
+    """Gets a Cloud DNS managedZone.
 
+    Find more information about the ManagedZone object at:
+    https://cloud.google.com/dns/docs/reference/rest/v1/managedZones#ManagedZone
 
-# [START get_zone]
-def get_zone(project_id, name):
-    client = dns.Client(project=project_id)
+    Args:
+        project_id: The project ID to use.
+        name: The name of the zone to get.
+
+    Returns:
+        The zone object if found, otherwise None.
+
+    Raises:
+        NotFound: If the zone is not found.
+    """
+
+    client = Client(project=project_id)
     zone = client.zone(name=name)
 
     try:
@@ -43,34 +72,62 @@ def get_zone(project_id, name):
         return zone
     except NotFound:
         return None
+# [END dns_get_zone]
 
 
-# [END get_zone]
+# [START dns_list_zones]
+def list_zones(project_id: str) -> list[str]:
+    """Gets a list of all Cloud DNS zones in the specified project.
 
+    Args:
+        project_id: The project ID to use.
 
-# [START list_zones]
-def list_zones(project_id):
-    client = dns.Client(project=project_id)
+    Returns:
+        A list of zone names.
+    """
+
+    client = Client(project=project_id)
     zones = client.list_zones()
     return [zone.name for zone in zones]
+# [END dns_list_zones]
 
 
-# [END list_zones]
+# [START dns_delete_zone]
+def delete_zone(project_id: str, name: str) -> None:
+    """Deletes a Cloud DNS zone.
 
+    Args:
+        project_id: The project ID to use.
+        name: The name of the zone to delete.
 
-# [START delete_zone]
-def delete_zone(project_id, name):
-    client = dns.Client(project=project_id)
+    Raises:
+        NotFound: If the zone is not found.
+    """
+    client = Client(project=project_id)
     zone = client.zone(name)
     zone.delete()
+# [END dns_delete_zone]
 
 
-# [END delete_zone]
+# [START dns_list_resource_records]
+def list_resource_records(project_id: str, zone_name: str) -> list[tuple[str, str, int, list[str]]]:
+    """Lists the resource record sets for a zone.
 
+    Find more information about the ResourceRecordSet object at:
+    https://cloud.google.com/dns/docs/reference/rest/v1/resourceRecordSets#resource:-resourcerecordset
 
-# [START list_resource_records]
-def list_resource_records(project_id, zone_name):
-    client = dns.Client(project=project_id)
+    Args:
+        project_id: The project ID to use.
+        zone_name: The name of the zone to list resource records for.
+
+    Returns:
+        A list of tuples, where each tuple contains:
+        - The record name (str).
+        - The record type (str).
+        - The record TTL (int).
+        - The record data (list of str).
+    """
+    client = Client(project=project_id)
     zone = client.zone(zone_name)
 
     records = zone.list_resource_record_sets()
@@ -79,99 +136,29 @@ def list_resource_records(project_id, zone_name):
         (record.name, record.record_type, record.ttl, record.rrdatas)
         for record in records
     ]
+# [END dns_list_resource_records]
 
 
-# [END list_resource_records]
+# [START dns_list_changes]
+def list_changes(project_id: str, zone_name: str) -> list[tuple[str, str]]:
+    """Lists the changes for a zone.
 
+    Find more information about the Change object at:
+    https://cloud.google.com/dns/docs/reference/rest/v1/changes#resource:-change
 
-# [START changes]
-def list_changes(project_id, zone_name):
-    client = dns.Client(project=project_id)
+    Args:
+        project_id: The project ID to use.
+        zone_name: The name of the zone to list changes for.
+
+    Returns:
+        A list of tuples, where each tuple contains:
+        - The change start time (str).
+        - The change status (str).
+    """
+    client = Client(project=project_id)
     zone = client.zone(zone_name)
 
     changes = zone.list_changes()
 
     return [(change.started, change.status) for change in changes]
-
-
-# [END changes]
-
-
-def create_command(args):
-    """Adds a zone with the given name, DNS name, and description."""
-    zone = create_zone(args.project_id, args.name, args.dns_name, args.description)
-    print(f"Zone {zone.name} added.")
-
-
-def get_command(args):
-    """Gets a zone by name."""
-    zone = get_zone(args.project_id, args.name)
-    if not zone:
-        print("Zone not found.")
-    else:
-        print("Zone: {}, {}, {}".format(zone.name, zone.dns_name, zone.description))
-
-
-def list_command(args):
-    """Lists all zones."""
-    print(list_zones(args.project_id))
-
-
-def delete_command(args):
-    """Deletes a zone."""
-    delete_zone(args.project_id, args.name)
-    print(f"Zone {args.name} deleted.")
-
-
-def list_resource_records_command(args):
-    """List all resource records for a zone."""
-    records = list_resource_records(args.project_id, args.name)
-    for record in records:
-        print(record)
-
-
-def changes_command(args):
-    """List all changes records for a zone."""
-    changes = list_changes(args.project_id, args.name)
-    for change in changes:
-        print(change)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
-
-    parser.add_argument("--project-id", help="Your cloud project ID.")
-
-    create_parser = subparsers.add_parser("create", help=create_command.__doc__)
-    create_parser.set_defaults(func=create_command)
-    create_parser.add_argument("name", help='New zone name, e.g. "azonename".')
-    create_parser.add_argument(
-        "dns_name", help='New zone dns name, e.g. "example.com."'
-    )
-    create_parser.add_argument("description", help="New zone description.")
-
-    get_parser = subparsers.add_parser("get", help=get_command.__doc__)
-    get_parser.add_argument("name", help='Zone name, e.g. "azonename".')
-    get_parser.set_defaults(func=get_command)
-
-    list_parser = subparsers.add_parser("list", help=list_command.__doc__)
-    list_parser.set_defaults(func=list_command)
-
-    delete_parser = subparsers.add_parser("delete", help=delete_command.__doc__)
-    delete_parser.add_argument("name", help='Zone name, e.g. "azonename".')
-    delete_parser.set_defaults(func=delete_command)
-
-    list_rr_parser = subparsers.add_parser(
-        "list-resource-records", help=list_resource_records_command.__doc__
-    )
-    list_rr_parser.add_argument("name", help='Zone name, e.g. "azonename".')
-    list_rr_parser.set_defaults(func=list_resource_records_command)
-
-    changes_parser = subparsers.add_parser("changes", help=changes_command.__doc__)
-    changes_parser.add_argument("name", help='Zone name, e.g. "azonename".')
-    changes_parser.set_defaults(func=changes_command)
-
-    args = parser.parse_args()
-
-    args.func(args)
+# [END dns_list_changes]
