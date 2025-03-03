@@ -13,6 +13,7 @@
 # limitations under the License.
 
 # [START datastore_ndb_flask]
+# [START ndb_flask]
 from flask import Flask
 
 from google.cloud import ndb
@@ -41,4 +42,5 @@ class Book(ndb.Model):
 def list_books():
     books = Book.query()
     return str([book.to_dict() for book in books])
+# [END ndb_flask]
 # [END datastore_ndb_flask]

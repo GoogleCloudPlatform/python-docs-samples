@@ -13,28 +13,23 @@
 # limitations under the License.
 
 # [START datastore_quickstart_python]
-# [START ndb_import]
 from google.cloud import ndb
 
 
-# [END ndb_import]
 class Book(ndb.Model):
     title = ndb.StringProperty()
 
 
-# [START ndb_client]
 client = ndb.Client()
 
 
-# [END ndb_client]
 def list_books():
     with client.context():
         books = Book.query()
         for book in books:
             print(book.to_dict())
-
-
 # [END datastore_quickstart_python]
+
 
 if __name__ == "__main__":
     list_books()
