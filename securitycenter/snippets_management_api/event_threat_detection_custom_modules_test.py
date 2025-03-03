@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -208,7 +208,8 @@ def test_get_event_threat_detection_custom_module():
 
     assert response is not None, "Failed to retrieve the custom module."
     assert response.display_name.startswith(PREFIX)
-    assert response.enablement_state == securitycentermanagement_v1.EventThreatDetectionCustomModule.EnablementState.ENABLED
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
 
 
 @backoff.on_exception(
@@ -258,3 +259,59 @@ def test_delete_event_threat_detection_custom_module():
 
     print(f"Custom module was deleted successfully: {module_id}")
     shared_modules.remove(module_id)
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_get_effective_event_threat_detection_custom_module():
+
+    module_id = get_random_shared_module()
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+
+    # Retrieve the custom module
+    response = event_threat_detection_custom_modules.get_effective_event_threat_detection_custom_module(parent, module_id)
+
+    assert response is not None, "Failed to retrieve the custom module."
+    assert response.display_name.startswith(PREFIX)
+    response_org_id = response.name.split("/")[1]  # Extract organization ID from the name field
+    assert response_org_id == ORGANIZATION_ID, f"Organization ID mismatch: Expected {ORGANIZATION_ID}, got {response_org_id}."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_effective_event_threat_detection_custom_module():
+
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the custom modules
+    custom_modules = event_threat_detection_custom_modules.list_effective_event_threat_detection_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_list_descendant_event_threat_detection_custom_module():
+
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+    # Retrieve the custom modules
+    custom_modules = event_threat_detection_custom_modules.list_descendant_event_threat_detection_custom_module(parent)
+
+    assert custom_modules is not None, "Failed to retrieve the custom modules."
+    assert len(custom_modules) > 0, "No custom modules were retrieved."
+
+
+@backoff.on_exception(
+    backoff.expo, (InternalServerError, ServiceUnavailable, NotFound), max_tries=3
+)
+def test_validate_event_threat_detection_custom_module():
+
+    parent = f"organizations/{ORGANIZATION_ID}/locations/{LOCATION}"
+
+    # Retrieve the custom module
+    response = event_threat_detection_custom_modules.validate_event_threat_detection_custom_module(parent)
+
+    assert response is not None, "Failed to retrieve the validte ETD custom module response."
