@@ -12,17 +12,31 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.cloud.dns import Client
+from google.cloud.dns import ManagedZone
 
-# [START create_zone]
-def create_zone(project_id: str, zone_name: str, dns_name: str, description: str
-) -> None:
+
+def create_zone(
+    project_id: str, zone_name: str, dns_name: str, description: str
+) -> ManagedZone:
+    # [START dns_create_zone]
+    from google.cloud.dns import Client
+
+    # TODO(developer): Uncomment the following lines:
+    # project_id = "my_project_id"
+    # zone_name = "my_zone_name"
+    # dns_name = "example.com."
+    # description = "Description for your ManagedZone, at most 1024 characters."
+
     client = Client(project_id)
+
+    # Find more information about the ManagedZone object at:
+    # https://cloud.google.com/python/docs/reference/dns/latest/zone
     zone = client.zone(
-        zone_name,  # examplezonename
-        dns_name=dns_name,  # example.com.
+        zone_name,
+        dns_name,
         description=description,
     )
     zone.create()
+    # [END dns_create_zone]
+
     return zone
-# [END create_zone]
