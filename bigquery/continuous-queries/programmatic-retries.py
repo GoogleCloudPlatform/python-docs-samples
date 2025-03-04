@@ -1,3 +1,24 @@
+# Copyright 2025 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+ 
+# This code sample demonstrates one possible approach to automating query retry.
+# Important things to consider when you retry a failed continuous query include the following:
+#      - Whether reprocessing some amount of data processed by the previous query before it failed is tolerable.
+#      - How to handle limiting retries or using exponential backoff.
+
+# Make sure you provide your SERVICE_ACCOUNT and CUSTOM_JOB_ID_PREFIX.
+
 import base64
 import json
 import re
@@ -6,11 +27,8 @@ import google.auth.transport.requests
 import requests
 import uuid
 
-
 def retry_bigquery_query(event, context):
    """Retries a failed BigQuery continuous query.
-
-
    Args:
        event (dict):  The dictionary with data specific to this type of
            event. The `data` field contains the PubsubMessage message. The
@@ -24,7 +42,6 @@ def retry_bigquery_query(event, context):
            # Decode and parse the Pub/Sub message data (LogEntry)
            log_entry = json.loads(base64.b64decode(event['data']).decode('utf-8'))
 
-
            # Check if 'protoPayload' exists
            if 'protoPayload' in log_entry:
                # Extract the SQL query
@@ -36,7 +53,6 @@ def retry_bigquery_query(event, context):
           
            # Extract the endTime from the log entry
            end_timestamp = log_entry['protoPayload']['metadata']['jobChange']['job']['jobStats']['endTime']
-
 
            # Check if the start_timestamp is "CURRENT_TIMESTAMP - INTERVAL 10 MINUTE"
            if "CURRENT_TIMESTAMP - INTERVAL 10 MINUTE" in sql_query:
@@ -66,10 +82,8 @@ def retry_bigquery_query(event, context):
            credentials.refresh(request)
            access_token = credentials.token
 
-
            # API endpoint
            url = f"https://bigquery.googleapis.com/bigquery/v2/projects/{project}/jobs"
-
 
            # Request headers
            headers = {
@@ -77,14 +91,11 @@ def retry_bigquery_query(event, context):
                "Content-Type": "application/json"
            }
 
-
            # Generate a random UUID
            random_suffix = str(uuid.uuid4())[:8]  # Take the first 8 characters of the UUID
 
-
            # Combine the prefix and random suffix
            job_id = f"continuous_query_label_{random_suffix}"
-
 
            # Request payload
            data = {
@@ -106,17 +117,14 @@ def retry_bigquery_query(event, context):
                    }
            }
 
-
            # Make the API request
            response = requests.post(url, headers=headers, json=data)
-
 
            # Handle the response
            if response.status_code == 200:
                print("Query job successfully created.")
            else:
                print(f"Error creating query job: {response.text}")
-
 
        except Exception as e:
            print(f"Error processing log entry or retrying query: {e}")
