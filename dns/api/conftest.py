@@ -22,17 +22,18 @@ from google.cloud.exceptions import NotFound
 import pytest
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-TEST_ZONE_NAME = "test-zone-" + str(uuid.uuid4())
+TEST_ZONE_NAME_BASE = "test-zone"
+TEST_ZONE_NAME_WITH_SUFFIX = TEST_ZONE_NAME_BASE + "-" + str(uuid.uuid4())
 TEST_ZONE_DNS_NAME = "theadora.is."
 TEST_ZONE_DESCRIPTION = "Test zone"
 
 
-def delay_rerun(*args: str) -> bool:
+def delay_rerun() -> bool:
     time.sleep(5)
     return True
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def client() -> Client:
     client = Client(PROJECT_ID)
 
@@ -48,7 +49,8 @@ def client() -> Client:
 
 @pytest.fixture
 def zone(client: Client) -> ManagedZone:
-    zone = client.zone(TEST_ZONE_NAME, TEST_ZONE_DNS_NAME)
+    zone_name = TEST_ZONE_NAME_BASE + "-" + str(uuid.uuid4())
+    zone = client.zone(zone_name, TEST_ZONE_DNS_NAME)
     zone.description = TEST_ZONE_DESCRIPTION
     zone.create()
 
@@ -68,7 +70,7 @@ def project_id() -> str:
 
 @pytest.fixture
 def zone_name() -> str:
-    return TEST_ZONE_NAME
+    return TEST_ZONE_NAME_WITH_SUFFIX
 
 
 @pytest.fixture

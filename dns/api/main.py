@@ -17,6 +17,8 @@ import argparse
 from google.cloud import dns
 from google.cloud.exceptions import NotFound
 
+from create_zone import create_zone
+
 
 # [START get_zone]
 def get_zone(project_id, name):
@@ -28,8 +30,6 @@ def get_zone(project_id, name):
         return zone
     except NotFound:
         return None
-
-
 # [END get_zone]
 
 
@@ -38,8 +38,6 @@ def list_zones(project_id):
     client = dns.Client(project=project_id)
     zones = client.list_zones()
     return [zone.name for zone in zones]
-
-
 # [END list_zones]
 
 
@@ -48,8 +46,6 @@ def delete_zone(project_id, name):
     client = dns.Client(project=project_id)
     zone = client.zone(name)
     zone.delete()
-
-
 # [END delete_zone]
 
 
@@ -64,8 +60,6 @@ def list_resource_records(project_id, zone_name):
         (record.name, record.record_type, record.ttl, record.rrdatas)
         for record in records
     ]
-
-
 # [END list_resource_records]
 
 
@@ -77,8 +71,6 @@ def list_changes(project_id, zone_name):
     changes = zone.list_changes()
 
     return [(change.started, change.status) for change in changes]
-
-
 # [END changes]
 
 
