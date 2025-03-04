@@ -18,21 +18,6 @@ from google.cloud import dns
 from google.cloud.exceptions import NotFound
 
 
-# [START create_zone]
-def create_zone(project_id, name, dns_name, description):
-    client = dns.Client(project=project_id)
-    zone = client.zone(
-        name,  # examplezonename
-        dns_name=dns_name,  # example.com.
-        description=description,
-    )
-    zone.create()
-    return zone
-
-
-# [END create_zone]
-
-
 # [START get_zone]
 def get_zone(project_id, name):
     client = dns.Client(project=project_id)
