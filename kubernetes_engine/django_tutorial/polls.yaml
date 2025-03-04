@@ -40,14 +40,14 @@ spec:
         app: polls
     spec:
       containers:
-      - name: polls-app
-        # Replace  with your project ID or use `make template`
-        image: gcr.io/<your-project-id>/polls
-        # This setting makes nodes pull the docker image every time before
-        # starting the pod. This is useful when debugging, but should be turned
-        # off in production.
-        imagePullPolicy: Always
-        env:
+        - name: polls-app
+          # Replace  with your project ID or use `make template`
+          image: gcr.io/<your-project-id>/polls
+          # This setting makes nodes pull the docker image every time before
+          # starting the pod. This is useful when debugging, but should be turned
+          # off in production.
+          imagePullPolicy: Always
+          env:
             - name: DATABASE_NAME
               valueFrom:
                 secretKeyRef:
@@ -63,22 +63,24 @@ spec:
                 secretKeyRef:
                   name: cloudsql
                   key: password
-        ports:
-        - containerPort: 8080
-      
-      - image: gcr.io/cloudsql-docker/gce-proxy:1.16
-        name: cloudsql-proxy
-        command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                  "-instances=<your-cloudsql-connection-string>=tcp:5432",
-                  "-credential_file=/secrets/cloudsql/credentials.json"]
-        volumeMounts:
-          - name: cloudsql-oauth-credentials
-            mountPath: /secrets/cloudsql
-            readOnly: true
-          - name: ssl-certs
-            mountPath: /etc/ssl/certs
-          - name: cloudsql
-            mountPath: /cloudsql
+          ports:
+            - containerPort: 8080
+      initContainers:
+        - image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:latest
+          name: cloud-sql-proxy
+          args:
+            # If connecting from a VPC-native GKE cluster, you can use the
+            # following flag to have the proxy connect over private IP
+            # - "--private-ip"
+            - "--port=5432"
+            - "--credentials-file=/secrets/cloudsql/credentials.json"
+            - "<your-cloudsql-connection-string>"
+          volumeMounts:
+            - name: cloudsql-oauth-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+            - name: ssl-certs
+              mountPath: /etc/ssl/certs
       volumes:
         - name: cloudsql-oauth-credentials
           secret:
@@ -86,11 +88,8 @@ spec:
         - name: ssl-certs
           hostPath:
             path: /etc/ssl/certs
-        - name: cloudsql
-          emptyDir: {}
 # [END gke_kubernetes_deployment_yaml_python]
 ---
-
 # [START gke_kubernetes_service_yaml_python]
 # The polls service provides a load-balancing proxy over the polls app
 # pods. By specifying the type as a 'LoadBalancer', Kubernetes Engine will
@@ -108,8 +107,8 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-  - port: 80
-    targetPort: 8080
+    - port: 80
+      targetPort: 8080
   selector:
     app: polls
 # [END gke_kubernetes_service_yaml_python]
