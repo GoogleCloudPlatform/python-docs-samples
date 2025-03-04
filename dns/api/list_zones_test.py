@@ -1,4 +1,5 @@
-# Copyright 2015 Google, Inc.
+# Copyright 2025 Google LLC
+#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -14,25 +15,20 @@
 import pytest
 
 from conftest import delay_rerun
-import main
+from create_zone import create_zone
+from list_zones import list_zones
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_resource_records(project_id: str, zone_name: str) -> None:
-    records = main.list_resource_records(project_id, zone_name)
+def test_list_zones(project_id: str, zone_name: str, zone_dns_name: str, zone_description: str) -> None:
+    zone = create_zone(
+        project_id, zone_name, zone_dns_name, zone_description
+    )
 
-    assert records
+    assert zone.name == zone_name
+    assert zone.dns_name == zone_dns_name
+    assert zone.description == zone_description
 
+    zones = list_zones(project_id)
 
-@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_changes(project_id: str, zone_name: str) -> None:
-    changes = main.list_changes(project_id, zone_name)
-
-    assert changes
-
-
-@pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_delete_zone(project_id: str, zone_name: str) -> None:
-    main.delete_zone(project_id, zone_name)
-
-    # TODO: Add assert for deletion.
+    assert zone_name in zones
