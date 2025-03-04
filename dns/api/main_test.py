@@ -15,9 +15,6 @@ import os
 import time
 import uuid
 
-from google.cloud import dns
-from google.cloud.exceptions import NotFound
-
 import pytest
 
 import main
@@ -33,37 +30,8 @@ def delay_rerun(*args):
     return True
 
 
-@pytest.fixture
-def client():
-    client = dns.Client(PROJECT)
-
-    yield client
-
-    # Delete anything created during the test.
-    for zone in client.list_zones():
-        try:
-            zone.delete()
-        except NotFound:  # May have been in process
-            pass
-
-
-@pytest.fixture
-def zone(client):
-    zone = client.zone(TEST_ZONE_NAME, TEST_ZONE_DNS_NAME)
-    zone.description = TEST_ZONE_DESCRIPTION
-    zone.create()
-
-    yield zone
-
-    if zone.exists():
-        try:
-            zone.delete()
-        except NotFound:  # May have been under way
-            pass
-
-
 @pytest.mark.flaky
-def test_create_zone(client):
+def test_create_zone():
     zone = main.create_zone(
         PROJECT, TEST_ZONE_NAME, TEST_ZONE_DNS_NAME, TEST_ZONE_DESCRIPTION
     )
@@ -74,7 +42,7 @@ def test_create_zone(client):
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_get_zone(client, zone):
+def test_get_zone():
     zone = main.get_zone(PROJECT, TEST_ZONE_NAME)
 
     assert zone.name == TEST_ZONE_NAME
@@ -83,26 +51,26 @@ def test_get_zone(client, zone):
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_zones(client, zone):
+def test_list_zones():
     zones = main.list_zones(PROJECT)
 
     assert TEST_ZONE_NAME in zones
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_resource_records(client, zone):
+def test_list_resource_records():
     records = main.list_resource_records(PROJECT, TEST_ZONE_NAME)
 
     assert records
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_list_changes(client, zone):
+def test_list_changes():
     changes = main.list_changes(PROJECT, TEST_ZONE_NAME)
 
     assert changes
 
 
 @pytest.mark.flaky(max_runs=3, min_passes=1, rerun_filter=delay_rerun)
-def test_delete_zone(client, zone):
+def test_delete_zone():
     main.delete_zone(PROJECT, TEST_ZONE_NAME)
