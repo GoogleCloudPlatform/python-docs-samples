@@ -475,13 +475,13 @@ def using_extras(client):
 def setup_logging(client):
     import logging
 
-    # [START setup_logging]
+    # [START logging_setup_logging]
     client.setup_logging(log_level=logging.INFO)
-    # [END setup_logging]
+    # [END logging_setup_logging]
 
-    # [START setup_logging_excludes]
+    # [START logging_setup_logging_excludes]
     client.setup_logging(log_level=logging.INFO, excluded_loggers=("werkzeug",))
-    # [END setup_logging_excludes]
+    # [END logging_setup_logging_excludes]
 
 
 @snippet
