@@ -22,7 +22,7 @@
 /compute/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /dns/**/*                              @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /gemma2/**/*                           @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/genai/**/*                           @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
+/genai/**/*                            @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /generative_ai/**/*                    @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /iam/cloud-client/**/*                 @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /kms/**/**                             @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
@@ -68,7 +68,7 @@
 
 # For practicing
 # ---* Use with codelabs to learn to submit samples
-/practice-folder/**/*                  engelke@google.com
+/practice-folder/**/*                  @GoogleCloudPlatform/cloud-samples-infra
 
 # ---* Fully Eng Owned
 /aml-ai/**/*                           @GoogleCloudPlatform/aml-ai @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
