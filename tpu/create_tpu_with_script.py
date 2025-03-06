@@ -20,8 +20,8 @@ def create_cloud_tpu_with_script(
     project_id: str,
     zone: str,
     tpu_name: str,
-    tpu_type: str = "v2-8",
-    runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
+    tpu_type: str = "v5litepod-4",
+    runtime_version: str = "v2-tpuv5-litepod",
 ) -> Node:
     # [START tpu_vm_create_startup_script]
     from google.cloud import tpu_v2
@@ -30,8 +30,8 @@ def create_cloud_tpu_with_script(
     # project_id = "your-project-id"
     # zone = "us-central1-b"
     # tpu_name = "tpu-name"
-    # tpu_type = "v2-8"
-    # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
+    # tpu_type = "v5litepod-4"
+    # runtime_version = "v2-tpuv5-litepod"
 
     node = tpu_v2.Node()
     node.accelerator_type = tpu_type
@@ -72,5 +72,5 @@ def create_cloud_tpu_with_script(
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     create_cloud_tpu_with_script(PROJECT_ID, ZONE, "tpu-name")
