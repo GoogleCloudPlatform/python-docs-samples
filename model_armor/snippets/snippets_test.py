@@ -31,6 +31,7 @@ from create_template_with_basic_sdp import create_model_armor_template_with_basi
 from create_template_with_labels import create_model_armor_template_with_labels
 from create_template_with_metadata import create_model_armor_template_with_metadata
 from delete_template import delete_model_armor_template
+from get_organization_floor_settings import get_organization_floor_settings
 from get_project_floor_settings import get_project_floor_settings
 from get_template import get_model_armor_template
 from list_templates import list_model_armor_templates
@@ -42,6 +43,7 @@ from sanitize_model_response_with_user_prompt import (
 )
 from sanitize_user_prompt import sanitize_user_prompt
 from screen_pdf_file import screen_pdf_file
+from update_organizations_floor_settings import update_organization_floor_settings
 from update_project_floor_settings import update_project_floor_settings
 from update_template import update_model_armor_template
 from update_template_lables import update_model_armor_template_labels
@@ -53,6 +55,11 @@ from update_template_with_mask_configuration import (
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 LOCATION = "us-central1"
 TEMPLATE_ID = f"test-model-armor-{uuid.uuid4()}"
+
+
+@pytest.fixture()
+def organization_id() -> str:
+    return os.environ["GCLOUD_ORGANIZATION"]
 
 
 @pytest.fixture()
@@ -325,6 +332,30 @@ def floor_settings_project_id(project_id: str) -> Generator[str, None, None]:
         )
     except GoogleAPIError:
         print("Floor settings not set or not authorized to set floor settings")
+
+
+@pytest.fixture()
+def floor_setting_organization_id(organization_id: str) -> Generator[str, None, None]:
+    client = modelarmor_v1.ModelArmorClient(transport="rest")
+
+    yield organization_id
+    try:
+        time.sleep(2)
+        client.update_floor_setting(
+            request=modelarmor_v1.UpdateFloorSettingRequest(
+                floor_setting=modelarmor_v1.FloorSetting(
+                    name=f"organizations/{organization_id}/locations/global/floorSetting",
+                    filter_config=modelarmor_v1.FilterConfig(
+                        rai_settings=modelarmor_v1.RaiFilterSettings(rai_filters=[])
+                    ),
+                    enable_floor_setting_enforcement=False,
+                )
+            )
+        )
+    except GoogleAPIError:
+        print(
+            "Floor settings not set or not authorized to set floor settings for organization"
+        )
 
 
 @pytest.fixture()
@@ -1040,10 +1071,27 @@ def test_quickstart(project_id: str, location_id: str, template_id: str) -> None
     quickstart(project_id, location_id, template_id)
 
 
+def test_update_organization_floor_settings(floor_setting_organization_id: str) -> None:
+    response = update_organization_floor_settings(floor_setting_organization_id)
+
+    assert response.enable_floor_setting_enforcement
+    print("Organization floor settings updated successfully.")
+
+
 def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
     response = update_project_floor_settings(floor_settings_project_id)
 
     assert response.enable_floor_setting_enforcement
+
+
+def test_get_organization_floor_settings(organization_id: str) -> None:
+    expected_floor_settings_name = (
+        f"organizations/{organization_id}/locations/global/floorSetting"
+    )
+    response = get_organization_floor_settings(organization_id)
+
+    assert response.name == expected_floor_settings_name
+    print("Organization floor settings retrieved successfully.")
 
 
 def test_get_project_floor_settings(project_id: str) -> None:
