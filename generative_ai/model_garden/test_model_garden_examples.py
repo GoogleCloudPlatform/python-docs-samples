@@ -31,9 +31,9 @@ import claude_3_unary_example
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 INPUT_BUCKET = "kellysun-test-project-europe-west1"
-OUTPUT_BUCKET = "python-docs-samples-tests"
+OUTPUT_BUCKET = "kellysun-test-project-europe-west1"
 OUTPUT_PATH = "batch/batch_text_predict_output"
-GCS_OUTPUT_PATH = "gs://python-docs-samples-tests/"
+GCS_OUTPUT_PATH = "gs://kellysun-test-project-europe-west1/"
 OUTPUT_TABLE = f"bq://{PROJECT_ID}.gen_ai_batch_prediction.predictions"
 
 
@@ -86,7 +86,7 @@ def test_generate_text() -> None:
 def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
     output_uri = "gs://python-docs-samples-tests"
     job = _main_test(
-        test_func=lambda: claude_3_batch_prediction_gcs.batch_predict_gemini_createjob(
+        test_func=lambda: claude_3_batch_prediction_gcs.batch_predict_createjob(
             output_uri
         )
     )
@@ -96,7 +96,7 @@ def test_batch_gemini_predict_gcs(output_folder: pytest.fixture()) -> None:
 def test_batch_gemini_predict_bigquery(output_folder: pytest.fixture()) -> None:
     output_uri = f"bq://{PROJECT_ID}.gen_ai_batch_prediction.predictions"
     job = _main_test(
-        test_func=lambda: claude_3_batch_prediciton_bq.batch_predict_gemini_createjob(
+        test_func=lambda: claude_3_batch_prediciton_bq.batch_predict_createjob(
             output_uri
             )
     )

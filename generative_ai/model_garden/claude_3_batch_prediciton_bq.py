@@ -18,7 +18,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 output_uri = "bq://storage-samples.generative_ai.gen_ai_batch_prediction.predictions"
 
 
-def batch_predict_gemini_createjob(output_uri: str) -> str:
+def batch_predict_createjob(output_uri: str) -> str:
     """Perform batch text prediction using a Gemini AI model and returns the output location"""
 
     # [START generativeaionvertexai_batch_predict_anthropic_gemini_createjob_bigquery]
@@ -68,4 +68,4 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
 
 
 if __name__ == "__main__":
-    batch_predict_gemini_createjob(output_uri)
+    batch_predict_createjob(output_uri)

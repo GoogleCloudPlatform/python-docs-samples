@@ -17,7 +17,7 @@ import os
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
-output_uri = "gs://python-docs-samples-tests"
+output_uri = "gs://kellysun-test-project-europe-west1"
 
 
 def batch_predict_createjob(output_uri: str) -> str:
