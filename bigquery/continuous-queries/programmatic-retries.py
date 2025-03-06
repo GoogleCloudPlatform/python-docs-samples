@@ -19,6 +19,7 @@
 
 # Make sure you provide your SERVICE_ACCOUNT and CUSTOM_JOB_ID_PREFIX.
 
+# [START functions_bigquery_continuous_queries_programmatic_retry]
 import base64
 import json
 import re
@@ -134,3 +135,4 @@ def retry_continuous_query(event, context):
         logging.error(f"Error processing log entry or retrying query: {e}", exc_info=True)
 
     logging.info("Cloud Function finished.")
+# [END functions_bigquery_continuous_queries_programmatic_retry]
