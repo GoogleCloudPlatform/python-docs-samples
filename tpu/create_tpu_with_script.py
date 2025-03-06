@@ -28,7 +28,7 @@ def create_cloud_tpu_with_script(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
-    # zone = "us-central1-b"
+    # zone = "us-central1-a"
     # tpu_name = "tpu-name"
     # tpu_type = "v5litepod-4"
     # runtime_version = "v2-tpuv5-litepod"
