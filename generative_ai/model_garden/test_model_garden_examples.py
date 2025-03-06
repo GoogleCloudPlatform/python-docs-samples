@@ -16,6 +16,8 @@ import backoff
 
 from google.api_core.exceptions import ResourceExhausted
 
+import claude_3_batch_prediciton_bq
+import claude_3_batch_prediction_gcs
 import claude_3_streaming_example
 import claude_3_tool_example
 import claude_3_unary_example
@@ -39,4 +41,16 @@ def test_tool_use() -> None:
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_generate_text() -> None:
     responses = claude_3_unary_example.generate_text()
+    assert "bread" in responses.model_dump_json(indent=2)
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_generate_text_gcs() -> None:
+    responses = claude_3_batch_prediction_gcs.generate_text()
+    assert "bread" in responses.model_dump_json(indent=2)
+
+
+@backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
+def test_generate_text_bq() -> None:
+    responses = claude_3_batch_prediciton_bq.generate_text()
     assert "bread" in responses.model_dump_json(indent=2)
