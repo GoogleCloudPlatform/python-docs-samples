@@ -33,17 +33,14 @@ def list_model_armor_templates(
     """
     # [START modelarmor_list_templates]
     from google.api_core.client_options import ClientOptions
-    from google.cloud.modelarmor_v1 import (
-        ModelArmorClient,
-        ListTemplatesRequest,
-    )
+    from google.cloud import modelarmor_v1
 
     # TODO(Developer): Uncomment these variables.
     # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
 
     # Create the Model Armor client.
-    client = ModelArmorClient(
+    client = modelarmor_v1.ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(
             api_endpoint=f"modelarmor.{location}.rep.googleapis.com"
@@ -51,7 +48,9 @@ def list_model_armor_templates(
     )
 
     # Initialize request argument(s).
-    request = ListTemplatesRequest(parent=f"projects/{project_id}/locations/{location}")
+    request = modelarmor_v1.ListTemplatesRequest(
+        parent=f"projects/{project_id}/locations/{location}"
+    )
 
     # Get list of templates.
     response = client.list_templates(request=request)
