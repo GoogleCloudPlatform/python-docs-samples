@@ -80,4 +80,4 @@ def test_retry_success(mock_uuid, mock_auth_default, mock_requests_post):
     # Assertions
     mock_requests_post.assert_called_once()
     assert end_time in new_query
-    assert "continuous_query_label_12345678" in mock_requests_post.call_args[1]['json']['jobReference']['jobId']
+    assert "CUSTOM_JOB_ID_PREFIX12345678" in mock_requests_post.call_args[1]['json']['jobReference']['jobId']
