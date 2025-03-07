@@ -33,6 +33,7 @@ def gemini_tuning_basic() -> sft.SupervisedTuningJob:
 
     sft_tuning_job = sft.train(
         source_model="gemini-2.0-flash-001",
+        # 1.5 and 2.0 models use the same JSONL format
         train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
     )
 
