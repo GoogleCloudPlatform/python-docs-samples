@@ -22,12 +22,13 @@ import re
 # Assuming your code is in a file named 'programmatic_retries.py'
 import programmatic_retries
 
-@patch('programmatic_retries.requests.post')
-@patch('programmatic_retries.google.auth.default')
-@patch('uuid.uuid4')
+
+@patch("programmatic_retries.requests.post")
+@patch("programmatic_retries.google.auth.default")
+@patch("uuid.uuid4")
 def test_retry_success(mock_uuid, mock_auth_default, mock_requests_post):
     # Mocking UUID to have a predictable result
-    mock_uuid.return_value = uuid.UUID('12345678-1234-5678-1234-567812345678')
+    mock_uuid.return_value = uuid.UUID("12345678-1234-5678-1234-567812345678")
 
     # Mocking Google Auth
     mock_credentials = Mock()
@@ -50,15 +51,9 @@ def test_retry_success(mock_uuid, mock_auth_default, mock_requests_post):
             "metadata": {
                 "jobChange": {
                     "job": {
-                        "jobConfig": {
-                            "queryConfig": {
-                                "query": sql_query
-                            }
-                        },
-                        "jobStats": {
-                            "endTime": end_time
-                        },
-                        "jobName": failed_job_id
+                        "jobConfig": {"queryConfig": {"query": sql_query}},
+                        "jobStats": {"endTime": end_time},
+                        "jobName": failed_job_id,
                     }
                 }
             }
@@ -67,17 +62,22 @@ def test_retry_success(mock_uuid, mock_auth_default, mock_requests_post):
 
     # Encode the log entry as a Pub/Sub message
     event = {
-        "data": base64.b64encode(json.dumps(log_entry).encode('utf-8')).decode('utf-8')
+        "data": base64.b64encode(json.dumps(log_entry).encode("utf-8")).decode("utf-8")
     }
 
     # Call the Cloud Function
     programmatic_retries.retry_continuous_query(event, None)
 
     # Print the new SQL query
-    new_query = mock_requests_post.call_args[1]['json']['configuration']['query']['query']
+    new_query = mock_requests_post.call_args[1]["json"]["configuration"]["query"][
+        "query"
+    ]
     print(f"\nNew SQL Query:\n{new_query}\n")
 
     # Assertions
     mock_requests_post.assert_called_once()
     assert end_time in new_query
-    assert "CUSTOM_JOB_ID_PREFIX12345678" in mock_requests_post.call_args[1]['json']['jobReference']['jobId']
+    assert (
+        "CUSTOM_JOB_ID_PREFIX12345678"
+        in mock_requests_post.call_args[1]["json"]["jobReference"]["jobId"]
+    )
