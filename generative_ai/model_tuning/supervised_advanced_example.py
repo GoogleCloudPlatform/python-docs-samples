@@ -40,14 +40,16 @@ def gemini_tuning_advanced() -> sft.SupervisedTuningJob:
     # vertexai.init(encryption_spec_key_name="your-kms-key")
 
     sft_tuning_job = sft.train(
-        source_model="gemini-1.5-pro-002",
+        source_model="gemini-2.0-flash-001",
+        # 1.5 and 2.0 models use the same JSONL format
         train_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_train_data.jsonl",
         # The following parameters are optional
         validation_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-1_5/text/sft_validation_data.jsonl",
-        epochs=4,
-        adapter_size=4,
-        learning_rate_multiplier=1.0,
-        tuned_model_display_name="tuned_gemini_1_5_pro",
+        tuned_model_display_name="tuned_gemini_2_0_flash",
+        # Advanced use only below. It is recommended to use auto-selection and leave them unset
+        # epochs=4,
+        # adapter_size=4,
+        # learning_rate_multiplier=1.0,
     )
 
     # Polling for job completion
