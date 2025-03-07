@@ -40,6 +40,7 @@ def generate_text_with_grounding_web() -> GenerationResponse:
         grounding.GoogleSearchRetrieval(
             # Optional: For Dynamic Retrieval
             dynamic_retrieval_config=grounding.DynamicRetrievalConfig(
+                mode=grounding.DynamicRetrievalConfig.Mode.MODE_DYNAMIC,
                 dynamic_threshold=0.7,
             )
         )
@@ -54,7 +55,7 @@ def generate_text_with_grounding_web() -> GenerationResponse:
         ),
     )
 
-    print(response.text)
+    print(response)
     # Example response:
     # The next total solar eclipse visible from the contiguous United States will be on **August 23, 2044**.
 
