@@ -1,0 +1,2 @@
+google-cloud-modelarmor==0.1.1
+google-cloud-dlp==3.27.0
