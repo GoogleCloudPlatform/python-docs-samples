@@ -20,8 +20,8 @@ def create_tpu_with_spot(
     project_id: str,
     zone: str,
     tpu_name: str,
-    tpu_type: str = "v2-8",
-    runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
+    tpu_type: str = "v5litepod-4",
+    runtime_version: str = "v2-tpuv5-litepod",
 ) -> Node:
     """Creates a Cloud TPU node.
     Args:
@@ -40,8 +40,8 @@ def create_tpu_with_spot(
     # project_id = "your-project-id"
     # zone = "us-central1-b"
     # tpu_name = "tpu-name"
-    # tpu_type = "v2-8"
-    # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
+    # tpu_type = "v5litepod-4"
+    # runtime_version = "v2-tpuv5-litepod"
 
     # Create a TPU node
     node = tpu_v2.Node()
@@ -75,5 +75,5 @@ def create_tpu_with_spot(
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     create_tpu_with_spot(PROJECT_ID, ZONE, "tpu-with-spot")

@@ -20,8 +20,8 @@ def create_cloud_tpu(
     project_id: str,
     zone: str,
     tpu_name: str,
-    tpu_type: str = "v2-8",
-    runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
+    tpu_type: str = "v5litepod-4",
+    runtime_version: str = "v2-tpuv5-litepod",
 ) -> Node:
     """Creates a Cloud TPU node.
     Args:
@@ -38,10 +38,10 @@ def create_cloud_tpu(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
-    # zone = "us-central1-b"
+    # zone = "us-central1-a"
     # tpu_name = "tpu-name"
-    # tpu_type = "v2-8"
-    # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
+    # tpu_type = "v5litepod-4"
+    # runtime_version = "v2-tpuv5-litepod"
 
     # Create a TPU node
     node = tpu_v2.Node()
@@ -65,7 +65,7 @@ def create_cloud_tpu(
     print(response)
     # Example response:
     # name: "projects/[project_id]/locations/[zone]/nodes/my-tpu"
-    # accelerator_type: "v2-8"
+    # accelerator_type: "v5litepod-4"
     # state: READY
     # ...
 
@@ -75,5 +75,5 @@ def create_cloud_tpu(
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     create_cloud_tpu(PROJECT_ID, ZONE, "tpu-name")

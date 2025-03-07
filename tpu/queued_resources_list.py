@@ -40,5 +40,5 @@ def list_queued_resources(project_id: str, zone: str) -> ListQueuedResourcesPage
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     list_queued_resources(PROJECT_ID, ZONE)

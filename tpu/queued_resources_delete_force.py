@@ -44,5 +44,5 @@ def delete_force_queued_resource(
 
 if __name__ == "__main__":
     PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     delete_force_queued_resource(PROJECT_ID, ZONE, "resource-name")
