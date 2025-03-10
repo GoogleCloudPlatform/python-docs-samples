@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -91,6 +89,7 @@ def update_source(source_name):
 def add_user_to_source(source_name):
     """Gives a user findingsEditor permission to the source."""
     user_email = "csccclienttest@gmail.com"
+
     # [START securitycenter_set_source_iam]
     from google.cloud import securitycenter
     from google.iam.v1 import policy_pb2
@@ -123,8 +122,8 @@ def add_user_to_source(source_name):
     )
 
     print(f"Updated Policy: {updated}")
-
     # [END securitycenter_set_source_iam]
+
     return binding, updated
 
 
@@ -437,10 +436,6 @@ def list_findings_at_time(source_name):
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
     five_days_ago = str(datetime.now(timezone.utc) - timedelta(days=5))
-
-    # TODO: Remove this after passing the tests
-    print(f'{five_days_ago=}')
-
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
@@ -596,6 +591,8 @@ def group_findings_and_changes(source_name):
 
     # List assets and their state change the last 30 days
     compare_delta = timedelta(days=30)
+
+    print(f'{compare_delta=}')
 
     group_result_iterator = client.group_findings(
         request={

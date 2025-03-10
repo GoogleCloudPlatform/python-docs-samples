@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-#
 # Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -23,7 +21,7 @@ import snippets_findings
 
 @pytest.fixture(scope="module")
 def organization_id():
-    """Get Organization ID from the environment variable"""
+    """Get Organization ID from the environment variable."""
     return os.environ["GCLOUD_ORGANIZATION"]
 
 
@@ -61,7 +59,7 @@ def test_update_source(source_name):
 
 
 def test_add_user_to_source(source_name):
-    binding, updated = snippets_findings.add_user_to_source(source_name)
+    _, updated = snippets_findings.add_user_to_source(source_name)
     assert any(
         member == "user:csccclienttest@gmail.com"
         for member in chain.from_iterable(
@@ -106,7 +104,7 @@ def test_list_filtered_findings(source_name):
     assert count > 0
 
 
-def list_findings_at_time(source_name):
+def test_list_findings_at_time(source_name):
     count = snippets_findings.list_findings_at_time(source_name)
     assert count == -1
 
