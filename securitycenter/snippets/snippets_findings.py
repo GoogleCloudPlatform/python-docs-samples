@@ -559,7 +559,11 @@ def group_findings_at_time(source_name):
     print(f'{read_time=}')
 
     group_result_iterator = client.group_findings(
-        request={"parent": source_name, "group_by": "category", "read_time": read_time}
+        request={
+            "parent": source_name,
+            "group_by": "category",
+            # "read_time": read_time,
+        }
     )
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
@@ -598,7 +602,7 @@ def group_findings_and_changes(source_name):
         request={
             "parent": source_name,
             "group_by": "state_change",
-            "compare_duration": compare_delta,
+            # "compare_duration": compare_delta,
         }
     )
     for i, group_result in enumerate(group_result_iterator):
