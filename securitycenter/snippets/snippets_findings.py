@@ -152,7 +152,7 @@ def list_source(organization_id):
 def create_finding(source_name, finding_id):
     """Creates a new finding."""
     # [START securitycenter_create_finding]
-    import datetime
+    from datetime import datetime, timezone
 
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
@@ -161,7 +161,7 @@ def create_finding(source_name, finding_id):
     client = securitycenter.SecurityCenterClient()
 
     # Use the current time as the finding "event time".
-    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
+    event_time = datetime.now(tz=timezone.utc)
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -194,7 +194,7 @@ def create_finding(source_name, finding_id):
 def create_finding_with_source_properties(source_name):
     """Demonstrate creating a new finding with source properties."""
     # [START securitycenter_create_finding_with_source_properties]
-    import datetime
+    from datetime import datetime, timezone
 
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
@@ -225,7 +225,7 @@ def create_finding_with_source_properties(source_name):
     num_value.number_value = 1234
 
     # Use the current time as the finding "event time".
-    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
+    event_time = datetime.now(tz=timezone.utc)
 
     finding = Finding(
         state=Finding.State.ACTIVE,
@@ -244,7 +244,7 @@ def create_finding_with_source_properties(source_name):
 
 def update_finding(source_name):
     # [START securitycenter_update_finding_source_properties]
-    import datetime
+    from datetime import datetime, timezone
 
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
@@ -259,7 +259,7 @@ def update_finding(source_name):
 
     # Set the update time to Now.  This must be some time greater then the
     # event_time on the original finding.
-    event_time = datetime.datetime.now(tz=datetime.timezone.utc)
+    event_time = datetime.now(tz=timezone.utc)
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -288,7 +288,7 @@ def update_finding(source_name):
 def update_finding_state(source_name):
     """Demonstrate updating only a finding state."""
     # [START securitycenter_update_finding_state]
-    import datetime
+    from datetime import datetime, timezone
 
     from google.cloud import securitycenter
     from google.cloud.securitycenter_v1 import Finding
@@ -308,7 +308,7 @@ def update_finding_state(source_name):
         request={
             "name": finding_name,
             "state": Finding.State.INACTIVE,
-            "start_time": datetime.datetime.now(tz=datetime.timezone.utc),
+            "start_time": datetime.now(timezone.utc),
         }
     )
     print(f"New state: {new_finding.state}")
@@ -419,7 +419,7 @@ def list_filtered_findings(source_name):
 
 def list_findings_at_time(source_name):
     # [START securitycenter_list_findings_at_time]
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     from google.cloud import securitycenter
 
@@ -436,7 +436,11 @@ def list_findings_at_time(source_name):
     #   "folders/{folder_id}"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
-    five_days_ago = str(datetime.now() - timedelta(days=5))
+    five_days_ago = str(datetime.now(timezone.utc) - timedelta(days=5))
+
+    # TODO: Remove this after passing the tests
+    print(f'{five_days_ago=}')
+
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
@@ -536,7 +540,7 @@ def group_findings_at_time(source_name):
     a specific time."""
     i = -1
     # [START securitycenter_group_findings_at_time]
-    from datetime import datetime, timedelta
+    from datetime import datetime, timedelta, timezone
 
     from google.cloud import securitycenter
 
@@ -554,7 +558,10 @@ def group_findings_at_time(source_name):
     # source_name = "organizations/111122222444/sources/1234"
 
     # Group findings as of yesterday.
-    read_time = datetime.utcnow() - timedelta(days=1)
+    read_time = datetime.now(timezone.utc) - timedelta(days=1)
+
+    # TODO: Remove this after passing the tests
+    print(f'{read_time=}')
 
     group_result_iterator = client.group_findings(
         request={"parent": source_name, "group_by": "category", "read_time": read_time}
