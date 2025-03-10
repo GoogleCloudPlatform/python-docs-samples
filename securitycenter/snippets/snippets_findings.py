@@ -553,7 +553,7 @@ def group_findings_at_time(source_name):
     # source_name = "organizations/111122222444/sources/1234"
 
     # Group findings as of yesterday.
-    read_time = datetime.now(timezone.utc) - timedelta(days=1)
+    read_time = datetime.now() - timedelta(days=1)
 
     # TODO: Remove this after passing the tests
     print(f'{read_time=}')
@@ -562,7 +562,7 @@ def group_findings_at_time(source_name):
         request={
             "parent": source_name,
             "group_by": "category",
-            # "read_time": read_time,
+            "read_time": read_time,
         }
     )
     for i, group_result in enumerate(group_result_iterator):
@@ -579,6 +579,7 @@ def group_findings_and_changes(source_name):
     from datetime import timedelta
 
     from google.cloud import securitycenter
+    from google.protobuf import duration_pb2
 
     # Create a client.
     client = securitycenter.SecurityCenterClient()
@@ -602,10 +603,12 @@ def group_findings_and_changes(source_name):
         request={
             "parent": source_name,
             "group_by": "state_change",
-            # "compare_duration": compare_delta,
+            "compare_duration": compare_delta,
         }
     )
+
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
     # [END securitycenter_group_findings_with_changes]]
+
     return i
