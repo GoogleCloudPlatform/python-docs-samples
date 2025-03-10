@@ -26,15 +26,15 @@ COPY --from=apache/beam_python3.11_sdk:2.62.0 /opt/apache/beam /opt/apache/beam
 ENTRYPOINT [ "/opt/apache/beam/boot" ]
 
 COPY requirements.txt .
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        curl python3-distutils default-jre docker.io \
-    && rm -rf /var/lib/apt/lists/* \
-    && update-alternatives --install /usr/bin/python python /usr/bin/python3 10 \
-    && curl https://bootstrap.pypa.io/get-pip.py | python \
+RUN apt-get update 
+RUN apt-get install -y --no-install-recommends \
+        curl python3-distutils default-jre docker.io 
+RUN rm -rf /var/lib/apt/lists/* 
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 10 
+RUN curl https://bootstrap.pypa.io/get-pip.py | python 
     # Install the requirements.
-    && pip install --no-cache-dir -r requirements.txt \
-    && pip check
+RUN pip install --no-cache-dir -r requirements.txt 
+RUN pip check
 
 
 COPY read_kafka.py ./
