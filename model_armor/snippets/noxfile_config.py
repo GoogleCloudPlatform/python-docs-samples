@@ -40,5 +40,6 @@ TEST_CONFIG_OVERRIDE = {
     # secrets here. These values will override predefined values.
     "envs": {
         "GCLOUD_ORGANIZATION": "951890214235",
+        "GCLOUD_FOLDER": "695279264361",
     },
 }
