@@ -448,7 +448,7 @@ def list_findings_at_time(source_name):
     finding_result_iterator = client.list_findings(
         request={
             "parent": source_name,
-            "filter": f"event_time > {timestamp_miliseconds}",
+            "filter": f"event_time < {timestamp_miliseconds}",
         }
     )
 
