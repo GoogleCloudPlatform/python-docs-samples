@@ -20,8 +20,8 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
-from google.protobuf.json_format import ParseError
 from google.cloud import securitycenter as securitycenter
+from google.protobuf.json_format import ParseError
 import pytest
 
 import snippets_notification_configs
