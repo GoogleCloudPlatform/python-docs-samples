@@ -32,7 +32,7 @@ def stop_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> No
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
-    # zone = "us-central1-b"
+    # zone = "us-central1-a"
     # tpu_name = "tpu-name"
 
     client = tpu_v2.TpuClient()
@@ -58,5 +58,5 @@ def stop_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> No
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     stop_cloud_tpu(PROJECT_ID, ZONE, "tpu-name")
