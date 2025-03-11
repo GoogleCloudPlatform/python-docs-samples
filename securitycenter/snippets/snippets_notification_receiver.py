@@ -23,6 +23,7 @@ def receive_notifications(project_id, subscription_name):
 
     from google.cloud import pubsub_v1
     from google.cloud.securitycenter_v1 import NotificationMessage
+    from google.protobuf.json_format import ParseError
 
     # TODO: project_id = "your-project-id"
     # TODO: subscription_name = "your-subscription-name"
@@ -31,12 +32,15 @@ def receive_notifications(project_id, subscription_name):
         # Print the data received for debugging purpose if needed
         print(f"Received message: {message.data}")
 
-        notification_msg = NotificationMessage.from_json(message.data)
+        try:
+            notification_msg = NotificationMessage.from_json(message.data)
+        except ParseError:
+            # TODO: DEBUG skip this error
+            pass
 
         print(
-            "Notification config name: {}".format(
-                notification_msg.notification_config_name
-            )
+            "Notification config name: "
+            f"{notification_msg.notification_config_name}"
         )
         print(f"Finding: {notification_msg.finding}")
 
