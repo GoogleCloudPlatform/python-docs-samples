@@ -40,8 +40,7 @@ def receive_notifications(project_id, subscription_name):
             )
             print(f"Finding: {notification_msg.finding}")
         except ParseError:
-            print(f"Could not parse message")
-            pass
+            print("Could not parse received message as a NotificationMessage.")
 
         # Ack the message to prevent it from being pulled again
         message.ack()
