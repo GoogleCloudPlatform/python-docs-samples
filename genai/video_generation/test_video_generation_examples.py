@@ -24,9 +24,9 @@ from google.cloud import storage
 
 import pytest
 
-import videogen_with_txt
-
 import videogen_with_img
+
+import videogen_with_txt
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
