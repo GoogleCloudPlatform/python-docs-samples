@@ -434,7 +434,7 @@ def list_findings_at_time(source_name):
     #   "folders/{folder_id}"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
-    five_days_ago = str(datetime.now(timezone.utc) - timedelta(days=5))
+    five_days_ago = (datetime.now(timezone.utc) - timedelta(days=5)).isoformat()
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
@@ -442,7 +442,7 @@ def list_findings_at_time(source_name):
     finding_result_iterator = client.list_findings(
         request={
             "parent": source_name,
-            "filter": f"event_time > {five_days_ago.isoformat()}",
+            "filter": f"event_time > {five_days_ago}",
         }
     )
 
