@@ -54,5 +54,5 @@ def receive_notifications(project_id, subscription_name):
     except concurrent.futures.TimeoutError:
         streaming_pull_future.cancel()
     # [END securitycenter_receive_notifications]
-    
+
     return True

@@ -445,7 +445,7 @@ def list_findings_at_time(source_name):
             "filter": f"event_time > {five_days_ago.isoformat()}",
         }
     )
-    
+
     for i, finding_result in enumerate(finding_result_iterator):
         print(
             "{}: name: {} resource: {}".format(
