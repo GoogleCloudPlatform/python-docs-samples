@@ -153,7 +153,7 @@ def create_finding(source_name, finding_id):
     # [START securitycenter_create_finding]
     from datetime import datetime, timezone
 
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.cloud.securitycenter_v1 import Finding
 
     # Create a new client.
