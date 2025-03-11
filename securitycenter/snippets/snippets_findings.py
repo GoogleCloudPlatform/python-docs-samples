@@ -440,8 +440,12 @@ def list_findings_at_time(source_name):
     # [START securitycenter_list_findings_at_time]
 
     finding_result_iterator = client.list_findings(
-        request={"parent": source_name, "filter": five_days_ago}
+        request={
+            "parent": source_name,
+            "filter": f"event_time > {five_days_ago.isoformat()}",
+        }
     )
+    
     for i, finding_result in enumerate(finding_result_iterator):
         print(
             "{}: name: {} resource: {}".format(
@@ -449,6 +453,7 @@ def list_findings_at_time(source_name):
             )
         )
     # [END securitycenter_list_findings_at_time]
+
     return i
 
 
