@@ -355,7 +355,6 @@ def trouble_shoot(source_name):
     print(f"Permision to update state? {len(permission_response.permissions) > 0}")
     # [END securitycenter_test_iam]
     return permission_response
-    assert len(permission_response.permissions) > 0
 
 
 def list_all_findings(organization_id):
@@ -527,88 +526,4 @@ def group_filtered_findings(source_name):
     for i, group_result in enumerate(group_result_iterator):
         print((i + 1), group_result)
     # [END securitycenter_group_filtered_findings]
-    return i
-
-
-def group_findings_at_time(source_name):
-    """Demonstrates grouping all findings across an organization as of
-    a specific time."""
-    i = -1
-    # [START securitycenter_group_findings_at_time]
-    from datetime import datetime, timedelta, timezone
-
-    from google.cloud import securitycenter
-
-    # Create a client.
-    client = securitycenter.SecurityCenterClient()
-
-    # 'source_name' is the resource path for a source that has been
-    # created previously (you can use list_sources to find a specific one).
-    # Its format is:
-    # source_name = "{parent}/sources/{source_id}"
-    # 'parent' must be in one of the following formats:
-    #   "organizations/{organization_id}"
-    #   "projects/{project_id}"
-    #   "folders/{folder_id}"
-    # source_name = "organizations/111122222444/sources/1234"
-
-    # Group findings as of yesterday.
-    read_time = datetime.now() - timedelta(days=1)
-
-    # TODO: Remove this after passing the tests
-    print(f'{read_time=}')
-
-    group_result_iterator = client.group_findings(
-        request={
-            "parent": source_name,
-            "group_by": "category",
-            "read_time": read_time,
-        }
-    )
-    for i, group_result in enumerate(group_result_iterator):
-        print((i + 1), group_result)
-    # [END securitycenter_group_findings_at_time]
-    return i
-
-
-def group_findings_and_changes(source_name):
-    """Demonstrates grouping all findings across an organization and
-    associated changes."""
-    i = 0
-    # [START securitycenter_group_findings_with_changes]
-    from datetime import timedelta
-
-    from google.cloud import securitycenter
-    from google.protobuf import duration_pb2
-
-    # Create a client.
-    client = securitycenter.SecurityCenterClient()
-
-    # 'source_name' is the resource path for a source that has been
-    # created previously (you can use list_sources to find a specific one).
-    # Its format is:
-    # source_name = "{parent}/sources/{source_id}"
-    # 'parent' must be in one of the following formats:
-    #   "organizations/{organization_id}"
-    #   "projects/{project_id}"
-    #   "folders/{folder_id}"
-    # source_name = "organizations/111122222444/sources/1234"
-
-    # List assets and their state change the last 30 days
-    compare_delta = timedelta(days=30)
-
-    print(f'{compare_delta=}')
-
-    group_result_iterator = client.group_findings(
-        request={
-            "parent": source_name,
-            "group_by": "state_change",
-            "compare_duration": compare_delta,
-        }
-    )
-
-    for i, group_result in enumerate(group_result_iterator):
-        print((i + 1), group_result)
-    # [END securitycenter_group_findings_with_changes]]
-
     return i

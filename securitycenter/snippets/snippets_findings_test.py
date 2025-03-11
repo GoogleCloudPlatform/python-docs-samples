@@ -121,13 +121,3 @@ def test_group_all_findings(organization_id):
 def test_group_filtered_findings(source_name):
     count = snippets_findings.group_filtered_findings(source_name)
     assert count == 0
-
-
-def test_group_findings_at_time(source_name):
-    count = snippets_findings.group_findings_at_time(source_name)
-    assert count == -1
-
-
-def test_group_findings_and_changes(source_name):
-    count = snippets_findings.group_findings_and_changes(source_name)
-    assert count == 0
