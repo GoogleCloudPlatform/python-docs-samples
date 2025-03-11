@@ -53,6 +53,7 @@ Press Ctrl+C to exit the program gracefully.
 
 # [START dialogflow_streaming_detect_intent_infinite]
 
+from __future__ import annotations
 import argparse
 import asyncio
 from collections.abc import AsyncGenerator
@@ -514,27 +515,26 @@ async def handle_audio_input_output(
 
     push_task = None
     try:
-        async with asyncio.TaskGroup() as tg:
-            push_task = tg.create_task(
-                push_to_audio_queue(audioIO.generator(), audio_queue)
+        push_task = asyncio.create_task(
+            push_to_audio_queue(audioIO.generator(), audio_queue)
+        )
+        while True:  # restart streaming here.
+            responses = dialogflow_streaming.streaming_detect_intent(audio_queue)
+
+            should_continue = await listen_print_loop(
+                responses,
+                audioIO,
+                audio_queue,
+                dialogflow_streaming.dialogflow_timeout,
             )
-            while True:  # restart streaming here.
-                responses = dialogflow_streaming.streaming_detect_intent(audio_queue)
-
-                should_continue = await listen_print_loop(
-                    responses,
-                    audioIO,
-                    audio_queue,
-                    dialogflow_streaming.dialogflow_timeout,
+            if not should_continue:
+                logger.debug(
+                    "End interaction detected, exiting handle_audio_input_output"
                 )
-                if not should_continue:
-                    logger.debug(
-                        "End interaction detected, exiting handle_audio_input_output"
-                    )
-                    await cancel_push_task(push_task)
-                    break  # exit while loop
+                await cancel_push_task(push_task)
+                break  # exit while loop
 
-                logger.debug("Restarting audio streaming loop")
+            logger.debug("Restarting audio streaming loop")
 
     except asyncio.CancelledError:
         logger.warning("Handling of audio input/output was cancelled.")
