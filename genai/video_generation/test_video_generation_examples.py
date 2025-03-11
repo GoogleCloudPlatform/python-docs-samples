@@ -54,6 +54,7 @@ def test_videogen_with_txt(output_gcs_uri: str) -> None:
     response = videogen_with_txt.generate_videos(output_gcs_uri=output_gcs_uri)
     assert response
 
+
 def test_videogen_with_img(output_gcs_uri: str) -> None:
     response = videogen_with_img.generate_videos_from_image(output_gcs_uri=output_gcs_uri)
     assert response
