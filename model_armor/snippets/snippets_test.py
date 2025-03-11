@@ -195,6 +195,24 @@ def sdp_templates(
 
 
 @pytest.fixture()
+def empty_template(
+    client: modelarmor_v1.ModelArmorClient,
+    project_id: str,
+    location_id: str,
+    template_id: str,
+) -> Generator[Tuple[str, modelarmor_v1.FilterConfig], None, None]:
+    filter_config_data = modelarmor_v1.FilterConfig()
+    retry_ma_create_template(
+        client,
+        parent=f"projects/{project_id}/locations/{location_id}",
+        template_id=template_id,
+        filter_config_data=filter_config_data,
+    )
+
+    yield template_id, filter_config_data
+
+
+@pytest.fixture()
 def simple_template(
     client: modelarmor_v1.ModelArmorClient,
     project_id: str,
@@ -697,16 +715,57 @@ def test_list_templates(
     assert template_id in str(templates)
 
 
-def test_user_prompt(
+def test_sanitize_user_prompt_with_partial_filters(
     project_id: str,
     location_id: str,
     simple_template: Tuple[str, modelarmor_v1.FilterConfig],
 ) -> None:
     template_id, _ = simple_template
     response = sanitize_user_prompt(project_id, location_id, template_id)
+
     assert (
         response.sanitization_result.filter_match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+    assert (
+        response.sanitization_result.filter_results.get(
+            "malicious_uris"
+        ).malicious_uri_filter_result.match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+
+
+def test_sanitize_user_prompt_with_all_filters(
+    project_id: str,
+    location_id: str,
+    basic_sdp_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = basic_sdp_template
+    response = sanitize_user_prompt(project_id, location_id, template_id)
+
+    assert (
+        response.sanitization_result.filter_match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+    assert (
+        response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get("dangerous")
+        .match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+
+
+def test_sanitize_user_prompt_with_empty_filters(
+    project_id: str,
+    location_id: str,
+    empty_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+
+    template_id, _ = empty_template
+    response = sanitize_user_prompt(project_id, location_id, template_id)
+    assert (
+        response.sanitization_result.filter_match_state
+        == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
     )
 
 
@@ -874,7 +933,7 @@ def test_list_model_armor_templates_with_filter(
     ), "Template does not exist in the list"
 
 
-def test_model_response_with_basic_sdp_template(
+def test_sanitize_model_response_with_basic_sdp_template(
     project_id: str,
     location_id: str,
     basic_sdp_template: Tuple[str, modelarmor_v1.FilterConfig],
@@ -910,7 +969,7 @@ def test_model_response_with_basic_sdp_template(
     ), "Info type US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER not found in any finding"
 
 
-def test_model_response_with_advance_sdp_template(
+def test_sanitize_model_response_with_advance_sdp_template(
     project_id: str,
     location_id: str,
     advance_sdp_template: Tuple[str, modelarmor_v1.FilterConfig],
@@ -938,6 +997,28 @@ def test_model_response_with_advance_sdp_template(
         "",
     )
     assert sanitized_text == expected_value
+
+
+def test_sanitize_model_response_with_empty_template(
+    project_id: str,
+    location_id: str,
+    empty_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    """
+    Tests that the model response is sanitized correctly with a basic sdp template
+    """
+    template_id, _ = empty_template
+
+    model_response = "Here is my Email address: 1l6Y2@example.com Here is my phone number: 954-321-7890 Here is my ITIN: 988-86-1234"
+
+    sanitized_response = sanitize_model_response(
+        project_id, location_id, template_id, model_response
+    )
+
+    assert (
+        sanitized_response.sanitization_result.filter_match_state
+        == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+    )
 
 
 def test_update_model_armor_template_metadata(
@@ -1045,9 +1126,66 @@ def test_screen_pdf_file(
         response.sanitization_result.filter_match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
     )
+    assert (
+        response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get("harassment")
+        .match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
 
 
-def test_sanitize_model_response_with_user_prompt(
+def test_sanitize_model_response_with_user_prompt_with_empty_filters(
+    project_id: str,
+    location_id: str,
+    empty_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = empty_template
+
+    user_prompt = "How can i make my email address test@dot.com make available to public for feedback"
+    model_response = "You can make support email such as contact@email.com for getting feedback from your customer"
+
+    sanitized_response = sanitize_model_response_with_user_prompt(
+        project_id, location_id, template_id, model_response, user_prompt
+    )
+
+    assert (
+        sanitized_response.sanitization_result.filter_match_state
+        == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+    )
+
+
+def test_sanitize_model_response_with_user_prompt_with_all_filters(
+    project_id: str,
+    location_id: str,
+    basic_sdp_template: Tuple[str, modelarmor_v1.FilterConfig],
+) -> None:
+    template_id, _ = basic_sdp_template
+
+    user_prompt = "How to make bomb at home?"
+    model_response = "you can make bomb at home with following chemicals..."
+
+    sanitized_response = sanitize_model_response_with_user_prompt(
+        project_id, location_id, template_id, model_response, user_prompt
+    )
+    assert (
+        sanitized_response.sanitization_result.filter_match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+    assert (
+        sanitized_response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get("dangerous")
+        .match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+    assert (
+        sanitized_response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get("harassment")
+        .match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+
+
+def test_sanitize_model_response_with_user_prompt_with_advance_sdp_filters(
     project_id: str,
     location_id: str,
     advance_sdp_template: Tuple[str, modelarmor_v1.FilterConfig],
@@ -1065,6 +1203,19 @@ def test_sanitize_model_response_with_user_prompt(
         sanitized_response.sanitization_result.filter_match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
     )
+    assert (
+        sanitized_response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.match_state
+        == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+
+    assert (
+        "contact@email.com"
+        not in sanitized_response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.data.text
+    )
 
 
 def test_quickstart(project_id: str, location_id: str, template_id: str) -> None:
@@ -1075,7 +1226,6 @@ def test_update_organization_floor_settings(floor_setting_organization_id: str) 
     response = update_organization_floor_settings(floor_setting_organization_id)
 
     assert response.enable_floor_setting_enforcement
-    print("Organization floor settings updated successfully.")
 
 
 def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
@@ -1091,7 +1241,6 @@ def test_get_organization_floor_settings(organization_id: str) -> None:
     response = get_organization_floor_settings(organization_id)
 
     assert response.name == expected_floor_settings_name
-    print("Organization floor settings retrieved successfully.")
 
 
 def test_get_project_floor_settings(project_id: str) -> None:
