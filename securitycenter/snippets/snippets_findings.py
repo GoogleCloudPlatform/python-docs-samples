@@ -18,9 +18,9 @@
 def create_source(organization_id):
     """Create a new findings source."""
     # [START securitycenter_create_source]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
     # organization_id is the numeric ID of the organization. e.g.:
     # organization_id = "111122222444"
     org_name = f"organizations/{organization_id}"
@@ -41,9 +41,9 @@ def create_source(organization_id):
 def get_source(source_name):
     """Gets an existing source."""
     # [START securitycenter_get_source]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -61,10 +61,10 @@ def get_source(source_name):
 def update_source(source_name):
     """Updates a source's display name."""
     # [START securitycenter_update_source]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.protobuf import field_mask_pb2
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # Field mask to only update the display name.
     field_mask = field_mask_pb2.FieldMask(paths=["display_name"])
@@ -91,10 +91,10 @@ def add_user_to_source(source_name):
     user_email = "csccclienttest@gmail.com"
 
     # [START securitycenter_set_source_iam]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.iam.v1 import policy_pb2
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -131,10 +131,10 @@ def list_source(organization_id):
     """Lists finding sources."""
     i = -1
     # [START securitycenter_list_sources]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
     #   "projects/{project_id}"
@@ -157,7 +157,7 @@ def create_finding(source_name, finding_id):
     from google.cloud.securitycenter_v1 import Finding
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # Use the current time as the finding "event time".
     event_time = datetime.now(tz=timezone.utc)
@@ -195,12 +195,12 @@ def create_finding_with_source_properties(source_name):
     # [START securitycenter_create_finding_with_source_properties]
     from datetime import datetime, timezone
 
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.cloud.securitycenter_v1 import Finding
     from google.protobuf.struct_pb2 import Value
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -245,11 +245,11 @@ def update_finding(source_name):
     # [START securitycenter_update_finding_source_properties]
     from datetime import datetime, timezone
 
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.cloud.securitycenter_v1 import Finding
     from google.protobuf import field_mask_pb2
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
     # Only update the specific source property and event_time.  event_time
     # is required for updates.
     field_mask = field_mask_pb2.FieldMask(
@@ -289,11 +289,11 @@ def update_finding_state(source_name):
     # [START securitycenter_update_finding_state]
     from datetime import datetime, timezone
 
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
     from google.cloud.securitycenter_v1 import Finding
 
     # Create a client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
@@ -318,10 +318,10 @@ def trouble_shoot(source_name):
     """Demonstrate calling test_iam_permissions to determine if the
     service account has the correct permisions."""
     # [START securitycenter_test_iam]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
     # Its format is:
@@ -359,10 +359,10 @@ def trouble_shoot(source_name):
 
 def list_all_findings(organization_id):
     # [START securitycenter_list_all_findings]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
@@ -385,10 +385,10 @@ def list_all_findings(organization_id):
 
 def list_filtered_findings(source_name):
     # [START securitycenter_list_filtered_findings]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -419,10 +419,12 @@ def list_findings_at_time(source_name):
     # [START securitycenter_list_findings_at_time]
     from datetime import datetime, timedelta, timezone
 
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a new client.
-    client = securitycenter.SecurityCenterClient()
+    # More info about SecurityCenterClient:
+    # https://cloud.google.com/python/docs/reference/securitycenter/latest/google.cloud.securitycenter_v1.services.security_center.SecurityCenterClient
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -434,15 +436,19 @@ def list_findings_at_time(source_name):
     #   "folders/{folder_id}"
     # You an also use a wild-card "-" for all sources:
     #   source_name = "organizations/111122222444/sources/-"
-    five_days_ago = (datetime.now(timezone.utc) - timedelta(days=5)).isoformat()
+
+    five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
+    timestamp_miliseconds = int(five_days_ago.timestamp() * 1000)
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
 
+    # More details about the request syntax:
+    # https://cloud.google.com/security-command-center/docs/reference/rest/v1/folders.sources.findings/list
     finding_result_iterator = client.list_findings(
         request={
             "parent": source_name,
-            "filter": f"event_time > {five_days_ago}",
+            "filter": f"event_time > {timestamp_miliseconds}",
         }
     )
 
@@ -460,9 +466,9 @@ def list_findings_at_time(source_name):
 def get_iam_policy(source_name):
     """Gives a user findingsEditor permission to the source."""
     # [START securitycenter_get_source_iam]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
@@ -480,10 +486,10 @@ def group_all_findings(organization_id):
     """Demonstrates grouping all findings across an organization."""
     i = 0
     # [START securitycenter_group_all_findings]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'parent' must be in one of the following formats:
     #   "organizations/{organization_id}"
@@ -506,10 +512,10 @@ def group_filtered_findings(source_name):
     """Demonstrates grouping all findings across an organization."""
     i = 0
     # [START securitycenter_group_filtered_findings]
-    from google.cloud import securitycenter
+    from google.cloud import securitycenter_v1
 
     # Create a client.
-    client = securitycenter.SecurityCenterClient()
+    client = securitycenter_v1.SecurityCenterClient()
 
     # 'source_name' is the resource path for a source that has been
     # created previously (you can use list_sources to find a specific one).
