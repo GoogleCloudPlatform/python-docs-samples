@@ -20,6 +20,7 @@ import uuid
 
 import backoff
 from google.api_core.exceptions import InternalServerError, NotFound, ServiceUnavailable
+from google.protobuf.json_format import ParseError
 from google.cloud import securitycenter as securitycenter
 import pytest
 
@@ -163,6 +164,7 @@ def test_update_notification_config(new_notification_config_for_update):
     assert updated_config is not None
 
 
+@backoff.on_exception(backoff.expo, (ParseError,), max_tries=3)
 def test_receive_notifications():
     assert snippets_notification_receiver.receive_notifications(
         PROJECT_ID, PUBSUB_SUBSCRIPTION
