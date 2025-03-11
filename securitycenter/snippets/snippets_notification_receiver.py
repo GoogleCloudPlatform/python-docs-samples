@@ -34,15 +34,14 @@ def receive_notifications(project_id, subscription_name):
 
         try:
             notification_msg = NotificationMessage.from_json(message.data)
+            print(
+                "Notification config name: "
+                f"{notification_msg.notification_config_name}"
+            )
+            print(f"Finding: {notification_msg.finding}")
         except ParseError:
-            # TODO: DEBUG skip this error
+            print(f"Could not parse message")
             pass
-
-        print(
-            "Notification config name: "
-            f"{notification_msg.notification_config_name}"
-        )
-        print(f"Finding: {notification_msg.finding}")
 
         # Ack the message to prevent it from being pulled again
         message.ack()
