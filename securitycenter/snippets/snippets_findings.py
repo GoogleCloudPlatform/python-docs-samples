@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # Copyright 2019 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -438,7 +440,7 @@ def list_findings_at_time(source_name):
     #   source_name = "organizations/111122222444/sources/-"
 
     five_days_ago = datetime.now(timezone.utc) - timedelta(days=5)
-    timestamp_miliseconds = int(five_days_ago.timestamp() * 1000)
+    timestamp_milliseconds = int(five_days_ago.timestamp() * 1000)
     # [END securitycenter_list_findings_at_time]
     i = -1
     # [START securitycenter_list_findings_at_time]
@@ -448,7 +450,7 @@ def list_findings_at_time(source_name):
     finding_result_iterator = client.list_findings(
         request={
             "parent": source_name,
-            "filter": f"event_time < {timestamp_miliseconds}",
+            "filter": f"event_time < {timestamp_milliseconds}",
         }
     )
 
