@@ -20,8 +20,8 @@ from datetime import datetime as dt
 
 import os
 
-import anthropic_batchpredict_with_bq
-import anthropic_batchpredict_with_gcs
+import anthropic_batch_predict_with_bq
+import anthropic_batch_predict_with_gcs
 
 from google.cloud import bigquery, storage
 from google.genai.types import JobState
@@ -62,10 +62,10 @@ def gcs_output_uri() -> str:
 
 
 def test_batch_prediction_with_bq(bq_output_uri: str) -> None:
-    response = anthropic_batchpredict_with_bq.generate_content(output_uri=bq_output_uri)
+    response = anthropic_batch_predict_with_bq.generate_content(output_uri=bq_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
 def test_batch_prediction_with_gcs(gcs_output_uri: str) -> None:
-    response = anthropic_batchpredict_with_gcs.generate_content(output_uri=gcs_output_uri)
+    response = anthropic_batch_predict_with_gcs.generate_content(output_uri=gcs_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED
