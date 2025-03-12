@@ -12,12 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-from unittest.mock import patch, Mock
-import json
 import base64
+import json
 import uuid
-import re
+from unittest.mock import Mock, patch
 
 # Assuming your code is in a file named 'programmatic_retries.py'
 import programmatic_retries
