@@ -45,6 +45,7 @@ def sanitize_model_response(
     # project_id = "YOUR_PROJECT_ID"
     # location_id = "us-central1"
     # template_id = "template_id"
+    # model_response = "The model response data to sanitize"
 
     # Create the Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
