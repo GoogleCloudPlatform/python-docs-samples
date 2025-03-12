@@ -12,17 +12,16 @@
 #    See the License for the specific language governing permissions and
 #    limitations under the License.
 
-# [START imports]
+# [START gae_localtesting_datastore_imports]
 import unittest
 
 from google.appengine.api import memcache
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+# [END gae_localtesting_datastore_imports]
 
-# [END imports]
 
-
-# [START datastore_example_1]
+# [START gae_localtesting_example_1]
 class TestModel(ndb.Model):
     """A model class used for testing."""
 
@@ -46,12 +45,10 @@ def GetEntityViaMemcache(entity_key):
     if entity is not None:
         memcache.set(entity_key, entity)
     return entity
+# [END gae_localtesting_example_1]
 
 
-# [END datastore_example_1]
-
-
-# [START datastore_example_test]
+# [START gae_localtesting_example_1_test]
 class DatastoreTestCase(unittest.TestCase):
     def setUp(self):
         # First, create an instance of the Testbed class.
@@ -66,23 +63,20 @@ class DatastoreTestCase(unittest.TestCase):
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
+# [END gae_localtesting_example_1_test]
 
-    # [END datastore_example_test]
-
-    # [START datastore_example_teardown]
+    # [START gae_localtesting_example_1_test_teardown]
     def tearDown(self):
         self.testbed.deactivate()
+    # [END gae_localtesting_example_1_test_teardown]
 
-    # [END datastore_example_teardown]
-
-    # [START datastore_example_insert]
+    # [START gae_localtesting_example_1_test_insert]
     def testInsertEntity(self):
         TestModel().put()
         self.assertEqual(1, len(TestModel.query().fetch(2)))
+    # [END gae_localtesting_example_1_test_insert]
 
-    # [END datastore_example_insert]
-
-    # [START datastore_example_filter]
+    # [START gae_localtesting_example_1_test_filter]
     def testFilterByNumber(self):
         root = TestEntityGroupRoot(id="root")
         TestModel(parent=root.key).put()
@@ -91,20 +85,18 @@ class DatastoreTestCase(unittest.TestCase):
         results = query.fetch(2)
         self.assertEqual(1, len(results))
         self.assertEqual(42, results[0].number)
+    # [END gae_localtesting_example_1_test_filter]
 
-    # [END datastore_example_filter]
-
-    # [START datastore_example_memcache]
+    # [START gae_localtesting_example_1_test_memcache]
     def testGetEntityViaMemcache(self):
         entity_key = TestModel(number=18).put().urlsafe()
         retrieved_entity = GetEntityViaMemcache(entity_key)
         self.assertNotEqual(None, retrieved_entity)
         self.assertEqual(18, retrieved_entity.number)
+    # [END gae_localtesting_example_1_test_memcache]
 
-    # [END datastore_example_memcache]
 
-
-# [START HRD_example_1]
+# [START gae_localtesting_hdr_example_1]
 from google.appengine.datastore import datastore_stub_util  # noqa
 
 
@@ -140,13 +132,13 @@ class HighReplicationTestCaseOne(unittest.TestCase):
         self.assertEqual(0, TestModel.query().count(3))
         # Ancestor query does see the data.
         self.assertEqual(2, TestModel.query(ancestor=user_key).count(3))
+    # [END gae_localtesting_hdr_example_1]
 
-    # [END HRD_example_1]
-
-    # [START HRD_example_2]
+    # [START gae_localtesting_hdr_example_2]
     def testDeterministicOutcome(self):
         # 50% chance to apply.
         self.policy.SetProbability(0.5)
+
         # Use the pseudo random sequence derived from seed=2.
         self.policy.SetSeed(2)
 
@@ -157,13 +149,13 @@ class HighReplicationTestCaseOne(unittest.TestCase):
 
         self.assertEqual(0, TestModel.query().count(3))
         self.assertEqual(0, TestModel.query().count(3))
+
         # Will always be applied before the third query.
         self.assertEqual(1, TestModel.query().count(3))
+    # [END gae_localtesting_hdr_example_2]
 
-    # [END HRD_example_2]
 
-
-# [START main]
+# [START gae_localtesting_datastore_main]
 if __name__ == "__main__":
     unittest.main()
-# [END main]
+# [END gae_localtesting_datastore_main]
