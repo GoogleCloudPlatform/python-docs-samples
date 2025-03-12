@@ -54,6 +54,7 @@ Press Ctrl+C to exit the program gracefully.
 # [START dialogflow_streaming_detect_intent_infinite]
 
 from __future__ import annotations
+
 import argparse
 import asyncio
 from collections.abc import AsyncGenerator
