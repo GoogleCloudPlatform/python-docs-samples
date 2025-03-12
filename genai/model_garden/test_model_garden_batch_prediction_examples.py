@@ -20,13 +20,13 @@ from datetime import datetime as dt
 
 import os
 
-import anthropic_batch_predict_with_bq
-import anthropic_batch_predict_with_gcs
-
 from google.cloud import bigquery, storage
 from google.genai.types import JobState
 
 import pytest
+
+import anthropic_batch_predict_with_bq
+import anthropic_batch_predict_with_gcs
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
