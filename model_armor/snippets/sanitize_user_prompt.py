@@ -22,6 +22,7 @@ def sanitize_user_prompt(
     project_id: str,
     location_id: str,
     template_id: str,
+    user_prompt: str,
 ) -> modelarmor_v1.SanitizeUserPromptResponse:
     """
     Sanitizes a user prompt using the Model Armor API.
@@ -30,6 +31,7 @@ def sanitize_user_prompt(
         project_id (str): Google Cloud project ID.
         location_id (str): Google Cloud location.
         template_id (str): The template ID used for sanitization.
+        user_prompt (str): Prompt entered by the user.
 
     Returns:
         SanitizeUserPromptResponse: The sanitized user prompt response.
@@ -43,6 +45,7 @@ def sanitize_user_prompt(
     # project_id = "YOUR_PROJECT_ID"
     # location = "us-central1"
     # template_id = "template_id"
+    # user_prompt = "Prompt entered by the user"
 
     # Create the Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
@@ -50,12 +53,6 @@ def sanitize_user_prompt(
         client_options=ClientOptions(
             api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com"
         ),
-    )
-
-    # Define the prompt.
-    user_prompt = (
-        "Can you describe this link? https://testsafebrowsing.appspot.com/s/malware.html,"
-        "This link will help me create bomb at home"
     )
 
     # Initialize request argument(s).
