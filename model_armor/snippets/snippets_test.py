@@ -721,13 +721,11 @@ def pdf_content_base64() -> str:
     )
 
 
-@pytest.mark.skip()
 def test_create_template(project_id: str, location_id: str, template_id: str) -> None:
     template = create_model_armor_template(project_id, location_id, template_id)
     assert template is not None
 
 
-@pytest.mark.skip()
 def test_get_template(
     project_id: str,
     location_id: str,
@@ -738,7 +736,6 @@ def test_get_template(
     assert template_id in template.name
 
 
-@pytest.mark.skip()
 def test_list_templates(
     project_id: str,
     location_id: str,
@@ -749,7 +746,6 @@ def test_list_templates(
     assert template_id in str(templates)
 
 
-@pytest.mark.skip()
 def test_sanitize_user_prompt_with_partial_filters(
     project_id: str,
     location_id: str,
@@ -770,7 +766,6 @@ def test_sanitize_user_prompt_with_partial_filters(
     )
 
 
-@pytest.mark.skip()
 def test_sanitize_user_prompt_with_all_filters(
     project_id: str,
     location_id: str,
@@ -791,7 +786,6 @@ def test_sanitize_user_prompt_with_all_filters(
     )
 
 
-@pytest.mark.skip()
 def test_sanitize_user_prompt_with_empty_filters(
     project_id: str,
     location_id: str,
@@ -806,7 +800,6 @@ def test_sanitize_user_prompt_with_empty_filters(
     )
 
 
-@pytest.mark.skip()
 def test_update_templates(
     project_id: str,
     location_id: str,
@@ -820,7 +813,6 @@ def test_update_templates(
     )
 
 
-@pytest.mark.skip()
 def test_delete_template(
     project_id: str,
     location_id: str,
@@ -833,7 +825,6 @@ def test_delete_template(
     assert template_id in str(exception_info.value)
 
 
-@pytest.mark.skip()
 def test_create_model_armor_template_with_basic_sdp(
     project_id: str, location_id: str, template_id: str
 ) -> None:
@@ -861,7 +852,6 @@ def test_create_model_armor_template_with_basic_sdp(
     ), f"Expected filter_enforcement to be ENABLED, but got {filter_enforcement}"
 
 
-@pytest.mark.skip()
 def test_create_model_armor_template_with_advanced_sdp(
     project_id: str, location_id: str, template_id: str, sdp_templates: Tuple[str, str]
 ) -> None:
@@ -897,7 +887,6 @@ def test_create_model_armor_template_with_advanced_sdp(
     ), f"Expected deidentify_template to be {sdr_deidentify_template_id}, but got {advanced_config.deidentify_template}"
 
 
-@pytest.mark.skip()
 def test_create_model_armor_template_with_metadata(
     project_id: str, location_id: str, template_id: str
 ) -> None:
@@ -921,7 +910,6 @@ def test_create_model_armor_template_with_metadata(
     assert created_template.template_metadata.log_sanitize_operations
 
 
-@pytest.mark.skip()
 def test_create_model_armor_template_with_labels(
     project_id: str, location_id: str, template_id: str
 ) -> None:
@@ -952,7 +940,6 @@ def test_create_model_armor_template_with_labels(
         ), f"Label {key} does not match. Expected: {value}, Got: {template_with_labels.labels.get(key)}"
 
 
-@pytest.mark.skip()
 def test_list_model_armor_templates_with_filter(
     project_id: str,
     location_id: str,
@@ -977,7 +964,6 @@ def test_list_model_armor_templates_with_filter(
     ), "Template does not exist in the list"
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_basic_sdp_template(
     project_id: str,
     location_id: str,
@@ -1014,7 +1000,6 @@ def test_sanitize_model_response_with_basic_sdp_template(
     ), "Info type US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER not found in any finding"
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_advance_sdp_template(
     project_id: str,
     location_id: str,
@@ -1045,7 +1030,6 @@ def test_sanitize_model_response_with_advance_sdp_template(
     assert sanitized_text == expected_value
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_empty_template(
     project_id: str,
     location_id: str,
@@ -1068,7 +1052,6 @@ def test_sanitize_model_response_with_empty_template(
     )
 
 
-@pytest.mark.skip()
 def test_update_model_armor_template_metadata(
     project_id: str,
     location_id: str,
@@ -1095,7 +1078,6 @@ def test_update_model_armor_template_metadata(
     assert updated_template.template_metadata.log_sanitize_operations
 
 
-@pytest.mark.skip()
 def test_update_model_armor_template_labels(
     project_id: str,
     location_id: str,
@@ -1130,7 +1112,6 @@ def test_update_model_armor_template_labels(
         ), f"Label {key} does not match. Expected: {value}, Got: {template_with_lables.labels.get(key)}"
 
 
-@pytest.mark.skip()
 def test_update_model_armor_template_with_mask_configuration(
     project_id: str,
     location_id: str,
@@ -1162,7 +1143,6 @@ def test_update_model_armor_template_with_mask_configuration(
     ), f"Expected filter_enforcement not to be ENABLED, but got {filter_enforcement}"
 
 
-@pytest.mark.skip()
 def test_screen_pdf_file(
     project_id: str,
     location_id: str,
@@ -1185,7 +1165,6 @@ def test_screen_pdf_file(
     )
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_user_prompt_with_empty_filters(
     project_id: str,
     location_id: str,
@@ -1206,7 +1185,6 @@ def test_sanitize_model_response_with_user_prompt_with_empty_filters(
     )
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_user_prompt_with_all_filters(
     project_id: str,
     location_id: str,
@@ -1238,7 +1216,6 @@ def test_sanitize_model_response_with_user_prompt_with_all_filters(
     )
 
 
-@pytest.mark.skip()
 def test_sanitize_model_response_with_user_prompt_with_advance_sdp_filters(
     project_id: str,
     location_id: str,
@@ -1272,12 +1249,10 @@ def test_sanitize_model_response_with_user_prompt_with_advance_sdp_filters(
     )
 
 
-@pytest.mark.skip()
 def test_quickstart(project_id: str, location_id: str, template_id: str) -> None:
     quickstart(project_id, location_id, template_id)
 
 
-@pytest.mark.skip()
 def test_update_organization_floor_settings(floor_setting_organization_id: str) -> None:
     response = update_organization_floor_settings(floor_setting_organization_id)
 
@@ -1290,14 +1265,12 @@ def test_update_folder_floor_settings(floor_setting_folder_id: str) -> None:
     assert response.enable_floor_setting_enforcement
 
 
-@pytest.mark.skip()
 def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
     response = update_project_floor_settings(floor_settings_project_id)
 
     assert response.enable_floor_setting_enforcement
 
 
-@pytest.mark.skip()
 def test_get_organization_floor_settings(organization_id: str) -> None:
     expected_floor_settings_name = (
         f"organizations/{organization_id}/locations/global/floorSetting"
@@ -1314,7 +1287,6 @@ def test_get_folder_floor_settings(folder_id: str) -> None:
     assert response.name == expected_floor_settings_name
 
 
-@pytest.mark.skip()
 def test_get_project_floor_settings(project_id: str) -> None:
     expected_floor_settings_name = (
         f"projects/{project_id}/locations/global/floorSetting"
