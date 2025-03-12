@@ -21,8 +21,6 @@ from unittest import mock
 
 import pytest
 
-import streaming_detect_intent_infinite
-
 DIRNAME = os.path.realpath(os.path.dirname(__file__))
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "global"
@@ -122,16 +120,18 @@ class MockStream:
         return self.closed.is_set()
 
 
-@mock.patch.dict(
-    "sys.modules",
-    pyaudio=mock.MagicMock(PyAudio=MockPyAudio(AUDIO)),
-)
 @pytest.mark.asyncio
 async def test_main(caplog: pytest.CaptureFixture) -> None:
-    with caplog.at_level(logging.INFO):
-        await streaming_detect_intent_infinite.main(
-            agent_name=AGENT_NAME,
-            sample_rate=AUDIO_SAMPLE_RATE,
-            dialogflow_timeout=TIMEOUT,
-        )
-        assert "Detected intent: Default Welcome Intent" in caplog.text
+    with mock.patch.dict(
+        "sys.modules",
+        pyaudio=mock.MagicMock(PyAudio=MockPyAudio(AUDIO)),
+    ):
+        import streaming_detect_intent_infinite
+
+        with caplog.at_level(logging.INFO):
+            await streaming_detect_intent_infinite.main(
+                agent_name=AGENT_NAME,
+                sample_rate=AUDIO_SAMPLE_RATE,
+                dialogflow_timeout=TIMEOUT,
+            )
+            assert "Detected intent: Default Welcome Intent" in caplog.text
