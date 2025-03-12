@@ -22,9 +22,10 @@
 # [START functions_bigquery_continuous_queries_programmatic_retry]
 import base64
 import json
+import logging
 import re
 import uuid
-import logging
+
 import google.auth
 import google.auth.transport.requests
 import requests
