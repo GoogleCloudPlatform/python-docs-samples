@@ -13,7 +13,7 @@
 # limitations under the License.
 import os
 
-from google.cloud.tpu_v2alpha1 import CreateQueuedResourceRequest, Node
+from google.cloud.tpu_v2alpha1 import Node
 
 
 def create_queued_resource_network(
@@ -56,7 +56,7 @@ def create_queued_resource_network(
     resource = tpu_v2alpha1.QueuedResource()
     resource.tpu = tpu_v2alpha1.QueuedResource.Tpu(node_spec=[node_spec])
 
-    request = CreateQueuedResourceRequest(
+    request = tpu_v2alpha1.CreateQueuedResourceRequest(
         parent=f"projects/{project_id}/locations/{zone}",
         queued_resource_id=queued_resource_name,
         queued_resource=resource,
