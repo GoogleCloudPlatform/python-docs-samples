@@ -14,8 +14,8 @@
 
 import base64
 import json
-import uuid
 from unittest.mock import Mock, patch
+import uuid
 
 # Assuming your code is in a file named 'programmatic_retries.py'
 import programmatic_retries
