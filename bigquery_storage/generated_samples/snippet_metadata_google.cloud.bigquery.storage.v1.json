@@ -8,7 +8,7 @@
     ],
     "language": "PYTHON",
     "name": "google-cloud-bigquery-storage",
-    "version": "2.29.0"
+    "version": "2.29.1"
   },
   "snippets": [
     {
