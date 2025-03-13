@@ -14,7 +14,7 @@
 
 
 def generate_content(output_uri: str) -> str:
-    # [START googlegenaisdk_anthropic_batchpredict_with_bq]
+    # [START aiplatform_anthropic_batchpredict_with_bq]
     import time
 
     from google import genai
@@ -58,7 +58,7 @@ def generate_content(output_uri: str) -> str:
     # ...
     # Job state: JOB_STATE_SUCCEEDED
 
-    # [END googlegenaisdk_anthropic_batchpredict_with_bq]
+    # [END aiplatform_anthropic_batchpredict_with_bq]
     return job.state
 
 
