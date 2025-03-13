@@ -37,7 +37,7 @@ def grant_access_to_table_or_view(
     # Table or view name to get the access policy.
     # resource_name = "my_table"
 
-    # Principal to whom to grant access.
+    # Principal to grant access to a table or view.
     # For more information about principal identifiers see:
     # https://cloud.google.com/iam/docs/principal-identifiers
     # principal_id = "user:bob@example.com"
