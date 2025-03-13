@@ -37,12 +37,14 @@ def grant_access_to_table_or_view(
     # Table or view name to get the access policy.
     # resource_name = "my_table"
 
-    # The principal requesting access to the table or view.
-    # Find more details about principal identifiers here:
+    # Principal to grant access to a table or view.
+    # For more information about principal identifiers see:
     # https://cloud.google.com/iam/docs/principal-identifiers
     # principal_id = "user:bob@example.com"
 
-    # Role to assign to the member.
+    # Role to grant to the principal.
+    # For more information about BigQuery roles see:
+    # https://cloud.google.com/bigquery/docs/access-control
     # role = "roles/bigquery.dataViewer"
 
     # Instantiate a client.
@@ -54,8 +56,7 @@ def grant_access_to_table_or_view(
     # Get the IAM access policy for the table or view.
     policy = client.get_iam_policy(full_resource_name)
 
-    # To grant access to a table or view,
-    # add bindings to the Table or View policy.
+    # To grant access to a table or view, add bindings to the IAM policy.
     #
     # Find more details about Policy and Binding objects here:
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Policy
@@ -66,7 +67,7 @@ def grant_access_to_table_or_view(
     }
     policy.bindings.append(binding)
 
-    # Set the IAM access spolicy with updated bindings.
+    # Set the IAM access policy with updated bindings.
     updated_policy = client.set_iam_policy(full_resource_name, policy)
 
     # Show a success message.

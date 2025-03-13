@@ -17,7 +17,6 @@ from google.api_core.iam import Policy
 
 def view_table_or_view_access_policy(project_id: str, dataset_id: str, resource_id: str) -> Policy:
     # [START bigquery_view_table_or_view_access_policy]
-    # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
     # TODO(developer): Update and uncomment the lines below.

@@ -23,9 +23,9 @@ prefixer = test_utils.prefixer.Prefixer("python-docs-samples", "bigquery/cloud-c
 
 PREFIX = prefixer.create_prefix()
 ENTITY_ID = "cloud-developer-relations@google.com"  # Group account
-DATASET_ID = f"{PREFIX}_cloud_client"
-TABLE_NAME = f"{PREFIX}_view_access_policies_table"
-VIEW_NAME = f"{PREFIX}_view_access_policies_view"
+DATASET_ID = f"{PREFIX}_access_policies_dataset"
+TABLE_NAME = f"{PREFIX}_access_policies_table"
+VIEW_NAME = f"{PREFIX}_access_policies_view"
 
 
 @pytest.fixture(scope="module")
@@ -70,8 +70,7 @@ def view(client: bigquery.Client, project_id: str, table: str) -> str:
     view = bigquery.Table(FULL_VIEW_NAME)
 
     # f"{table}" will inject the full table name,
-    # with project_id and dataset_id, as required by
-    # .create_table()
+    # with project_id and dataset_id, as required by create_table()
     view.view_query = f"SELECT * FROM `{table}`"
     view = client.create_table(view)
     return view
