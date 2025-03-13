@@ -17,14 +17,13 @@ from google.cloud.bigquery.dataset import AccessEntry
 
 def revoke_dataset_access(dataset_id: str, entity_id: str) -> list[AccessEntry]:
     # [START bigquery_revoke_dataset_access]
-    # Import the Google Cloud client library.
     from google.cloud import bigquery
     from google.api_core.exceptions import PreconditionFailed
 
     # TODO(developer): Update and uncomment the lines below.
 
     # ID of the dataset to revoke access to.
-    # dataset_id = "your-project.your_dataset"
+    # dataset_id = "my-project.my_dataset"
 
     # ID of the user or group from whom you are revoking access.
     # Alternatively, the JSON REST API representation of the entity,
@@ -61,6 +60,7 @@ def revoke_dataset_access(dataset_id: str, entity_id: str) -> list[AccessEntry]:
             ["access_entries"],
         )
 
+        # Show a success message.
         full_dataset_id = f"{dataset.project}.{dataset.dataset_id}"
         print(f"Revoked dataset access for '{entity_id}' to ' dataset '{full_dataset_id}.'")
     except PreconditionFailed:  # A read-modify-write error.

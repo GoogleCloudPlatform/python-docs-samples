@@ -17,7 +17,6 @@ from google.cloud.bigquery.dataset import AccessEntry
 
 def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
     # [START bigquery_view_dataset_access_policy]
-    # Import the Google Cloud client library.
     from google.cloud import bigquery
 
     # Instantiate a client.
@@ -38,6 +37,7 @@ def view_dataset_access_policy(dataset_id: str) -> list[AccessEntry]:
         f"{len(dataset.access_entries)} Access entries found "
         f"in dataset '{dataset_id}':"
     )
+
     for access_entry in dataset.access_entries:
         print()
         print(f"Role: {access_entry.role}")

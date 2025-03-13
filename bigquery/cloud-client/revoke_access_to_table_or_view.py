@@ -25,7 +25,6 @@ def revoke_access_to_table_or_view(
     principal_to_remove: str | None = None,
 ) -> Policy:
     # [START bigquery_revoke_access_to_table_or_view]
-    # Imports the Google Cloud client library.
     from google.cloud import bigquery
 
     # TODO(developer): Update and uncomment the lines below.
@@ -48,7 +47,7 @@ def revoke_access_to_table_or_view(
     # Find more information about roles and principals (referred to as members) here:
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Binding
 
-    # Instantiates a client.
+    # Instantiate a client.
     client = bigquery.Client()
 
     # Get the full table name.
@@ -58,7 +57,7 @@ def revoke_access_to_table_or_view(
     policy = client.get_iam_policy(full_resource_name)
 
     # To revoke access to a table or view,
-    # remove bindings from the Table or View policy.
+    # remove bindings from the Table or View IAM policy.
     #
     # Find more details about the Policy object here:
     # https://cloud.google.com/security-command-center/docs/reference/rest/Shared.Types/Policy

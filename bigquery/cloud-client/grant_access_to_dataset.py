@@ -27,12 +27,12 @@ def grant_access_to_dataset(
 
     # TODO(developer): Update and uncomment the lines below.
 
-    # ID of the dataset to revoke access to.
+    # ID of the dataset to grant access to.
     # dataset_id = "my_project_id.my_dataset"
 
-    # ID of the user or group from whom you are adding access.
+    # ID of the user or group receiving access to the dataset.
     # Alternatively, the JSON REST API representation of the entity,
-    # such as a view's table reference.
+    # such as the view's table reference.
     # entity_id = "user-or-group-to-add@example.com"
 
     # One of the "Basic roles for datasets" described here:
