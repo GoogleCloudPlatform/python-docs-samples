@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import example_syntax
 import non_stream_multimodality_basic
 import non_stream_text_basic
 import stream_multimodality_basic
@@ -36,3 +37,8 @@ def test_stream_text_basic() -> None:
 def test_stream_multi_modality_basic() -> None:
     responses = stream_multimodality_basic.generate_content()
     assert responses
+
+
+def test_generate_response() -> None:
+    response = example_syntax.generate_response()
+    assert response is not None
