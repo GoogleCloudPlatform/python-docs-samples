@@ -1,2 +1,2 @@
 six==1.16.0
-cryptography==44.0.0
+cryptography==44.0.1
