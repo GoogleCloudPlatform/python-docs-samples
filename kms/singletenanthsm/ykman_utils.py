@@ -14,8 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import ykman
+import pathlib
 import cryptography.exceptions
+import glob
+import re
+import os
+import ykman
+
 
 
 from cryptography.hazmat.primitives import _serialization
@@ -67,7 +72,7 @@ def generate_private_key(
       if not public_key:
         raise Exception("failed to generate public key")
       with open(
-          f"public_key_{device_info.serial}_slot_{piv.SLOT.RETIRED1}.pem", "wb"
+          f"generated_public_keys/public_key_{device_info.serial}_slot_{piv.SLOT.RETIRED1}.pem", "wb"
       ) as binary_file:
 
         # Write bytes to file
@@ -82,14 +87,42 @@ def generate_private_key(
           f" slot: {piv.SLOT.RETIRED1}"
       )
 
+class Challenge:
+
+  def __init__(self, challenge, public_key_pem):
+    self.challenge = challenge
+    self.public_key_pem = public_key_pem
+
 class ChallengeReply:
   
     def __init__(self, signed_challenge, public_key_pem):
         self.signed_challenge = signed_challenge
         self.public_key_pem = public_key_pem
 
+def populate_challenges_from_files():
+        public_key_files = [key_file for key_file in pathlib.Path.cwd().glob("challenges/public_key*.pem")]
+        print(public_key_files)
+        challenge_files = [challenge_file for challenge_file in pathlib.Path.cwd().glob("challenges/challenge*.txt")]
+        print(challenge_files)
 
-def sign_proposal(challenges):
+        challenges = []
+        
+        for public_key_file in public_key_files:
+            challenge_id = re.findall(r"\d+", str(public_key_file))
+            for challenge_file in challenge_files:
+                if challenge_id == re.findall(r"\d+",str(challenge_file)):
+                    print(public_key_file)
+                    file = open(public_key_file, "r")
+                    public_key_pem = file.read()
+                    file.close()
+                    file = open(challenge_file, "r")
+                    challenge = file.read()
+                    file.close()
+                    challenges.append(Challenge(challenge, public_key_pem ))
+        return challenges
+
+
+def sign_proposal(challenges, singed_challenge_files):
   """Signs a proposal's challenges using a Yubikey."""
   if not challenges:
     raise Exception("Challenge list empty: No challenges to sign.")
@@ -97,6 +130,7 @@ def sign_proposal(challenges):
   devices = list_all_devices()
   if not devices:
     raise Exception("no yubikeys found")
+  challenge_count = 0
   for yubikey, _ in devices:
     with yubikey.open_connection(SmartCardConnection) as connection:
       # Make PivSession and fetch public key from Signature slot.
@@ -119,23 +153,53 @@ def sign_proposal(challenges):
             encoding=_serialization.Encoding.PEM,
             format=_serialization.PublicFormat.SubjectPublicKeyInfo,
         )
-
+        print(key_public_bytes.decode())
+        print(challenge.public_key_pem)
         if key_public_bytes == challenge.public_key_pem.encode():
 
           # sign the challenge
           print("Press Yubikey to sign challenge")
-          signed_challenges.append(
-            ChallengeReply(
-              piv_session.sign(
+          signed_challenge = piv_session.sign(
                   slot=piv.SLOT.RETIRED1,
                   key_type=slot_metadata.key_type,
-                  message=challenge.challenge,
+                  message=challenge.challenge.encode('utf-8'),
                   hash_algorithm=hashes.SHA256(),
                   padding=padding.PKCS1v15(),
-              ),
+              )
+
+          signed_challenges.append(
+            ChallengeReply(
+              signed_challenge,
               challenge.public_key_pem
             )
           )
+          challenge_count += 1
+          print("challenge_count", challenge_count)    
+          directory_path = "signed_challenges"
+          if not os.path.exists(directory_path):
+              os.mkdir(directory_path)
+              print(f"Directory '{directory_path}' created.")
+          else:
+              print(f"Directory '{directory_path}' already exists.")
+          with open(
+              f"signed_challenges/public_key_{challenge_count}.pem", "w"
+          ) as binary_file:
+
+            # Write public key to file
+            binary_file.write(
+                challenge.public_key_pem
+            )
+          with open(
+              f"signed_challenges/signed_challenge{challenge_count}.txt", "wb"
+          ) as binary_file:
+
+            # Write public key to file
+            binary_file.write(
+                signed_challenge
+            )
+          singed_challenge_files.append((f"signed_challenges/signed_challenge{challenge_count}.txt",
+                                        f"signed_challenges/public_key_{challenge_count}.pem")
+                                        )
           print("Challenge signed successfully")
   if not signed_challenges:
     raise Exception(

@@ -50,6 +50,19 @@ def build_custom_gcloud():
     print(process.stdout)
   except subprocess.CalledProcessError as e:
     raise subprocess.CalledProcessError(f"Error executing gcloud build: {e}")
+  # try:
+  #   print("\nAdding sthigcloud alias")
+  #   process = subprocess.run(
+  #     "alias sthigcloud=~/sthi/google-cloud-sdk/bin/gcloud",
+  #     check=False,
+  #     capture_output=False,
+  #     executable="/bin/bash",
+  #     text=True,
+  #     shell=True
+  #   )
+  # except subprocess.CalledProcessError as e:
+  #   raise subprocess.CalledProcessError(f"Error executing gcloud alias update: {e}")
+  #   print(f"Error executing gcloud alias update: {e}")
   try:
     print("\nAdding gcloud components")
     process = subprocess.run(
@@ -88,7 +101,7 @@ def fetch_challenges(sthi_proposal_resource:str):
   try:
     print("\nfetching challenges")
     process = subprocess.run(
-        command_gcloud_describe_proposal + sthi_proposal_resource,
+        command_gcloud_describe_proposal + sthi_proposal_resource + " --format=json",
         capture_output=True,
         check=False,
         text=True,

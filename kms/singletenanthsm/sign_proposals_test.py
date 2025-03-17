@@ -25,7 +25,7 @@ from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives.asymmetric import x25519
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
-import approve_sthi_proposal
+import kms.singletenanthsm.approve_proposal as approve_proposal
 
 
 public_key = """-----BEGIN PUBLIC KEY-----
@@ -83,8 +83,8 @@ def test_sign_proposal_success():
   challenges = []
   challenges.append(example_challenge_1)
   challenges.append(example_challenge_2)
-  signed_challenges = approve_sthi_proposal.sign_proposal(challenges)
-  if approve_sthi_proposal:
+  signed_challenges = approve_proposal.sign_proposal(challenges)
+  if approve_proposal:
     print("proposals signed")
   else:
     print("proposals not signed")
@@ -101,9 +101,11 @@ def test_sign_proposal_no_matching_public_keys():
   challenges = []
 
 
+
+
 def test_fetch_challenges():
   print("fetching challenges")
-  approve_sthi_proposal.fetch_challenges
+  approve_proposal.fetch_challenges
   print("challenges fetched successfully")
 
 
