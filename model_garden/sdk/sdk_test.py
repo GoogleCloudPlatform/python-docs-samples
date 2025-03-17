@@ -30,5 +30,5 @@ def test_list_deploy_options() -> None:
 
 
 def test_default_deploy() -> None:
-	endpoint = default_deploy_example.default_deploy()
+	endpoint = default_deploy_example.default_deploy(model="google/gemma3@gemma-3-1b-it")
 	assert endpoint

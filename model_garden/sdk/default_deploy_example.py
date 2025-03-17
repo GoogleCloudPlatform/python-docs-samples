@@ -23,28 +23,28 @@ from vertexai.preview import model_garden
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def default_deploy() -> aiplatform.Endpoint:
-    # [START generativeaionvertexai_model_garden_deploy]
+def default_deploy(model : str) -> aiplatform.Endpoint:
+    # [START generativeaionvertexai_modelgardensdk_default_deploy]
 
     import vertexai
     from vertexai.preview import model_garden
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # MODEL= "google/gemma3@gemma-3-1b-it"
+    # model= "google/gemma3@gemma-3-1b-it"
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = model_garden.OpenModel(MODEL)
-    endpoint = model.deploy()
+    open_model = model_garden.OpenModel(model)
+    endpoint = open_model.deploy()
 
     # Optional. Run predictions on the deployed endoint.
     # endpoint.predict(instances=[{"prompt": "What is Generative AI?"}])
 
-    # [END generativeaionvertexai_model_garden_deploy]
+    # [END generativeaionvertexai_modelgardensdk_default_deploy]
 
     return endpoint
 
 
 if __name__ == "__main__":
-    default_deploy()
+    default_deploy("google/gemma3@gemma-3-1b-it")

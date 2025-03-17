@@ -21,7 +21,7 @@ from vertexai.preview import model_garden
 
 
 def list_deployable_models(list_hugging_face_models : bool = False, model_filter : str = "") -> List[str]:
-    # [START generativeaionvertexai_model_garden_list_deployable_models]
+    # [START generativeaionvertexai_modelgardensdk_list_deployable_models]
 
     from vertexai.preview import model_garden
 
@@ -35,7 +35,7 @@ def list_deployable_models(list_hugging_face_models : bool = False, model_filter
     # Example response:
     # ['google/gemma2@gemma-2-27b','google/gemma2@gemma-2-27b-it', ...]
 
-    # [END generativeaionvertexai_model_garden_list_deployable_models]
+    # [END generativeaionvertexai_modelgardensdk_list_deployable_models]
 
     return deployable_models
 

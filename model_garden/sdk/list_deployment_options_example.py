@@ -20,24 +20,24 @@ from google.cloud.aiplatform.aiplatform_v1beta1 import types
 from typing import List
 
 def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.Deploy]:
-    # [START generativeaionvertexai_model_garden_list_deploy_options]
+    # [START generativeaionvertexai_modelgardensdk_list_deploy_options]
     from vertexai.preview import model_garden
 
     # TODO(developer): Update and un-comment below lines
-    # MODEL = "google/gemma3@gemma-3-1b-it"
-    # HF_MODEL = "meta-llama/Llama-3.3-70B-Instruct"
+    # model = "google/gemma3@gemma-3-1b-it"
+    # hf_model = "meta-llama/Llama-3.3-70B-Instruct"
     
     # List the deployment options for a Model Garden model.
-    model = model_garden.OpenModel(MODEL)
+    model = model_garden.OpenModel(model)
     deploy_options = model.list_deploy_options()
     print(deploy_options)
 
     # List the deployment options for a Hugging Face model.
-    # hf_model = model_garden.OpenModel(HF_MODEL)
+    # hf_model = model_garden.OpenModel(hf_model)
     # hf_deploy_options = hf_model.list_deploy_options()
     # print(hf_deploy_options)
 
-    # [END generativeaionvertexai_model_garden_list_deploy_options]
+    # [END generativeaionvertexai_modelgardensdk_list_deploy_options]
 
     return deploy_options
 
