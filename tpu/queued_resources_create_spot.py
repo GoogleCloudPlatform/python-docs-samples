@@ -13,7 +13,7 @@
 # limitations under the License.
 import os
 
-from google.cloud.tpu_v2alpha1 import CreateQueuedResourceRequest, Node
+from google.cloud.tpu_v2alpha1 import Node
 
 
 def create_queued_resource_spot(
@@ -51,7 +51,7 @@ def create_queued_resource_spot(
     # Create a spot resource
     resource.spot = tpu_v2alpha1.QueuedResource.Spot()
 
-    request = CreateQueuedResourceRequest(
+    request = tpu_v2alpha1.CreateQueuedResourceRequest(
         parent=f"projects/{project_id}/locations/{zone}",
         queued_resource_id=queued_resource_name,
         queued_resource=resource,

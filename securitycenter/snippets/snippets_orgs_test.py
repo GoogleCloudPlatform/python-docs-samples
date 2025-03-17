@@ -16,6 +16,8 @@
 """Examples for working with organization settings. """
 import os
 
+import backoff
+from google.api_core.exceptions import Aborted
 import pytest
 
 import snippets_orgs
@@ -31,6 +33,7 @@ def test_get_settings(organization_id):
     snippets_orgs.get_settings(organization_id)
 
 
+@backoff.on_exception(backoff.expo, (Aborted,), max_tries=3)
 def test_update_asset_discovery_org_settings(organization_id):
     updated = snippets_orgs.update_asset_discovery_org_settings(organization_id)
     assert updated.enable_asset_discovery
