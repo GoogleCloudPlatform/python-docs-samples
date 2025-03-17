@@ -17,7 +17,6 @@
 """
 
 from typing import List
-from vertexai.preview import model_garden
 
 
 def list_deployable_models(list_hugging_face_models : bool = False, model_filter : str = "") -> List[str]:
@@ -38,6 +37,7 @@ def list_deployable_models(list_hugging_face_models : bool = False, model_filter
     # [END generativeaionvertexai_modelgardensdk_list_deployable_models]
 
     return deployable_models
+
 
 if __name__ == "__main__":
     list_deployable_models()

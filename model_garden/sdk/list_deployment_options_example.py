@@ -15,9 +15,11 @@
 """Google Cloud Vertex AI sample for listing verified deploy 
     options for models in Model Garden.
 """
-from vertexai.preview import model_garden
-from google.cloud.aiplatform.aiplatform_v1beta1 import types
+
 from typing import List
+
+from google.cloud.aiplatform_v1beta1 import types
+
 
 def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.Deploy]:
     # [START generativeaionvertexai_modelgardensdk_list_deploy_options]
@@ -26,7 +28,7 @@ def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.D
     # TODO(developer): Update and un-comment below lines
     # model = "google/gemma3@gemma-3-1b-it"
     # hf_model = "meta-llama/Llama-3.3-70B-Instruct"
-    
+
     # List the deployment options for a Model Garden model.
     model = model_garden.OpenModel(model)
     deploy_options = model.list_deploy_options()
@@ -40,6 +42,7 @@ def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.D
     # [END generativeaionvertexai_modelgardensdk_list_deploy_options]
 
     return deploy_options
+
 
 if __name__ == "__main__":
     list_deploy_options("google/gemma3@gemma-3-1b-it")

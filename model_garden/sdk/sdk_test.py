@@ -13,22 +13,22 @@
 # limitations under the License.
 
 
+import default_deploy_example
 import list_deployable_models_example
 import list_deployment_options_example
-import default_deploy_example
 
 
 def test_list_deployable_models() -> None:
-	models = list_deployable_models_example.list_deployable_models(model_filter="gemma")
-	assert len(models) > 0
-	assert "gemma" in models[0]
+    models = list_deployable_models_example.list_deployable_models(model_filter="gemma")
+    assert len(models) > 0
+    assert "gemma" in models[0]
 
 
 def test_list_deploy_options() -> None:
-	deploy_options = list_deployment_options_example.list_deploy_options(model="google/gemma3@gemma-3-1b-it")
-	assert len(deploy_options) > 0
+    deploy_options = list_deployment_options_example.list_deploy_options(model="google/gemma3@gemma-3-1b-it")
+    assert len(deploy_options) > 0
 
 
 def test_default_deploy() -> None:
-	endpoint = default_deploy_example.default_deploy(model="google/gemma3@gemma-3-1b-it")
-	assert endpoint
+    endpoint = default_deploy_example.default_deploy(model="google/gemma3@gemma-3-1b-it")
+    assert endpoint

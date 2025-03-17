@@ -18,7 +18,7 @@
 import os
 
 from google.cloud import aiplatform
-from vertexai.preview import model_garden
+
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
