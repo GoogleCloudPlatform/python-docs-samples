@@ -73,12 +73,15 @@ def get_cloud_kms_key():
     if session == 'py-3.12':
         return ('projects/python-docs-samples-tests-312/locations/us/'
                 'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
+    if session == 'py-3.13':
+        return ('projects/python-docs-samples-tests-313/locations/us/'
+                'keyRings/gcs-kms-key-ring/cryptoKeys/gcs-kms-key')
     return os.environ['CLOUD_KMS_KEY']
 
 
 TEST_CONFIG_OVERRIDE = {
     # You can opt out from the test for specific Python versions.
-    'ignored_versions': ["2.7", "3.6", "3.7", "3.11", "3.12"],
+    'ignored_versions': ["2.7", "3.6", "3.7", "3.11", "3.12", "3.13"],
 
     # An envvar key for determining the project id to use. Change it
     # to 'BUILD_SPECIFIC_GCLOUD_PROJECT' if you want to opt in using a
