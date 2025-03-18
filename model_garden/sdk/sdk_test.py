@@ -32,3 +32,9 @@ def test_list_deploy_options() -> None:
 def test_default_deploy() -> None:
     endpoint = default_deploy_example.default_deploy(model="google/gemma3@gemma-3-1b-it")
     assert endpoint
+
+    endpoint.undeploy()
+
+
+if __name__ == "__main__":
+    test_default_deploy()

@@ -36,7 +36,7 @@ def default_deploy(model : str) -> aiplatform.Endpoint:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     open_model = model_garden.OpenModel(model)
-    endpoint = open_model.deploy()
+    endpoint = open_model.deploy(accept_eula=True)
 
     # Optional. Run predictions on the deployed endoint.
     # endpoint.predict(instances=[{"prompt": "What is Generative AI?"}])

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Vertex AI sample for listing deployable models in 
+"""Google Cloud Vertex AI sample for listing deployable models in
     Model Garden.
 """
 
