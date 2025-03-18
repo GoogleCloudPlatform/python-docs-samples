@@ -31,11 +31,16 @@ import six
 (testbed)
 
 
-def pytest_ignore_collect(path, config):
-    """Skip App Engine tests in python 3 or if no SDK is available."""
-    if "appengine/standard" in str(path):
-        if six.PY3:
-            return True
+def pytest_ignore_collect(collection_path):
+    """Skip App Engine tests if no SDK is available."""
+    if "appengine/standard" in str(collection_path):
         if "GAE_SDK_PATH" not in os.environ:
+            #test_file = os.path.basename(collection_path)
+            test_file = os.path.join(collection_path.parent.name, collection_path.name)
+
+            if ".py" in test_file:
+                print("GAE_SDK_PATH is missing! "
+                    f"Skipping App Engine test in {test_file}."
+                )
             return True
     return False
