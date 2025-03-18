@@ -31,6 +31,29 @@ storage_client = storage.Client()
 project_id = os.environ["GCP_PROJECT"]
 # [END functions_ocr_setup]
 
+T = TypeVar("T")
+
+
+def validate_message(message: Dict[str, T], param: str) -> T:
+    """
+    Placeholder function for validating message parts.
+
+    Args:
+        message: message to be validated.
+        param: name of the message parameter to be validated.
+
+    Returns:
+        The value of message['param'] if it's valid. Throws ValueError
+        if it's not valid.
+    """
+    var = message.get(param)
+    if not var:
+        raise ValueError(
+            f"{param} is not provided. Make sure you have "
+            f"property {param} in the request"
+        )
+    return var
+
 
 # [START functions_ocr_detect]
 def detect_text(bucket: str, filename: str) -> None:
@@ -85,38 +108,7 @@ def detect_text(bucket: str, filename: str) -> None:
         futures.append(future)
     for future in futures:
         future.result()
-
-
 # [END functions_ocr_detect]
-
-T = TypeVar("T")
-
-
-# [START message_validatation_helper]
-def validate_message(message: Dict[str, T], param: str) -> T:
-    """
-    Placeholder function for validating message parts.
-
-    Args:
-        message: message to be validated.
-        param: name of the message parameter to be validated.
-
-    Returns:
-        The value of message['param'] if it's valid. Throws ValueError
-        if it's not valid.
-    """
-    var = message.get(param)
-    if not var:
-        raise ValueError(
-            "{} is not provided. Make sure you have \
-                          property {} in the request".format(
-                param, param
-            )
-        )
-    return var
-
-
-# [END message_validatation_helper]
 
 
 # [START functions_ocr_process]
@@ -136,16 +128,13 @@ def process_image(file_info: dict, context: dict) -> None:
 
     detect_text(bucket, name)
 
-    print("File {} processed.".format(file_info["name"]))
-
-
+    print(f"File {file_info["name"]} processed.")
 # [END functions_ocr_process]
 
 
 # [START functions_ocr_translate]
 def translate_text(event: dict, context: dict) -> None:
-    """
-    Cloud Function triggered by PubSub when a message is received from
+    """Cloud Function triggered by PubSub when a message is received from
     a subscription.
 
     Translates the text in the message from the specified source language
@@ -184,8 +173,6 @@ def translate_text(event: dict, context: dict) -> None:
     topic_path = publisher.topic_path(project_id, topic_name)
     future = publisher.publish(topic_path, data=encoded_message)
     future.result()
-
-
 # [END functions_ocr_translate]
 
 
@@ -224,6 +211,4 @@ def save_result(event: dict, context: dict) -> None:
     blob.upload_from_string(text)
 
     print("File saved.")
-
-
 # [END functions_ocr_save]
