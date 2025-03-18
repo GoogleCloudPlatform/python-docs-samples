@@ -80,10 +80,12 @@ def detect_text(bucket: str, filename: str) -> None:
     )
     text_detection_response = vision_client.text_detection(image=image)
     annotations = text_detection_response.text_annotations
+
     if len(annotations) > 0:
         text = annotations[0].description
     else:
         text = ""
+
     print(f"Extracted text {text} from image ({len(text)} chars).")
 
     detect_language_response = translate_client.detect_language(text)
@@ -128,7 +130,7 @@ def process_image(file_info: dict, context: dict) -> None:
 
     detect_text(bucket, name)
 
-    print(f"File {file_info["name"]} processed.")
+    print(f"File '{file_info['name']}' processed.")
 # [END functions_ocr_process]
 
 
