@@ -13,21 +13,25 @@
 # limitations under the License.
 
 from unittest.mock import MagicMock, patch
+from google.cloud import aiplatform
 
 import deploy_gemma3_example
-from google.cloud import aiplatform
 import list_deployable_models_example
 import list_deployment_options_example
 
 
 def test_list_deployable_models() -> None:
-    models = list_deployable_models_example.list_deployable_models(model_filter="gemma")
+    models = list_deployable_models_example.list_deployable_models(
+        model_filter="gemma"
+    )
     assert len(models) > 0
     assert "gemma" in models[0]
 
 
 def test_list_deploy_options() -> None:
-    deploy_options = list_deployment_options_example.list_deploy_options(model="google/gemma3@gemma-3-1b-it")
+    deploy_options = list_deployment_options_example.list_deploy_options(
+        model="google/gemma3@gemma-3-1b-it"
+    )
     assert len(deploy_options) > 0
 
 
@@ -39,5 +43,9 @@ def test_gemma3_deploy(mock_open_model: MagicMock) -> None:
     endpoint = deploy_gemma3_example.deploy()
     assert endpoint
     mock_open_model.assert_called_once_with("google/gemma3@gemma-3-12b-it")
-    mock_open_model.return_value.deploy.assert_called_once_with(machine_type="g2-standard-48", 
-        accelerator_type="NVIDIA_L4", accelerator_count=4, accept_eula=True)
+    mock_open_model.return_value.deploy.assert_called_once_with(
+        machine_type="g2-standard-48",
+        accelerator_type="NVIDIA_L4",
+        accelerator_count=4,
+        accept_eula=True,
+    )

@@ -34,8 +34,12 @@ def deploy() -> aiplatform.Endpoint:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     open_model = model_garden.OpenModel("google/gemma3@gemma-3-12b-it")
-    endpoint = open_model.deploy(machine_type="g2-standard-48", 
-        accelerator_type="NVIDIA_L4", accelerator_count=4, accept_eula=True)
+    endpoint = open_model.deploy(
+        machine_type="g2-standard-48",
+        accelerator_type="NVIDIA_L4",
+        accelerator_count=4,
+        accept_eula=True,
+    )
 
     # Optional. Run predictions on the deployed endoint.
     # endpoint.predict(instances=[{"prompt": "What is Generative AI?"}])
