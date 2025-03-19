@@ -25,6 +25,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def list_deployable_models() -> List[str]:
     # [START aiplatform_modelgarden_models_deployables_list]
 
+    import vertexai
     from vertexai.preview import model_garden
 
     # TODO(developer): Update and un-comment below lines
