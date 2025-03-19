@@ -15,35 +15,46 @@
 """Google Cloud Vertex AI sample for listing verified deploy
     options for models in Model Garden.
 """
-
+import os
 from typing import List
 
 from google.cloud.aiplatform_v1beta1 import types
 
 
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+
+
 def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.Deploy]:
-    # [START aiplatform_modelgarden_list_deploy_options]
+    # [START aiplatform_modelgarden_models_deployables_options_list]
     from vertexai.preview import model_garden
 
     # TODO(developer): Update and un-comment below lines
+    # PROJECT_ID = "your-project-id"
     # model = "google/gemma3@gemma-3-1b-it"
-    # hf_model = "meta-llama/Llama-3.3-70B-Instruct"
 
     # List the deployment options for a Model Garden model.
     model = model_garden.OpenModel(model)
     deploy_options = model.list_deploy_options()
     print(deploy_options)
+    # Example response:
+    # [
+    #   dedicated_resources {
+    #     machine_spec {
+    #       machine_type: "g2-standard-12"
+    #       accelerator_type: NVIDIA_L4
+    #       accelerator_count: 1
+    #     }
+    #   }
+    #   container_spec {
+    #     ...
+    #   }
+    #   ...
+    # ]
 
-    # List the deployment options for a Hugging Face model.
-    # hf_model = model_garden.OpenModel(hf_model)
-    # hf_deploy_options = hf_model.list_deploy_options()
-    # print(hf_deploy_options)
-
-    # [END aiplatform_modelgarden_list_deploy_options]
+    # [END aiplatform_modelgarden_models_deployables_options_list]
 
     return deploy_options
 
 
 if __name__ == "__main__":
     list_deploy_options("google/gemma3@gemma-3-1b-it")
-    list_deploy_options("meta-llama/Llama-3.3-70B-Instruct")

@@ -22,9 +22,7 @@ import list_deployment_options_example
 
 
 def test_list_deployable_models() -> None:
-    models = list_deployable_models_example.list_deployable_models(
-        model_filter="gemma"
-    )
+    models = list_deployable_models_example.list_deployable_models()
     assert len(models) > 0
     assert "gemma" in models[0]
 
