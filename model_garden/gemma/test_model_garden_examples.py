@@ -22,13 +22,13 @@ import models_deploy_options_list
 
 
 def test_list_deployable_models() -> None:
-    models = list_deployable_models_example.list_deployable_models()
+    models = models_deployable_list.list_deployable_models()
     assert len(models) > 0
     assert "gemma" in models[0]
 
 
 def test_list_deploy_options() -> None:
-    deploy_options = list_deployment_options_example.list_deploy_options(
+    deploy_options = models_deploy_options_list.list_deploy_options(
         model="google/gemma3@gemma-3-1b-it"
     )
     assert len(deploy_options) > 0
@@ -39,7 +39,7 @@ def test_gemma3_deploy(mock_open_model: MagicMock) -> None:
     # Mock the deploy response.
     mock_endpoint = aiplatform.Endpoint(endpoint_name="test-endpoint-name")
     mock_open_model.return_value.deploy.return_value = mock_endpoint
-    endpoint = deploy_gemma3_example.deploy()
+    endpoint = gemma3_deploy.deploy()
     assert endpoint
     mock_open_model.assert_called_once_with("google/gemma3@gemma-3-12b-it")
     mock_open_model.return_value.deploy.assert_called_once_with(
