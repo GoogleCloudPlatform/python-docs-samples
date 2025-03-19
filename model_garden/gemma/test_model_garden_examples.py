@@ -17,8 +17,8 @@ from unittest.mock import MagicMock, patch
 from google.cloud import aiplatform
 
 import gemma3_deploy
-import models_deployable_list
 import models_deploy_options_list
+import models_deployable_list
 
 
 def test_list_deployable_models() -> None:
