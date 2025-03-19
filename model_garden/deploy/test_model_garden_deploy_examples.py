@@ -13,6 +13,7 @@
 # limitations under the License.
 
 from unittest.mock import MagicMock, patch
+
 from google.cloud import aiplatform
 
 import deploy_gemma3_example
