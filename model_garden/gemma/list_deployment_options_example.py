@@ -30,9 +30,13 @@ def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.D
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-    # model = "google/gemma3@gemma-3-1b-it"
+    # model = "google/gemma3@gemma-3-1b-it" 
+    
+    # For Hugging Face modelsm the format is the Hugging Face model name, as in 
+    # "meta-llama/Llama-3.3-70B-Instruct".
+    # Go to https://console.cloud.google.com/vertex-ai/model-garden to find all deployable 
+    # model names.
 
-    # List the deployment options for a Model Garden model.
     model = model_garden.OpenModel(model)
     deploy_options = model.list_deploy_options()
     print(deploy_options)
