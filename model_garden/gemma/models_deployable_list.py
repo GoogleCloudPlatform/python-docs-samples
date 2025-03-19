@@ -12,42 +12,35 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Google Cloud Vertex AI sample for deploying Gemma 3 in Model Garden.
+"""Google Cloud Vertex AI sample for listing deployable models in
+    Model Garden.
 """
 import os
-
-from google.cloud import aiplatform
+from typing import List
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def deploy() -> aiplatform.Endpoint:
-    # [START aiplatform_modelgarden_gemma3_deploy]
+def list_deployable_models() -> List[str]:
+    # [START aiplatform_modelgarden_models_deployables_list]
 
-    import vertexai
     from vertexai.preview import model_garden
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
-
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    open_model = model_garden.OpenModel("google/gemma3@gemma-3-12b-it")
-    endpoint = open_model.deploy(
-        machine_type="g2-standard-48",
-        accelerator_type="NVIDIA_L4",
-        accelerator_count=4,
-        accept_eula=True,
-    )
+    # List deployable models, optionally list Hugging Face models only or filter by model name.
+    deployable_models = model_garden.list_deployable_models(list_hf_models=False, model_filter="gemma")
+    print(deployable_models)
+    # Example response:
+    # ['google/gemma2@gemma-2-27b','google/gemma2@gemma-2-27b-it', ...]
 
-    # Optional. Run predictions on the deployed endoint.
-    # endpoint.predict(instances=[{"prompt": "What is Generative AI?"}])
+    # [END aiplatform_modelgarden_models_deployables_list]
 
-    # [END aiplatform_modelgarden_gemma3_deploy]
-
-    return endpoint
+    return deployable_models
 
 
 if __name__ == "__main__":
-    deploy()
+    list_deployable_models()

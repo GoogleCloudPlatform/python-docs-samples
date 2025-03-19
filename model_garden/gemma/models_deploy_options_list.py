@@ -31,6 +31,7 @@ def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.D
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
     # model = "google/gemma3@gemma-3-1b-it"
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # For Hugging Face modelsm the format is the Hugging Face model name, as in
     # "meta-llama/Llama-3.3-70B-Instruct".
