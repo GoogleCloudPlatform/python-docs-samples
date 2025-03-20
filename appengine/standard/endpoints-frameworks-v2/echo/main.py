@@ -20,7 +20,6 @@ import endpoints
 from endpoints import message_types
 from endpoints import messages
 from endpoints import remote
-
 # [END endpoints_echo_api_imports]
 
 
@@ -57,7 +56,6 @@ class EchoApi(remote.Service):
     def echo(self, request):
         output_message = " ".join([request.message] * request.n)
         return EchoResponse(message=output_message)
-
     # [END endpoints_echo_api_method]
 
     @endpoints.method(
@@ -107,8 +105,6 @@ class EchoApi(remote.Service):
         if not user:
             raise endpoints.UnauthorizedException
         return EchoResponse(message=user.email())
-
-
 # [END endpoints_echo_api_class]
 
 

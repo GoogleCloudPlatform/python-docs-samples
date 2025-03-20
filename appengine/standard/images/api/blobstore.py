@@ -45,8 +45,6 @@ class Thumbnailer(webapp2.RequestHandler):
         # Either "blob_key" wasn't provided, or there was no value with that ID
         # in the Blobstore.
         self.error(404)
-
-
 # [END gae_images_api_blobstore_thumbnailer]
 
 
@@ -58,11 +56,11 @@ class ServingUrlRedirect(webapp2.RequestHandler):
             blob_info = blobstore.get(blob_key)
 
             if blob_info:
-                # [START get_serving_url]
+                # [START gae_get_serving_url]
                 url = images.get_serving_url(
                     blob_key, size=150, crop=True, secure_url=True
                 )
-                # [END get_serving_url]
+                # [END gae_get_serving_url]
                 return webapp2.redirect(url)
 
         # Either "blob_key" wasn't provided, or there was no value with that ID
