@@ -232,13 +232,24 @@ def test_add_secret_version(secret: Tuple[str, str, str]) -> None:
 
 
 def test_create_secret(
-    client: secretmanager.SecretManagerServiceClient,
     project_id: str,
     secret_id: str,
     ttl: Optional[str],
 ) -> None:
     secret = create_secret(project_id, secret_id, ttl)
+
     assert secret_id in secret.name
+    assert secret.expire_time
+
+
+def test_create_secret_without_ttl(
+    project_id: str,
+    secret_id: str,
+) -> None:
+    secret = create_secret(project_id, secret_id, None)
+
+    assert secret_id in secret.name
+    assert not secret.expire_time
 
 
 def test_create_secret_with_user_managed_replication(
