@@ -49,11 +49,12 @@ def stop_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> No
         # Example response:
         # State.STOPPED
 
-        return response
     except Exception as e:
         print(e)
+        raise e
 
     # [END tpu_vm_stop]
+    return response
 
 
 if __name__ == "__main__":
