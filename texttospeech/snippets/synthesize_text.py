@@ -38,8 +38,7 @@ def synthesize_text():
     # Names of voices can be retrieved with client.list_voices().
     voice = texttospeech.VoiceSelectionParams(
         language_code="en-US",
-        name="en-US-Standard-C",
-        ssml_gender=texttospeech.SsmlVoiceGender.FEMALE,
+        name="en-US-Chirp3-HD-Charon",
     )
 
     audio_config = texttospeech.AudioConfig(
@@ -47,7 +46,9 @@ def synthesize_text():
     )
 
     response = client.synthesize_speech(
-        request={"input": input_text, "voice": voice, "audio_config": audio_config}
+        input=input_text,
+        voice=voice,
+        audio_config=audio_config,
     )
 
     # The response's audio_content is binary.
