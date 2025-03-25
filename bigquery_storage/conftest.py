@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import datetime
 import os
 
 import pytest
@@ -20,3 +21,20 @@ import pytest
 @pytest.fixture(scope="session")
 def project_id():
     return os.environ["GOOGLE_CLOUD_PROJECT"]
+
+
+@pytest.fixture(scope="session")
+def dataset(project_id):
+    from google.cloud import bigquery
+
+    client = bigquery.Client()
+    dataset_suffix = datetime.datetime.now().strftime("%y%m%d_%H%M%S")
+    dataset_name = "samples_tests_" + dataset_suffix
+
+    dataset_id = "{}.{}".format(project_id, dataset_name)
+    dataset = bigquery.Dataset(dataset_id)
+    dataset.location = "us-east7"
+    created_dataset = client.create_dataset(dataset)
+    yield created_dataset
+
+    client.delete_dataset(created_dataset, delete_contents=True)
