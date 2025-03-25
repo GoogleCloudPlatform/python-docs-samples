@@ -60,7 +60,7 @@ def create_queued_resource(
 
     response = operation.result()
     print(response.name)
-    print(response.state.state)
+    print(response.state)
     # Example response:
     # projects/[project_id]/locations/[zone]/queuedResources/resource-name
     # State.WAITING_FOR_RESOURCES

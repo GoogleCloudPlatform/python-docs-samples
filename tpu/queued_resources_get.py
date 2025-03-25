@@ -33,7 +33,7 @@ def get_queued_resource(
     )
     resource = client.get_queued_resource(name=name)
     print("Resource name:", resource.name)
-    print(resource.state.state)
+    print(resource.state)
     # Example response:
     # Resource name: projects/{project_id}/locations/{zone}/queuedResources/resource-name
     # State.ACTIVE

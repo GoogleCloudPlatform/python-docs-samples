@@ -48,11 +48,12 @@ def start_cloud_tpu(project_id: str, zone: str, tpu_name: str = "tpu-name") -> N
         # Example response:
         # State.READY
 
-        return response
     except Exception as e:
         print(e)
+        raise e
 
     # [END tpu_vm_start]
+    return response
 
 
 if __name__ == "__main__":
