@@ -15,14 +15,14 @@
 # limitations under the License.
 import datetime
 import decimal
+
+from google.cloud.bigquery import enums
 import pandas as pd
 import pyarrow as pa
 
 from google.cloud import bigquery
-from google.cloud.bigquery import enums
 from google.cloud.bigquery_storage_v1 import types as gapic_types
 from google.cloud.bigquery_storage_v1.writer import AppendRowsStream
-
 
 TABLE_LENGTH = 100_000
 
