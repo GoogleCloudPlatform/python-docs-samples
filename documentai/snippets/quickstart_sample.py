@@ -20,7 +20,7 @@ def quickstart(
     project_id: str,
     location: str,
     file_path: str,
-    processor_display_name: str ,
+    processor_display_name: str,
 ) -> tuple[Processor, Document]:
     # [START documentai_quickstart]
     from google.api_core.client_options import ClientOptions
