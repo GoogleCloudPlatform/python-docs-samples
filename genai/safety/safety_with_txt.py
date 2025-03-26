@@ -112,5 +112,6 @@ def generate_content() -> GenerateContentResponse:
     # [END googlegenaisdk_safety_with_txt]
     return response
 
+
 if __name__ == "__main__":
     generate_content()
