@@ -40,9 +40,7 @@ async def generate_content() -> list[str]:
         print("".join(response))
     # Example output:
     # >  Hello? Gemini, are you there?
-
     # Yes, I'm here. What would you like to talk about?
-
     # [END googlegenaisdk_live_with_txt]
     return response
 

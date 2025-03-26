@@ -68,7 +68,6 @@ def generate_content() -> str:
     #   {"Day": "Thursday", "Forecast": "cloudy", "Temperature": 66, "Wind Speed": null, "Humidity": "60%"},
     #   {"Day": "Friday", "Forecast": "partly cloudy", "Temperature": 73, "Wind Speed": 12},
     #   {"Day": "Saturday", "Forecast": "sunny", "Temperature": 80, "Wind Speed": 8, "Humidity": "40%"}]}
-
     # [END googlegenaisdk_ctrlgen_with_nullable_schema]
     return response.text
 

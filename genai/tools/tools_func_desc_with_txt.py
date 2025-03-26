@@ -87,7 +87,6 @@ def generate_content() -> str:
     #         ]
     #     },
     # )]
-
     # [END googlegenaisdk_tools_func_desc_with_txt]
     return str(response.function_calls[0])
 

@@ -58,7 +58,6 @@ def generate_content() -> str:
     #
     # # Outcome:
     # fib_20=6765
-
     # [END googlegenaisdk_tools_code_exec_with_txt]
     return response.executable_code
 

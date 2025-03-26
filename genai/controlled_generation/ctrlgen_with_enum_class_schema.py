@@ -40,7 +40,6 @@ def generate_content() -> str:
     print(response.text)
     # Example output:
     # String
-
     # [END googlegenaisdk_ctrlgen_with_enum_class_schema]
     return response.text
 
