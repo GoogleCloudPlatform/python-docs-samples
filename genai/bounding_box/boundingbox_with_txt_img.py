@@ -24,7 +24,6 @@ def generate_content() -> str:
 
     from pydantic import BaseModel
 
-
     # Helper class to represent a bounding box
     class BoundingBox(BaseModel):
         """
@@ -38,7 +37,6 @@ def generate_content() -> str:
 
         box_2d: list[int]
         label: str
-
 
     # Helper function to plot bounding boxes on an image
     def plot_bounding_boxes(image_uri: str, bounding_boxes: list[BoundingBox]) -> None:
@@ -72,7 +70,6 @@ def generate_content() -> str:
                     draw.text((abs_x1 + 8, abs_y1 + 6), bbox.label, fill=color)
 
             im.show()
-
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
