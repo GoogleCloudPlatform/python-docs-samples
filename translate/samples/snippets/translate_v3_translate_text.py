@@ -25,14 +25,16 @@ PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
 
 def translate_text(
     text: str = "YOUR_TEXT_TO_TRANSLATE",
-    language_code: str = "fr",
+    source_language_code: str = "en-US",
+    target_language_code: str = "fr",
 ) -> translate_v3.TranslationServiceClient:
-    """Translating Text from English.
+    """Translate Text from a Source language to a Target language.
     Args:
         text: The content to translate.
-        language_code: The language code for the translation.
-            E.g. "fr" for French, "es" for Spanish, etc.
-            Available languages:
+        source_language_code: The code of the source language.
+        target_language_code: The code of the target language.
+            For example: "fr" for French, "es" for Spanish, etc.
+            Find available languages and codes here:
             https://cloud.google.com/translate/docs/languages#neural_machine_translation_model
     """
 
@@ -40,26 +42,18 @@ def translate_text(
     client = translate_v3.TranslationServiceClient()
     parent = f"projects/{PROJECT_ID}/locations/global"
 
-    # Translate text from English to chosen language.
-    # Supported MIME types:
-    # https://cloud.google.com/translate/docs/supported-formats
+    # Translate text from the source to the target language.
     response = client.translate_text(
         contents=[text],
-        target_language_code=language_code,
         parent=parent,
-        mime_type="text/plain",
-        source_language_code="en-US",
+        source_language_code=source_language_code,
+        target_language_code=target_language_code,
     )
 
-    # Display the translation for each input text provided.
-    for translation in response.translations:
-        print(f"Translated text: {translation.translated_text}")
-
-    # Example response:
+    # Display the translation for the text.
+    # For example, for "Hello! How are you doing today?":
     # Translated text: Bonjour comment vas-tu aujourd'hui?
+    print(f"Translated text: {response.translations[0].translated_text[0]}")
+
     return response
 # [END translate_v3_translate_text]
-
-
-if __name__ == "__main__":
-    translate_text(text="Hello! How are you doing today?", language_code="fr")

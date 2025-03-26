@@ -12,12 +12,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
-
 import translate_v3_translate_text
 
 
-def test_translate_text(capsys: pytest.LogCaptureFixture) -> None:
-    response = translate_v3_translate_text.translate_text("Hello World!", "fr")
-    out, _ = capsys.readouterr()
+def test_translate_text() -> None:
+    response = translate_v3_translate_text.translate_text("Hello World!", "en-US", "fr")
     assert "Bonjour le monde" in response.translations[0].translated_text
