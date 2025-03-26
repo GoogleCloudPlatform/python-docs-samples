@@ -19,10 +19,10 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    chat = client.chats.create(model="gemini-2.0-flash-001")
+    chat_session = client.chats.create(model="gemini-2.0-flash-001")
     response_text = ""
 
-    for chunk in chat.send_message_stream("Why is the sky blue?"):
+    for chunk in chat_session.send_message_stream("Why is the sky blue?"):
         print(chunk.text, end="")
         response_text += chunk.text
     # Example response:

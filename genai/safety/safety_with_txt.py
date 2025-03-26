@@ -64,23 +64,53 @@ def generate_content() -> GenerateContentResponse:
 
     # Response will be `None` if it is blocked.
     print(response.text)
+    # Example response:
+    #     None
+
     # Finish Reason will be `SAFETY` if it is blocked.
     print(response.candidates[0].finish_reason)
-    # Safety Ratings show the levels for each filter.
-    for safety_rating in response.candidates[0].safety_ratings:
-        print(safety_rating)
-
     # Example response:
-    # None
-    # FinishReason.SAFETY
-    # blocked=None category=<HarmCategory.HARM_CATEGORY_HATE_SPEECH: 'HARM_CATEGORY_HATE_SPEECH'> probability=<HarmProbability.NEGLIGIBLE: 'NEGLIGIBLE'> probability_score=1.767152e-05 severity=<HarmSeverity.HARM_SEVERITY_NEGLIGIBLE: 'HARM_SEVERITY_NEGLIGIBLE'> severity_score=None
-    # blocked=None category=<HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: 'HARM_CATEGORY_DANGEROUS_CONTENT'> probability=<HarmProbability.NEGLIGIBLE: 'NEGLIGIBLE'> probability_score=2.399503e-06 severity=<HarmSeverity.HARM_SEVERITY_NEGLIGIBLE: 'HARM_SEVERITY_NEGLIGIBLE'> severity_score=0.061250776
-    # blocked=True category=<HarmCategory.HARM_CATEGORY_HARASSMENT: 'HARM_CATEGORY_HARASSMENT'> probability=<HarmProbability.MEDIUM: 'MEDIUM'> probability_score=0.64129734 severity=<HarmSeverity.HARM_SEVERITY_MEDIUM: 'HARM_SEVERITY_MEDIUM'> severity_score=0.2686556
-    # blocked=None category=<HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT: 'HARM_CATEGORY_SEXUALLY_EXPLICIT'> probability=<HarmProbability.NEGLIGIBLE: 'NEGLIGIBLE'> probability_score=5.2786977e-06 severity=<HarmSeverity.HARM_SEVERITY_NEGLIGIBLE: 'HARM_SEVERITY_NEGLIGIBLE'> severity_score=0.043162167
+    #     FinishReason.SAFETY
 
+    # For details on all the fields in the response
+    for each in response.candidates[0].safety_ratings:
+        print('\nCategory: ', str(each.category))
+        print('Is Blocked:', True if each.blocked else False)
+        print('Probability: ', each.probability)
+        print('Probability Score: ', each.probability_score)
+        print('Severity:', each.severity)
+        print('Severity Score:', each.severity_score)
+    # Example response:
+    #
+    #     Category:  HarmCategory.HARM_CATEGORY_HATE_SPEECH
+    #     Is Blocked: False
+    #     Probability:  HarmProbability.NEGLIGIBLE
+    #     Probability Score:  2.547714e-05
+    #     Severity: HarmSeverity.HARM_SEVERITY_NEGLIGIBLE
+    #     Severity Score: None
+    #
+    #     Category:  HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT
+    #     Is Blocked: False
+    #     Probability:  HarmProbability.NEGLIGIBLE
+    #     Probability Score:  3.6103818e-06
+    #     Severity: HarmSeverity.HARM_SEVERITY_NEGLIGIBLE
+    #     Severity Score: None
+    #
+    #     Category:  HarmCategory.HARM_CATEGORY_HARASSMENT
+    #     Is Blocked: True
+    #     Probability:  HarmProbability.MEDIUM
+    #     Probability Score:  0.71599233
+    #     Severity: HarmSeverity.HARM_SEVERITY_MEDIUM
+    #     Severity Score: 0.30782545
+    #
+    #     Category:  HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT
+    #     Is Blocked: False
+    #     Probability:  HarmProbability.NEGLIGIBLE
+    #     Probability Score:  1.5624657e-05
+    #     Severity: HarmSeverity.HARM_SEVERITY_NEGLIGIBLE
+    #     Severity Score: None
     # [END googlegenaisdk_safety_with_txt]
     return response
-
 
 if __name__ == "__main__":
     generate_content()

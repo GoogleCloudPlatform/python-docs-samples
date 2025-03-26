@@ -19,7 +19,7 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions, ModelContent, Part, UserContent
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    chat = client.chats.create(
+    chat_session = client.chats.create(
         model="gemini-2.0-flash-001",
         history=[
             UserContent(parts=[Part(text="Hello")]),
@@ -28,7 +28,7 @@ def generate_content() -> str:
             ),
         ],
     )
-    response = chat.send_message("Tell me a story.")
+    response = chat_session.send_message("Tell me a story.")
     print(response.text)
     # Example response:
     # Okay, here's a story for you:
