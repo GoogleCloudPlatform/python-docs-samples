@@ -29,7 +29,6 @@ def count_tokens() -> int:
     # Example output:
     # total_tokens=10
     # cached_content_token_count=None
-
     # [END googlegenaisdk_counttoken_with_txt]
     # [END googlegenaisdk_count_tokens_with_txt]
     return response.total_tokens

@@ -55,7 +55,6 @@ def generate_content(output_uri: str) -> str:
     # Job state: JOB_STATE_RUNNING
     # ...
     # Job state: JOB_STATE_SUCCEEDED
-
     # [END googlegenaisdk_batchpredict_with_gcs]
     return job.state
 

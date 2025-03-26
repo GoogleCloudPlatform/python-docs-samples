@@ -15,7 +15,6 @@
 
 def generate_content() -> str:
     # [START googlegenaisdk_provisionedthroughput_with_txt]
-
     from google import genai
     from google.genai.types import HttpOptions
 
@@ -36,7 +35,6 @@ def generate_content() -> str:
         contents="How does AI work?",
     )
     print(response.text)
-
     # Example response:
     # Okay, let's break down how AI works. It's a broad field, so I'll focus on the ...
     #

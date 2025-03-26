@@ -37,7 +37,6 @@ def count_tokens_example() -> int:
     #  candidates_token_count=311
     #  prompt_token_count=6
     #  total_token_count=317
-
     # [END googlegenaisdk_counttoken_resp_with_txt]
     # [END googlegenaisdk_count_tokens_resp_with_txt]
     return response.usage_metadata

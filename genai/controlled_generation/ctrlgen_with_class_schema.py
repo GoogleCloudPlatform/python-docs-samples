@@ -54,7 +54,6 @@ def generate_content() -> str:
     #     ],
     #     "recipe_name": "Classic Chocolate Chip Cookies"
     #   }, ... ]
-
     # [END googlegenaisdk_ctrlgen_with_class_schema]
     return response.text
 

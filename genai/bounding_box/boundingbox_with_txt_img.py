@@ -18,17 +18,14 @@ def generate_content() -> str:
     import requests
 
     from google import genai
-    from google.genai.types import (
-        GenerateContentConfig,
-        HttpOptions,
-        Part,
-        SafetySetting,
-    )
+    from google.genai.types import GenerateContentConfig, HttpOptions, Part, SafetySetting
 
     from PIL import Image, ImageColor, ImageDraw
 
     from pydantic import BaseModel
 
+
+    # Helper class to represent a bounding box
     class BoundingBox(BaseModel):
         """
         Represents a bounding box with its 2D coordinates and associated label.
@@ -42,6 +39,8 @@ def generate_content() -> str:
         box_2d: list[int]
         label: str
 
+
+    # Helper function to plot bounding boxes on an image
     def plot_bounding_boxes(image_uri: str, bounding_boxes: list[BoundingBox]) -> None:
         """
         Plots bounding boxes on an image with markers for each a name, using PIL, normalized coordinates, and different colors.
@@ -51,7 +50,6 @@ def generate_content() -> str:
             bounding_boxes: A list of bounding boxes containing the name of the object
             and their positions in normalized [y1 x1 y2 x2] format.
         """
-
         with Image.open(requests.get(image_uri, stream=True, timeout=10).raw) as im:
             width, height = im.size
             draw = ImageDraw.Draw(im)
@@ -75,6 +73,7 @@ def generate_content() -> str:
 
             im.show()
 
+
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     config = GenerateContentConfig(
@@ -92,7 +91,7 @@ def generate_content() -> str:
             ),
         ],
         response_mime_type="application/json",
-        response_schema=list[BoundingBox],
+        response_schema=list[BoundingBox],  # Add BoundingBox class to the response schema
     )
 
     image_uri = "https://storage.googleapis.com/generativeai-downloads/images/socks.jpg"

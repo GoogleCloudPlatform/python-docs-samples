@@ -47,7 +47,6 @@ def generate_content() -> str:
     print(response.text)
     # Example output:
     # [{"rating": "a+", "recipe_name": "Classic Chocolate Chip Cookies"}, ...]
-
     # [END googlegenaisdk_ctrlgen_with_nested_class_schema]
     return response.text
 
