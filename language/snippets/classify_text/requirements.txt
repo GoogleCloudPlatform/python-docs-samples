@@ -1,4 +1,5 @@
 google-cloud-language==2.15.1
+```suggestion
 numpy==2.2.4; python_version > '3.9'
-numpy==2.2.4; python_version == '3.8'
-numpy==2.2.4; python_version == '3.9'
+numpy==1.26.4; python_version == '3.9'
+numpy==1.24.4; python_version == '3.8'
