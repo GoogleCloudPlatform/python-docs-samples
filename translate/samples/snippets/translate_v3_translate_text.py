@@ -42,10 +42,16 @@ def translate_text(
     client = translate_v3.TranslationServiceClient()
     parent = f"projects/{PROJECT_ID}/locations/global"
 
+    # MIME type of the content to translate.
+    # Find supported types for `Text translation - Advanced (v3)` here:
+    # https://cloud.google.com/translate/docs/supported-formats
+    mime_type = "text/plain"
+
     # Translate text from the source to the target language.
     response = client.translate_text(
         contents=[text],
         parent=parent,
+        mime_type=mime_type,
         source_language_code=source_language_code,
         target_language_code=target_language_code,
     )
@@ -53,7 +59,16 @@ def translate_text(
     # Display the translation for the text.
     # For example, for "Hello! How are you doing today?":
     # Translated text: Bonjour comment vas-tu aujourd'hui?
-    print(f"Translated text: {response.translations[0].translated_text[0]}")
+    for translation in response.translations:
+        print(f"Translated text: {translation.translated_text}")
 
     return response
 # [END translate_v3_translate_text]
+
+
+if __name__ == "__main__":
+    translate_text(
+        text="Hello! How are you doing today?",
+        source_language_code="en-US",
+        target_language_code="fr"
+    )
