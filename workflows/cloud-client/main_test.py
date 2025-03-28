@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google.api_core.retry import Retry
+import backoff
+
 from google.cloud.workflows.executions_v1.types import executions
 
 import main
 
 
-@Retry()
+@backoff.on_exception(backoff.expo, AssertionError, max_time=60)
 def test_workflow_execution(project_id: str, location: str, workflow_id: str) -> None:
     result = main.execute_workflow(project_id, location, workflow_id)
     assert result.state == executions.Execution.State.SUCCEEDED
