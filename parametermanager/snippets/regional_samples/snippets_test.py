@@ -17,7 +17,7 @@ from typing import Iterator, Optional, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
-from google.cloud import parametermanager_v1, secretmanager
+from google.cloud import kms, parametermanager_v1, secretmanager
 import pytest
 
 # Import the methods to be tested
@@ -26,6 +26,7 @@ from regional_samples import create_regional_param_version
 from regional_samples import (
     create_regional_param_version_with_secret,
 )
+from regional_samples import create_regional_param_with_kms_key
 from regional_samples import create_structured_regional_param
 from regional_samples import (
     create_structured_regional_param_version,
@@ -39,7 +40,9 @@ from regional_samples import get_regional_param_version
 from regional_samples import list_regional_param_versions
 from regional_samples import list_regional_params
 from regional_samples import regional_quickstart
+from regional_samples import remove_regional_param_kms_key
 from regional_samples import render_regional_param_version
+from regional_samples import update_regional_param_kms_key
 
 
 @pytest.fixture()
@@ -56,6 +59,11 @@ def secret_manager_client(location_id: str) -> secretmanager.SecretManagerServic
     return secretmanager.SecretManagerServiceClient(
         client_options={"api_endpoint": api_endpoint},
     )
+
+
+@pytest.fixture()
+def kms_key_client() -> kms.KeyManagementServiceClient:
+    return kms.KeyManagementServiceClient()
 
 
 @pytest.fixture()
@@ -141,6 +149,15 @@ def retry_client_delete_secret(
     return secret_manager_client.delete_secret(request=request)
 
 
+@retry.Retry()
+def retry_client_destroy_crypto_key(
+    kms_key_client: kms.KeyManagementServiceClient,
+    request: Optional[Union[kms.DestroyCryptoKeyVersionRequest, dict]],
+) -> None:
+    # Retry to avoid 503 error & flaky issues
+    return kms_key_client.destroy_crypto_key_version(request=request)
+
+
 @pytest.fixture()
 def parameter(
     client: parametermanager_v1.ParameterManagerClient,
@@ -186,6 +203,31 @@ def structured_parameter(
     )
 
     yield project_id, param_id, version_id, parameter.policy_member
+
+
+@pytest.fixture()
+def parameter_with_kms(
+    client: parametermanager_v1.ParameterManagerClient,
+    location_id: str,
+    project_id: str,
+    parameter_id: str,
+    hsm_key_id: str
+) -> Iterator[Tuple[str, str, str, parametermanager_v1.Parameter]]:
+    param_id, version_id = parameter_id
+    print(f"Creating parameter {param_id} with kms {hsm_key_id}")
+
+    parent = client.common_location_path(project_id, location_id)
+    time.sleep(5)
+    parameter = retry_client_create_parameter(
+        client,
+        request={
+            "parent": parent,
+            "parameter_id": param_id,
+            "parameter": {"kms_key": hsm_key_id},
+        },
+    )
+
+    yield project_id, param_id, version_id, parameter.kms_key
 
 
 @pytest.fixture()
@@ -342,6 +384,97 @@ def secret_version(
     yield project_id, version.name, version.name.rsplit("/", 1)[-1], parent
 
 
+@pytest.fixture()
+def key_ring_id(
+    kms_key_client: kms.KeyManagementServiceClient, project_id: str, location_id: str
+) -> Tuple[str, str]:
+    location_name = f"projects/{project_id}/locations/{location_id}"
+    key_ring_id = "test-pm-snippets"
+    key_id = f"{uuid.uuid4()}"
+    try:
+        key_ring = kms_key_client.create_key_ring(
+            request={"parent": location_name, "key_ring_id": key_ring_id, "key_ring": {}}
+        )
+        yield key_ring.name, key_id
+    except exceptions.AlreadyExists:
+        yield f"{location_name}/keyRings/{key_ring_id}", key_id
+    except Exception:
+        pytest.fail("Unable to create the keyring")
+
+
+@pytest.fixture()
+def hsm_key_id(
+    kms_key_client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: Tuple[str, str],
+) -> str:
+    parent, key_id = key_ring_id
+    key = kms_key_client.create_crypto_key(
+        request={
+            "parent": parent,
+            "crypto_key_id": key_id,
+            "crypto_key": {
+                "purpose": kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
+                "version_template": {
+                    "algorithm":
+                        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
+                    "protection_level": kms.ProtectionLevel.HSM,
+                },
+                "labels": {"foo": "bar", "zip": "zap"},
+            },
+        }
+    )
+    wait_for_ready(kms_key_client, f"{key.name}/cryptoKeyVersions/1")
+    yield key.name
+    print(f"Destroying the key version {key.name}")
+    try:
+        time.sleep(5)
+        for key_version in kms_key_client.list_crypto_key_versions(request={"parent": key.name}):
+            if key_version.state == key_version.state.ENABLED:
+                retry_client_destroy_crypto_key(kms_key_client, request={"name": key_version.name})
+    except exceptions.NotFound:
+        # KMS key was already deleted, probably in the test
+        print(f"KMS Key {key.name} was not found.")
+
+
+@pytest.fixture()
+def updated_hsm_key_id(
+    kms_key_client: kms.KeyManagementServiceClient,
+    project_id: str,
+    location_id: str,
+    key_ring_id: Tuple[str, str],
+) -> str:
+    parent, _ = key_ring_id
+    key_id = f"{uuid.uuid4()}"
+    key = kms_key_client.create_crypto_key(
+        request={
+            "parent": parent,
+            "crypto_key_id": key_id,
+            "crypto_key": {
+                "purpose": kms.CryptoKey.CryptoKeyPurpose.ENCRYPT_DECRYPT,
+                "version_template": {
+                    "algorithm":
+                        kms.CryptoKeyVersion.CryptoKeyVersionAlgorithm.GOOGLE_SYMMETRIC_ENCRYPTION,
+                    "protection_level": kms.ProtectionLevel.HSM,
+                },
+                "labels": {"foo": "bar", "zip": "zap"},
+            },
+        }
+    )
+    wait_for_ready(kms_key_client, f"{key.name}/cryptoKeyVersions/1")
+    yield key.name
+    print(f"Destroying the key version {key.name}")
+    try:
+        time.sleep(5)
+        for key_version in kms_key_client.list_crypto_key_versions(request={"parent": key.name}):
+            if key_version.state == key_version.state.ENABLED:
+                retry_client_destroy_crypto_key(kms_key_client, request={"name": key_version.name})
+    except exceptions.NotFound:
+        # KMS key was already deleted, probably in the test
+        print(f"KMS Key {key.name} was not found.")
+
+
 def test_regional_quickstart(
     project_id: str, location_id: str, parameter_id: Tuple[str, str]
 ) -> None:
@@ -357,6 +490,49 @@ def test_create_regional_param(
     param_id, _ = parameter_id
     parameter = create_regional_param.create_regional_param(project_id, location_id, param_id)
     assert param_id in parameter.name
+
+
+def test_create_regional_param_with_kms_key(
+    project_id: str,
+    location_id: str,
+    parameter_id: str,
+    hsm_key_id: str
+) -> None:
+    param_id, _ = parameter_id
+    parameter = create_regional_param_with_kms_key.create_regional_param_with_kms_key(
+        project_id, location_id, param_id, hsm_key_id
+    )
+    assert param_id in parameter.name
+    assert hsm_key_id == parameter.kms_key
+
+
+def test_update_regional_param_kms_key(
+    project_id: str,
+    location_id: str,
+    parameter_with_kms: Tuple[str, str, str, str],
+    updated_hsm_key_id: str
+) -> None:
+    project_id, param_id, _, kms_key = parameter_with_kms
+    parameter = update_regional_param_kms_key.update_regional_param_kms_key(
+        project_id, location_id, param_id, updated_hsm_key_id
+    )
+    assert param_id in parameter.name
+    assert updated_hsm_key_id == parameter.kms_key
+    assert kms_key != parameter.kms_key
+
+
+def test_remove_regional_param_kms_key(
+    project_id: str,
+    location_id: str,
+    parameter_with_kms: Tuple[str, str, str, str],
+    hsm_key_id: str
+) -> None:
+    project_id, param_id, _, kms_key = parameter_with_kms
+    parameter = remove_regional_param_kms_key.remove_regional_param_kms_key(
+        project_id, location_id, param_id
+    )
+    assert param_id in parameter.name
+    assert parameter.kms_key == ""
 
 
 def test_create_regional_param_version(
@@ -525,3 +701,14 @@ def test_render_regional_param_version(
         version.rendered_payload.decode("utf-8")
         == '{"username": "temp-user", "password": "hello world!"}'
     )
+
+
+def wait_for_ready(
+    kms_key_client: kms.KeyManagementServiceClient, key_version_name: str
+) -> None:
+    for i in range(4):
+        key_version = kms_key_client.get_crypto_key_version(request={"name": key_version_name})
+        if key_version.state == kms.CryptoKeyVersion.CryptoKeyVersionState.ENABLED:
+            return
+        time.sleep((i + 1) ** 2)
+    pytest.fail(f"{key_version_name} not ready")
