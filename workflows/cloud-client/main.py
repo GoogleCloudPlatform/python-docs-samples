@@ -17,7 +17,10 @@ import os
 from google.cloud.workflows.executions_v1 import Execution
 
 
-def execute_workflow(project_id: str, location: str, workflow_id: str,
+def execute_workflow(
+    project_id: str,
+    location: str,
+    workflow_id: str
 ) -> Execution:
     """Execute a workflow and print the execution results.
 
