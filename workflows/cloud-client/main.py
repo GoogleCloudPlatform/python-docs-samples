@@ -12,21 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START workflows_api_quickstart]
 import os
-import time
 
-from google.cloud import workflows_v1
-from google.cloud.workflows import executions_v1
 from google.cloud.workflows.executions_v1 import Execution
-from google.cloud.workflows.executions_v1.types import executions
-
-PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
-LOCATION = os.getenv("LOCATION", "us-central1")
-WORKFLOW_ID = os.getenv("WORKFLOW", "myFirstWorkflow")
 
 
-def execute_workflow(project: str, location: str, workflow: str) -> Execution:
+def execute_workflow(project_id: str, location: str, workflow_id: str,
+) -> Execution:
     """Execute a workflow and print the execution results.
 
     A workflow consists of a series of steps described
@@ -41,15 +33,29 @@ def execute_workflow(project: str, location: str, workflow: str) -> Execution:
     Returns:
         The execution response.
     """
+
+# [START workflows_api_quickstart]
+    import time
+
+    from google.cloud import workflows_v1
+    from google.cloud.workflows import executions_v1
+
+    from google.cloud.workflows.executions_v1.types import executions
+
+    # TODO(developer): Update and uncomment the following lines.
+    # project_id = "MY_PROJECT_ID"
+    # location = "MY_LOCATION" # For example: us-central1
+    # workflow_id = "MY_FIRST_WORKFLOW"
+
     # [START workflows_api_quickstart_client_libraries]
-    # Set up API clients.
+    # Initialize API clients.
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
     # [END workflows_api_quickstart_client_libraries]
 
     # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
-    parent = workflows_client.workflow_path(project, location, workflow)
+    parent = workflows_client.workflow_path(project_id, location, workflow_id)
 
     # Execute the workflow.
     response = execution_client.create_execution(request={"parent": parent})
@@ -59,13 +65,14 @@ def execute_workflow(project: str, location: str, workflow: str) -> Execution:
     execution_finished = False
     backoff_delay = 1  # Start wait with delay of 1 second
     print("Poll for result...")
+
     while not execution_finished:
         execution = execution_client.get_execution(
             request={"name": response.name}
         )
         execution_finished = execution.state != executions.Execution.State.ACTIVE
 
-        # If we haven't seen the result yet, wait a second.
+        # If we haven't seen the result yet, keep wait.
         if not execution_finished:
             print("- Waiting for results...")
             time.sleep(backoff_delay)
@@ -74,11 +81,13 @@ def execute_workflow(project: str, location: str, workflow: str) -> Execution:
         else:
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
-            return execution
     # [END workflows_api_quickstart_execution]
+# [END workflows_api_quickstart]
+            return execution
 
 
 if __name__ == "__main__":
+    PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
     assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
-    execute_workflow(PROJECT, LOCATION, WORKFLOW_ID)
-# [END workflows_api_quickstart]
+
+    execute_workflow(PROJECT, "us-central1", "myFirstWorkflow")
