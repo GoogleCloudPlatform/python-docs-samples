@@ -66,7 +66,7 @@ def execute_workflow(
 
     # Wait for execution to finish, then print results.
     execution_finished = False
-    backoff_delay = 1  # Start wait with delay of 1 second
+    backoff_delay = 1  # Start wait with delay of 1 second.
     print("Poll for result...")
 
     while not execution_finished:
@@ -75,7 +75,7 @@ def execute_workflow(
         )
         execution_finished = execution.state != executions.Execution.State.ACTIVE
 
-        # If we haven't seen the result yet, keep wait.
+        # If we haven't seen the result yet, keep waiting.
         if not execution_finished:
             print("- Waiting for results...")
             time.sleep(backoff_delay)
