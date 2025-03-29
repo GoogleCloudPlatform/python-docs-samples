@@ -31,6 +31,8 @@ import textgen_with_multi_local_img
 import textgen_with_mute_video
 import textgen_with_pdf
 import textgen_with_txt
+import textgen_with_txt_2_0_flash_lite
+import textgen_with_txt_2_0_pro
 import textgen_with_txt_img
 import textgen_with_txt_stream
 import textgen_with_video
@@ -134,4 +136,14 @@ def test_textgen_with_local_video() -> None:
 
 def test_textgen_with_youtube_video() -> None:
     response = textgen_with_youtube_video.generate_content()
+    assert response
+
+
+def test_textgen_with_txt_2_0_flash_lite() -> None:
+    response = textgen_with_txt_2_0_flash_lite.generate_content()
+    assert response
+
+
+def test_textgen_with_txt_2_0_pro() -> None:
+    response = textgen_with_txt_2_0_pro.generate_content()
     assert response
