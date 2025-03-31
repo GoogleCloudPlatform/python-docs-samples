@@ -90,7 +90,7 @@ def workflow_id(client: workflows_v1.WorkflowsClient) -> str:
 
     yield WORKFLOW_ID
 
-    # Delete the workflow
+    # Delete the workflow.
     workflow_full_name = client.workflow_path(
         PROJECT_ID, LOCATION, WORKFLOW_ID
     )
