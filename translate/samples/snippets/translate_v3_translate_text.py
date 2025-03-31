@@ -17,7 +17,7 @@ import os
 
 # Import the Google Cloud Translation library.
 # [START translate_v3_import_client_library]
-from google.cloud import translate_v3
+from google.cloud import translate_v3beta1 as translate
 # [END translate_v3_import_client_library]
 
 PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
@@ -27,7 +27,7 @@ def translate_text(
     text: str = "YOUR_TEXT_TO_TRANSLATE",
     source_language_code: str = "en-US",
     target_language_code: str = "fr",
-) -> translate_v3.TranslationServiceClient:
+) -> translate.TranslationServiceClient:
     """Translate Text from a Source language to a Target language.
     Args:
         text: The content to translate.
@@ -39,11 +39,11 @@ def translate_text(
     """
 
     # Initialize Translation client.
-    client = translate_v3.TranslationServiceClient()
+    client = translate.TranslationServiceClient()
     parent = f"projects/{PROJECT_ID}/locations/global"
 
     # MIME type of the content to translate.
-    # Find supported types for `Text translation - Advanced (v3)` here:
+    # Supported MIME types:
     # https://cloud.google.com/translate/docs/supported-formats
     mime_type = "text/plain"
 
