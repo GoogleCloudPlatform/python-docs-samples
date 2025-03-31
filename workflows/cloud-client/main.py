@@ -47,7 +47,7 @@ def execute_workflow(
 
     # TODO(developer): Update and uncomment the following lines.
     # project_id = "MY_PROJECT_ID"
-    # location = "MY_LOCATION"# For example: us-central1
+    # location = "MY_LOCATION"  # For example: us-central1
     # workflow_id = "MY_WORKFLOW_ID"  # For example: myFirstWorkflow
 
     # [START workflows_api_quickstart_client_libraries]
