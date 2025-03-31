@@ -58,7 +58,7 @@ def generate_content() -> str:
         Finally, Saturday rounds off the week with sunny skies, a temperature of 80°F, and a humidity level of 40%. Winds will be gentle at 8 km/h.
     """
 
-    model = GenerativeModel("gemini-1.5-pro-002")
+    model = GenerativeModel("gemini-2.5-pro-exp-03-25")
 
     response = model.generate_content(
         prompt,

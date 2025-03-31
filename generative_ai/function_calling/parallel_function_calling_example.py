@@ -65,7 +65,7 @@ def parallel_function_calling_example() -> ChatSession:
 
     # Initialize Gemini model
     model = GenerativeModel(
-        model_name="gemini-1.5-pro-002",
+        model_name="gemini-2.5-pro-exp-03-25",
         tools=[tools],
     )
 

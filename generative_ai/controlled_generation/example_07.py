@@ -27,7 +27,7 @@ def generate_content() -> str:
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-pro")
+    model = GenerativeModel("gemini-2.5-pro-exp-03-25")
 
     response_schema = {"type": "STRING", "enum": ["drama", "comedy", "documentary"]}
 

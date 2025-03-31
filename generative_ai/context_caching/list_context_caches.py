@@ -35,7 +35,7 @@ def list_context_caches() -> list[str]:
         print(f"Last updated at: {cached_content.update_time}")
         print(f"Expires at: {cached_content.expire_time}")
         # Example response:
-        # Cached content 'example-cache' for model '.../gemini-1.5-pro-001'
+        # Cached content 'example-cache' for model '.../gemini-2.5-pro-exp-03-25'
         # Last updated at: 2024-09-16T12:41:09.998635Z
         # Expires at: 2024-09-16T13:41:09.989729Z
     # [END generativeaionvertexai_context_caching_list]

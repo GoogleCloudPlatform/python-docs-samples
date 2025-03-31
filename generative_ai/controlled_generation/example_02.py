@@ -46,7 +46,7 @@ def generate_content() -> str:
         - "Quite good, but a bit too sweet for my taste." Rating: 1, Flavor: Mango Tango
     """
 
-    model = GenerativeModel("gemini-1.5-pro-002")
+    model = GenerativeModel("gemini-2.5-pro-exp-03-25")
 
     response = model.generate_content(
         prompt,
