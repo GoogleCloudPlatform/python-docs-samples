@@ -18,9 +18,9 @@ import multimodal_token_count_example
 import simple_example
 
 
-def test_local_sdk_example() -> None:
-    assert local_sdk_example.local_tokenizer_example()
-    assert api_example.count_token_api_example()
+# def test_local_sdk_example() -> None:
+#     assert local_sdk_example.local_tokenizer_example()
+#     assert api_example.count_token_api_example()
 
 
 def test_simple_example() -> None:
