@@ -26,7 +26,7 @@ pandas==2.2.3
 proto-plus==1.26.1
 pyarrow==19.0.1
 pyasn1==0.6.1
-pyasn1-modules==0.4.1
+pyasn1-modules==0.4.2
 pycparser==2.22
 pyparsing==3.2.3
 python-dateutil==2.9.0.post0
