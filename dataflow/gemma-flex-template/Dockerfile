@@ -12,7 +12,7 @@
 
 # This uses Ubuntu with Python 3.11 and comes with CUDA drivers for
 # GPU use.
-ARG SERVING_BUILD_IMAGE=pytorch/pytorch:2.6.0-cuda11.8-cudnn9-devel
+ARG SERVING_BUILD_IMAGE=pytorch/pytorch:2.6.0-cuda11.8-cudnn9-runtime
 
 FROM ${SERVING_BUILD_IMAGE}
 
