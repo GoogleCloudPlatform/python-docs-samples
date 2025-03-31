@@ -52,11 +52,11 @@ def evaluate_output() -> EvalResult:
     eval_dataset = pd.DataFrame({"prompt": [prompt]})
 
     # Baseline model for pairwise comparison
-    baseline_model = GenerativeModel("gemini-1.5-pro-001")
+    baseline_model = GenerativeModel("gemini-2.0-flash-001")
 
     # Candidate model for pairwise comparison
     candidate_model = GenerativeModel(
-        "gemini-1.5-pro-002", generation_config={"temperature": 0.4}
+        "gemini-2.0-flash-001", generation_config={"temperature": 0.4}
     )
 
     prompt_template = MetricPromptTemplateExamples.get_prompt_template(

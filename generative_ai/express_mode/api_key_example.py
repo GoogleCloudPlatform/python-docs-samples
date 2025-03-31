@@ -21,7 +21,7 @@ def generate_content() -> None:
     # TODO(developer): Update below line
     vertexai.init(api_key="YOUR_API_KEY")
 
-    model = GenerativeModel("gemini-1.5-flash")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     response = model.generate_content("Explain bubble sort to me")
 

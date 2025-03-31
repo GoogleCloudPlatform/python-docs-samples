@@ -37,7 +37,7 @@ def batch_predict_gemini_createjob(output_uri: str) -> str:
 
     # Submit a batch prediction job with Gemini model
     batch_prediction_job = BatchPredictionJob.submit(
-        source_model="gemini-1.5-flash-002",
+        source_model="gemini-2.0-flash-001",
         input_dataset=input_uri,
         output_uri_prefix=output_uri,
     )

@@ -33,7 +33,7 @@ def translate_text(text: str, target_language_code: str = "fr") -> GenerationRes
     # Initializes the Vertex AI with the specified project and location
     vertexai.init(project=PROJECT_ID, location="europe-west2")
 
-    model = GenerativeModel("gemini-1.0-pro")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     # Configuration for the text generation
     generation_config = {

@@ -27,7 +27,7 @@ def generate_text() -> str:
 
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    vision_model = GenerativeModel("gemini-1.5-flash-002")
+    vision_model = GenerativeModel("gemini-2.0-flash-001")
 
     # Generate text
     response = vision_model.generate_content(

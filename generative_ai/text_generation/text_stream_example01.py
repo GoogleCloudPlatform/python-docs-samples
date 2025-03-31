@@ -27,7 +27,7 @@ def generate_content() -> object:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-001")
     responses = model.generate_content(
         "Write a story about a magic backpack.", stream=True
     )
