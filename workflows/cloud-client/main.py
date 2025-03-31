@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ def execute_workflow(
     using the Workflows syntax, and can be written in either YAML or JSON.
 
     Args:
-        project: The Google Cloud project id
+        project: The ID of the Google Cloud project
             which contains the workflow to execute.
-        location: The location for the workflow
+        location: The location for the workflow.
         workflow: The ID of the workflow to execute.
 
     Returns:
@@ -47,8 +47,8 @@ def execute_workflow(
 
     # TODO(developer): Update and uncomment the following lines.
     # project_id = "MY_PROJECT_ID"
-    # location = "MY_LOCATION" # For example: us-central1
-    # workflow_id = "MY_FIRST_WORKFLOW"
+    # location = "MY_LOCATION"# For example: us-central1
+    # workflow_id = "MY_WORKFLOW_ID"  # For example: myFirstWorkflow
 
     # [START workflows_api_quickstart_client_libraries]
     # Initialize API clients.
