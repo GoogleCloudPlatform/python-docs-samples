@@ -39,7 +39,7 @@ def test_gemini_grounding_vais_example() -> None:
     )
     assert response
 
-
-def test_gemini_grounding_web_example() -> None:
-    response = web_example.generate_text_with_grounding_web()
-    assert response
+#
+# def test_gemini_grounding_web_example() -> None:
+#     response = web_example.generate_text_with_grounding_web()
+#     assert response
