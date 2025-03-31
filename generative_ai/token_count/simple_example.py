@@ -27,7 +27,7 @@ def count_token_example() -> GenerationResponse:
     # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     prompt = "Why is the sky blue?"
     # Prompt tokens count

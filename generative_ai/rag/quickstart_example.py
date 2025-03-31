@@ -95,7 +95,7 @@ def quickstart(
     )
     # Create a gemini-pro model instance
     rag_model = GenerativeModel(
-        model_name="gemini-1.5-flash-001", tools=[rag_retrieval_tool]
+        model_name="gemini-2.0-flash-001", tools=[rag_retrieval_tool]
     )
 
     # Generate response

@@ -19,7 +19,7 @@
 #     from vertexai.preview.tokenization import get_tokenizer_for_model
 #
 #     # Using local tokenzier
-#     tokenizer = get_tokenizer_for_model("gemini-1.5-flash-002")
+#     tokenizer = get_tokenizer_for_model("gemini-2.0-flash-001")
 #
 #     prompt = "hello world"
 #     response = tokenizer.count_tokens(prompt)

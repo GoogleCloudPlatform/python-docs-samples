@@ -31,9 +31,9 @@ def translate_text(text: str, target_language_code: str = "fr") -> GenerationRes
         responses: The response from the model containing the translated text.
     """
     # Initializes the Vertex AI with the specified project and location
-    vertexai.init(project=PROJECT_ID, location="europe-west2")
+    vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.0-pro")
+    model = GenerativeModel("gemini-2.0-flash")
 
     # Configuration for the text generation
     generation_config = {

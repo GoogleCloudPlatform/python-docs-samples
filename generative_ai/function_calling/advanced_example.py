@@ -80,7 +80,7 @@ def generate_function_call_advanced() -> GenerationResponse:
     )
 
     model = GenerativeModel(
-        model_name="gemini-1.5-flash-002",
+        model_name="gemini-2.0-flash-001",
         tools=[retail_tool],
         tool_config=retail_tool_config,
     )

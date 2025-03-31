@@ -71,7 +71,7 @@ def generate_function_call_chat() -> ChatSession:
 
     # Initialize Gemini model
     model = GenerativeModel(
-        model_name="gemini-1.5-flash-001",
+        model_name="gemini-2.0-flash-001",
         generation_config=GenerationConfig(temperature=0),
         tools=[retail_tool],
     )

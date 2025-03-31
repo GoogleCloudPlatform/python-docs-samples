@@ -21,7 +21,7 @@ def list_tokens_example() -> int:
     from vertexai.preview.tokenization import get_tokenizer_for_model
 
     # init local tokenzier
-    tokenizer = get_tokenizer_for_model("gemini-1.5-flash-001")
+    tokenizer = get_tokenizer_for_model("gemini-2.0-flash-001")
 
     # Count Tokens
     prompt = "why is the sky blue?"

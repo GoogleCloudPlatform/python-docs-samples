@@ -25,7 +25,7 @@ def count_token_api_example() -> int:
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # using Vertex AI Model as tokenzier
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     prompt = "hello world"
     response = model.count_tokens(prompt)

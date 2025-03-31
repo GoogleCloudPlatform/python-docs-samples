@@ -25,7 +25,7 @@ def analyze_pdf() -> str:
     # TODO(developer): Update project_id and location
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     prompt = """
     You are a very professional document summarization specialist.
