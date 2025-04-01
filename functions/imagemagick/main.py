@@ -70,7 +70,7 @@ def __blur_image(current_blob):
 
     # Blur the image using ImageMagick.
     with Image(filename=temp_local_filename) as image:
-        image.resize(*image.size, blur=16, filter="hamming")
+        image.resize(*image.size, blur=160, filter="hamming")
         image.save(filename=temp_local_filename)
 
     print(f"Image {file_name} was blurred.")
@@ -81,6 +81,16 @@ def __blur_image(current_blob):
     blur_bucket_name = os.getenv("BLURRED_BUCKET_NAME")
     blur_bucket = storage_client.bucket(blur_bucket_name)
     new_blob = blur_bucket.blob(file_name)
+
+    # Copy mimetype from the source blob.
+    new_blob.content_type = current_blob.content_type
+
+    # Add custom metadata.
+    new_blob.metadata = {
+        "blurred": "true",
+        "original_file": file_name,
+    }
+
     new_blob.upload_from_filename(temp_local_filename)
     print(f"Blurred image uploaded to: gs://{blur_bucket_name}/{file_name}")
 
