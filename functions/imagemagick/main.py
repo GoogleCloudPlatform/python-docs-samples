@@ -86,9 +86,12 @@ def __blur_image(current_blob):
     new_blob.content_type = current_blob.content_type
 
     # Add custom metadata.
+# Add custom metadata.
+    import datetime
     new_blob.metadata = {
         "blurred": "true",
         "original_file": file_name,
+        "blurred_at": datetime.datetime.utcnow().isoformat(),
     }
 
     new_blob.upload_from_filename(temp_local_filename)
