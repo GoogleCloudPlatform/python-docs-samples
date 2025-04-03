@@ -39,6 +39,9 @@ import retrieval_query_example
 import upload_file_example
 
 
+# TODO(https://github.com/GoogleCloudPlatform/python-docs-samples/issues/11557): Remove once Allowlist is removed
+pytest.skip(allow_module_level=True)
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 GCS_FILE = "gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
@@ -79,7 +82,6 @@ def test_create_corpus() -> None:
     delete_corpus_example.delete_corpus(corpus.name)
 
 
-@pytest.mark.skip
 def test_create_corpus_feature_store() -> None:
     FEATURE_ONLINE_STORE_ID = "rag_test_feature_store"
     FEATURE_VIEW_ID = "rag_test_feature_view"
@@ -91,7 +93,6 @@ def test_create_corpus_feature_store() -> None:
     delete_corpus_example.delete_corpus(corpus.name)
 
 
-@pytest.mark.skip
 def test_create_corpus_pinecone() -> None:
     PINECONE_INDEX_NAME = "pinecone_index_name"
     SECRET_NAME = "rag_test_pinecone"
@@ -122,7 +123,6 @@ def test_create_corpus_vector_search() -> None:
     delete_corpus_example.delete_corpus(corpus.name)
 
 
-@pytest.mark.skip
 def test_create_corpus_weaviate() -> None:
     WEAVIATE_HTTP_ENDPOINT = "https://weaviate.com/xxxx"
     WEAVIATE_COLLECTION_NAME = "rag_engine_weaviate_test"
