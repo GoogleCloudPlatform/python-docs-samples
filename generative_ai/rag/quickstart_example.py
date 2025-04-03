@@ -16,8 +16,8 @@ import os
 
 from typing import List, Tuple
 
-from vertexai.generative_models import GenerationResponse
 from vertexai import rag
+from vertexai.generative_models import GenerationResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -27,8 +27,8 @@ def quickstart(
     paths: List[str],
 ) -> Tuple[rag.RagCorpus, GenerationResponse]:
     # [START generativeaionvertexai_rag_quickstart]
-    from vertexai.generative_models import GenerativeModel, Tool
     from vertexai import rag
+    from vertexai.generative_models import GenerativeModel, Tool
     import vertexai
 
     # Create a RAG Corpus, Import Files, and Generate a response
