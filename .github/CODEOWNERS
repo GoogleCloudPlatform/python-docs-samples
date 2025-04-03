@@ -20,7 +20,6 @@
 /batch/**/*                            @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /cdn/**/*                              @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /compute/**/*                          @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
-/dns/**/*                              @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /gemma2/**/*                           @GoogleCloudPlatform/dee-infra @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /genai/**/*                            @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
 /generative_ai/**/*                    @GoogleCloudPlatform/generative-ai-devrel @GoogleCloudPlatform/python-samples-reviewers @GoogleCloudPlatform/cloud-samples-reviewers
