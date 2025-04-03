@@ -28,7 +28,7 @@ def create_corpus_pinecone(
 ) -> RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_pinecone]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -42,8 +42,10 @@ def create_corpus_pinecone(
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Configure embedding model (Optional)
-    embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/text-embedding-004"
+    embedding_model_config = rag.RagEmbeddingModelConfig(
+        vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
+            publisher_model="publishers/google/models/text-embedding-005"
+        )
     )
 
     # Configure Vector DB
@@ -55,8 +57,10 @@ def create_corpus_pinecone(
     corpus = rag.create_corpus(
         display_name=display_name,
         description=description,
-        embedding_model_config=embedding_model_config,
-        vector_db=vector_db,
+        backend_config=rag.RagVectorDbConfig(
+            rag_embedding_model_config=embedding_model_config,
+            vector_db=vector_db,
+        ),
     )
     print(corpus)
     # Example response:
