@@ -17,7 +17,7 @@ import os
 from google.cloud.workflows.executions_v1 import Execution
 
 
-def execute_workflow(
+def execute_workflow_with_argument(
     project_id: str,
     location: str,
     workflow_id: str
@@ -54,7 +54,6 @@ def execute_workflow(
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
 
-    # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project_id, location, workflow_id)
 
@@ -92,7 +91,6 @@ def execute_workflow(
         else:
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
-    # [END workflows_api_quickstart_execution]
 # [END workflows_api_quickstart_pass_data_in_execution_request]
             return execution
 
@@ -101,4 +99,4 @@ if __name__ == "__main__":
     PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
     assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
 
-    execute_workflow(PROJECT, "us-central1", "myFirstWorkflow")
+    execute_workflow_with_argument(PROJECT, "us-central1", "myFirstWorkflow")
