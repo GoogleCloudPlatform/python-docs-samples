@@ -32,7 +32,7 @@ def restore_prompt_version() -> Prompt:
     prompt = Prompt(
         prompt_name="zoologist",
         prompt_data="Which animal is the fastest on earth?",
-        model_name="gemini-1.5-pro-002",
+        model_name="gemini-2.0-flash-001",
         system_instruction="You are a zoologist. Answer in a short sentence.",
     )
     # Save Prompt to online resource.
