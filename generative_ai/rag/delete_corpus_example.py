@@ -20,7 +20,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def delete_corpus(corpus_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_corpus]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
