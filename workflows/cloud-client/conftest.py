@@ -58,7 +58,7 @@ def location() -> str:
 
 @pytest.fixture(scope="function")
 def workflow_id(client: workflows_v1.WorkflowsClient) -> str:
-    workflow_id_str = f"{WORKFLOW_ID_BASE}_" + str(uuid.uuid4())
+    workflow_id_str = f"{WORKFLOW_ID_BASE}_{uuid.uuid4()}"
 
     creating_workflow = False
     backoff_delay = 1  # Start wait with delay of 1 second.
