@@ -5,5 +5,6 @@
 #		https://github.com/apache/airflow/blob/main/pyproject.toml
 
 apache-airflow[amazon,apache.beam,cncf.kubernetes,google,microsoft.azure,openlineage,postgres]==2.9.2
+# apache-airflow[amazon,apache.beam,cncf.kubernetes,google,microsoft.azure,openlineage,postgres]==2.10.5
 google-cloud-dataform==0.5.9 # used in Dataform operators
 scipy==1.14.1

@@ -16,6 +16,31 @@
 import internal_unit_testing
 
 
+def convert_version_str_to_list(version: str) -> list[int]:
+    COMPOSER_SUFFIX = "+composer"
+    if version.endswith(COMPOSER_SUFFIX):
+        airflow_version_without_suffix = version[:-len(COMPOSER_SUFFIX)]
+    else:
+        airflow_version_without_suffix = version
+    AIRFLOW_VERSION_STR = airflow_version_without_suffix.split(".")
+    AIRFLOW_VERSION = [int(s) for s in AIRFLOW_VERSION_STR]
+
+    return AIRFLOW_VERSION
+
+
+def test_version_comparison():
+    # b/408307862 - Validate version check logic used in the sample.
+    AIRFLOW_VERSION = convert_version_str_to_list("2.10.5+composer")
+
+    assert AIRFLOW_VERSION == [2, 10, 5]
+    assert AIRFLOW_VERSION > [2, 9, 1]
+
+    AIRFLOW_VERSION = convert_version_str_to_list("2.9.2")
+
+    assert AIRFLOW_VERSION == [2, 9, 2]
+    assert AIRFLOW_VERSION < [2, 9, 3]
+
+
 def test_dag_import(airflow_database):
     """Test that the DAG file can be successfully imported.
 

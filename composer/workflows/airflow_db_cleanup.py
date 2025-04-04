@@ -12,9 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Note: This sample is intended to work with Airflow 1 and 2.
+
 # [START composer_metadb_cleanup]
-"""
-A maintenance workflow that you can deploy into Airflow to periodically clean
+"""A maintenance workflow that you can deploy into Airflow to periodically clean
 out the DagRun, TaskInstance, Log, XCom, Job DB and SlaMiss entries to avoid
 having too much data in your Airflow MetaStore.
 
@@ -72,29 +73,50 @@ now = timezone.utcnow
 
 # airflow-db-cleanup
 DAG_ID = os.path.basename(__file__).replace(".pyc", "").replace(".py", "")
+
 START_DATE = airflow.utils.dates.days_ago(1)
-# How often to Run. @daily - Once a day at Midnight (UTC)
+
+# How often to Run. @daily - Once a day at Midnight (UTC).
 SCHEDULE_INTERVAL = "@daily"
-# Who is listed as the owner of this DAG in the Airflow Web Server
+
+# Who is listed as the owner of this DAG in the Airflow Web Server.
 DAG_OWNER_NAME = "operations"
-# List of email address to send email alerts to if this job fails
+
+# List of email address to send email alerts to if this job fails.
 ALERT_EMAIL_ADDRESSES = []
-# Airflow version used by the environment in list form, value stored in
-# airflow_version is in format e.g "2.3.4+composer"
-AIRFLOW_VERSION = airflow_version[: -len("+composer")].split(".")
-# Length to retain the log files if not already provided in the conf. If this
-# is set to 30, the job will remove those files that arE 30 days old or older.
+
+# Airflow version used by the environment as a list of integers.
+# For example: [2, 9, 2]
+#
+# Value in `airflow_version` is in format e.g "2.9.2+composer"
+# It's converted to facilitate version comparison.
+# Update the following lines if you are using a version
+# with non-numerical characters such as "2.9.3rc1".
+COMPOSER_SUFFIX = "+composer"
+if airflow_version.endswith(COMPOSER_SUFFIX):
+    airflow_version_without_suffix = airflow_version[:-len(COMPOSER_SUFFIX)]
+else:
+    airflow_version_without_suffix = airflow_version
+AIRFLOW_VERSION_STR = airflow_version_without_suffix.split(".")
+AIRFLOW_VERSION = [int(s) for s in AIRFLOW_VERSION_STR]
+
+# Length to retain the log files if not already provided in the configuration.
+# If this is set to 30, the job will remove those files
+# that are 30 days old or older.
 DEFAULT_MAX_DB_ENTRY_AGE_IN_DAYS = int(
     Variable.get("airflow_db_cleanup__max_db_entry_age_in_days", 30)
 )
-# Prints the database entries which will be getting deleted; set to False
-# to avoid printing large lists and slowdown process
+
+# Prints the database entries which will be getting deleted;
+# set to False to avoid printing large lists and slowdown the process.
 PRINT_DELETES = False
-# Whether the job should delete the db entries or not. Included if you want to
-# temporarily avoid deleting the db entries.
+
+# Whether the job should delete the DB entries or not.
+# Included if you want to temporarily avoid deleting the DB entries.
 ENABLE_DELETE = True
-# List of all the objects that will be deleted. Comment out the DB objects you
-# want to skip.
+
+# List of all the objects that will be deleted.
+# Comment out the DB objects you want to skip.
 DATABASE_OBJECTS = [
     {
         "airflow_db_model": DagRun,
@@ -106,8 +128,9 @@ DATABASE_OBJECTS = [
     {
         "airflow_db_model": TaskInstance,
         "age_check_column": TaskInstance.start_date
-        if AIRFLOW_VERSION < ["2", "2", "0"]
-        else TaskInstance.start_date,
+            # TODO: Confirm why this was added, as it doesn't make sense.
+            if AIRFLOW_VERSION < [2, 2, 0]
+            else TaskInstance.start_date,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None,
@@ -122,8 +145,8 @@ DATABASE_OBJECTS = [
     {
         "airflow_db_model": XCom,
         "age_check_column": XCom.execution_date
-        if AIRFLOW_VERSION < ["2", "2", "5"]
-        else XCom.timestamp,
+            if AIRFLOW_VERSION < [2, 2, 5]
+            else XCom.timestamp,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None,
@@ -152,8 +175,8 @@ try:
         {
             "airflow_db_model": TaskReschedule,
             "age_check_column": TaskReschedule.execution_date
-            if AIRFLOW_VERSION < ["2", "2", "0"]
-            else TaskReschedule.start_date,
+                if AIRFLOW_VERSION < [2, 2, 0]
+                else TaskReschedule.start_date,
             "keep_last": False,
             "keep_last_filters": None,
             "keep_last_group_by": None,
@@ -181,7 +204,7 @@ except Exception as e:
     logging.error(e)
 
 # Check for RenderedTaskInstanceFields model
-if AIRFLOW_VERSION < ["2", "4", "0"]:
+if AIRFLOW_VERSION < [2, 4, 0]:
     try:
         from airflow.models import RenderedTaskInstanceFields
 
@@ -216,7 +239,7 @@ try:
 except Exception as e:
     logging.error(e)
 
-if AIRFLOW_VERSION < ["2", "6", "0"]:
+if AIRFLOW_VERSION < [2, 6, 0]:
     try:
         from airflow.jobs.base_job import BaseJob
 
