@@ -16,7 +16,7 @@ import os
 
 from flask import Flask, request
 
-from receive import receive_authorized_get_request
+from receive import receive_request_and_parse_auth_header
 
 app = Flask(__name__)
 
@@ -25,7 +25,7 @@ app = Flask(__name__)
 def main() -> str:
     """Example route for receiving authorized requests."""
     try:
-        return receive_authorized_get_request(request)
+        return receive_request_and_parse_auth_header(request)
     except Exception as e:
         return f"Error verifying ID token: {e}"
 

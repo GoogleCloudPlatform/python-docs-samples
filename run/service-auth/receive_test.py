@@ -37,8 +37,19 @@ HTTP_STATUS_BAD_GATEWAY = 502
 HTTP_STATUS_SERVICE_UNAVAILABLE = 503
 HTTP_STATUS_GATEWAY_TIMEOUT = 504
 
+STATUS_FORCELIST = [
+    HTTP_STATUS_BAD_REQUEST,
+    HTTP_STATUS_UNAUTHORIZED,
+    HTTP_STATUS_FORBIDDEN,
+    HTTP_STATUS_NOT_FOUND,
+    HTTP_STATUS_INTERNAL_SERVER_ERROR,
+    HTTP_STATUS_BAD_GATEWAY,
+    HTTP_STATUS_SERVICE_UNAVAILABLE,
+    HTTP_STATUS_GATEWAY_TIMEOUT,
+],
 
-@pytest.fixture()
+
+@pytest.fixture(scope="module")
 def service() -> tuple[str, str]:
     """Deploys a Cloud Run service and returns its URL and a valid token."""
     # Add a unique suffix to create distinct service names.
@@ -125,16 +136,7 @@ def test_authentication_on_cloud_run(service: tuple[str, str]) -> None:
 
     retry_strategy = Retry(
         total=3,
-        status_forcelist=[
-            HTTP_STATUS_BAD_REQUEST,
-            HTTP_STATUS_UNAUTHORIZED,
-            HTTP_STATUS_FORBIDDEN,
-            HTTP_STATUS_NOT_FOUND,
-            HTTP_STATUS_INTERNAL_SERVER_ERROR,
-            HTTP_STATUS_BAD_GATEWAY,
-            HTTP_STATUS_SERVICE_UNAVAILABLE,
-            HTTP_STATUS_GATEWAY_TIMEOUT,
-        ],
+        status_forcelist=STATUS_FORCELIST,
         allowed_methods=["GET", "POST"],
         backoff_factor=3,
     )
@@ -149,3 +151,31 @@ def test_authentication_on_cloud_run(service: tuple[str, str]) -> None:
     assert response.status_code == HTTP_STATUS_OK
     assert "Hello" in response_content
     assert "anonymous" not in response_content
+
+
+def test_anonymous_request_on_cloud_run(service: tuple[str, str]) -> None:
+    endpoint_url = service[0]
+
+    req = request.Request(endpoint_url)
+    try:
+        _ = request.urlopen(req)
+    except error.HTTPError as e:
+        assert e.code == HTTP_STATUS_FORBIDDEN
+
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=STATUS_FORCELIST,
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    response = client.get(endpoint_url)
+    response_content = response.content.decode("UTF-8")
+
+    assert response.status_code == HTTP_STATUS_OK
+    assert "Hello" in response_content
+    assert "anonymous" in response_content
