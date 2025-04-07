@@ -179,3 +179,31 @@ def test_anonymous_request_on_cloud_run(service: tuple[str, str]) -> None:
     assert response.status_code == HTTP_STATUS_OK
     assert "Hello" in response_content
     assert "anonymous" in response_content
+
+
+def test_invalid_token(service: tuple[str, str]) -> None:
+    endpoint_url = service[0]
+
+    req = request.Request(endpoint_url)
+    try:
+        _ = request.urlopen(req)
+    except error.HTTPError as e:
+        assert e.code == HTTP_STATUS_FORBIDDEN
+
+    retry_strategy = Retry(
+        total=3,
+        status_forcelist=STATUS_FORCELIST,
+        allowed_methods=["GET", "POST"],
+        backoff_factor=3,
+    )
+    adapter = HTTPAdapter(max_retries=retry_strategy)
+
+    client = requests.session()
+    client.mount("https://", adapter)
+
+    # Sample token from https://jwt.io for John Doe.
+    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+    response = client.get(endpoint_url, headers={"Authorization": f"Bearer {token}"})
+    response_content = response.content.decode("UTF-8")
+
+    assert "Invalid token" in response_content
