@@ -40,9 +40,9 @@ HTTP_STATUS_GATEWAY_TIMEOUT = 504
 
 @pytest.fixture()
 def service() -> tuple[str, str]:
+    """Deploys a Cloud Run service and returns its URL and a valid token."""
     # Add a unique suffix to create distinct service names.
-    suffix = uuid.uuid4()
-    service_name = f"receive-{suffix}"
+    service_name = f"receive-{uuid.uuid4()}"
 
     # Deploy the Cloud Run Service.
     subprocess.run(
