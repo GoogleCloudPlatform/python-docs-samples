@@ -17,6 +17,7 @@
 For example for Cloud Run or Cloud Functions.
 """
 
+# [START auth_service_to_service_receive]
 # [START cloudrun_service_to_service_receive]
 from flask import Request
 
@@ -52,3 +53,4 @@ def receive_authorized_get_request(request: Request) -> str:
 
     return "Hello, anonymous user.\n"
 # [END cloudrun_service_to_service_receive]
+# [END auth_service_to_service_receive]
