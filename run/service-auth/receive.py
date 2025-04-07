@@ -12,39 +12,43 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-Demonstrates how to receive authenticated service-to-service requests, eg
-for Cloud Run or Cloud Functions
+"""Demonstrates how to receive authenticated service-to-service requests.
+
+For example for Cloud Run or Cloud Functions.
 """
 
 # [START cloudrun_service_to_service_receive]
+from flask import Request
 
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
 
-def receive_authorized_get_request(request):
-    """Parse the authorization header and decode the information
-    being sent by the Bearer token.
+def receive_authorized_get_request(request: Request) -> str:
+    """Parse the authorization header
+    and decode the information being sent by the Bearer token.
 
     Args:
-        request: Flask request object
+        request: Flask request object.
 
     Returns:
-        The email from the request's Authorization header.
+        One of the following:
+        a) The email from the request's Authorization header.
+        b) A welcome message for anonymous users.
+        c) An error if the authentication method is not "Bearer".
     """
     auth_header = request.headers.get("Authorization")
     if auth_header:
-        # split the auth type and value from the header.
+        # Split the auth type and value from the header.
         auth_type, creds = auth_header.split(" ", 1)
 
         if auth_type.lower() == "bearer":
-            claims = id_token.verify_token(creds, requests.Request())
-            return f"Hello, {claims['email']}!\n"
-
+            # Find more information about `verify_token()` here:
+            # https://google-auth.readthedocs.io/en/master/reference/google.oauth2.id_token.html#google.oauth2.id_token.verify_token
+            decoded_token = id_token.verify_token(creds, requests.Request())
+            return f"Hello, {decoded_token['email']}!\n"
         else:
             return f"Unhandled header format ({auth_type}).\n"
+
     return "Hello, anonymous user.\n"
-
-
 # [END cloudrun_service_to_service_receive]

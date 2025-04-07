@@ -25,15 +25,26 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+
+HTTP_STATUS_OK = 200
+HTTP_STATUS_BAD_REQUEST = 400
+HTTP_STATUS_UNAUTHORIZED = 401
+HTTP_STATUS_FORBIDDEN = 403
+HTTP_STATUS_NOT_FOUND = 404
+HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
+HTTP_STATUS_BAD_GATEWAY = 502
+HTTP_STATUS_SERVICE_UNAVAILABLE = 503
+HTTP_STATUS_GATEWAY_TIMEOUT = 504
+
 
 @pytest.fixture()
-def services():
-    # Unique suffix to create distinct service names
-    suffix = uuid.uuid4().hex
+def service() -> tuple[str, str]:
+    # Add a unique suffix to create distinct service names.
+    suffix = uuid.uuid4()
     service_name = f"receive-{suffix}"
-    project = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-    # Deploy receive Cloud Run Service
+    # Deploy the Cloud Run Service.
     subprocess.run(
         [
             "gcloud",
@@ -41,17 +52,17 @@ def services():
             "deploy",
             service_name,
             "--project",
-            project,
+            PROJECT_ID,
             "--source",
             ".",
             "--region=us-central1",
             "--allow-unauthenticated",
             "--quiet",
         ],
+        # Rise a CalledProcessError exception for a non-zero exit code.
         check=True,
     )
 
-    # Get the URL for the service
     endpoint_url = (
         subprocess.run(
             [
@@ -61,7 +72,7 @@ def services():
                 "describe",
                 service_name,
                 "--project",
-                project,
+                PROJECT_ID,
                 "--region=us-central1",
                 "--format=value(status.url)",
             ],
@@ -84,6 +95,7 @@ def services():
 
     yield endpoint_url, token
 
+    # Clean-up after running the test.
     subprocess.run(
         [
             "gcloud",
@@ -92,7 +104,7 @@ def services():
             "delete",
             service_name,
             "--project",
-            project,
+            PROJECT_ID,
             "--async",
             "--region=us-central1",
             "--quiet",
@@ -101,19 +113,28 @@ def services():
     )
 
 
-def test_auth(services):
-    url = services[0]
-    token = services[1]
+def test_authentication_on_cloud_run(service: tuple[str, str]) -> None:
+    endpoint_url = service[0]
+    token = service[1]
 
-    req = request.Request(url)
+    req = request.Request(endpoint_url)
     try:
         _ = request.urlopen(req)
     except error.HTTPError as e:
-        assert e.code == 403
+        assert e.code == HTTP_STATUS_FORBIDDEN
 
     retry_strategy = Retry(
         total=3,
-        status_forcelist=[400, 401, 403, 404, 500, 502, 503, 504],
+        status_forcelist=[
+            HTTP_STATUS_BAD_REQUEST,
+            HTTP_STATUS_UNAUTHORIZED,
+            HTTP_STATUS_FORBIDDEN,
+            HTTP_STATUS_NOT_FOUND,
+            HTTP_STATUS_INTERNAL_SERVER_ERROR,
+            HTTP_STATUS_BAD_GATEWAY,
+            HTTP_STATUS_SERVICE_UNAVAILABLE,
+            HTTP_STATUS_GATEWAY_TIMEOUT,
+        ],
         allowed_methods=["GET", "POST"],
         backoff_factor=3,
     )
@@ -122,8 +143,9 @@ def test_auth(services):
     client = requests.session()
     client.mount("https://", adapter)
 
-    response = client.get(url, headers={"Authorization": f"Bearer {token}"})
+    response = client.get(endpoint_url, headers={"Authorization": f"Bearer {token}"})
+    response_content = response.content.decode("UTF-8")
 
-    assert response.status_code == 200
-    assert "Hello" in response.content.decode("UTF-8")
-    assert "anonymous" not in response.content.decode("UTF-8")
+    assert response.status_code == HTTP_STATUS_OK
+    assert "Hello" in response_content
+    assert "anonymous" not in response_content
