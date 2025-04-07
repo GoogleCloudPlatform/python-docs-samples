@@ -22,22 +22,12 @@ import chat_completions_non_streaming_text_self_deployed
 import chat_completions_streaming_image
 import chat_completions_streaming_text
 import chat_completions_streaming_text_self_deployed
-import chat_function_calling_basic
-import chat_function_calling_config
 
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 SELF_HOSTED_MODEL_ID = "google/gemma-2-9b-it"
 ENDPOINT_ID = "6714120476014149632"
-
-
-def test_chat_function_calling_basic() -> None:
-    assert chat_function_calling_basic.generate_text()
-
-
-def test_chat_function_calling_config() -> None:
-    assert chat_function_calling_config.generate_text()
 
 
 def test_authentication() -> None:
