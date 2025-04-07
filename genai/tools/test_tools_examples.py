@@ -23,6 +23,7 @@ import tools_code_exec_with_txt_local_img
 import tools_func_def_with_txt
 import tools_func_desc_with_txt
 import tools_google_search_with_txt
+import tools_vais_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -52,4 +53,11 @@ def test_tools_func_desc_with_txt() -> None:
 
 def test_tools_google_search_with_txt() -> None:
     response = tools_google_search_with_txt.generate_content()
+    assert response
+
+
+def test_tools_vais_with_txt() -> None:
+    PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+    datastore = f"projects/{PROJECT_ID}/locations/global/collections/default_collection/dataStores/grounding-test-datastore"
+    response = tools_vais_with_txt.generate_content(datastore)
     assert response

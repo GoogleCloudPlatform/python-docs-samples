@@ -24,8 +24,8 @@ def generate_content_with_rag(
 ) -> GenerationResponse:
     # [START generativeaionvertexai_rag_generate_content]
 
-    from vertexai.preview import rag
-    from vertexai.preview.generative_models import GenerativeModel, Tool
+    from vertexai import rag
+    from vertexai.generative_models import GenerativeModel, Tool
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -45,8 +45,10 @@ def generate_content_with_rag(
                         # rag_file_ids=["rag-file-1", "rag-file-2", ...],
                     )
                 ],
-                similarity_top_k=3,  # Optional
-                vector_distance_threshold=0.5,  # Optional
+                rag_retrieval_config=rag.RagRetrievalConfig(
+                    top_k=10,
+                    filter=rag.utils.resources.Filter(vector_distance_threshold=0.5),
+                ),
             ),
         )
     )

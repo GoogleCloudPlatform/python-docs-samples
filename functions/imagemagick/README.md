@@ -35,7 +35,7 @@ Functions for your project.
 
 1. Deploy the `blur_offensive_images` function with a Storage trigger:
 
-        gcloud functions deploy blur_offensive_images --trigger-bucket=YOUR_INPUT_BUCKET_NAME --set-env-vars BLURRED_BUCKET_NAME=YOUR_OUTPUT_BUCKET_NAME --runtime python37
+        gcloud functions deploy blur_offensive_images --trigger-bucket=YOUR_INPUT_BUCKET_NAME --set-env-vars BLURRED_BUCKET_NAME=YOUR_OUTPUT_BUCKET_NAME --runtime python312
 
     * Replace `YOUR_INPUT_BUCKET_NAME` and `YOUR_OUTPUT_BUCKET_NAME` with the names of the respective Cloud Storage Buckets you created earlier.
 

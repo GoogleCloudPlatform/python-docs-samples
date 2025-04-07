@@ -16,8 +16,8 @@ import os
 
 from typing import List, Tuple
 
+from vertexai import rag
 from vertexai.generative_models import GenerationResponse
-from vertexai.preview.rag.utils.resources import RagCorpus
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -25,10 +25,10 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def quickstart(
     display_name: str,
     paths: List[str],
-) -> Tuple[RagCorpus, GenerationResponse]:
+) -> Tuple[rag.RagCorpus, GenerationResponse]:
     # [START generativeaionvertexai_rag_quickstart]
-    from vertexai.preview import rag
-    from vertexai.preview.generative_models import GenerativeModel, Tool
+    from vertexai import rag
+    from vertexai.generative_models import GenerativeModel, Tool
     import vertexai
 
     # Create a RAG Corpus, Import Files, and Generate a response
@@ -42,26 +42,39 @@ def quickstart(
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     # Create RagCorpus
-    # Configure embedding model, for example "text-embedding-004".
-    embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/text-embedding-004"
+    # Configure embedding model, for example "text-embedding-005".
+    embedding_model_config = rag.RagEmbeddingModelConfig(
+        vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
+            publisher_model="publishers/google/models/text-embedding-005"
+        )
     )
 
     rag_corpus = rag.create_corpus(
         display_name=display_name,
-        embedding_model_config=embedding_model_config,
+        backend_config=rag.RagVectorDbConfig(
+            rag_embedding_model_config=embedding_model_config
+        ),
     )
 
     # Import Files to the RagCorpus
     rag.import_files(
         rag_corpus.name,
         paths,
-        chunk_size=512,  # Optional
-        chunk_overlap=100,  # Optional
-        max_embedding_requests_per_min=900,  # Optional
+        # Optional
+        transformation_config=rag.TransformationConfig(
+            chunking_config=rag.ChunkingConfig(
+                chunk_size=512,
+                chunk_overlap=100,
+            ),
+        ),
+        max_embedding_requests_per_min=1000,  # Optional
     )
 
     # Direct context retrieval
+    rag_retrieval_config = rag.RagRetrievalConfig(
+        top_k=3,  # Optional
+        filter=rag.Filter(vector_distance_threshold=0.5),  # Optional
+    )
     response = rag.retrieval_query(
         rag_resources=[
             rag.RagResource(
@@ -71,8 +84,7 @@ def quickstart(
             )
         ],
         text="What is RAG and why it is helpful?",
-        similarity_top_k=10,  # Optional
-        vector_distance_threshold=0.5,  # Optional
+        rag_retrieval_config=rag_retrieval_config,
     )
     print(response)
 
@@ -88,12 +100,12 @@ def quickstart(
                         # rag_file_ids=["rag-file-1", "rag-file-2", ...],
                     )
                 ],
-                similarity_top_k=3,  # Optional
-                vector_distance_threshold=0.5,  # Optional
+                rag_retrieval_config=rag_retrieval_config,
             ),
         )
     )
-    # Create a gemini-pro model instance
+
+    # Create a Gemini model instance
     rag_model = GenerativeModel(
         model_name="gemini-2.0-flash-001", tools=[rag_retrieval_tool]
     )

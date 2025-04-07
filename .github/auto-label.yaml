@@ -43,7 +43,6 @@ path:
         dialogflow: "dialogflow"
         discoveryengine: "discoveryengine"
         dlp: "dlp"
-        dns: "dns"
         documentai: "documentai"
         endpoints: "endpoints"
         error_reporting: "clouderrorreporting"
