@@ -15,45 +15,71 @@
 # This test deploys a secure application running on Cloud Run
 # to test that the authentication sample works properly.
 
+from http import HTTPStatus
 import os
 import subprocess
+import time
 from urllib import error, request
 import uuid
 
+from google.auth import crypt
+from google.auth import jwt
+
 import pytest
+
 import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+from requests.sessions import Session
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
-HTTP_STATUS_OK = 200
-HTTP_STATUS_BAD_REQUEST = 400
-HTTP_STATUS_UNAUTHORIZED = 401
-HTTP_STATUS_FORBIDDEN = 403
-HTTP_STATUS_NOT_FOUND = 404
-HTTP_STATUS_INTERNAL_SERVER_ERROR = 500
-HTTP_STATUS_BAD_GATEWAY = 502
-HTTP_STATUS_SERVICE_UNAVAILABLE = 503
-HTTP_STATUS_GATEWAY_TIMEOUT = 504
-
 STATUS_FORCELIST = [
-    HTTP_STATUS_BAD_REQUEST,
-    HTTP_STATUS_UNAUTHORIZED,
-    HTTP_STATUS_FORBIDDEN,
-    HTTP_STATUS_NOT_FOUND,
-    HTTP_STATUS_INTERNAL_SERVER_ERROR,
-    HTTP_STATUS_BAD_GATEWAY,
-    HTTP_STATUS_SERVICE_UNAVAILABLE,
-    HTTP_STATUS_GATEWAY_TIMEOUT,
+    HTTPStatus.BAD_REQUEST,
+    HTTPStatus.UNAUTHORIZED,
+    HTTPStatus.FORBIDDEN,
+    HTTPStatus.NOT_FOUND,
+    HTTPStatus.INTERNAL_SERVER_ERROR,
+    HTTPStatus.BAD_GATEWAY,
+    HTTPStatus.SERVICE_UNAVAILABLE,
+    HTTPStatus.GATEWAY_TIMEOUT,
 ],
 
 
+DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
+
+with open(os.path.join(DATA_DIR, "privatekey.pem"), "rb") as fh:
+    PRIVATE_KEY_BYTES = fh.read()
+
+
 @pytest.fixture(scope="module")
-def service() -> tuple[str, str]:
-    """Deploys a Cloud Run service and returns its URL and a valid token."""
+def signer() -> crypt.RSASigner:
+    return crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
+
+
+@pytest.fixture
+def fake_token(signer: crypt.RSASigner) -> str:
+    now = int(time.time())
+    payload = {
+        "aud": "example.com",
+        "azp": "1234567890",
+        "email": "example@example.iam.gserviceaccount.com",
+        "email_verified": True,
+        "iat": now,
+        "exp": now + 3600,
+        "iss": "https://accounts.google.com",
+        "sub": "1234567890",
+    }
+    header = {"alg": "RS256", "kid": signer.key_id, "typ": "JWT"}
+    token_str = jwt.encode(signer, payload, header=header).decode("utf-8")
+
+    return token_str
+
+
+@pytest.fixture(scope="module")
+def service_name() -> str:
     # Add a unique suffix to create distinct service names.
-    service_name = f"receive-{uuid.uuid4()}"
+    service_name_str = f"receive-{uuid.uuid4().hex}"
 
     # Deploy the Cloud Run Service.
     subprocess.run(
@@ -61,7 +87,7 @@ def service() -> tuple[str, str]:
             "gcloud",
             "run",
             "deploy",
-            service_name,
+            service_name_str,
             "--project",
             PROJECT_ID,
             "--source",
@@ -74,7 +100,29 @@ def service() -> tuple[str, str]:
         check=True,
     )
 
-    endpoint_url = (
+    yield service_name_str
+
+    # Clean-up after running the test.
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name_str,
+            "--project",
+            PROJECT_ID,
+            "--async",
+            "--region=us-central1",
+            "--quiet",
+        ],
+        check=True,
+    )
+
+
+@pytest.fixture(scope="module")
+def endpoint_url(service_name: str) -> str:
+    endpoint_url_str = (
         subprocess.run(
             [
                 "gcloud",
@@ -94,7 +142,12 @@ def service() -> tuple[str, str]:
         .decode()
     )
 
-    token = (
+    return endpoint_url_str
+
+
+@pytest.fixture(scope="module")
+def token() -> str:
+    token_str = (
         subprocess.run(
             ["gcloud", "auth", "print-identity-token"],
             stdout=subprocess.PIPE,
@@ -104,35 +157,16 @@ def service() -> tuple[str, str]:
         .decode()
     )
 
-    yield endpoint_url, token
-
-    # Clean-up after running the test.
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "delete",
-            service_name,
-            "--project",
-            PROJECT_ID,
-            "--async",
-            "--region=us-central1",
-            "--quiet",
-        ],
-        check=True,
-    )
+    return token_str
 
 
-def test_authentication_on_cloud_run(service: tuple[str, str]) -> None:
-    endpoint_url = service[0]
-    token = service[1]
-
+@pytest.fixture(scope="module")
+def client(endpoint_url: str) -> Session:
     req = request.Request(endpoint_url)
     try:
         _ = request.urlopen(req)
     except error.HTTPError as e:
-        assert e.code == HTTP_STATUS_FORBIDDEN
+        assert e.code == HTTPStatus.FORBIDDEN
 
     retry_strategy = Retry(
         total=3,
@@ -145,65 +179,36 @@ def test_authentication_on_cloud_run(service: tuple[str, str]) -> None:
     client = requests.session()
     client.mount("https://", adapter)
 
-    response = client.get(endpoint_url, headers={"Authorization": f"Bearer {token}"})
-    response_content = response.content.decode("UTF-8")
+    return client
 
-    assert response.status_code == HTTP_STATUS_OK
+
+def test_authentication_on_cloud_run(
+    client: Session, endpoint_url: str, token: str
+) -> None:
+    response = client.get(
+        endpoint_url, headers={"Authorization": f"Bearer {token}"}
+    )
+    response_content = response.content.decode("utf-8")
+
+    assert response.status_code == HTTPStatus.OK
     assert "Hello" in response_content
     assert "anonymous" not in response_content
 
 
-def test_anonymous_request_on_cloud_run(service: tuple[str, str]) -> None:
-    endpoint_url = service[0]
-
-    req = request.Request(endpoint_url)
-    try:
-        _ = request.urlopen(req)
-    except error.HTTPError as e:
-        assert e.code == HTTP_STATUS_FORBIDDEN
-
-    retry_strategy = Retry(
-        total=3,
-        status_forcelist=STATUS_FORCELIST,
-        allowed_methods=["GET", "POST"],
-        backoff_factor=3,
-    )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
-
-    client = requests.session()
-    client.mount("https://", adapter)
-
+def test_anonymous_request_on_cloud_run(client: Session, endpoint_url: str) -> None:
     response = client.get(endpoint_url)
-    response_content = response.content.decode("UTF-8")
+    response_content = response.content.decode("utf-8")
 
-    assert response.status_code == HTTP_STATUS_OK
+    assert response.status_code == HTTPStatus.OK
     assert "Hello" in response_content
     assert "anonymous" in response_content
 
 
-def test_invalid_token(service: tuple[str, str]) -> None:
-    endpoint_url = service[0]
-
-    req = request.Request(endpoint_url)
-    try:
-        _ = request.urlopen(req)
-    except error.HTTPError as e:
-        assert e.code == HTTP_STATUS_FORBIDDEN
-
-    retry_strategy = Retry(
-        total=3,
-        status_forcelist=STATUS_FORCELIST,
-        allowed_methods=["GET", "POST"],
-        backoff_factor=3,
+def test_invalid_token(client: Session, endpoint_url: str, fake_token: str) -> None:
+    response = client.get(
+        endpoint_url, headers={"Authorization": f"Bearer {fake_token}"}
     )
-    adapter = HTTPAdapter(max_retries=retry_strategy)
+    response_content = response.content.decode("utf-8")
 
-    client = requests.session()
-    client.mount("https://", adapter)
-
-    # Sample token from https://jwt.io for John Doe.
-    token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-    response = client.get(endpoint_url, headers={"Authorization": f"Bearer {token}"})
-    response_content = response.content.decode("UTF-8")
-
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
     assert "Invalid token" in response_content
