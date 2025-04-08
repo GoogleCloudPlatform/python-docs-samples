@@ -24,11 +24,13 @@ def generate_content() -> str:
     model_id = "gemini-2.0-flash-001"
 
     prompt = """
-    You are a highly skilled document summarization specialist. Your task is to provide a concise executive summary of no more than 300 words. Please summarize the given document for a general audience.
+    You are a highly skilled document summarization specialist.
+    Your task is to provide a concise executive summary of no more than 300 words.
+    Please summarize the given document for a general audience.
     """
 
     pdf_file = Part.from_uri(
-        file_uri="gs://cloud-samples-data/generative-ai/pdf/2403.05530.pdf",
+        file_uri="gs://cloud-samples-data/generative-ai/pdf/1706.03762v7.pdf",
         mime_type="application/pdf",
     )
 
@@ -39,9 +41,12 @@ def generate_content() -> str:
 
     print(response.text)
     # Example response:
-    # Here's a summary of the Google DeepMind Gemini 1.5 report:
+    # Here is a summary of the document in 300 words.
     #
-    # This report introduces Gemini 1.5 Pro...
+    # The paper introduces the Transformer, a novel neural network architecture for
+    # sequence transduction tasks like machine translation. Unlike existing models that rely on recurrent or
+    # convolutional layers, the Transformer is based entirely on attention mechanisms.
+    # ...
     # [END googlegenaisdk_textgen_with_pdf]
     return response.text
 
