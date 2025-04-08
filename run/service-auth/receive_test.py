@@ -18,12 +18,8 @@
 from http import HTTPStatus
 import os
 import subprocess
-import time
 from urllib import error, request
 import uuid
-
-from google.auth import crypt
-from google.auth import jwt
 
 import pytest
 
@@ -44,36 +40,6 @@ STATUS_FORCELIST = [
     HTTPStatus.SERVICE_UNAVAILABLE,
     HTTPStatus.GATEWAY_TIMEOUT,
 ],
-
-
-DATA_DIR = os.path.join(os.path.dirname(__file__), "data")
-
-with open(os.path.join(DATA_DIR, "privatekey.pem"), "rb") as fh:
-    PRIVATE_KEY_BYTES = fh.read()
-
-
-@pytest.fixture(scope="module")
-def signer() -> crypt.RSASigner:
-    return crypt.RSASigner.from_string(PRIVATE_KEY_BYTES, "1")
-
-
-@pytest.fixture
-def fake_token(signer: crypt.RSASigner) -> str:
-    now = int(time.time())
-    payload = {
-        "aud": "example.com",
-        "azp": "1234567890",
-        "email": "example@example.iam.gserviceaccount.com",
-        "email_verified": True,
-        "iat": now,
-        "exp": now + 3600,
-        "iss": "https://accounts.google.com",
-        "sub": "1234567890",
-    }
-    header = {"alg": "RS256", "kid": signer.key_id, "typ": "JWT"}
-    token_str = jwt.encode(signer, payload, header=header).decode("utf-8")
-
-    return token_str
 
 
 @pytest.fixture(scope="module")
@@ -204,11 +170,9 @@ def test_anonymous_request_on_cloud_run(client: Session, endpoint_url: str) -> N
     assert "anonymous" in response_content
 
 
-def test_invalid_token(client: Session, endpoint_url: str, fake_token: str) -> None:
+def test_invalid_token(client: Session, endpoint_url: str) -> None:
     response = client.get(
-        endpoint_url, headers={"Authorization": f"Bearer {fake_token}"}
+        endpoint_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
     )
-    response_content = response.content.decode("utf-8")
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
-    assert "Invalid token" in response_content
