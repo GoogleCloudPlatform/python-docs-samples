@@ -69,6 +69,18 @@ import dateutil.parser
 from sqlalchemy import desc, sql, text
 from sqlalchemy.exc import ProgrammingError
 
+def parse_airflow_version(version: str) -> tuple[int]:
+    # TODO(developer): Update this function if you are using a version
+    # with non-numerical characters such as "2.9.3rc1".
+    COMPOSER_SUFFIX = "+composer"
+    if version.endswith(COMPOSER_SUFFIX):
+        airflow_version_without_suffix = version[:-len(COMPOSER_SUFFIX)]
+    else:
+        airflow_version_without_suffix = version
+    airflow_version_str = airflow_version_without_suffix.split(".")
+
+    return tuple([int(s) for s in airflow_version_str])
+
 now = timezone.utcnow
 
 # airflow-db-cleanup
@@ -85,22 +97,12 @@ DAG_OWNER_NAME = "operations"
 # List of email address to send email alerts to if this job fails.
 ALERT_EMAIL_ADDRESSES = []
 
-
-# TODO(developer): Update the following lines if you are using a version
-# with non-numerical characters such as "2.9.3rc1".
-
-# Airflow version used by the environment as a list of integers.
-# For example: [2, 9, 2]
+# Airflow version used by the environment as a tuple of integers.
+# For example: (2, 9, 2)
 #
-# Value in `airflow_version` is in format e.g "2.9.2+composer"
+# Value in `airflow_version` is in format e.g. "2.9.2+composer"
 # It's converted to facilitate version comparison.
-COMPOSER_SUFFIX = "+composer"
-if airflow_version.endswith(COMPOSER_SUFFIX):
-    airflow_version_without_suffix = airflow_version[:-len(COMPOSER_SUFFIX)]
-else:
-    airflow_version_without_suffix = airflow_version
-AIRFLOW_VERSION_STR = airflow_version_without_suffix.split(".")
-AIRFLOW_VERSION = [int(s) for s in AIRFLOW_VERSION_STR]
+AIRFLOW_VERSION = parse_airflow_version(airflow_version)
 
 # Length to retain the log files if not already provided in the configuration.
 # If this is set to 30, the job will remove those files
@@ -129,10 +131,7 @@ DATABASE_OBJECTS = [
     },
     {
         "airflow_db_model": TaskInstance,
-        "age_check_column": TaskInstance.start_date
-            # TODO: Confirm why this was added, as it doesn't make sense.
-            if AIRFLOW_VERSION < [2, 2, 0]
-            else TaskInstance.start_date,
+        "age_check_column": TaskInstance.start_date,
         "keep_last": False,
         "keep_last_filters": None,
         "keep_last_group_by": None,
@@ -147,7 +146,7 @@ DATABASE_OBJECTS = [
     {
         "airflow_db_model": XCom,
         "age_check_column": XCom.execution_date
-            if AIRFLOW_VERSION < [2, 2, 5]
+            if AIRFLOW_VERSION < (2, 2, 5)
             else XCom.timestamp,
         "keep_last": False,
         "keep_last_filters": None,
@@ -169,7 +168,7 @@ DATABASE_OBJECTS = [
     },
 ]
 
-# Check for TaskReschedule model
+# Check for TaskReschedule model.
 try:
     from airflow.models import TaskReschedule
 
@@ -177,7 +176,7 @@ try:
         {
             "airflow_db_model": TaskReschedule,
             "age_check_column": TaskReschedule.execution_date
-                if AIRFLOW_VERSION < [2, 2, 0]
+                if AIRFLOW_VERSION < (2, 2, 0)
                 else TaskReschedule.start_date,
             "keep_last": False,
             "keep_last_filters": None,
@@ -188,7 +187,7 @@ try:
 except Exception as e:
     logging.error(e)
 
-# Check for TaskFail model
+# Check for TaskFail model.
 try:
     from airflow.models import TaskFail
 
@@ -205,8 +204,8 @@ try:
 except Exception as e:
     logging.error(e)
 
-# Check for RenderedTaskInstanceFields model
-if AIRFLOW_VERSION < [2, 4, 0]:
+# Check for RenderedTaskInstanceFields model.
+if AIRFLOW_VERSION < (2, 4, 0):
     try:
         from airflow.models import RenderedTaskInstanceFields
 
@@ -223,7 +222,7 @@ if AIRFLOW_VERSION < [2, 4, 0]:
     except Exception as e:
         logging.error(e)
 
-# Check for ImportError model
+# Check for ImportError model.
 try:
     from airflow.models import ImportError
 
@@ -241,7 +240,7 @@ try:
 except Exception as e:
     logging.error(e)
 
-if AIRFLOW_VERSION < [2, 6, 0]:
+if AIRFLOW_VERSION < (2, 6, 0):
     try:
         from airflow.jobs.base_job import BaseJob
 

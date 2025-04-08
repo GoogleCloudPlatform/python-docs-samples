@@ -37,8 +37,9 @@ TEST_CONFIG_OVERRIDE = {
         "3.8",
         "3.9",
         "3.10",
-        # "3.12",
-    ],  # Composer w/ Airflow 2 only supports Python 3.8
+        "3.12",
+        "3.13",
+    ],
     # Old samples are opted out of enforcing Python type hints
     # All new samples should feature them
     "enforce_type_hints": False,
