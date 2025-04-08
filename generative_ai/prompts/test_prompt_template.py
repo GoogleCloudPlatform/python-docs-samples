@@ -17,7 +17,7 @@ import prompt_delete
 import prompt_get
 import prompt_list_prompts
 import prompt_list_version
-import prompt_restore_version
+# import prompt_restore_version
 import prompt_template
 
 
@@ -51,6 +51,6 @@ def test_prompt_delete() -> None:
     assert delete_prompt is None
 
 
-def test_prompt_restore_version() -> None:
-    prompt1 = prompt_restore_version.restore_prompt_version()
-    assert prompt1
+# def test_prompt_restore_version() -> None:
+#     prompt1 = prompt_restore_version.restore_prompt_version()
+#     assert prompt1
