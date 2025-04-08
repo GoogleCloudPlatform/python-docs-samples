@@ -19,7 +19,6 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 def generate_text() -> object:
     # [START generativeaionvertexai_gemini_chat_completions_function_calling_config]
-    import vertexai
     import openai
 
     from google.auth import default, transport
@@ -27,8 +26,6 @@ def generate_text() -> object:
     # TODO(developer): Update & uncomment below line
     # PROJECT_ID = "your-project-id"
     location = "us-central1"
-
-    vertexai.init(project=PROJECT_ID, location=location)
 
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])

@@ -18,8 +18,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
 def generate_text() -> object:
-    # [START generativeaionvertexai_gemini_chat_completions_function_calling_config]
-    import vertexai
+    # [START generativeaionvertexai_gemini_chat_completions_function_calling_basic]
     import openai
 
     from google.auth import default, transport
@@ -28,14 +27,12 @@ def generate_text() -> object:
     # PROJECT_ID = "your-project-id"
     location = "us-central1"
 
-    vertexai.init(project=PROJECT_ID, location=location)
-
     # Programmatically get an access token
     credentials, _ = default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
     auth_request = transport.requests.Request()
     credentials.refresh(auth_request)
 
-    # OpenAI Client
+    # # OpenAI Client
     client = openai.OpenAI(
         base_url=f"https://{location}-aiplatform.googleapis.com/v1beta1/projects/{PROJECT_ID}/locations/{location}/endpoints/openapi",
         api_key=credentials.token,
@@ -68,13 +65,12 @@ def generate_text() -> object:
             "content": "Don't make assumptions about what values to plug into functions. Ask for clarification if a user request is ambiguous.",
         }
     )
-    messages.append({"role": "user", "content": "What is the weather in Boston, MA?"})
+    messages.append({"role": "user", "content": "What is the weather in Boston?"})
 
     response = client.chat.completions.create(
         model="google/gemini-2.0-flash-001",
         messages=messages,
         tools=tools,
-        tool_choice="auto",
     )
 
     print("Function:", response.choices[0].message.tool_calls[0].id)
@@ -82,8 +78,8 @@ def generate_text() -> object:
     # Example response:
     # Function: get_current_weather
     # Arguments: {"location":"Boston"}
-    # [END generativeaionvertexai_gemini_chat_completions_function_calling_config]
 
+    # [END generativeaionvertexai_gemini_chat_completions_function_calling_basic]
     return response
 
 
