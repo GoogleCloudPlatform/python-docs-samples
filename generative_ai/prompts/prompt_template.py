@@ -38,7 +38,7 @@ def prompt_template_example() -> list[GenerationResponse]:
     # define prompt template
     prompt = Prompt(
         prompt_data="Do {animal} {activity}?",
-        model_name="gemini-1.5-flash-002",
+        model_name="gemini-2.0-flash-001",
         variables=variables,
         system_instruction="You are a helpful zoologist"
         # generation_config=generation_config, # Optional
