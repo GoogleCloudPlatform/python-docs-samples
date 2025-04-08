@@ -85,13 +85,15 @@ DAG_OWNER_NAME = "operations"
 # List of email address to send email alerts to if this job fails.
 ALERT_EMAIL_ADDRESSES = []
 
+
+# TODO(developer): Update the following lines if you are using a version
+# with non-numerical characters such as "2.9.3rc1".
+
 # Airflow version used by the environment as a list of integers.
 # For example: [2, 9, 2]
 #
 # Value in `airflow_version` is in format e.g "2.9.2+composer"
 # It's converted to facilitate version comparison.
-# Update the following lines if you are using a version
-# with non-numerical characters such as "2.9.3rc1".
 COMPOSER_SUFFIX = "+composer"
 if airflow_version.endswith(COMPOSER_SUFFIX):
     airflow_version_without_suffix = airflow_version[:-len(COMPOSER_SUFFIX)]
@@ -552,5 +554,4 @@ for db_object in DATABASE_OBJECTS:
 
     print_configuration.set_downstream(cleanup_op)
     cleanup_op.set_downstream(analyze_op)
-
 # [END composer_metadb_cleanup]
