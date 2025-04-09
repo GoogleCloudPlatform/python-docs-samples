@@ -18,10 +18,16 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_with_txt]
     from google import genai
-    from google.genai.types import LiveConnectConfig, HttpOptions, Modality
+    from google.genai.types import (
+        Content,
+        LiveConnectConfig,
+        HttpOptions,
+        Modality,
+        Part,
+    )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
-    model_id = "gemini-2.0-flash-exp"
+    model_id = "gemini-2.0-flash-live-preview-04-09"
 
     async with client.aio.live.connect(
         model=model_id,
@@ -29,7 +35,9 @@ async def generate_content() -> list[str]:
     ) as session:
         text_input = "Hello? Gemini, are you there?"
         print("> ", text_input, "\n")
-        await session.send(input=text_input, end_of_turn=True)
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
         response = []
 
