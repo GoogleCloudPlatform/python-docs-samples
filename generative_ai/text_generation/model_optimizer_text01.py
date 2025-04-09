@@ -13,7 +13,8 @@
 # limitations under the License.
 import os
 
-PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
+# Replace 'your-project-id' with a default value if needed
+PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-project-id")
 
 
 def generate_from_text_input() -> str:
@@ -21,8 +22,6 @@ def generate_from_text_input() -> str:
     import vertexai
     from vertexai.generative_models import GenerativeModel, GenerationConfig
 
-    # TODO(developer): Update and un-comment below line
-    # PROJECT_ID = "your-project-id"
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
     model = GenerativeModel("model-optimizer-exp-04-09", generation_config=GenerationConfig(
