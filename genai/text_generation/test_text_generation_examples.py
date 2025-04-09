@@ -18,6 +18,7 @@
 
 import os
 
+import model_optimizer_textgen_with_txt
 import textgen_async_with_txt
 import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
@@ -36,7 +37,6 @@ import textgen_with_txt_stream
 import textgen_with_video
 import textgen_with_youtube_video
 import thinking_textgen_with_txt
-
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -134,4 +134,9 @@ def test_textgen_with_local_video() -> None:
 
 def test_textgen_with_youtube_video() -> None:
     response = textgen_with_youtube_video.generate_content()
+    assert response
+
+
+def test_model_optimizer_textgen_with_txt() -> None:
+    response = model_optimizer_textgen_with_txt.generate_content()
     assert response
