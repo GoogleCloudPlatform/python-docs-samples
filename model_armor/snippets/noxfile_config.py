@@ -38,5 +38,8 @@ TEST_CONFIG_OVERRIDE = {
     "pip_version_override": None,
     # A dictionary you want to inject into your test. Don't put any
     # secrets here. These values will override predefined values.
-    "envs": {},
+    "envs": {
+        "GCLOUD_ORGANIZATION": "951890214235",
+        "GCLOUD_FOLDER": "695279264361",
+    },
 }
