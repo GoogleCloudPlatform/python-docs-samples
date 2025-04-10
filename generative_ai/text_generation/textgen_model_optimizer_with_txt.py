@@ -18,7 +18,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT", "your-project-id")
 
 
 def generate_from_text_input() -> str:
-    # [START generativeaionvertexai_model_optimizer_generate_from_text_input]
+    # [START generativeaionvertexai_textgen_model_optimizer_with_txt]
     import vertexai
     from vertexai.generative_models import GenerativeModel, GenerationConfig
 
@@ -43,7 +43,7 @@ def generate_from_text_input() -> str:
     # * The Petal Preserve
     # ...
 
-    # [END generativeaionvertexai_model_optimizer_generate_from_text_input]
+    # [END generativeaionvertexai_textgen_model_optimizer_with_txt]
     return response.text
 
 
