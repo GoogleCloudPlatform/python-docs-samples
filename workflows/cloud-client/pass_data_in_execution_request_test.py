@@ -16,11 +16,14 @@ import backoff
 
 from google.cloud.workflows.executions_v1.types import executions
 
-import main
+import pass_data_in_execution_request
 
 
 @backoff.on_exception(backoff.expo, AssertionError, max_tries=5)
-def test_workflow_execution(project_id: str, location: str, workflow_id: str) -> None:
-    result = main.execute_workflow(project_id, location, workflow_id)
-    assert result.state == executions.Execution.State.SUCCEEDED
-    assert result.result
+def test_workflow_execution_with_arguments(project_id: str, location: str, workflow_id: str) -> None:
+    execution_result = pass_data_in_execution_request.execute_workflow_with_argument(
+        project_id, location, workflow_id
+    )
+    assert execution_result.state == executions.Execution.State.SUCCEEDED
+    assert "searchTerm" in execution_result.argument
+    assert "Cloud" in execution_result.result
