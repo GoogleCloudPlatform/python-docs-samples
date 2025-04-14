@@ -40,8 +40,8 @@ import pyaudio
 STREAMING_LIMIT = 240000  # 4 minutes
 SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
-# 25KB API limit. Increasing this will throw error
-MAX_STREAMING_CHUNK = 25 * 1024 
+# 25KB API limit for streaming requests. Exceeding this limit will result in an error.
+MAX_STREAMING_CHUNK = 25 * 1024
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"
