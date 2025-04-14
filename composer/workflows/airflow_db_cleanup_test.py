@@ -31,7 +31,7 @@ def test_version_comparison():
     assert AIRFLOW_VERSION < (2, 9, 3)
 
 
-def test_dag_import(airflow_database):
+def test_dag_import():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow

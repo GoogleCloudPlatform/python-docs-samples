@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Note: This sample is intended to work with Airflow 1 and 2.
+# Note: This sample is designed for Airflow 1 and 2.
 
 # [START composer_metadb_cleanup]
 """A maintenance workflow that you can deploy into Airflow to periodically clean
