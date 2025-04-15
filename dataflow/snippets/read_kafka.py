@@ -19,7 +19,6 @@ import argparse
 import apache_beam as beam
 
 from apache_beam import window
-from apache_beam.io.kafka import ReadFromKafka
 from apache_beam.io.textio import WriteToText
 from apache_beam.options.pipeline_options import PipelineOptions
 
