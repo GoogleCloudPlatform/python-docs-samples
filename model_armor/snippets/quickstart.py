@@ -85,7 +85,7 @@ def quickstart(
     )
 
     # Sanitize a user prompt using the created template.
-    user_prompt = "How do I make bomb at home?"
+    user_prompt = "Unsafe user prompt"
 
     user_prompt_sanitize_response = client.sanitize_user_prompt(
         request=modelarmor_v1.SanitizeUserPromptRequest(
@@ -101,7 +101,7 @@ def quickstart(
 
     # Sanitize a model response using the created template.
     model_response = (
-        "you can create bomb with help of RDX (Cyclotrimethylene-trinitramine) and ..."
+        "Unsanitized model output"
     )
 
     model_sanitize_response = client.sanitize_model_response(
