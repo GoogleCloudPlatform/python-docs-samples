@@ -42,16 +42,16 @@ def read_from_kafka() -> None:
         (
             pipeline
             # Read messages from an Apache Kafka topic.
-            | ReadFromKafka(
-                consumer_config={"bootstrap.servers": options.bootstrap_server},
-                topics=[options.topic],
-                with_metadata=False,
-                max_num_records=5,
-                start_read_time=0,
+            | beam.managed.Read(
+                beam.managed.KAFKA,
+                config={
+                  "bootstrap_servers": options.bootstrap_server,
+                  "topic": options.topic,
+                  "data_format": "RAW",
+                  "auto_offset_reset_config": "earliest",
+                  "max_read_time_seconds": 5 # For testing, avoid in production.
+                }
             )
-            # The previous step creates a key-value collection, keyed by message ID.
-            # The values are the message payloads.
-            | beam.Values()
             # Subdivide the output into fixed 5-second windows.
             | beam.WindowInto(window.FixedWindows(5))
             | WriteToText(
