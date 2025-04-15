@@ -22,7 +22,7 @@ def screen_pdf_file(
     project_id: str,
     location_id: str,
     template_id: str,
-    pdf_content_base64: str,
+    pdf_content_filename: str,
 ) -> modelarmor_v1.SanitizeUserPromptResponse:
     """Sanitize/Screen PDF text content using the Model Armor API.
 
@@ -30,13 +30,14 @@ def screen_pdf_file(
         project_id (str): Google Cloud project ID.
         location_id (str): Google Cloud location.
         template_id (str): The template ID used for sanitization.
-        pdf_content_base64 (str): PDF data in base64 format.
+        pdf_content_filename (str): Path to a PDF file.
 
     Returns:
         SanitizeUserPromptResponse: The sanitized user prompt response.
     """
     # [START modelarmor_screen_pdf_file]
 
+    import base64
     from google.api_core.client_options import ClientOptions
     from google.cloud import modelarmor_v1
 
@@ -44,6 +45,11 @@ def screen_pdf_file(
     # project_id = "YOUR_PROJECT_ID"
     # location_id = "us-central1"
     # template_id = "template_id"
+    # pdf_content_filename = "path/to/file.pdf"
+
+    # Encode the PDF file into base64
+    with open(pdf_content_filename, "rb") as f:
+        pdf_content_base64 = base64.b64encode(f.read())
 
     # Create the Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
