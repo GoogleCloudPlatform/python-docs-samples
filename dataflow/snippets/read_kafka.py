@@ -49,7 +49,7 @@ def read_from_kafka() -> None:
                   "topic": options.topic,
                   "data_format": "RAW",
                   "auto_offset_reset_config": "earliest",
-                  "max_read_time_seconds": 5 # For testing, avoid in production.
+                  "max_read_time_seconds": 5  # For testing, avoid in production.
                 }
             )
             # Subdivide the output into fixed 5-second windows.
