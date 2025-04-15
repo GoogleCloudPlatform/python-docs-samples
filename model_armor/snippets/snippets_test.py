@@ -406,6 +406,7 @@ def floor_setting_folder_id(folder_id: str) -> Generator[str, None, None]:
             "Floor settings not set or not authorized to set floor settings for folder"
         )
 
+
 def test_create_template(project_id: str, location_id: str, template_id: str) -> None:
     template = create_model_armor_template(project_id, location_id, template_id)
     assert template is not None
