@@ -49,7 +49,7 @@ def read_from_kafka() -> None:
                   "data_format": "RAW",
                   "auto_offset_reset_config": "earliest",
                   # The max_read_time_seconds parameter is intended for testing.
-                  # Avoiding using this parameter in production.
+                  # Avoid using this parameter in production.
                   "max_read_time_seconds": 5
                 }
             )
