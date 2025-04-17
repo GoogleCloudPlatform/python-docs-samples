@@ -26,6 +26,7 @@ from add_secret_version import add_secret_version
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
+from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_labels import create_secret_with_labels
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
@@ -36,6 +37,7 @@ from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
 from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
+from disable_secret_with_delayed_destroy import disable_secret_with_delayed_destroy
 from edit_secret_annotations import edit_secret_annotations
 from enable_secret_version import enable_secret_version
 from enable_secret_version_with_etag import enable_secret_version_with_etag
@@ -50,6 +52,7 @@ from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
+from update_secret_with_delayed_destroy import update_secret_with_delayed_destroy
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
@@ -93,6 +96,10 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
+@pytest.fixture()
+def version_destroy_ttl() -> str:
+    return 604800  # 7 days in seconds
 
 
 @retry.Retry()
@@ -157,6 +164,7 @@ def secret(
     label_value: str,
     annotation_key: str,
     annotation_value: str,
+    version_destroy_ttl: int,
     ttl: Optional[str],
 ) -> Iterator[Tuple[str, str, str, str]]:
     print(f"creating secret {secret_id}")
@@ -173,6 +181,7 @@ def secret(
                 "ttl": ttl,
                 "labels": {label_key: label_value},
                 "annotations": {annotation_key: annotation_value},
+                "version_destroy_ttl": version_destroy_ttl,
             },
         },
     )
@@ -288,6 +297,14 @@ def test_create_secret_with_annotations(
     assert secret_id in secret.name
 
 
+def test_create_secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id, secret_id, version_destroy_ttl: int
+) -> None:
+    secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
+    assert secret.id in secret
+
+
 def test_delete_secret(
     client: secretmanager.SecretManagerServiceClient, secret: Tuple[str, str, str]
 ) -> None:
@@ -339,6 +356,15 @@ def test_destroy_secret_version_with_etag(
     project_id, secret_id, version_id, etag = secret_version
     version = destroy_secret_version_with_etag(project_id, secret_id, version_id, etag)
     assert version.destroy_time
+
+
+def test_disable_secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    secret: Tuple[str, str, str],
+) -> None:
+    project_id, secret_id = secret
+    updated_secret = disable_secret_with_delayed_destroy(project_id, secret_id);
+    assert updated_secret.version_destroy_ttl is None
 
 
 def test_enable_disable_secret_version(
@@ -532,3 +558,10 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
     project_id, secret_id, version_id, _ = secret_version
     secret = update_secret_with_alias(project_id, secret_id)
     assert secret.version_aliases["test"] == 1
+
+
+def test_update_secret_with_delayed_destroy(secret: Tuple[str, str, str], version_destroy_ttl: str) -> None:
+    project_id, secret_id, _ = secret
+    updated_version_destroy_ttl_value = 118400
+    updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
+    assert updated_secret.version_destroy_ttl == updated_version_destroy_ttl_value
