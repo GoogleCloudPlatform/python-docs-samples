@@ -23,14 +23,14 @@ import pytest
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
-WORKFLOW_ID = "myFirstWorkflow_" + str(uuid.uuid4())
+WORKFLOW_ID_BASE = "myFirstWorkflow"
 
 
-def workflow_exists(client: workflows_v1.WorkflowsClient) -> bool:
+def workflow_exists(client: workflows_v1.WorkflowsClient, workflow_id: str) -> bool:
     """Returns True if the workflow exists in this project."""
     try:
         workflow_name = client.workflow_path(
-            PROJECT_ID, LOCATION, WORKFLOW_ID
+            PROJECT_ID, LOCATION, workflow_id
         )
         client.get_workflow(request={"name": workflow_name})
         return True
@@ -56,13 +56,15 @@ def location() -> str:
     return LOCATION
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="function")
 def workflow_id(client: workflows_v1.WorkflowsClient) -> str:
+    workflow_id_str = f"{WORKFLOW_ID_BASE}_{uuid.uuid4()}"
+
     creating_workflow = False
     backoff_delay = 1  # Start wait with delay of 1 second.
 
     # Create the workflow if it doesn't exist.
-    while not workflow_exists(client):
+    while not workflow_exists(client, workflow_id_str):
         if not creating_workflow:
             # Create the workflow.
             workflow_file = open("myFirstWorkflow.workflows.yaml").read()
@@ -72,9 +74,9 @@ def workflow_id(client: workflows_v1.WorkflowsClient) -> str:
             client.create_workflow(
                 request={
                     "parent": parent,
-                    "workflow_id": WORKFLOW_ID,
+                    "workflow_id": workflow_id_str,
                     "workflow": {
-                        "name": WORKFLOW_ID,
+                        "name": workflow_id_str,
                         "source_contents": workflow_file
                     },
                 }
@@ -88,11 +90,11 @@ def workflow_id(client: workflows_v1.WorkflowsClient) -> str:
         # Double the delay to provide exponential backoff.
         backoff_delay *= 2
 
-    yield WORKFLOW_ID
+    yield workflow_id_str
 
     # Delete the workflow.
     workflow_full_name = client.workflow_path(
-        PROJECT_ID, LOCATION, WORKFLOW_ID
+        PROJECT_ID, LOCATION, workflow_id_str
     )
 
     client.delete_workflow(
