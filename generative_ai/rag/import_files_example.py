@@ -43,7 +43,7 @@ def import_files(
         transformation_config=rag.TransformationConfig(
             rag.ChunkingConfig(chunk_size=512, chunk_overlap=100)
         ),
-        import_result_sink="gs://sample-existing-folder/sample_import_result_unique.ndjson", #  # Optional, this has to be an existing storage bucket folder, and file name has to be unique (non-existent).
+        import_result_sink="gs://sample-existing-folder/sample_import_result_unique.ndjson",  # Optional, this has to be an existing storage bucket folder, and file name has to be unique (non-existent).
         max_embedding_requests_per_min=900,  # Optional
     )
     print(f"Imported {response.imported_rag_files_count} files.")
