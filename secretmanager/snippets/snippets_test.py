@@ -17,6 +17,8 @@ import time
 from typing import Iterator, Optional, Tuple, Union
 import uuid
 
+from datetime import timedelta
+from google.protobuf.duration_pb2 import Duration
 from google.api_core import exceptions, retry
 from google.cloud import secretmanager
 import pytest
@@ -164,7 +166,6 @@ def secret(
     label_value: str,
     annotation_key: str,
     annotation_value: str,
-    version_destroy_ttl: int,
     ttl: Optional[str],
 ) -> Iterator[Tuple[str, str, str, str]]:
     print(f"creating secret {secret_id}")
@@ -181,13 +182,37 @@ def secret(
                 "ttl": ttl,
                 "labels": {label_key: label_value},
                 "annotations": {annotation_key: annotation_value},
-                "version_destroy_ttl": version_destroy_ttl,
             },
         },
     )
 
     yield project_id, secret_id, secret.etag
 
+@pytest.fixture()
+def secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+    ttl: Optional[str],
+) -> Iterator[Tuple[str, str]]:
+    print(f"creating secret {secret_id}")
+
+    parent = f"projects/{project_id}"
+    time.sleep(5)
+    secret = retry_client_create_secret(
+        client,
+        request={
+            "parent": parent,
+            "secret_id": secret_id,
+            "secret": {
+                "replication": {"automatic": {}},
+                "version_destroy_ttl": Duration(seconds=version_destroy_ttl),
+            },
+        },
+    )
+
+    yield project_id, secret_id
 
 @pytest.fixture()
 def secret_version(
@@ -302,7 +327,8 @@ def test_create_secret_with_delayed_destroy(
     project_id, secret_id, version_destroy_ttl: int
 ) -> None:
     secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
-    assert secret.id in secret
+    assert secret_id in secret.name
+    assert version_destroy_ttl in secret.name
 
 
 def test_delete_secret(
@@ -360,9 +386,9 @@ def test_destroy_secret_version_with_etag(
 
 def test_disable_secret_with_delayed_destroy(
     client: secretmanager.SecretManagerServiceClient,
-    secret: Tuple[str, str, str],
+    secret_with_delayed_destroy: Tuple[str, str],
 ) -> None:
-    project_id, secret_id = secret
+    project_id, secret_id = secret_with_delayed_destroy
     updated_secret = disable_secret_with_delayed_destroy(project_id, secret_id);
     assert updated_secret.version_destroy_ttl is None
 
@@ -560,8 +586,8 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
     assert secret.version_aliases["test"] == 1
 
 
-def test_update_secret_with_delayed_destroy(secret: Tuple[str, str, str], version_destroy_ttl: str) -> None:
-    project_id, secret_id, _ = secret
+def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[str, str], version_destroy_ttl: str) -> None:
+    project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
     assert updated_secret.version_destroy_ttl == updated_version_destroy_ttl_value

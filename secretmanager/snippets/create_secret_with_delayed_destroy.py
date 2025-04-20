@@ -20,7 +20,7 @@ delayed_destroy.
 # [START secretmanager_create_secret_with_delayed_destroy]
 import argparse
 import typing
-
+from datetime import timedelta
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 

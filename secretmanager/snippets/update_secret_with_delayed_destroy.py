@@ -15,10 +15,11 @@
 
 import argparse
 
+from datetime import timedelta
 from google.cloud import secretmanager
 
 
-# [START secretmanager_update_secret_with_delayed_destroy]
+# [START secretmanager_ufpdate_secret_with_delayed_destroy]
 def update_secret_with_delayed_destroy(
     project_id: str, secret_id: str, new_version_destroy_ttl: int
 ) -> secretmanager.UpdateSecretRequest:
@@ -34,10 +35,10 @@ def update_secret_with_delayed_destroy(
     name = client.secret_path(project_id, secret_id)
 
     # Update the version_destroy_ttl.
-    secret = {"name": name, "version_destroy_ttl": new_version_destroy_ttl}
+    secret = {"name": name, "version_destroy_ttl": timedelta(seconds=new_version_destroy_ttl)}
     update_mask = {"paths": ["version_destroy_ttl"]}    
     response = client.update_secret(
-        request={"secret": secret, "update_mask": update_mask
+        request={"secret": secret, "update_mask": update_mask}
     )
 
     # Print the new secret name.
