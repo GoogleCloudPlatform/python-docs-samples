@@ -29,7 +29,7 @@ def list_model_armor_templates_with_filter(
     Args:
         project_id (str): Google Cloud project ID.
         location_id (str): Google Cloud location.
-        template_id (str): Model Armour Template ID(s) to filter from list.
+        template_id (str): Model Armor Template ID(s) to filter from list.
 
     Returns:
         List[str]: A list of template names.

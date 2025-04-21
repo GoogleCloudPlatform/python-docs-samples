@@ -144,8 +144,8 @@ def template_id(
 def sdp_templates(
     project_id: str, location_id: str
 ) -> Generator[Tuple[str, str], None, None]:
-    inspect_template_id = f"model-armour-inspect-template-{uuid.uuid4()}"
-    deidentify_template_id = f"model-armour-deidentify-template-{uuid.uuid4()}"
+    inspect_template_id = f"model-armor-inspect-template-{uuid.uuid4()}"
+    deidentify_template_id = f"model-armor-deidentify-template-{uuid.uuid4()}"
     api_endpoint = f"dlp.{location_id}.rep.googleapis.com"
     parent = f"projects/{project_id}/locations/{location_id}"
     info_types = [
@@ -533,12 +533,12 @@ def test_create_model_armor_template_with_advanced_sdp(
     that matches the expected format.
     """
 
-    sdr_inspect_template_id, sdr_deidentify_template_id = sdp_templates
+    sdp_inspect_template_id, sdr_deidentify_template_id = sdp_templates
     created_template = create_model_armor_template_with_advanced_sdp(
         project_id,
         location_id,
         template_id,
-        sdr_inspect_template_id,
+        sdp_inspect_template_id,
         sdr_deidentify_template_id,
     )
 
@@ -554,8 +554,8 @@ def test_create_model_armor_template_with_advanced_sdp(
         created_template.filter_config.sdp_settings.advanced_config
     )
     assert (
-        advanced_config.inspect_template == sdr_inspect_template_id
-    ), f"Expected inspect_template to be {sdr_inspect_template_id}, but got {advanced_config.inspect_template}"
+        advanced_config.inspect_template == sdp_inspect_template_id
+    ), f"Expected inspect_template to be {sdp_inspect_template_id}, but got {advanced_config.inspect_template}"
 
     assert (
         advanced_config.deidentify_template == sdr_deidentify_template_id
@@ -875,6 +875,12 @@ def test_sanitize_user_prompt_with_advance_sdp_template(
 
     response = sanitize_user_prompt(
         project_id, location_id, template_id, user_prompt
+    )
+
+    print(
+        response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.info_type
     )
 
     assert (
