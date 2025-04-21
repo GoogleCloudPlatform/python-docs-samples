@@ -21,6 +21,9 @@ import subprocess
 from urllib import error, request
 import uuid
 
+from google.auth.transport import requests
+from google.oauth2 import id_token
+
 import pytest
 
 import requests
@@ -45,45 +48,50 @@ STATUS_FORCELIST = [
 @pytest.fixture(scope="module")
 def service_name() -> str:
     # Add a unique suffix to create distinct service names.
-    service_name_str = f"receive-{uuid.uuid4().hex}"
+    # service_name_str = f"receive-python-{uuid.uuid4().hex}"
+    service_name_str = "receive-python"
+
+    # TODO: To reduce testing time, the Run Services are being deployed
+    # and deleted manually. Uncomment the following lines before
+    # sending a final PR.
 
     # Deploy the Cloud Run Service.
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "deploy",
-            service_name_str,
-            "--project",
-            PROJECT_ID,
-            "--source",
-            ".",
-            "--region=us-central1",
-            "--allow-unauthenticated",
-            "--quiet",
-        ],
-        # Rise a CalledProcessError exception for a non-zero exit code.
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "run",
+    #         "deploy",
+    #         service_name_str,
+    #         "--project",
+    #         PROJECT_ID,
+    #         "--source",
+    #         ".",
+    #         "--region=us-central1",
+    #         "--allow-unauthenticated",
+    #         "--quiet",
+    #     ],
+    #     # Rise a CalledProcessError exception for a non-zero exit code.
+    #     check=True,
+    # )
 
     yield service_name_str
 
     # Clean-up after running the test.
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "delete",
-            service_name_str,
-            "--project",
-            PROJECT_ID,
-            "--async",
-            "--region=us-central1",
-            "--quiet",
-        ],
-        check=True,
-    )
+    # subprocess.run(
+    #     [
+    #         "gcloud",
+    #         "run",
+    #         "services",
+    #         "delete",
+    #         service_name_str,
+    #         "--project",
+    #         PROJECT_ID,
+    #         "--async",
+    #         "--region=us-central1",
+    #         "--quiet",
+    #     ],
+    #     check=True,
+    # )
 
 
 @pytest.fixture(scope="module")
@@ -112,8 +120,11 @@ def endpoint_url(service_name: str) -> str:
 
 
 @pytest.fixture(scope="module")
-def token() -> str:
+def debug_token() -> str:
     token_str = (
+        # TODO: This approach is not recommended in production environments
+        # as in:
+        # https://cloud.google.com/docs/authentication/get-id-token#generic-dev
         subprocess.run(
             ["gcloud", "auth", "print-identity-token"],
             stdout=subprocess.PIPE,
@@ -127,12 +138,34 @@ def token() -> str:
 
 
 @pytest.fixture(scope="module")
+def token(endpoint_url: str) -> str:
+    # Cloud Run uses your service's hostname as the `audience` value.
+    # For example:
+    # audience = 'https://my-cloud-run-service.run.app/'
+    target_audience = endpoint_url
+    auth_req = requests.Request()
+
+    # More info for the `fetch_id_token`function
+    # https://googleapis.dev/python/google-auth/1.14.0/reference/google.oauth2.id_token.html
+    token = id_token.fetch_id_token(auth_req, target_audience)
+
+    return token
+
+
+@pytest.fixture(scope="module")
 def client(endpoint_url: str) -> Session:
+    # Validate that we get an 401 (UNAUTHORIZED) when opening
+    # the URL without an Authorization attempt.
     req = request.Request(endpoint_url)
     try:
         _ = request.urlopen(req)
     except error.HTTPError as e:
-        assert e.code == HTTPStatus.FORBIDDEN
+        # TODO: Check if we need to fix the following logic: 401 vs 403
+        # https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Status/401
+        # But the Networking tab in the Run Service uses the following
+        # 403 (Forbidden) - When a Token is not supplied
+        # 401 (Unauthorized) - When the token is invalid
+        assert e.code == HTTPStatus.UNAUTHORIZED
 
     retry_strategy = Retry(
         total=3,
