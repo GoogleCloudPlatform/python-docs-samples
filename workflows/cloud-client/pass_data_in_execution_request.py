@@ -37,7 +37,7 @@ def execute_workflow_with_argument(
         The execution response.
     """
 
-# [START workflows_api_quickstart_pass_data_in_execution_request]
+# [START workflows_execute_with_arguments]
     import time
 
     from google.cloud import workflows_v1
@@ -91,7 +91,7 @@ def execute_workflow_with_argument(
         else:
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
-# [END workflows_api_quickstart_pass_data_in_execution_request]
+# [END workflows_execute_with_arguments]
             return execution
 
 

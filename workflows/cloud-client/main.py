@@ -37,6 +37,7 @@ def execute_workflow(
         The execution response.
     """
 
+# [START workflows_execute_without_arguments]
 # [START workflows_api_quickstart]
     import time
 
@@ -86,6 +87,7 @@ def execute_workflow(
             print(f"Execution results: {execution.result}")
     # [END workflows_api_quickstart_execution]
 # [END workflows_api_quickstart]
+# [END workflows_execute_without_arguments]
             return execution
 
 
