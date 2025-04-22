@@ -38,7 +38,7 @@ def disable_secret_with_delayed_destroy(
 
     # Delayed destroy of the secret version.
     secret = {"name": name}
-    update_mask = {"paths": "version_destroy_ttl"}
+    update_mask = {"paths": ["version_destroy_ttl"]}
     response = client.update_secret(request={"secret": secret, "update_mask": update_mask})
 
     # Print the new secret name.

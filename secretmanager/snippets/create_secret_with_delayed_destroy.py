@@ -20,7 +20,8 @@ delayed_destroy.
 # [START secretmanager_create_secret_with_delayed_destroy]
 import argparse
 import typing
-from datetime import timedelta
+# from datetime import timedelta
+from google.protobuf.duration_pb2 import Duration 
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
@@ -49,7 +50,7 @@ def create_secret_with_delayed_destroy(
             "secret_id": secret_id,
             "secret": {
                 "replication": {"automatic": {}},
-                "version_destroy_ttl": timedelta(seconds=version_destroy_ttl),
+                "version_destroy_ttl": Duration(seconds=version_destroy_ttl),
             },
         }
     )

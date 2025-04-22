@@ -15,7 +15,8 @@
 
 import argparse
 
-from datetime import timedelta
+# from datetime import timedelta
+from google.protobuf.duration_pb2 import Duration 
 from google.cloud import secretmanager
 
 
@@ -35,7 +36,7 @@ def update_secret_with_delayed_destroy(
     name = client.secret_path(project_id, secret_id)
 
     # Update the version_destroy_ttl.
-    secret = {"name": name, "version_destroy_ttl": timedelta(seconds=new_version_destroy_ttl)}
+    secret = {"name": name, "version_destroy_ttl": Duration(seconds=new_version_destroy_ttl)}
     update_mask = {"paths": ["version_destroy_ttl"]}    
     response = client.update_secret(
         request={"secret": secret, "update_mask": update_mask}

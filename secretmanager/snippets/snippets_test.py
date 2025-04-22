@@ -328,7 +328,7 @@ def test_create_secret_with_delayed_destroy(
 ) -> None:
     secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
     assert secret_id in secret.name
-    assert version_destroy_ttl in secret.name
+    assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
 
 def test_delete_secret(
@@ -390,7 +390,7 @@ def test_disable_secret_with_delayed_destroy(
 ) -> None:
     project_id, secret_id = secret_with_delayed_destroy
     updated_secret = disable_secret_with_delayed_destroy(project_id, secret_id);
-    assert updated_secret.version_destroy_ttl is None
+    assert updated_secret.version_destroy_ttl == timedelta(0)
 
 
 def test_enable_disable_secret_version(
@@ -590,4 +590,4 @@ def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[s
     project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
-    assert updated_secret.version_destroy_ttl == updated_version_destroy_ttl_value
+    assert updated_secret.version_destroy_ttl == timedelta(seconds=version_destroy_ttl)
