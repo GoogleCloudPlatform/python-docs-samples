@@ -170,7 +170,7 @@ def secret(
     annotation_value: str,
     ttl: Optional[str],
 ) -> Iterator[Tuple[str, str, str, str]]:
-    print(f"creating secret {secret_id}")
+    print(f"creating secret with given secret id.")
 
     parent = f"projects/{project_id}"
     time.sleep(5)
@@ -596,4 +596,4 @@ def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[s
     project_id, secret_id = secret_with_delayed_destroy
     updated_version_destroy_ttl_value = 118400
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
-    assert updated_secret.version_destroy_ttl == timedelta(seconds=version_destroy_ttl)
+    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)
