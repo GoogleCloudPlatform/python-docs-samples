@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import os
 import sys
 from google.auth.transport import requests
 from google.cloud.gkeconnect import gateway_v1
@@ -19,13 +20,10 @@ from google.oauth2 import service_account
 from kubernetes import client, config
 
 # --- Configuration ---
-if not SERVICE_ACCOUNT_KEY_PATH:
-    print("Error: SERVICE_ACCOUNT_KEY_PATH environment variable not set.")
-    sys.exit(1)
-SERVICE_ACCOUNT_KEY_PATH = 'SERVICE_ACCOUNT_KEY_PATH'
-PROJECT_NUMBER = 'PROJECT_NUMBER'
-MEMBERSHIP_LOCATION = 'LOCATION'
-MEMBERSHIP_ID = 'MEMBERSHIP_ID'
+SERVICE_ACCOUNT_KEY_PATH = os.environ.get('SERVICE_ACCOUNT_KEY_PATH')
+PROJECT_NUMBER = os.environ.get('PROJECT_NUMBER')
+MEMBERSHIP_LOCATION = os.environ.get('MEMBERSHIP_LOCATION')
+MEMBERSHIP_ID = os.environ.get('MEMBERSHIP_ID')
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
 def get_gateway_url() -> str:
@@ -56,6 +54,9 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     configuration.host = gateway_url
 
     # Set the authentication header with the GCP OAuth token
+    if not SERVICE_ACCOUNT_KEY_PATH:
+        print("Error: SERVICE_ACCOUNT_KEY_PATH environment variable not set.")
+        sys.exit(1)
     try:
         credentials = service_account.Credentials.from_service_account_file(
             SERVICE_ACCOUNT_KEY_PATH, scopes=SCOPES
