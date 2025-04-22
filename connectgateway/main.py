@@ -19,7 +19,9 @@ from google.oauth2 import service_account
 from kubernetes import client, config
 
 # --- Configuration ---
-# TODO(developer): Update the following lines.
+if not SERVICE_ACCOUNT_KEY_PATH:
+    print("Error: SERVICE_ACCOUNT_KEY_PATH environment variable not set.")
+    sys.exit(1)
 SERVICE_ACCOUNT_KEY_PATH = 'SERVICE_ACCOUNT_KEY_PATH'
 PROJECT_NUMBER = 'PROJECT_NUMBER'
 MEMBERSHIP_LOCATION = 'LOCATION'
