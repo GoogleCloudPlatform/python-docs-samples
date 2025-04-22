@@ -36,6 +36,9 @@ def get_gateway_url() -> str:
         request.name = f'projects/{PROJECT_NUMBER}/locations/{MEMBERSHIP_LOCATION}/memberships/{MEMBERSHIP_ID}'
         response = gateway_client.generate_credentials(request=request)
         print(f'GKE Connect Gateway Endpoint: {response.endpoint}')
+        if not response.endpoint:
+            print("Error: GKE Connect Gateway Endpoint is empty.")
+            sys.exit(1)
         return response.endpoint
     except google.api_core.exceptions.NotFound as e:
         print(f'Membership not found: {e}')
