@@ -35,6 +35,9 @@ def get_gateway_url() -> str:
         response = gateway_client.generate_credentials(request=request)
         print(f'GKE Connect Gateway Endpoint: {response.endpoint}')
         return response.endpoint
+    except google.api_core.exceptions.NotFound as e:
+        print(f'Membership not found: {e}')
+        sys.exit(1)
     except Exception as e:
         print(f'Error fetching GKE Connect Gateway URL: {e}')
         sys.exit(1)
