@@ -48,9 +48,16 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     configuration.host = gateway_url
 
     # Set the authentication header with the GCP OAuth token
-    credentials = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_KEY_PATH, scopes=SCOPES
-    )
+    try:
+        credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_KEY_PATH, scopes=SCOPES
+        )
+    except FileNotFoundError:
+        print(f"Error: Service account key file not found at {SERVICE_ACCOUNT_KEY_PATH}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"Error loading service account credentials: {e}")
+        sys.exit(1)
     auth_req = requests.Request()
     credentials.refresh(auth_req)
     configuration.api_key = {'authorization': f'Bearer {credentials.token}'}
