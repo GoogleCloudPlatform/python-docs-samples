@@ -24,9 +24,6 @@ def execute_workflow_with_argument(
 ) -> Execution:
     """Execute a workflow and print the execution results.
 
-    A workflow consists of a series of steps described
-    using the Workflows syntax, and can be written in either YAML or JSON.
-
     Args:
         project: The ID of the Google Cloud project
             which contains the workflow to execute.
