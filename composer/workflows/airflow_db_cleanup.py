@@ -348,6 +348,9 @@ def build_query(
             .first()
         )
         logging.info("Newest dagrun: " + str(newest_dagrun))
+        # We wan't to remove all dag_runs that are:
+        # * older than max_date 
+        # * not newest
         if newest_dagrun is not None:
             query = (
                 query
