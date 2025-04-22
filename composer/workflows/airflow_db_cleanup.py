@@ -351,7 +351,6 @@ def build_query(
         if newest_dagrun is not None:
             query = (
                 query
-                .filter(DagRun.external_trigger.is_(False))
                 .filter(age_check_column <= max_date)
                 .filter(airflow_db_model.id != newest_dagrun.id)
             )
