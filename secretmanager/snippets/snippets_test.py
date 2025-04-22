@@ -170,7 +170,7 @@ def secret(
     annotation_value: str,
     ttl: Optional[str],
 ) -> Iterator[Tuple[str, str, str, str]]:
-    print(f"creating secret with given secret id.")
+    print(f"creating secret {secret_id}")
 
     parent = f"projects/{project_id}"
     time.sleep(5)
@@ -199,7 +199,7 @@ def secret_with_delayed_destroy(
     version_destroy_ttl: int,
     ttl: Optional[str],
 ) -> Iterator[Tuple[str, str]]:
-    print(f"creating secret {secret_id}")
+    print("creating secret with given secret id.")
 
     parent = f"projects/{project_id}"
     time.sleep(5)
@@ -328,9 +328,7 @@ def test_create_secret_with_annotations(
 
 def test_create_secret_with_delayed_destroy(
     client: secretmanager.SecretManagerServiceClient,
-    project_id: str,
-    secret_id: str,
-    version_destroy_ttl: int,
+    project_id: str, secret_id: str, version_destroy_ttl: int
 ) -> None:
     secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
     assert secret_id in secret.name

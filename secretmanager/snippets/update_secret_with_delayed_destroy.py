@@ -17,21 +17,17 @@ import argparse
 
 from google.cloud import secretmanager
 
+# from datetime import timedelta
+from google.protobuf.duration_pb2 import Duration
+
+
 # [START secretmanager_update_secret_with_delayed_destroy]
-
-
 def update_secret_with_delayed_destroy(
     project_id: str, secret_id: str, new_version_destroy_ttl: int
 ) -> secretmanager.UpdateSecretRequest:
     """
     Update the version destroy ttl value on an existing secret.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
-
-    # from datetime import timedelta
-    from google.protobuf.duration_pb2 import Duration
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()

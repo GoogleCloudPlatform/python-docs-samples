@@ -17,9 +17,8 @@ import argparse
 
 from google.cloud import secretmanager
 
+
 # [START secretmanager_disable_secret_with_delayed_destroy]
-
-
 def disable_secret_with_delayed_destroy(
     project_id: str, secret_id: str
 ) -> secretmanager.Secret:
@@ -36,7 +35,7 @@ def disable_secret_with_delayed_destroy(
     # Build the resource name of the secret.
     name = client.secret_path(project_id, secret_id)
 
-    # Disable delayed destroy of the secret.
+    # Delayed destroy of the secret version.
     secret = {"name": name}
     update_mask = {"paths": ["version_destroy_ttl"]}
     response = client.update_secret(request={"secret": secret, "update_mask": update_mask})

@@ -17,11 +17,14 @@ command line application and sample code for creating a new secret with
 delayed_destroy.
 """
 
+# [START secretmanager_create_secret_with_delayed_destroy]
 import argparse
 
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
-# [START secretmanager_create_secret_with_delayed_destroy]
+# from datetime import timedelta
+from google.protobuf.duration_pb2 import Duration
 
 
 def create_secret_with_delayed_destroy(
@@ -34,12 +37,6 @@ def create_secret_with_delayed_destroy(
     secret is a logical wrapper around a collection of secret versions.
     Secret versions hold the actual secret material.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
-
-    # Import the Duration protobuf library.
-    from google.protobuf.duration_pb2 import Duration
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
