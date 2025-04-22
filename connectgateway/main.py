@@ -69,7 +69,7 @@ def list_namespaces(api_client: client.CoreV1Api):
         else:
             print("No namespaces found in the cluster.")
     except client.ApiException as e:
-        print(f"Error listing namespaces: {e}")
+        print(f"Error listing namespaces: {e}\nStatus: {e.status}\nReason: {e.reason}")
 
 def main():
     """Main function to connect to the cluster and list pods."""
