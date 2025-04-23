@@ -13,17 +13,16 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 """
-command line application and sample code for creating a new secret with
+Command line application and sample code for creating a new secret with
 delayed_destroy.
 """
 
-# [START secretmanager_create_secret_with_delayed_destroy]
 import argparse
+
+# [START secretmanager_create_secret_with_delayed_destroy]
 
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
-
-# from datetime import timedelta
 from google.protobuf.duration_pb2 import Duration
 
 
@@ -61,8 +60,8 @@ def create_secret_with_delayed_destroy(
 
     return response
 
-
 # [END secretmanager_create_secret_with_delayed_destroy]
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

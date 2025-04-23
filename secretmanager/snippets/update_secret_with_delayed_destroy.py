@@ -15,13 +15,13 @@
 
 import argparse
 
-from google.cloud import secretmanager
+# [START secretmanager_update_secret_with_delayed_destroy]
 
-# from datetime import timedelta
+# Import the Secret Manager client library.
+from google.cloud import secretmanager
 from google.protobuf.duration_pb2 import Duration
 
 
-# [START secretmanager_update_secret_with_delayed_destroy]
 def update_secret_with_delayed_destroy(
     project_id: str, secret_id: str, new_version_destroy_ttl: int
 ) -> secretmanager.UpdateSecretRequest:
@@ -47,7 +47,7 @@ def update_secret_with_delayed_destroy(
 
     return response
 
-    # [END secretmanager_update_secret_with_delayed_destroy]
+# [END secretmanager_update_secret_with_delayed_destroy]
 
 
 if __name__ == "__main__":

@@ -15,19 +15,18 @@
 
 import argparse
 
+# [START secretmanager_disable_secret_with_delayed_destroy]
+
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
 
-# [START secretmanager_disable_secret_with_delayed_destroy]
 def disable_secret_with_delayed_destroy(
     project_id: str, secret_id: str
 ) -> secretmanager.Secret:
     """
     Disable the version destroy ttl on the given secret version.
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -42,9 +41,10 @@ def disable_secret_with_delayed_destroy(
 
     # Print the new secret name.
     print(f"Disabled delayed destroy on secret: {response.name}")
-    # [END secretmanager_disable_secret_with_delayed_destroy]
 
     return response
+
+# [END secretmanager_disable_secret_with_delayed_destroy]
 
 
 if __name__ == "__main__":
