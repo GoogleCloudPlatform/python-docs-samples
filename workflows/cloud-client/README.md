@@ -2,8 +2,8 @@
 
 # Cloud Workflows Quickstart – Python
 
-This sample shows how to execute a Cloud Workflow and wait for the
-workflow execution results using the Python client libraries.
+This sample shows how to execute Cloud Workflows and wait for the result
+of a workflow execution using the Python client libraries.
 
 ## Setup
 
@@ -17,8 +17,8 @@ workflow execution results using the Python client libraries.
 
 Install [`pip`][pip] and [`virtualenv`][virtualenv] if you do not already have them.
 
-You may want to refer to the [`Python Development Environment Setup Guide`][setup]
-for Google Cloud Platform for instructions.
+For more information, refer to the
+[Python Development Environment Setup Guide][setup] for Google Cloud Platform.
 
 1. Create a virtualenv. Samples are compatible with Python 3.9+.
 
