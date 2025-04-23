@@ -790,7 +790,7 @@ def test_sanitize_user_prompt_with_basic_sdp_template(
     """
     template_id, _ = basic_sdp_template
 
-    user_prompt = "Give me email associated with following ITIN: 988-86-1234 "
+    user_prompt = "Give me email associated with following ITIN: 988-86-1234"
     response = sanitize_user_prompt(
         project_id, location_id, template_id, user_prompt
     )
@@ -818,15 +818,11 @@ def test_sanitize_user_prompt_with_advance_sdp_template(
     template_id, _ = advance_sdp_template
 
     user_prompt = "How can I make my email address test@dot.com make available to public for feedback"
+    redacted_prompt = "How can I make my email address [REDACTED] make available to public for feedback"
+    expected_info_type = "EMAIL_ADDRESS"
 
     response = sanitize_user_prompt(
         project_id, location_id, template_id, user_prompt
-    )
-
-    print(
-        response.sanitization_result.filter_results.get(
-            "sdp"
-        ).sdp_filter_result.deidentify_result.info_type
     )
 
     assert (
@@ -839,10 +835,15 @@ def test_sanitize_user_prompt_with_advance_sdp_template(
         ).sdp_filter_result.deidentify_result.match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
     )
-
     assert (
-        "test@dot.com"
-        not in response.sanitization_result.filter_results.get(
+        expected_info_type
+        in response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.info_types
+    )
+    assert (
+        redacted_prompt
+        == response.sanitization_result.filter_results.get(
             "sdp"
         ).sdp_filter_result.deidentify_result.data.text
     )
@@ -855,7 +856,7 @@ def test_sanitize_user_prompt_with_empty_template(
 ) -> None:
     template_id, _ = empty_template
 
-    user_prompt = "Can you describe this link? https://testsafebrowsing.appspot.com/s/malware.html,"
+    user_prompt = "Can you describe this link? https://testsafebrowsing.appspot.com/s/malware.html"
     response = sanitize_user_prompt(
         project_id, location_id, template_id, user_prompt
     )
@@ -935,7 +936,7 @@ def test_sanitize_model_response_with_malicious_url_template(
 ) -> None:
     template_id, _ = all_filter_template
 
-    model_response = "You can use this to make a cake: https://testsafebrowsing.appspot.com/s/malware.html,"
+    model_response = "You can use this to make a cake: https://testsafebrowsing.appspot.com/s/malware.html"
     sanitized_response = sanitize_model_response(
         project_id, location_id, template_id, model_response
     )
@@ -987,6 +988,11 @@ def test_sanitize_model_response_with_advance_sdp_template(
     template_id, _ = advance_sdp_template
     model_response = "For following email 1l6Y2@example.com found following associated phone number: 954-321-7890 and this ITIN: 988-86-1234"
     expected_value = "For following email [REDACTED] found following associated phone number: [REDACTED] and this ITIN: [REDACTED]"
+    expected_info_types = [
+        "EMAIL_ADDRESS",
+        "PHONE_NUMBER",
+        "US_INDIVIDUAL_TAXPAYER_IDENTIFICATION_NUMBER",
+    ]
 
     sanitized_response = sanitize_model_response(
         project_id, location_id, template_id, model_response
@@ -1001,6 +1007,14 @@ def test_sanitize_model_response_with_advance_sdp_template(
             "sdp"
         ).sdp_filter_result.deidentify_result.match_state
         == modelarmor_v1.FilterMatchState.MATCH_FOUND
+    )
+
+    assert all(
+        expected_info_type
+        in sanitized_response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.info_types
+        for expected_info_type in expected_info_types
     )
 
     sanitized_text = sanitized_response.sanitization_result.filter_results.get(
@@ -1081,6 +1095,11 @@ def test_sanitize_model_response_with_user_prompt_with_advance_sdp_template(
 
     user_prompt = "How can I make my email address test@dot.com make available to public for feedback"
     model_response = "You can make support email such as contact@email.com for getting feedback from your customer"
+    expected_redacted_model_response = (
+        "You can make support email such as [REDACTED] "
+        "for getting feedback from your customer"
+    )
+    expected_info_type = "EMAIL_ADDRESS"
 
     sanitized_response = sanitize_model_response_with_user_prompt(
         project_id, location_id, template_id, model_response, user_prompt
@@ -1098,8 +1117,15 @@ def test_sanitize_model_response_with_user_prompt_with_advance_sdp_template(
     )
 
     assert (
-        "contact@email.com"
-        not in sanitized_response.sanitization_result.filter_results.get(
+        expected_info_type
+        in sanitized_response.sanitization_result.filter_results.get(
+            "sdp"
+        ).sdp_filter_result.deidentify_result.info_types
+    )
+
+    assert (
+        expected_redacted_model_response
+        == sanitized_response.sanitization_result.filter_results.get(
             "sdp"
         ).sdp_filter_result.deidentify_result.data.text
     )
