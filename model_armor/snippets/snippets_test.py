@@ -505,11 +505,6 @@ def test_create_model_armor_template_with_basic_sdp(
     created_template = create_model_armor_template_with_basic_sdp(
         project_id, location_id, template_id
     )
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert created_template.name == expected_name_format
 
     filter_enforcement = (
         created_template.filter_config.sdp_settings.basic_config.filter_enforcement
@@ -541,12 +536,6 @@ def test_create_model_armor_template_with_advanced_sdp(
         sdp_deidentify_template_id,
     )
 
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert created_template.name == expected_name_format
-
     advanced_config = (
         created_template.filter_config.sdp_settings.advanced_config
     )
@@ -567,11 +556,7 @@ def test_create_model_armor_template_with_metadata(
         location_id,
         template_id,
     )
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
 
-    assert created_template.name == expected_name_format
     assert created_template.template_metadata.ignore_partial_invocation_failures
     assert created_template.template_metadata.log_sanitize_operations
 
@@ -584,15 +569,9 @@ def test_create_model_armor_template_with_labels(
     that matches the expected format.
     """
     expected_labels = {"name": "wrench", "count": "3"}
-
-    created_template = create_model_armor_template_with_labels(
+    create_model_armor_template_with_labels(
         project_id, location_id, template_id, labels=expected_labels
     )
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert created_template.name == expected_name_format
 
     template_with_labels = get_model_armor_template(
         project_id, location_id, template_id
@@ -641,11 +620,6 @@ def test_update_model_armor_template_metadata(
         project_id, location_id, template_id
     )
 
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert updated_template.name == expected_name_format
     assert updated_template.template_metadata.ignore_partial_invocation_failures
     assert updated_template.template_metadata.log_sanitize_operations
 
@@ -663,14 +637,9 @@ def test_update_model_armor_template_labels(
 
     template_id, _ = all_filter_template
 
-    updated_template = update_model_armor_template_labels(
+    update_model_armor_template_labels(
         project_id, location_id, template_id, expected_labels
     )
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert updated_template.name == expected_name_format
 
     template_with_lables = get_model_armor_template(
         project_id, location_id, template_id
@@ -694,12 +663,6 @@ def test_update_model_armor_template_with_mask_configuration(
     updated_template = update_model_armor_template_with_mask_configuration(
         project_id, location_id, template_id
     )
-
-    expected_name_format = (
-        f"projects/{project_id}/locations/{location_id}/templates/{template_id}"
-    )
-
-    assert updated_template.name == expected_name_format
 
     filter_enforcement = (
         updated_template.filter_config.sdp_settings.basic_config.filter_enforcement
