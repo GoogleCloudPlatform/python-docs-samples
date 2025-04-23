@@ -387,6 +387,7 @@ def floor_settings_project_id(project_id: str) -> Generator[str, None, None]:
         )
     except GoogleAPIError:
         print("Floor settings not set or not authorized to set floor settings")
+        pytest.fail("Failed to cleanup floor settings")
 
 
 @pytest.fixture()
@@ -415,6 +416,7 @@ def floor_setting_organization_id(
         print(
             "Floor settings not set or not authorized to set floor settings for organization"
         )
+        pytest.fail("Failed to cleanup floor settings")
 
 
 @pytest.fixture()
@@ -441,6 +443,7 @@ def floor_setting_folder_id(folder_id: str) -> Generator[str, None, None]:
         print(
             "Floor settings not set or not authorized to set floor settings for folder"
         )
+        pytest.fail("Failed to cleanup floor settings")
 
 
 def test_create_template(
