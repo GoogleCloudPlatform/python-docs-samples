@@ -338,7 +338,8 @@ def build_query(
         query = query.filter(airflow_db_model.dag_id == dag_id)
 
     if airflow_db_model == DagRun:
-        # For DagRuns we want to leave last DagRun regardless of its age
+        # For DagRuns we want to leave last *scheduled* DagRun
+        # regardless of its age
         newest_dagrun = (
             session
             .query(airflow_db_model)
@@ -348,9 +349,6 @@ def build_query(
             .first()
         )
         logging.info("Newest dagrun: " + str(newest_dagrun))
-        # We wan't to remove all dag_runs that are:
-        # * older than max_date 
-        # * not newest
         if newest_dagrun is not None:
             query = (
                 query
