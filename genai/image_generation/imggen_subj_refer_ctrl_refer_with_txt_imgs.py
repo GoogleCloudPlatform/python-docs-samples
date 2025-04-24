@@ -12,28 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google import genai
 
-from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, EditImageResponse, Image, SubjectReferenceConfig, SubjectReferenceImage
-
-
-def subject_customization(output_file: str) -> EditImageResponse:
-    # [START googlegenaisdk_imagen_subject_customization]
+def subject_customization(output_gcs_uri: str) -> str:
+    # [START googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
+    from google import genai
+    from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, Image, SubjectReferenceConfig, SubjectReferenceImage
 
     client = genai.Client()
 
-    subject_image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png")
+    # TODO(developer): Update and un-comment below line
+    # output_gcs_uri = "gs://your-bucket/your-prefix"
 
+    # Create subject and control reference images of a photograph stored in Google Cloud Storage
     subject_reference_image = SubjectReferenceImage(
         reference_id=1,
-        reference_image=subject_image,
+        reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png"),
         config=SubjectReferenceConfig(
             subject_description="a headshot of a woman", subject_type="SUBJECT_TYPE_PERSON"
         ),
     )
     control_reference_image = ControlReferenceImage(
         reference_id=2,
-        reference_image=subject_image,
+        reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png"),
         config=ControlReferenceConfig(control_type="CONTROL_TYPE_FACE_MESH"),
     )
 
@@ -47,19 +47,14 @@ def subject_customization(output_file: str) -> EditImageResponse:
             seed=1,
             safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
             person_generation="ALLOW_ADULT",
+            output_gcs_uri=output_gcs_uri,
         ),
     )
 
-    image.generated_images[0].image._pil_image.save(output_file)
-
-    print(f"Created output image using {len(image.generated_images[0].image.image_bytes)} bytes")
     # Example response:
-    # Created output image using 1234567 bytes
-
-    # [END googlegenaisdk_imagen_subject_customization]
-
-    return image
-
+    # gs://your-bucket/your-prefix
+    # [END googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
+    return image.generated_images[0].image.gcs_uri
 
 if __name__ == "__main__":
-    subject_customization(output_file="test_resources/img_customization.png",)
+    subject_customization(output_gcs_uri="gs://your-bucket/your-prefix")

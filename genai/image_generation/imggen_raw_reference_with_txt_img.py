@@ -12,18 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from google import genai
 
-from google.genai.types import EditImageConfig, EditImageResponse, Image, RawReferenceImage
-
-
-def style_transfer_customization(output_file: str) -> EditImageResponse:
-    # [START googlegenaisdk_imagen_style_transfer_customization]
+def style_transfer_customization(output_gcs_uri: str) -> str:
+    # [START googlegenaisdk_imggen_raw_reference_with_txt_img]
+    from google import genai
+    from google.genai.types import EditImageConfig, Image, RawReferenceImage
 
     client = genai.Client()
 
-    style_image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png")
-    raw_ref_image = RawReferenceImage(reference_image=style_image, reference_id=1)
+    # TODO(developer): Update and un-comment below line
+    # output_gcs_uri = "gs://your-bucket/your-prefix"
+
+    # Create a raw reference image of teacup stored in Google Cloud Storage
+    raw_ref_image = RawReferenceImage(
+        reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png"), 
+        reference_id=1
+    )
 
     image = client.models.edit_image(
         model="imagen-3.0-capability-001",
@@ -35,19 +39,15 @@ def style_transfer_customization(output_file: str) -> EditImageResponse:
             seed=1,
             safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
             person_generation="ALLOW_ADULT",
+            output_gcs_uri=output_gcs_uri,
         ),
     )
 
-    image.generated_images[0].image._pil_image.save(output_file)
-
-    print(f"Created output image using {len(image.generated_images[0].image.image_bytes)} bytes")
     # Example response:
-    # Created output image using 1234567 bytes
-
-    # [END googlegenaisdk_imagen_style_transfer_customization]
-
-    return image
+    # gs://your-bucket/your-prefix
+    # [END googlegenaisdk_imggen_raw_reference_with_txt_img]
+    return image.generated_images[0].image.gcs_uri
 
 
 if __name__ == "__main__":
-    style_transfer_customization(output_file="test_resources/img_customization.png",)
+    style_transfer_customization(output_gcs_uri="gs://your-bucket/your-prefix")
