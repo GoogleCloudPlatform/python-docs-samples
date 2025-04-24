@@ -1,4 +1,4 @@
-<img src="https://avatars2.githubusercontent.com/u/2810941?v=3&s=96" alt="Google Cloud Platform logo" title="Google Cloud Platform" align="right" height="96" width="96"/>
+<img src="https://avatars2.githubusercontent.com/u/2810941?v=3&s=96" alt="Google Cloud logo" title="Google Cloud" align="right" height="96" width="96"/>
 
 # Cloud Workflows Quickstart – Python
 
@@ -18,7 +18,7 @@ of a workflow execution using the Python client libraries.
 Install [`pip`][pip] and [`virtualenv`][virtualenv] if you do not already have them.
 
 For more information, refer to the
-[Python Development Environment Setup Guide][setup] for Google Cloud Platform.
+[Python Development Environment Setup Guide][setup] for Google Cloud.
 
 1. Create a virtualenv. Samples are compatible with Python 3.9+.
 
