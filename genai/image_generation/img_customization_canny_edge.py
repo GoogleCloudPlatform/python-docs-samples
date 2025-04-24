@@ -14,12 +14,12 @@
 
 from google import genai
 
-from google.genai.types import Image, EditImageConfig, EditImageResponse, ControlReferenceImage, ControlReferenceConfig
+from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, EditImageResponse, Image
 
 
 def canny_edge_customization(output_file: str) -> EditImageResponse:
     # [START googlegenaisdk_imagen_canny_edge_customization]
-    
+
     client = genai.Client()
 
     image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/car_canny.png")

@@ -14,12 +14,12 @@
 
 from google import genai
 
-from google.genai.types import Image, EditImageConfig, EditImageResponse, RawReferenceImage
+from google.genai.types import EditImageConfig, EditImageResponse, Image, RawReferenceImage
 
 
 def style_transfer_customization(output_file: str) -> EditImageResponse:
     # [START googlegenaisdk_imagen_style_transfer_customization]
-    
+
     client = genai.Client()
 
     style_image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png")

@@ -14,12 +14,12 @@
 
 from google import genai
 
-from google.genai.types import Image, EditImageConfig, EditImageResponse, ControlReferenceImage, ControlReferenceConfig, SubjectReferenceImage, SubjectReferenceConfig
+from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, EditImageResponse, Image, SubjectReferenceConfig, SubjectReferenceImage
 
 
 def subject_customization(output_file: str) -> EditImageResponse:
     # [START googlegenaisdk_imagen_subject_customization]
-    
+
     client = genai.Client()
 
     subject_image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png")

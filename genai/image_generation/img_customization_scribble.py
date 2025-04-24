@@ -14,12 +14,12 @@
 
 from google import genai
 
-from google.genai.types import Image, EditImageConfig, EditImageResponse, ControlReferenceImage, ControlReferenceConfig
+from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, EditImageResponse, Image
 
 
 def scribble_customization(output_file: str) -> EditImageResponse:
     # [START googlegenaisdk_imagen_scribble_customization]
-    
+
     client = genai.Client()
 
     image = Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/car_scribble.png")

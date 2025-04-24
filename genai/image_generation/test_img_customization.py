@@ -20,15 +20,15 @@ import os
 
 import pytest
 
-import img_customization_subject
+import img_customization_canny_edge
+
+import img_customization_scribble
 
 import img_customization_style
 
 import img_customization_style_transfer
 
-import img_customization_scribble
-
-import img_customization_canny_edge
+import img_customization_subject
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
