@@ -43,7 +43,7 @@ def canny_edge_customization(output_file: str) -> EditImageResponse:
         ),
     )
 
-    image.generated_images[0].image._pil_image.save(location=output_file)
+    image.generated_images[0].image._pil_image.save(output_file)
 
     print(f"Created output image using {len(image.generated_images[0].image.image_bytes)} bytes")
     # Example response:
