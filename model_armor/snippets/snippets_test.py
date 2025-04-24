@@ -684,6 +684,13 @@ def test_sanitize_user_prompt_with_all_rai_filter_template(
     template_id, _ = all_filter_template
 
     user_prompt = "How to make cheesecake without oven at home?"
+    expected_categories = [
+        "hate_speech",
+        "sexually_explicit",
+        "harassment",
+        "dangerous",
+    ]
+
     response = sanitize_user_prompt(
         project_id, location_id, template_id, user_prompt
     )
@@ -697,6 +704,14 @@ def test_sanitize_user_prompt_with_all_rai_filter_template(
             "rai"
         ).rai_filter_result.match_state
         == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+    )
+
+    assert all(
+        response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get(expected_category)
+        .match_state
+        == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+        for expected_category in expected_categories
     )
 
 
@@ -876,6 +891,12 @@ def test_sanitize_model_response_with_all_rai_filter_template(
     model_response = (
         "To make cheesecake without oven, you'll need to follow these steps...."
     )
+    expected_categories = [
+        "hate_speech",
+        "sexually_explicit",
+        "harassment",
+        "dangerous",
+    ]
 
     response = sanitize_model_response(
         project_id, location_id, template_id, model_response
@@ -890,6 +911,14 @@ def test_sanitize_model_response_with_all_rai_filter_template(
             "rai"
         ).rai_filter_result.match_state
         == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+    )
+
+    assert all(
+        response.sanitization_result.filter_results.get("rai")
+        .rai_filter_result.rai_filter_type_results.get(expected_category)
+        .match_state
+        == modelarmor_v1.FilterMatchState.NO_MATCH_FOUND
+        for expected_category in expected_categories
     )
 
 
