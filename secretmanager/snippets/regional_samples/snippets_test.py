@@ -218,7 +218,7 @@ def regional_secret_with_delayed_destroy(
     location_id: str,
     secret_id: str,
     version_destroy_ttl: int,
-):
+) -> Iterator[str]:
     print("creating secret with given secret id.")
 
     parent = f"projects/{project_id}/locations/{location_id}"

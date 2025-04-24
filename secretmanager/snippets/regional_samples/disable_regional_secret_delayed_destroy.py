@@ -63,11 +63,8 @@ if __name__ == "__main__":
         "location_id", help="id of the location where secret is to be created"
     )
     parser.add_argument("secret_id", help="id of the secret to act on")
-    parser.add_argument(
-        "version_destroy_ttl", help="version_destroy_ttl you want to add"
-    )
     args = parser.parse_args()
 
     disable_regional_secret_delayed_destroy(
-        args.project_id, args.location_id, args.secret_id, args.version_destroy_ttl
+        args.project_id, args.location_id, args.secret_id
     )
