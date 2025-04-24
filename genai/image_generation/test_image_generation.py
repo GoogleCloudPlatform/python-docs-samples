@@ -66,16 +66,16 @@ def test_img_customization_style(output_gcs_uri: str) -> None:
     assert response
 
 
-def test_img_customization_style_transfer() -> None:
+def test_img_customization_style_transfer(output_gcs_uri: str) -> None:
     response = imggen_raw_reference_with_txt_img.style_transfer_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
-def test_img_customization_scribble() -> None:
+def test_img_customization_scribble(output_gcs_uri: str) -> None:
     response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
-def test_img_customization_canny_edge() -> None:
+def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
     response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(output_gcs_uri=output_gcs_uri)
     assert response
