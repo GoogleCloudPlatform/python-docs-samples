@@ -56,5 +56,6 @@ def subject_customization(output_gcs_uri: str) -> str:
     # [END googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
     return image.generated_images[0].image.gcs_uri
 
+
 if __name__ == "__main__":
     subject_customization(output_gcs_uri="gs://your-bucket/your-prefix")

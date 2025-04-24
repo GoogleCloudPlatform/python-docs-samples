@@ -25,7 +25,7 @@ def style_transfer_customization(output_gcs_uri: str) -> str:
 
     # Create a raw reference image of teacup stored in Google Cloud Storage
     raw_ref_image = RawReferenceImage(
-        reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png"), 
+        reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png"),
         reference_id=1
     )
 
