@@ -17,11 +17,11 @@ def subject_customization(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
     from google import genai
     from google.genai.types import (
-        ControlReferenceConfig, 
-        ControlReferenceImage, 
-        EditImageConfig, 
-        Image, 
-        SubjectReferenceConfig, 
+        ControlReferenceConfig,
+        ControlReferenceImage,
+        EditImageConfig,
+        Image,
+        SubjectReferenceConfig,
         SubjectReferenceImage
     )
 
@@ -48,8 +48,8 @@ def subject_customization(output_gcs_uri: str) -> str:
     image = client.models.edit_image(
         model="imagen-3.0-capability-001",
         prompt="""
-        a portrait of a woman[1] in the pose of the control image[2]in a watercolor style by a professional artist, 
-        light and low-contrast stokes, bright pastel colors, a warm atmosphere, clean background, grainy paper, 
+        a portrait of a woman[1] in the pose of the control image[2]in a watercolor style by a professional artist,
+        light and low-contrast stokes, bright pastel colors, a warm atmosphere, clean background, grainy paper,
         bold visible brushstrokes, patchy details
         """,
         reference_images=[subject_reference_image, control_reference_image],
