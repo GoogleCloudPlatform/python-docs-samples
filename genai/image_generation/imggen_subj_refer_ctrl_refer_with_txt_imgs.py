@@ -16,7 +16,14 @@
 def subject_customization(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
     from google import genai
-    from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, Image, SubjectReferenceConfig, SubjectReferenceImage
+    from google.genai.types import (
+        ControlReferenceConfig, 
+        ControlReferenceImage, 
+        EditImageConfig, 
+        Image, 
+        SubjectReferenceConfig, 
+        SubjectReferenceImage
+    )
 
     client = genai.Client()
 
@@ -24,6 +31,7 @@ def subject_customization(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     # Create subject and control reference images of a photograph stored in Google Cloud Storage
+    # using https://storage.googleapis.com/cloud-samples-data/generative-ai/image/person.png
     subject_reference_image = SubjectReferenceImage(
         reference_id=1,
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png"),
@@ -39,7 +47,11 @@ def subject_customization(output_gcs_uri: str) -> str:
 
     image = client.models.edit_image(
         model="imagen-3.0-capability-001",
-        prompt="a portrait of a woman[1] in the pose of the control image[2]in a watercolor style by a professional artist, light and low-contrast stokes, bright pastel colors, a warm atmosphere, clean background, grainy paper, bold visible brushstrokes, patchy details",
+        prompt="""
+        a portrait of a woman[1] in the pose of the control image[2]in a watercolor style by a professional artist, 
+        light and low-contrast stokes, bright pastel colors, a warm atmosphere, clean background, grainy paper, 
+        bold visible brushstrokes, patchy details
+        """,
         reference_images=[subject_reference_image, control_reference_image],
         config=EditImageConfig(
             edit_mode="EDIT_MODE_DEFAULT",
@@ -53,6 +65,7 @@ def subject_customization(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
+    print(image.generated_images[0].image.gcs_uri)
     # [END googlegenaisdk_imggen_subj_refer_ctrl_refer_with_txt_imgs]
     return image.generated_images[0].image.gcs_uri
 

@@ -24,6 +24,7 @@ def style_customization(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     # Create a style reference image of a neon sign stored in Google Cloud Storage
+    # using https://storage.googleapis.com/cloud-samples-data/generative-ai/image/neon.png
     style_reference_image = StyleReferenceImage(
         reference_id=1,
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/neon.png"),
@@ -46,6 +47,7 @@ def style_customization(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
+    print(image.generated_images[0].image.gcs_uri)
     # [END googlegenaisdk_imggen_style_reference_with_txt_img]
     return image.generated_images[0].image.gcs_uri
 

@@ -24,6 +24,7 @@ def scribble_customization(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     # Create a reference image out of an existing scribble image signal
+    # using https://storage.googleapis.com/cloud-samples-data/generative-ai/image/car_scribble.png
     control_reference_image = ControlReferenceImage(
         reference_id=1,
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/car_scribble.png"),
@@ -46,6 +47,7 @@ def scribble_customization(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
+    print(image.generated_images[0].image.gcs_uri)
     # [END googlegenaisdk_imggen_scribble_ctrl_type_with_txt_img]
     return image.generated_images[0].image.gcs_uri
 

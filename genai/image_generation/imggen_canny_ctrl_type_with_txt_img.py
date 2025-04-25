@@ -24,6 +24,7 @@ def canny_edge_customization(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     # Create a reference image out of an existing canny edge image signal
+    # using https://storage.googleapis.com/cloud-samples-data/generative-ai/image/car_canny.png
     control_reference_image = ControlReferenceImage(
         reference_id=1,
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/car_canny.png"),
@@ -46,6 +47,7 @@ def canny_edge_customization(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
+    print(image.generated_images[0].image.gcs_uri)
     # [END googlegenaisdk_imggen_canny_ctrl_type_with_txt_img]
     return image.generated_images[0].image.gcs_uri
 
