@@ -463,13 +463,15 @@ def process_document_layout_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
+    enable_llm_layout_parsing: bool = false,
 ) -> documentai.Document:
     process_options = documentai.ProcessOptions(
         layout_config=documentai.ProcessOptions.LayoutConfig(
             chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
                 chunk_size=1000,
                 include_ancestor_headings=True,
-            )
+            ),
+            enable_llm_layout_parsing=enable_llm_layout_parsing
         )
     )
 
