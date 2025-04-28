@@ -17,15 +17,12 @@ import os
 from google.cloud.workflows.executions_v1 import Execution
 
 
-def execute_workflow(
+def execute_workflow_with_argument(
     project_id: str,
     location: str,
     workflow_id: str
 ) -> Execution:
     """Execute a workflow and print the execution results.
-
-    A workflow consists of a series of steps described
-    using the Workflows syntax, and can be written in either YAML or JSON.
 
     Args:
         project: The ID of the Google Cloud project
@@ -37,8 +34,7 @@ def execute_workflow(
         The execution response.
     """
 
-# [START workflows_execute_without_arguments]
-# [START workflows_api_quickstart]
+# [START workflows_execute_with_arguments]
     import time
 
     from google.cloud import workflows_v1
@@ -47,22 +43,29 @@ def execute_workflow(
     from google.cloud.workflows.executions_v1.types import executions
 
     # TODO(developer): Update and uncomment the following lines.
-    # project_id = "MY_PROJECT_ID"
-    # location = "MY_LOCATION"  # For example: us-central1
-    # workflow_id = "MY_WORKFLOW_ID"  # For example: myFirstWorkflow
+    # project_id = "YOUR_PROJECT_ID"
+    # location = "YOUR_LOCATION"  # For example: us-central1
+    # workflow_id = "YOUR_WORKFLOW_ID"  # For example: myFirstWorkflow
 
-    # [START workflows_api_quickstart_client_libraries]
     # Initialize API clients.
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
-    # [END workflows_api_quickstart_client_libraries]
 
-    # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project_id, location, workflow_id)
 
     # Execute the workflow.
-    response = execution_client.create_execution(request={"parent": parent})
+    # Find more information about the Execution object here:
+    # https://cloud.google.com/python/docs/reference/workflows/latest/google.cloud.workflows.executions_v1.types.Execution
+    execution = executions_v1.Execution(
+        name=parent,
+        argument='{"searchTerm": "Cloud"}',
+    )
+
+    response = execution_client.create_execution(
+        parent=parent,
+        execution=execution,
+    )
     print(f"Created execution: {response.name}")
 
     # Wait for execution to finish, then print results.
@@ -85,9 +88,7 @@ def execute_workflow(
         else:
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
-    # [END workflows_api_quickstart_execution]
-# [END workflows_api_quickstart]
-# [END workflows_execute_without_arguments]
+# [END workflows_execute_with_arguments]
             return execution
 
 
@@ -95,4 +96,4 @@ if __name__ == "__main__":
     PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
     assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
 
-    execute_workflow(PROJECT, "us-central1", "myFirstWorkflow")
+    execute_workflow_with_argument(PROJECT, "us-central1", "myFirstWorkflow")
