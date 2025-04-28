@@ -16,12 +16,22 @@
 def generate_content() -> str:
     # [START googlegenaisdk_model_optimizer_textgen_with_txt]
     from google import genai
-    from google.genai.types import HttpOptions
+    from google.genai.types import (
+        FeatureSelectionPreference,
+        GenerateContentConfig,
+        HttpOptions,
+        ModelSelectionConfig
+    )
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
     response = client.models.generate_content(
         model="model-optimizer-exp-04-09",
         contents="How does AI work?",
+        config=GenerateContentConfig(
+            model_selection_config=ModelSelectionConfig(
+                feature_selection_preference=FeatureSelectionPreference.BALANCED  # Options: PRIORITIZE_QUALITY, BALANCED, PRIORITIZE_COST
+            ),
+        ),
     )
     print(response.text)
     # Example response:
