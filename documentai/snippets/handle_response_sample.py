@@ -32,8 +32,8 @@ from google.cloud import documentai
 # processor_version = "rc" # Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 # file_path = "/path/to/local/pdf"
 # mime_type = "application/pdf" # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
-# enable_image_annotation = "ENABLE_IMAGE_ANNOTATION_BOOLEAN" # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
-# enable_table_annotation = "ENABLE_TABLE_ANNOTATION_BOOLEAN" # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
+# enable_image_annotation = FALSE # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
+# enable_table_annotation = FALSE # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
 
 # [END documentai_process_ocr_document]
 # [END documentai_process_form_document]
@@ -464,8 +464,8 @@ def process_document_layout_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
-    enable_image_annotation: bool = false,
-    enable_table_annotation: bool = false,
+    enable_image_annotation: bool = false, # Enable image annotation
+    enable_table_annotation: bool = false, # Enable table annotation
 ) -> documentai.Document:
     process_options = documentai.ProcessOptions(
         layout_config=documentai.ProcessOptions.LayoutConfig(
