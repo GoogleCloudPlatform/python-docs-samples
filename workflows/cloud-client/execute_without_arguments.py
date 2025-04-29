@@ -50,13 +50,10 @@ def execute_workflow_without_arguments(
     # location = "YOUR_LOCATION"  # For example: us-central1
     # workflow_id = "YOUR_WORKFLOW_ID"  # For example: myFirstWorkflow
 
-    # [START workflows_api_quickstart_client_libraries]
     # Initialize API clients.
     execution_client = executions_v1.ExecutionsClient()
     workflows_client = workflows_v1.WorkflowsClient()
-    # [END workflows_api_quickstart_client_libraries]
 
-    # [START workflows_api_quickstart_execution]
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project_id, location, workflow_id)
 
@@ -86,7 +83,6 @@ def execute_workflow_without_arguments(
         else:
             print(f"Execution finished with state: {execution.state.name}")
             print(f"Execution results: {execution.result}")
-    # [END workflows_api_quickstart_execution]
 # [END workflows_execute_without_arguments]
             return execution
 
