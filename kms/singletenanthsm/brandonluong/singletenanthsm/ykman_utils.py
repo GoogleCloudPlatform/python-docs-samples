@@ -14,32 +14,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from dataclasses import dataclass
-
-
 import base64
+from dataclasses import dataclass
 import pathlib
-import cryptography.exceptions
-import glob
 import re
-import os
-import ykman
-
-
-
+import cryptography.exceptions
 from cryptography.hazmat.primitives import _serialization
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.asymmetric import ec
-from cryptography.hazmat.primitives.asymmetric import ed25519
 from cryptography.hazmat.primitives.asymmetric import padding
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives.asymmetric import x25519
 from cryptography.hazmat.primitives.serialization import load_pem_public_key
-
-
 from ykman import piv
 from ykman.device import list_all_devices
-from yubikit.piv import hashes
 from yubikit.piv import PIN_POLICY, TOUCH_POLICY, hashes
 from yubikit.piv import SmartCardConnection
 
@@ -52,11 +36,11 @@ def generate_private_key(
     management_key=DEFAULT_MANAGEMENT_KEY,
     pin=DEFAULT_PIN,
 ):
-  """Generates a private key on the yubikey"""
+  """Generates a private key on the yubikey."""
 
   devices = list_all_devices()
   if not devices:
-    raise Exception("no yubikeys found")
+    raise ValueError("no yubikeys found")
   print(f"{len(devices)} yubikeys detected")
   for yubikey, device_info in devices:
     with yubikey.open_connection(SmartCardConnection) as connection:
@@ -74,13 +58,7 @@ def generate_private_key(
           touch_policy=TOUCH_POLICY.ALWAYS,
       )
       if not public_key:
-        raise Exception("failed to generate public key")
-      directory_path = "generated_public_keys"
-      if not os.path.exists(directory_path):
-        os.mkdir(directory_path)
-        print(f"Directory '{directory_path}' created.")
-      else:
-        print(f"Directory '{directory_path}' already exists.")
+        raise RuntimeError("failed to generate public key")
       with open(
           f"generated_public_keys/public_key_{device_info.serial}.pem", "wb"
       ) as binary_file:
@@ -97,66 +75,81 @@ def generate_private_key(
           f" slot: {piv.SLOT.RETIRED1}"
       )
 
+
 @dataclass
 class Challenge:
-    challenge: bytes
-    public_key_pem: str
+  """Represents a challenge with its associated public key."""
 
-    def to_dict(self):
-        return {
-            "challenge": base64.b64encode(self.challenge).decode('utf-8'),
-            "public_key_pem": self.public_key_pem,
-        }
+  challenge: bytes
+  public_key_pem: str
 
-    @staticmethod
-    def from_dict(data):
-        if not isinstance(data, dict):
-            return None
-        return Challenge(
-            challenge=base64.b64decode(data['challenge']),
-            public_key_pem=data['public_key_pem']
-        )
+  def to_dict(self):
+    return {
+        "challenge": base64.b64encode(self.challenge).decode("utf-8"),
+        "public_key_pem": self.public_key_pem,
+    }
 
+  @staticmethod
+  def from_dict(data):
+    if not isinstance(data, dict):
+      return None
+    return Challenge(
+        challenge=base64.b64decode(data["challenge"]),
+        public_key_pem=data["public_key_pem"],
+    )
 
 
 class ChallengeReply:
-  
-    def __init__(self, unsigned_challenge, signed_challenge, public_key_pem):
-        self.unsigned_challenge = unsigned_challenge
-        self.signed_challenge = signed_challenge
-        self.public_key_pem = public_key_pem
+
+  def __init__(self, unsigned_challenge, signed_challenge, public_key_pem):
+    self.unsigned_challenge = unsigned_challenge
+    self.signed_challenge = signed_challenge
+    self.public_key_pem = public_key_pem
+
 
 def populate_challenges_from_files() -> list[Challenge]:
-        public_key_files = [key_file for key_file in pathlib.Path.cwd().glob("challenges/public_key*.pem")]
-        print(public_key_files)
-        challenge_files = [challenge_file for challenge_file in pathlib.Path.cwd().glob("challenges/challenge*.txt")]
-        print(challenge_files)
+  """Populates challenges and their corresponding public keys from files.
 
-        challenges = []
-        
-        for public_key_file in public_key_files:
-            challenge_id = re.findall(r"\d+", str(public_key_file))
-            for challenge_file in challenge_files:
-                if challenge_id == re.findall(r"\d+",str(challenge_file)):
-                    print(public_key_file)
-                    file = open(public_key_file, "r")
-                    public_key_pem = file.read()
-                    file.close()
-                    file = open(challenge_file, "rb")
-                    challenge = file.read()
-                    file.close()
-                    challenges.append(Challenge(challenge, public_key_pem ))
-        return challenges
+  This function searches for files matching the patterns
+  "challenges/public_key*.pem"
+  and "challenges/challenge*.bin" in the current working directory. It then
+  pairs each challenge with its corresponding public key based on matching
+  numeric IDs in the filenames.
+
+  Returns:
+      list[Challenge]: A list of Challenge objects, each containing a challenge
+      and its associated public key.
+  """
+  public_key_files = list(pathlib.Path.cwd().glob("challenges/public_key*.pem"))
+  print(public_key_files)
+  challenge_files = list(pathlib.Path.cwd().glob("challenges/challenge*.bin"))
+  print(challenge_files)
+
+  challenges = []
+
+  for public_key_file in public_key_files:
+    challenge_id = re.findall(r"\d+", str(public_key_file))
+    for challenge_file in challenge_files:
+      if challenge_id == re.findall(r"\d+", str(challenge_file)):
+        print(public_key_file)
+        file = open(public_key_file, "r")
+        public_key_pem = file.read()
+        file.close()
+        file = open(challenge_file, "rb")
+        challenge = file.read()
+        file.close()
+        challenges.append(Challenge(challenge, public_key_pem))
+  return challenges
 
 
 def sign_challenges(challenges: list[Challenge]) -> list[ChallengeReply]:
   """Signs a proposal's challenges using a Yubikey."""
   if not challenges:
-    raise Exception("Challenge list empty: No challenges to sign.")
+    raise ValueError("Challenge list empty: No challenges to sign.")
   signed_challenges = []
   devices = list_all_devices()
   if not devices:
-    raise Exception("no yubikeys found")
+    raise ValueError("no yubikeys found")
   for yubikey, _ in devices:
     with yubikey.open_connection(SmartCardConnection) as connection:
       # Make PivSession and fetch public key from Signature slot.
@@ -185,64 +178,69 @@ def sign_challenges(challenges: list[Challenge]) -> list[ChallengeReply]:
 
           # sign the challenge
           print("Press Yubikey to sign challenge")
-          # print("key type: " + str(slot_metadata.key_type))
-          # print(challenge.challenge)
-          # print(type(challenge.challenge))
           signed_challenge = piv_session.sign(
-                  slot=piv.SLOT.RETIRED1,
-                  key_type=slot_metadata.key_type,
-                  message=challenge.challenge,
-                  hash_algorithm=hashes.SHA256(),
-                  padding=padding.PKCS1v15(),
-              )
+              slot=piv.SLOT.RETIRED1,
+              key_type=slot_metadata.key_type,
+              message=challenge.challenge,
+              hash_algorithm=hashes.SHA256(),
+              padding=padding.PKCS1v15(),
+          )
 
           signed_challenges.append(
-            ChallengeReply(
-              challenge.challenge,
-              signed_challenge,
-              challenge.public_key_pem
-            )
+              ChallengeReply(
+                  challenge.challenge,
+                  signed_challenge,
+                  challenge.public_key_pem,
+              )
           )
           print("Challenge signed successfully")
   if not signed_challenges:
-    raise Exception(
+    raise RuntimeError(
         "No matching public keys between Yubikey and challenges. Make sure"
         " key is generated in correct slot"
     )
   return signed_challenges
 
+
 def urlsafe_base64_to_binary(urlsafe_string: str) -> bytes:
-    """
-    Converts a URL-safe base64 encoded string to its binary equivalent.
+  """Converts a URL-safe base64 encoded string to its binary equivalent.
 
-    Args:
-        urlsafe_string: The URL-safe base64 encoded string.
+  Args:
+      urlsafe_string: The URL-safe base64 encoded string.
 
-    Returns:
-        The binary data as bytes, or None if an error occurs.
+  Returns:
+      The binary data as bytes, or None if an error occurs.
 
-    Raises:
-        TypeError: If the input is not a string.
-        ValueError: If the input string is not valid URL-safe base64.
-    """
-    try:
-      if not isinstance(urlsafe_string, str):
-        raise TypeError("Input must be a string")
-      # Add padding if necessary. Base64 requires padding to be a multiple of 4
-      missing_padding = len(urlsafe_string) % 4
-      if missing_padding:
-          urlsafe_string += '=' * (4 - missing_padding)
-      return base64.urlsafe_b64decode(urlsafe_string)
-    except base64.binascii.Error as e:
-        raise ValueError(f"Invalid URL-safe base64 string: {e}") from e
+  Raises:
+      TypeError: If the input is not a string.
+      ValueError: If the input string is not valid URL-safe base64.
+  """
+  try:
+    if not isinstance(urlsafe_string, str):
+      raise TypeError("Input must be a string")
+    # Add padding if necessary. Base64 requires padding to be a multiple of 4
+    missing_padding = len(urlsafe_string) % 4
+    if missing_padding:
+      urlsafe_string += "=" * (4 - missing_padding)
+    return base64.urlsafe_b64decode(urlsafe_string)
+  except base64.binascii.Error as e:
+    raise ValueError(f"Invalid URL-safe base64 string: {e}") from e
+
 
 def verify_challenge_signatures(challenge_replies: list[ChallengeReply]):
+  """Verifies the signatures of a list of challenge replies.
+
+  Args:
+      challenge_replies: A list of ChallengeReply objects.
+
+  Raises:
+      ValueError: If the list of challenge replies is empty.
+      cryptography.exceptions.InvalidSignature: If a signature is invalid.
+  """
   if not challenge_replies:
-    raise Exception("No signed challenges to verify")
+    raise ValueError("No signed challenges to verify")
   for challenge_reply in challenge_replies:
-    public_key = load_pem_public_key(
-        challenge_reply.public_key_pem.encode()
-    )
+    public_key = load_pem_public_key(challenge_reply.public_key_pem.encode())
     try:
 
       public_key.verify(
@@ -251,10 +249,12 @@ def verify_challenge_signatures(challenge_replies: list[ChallengeReply]):
           padding.PKCS1v15(),
           hashes.SHA256(),
       )
-      print(f"Signature verification success")
+      print("Signature verification success")
     except cryptography.exceptions.InvalidSignature as e:
-      raise cryptography.exceptions.InvalidSignature((f"Signature verification failed: {e}"))
-    
+      raise cryptography.exceptions.InvalidSignature(
+          f"Signature verification failed: {e}"
+      )
+
 
 if __name__ == "__main__":
-    generate_private_key()
+  generate_private_key()

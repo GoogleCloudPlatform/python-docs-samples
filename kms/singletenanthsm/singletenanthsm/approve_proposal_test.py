@@ -209,6 +209,12 @@ def test_get_challenges_mocked(mocker, monkeypatch):
   for file_path in challenge_files:
     assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
 
+  # assert signed challenge files created
+  signed_challenge_files = ['signed_challenges/signed_challenge1.txt', 'signed_challenges/signed_challenge2.txt', 'signed_challenges/signed_challenge3.txt']
+  for file_path in signed_challenge_files:
+    assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
+
+
 if __name__ == "__main__":
   # Parse challenges into files
   unsigned_challenges = approve_proposal.parse_challenges_into_files(
@@ -217,12 +223,6 @@ if __name__ == "__main__":
   created_signed_files = ['signed_challenges/signed_challenge1.txt', 'signed_challenges/signed_challenge2.txt', 'signed_challenges/signed_challenge3.txt']
   for file_path in created_signed_files:
     assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
-
-  # assert signed challenge files created
-  signed_challenge_files = ['signed_challenges/signed_challenge1.txt', 'signed_challenges/signed_challenge2.txt', 'signed_challenges/signed_challenge3.txt']
-  for file_path in signed_challenge_files:
-    assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
-
 
   # Parse files into challenge list
   challenges = ykman_utils.populate_challenges_from_files()

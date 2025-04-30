@@ -107,6 +107,7 @@ def fetch_challenges(sthi_proposal_resource: str):
   except subprocess.CalledProcessError as e:
     raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
 
+
 command_gcloud_approve_proposal = [
     "~/sthi/google-cloud-sdk/bin/gcloud",
     "kms",
@@ -120,8 +121,6 @@ def send_signed_challenges(
     signed_challenged_files: list[str], proposal_resource: str
 ):
   """Sends signed challenges to the server."""
-  if signed_challenged_files is None or not signed_challenged_files:
-    raise ValueError("signed_challenged_files is empty")
   print("Sending signed challenges")
   signed_challenge_str = (
       '--challenge_replies="' + str(signed_challenged_files) + '"'
@@ -138,7 +137,7 @@ def send_signed_challenges(
     process = subprocess.run(
         command_str,
         capture_output=True,
-        check=True,
+        check=False,
         text=True,
         shell=True,
     )

@@ -60,9 +60,7 @@ def parse_challenges_into_files(sthi_output: str) -> List[bytes]:
     f = open("challenges/public_key{0}.pem".format(challenge_count), "w")
     f.write(challenge["publicKeyPem"].encode("utf-8").decode("unicode_escape"))
     f.close()
-    unsigned_challenges.append(
-        ykman_utils.Challenge(binary_challenge, challenge["publicKeyPem"])
-    )
+    unsigned_challenges.append(ykman_utils.Challenge(binary_challenge, challenge["publicKeyPem"]))
 
   return unsigned_challenges
 
@@ -124,6 +122,7 @@ def approve_proposal():
 
   # Parse challenges into files
   unsigned_challenges = parse_challenges_into_files(process.stdout)
+  print(unsigned_challenges)
 
   # Sign challenges
   signed_challenges = ykman_utils.sign_challenges(unsigned_challenges)

@@ -75,12 +75,6 @@ def generate_private_key(
       )
       if not public_key:
         raise Exception("failed to generate public key")
-      directory_path = "generated_public_keys"
-      if not os.path.exists(directory_path):
-        os.mkdir(directory_path)
-        print(f"Directory '{directory_path}' created.")
-      else:
-        print(f"Directory '{directory_path}' already exists.")
       with open(
           f"generated_public_keys/public_key_{device_info.serial}.pem", "wb"
       ) as binary_file:
