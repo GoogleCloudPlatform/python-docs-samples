@@ -12,40 +12,39 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START connectgateway_get_namespace]
 import os
 import sys
 from google.auth.transport import requests
 from google.cloud.gkeconnect import gateway_v1
 from google.oauth2 import service_account
-from kubernetes import client, config
+from kubernetes import client
+from google.api_core import exceptions
 
 # --- Configuration ---
-SERVICE_ACCOUNT_KEY_PATH = os.environ.get('SERVICE_ACCOUNT_KEY_PATH')
-PROJECT_NUMBER = os.environ.get('PROJECT_NUMBER')
-MEMBERSHIP_LOCATION = os.environ.get('MEMBERSHIP_LOCATION')
-MEMBERSHIP_ID = os.environ.get('MEMBERSHIP_ID')
+
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
-def get_gateway_url() -> str:
+def get_gateway_url(membership_name: str) -> str:
     """Fetches the GKE Connect Gateway URL for the specified membership."""
     try:
         gateway_client = gateway_v1.GatewayControlClient()
         request = gateway_v1.GenerateCredentialsRequest()
-        request.name = f'projects/{PROJECT_NUMBER}/locations/{MEMBERSHIP_LOCATION}/memberships/{MEMBERSHIP_ID}'
+        request.name = membership_name
         response = gateway_client.generate_credentials(request=request)
         print(f'GKE Connect Gateway Endpoint: {response.endpoint}')
         if not response.endpoint:
             print("Error: GKE Connect Gateway Endpoint is empty.")
             sys.exit(1)
         return response.endpoint
-    except google.api_core.exceptions.NotFound as e:
+    except exceptions.NotFound as e:
         print(f'Membership not found: {e}')
         sys.exit(1)
     except Exception as e:
         print(f'Error fetching GKE Connect Gateway URL: {e}')
         sys.exit(1)
 
-def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
+def configure_kubernetes_client(gateway_url: str, service_account_key_path: str) -> client.CoreV1Api:
     """Configures the Kubernetes client with the GKE Connect Gateway URL and credentials."""
 
     configuration = client.Configuration()
@@ -54,15 +53,15 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     configuration.host = gateway_url
 
     # Set the authentication header with the GCP OAuth token
-    if not SERVICE_ACCOUNT_KEY_PATH:
+    if not service_account_key_path:
         print("Error: SERVICE_ACCOUNT_KEY_PATH environment variable not set.")
         sys.exit(1)
     try:
         credentials = service_account.Credentials.from_service_account_file(
-            SERVICE_ACCOUNT_KEY_PATH, scopes=SCOPES
+            service_account_key_path, scopes=SCOPES
         )
     except FileNotFoundError:
-        print(f"Error: Service account key file not found at {SERVICE_ACCOUNT_KEY_PATH}")
+        print(f"Error: Service account key file not found at {service_account_key_path}")
         sys.exit(1)
     except Exception as e:
         print(f"Error loading service account credentials: {e}")
@@ -74,24 +73,26 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     api_client = client.ApiClient(configuration=configuration)
     return client.CoreV1Api(api_client)
 
-def list_namespaces(api_client: client.CoreV1Api):
-    """Lists all namespaces in the Kubernetes cluster."""
+def get_default_namespace(api_client: client.CoreV1Api):
+    """Get default namespace in the Kubernetes cluster."""
     try:
-        namespace_list = api_client.list_namespace()
-        if namespace_list.items:
-            print("\n--- List of Namespaces ---")
-            for namespace in namespace_list.items:
-                print(f"Name: {namespace.metadata.name}")
+        namespace = api_client.read_namespace(name="default")
+        if namespace is not None:
+            print(f"\nDefault Namespace:\n{namespace}")
         else:
-            print("No namespaces found in the cluster.")
+            print("Default namespace not found in the cluster.")
     except client.ApiException as e:
-        print(f"Error listing namespaces: {e}\nStatus: {e.status}\nReason: {e.reason}")
+        print(f"Error getting default namespace: {e}\nStatus: {e.status}\nReason: {e.reason}")
 
-def main():
-    """Main function to connect to the cluster and list pods."""
-    gateway_url = get_gateway_url()
-    core_v1_api = configure_kubernetes_client(gateway_url)
-    list_namespaces(core_v1_api)
+def get_namespace(membership_name: str, service_account_key_path: str):
+    """Main function to connect to the cluster and get the default namespace."""
+    gateway_url = get_gateway_url(membership_name)
+    core_v1_api = configure_kubernetes_client(gateway_url, service_account_key_path)
+    get_default_namespace(core_v1_api)
+
+# [END connectgateway_get_namespace]
 
 if __name__ == "__main__":
-    main()
+    MEMBERSHIP_NAME = os.environ.get('MEMBERSHIP_NAME')
+    SERVICE_ACCOUNT_KEY_PATH = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
+    get_namespace(MEMBERSHIP_NAME, SERVICE_ACCOUNT_KEY_PATH)

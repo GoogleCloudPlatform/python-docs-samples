@@ -125,3 +125,7 @@ export SMART_REPLY_ALLOWLIST=
 
 # Datastore/Firestore
 export DATASTORE_DATABASE=
+
+# Connect Gateway
+export MEMBERSHIP_NAME=
+export CONNECT_GATEWAY_SERVICE_ACCOUNT_KEY=
