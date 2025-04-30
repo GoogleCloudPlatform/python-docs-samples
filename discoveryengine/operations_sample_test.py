@@ -15,10 +15,10 @@
 
 import os
 
+from discoveryengine import cancel_operation_sample
 from discoveryengine import get_operation_sample
 from discoveryengine import list_operations_sample
 from discoveryengine import poll_operation_sample
-from discoveryengine import cancel_operation_sample
 
 from google.api_core.exceptions import NotFound
 
