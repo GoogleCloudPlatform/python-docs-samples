@@ -32,8 +32,6 @@ from google.cloud import documentai
 # processor_version = "rc" # Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
 # file_path = "/path/to/local/pdf"
 # mime_type = "application/pdf" # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
-# enable_image_annotation = False # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
-# enable_table_annotation = False # Set to TRUE to enable processing. Refer to https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
 
 # [END documentai_process_ocr_document]
 # [END documentai_process_form_document]
