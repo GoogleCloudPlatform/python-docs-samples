@@ -473,8 +473,9 @@ def process_document_layout_sample(
                 chunk_size=1000,
                 include_ancestor_headings=True,
             ),
-            enable_image_annotation=enable_image_annotation,
-            enable_table_annotation=enable_table_annotation,
+            https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
+            enable_image_annotation=True, # Optional
+            enable_table_annotation=True, # Optional
         )
     )
 
