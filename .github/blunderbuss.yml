@@ -262,6 +262,10 @@ assign_prs_by:
       - "api: dataplex"
     to:
       - GoogleCloudPlatform/googleapi-dataplex
+  - labels:
+      - "api: connectgatewayapi"
+    to:
+      - GoogleCloudPlatform/connectgateway
   # Self-service individuals
   - labels:
       - "api: auth"
