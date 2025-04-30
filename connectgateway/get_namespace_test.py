@@ -135,4 +135,4 @@ def test_get_namespace() -> None:
     results = get_namespace.get_namespace(membership_name, REGION, SERVICE_ACCOUNT_KEY)
     print(f"\nDefault Namespace:\n{results}")
     assert results is not None
-    assert results.metadata.name == "Default"
+    assert results.metadata.name == "default"
