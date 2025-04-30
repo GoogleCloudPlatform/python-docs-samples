@@ -1,0 +1,7 @@
+google-cloud-connect-gateway==0.10.3
+google-auth==2.38.0
+kubernetes==32.0.1
+google-api-core=21.2.4
+backoff=21.2.4
+google-cloud-container=21.2.4
+pytest=21.2.4
