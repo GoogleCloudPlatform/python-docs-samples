@@ -15,15 +15,15 @@
 # [START connectgateway_get_namespace]
 import os
 import sys
+
+from google.api_core import exceptions
 from google.auth.transport import requests
 from google.cloud.gkeconnect import gateway_v1
 from google.oauth2 import service_account
 from kubernetes import client
-from google.api_core import exceptions
-
-# --- Configuration ---
 
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
+
 
 def get_gateway_url(membership_name: str, location: str) -> str:
     """Fetches the GKE Connect Gateway URL for the specified membership."""
@@ -48,6 +48,7 @@ def get_gateway_url(membership_name: str, location: str) -> str:
     except Exception as e:
         print(f'Error fetching GKE Connect Gateway URL: {e}')
         sys.exit(1)
+
 
 def configure_kubernetes_client(gateway_url: str, service_account_key_path: str) -> client.CoreV1Api:
     """Configures the Kubernetes client with the GKE Connect Gateway URL and credentials."""
@@ -78,27 +79,28 @@ def configure_kubernetes_client(gateway_url: str, service_account_key_path: str)
     api_client = client.ApiClient(configuration=configuration)
     return client.CoreV1Api(api_client)
 
+
 def get_default_namespace(api_client: client.CoreV1Api):
     """Get default namespace in the Kubernetes cluster."""
     try:
         namespace = api_client.read_namespace(name="default")
-        if namespace is not None:
-            print(f"\nDefault Namespace:\n{namespace}")
-        else:
-            print("Default namespace not found in the cluster.")
+        return namespace
     except client.ApiException as e:
         print(f"Error getting default namespace: {e}\nStatus: {e.status}\nReason: {e.reason}")
+        sys.exit(1)
+
 
 def get_namespace(membership_name: str, location: str, service_account_key_path: str):
     """Main function to connect to the cluster and get the default namespace."""
     gateway_url = get_gateway_url(membership_name, location)
     core_v1_api = configure_kubernetes_client(gateway_url, service_account_key_path)
-    get_default_namespace(core_v1_api)
-
+    return get_default_namespace(core_v1_api)
 # [END connectgateway_get_namespace]
+
 
 if __name__ == "__main__":
     MEMBERSHIP_NAME = os.environ.get('MEMBERSHIP_NAME')
     MEMBERSHIP_LOCATION = os.environ.get("MEMBERSHIP_LOCATION")
     SERVICE_ACCOUNT_KEY_PATH = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    get_namespace(MEMBERSHIP_NAME, MEMBERSHIP_LOCATION, SERVICE_ACCOUNT_KEY_PATH)
+    namespace = get_namespace(MEMBERSHIP_NAME, MEMBERSHIP_LOCATION, SERVICE_ACCOUNT_KEY_PATH)
+    print(f"\nDefault Namespace:\n{namespace}")

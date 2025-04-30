@@ -13,17 +13,22 @@
 # limitations under the License.
 
 import os
-import backoff
 import uuid
+
+import backoff
+
 from google.cloud import container_v1 as gke
-import get_namespace
+
 import pytest
+
+import get_namespace
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 SERVICE_ACCOUNT_KEY = os.environ["GOOGLE_APPLICATION_CREDENTIALS"]
 ZONE = "us-central1-a"
 REGION = "us-central1"
 CLUSTER_NAME = f"cluster-{uuid.uuid4().hex[:10]}"
+
 
 @pytest.fixture(autouse=True)
 def setup_and_tear_down() -> None:
@@ -49,6 +54,7 @@ def setup_and_tear_down() -> None:
             return client.get_operation({"name": op_id}).status
 
         wait_for_delete()
+
 
 def on_success(details: dict[str, str]) -> None:
     """
@@ -114,7 +120,7 @@ def create_cluster(project_id: str, location: str, cluster_name: str):
         "node_config": {"machine_type": "e2-standard-2"},
         "fleet": {"project": str(project_id)},
     }
-    
+
     # Create the request object with the location identifier.
     request = {"parent": cluster_location, "cluster": cluster_def}
     create_response = client.create_cluster(request)
@@ -122,9 +128,11 @@ def create_cluster(project_id: str, location: str, cluster_name: str):
     # poll for the operation status and schedule a retry until the cluster is created
     poll_for_op_status(client, op_identifier)
 
+
 def test_get_namespace() -> None:
     create_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
     membership_name = f"projects/{PROJECT_ID}/locations/{REGION}/memberships/{CLUSTER_NAME}"
     results = get_namespace.get_namespace(membership_name, REGION, SERVICE_ACCOUNT_KEY)
+    print(f"\nDefault Namespace:\n{results}")
     assert results is not None
-    assert results.Metadata.Name == "Default"
+    assert results.metadata.name == "Default"
