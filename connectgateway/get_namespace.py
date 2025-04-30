@@ -25,10 +25,15 @@ from google.api_core import exceptions
 
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
-def get_gateway_url(membership_name: str) -> str:
+def get_gateway_url(membership_name: str, location: str) -> str:
     """Fetches the GKE Connect Gateway URL for the specified membership."""
     try:
-        gateway_client = gateway_v1.GatewayControlClient()
+        client_options = {}
+        if location != "global":
+            # If the location is not global, the endpoint needs to be set to the regional endpoint.
+            regional_endpoint = f"{location}-connectgateway.googleapis.com"
+            client_options = {"api_endpoint": regional_endpoint}
+        gateway_client = gateway_v1.GatewayControlClient(client_options=client_options)
         request = gateway_v1.GenerateCredentialsRequest()
         request.name = membership_name
         response = gateway_client.generate_credentials(request=request)
@@ -84,9 +89,9 @@ def get_default_namespace(api_client: client.CoreV1Api):
     except client.ApiException as e:
         print(f"Error getting default namespace: {e}\nStatus: {e.status}\nReason: {e.reason}")
 
-def get_namespace(membership_name: str, service_account_key_path: str):
+def get_namespace(membership_name: str, location: str, service_account_key_path: str):
     """Main function to connect to the cluster and get the default namespace."""
-    gateway_url = get_gateway_url(membership_name)
+    gateway_url = get_gateway_url(membership_name, location)
     core_v1_api = configure_kubernetes_client(gateway_url, service_account_key_path)
     get_default_namespace(core_v1_api)
 

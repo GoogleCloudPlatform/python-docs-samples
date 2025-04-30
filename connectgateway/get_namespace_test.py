@@ -125,6 +125,6 @@ def create_cluster(project_id: str, location: str, cluster_name: str):
 def test_get_namespace() -> None:
     create_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
     membership_name = f"projects/{PROJECT_ID}/locations/{REGION}/memberships/{CLUSTER_NAME}"
-    results = get_namespace.get_namespace(membership_name, SERVICE_ACCOUNT_KEY)
+    results = get_namespace.get_namespace(membership_name, REGION, SERVICE_ACCOUNT_KEY)
     assert results is not None
     assert results.Metadata.Name == "Default"
