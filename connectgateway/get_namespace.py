@@ -99,5 +99,6 @@ def get_namespace(membership_name: str, location: str, service_account_key_path:
 
 if __name__ == "__main__":
     MEMBERSHIP_NAME = os.environ.get('MEMBERSHIP_NAME')
+    LOCATION = os.environ.get("LOCATION")
     SERVICE_ACCOUNT_KEY_PATH = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    get_namespace(MEMBERSHIP_NAME, SERVICE_ACCOUNT_KEY_PATH)
+    get_namespace(MEMBERSHIP_NAME, LOCATION, SERVICE_ACCOUNT_KEY_PATH)
