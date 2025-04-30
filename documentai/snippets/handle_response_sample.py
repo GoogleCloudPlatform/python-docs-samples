@@ -464,8 +464,6 @@ def process_document_layout_sample(
     processor_version: str,
     file_path: str,
     mime_type: str,
-    enable_image_annotation: bool = False, # Enable image annotation
-    enable_table_annotation: bool = False, # Enable table annotation
 ) -> documentai.Document:
     process_options = documentai.ProcessOptions(
         layout_config=documentai.ProcessOptions.LayoutConfig(
