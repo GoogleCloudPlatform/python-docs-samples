@@ -229,8 +229,6 @@ def test_process_document_layout():
         processor_version="pretrained",
         file_path="resources/superconductivity.pdf",
         mime_type="application/pdf",
-        enable_image_annotation = True,
-        enable_table_annotation = True,
     )
 
     assert document
