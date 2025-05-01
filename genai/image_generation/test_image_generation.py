@@ -25,13 +25,12 @@ from google.cloud import storage
 import pytest
 
 import imggen_canny_ctrl_type_with_txt_img
-
+import imggen_mmflash_edit_img_with_txt_img
+import imggen_mmflash_txt_and_img_with_txt
+import imggen_mmflash_with_txt
 import imggen_raw_reference_with_txt_img
-
 import imggen_scribble_ctrl_type_with_txt_img
-
 import imggen_style_reference_with_txt_img
-
 import imggen_subj_refer_ctrl_refer_with_txt_imgs
 
 
@@ -57,25 +56,60 @@ def output_gcs_uri() -> str:
 
 
 def test_img_customization_subject(output_gcs_uri: str) -> None:
-    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
 
 
 def test_img_customization_style(output_gcs_uri: str) -> None:
-    response = imggen_style_reference_with_txt_img.style_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_style_reference_with_txt_img.style_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
 
 
 def test_img_customization_style_transfer(output_gcs_uri: str) -> None:
-    response = imggen_raw_reference_with_txt_img.style_transfer_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_raw_reference_with_txt_img.style_transfer_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
 
 
 def test_img_customization_scribble(output_gcs_uri: str) -> None:
-    response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
 
 
 def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
-    response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
+
+
+def test_imggen_mmflash_examples() -> None:
+    # generate image
+    fname = imggen_mmflash_with_txt.generate_content()
+    assert os.path.isfile(fname)
+    # edit generate image
+    new_fname = imggen_mmflash_edit_img_with_txt_img.generate_content()
+    assert os.path.isfile(new_fname)
+
+    # clean-up
+    os.remove(fname)
+    os.remove(new_fname)
+
+
+def test_imggen_mmflash_txt_and_img_with_txt() -> None:
+    last_image_id = imggen_mmflash_txt_and_img_with_txt.generate_content()
+    # clean-up
+    for i in range(last_image_id + 1):
+        img_name = f"example-image-{i+1}.png"
+        if os.path.isfile(img_name):
+            os.remove(img_name)
+    fname = "paella-recipe.md"
+    if os.path.isfile(fname):
+        os.remove(fname)
