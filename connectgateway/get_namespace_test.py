@@ -41,7 +41,7 @@ def setup_and_tear_down() -> None:
     delete_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
 
 
-def poll_operation(client: gke.ClusterManagerClient, op_id:str) -> None:
+def poll_operation(client: gke.ClusterManagerClient, op_id: str) -> None:
 
     while True:
         # Make GetOperation request
@@ -57,7 +57,7 @@ def poll_operation(client: gke.ClusterManagerClient, op_id:str) -> None:
         sleep(30)
 
 
-def create_cluster(project_id: str, location: str, cluster_name: str):
+def create_cluster(project_id: str, location: str, cluster_name: str) -> None:
     """Create a new GKE cluster in the given GCP Project and Zone/Region."""
     # Initialize the Cluster management client.
     client = gke.ClusterManagerClient()
@@ -76,7 +76,7 @@ def create_cluster(project_id: str, location: str, cluster_name: str):
     poll_operation(client, op_identifier)
 
 
-def delete_cluster(project_id: str, location: str, cluster_name: str):
+def delete_cluster(project_id: str, location: str, cluster_name: str) -> None:
     """Delete the created GKE cluster."""
     client = gke.ClusterManagerClient()
     cluster_location = client.common_location_path(project_id, location)

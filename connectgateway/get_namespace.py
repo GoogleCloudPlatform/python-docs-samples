@@ -17,10 +17,11 @@ import os
 import sys
 
 from google.api_core import exceptions
+import google.auth
+from google.auth.transport import requests
 from google.cloud.gkeconnect import gateway_v1
 from kubernetes import client
-import google.auth
-import google.auth.transport.requests
+
 
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
@@ -60,15 +61,15 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
 
     # Configure API key using default auth.
     credentials, _ = google.auth.default(scopes=SCOPES)
-    auth_req = google.auth.transport.requests.Request()
+    auth_req = requests.Request()
     credentials.refresh(auth_req)
-    configuration.api_key = {'authorization': f'Bearer {credentials.token}'} 
+    configuration.api_key = {'authorization': f'Bearer {credentials.token}'}
 
     api_client = client.ApiClient(configuration=configuration)
     return client.CoreV1Api(api_client)
 
 
-def get_default_namespace(api_client: client.CoreV1Api):
+def get_default_namespace(api_client: client.CoreV1Api) -> None:
     """Get default namespace in the Kubernetes cluster."""
     try:
         namespace = api_client.read_namespace(name="default")
@@ -78,7 +79,7 @@ def get_default_namespace(api_client: client.CoreV1Api):
         sys.exit(1)
 
 
-def get_namespace(membership_name: str, location: str):
+def get_namespace(membership_name: str, location: str) -> None:
     """Main function to connect to the cluster and get the default namespace."""
     gateway_url = get_gateway_url(membership_name, location)
     core_v1_api = configure_kubernetes_client(gateway_url)
