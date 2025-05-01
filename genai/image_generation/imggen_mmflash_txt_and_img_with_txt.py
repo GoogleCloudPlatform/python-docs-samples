@@ -16,7 +16,7 @@
 def generate_content() -> int:
     # [START googlegenaisdk_imggen_mmflash_txt_and_img_with_txt]
     from google import genai
-    from google.genai.types import GenerateContentConfig
+    from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
     from io import BytesIO
 
@@ -28,7 +28,7 @@ def generate_content() -> int:
             "Generate an illustrated recipe for a paella."
             "Create images to go alongside the text as you generate the recipe"
         ),
-        config=GenerateContentConfig(response_modalities=["Text", "Image"]),
+        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     with open("paella-recipe.md", "w") as fp:
         for i, part in enumerate(response.candidates[0].content.parts):

@@ -16,7 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_imggen_mmflash_edit_img_with_txt_img]
     from google import genai
-    from google.genai.types import GenerateContentConfig
+    from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
     from io import BytesIO
 
@@ -28,7 +28,7 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model="gemini-2.0-flash-exp",
         contents=[image, "Edit this image to make it look like a cartoon."],
-        config=GenerateContentConfig(response_modalities=["Text", "Image"]),
+        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     for part in response.candidates[0].content.parts:
         if part.text:

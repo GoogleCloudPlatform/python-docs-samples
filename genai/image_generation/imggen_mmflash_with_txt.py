@@ -16,7 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_imggen_mmflash_with_txt]
     from google import genai
-    from google.genai.types import GenerateContentConfig
+    from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
     from io import BytesIO
 
@@ -27,7 +27,7 @@ def generate_content() -> str:
         contents=(
             "Generate an image of the Eiffel tower with fireworks in the background."
         ),
-        config=GenerateContentConfig(response_modalities=["Text", "Image"]),
+        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     for part in response.candidates[0].content.parts:
         if part.text:
