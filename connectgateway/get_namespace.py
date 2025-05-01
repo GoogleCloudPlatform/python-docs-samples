@@ -17,10 +17,10 @@ import os
 import sys
 
 from google.api_core import exceptions
-from google.auth.transport import requests
 from google.cloud.gkeconnect import gateway_v1
-from google.oauth2 import service_account
 from kubernetes import client
+import google.auth
+import google.auth.transport.requests
 
 SCOPES = ['https://www.googleapis.com/auth/cloud-platform']
 
@@ -50,7 +50,7 @@ def get_gateway_url(membership_name: str, location: str) -> str:
         sys.exit(1)
 
 
-def configure_kubernetes_client(gateway_url: str, service_account_key_path: str) -> client.CoreV1Api:
+def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     """Configures the Kubernetes client with the GKE Connect Gateway URL and credentials."""
 
     configuration = client.Configuration()
@@ -58,24 +58,18 @@ def configure_kubernetes_client(gateway_url: str, service_account_key_path: str)
     # Configure the API client with the custom host.
     configuration.host = gateway_url
 
-    # Set the authentication header with the GCP OAuth token
-    if not service_account_key_path:
-        print("Error: SERVICE_ACCOUNT_KEY_PATH environment variable not set.")
-        sys.exit(1)
-    try:
-        credentials = service_account.Credentials.from_service_account_file(
-            service_account_key_path, scopes=SCOPES
+    # Configure API key using default auth.
+    credentials, project_id = google.auth.default(
+            scopes=[
+                "https://www.googleapis.com/auth/cloud-platform",
+            ]   
         )
-    except FileNotFoundError:
-        print(f"Error: Service account key file not found at {service_account_key_path}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error loading service account credentials: {e}")
-        sys.exit(1)
-    auth_req = requests.Request()
+    
+    auth_req = google.auth.transport.requests.Request()
     credentials.refresh(auth_req)
-    configuration.api_key = {'authorization': f'Bearer {credentials.token}'}
-
+    configuration.api_key = {
+        'authorization': f'Bearer {credentials.token}'
+    }
     api_client = client.ApiClient(configuration=configuration)
     return client.CoreV1Api(api_client)
 
@@ -90,10 +84,10 @@ def get_default_namespace(api_client: client.CoreV1Api):
         sys.exit(1)
 
 
-def get_namespace(membership_name: str, location: str, service_account_key_path: str):
+def get_namespace(membership_name: str, location: str):
     """Main function to connect to the cluster and get the default namespace."""
     gateway_url = get_gateway_url(membership_name, location)
-    core_v1_api = configure_kubernetes_client(gateway_url, service_account_key_path)
+    core_v1_api = configure_kubernetes_client(gateway_url)
     namespace = get_default_namespace(core_v1_api)
     print(f"\nDefault Namespace:\n{namespace}")
 
@@ -105,5 +99,4 @@ def get_namespace(membership_name: str, location: str, service_account_key_path:
 if __name__ == "__main__":
     MEMBERSHIP_NAME = os.environ.get('MEMBERSHIP_NAME')
     MEMBERSHIP_LOCATION = os.environ.get("MEMBERSHIP_LOCATION")
-    SERVICE_ACCOUNT_KEY_PATH = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
-    namespace = get_namespace(MEMBERSHIP_NAME, MEMBERSHIP_LOCATION, SERVICE_ACCOUNT_KEY_PATH)
+    namespace = get_namespace(MEMBERSHIP_NAME, MEMBERSHIP_LOCATION)
