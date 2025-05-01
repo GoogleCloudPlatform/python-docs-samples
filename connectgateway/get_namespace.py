@@ -94,8 +94,12 @@ def get_namespace(membership_name: str, location: str, service_account_key_path:
     """Main function to connect to the cluster and get the default namespace."""
     gateway_url = get_gateway_url(membership_name, location)
     core_v1_api = configure_kubernetes_client(gateway_url, service_account_key_path)
-    return get_default_namespace(core_v1_api)
-# [END connectgateway_get_namespace]
+    namespace = get_default_namespace(core_v1_api)
+    print(f"\nDefault Namespace:\n{namespace}")
+
+    # [END connectgateway_get_namespace]
+
+    return namespace
 
 
 if __name__ == "__main__":
@@ -103,4 +107,3 @@ if __name__ == "__main__":
     MEMBERSHIP_LOCATION = os.environ.get("MEMBERSHIP_LOCATION")
     SERVICE_ACCOUNT_KEY_PATH = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS')
     namespace = get_namespace(MEMBERSHIP_NAME, MEMBERSHIP_LOCATION, SERVICE_ACCOUNT_KEY_PATH)
-    print(f"\nDefault Namespace:\n{namespace}")

@@ -1,4 +1,4 @@
-google-cloud-connect-gateway==0.10.3
+google-cloud-gke-connect-gateway==0.10.3
 google-auth==2.38.0
 kubernetes==32.0.1
-google-api-core=21.2.4
+google-api-core==21.2.4
