@@ -90,6 +90,6 @@ def delete_cluster(project_id: str, location: str, cluster_name: str):
 def test_get_namespace() -> None:
     membership_name = f"projects/{PROJECT_ID}/locations/{REGION}/memberships/{CLUSTER_NAME}"
     results = get_namespace.get_namespace(membership_name, REGION, SERVICE_ACCOUNT_KEY)
-    print(f"\nDefault Namespace:\n{results}")
+
     assert results is not None
     assert results.metadata.name == "default"
