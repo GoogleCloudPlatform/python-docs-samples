@@ -64,7 +64,6 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
                 "https://www.googleapis.com/auth/cloud-platform",
             ]   
         )
-    
     auth_req = google.auth.transport.requests.Request()
     credentials.refresh(auth_req)
     configuration.api_key = {'authorization': f'Bearer {credentials.token}'} 
