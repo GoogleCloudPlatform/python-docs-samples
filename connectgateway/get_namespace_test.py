@@ -31,13 +31,10 @@ CLUSTER_NAME = f"cluster-{uuid.uuid4().hex[:10]}"
 
 @pytest.fixture(autouse=True)
 def setup_and_tear_down() -> None:
-    # Create the cluster.
     create_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
 
-    # Run the tests here.
     yield
 
-    # Delete the cluster.
     delete_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
 
 
