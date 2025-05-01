@@ -58,7 +58,7 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     # Configure the API client with the custom host.
     configuration.host = gateway_url
 
-    # Configure API key using default auth.
+       # Configure API key using default auth.
     credentials, project_id = google.auth.default(
             scopes=[
                 "https://www.googleapis.com/auth/cloud-platform",
@@ -67,9 +67,8 @@ def configure_kubernetes_client(gateway_url: str) -> client.CoreV1Api:
     
     auth_req = google.auth.transport.requests.Request()
     credentials.refresh(auth_req)
-    configuration.api_key = {
-        'authorization': f'Bearer {credentials.token}'
-    }
+    configuration.api_key = {'authorization': f'Bearer {credentials.token}'} 
+
     api_client = client.ApiClient(configuration=configuration)
     return client.CoreV1Api(api_client)
 
