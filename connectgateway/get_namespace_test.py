@@ -13,8 +13,8 @@
 # limitations under the License.
 
 import os
-import uuid
 from time import sleep
+import uuid
 
 
 from google.cloud import container_v1 as gke
@@ -42,9 +42,7 @@ def setup_and_tear_down() -> None:
     delete_cluster(PROJECT_ID, ZONE, CLUSTER_NAME)
 
 
-def poll_operation(
-        client: gke.ClusterManagerClient, op_id:str
-) -> None:
+def poll_operation(client: gke.ClusterManagerClient, op_id:str) -> None:
 
     while True:
         # Make GetOperation request
@@ -52,7 +50,7 @@ def poll_operation(
         # Print the Operation Information
         print(operation)
 
-        # Stop polling when Operation is done. 
+        # Stop polling when Operation is done.
         if operation.status == gke.Operation.Status.DONE:
             break
 
