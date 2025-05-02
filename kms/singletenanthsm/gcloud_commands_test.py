@@ -14,8 +14,11 @@
 
 import subprocess
 from unittest import mock
-import gcloud_commands
+
 import pytest
+
+import gcloud_commands
+
 
 test_proposal_resource = """projects/test_project/locations/\
 us-central1/singleTenantHsmInstances/my_sthi/proposals/my_proposal
@@ -46,276 +49,269 @@ sample_fetch_challenge_output = """
 
 # Test case 1: Successful build and components add
 def test_build_custom_gcloud_success(mock_subprocess_run):
-  # Setup: Mock successful gcloud execution
-  mock_subprocess_run.side_effect = [
-      subprocess.CompletedProcess(
-          args=gcloud_commands.command_build_custom_gcloud,
-          returncode=0,
-          stdout="gcloud build successful!",
-          stderr="",
-      ),
-      subprocess.CompletedProcess(
-          args=gcloud_commands.command_add_components,
-          returncode=0,
-          stdout="gcloud components add successful.",
-          stderr="",
-      ),
-  ]
+    # Setup: Mock successful gcloud execution
+    mock_subprocess_run.side_effect = [
+        subprocess.CompletedProcess(
+            args=gcloud_commands.command_build_custom_gcloud,
+            returncode=0,
+            stdout="gcloud build successful!",
+            stderr="",
+        ),
+        subprocess.CompletedProcess(
+            args=gcloud_commands.command_add_components,
+            returncode=0,
+            stdout="gcloud components add successful.",
+            stderr="",
+        ),
+    ]
 
-  # Action: Call the function
-  result = gcloud_commands.build_custom_gcloud()
+    # Action: Call the function
+    result = gcloud_commands.build_custom_gcloud()
 
-  # Assert: Verify the return value and that subprocess.run was called correctly
-  assert result.returncode == 0
-  assert result.stdout == "gcloud components add successful."
-  assert mock_subprocess_run.call_count == 2
-  mock_subprocess_run.assert_has_calls([
-      mock.call(
-          gcloud_commands.command_build_custom_gcloud, check=True, shell=True
-      ),
-      mock.call(
-          gcloud_commands.command_add_components,
-          check=False,
-          shell=True,
-          capture_output=False,
-          text=True,
-      ),
-  ])
+    # Assert: Verify the return value and that subprocess.run was called correctly
+    assert result.returncode == 0
+    assert result.stdout == "gcloud components add successful."
+    assert mock_subprocess_run.call_count == 2
+    mock_subprocess_run.assert_has_calls(
+        [
+            mock.call(
+                gcloud_commands.command_build_custom_gcloud, check=True, shell=True
+            ),
+            mock.call(
+                gcloud_commands.command_add_components,
+                check=False,
+                shell=True,
+                capture_output=False,
+                text=True,
+            ),
+        ]
+    )
 
 
 # Test case 2: gcloud build fails
 def test_build_custom_gcloud_build_error(mock_subprocess_run):
-  # Setup: Mock gcloud build command with a non-zero return code
-  mock_subprocess_run.side_effect = subprocess.CalledProcessError(
-      returncode=1,
-      cmd=gcloud_commands.command_build_custom_gcloud,
-      output="",
-      stderr="Error: Build failed",
-  )
+    # Setup: Mock gcloud build command with a non-zero return code
+    mock_subprocess_run.side_effect = subprocess.CalledProcessError(
+        returncode=1,
+        cmd=gcloud_commands.command_build_custom_gcloud,
+        output="",
+        stderr="Error: Build failed",
+    )
 
-  # Action & Assert: Call the function and verify that the
-  # CalledProcessError is re-raised
-  with pytest.raises(subprocess.CalledProcessError) as exc_info:
-    gcloud_commands.build_custom_gcloud()
+    # Action & Assert: Call the function and verify that the
+    # CalledProcessError is re-raised
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        gcloud_commands.build_custom_gcloud()
 
-  assert exc_info.value.returncode == 1
-  assert exc_info.value.stderr == "Error: Build failed"
-  assert exc_info.value.cmd == gcloud_commands.command_build_custom_gcloud
-  assert mock_subprocess_run.call_count == 1
+    assert exc_info.value.returncode == 1
+    assert exc_info.value.stderr == "Error: Build failed"
+    assert exc_info.value.cmd == gcloud_commands.command_build_custom_gcloud
+    assert mock_subprocess_run.call_count == 1
 
 
 # Test case 3: gcloud components add fails
 def test_build_custom_gcloud_components_error(mock_subprocess_run):
-  # Setup: Mock gcloud build success and components add with error
-  mock_subprocess_run.side_effect = [
-      subprocess.CompletedProcess(
-          args=gcloud_commands.command_build_custom_gcloud,
-          returncode=0,
-          stdout="gcloud build successful!",
-          stderr="",
-      ),
-      subprocess.CalledProcessError(
-          returncode=1,
-          cmd=gcloud_commands.command_add_components,
-          output="",
-          stderr="Error: Components add failed",
-      ),
-  ]
+    # Setup: Mock gcloud build success and components add with error
+    mock_subprocess_run.side_effect = [
+        subprocess.CompletedProcess(
+            args=gcloud_commands.command_build_custom_gcloud,
+            returncode=0,
+            stdout="gcloud build successful!",
+            stderr="",
+        ),
+        subprocess.CalledProcessError(
+            returncode=1,
+            cmd=gcloud_commands.command_add_components,
+            output="",
+            stderr="Error: Components add failed",
+        ),
+    ]
 
-  # Action & Assert: Call the function and verify that the
-  # CalledProcessError is re-raised
-  with pytest.raises(subprocess.CalledProcessError) as exc_info:
-    gcloud_commands.build_custom_gcloud()
+    # Action & Assert: Call the function and verify that the
+    # CalledProcessError is re-raised
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        gcloud_commands.build_custom_gcloud()
 
-  assert exc_info.value.returncode == 1
-  assert exc_info.value.stderr == "Error: Components add failed"
-  assert exc_info.value.cmd == gcloud_commands.command_add_components
-  assert mock_subprocess_run.call_count == 2
+    assert exc_info.value.returncode == 1
+    assert exc_info.value.stderr == "Error: Components add failed"
+    assert exc_info.value.cmd == gcloud_commands.command_add_components
+    assert mock_subprocess_run.call_count == 2
 
 
 @pytest.fixture
 def mock_subprocess_run(monkeypatch):
-  mock_run = mock.create_autospec(subprocess.run)
-  monkeypatch.setattr(subprocess, "run", mock_run)
-  return mock_run
+    mock_run = mock.create_autospec(subprocess.run)
+    monkeypatch.setattr(subprocess, "run", mock_run)
+    return mock_run
 
 
 def test_fetch_challenges_success(mock_subprocess_run):
-  # Setup: Configure the mock to simulate a successful gcloud command
-  mock_process_result = subprocess.CompletedProcess(
-      args=[],
-      returncode=0,
-      stdout=sample_fetch_challenge_output,
-      stderr="",
-  )
-  mock_subprocess_run.return_value = mock_process_result
+    # Setup: Configure the mock to simulate a successful gcloud command
+    mock_process_result = subprocess.CompletedProcess(
+        args=[],
+        returncode=0,
+        stdout=sample_fetch_challenge_output,
+        stderr="",
+    )
+    mock_subprocess_run.return_value = mock_process_result
 
-  # Action: Call the function
-  resource = test_proposal_resource
-  result = gcloud_commands.fetch_challenges(resource)
+    # Action: Call the function
+    resource = test_proposal_resource
+    result = gcloud_commands.fetch_challenges(resource)
 
-  # Assertions: Verify the results
-  mock_subprocess_run.assert_called_once_with(
-      gcloud_commands.command_gcloud_describe_proposal
-      + resource
-      + " --format=json",
-      capture_output=True,
-      check=True,
-      text=True,
-      shell=True,
-  )
-  assert result == mock_process_result
-  assert result.returncode == 0
-  assert result.stdout == sample_fetch_challenge_output
-  assert not result.stderr
+    # Assertions: Verify the results
+    mock_subprocess_run.assert_called_once_with(
+        gcloud_commands.command_gcloud_describe_proposal + resource + " --format=json",
+        capture_output=True,
+        check=True,
+        text=True,
+        shell=True,
+    )
+    assert result == mock_process_result
+    assert result.returncode == 0
+    assert result.stdout == sample_fetch_challenge_output
+    assert not result.stderr
 
 
 def test_fetch_challenges_error(mock_subprocess_run):
-  # Setup: Configure the mock to simulate a failed gcloud command
-  mock_subprocess_run.side_effect = subprocess.CalledProcessError(
-      returncode=1, cmd="", output="", stderr="Error: Invalid resource"
-  )
+    # Setup: Configure the mock to simulate a failed gcloud command
+    mock_subprocess_run.side_effect = subprocess.CalledProcessError(
+        returncode=1, cmd="", output="", stderr="Error: Invalid resource"
+    )
 
-  # Action & Assert: Call the function and check for the expected exception
-  resource = "invalid-resource"
-  with pytest.raises(subprocess.CalledProcessError) as exc_info:
-    gcloud_commands.fetch_challenges(resource)
+    # Action & Assert: Call the function and check for the expected exception
+    resource = "invalid-resource"
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        gcloud_commands.fetch_challenges(resource)
 
-  # Verify the exception details
-  assert exc_info.value.returncode == 1
-  assert exc_info.value.stderr == "Error: Invalid resource"
+    # Verify the exception details
+    assert exc_info.value.returncode == 1
+    assert exc_info.value.stderr == "Error: Invalid resource"
 
 
 def test_fetch_challenges_command_construction(mock_subprocess_run):
-  # Setup:
-  mock_process_result = subprocess.CompletedProcess(
-      args=[],
-      returncode=0,
-      stdout="{}",
-      stderr="",
-  )
-  mock_subprocess_run.return_value = mock_process_result
-  resource = test_proposal_resource
+    # Setup:
+    mock_process_result = subprocess.CompletedProcess(
+        args=[],
+        returncode=0,
+        stdout="{}",
+        stderr="",
+    )
+    mock_subprocess_run.return_value = mock_process_result
+    resource = test_proposal_resource
 
-  # Action: Call the function
-  gcloud_commands.fetch_challenges(resource)
+    # Action: Call the function
+    gcloud_commands.fetch_challenges(resource)
 
-  # Assertions: Verify the command
-  mock_subprocess_run.assert_called_once_with(
-      gcloud_commands.command_gcloud_describe_proposal
-      + resource
-      + " --format=json",
-      capture_output=True,
-      check=True,
-      text=True,
-      shell=True,
-  )
+    # Assertions: Verify the command
+    mock_subprocess_run.assert_called_once_with(
+        gcloud_commands.command_gcloud_describe_proposal + resource + " --format=json",
+        capture_output=True,
+        check=True,
+        text=True,
+        shell=True,
+    )
 
 
 def test_fetch_challenges_output_capture(mock_subprocess_run):
-  # Setup:
-  expected_stdout = "Expected Output"
-  expected_stderr = "Expected Error"
-  expected_returncode = 0
-  mock_process_result = subprocess.CompletedProcess(
-      args=[],
-      returncode=expected_returncode,
-      stdout=expected_stdout,
-      stderr=expected_stderr,
-  )
-  mock_subprocess_run.return_value = mock_process_result
-  resource = test_proposal_resource
-  # Action: Call the function
-  result = gcloud_commands.fetch_challenges(resource)
+    # Setup:
+    expected_stdout = "Expected Output"
+    expected_stderr = "Expected Error"
+    expected_returncode = 0
+    mock_process_result = subprocess.CompletedProcess(
+        args=[],
+        returncode=expected_returncode,
+        stdout=expected_stdout,
+        stderr=expected_stderr,
+    )
+    mock_subprocess_run.return_value = mock_process_result
+    resource = test_proposal_resource
+    # Action: Call the function
+    result = gcloud_commands.fetch_challenges(resource)
 
-  # Assertions: Verify the captured output
-  assert result.stdout == expected_stdout
-  assert result.stderr == expected_stderr
-  assert result.returncode == expected_returncode
+    # Assertions: Verify the captured output
+    assert result.stdout == expected_stdout
+    assert result.stderr == expected_stderr
+    assert result.returncode == expected_returncode
 
 
 # Test case 1: Successful gcloud command
 def test_send_signed_challenges_success(mock_subprocess_run):
-  # Setup: Mock successful gcloud execution
-  signed_files = [("signed_challenge.bin", "public_key_1.pem")]
-  proposal = "my-proposal"
-  mock_subprocess_run.return_value = subprocess.CompletedProcess(
-      args=[],  # Not checked in this test, but good practice to include
-      returncode=0,
-      stdout="gcloud command successful!",
-      stderr="",
-  )
+    # Setup: Mock successful gcloud execution
+    signed_files = [("signed_challenge.bin", "public_key_1.pem")]
+    proposal = "my-proposal"
+    mock_subprocess_run.return_value = subprocess.CompletedProcess(
+        args=[],  # Not checked in this test, but good practice to include
+        returncode=0,
+        stdout="gcloud command successful!",
+        stderr="",
+    )
 
-  # Action: Call the function
-  result = gcloud_commands.send_signed_challenges(signed_files, proposal)
+    # Action: Call the function
+    result = gcloud_commands.send_signed_challenges(signed_files, proposal)
 
-  # Assert: Verify the return value and that subprocess.run was called correctly
-  assert result.returncode == 0
-  assert result.stdout == "gcloud command successful!"
-  expected_command = " ".join(
-      gcloud_commands.command_gcloud_approve_proposal
-      + [proposal]
-      + [
-          "--challenge_replies=\"[('signed_challenge.bin',"
-          " 'public_key_1.pem')]\""
-      ]
-  )
-  mock_subprocess_run.assert_called_once_with(
-      expected_command,
-      capture_output=True,
-      check=True,
-      text=True,
-      shell=True,
-  )
+    # Assert: Verify the return value and that subprocess.run was called correctly
+    assert result.returncode == 0
+    assert result.stdout == "gcloud command successful!"
+    expected_command = " ".join(
+        gcloud_commands.command_gcloud_approve_proposal
+        + [proposal]
+        + ["--challenge_replies=\"[('signed_challenge.bin'," " 'public_key_1.pem')]\""]
+    )
+    mock_subprocess_run.assert_called_once_with(
+        expected_command,
+        capture_output=True,
+        check=True,
+        text=True,
+        shell=True,
+    )
 
 
 # Test case 2: gcloud command returns an error code
 def test_send_signed_challenges_gcloud_error(mock_subprocess_run):
-  # Setup: Mock gcloud command with a non-zero return code and stderr
-  signed_files = [("signed_challenge.bin", "public_key_1.pem")]
-  proposal = "my-proposal"
-  mock_subprocess_run.return_value = subprocess.CompletedProcess(
-      args=[],
-      returncode=1,
-      stdout="",
-      stderr="Error: Invalid proposal resource",
-  )
+    # Setup: Mock gcloud command with a non-zero return code and stderr
+    signed_files = [("signed_challenge.bin", "public_key_1.pem")]
+    proposal = "my-proposal"
+    mock_subprocess_run.return_value = subprocess.CompletedProcess(
+        args=[],
+        returncode=1,
+        stdout="",
+        stderr="Error: Invalid proposal resource",
+    )
 
-  # Action: Call the function
-  result = gcloud_commands.send_signed_challenges(signed_files, proposal)
+    # Action: Call the function
+    result = gcloud_commands.send_signed_challenges(signed_files, proposal)
 
-  # Assert: Verify the return value
-  assert result.returncode == 1
-  assert result.stderr == "Error: Invalid proposal resource"
+    # Assert: Verify the return value
+    assert result.returncode == 1
+    assert result.stderr == "Error: Invalid proposal resource"
 
 
 # Test case 3: subprocess.run raises a CalledProcessError
-def test_send_signed_challenges_called_process_error(
-    mock_subprocess_run
-):
-  # Setup: Mock subprocess.run to raise a CalledProcessError
-  signed_files = [("signed_challenge.bin", "public_key_1.pem")]
-  proposal = "my-proposal"
-  mock_subprocess_run.side_effect = subprocess.CalledProcessError(
-      returncode=2,
-      cmd="test_command",
-      output="",
-      stderr="Called process error",
-  )
+def test_send_signed_challenges_called_process_error(mock_subprocess_run):
+    # Setup: Mock subprocess.run to raise a CalledProcessError
+    signed_files = [("signed_challenge.bin", "public_key_1.pem")]
+    proposal = "my-proposal"
+    mock_subprocess_run.side_effect = subprocess.CalledProcessError(
+        returncode=2,
+        cmd="test_command",
+        output="",
+        stderr="Called process error",
+    )
 
-  # Action & Assert: Call the function and verify that the
-  # CalledProcessError is re-raised
-  with pytest.raises(subprocess.CalledProcessError) as exc_info:
-    gcloud_commands.send_signed_challenges(signed_files, proposal)
+    # Action & Assert: Call the function and verify that the
+    # CalledProcessError is re-raised
+    with pytest.raises(subprocess.CalledProcessError) as exc_info:
+        gcloud_commands.send_signed_challenges(signed_files, proposal)
 
-  assert exc_info.value.returncode == 2
-  assert exc_info.value.stderr == "Called process error"
-  assert exc_info.value.cmd == "test_command"
+    assert exc_info.value.returncode == 2
+    assert exc_info.value.stderr == "Called process error"
+    assert exc_info.value.cmd == "test_command"
 
 
 # Test case 4: Signed challenge file list is empty.
 def test_send_signed_challenges_empty_list(mock_subprocess_run):
 
-  # Action: Call the function
-  with pytest.raises(ValueError, match="signed_challenged_files is empty"):
-    gcloud_commands.send_signed_challenges([], test_proposal_resource)
+    # Action: Call the function
+    with pytest.raises(ValueError, match="signed_challenged_files is empty"):
+        gcloud_commands.send_signed_challenges([], test_proposal_resource)

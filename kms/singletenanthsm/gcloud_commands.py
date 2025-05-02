@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2020 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -35,41 +35,41 @@ command_add_components = """
 
 
 def build_custom_gcloud():
-  """Builds a custom gcloud binary."""
-  try:
-    print("\nBuilding custom gcloud build")
-    process = subprocess.run(
-        command_build_custom_gcloud,
-        check=True,
-        shell=True,
-    )
-    print(f"Return Test: {process}")
-    print(f"Return Code: {process.returncode}")
-    print(f"Standard Output: {process.stdout}")
-    print(f"Standard Error: {process.stderr}")
-    print("gcloud build executed successfully.")
-    print(process.stdout)
-  except subprocess.CalledProcessError as e:
-    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
-  try:
-    print("\nAdding gcloud components")
-    process = subprocess.run(
-        command_add_components,
-        check=False,
-        capture_output=False,
-        text=True,
-        shell=True,
-    )
-    print(f"Return Test: {process}")
-    print(f"Return Code: {process.returncode}")
-    print(f"Standard Output: {process.stdout}")
-    print(f"Standard Error: {process.stderr}")
-    print("gcloud components add executed successfully.")
-    print(process.stdout)
-    return process
-  except subprocess.CalledProcessError as e:
-    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
-    print(f"Error executing gcloud components update: {e}")
+    """Builds a custom gcloud binary."""
+    try:
+        print("\nBuilding custom gcloud build")
+        process = subprocess.run(
+            command_build_custom_gcloud,
+            check=True,
+            shell=True,
+        )
+        print(f"Return Test: {process}")
+        print(f"Return Code: {process.returncode}")
+        print(f"Standard Output: {process.stdout}")
+        print(f"Standard Error: {process.stderr}")
+        print("gcloud build executed successfully.")
+        print(process.stdout)
+    except subprocess.CalledProcessError as e:
+        raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
+    try:
+        print("\nAdding gcloud components")
+        process = subprocess.run(
+            command_add_components,
+            check=False,
+            capture_output=False,
+            text=True,
+            shell=True,
+        )
+        print(f"Return Test: {process}")
+        print(f"Return Code: {process.returncode}")
+        print(f"Standard Output: {process.stdout}")
+        print(f"Standard Error: {process.stderr}")
+        print("gcloud components add executed successfully.")
+        print(process.stdout)
+        return process
+    except subprocess.CalledProcessError as e:
+        raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
+        print(f"Error executing gcloud components update: {e}")
 
 
 command_gcloud_list_proposal = (
@@ -83,29 +83,30 @@ command_gcloud_describe_proposal = """
 
 
 def fetch_challenges(sthi_proposal_resource: str):
-  """Fetches challenges from the server."""
+    """Fetches challenges from the server."""
 
-  try:
-    print("\nfetching challenges")
-    process = subprocess.run(
-        command_gcloud_describe_proposal
-        + sthi_proposal_resource
-        + " --format=json",
-        capture_output=True,
-        check=True,
-        text=True,
-        shell=True,
-        # stderr=subprocess.STDOUT
-    )
-    print(f"Return Test: {process}")
-    print(f"Return Code: {process.returncode}")
-    print(f"Standard Output: {process.stdout}")
-    print(f"Standard Error: {process.stderr}")
-    print("gcloud command executed successfully.")
-    print(process.stdout)
-    return process
-  except subprocess.CalledProcessError as e:
-    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
+    try:
+        print("\nfetching challenges")
+        process = subprocess.run(
+            command_gcloud_describe_proposal
+            + sthi_proposal_resource
+            + " --format=json",
+            capture_output=True,
+            check=True,
+            text=True,
+            shell=True,
+            # stderr=subprocess.STDOUT
+        )
+        print(f"Return Test: {process}")
+        print(f"Return Code: {process.returncode}")
+        print(f"Standard Output: {process.stdout}")
+        print(f"Standard Error: {process.stderr}")
+        print("gcloud command executed successfully.")
+        print(process.stdout)
+        return process
+    except subprocess.CalledProcessError as e:
+        raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
+
 
 command_gcloud_approve_proposal = [
     "~/sthi/google-cloud-sdk/bin/gcloud",
@@ -116,38 +117,31 @@ command_gcloud_approve_proposal = [
 ]
 
 
-def send_signed_challenges(
-    signed_challenged_files: list[str], proposal_resource: str
-):
-  """Sends signed challenges to the server."""
-  if signed_challenged_files is None or not signed_challenged_files:
-    raise ValueError("signed_challenged_files is empty")
-  print("Sending signed challenges")
-  signed_challenge_str = (
-      '--challenge_replies="' + str(signed_challenged_files) + '"'
-  )
-  command_str = " ".join(
-      command_gcloud_approve_proposal
-      + [proposal_resource]
-      + [signed_challenge_str]
-  )
-  print(command_str)
-
-  try:
-
-    process = subprocess.run(
-        command_str,
-        capture_output=True,
-        check=True,
-        text=True,
-        shell=True,
+def send_signed_challenges(signed_challenged_files: list[str], proposal_resource: str):
+    """Sends signed challenges to the server."""
+    if signed_challenged_files is None or not signed_challenged_files:
+        raise ValueError("signed_challenged_files is empty")
+    print("Sending signed challenges")
+    signed_challenge_str = '--challenge_replies="' + str(signed_challenged_files) + '"'
+    command_str = " ".join(
+        command_gcloud_approve_proposal + [proposal_resource] + [signed_challenge_str]
     )
-    print(f"Return Test: {process}")
-    print(f"Return Code: {process.returncode}")
-    print(f"Standard Output: {process.stdout}")
-    print(f"Standard Error: {process.stderr}")
-    print("gcloud command executed successfully.")
-    return process
+    print(command_str)
 
-  except subprocess.CalledProcessError as e:
-    raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
+    try:
+        process = subprocess.run(
+            command_str,
+            capture_output=True,
+            check=True,
+            text=True,
+            shell=True,
+        )
+        print(f"Return Test: {process}")
+        print(f"Return Code: {process.returncode}")
+        print(f"Standard Output: {process.stdout}")
+        print(f"Standard Error: {process.stderr}")
+        print("gcloud command executed successfully.")
+        return process
+
+    except subprocess.CalledProcessError as e:
+        raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)

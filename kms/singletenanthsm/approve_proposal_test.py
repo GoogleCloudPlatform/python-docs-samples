@@ -11,32 +11,22 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+import argparse
+
 from dataclasses import dataclass
 
+import json
 
-from cryptography.hazmat.primitives import serialization
-from cryptography.hazmat.primitives.asymmetric import rsa
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.backends import default_backend
-from cryptography.exceptions import InvalidSignature
-from cryptography.hazmat.primitives.asymmetric import padding
+import os
+
 from cryptography.hazmat.primitives.serialization import (
     Encoding,
     PublicFormat,
 )
 
-import argparse
-import json
-import os
-import subprocess
-from unittest import mock
-from unittest.mock import Mock
-from unittest.mock import patch
-# from approve_proposal import parse_args
-
 import approve_proposal
-import gcloud_commands
-import pytest
+
 import ykman_fake
 import ykman_utils
 
@@ -64,66 +54,58 @@ sample_sthi_output = """
 
 """
 
+
 sample_nonces = [
-   "NNH3Pt3F-OvaeYR_Dynp_nbHMuLaVYBnkG7uJtwz2-lShyLaHNjOyjBnL-eGjoRY",
-   "tiOz64M_rJ34yOvweHBBltRrm3k34bou4m2JKlz9BmhrR7yU6S6ram8o1VQhyPU1",
-   "6bfZOoD9L35qO1GIzVHcv9sX0UEzKCTru8yz1U7NK4o7y0gnXoU3Ak47sFFY4Yzb",
+    "NNH3Pt3F-OvaeYR_Dynp_nbHMuLaVYBnkG7uJtwz2-lShyLaHNjOyjBnL-eGjoRY",
+    "tiOz64M_rJ34yOvweHBBltRrm3k34bou4m2JKlz9BmhrR7yU6S6ram8o1VQhyPU1",
+    "6bfZOoD9L35qO1GIzVHcv9sX0UEzKCTru8yz1U7NK4o7y0gnXoU3Ak47sFFY4Yzb",
 ]
+
 
 @dataclass
 class QuorumParameters:
-  challenges: list[ykman_utils.Challenge]
-
-  # def __init__(self, challenges: list[ykman_utils.Challenge]):
-  #   self.challenges = challenges
-
-  # def to_dict(self):
-  #       return {"challenges": self.challenges}
+    challenges: list[ykman_utils.Challenge]
 
 
-
-sample_assigned_challenges = ""
-
-
-@pytest.fixture()
-def setup():
-  parser = approve_proposal.parse_args(["proposal_resource", "my_proposal"])
-
+mock_signed_challenges = []
 
 test_resource = "projects/my-project/locations/us-east1/singleTenantHsmInstances/mysthi/proposals/my_proposal"
+# mock_completed_process = subprocess.CompletedProcess
 
-mock_completed_process = subprocess.CompletedProcess
 
 def public_key_to_pem(public_key):
-  public_key_pem =  public_key.public_bytes(
-       encoding=Encoding.PEM,
-       format=PublicFormat.SubjectPublicKeyInfo
-    ).decode('utf-8')
-  print("PUBLIC KEY--------------")
-  print(public_key_pem)
-  return public_key_pem
+    public_key_pem = public_key.public_bytes(
+        encoding=Encoding.PEM, format=PublicFormat.SubjectPublicKeyInfo
+    ).decode("utf-8")
+    print("PUBLIC KEY--------------")
+    print(public_key_pem)
+    return public_key_pem
+
 
 def create_json(public_key_pem_1, public_key_pem_2, public_key_pem_3):
 
-  my_json_string = json.dumps({ "quorumParameters": {
-    "challenges": [
-      {
-        "challenge": "tiOz64M_rJ34yOvweHBBltRrm3k34bou4m2JKlz9BmhrR7yU6S6ram8o1VQhyPU1",
-        "publicKeyPem": public_key_pem_1
-      },
-      {
-        "challenge": "6bfZOoD9L35qO1GIzVHcv9sX0UEzKCTru8yz1U7NK4o7y0gnXoU3Ak47sFFY4Yzb",
-        "publicKeyPem": public_key_pem_2
-      },
-      {
-        "challenge": "NNH3Pt3F-OvaeYR_Dynp_nbHMuLaVYBnkG7uJtwz2-lShyLaHNjOyjBnL-eGjoRY",
-        "publicKeyPem": public_key_pem_3
-      }
-    ],
-    "requiredApproverCount": 3
-  }})
-
-  return my_json_string
+    my_json_string = json.dumps(
+        {
+            "quorumParameters": {
+                "challenges": [
+                    {
+                        "challenge": "tiOz64M_rJ34yOvweHBBltRrm3k34bou4m2JKlz9BmhrR7yU6S6ram8o1VQhyPU1",
+                        "publicKeyPem": public_key_pem_1,
+                    },
+                    {
+                        "challenge": "6bfZOoD9L35qO1GIzVHcv9sX0UEzKCTru8yz1U7NK4o7y0gnXoU3Ak47sFFY4Yzb",
+                        "publicKeyPem": public_key_pem_2,
+                    },
+                    {
+                        "challenge": "NNH3Pt3F-OvaeYR_Dynp_nbHMuLaVYBnkG7uJtwz2-lShyLaHNjOyjBnL-eGjoRY",
+                        "publicKeyPem": public_key_pem_3,
+                    },
+                ],
+                "requiredApproverCount": 3,
+            }
+        }
+    )
+    return my_json_string
 
 
 def create_fake_fetch_response(num_keys=3):
@@ -151,91 +133,108 @@ def create_fake_fetch_response(num_keys=3):
     return challenge_json, pub_to_priv_key
 
 
-
-mock_signed_challenges = []
-
-def sign_challenges_with_capture(challenges:list[ykman_utils.Challenge], pub_to_priv_key):
-  signed_challenges = []
-  for challenge in challenges:
-      private_key = pub_to_priv_key[challenge.public_key_pem]
-      signed_challenge = ykman_fake.sign_data(private_key, challenge.challenge)
-      signed_challenges.append(
-        ykman_utils.ChallengeReply(
-          challenge.challenge,
-          signed_challenge,
-          challenge.public_key_pem
+def sign_challenges_with_capture(
+    challenges: list[ykman_utils.Challenge], pub_to_priv_key
+):
+    signed_challenges = []
+    for challenge in challenges:
+        private_key = pub_to_priv_key[challenge.public_key_pem]
+        signed_challenge = ykman_fake.sign_data(private_key, challenge.challenge)
+        signed_challenges.append(
+            ykman_utils.ChallengeReply(
+                challenge.challenge, signed_challenge, challenge.public_key_pem
+            )
         )
-      )
-  mock_signed_challenges.extend(signed_challenges)
-  return signed_challenges
+    mock_signed_challenges.extend(signed_challenges)
+    return signed_challenges
+
 
 def verify_with_fake(pub_to_priv_key, signed_challenges):
-  for signed_challenge in signed_challenges:
-    priv_key = pub_to_priv_key[signed_challenge.public_key_pem]
-    assert True == ykman_fake.verify_signature(priv_key.public_key(), signed_challenge.unsigned_challenge, signed_challenge.signed_challenge)
-  print("Signed verified successfully")
+    for signed_challenge in signed_challenges:
+        priv_key = pub_to_priv_key[signed_challenge.public_key_pem]
+        assert ykman_fake.verify_signature(
+            priv_key.public_key(),
+            signed_challenge.unsigned_challenge,
+            signed_challenge.signed_challenge,
+        )
+    print("Signed verified successfully")
+
 
 def test_get_challenges_mocked(mocker, monkeypatch):
-  
-  # Verify signed challenges
-  monkeypatch.setattr(
-    "gcloud_commands.send_signed_challenges",
-    lambda signed_challenges, proposal_resource: verify_with_fake(pub_to_priv_key, mock_signed_challenges)
-  )
+    # Verify signed challenges
+    monkeypatch.setattr(
+        "gcloud_commands.send_signed_challenges",
+        lambda signed_challenges, proposal_resource: verify_with_fake(
+            pub_to_priv_key, mock_signed_challenges
+        ),
+    )
 
-  # monkeypatch sign challenges
-  monkeypatch.setattr(
-      "ykman_utils.sign_challenges",
-      lambda challenges: sign_challenges_with_capture(challenges, pub_to_priv_key)
-  )
+    # monkeypatch sign challenges
+    monkeypatch.setattr(
+        "ykman_utils.sign_challenges",
+        lambda challenges: sign_challenges_with_capture(challenges, pub_to_priv_key),
+    )
 
-  # mock the challenge string returned by service
-  challenge_json, pub_to_priv_key  = create_fake_fetch_response()
-  mock_response = mocker.MagicMock()
-  mock_response.stdout = challenge_json
-  mocker.patch("subprocess.run", return_value=mock_response)
+    # mock the challenge string returned by service
+    challenge_json, pub_to_priv_key = create_fake_fetch_response()
+    mock_response = mocker.MagicMock()
+    mock_response.stdout = challenge_json
+    mocker.patch("subprocess.run", return_value=mock_response)
 
-  # monkeypatch parse args
-  mock_args = argparse.Namespace(proposal_resource="test_resource")
-  monkeypatch.setattr(
-      "approve_proposal.parse_args",
-      lambda args: mock_args
-  )  
+    # monkeypatch parse args
+    mock_args = argparse.Namespace(proposal_resource="test_resource")
+    monkeypatch.setattr("approve_proposal.parse_args", lambda args: mock_args)
 
-  approve_proposal.approve_proposal()
+    approve_proposal.approve_proposal()
 
-  # assert challenge files created
-  challenge_files = ['challenges/challenge1.txt', 'challenges/challenge2.txt', 'challenges/challenge3.txt']
-  for file_path in challenge_files:
-    assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
+    # assert challenge files created
+    challenge_files = [
+        "challenges/challenge1.txt",
+        "challenges/challenge2.txt",
+        "challenges/challenge3.txt",
+    ]
+    for file_path in challenge_files:
+        assert os.path.exists(
+            file_path
+        ), f"File '{file_path}' should exist but does not."
+
 
 if __name__ == "__main__":
-  # Parse challenges into files
-  unsigned_challenges = approve_proposal.parse_challenges_into_files(
-      sample_sthi_output
-  )
-  created_signed_files = ['signed_challenges/signed_challenge1.txt', 'signed_challenges/signed_challenge2.txt', 'signed_challenges/signed_challenge3.txt']
-  for file_path in created_signed_files:
-    assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
+    # Parse challenges into files
+    unsigned_challenges = approve_proposal.parse_challenges_into_files(
+        sample_sthi_output
+    )
+    created_signed_files = [
+        "signed_challenges/signed_challenge1.txt",
+        "signed_challenges/signed_challenge2.txt",
+        "signed_challenges/signed_challenge3.txt",
+    ]
+    for file_path in created_signed_files:
+        assert os.path.exists(
+            file_path
+        ), f"File '{file_path}' should exist but does not."
 
-  # assert signed challenge files created
-  signed_challenge_files = ['signed_challenges/signed_challenge1.txt', 'signed_challenges/signed_challenge2.txt', 'signed_challenges/signed_challenge3.txt']
-  for file_path in signed_challenge_files:
-    assert True == os.path.exists(file_path), f"File '{file_path}' should exist but does not."
+    # assert signed challenge files created
+    signed_challenge_files = [
+        "signed_challenges/signed_challenge1.txt",
+        "signed_challenges/signed_challenge2.txt",
+        "signed_challenges/signed_challenge3.txt",
+    ]
+    for file_path in signed_challenge_files:
+        assert os.path.exists(
+            file_path
+        ), f"File '{file_path}' should exist but does not."
 
-
-  # Parse files into challenge list
-  challenges = ykman_utils.populate_challenges_from_files()
-  for challenge in challenges:
-    print(challenge.challenge)
-    print(challenge.public_key_pem)
-    unsigned_challenges.append(challenge.challenge)
-  signed_challenged_files = []
-  signed_challenges = ykman_utils.sign_challenges(
-      challenges, signed_challenged_files
-  )
-  for signed_challenge in signed_challenges:
-    print(signed_challenge.signed_challenge)
-    print(signed_challenge.public_key_pem)
-  print("--challenge_replies=" + str(signed_challenged_files))
-  ykman_utils.verify_challenge_signatures(signed_challenges)
+    # Parse files into challenge list
+    challenges = ykman_utils.populate_challenges_from_files()
+    for challenge in challenges:
+        print(challenge.challenge)
+        print(challenge.public_key_pem)
+        unsigned_challenges.append(challenge.challenge)
+    signed_challenged_files = []
+    signed_challenges = ykman_utils.sign_challenges(challenges, signed_challenged_files)
+    for signed_challenge in signed_challenges:
+        print(signed_challenge.signed_challenge)
+        print(signed_challenge.public_key_pem)
+    print("--challenge_replies=" + str(signed_challenged_files))
+    ykman_utils.verify_challenge_signatures(signed_challenges)
