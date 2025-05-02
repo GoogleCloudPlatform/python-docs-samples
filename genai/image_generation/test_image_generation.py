@@ -34,6 +34,8 @@ import imggen_style_reference_with_txt_img
 
 import imggen_subj_refer_ctrl_refer_with_txt_imgs
 
+import imggen_with_txt
+
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -78,4 +80,9 @@ def test_img_customization_scribble(output_gcs_uri: str) -> None:
 
 def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
     response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(output_gcs_uri=output_gcs_uri)
+    assert response
+
+
+def test_img_generation(output_gcs_uri: str) -> None:
+    response = imggen_with_txt.generate_images(output_gcs_uri=output_gcs_uri)
     assert response
