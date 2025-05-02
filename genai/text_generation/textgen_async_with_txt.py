@@ -18,10 +18,10 @@ import asyncio
 async def generate_content() -> str:
     # [START googlegenaisdk_textgen_async_with_txt]
     from google import genai
-    from google.genai.types import GenerateContentConfig
+    from google.genai.types import GenerateContentConfig, HttpOptions
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
     response = await client.aio.models.generate_content(
         model=model_id,

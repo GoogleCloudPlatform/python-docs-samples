@@ -18,11 +18,10 @@ import urllib
 
 import flask
 
-# [START taskq-imp]
+# [START gae_ndb_transactions_import]
 from google.appengine.api import taskqueue
 from google.appengine.ext import ndb
-
-# [END taskq-imp]
+# [END gae_ndb_transactions_import]
 
 
 class Note(ndb.Model):
@@ -73,7 +72,7 @@ def main_page():
     return response
 
 
-# [START standard]
+# [START gae_ndb_transactions_insert_standard]
 @ndb.transactional
 def insert_if_absent(note_key, note):
     fetch = note_key.get()
@@ -81,16 +80,14 @@ def insert_if_absent(note_key, note):
         note.put()
         return True
     return False
+# [END gae_ndb_transactions_insert_standard]
 
 
-# [END standard]
-
-
-# [START two-tries]
+# [START gae_ndb_transactions_insert_two_tries]
 @ndb.transactional(retries=1)
 def insert_if_absent_2_retries(note_key, note):
     # do insert
-    # [END two-tries]
+    # [END gae_ndb_transactions_insert_two_tries]
     fetch = note_key.get()
     if fetch is None:
         note.put()
@@ -98,11 +95,11 @@ def insert_if_absent_2_retries(note_key, note):
     return False
 
 
-# [START cross-group]
+# [START gae_ndb_transactions_insert_cross_group]
 @ndb.transactional(xg=True)
 def insert_if_absent_xg(note_key, note):
     # do insert
-    # [END cross-group]
+    # [END gae_ndb_transactions_insert_cross_group]
     fetch = note_key.get()
     if fetch is None:
         note.put()
@@ -110,10 +107,10 @@ def insert_if_absent_xg(note_key, note):
     return False
 
 
-# [START sometimes]
+# [START gae_ndb_transactions_insert_sometimes]
 def insert_if_absent_sometimes(note_key, note):
     # do insert
-    # [END sometimes]
+    # [END gae_ndb_transactions_insert_sometimes]
     fetch = note_key.get()
     if fetch is None:
         note.put()
@@ -121,11 +118,11 @@ def insert_if_absent_sometimes(note_key, note):
     return False
 
 
-# [START indep]
+# [START gae_ndb_transactions_insert_independent]
 @ndb.transactional(propagation=ndb.TransactionOptions.INDEPENDENT)
 def insert_if_absent_indep(note_key, note):
     # do insert
-    # [END indep]
+    # [END gae_ndb_transactions_insert_independent]
     fetch = note_key.get()
     if fetch is None:
         note.put()
@@ -133,12 +130,12 @@ def insert_if_absent_indep(note_key, note):
     return False
 
 
-# [START taskq]
+# [START gae_ndb_transactions_insert_task_queue]
 @ndb.transactional
 def insert_if_absent_taskq(note_key, note):
     taskqueue.add(url=flask.url_for("taskq_worker"), transactional=True)
     # do insert
-    # [END taskq]
+    # [END gae_ndb_transactions_insert_task_queue]
     fetch = note_key.get()
     if fetch is None:
         note.put()
@@ -154,17 +151,17 @@ def taskq_worker():
 def pick_random_insert(note_key, note):
     choice = random.randint(0, 5)
     if choice == 0:
-        # [START calling2]
+        # [START gae_ndb_transactions_insert_standard_calling_2]
         inserted = insert_if_absent(note_key, note)
-        # [END calling2]
+        # [END gae_ndb_transactions_insert_standard_calling_2]
     elif choice == 1:
         inserted = insert_if_absent_2_retries(note_key, note)
     elif choice == 2:
         inserted = insert_if_absent_xg(note_key, note)
     elif choice == 3:
-        # [START sometimes-call]
+        # [START gae_ndb_transactions_insert_sometimes_callback]
         inserted = ndb.transaction(lambda: insert_if_absent_sometimes(note_key, note))
-        # [END sometimes-call]
+        # [END gae_ndb_transactions_insert_sometimes_callback]
     elif choice == 4:
         inserted = insert_if_absent_indep(note_key, note)
     elif choice == 5:
@@ -183,10 +180,10 @@ def add_note():
     choice = random.randint(0, 1)
     if choice == 0:
         # Use transactional function
-        # [START calling]
+        # [START gae_ndb_transactions_insert_standard_calling_1]
         note_key = ndb.Key(Note, note_title, parent=parent)
         note = Note(key=note_key, content=note_text)
-        # [END calling]
+        # [END gae_ndb_transactions_insert_standard_calling_1]
         if pick_random_insert(note_key, note) is False:
             return 'Already there<br><a href="%s">Return</a>' % flask.url_for(
                 "main_page", page_name=page_name

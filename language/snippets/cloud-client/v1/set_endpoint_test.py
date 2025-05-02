@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 import set_endpoint
 
 
-def test_set_endpoint(capsys):
+def test_set_endpoint(capsys: pytest.LogCaptureFixture) -> None:
     set_endpoint.set_endpoint()
 
     out, _ = capsys.readouterr()

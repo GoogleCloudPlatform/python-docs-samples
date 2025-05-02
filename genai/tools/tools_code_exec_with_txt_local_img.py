@@ -19,9 +19,14 @@ def generate_content() -> GenerateContentResponse:
     # [START googlegenaisdk_tools_code_exec_with_txt_local_img]
     from PIL import Image
     from google import genai
-    from google.genai.types import Tool, ToolCodeExecution, GenerateContentConfig
+    from google.genai.types import (
+        GenerateContentConfig,
+        HttpOptions,
+        Tool,
+        ToolCodeExecution,
+    )
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
 
     prompt = """
@@ -37,36 +42,37 @@ def generate_content() -> GenerateContentResponse:
     """
 
     # Image source: https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Monty_open_door.svg/640px-Monty_open_door.svg.png
-    image_data = Image.open(open("test_data/640px-Monty_open_door.svg.png", "rb"))
+    with open("test_data/640px-Monty_open_door.svg.png", "rb") as image_file:
+        image_data = Image.open(image_file)
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
-        contents=[image_data, prompt],
-        config=GenerateContentConfig(
-            tools=[code_execution_tool],
-            temperature=0,
-        ),
-    )
+        response = client.models.generate_content(
+            model="gemini-2.0-flash-001",
+            contents=[image_data, prompt],
+            config=GenerateContentConfig(
+                tools=[code_execution_tool],
+                temperature=0,
+            ),
+        )
 
     print("# Code:")
-    for part in response.candidates[0].content.parts:
-        if part.executable_code:
-            print(part.executable_code)
-
+    print(response.executable_code)
     print("# Outcome:")
-    for part in response.candidates[0].content.parts:
-        if part.code_execution_result:
-            print(part.code_execution_result)
+    print(response.code_execution_result)
 
-    # Example response:
     # # Code:
-    # code='\nimport random\n\ndef monty_hall_simulation(num_trials):\n
-    # """Simulates the Monty Hall problem and returns the win rates for switching and not switching."""\n\n
-    # wins_switching = 0\n    wins_not_switching = 0\n\n    for _ in range(num_trials):\n        # 1. Set up the game:\n
-    #   - Randomly place the car behind one of the three doors.\n        car_door = random.randint(0, 2)\n
+    # import random
+
+    # def monty_hall_simulation(num_trials=1000):
+    #     wins_switching = 0
+    #     wins_not_switching = 0
+
+    #     for _ in range(num_trials):
+    #         # Randomly assign the car to a door (0, 1, or 2)
+    #         car_door = random.randint(0, 2)
     # ...
     # # Outcome:
-    # outcome=<Outcome.OUTCOME_OK: 'OUTCOME_OK'> output='Win percentage when switching: 65.90%\nWin percentage when not switching: 34.10%\n'
+    # Win percentage when switching: 65.50%
+    # Win percentage when not switching: 34.50%
     # [END googlegenaisdk_tools_code_exec_with_txt_local_img]
     return response
 

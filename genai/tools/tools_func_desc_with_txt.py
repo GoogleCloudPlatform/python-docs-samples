@@ -16,10 +16,15 @@
 def generate_content() -> str:
     # [START googlegenaisdk_tools_func_desc_with_txt]
     from google import genai
-    from google.genai.types import FunctionDeclaration, Tool, GenerateContentConfig
+    from google.genai.types import (
+        FunctionDeclaration,
+        GenerateContentConfig,
+        HttpOptions,
+        Tool,
+    )
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
     get_album_sales = FunctionDeclaration(
         name="get_album_sales",
@@ -68,7 +73,7 @@ def generate_content() -> str:
         ),
     )
 
-    print(response.candidates[0].content.parts[0].function_call)
+    print(response.function_calls[0])
     # Example response:
     # [FunctionCall(
     #     id=None,
@@ -82,9 +87,8 @@ def generate_content() -> str:
     #         ]
     #     },
     # )]
-
     # [END googlegenaisdk_tools_func_desc_with_txt]
-    return str(response.candidates[0].content.parts[0].function_call)
+    return str(response.function_calls[0])
 
 
 if __name__ == "__main__":

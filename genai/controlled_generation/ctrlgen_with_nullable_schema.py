@@ -16,6 +16,7 @@
 def generate_content() -> str:
     # [START googlegenaisdk_ctrlgen_with_nullable_schema]
     from google import genai
+    from google.genai.types import GenerateContentConfig, HttpOptions
 
     response_schema = {
         "type": "OBJECT",
@@ -48,14 +49,14 @@ def generate_content() -> str:
         Finally, Saturday rounds off the week with sunny skies, a temperature of 80°F, and a humidity level of 40%. Winds will be gentle at 8 km/h.
     """
 
-    client = genai.Client()
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=prompt,
-        config={
-            "response_mime_type": "application/json",
-            "response_schema": response_schema,
-        },
+        config=GenerateContentConfig(
+            response_mime_type="application/json",
+            response_schema=response_schema,
+        ),
     )
 
     print(response.text)
@@ -67,7 +68,6 @@ def generate_content() -> str:
     #   {"Day": "Thursday", "Forecast": "cloudy", "Temperature": 66, "Wind Speed": null, "Humidity": "60%"},
     #   {"Day": "Friday", "Forecast": "partly cloudy", "Temperature": 73, "Wind Speed": 12},
     #   {"Day": "Saturday", "Forecast": "sunny", "Temperature": 80, "Wind Speed": 8, "Humidity": "40%"}]}
-
     # [END googlegenaisdk_ctrlgen_with_nullable_schema]
     return response.text
 

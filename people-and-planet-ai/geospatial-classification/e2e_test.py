@@ -293,7 +293,7 @@ def train_model(bucket_name: str) -> str:
     )
 
     job.run(
-        accelerator_type="NVIDIA_TESLA_K80",
+        accelerator_type="NVIDIA_TESLA_T4",
         accelerator_count=1,
         args=[f"--bucket={bucket_name}"],
     )

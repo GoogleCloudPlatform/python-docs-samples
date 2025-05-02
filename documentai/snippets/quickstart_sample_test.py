@@ -1,4 +1,4 @@
-# # Copyright 2020 Google LLC
+# Copyright 2020 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,9 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
-
-# flake8: noqa
 
 import os
 from uuid import uuid4
@@ -21,33 +18,65 @@ from uuid import uuid4
 from documentai.snippets import quickstart_sample
 
 from google.api_core.client_options import ClientOptions
-from google.cloud import documentai  # type: ignore
+from google.cloud import documentai_v1
 
-location = "us"
-project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
-processor_display_name = f"test-processor-{uuid4()}"
-file_path = "resources/invoice.pdf"
+from google.cloud.documentai_v1.types.processor import Processor
+
+import pytest
+
+LOCATION = "us"
+PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+FILE_PATH = "resources/invoice.pdf"
 
 
-def test_quickstart(capsys):
-    processor = quickstart_sample.quickstart(
-        project_id=project_id,
-        location=location,
-        processor_display_name=processor_display_name,
-        file_path=file_path,
+@pytest.fixture(scope="module")
+def client() -> documentai_v1.DocumentProcessorServiceClient:
+    opts = ClientOptions(api_endpoint=f"{LOCATION}-documentai.googleapis.com")
+
+    client = documentai_v1.DocumentProcessorServiceClient(client_options=opts)
+
+    return client
+
+
+@pytest.fixture(scope="module")
+def processor_id(client: documentai_v1.DocumentProcessorServiceClient) -> Processor:
+    processor_display_name = f"test-processor-{uuid4()}"
+
+    # Get the full resource name of the location.
+    # For example: `projects/{project_id}/locations/{location}`
+    parent = client.common_location_path(PROJECT_ID, LOCATION)
+
+    # Create a Processor.
+    # https://cloud.google.com/document-ai/docs/create-processor#available_processors
+    processor = client.create_processor(
+        parent=parent,
+        processor=documentai_v1.Processor(
+            type_="OCR_PROCESSOR",
+            display_name=processor_display_name,
+        ),
     )
-    out, _ = capsys.readouterr()
 
-    # Delete created processor
-    client = documentai.DocumentProcessorServiceClient(
+    # `processor.name` (Full Processor Path) has this form:
+    # `projects/{project_id}/locations/{location}/processors/{processor_id}`
+    # Return only the `processor_id` section.
+    last_slash_index = processor.name.rfind('/')
+    yield processor.name[last_slash_index + 1:]
+
+    # Delete processor.
+    client = documentai_v1.DocumentProcessorServiceClient(
         client_options=ClientOptions(
-            api_endpoint=f"{location}-documentai.googleapis.com"
+            api_endpoint=f"{LOCATION}-documentai.googleapis.com"
         )
     )
-    operation = client.delete_processor(name=processor.name)
-    # Wait for operation to complete
-    operation.result()
+    client.delete_processor(name=processor.name)
 
-    assert "Processor Name:" in out
-    assert "text:" in out
-    assert "Invoice" in out
+
+def test_quickstart(processor_id: str) -> None:
+    document = quickstart_sample.quickstart(
+        project_id=PROJECT_ID,
+        processor_id=processor_id,
+        location=LOCATION,
+        file_path=FILE_PATH,
+    )
+
+    assert "Invoice" in document.text

@@ -36,7 +36,7 @@ def generate_text(project_id: str, location: str = "us-central1") -> object:
     )
 
     response = client.chat.completions.create(
-        model="google/gemini-1.5-flash-002",
+        model="google/gemini-2.0-flash-001",
         messages=[
             {
                 "role": "user",
