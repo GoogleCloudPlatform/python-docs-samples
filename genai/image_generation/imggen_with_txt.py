@@ -29,7 +29,6 @@ def generate_images(output_gcs_uri: str) -> str:
         config=GenerateImagesConfig(
             aspect_ratio="1:1",
             number_of_images=1,
-            seed=1,
             safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
             person_generation="DONT_ADULT",
             output_gcs_uri=output_gcs_uri,
