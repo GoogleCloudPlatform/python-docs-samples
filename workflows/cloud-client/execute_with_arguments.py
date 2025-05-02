@@ -17,7 +17,7 @@ import os
 from google.cloud.workflows.executions_v1 import Execution
 
 
-def execute_workflow_with_argument(
+def execute_workflow_with_arguments(
     project_id: str,
     location: str,
     workflow_id: str
@@ -54,7 +54,7 @@ def execute_workflow_with_argument(
     # Construct the fully qualified location path.
     parent = workflows_client.workflow_path(project_id, location, workflow_id)
 
-    # Execute the workflow.
+    # Execute the workflow adding an dictionary of arguments.
     # Find more information about the Execution object here:
     # https://cloud.google.com/python/docs/reference/workflows/latest/google.cloud.workflows.executions_v1.types.Execution
     execution = executions_v1.Execution(
@@ -73,6 +73,8 @@ def execute_workflow_with_argument(
     backoff_delay = 1  # Start wait with delay of 1 second.
     print("Poll for result...")
 
+    # Keep polling the state until the execution finishes,
+    # using exponential backoff.
     while not execution_finished:
         execution = execution_client.get_execution(
             request={"name": response.name}
@@ -96,4 +98,4 @@ if __name__ == "__main__":
     PROJECT = os.getenv("GOOGLE_CLOUD_PROJECT")
     assert PROJECT, "'GOOGLE_CLOUD_PROJECT' environment variable not set."
 
-    execute_workflow_with_argument(PROJECT, "us-central1", "myFirstWorkflow")
+    execute_workflow_with_arguments(PROJECT, "us-central1", "myFirstWorkflow")
