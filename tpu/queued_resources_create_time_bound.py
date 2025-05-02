@@ -13,15 +13,15 @@
 # limitations under the License.
 import os
 
-from google.cloud.tpu_v2alpha1 import CreateQueuedResourceRequest, Node
+from google.cloud.tpu_v2alpha1 import Node
 
 
 def create_queued_resource_time_bound(
     project_id: str,
     zone: str,
     tpu_name: str,
-    tpu_type: str = "v2-8",
-    runtime_version: str = "tpu-vm-tf-2.17.0-pjrt",
+    tpu_type: str = "v5litepod-4",
+    runtime_version: str = "v2-tpuv5-litepod",
     queued_resource_name: str = "resource-name",
 ) -> Node:
     # [START tpu_queued_resources_time_bound]
@@ -29,10 +29,10 @@ def create_queued_resource_time_bound(
 
     # TODO(developer): Update and un-comment below lines
     # project_id = "your-project-id"
-    # zone = "us-central1-b"
+    # zone = "us-central1-a"
     # tpu_name = "tpu-name"
-    # tpu_type = "v2-8"
-    # runtime_version = "tpu-vm-tf-2.17.0-pjrt"
+    # tpu_type = "v5litepod-4"
+    # runtime_version = "v2-tpuv5-litepod"
     # queued_resource_name = "resource-name"
 
     node = tpu_v2alpha1.Node()
@@ -57,7 +57,7 @@ def create_queued_resource_time_bound(
         # valid_until_time="2024-10-29T16:00:00Z",  # Specify a time before which the resource should be allocated
     )
 
-    request = CreateQueuedResourceRequest(
+    request = tpu_v2alpha1.CreateQueuedResourceRequest(
         parent=f"projects/{project_id}/locations/{zone}",
         queued_resource_id=queued_resource_name,
         queued_resource=resource,
@@ -81,7 +81,7 @@ def create_queued_resource_time_bound(
 
 if __name__ == "__main__":
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     create_queued_resource_time_bound(
         project_id=PROJECT_ID,
         zone=ZONE,

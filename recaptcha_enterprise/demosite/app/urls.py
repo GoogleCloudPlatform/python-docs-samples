@@ -251,6 +251,7 @@ def on_comment_submit() -> Response:
 
 
 # Classify the action as BAD/ NOT_BAD based on conditions specified.
+# See https://cloud.google.com/recaptcha/docs/interpret-assessment-website
 def check_for_bad_action(
     assessment_response: Assessment, recaptcha_action: str
 ) -> tuple[str, str]:

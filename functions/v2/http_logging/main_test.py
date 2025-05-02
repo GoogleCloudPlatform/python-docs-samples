@@ -34,7 +34,7 @@ def test_functions_log_http_should_print_message(app, capsys):
     os.environ["K_CONFIGURATION"] = "test-config-name"
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     mock_trace = "abcdef"
-    mock_span = "2"
+    mock_span = "0000000000000002"
     expected = {
         "message": "Hello, world!",
         "severity": "INFO",

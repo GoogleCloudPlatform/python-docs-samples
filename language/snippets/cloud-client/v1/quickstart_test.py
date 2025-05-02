@@ -12,11 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
 
 import quickstart
 
 
-def test_quickstart(capsys):
+def test_quickstart(capsys: pytest.LogCaptureFixture) -> None:
     quickstart.run_quickstart()
     out, _ = capsys.readouterr()
     assert "Sentiment" in out

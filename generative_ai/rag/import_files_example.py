@@ -15,7 +15,7 @@
 import os
 from typing import List
 
-from google.cloud.aiplatform_v1beta1 import ImportRagFilesResponse
+from google.cloud.aiplatform_v1 import ImportRagFilesResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -26,7 +26,7 @@ def import_files(
 ) -> ImportRagFilesResponse:
     # [START generativeaionvertexai_rag_import_files]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -40,8 +40,10 @@ def import_files(
     response = rag.import_files(
         corpus_name=corpus_name,
         paths=paths,
-        chunk_size=512,  # Optional
-        chunk_overlap=100,  # Optional
+        transformation_config=rag.TransformationConfig(
+            rag.ChunkingConfig(chunk_size=512, chunk_overlap=100)
+        ),
+        import_result_sink="gs://sample-existing-folder/sample_import_result_unique.ndjson",  # Optional, this has to be an existing storage bucket folder, and file name has to be unique (non-existent).
         max_embedding_requests_per_min=900,  # Optional
     )
     print(f"Imported {response.imported_rag_files_count} files.")

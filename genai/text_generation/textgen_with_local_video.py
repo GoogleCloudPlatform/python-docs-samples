@@ -14,12 +14,12 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_textgen_code_with_local_video]
+    # [START googlegenaisdk_textgen_with_local_video]
     from google import genai
-    from google.genai import types
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client()
-    model_id = "gemini-2.0-flash-exp"
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    model_id = "gemini-2.0-flash-001"
 
     # Read local video file content
     with open("test_data/describe_video_content.mp4", "rb") as fp:
@@ -29,8 +29,8 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model=model_id,
         contents=[
+            Part.from_bytes(data=video_content, mime_type="video/mp4"),
             "Write a short and engaging blog post based on this video.",
-            types.Part.from_bytes(data=video_content, mime_type="video/mp4"),
         ],
     )
 
@@ -39,7 +39,7 @@ def generate_content() -> str:
     # Okay, here's a short and engaging blog post based on the climbing video:
     # **Title: Conquering the Wall: A Glimpse into the World of Indoor Climbing**
     # ...
-    # [END googlegenaisdk_textgen_code_with_local_video]
+    # [END googlegenaisdk_textgen_with_local_video]
     return response.text
 
 

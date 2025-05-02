@@ -16,9 +16,9 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_video]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     prompt = """
     Analyze the provided video file, including its audio.
     Summarize the main points of the video concisely.
@@ -27,11 +27,11 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            prompt,
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/pixel8.mp4",
                 mime_type="video/mp4",
             ),
+            prompt,
         ],
     )
 

@@ -24,7 +24,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def list_corpora() -> ListRagCorporaPager:
     # [START generativeaionvertexai_rag_list_corpora]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

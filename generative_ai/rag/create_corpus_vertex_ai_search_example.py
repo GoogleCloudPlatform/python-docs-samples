@@ -15,7 +15,7 @@ import os
 
 from typing import Optional
 
-from vertexai.preview.rag import RagCorpus
+from vertexai import rag
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -24,10 +24,10 @@ def create_corpus_vertex_ai_search(
     vertex_ai_search_engine_name: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagCorpus:
+) -> rag.RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus_vertex_ai_search]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

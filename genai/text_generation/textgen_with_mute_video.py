@@ -16,17 +16,17 @@
 def generate_content() -> str:
     # [START googlegenaisdk_textgen_with_mute_video]
     from google import genai
-    from google.genai.types import Part
+    from google.genai.types import HttpOptions, Part
 
-    client = genai.Client(http_options={'api_version': 'v1'})
+    client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents=[
-            "What is in the video?",
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/ad_copy_from_video.mp4",
                 mime_type="video/mp4",
             ),
+            "What is in the video?",
         ],
     )
     print(response.text)

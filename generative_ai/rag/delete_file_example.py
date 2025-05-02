@@ -20,7 +20,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def delete_file(file_name: str) -> None:
     # [START generativeaionvertexai_rag_delete_file]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

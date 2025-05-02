@@ -41,7 +41,8 @@ def connect_with_connector() -> sqlalchemy.engine.base.Engine:
 
     ip_type = IPTypes.PRIVATE if os.environ.get("PRIVATE_IP") else IPTypes.PUBLIC
 
-    connector = Connector(ip_type)
+    # initialize Cloud SQL Python Connector object
+    connector = Connector(ip_type=ip_type, refresh_strategy="LAZY")
 
     connect_args = {}
     # If your SQL Server instance requires SSL, you need to download the CA

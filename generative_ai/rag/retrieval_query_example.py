@@ -24,7 +24,7 @@ def retrieval_query(
 ) -> RetrieveContextsResponse:
     # [START generativeaionvertexai_rag_retrieval_query]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -43,9 +43,10 @@ def retrieval_query(
             )
         ],
         text="Hello World!",
-        similarity_top_k=10,  # Optional
-        vector_distance_threshold=0.5,  # Optional
-        # vector_search_alpha=0.5, # Optional - Only supported for Weaviate
+        rag_retrieval_config=rag.RagRetrievalConfig(
+            top_k=10,
+            filter=rag.utils.resources.Filter(vector_distance_threshold=0.5),
+        ),
     )
     print(response)
     # Example response:

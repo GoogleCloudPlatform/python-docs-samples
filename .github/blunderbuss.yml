@@ -23,6 +23,8 @@ assign_issues_by:
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
+      - "api: modelarmor"
+      - "api: parametermanager" 
       - "api: privateca"
       - "api: recaptchaenterprise"
       - "api: secretmanager"
@@ -56,7 +58,7 @@ assign_issues_by:
       - "api: storagecontrol"
       - "api: storagetransfer"
     to:
-      - GoogleCloudPlatform/cloud-storage-dpes
+      - GoogleCloudPlatform/gcs-sdk-team
   - labels:
       - "api: pubsub"
       - "api: pubsublite"
@@ -156,6 +158,8 @@ assign_prs_by:
       - "api: cloudkms"
       - "api: iam"
       - "api: kms"
+      - "api: modelarmor"
+      - "api: parametermanager"
       - "api: privateca"
       - "api: recaptchaenterprise"
       - "api: secretmanager"
@@ -186,7 +190,7 @@ assign_prs_by:
   - labels:
       - "api: storage"
     to:
-      - GoogleCloudPlatform/cloud-storage-dpes
+      - GoogleCloudPlatform/gcs-sdk-team
   - labels:
       - "api: pubsub"
       - "api: pubsublite"
@@ -258,6 +262,10 @@ assign_prs_by:
       - "api: dataplex"
     to:
       - GoogleCloudPlatform/googleapi-dataplex
+  - labels:
+      - "api: connectgateway"
+    to:
+      - GoogleCloudPlatform/connectgateway
   # Self-service individuals
   - labels:
       - "api: auth"

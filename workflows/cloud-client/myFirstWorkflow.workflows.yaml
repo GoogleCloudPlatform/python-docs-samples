@@ -1,4 +1,4 @@
-# Copyright 2021 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,18 +12,36 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-- getCurrentTime:
-    call: http.get
-    args:
-      url: https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam
-    result: currentTime
-- readWikipedia:
-    call: http.get
-    args:
-      url: https://en.wikipedia.org/w/api.php
-      query:
-        action: opensearch
-        search: ${currentTime.body.dayOfWeek}
-    result: wikiResult
-- returnResult:
-    return: ${wikiResult.body[1]}
+# [START workflows_myfirstworkflow_yaml_python]
+# This workflow accepts an optional "searchTerm" argument for the Wikipedia API.
+# If no input arguments are provided or "searchTerm" is absent,
+# it will fetch the day of the week in Amsterdam and use it as the search term.
+
+main:
+    params: [input]
+    steps:
+    - validateSearchTermAndRedirectToReadWikipedia:
+        switch:
+            - condition: '${map.get(input, "searchTerm") != null}'
+              assign:
+                - searchTerm: '${input.searchTerm}'
+              next: readWikipedia
+    - getCurrentTime:
+        call: http.get
+        args:
+            url: https://timeapi.io/api/Time/current/zone?timeZone=Europe/Amsterdam
+        result: currentTime
+    - setFromCallResult:
+        assign:
+            - searchTerm: '${currentTime.body.dayOfWeek}'
+    - readWikipedia:
+        call: http.get
+        args:
+            url: 'https://en.wikipedia.org/w/api.php'
+            query:
+                action: opensearch
+                search: '${searchTerm}'
+        result: wikiResult
+    - returnOutput:
+            return: '${wikiResult.body[1]}'
+# [END workflows_myfirstworkflow_yaml_python]

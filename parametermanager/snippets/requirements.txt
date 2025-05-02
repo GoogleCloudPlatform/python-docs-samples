@@ -1,0 +1,1 @@
+google-cloud-parametermanager==0.1.3

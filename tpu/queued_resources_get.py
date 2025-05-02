@@ -33,7 +33,7 @@ def get_queued_resource(
     )
     resource = client.get_queued_resource(name=name)
     print("Resource name:", resource.name)
-    print(resource.state.state)
+    print(resource.state)
     # Example response:
     # Resource name: projects/{project_id}/locations/{zone}/queuedResources/resource-name
     # State.ACTIVE
@@ -44,5 +44,5 @@ def get_queued_resource(
 
 if __name__ == "__main__":
     PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
-    ZONE = "us-central1-b"
+    ZONE = "us-central1-a"
     get_queued_resource(PROJECT_ID, ZONE, "resource-name")

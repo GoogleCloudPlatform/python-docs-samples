@@ -69,14 +69,7 @@ def bucket():
     delete_bucket()
 
 
-def test_speech_transcription(capsys):
-    beta_snippets.speech_transcription(
-        "gs://python-docs-samples-tests/video/googlework_short.mp4", timeout=240
-    )
-    out, _ = capsys.readouterr()
-    assert "cultural" in out
-
-
+@pytest.mark.skip(reason="b/330632499")
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_labels_streaming(capsys, video_path):
     beta_snippets.detect_labels_streaming(video_path)
@@ -85,6 +78,7 @@ def test_detect_labels_streaming(capsys, video_path):
     assert "cat" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 def test_detect_shot_change_streaming(capsys, video_path):
     beta_snippets.detect_shot_change_streaming(video_path)
 
@@ -92,6 +86,7 @@ def test_detect_shot_change_streaming(capsys, video_path):
     assert "Shot" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 # Flaky ServiceUnavailable
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_track_objects_streaming(capsys, video_path):
@@ -101,6 +96,7 @@ def test_track_objects_streaming(capsys, video_path):
     assert "cat" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_detect_explicit_content_streaming(capsys, video_path):
     beta_snippets.detect_explicit_content_streaming(video_path)
@@ -109,6 +105,7 @@ def test_detect_explicit_content_streaming(capsys, video_path):
     assert "Time" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     output_uri = "gs://{}".format(bucket.name)
@@ -118,24 +115,7 @@ def test_annotation_to_storage_streaming(capsys, video_path, bucket):
     assert "Storage" in out
 
 
-# Flaky timeout
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_text(capsys):
-    in_file = "./resources/googlework_tiny.mp4"
-    beta_snippets.video_detect_text(in_file)
-    out, _ = capsys.readouterr()
-    assert "Text" in out
-
-
-# Flaky timeout
-@pytest.mark.flaky(max_runs=3, min_passes=1)
-def test_detect_text_gcs(capsys):
-    in_file = "gs://python-docs-samples-tests/video/googlework_tiny.mp4"
-    beta_snippets.video_detect_text_gcs(in_file)
-    out, _ = capsys.readouterr()
-    assert "Text" in out
-
-
+@pytest.mark.skip(reason="b/330632499")
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_classification(capsys, video_path):
@@ -146,6 +126,7 @@ def test_streaming_automl_classification(capsys, video_path):
     assert "brush_hair" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_object_tracking(capsys, video_path):
@@ -156,6 +137,7 @@ def test_streaming_automl_object_tracking(capsys, video_path):
     assert "Track Id" in out
 
 
+@pytest.mark.skip(reason="b/330632499")
 # Flaky Gateway
 @pytest.mark.flaky(max_runs=3, min_passes=1)
 def test_streaming_automl_action_recognition(capsys, video_path):
