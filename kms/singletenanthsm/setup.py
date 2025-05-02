@@ -19,7 +19,7 @@ import gcloud_commands
 import ykman_utils
 
 
-def validate_operation(operation: str):
+def validate_operation(operation: str, management_key: str, pin: str):
     if operation == "build_custom_gcloud":
         try:
             gcloud_commands.build_custom_gcloud()
@@ -27,8 +27,12 @@ def validate_operation(operation: str):
             raise Exception(f"Generating custom gcloud build failed {e}")
     elif operation == "generate_rsa_keys":
         try:
-            ykman_utils.generate_private_key()
+            if not management_key or not pin:
+                raise ValueError("--management_key and --pin need to be specified for the generate_rsa_keys operation")
+            ykman_utils.generate_private_key(management_key=management_key, pin=pin)
         except Exception as e:
+            if not management_key or not pin:
+                raise ValueError("--management_key and --pin need to be specified for the generate_rsa_keys operation")
             raise Exception(f"Generating private keys failed {e}")
     elif operation == "generate_gcloud_and_keys":
         generate_private_keys_build_gcloud()
@@ -39,12 +43,12 @@ def validate_operation(operation: str):
         )
 
 
-def generate_private_keys_build_gcloud():
+def generate_private_keys_build_gcloud(management_key: str, pin: str):
     """Generates an RSA key on slot 82 of every yubikey
     connected to the local machine and builds the custom gcloud cli.
     """
     try:
-        ykman_utils.generate_private_key()
+        ykman_utils.generate_private_key(management_key=management_key, pin=pin)
     except Exception as e:
         raise Exception(f"Generating private keys failed {e}")
     try:
@@ -65,5 +69,15 @@ if __name__ == "__main__":
         ],
         required=True,
     )
+    parser.add_argument(
+        "--management_key",
+        type=str,
+        required=False,
+    )
+    parser.add_argument(
+        "--pin",
+        type=str,
+        required=False,
+    )
     args = parser.parse_args()
-    validate_operation(args.operation)
+    validate_operation(args.operation, args.management_key, args.pin)

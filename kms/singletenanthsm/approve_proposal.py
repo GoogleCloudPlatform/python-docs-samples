@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import argparse
+import logging
 import json
 import os
 import sys
@@ -33,31 +34,39 @@ def parse_challenges_into_files(sthi_output: str) -> List[bytes]:
     Returns:
         A list of the unsigned challenges.
     """
-    print("parsing challenges into files")
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
+    logger.info("Parsing challenges into files")
     proposal_json = json.loads(sthi_output, strict=False)
     challenges = proposal_json["quorumParameters"]["challenges"]
 
     directory_path = "challenges"
     if not os.path.exists(directory_path):
         os.mkdir(directory_path)
-        print(f"Directory '{directory_path}' created.")
+        logger.info(f"Directory '{directory_path}' created.")
     else:
-        print(f"Directory '{directory_path}' already exists.")
+        logger.info(f"Directory '{directory_path}' already exists.")
 
     challenge_count = 0
     unsigned_challenges = []
     for challenge in challenges:
         challenge_count += 1
-        print(challenge["challenge"] + "\n")
-        print(challenge["publicKeyPem"].encode("utf-8").decode("unicode_escape"))
-        f = open("challenges/challenge{0}.txt".format(challenge_count), "wb")
-        binary_challenge = ykman_utils.urlsafe_base64_to_binary(challenge["challenge"])
-        f.write(binary_challenge)
-        f.close()
-
-        f = open("challenges/public_key{0}.pem".format(challenge_count), "w")
-        f.write(challenge["publicKeyPem"].encode("utf-8").decode("unicode_escape"))
-        f.close()
+        try:
+            with open("challenges/challenge{0}.txt".format(challenge_count), "wb") as f:
+                binary_challenge = ykman_utils.urlsafe_base64_to_binary(challenge["challenge"])
+                f.write(binary_challenge)
+        except FileNotFoundError:
+            print(f"File not found: challenges/challenge{challenge_count}.txt")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+        try:
+            with open("challenges/public_key{0}.pem".format(challenge_count), "w") as f:
+                f.write(challenge["publicKeyPem"].encode("utf-8").decode("unicode_escape"))
+        except FileNotFoundError:
+            print(f"File not found: challenges/public_key{challenge_count}.txt")
+        except Exception as e:
+            print(f"An error occurred: {e}")
         unsigned_challenges.append(
             ykman_utils.Challenge(binary_challenge, challenge["publicKeyPem"])
         )
@@ -85,15 +94,17 @@ def signed_challenges_to_files(
     """
     signed_challenge_files = []
     challenge_count = 0
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     for challenge_reply in challenge_replies:
         challenge_count += 1
-        print("challenge_count", challenge_count)
         directory_path = "signed_challenges"
         if not os.path.exists(directory_path):
             os.mkdir(directory_path)
-            print(f"Directory '{directory_path}' created.")
+            logger.info(f"Directory '{directory_path}' created.")
         else:
-            print(f"Directory '{directory_path}' already exists.")
+            logger.info(f"Directory '{directory_path}' already exists.")
         with open(
             f"signed_challenges/public_key_{challenge_count}.pem", "w"
         ) as public_key_file:

@@ -149,7 +149,8 @@ def populate_challenges_from_files() -> list[Challenge]:
     return challenges
 
 
-def sign_challenges(challenges: list[Challenge]) -> list[ChallengeReply]:
+def sign_challenges(challenges: list[Challenge], management_key=DEFAULT_MANAGEMENT_KEY, 
+                    pin=DEFAULT_PIN) -> list[ChallengeReply]:
     """Signs a proposal's challenges using a Yubikey."""
     if not challenges:
         raise ValueError("Challenge list empty: No challenges to sign.")
@@ -164,9 +165,9 @@ def sign_challenges(challenges: list[Challenge]) -> list[ChallengeReply]:
             # authenticate
             piv_session.authenticate(
                 piv.MANAGEMENT_KEY_TYPE.TDES,
-                bytes.fromhex("010203040506070801020304050607080102030405060708"),
+                bytes.fromhex(management_key),
             )
-            piv_session.verify_pin("123456")
+            piv_session.verify_pin(pin)
 
             # Get the public key from slot 82.
             slot_metadata = piv_session.get_slot_metadata(slot=piv.SLOT.RETIRED1)
@@ -225,6 +226,9 @@ def urlsafe_base64_to_binary(urlsafe_string: str) -> bytes:
     try:
         if not isinstance(urlsafe_string, str):
             raise TypeError("Input must be a string")
+        # Check if the input string contains only URL-safe base64 characters
+        if not re.match(r'^[a-zA-Z0-9_-]*$', urlsafe_string):
+            raise ValueError("Input string contains invalid characters")
         # Add padding if necessary. Base64 requires padding to be a multiple of 4
         missing_padding = len(urlsafe_string) % 4
         if missing_padding:

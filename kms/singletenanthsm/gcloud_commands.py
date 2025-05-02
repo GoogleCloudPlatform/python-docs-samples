@@ -14,6 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import logging
 import subprocess
 
 command_build_custom_gcloud = """
@@ -36,19 +37,22 @@ command_add_components = """
 
 def build_custom_gcloud():
     """Builds a custom gcloud binary."""
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger(__name__)
+
     try:
         print("\nBuilding custom gcloud build")
         process = subprocess.run(
             command_build_custom_gcloud,
             check=True,
             shell=True,
+            capture_output=True, # Capture output
+            text=True # Ensure output is text
         )
-        print(f"Return Test: {process}")
-        print(f"Return Code: {process.returncode}")
-        print(f"Standard Output: {process.stdout}")
-        print(f"Standard Error: {process.stderr}")
-        print("gcloud build executed successfully.")
-        print(process.stdout)
+        logger.info(f"Return Code: {process.returncode}")
+        logger.info(f"Standard Error: {process.stderr}")
+        logger.info("gcloud build executed successfully.")
+        logger.info(process.stdout)
     except subprocess.CalledProcessError as e:
         raise subprocess.CalledProcessError(e.returncode, e.cmd, e.output, e.stderr)
     try:
