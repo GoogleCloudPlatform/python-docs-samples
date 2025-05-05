@@ -34,6 +34,12 @@ Install Dependencies
    .. _Python Development Environment Setup Guide:
        https://cloud.google.com/python/setup
 
+#. Install `libpcsclite-dev` if you do not already have it.
+
+    .. code-block:: bash
+
+        $ sudo apt install libpcsclite-dev
+
 #. Create a virtualenv. Samples are compatible with Python 2.7 and 3.4+.
 
     .. code-block:: bash
