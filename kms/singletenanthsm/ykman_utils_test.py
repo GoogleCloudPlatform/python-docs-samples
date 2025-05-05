@@ -46,6 +46,7 @@ def generate_test_challenge_files():
         print(challenge.public_key_pem)
     # Sign challenges
     signed_challenges = ykman_utils.sign_challenges(challenges)
+    # Use a sample challenge from the HSM
     ykman_utils.verify_challenge_signatures(
         signed_challenges,
         b"rddK-SCLvik55PPoxOxgjoZEnQ7kTttvtYg2-zYhpGsDjpsPEFw_2OKau1EFf3nN",

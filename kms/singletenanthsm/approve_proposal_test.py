@@ -172,7 +172,9 @@ def test_get_challenges_mocked(mocker, monkeypatch):
     # monkeypatch sign challenges
     monkeypatch.setattr(
         "ykman_utils.sign_challenges",
-        lambda challenges: sign_challenges_with_capture(challenges, pub_to_priv_key),
+        lambda challenges, **kwargs: sign_challenges_with_capture(
+            challenges, pub_to_priv_key
+        ),
     )
 
     # mock the challenge string returned by service
@@ -182,9 +184,14 @@ def test_get_challenges_mocked(mocker, monkeypatch):
     mocker.patch("subprocess.run", return_value=mock_response)
 
     # monkeypatch parse args
-    mock_args = argparse.Namespace(proposal_resource="test_resource")
-    monkeypatch.setattr("approve_proposal.parse_args", lambda args: mock_args)
-
+    monkeypatch.setattr(
+        "approve_proposal.parse_args",
+        lambda args: argparse.Namespace(
+            proposal_resource="test_resource",
+            management_key="test_management_key",
+            pin="123456",
+        ),
+    )
     approve_proposal.approve_proposal()
 
     # assert challenge files created
