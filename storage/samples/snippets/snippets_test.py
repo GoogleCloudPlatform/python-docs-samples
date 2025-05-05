@@ -26,6 +26,7 @@ import requests
 
 import storage_add_bucket_label
 import storage_async_upload
+import storage_async_download
 import storage_batch_request
 import storage_bucket_delete_default_kms_key
 import storage_change_default_storage_class
@@ -265,6 +266,19 @@ def test_async_upload(bucket, capsys):
     asyncio.run(storage_async_upload.async_upload_blob(bucket.name))
     out, _ = capsys.readouterr()
     assert f"Uploaded 3 files to bucket {bucket.name}" in out
+
+
+def test_async_download(test_bucket, capsys):
+    object_count = 3
+    source_files = [f"async_sample_blob_{x}" for x in range(object_count)]
+    for source in source_files:
+        blob = test_bucket.blob(source)
+        blob.upload_from_string(source)
+
+    asyncio.run(storage_async_download.async_download_blobs(test_bucket.name, *source_files))
+    out, _ = capsys.readouterr()
+    for x in range(object_count):
+        assert f"Downloaded storage object async_sample_blob_{x}" in out
 
 
 def test_download_byte_range(test_blob):
