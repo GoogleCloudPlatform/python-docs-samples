@@ -13,9 +13,8 @@
 # limitations under the License.
 
 
-# TODO: To deprecate this sample. Moving thinking samples to `thinking` folder.
 def generate_content() -> str:
-    # [START googlegenaisdk_thinking_textgen_with_txt]
+    # [START googlegenaisdk_thinking_with_txt]
     from google import genai
 
     client = genai.Client()
@@ -70,7 +69,7 @@ def generate_content() -> str:
     #
     #     **Answer:**
     #     The solution to the equation x² + 4x + 4 = 0 is x = -2. This is a repeated root (or a root with multiplicity 2).
-    # [END googlegenaisdk_thinking_textgen_with_txt]
+    # [END googlegenaisdk_thinking_with_txt]
     return response.text
 
 
