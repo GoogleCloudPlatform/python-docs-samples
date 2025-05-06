@@ -59,9 +59,12 @@ import storage_generate_upload_signed_url_v4
 import storage_get_autoclass
 import storage_get_bucket_labels
 import storage_get_bucket_metadata
+import storage_get_soft_deleted_bucket
 import storage_get_metadata
 import storage_get_service_account
 import storage_list_buckets
+import storage_list_soft_deleted_buckets
+import storage_restore_soft_deleted_bucket
 import storage_list_file_archived_generations
 import storage_list_files
 import storage_list_files_with_prefix
@@ -131,6 +134,19 @@ def test_bucket():
     bucket.delete(force=True)
 
 
+@pytest.fixture(scope="module")
+def test_soft_deleted_bucket():
+    """Yields a soft-deleted bucket."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = f"storage-snippets-test-{uuid.uuid4()}"
+        bucket = storage.Client().bucket(bucket_name)
+    bucket.create()
+    # [Assumption] Bucket is created with default policy , ie soft delete on.
+    bucket.delete()
+    yield bucket
+
+
 @pytest.fixture(scope="function")
 def test_public_bucket():
     # The new projects don't allow to make a bucket available to public, so
@@ -195,6 +211,12 @@ def test_list_buckets(test_bucket, capsys):
     assert test_bucket.name in out
 
 
+def test_list_soft_deleted_buckets(test_soft_deleted_bucket, capsys):
+    storage_list_soft_deleted_buckets.list_soft_deleted_buckets()
+    out, _ = capsys.readouterr()
+    assert test_soft_deleted_bucket.name in out
+
+
 def test_list_blobs(test_blob, capsys):
     storage_list_files.list_blobs(test_blob.bucket.name)
     out, _ = capsys.readouterr()
@@ -205,6 +227,18 @@ def test_bucket_metadata(test_bucket, capsys):
     storage_get_bucket_metadata.bucket_metadata(test_bucket.name)
     out, _ = capsys.readouterr()
     assert test_bucket.name in out
+
+
+def test_get_soft_deleted_bucket(test_soft_deleted_bucket, capsys):
+    storage_get_soft_deleted_bucket.get_soft_deleted_bucket(test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation)
+    out, _ = capsys.readouterr()
+    assert test_soft_deleted_bucket.name in out
+
+
+def test_restore_soft_deleted_bucket(test_soft_deleted_bucket, capsys):
+    storage_restore_soft_deleted_bucket.restore_bucket(test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation)
+    out, _ = capsys.readouterr()
+    assert test_soft_deleted_bucket.name in out
 
 
 def test_list_blobs_with_prefix(test_blob, capsys):
