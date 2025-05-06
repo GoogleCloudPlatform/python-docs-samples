@@ -85,7 +85,7 @@ fi
 cd "${PROJECT_ROOT}"
 
 # add libpcsclite
-sudo apt install libpcsclite-dev 
+apt install libpcsclite-dev 
 
 # add user's pip binary path to PATH
 export PATH="${HOME}/.local/bin:${PATH}"
