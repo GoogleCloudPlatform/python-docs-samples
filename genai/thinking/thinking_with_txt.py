@@ -19,7 +19,7 @@ def generate_content() -> str:
 
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-2.5-pro-preview-03-25",
+        model="gemini-2.5-pro-preview-05-06",
         contents="solve x^2 + 4x + 4 = 0",
     )
     print(response.text)

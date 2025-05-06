@@ -20,7 +20,7 @@ def generate_content() -> str:
 
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-2.5-pro-preview-03-25",
+        model="gemini-2.5-pro-preview-05-06",
         contents="solve x^2 + 4x + 4 = 0",
         config=GenerateContentConfig(
             thinking_config=ThinkingConfig(include_thoughts=True)
@@ -38,7 +38,7 @@ def generate_content() -> str:
         if part and part.thought:  # show thoughts
             print(part.text)
     # Example Response:
-    #     **Deconstructing the Quadratic**
+    #     **My Thought Process for Solving the Quadratic Equation**
     #
     #     Alright, let's break down this quadratic, x² + 4x + 4 = 0. First things first:
     #     it's a quadratic; the x² term gives it away, and we know the general form is
