@@ -146,6 +146,7 @@ RUN set -ex \
 # "ValueError: invalid truth value '<VERSION>'"
 ENV PYTHON_PIP_VERSION 21.3.1
 RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
+  && wget --no-check-certificate -O /tmp/get-pip-3-8.py 'https://bootstrap.pypa.io/pip/3.8/get-pip.py' \
   && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
   && python3.10 /tmp/get-pip.py "pip==$PYTHON_PIP_VERSION" \
   # we use "--force-reinstall" for the case where the version of pip we're trying to install is the same as the version bundled with Python
@@ -161,7 +162,7 @@ RUN python3.13 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
-RUN python3.8 /tmp/get-pip.py
+RUN python3.8 /tmp/get-pip-3-8.py
 RUN python3.7 /tmp/get-pip-3-7.py
 RUN rm /tmp/get-pip.py
 
