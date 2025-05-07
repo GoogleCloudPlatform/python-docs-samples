@@ -1,0 +1,2 @@
+functions-framework==3.*
+google-api-python-client==2.169.0
