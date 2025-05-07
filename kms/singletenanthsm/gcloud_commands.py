@@ -60,10 +60,10 @@ def build_custom_gcloud():
         print("\nAdding gcloud components")
         process = subprocess.run(
             command_add_components,
-            check=False,
-            capture_output=False,
-            text=True,
+            check=True,
             shell=True,
+            capture_output=True,
+            text=True,
         )
         logger.info(f"Return Test: {process}")
         logger.info(f"Return Code: {process.returncode}")

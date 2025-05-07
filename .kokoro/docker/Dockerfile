@@ -46,6 +46,7 @@ RUN apt-get update \
   liblzma-dev \
   libmagickwand-dev \
   libmemcached-dev \
+  libpcsclite-dev \ 
   libpython3-dev \
   libreadline-dev \
   libsnappy-dev \
@@ -226,7 +227,5 @@ RUN dpkg-divert --add --rename --divert /opt/google/chrome/google-chrome.real /o
 RUN mkdir -p /opt/selenium \
   && curl http://chromedriver.storage.googleapis.com/`curl -sS chromedriver.storage.googleapis.com/LATEST_RELEASE`/chromedriver_linux64.zip -o /opt/selenium/chromedriver_linux64.zip \
   && cd /opt/selenium; unzip /opt/selenium/chromedriver_linux64.zip; rm -rf chromedriver_linux64.zip; ln -fs /opt/selenium/chromedriver /usr/local/bin/chromedriver;
-
-RUN sudo apt install libpcsclite-dev 
 
 CMD ["python3"]

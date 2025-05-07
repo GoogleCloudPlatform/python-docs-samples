@@ -75,13 +75,17 @@ def test_build_custom_gcloud_success(mock_subprocess_run):
     mock_subprocess_run.assert_has_calls(
         [
             mock.call(
-                gcloud_commands.command_build_custom_gcloud, check=True, shell=True
+                gcloud_commands.command_build_custom_gcloud,
+                check=True,
+                shell=True,
+                capture_output=True,
+                text=True,
             ),
             mock.call(
                 gcloud_commands.command_add_components,
-                check=False,
+                check=True,
                 shell=True,
-                capture_output=False,
+                capture_output=True,
                 text=True,
             ),
         ]
