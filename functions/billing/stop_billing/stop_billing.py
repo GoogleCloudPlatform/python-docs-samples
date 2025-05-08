@@ -23,7 +23,7 @@ import functions_framework
 from googleapiclient import discovery
 
 
-def get_project_id() -> str:
+def get_project_id_from_metadata() -> str:
     url = "http://metadata.google.internal/computeMetadata/v1/project/project-id"
     req = urllib.request.Request(url)
     req.add_header("Metadata-Flavor", "Google")
@@ -37,7 +37,7 @@ def get_project_id() -> str:
 
 @functions_framework.cloud_event
 def stop_billing(cloud_event: CloudEvent) -> None:
-    PROJECT_ID = get_project_id()
+    PROJECT_ID = get_project_id_from_metadata()
     PROJECT_NAME = f"projects/{PROJECT_ID}"
 
     pubsub_data = base64.b64decode(
@@ -111,16 +111,19 @@ def _disable_billing_for_project(
         projects: Resource for interacting with the Billing API.
     """
 
+    print(f"Disabling billing for project: {project_name}")
+
+    # To disable billing set the `billingAccountName` field to empty
+    request_body = {"billingAccountName": ""}
+
     # Find more information about `updateBillingInfo` method here:
     # https://cloud.google.com/billing/docs/reference/rest/v1/projects/updateBillingInfo
 
-    # To disable billing set the `billingAccountName` field to empty
-    body = {"billingAccountName": ""}
-
     try:
-        print(f"Disabling billing for project: {project_name}")
-        res = projects.updateBillingInfo(name=project_name, body=body).execute()
-        print(f"Billing disabled: {json.dumps(res)}")
+        response = projects.updateBillingInfo(
+            name=project_name, body=request_body
+        ).execute()
+        print(f"Billing disabled: {json.dumps(response)}")
     except Exception:
         print("Failed to disable billing, check permissions.")
 # [END functions_billing_stop]
