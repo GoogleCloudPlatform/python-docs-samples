@@ -20,6 +20,8 @@ import os
 import random
 import time
 
+from typing import Tuple, Union
+
 import flask
 
 # [START trace_demo_imports]
@@ -62,7 +64,7 @@ RequestsInstrumentor().instrument()
 
 
 @app.route("/")
-def template_test() -> str | tuple[str, int]:
+def template_test() -> Union[str, Tuple[str, int]]:
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
 
