@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# This code is for illustration purposes only.
+
+# This code is designed for Python 2.7 which is not supported
+# on the current App Engine environment.
+# See https://cloud.google.com/appengine/docs/legacy/standard/python
+
 runtime: python27
 api_version: 1
 service: default
