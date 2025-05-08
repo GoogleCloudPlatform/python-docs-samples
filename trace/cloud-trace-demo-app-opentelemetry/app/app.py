@@ -62,7 +62,7 @@ RequestsInstrumentor().instrument()
 
 
 @app.route("/")
-def template_test() -> str | (str, int):
+def template_test() -> str | tuple[str, int]:
     # Sleep for a random time to imitate a random processing time
     time.sleep(random.uniform(0, 0.5))
 
