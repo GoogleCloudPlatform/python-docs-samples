@@ -43,6 +43,8 @@ class Note(ndb.Model):
 
 
 # [START gae_python_query_database]
+# This code is for illustration purposes only.
+
 def query_database(user_id):
     """Fetches all notes associated with user_id.
 
@@ -76,6 +78,8 @@ def list_notes():
 
     # Verify Firebase auth.
     # [START gae_python_verify_token]
+    # This code is for illustration purposes only.
+
     id_token = request.headers["Authorization"].split(" ").pop()
     claims = google.oauth2.id_token.verify_firebase_token(
         id_token, HTTP_REQUEST, audience=os.environ.get("GOOGLE_CLOUD_PROJECT")
@@ -108,6 +112,8 @@ def add_note():
         return "Unauthorized", 401
 
     # [START gae_python_create_entity]
+    # This code is for illustration purposes only.
+
     data = request.get_json()
 
     # Populates note properties according to the model,

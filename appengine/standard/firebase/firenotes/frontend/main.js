@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-$(function(){
+$(function () {
   // This is the host for the backend.
   // TODO: When running Firenotes locally, set to http://localhost:8081. Before
   // deploying the application to a live production environment, change to
@@ -21,6 +21,8 @@ $(function(){
   var backendHostUrl = '<your-backend-url>';
 
   // [START gae_python_firenotes_config]
+  // This code is for illustration purposes only.
+
   // Obtain the following from the "Add Firebase to your web app" dialogue
   // Initialize Firebase
   var config = {
@@ -42,7 +44,7 @@ $(function(){
     firebase.initializeApp(config);
 
     // [START gae_python_state_change]
-    firebase.auth().onAuthStateChanged(function(user) {
+    firebase.auth().onAuthStateChanged(function (user) {
       if (user) {
         $('#logged-out').hide();
         var name = user.displayName;
@@ -51,7 +53,7 @@ $(function(){
         personal welcome message. Otherwise, use the user's email. */
         var welcomeName = name ? name : user.email;
 
-        user.getIdToken().then(function(idToken) {
+        user.getIdToken().then(function (idToken) {
           userIdToken = idToken;
 
           /* Now that the user is authenicated, fetch the notes. */
@@ -73,6 +75,8 @@ $(function(){
   }
 
   // [START gae_python_firebase_login]
+  // This code is for illustration purposes only.
+
   // Firebase log-in widget
   function configureFirebaseLoginWidget() {
     var uiConfig = {
@@ -95,6 +99,8 @@ $(function(){
   // [END gae_python_firebase_login]
 
   // [START gae_python_fetch_notes]
+  // This code is for illustration purposes only.
+
   // Fetch notes from the backend.
   function fetchNotes() {
     $.ajax(backendHostUrl + '/notes', {
@@ -103,10 +109,10 @@ $(function(){
       headers: {
         'Authorization': 'Bearer ' + userIdToken
       }
-    }).then(function(data){
+    }).then(function (data) {
       $('#notes-container').empty();
       // Iterate over user data to display user's notes from database.
-      data.forEach(function(note){
+      data.forEach(function (note) {
         $('#notes-container').append($('<p>').text(note.message));
       });
     });
@@ -114,20 +120,20 @@ $(function(){
   // [END gae_python_fetch_notes]
 
   // Sign out a user
-  var signOutBtn =$('#sign-out');
-  signOutBtn.click(function(event) {
+  var signOutBtn = $('#sign-out');
+  signOutBtn.click(function (event) {
     event.preventDefault();
 
-    firebase.auth().signOut().then(function() {
+    firebase.auth().signOut().then(function () {
       console.log("Sign out successful");
-    }, function(error) {
+    }, function (error) {
       console.log(error);
     });
   });
 
   // Save a note to the backend
   var saveNoteBtn = $('#add-note');
-  saveNoteBtn.click(function(event) {
+  saveNoteBtn.click(function (event) {
     event.preventDefault();
 
     var noteField = $('#note-content');
@@ -141,9 +147,9 @@ $(function(){
         'Authorization': 'Bearer ' + userIdToken
       },
       method: 'POST',
-      data: JSON.stringify({'message': note}),
-      contentType : 'application/json'
-    }).then(function(){
+      data: JSON.stringify({ 'message': note }),
+      contentType: 'application/json'
+    }).then(function () {
       // Refresh notebook display.
       fetchNotes();
     });
