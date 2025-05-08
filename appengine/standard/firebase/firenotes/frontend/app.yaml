@@ -14,9 +14,8 @@
 
 # This code is for illustration purposes only.
 
-# This code is designed for Python 2.7 which is not supported
-# on the current App Engine environment.
-# See https://cloud.google.com/appengine/docs/legacy/standard/python
+# This code is designed for Python 2.7 and
+# the App Engine first-generation Runtime which has reached End of Support.
 
 runtime: python27
 api_version: 1
