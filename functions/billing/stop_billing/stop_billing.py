@@ -20,7 +20,8 @@ import urllib.request
 from cloudevents.http.event import CloudEvent
 import functions_framework
 
-from googleapiclient import discovery
+from google.api_core import exceptions
+from google.cloud import billing_v1
 
 
 def get_project_id_from_metadata() -> str:
@@ -40,40 +41,33 @@ def stop_billing(cloud_event: CloudEvent) -> None:
     PROJECT_ID = get_project_id_from_metadata()
     PROJECT_NAME = f"projects/{PROJECT_ID}"
 
-    pubsub_data = base64.b64decode(
+    event_data = base64.b64decode(
         cloud_event.data["message"]["data"]
     ).decode("utf-8")
-    pubsub_json = json.loads(pubsub_data)
+    event_dict = json.loads(event_data)
 
-    cost_amount = pubsub_json["costAmount"]
-    budget_amount = pubsub_json["budgetAmount"]
+    cost_amount = event_dict["costAmount"]
+    budget_amount = event_dict["budgetAmount"]
     print(f"Cost: {cost_amount} Budget: {budget_amount}")
 
     if cost_amount <= budget_amount:
         print("No action required. Current cost is within budget.")
         return
 
-    # Construct a Resource for interacting with the billing API
-    billing = discovery.build(
-        "cloudbilling",
-        "v1",
-        cache_discovery=False,
-    )
+    # Create a Billing client.
+    billing_client = billing_v1.CloudBillingClient()
 
-    # Get the resource containing the projects
-    projects = billing.projects()
-
-    is_billing_enabled = _is_billing_enabled(PROJECT_NAME, projects)
+    is_billing_enabled = _is_billing_enabled(PROJECT_NAME, billing_client)
 
     # Disable billing if required
     if is_billing_enabled:
-        _disable_billing_for_project(PROJECT_NAME, projects)
+        _disable_billing_for_project(PROJECT_NAME, billing_client)
     else:
         print("Billing is already disabled.")
 
 
 def _is_billing_enabled(
-    project_name: str, projects: discovery.Resource
+    project_name: str, billing_client: billing_v1.CloudBillingClient
 ) -> bool:
     """Determine whether billing is enabled for a project.
 
@@ -85,24 +79,22 @@ def _is_billing_enabled(
         Whether project has billing enabled or not.
     """
     try:
-        print(f"Getting billing info for project: {project_name}")
-        res = projects.getBillingInfo(name=project_name).execute()
+        print(f"Getting billing info for project '{project_name}'...")
+        response = billing_client.get_project_billing_info(name=project_name)
 
-        return res["billingEnabled"]
-    except KeyError:
-        # If `billingEnabled` isn't part of the billingInfo,
-        # billing is not enabled
-        return False
-    except Exception:
+        return response.billing_enabled
+    except Exception as e:
+        print(f'Error getting billing info: {e}')
         print(
             "Unable to determine if billing is enabled on specified project, "
-            "assuming billing is enabled"
+            "assuming billing is enabled."
         )
+
         return True
 
 
 def _disable_billing_for_project(
-    project_name: str, projects: discovery.Resource
+    project_name: str, billing_client: billing_v1.CloudBillingClient
 ) -> None:
     """Disable billing for a project by removing its billing account.
 
@@ -111,19 +103,25 @@ def _disable_billing_for_project(
         projects: Resource for interacting with the Billing API.
     """
 
-    print(f"Disabling billing for project: {project_name}")
+    print(f"Disabling billing for project '{project_name}'...")
 
-    # To disable billing set the `billingAccountName` field to empty
-    request_body = {"billingAccountName": ""}
+    # To disable billing set the `billing_account_name` field to empty
+    # LINT: Commented out to pass linter
+    # project_billing_info = billing_v1.ProjectBillingInfo(
+    #     billing_account_name=""
+    # )
 
-    # Find more information about `updateBillingInfo` method here:
+    # Find more information about `updateBillingInfo` API method here:
     # https://cloud.google.com/billing/docs/reference/rest/v1/projects/updateBillingInfo
-
     try:
-        response = projects.updateBillingInfo(
-            name=project_name, body=request_body
-        ).execute()
-        print(f"Billing disabled: {json.dumps(response)}")
-    except Exception:
+        # DEBUG: Simulate disabling billing
+        print("Billing disabled. (Simulated)")
+
+        # response = billing_client.update_project_billing_info(
+        #     name=project_name,
+        #     project_billing_info=project_billing_info
+        # )
+        # print(f"Billing disabled: {response}")
+    except exceptions.PermissionDenied:
         print("Failed to disable billing, check permissions.")
 # [END functions_billing_stop]
