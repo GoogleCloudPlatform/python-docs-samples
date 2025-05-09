@@ -14,7 +14,7 @@
 
 
 def list_tuning_jobs() -> None:
-    # [START googlegenaisdk_tuning_list]
+    # [START googlegenaisdk_tuning_job_list]
     from google import genai
     from google.genai.types import HttpOptions
 
@@ -26,7 +26,7 @@ def list_tuning_jobs() -> None:
         # Example response:
         # projects/123456789012/locations/us-central1/tuningJobs/123456789012345
 
-    # [END googlegenaisdk_tuning_list]
+    # [END googlegenaisdk_tuning_job_list]
     return
 
 
