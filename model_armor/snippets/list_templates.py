@@ -20,7 +20,7 @@ from google.cloud.modelarmor_v1.services.model_armor import pagers
 
 def list_model_armor_templates(
     project_id: str,
-    location: str,
+    location_id: str,
 ) -> pagers.ListTemplatesPager:
     """List model armor templates.
 
@@ -37,19 +37,19 @@ def list_model_armor_templates(
 
     # TODO(Developer): Uncomment these variables.
     # project_id = "YOUR_PROJECT_ID"
-    # location = "us-central1"
+    # location_id = "us-central1"
 
     # Create the Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(
-            api_endpoint=f"modelarmor.{location}.rep.googleapis.com"
+            api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com"
         ),
     )
 
     # Initialize request argument(s).
     request = modelarmor_v1.ListTemplatesRequest(
-        parent=f"projects/{project_id}/locations/{location}"
+        parent=f"projects/{project_id}/locations/{location_id}"
     )
 
     # Get list of templates.

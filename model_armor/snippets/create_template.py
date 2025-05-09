@@ -20,14 +20,14 @@ from google.cloud import modelarmor_v1
 
 def create_model_armor_template(
     project_id: str,
-    location: str,
+    location_id: str,
     template_id: str,
 ) -> modelarmor_v1.Template:
     """Create a new Model Armor template.
 
     Args:
         project_id (str): Google Cloud project ID.
-        location (str): Google Cloud location.
+        location_id (str): Google Cloud location.
         template_id (str): ID for the template to create.
 
     Returns:
@@ -40,14 +40,14 @@ def create_model_armor_template(
 
     # TODO(Developer): Uncomment these variables.
     # project_id = "your-google-cloud-project-id"
-    # location = "us-central1"
+    # location_id = "us-central1"
     # template_id = "template_id"
 
     # Create the Model Armor client.
     client = modelarmor_v1.ModelArmorClient(
         transport="rest",
         client_options=ClientOptions(
-            api_endpoint=f"modelarmor.{location}.rep.googleapis.com"
+            api_endpoint=f"modelarmor.{location_id}.rep.googleapis.com"
         ),
     )
 
@@ -68,7 +68,7 @@ def create_model_armor_template(
 
     # Prepare the request for creating the template.
     request = modelarmor_v1.CreateTemplateRequest(
-        parent=f"projects/{project_id}/locations/{location}",
+        parent=f"projects/{project_id}/locations/{location_id}",
         template_id=template_id,
         template=template,
     )
