@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from datetime import timedelta
 import os
 import time
 from typing import Iterator, Tuple, Union
@@ -18,18 +19,21 @@ import uuid
 
 from google.api_core import exceptions, retry
 from google.cloud import secretmanager_v1
+from google.protobuf.duration_pb2 import Duration
 import pytest
 
 from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_annotations
+from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_labels
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
+from regional_samples import disable_regional_secret_delayed_destroy
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
 from regional_samples import edit_regional_secret_annotations
@@ -46,6 +50,7 @@ from regional_samples import list_regional_secrets
 from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
+from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
 from regional_samples import view_regional_secret_labels
@@ -97,6 +102,11 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
+
+@pytest.fixture()
+def version_destroy_ttl() -> int:
+    return 604800  # 7 days in seconds
 
 
 @retry.Retry()
@@ -201,6 +211,33 @@ def regional_secret(
     yield secret_id, regional_secret.etag
 
 
+@pytest.fixture()
+def regional_secret_with_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+) -> Iterator[str]:
+    print("creating secret with given secret id.")
+
+    parent = f"projects/{project_id}/locations/{location_id}"
+    time.sleep(5)
+    retry_client_create_regional_secret(
+        regional_client,
+        request={
+            "parent": parent,
+            "secret_id": secret_id,
+            "secret": {
+                "version_destroy_ttl": Duration(seconds=version_destroy_ttl),
+            },
+        },
+    )
+    print("debug")
+
+    yield secret_id
+
+
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
@@ -257,6 +294,18 @@ def test_create_regional_secret_with_annotations(
         )
     )
     assert secret_id in secret.name
+
+
+def test_create_regional_secret_with_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+) -> None:
+    secret = create_regional_secret_with_delayed_destroy.create_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, version_destroy_ttl)
+    assert secret_id in secret.name
+    assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
 
 def test_create_regional_secret_with_label(
@@ -334,6 +383,17 @@ def test_destroy_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, etag
     )
     assert version.destroy_time
+
+
+def test_disable_regional_secret_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_with_delayed_destroy: str,
+    project_id: str,
+    location_id: str,
+) -> None:
+    secret_id = regional_secret_with_delayed_destroy
+    updated_secret = disable_regional_secret_delayed_destroy.disable_regional_secret_delayed_destroy(project_id, location_id, secret_id)
+    assert updated_secret.version_destroy_ttl == timedelta(0)
 
 
 def test_enable_disable_regional_secret_version(
@@ -610,6 +670,18 @@ def test_update_regional_secret(
         project_id, location_id, secret_id
     )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
+
+
+def test_update_regional_secret_with_delayed_destroy(
+    regional_secret_with_delayed_destroy: str,
+    project_id: str,
+    location_id: str,
+    version_destroy_ttl: int
+) -> None:
+    secret_id = regional_secret_with_delayed_destroy
+    updated_version_delayed_destroy = 118400
+    updated_secret = update_regional_secret_with_delayed_destroy.update_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, updated_version_delayed_destroy)
+    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_delayed_destroy)
 
 
 def test_view_regional_secret_labels(
