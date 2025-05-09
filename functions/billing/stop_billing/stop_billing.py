@@ -15,6 +15,7 @@
 # [START functions_billing_stop]
 import base64
 import json
+import os
 import urllib.request
 
 from cloudevents.http.event import CloudEvent
@@ -26,7 +27,28 @@ from google.cloud import billing_v1
 billing_client = billing_v1.CloudBillingClient()
 
 
-def get_project_id_from_metadata() -> str:
+def get_project_id() -> str:
+    """Retrieves the Google Cloud Project ID.
+
+    This function first attempts to get the project ID from the
+    `GOOGLE_CLOUD_PROJECT` environment variable. If the environment
+    variable is not set or is None, it then attempts to retrieve the
+    project ID from the Google Cloud metadata server.
+
+    Returns:
+        str: The Google Cloud Project ID.
+
+    Raises:
+        ValueError: If the project ID cannot be determined either from
+                    the environment variable or the metadata server.
+    """
+
+    # Read the environment variable, usually set manually
+    project_id = os.getenv("GOOGLE_CLOUD_PROJECT")
+    if project_id is not None:
+        return project_id
+
+    # Otherwise, get the `project-id`` from the Metadata server
     url = "http://metadata.google.internal/computeMetadata/v1/project/project-id"
     req = urllib.request.Request(url)
     req.add_header("Metadata-Flavor", "Google")
@@ -45,7 +67,7 @@ def stop_billing(cloud_event: CloudEvent) -> None:
     # after you validate with a test budget.
     SIMULATE_DEACTIVATION = True
 
-    PROJECT_ID = get_project_id_from_metadata()
+    PROJECT_ID = get_project_id()
     PROJECT_NAME = f"projects/{PROJECT_ID}"
 
     event_data = base64.b64decode(
@@ -122,14 +144,15 @@ def _disable_billing_for_project(
     # https://cloud.google.com/billing/docs/reference/rest/v1/projects/updateBillingInfo
     try:
         # To disable billing set the `billing_account_name` field to empty
-        project_billing_info = billing_v1.ProjectBillingInfo(
-            billing_account_name=""
-        )
-        response = billing_client.update_project_billing_info(
-            name=project_name,
-            project_billing_info=project_billing_info
-        )
-        print(f"Billing disabled: {response}")
+        # project_billing_info = billing_v1.ProjectBillingInfo(
+        #     billing_account_name=""
+        # )
+        # response = billing_client.update_project_billing_info(
+        #     name=project_name,
+        #     project_billing_info=project_billing_info
+        # )
+        # print(f"Billing disabled: {response}")
+        pass
     except exceptions.PermissionDenied:
         print("Failed to disable billing, check permissions.")
 # [END functions_billing_stop]
