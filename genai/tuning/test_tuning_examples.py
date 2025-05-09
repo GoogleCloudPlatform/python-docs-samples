@@ -16,14 +16,14 @@ from unittest.mock import MagicMock, patch
 
 from google.genai import types
 
-import tuning_create
-import tuning_get
-import tuning_list
-import tuning_test
+import tuning_job_create
+import tuning_job_get
+import tuning_job_list
+import tuning_textgen_with_txt
 
 
 @patch("google.genai.Client")
-def test_tuning_create(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_create(mock_genai_client: MagicMock) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -35,7 +35,7 @@ def test_tuning_create(mock_genai_client: MagicMock) -> None:
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
-    response = tuning_create.create_tuning_job()
+    response = tuning_job_create.create_tuning_job()
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
@@ -43,7 +43,7 @@ def test_tuning_create(mock_genai_client: MagicMock) -> None:
 
 
 @patch("google.genai.Client")
-def test_tuning_get(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_get(mock_genai_client: MagicMock) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -55,7 +55,7 @@ def test_tuning_get(mock_genai_client: MagicMock) -> None:
     )
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
 
-    response = tuning_get.get_tuning_job("test-tuning-job")
+    response = tuning_job_get.get_tuning_job("test-tuning-job")
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once()
@@ -63,7 +63,7 @@ def test_tuning_get(mock_genai_client: MagicMock) -> None:
 
 
 @patch("google.genai.Client")
-def test_tuning_list(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_list(mock_genai_client: MagicMock) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -75,14 +75,14 @@ def test_tuning_list(mock_genai_client: MagicMock) -> None:
     )
     mock_genai_client.return_value.tunings.list.return_value = [mock_tuning_job]
 
-    tuning_list.list_tuning_jobs()
+    tuning_job_list.list_tuning_jobs()
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.list.assert_called_once()
 
 
 @patch("google.genai.Client")
-def test_tuning_test(mock_genai_client: MagicMock) -> None:
+def test_tuning_textgen_with_txt(mock_genai_client: MagicMock) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -108,7 +108,7 @@ def test_tuning_test(mock_genai_client: MagicMock) -> None:
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
     mock_genai_client.return_value.models.generate_content.return_value = mock_response
 
-    tuning_test.test_tuned_endpoint("test-tuning-job")
+    tuning_textgen_with_txt.test_tuned_endpoint("test-tuning-job")
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once()
