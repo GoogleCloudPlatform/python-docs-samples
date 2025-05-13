@@ -561,6 +561,7 @@ def test_create_model_armor_template_with_metadata(
     )
 
     assert created_template.template_metadata.ignore_partial_invocation_failures
+    assert created_template.template_metadata.log_template_operations
     assert created_template.template_metadata.log_sanitize_operations
 
 
@@ -624,6 +625,7 @@ def test_update_model_armor_template_metadata(
     )
 
     assert updated_template.template_metadata.ignore_partial_invocation_failures
+    assert updated_template.template_metadata.log_template_operations
     assert updated_template.template_metadata.log_sanitize_operations
 
 
