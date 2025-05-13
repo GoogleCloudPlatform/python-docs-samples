@@ -13,8 +13,8 @@
 # limitations under the License.
 
 
-def create_tuning_job() -> str:
-    # [START googlegenaisdk_tuning_job_create]
+def create_with_checkpoints() -> str:
+    # [START googlegenaisdk_tuning_with_checkpoints_create]
     import time
 
     from google import genai
@@ -27,6 +27,8 @@ def create_tuning_job() -> str:
         training_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-2_0/text/sft_train_data.jsonl",
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
+            # Set to True to disable tuning intermediate checkpoints. Default is False.
+            export_last_checkpoint_only=False,
         ),
     )
 
@@ -55,9 +57,9 @@ def create_tuning_job() -> str:
         # Checkpoint 1:  checkpoint_id='1' epoch=1 step=10 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789000000'
         # Checkpoint 2:  checkpoint_id='2' epoch=2 step=20 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789012345'
 
-    # [END googlegenaisdk_tuning_job_create]
+    # [END googlegenaisdk_tuning_with_checkpoints_create]
     return tuning_job.name
 
 
 if __name__ == "__main__":
-    create_tuning_job()
+    create_with_checkpoints()
