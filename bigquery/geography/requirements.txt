@@ -12,7 +12,7 @@ geojson==3.2.0
 geopandas==1.0.1
 google-api-core==2.24.2
 google-auth==2.40.1
-google-cloud-bigquery==3.31.0
+google-cloud-bigquery==3.32.0
 google-cloud-bigquery-storage==2.31.0
 google-cloud-core==2.4.3
 google-crc32c==1.7.1
