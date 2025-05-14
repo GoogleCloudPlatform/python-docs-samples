@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -26,6 +26,14 @@ def disable_regional_secret_delayed_destroy(
 ) -> secretmanager_v1.Secret:
     """
     Disable delayed destroy on an existing secret with a version destroy ttl.
+
+    Args:
+      project_id: Parent project id
+      location_id: Location of the secret
+      secret_id: ID of the secret or fully qualified identifier for the secret
+
+    Returns:
+      Regional secret with disabled delayed destroy
     """
 
     # Endpoint to call the regional secret manager sever

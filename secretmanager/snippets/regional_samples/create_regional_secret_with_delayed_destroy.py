@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -36,7 +36,16 @@ def create_regional_secret_with_delayed_destroy(
     Create a new secret with the given name and version_destroy_ttl. A secret is a logical wrapper
     around a collection of secret versions. Secret versions hold the actual
     secret material.
-    """
+
+    Args:
+      project_id: Parent project id
+      location_id: Location of the secret
+      secret_id: ID of the secret or fully qualified identifier for the secret
+      version_destroy_ttl: Secret Version TTL after destruction request
+
+    Returns:
+      Regional secret with delayed destroy
+      """
 
     # Endpoint to call the regional secret manager sever
     api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
@@ -76,10 +85,10 @@ if __name__ == "__main__":
     )
     parser.add_argument("secret_id", help="id of the secret to create")
     parser.add_argument(
-        "version_destroy_ttl", help="version_destroy_ttl you want to add"
+        "version_destroy_ttl", help="version_destroy_ttl you want to add (in seconds)"
     )
     args = parser.parse_args()
 
     create_regional_secret_with_delayed_destroy(
-        args.project_id, args.location_id, args.secret_id, args.version_destroy_ttl
+        args.project_id, args.location_id, args.secret_id, int(args.version_destroy_ttl)
     )

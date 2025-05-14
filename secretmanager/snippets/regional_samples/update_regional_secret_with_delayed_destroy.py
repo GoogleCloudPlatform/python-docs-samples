@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,9 +24,18 @@ from google.protobuf.duration_pb2 import Duration
 
 def update_regional_secret_with_delayed_destroy(
     project_id: str, location_id: str, secret_id: str, new_version_destroy_ttl: int
-) -> secretmanager_v1.UpdateSecretRequest:
+) -> secretmanager_v1.Secret:
     """
     Update the version destroy ttl on an existing secret.
+
+    Args:
+      project_id: Parent project id
+      location_id: Location of the secret
+      secret_id: ID of the secret or fully qualified identifier for the secret
+      new_version_destroy_ttl: Secret Version TTL value in seconds
+
+    Returns:
+      Regional secret with updated version destroy ttl value
     """
 
     # Endpoint to call the regional secret manager sever
@@ -68,10 +77,10 @@ if __name__ == "__main__":
     )
     parser.add_argument("secret_id", help="id of the secret to act on")
     parser.add_argument(
-        "version_destroy_ttl", help="version_destroy_ttl you want to add"
+        "new_version_destroy_ttl", help="version_destroy_ttl you want to add (in seconds)"
     )
     args = parser.parse_args()
 
     update_regional_secret_with_delayed_destroy(
-        args.project_id, args.location_id, args.secret_id, args.version_destroy_ttl
+        args.project_id, args.location_id, args.secret_id, int(args.new_version_destroy_ttl)
     )
