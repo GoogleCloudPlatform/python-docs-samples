@@ -76,7 +76,6 @@ def create_model_armor_template_with_metadata(
         # For more details on template metadata, please refer to the following doc:
         # https://cloud.google.com/security-command-center/docs/reference/model-armor/rest/v1/projects.locations.templates#templatemetadata
         template_metadata=modelarmor_v1.Template.TemplateMetadata(
-            ignore_partial_invocation_failures=True,
             log_sanitize_operations=True,
             log_template_operations=True,
         ),
