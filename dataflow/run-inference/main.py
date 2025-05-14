@@ -13,7 +13,7 @@
 # limitations under the License.
 
 """Runs a streaming RunInference Language Model pipeline."""
-
+"""This is a NOOP"""
 from __future__ import annotations
 
 import logging
