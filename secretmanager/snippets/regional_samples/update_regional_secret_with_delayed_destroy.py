@@ -15,7 +15,7 @@
 
 import argparse
 
-# [START secretmanager_update_regional_secret_delayed_destroy]
+# [START secretmanager_update_regional_secret_with_delayed_destroy]
 
 # Import the Secret Manager client library.
 from google.cloud import secretmanager_v1
@@ -64,7 +64,7 @@ def update_regional_secret_with_delayed_destroy(
 
     return response
 
-# [END secretmanager_update_regional_secret_delayed_destroy]
+# [END secretmanager_update_regional_secret_with_delayed_destroy]
 
 
 if __name__ == "__main__":
