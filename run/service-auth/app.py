@@ -74,7 +74,11 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
     """
 
     # Split the auth type and value from the header.
-    auth_type, creds = auth_header.split(" ", 1)
+    try:
+        auth_type, creds = auth_header.split(" ", 1)
+    except ValueError:
+        print("Malformed Authorization header.")
+        return None
 
     # The token audience will be the SERVICE_URL.
     # If `audience` was None, it won't be verified.
