@@ -18,8 +18,9 @@
 from http import HTTPStatus
 import os
 import subprocess
-# from urllib import error, request
-# import uuid
+import uuid
+
+import backoff
 
 from google.auth.transport import requests as transport_requests
 from google.oauth2 import id_token
@@ -48,50 +49,46 @@ STATUS_FORCELIST = [
 @pytest.fixture(scope="module")
 def service_name() -> str:
     # Add a unique suffix to create distinct service names.
-    # service_name_str = f"receive-python-{uuid.uuid4().hex}"
-    service_name_str = "receive-python"
-
-    # TODO: To reduce testing time, the Run Services are being deployed
-    # and deleted manually. Uncomment the following lines before
-    # sending a final PR.
+    service_name_str = f"receive-python-{uuid.uuid4().hex}"
+    # service_name_str = "receive-python"
 
     # Deploy the Cloud Run Service.
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "run",
-    #         "deploy",
-    #         service_name_str,
-    #         "--project",
-    #         PROJECT_ID,
-    #         "--source",
-    #         ".",
-    #         "--region=us-central1",
-    #         "--allow-unauthenticated",
-    #         "--quiet",
-    #     ],
-    #     # Rise a CalledProcessError exception for a non-zero exit code.
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            service_name_str,
+            "--project",
+            PROJECT_ID,
+            "--source",
+            ".",
+            "--region=us-central1",
+            "--allow-unauthenticated",
+            "--quiet",
+        ],
+        # Rise a CalledProcessError exception for a non-zero exit code.
+        check=True,
+    )
 
     yield service_name_str
 
     # Clean-up after running the test.
-    # subprocess.run(
-    #     [
-    #         "gcloud",
-    #         "run",
-    #         "services",
-    #         "delete",
-    #         service_name_str,
-    #         "--project",
-    #         PROJECT_ID,
-    #         "--async",
-    #         "--region=us-central1",
-    #         "--quiet",
-    #     ],
-    #     check=True,
-    # )
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name_str,
+            "--project",
+            PROJECT_ID,
+            "--async",
+            "--region=us-central1",
+            "--quiet",
+        ],
+        check=True,
+    )
 
 
 @pytest.fixture(scope="module")
@@ -149,6 +146,7 @@ def client() -> Session:
     return client
 
 
+@backoff.on_exception(backoff.expo, Exception, max_time=60)
 def test_authentication_on_cloud_run_service(
     client: Session, endpoint_url: str, token: str
 ) -> None:

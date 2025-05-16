@@ -14,9 +14,8 @@
 
 # [START auth_validate_and_decode_bearer_token_on_flask]
 # [START cloudrun_service_to_service_receive]
-"""Demonstrates how to receive authenticated service-to-service requests.
-
-Sample designed for Cloud Run.
+"""Demonstrates how to receive authenticated service-to-service requests
+on a Cloud Run Service.
 """
 
 from http import HTTPStatus
@@ -40,12 +39,10 @@ req.add_header("Metadata-Flavor", "Google")
 PROJECT_ID = urlopen(req).read().decode("utf-8")
 
 # Get the Region.
-# Returns "projects/PROJECT-NUMBER/regions/REGION"
 req = Request("http://metadata.google.internal/computeMetadata/v1/instance/region")
 req.add_header("Metadata-Flavor", "Google")
 
-# region_response = urlopen(req).read().decode("utf-8")
-# project_region_list = region_response.split('/')
+# Returns "projects/PROJECT-NUMBER/regions/REGION"
 project_region_list = urlopen(req).read().decode("utf-8").split('/')
 
 REGION = project_region_list[3]
@@ -79,7 +76,7 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
     # Split the auth type and value from the header.
     auth_type, creds = auth_header.split(" ", 1)
 
-    # Validate the token's audience, connecting it to the SERVICE_URL
+    # The token audience will be the SERVICE_URL.
     # If `audience` was None, it won't be verified.
     audience = SERVICE_URI
 
