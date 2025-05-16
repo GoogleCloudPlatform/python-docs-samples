@@ -1,6 +1,7 @@
 from google.auth.transport import requests
 from google.oauth2 import id_token
 
+
 def token(audience: str) -> str:
     # Cloud Run uses your service's hostname as the `audience` value
     # audience = 'https://my-cloud-run-service.run.app/'
@@ -9,7 +10,8 @@ def token(audience: str) -> str:
 
     return token
 
-print(token("https://receive-python-764067474825.us-central1.run.app"))
+
+print(token("https://receive-python-698899164414.us-central1.run.app"))
 
 # Returned
 # Hello, insecure-cloudtop-shared-user@cloudtop-prod-us-west.iam.gserviceaccount.com.
