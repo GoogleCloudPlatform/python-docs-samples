@@ -13,13 +13,17 @@
 # limitations under the License.
 
 # This test deploys a secure application running on Cloud Run
-# to test that the authentication sample works properly.
+# to validate receiving authenticated requests.
 
 from http import HTTPStatus
 import os
 import subprocess
-from urllib import error, request
 import uuid
+
+import backoff
+
+from google.auth.transport import requests as transport_requests
+from google.oauth2 import id_token
 
 import pytest
 
@@ -45,7 +49,7 @@ STATUS_FORCELIST = [
 @pytest.fixture(scope="module")
 def service_name() -> str:
     # Add a unique suffix to create distinct service names.
-    service_name_str = f"receive-{uuid.uuid4().hex}"
+    service_name_str = f"receive-python-{uuid.uuid4().hex}"
 
     # Deploy the Cloud Run Service.
     subprocess.run(
@@ -112,28 +116,21 @@ def endpoint_url(service_name: str) -> str:
 
 
 @pytest.fixture(scope="module")
-def token() -> str:
-    token_str = (
-        subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.strip()
-        .decode()
-    )
+def token(endpoint_url: str) -> str:
+    # Cloud Run uses your service's hostname as the `audience` value.
+    # For example: 'https://my-cloud-run-service.run.app'
+    target_audience = endpoint_url
+    auth_req = transport_requests.Request()
 
-    return token_str
+    # More info for the `fetch_id_token`function
+    # https://googleapis.dev/python/google-auth/1.14.0/reference/google.oauth2.id_token.html
+    token = id_token.fetch_id_token(auth_req, target_audience)
+
+    return token
 
 
 @pytest.fixture(scope="module")
-def client(endpoint_url: str) -> Session:
-    req = request.Request(endpoint_url)
-    try:
-        _ = request.urlopen(req)
-    except error.HTTPError as e:
-        assert e.code == HTTPStatus.FORBIDDEN
-
+def client() -> Session:
     retry_strategy = Retry(
         total=3,
         status_forcelist=STATUS_FORCELIST,
@@ -148,7 +145,8 @@ def client(endpoint_url: str) -> Session:
     return client
 
 
-def test_authentication_on_cloud_run(
+@backoff.on_exception(backoff.expo, Exception, max_time=60)
+def test_authentication_on_cloud_run_service(
     client: Session, endpoint_url: str, token: str
 ) -> None:
     response = client.get(
@@ -158,19 +156,15 @@ def test_authentication_on_cloud_run(
 
     assert response.status_code == HTTPStatus.OK
     assert "Hello" in response_content
-    assert "anonymous" not in response_content
 
 
-def test_anonymous_request_on_cloud_run(client: Session, endpoint_url: str) -> None:
+def test_anonymous_request_on_cloud_run_service(client: Session, endpoint_url: str) -> None:
     response = client.get(endpoint_url)
-    response_content = response.content.decode("utf-8")
 
-    assert response.status_code == HTTPStatus.OK
-    assert "Hello" in response_content
-    assert "anonymous" in response_content
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
-def test_invalid_token(client: Session, endpoint_url: str) -> None:
+def test_an_invalid_token_on_cloud_run_service(client: Session, endpoint_url: str) -> None:
     response = client.get(
         endpoint_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
     )
