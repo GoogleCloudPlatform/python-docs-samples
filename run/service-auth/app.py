@@ -98,7 +98,7 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
                 audience=audience,
             )
 
-            # Verify that the token contains the email claims.
+            # Verify that the token contains the email claim.
             if decoded_token['email_verified']:
                 print(f"Email verified {decoded_token['email']}")
 
