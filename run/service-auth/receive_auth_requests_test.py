@@ -50,7 +50,6 @@ STATUS_FORCELIST = [
 def service_name() -> str:
     # Add a unique suffix to create distinct service names.
     service_name_str = f"receive-python-{uuid.uuid4().hex}"
-    # service_name_str = "receive-python"
 
     # Deploy the Cloud Run Service.
     subprocess.run(
