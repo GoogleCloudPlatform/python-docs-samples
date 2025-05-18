@@ -1,5 +1,5 @@
 Flask==3.0.3
-flask-cors==5.0.1; python_version >= "3.9"
+flask-cors==6.0.0; python_version >= "3.9"
 flask-cors==5.0.0; python_version == "3.8"
 gunicorn==23.0.0
 six==1.16.0
