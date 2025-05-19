@@ -89,7 +89,7 @@ def deploy_cloud_run_service(
             print(f"An error occurred during service deployment: {e}")
             raise
 
-    # --- Allow unauthenticated requests if requested ---
+    # Allow unauthenticated requests if requested
     if deployed_service and allow_unauthenticated:
         try:
             print(f"Attempting to allow unauthenticated access for {service_name}...")
