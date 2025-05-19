@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# TODO: As this sample relies on console output, we'll validate against it.
-
 import base64
 import json
 
@@ -67,7 +65,7 @@ def client() -> FlaskClient:
     return create_app(target, source, "cloudevent").test_client()
 
 
-def test_event(
+def test_receive_notification_to_stop_billing(
     client: FlaskClient,
     cloud_event_budget_alert: CloudEvent,
     capsys: pytest.CaptureFixture[str]
