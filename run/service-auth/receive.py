@@ -17,7 +17,7 @@
 For example for Cloud Run or Cloud Functions.
 """
 
-# This sample will be migrated to app.py
+# This sample is marked to be migrated to app.py
 
 # [START auth_validate_and_decode_bearer_token_on_flask]
 # [START cloudrun_service_to_service_receive]

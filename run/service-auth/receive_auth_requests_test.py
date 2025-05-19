@@ -23,6 +23,7 @@ import uuid
 import backoff
 
 from google.auth.transport import requests as transport_requests
+from google.cloud import run_v2
 from google.oauth2 import id_token
 
 import pytest
@@ -31,6 +32,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from requests.sessions import Session
+
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 
