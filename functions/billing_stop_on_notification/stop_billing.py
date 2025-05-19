@@ -83,7 +83,6 @@ def stop_billing(cloud_event: CloudEvent) -> None:
         print("No action required. Current cost is within budget.")
         return
 
-    # Disable billing if required
     print(f"Disabling billing for project '{PROJECT_NAME}'...")
 
     is_billing_enabled = _is_billing_enabled(PROJECT_NAME)
@@ -102,7 +101,6 @@ def _is_billing_enabled(project_name: str) -> bool:
 
     Args:
         project_name: Name of project to check if billing is enabled.
-        projects: Resource for interacting with the Billing API.
 
     Returns:
         Whether project has billing enabled or not.
@@ -130,7 +128,6 @@ def _disable_billing_for_project(
 
     Args:
         project_name: Name of project to disable billing.
-        projects: Resource for interacting with the Billing API.
         simulate_deactivation:
             If True, it won't actually disable billing.
             Useful to validate with test budgets.
@@ -144,14 +141,14 @@ def _disable_billing_for_project(
     # https://cloud.google.com/billing/docs/reference/rest/v1/projects/updateBillingInfo
     try:
         # To disable billing set the `billing_account_name` field to empty
-        # project_billing_info = billing_v1.ProjectBillingInfo(
-        #     billing_account_name=""
-        # )
-        # response = billing_client.update_project_billing_info(
-        #     name=project_name,
-        #     project_billing_info=project_billing_info
-        # )
-        # print(f"Billing disabled: {response}")
+        project_billing_info = billing_v1.ProjectBillingInfo(
+            billing_account_name=""
+        )
+        response = billing_client.update_project_billing_info(
+            name=project_name,
+            project_billing_info=project_billing_info
+        )
+        print(f"Billing disabled: {response}")
         pass
     except exceptions.PermissionDenied:
         print("Failed to disable billing, check permissions.")
