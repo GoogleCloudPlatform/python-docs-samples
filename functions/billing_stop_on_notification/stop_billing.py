@@ -13,6 +13,10 @@
 # limitations under the License.
 
 # [START functions_billing_stop]
+# WARNING: The following action, if not in simulation mode, will disable billing
+# for the project, potentially stopping all services and causing outages.
+# Ensure thorough testing and understanding before enabling live deactivation.
+
 import base64
 import json
 import os
