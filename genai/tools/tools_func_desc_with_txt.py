@@ -24,7 +24,7 @@ def generate_content() -> str:
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash-preview-05-20"
+    model_id = "gemini-2.0-flash-001"
 
     get_album_sales = FunctionDeclaration(
         name="get_album_sales",
@@ -73,7 +73,7 @@ def generate_content() -> str:
         ),
     )
 
-    print(response.function_calls[0])
+    print(response.function_calls)
     # Example response:
     # [FunctionCall(
     #     id=None,
