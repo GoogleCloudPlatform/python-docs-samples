@@ -23,7 +23,7 @@ def generate_content(cache_name: str) -> str:
     # Use content cache to generate text response
     # E.g cache_name = 'projects/111111111111/locations/us-central1/cachedContents/1111111111111111111'
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         contents="Summarize the pdfs",
         config=GenerateContentConfig(
             cached_content=cache_name,

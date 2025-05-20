@@ -73,7 +73,7 @@ def generate_content() -> str:
         ),
     )
 
-    print(response.function_calls[0])
+    print(response.function_calls)
     # Example response:
     # [FunctionCall(
     #     id=None,

@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.0-flash-001"
+    model_id = "gemini-2.5-flash-preview-05-20"
 
     # Read local video file content
     with open("test_data/describe_video_content.mp4", "rb") as fp:
@@ -29,6 +29,7 @@ def generate_content() -> str:
     response = client.models.generate_content(
         model=model_id,
         contents=[
+            Part.from_text(text="hello-world"),
             Part.from_bytes(data=video_content, mime_type="video/mp4"),
             "Write a short and engaging blog post based on this video.",
         ],

@@ -40,7 +40,7 @@ def test_api_key_example(mock_genai_client: MagicMock) -> None:
 
     mock_genai_client.assert_called_once_with(vertexai=True, api_key="YOUR_API_KEY")
     mock_genai_client.return_value.models.generate_content.assert_called_once_with(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         contents="Explain bubble sort to me.",
     )
     assert response == "This is a mocked bubble sort explanation."
