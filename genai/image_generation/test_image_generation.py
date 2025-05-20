@@ -41,6 +41,8 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
+RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
+OUTPUT_FILE = os.path.join(RESOURCES, "dog_newspaper.png")
 
 
 @pytest.fixture(scope="session")
@@ -58,7 +60,7 @@ def output_gcs_uri() -> str:
 
 def test_img_generation(output_gcs_uri: str) -> None:
     response = imggen_with_txt.generate_images(
-        output_gcs_uri=output_gcs_uri
+        OUTPUT_FILE
     )
     assert response
 
