@@ -26,7 +26,7 @@ def generate_content(output_uri: str) -> str:
     # output_uri = f"bq://your-project.your_dataset.your_table"
 
     job = client.batches.create(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.0-flash-001",
         src="bq://storage-samples.generative_ai.batch_requests_for_multimodal_input",
         config=CreateBatchJobConfig(dest=output_uri),
     )
