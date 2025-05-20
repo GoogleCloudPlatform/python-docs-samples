@@ -18,7 +18,7 @@ from google.genai.types import Image
 def generate_images(output_file: str) -> Image:
     # [START googlegenaisdk_imggen_with_txt]
     from google import genai
-    
+
     client = genai.Client()
 
     # TODO(developer): Update and un-comment below line
