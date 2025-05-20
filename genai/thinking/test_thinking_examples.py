@@ -18,7 +18,7 @@ import thinking_includethoughts_with_txt
 import thinking_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "global" # "us-central1"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
