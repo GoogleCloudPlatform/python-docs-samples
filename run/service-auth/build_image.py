@@ -4,8 +4,10 @@ import tempfile
 import time
 
 from google.cloud.devtools import cloudbuild_v1
-from google.cloud.devtools.cloudbuild_v1.types import Build, BuildStep, Source, StorageSource
+from google.cloud.devtools.cloudbuild_v1.types import Build, BuildStep, BuildOptions, Source, StorageSource
 from google.cloud import storage
+
+# from google.api_core.exceptions import NotFound
 
 from deploy import deploy_cloud_run_service
 
@@ -74,6 +76,9 @@ def build_image_from_source(
             )
         ],
         timeout={"seconds": 1200},
+        options=BuildOptions(
+            # Example: machine_type=BuildOptions.MachineType.E2_MEDIUM
+        )
     )
 
     print(f"Starting Cloud Build for image {full_image_uri}...")
@@ -118,11 +123,13 @@ if __name__ == "__main__":
     SOURCE_DIRECTORY = "./source/"
     GCS_BUILD_BUCKET = f"{PROJECT_ID}_cloudbuild_sources"
 
-    ENVIRONMENT_VARIABLES = {}
+    ENVIRONMENT_VARIABLES = {
+        # "APP_MESSAGE": "Deployed from source via Python!",
+    }
 
     built_image_uri = None
     try:
-        print(f"Step 1: Building image for {SERVICE_NAME} from source {SOURCE_DIRECTORY}.")
+        print(f"--- Step 1: Building image for {SERVICE_NAME} from source {SOURCE_DIRECTORY} ---")
         built_image_uri = build_image_from_source(
             project_id=PROJECT_ID,
             region=REGION,
@@ -132,7 +139,7 @@ if __name__ == "__main__":
         )
 
         if built_image_uri:
-            print(f"\nStep 2: Deploying image {built_image_uri} to Cloud Run service {SERVICE_NAME}.")
+            print(f"\n--- Step 2: Deploying image {built_image_uri} to Cloud Run service {SERVICE_NAME} ---")
             deploy_cloud_run_service(
                 project_id=PROJECT_ID,
                 region=REGION,
@@ -141,7 +148,7 @@ if __name__ == "__main__":
                 env_vars=ENVIRONMENT_VARIABLES,
                 allow_unauthenticated=True,
             )
-            print(f"\nDeployment process for {SERVICE_NAME} finished.")
+            print(f"\n--- Deployment process for {SERVICE_NAME} finished ---")
         else:
             print(f"Image build failed for {SERVICE_NAME}. Deployment aborted.")
 
