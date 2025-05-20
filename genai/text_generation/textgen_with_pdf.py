@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.0-flash-001"
+    model_id = "gemini-2.5-flash-preview-05-20"
 
     prompt = """
     You are a highly skilled document summarization specialist.

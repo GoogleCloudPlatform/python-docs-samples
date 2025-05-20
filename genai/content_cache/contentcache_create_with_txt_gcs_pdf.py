@@ -42,7 +42,7 @@ def create_content_cache() -> str:
     ]
 
     content_cache = client.caches.create(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         config=CreateCachedContentConfig(
             contents=contents,
             system_instruction=system_instruction,
