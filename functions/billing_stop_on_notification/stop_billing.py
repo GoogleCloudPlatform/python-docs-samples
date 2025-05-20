@@ -27,6 +27,7 @@ import functions_framework
 
 from google.api_core import exceptions
 from google.cloud import billing_v1
+from google.cloud import logging
 
 billing_client = billing_v1.CloudBillingClient()
 
@@ -137,8 +138,14 @@ def _disable_billing_for_project(
             Useful to validate with test budgets.
     """
 
+    # Log this operation in Cloud Logging
+    logging_client = logging.Client()
+    logger = logging_client.logger(name="disable-billing")
+
     if simulate_deactivation:
-        print("Billing disabled. (Simulated)")
+        entry_text = "Billing disabled. (Simulated)"
+        print(entry_text)
+        logger.log_text(entry_text, severity="CRITICAL")
         return
 
     # Find more information about `updateBillingInfo` API method here:
@@ -148,12 +155,15 @@ def _disable_billing_for_project(
         project_billing_info = billing_v1.ProjectBillingInfo(
             billing_account_name=""
         )
+
         response = billing_client.update_project_billing_info(
             name=project_name,
             project_billing_info=project_billing_info
         )
-        print(f"Billing disabled: {response}")
-        pass
+
+        entry_text = f"Billing disabled: {response}"
+        print(entry_text)
+        logger.log_text(entry_text, severity="CRITICAL")
     except exceptions.PermissionDenied:
         print("Failed to disable billing, check permissions.")
 # [END functions_billing_stop]
