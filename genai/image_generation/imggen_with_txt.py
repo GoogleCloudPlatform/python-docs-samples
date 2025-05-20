@@ -12,35 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.genai.types import Image
 
-def generate_images(output_gcs_uri: str) -> str:
+
+def generate_images(output_file: str) -> Image:
     # [START googlegenaisdk_imggen_with_txt]
     from google import genai
-    from google.genai.types import GenerateImagesConfig
 
     client = genai.Client()
 
     # TODO(developer): Update and un-comment below line
-    # output_gcs_uri = "gs://your-bucket/your-prefix"
+    # output_file = "output-image.png"
 
     image = client.models.generate_images(
-        model="imagen-3.0-generate-002",
+        model="imagen-4.0-generate-preview-05-20",
         prompt="A dog reading a newspaper",
-        config=GenerateImagesConfig(
-            aspect_ratio="1:1",
-            number_of_images=1,
-            safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
-            person_generation="DONT_ADULT",
-            output_gcs_uri=output_gcs_uri,
-        ),
     )
 
+    image.generated_images[0].image.save(output_file)
+
+    print(f"Created output image using {len(image.generated_images[0].image.image_bytes)} bytes")
     # Example response:
-    # gs://your-bucket/your-prefix
-    print(image.generated_images[0].image.gcs_uri)
+    # Created output image using 1234567 bytes
+
     # [END googlegenaisdk_imggen_with_txt]
-    return image.generated_images[0].image.gcs_uri
+    return image.generated_images[0].image
 
 
 if __name__ == "__main__":
-    generate_images(output_gcs_uri="gs://your-bucket/your-prefix")
+    generate_images(output_file="test_resources/dog_newspaper.png")
