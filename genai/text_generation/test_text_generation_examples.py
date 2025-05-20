@@ -138,5 +138,7 @@ def test_textgen_with_youtube_video() -> None:
 
 
 def test_model_optimizer_textgen_with_txt() -> None:
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
     response = model_optimizer_textgen_with_txt.generate_content()
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
     assert response
