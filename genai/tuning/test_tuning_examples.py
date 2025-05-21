@@ -113,7 +113,7 @@ def test_tuning_textgen_with_txt(mock_genai_client: MagicMock) -> None:
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
     mock_genai_client.return_value.models.generate_content.return_value = mock_response
 
-    tuning_textgen_with_txt.test_tuned_endpoint("test-tuning-job")
+    tuning_textgen_with_txt.predict_with_tuned_endpoint("test-tuning-job")
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once()
@@ -277,7 +277,7 @@ def test_tuning_with_checkpoints_textgen_with_txt(mock_genai_client: MagicMock) 
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
     mock_genai_client.return_value.models.generate_content.return_value = mock_response
 
-    tuning_with_checkpoints_textgen_with_txt.test_checkpoint("test-tuning-job")
+    tuning_with_checkpoints_textgen_with_txt.predict_with_checkpoints("test-tuning-job")
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once()
