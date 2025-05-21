@@ -1,6 +1,6 @@
-bigquery_magics==0.9.0
+bigquery_magics==0.10.0
 db-dtypes==1.4.3
-google.cloud.bigquery==3.32.0
+google.cloud.bigquery==3.33.0
 google-cloud-bigquery-storage==2.31.0
 ipython===8.18.1
 pandas==2.2.3

@@ -3,7 +3,7 @@ certifi==2025.4.26
 cffi==1.17.1
 charset-normalizer==3.4.2
 click===8.1.8; python_version == '3.9'
-click==8.2.0; python_version >= '3.10'
+click==8.2.1; python_version >= '3.10'
 click-plugins==1.1.1
 cligj==0.7.2
 db-dtypes==1.4.3
@@ -12,7 +12,7 @@ geojson==3.2.0
 geopandas==1.0.1
 google-api-core==2.24.2
 google-auth==2.40.1
-google-cloud-bigquery==3.32.0
+google-cloud-bigquery==3.33.0
 google-cloud-bigquery-storage==2.31.0
 google-cloud-core==2.4.3
 google-crc32c==1.7.1
@@ -36,7 +36,7 @@ PyYAML==6.0.2
 requests==2.32.3
 rsa==4.9.1
 Shapely===2.0.7; python_version == '3.9'
-Shapely==2.1.0; python_version >= '3.10'
+Shapely==2.1.1; python_version >= '3.10'
 six==1.17.0
 typing-extensions==4.13.2
 typing-inspect==0.9.0
