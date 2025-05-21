@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def set_default_checkpoint(name: str, checkpoint_id: str) -> str:
+def set_default_checkpoint(tuning_job_name: str, checkpoint_id: str) -> str:
     # [START googlegenaisdk_tuning_with_checkpoints_set_default]
     from google import genai
     from google.genai.types import HttpOptions, UpdateModelConfig
@@ -21,8 +21,8 @@ def set_default_checkpoint(name: str, checkpoint_id: str) -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Get the tuning job and the tuned model.
-    # Eg. name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
-    tuning_job = client.tunings.get(name=name)
+    # Eg. tuning_job_name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
+    tuning_job = client.tunings.get(name=tuning_job_name)
     tuned_model = client.models.get(model=tuning_job.tuned_model.model)
 
     print(f"Default checkpoint: {tuned_model.default_checkpoint_id}")
@@ -49,6 +49,6 @@ def set_default_checkpoint(name: str, checkpoint_id: str) -> str:
 
 
 if __name__ == "__main__":
-    tuning_job_name = input("Tuning job name: ")
+    input_tuning_job_name = input("Tuning job name: ")
     default_checkpoint_id = input("Default checkpoint id: ")
-    set_default_checkpoint(tuning_job_name, default_checkpoint_id)
+    set_default_checkpoint(input_tuning_job_name, default_checkpoint_id)

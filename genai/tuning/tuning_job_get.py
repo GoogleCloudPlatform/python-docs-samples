@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def get_tuning_job(name: str) -> str:
+def get_tuning_job(tuning_job_name: str) -> str:
     # [START googlegenaisdk_tuning_job_get]
     from google import genai
     from google.genai.types import HttpOptions
@@ -21,8 +21,8 @@ def get_tuning_job(name: str) -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Get the tuning job and the tuned model.
-    # Eg. name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
-    tuning_job = client.tunings.get(name=name)
+    # Eg. tuning_job_name = "projects/123456789012/locations/us-central1/tuningJobs/123456789012345"
+    tuning_job = client.tunings.get(name=tuning_job_name)
 
     print(tuning_job.tuned_model.model)
     print(tuning_job.tuned_model.endpoint)
@@ -37,5 +37,5 @@ def get_tuning_job(name: str) -> str:
 
 
 if __name__ == "__main__":
-    tuning_job_name = input("Tuning job name: ")
-    get_tuning_job(tuning_job_name)
+    input_tuning_job_name = input("Tuning job name: ")
+    get_tuning_job(input_tuning_job_name)
