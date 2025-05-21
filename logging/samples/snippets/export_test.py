@@ -19,7 +19,7 @@ import string
 import time
 
 import backoff
-from google.cloud import logging
+from google.cloud import logging, storage
 import pytest
 
 import export
@@ -34,6 +34,10 @@ TIMESTAMP = int(time.time())
 # old sink, in seconds
 CLEANUP_THRESHOLD = 7200  # 2 hours
 
+# Max buckets to delete at a time, to mitigate operation timeout
+# issues. To turn off in the future, set to None.
+MAX_BUCKETS = 1500
+
 
 def _random_id():
     return "".join(
@@ -46,8 +50,8 @@ def _create_sink_name():
 
 
 @backoff.on_exception(backoff.expo, Exception, max_time=60, raise_on_giveup=False)
-def _delete_sink(sink):
-    sink.delete()
+def _delete_object(obj):
+    obj.delete()
 
 
 # Runs once for entire test suite
@@ -62,7 +66,20 @@ def cleanup_old_sinks():
         if match:
             sink_timestamp = int(match.group(1))
             if TIMESTAMP - sink_timestamp > CLEANUP_THRESHOLD:
-                _delete_sink(sink)
+                _delete_object(sink)
+
+    storage_client = storage.Client()
+
+    # See _sink_storage_setup in usage_guide.py for details about how
+    # sinks are named.
+    test_bucket_name_regex = r"^sink\-storage\-(\d+)$"
+    for bucket in storage_client.list_buckets(max_results=MAX_BUCKETS):
+        match = re.match(test_bucket_name_regex, bucket.name)
+        if match:
+            # Bucket timestamp is int(time.time() * 1000)
+            bucket_timestamp = int(match.group(1))
+            if TIMESTAMP - bucket_timestamp // 1000 > CLEANUP_THRESHOLD:
+                _delete_object(bucket)
 
 
 @pytest.fixture
@@ -79,7 +96,7 @@ def example_sink(cleanup_old_sinks):
 
     yield sink
 
-    _delete_sink(sink)
+    _delete_object(sink)
 
 
 def test_list(example_sink, capsys):
@@ -99,7 +116,7 @@ def test_create(capsys):
         export.create_sink(sink_name, BUCKET, TEST_SINK_FILTER)
     # Clean-up the temporary sink.
     finally:
-        _delete_sink(logging.Client().sink(sink_name))
+        _delete_object(logging.Client().sink(sink_name))
 
     out, _ = capsys.readouterr()
     assert sink_name in out
