@@ -17,14 +17,14 @@ from __future__ import annotations
 # [START generativeaionvertexai_embedding_code_retrieval]
 from vertexai.language_models import TextEmbeddingInput, TextEmbeddingModel
 
-MODEL_NAME = "text-embedding-005"
+MODEL_NAME = "gemini-embedding-001"
 DIMENSIONALITY = 256
 
 
 def embed_text(
     texts: list[str] = ["Retrieve a function that adds two numbers"],
     task: str = "CODE_RETRIEVAL_QUERY",
-    model_name: str = "text-embedding-005",
+    model_name: str = "gemini-embedding-001",
     dimensionality: int | None = 256,
 ) -> list[list[float]]:
     """Embeds texts with a pre-trained, foundational model."""
