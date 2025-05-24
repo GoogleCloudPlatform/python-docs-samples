@@ -28,7 +28,7 @@ def embed_text() -> list[list[float]]:
     # A list of texts to be embedded.
     texts = ["banana muffins? ", "banana bread? banana muffins?"]
     # The dimensionality of the output embeddings.
-    dimensionality = 256
+    dimensionality = 3072
     # The task type for embedding. Check the available tasks in the model's documentation.
     task = "RETRIEVAL_DOCUMENT"
 
