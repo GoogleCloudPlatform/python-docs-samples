@@ -13,16 +13,18 @@
 # limitations under the License.
 
 
-def client_query_shortmode() -> None:
-    # [START bigquery_query_shortquery]
-    # This example demonstrates issuing a query that may be run in short query mode.
-    #
-    # To enable the short query mode preview feature, the QUERY_PREVIEW_ENABLED
-    # environmental variable should be set to `TRUE`.
+def client_query_job_optional() -> None:
+    # [START bigquery_query_job_optional]
+    # This example demonstrates executing a query without requiring an associated
+    # job.
     from google.cloud import bigquery
+    from google.cloud.bigquery.enums import JobCreationMode
 
-    # Construct a BigQuery client object.
-    client = bigquery.Client()
+    # Construct a BigQuery client object, specifying that the library should
+    # avoid creating jobs when possible.
+    client = bigquery.Client(
+        default_job_creation_mode=JobCreationMode.JOB_CREATION_OPTIONAL
+    )
 
     query = """
         SELECT
@@ -44,10 +46,12 @@ def client_query_shortmode() -> None:
     if rows.job_id is not None:
         print("Query was run with job state.  Job ID: {}".format(rows.job_id))
     else:
-        print("Query was run in short mode.  Query ID: {}".format(rows.query_id))
+        print(
+            "Query was run without creating a job.  Query ID: {}".format(rows.query_id)
+        )
 
     print("The query data:")
     for row in rows:
         # Row values can be accessed by field name or index.
         print("name={}, gender={}, total={}".format(row[0], row[1], row["total"]))
-    # [END bigquery_query_shortquery]
+    # [END bigquery_query_job_optional]

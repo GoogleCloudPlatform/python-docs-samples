@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
 
 import typing
 
-from .. import client_query_shortmode
+from .. import client_query_job_optional
 
 if typing.TYPE_CHECKING:
     import pytest
 
 
 def test_client_query_shortmode(capsys: "pytest.CaptureFixture[str]") -> None:
-    client_query_shortmode.client_query_shortmode()
+    client_query_job_optional.client_query_job_optional()
     out, err = capsys.readouterr()
     assert "Query was run" in out
