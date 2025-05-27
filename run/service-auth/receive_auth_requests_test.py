@@ -164,7 +164,7 @@ def test_anonymous_request_on_cloud_run_service(client: Session, endpoint_url: s
     assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
-def test_an_invalid_token_on_cloud_run_service(client: Session, endpoint_url: str) -> None:
+def test_invalid_token(client: Session, endpoint_url: str) -> None:
     response = client.get(
         endpoint_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
     )
