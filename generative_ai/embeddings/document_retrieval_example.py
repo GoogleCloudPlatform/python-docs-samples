@@ -33,7 +33,6 @@ def embed_text() -> list[list[float]]:
     task = "RETRIEVAL_DOCUMENT"
 
     model = TextEmbeddingModel.from_pretrained("gemini-embedding-001")
-    inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
 
     embeddings = []
