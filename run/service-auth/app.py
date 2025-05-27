@@ -33,6 +33,16 @@ app = Flask(__name__)
 
 
 def get_service_url(full_service_name: str) -> str:
+    """Retrieves the primary URL for a given Cloud Run service.
+
+    Args:
+        full_service_name: The fully qualified name of the Cloud Run service.
+            The expected format is
+            "projects/PROJECT_ID/locations/REGION/services/SERVICE_NAME".
+
+    Returns:
+        The base URL of the specified Cloud Run service.
+    """
     client = run_v2.ServicesClient()
 
     service_request = run_v2.GetServiceRequest(
@@ -78,7 +88,7 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
     if auth_type.lower() == "bearer":
 
         try:
-            # Find more information about `verify_oauth2_token` function here:
+            # Find more information about `verify_oauth2_token` function:
             # https://googleapis.dev/python/google-auth/latest/reference/google.oauth2.id_token.html#google.oauth2.id_token.verify_oauth2_token
             decoded_token = id_token.verify_oauth2_token(
                 id_token=creds,

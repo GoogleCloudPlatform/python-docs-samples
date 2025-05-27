@@ -52,9 +52,9 @@ STATUS_FORCELIST = [
 @pytest.fixture(scope="module")
 def full_service_name() -> str:
     # Add a unique suffix to create distinct service names.
-    service_name_str = f"receive-python-{uuid.uuid4().hex}"
+    service_name = f"receive-python-{uuid.uuid4().hex}"
 
-    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name_str}"
+    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name}"
 
     # Deploy the Cloud Run Service.
     subprocess.run(
@@ -62,7 +62,7 @@ def full_service_name() -> str:
             "gcloud",
             "run",
             "deploy",
-            service_name_str,
+            service_name,
             "--project",
             PROJECT_ID,
             "--source",
@@ -79,14 +79,13 @@ def full_service_name() -> str:
     yield full_service_name
 
     # Clean-up after running the test.
-    """
     subprocess.run(
         [
             "gcloud",
             "run",
             "services",
             "delete",
-            service_name_str,
+            service_name,
             "--project",
             PROJECT_ID,
             "--async",
@@ -95,22 +94,16 @@ def full_service_name() -> str:
         ],
         check=True,
     )
-    """
 
 
 @pytest.fixture(scope="module")
 def service_url(full_service_name: str) -> str:
-    """Returns the Base URL for the Service."""
-
-    service_base_url = get_service_url(full_service_name)
-
-    return service_base_url
+    return get_service_url(full_service_name)
 
 
 @pytest.fixture(scope="module")
 def token(service_url: str) -> str:
     auth_req = transport_requests.Request()
-
     target_audience = service_url
 
     # More info for the `fetch_id_token` function:
