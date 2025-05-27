@@ -35,8 +35,8 @@ def client_query_w_array_params() -> None:
             bigquery.ArrayQueryParameter("states", "STRING", ["WA", "WI", "WV", "WY"]),
         ]
     )
-    query_job = client.query(query, job_config=job_config)  # Make an API request.
+    rows = client.query_and_wait(query, job_config=job_config)  # Make an API request.
 
-    for row in query_job:
+    for row in rows:
         print("{}: \t{}".format(row.name, row.count))
     # [END bigquery_query_params_arrays]
