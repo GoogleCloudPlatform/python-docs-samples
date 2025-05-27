@@ -35,12 +35,18 @@ def embed_text() -> list[list[float]]:
     model = TextEmbeddingModel.from_pretrained("gemini-embedding-001")
     inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
-    embeddings = model.get_embeddings(inputs, **kwargs)
 
-    print(embeddings)
-    # Example response:
-    # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...], [0.1234434666, ...]],
-    return [embedding.values for embedding in embeddings]
+    embeddings = []
+    # gemini-embedding-001 takes one input at a time
+    for text in texts:
+        text_input = TextEmbeddingInput(text, task)
+        embedding = model.get_embeddings([text_input], **kwargs)
+        print(embedding)
+        # Example response:
+        # [[0.006135190837085247, -0.01462465338408947, 0.004978656303137541, ...]]
+        embeddings.append(embedding[0].values)
+
+    return embeddings
 
 
 # [END generativeaionvertexai_embedding]

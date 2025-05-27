@@ -81,7 +81,7 @@ def test_generate_embeddings_with_lower_dimension() -> None:
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_embed_text() -> None:
     embeddings = document_retrieval_example.embed_text()
-    assert [len(e) for e in embeddings] == [256, 256]
+    assert [len(e) for e in embeddings] == [3072, 3072]
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
