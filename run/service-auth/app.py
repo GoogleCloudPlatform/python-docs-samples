@@ -21,7 +21,6 @@ on a Cloud Run Service.
 from http import HTTPStatus
 import os
 from typing import Optional
-from urllib.request import Request, urlopen
 
 from flask import Flask, request
 
@@ -30,36 +29,27 @@ from google.auth.transport import requests
 from google.cloud import run_v2
 from google.oauth2 import id_token
 
-# Get the Service Name as found in Cloud Run.
-SERVICE_NAME = os.getenv("K_SERVICE")
-
-# Get the Project ID.
-req = Request("http://metadata.google.internal/computeMetadata/v1/project/project-id")
-req.add_header("Metadata-Flavor", "Google")
-PROJECT_ID = urlopen(req).read().decode("utf-8")
-
-# Get the Region.
-req = Request("http://metadata.google.internal/computeMetadata/v1/instance/region")
-req.add_header("Metadata-Flavor", "Google")
-
-# Returns "projects/PROJECT-NUMBER/regions/REGION"
-project_region_list = urlopen(req).read().decode("utf-8").split('/')
-
-REGION = project_region_list[3]
-
-# Get the Service URL, required to define the valid audience for the Token.
-# https://cloud.google.com/run/docs/triggering/https-request#deterministic
-FULL_SERVICE_NAME = f"projects/{PROJECT_ID}/locations/{REGION}/services/{SERVICE_NAME}"
-
-client = run_v2.ServicesClient()
-
-service_request = run_v2.GetServiceRequest(
-    name=FULL_SERVICE_NAME,
-)
-
-SERVICE_URI = client.get_service(request=service_request).uri
-
 app = Flask(__name__)
+
+
+def get_service_url() -> str:
+    # Get the full service name from the environment variable
+    # set at deployment time.
+    full_service_name = os.getenv("FULL_SERVICE_NAME")
+
+    client = run_v2.ServicesClient()
+
+    service_request = run_v2.GetServiceRequest(
+        name=full_service_name,
+    )
+
+    service_info = client.get_service(request=service_request)
+
+    # Get the Deterministic URL for this Service.
+    # https://cloud.google.com/run/docs/triggering/https-request#deterministic
+    service_url = service_info.urls[0]
+
+    return service_url
 
 
 def parse_auth_header(auth_header: str) -> Optional[str]:
@@ -80,14 +70,11 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
         print("Malformed Authorization header.")
         return None
 
-    # The token audience will be the SERVICE_URL.
-    # If `audience` was None, it won't be verified.
-    audience = SERVICE_URI
+    # Define the expected audience as the Service Base URL.
+    audience = get_service_url()
 
+    # Validate and decode the ID token in the header.
     if auth_type.lower() == "bearer":
-        # Get the ID token.
-        # Find more info about the ID Token here:
-        # https://cloud.google.com/docs/authentication/token-types#id
 
         try:
             # Find more information about `verify_oauth2_token` function here:
@@ -98,14 +85,16 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
                 audience=audience,
             )
 
+            # More info about the structure for the decoded ID Token here:
+            # https://cloud.google.com/docs/authentication/token-types#id
+
             # Verify that the token contains the email claim.
             if decoded_token['email_verified']:
-                print(f"Email verified {decoded_token['email']}")
+                print(f"Email verified: {decoded_token['email']}")
 
                 return decoded_token['email']
 
-            print("Email wasn't verified.")
-            return None
+            print("Invalid token. Email wasn't verified.")
         except GoogleAuthError as e:
             print(f"Invalid token: {e}")
     else:

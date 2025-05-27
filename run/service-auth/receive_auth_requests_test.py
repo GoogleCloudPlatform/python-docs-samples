@@ -23,6 +23,7 @@ import uuid
 import backoff
 
 from google.auth.transport import requests as transport_requests
+from google.cloud import run_v2
 from google.oauth2 import id_token
 
 import pytest
@@ -33,6 +34,7 @@ from requests.packages.urllib3.util.retry import Retry
 from requests.sessions import Session
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
 
 STATUS_FORCELIST = [
     HTTPStatus.BAD_REQUEST,
@@ -51,6 +53,11 @@ def service_name() -> str:
     # Add a unique suffix to create distinct service names.
     service_name_str = f"receive-python-{uuid.uuid4().hex}"
 
+    # DEBUG: Remove after sending it to review.
+    # service_name_str = f"receive-python"
+
+    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name_str}"
+
     # Deploy the Cloud Run Service.
     subprocess.run(
         [
@@ -62,7 +69,8 @@ def service_name() -> str:
             PROJECT_ID,
             "--source",
             ".",
-            "--region=us-central1",
+            f"--region={REGION}",
+            f"--set-env-vars=FULL_SERVICE_NAME={full_service_name}"
             "--allow-unauthenticated",
             "--quiet",
         ],
@@ -73,6 +81,7 @@ def service_name() -> str:
     yield service_name_str
 
     # Clean-up after running the test.
+    """
     subprocess.run(
         [
             "gcloud",
@@ -83,47 +92,40 @@ def service_name() -> str:
             "--project",
             PROJECT_ID,
             "--async",
-            "--region=us-central1",
+            f"--region={REGION}",
             "--quiet",
         ],
         check=True,
     )
+    """
 
 
 @pytest.fixture(scope="module")
 def endpoint_url(service_name: str) -> str:
-    endpoint_url_str = (
-        subprocess.run(
-            [
-                "gcloud",
-                "run",
-                "services",
-                "describe",
-                service_name,
-                "--project",
-                PROJECT_ID,
-                "--region=us-central1",
-                "--format=value(status.url)",
-            ],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.strip()
-        .decode()
+    """Return the Deterministic URL for this Service."""
+
+    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name}"
+
+    client = run_v2.ServicesClient()
+
+    service_request = run_v2.GetServiceRequest(
+        name=full_service_name,
     )
 
-    return endpoint_url_str
+    service_info = client.get_service(request=service_request)
+    service_url = service_info.urls[0]
+
+    return service_url
 
 
 @pytest.fixture(scope="module")
 def token(endpoint_url: str) -> str:
-    # Cloud Run uses your service's hostname as the `audience` value.
-    # For example: 'https://my-cloud-run-service.run.app'
-    target_audience = endpoint_url
     auth_req = transport_requests.Request()
 
-    # More info for the `fetch_id_token`function
-    # https://googleapis.dev/python/google-auth/1.14.0/reference/google.oauth2.id_token.html
+    target_audience = endpoint_url
+
+    # More info for the `fetch_id_token` function:
+    # https://googleapis.dev/python/google-auth/latest/reference/google.oauth2.id_token.html#google.oauth2.id_token.fetch_id_token
     token = id_token.fetch_id_token(auth_req, target_audience)
 
     return token
@@ -146,7 +148,7 @@ def client() -> Session:
 
 
 @backoff.on_exception(backoff.expo, Exception, max_time=60)
-def test_authentication_on_cloud_run_service(
+def test_authenticated_request(
     client: Session, endpoint_url: str, token: str
 ) -> None:
     response = client.get(
@@ -158,7 +160,7 @@ def test_authentication_on_cloud_run_service(
     assert "Hello" in response_content
 
 
-def test_anonymous_request_on_cloud_run_service(client: Session, endpoint_url: str) -> None:
+def test_anonymous_request(client: Session, endpoint_url: str) -> None:
     response = client.get(endpoint_url)
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
