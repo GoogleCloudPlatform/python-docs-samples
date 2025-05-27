@@ -32,11 +32,7 @@ from google.oauth2 import id_token
 app = Flask(__name__)
 
 
-def get_service_url() -> str:
-    # Get the full service name from the environment variable
-    # set at deployment time.
-    full_service_name = os.getenv("FULL_SERVICE_NAME")
-
+def get_service_url(full_service_name: str) -> str:
     client = run_v2.ServicesClient()
 
     service_request = run_v2.GetServiceRequest(
@@ -45,9 +41,9 @@ def get_service_url() -> str:
 
     service_info = client.get_service(request=service_request)
 
-    # Get the Deterministic URL for this Service.
+    # Get the Deterministic URL for this Service and remove any trailing slash.
     # https://cloud.google.com/run/docs/triggering/https-request#deterministic
-    service_url = service_info.urls[0]
+    service_url = service_info.urls[0].rstrip('/')
 
     return service_url
 
@@ -70,8 +66,13 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
         print("Malformed Authorization header.")
         return None
 
+    # Get the full service name from the environment variable
+    # set at the time of deployment.
+    # Format: "projects/PROJECT_ID/locations/REGION/services/SERVICE_NAME"
+    full_service_name = os.getenv("FULL_SERVICE_NAME")
+
     # Define the expected audience as the Service Base URL.
-    audience = get_service_url()
+    audience = get_service_url(full_service_name)
 
     # Validate and decode the ID token in the header.
     if auth_type.lower() == "bearer":

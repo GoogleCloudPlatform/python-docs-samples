@@ -23,7 +23,6 @@ import uuid
 import backoff
 
 from google.auth.transport import requests as transport_requests
-from google.cloud import run_v2
 from google.oauth2 import id_token
 
 import pytest
@@ -32,6 +31,8 @@ import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from requests.sessions import Session
+
+from app import get_service_url
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -49,12 +50,9 @@ STATUS_FORCELIST = [
 
 
 @pytest.fixture(scope="module")
-def service_name() -> str:
+def full_service_name() -> str:
     # Add a unique suffix to create distinct service names.
     service_name_str = f"receive-python-{uuid.uuid4().hex}"
-
-    # DEBUG: Remove after sending it to review.
-    # service_name_str = f"receive-python"
 
     full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name_str}"
 
@@ -70,15 +68,15 @@ def service_name() -> str:
             "--source",
             ".",
             f"--region={REGION}",
-            f"--set-env-vars=FULL_SERVICE_NAME={full_service_name}"
             "--allow-unauthenticated",
+            f"--set-env-vars=FULL_SERVICE_NAME={full_service_name}",
             "--quiet",
         ],
         # Rise a CalledProcessError exception for a non-zero exit code.
         check=True,
     )
 
-    yield service_name_str
+    yield full_service_name
 
     # Clean-up after running the test.
     """
@@ -101,28 +99,19 @@ def service_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def endpoint_url(service_name: str) -> str:
-    """Return the Deterministic URL for this Service."""
+def service_url(full_service_name: str) -> str:
+    """Returns the Base URL for the Service."""
 
-    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name}"
+    service_base_url = get_service_url(full_service_name)
 
-    client = run_v2.ServicesClient()
-
-    service_request = run_v2.GetServiceRequest(
-        name=full_service_name,
-    )
-
-    service_info = client.get_service(request=service_request)
-    service_url = service_info.urls[0]
-
-    return service_url
+    return service_base_url
 
 
 @pytest.fixture(scope="module")
-def token(endpoint_url: str) -> str:
+def token(service_url: str) -> str:
     auth_req = transport_requests.Request()
 
-    target_audience = endpoint_url
+    target_audience = service_url
 
     # More info for the `fetch_id_token` function:
     # https://googleapis.dev/python/google-auth/latest/reference/google.oauth2.id_token.html#google.oauth2.id_token.fetch_id_token
@@ -149,10 +138,10 @@ def client() -> Session:
 
 @backoff.on_exception(backoff.expo, Exception, max_time=60)
 def test_authenticated_request(
-    client: Session, endpoint_url: str, token: str
+    client: Session, service_url: str, token: str,
 ) -> None:
     response = client.get(
-        endpoint_url, headers={"Authorization": f"Bearer {token}"}
+        service_url, headers={"Authorization": f"Bearer {token}"}
     )
     response_content = response.content.decode("utf-8")
 
@@ -160,15 +149,15 @@ def test_authenticated_request(
     assert "Hello" in response_content
 
 
-def test_anonymous_request(client: Session, endpoint_url: str) -> None:
-    response = client.get(endpoint_url)
+def test_anonymous_request(client: Session, service_url: str) -> None:
+    response = client.get(service_url)
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
-def test_invalid_token(client: Session, endpoint_url: str) -> None:
+def test_invalid_token(client: Session, service_url: str) -> None:
     response = client.get(
-        endpoint_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
+        service_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
