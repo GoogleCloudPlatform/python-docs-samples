@@ -32,8 +32,6 @@ from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from requests.sessions import Session
 
-from app import get_service_url
-
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
 
@@ -50,13 +48,35 @@ STATUS_FORCELIST = [
 
 
 @pytest.fixture(scope="module")
-def full_service_name() -> str:
+def project_number() -> str:
+    return (
+        subprocess.run(
+            [
+                "gcloud",
+                "projects",
+                "describe",
+                PROJECT_ID,
+                "--format=value(projectNumber)",
+            ],
+            stdout=subprocess.PIPE,
+            check=True,
+        )
+        .stdout.strip()
+        .decode()
+    )
+
+
+@pytest.fixture(scope="module")
+def service_url(project_number: str) -> str:
+    """Deploys a Run Service and returns its Base URL."""
+
     # Add a unique suffix to create distinct service names.
     service_name = f"receive-python-{uuid.uuid4().hex}"
 
-    full_service_name = f"projects/{PROJECT_ID}/locations/{REGION}/services/{service_name}"
+    # Construct the Deterministic URL.
+    service_url = f"https://{service_name}-{project_number}.{REGION}.run.app"
 
-    # Deploy the Cloud Run Service.
+    # Deploy the Cloud Run Service supplying the URL as an environment variable.
     subprocess.run(
         [
             "gcloud",
@@ -69,14 +89,14 @@ def full_service_name() -> str:
             ".",
             f"--region={REGION}",
             "--allow-unauthenticated",
-            f"--set-env-vars=FULL_SERVICE_NAME={full_service_name}",
+            f"--set-env-vars=SERVICE_URL={service_url}",
             "--quiet",
         ],
         # Rise a CalledProcessError exception for a non-zero exit code.
         check=True,
     )
 
-    yield full_service_name
+    yield service_url
 
     # Clean-up after running the test.
     subprocess.run(
@@ -97,17 +117,10 @@ def full_service_name() -> str:
 
 
 @pytest.fixture(scope="module")
-def service_url(full_service_name: str) -> str:
-    return get_service_url(full_service_name)
-
-
-@pytest.fixture(scope="module")
 def token(service_url: str) -> str:
     auth_req = transport_requests.Request()
     target_audience = service_url
 
-    # More info for the `fetch_id_token` function:
-    # https://googleapis.dev/python/google-auth/latest/reference/google.oauth2.id_token.html#google.oauth2.id_token.fetch_id_token
     token = id_token.fetch_id_token(auth_req, target_audience)
 
     return token

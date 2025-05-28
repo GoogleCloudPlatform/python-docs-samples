@@ -32,32 +32,6 @@ from google.oauth2 import id_token
 app = Flask(__name__)
 
 
-def get_service_url(full_service_name: str) -> str:
-    """Retrieves the primary URL for a given Cloud Run service.
-
-    Args:
-        full_service_name: The fully qualified name of the Cloud Run service.
-            The expected format is
-            "projects/PROJECT_ID/locations/REGION/services/SERVICE_NAME".
-
-    Returns:
-        The base URL of the specified Cloud Run service.
-    """
-    client = run_v2.ServicesClient()
-
-    service_request = run_v2.GetServiceRequest(
-        name=full_service_name,
-    )
-
-    service_info = client.get_service(request=service_request)
-
-    # Get the Deterministic URL for this Service and remove any trailing slash.
-    # https://cloud.google.com/run/docs/triggering/https-request#deterministic
-    service_url = service_info.urls[0].rstrip('/')
-
-    return service_url
-
-
 def parse_auth_header(auth_header: str) -> Optional[str]:
     """Parse the authorization header, validate and decode the Bearer token.
 
@@ -76,17 +50,15 @@ def parse_auth_header(auth_header: str) -> Optional[str]:
         print("Malformed Authorization header.")
         return None
 
-    # Get the full service name from the environment variable
+    # Get the service URL from the environment variable
     # set at the time of deployment.
-    # Format: "projects/PROJECT_ID/locations/REGION/services/SERVICE_NAME"
-    full_service_name = os.getenv("FULL_SERVICE_NAME")
+    service_url = os.environ["SERVICE_URL"]
 
     # Define the expected audience as the Service Base URL.
-    audience = get_service_url(full_service_name)
+    audience = service_url
 
     # Validate and decode the ID token in the header.
     if auth_type.lower() == "bearer":
-
         try:
             # Find more information about `verify_oauth2_token` function:
             # https://googleapis.dev/python/google-auth/latest/reference/google.oauth2.id_token.html#google.oauth2.id_token.verify_oauth2_token
