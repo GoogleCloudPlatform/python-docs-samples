@@ -32,7 +32,6 @@ def embed_text(
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
 
     embeddings = []
-    
     # gemini-embedding-001 takes one input at a time
     for text in texts:
         text_input = TextEmbeddingInput(text, task)
