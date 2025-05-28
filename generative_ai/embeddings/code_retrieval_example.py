@@ -29,7 +29,6 @@ def embed_text(
 ) -> list[list[float]]:
     """Embeds texts with a pre-trained, foundational model."""
     model = TextEmbeddingModel.from_pretrained(model_name)
-    inputs = [TextEmbeddingInput(text, task) for text in texts]
     kwargs = dict(output_dimensionality=dimensionality) if dimensionality else {}
 
     embeddings = []
