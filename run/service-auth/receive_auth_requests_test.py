@@ -121,9 +121,7 @@ def token(service_url: str) -> str:
     auth_req = transport_requests.Request()
     target_audience = service_url
 
-    token = id_token.fetch_id_token(auth_req, target_audience)
-
-    return token
+    return id_token.fetch_id_token(auth_req, target_audience)
 
 
 @pytest.fixture(scope="module")
