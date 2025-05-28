@@ -26,7 +26,6 @@ from flask import Flask, request
 
 from google.auth.exceptions import GoogleAuthError
 from google.auth.transport import requests
-from google.cloud import run_v2
 from google.oauth2 import id_token
 
 app = Flask(__name__)
