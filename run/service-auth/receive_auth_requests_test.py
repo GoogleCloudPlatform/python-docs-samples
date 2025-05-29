@@ -13,13 +13,17 @@
 # limitations under the License.
 
 # This test deploys a secure application running on Cloud Run
-# to test that the authentication sample works properly.
+# to validate receiving authenticated requests.
 
 from http import HTTPStatus
 import os
 import subprocess
-from urllib import error, request
 import uuid
+
+import backoff
+
+from google.auth.transport import requests as transport_requests
+from google.oauth2 import id_token
 
 import pytest
 
@@ -29,6 +33,7 @@ from requests.packages.urllib3.util.retry import Retry
 from requests.sessions import Session
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
+REGION = "us-central1"
 
 STATUS_FORCELIST = [
     HTTPStatus.BAD_REQUEST,
@@ -43,63 +48,15 @@ STATUS_FORCELIST = [
 
 
 @pytest.fixture(scope="module")
-def service_name() -> str:
-    # Add a unique suffix to create distinct service names.
-    service_name_str = f"receive-{uuid.uuid4().hex}"
-
-    # Deploy the Cloud Run Service.
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "deploy",
-            service_name_str,
-            "--project",
-            PROJECT_ID,
-            "--source",
-            ".",
-            "--region=us-central1",
-            "--allow-unauthenticated",
-            "--quiet",
-        ],
-        # Rise a CalledProcessError exception for a non-zero exit code.
-        check=True,
-    )
-
-    yield service_name_str
-
-    # Clean-up after running the test.
-    subprocess.run(
-        [
-            "gcloud",
-            "run",
-            "services",
-            "delete",
-            service_name_str,
-            "--project",
-            PROJECT_ID,
-            "--async",
-            "--region=us-central1",
-            "--quiet",
-        ],
-        check=True,
-    )
-
-
-@pytest.fixture(scope="module")
-def endpoint_url(service_name: str) -> str:
-    endpoint_url_str = (
+def project_number() -> str:
+    return (
         subprocess.run(
             [
                 "gcloud",
-                "run",
-                "services",
+                "projects",
                 "describe",
-                service_name,
-                "--project",
                 PROJECT_ID,
-                "--region=us-central1",
-                "--format=value(status.url)",
+                "--format=value(projectNumber)",
             ],
             stdout=subprocess.PIPE,
             check=True,
@@ -108,32 +65,67 @@ def endpoint_url(service_name: str) -> str:
         .decode()
     )
 
-    return endpoint_url_str
-
 
 @pytest.fixture(scope="module")
-def token() -> str:
-    token_str = (
-        subprocess.run(
-            ["gcloud", "auth", "print-identity-token"],
-            stdout=subprocess.PIPE,
-            check=True,
-        )
-        .stdout.strip()
-        .decode()
+def service_url(project_number: str) -> str:
+    """Deploys a Run Service and returns its Base URL."""
+
+    # Add a unique suffix to create distinct service names.
+    service_name = f"receive-python-{uuid.uuid4().hex}"
+
+    # Construct the Deterministic URL.
+    service_url = f"https://{service_name}-{project_number}.{REGION}.run.app"
+
+    # Deploy the Cloud Run Service supplying the URL as an environment variable.
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "deploy",
+            service_name,
+            "--project",
+            PROJECT_ID,
+            "--source",
+            ".",
+            f"--region={REGION}",
+            "--allow-unauthenticated",
+            f"--set-env-vars=SERVICE_URL={service_url}",
+            "--quiet",
+        ],
+        # Rise a CalledProcessError exception for a non-zero exit code.
+        check=True,
     )
 
-    return token_str
+    yield service_url
+
+    # Clean-up after running the test.
+    subprocess.run(
+        [
+            "gcloud",
+            "run",
+            "services",
+            "delete",
+            service_name,
+            "--project",
+            PROJECT_ID,
+            "--async",
+            f"--region={REGION}",
+            "--quiet",
+        ],
+        check=True,
+    )
 
 
 @pytest.fixture(scope="module")
-def client(endpoint_url: str) -> Session:
-    req = request.Request(endpoint_url)
-    try:
-        _ = request.urlopen(req)
-    except error.HTTPError as e:
-        assert e.code == HTTPStatus.FORBIDDEN
+def token(service_url: str) -> str:
+    auth_req = transport_requests.Request()
+    target_audience = service_url
 
+    return id_token.fetch_id_token(auth_req, target_audience)
+
+
+@pytest.fixture(scope="module")
+def client() -> Session:
     retry_strategy = Retry(
         total=3,
         status_forcelist=STATUS_FORCELIST,
@@ -148,31 +140,28 @@ def client(endpoint_url: str) -> Session:
     return client
 
 
-def test_authentication_on_cloud_run(
-    client: Session, endpoint_url: str, token: str
+@backoff.on_exception(backoff.expo, Exception, max_time=60)
+def test_authenticated_request(
+    client: Session, service_url: str, token: str,
 ) -> None:
     response = client.get(
-        endpoint_url, headers={"Authorization": f"Bearer {token}"}
+        service_url, headers={"Authorization": f"Bearer {token}"}
     )
     response_content = response.content.decode("utf-8")
 
     assert response.status_code == HTTPStatus.OK
     assert "Hello" in response_content
-    assert "anonymous" not in response_content
 
 
-def test_anonymous_request_on_cloud_run(client: Session, endpoint_url: str) -> None:
-    response = client.get(endpoint_url)
-    response_content = response.content.decode("utf-8")
+def test_anonymous_request(client: Session, service_url: str) -> None:
+    response = client.get(service_url)
 
-    assert response.status_code == HTTPStatus.OK
-    assert "Hello" in response_content
-    assert "anonymous" in response_content
+    assert response.status_code == HTTPStatus.UNAUTHORIZED
 
 
-def test_invalid_token(client: Session, endpoint_url: str) -> None:
+def test_invalid_token(client: Session, service_url: str) -> None:
     response = client.get(
-        endpoint_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
+        service_url, headers={"Authorization": "Bearer i-am-not-a-real-token"}
     )
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED
