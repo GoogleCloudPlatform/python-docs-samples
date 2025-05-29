@@ -21,6 +21,8 @@ For more information, the documentation at
 https://cloud.google.com/translate/docs.
 """
 
+from __future__ import annotations
+
 import argparse
 
 
@@ -116,12 +118,29 @@ def translate_text_with_model(target: str, text: str, model: str = "nmt") -> dic
 
 
 # [START translate_translate_text]
-def translate_text(target: str, text: str) -> dict:
-    """Translates text into the target language.
+def translate_text(
+    text: str | bytes = "¡Hola amigos y amigas!",
+    target_language: str = "en",
+    source_language: str | None = None,
+) -> dict:
+    """Translates a given text into the specified target language.
 
-    Target must be an ISO 639-1 language code.
-    See https://g.co/cloud/translate/v2/translate-reference#supported_languages
+    Find a list of supported languages and codes here:
+    https://cloud.google.com/translate/docs/languages#nmt
+
+    Args:
+        text: The text to translate. Can be a string or bytes.
+              If bytes, it will be decoded as UTF-8.
+        target_language: The ISO 639 language code to translate the text into
+                         (e.g., 'en' for English, 'es' for Spanish).
+        source_language: Optional. The ISO 639 language code of the input text
+                         (e.g., 'fr' for French). If None, the API will attempt
+                         to detect the source language automatically.
+
+    Returns:
+        A dictionary containing the translation results.
     """
+
     from google.cloud import translate_v2 as translate
 
     translate_client = translate.Client()
@@ -129,17 +148,24 @@ def translate_text(target: str, text: str) -> dict:
     if isinstance(text, bytes):
         text = text.decode("utf-8")
 
-    # Text can also be a sequence of strings, in which case this method
-    # will return a sequence of results for each text.
-    result = translate_client.translate(text, target_language=target)
+    # Values can also be a list of strings, in which case this method
+    # will return a list of results for each text.
 
-    print("Text: {}".format(result["input"]))
-    print("Translation: {}".format(result["translatedText"]))
-    print("Detected source language: {}".format(result["detectedSourceLanguage"]))
+    # Find more information about translate function here:
+    # https://cloud.google.com/python/docs/reference/translate/latest/google.cloud.translate_v2.client.Client#google_cloud_translate_v2_client_Client_translate
+    result = translate_client.translate(
+        values=text,
+        target_language=target_language,
+        source_language=source_language
+    )
+
+    if "detectedSourceLanguage" in result:
+        print(f"Detected source language: {result['detectedSourceLanguage']}")
+
+    print(f"Input text: {result['input']}")
+    print(f"Translated text: {result['translatedText']}")
 
     return result
-
-
 # [END translate_translate_text]
 
 
