@@ -244,11 +244,6 @@ assign_prs_by:
       - "api: appengine"
     to:
       - jinglundong
-assign_issues:
-  - GoogleCloudPlatform/python-samples-owners
-
-assign_prs:
-  - GoogleCloudPlatform/python-samples-owners
 
 ###
 # Updates should be made to both assign_issues_by & assign_prs_by sections
