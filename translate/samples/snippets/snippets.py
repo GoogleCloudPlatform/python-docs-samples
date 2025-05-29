@@ -204,4 +204,4 @@ if __name__ == "__main__":
     elif args.command == "list-languages-with-target":
         list_languages_with_target(args.target)
     elif args.command == "translate-text":
-        translate_text(args.target, args.text)
+        translate_text(text=args.text, target_language=args.target)
