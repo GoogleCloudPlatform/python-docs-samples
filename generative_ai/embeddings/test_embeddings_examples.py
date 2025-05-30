@@ -35,7 +35,6 @@ import multimodal_video_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-@pytest.fixture(scope="session")
 def test_embed_text_batch() -> None:
     os.environ["GCS_OUTPUT_URI"] = "gs://python-docs-samples-tests/"
     batch_prediction_job = batch_example.embed_text_batch()
