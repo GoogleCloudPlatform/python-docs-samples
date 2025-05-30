@@ -22,7 +22,6 @@ import google.auth
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
-import pytest
 
 import batch_example
 import code_retrieval_example
