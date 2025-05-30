@@ -1,2 +1,2 @@
-google-cloud-modelarmor==0.1.1
-google-cloud-dlp==3.27.0
+google-cloud-modelarmor==0.2.5
+google-cloud-dlp==3.30.0
