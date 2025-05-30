@@ -18,7 +18,7 @@ from google.cloud.aiplatform import BatchPredictionJob
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
 
-def embed_text_batch(OUTPUT_URI) -> BatchPredictionJob:
+def embed_text_batch(OUTPUT_URI: str) -> BatchPredictionJob:
     """Example of how to generate embeddings from text using batch processing.
 
     Read more: https://cloud.google.com/vertex-ai/generative-ai/docs/embeddings/batch-prediction-genai-embeddings
