@@ -39,7 +39,7 @@ def embed_text_batch() -> BatchPredictionJob:
     output_uri = OUTPUT_URI
 
     textembedding_model = language_models.TextEmbeddingModel.from_pretrained(
-        "gemini-embedding-001"
+        "textembedding-gecko@003"
     )
 
     batch_prediction_job = textembedding_model.batch_predict(
