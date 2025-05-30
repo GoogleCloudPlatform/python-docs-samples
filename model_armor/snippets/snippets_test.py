@@ -515,7 +515,7 @@ def test_create_model_armor_template_with_basic_sdp(
 
     assert (
         filter_enforcement.name
-        == modelarmor_v1.SdpBasicConfig.filter_enforcement.ENABLED.name
+        == modelarmor_v1.SdpBasicConfig.SdpBasicConfigEnforcement.ENABLED.name
     )
 
 
@@ -672,7 +672,7 @@ def test_update_model_armor_template_with_mask_configuration(
     )
     assert (
         filter_enforcement.name
-        != modelarmor_v1.SdpBasicConfig.filter_enforcement.ENABLED.name
+        != modelarmor_v1.SdpBasicConfig.SdpBasicConfigEnforcement.ENABLED.name
     )
 
 
