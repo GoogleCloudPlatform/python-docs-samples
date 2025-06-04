@@ -21,6 +21,7 @@ import os
 import pytest
 
 import live_with_txt
+import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt
@@ -34,6 +35,11 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 @pytest.mark.asyncio
 async def test_live_with_text() -> None:
     assert await live_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_websocket_textgen_with_audio() -> None:
+    assert await live_websocket_textgen_with_audio.generate_content()
 
 
 @pytest.mark.asyncio
