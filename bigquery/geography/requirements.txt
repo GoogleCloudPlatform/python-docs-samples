@@ -9,8 +9,9 @@ cligj==0.7.2
 db-dtypes==1.4.3
 Fiona==1.10.1
 geojson==3.2.0
-geopandas==1.0.1
-google-api-core==2.24.2
+geopandas===1.0.1; python_version <= '3.9'
+geopandas==1.1.0; python_version >= '3.10'
+google-api-core==2.25.0
 google-auth==2.40.2
 google-cloud-bigquery==3.34.0
 google-cloud-bigquery-storage==2.32.0
@@ -18,7 +19,7 @@ google-cloud-core==2.4.3
 google-crc32c==1.7.1
 google-resumable-media==2.7.2
 googleapis-common-protos==1.70.0
-grpcio==1.71.0
+grpcio==1.72.1
 idna==3.10
 munch==4.0.0
 mypy-extensions==1.1.0
@@ -38,6 +39,6 @@ rsa==4.9.1
 Shapely===2.0.7; python_version == '3.9'
 Shapely==2.1.1; python_version >= '3.10'
 six==1.17.0
-typing-extensions==4.13.2
+typing-extensions==4.14.0
 typing-inspect==0.9.0
 urllib3==2.4.0
