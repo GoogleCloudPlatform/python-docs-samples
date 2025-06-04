@@ -18,9 +18,14 @@ import subprocess
 
 
 def get_bearer_token():
-    command = "gcloud auth application-default print-access-token"
-    result = subprocess.check_output(command, shell=True, text=True)
-    return result.strip()
+    import google.auth
+    from google.auth.transport.requests import Request
+
+    creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    auth_req = Request()
+    creds.refresh(auth_req)
+    bearer_token = creds.token
+    return bearer_token
 
 
 # get bearer token
@@ -44,7 +49,7 @@ async def generate_content() -> str:
     PROJECT_ID = os.getenv("GOOGLE_SAMPLES_PROJECT")
     LOCATION = "us-central1"
     GEMINI_MODEL_NAME = "gemini-2.0-flash-live-preview-04-09"
-    # To generate a bearer token, use:
+    # To generate a bearer token in CLI, use:
     #   $ gcloud auth application-default print-access-token
     # It's recommended to fetch this token dynamically rather than hardcoding.
     # BEARER_TOKEN = "ya29.a0AW4XtxhRb1s51TxLPnj..."

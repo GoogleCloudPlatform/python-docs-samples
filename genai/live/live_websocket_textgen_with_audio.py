@@ -18,9 +18,14 @@ import subprocess
 
 
 def get_bearer_token():
-    command = "gcloud auth application-default print-access-token"
-    result = subprocess.check_output(command, shell=True, text=True)
-    return result.strip()
+    import google.auth
+    from google.auth.transport.requests import Request
+
+    creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    auth_req = Request()
+    creds.refresh(auth_req)
+    bearer_token = creds.token
+    return bearer_token
 
 
 # get bearer token
@@ -39,7 +44,6 @@ async def generate_content() -> str:
     from websockets.asyncio.client import connect
     from scipy.io import wavfile
 
-
     def read_wavefile(filepath):
         # Read the .wav file.
         rate, data = wavfile.read(filepath)
@@ -47,7 +51,7 @@ async def generate_content() -> str:
         raw_audio_bytes = data.tobytes()
         # Encode the raw bytes to a base64 string.
         # The result needs to be decoded from bytes to a UTF-8 string
-        base64_encoded_data = base64.b64encode(raw_audio_bytes).decode('ascii')
+        base64_encoded_data = base64.b64encode(raw_audio_bytes).decode("ascii")
         mime_type = f"audio/pcm;rate={rate}"
         return base64_encoded_data, mime_type
 
@@ -55,7 +59,7 @@ async def generate_content() -> str:
     PROJECT_ID = os.getenv("GOOGLE_SAMPLES_PROJECT")
     LOCATION = "us-central1"
     GEMINI_MODEL_NAME = "gemini-2.0-flash-live-preview-04-09"
-    # To generate a bearer token, use:
+    # To generate a bearer token in CLI, use:
     #   $ gcloud auth application-default print-access-token
     # It's recommended to fetch this token dynamically rather than hardcoding.
     # BEARER_TOKEN = "ya29.a0AW4XtxhRb1s51TxLPnj..."
@@ -113,8 +117,8 @@ async def generate_content() -> str:
                         "parts": [
                             {
                                 "inlineData": {
-                                    "mimeType": mime_type,         # Example value: "audio/pcm;rate=24000"
-                                    "data": encoded_audio_message, # Example value: "AQD//wAAAAAAA....."
+                                    "mimeType": mime_type,  # Example value: "audio/pcm;rate=24000"
+                                    "data": encoded_audio_message,  # Example value: "AQD//wAAAAAAA....."
                                 }
                             }
                         ],
