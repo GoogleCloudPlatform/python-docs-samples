@@ -32,7 +32,7 @@ def generate_content() -> str:
 
     response = client.models.generate_content(
         model="gemini-2.5-flash-preview-05-20",
-        contents="Recommend a good restaurant in San Francisco",
+        contents="Recommend a good restaurant in San Francisco.",
         config=GenerateContentConfig(
             tools=[
                 # Use Google Maps Tool
@@ -51,7 +51,7 @@ def generate_content() -> str:
 
     print(response.text)
     # Example response:
-    # 'The next total solar eclipse in the United States will occur on ...'
+    # 'San Francisco boasts a vibrant culinary scene...'
     # [END googlegenaisdk_tools_google_maps_with_txt]
     return response.text
 
