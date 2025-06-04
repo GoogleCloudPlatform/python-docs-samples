@@ -14,7 +14,6 @@
 
 import asyncio
 import os
-import subprocess
 
 
 def get_bearer_token():
