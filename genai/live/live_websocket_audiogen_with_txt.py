@@ -38,7 +38,7 @@ async def generate_content() -> str:
     import numpy as np
 
     from websockets.asyncio.client import connect
-    from scipy.io.wavfile import write as save_audio
+    from scipy.io import wavfile
 
     # Configuration Constants
     PROJECT_ID = os.getenv("GOOGLE_SAMPLES_PROJECT")
@@ -133,7 +133,7 @@ async def generate_content() -> str:
 
         # Save audio to a file
         if aggregated_response_parts:
-            save_audio("output.wav", 24000, np.concatenate(aggregated_response_parts))
+            wavfile.write("output.wav", 24000, np.concatenate(aggregated_response_parts))
         # Example response:
         #     Setup Response: {'setupComplete': {}}
         #     Input: Hello? Gemini are you there?

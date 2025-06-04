@@ -38,7 +38,7 @@ async def generate_content() -> str:
     import numpy as np
 
     from websockets.asyncio.client import connect
-    from scipy.io.wavfile import write as save_audio
+    from scipy.io import wavfile
 
     # Configuration Constants
     PROJECT_ID = os.getenv("GOOGLE_SAMPLES_PROJECT")
@@ -146,7 +146,7 @@ async def generate_content() -> str:
 
         # Save audio to a file
         final_response_audio = np.concatenate(aggregated_response_parts)
-        save_audio("output.wav", 24000, final_response_audio)
+        wavfile.write("output.wav", 24000, final_response_audio)
         print(f"Input transcriptions: {''.join(input_transcriptions_parts)}")
         print(f"Output transcriptions: {''.join(output_transcriptions_parts)}")
         # Example response:
