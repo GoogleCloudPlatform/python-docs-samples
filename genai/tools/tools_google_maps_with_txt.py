@@ -52,7 +52,7 @@ def generate_content() -> str:
     print(response.text)
     # Example response:
     # 'The next total solar eclipse in the United States will occur on ...'
-    # [END googlegenaisdk_tools_enterprise_web_search_with_txt]
+    # [END googlegenaisdk_tools_google_maps_with_txt]
     return response.text
 
 
