@@ -26,6 +26,8 @@ def generate_content(output_uri: str) -> str:
     # output_uri = f"bq://your-project.your_dataset.your_table"
 
     job = client.batches.create(
+        # To use a tuned model, set the model param to your tuned model using the following format:
+        # model="projects/{PROJECT_ID}/locations/{LOCATION}/models/{MODEL_ID}
         model="gemini-2.0-flash-001",
         src="bq://storage-samples.generative_ai.batch_requests_for_multimodal_input",
         config=CreateBatchJobConfig(dest=output_uri),
