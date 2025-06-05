@@ -62,7 +62,7 @@ def output_gcs_uri() -> str:
         blob.delete()
 
 
-def test_img_generation(output_gcs_uri: str) -> None:
+def test_img_generation() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "dog_newspaper.png")
     response = imggen_with_txt.generate_images(
         OUTPUT_FILE
@@ -70,7 +70,7 @@ def test_img_generation(output_gcs_uri: str) -> None:
     assert response
 
 
-def test_img_edit_inpainting_insert(output_gcs_uri: str) -> None:
+def test_img_edit_inpainting_insert() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
     response = imggen_inpainting_insert_with_txt_img.edit_inpainting_insert(
         OUTPUT_FILE
@@ -78,28 +78,28 @@ def test_img_edit_inpainting_insert(output_gcs_uri: str) -> None:
     assert response
 
 
-def test_img_edit_inpainting_removal(output_gcs_uri: str) -> None:
+def test_img_edit_inpainting_removal() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
     response = imggen_inpainting_removal_with_txt_img.edit_inpainting_removal(
         OUTPUT_FILE
     )
     assert response
 
-def test_img_edit_product_background(output_gcs_uri: str) -> None:
+def test_img_edit_product_background() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
     response = imggen_product_background_with_txt_img.edit_product_background(
         OUTPUT_FILE
     )
     assert response
 
-def test_img_edit_outpainting(output_gcs_uri: str) -> None:
+def test_img_edit_outpainting() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "living_room_edit.png")
     response = imggen_outpainting_with_txt_img.edit_outpainting(
         OUTPUT_FILE
     )
     assert response
 
-def test_img_edit_mask_free(output_gcs_uri: str) -> None:
+def test_img_edit_mask_free() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "latte_edit.png")
     response = imggen_mask_free_edit_with_txt_img.edit_mask_free(
         OUTPUT_FILE
