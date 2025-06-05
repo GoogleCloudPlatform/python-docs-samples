@@ -20,14 +20,13 @@ def edit_mask_free(output_file: str) -> Image:
     from google import genai
     from google.genai.types import RawReferenceImage, EditImageConfig
 
-
     client = genai.Client()
 
     # TODO(developer): Update and un-comment below line
     # output_file = "output-image.png"
 
     raw_ref = RawReferenceImage(
-        reference_image=Image.from_file('test_resources/latte.jpg'), reference_id=0)
+        reference_image=Image.from_file(location='test_resources/latte.jpg'), reference_id=0)
 
     image = client.models.edit_image(
         model="imagen-3.0-capability-001",

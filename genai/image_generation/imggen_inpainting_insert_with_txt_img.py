@@ -20,14 +20,13 @@ def edit_inpainting_insert(output_file: str) -> Image:
     from google import genai
     from google.genai.types import RawReferenceImage, MaskReferenceImage, MaskReferenceConfig, EditImageConfig
 
-
     client = genai.Client()
 
     # TODO(developer): Update and un-comment below line
     # output_file = "output-image.png"
 
     raw_ref = RawReferenceImage(
-        reference_image=Image.from_file('test_resources/fruit.png'), reference_id=0)
+        reference_image=Image.from_file(location='test_resources/fruit.png'), reference_id=0)
     mask_ref = MaskReferenceImage(
         reference_id=1,
         reference_image=None,

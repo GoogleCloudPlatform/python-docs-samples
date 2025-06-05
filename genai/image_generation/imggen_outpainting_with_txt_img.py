@@ -20,17 +20,16 @@ def edit_outpainting(output_file: str) -> Image:
     from google import genai
     from google.genai.types import RawReferenceImage, MaskReferenceImage, MaskReferenceConfig, EditImageConfig
 
-
     client = genai.Client()
 
     # TODO(developer): Update and un-comment below line
     # output_file = "output-image.png"
 
     raw_ref = RawReferenceImage(
-        reference_image=Image.from_file('test_resources/living_room.png'), reference_id=0)
+        reference_image=Image.from_file(location='test_resources/living_room.png'), reference_id=0)
     mask_ref = MaskReferenceImage(
         reference_id=1,
-        reference_image=Image.from_file('test_resources/living_room_mask.png'),
+        reference_image=Image.from_file(location='test_resources/living_room_mask.png'),
         config=MaskReferenceConfig(
             mask_mode="MASK_MODE_USER_PROVIDED",
             mask_dilation=0.03,

@@ -85,6 +85,7 @@ def test_img_edit_inpainting_removal() -> None:
     )
     assert response
 
+
 def test_img_edit_product_background() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
     response = imggen_product_background_with_txt_img.edit_product_background(
@@ -92,12 +93,14 @@ def test_img_edit_product_background() -> None:
     )
     assert response
 
+
 def test_img_edit_outpainting() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "living_room_edit.png")
     response = imggen_outpainting_with_txt_img.edit_outpainting(
         OUTPUT_FILE
     )
     assert response
+
 
 def test_img_edit_mask_free() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "latte_edit.png")
