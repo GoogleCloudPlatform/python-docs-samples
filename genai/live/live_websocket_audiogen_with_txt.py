@@ -45,7 +45,7 @@ async def generate_content() -> str:
     from scipy.io import wavfile
 
     # Configuration Constants
-    PROJECT_ID = os.getenv("GOOGLE_SAMPLES_PROJECT")
+    PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
     LOCATION = "us-central1"
     GEMINI_MODEL_NAME = "gemini-2.0-flash-live-preview-04-09"
     # To generate a bearer token in CLI, use:
