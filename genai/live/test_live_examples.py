@@ -20,11 +20,11 @@ import os
 
 import pytest
 
-import live_with_txt
-import live_websocket_textgen_with_audio
-import live_websocket_textgen_with_txt
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt
+import live_websocket_textgen_with_audio
+import live_websocket_textgen_with_txt
+import live_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"

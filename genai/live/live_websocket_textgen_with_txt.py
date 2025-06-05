@@ -16,7 +16,7 @@ import asyncio
 import os
 
 
-def get_bearer_token():
+def get_bearer_token() -> str:
     import google.auth
     from google.auth.transport.requests import Request
 

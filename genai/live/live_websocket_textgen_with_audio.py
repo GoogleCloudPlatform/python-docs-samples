@@ -16,7 +16,7 @@ import asyncio
 import os
 
 
-def get_bearer_token():
+def get_bearer_token() -> str:
     import google.auth
     from google.auth.transport.requests import Request
 
@@ -43,8 +43,8 @@ async def generate_content() -> str:
     from websockets.asyncio.client import connect
     from scipy.io import wavfile
 
-    def read_wavefile(filepath):
-        # Read the .wav file.
+    def read_wavefile(filepath: str) -> tuple[str, str]:
+        # Read the .wav file using scipy.io.wavfile.read
         rate, data = wavfile.read(filepath)
         # Convert the NumPy array of audio samples back to raw bytes
         raw_audio_bytes = data.tobytes()
