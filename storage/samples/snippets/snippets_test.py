@@ -25,8 +25,8 @@ import pytest
 import requests
 
 import storage_add_bucket_label
-import storage_async_upload
 import storage_async_download
+import storage_async_upload
 import storage_batch_request
 import storage_bucket_delete_default_kms_key
 import storage_change_default_storage_class
@@ -44,6 +44,7 @@ import storage_define_bucket_website_configuration
 import storage_delete_file
 import storage_delete_file_archived_generation
 import storage_disable_bucket_lifecycle_management
+import storage_disable_soft_delete
 import storage_disable_versioning
 import storage_download_byte_range
 import storage_download_file
@@ -59,26 +60,31 @@ import storage_generate_upload_signed_url_v4
 import storage_get_autoclass
 import storage_get_bucket_labels
 import storage_get_bucket_metadata
-import storage_get_soft_deleted_bucket
 import storage_get_metadata
 import storage_get_service_account
+import storage_get_soft_delete_policy
+import storage_get_soft_deleted_bucket
 import storage_list_buckets
-import storage_list_soft_deleted_buckets
-import storage_restore_soft_deleted_bucket
 import storage_list_file_archived_generations
 import storage_list_files
 import storage_list_files_with_prefix
+import storage_list_soft_deleted_buckets
+import storage_list_soft_deleted_object_versions
+import storage_list_soft_deleted_objects
 import storage_make_public
 import storage_move_file
 import storage_object_get_kms_key
 import storage_remove_bucket_label
 import storage_remove_cors_configuration
 import storage_rename_file
+import storage_restore_object
+import storage_restore_soft_deleted_bucket
 import storage_set_autoclass
 import storage_set_bucket_default_kms_key
 import storage_set_client_endpoint
-import storage_set_object_retention_policy
 import storage_set_metadata
+import storage_set_object_retention_policy
+import storage_set_soft_delete_policy
 import storage_trace_quickstart
 import storage_transfer_manager_download_bucket
 import storage_transfer_manager_download_chunks_concurrently
@@ -145,6 +151,21 @@ def test_soft_deleted_bucket():
     # [Assumption] Bucket is created with default policy , ie soft delete on.
     bucket.delete()
     yield bucket
+
+
+@pytest.fixture(scope="function")
+def test_soft_delete_enabled_bucket():
+    """Yields a bucket with soft-delete enabled that is deleted after the test completes."""
+    bucket = None
+    while bucket is None or bucket.exists():
+        bucket_name = f"storage-snippets-test-{uuid.uuid4()}"
+        bucket = storage.Client().bucket(bucket_name)
+    # Soft-delete retention for 7 days (minimum allowed by API)
+    bucket.soft_delete_policy.retention_duration_seconds = 7 * 24 * 60 * 60
+    # Soft-delete requires a region
+    bucket.create(location="US-CENTRAL1")
+    yield bucket
+    bucket.delete(force=True)
 
 
 @pytest.fixture(scope="function")
@@ -230,13 +251,17 @@ def test_bucket_metadata(test_bucket, capsys):
 
 
 def test_get_soft_deleted_bucket(test_soft_deleted_bucket, capsys):
-    storage_get_soft_deleted_bucket.get_soft_deleted_bucket(test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation)
+    storage_get_soft_deleted_bucket.get_soft_deleted_bucket(
+        test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation
+    )
     out, _ = capsys.readouterr()
     assert test_soft_deleted_bucket.name in out
 
 
 def test_restore_soft_deleted_bucket(test_soft_deleted_bucket, capsys):
-    storage_restore_soft_deleted_bucket.restore_bucket(test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation)
+    storage_restore_soft_deleted_bucket.restore_bucket(
+        test_soft_deleted_bucket.name, test_soft_deleted_bucket.generation
+    )
     out, _ = capsys.readouterr()
     assert test_soft_deleted_bucket.name in out
 
@@ -309,7 +334,9 @@ def test_async_download(test_bucket, capsys):
         blob = test_bucket.blob(source)
         blob.upload_from_string(source)
 
-    asyncio.run(storage_async_download.async_download_blobs(test_bucket.name, *source_files))
+    asyncio.run(
+        storage_async_download.async_download_blobs(test_bucket.name, *source_files)
+    )
     out, _ = capsys.readouterr()
     for x in range(object_count):
         assert f"Downloaded storage object async_sample_blob_{x}" in out
@@ -877,7 +904,10 @@ def test_object_retention_policy(test_bucket_create, capsys):
         test_bucket_create.name
     )
     out, _ = capsys.readouterr()
-    assert f"Created bucket {test_bucket_create.name} with object retention enabled setting" in out
+    assert (
+        f"Created bucket {test_bucket_create.name} with object retention enabled setting"
+        in out
+    )
 
     blob_name = "test_object_retention"
     storage_set_object_retention_policy.set_object_retention_policy(
@@ -898,7 +928,10 @@ def test_create_bucket_hierarchical_namespace(test_bucket_create, capsys):
         test_bucket_create.name
     )
     out, _ = capsys.readouterr()
-    assert f"Created bucket {test_bucket_create.name} with hierarchical namespace enabled" in out
+    assert (
+        f"Created bucket {test_bucket_create.name} with hierarchical namespace enabled"
+        in out
+    )
 
 
 def test_storage_trace_quickstart(test_bucket, capsys):
@@ -911,3 +944,96 @@ def test_storage_trace_quickstart(test_bucket, capsys):
     assert (
         f"Downloaded storage object {blob_name} from bucket {test_bucket.name}" in out
     )
+
+
+def test_storage_disable_soft_delete(test_soft_delete_enabled_bucket, capsys):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    storage_disable_soft_delete.disable_soft_delete(bucket_name)
+    out, _ = capsys.readouterr()
+    assert f"Soft-delete policy is disabled for bucket {bucket_name}" in out
+
+
+def test_storage_get_soft_delete_policy(test_soft_delete_enabled_bucket, capsys):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    storage_get_soft_delete_policy.get_soft_delete_policy(bucket_name)
+    out, _ = capsys.readouterr()
+    assert f"Soft-delete policy for {bucket_name}" in out
+    assert "Object soft-delete policy is enabled" in out
+    assert "Object retention duration: " in out
+    assert "Policy effective time: " in out
+
+    # Disable the soft-delete policy
+    test_soft_delete_enabled_bucket.soft_delete_policy.retention_duration_seconds = 0
+    test_soft_delete_enabled_bucket.patch()
+    storage_get_soft_delete_policy.get_soft_delete_policy(bucket_name)
+    out, _ = capsys.readouterr()
+    assert f"Soft-delete policy for {bucket_name}" in out
+    assert "Object soft-delete policy is disabled" in out
+
+
+def test_storage_set_soft_delete_policy(test_soft_delete_enabled_bucket, capsys):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    retention_duration_seconds = 10 * 24 * 60 * 60  # 10 days
+    storage_set_soft_delete_policy.set_soft_delete_policy(
+        bucket_name, retention_duration_seconds
+    )
+    out, _ = capsys.readouterr()
+    assert (
+        f"Soft delete policy for bucket {bucket_name} was set to {retention_duration_seconds} seconds retention period"
+        in out
+    )
+
+
+def test_storage_list_soft_deleted_objects(test_soft_delete_enabled_bucket, capsys):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    blob_name = f"test_object_{uuid.uuid4().hex}.txt"
+    blob_content = "This object will be soft-deleted for listing."
+    blob = test_soft_delete_enabled_bucket.blob(blob_name)
+    blob.upload_from_string(blob_content)
+    blob_generation = blob.generation
+
+    blob.delete()  # Soft-delete the object
+    storage_list_soft_deleted_objects.list_soft_deleted_objects(bucket_name)
+    out, _ = capsys.readouterr()
+    assert f"Name: {blob_name}, Generation: {blob_generation}" in out
+
+
+def test_storage_list_soft_deleted_object_versions(
+    test_soft_delete_enabled_bucket, capsys
+):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    blob_name = f"test_object_{uuid.uuid4().hex}.txt"
+    blob_content = "This object will be soft-deleted for version listing."
+    blob = test_soft_delete_enabled_bucket.blob(blob_name)
+    blob.upload_from_string(blob_content)
+    blob_generation = blob.generation
+
+    blob.delete()  # Soft-delete the object
+    storage_list_soft_deleted_object_versions.list_soft_deleted_object_versions(
+        bucket_name, blob_name
+    )
+    out, _ = capsys.readouterr()
+    assert f"Version ID: {blob_generation}" in out
+
+
+def test_storage_restore_soft_deleted_object(test_soft_delete_enabled_bucket, capsys):
+    bucket_name = test_soft_delete_enabled_bucket.name
+    blob_name = f"test-restore-sd-obj-{uuid.uuid4().hex}.txt"
+    blob_content = "This object will be soft-deleted and restored."
+    blob = test_soft_delete_enabled_bucket.blob(blob_name)
+    blob.upload_from_string(blob_content)
+    blob_generation = blob.generation
+
+    blob.delete()  # Soft-delete the object
+    storage_restore_object.restore_soft_deleted_object(
+        bucket_name, blob_name, blob_generation
+    )
+    out, _ = capsys.readouterr()
+    assert (
+        f"Soft-deleted object {blob_name} is restored in the bucket {bucket_name}"
+        in out
+    )
+
+    # Verify the restoration
+    blob = test_soft_delete_enabled_bucket.get_blob(blob_name)
+    assert blob is not None
