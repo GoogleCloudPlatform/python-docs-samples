@@ -12,19 +12,19 @@ geojson==3.2.0
 geopandas===1.0.1; python_version <= '3.9'
 geopandas==1.1.0; python_version >= '3.10'
 google-api-core==2.25.0
-google-auth==2.40.2
+google-auth==2.40.3
 google-cloud-bigquery==3.34.0
 google-cloud-bigquery-storage==2.32.0
 google-cloud-core==2.4.3
 google-crc32c==1.7.1
 google-resumable-media==2.7.2
 googleapis-common-protos==1.70.0
-grpcio==1.72.1
+grpcio==1.73.0
 idna==3.10
 munch==4.0.0
 mypy-extensions==1.1.0
 packaging==25.0
-pandas==2.2.3
+pandas==2.3.0
 proto-plus==1.26.1
 pyarrow==20.0.0
 pyasn1==0.6.1
