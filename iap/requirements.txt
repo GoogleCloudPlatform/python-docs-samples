@@ -2,7 +2,7 @@ cryptography==45.0.1
 Flask==3.0.3
 google-auth==2.38.0
 gunicorn==23.0.0
-requests==2.32.2
+requests==2.32.4
 requests-toolbelt==1.0.0
 Werkzeug==3.0.6
 google-cloud-iam~=2.17.0
