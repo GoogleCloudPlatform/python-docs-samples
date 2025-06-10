@@ -1,2 +1,2 @@
-google-api-core==2.24.0
+google-api-core==2.24.2
 pytest==8.2.0
