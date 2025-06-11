@@ -25,7 +25,7 @@ def generate_images(output_file: str) -> Image:
     # output_file = "output-image.png"
 
     image = client.models.generate_images(
-        model="imagen-4.0-generate-preview-05-20",
+        model="imagen-4.0-generate-preview-06-06",
         prompt="A dog reading a newspaper",
     )
 
