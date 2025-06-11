@@ -15,9 +15,6 @@
 Sample code for updating the model armor floor settings of an organization.
 """
 
-# TODO: Update to change rai filter configs using floor setting
-# once floor settings API works correctly.
-
 from google.cloud import modelarmor_v1
 
 
@@ -57,7 +54,12 @@ def update_organization_floor_settings(
                 name=floor_settings_name,
                 filter_config=modelarmor_v1.FilterConfig(
                     rai_settings=modelarmor_v1.RaiFilterSettings(
-                        rai_filters=[]
+                        rai_filters=[
+                            modelarmor_v1.RaiFilterSettings.RaiFilter(
+                                filter_type=modelarmor_v1.RaiFilterType.HATE_SPEECH,
+                                confidence_level=modelarmor_v1.DetectionConfidenceLevel.HIGH,
+                            )
+                        ]
                     ),
                 ),
                 enable_floor_setting_enforcement=True,
