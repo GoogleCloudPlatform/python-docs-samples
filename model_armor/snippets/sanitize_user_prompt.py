@@ -43,7 +43,7 @@ def sanitize_user_prompt(
 
     # TODO(Developer): Uncomment these variables.
     # project_id = "YOUR_PROJECT_ID"
-    # location = "us-central1"
+    # location_id = "us-central1"
     # template_id = "template_id"
     # user_prompt = "Prompt entered by the user"
 
