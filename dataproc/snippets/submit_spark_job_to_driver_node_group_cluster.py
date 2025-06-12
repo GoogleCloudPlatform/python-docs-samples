@@ -65,11 +65,7 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
             request={"project_id": project_id, "region": region, "job": job}
         )
 
-        try:
-            response = operation.result()
-        except Exception as e:
-            print(f"Error submitting job or waiting for completion: {e}")
-        raise
+        response = operation.result()
 
         # Dataproc job output gets saved to the Cloud Storage bucket
         # allocated to the job. Use a regex to obtain the bucket and blob info.
