@@ -43,55 +43,55 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     ) as job_client:
  
-    driver_scheduling_config = dataproc.DriverSchedulingConfig(
-        memory_mb=2048, # Example memory in MB
-        vcores=2, # Example number of vcores
-    )
+        driver_scheduling_config = dataproc.DriverSchedulingConfig(
+            memory_mb=2048, # Example memory in MB
+            vcores=2, # Example number of vcores
+        )
  
-    # Create the job config. 'main_jar_file_uri' can also be a
-    # Google Cloud Storage URL.
-    job = {
-        "placement": {"cluster_name": cluster_name},
-        "spark_job": {
-            "main_class": "org.apache.spark.examples.SparkPi",
-            "jar_file_uris": ["file:///usr/lib/spark/examples/jars/spark-examples.jar"],
-            "args": ["1000"],
-        },
-        "driver_scheduling_config": driver_scheduling_config
-    }
+        # Create the job config. 'main_jar_file_uri' can also be a
+        # Google Cloud Storage URL.
+        job = {
+            "placement": {"cluster_name": cluster_name},
+            "spark_job": {
+                "main_class": "org.apache.spark.examples.SparkPi",
+                "jar_file_uris": ["file:///usr/lib/spark/examples/jars/spark-examples.jar"],
+                "args": ["1000"],
+            },
+            "driver_scheduling_config": driver_scheduling_config
+        }
  
-    operation = job_client.submit_job_as_operation(
-        request={"project_id": project_id, "region": region, "job": job}
-    )
+        operation = job_client.submit_job_as_operation(
+            request={"project_id": project_id, "region": region, "job": job}
+        )
  
-    try: 
-        response = operation.result()
-    except Exception as e:
-        print(f"Error submitting job or waiting for completion: {e}")
-    raise
- 
-    # Dataproc job output gets saved to the Cloud Storage bucket
-    # allocated to the job. Use a regex to obtain the bucket and blob info.
-    matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
-    if not matches:
-        print(f"Error: Could not parse driver output URI: {response.driver_output_resource_uri}")
-        raise ValueError
-
-    try:
-        with storage.Client() as storage_client:
-            bucket_name = matches.group(1)
-            blob_name = f"{matches.group(2)}.000000000"
-            output = (
-                storage_client.get_bucket(bucket_name)
-                .blob(blob_name)
-                .download_as_bytes()
-                .decode("utf-8")
-            )
-    except Exception as e:
-        print(f"Error downloading job output: {e}")
+        try: 
+            response = operation.result()
+        except Exception as e:
+            print(f"Error submitting job or waiting for completion: {e}")
         raise
  
-    print(f"Job finished successfully: {output}")
+        # Dataproc job output gets saved to the Cloud Storage bucket
+        # allocated to the job. Use a regex to obtain the bucket and blob info.
+        matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
+        if not matches:
+            print(f"Error: Could not parse driver output URI: {response.driver_output_resource_uri}")
+            raise ValueError
+
+        try:
+            with storage.Client() as storage_client:
+                bucket_name = matches.group(1)
+                blob_name = f"{matches.group(2)}.000000000"
+                output = (
+                    storage_client.get_bucket(bucket_name)
+                    .blob(blob_name)
+                    .download_as_bytes()
+                    .decode("utf-8")
+                )
+        except Exception as e:
+            print(f"Error downloading job output: {e}")
+            raise
+ 
+        print(f"Job finished successfully: {output}")
 
 
 # [END dataproc_submit_spark_job_to_driver_node_group_cluster]
