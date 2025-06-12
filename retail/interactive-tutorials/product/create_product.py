@@ -15,6 +15,8 @@
 
 # Create product in a catalog using Retail API
 #
+# [START retail_create_product]
+
 import random
 import string
 
@@ -81,3 +83,5 @@ def create_product(product_id: str):
 created_product = create_product(generated_product_id)
 # delete created product
 delete_product(created_product.name)
+
+# [END retail_create_product]
