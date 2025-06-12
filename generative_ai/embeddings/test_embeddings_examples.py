@@ -22,7 +22,6 @@ import google.auth
 from google.cloud import aiplatform
 from google.cloud.aiplatform import initializer as aiplatform_init
 
-import pytest
 
 import batch_example
 import code_retrieval_example
@@ -35,10 +34,8 @@ import multimodal_video_example
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
-@pytest.fixture(scope="session")
 def test_embed_text_batch() -> None:
-    os.environ["GCS_OUTPUT_URI"] = "gs://python-docs-samples-tests/"
-    batch_prediction_job = batch_example.embed_text_batch()
+    batch_prediction_job = batch_example.embed_text_batch("gs://python-docs-samples-tests/")
     assert batch_prediction_job
 
 
@@ -81,7 +78,7 @@ def test_generate_embeddings_with_lower_dimension() -> None:
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)
 def test_text_embed_text() -> None:
     embeddings = document_retrieval_example.embed_text()
-    assert [len(e) for e in embeddings] == [256, 256]
+    assert [len(e) for e in embeddings] == [3072, 3072]
 
 
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=10)

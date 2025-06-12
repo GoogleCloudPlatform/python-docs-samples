@@ -15,8 +15,23 @@
 
 import internal_unit_testing
 
+from . import airflow_db_cleanup
 
-def test_dag_import(airflow_database):
+
+def test_version_comparison():
+    # b/408307862 - Validate version check logic used in the sample.
+    AIRFLOW_VERSION = airflow_db_cleanup.parse_airflow_version("2.10.5+composer")
+
+    assert AIRFLOW_VERSION == (2, 10, 5)
+    assert AIRFLOW_VERSION > (2, 9, 1)
+
+    AIRFLOW_VERSION = airflow_db_cleanup.parse_airflow_version("2.9.2")
+
+    assert AIRFLOW_VERSION == (2, 9, 2)
+    assert AIRFLOW_VERSION < (2, 9, 3)
+
+
+def test_dag_import():
     """Test that the DAG file can be successfully imported.
 
     This tests that the DAG can be parsed, but does not run it in an Airflow

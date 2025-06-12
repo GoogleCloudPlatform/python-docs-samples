@@ -1,0 +1,10 @@
+Flask==1.1.4; python_version < '3.0'
+Flask==3.0.0; python_version > '3.0'
+pyjwt==1.7.1; python_version < '3.0'
+flask-cors==6.0.0
+google-auth==2.17.3; python_version < '3.0'
+google-auth==2.17.3; python_version > '3.0'
+requests==2.27.1
+requests-toolbelt==0.10.1
+Werkzeug==1.0.1; python_version < '3.0'
+Werkzeug==3.0.3; python_version > '3.0'

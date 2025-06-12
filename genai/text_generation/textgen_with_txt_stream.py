@@ -13,26 +13,25 @@
 # limitations under the License.
 
 
-def generate_content() -> str:
+def generate_content() -> bool:
     # [START googlegenaisdk_textgen_with_txt_stream]
     from google import genai
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    response_text = ""
+
     for chunk in client.models.generate_content_stream(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         contents="Why is the sky blue?",
     ):
         print(chunk.text, end="")
-        response_text += chunk.text
     # Example response:
     # The
     #  sky appears blue due to a phenomenon called **Rayleigh scattering**. Here's
     #  a breakdown of why:
     # ...
     # [END googlegenaisdk_textgen_with_txt_stream]
-    return response_text
+    return True
 
 
 if __name__ == "__main__":

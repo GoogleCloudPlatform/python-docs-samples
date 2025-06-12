@@ -51,7 +51,7 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         contents=prompt,
         config=GenerateContentConfig(
             response_mime_type="application/json",

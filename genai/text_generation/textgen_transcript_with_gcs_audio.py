@@ -24,7 +24,7 @@ def generate_content() -> str:
     Use speaker A, speaker B, etc. to identify speakers.
     """
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash-preview-05-20",
         contents=[
             prompt,
             Part.from_uri(

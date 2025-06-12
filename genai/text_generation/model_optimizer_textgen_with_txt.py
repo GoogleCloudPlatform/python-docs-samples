@@ -13,6 +13,8 @@
 # limitations under the License.
 
 
+# TODO: Migrate model_optimizer samples to /model_optimizer
+#       and deprecate following sample
 def generate_content() -> str:
     # [START googlegenaisdk_model_optimizer_textgen_with_txt]
     from google import genai

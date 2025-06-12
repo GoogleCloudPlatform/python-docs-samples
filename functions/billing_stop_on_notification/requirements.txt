@@ -1,0 +1,3 @@
+functions-framework==3.*
+google-cloud-billing==1.16.2
+google-cloud-logging==3.12.1

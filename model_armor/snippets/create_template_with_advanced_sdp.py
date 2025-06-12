@@ -43,8 +43,8 @@ def create_model_armor_template_with_advanced_sdp(
             returned as SdpFinding in SdpInsepctionResult e.g.
             `organizations/{organization}/inspectTemplates/{inspect_template}`,
             `projects/{project}/inspectTemplates/{inspect_template}`
-            `organizations/{organization}/locations/{location}/inspectTemplates/{inspect_template}`
-            `projects/{project}/locations/{location}/inspectTemplates/{inspect_template}`
+            `organizations/{organization}/locations/{location_id}/inspectTemplates/{inspect_template}`
+            `projects/{project}/locations/{location_id}/inspectTemplates/{inspect_template}`
         deidentify_template (str):
             Optional. Optional Sensitive Data Protection Deidentify
             template resource name.
@@ -56,8 +56,8 @@ def create_model_armor_template_with_advanced_sdp(
             e.g.
             `organizations/{organization}/deidentifyTemplates/{deidentify_template}`,
             `projects/{project}/deidentifyTemplates/{deidentify_template}`
-            `organizations/{organization}/locations/{location}/deidentifyTemplates/{deidentify_template}`
-            `projects/{project}/locations/{location}/deidentifyTemplates/{deidentify_template}`
+            `organizations/{organization}/locations/{location_id}/deidentifyTemplates/{deidentify_template}`
+            `projects/{project}/locations/{location_id}/deidentifyTemplates/{deidentify_template}`
     Example:
         # Create template with advance SDP configuration
         create_model_armor_template_with_advanced_sdp(
