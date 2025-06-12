@@ -18,7 +18,6 @@
 import base64
 import json
 import os
-
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
 # [END functions_billing_slack]
@@ -26,14 +25,12 @@ import os
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
 from googleapiclient import discovery
-
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
 import slack
 from slack.errors import SlackApiError
-
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
@@ -139,8 +136,6 @@ def __disable_billing_for_project(project_name, projects):
         print(f"Billing disabled: {json.dumps(res)}")
     except Exception:
         print("Failed to disable billing, possibly check permissions")
-
-
 
 
 # [START functions_billing_limit]
