@@ -44,8 +44,8 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
     ) as job_client:
  
     driver_scheduling_config = dataproc.DriverSchedulingConfig(
-    memory_mb=2048, # Example memory in MB
-    vcores=2, # Example number of vcores
+        memory_mb=2048, # Example memory in MB
+        vcores=2, # Example number of vcores
     )
  
     # Create the job config. 'main_jar_file_uri' can also be a
