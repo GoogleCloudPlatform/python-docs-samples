@@ -35,9 +35,10 @@ from create_template_with_metadata import (
     create_model_armor_template_with_metadata,
 )
 from delete_template import delete_model_armor_template
-# from get_folder_floor_settings import get_folder_floor_settings
-# from get_organization_floor_settings import get_organization_floor_settings
-# from get_project_floor_settings import get_project_floor_settings
+
+from get_folder_floor_settings import get_folder_floor_settings
+from get_organization_floor_settings import get_organization_floor_settings
+from get_project_floor_settings import get_project_floor_settings
 from get_template import get_model_armor_template
 from list_templates import list_model_armor_templates
 from list_templates_with_filter import list_model_armor_templates_with_filter
@@ -48,11 +49,12 @@ from sanitize_model_response_with_user_prompt import (
 )
 from sanitize_user_prompt import sanitize_user_prompt
 from screen_pdf_file import screen_pdf_file
-# from update_folder_floor_settings import update_folder_floor_settings
-# from update_organizations_floor_settings import (
-#     update_organization_floor_settings,
-# )
-# from update_project_floor_settings import update_project_floor_settings
+
+from update_folder_floor_settings import update_folder_floor_settings
+from update_organizations_floor_settings import (
+    update_organization_floor_settings,
+)
+from update_project_floor_settings import update_project_floor_settings
 from update_template import update_model_armor_template
 from update_template_labels import update_model_armor_template_labels
 from update_template_metadata import update_model_armor_template_metadata
@@ -1166,50 +1168,54 @@ def test_quickstart(
     quickstart(project_id, location_id, template_id)
 
 
-# TODO: Uncomment below tests once floor setting API issues are resolved.
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_update_organization_floor_settings(
+    floor_setting_organization_id: str,
+) -> None:
+    response = update_organization_floor_settings(floor_setting_organization_id)
 
-# def test_update_organization_floor_settings(
-#     floor_setting_organization_id: str,
-# ) -> None:
-#     response = update_organization_floor_settings(floor_setting_organization_id)
-
-#     assert response.enable_floor_setting_enforcement
-
-
-# def test_update_folder_floor_settings(floor_setting_folder_id: str) -> None:
-#     response = update_folder_floor_settings(floor_setting_folder_id)
-
-#     assert response.enable_floor_setting_enforcement
+    assert response.enable_floor_setting_enforcement
 
 
-# def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
-#     response = update_project_floor_settings(floor_settings_project_id)
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_update_folder_floor_settings(floor_setting_folder_id: str) -> None:
+    response = update_folder_floor_settings(floor_setting_folder_id)
 
-#     assert response.enable_floor_setting_enforcement
-
-
-# def test_get_organization_floor_settings(organization_id: str) -> None:
-#     expected_floor_settings_name = (
-#         f"organizations/{organization_id}/locations/global/floorSetting"
-#     )
-#     response = get_organization_floor_settings(organization_id)
-
-#     assert response.name == expected_floor_settings_name
+    assert response.enable_floor_setting_enforcement
 
 
-# def test_get_folder_floor_settings(folder_id: str) -> None:
-#     expected_floor_settings_name = (
-#         f"folders/{folder_id}/locations/global/floorSetting"
-#     )
-#     response = get_folder_floor_settings(folder_id)
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
+    response = update_project_floor_settings(floor_settings_project_id)
 
-#     assert response.name == expected_floor_settings_name
+    assert response.enable_floor_setting_enforcement
 
 
-# def test_get_project_floor_settings(project_id: str) -> None:
-#     expected_floor_settings_name = (
-#         f"projects/{project_id}/locations/global/floorSetting"
-#     )
-#     response = get_project_floor_settings(project_id)
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_get_organization_floor_settings(organization_id: str) -> None:
+    expected_floor_settings_name = (
+        f"organizations/{organization_id}/locations/global/floorSetting"
+    )
+    response = get_organization_floor_settings(organization_id)
 
-#     assert response.name == expected_floor_settings_name
+    assert response.name == expected_floor_settings_name
+
+
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_get_folder_floor_settings(folder_id: str) -> None:
+    expected_floor_settings_name = (
+        f"folders/{folder_id}/locations/global/floorSetting"
+    )
+    response = get_folder_floor_settings(folder_id)
+
+    assert response.name == expected_floor_settings_name
+
+
+@pytest.mark.skip(reason="Skipping due to floor setting API issues.")
+def test_get_project_floor_settings(project_id: str) -> None:
+    expected_floor_settings_name = (
+        f"projects/{project_id}/locations/global/floorSetting"
+    )
+    response = get_project_floor_settings(project_id)
+
+    assert response.name == expected_floor_settings_name
