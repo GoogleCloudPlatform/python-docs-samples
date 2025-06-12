@@ -80,7 +80,7 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
             .download_as_bytes()
             .decode("utf-8")
         )
- 
+
         print(f"Job finished successfully: {output}")
 
 # [END dataproc_submit_spark_job_to_driver_node_group_cluster]
