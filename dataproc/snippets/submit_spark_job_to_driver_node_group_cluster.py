@@ -30,6 +30,7 @@ import re
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 
+
 def submit_job(project_id: str, region: str, cluster_name: str) -> None:
     """Submits a Spark job to the specified Dataproc cluster with a driver node group and prints the output.
 
