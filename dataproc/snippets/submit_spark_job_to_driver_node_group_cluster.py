@@ -30,11 +30,18 @@ import re
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
  
-def submit_job(project_id, region, cluster_name):
+def submit_job(project_id: str, region: str, cluster_name: str) -> None:
+    """Submits a Spark job to the specified Dataproc cluster with a driver node group and prints the output.
+
+    Args:
+        project_id: The Google Cloud project ID.
+        region: The Dataproc region where the cluster is located.
+        cluster_name: The name of the Dataproc cluster.
+    """
     # Create the job client.
-    job_client = dataproc.JobControllerClient(
+    with dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
-    )
+    ) as job_client:
  
     driver_scheduling_config = dataproc.DriverSchedulingConfig(
     memory_mb=2048, # Example memory in MB
@@ -56,19 +63,33 @@ def submit_job(project_id, region, cluster_name):
     operation = job_client.submit_job_as_operation(
         request={"project_id": project_id, "region": region, "job": job}
     )
-    response = operation.result()
+ 
+    try: 
+        response = operation.result()
+    except Exception as e:
+        print(f"Error submitting job or waiting for completion: {e}")
+    raise
  
     # Dataproc job output gets saved to the Cloud Storage bucket
     # allocated to the job. Use a regex to obtain the bucket and blob info.
     matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
- 
-    output = (
-        storage.Client()
-        .get_bucket(matches.group(1))
-        .blob(f"{matches.group(2)}.000000000")
-        .download_as_bytes()
-        .decode("utf-8")
-    )
+    if not matches:
+        print(f"Error: Could not parse driver output URI: {response.driver_output_resource_uri}")
+        raise ValueError
+
+    try:
+        with storage.Client() as storage_client:
+            bucket_name = matches.group(1)
+            blob_name = f"{matches.group(2)}.000000000"
+            output = (
+                storage_client.get_bucket(bucket_name)
+                .blob(blob_name)
+                .download_as_bytes()
+                .decode("utf-8")
+            )
+    except Exception as e:
+        print(f"Error downloading job output: {e}")
+        raise
  
     print(f"Job finished successfully: {output}")
 
@@ -77,9 +98,14 @@ def submit_job(project_id, region, cluster_name):
 
 
 if __name__ == "__main__":
- 
-    my_project_id = "your_cluster"  # <-- REPLACE THIS
-    my_region = "us-central1"        # <-- REPLACE THIS
-    my_cluster_name = "your-node-group-cluster" # <-- REPLACE THIS
- 
-    submit_job(my_project_id, my_region, my_cluster_name)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Submits a Spark job to a Dataproc driver node group cluster."
+    )
+    parser.add_argument("--project_id", help="The Google Cloud project ID.", required=True)
+    parser.add_argument("--region", help="The Dataproc region where the cluster is located.", required=True)
+    parser.add_argument("--cluster_name", help="The name of the Dataproc cluster.", required=True)
+
+    args = parser.parse_args()
+    submit_job(args.project_id, args.region, args.cluster_name)
