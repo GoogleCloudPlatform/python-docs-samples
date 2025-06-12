@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample walks a user through submitting a Spark job to a 
+# This sample walks a user through submitting a Spark job to a
 # Dataproc driver node group cluster using the Dataproc
 # client library.
 
@@ -26,10 +26,10 @@
 # [START dataproc_submit_spark_job_to_driver_node_group_cluster]
 
 import re
- 
+
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
- 
+
 def submit_job(project_id: str, region: str, cluster_name: str) -> None:
     """Submits a Spark job to the specified Dataproc cluster with a driver node group and prints the output.
 
@@ -42,12 +42,12 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
     with dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     ) as job_client:
- 
+
         driver_scheduling_config = dataproc.DriverSchedulingConfig(
             memory_mb=2048, # Example memory in MB
             vcores=2, # Example number of vcores
         )
- 
+
         # Create the job config. 'main_jar_file_uri' can also be a
         # Google Cloud Storage URL.
         job = {
@@ -59,17 +59,18 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
             },
             "driver_scheduling_config": driver_scheduling_config
         }
- 
+
+
         operation = job_client.submit_job_as_operation(
             request={"project_id": project_id, "region": region, "job": job}
         )
- 
+
         try: 
             response = operation.result()
         except Exception as e:
             print(f"Error submitting job or waiting for completion: {e}")
         raise
- 
+
         # Dataproc job output gets saved to the Cloud Storage bucket
         # allocated to the job. Use a regex to obtain the bucket and blob info.
         matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
@@ -90,7 +91,7 @@ def submit_job(project_id: str, region: str, cluster_name: str) -> None:
         except Exception as e:
             print(f"Error downloading job output: {e}")
             raise
- 
+
         print(f"Job finished successfully: {output}")
 
 
