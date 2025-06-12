@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_mcpserver_dockerfile_python]
+
 # Use the official Python image
 FROM python:3.13-slim
 
@@ -32,3 +34,5 @@ EXPOSE $PORT
 
 # Run the FastMCP server
 CMD ["uv", "run", "server.py"]
+
+# [END cloudrun_mcpserver_dockerfile_python]

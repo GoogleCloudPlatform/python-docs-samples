@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_mcpserver_python]
 import asyncio
 import logging
 import os
@@ -61,3 +62,5 @@ if __name__ == "__main__":
             port=os.getenv("PORT", 8080),
         )
     )
+
+# [END cloudrun_mcpserver_python]
