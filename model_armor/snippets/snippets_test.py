@@ -1168,10 +1168,7 @@ def test_quickstart(
     quickstart(project_id, location_id, template_id)
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_update_organization_floor_settings(
     floor_setting_organization_id: str,
 ) -> None:
@@ -1180,30 +1177,21 @@ def test_update_organization_floor_settings(
     assert response.enable_floor_setting_enforcement
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_update_folder_floor_settings(floor_setting_folder_id: str) -> None:
     response = update_folder_floor_settings(floor_setting_folder_id)
 
     assert response.enable_floor_setting_enforcement
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_update_project_floor_settings(floor_settings_project_id: str) -> None:
     response = update_project_floor_settings(floor_settings_project_id)
 
     assert response.enable_floor_setting_enforcement
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_get_organization_floor_settings(organization_id: str) -> None:
     expected_floor_settings_name = (
         f"organizations/{organization_id}/locations/global/floorSetting"
@@ -1213,10 +1201,7 @@ def test_get_organization_floor_settings(organization_id: str) -> None:
     assert response.name == expected_floor_settings_name
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_get_folder_floor_settings(folder_id: str) -> None:
     expected_floor_settings_name = (
         f"folders/{folder_id}/locations/global/floorSetting"
@@ -1226,10 +1211,7 @@ def test_get_folder_floor_settings(folder_id: str) -> None:
     assert response.name == expected_floor_settings_name
 
 
-@pytest.mark.skip(
-    reason="Skipping due to floor setting API issues. "
-    "See buganizer ticket b/424365799 for status."
-)
+@pytest.mark.skip(reason="Remove skip once the b/424365799 is resolved")
 def test_get_project_floor_settings(project_id: str) -> None:
     expected_floor_settings_name = (
         f"projects/{project_id}/locations/global/floorSetting"
