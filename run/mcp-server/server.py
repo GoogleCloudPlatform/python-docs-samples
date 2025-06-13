@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START cloudrun_mcpserver_python]
+# [START cloudrun_mcpserver]
 import asyncio
 import logging
 import os
@@ -63,4 +63,4 @@ if __name__ == "__main__":
         )
     )
 
-# [END cloudrun_mcpserver_python]
+# [END cloudrun_mcpserver]
