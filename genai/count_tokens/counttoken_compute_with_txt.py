@@ -25,12 +25,14 @@ def compute_tokens_example() -> int:
     )
 
     print(response)
+    print(f"token count: {len(response.tokens_info[0].tokens)}")
     # Example output:
     # tokens_info=[TokensInfo(
     #    role='user',
     #    token_ids=[1841, 235303, 235256, 573, 32514, 2204, 575, 573, 4645, 5255, 235336],
     #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
     #  )]
+    # token count: 11
     # [END googlegenaisdk_counttoken_compute_with_txt]
     return response.tokens_info
 
