@@ -54,6 +54,8 @@ if [[ -z "${RUN_TESTS_SESSION:-}" ]]; then
     RUN_TESTS_SESSION="py-3.10"
 fi
 
+echo "🪿 We be running ${RUN_TESTS_SESSION} ✨"
+
 if [[ -z "${TRAMPOLINE_BUILD_FILE:-}" ]]; then
    TRAMPOLINE_BUILD_FILE=".kokoro/tests/run_tests_diff_head.sh"
 fi
