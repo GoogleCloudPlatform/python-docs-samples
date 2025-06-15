@@ -51,7 +51,7 @@ if [[ -z "${TRAMPOLINE_DOCKERFILE:-}" ]]; then
 fi
 
 if [[ -z "${RUN_TESTS_SESSION:-}" ]]; then
-    RUN_TESTS_SESSION="py-3.7"
+    RUN_TESTS_SESSION="py-3.10"
 fi
 
 if [[ -z "${TRAMPOLINE_BUILD_FILE:-}" ]]; then
