@@ -146,7 +146,7 @@ FLAKE8_COMMON_ARGS = [
 ]
 
 
-@nox.session
+@nox.session(python="3.10")
 def lint(session: nox.sessions.Session) -> None:
 
     print("✨ Original noxfile")
