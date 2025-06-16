@@ -23,6 +23,7 @@ from typing import Optional
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
+
 def create_secret(
     project_id: str, secret_id: str, ttl: Optional[str] = None
 ) -> secretmanager.Secret:
@@ -49,8 +50,6 @@ def create_secret(
         # Create a secret with a TTL of 30 days
         new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "7776000s")
     """
-
-
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
