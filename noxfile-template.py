@@ -148,6 +148,8 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session: nox.sessions.Session) -> None:
+
+    print("✨ Original noxfile")
     if not TEST_CONFIG["enforce_type_hints"]:
         session.install("flake8", "flake8-import-order")
     else:

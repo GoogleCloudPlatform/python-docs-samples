@@ -148,12 +148,13 @@ FLAKE8_COMMON_ARGS = [
 
 @nox.session
 def lint(session: nox.sessions.Session) -> None:
+
+    print("✨ Custom noxfile interception")
     if not TEST_CONFIG["enforce_type_hints"]:
         session.install("flake8", "flake8-import-order")
     else:
         session.install("flake8", "flake8-import-order", "flake8-annotations")
 
-    print("✨ Custom noxfile interception")
     local_names = _determine_local_import_names(".")
     args = FLAKE8_COMMON_ARGS + [
         "--application-import-names",
