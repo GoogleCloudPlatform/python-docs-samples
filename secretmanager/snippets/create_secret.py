@@ -51,7 +51,6 @@ def create_secret(
         new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "7776000s")
     """
 
-
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
 
