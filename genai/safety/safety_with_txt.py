@@ -54,7 +54,7 @@ def generate_content() -> GenerateContentResponse:
     ]
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents=prompt,
         config=GenerateContentConfig(
             system_instruction=system_instruction,

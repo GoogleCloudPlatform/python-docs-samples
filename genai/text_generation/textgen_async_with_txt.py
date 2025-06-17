@@ -21,7 +21,7 @@ async def generate_content() -> str:
     from google.genai.types import GenerateContentConfig, HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash-preview-05-20"
+    model_id = "gemini-2.5-flash"
 
     response = await client.aio.models.generate_content(
         model=model_id,

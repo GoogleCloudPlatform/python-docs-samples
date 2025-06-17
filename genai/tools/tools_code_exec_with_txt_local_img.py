@@ -46,7 +46,7 @@ def generate_content() -> GenerateContentResponse:
         image_data = Image.open(image_file)
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash-preview-05-20",
+            model="gemini-2.5-flash",
             contents=[image_data, prompt],
             config=GenerateContentConfig(
                 tools=[code_execution_tool],

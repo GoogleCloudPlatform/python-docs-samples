@@ -21,7 +21,7 @@ def generate_content() -> bool:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     for chunk in client.models.generate_content_stream(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents="Why is the sky blue?",
     ):
         print(chunk.text, end="")

@@ -26,7 +26,7 @@ def generate_content() -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents="When is the next total solar eclipse in the United States?",
         config=GenerateContentConfig(
             tools=[
