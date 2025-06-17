@@ -24,7 +24,7 @@ def generate_content() -> str:
     )
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash-preview-05-20"
+    model_id = "gemini-2.5-flash"
 
     code_execution_tool = Tool(code_execution=ToolCodeExecution())
     response = client.models.generate_content(

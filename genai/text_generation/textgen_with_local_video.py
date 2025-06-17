@@ -19,7 +19,7 @@ def generate_content() -> str:
     from google.genai.types import HttpOptions, Part
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.5-flash-preview-05-20"
+    model_id = "gemini-2.5-flash"
 
     # Read local video file content
     with open("test_data/describe_video_content.mp4", "rb") as fp:

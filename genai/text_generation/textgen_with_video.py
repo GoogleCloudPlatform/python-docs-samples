@@ -25,7 +25,7 @@ def generate_content() -> str:
     Create a chapter breakdown with timestamps for key sections or topics discussed.
     """
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents=[
             Part.from_uri(
                 file_uri="gs://cloud-samples-data/generative-ai/video/pixel8.mp4",

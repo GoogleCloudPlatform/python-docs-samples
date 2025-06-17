@@ -42,10 +42,12 @@ def create_content_cache() -> str:
     ]
 
     content_cache = client.caches.create(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         config=CreateCachedContentConfig(
             contents=contents,
             system_instruction=system_instruction,
+            # (Optional) For enhanced security, the content cache can be encrypted using a Cloud KMS key
+            # kms_key_name = "projects/.../locations/us-central1/keyRings/.../cryptoKeys/..."
             display_name="example-cache",
             ttl="86400s",
         ),

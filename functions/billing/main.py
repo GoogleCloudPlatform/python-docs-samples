@@ -14,37 +14,28 @@
 
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
-# [START functions_billing_stop]
 # [START functions_billing_slack]
 import base64
 import json
 import os
-
-# [END functions_billing_stop]
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
 # [START functions_billing_limit_appengine]
-# [START functions_billing_stop]
 from googleapiclient import discovery
-
-# [END functions_billing_stop]
 # [END functions_billing_limit]
 # [END functions_billing_limit_appengine]
 
 # [START functions_billing_slack]
 import slack
 from slack.errors import SlackApiError
-
 # [END functions_billing_slack]
 
 # [START functions_billing_limit]
-# [START functions_billing_stop]
 PROJECT_ID = os.getenv("GCP_PROJECT")
 PROJECT_NAME = f"projects/{PROJECT_ID}"
-# [END functions_billing_stop]
 # [END functions_billing_limit]
 
 # [START functions_billing_slack]
@@ -86,7 +77,6 @@ def notify_slack(data, context):
 # [END functions_billing_slack]
 
 
-# [START functions_billing_stop]
 def stop_billing(data, context):
     pubsub_data = base64.b64decode(data["data"]).decode("utf-8")
     pubsub_json = json.loads(pubsub_data)
@@ -146,9 +136,6 @@ def __disable_billing_for_project(project_name, projects):
         print(f"Billing disabled: {json.dumps(res)}")
     except Exception:
         print("Failed to disable billing, possibly check permissions")
-
-
-# [END functions_billing_stop]
 
 
 # [START functions_billing_limit]

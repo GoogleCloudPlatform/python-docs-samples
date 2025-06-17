@@ -19,7 +19,7 @@ def generate_content() -> bool:
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    chat_session = client.chats.create(model="gemini-2.5-flash-preview-05-20")
+    chat_session = client.chats.create(model="gemini-2.5-flash")
 
     for chunk in chat_session.send_message_stream("Why is the sky blue?"):
         print(chunk.text, end="")
