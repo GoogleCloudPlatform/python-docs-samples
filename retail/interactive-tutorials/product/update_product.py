@@ -15,6 +15,7 @@
 
 # Update product in a catalog using Retail API
 #
+# [START retail_update_product]
 import random
 import string
 
@@ -82,7 +83,7 @@ def update_product(original_product: Product):
     print("---updated product---:")
     print(updated_product)
     return updated_product
-
+# [END retail_update_product]
 
 # create product
 created_product = create_product(generated_product_id)
