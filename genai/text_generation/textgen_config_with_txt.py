@@ -31,7 +31,7 @@ def generate_content() -> str:
             top_p=0.95,
             top_k=20,
             seed=5,
-            max_output_tokens=100,
+            max_output_tokens=500,
             stop_sequences=["STOP!"],
             presence_penalty=0.0,
             frequency_penalty=0.0,
