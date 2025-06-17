@@ -20,7 +20,7 @@ def compute_tokens_example() -> int:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.compute_tokens(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents="What's the longest word in the English language?",
     )
 

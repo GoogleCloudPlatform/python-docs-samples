@@ -23,7 +23,7 @@ def generate_content() -> str:
     Provide a concise summary of the main points in the audio file.
     """
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents=[
             prompt,
             Part.from_uri(

@@ -20,7 +20,7 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     chat_session = client.chats.create(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         history=[
             UserContent(parts=[Part(text="Hello")]),
             ModelContent(

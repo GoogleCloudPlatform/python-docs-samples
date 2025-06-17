@@ -28,7 +28,7 @@ def generate_content(image_path_1: str, image_path_2: str) -> str:
         image_2_bytes = f.read()
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-preview-05-20",
+        model="gemini-2.5-flash",
         contents=[
             "Generate a list of all the objects contained in both images.",
             Part.from_bytes(data=image_1_bytes, mime_type="image/jpeg"),

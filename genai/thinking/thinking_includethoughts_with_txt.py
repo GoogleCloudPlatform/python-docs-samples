@@ -20,7 +20,7 @@ def generate_content() -> str:
 
     client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-2.5-pro-preview-05-06",
+        model="gemini-2.5-pro",
         contents="solve x^2 + 4x + 4 = 0",
         config=GenerateContentConfig(
             thinking_config=ThinkingConfig(include_thoughts=True)
