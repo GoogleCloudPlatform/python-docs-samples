@@ -23,8 +23,8 @@ def create_tuning_job() -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     tuning_job = client.tunings.tune(
-        base_model="gemini-2.0-flash-lite-001",
-        training_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini-2_0/text/sft_train_data.jsonl",
+        base_model="gemini-2.5-flash",
+        training_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data.jsonl",
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
         ),
