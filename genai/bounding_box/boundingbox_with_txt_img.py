@@ -16,12 +16,16 @@
 def generate_content() -> str:
     # [START googlegenaisdk_boundingbox_with_txt_img]
     import requests
-
     from google import genai
-    from google.genai.types import GenerateContentConfig, HttpOptions, Part, SafetySetting
-
+    from google.genai.types import (
+        GenerateContentConfig,
+        HarmBlockThreshold,
+        HarmCategory,
+        HttpOptions,
+        Part,
+        SafetySetting,
+    )
     from PIL import Image, ImageColor, ImageDraw
-
     from pydantic import BaseModel
 
     # Helper class to represent a bounding box
@@ -31,7 +35,7 @@ def generate_content() -> str:
 
         Attributes:
             box_2d (list[int]): A list of integers representing the 2D coordinates of the bounding box,
-                                typically in the format [x_min, y_min, x_max, y_max].
+                                typically in the format [y_min, x_min, y_max, x_max].
             label (str): A string representing the label or class associated with the object within the bounding box.
         """
 
@@ -41,12 +45,12 @@ def generate_content() -> str:
     # Helper function to plot bounding boxes on an image
     def plot_bounding_boxes(image_uri: str, bounding_boxes: list[BoundingBox]) -> None:
         """
-        Plots bounding boxes on an image with markers for each a name, using PIL, normalized coordinates, and different colors.
+        Plots bounding boxes on an image with labels, using PIL and normalized coordinates.
 
         Args:
-            img_path: The path to the image file.
-            bounding_boxes: A list of bounding boxes containing the name of the object
-            and their positions in normalized [y1 x1 y2 x2] format.
+            image_uri: The URI of the image file.
+            bounding_boxes: A list of BoundingBox objects. Each box's coordinates are in
+                            normalized [y_min, x_min, y_max, x_max] format.
         """
         with Image.open(requests.get(image_uri, stream=True, timeout=10).raw) as im:
             width, height = im.size
@@ -55,19 +59,23 @@ def generate_content() -> str:
             colors = list(ImageColor.colormap.keys())
 
             for i, bbox in enumerate(bounding_boxes):
-                y1, x1, y2, x2 = bbox.box_2d
-                abs_y1 = int(y1 / 1000 * height)
-                abs_x1 = int(x1 / 1000 * width)
-                abs_y2 = int(y2 / 1000 * height)
-                abs_x2 = int(x2 / 1000 * width)
+                # Scale normalized coordinates to image dimensions
+                abs_y_min = int(bbox.box_2d[0] / 1000 * height)
+                abs_x_min = int(bbox.box_2d[1] / 1000 * width)
+                abs_y_max = int(bbox.box_2d[2] / 1000 * height)
+                abs_x_max = int(bbox.box_2d[3] / 1000 * width)
 
                 color = colors[i % len(colors)]
 
+                # Draw the rectangle using the correct (x, y) pairs
                 draw.rectangle(
-                    ((abs_x1, abs_y1), (abs_x2, abs_y2)), outline=color, width=4
+                    ((abs_x_min, abs_y_min), (abs_x_max, abs_y_max)),
+                    outline=color,
+                    width=4,
                 )
                 if bbox.label:
-                    draw.text((abs_x1 + 8, abs_y1 + 6), bbox.label, fill=color)
+                    # Position the text at the top-left corner of the box
+                    draw.text((abs_x_min + 8, abs_y_min + 6), bbox.label, fill=color)
 
             im.show()
 
@@ -83,12 +91,12 @@ def generate_content() -> str:
         temperature=0.5,
         safety_settings=[
             SafetySetting(
-                category="HARM_CATEGORY_DANGEROUS_CONTENT",
-                threshold="BLOCK_ONLY_HIGH",
+                category=HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
+                threshold=HarmBlockThreshold.BLOCK_ONLY_HIGH,
             ),
         ],
         response_mime_type="application/json",
-        response_schema=list[BoundingBox],  # Add BoundingBox class to the response schema
+        response_schema=list[BoundingBox],
     )
 
     image_uri = "https://storage.googleapis.com/generativeai-downloads/images/socks.jpg"
@@ -109,8 +117,8 @@ def generate_content() -> str:
 
     # Example response:
     # [
-    #     {"box_2d": [36, 246, 380, 492], "label": "top left sock with face"},
-    #     {"box_2d": [260, 663, 640, 917], "label": "top right sock with face"},
+    #     {"box_2d": [6, 246, 386, 526], "label": "top-left light blue sock with cat face"},
+    #     {"box_2d": [234, 649, 650, 863], "label": "top-right light blue sock with cat face"},
     # ]
     # [END googlegenaisdk_boundingbox_with_txt_img]
     return response.text
