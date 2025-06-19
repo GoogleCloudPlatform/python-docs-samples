@@ -1,4 +1,4 @@
 requests==2.32.4
 google-auth==2.38.0
 google-auth-httplib2==0.2.0
-google-cloud-storage==2.9.0
+google-cloud-storage==2.19.0
