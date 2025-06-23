@@ -57,7 +57,9 @@ def test_basic_vector_search(db_connection: dbapi.Connection) -> None:
     execute_sql_request(db_connection, sql_statement)
 
     # Insert product and product inventory data
-    with open(Path("resources") / "example_data.sql", encoding="utf-8") as f:
+    with open(
+        Path(__file__).parent / "resources/example_data.sql", encoding="utf-8"
+    ) as f:
         sql_statement = f.read()
         execute_sql_request(db_connection, sql_statement)
 
@@ -87,4 +89,5 @@ def test_basic_vector_search(db_connection: dbapi.Connection) -> None:
     )
 
     result = perform_vector_search(db_connection, word_to_find="music", limit=3)
+    assert len(result) == 3
     assert result == expected

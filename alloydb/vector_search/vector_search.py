@@ -12,7 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from typing import Union
+import logging
+from typing import Optional, Union
 
 from google.api_core import exceptions as api_exceptions
 from google.cloud.alloydb.connector import Connector, IPTypes
@@ -58,7 +59,7 @@ def get_db_connection(
             "An error occurred during the AlloyDB connector's API interaction."
         ) from e
     except Exception as e:
-        print(f"An unexpected error occurred during connection setup: {e}")
+        logging.exception(f"An unexpected error occurred during connection setup: {e}")
         raise
 
 
@@ -68,7 +69,7 @@ def execute_sql_request(
     params: tuple = (),
     fetch_one: bool = False,
     fetch_all: bool = False,
-) -> Union[tuple, None]:  # TODO: Get the right type for this function
+) -> Union[Optional[tuple], list[tuple], bool]:
     cursor = db_connection.cursor()
     cursor.execute(sql_statement, params)
 
@@ -88,7 +89,7 @@ def execute_sql_request(
 
 def perform_vector_search(
     db_connection: dbapi.Connection, word_to_find: str, limit: int = 5
-) -> tuple[tuple]:  # TODO: Get the right type for this function
+) -> tuple[list]:
     sql_statement = """
         SELECT id, name, description, category, color
         FROM product
