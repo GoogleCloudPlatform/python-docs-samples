@@ -18,13 +18,17 @@ def create_with_checkpoints() -> str:
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig
+    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
+    training_dataset = TuningDataset(
+        gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data.jsonl",
+    )
+    
     tuning_job = client.tunings.tune(
         base_model="gemini-2.5-flash",
-        training_dataset="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data.jsonl",
+        training_dataset=training_dataset,
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
             # Set to True to disable tuning intermediate checkpoints. Default is False.
