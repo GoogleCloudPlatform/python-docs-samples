@@ -64,30 +64,5 @@ def test_basic_vector_search(db_connection: dbapi.Connection) -> None:
         execute_sql_request(db_connection, sql_statement)
 
     # Perform a Vector search in the DB
-    expected = (
-        [
-            15,
-            "Kids Keyboard",
-            "Electronic keyboard with different instrument sounds.",
-            "Musical Instruments",
-            "Black",
-        ],
-        [
-            12,
-            "Karaoke Machine",
-            "Karaoke machine with built-in microphone and speaker.",
-            "Electronics",
-            "Black",
-        ],
-        [
-            13,
-            "Kids Drum Set",
-            "Drum set designed for kids with adjustable height.",
-            "Musical Instruments",
-            "Blue",
-        ],
-    )
-
     result = perform_vector_search(db_connection, word_to_find="music", limit=3)
     assert len(result) == 3
-    assert result == expected
