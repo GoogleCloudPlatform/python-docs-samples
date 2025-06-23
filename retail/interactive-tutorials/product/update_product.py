@@ -84,6 +84,7 @@ def update_product(original_product: Product):
     print(updated_product)
     return updated_product
 
+
 # create product
 created_product = create_product(generated_product_id)
 # UPDATE PRODUCT
