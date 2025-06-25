@@ -1,5 +1,5 @@
 # samples/snippets should be runnable with no "extras"
 google-cloud-testutils==1.6.4
-pytest==8.4.0
+pytest==8.4.1
 mock==5.2.0
 pytest-xdist==3.7.0
