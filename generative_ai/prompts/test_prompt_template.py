@@ -12,15 +12,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from vertexai.preview import prompts
+
 import prompt_create
 import prompt_delete
 import prompt_get
 import prompt_list_prompts
 import prompt_list_version
-
 # import prompt_restore_version
 import prompt_template
-from vertexai.preview import prompts
 
 
 def test_prompt_template() -> None:
