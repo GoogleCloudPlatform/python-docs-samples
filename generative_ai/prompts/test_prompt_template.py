@@ -17,6 +17,7 @@ import prompt_delete
 import prompt_get
 import prompt_list_prompts
 import prompt_list_version
+
 # import prompt_restore_version
 import prompt_template
 from vertexai.preview import prompts
@@ -30,7 +31,7 @@ def test_prompt_template() -> None:
 def test_prompt_create() -> None:
     response = prompt_create.prompt_create()
     assert response
-    prompts.delete(prompt_id = response.prompt_id)
+    prompts.delete(prompt_id=response.prompt_id)
 
 
 def test_prompt_list_prompts() -> None:
@@ -41,14 +42,14 @@ def test_prompt_list_prompts() -> None:
 def test_prompt_get() -> None:
     get_prompt = prompt_get.get_prompt()
     assert get_prompt
-    prompts.delete(prompt_id = get_prompt.prompt_id)
+    prompts.delete(prompt_id=get_prompt.prompt_id)
 
 
 def test_prompt_list_version() -> None:
     list_versions = prompt_list_version.list_prompt_version()
     assert list_versions
     for prompt in list_versions:
-        prompts.delete(prompt_id = prompt.prompt_id)
+        prompts.delete(prompt_id=prompt.prompt_id)
 
 
 def test_prompt_delete() -> None:
