@@ -13,14 +13,18 @@
 # limitations under the License.
 
 import os
+import subprocess
 import uuid
 
 import backoff
-from google.api_core.exceptions import (Aborted, InternalServerError, NotFound,
-                                        ServiceUnavailable)
+from google.api_core.exceptions import (
+    Aborted,
+    InternalServerError,
+    NotFound,
+    ServiceUnavailable,
+)
 from google.cloud import dataproc_v1 as dataproc
 
-import create_cluster
 import submit_spark_job_to_driver_node_group_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
@@ -58,9 +62,20 @@ def teardown():
     max_tries=5,
 )
 def test_workflows(capsys):
+    # Setup driver node group cluster. TODO: cleanup b/424371877
+    command = f"""gcloud dataproc clusters create {CLUSTER_NAME} \
+            --region {REGION} \
+            --project {PROJECT_ID} \
+            --driver-pool-size=1 \
+            --driver-pool-id=pytest"""
 
-    # create temporary cluster for test
-    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
+    output = subprocess.run(
+        command,
+        capture_output=True,
+        shell=True,
+        check=True,
+    )
+    print(output)
 
     # Wrapper function for client library function
     submit_spark_job_to_driver_node_group_cluster.submit_job(
