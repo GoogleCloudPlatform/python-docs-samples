@@ -25,6 +25,7 @@ from google.api_core.exceptions import (
 
 from google.cloud import dataproc_v1 as dataproc
 import submit_spark_job_to_driver_node_group_cluster
+import create_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -63,10 +64,7 @@ def teardown():
 def test_workflows(capsys):
 
     # create temporary cluster for test
-    request = dataproc.GetClusterRequest(
-        project_id=PROJECT_ID, region=REGION, cluster_name=CLUSTER_NAME
-    )
-    response = cluster_client.get_cluster(request=request)
+    create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
     # Wrapper function for client library function
     submit_spark_job_to_driver_node_group_cluster.submit_job(PROJECT_ID, REGION, CLUSTER_NAME)
