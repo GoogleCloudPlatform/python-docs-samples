@@ -16,16 +16,12 @@ import os
 import uuid
 
 import backoff
-from google.api_core.exceptions import (
-    Aborted,
-    InternalServerError,
-    ServiceUnavailable,
-    NotFound,
-)
-
+from google.api_core.exceptions import (Aborted, InternalServerError, NotFound,
+                                        ServiceUnavailable)
 from google.cloud import dataproc_v1 as dataproc
-import submit_spark_job_to_driver_node_group_cluster
+
 import create_cluster
+import submit_spark_job_to_driver_node_group_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
@@ -67,7 +63,9 @@ def test_workflows(capsys):
     create_cluster.create_cluster(PROJECT_ID, REGION, CLUSTER_NAME)
 
     # Wrapper function for client library function
-    submit_spark_job_to_driver_node_group_cluster.submit_job(PROJECT_ID, REGION, CLUSTER_NAME)
+    submit_spark_job_to_driver_node_group_cluster.submit_job(
+        PROJECT_ID, REGION, CLUSTER_NAME
+    )
 
     out, _ = capsys.readouterr()
     assert "successfully" in out
