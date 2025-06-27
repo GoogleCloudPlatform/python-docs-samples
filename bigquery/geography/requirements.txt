@@ -4,13 +4,13 @@ cffi==1.17.1
 charset-normalizer==3.4.2
 click===8.1.8; python_version == '3.9'
 click==8.2.1; python_version >= '3.10'
-click-plugins==1.1.1
+click-plugins==1.1.1.2
 cligj==0.7.2
 db-dtypes==1.4.3
 Fiona==1.10.1
 geojson==3.2.0
 geopandas===1.0.1; python_version <= '3.9'
-geopandas==1.1.0; python_version >= '3.10'
+geopandas==1.1.1; python_version >= '3.10'
 google-api-core==2.25.1
 google-auth==2.40.3
 google-cloud-bigquery==3.34.0
@@ -19,7 +19,7 @@ google-cloud-core==2.4.3
 google-crc32c==1.7.1
 google-resumable-media==2.7.2
 googleapis-common-protos==1.70.0
-grpcio==1.73.0
+grpcio==1.73.1
 idna==3.10
 munch==4.0.0
 mypy-extensions==1.1.0
