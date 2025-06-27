@@ -218,7 +218,7 @@ proto-plus==1.23.0
     #   google-cloud-spanner
     #   google-cloud-videointelligence
     #   google-cloud-vision
-protobuf==4.25.3
+protobuf==4.25.8
     # via
     #   apache-beam
     #   google-api-core
@@ -305,7 +305,7 @@ typing-extensions==4.10.0
     # via apache-beam
 tzlocal==5.2
     # via js2py
-urllib3==2.2.2
+urllib3==2.5.0
     # via requests
 wrapt==1.16.0
     # via deprecated
