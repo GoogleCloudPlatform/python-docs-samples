@@ -68,6 +68,6 @@ def test_workflows(capsys):
     )
 
     out, _ = capsys.readouterr()
-    assert "successfully" in out
+    assert "Job finished successfully" in out
 
     # cluster deleted in teardown()
