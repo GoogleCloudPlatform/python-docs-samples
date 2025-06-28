@@ -14,6 +14,8 @@
 
 # Remove place IDs using Retail API.
 #
+# [START retail_remove_fulfillment_places]
+#
 import asyncio
 import random
 import string
@@ -72,3 +74,5 @@ async def remove_places(product_name: str):
 product = create_product(product_id)
 
 asyncio.run(remove_places(product.name))
+
+# [END retail_remove_fulfillment_places]
