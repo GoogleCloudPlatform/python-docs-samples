@@ -201,7 +201,7 @@ RUN for PYTHON_VERSION in 3.9 3.10 3.11 3.12 3.13; do \
     --no-cache-dir \
     --require-hashes \
     -r /requirements.txt \
-  ; done
+  ; done && rm /requirements.txt
 
 # Install "virtualenv", since the vast majority of users of this image will want it.
 RUN pip install --no-cache-dir virtualenv
