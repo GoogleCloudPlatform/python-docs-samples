@@ -167,9 +167,7 @@ RUN python3.11 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip-3-8.py
 RUN python3.7 /tmp/get-pip-3-7.py
-RUN rm /tmp/get-pip.py
-RUN rm /tmp/get-pip-3-8.py
-RUN rm /tmp/get-pip-3-7.py
+RUN rm /tmp/get-pip.py /tmp/get-pip-3-8.py /tmp/get-pip-3-7.py
 
 # Test Pip
 RUN python3 -m pip
