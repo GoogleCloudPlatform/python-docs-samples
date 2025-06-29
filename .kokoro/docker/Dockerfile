@@ -65,6 +65,8 @@ RUN apt-get update \
   uuid-dev \
   wget \
   zlib1g-dev \
+  # Remove `python3-setuptools` since the installed version
+  # does not include a patch for CVE-2025-47273/CVE-2025-47273.
   && apt remove -y python3-setuptools \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
