@@ -13,7 +13,6 @@
 # limitations under the License.
 
 # [START cloudrun_mcpserver_dockerfile_python]
-
 # Use the official Python image
 FROM python:3.13-slim
 
