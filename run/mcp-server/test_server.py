@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# [START cloudrun_test_mcpserver]
 import asyncio
 
 from fastmcp import Client
@@ -35,3 +36,4 @@ async def test_server():
 
 if __name__ == "__main__":
     asyncio.run(test_server())
+# [END cloudrun_test_mcpserver]
