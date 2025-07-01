@@ -364,8 +364,6 @@ def build_query(
         query = query.filter(airflow_db_model.dag_id == dag_id)
 
     if airflow_db_model == DagRun:
-        # For DagRuns we want to leave last *scheduled* DagRun
-        # regardless of its age
         newest_dagrun = (
             session
             .query(airflow_db_model)
@@ -375,17 +373,16 @@ def build_query(
             .first()
         )
         logging.info("Newest dagrun: " + str(newest_dagrun))
+
+        # For DagRuns we want to leave last *scheduled* DagRun
+        # regardless of its age, otherwise Airflow will retrigger it
         if newest_dagrun is not None:
             query = (
                 query
-                .filter(age_check_column <= max_date)
                 .filter(airflow_db_model.id != newest_dagrun.id)
             )
-        else:
-            query = query.filter(sql.false())
-    else:
-        query = query.filter(age_check_column <= max_date)
 
+    query = query.filter(age_check_column <= max_date)
     logging.info("FINAL QUERY: " + str(query))
 
     return query
