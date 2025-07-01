@@ -66,7 +66,7 @@ from airflow.utils import timezone
 from airflow.version import version as airflow_version
 
 import dateutil.parser
-from sqlalchemy import desc, sql, text
+from sqlalchemy import desc, text
 from sqlalchemy.exc import ProgrammingError
 
 
