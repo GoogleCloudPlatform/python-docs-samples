@@ -26,7 +26,7 @@ echo ${GH_REPOSITORY_URL}
 # Function to cleanup and remove runner from Github.
 cleanup() {
    echo "Removing runner..."
-   ./config.sh remove --unattended --token ${REG_TOKEN}
+./config.sh remove --unattended --token ${GH_TOKEN}
 }
 
 
