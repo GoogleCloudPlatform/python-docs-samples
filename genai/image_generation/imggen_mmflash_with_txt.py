@@ -23,7 +23,7 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
+        model="gemini-2.0-flash-preview-image-generation",
         contents=(
             "Generate an image of the Eiffel tower with fireworks in the background."
         ),
