@@ -29,11 +29,11 @@ def bind_tags_to_secret(
     project_id: str,
     secret_id: str,
     tag_value: str,
-) -> secretmanager.Secret:
+) -> resourcemanager_v3.TagBinding:
     """
-    Create a new secret with the given name. A secret is a logical wrapper
-    around a collection of secret versions. Secret versions hold the actual
-    secret material.
+    Create a new secret with the given name, and then bind an existing tag to it.
+    A secret is a logical wrapper around a collection of secret versions. Secret
+    versions hold the actual secret material.
     """
 
     # Create the Secret Manager client.

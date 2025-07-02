@@ -193,9 +193,9 @@ def retry_client_create_tag_value(
 def retry_client_delete_tag_value(
     tag_values_client: resourcemanager_v3.TagValuesClient,
     request: Optional[Union[resourcemanager_v3.DeleteTagValueRequest, dict]],
-) -> None:
+) -> str:
     # Retry to avoid 503 error & flaky issues
-    time.sleep(10)  # Added a sleep to wait for the tag unbinding
+    time.sleep(15)  # Added a sleep to wait for the tag unbinding
     operation = tag_values_client.delete_tag_value(request=request)
     response = operation.result()
     return response.name
@@ -205,7 +205,7 @@ def retry_client_delete_tag_value(
 def retry_client_delete_tag_key(
     tag_keys_client: resourcemanager_v3.TagKeysClient,
     request: Optional[Union[resourcemanager_v3.DeleteTagKeyRequest, dict]],
-) -> None:
+) -> str:
     # Retry to avoid 503 error & flaky issues
     operation = tag_keys_client.delete_tag_key(request=request)
     response = operation.result()
@@ -243,7 +243,7 @@ def tag_key_and_tag_value(
         request={
             "tag_key": {
                 "parent": f"projects/{project_id}",
-                "short_name": f"{short_key_name}"
+                "short_name": short_key_name,
             }
         },
     )
@@ -254,8 +254,8 @@ def tag_key_and_tag_value(
         tag_values_client,
         request={
             "tag_value": {
-                "parent": f"{tag_key}",
-                "short_name": f"{short_value_name}",
+                "parent": tag_key,
+                "short_name": short_value_name,
             }
         },
     )

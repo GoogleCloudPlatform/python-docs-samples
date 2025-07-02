@@ -31,9 +31,9 @@ def create_secret_with_tags(
     tag_value: str,
 ) -> secretmanager.Secret:
     """
-    Create a new secret with the given name. A secret is a logical wrapper
-    around a collection of secret versions. Secret versions hold the actual
-    secret material.
+    Create a new secret with the given name and associated tags. A secret is a
+    logical wrapper around a collection of secret versions. Secret versions hold
+    the actual secret material.
     """
 
     # Create the Secret Manager client.
