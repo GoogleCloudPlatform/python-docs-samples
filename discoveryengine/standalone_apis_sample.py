@@ -94,7 +94,7 @@ def rank_sample(
     )
     request = discoveryengine.RankRequest(
         ranking_config=ranking_config,
-        model="semantic-ranker-512@latest",
+        model="semantic-ranker-default@latest",
         top_n=10,
         query="What is Google Gemini?",
         records=[
