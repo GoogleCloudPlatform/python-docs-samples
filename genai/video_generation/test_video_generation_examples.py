@@ -24,9 +24,15 @@ from google.cloud import storage
 
 import pytest
 
+import videogen_with_first_last_frame
+
 import videogen_with_img
 
+import videogen_with_no_rewrite
+
 import videogen_with_txt
+
+import videogen_with_vid
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -57,4 +63,19 @@ def test_videogen_with_txt(output_gcs_uri: str) -> None:
 
 def test_videogen_with_img(output_gcs_uri: str) -> None:
     response = videogen_with_img.generate_videos_from_image(output_gcs_uri=output_gcs_uri)
+    assert response
+
+
+def test_videogen_with_first_last_frame(output_gcs_uri: str) -> None:
+    response = videogen_with_first_last_frame.generate_videos_from_first_last_frame(output_gcs_uri=output_gcs_uri)
+    assert response
+
+
+def test_videogen_with_vid(output_gcs_uri: str) -> None:
+    response = videogen_with_vid.generate_videos_from_video(output_gcs_uri=output_gcs_uri)
+    assert response
+
+
+def test_videogen_with_no_rewriter(output_gcs_uri: str) -> None:
+    response = videogen_with_no_rewrite.generate_videos_no_rewriter(output_gcs_uri=output_gcs_uri)
     assert response
