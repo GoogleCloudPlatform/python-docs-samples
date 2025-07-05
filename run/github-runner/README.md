@@ -71,7 +71,7 @@ Deploy:
 > Change the values of `GITHUB_USER_OR_ORGANIZATION` and `REPOSITORY_NAME`.
 
 ```sh
-gcloud alpha run worker-pools deploy cloud-run-github-runner \
+gcloud beta run worker-pools deploy cloud-run-github-runner \
 --source=. \
 --scaling=1 \
 --set-env-vars GH_OWNER=GITHUB_USER_OR_ORGANIZATION,GH_REPOSITORY=REPOSITORY_NAME \
