@@ -24,7 +24,7 @@ idna==3.10
 munch==4.0.0
 mypy-extensions==1.1.0
 packaging==25.0
-pandas==2.3.0
+pandas==2.3.1
 proto-plus==1.26.1
 pyarrow==20.0.0
 pyasn1==0.6.1
@@ -39,6 +39,6 @@ rsa==4.9.1
 Shapely===2.0.7; python_version == '3.9'
 Shapely==2.1.1; python_version >= '3.10'
 six==1.17.0
-typing-extensions==4.14.0
+typing-extensions==4.14.1
 typing-inspect==0.9.0
 urllib3==2.5.0
