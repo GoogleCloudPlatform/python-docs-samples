@@ -102,8 +102,6 @@ def main(bucket_name):
 
     import_user_events_from_gcs()
 
-# [END retail_import_user_events_from_gcs]
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -111,3 +109,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.bucket_name)
+
+# [END retail_import_user_events_from_gcs]
