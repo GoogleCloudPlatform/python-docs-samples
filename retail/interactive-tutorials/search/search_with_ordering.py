@@ -14,6 +14,7 @@
 
 # Call Retail API to search for a products in a catalog, order the results by different product fields.
 #
+# [START retail_search_for_products_with_ordering]
 
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
@@ -59,3 +60,5 @@ def search():
 
 
 search()
+
+# [END retail_search_for_products_with_ordering]
