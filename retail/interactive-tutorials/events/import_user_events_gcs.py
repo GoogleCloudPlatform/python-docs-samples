@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START retail_import_user_events_from_gcs]
 
 import argparse
 import os
@@ -101,6 +102,7 @@ def main(bucket_name):
 
     import_user_events_from_gcs()
 
+# [END retail_import_user_events_from_gcs]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
