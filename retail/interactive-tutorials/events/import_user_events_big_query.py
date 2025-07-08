@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+#
+# [START retail_import_user_events_from_big_query]
 
 import argparse
 
@@ -97,6 +99,7 @@ def main(project_id, dataset_id, table_id):
 
     import_user_events_from_big_query()
 
+# [END retail_import_user_events_from_big_query]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
