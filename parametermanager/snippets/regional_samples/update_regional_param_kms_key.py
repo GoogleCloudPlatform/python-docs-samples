@@ -42,7 +42,7 @@ def update_regional_param_kms_key(
         update_regional_param_kms_key(
             "my-project",
             "us-central1",
-            "my-global-parameter",
+            "my-regional-parameter",
             "projects/my-project/locations/us-central1/keyRings/test/cryptoKeys/updated-test-key"
         )
     """

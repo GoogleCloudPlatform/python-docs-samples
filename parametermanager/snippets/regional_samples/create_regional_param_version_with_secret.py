@@ -53,7 +53,7 @@ def create_regional_param_version_with_secret(
             "my-regional-parameter",
             "v1",
             "projects/my-project/locations/us-central1/
-            secrets/application-secret/version/latest"
+            secrets/application-secret/versions/latest"
         )
     """
     # Import the necessary library for Google Cloud Parameter Manager.
