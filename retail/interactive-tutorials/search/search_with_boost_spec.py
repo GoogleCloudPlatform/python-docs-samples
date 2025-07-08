@@ -15,6 +15,7 @@
 # Call Retail API to search for a products in a catalog, rerank the
 # results boosting or burying the products that match defined condition.
 #
+# [START retail_search_product_with_boost_spec]
 
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
@@ -67,3 +68,4 @@ def search():
 
 
 search()
+# [END retail_search_product_with_boost_spec]
