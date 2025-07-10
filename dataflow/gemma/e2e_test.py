@@ -125,7 +125,7 @@ def dataflow_job(
     conftest.dataflow_cancel_job(project, location, job_id)
 
 
-@pytest.mark.timeout(3600)
+@pytest.mark.timeout(5400)
 def test_pipeline_dataflow(
         project: str,
         location: str,
