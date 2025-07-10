@@ -19,6 +19,7 @@ from typing import Iterator, Optional, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
+from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager
 from google.protobuf.duration_pb2 import Duration
 
@@ -26,11 +27,13 @@ import pytest
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
+from bind_tags_to_secret import bind_tags_to_secret
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_labels import create_secret_with_labels
+from create_secret_with_tags import create_secret_with_tags
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
@@ -64,6 +67,16 @@ from view_secret_labels import view_secret_labels
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
     return secretmanager.SecretManagerServiceClient()
+
+
+@pytest.fixture()
+def tag_keys_client() -> resourcemanager_v3.TagKeysClient:
+    return resourcemanager_v3.TagKeysClient()
+
+
+@pytest.fixture()
+def tag_values_client() -> resourcemanager_v3.TagValuesClient:
+    return resourcemanager_v3.TagValuesClient()
 
 
 @pytest.fixture()
@@ -106,6 +119,16 @@ def version_destroy_ttl() -> str:
     return 604800  # 7 days in seconds
 
 
+@pytest.fixture()
+def short_key_name() -> str:
+    return f"python-test-key-{uuid.uuid4()}"
+
+
+@pytest.fixture()
+def short_value_name() -> str:
+    return f"python-test-value-{uuid.uuid4()}"
+
+
 @retry.Retry()
 def retry_client_create_secret(
     client: secretmanager.SecretManagerServiceClient,
@@ -142,6 +165,53 @@ def retry_client_add_secret_version(
     return client.add_secret_version(request=request)
 
 
+@retry.Retry()
+def retry_client_create_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Optional[Union[resourcemanager_v3.CreateTagKeyRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.create_tag_key(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_create_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Optional[Union[resourcemanager_v3.CreateTagValueRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_values_client.create_tag_value(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Optional[Union[resourcemanager_v3.DeleteTagValueRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    time.sleep(15)  # Added a sleep to wait for the tag unbinding
+    operation = tag_values_client.delete_tag_value(request=request)
+    response = operation.result()
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Optional[Union[resourcemanager_v3.DeleteTagKeyRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.delete_tag_key(request=request)
+    response = operation.result()
+    return response.name
+
+
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
@@ -157,6 +227,52 @@ def secret_id(
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
+
+
+@pytest.fixture()
+def tag_key_and_tag_value(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    project_id: str,
+    short_key_name: str,
+    short_value_name: str,
+) -> Iterator[Tuple[str, str]]:
+
+    tag_key = retry_client_create_tag_key(
+        tag_keys_client,
+        request={
+            "tag_key": {
+                "parent": f"projects/{project_id}",
+                "short_name": short_key_name,
+            }
+        },
+    )
+
+    print(f"created tag key {tag_key}")
+
+    tag_value = retry_client_create_tag_value(
+        tag_values_client,
+        request={
+            "tag_value": {
+                "parent": tag_key,
+                "short_name": short_value_name,
+            }
+        },
+    )
+
+    print(f"created tag value {tag_value}")
+
+    yield tag_key, tag_value
+
+    print(f"deleting tag value {tag_value} and tag key {tag_key}")
+
+    try:
+        time.sleep(5)
+        retry_client_delete_tag_value(tag_values_client, request={"name": tag_value})
+        retry_client_delete_tag_key(tag_keys_client, request={"name": tag_key})
+    except exceptions.NotFound:
+        # Tag was already deleted, probably in the test
+        print("Tag value or tag key was not found.")
 
 
 @pytest.fixture()
@@ -278,6 +394,29 @@ def test_create_secret(
 
     assert secret_id in secret.name
     assert secret.expire_time
+
+
+def test_create_secret_with_tags(
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+    secret = create_secret_with_tags(project_id, secret_id, tag_key, tag_value)
+
+    assert secret_id in secret.name
+
+
+def test_bind_tags_to_secret(
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    _, tag_value = tag_key_and_tag_value
+    tag_resp = bind_tags_to_secret(project_id, secret_id, tag_value)
+
+    assert secret_id in tag_resp.parent
+    assert tag_value in tag_resp.tag_value
 
 
 def test_create_secret_without_ttl(
