@@ -14,6 +14,8 @@
 
 # Adding place IDs using Retail API.
 #
+# [START retail_add_fulfillment_places]
+#
 import asyncio
 import random
 import string
@@ -75,3 +77,5 @@ async def add_places(product_name: str):
 create_product(product_id)
 
 asyncio.run(add_places(product_name))
+
+# [END retail_add_fulfillment_places]
