@@ -101,6 +101,7 @@ def main(project_id, dataset_id, table_id):
 
 # [END retail_import_user_events_from_big_query]
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("dataset_id", nargs="?", default="user_events")
