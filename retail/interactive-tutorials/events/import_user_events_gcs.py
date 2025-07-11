@@ -102,6 +102,7 @@ def main(bucket_name):
 
     import_user_events_from_gcs()
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
