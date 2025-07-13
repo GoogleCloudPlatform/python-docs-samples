@@ -40,6 +40,8 @@ import pyaudio
 STREAMING_LIMIT = 240000  # 4 minutes
 SAMPLE_RATE = 16000
 CHUNK_SIZE = int(SAMPLE_RATE / 10)  # 100ms
+# 25KB API limit for streaming requests. Exceeding this limit will result in an error.
+MAX_STREAMING_CHUNK = 25 * 1024
 
 RED = "\033[0;31m"
 GREEN = "\033[0;32m"
@@ -213,7 +215,23 @@ class ResumableMicrophoneStream:
                 except queue.Empty:
                     break
 
-            yield b"".join(data)
+            # Enforce max streaming chunk size supported by the API
+            combined_size = sum(len(chunk) for chunk in data)
+            if combined_size <= MAX_STREAMING_CHUNK:
+                yield b"".join(data)
+            else:
+                run_chunks = []
+                run_size = 0
+                for chunk in data:
+                    if len(chunk) + run_size > MAX_STREAMING_CHUNK:
+                        yield b"".join(run_chunks)
+                        run_chunks = [chunk]
+                        run_size = len(chunk)
+                    else:
+                        run_chunks.append(chunk)
+                        run_size += len(chunk)
+                if run_chunks:
+                    yield b"".join(run_chunks)
 
 
 def listen_print_loop(responses: object, stream: object) -> None:
