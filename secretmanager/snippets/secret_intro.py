@@ -27,13 +27,16 @@ from google.cloud import secretmanager
 """
 # Define these values to use this sample:
 # [START secret_create_secret_ipy_style]
+
 project_id = "PROJECT_ID"
 secret_id = "SECRET_ID"
+
 # [END secret_create_secret_ipy_style]
 """
 
 def create_secret(project_id, secret_id):
     # [START secret_create_secret_ipy_style]
+    # [START secret_create_secret_ipy_style_indent]
     client = secretmanager.SecretManagerServiceClient()
     response = client.create_secret(
         parent=f"projects/{project_id}",
@@ -42,7 +45,8 @@ def create_secret(project_id, secret_id):
     )
 
     print(f"Created secret: {response.name}")
-    # [START secret_create_secret_ipy_style]
+    # [END secret_create_secret_ipy_style_indent]
+    # [END secret_create_secret_ipy_style]
     return response
 
 # [START secret_create_secret_ipy_style]
