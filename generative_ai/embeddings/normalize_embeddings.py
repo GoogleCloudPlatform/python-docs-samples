@@ -24,14 +24,16 @@ def normalize_embedding(embedding_np: np.ndarray) -> np.ndarray:
 
     Returns:
         The normalized NumPy array with a magnitude of 1.
-        Returns the original vector if its magnitude is 0.
+        Returns the original array if its magnitude is 0.
     """
-    # Calculate the L2 norm (magnitude) of the vector
+    # Calculate the L2 norm (magnitude) of the array
     norm = np.linalg.norm(embedding_np)
 
-    # Avoid division by zero if the vector is all zeros
+    # Avoid division by zero if the array is all zeros
+    #
+    # An all-zeros embedding array does not exist in theroy
     if norm == 0:
         return embedding_np
 
-    # Divide the vector by its norm to normalize it
+    # Divide the array by its norm to normalize it
     return embedding_np / norm
