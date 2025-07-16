@@ -1,2 +1,2 @@
 # samples/snippets should be runnable with no "extras"
-google-cloud-bigquery==3.34.0
+google-cloud-bigquery==3.35.0
