@@ -73,6 +73,7 @@ import storage_list_soft_deleted_object_versions
 import storage_list_soft_deleted_objects
 import storage_make_public
 import storage_move_file
+import storage_move_file_atomically
 import storage_object_get_kms_key
 import storage_remove_bucket_label
 import storage_remove_cors_configuration
@@ -1037,3 +1038,20 @@ def test_storage_restore_soft_deleted_object(test_soft_delete_enabled_bucket, ca
     # Verify the restoration
     blob = test_soft_delete_enabled_bucket.get_blob(blob_name)
     assert blob is not None
+
+
+def test_move_object(test_blob):
+    bucket = test_blob.bucket
+    try:
+        bucket.delete_blob("test_move_blob_atomic")
+    except google.cloud.exceptions.NotFound:
+        print(f"test_move_blob_atomic not found in bucket {bucket.name}")
+
+    storage_move_file_atomically.move_object(
+        bucket.name,
+        test_blob.name,
+        "test_move_blob_atomic",
+    )
+
+    assert bucket.get_blob("test_move_blob_atomic") is not None
+    assert bucket.get_blob(test_blob.name) is None
