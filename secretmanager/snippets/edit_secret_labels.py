@@ -24,7 +24,7 @@ from google.cloud import secretmanager
 
 def edit_secret_labels(
     project_id: str, secret_id: str, new_labels: Dict[str, str]
-) -> secretmanager.UpdateSecretRequest:
+) -> secretmanager.Secret:
     """
     Create or update a label on an existing secret.
     """

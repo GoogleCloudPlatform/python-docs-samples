@@ -22,7 +22,7 @@ from google.cloud import secretmanager
 
 def delete_secret_annotation(
     project_id: str, secret_id: str, annotation_key: str
-) -> secretmanager.UpdateSecretRequest:
+) -> secretmanager.Secret:
     """
     Delete a annotation on an existing secret.
     """
