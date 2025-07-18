@@ -26,13 +26,16 @@ def get_batch_job(batch_job_name: str) -> str:
 
     print(f"Job state: {batch_job.state}")
     # Example response:
-    # Job state: JOB_STATE_PENDING 
+    # Job state: JOB_STATE_PENDING
     # Job state: JOB_STATE_RUNNING
     # Job state: JOB_STATE_SUCCEEDED
 
     # [END googlegenaisdk_batch_job_get]
-    return batch_job.name
+    return batch_job
 
 
 if __name__ == "__main__":
-    get_batch_job(input("Batch job name: "))
+    try:
+        get_batch_job(input("Batch job name: "))
+    except Exception as e:
+        print(f"An error occurred: {e}")
