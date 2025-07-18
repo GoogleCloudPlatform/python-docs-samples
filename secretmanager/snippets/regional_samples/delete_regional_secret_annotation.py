@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,36 +13,38 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-# [START secretmanager_edit_secret_annotations]
-
+# [START secretmanager_delete_regional_secret_annotation]
 import argparse
-from typing import Dict
 
 # Import the Secret Manager client library.
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 
 
-def edit_secret_annotations(
-    project_id: str, secret_id: str, new_annotations: Dict[str, str]
-) -> secretmanager.UpdateSecretRequest:
+def delete_regional_secret_annotation(
+    project_id: str, location_id: str, secret_id: str, annotation_key: str
+) -> secretmanager_v1.Secret:
     """
-    Create or update a annotation on an existing secret.
+    Delete a annotation on an existing secret.
     """
+
+    # Endpoint to call the regional Secret Manager API.
+    api_endpoint = f"secretmanager.{location_id}.rep.googleapis.com"
 
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient(
+        client_options={"api_endpoint": api_endpoint},
+    )
 
-    # Build the resource name of the secret.
-    name = client.secret_path(project_id, secret_id)
+    # Build the resource name of the parent secret.
+    name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}"
 
     # Get the secret.
     response = client.get_secret(request={"name": name})
 
     annotations = response.annotations
 
-    # Update the annotations
-    for annotation_key in new_annotations:
-        annotations[annotation_key] = new_annotations[annotation_key]
+    # Delete the annotation
+    annotations.pop(annotation_key, None)
 
     # Update the secret.
     secret = {"name": name, "annotations": annotations}
@@ -57,21 +59,20 @@ def edit_secret_annotations(
     return response
 
 
-# [END secretmanager_edit_secret_annotations]
+# [END secretmanager_delete_regional_secret_annotation]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
     parser.add_argument("project_id", help="id of the GCP project")
+    parser.add_argument(
+        "location_id", help="id of the location where secret is to be created"
+    )
     parser.add_argument("secret_id", help="id of the secret to act on")
-    parser.add_argument(
-        "annotation_key", help="key of the annotation to be added/updated"
-    )
-    parser.add_argument(
-        "annotation_value", help="value of the annotation to be added/updated"
-    )
+    parser.add_argument("annotation_key", help="key of the annotation to be deleted")
     args = parser.parse_args()
 
-    annotations = {args.annotation_key: args.annotation_value}
-    edit_secret_annotations(args.project_id, args.secret_id, annotations)
+    delete_regional_secret_annotation(
+        args.project_id, args.location_id, args.secret_id, args.annotation_key
+    )
