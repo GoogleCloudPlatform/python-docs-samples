@@ -79,7 +79,7 @@ if __name__ == "__main__":
     parser.add_argument("label_value", help="value of the label you want to add")
     args = parser.parse_args()
 
-    labels = {args.label_key, args.label_value}
+    labels = {args.label_key: args.label_value}
     create_regional_secret_with_labels(
         args.project_id, args.location_id, args.secret_id, labels
     )

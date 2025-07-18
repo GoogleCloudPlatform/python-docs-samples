@@ -69,5 +69,5 @@ if __name__ == "__main__":
     parser.add_argument("label_value", help="value of the label to be added/updated")
     args = parser.parse_args()
 
-    labels = {args.label_key, args.label_value}
+    labels = {args.label_key: args.label_value}
     create_update_secret_label(args.project_id, args.secret_id, labels)
