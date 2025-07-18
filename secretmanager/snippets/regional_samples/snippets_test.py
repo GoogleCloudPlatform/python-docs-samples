@@ -32,6 +32,7 @@ from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_labels
 from regional_samples import create_regional_secret_with_tags
 from regional_samples import delete_regional_secret
+from regional_samples import delete_regional_secret_annotation
 from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
@@ -467,6 +468,24 @@ def test_create_regional_secret_with_label(
         project_id, location_id, secret_id, labels, ttl
     )
     assert secret_id in secret.name
+
+
+def test_delete_regional_secret_annotation(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    regional_secret: Tuple[str, str],
+    annotation_key: str,
+) -> None:
+    secret_id, _ = regional_secret
+    delete_regional_secret_annotation.delete_regional_secret_annotation(
+        project_id, location_id, secret_id, annotation_key
+    )
+    with pytest.raises(exceptions.NotFound):
+        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_regional_secret_version(
+            regional_client, request={"name": name}
+        )
 
 
 def test_delete_regional_secret_labels(

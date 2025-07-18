@@ -37,6 +37,7 @@ from create_secret_with_tags import create_secret_with_tags
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
+from delete_secret_annotation import delete_secret_annotation
 from delete_secret_label import delete_secret_label
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
@@ -45,6 +46,7 @@ from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
 from disable_secret_with_delayed_destroy import disable_secret_with_delayed_destroy
 from edit_secret_annotations import edit_secret_annotations
+from edit_secret_labels import edit_secret_labels
 from enable_secret_version import enable_secret_version
 from enable_secret_version_with_etag import enable_secret_version_with_etag
 from get_secret import get_secret
@@ -485,6 +487,19 @@ def test_delete_secret(
         retry_client_access_secret_version(client, request={"name": name})
 
 
+def test_delete_secret_annotation(
+    client: secretmanager.SecretManagerServiceClient,
+    secret: Tuple[str, str, str],
+    annotation_key: str,
+) -> None:
+    project_id, secret_id, _ = secret
+    delete_secret_annotation(project_id, secret_id, annotation_key)
+    with pytest.raises(exceptions.NotFound):
+        print(f"{client}")
+        name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
+        retry_client_access_secret_version(client, request={"name": name})
+
+
 def test_delete_secret_labels(
     client: secretmanager.SecretManagerServiceClient,
     secret: Tuple[str, str, str],
@@ -702,6 +717,16 @@ def test_edit_secret_annotations(
     annotations = {annotation_key: updated_annotation_value}
     updated_secret = edit_secret_annotations(project_id, secret_id, annotations)
     assert updated_secret.annotations[annotation_key] == updated_annotation_value
+
+
+def test_edit_secret_labels(
+    secret: Tuple[str, str, str], label_key: str
+) -> None:
+    project_id, secret_id, _ = secret
+    updated_label_value = "updatedlabelvalue"
+    labels = {label_key: updated_label_value}
+    updated_secret = edit_secret_labels(project_id, secret_id, labels)
+    assert updated_secret.labels[label_key] == updated_label_value
 
 
 def test_update_secret(secret: Tuple[str, str, str]) -> None:
