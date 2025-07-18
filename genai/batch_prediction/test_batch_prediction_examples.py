@@ -15,21 +15,20 @@
 #
 # Using Google Cloud Vertex AI to test the code samples.
 #
-
 from datetime import datetime as dt
-from unittest.mock import MagicMock, patch
-
 import os
-import pytest
+
+from unittest.mock import MagicMock, patch
 
 from google.cloud import bigquery, storage
 from google.genai import types
 from google.genai.types import JobState
+import pytest
 
 import batchpredict_embeddings_with_gcs
 import batchpredict_with_bq
 import batchpredict_with_gcs
-import genai.batch_prediction.get_batch_job as get_batch_job
+import get_batch_job
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -86,8 +85,10 @@ def test_get_batch_job(mock_genai_client: MagicMock) -> None:
     # Mock the API response
     mock_batch_job = types.BatchJob(
         name="test-batch-job",
+        state="JOB_STATE_PENDING"
     )
-    mock_genai_client.return_value.batches.get = mock_batch_job
+
+    mock_genai_client.return_value.batches.get.return_value = mock_batch_job
 
     response = get_batch_job.get_batch_job("test-batch-job")
 
