@@ -13,6 +13,8 @@
 # limitations under the License.
 
 from google.genai import types
+
+
 def get_batch_job(batch_job_name: str) -> types.BatchJob:
     # [START googlegenaisdk_batch_job_get]
     from google import genai
