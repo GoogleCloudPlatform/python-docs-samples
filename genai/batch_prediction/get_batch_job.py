@@ -12,8 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
-def get_batch_job(batch_job_name: str) -> str:
+from google.genai import types
+def get_batch_job(batch_job_name: str) -> types.BatchJob:
     # [START googlegenaisdk_batch_job_get]
     from google import genai
     from google.genai.types import HttpOptions
