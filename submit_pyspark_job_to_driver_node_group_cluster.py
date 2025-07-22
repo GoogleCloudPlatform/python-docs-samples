@@ -71,7 +71,9 @@ def submit_job(project_id, region, cluster_name):
     )
  
     print(f"Job finished successfully: {output}")
- 
+
+# [END dataproc_submit_pyspark_job_to_driver_node_group_cluster]
+
 if __name__ == "__main__":
  
     my_project_id = "your_cluster"  # <-- REPLACE THIS
