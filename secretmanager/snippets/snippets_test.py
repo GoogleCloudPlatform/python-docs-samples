@@ -492,7 +492,8 @@ def test_delete_secret_annotation(
     annotation_key: str,
 ) -> None:
     project_id, secret_id, _ = secret
-    delete_secret_annotation(project_id, secret_id, annotation_key)
+    secret = delete_secret_annotation(project_id, secret_id, annotation_key)
+    assert secret_id in secret.name
     with pytest.raises(exceptions.NotFound):
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"

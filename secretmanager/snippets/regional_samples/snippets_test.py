@@ -478,9 +478,10 @@ def test_delete_regional_secret_annotation(
     annotation_key: str,
 ) -> None:
     secret_id, _ = regional_secret
-    delete_regional_secret_annotation.delete_regional_secret_annotation(
+    secret = delete_regional_secret_annotation.delete_regional_secret_annotation(
         project_id, location_id, secret_id, annotation_key
     )
+    assert secret_id in secret.name
     with pytest.raises(exceptions.NotFound):
         name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
         retry_client_access_regional_secret_version(
