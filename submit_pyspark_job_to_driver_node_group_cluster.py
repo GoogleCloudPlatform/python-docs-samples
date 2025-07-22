@@ -27,12 +27,18 @@
 
 import re
  
- 
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
- 
- 
+
+
 def submit_job(project_id, region, cluster_name):
+    """Submits a PySpark job to a Dataproc cluster with a driver node group.
+
+    Args:
+        project_id (str): The ID of the Google Cloud project.
+        region (str): The region where the Dataproc cluster is located.
+        cluster_name (str): The name of the Dataproc cluster.
+    """
     # Create the job client.
     job_client = dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
@@ -43,7 +49,7 @@ def submit_job(project_id, region, cluster_name):
     vcores=2, # Example number of vcores
     )
  
-    # Create the job config. 'main_jar_file_uri' can also be a
+    # Create the job config. 'main_python_file_uri' can also be a
     # Google Cloud Storage URL.
     job = {
         "placement": {"cluster_name": cluster_name},
@@ -61,6 +67,8 @@ def submit_job(project_id, region, cluster_name):
     # Dataproc job output gets saved to the Google Cloud Storage bucket
     # allocated to the job. Use a regex to obtain the bucket and blob info.
     matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
+    if not matches:
+        raise ValueError(f"Unexpected driver output URI: {response.driver_output_resource_uri}")
  
     output = (
         storage.Client()
@@ -76,8 +84,8 @@ def submit_job(project_id, region, cluster_name):
 
 if __name__ == "__main__":
  
-    my_project_id = "your_cluster"  # <-- REPLACE THIS
-    my_region = "us-central1"        # <-- REPLACE THIS
-    my_cluster_name = "your-node-group-cluster" # <-- REPLACE THIS
+    my_project_id = "your_project_id"  # <-- REPLACE THIS
+    my_region = "your_region"        # <-- REPLACE THIS
+    my_cluster_name = "your_node_group_cluster" # <-- REPLACE THIS
  
     submit_job(my_project_id, my_region, my_cluster_name)
