@@ -79,6 +79,6 @@ def create_connect_cluster(
         response = operation.result(timeout=1800)
         print("Created Connect cluster:", response)
     except GoogleAPICallError as e:
-        print(f"The operation failed with error: {e.message}")
+        print(f"The operation failed with error: {e}")
 
     # [END managedkafka_create_connect_cluster]
