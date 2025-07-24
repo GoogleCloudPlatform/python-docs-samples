@@ -54,6 +54,6 @@ def delete_connect_cluster(
         operation.result()
         print("Deleted Connect cluster")
     except GoogleAPICallError as e:
-        print(f"The operation failed with error: {e.message}")
+        print(f"The operation failed with error: {e}")
 
     # [END managedkafka_delete_connect_cluster]
