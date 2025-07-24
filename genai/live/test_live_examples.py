@@ -27,6 +27,7 @@ import live_websocket_textgen_with_txt
 import live_with_txt
 import live_code_exec_with_txt
 import live_ground_googsearch_with_txt
+import live_ground_ragengine_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -67,3 +68,8 @@ async def test_live_code_exec_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_ground_googsearch_with_txt() -> None:
     assert await live_ground_googsearch_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_ground_ragengine_with_txt() -> None:
+    assert await live_ground_ragengine_with_txt.generate_content()
