@@ -50,6 +50,6 @@ def get_connect_cluster(
         cluster = client.get_connect_cluster(request=request)
         print("Got Connect cluster:", cluster)
     except NotFound as e:
-        print(f"Failed to get Connect cluster {connect_cluster_id} with error: {e.message}")
+        print(f"Failed to get Connect cluster {connect_cluster_id} with error: {e}")
 
     # [END managedkafka_get_connect_cluster]
