@@ -51,7 +51,8 @@ def delete_connect_cluster(
     try:
         operation = client.delete_connect_cluster(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
-        operation.result()
+        # Deleting a Connect cluster can take 10-40 minutes.
+        operation.result(timeout=3000)
         print("Deleted Connect cluster")
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e}")

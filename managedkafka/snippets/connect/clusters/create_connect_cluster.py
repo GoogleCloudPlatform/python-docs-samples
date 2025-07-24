@@ -75,10 +75,11 @@ def create_connect_cluster(
     try:
         operation = connect_client.create_connect_cluster(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
-        # Creating a Connect cluster can take 20-30 minutes.
-        response = operation.result(timeout=1800)
+        # Creating a Connect cluster can take 10-40 minutes.
+        response = operation.result(timeout=3000)
         print("Created Connect cluster:", response)
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e}")
 
     # [END managedkafka_create_connect_cluster]
+    

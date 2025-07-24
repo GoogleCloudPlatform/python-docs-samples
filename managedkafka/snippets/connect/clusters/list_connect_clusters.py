@@ -29,6 +29,7 @@ def list_connect_clusters(
     from google.cloud.managedkafka_v1.services.managed_kafka_connect import (
         ManagedKafkaConnectClient,
     )
+    from google.api_core.exceptions import GoogleAPICallError
 
     # TODO(developer)
     # project_id = "my-project-id"
@@ -42,11 +43,9 @@ def list_connect_clusters(
 
     response = connect_client.list_connect_clusters(request=request)
     for cluster in response:
-    try:
-        response = connect_client.list_connect_clusters(request=request)
-        for cluster in response:
+        try:
             print("Got Connect cluster:", cluster)
-    except GoogleAPICallError as e:
-        print(f"Failed to list Connect clusters with error: {e}")
+        except GoogleAPICallError as e:
+            print(f"Failed to list Connect clusters with error: {e}")
 
     # [END managedkafka_list_connect_clusters]
