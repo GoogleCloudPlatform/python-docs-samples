@@ -24,8 +24,8 @@ async def generate_content() -> list[str]:
         Tool,
         ToolCodeExecution,
         Content,
-        Part
-        )
+        Part,
+    )
 
     config = LiveConnectConfig(
         response_modalities=[Modality.TEXT],
@@ -37,9 +37,9 @@ async def generate_content() -> list[str]:
     model_id = "gemini-2.0-flash-live-preview-04-09"
 
     async with client.aio.live.connect(model=model_id, config=config) as session:
-        text_input = "Compute the largest prime palindrome under 10, "
+        text_input = "Compute the largest prime palindrome under 10"
         print("> ", text_input, "\n")
-        await session.send_client_content(turns=Content(parts=[Part(text=text_input)]))
+        await session.send_client_content(turns=Content(role="user",parts=[Part(text=text_input)]))
 
         response = []
 
@@ -47,7 +47,6 @@ async def generate_content() -> list[str]:
             if chunk.server_content:
                 if chunk.text is not None:
                     response.append(chunk.text)
-                    # print(chunk.text)
 
                 model_turn = chunk.server_content.model_turn
                 if model_turn:
