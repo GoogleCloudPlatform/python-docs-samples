@@ -66,6 +66,6 @@ def update_connect_cluster(
         response = operation.result()
         print("Updated Connect cluster:", response)
     except GoogleAPICallError as e:
-        print(f"The operation failed with error: {e.message}")
+        print(f"The operation failed with error: {e}")
 
     # [END managedkafka_update_connect_cluster]
