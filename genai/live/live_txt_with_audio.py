@@ -72,20 +72,20 @@ async def main():
     async with client.aio.live.connect(model=model) as session:
     #TODO after the meeting add confing to the meeting
         try:
-            audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
-            response = requests.get(audio_url)
-            response.raise_for_status()
-            buffer = io.BytesIO(response.content)
-            y, sr = librosa.load(buffer, sr=16000)
-            sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
-            buffer.seek(0)
-            audio_bytes = buffer.read()
-
-            # buffer = io.BytesIO()
-            # y, sr = librosa.load("hello_gemini_are_you_there.wav", sr=16000)
+            # audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
+            # response = requests.get(audio_url)
+            # response.raise_for_status()
+            # buffer = io.BytesIO(response.content)
+            # y, sr = librosa.load(buffer, sr=16000)
             # sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
             # buffer.seek(0)
             # audio_bytes = buffer.read()
+
+            buffer = io.BytesIO()
+            y, sr = librosa.load("hello_gemini_are_you_there.wav", sr=16000)
+            sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
+            buffer.seek(0)
+            audio_bytes = buffer.read()
 
         except requests.exceptions.RequestException as e:
             print(f"Error fetching audio from URL: {e}")

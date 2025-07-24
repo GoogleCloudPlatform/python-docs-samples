@@ -14,6 +14,8 @@
 
 
 import asyncio
+
+
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_ground_googsearch_with_txt]
     from google import genai
@@ -23,7 +25,7 @@ async def generate_content() -> list[str]:
         Tool,
         GoogleSearch,
         Content,
-        Part
+        Part,
     )
 
     client = genai.Client()
@@ -35,7 +37,9 @@ async def generate_content() -> list[str]:
     )
     async with client.aio.live.connect(model=model_id, config=config) as session:
         text_input = "When did the last Brazil vs. Argentina soccer match happen?"
-        await session.send_client_content(turns=Content(role="user", parts=[Part(text=text_input)]))
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
         response = []
 
@@ -60,6 +64,7 @@ async def generate_content() -> list[str]:
     # The last Brazil vs. Argentina soccer match was on March 25, 2025, a 2026 World Cup qualifier, where Argentina defeated Brazil 4-1.
     # [END googlegenaisdk_live_ground_googsearch_with_txt]
     return response
+
 
 if __name__ == "__main__":
     asyncio.run(generate_content())
