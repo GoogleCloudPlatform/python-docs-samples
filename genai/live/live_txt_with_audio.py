@@ -33,7 +33,7 @@ audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wa
 client = genai.Client()
 
 # config = {"response_modalities": ["TEXT"]}
-config = types.LiveConnectConfig(response_modalities = [types.Modality.TEXT])
+config = types.LiveConnectConfig(response_modalities=[types.Modality.TEXT])
 # model = "gemini-live-2.5-flash-preview-native-audio"
 model = "gemini-2.0-flash-live-preview-04-09"
 
@@ -65,12 +65,13 @@ model = "gemini-2.0-flash-live-preview-04-09"
 #     print(response.text)
 # generate_content()
 
+
 async def main():
     # config = {"response_modalities": ["TEXT"]}
 
     # async with client.aio.live.connect(model=model, config=config) as session:
     async with client.aio.live.connect(model=model) as session:
-    #TODO after the meeting add confing to the meeting
+        # TODO after the meeting add confing to the meeting
         try:
             # audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
             # response = requests.get(audio_url)

@@ -21,15 +21,24 @@ import vertexai
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_ground_ragengine_with_txt]
     from google import genai
-    from google.genai.types import (Content, LiveConnectConfig, HttpOptions, Modality, Part, Tool, Retrieval,
-                                    VertexRagStore, VertexRagStoreRagResource)
+    from google.genai.types import (
+        Content,
+        LiveConnectConfig,
+        HttpOptions,
+        Modality,
+        Part,
+        Tool,
+        Retrieval,
+        VertexRagStore,
+        VertexRagStoreRagResource,
+    )
+
     # from vertexai import rag
     # vertexai.init(project=os.environ["GOOGLE_CLOUD_PROJECT"], location=os.environ["GOOGLE_CLOUD_LOCATION"])
 
     client = genai.Client()
     # model_id = "gemini-live-2.5-flash"
     model_id = "gemini-2.0-flash-live-preview-04-09"
-
 
     # rag_store = VertexRagStore(
     #    rag_resources=[
@@ -47,19 +56,19 @@ async def generate_content() -> list[str]:
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
     async with client.aio.live.connect(model=model_id, config=config) as session:
-       text_input = "What year did Mariusz Pudzianowski win World's Strongest Man?"
-       print("> ", text_input, "\n")
+        text_input = "What year did Mariusz Pudzianowski win World's Strongest Man?"
+        print("> ", text_input, "\n")
 
-       await session.send_client_content(
-           turns=Content(role="user", parts=[Part(text=text_input)])
-       )
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
-       response = []
+        response = []
 
-       async for message in session.receive():
-           if message.text:
-               response.append(message.text)
-               continue
+        async for message in session.receive():
+            if message.text:
+                response.append(message.text)
+                continue
 
     print("".join(response))
     # Example output:
@@ -67,6 +76,7 @@ async def generate_content() -> list[str]:
     # Mariusz Pudzianowski won World's Strongest Man in 2002, 2003, 2005, 2007, and 2008.
     # [END googlegenaisdk_live_ground_ragengine_with_txt]
     return response
+
 
 if __name__ == "__main__":
     asyncio.run(generate_content())

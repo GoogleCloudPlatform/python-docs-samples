@@ -34,6 +34,7 @@ client = openai.OpenAI(
     api_key=credentials.token,
 )
 
+
 class CalendarEvent(BaseModel):
     name: str
     date: str
@@ -45,11 +46,13 @@ completion = client.beta.chat.completions.parse(
     # model="google/gemini-2.5-flash-preview-04-17",
     messages=[
         {"role": "system", "content": "Extract the event information."},
-        {"role": "user", "content": "Alice and Bob are going to a science fair on Friday."},
+        {
+            "role": "user",
+            "content": "Alice and Bob are going to a science fair on Friday.",
+        },
     ],
     response_format=CalendarEvent,
 )
-
 
 
 print(completion.choices[0].message.parsed)
