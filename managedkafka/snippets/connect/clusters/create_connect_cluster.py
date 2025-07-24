@@ -49,7 +49,7 @@ def create_connect_cluster(
     # region = "us-central1"
     # connect_cluster_id = "my-connect-cluster"
     # kafka_cluster_id = "my-kafka-cluster"
-    # subnet = "projects/my-project-id/regions/us-central1/subnetworks/default"
+    # primary_subnet = "projects/my-project-id/regions/us-central1/subnetworks/default"
     # cpu = 3
     # memory_bytes = 3221225472 # 3 GiB
 
