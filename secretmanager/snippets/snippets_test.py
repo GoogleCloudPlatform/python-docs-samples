@@ -487,17 +487,13 @@ def test_delete_secret(
 
 
 def test_delete_secret_annotation(
-    client: secretmanager.SecretManagerServiceClient,
     secret: Tuple[str, str, str],
     annotation_key: str,
 ) -> None:
     project_id, secret_id, _ = secret
     secret = delete_secret_annotation(project_id, secret_id, annotation_key)
     assert secret_id in secret.name
-    with pytest.raises(exceptions.NotFound):
-        print(f"{client}")
-        name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_secret_version(client, request={"name": name})
+    assert annotation_key not in secret.annotations
 
 
 def test_delete_secret_labels(

@@ -471,7 +471,6 @@ def test_create_regional_secret_with_label(
 
 
 def test_delete_regional_secret_annotation(
-    regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
     location_id: str,
     regional_secret: Tuple[str, str],
@@ -482,11 +481,7 @@ def test_delete_regional_secret_annotation(
         project_id, location_id, secret_id, annotation_key
     )
     assert secret_id in secret.name
-    with pytest.raises(exceptions.NotFound):
-        name = f"projects/{project_id}/locations/{location_id}/secrets/{secret_id}/versions/latest"
-        retry_client_access_regional_secret_version(
-            regional_client, request={"name": name}
-        )
+    assert annotation_key not in secret.annotations
 
 
 def test_delete_regional_secret_labels(
