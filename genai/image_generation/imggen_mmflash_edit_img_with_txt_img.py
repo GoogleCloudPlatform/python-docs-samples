@@ -26,7 +26,7 @@ def generate_content() -> str:
     image = Image.open("example-image.png")
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
+        model="gemini-2.0-flash-preview-image-generation",
         contents=[image, "Edit this image to make it look like a cartoon."],
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
