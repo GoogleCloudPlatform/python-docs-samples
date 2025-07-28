@@ -25,6 +25,12 @@ import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
+import live_audio_with_txt
+import live_code_exec_with_txt
+import live_ground_googsearch_with_txt
+import live_func_call_with_txt
+import live_txt_with_audio
+import live_transcribe_with_audio
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -55,3 +61,34 @@ async def test_live_websocket_audiogen_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_websocket_audiotranscript_with_txt() -> None:
     assert await live_websocket_audiotranscript_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_audio_with_txt() -> None:
+    result = await live_audio_with_txt.generate_content()
+    assert result == []
+
+
+@pytest.mark.asyncio
+async def test_live_code_exec_with_txt() -> None:
+    assert await live_code_exec_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_func_call_with_txt() -> None:
+    assert await live_func_call_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_ground_googsearch_with_txt() -> None:
+    assert await live_ground_googsearch_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_transcribe_with_audio() -> None:
+    assert await live_transcribe_with_audio.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_txt_with_audio() -> None:
+    assert await live_txt_with_audio.generate_content()
