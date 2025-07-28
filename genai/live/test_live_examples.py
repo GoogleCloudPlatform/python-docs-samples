@@ -25,6 +25,7 @@ import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
+import live_txt_with_audio
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -55,3 +56,8 @@ async def test_live_websocket_audiogen_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_websocket_audiotranscript_with_txt() -> None:
     assert await live_websocket_audiotranscript_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_txt_with_audio() -> None:
+    assert await live_txt_with_audio.generate_content()
