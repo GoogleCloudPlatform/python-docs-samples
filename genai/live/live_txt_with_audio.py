@@ -32,17 +32,21 @@ async def generate_content() -> list[str]:
     model = "gemini-2.0-flash-live-preview-04-09"
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
+
+    def get_audio(url: str):
+        resp = requests.get(url)
+        resp.raise_for_status()
+        buffer = io.BytesIO(resp.content)
+        y, sr = librosa.load(buffer, sr=16000)
+        sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
+        buffer.seek(0)
+        return buffer.read()
+
     async with client.aio.live.connect(model=model, config=config) as session:
         audio_url = (
             "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
         )
-        response = requests.get(audio_url)
-        response.raise_for_status()
-        buffer = io.BytesIO(response.content)
-        y, sr = librosa.load(buffer, sr=16000)
-        sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
-        buffer.seek(0)
-        audio_bytes = buffer.read()
+        audio_bytes = get_audio(audio_url)
 
         # If you've pre-converted to sample.pcm using ffmpeg, use this instead:
         # audio_bytes = Path("sample.pcm").read_bytes()

@@ -28,7 +28,6 @@ async def generate_content() -> list[str]:
     )
 
     client = genai.Client()
-    # model_id = "gemini-live-2.5-flash" #todo
     model_id = "gemini-2.0-flash-live-preview-04-09"
     config = LiveConnectConfig(
         response_modalities=[Modality.TEXT],

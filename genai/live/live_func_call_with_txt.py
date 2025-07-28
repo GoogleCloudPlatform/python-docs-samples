@@ -13,9 +13,9 @@
 # limitations under the License.
 
 import asyncio
+from google.genai.types import FunctionResponse
 
-
-async def generate_content() -> list[str]:
+async def generate_content() -> list[FunctionResponse]:
     # [START googlegenaisdk_live_func_call_with_txt]
     from google import genai
     from google.genai.types import (
@@ -24,10 +24,11 @@ async def generate_content() -> list[str]:
         Tool,
         FunctionDeclaration,
         FunctionResponse,
+        Content,
+        Part
     )
 
     client = genai.Client()
-    # model = "gemini-live-2.5-flash"
     model_id = "gemini-2.0-flash-live-preview-04-09"
 
     turn_on_the_lights = FunctionDeclaration(name="turn_on_the_lights")
@@ -40,7 +41,9 @@ async def generate_content() -> list[str]:
     async with client.aio.live.connect(model=model_id, config=config) as session:
         text_input = "Turn on the lights please"
         print("> ", text_input, "\n")
-        await session.send_client_content(turns={"parts": [{"text": text_input}]})
+        await session.send_client_content(turns=Content(role="user", parts=[Part(text=text_input)]))
+
+        function_responses = []
 
         async for chunk in session.receive():
             if chunk.server_content:
@@ -48,7 +51,7 @@ async def generate_content() -> list[str]:
                     print(chunk.text)
 
             elif chunk.tool_call:
-                function_responses = []
+
                 for fc in chunk.tool_call.function_calls:
                     function_response = FunctionResponse(
                         name=fc.name,

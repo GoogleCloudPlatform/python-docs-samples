@@ -19,7 +19,7 @@
 import asyncio
 
 
-async def generate_content():
+async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_transcribe_with_audio]
     from google import genai
     from google.genai.types import (
@@ -42,9 +42,7 @@ async def generate_content():
         input_txt = "Hello? Gemini are you there?"
         print("> ", input_txt, "\n")
 
-        await session.send_client_content(
-            turns=Content(role="user", parts=[Part(text=input_txt)]), turn_complete=True
-        )
+        await session.send_client_content(turns=Content(role="user", parts=[Part(text=input_txt)]))
 
         response = []
 
