@@ -27,7 +27,7 @@ def generate_content(output_uri: str) -> str:
     # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.batches.Batches.create
     job = client.batches.create(
         # To use a tuned model, set the model param to your tuned model using the following format:
-        # model = "projects/{PROJECT_ID}/locations/{LOCATION}/models/{MODEL_ID}
+        # model="projects/{PROJECT_ID}/locations/{LOCATION}/models/{MODEL_ID}
         model="gemini-2.5-flash",
         # Source link: https://storage.cloud.google.com/cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl
         src="gs://cloud-samples-data/batch/prompt_for_batch_gemini_predict.jsonl",
