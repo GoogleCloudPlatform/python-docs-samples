@@ -66,7 +66,7 @@ async def test_live_websocket_audiotranscript_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_audio_with_txt() -> None:
     result = await live_audio_with_txt.generate_content()
-    assert result == []
+    assert result is None
 
 
 @pytest.mark.asyncio

@@ -19,7 +19,7 @@
 import asyncio
 
 
-async def generate_content() -> list[str]:
+async def generate_content() -> None:
     # [START googlegenaisdk_live_audio_with_txt]
     import numpy as np
     from IPython.display import Audio, display
@@ -81,7 +81,7 @@ async def generate_content() -> list[str]:
     # Received audio answer:
     # <IPython.lib.display.Audio object>
     # [STOP googlegenaisdk_live_audio_with_txt]
-    return []
+    return None
 
 
 if __name__ == "__main__":
