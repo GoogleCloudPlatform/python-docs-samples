@@ -65,6 +65,15 @@ def create_connect_cluster(
     connect_cluster.capacity_config.vcpu_count = cpu
     connect_cluster.capacity_config.memory_bytes = memory_bytes
     connect_cluster.gcp_config.access_config.network_configs = [ConnectNetworkConfig(primary_subnet=primary_subnet)]
+    # Optionally, you can also specify accessible subnets and resolvable DNS domains as part of your network configuration.
+    # For example:
+    # connect_cluster.gcp_config.access_config.network_configs = [
+    #     ConnectNetworkConfig(
+    #         primary_subnet=primary_subnet,
+    #         additional_subnets=additional_subnets,
+    #         dns_domain_names=dns_domain_names,
+    #     )
+    # ]
 
     request = CreateConnectClusterRequest(
         parent=parent,
@@ -82,4 +91,3 @@ def create_connect_cluster(
         print(f"The operation failed with error: {e}")
 
     # [END managedkafka_create_connect_cluster]
-    

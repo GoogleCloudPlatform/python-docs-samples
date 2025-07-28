@@ -38,8 +38,8 @@ def test_create_connect_cluster(
     mock_method: MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    cpu = 3
-    memory_bytes = 3221225472
+    cpu = 12
+    memory_bytes = 12884901900 # 12 GB
     primary_subnet = "test-subnet"
     operation = mock.MagicMock(spec=Operation)
     connect_cluster = managedkafka_v1.types.ConnectCluster()
@@ -101,7 +101,7 @@ def test_update_connect_cluster(
     mock_method: MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    new_memory_bytes = 3221225475
+    new_memory_bytes = 12884901900  # 12 GB
     operation = mock.MagicMock(spec=Operation)
     connect_cluster = managedkafka_v1.types.ConnectCluster()
     connect_cluster.name = (
