@@ -40,12 +40,7 @@ ThreadPoolExecutor = futures.ThreadPoolExecutor
 # Note: This script only deletes folders, not objects; any folders with child
 # objects (immediate or nested) will fail to be deleted.
 #
-# Usage:
-# 1. Authenticate with Google Cloud CLI:
-#    `gcloud auth application-default login`
-# 2. Update configuration variables as needed to specify the target bucket,
-#    prefix, number of concurrent threads, etc.
-# 3. Run the script: `python3 delete-empty-folders.py`
+# Usage: See README.md for instructions.
 
 # --- Configuration ---
 BUCKET_NAME = "your-gcs-bucket-name"
