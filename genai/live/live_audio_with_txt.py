@@ -72,7 +72,7 @@ async def generate_content() -> list[str]:
                         )
 
         if audio_data:
-            print("Received audio answer:")
+            print("Received audio answer: ")
             display(Audio(np.concatenate(audio_data), rate=24000, autoplay=True))
 
     # Example output:
