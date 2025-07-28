@@ -36,6 +36,7 @@ async def generate_content() -> list[str]:
 
     client = genai.Client()
     voice_name = "Aoede"
+    model = "gemini-2.0-flash-live-preview-04-09"
 
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
@@ -47,23 +48,23 @@ async def generate_content() -> list[str]:
             ),
         ),
     )
-    model = "gemini-2.0-flash-live-preview-04-09"
 
     async with client.aio.live.connect(
-            model=model,
-            config=config,
+        model=model,
+        config=config,
     ) as session:
         text_input = "Hello? Gemini are you there?"
         print("> ", text_input, "\n")
 
         await session.send_client_content(
-            turns=Content(role="user", parts=[Part(text=text_input)]))
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
         audio_data = []
         async for message in session.receive():
             if (
-                    message.server_content.model_turn
-                    and message.server_content.model_turn.parts
+                message.server_content.model_turn
+                and message.server_content.model_turn.parts
             ):
                 for part in message.server_content.model_turn.parts:
                     if part.inline_data:

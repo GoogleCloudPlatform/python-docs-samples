@@ -33,7 +33,9 @@ async def generate_content() -> list[str]:
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
     async with client.aio.live.connect(model=model, config=config) as session:
-        audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
+        audio_url = (
+            "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
+        )
         response = requests.get(audio_url)
         response.raise_for_status()
         buffer = io.BytesIO(response.content)
@@ -63,7 +65,6 @@ async def generate_content() -> list[str]:
     # Yes, I can hear you. How can I help you today?
     # [STOP googlegenaisdk_live_txt_with_audio]
     return response
-
 
 
 if __name__ == "__main__":

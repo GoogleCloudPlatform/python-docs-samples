@@ -35,7 +35,9 @@ async def generate_content() -> list[str]:
     ) as session:
         text_input = "Hello? Gemini, are you there?"
         print("> ", text_input, "\n")
-        await session.send_client_content(turns=Content(role="user", parts=[Part(text=text_input)]))
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
         response = []
 
