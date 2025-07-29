@@ -15,6 +15,7 @@
 import asyncio
 from google.genai.types import FunctionResponse
 
+
 async def generate_content() -> list[FunctionResponse]:
     # [START googlegenaisdk_live_func_call_with_txt]
     from google import genai
@@ -25,7 +26,7 @@ async def generate_content() -> list[FunctionResponse]:
         FunctionDeclaration,
         FunctionResponse,
         Content,
-        Part
+        Part,
     )
 
     client = genai.Client()
@@ -41,7 +42,9 @@ async def generate_content() -> list[FunctionResponse]:
     async with client.aio.live.connect(model=model_id, config=config) as session:
         text_input = "Turn on the lights please"
         print("> ", text_input, "\n")
-        await session.send_client_content(turns=Content(role="user", parts=[Part(text=text_input)]))
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=text_input)])
+        )
 
         function_responses = []
 

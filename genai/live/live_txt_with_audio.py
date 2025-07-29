@@ -32,7 +32,6 @@ async def generate_content() -> list[str]:
     model = "gemini-2.0-flash-live-preview-04-09"
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
-
     def get_audio(url: str):
         resp = requests.get(url)
         resp.raise_for_status()

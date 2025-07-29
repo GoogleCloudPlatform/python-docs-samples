@@ -42,7 +42,9 @@ async def generate_content() -> list[str]:
         input_txt = "Hello? Gemini are you there?"
         print("> ", input_txt, "\n")
 
-        await session.send_client_content(turns=Content(role="user", parts=[Part(text=input_txt)]))
+        await session.send_client_content(
+            turns=Content(role="user", parts=[Part(text=input_txt)])
+        )
 
         response = []
 
