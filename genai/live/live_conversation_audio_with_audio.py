@@ -12,18 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-# Installation
-# on linux
-sudo apt-get install portaudio19-dev
-
-# on mac
-brew install portaudio
-
-python3 -m venv env
-source env/bin/activate
-pip install google-genai
-"""
 
 import asyncio
 import pyaudio
@@ -47,10 +35,11 @@ config = LiveConnectConfig(
 )
 
 async def main():
+    #exit()
     print(MODEL)
     p = pyaudio.PyAudio()
     async with client.aio.live.connect(model=MODEL, config=config) as session:
-        # exit()
+
         async def send():
             stream = p.open(
                 format=FORMAT, channels=CHANNELS, rate=INPUT_RATE, input=True, frames_per_buffer=CHUNK)
@@ -58,6 +47,7 @@ async def main():
                 frame = stream.read(CHUNK)
                 await session.send_realtime_input(media=Blob(data=frame, mime_type="audio/pcm"))
                 await asyncio.sleep(10 ** -12)
+
 
         async def receive():
             output_stream = p.open(
@@ -74,9 +64,17 @@ async def main():
                             output_stream.write(audio_data)
                             await asyncio.sleep(10 ** -12)
 
+
+
+
         send_task = asyncio.create_task(send())
         receive_task = asyncio.create_task(receive())
         await asyncio.gather(send_task, receive_task)
+
+
+#run it in terminal
+
+
 
 
 asyncio.run(main())
