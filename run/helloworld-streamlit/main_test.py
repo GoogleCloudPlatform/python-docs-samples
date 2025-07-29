@@ -12,9 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-from streamlit.testing.v1 import AppTest
 import pytest
-
+from streamlit.testing.v1 import AppTest
 
 @pytest.fixture
 def app_test() -> AppTest:
