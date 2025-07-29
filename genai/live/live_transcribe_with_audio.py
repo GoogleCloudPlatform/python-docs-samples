@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -58,7 +58,7 @@ async def generate_content() -> list[str]:
     # Example output:
     # >  Hello? Gemini are you there?
     # Yes, I'm here. What would you like to talk about?
-    # [STOP googlegenaisdk_live_transcribe_with_audio]
+    # [END googlegenaisdk_live_transcribe_with_audio]
     return response
 
 

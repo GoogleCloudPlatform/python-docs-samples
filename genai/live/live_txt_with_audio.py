@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -66,7 +66,7 @@ async def generate_content() -> list[str]:
     # Example output:
     # > Answer to this audio url https://storage.googleapis.com/generativeai-downloads/data/16000.wav
     # Yes, I can hear you. How can I help you today?
-    # [STOP googlegenaisdk_live_txt_with_audio]
+    # [END googlegenaisdk_live_txt_with_audio]
     return response
 
 

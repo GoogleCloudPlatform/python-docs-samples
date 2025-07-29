@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import asyncio
 async def generate_content() -> None:
     # [START googlegenaisdk_live_audio_with_txt]
     import numpy as np
-    from IPython.display import Audio, display
+    import scipy.io.wavfile as wavfile
     from google import genai
     from google.genai.types import (
         Content,
@@ -60,7 +60,7 @@ async def generate_content() -> None:
             turns=Content(role="user", parts=[Part(text=text_input)])
         )
 
-        audio_data = []
+        audio_data_chunks = []
         async for message in session.receive():
             if (
                 message.server_content.model_turn
@@ -68,19 +68,25 @@ async def generate_content() -> None:
             ):
                 for part in message.server_content.model_turn.parts:
                     if part.inline_data:
-                        audio_data.append(
+                        audio_data_chunks.append(
                             np.frombuffer(part.inline_data.data, dtype=np.int16)
                         )
 
-        if audio_data:
-            print("Received audio answer: ")
-            display(Audio(np.concatenate(audio_data), rate=24000, autoplay=True))
+        if audio_data_chunks:
+            print("Received audio answer. Saving to output.wav...")
+            full_audio_array = np.concatenate(audio_data_chunks)
+
+            output_filename = "gemini_response.wav"
+            sample_rate = 24000
+
+            wavfile.write(output_filename, sample_rate, full_audio_array)
+            print(f"Audio saved to {output_filename}")
 
     # Example output:
     # >  Hello? Gemini are you there?
-    # Received audio answer:
-    # <IPython.lib.display.Audio object>
-    # [STOP googlegenaisdk_live_audio_with_txt]
+    # Received audio answer. Saving to output.wav...
+    # Audio saved to gemini_response.wav
+    # [END googlegenaisdk_live_audio_with_txt]
     return None
 
 

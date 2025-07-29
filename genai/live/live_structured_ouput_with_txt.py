@@ -82,7 +82,7 @@ def generate_content() -> CalendarEvent:
     # System message: Extract the event information.
     # User message: Alice and Bob are going to a science fair on Friday.
     # Output message: name='science fair' date='Friday' participants=['Alice', 'Bob']
-    # [STOP googlegenaisdk_live_structured_ouput_with_txt]
+    # [END googlegenaisdk_live_structured_ouput_with_txt]
     return response
 
 

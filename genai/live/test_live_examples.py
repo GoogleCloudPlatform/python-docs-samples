@@ -94,6 +94,7 @@ async def test_live_transcribe_with_audio() -> None:
 async def test_live_txt_with_audio() -> None:
     assert await live_txt_with_audio.generate_content()
 
+
 @pytest.mark.asyncio
 async def test_live_structured_ouput_with_txt() -> None:
     assert live_structured_ouput_with_txt.generate_content()
