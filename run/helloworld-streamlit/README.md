@@ -11,7 +11,7 @@ This sample shows how to deploy a Hello World Streamlit application to Cloud Run
 
 * Set an environment variable with your GCP Project ID:
 
-```
+```sh
 export GOOGLE_CLOUD_PROJECT=<PROJECT_ID>
 ```
 
@@ -29,7 +29,7 @@ docker run --rm gcr.io/${GOOGLE_CLOUD_PROJECT}/helloworld-streamlit
 
 ## Test
 
-```
+```sh
 pytest
 ```
 
