@@ -17,11 +17,9 @@ import os
 
 import pytest
 
-from discoveryengine import (
-    import_documents_sample,
-    list_documents_sample,
-    purge_documents_sample,
-)
+from discoveryengine import import_documents_sample
+from discoveryengine import list_documents_sample
+from discoveryengine import purge_documents_sample
 
 project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
 location = "global"
