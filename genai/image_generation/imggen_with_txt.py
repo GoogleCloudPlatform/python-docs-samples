@@ -18,6 +18,7 @@ from google.genai.types import Image
 def generate_images(output_file: str) -> Image:
     # [START googlegenaisdk_imggen_with_txt]
     from google import genai
+    from google.genai.types import GenerateImagesConfig
 
     client = genai.Client()
 
@@ -27,7 +28,9 @@ def generate_images(output_file: str) -> Image:
     image = client.models.generate_images(
         model="imagen-4.0-generate-preview-06-06",
         prompt="A dog reading a newspaper",
-        image_size="2K",
+        config=GenerateImagesConfig(
+            image_size="2K",
+        ),
     )
 
     image.generated_images[0].image.save(output_file)
