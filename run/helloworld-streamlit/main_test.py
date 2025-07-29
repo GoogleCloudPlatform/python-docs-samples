@@ -15,6 +15,7 @@
 import pytest
 from streamlit.testing.v1 import AppTest
 
+
 @pytest.fixture
 def app_test() -> AppTest:
     """Fixture for creating a test app instance and setting a name."""
