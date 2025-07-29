@@ -34,7 +34,7 @@ def generate_content() -> str:
         return weather_map.get(location, "unknown")
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    model_id = "gemini-2.0-flash-001"
+    model_id = "gemini-2.5-flash"
 
     response = client.models.generate_content(
         model=model_id,
