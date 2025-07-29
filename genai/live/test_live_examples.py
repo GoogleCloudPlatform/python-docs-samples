@@ -25,6 +25,7 @@ import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
+import live_ground_ragengine_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -36,28 +37,22 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 def mock_rag_components(mocker):
     mock_client_cls = mocker.patch("google.genai.Client")
 
-    from google.genai.types import VertexRagStore, VertexRagStoreRagResource
+    class AsyncIterator:
+        def __aiter__(self):
+            return self
 
-    mocker.patch(
-        "google.genai.types.VertexRagStoreRagResource",
-        side_effect=lambda rag_corpus: VertexRagStoreRagResource(rag_corpus=rag_corpus),
-    )
-    mocker.patch(
-        "google.genai.types.VertexRagStore",
-        side_effect=lambda rag_resources, store_context: VertexRagStore(
-            rag_resources=rag_resources, store_context=store_context
-        ),
-    )
+        async def __anext__(self):
+            if not hasattr(self, "used"):
+                self.used = True
+                return mocker.MagicMock(
+                    text="Mariusz Pudzianowski won in 2002, 2003, 2005, 2007, and 2008."
+                )
+            raise StopAsyncIteration
 
     mock_session = mocker.AsyncMock()
     mock_session.__aenter__.return_value = mock_session
-    mock_session.receive.return_value = iter(
-        [
-            mocker.MagicMock(
-                text="Mariusz Pudzianowski won in 2002, 2003, 2005, 2007, and 2008."
-            )
-        ]
-    )
+    mock_session.receive = lambda: AsyncIterator()
+
     mock_client_cls.return_value.aio.live.connect.return_value = mock_session
 
 
@@ -84,3 +79,8 @@ async def test_live_websocket_audiogen_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_websocket_audiotranscript_with_txt() -> None:
     assert await live_websocket_audiotranscript_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_ground_ragengine_with_txt(mock_rag_components) -> None:
+    assert await live_ground_ragengine_with_txt.generate_content("test")

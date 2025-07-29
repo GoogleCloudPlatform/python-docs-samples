@@ -13,6 +13,8 @@
 # limitations under the License.
 import asyncio
 
+_memory_corpus = "projects/cloud-ai-devrel-softserve/locations/us-central1/ragCorpora/2305843009213693952"
+
 
 async def generate_content(memory_corpus: str) -> list[str]:
     # [START googlegenaisdk_live_ground_ragengine_with_txt]
@@ -29,9 +31,7 @@ async def generate_content(memory_corpus: str) -> list[str]:
     )
 
     client = genai.Client()
-    # model_id = "gemini-live-2.5-flash"
     model_id = "gemini-2.0-flash-live-preview-04-09"
-
     rag_store = VertexRagStore(
         rag_resources=[
             VertexRagStoreRagResource(
@@ -70,4 +70,4 @@ async def generate_content(memory_corpus: str) -> list[str]:
 
 
 if __name__ == "__main__":
-    asyncio.run(generate_content("memory_corpus"))
+    asyncio.run(generate_content(_memory_corpus))
