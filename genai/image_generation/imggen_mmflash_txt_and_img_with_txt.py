@@ -23,7 +23,7 @@ def generate_content() -> int:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-exp",
+        model="gemini-2.0-flash-preview-image-generation",
         contents=(
             "Generate an illustrated recipe for a paella."
             "Create images to go alongside the text as you generate the recipe"
