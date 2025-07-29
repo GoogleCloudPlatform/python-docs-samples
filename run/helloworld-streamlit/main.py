@@ -15,7 +15,7 @@
 # [START cloudrun_helloworld_streamlit]
 import streamlit as st
 
-st.title(f"Hello World! 👋🌎")
+st.title("Hello World! 👋🌎")
 st.markdown(
     """
     This is a demo Streamlit app.
