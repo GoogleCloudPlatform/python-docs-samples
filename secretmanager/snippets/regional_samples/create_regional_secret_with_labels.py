@@ -17,7 +17,7 @@ command line application and sample code for creating a new secret with
 labels.
 """
 
-# [START secretmanager_create_regional_secret_with_label]
+# [START secretmanager_create_regional_secret_with_labels]
 import argparse
 import typing
 
@@ -64,7 +64,7 @@ def create_regional_secret_with_labels(
     return response
 
 
-# [END secretmanager_create_regional_secret_with_label]
+# [END secretmanager_create_regional_secret_with_labels]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

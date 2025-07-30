@@ -18,7 +18,7 @@
 
 import os
 
-import model_optimizer_textgen_with_txt
+# import model_optimizer_textgen_with_txt
 import textgen_async_with_txt
 import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
@@ -39,7 +39,7 @@ import textgen_with_youtube_video
 import thinking_textgen_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
 # The project name is included in the CICD pipeline
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
@@ -137,6 +137,9 @@ def test_textgen_with_youtube_video() -> None:
     assert response
 
 
-def test_model_optimizer_textgen_with_txt() -> None:
-    response = model_optimizer_textgen_with_txt.generate_content()
-    assert response
+# Migrated to Model Optimser Folder
+# def test_model_optimizer_textgen_with_txt() -> None:
+#     os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+#     response = model_optimizer_textgen_with_txt.generate_content()
+#     os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
+#     assert response

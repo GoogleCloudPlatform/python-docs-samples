@@ -15,6 +15,7 @@
 
 # Write user event using Retail API.
 #
+# [START retail_write_user_event]
 import datetime
 
 import google.auth
@@ -70,3 +71,4 @@ def write_user_event():
 
 write_user_event()
 purge_user_event(visitor_id)
+# [END retail_write_user_event]

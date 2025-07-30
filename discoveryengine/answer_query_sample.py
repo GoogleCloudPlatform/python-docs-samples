@@ -85,6 +85,7 @@ def answer_query_sample(
         session=None,  # Optional: include previous session ID to continue a conversation
         query_understanding_spec=query_understanding_spec,
         answer_generation_spec=answer_generation_spec,
+        user_pseudo_id="user-pseudo-id",  # Optional: Add user pseudo-identifier for queries.
     )
 
     # Make the request

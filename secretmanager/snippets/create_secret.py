@@ -19,10 +19,11 @@ command line application and sample code for creating a new secret.
 import argparse
 from typing import Optional
 
+# [START secretmanager_create_secret]
+# Import the Secret Manager client library.
 from google.cloud import secretmanager
 
 
-# [START secretmanager_create_secret]
 def create_secret(
     project_id: str, secret_id: str, ttl: Optional[str] = None
 ) -> secretmanager.Secret:
@@ -49,9 +50,6 @@ def create_secret(
         # Create a secret with a TTL of 30 days
         new_secret_with_ttl = create_secret("my-project", "my-timed-secret", "7776000s")
     """
-
-    # Import the Secret Manager client library.
-    from google.cloud import secretmanager
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -81,7 +79,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret to create")
-    parser.add_argument("ttl", help="time to live for secrets, f.e. '600s' ")
+    parser.add_argument("--ttl", help="time to live for secrets, f.e. '600s' ")
     args = parser.parse_args()
 
     create_secret(args.project_id, args.secret_id, args.ttl)

@@ -17,6 +17,8 @@
 # or jump to chosen page using "offset".
 #
 
+# [START retail_search_for_products_with_pagination]
+
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
@@ -71,3 +73,5 @@ def search():
 
 
 search()
+
+# [END retail_search_for_products_with_pagination]

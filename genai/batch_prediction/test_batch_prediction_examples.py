@@ -15,19 +15,20 @@
 #
 # Using Google Cloud Vertex AI to test the code samples.
 #
-
 from datetime import datetime as dt
-
 import os
 
-from google.cloud import bigquery, storage
-from google.genai.types import JobState
+from unittest.mock import MagicMock, patch
 
+from google.cloud import bigquery, storage
+from google.genai import types
+from google.genai.types import JobState
 import pytest
 
 import batchpredict_embeddings_with_gcs
 import batchpredict_with_bq
 import batchpredict_with_gcs
+import get_batch_job
 
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
@@ -77,3 +78,20 @@ def test_batch_prediction_with_bq(bq_output_uri: str) -> None:
 def test_batch_prediction_with_gcs(gcs_output_uri: str) -> None:
     response = batchpredict_with_gcs.generate_content(output_uri=gcs_output_uri)
     assert response == JobState.JOB_STATE_SUCCEEDED
+
+
+@patch("google.genai.Client")
+def test_get_batch_job(mock_genai_client: MagicMock) -> None:
+    # Mock the API response
+    mock_batch_job = types.BatchJob(
+        name="test-batch-job",
+        state="JOB_STATE_PENDING"
+    )
+
+    mock_genai_client.return_value.batches.get.return_value = mock_batch_job
+
+    response = get_batch_job.get_batch_job("test-batch-job")
+
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.return_value.batches.get.assert_called_once()
+    assert response == mock_batch_job

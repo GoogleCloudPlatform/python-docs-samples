@@ -20,9 +20,10 @@ def generate_content() -> str:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash",
         contents="Why is the sky blue?",
-        # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.types.GenerateContentConfig
+        # See the SDK documentation at
+        # https://googleapis.github.io/python-genai/genai.html#genai.types.GenerateContentConfig
         config=GenerateContentConfig(
             temperature=0,
             candidate_count=1,
@@ -30,7 +31,7 @@ def generate_content() -> str:
             top_p=0.95,
             top_k=20,
             seed=5,
-            max_output_tokens=100,
+            max_output_tokens=500,
             stop_sequences=["STOP!"],
             presence_penalty=0.0,
             frequency_penalty=0.0,

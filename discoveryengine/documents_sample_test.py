@@ -26,6 +26,7 @@ location = "global"
 data_store_id = "test-structured-data-engine"
 
 
+@pytest.mark.skip(reason="Table deleted.")
 def test_import_documents_bigquery():
     # Empty Dataset
     bigquery_dataset = "genappbuilder_test"

@@ -15,6 +15,7 @@
 
 # Delete product from a catalog using Retail API.
 #
+# [START retail_delete_product]
 import random
 import string
 
@@ -55,3 +56,4 @@ def delete_product(product_name: str):
 # delete created product
 created_product_name = create_product(product_id).name
 delete_product(created_product_name)
+# [END retail_delete_product]

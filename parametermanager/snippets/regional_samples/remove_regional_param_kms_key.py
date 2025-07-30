@@ -41,7 +41,7 @@ def remove_regional_param_kms_key(
         remove_regional_param_kms_key(
             "my-project",
             "us-central1",
-            "my-global-parameter"
+            "my-regional-parameter"
         )
     """
     # Import the necessary library for Google Cloud Parameter Manager.

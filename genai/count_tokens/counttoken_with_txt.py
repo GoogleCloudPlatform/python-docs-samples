@@ -20,7 +20,7 @@ def count_tokens() -> int:
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.count_tokens(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash",
         contents="What's the highest mountain in Africa?",
     )
     print(response)

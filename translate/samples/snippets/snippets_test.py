@@ -38,13 +38,13 @@ def test_list_languages_with_target(capsys: pytest.LogCaptureFixture) -> None:
 
 
 def test_translate_text(capsys: pytest.LogCaptureFixture) -> None:
-    result = snippets.translate_text("is", "Hello world")
+    result = snippets.translate_text(text="Hello world", target_language="is")
     out, _ = capsys.readouterr()
-    assert "Halló heimur" in result["translatedText"]
+    assert "Halló heimur" in result[0]["translatedText"]
 
 
 def test_translate_utf8(capsys: pytest.LogCaptureFixture) -> None:
     text = "파인애플 13개"
-    result = snippets.translate_text("en", text)
+    result = snippets.translate_text(text=text, target_language="en")
     out, _ = capsys.readouterr()
-    assert "13 pineapples" in result["translatedText"]
+    assert "13 pineapples" in result[0]["translatedText"]

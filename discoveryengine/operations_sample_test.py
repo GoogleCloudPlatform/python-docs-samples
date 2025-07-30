@@ -15,6 +15,7 @@
 
 import os
 
+from discoveryengine import cancel_operation_sample
 from discoveryengine import get_operation_sample
 from discoveryengine import list_operations_sample
 from discoveryengine import poll_operation_sample
@@ -56,6 +57,14 @@ def test_poll_operation():
             operation_name=operation_name
         )
         assert operation
+    except NotFound as e:
+        print(e.message)
+        pass
+
+
+def test_cancel_operation():
+    try:
+        cancel_operation_sample.cancel_operation_sample(operation_name=operation_name)
     except NotFound as e:
         print(e.message)
         pass

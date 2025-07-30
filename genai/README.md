@@ -53,10 +53,22 @@ Demonstrates how to use Express Mode for simpler and faster interactions with Ge
 This mode is ideal for quick prototyping and experimentation. See the [Express Mode documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/start/express-mode/overview)
 for details.
 
+### [Image Generation](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/image_generation/)
+
+Demonstrates how to generate image and edit images using Generative AI models. Check [Image Generation with Gemini Flash](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal/image-generation)
+and [Imagen on Vertex AI](https://cloud.google.com/vertex-ai/generative-ai/docs/image/overview) for details.
+
+
 ### [Live API](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/live_api/)
 
 Provides examples of using the Generative AI [Live API](https://cloud.google.com/vertex-ai/generative-ai/docs/multimodal-live-api).
 This allows for real-time interactions and dynamic content generation.
+
+### [Model Optimizer](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/model_optimizer/)
+
+Provides examples of using the Generative AI [Model Optimizer](https://cloud.google.com/vertex-ai/generative-ai/docs/model-reference/vertex-ai-model-optimizer).
+Vertex AI Model Optimizer is a dynamic endpoint designed to simplify model selection by automatically applying the 
+Gemini model which best meets your needs.
 
 ### [Provisioned Throughput](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/genai/live_api/)
 

@@ -15,6 +15,8 @@
 
 # Import user events into a catalog from inline source using Retail API
 #
+# [START retail_import_user_events_from_inline_source]
+
 import datetime
 import random
 import string
@@ -104,3 +106,5 @@ def import_user_events_from_inline_source():
 
 
 import_user_events_from_inline_source()
+
+# [END retail_import_user_events_from_inline_source]

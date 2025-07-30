@@ -97,6 +97,11 @@ TESTED_VERSIONS = sorted([v for v in ALL_VERSIONS if v not in IGNORED_VERSIONS])
 
 INSTALL_LIBRARY_FROM_SOURCE = bool(os.environ.get("INSTALL_LIBRARY_FROM_SOURCE", False))
 
+# Use the oldest tested Python version for linting (defaults to 3.10)
+LINTING_VERSION = "3.10"
+if len(TESTED_VERSIONS) > 0:
+    LINTING_VERSION = TESTED_VERSIONS[0]
+
 # Error if a python version is missing
 nox.options.error_on_missing_interpreters = True
 
@@ -146,7 +151,7 @@ FLAKE8_COMMON_ARGS = [
 ]
 
 
-@nox.session
+@nox.session(python=LINTING_VERSION)
 def lint(session: nox.sessions.Session) -> None:
     if not TEST_CONFIG["enforce_type_hints"]:
         session.install("flake8", "flake8-import-order")
@@ -167,7 +172,7 @@ def lint(session: nox.sessions.Session) -> None:
 #
 
 
-@nox.session
+@nox.session(python=LINTING_VERSION)
 def blacken(session: nox.sessions.Session) -> None:
     session.install("black")
     python_files = [path for path in os.listdir(".") if path.endswith(".py")]
