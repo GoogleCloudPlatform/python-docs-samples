@@ -17,4 +17,4 @@ gcloud config set project <PROJECT_ID>
 gcloud run deploy helloworld-streamlit --source .
 ```
 
-For more details on how to work with this sample read the [Python Cloud Run Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run)
+For more details on how to work with this sample, read the [Python Cloud Run Samples README](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/run)
