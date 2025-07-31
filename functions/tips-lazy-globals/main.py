@@ -51,7 +51,7 @@ def lazy_globals(request):
         Response object using `make_response`
         <http://flask.pocoo.org/docs/1.0/api/#flask.Flask.make_response>.
     """
-    global lazy_global, non_lazy_global
+    global lazy_global, non_lazy_global  # noqa: F824
 
     # This value is initialized only if (and when) the function is called
     if not lazy_global:

@@ -21,9 +21,10 @@ For more information, see README.md
 """
 
 # [START gae_ndb_overview]
-import cgi
 import textwrap
 import urllib
+
+import cgi
 
 from google.appengine.ext import ndb
 
