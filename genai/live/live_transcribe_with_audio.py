@@ -40,7 +40,7 @@ async def generate_content() -> list[str]:
 
     async with client.aio.live.connect(model=model, config=config) as session:
         input_txt = "Hello? Gemini are you there?"
-        print("> ", input_txt, "\n")
+        print(f"> {input_txt}")
 
         await session.send_client_content(
             turns=Content(role="user", parts=[Part(text=input_txt)])
@@ -49,9 +49,14 @@ async def generate_content() -> list[str]:
         response = []
 
         async for message in session.receive():
+            if message.server_content.model_turn:
+                print("Model turn:", message.server_content.model_turn)
+            if message.server_content.input_transcription:
+                print(
+                    "Input transcript:", message.server_content.input_transcription.text
+                )
             if message.server_content.output_transcription:
-                if message.server_content.output_transcription.text is not None:
-                    response.append(message.server_content.output_transcription.text)
+                response.append(message.server_content.output_transcription.text)
 
         print("".join(response))
 

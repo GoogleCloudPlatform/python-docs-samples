@@ -20,7 +20,7 @@ import asyncio
 
 
 async def generate_content() -> None:
-    # [START googlegenaisdk_live_audio_with_txt]
+    # [START googlegenaisdk_live_audiogen_with_txt]
     import numpy as np
     import scipy.io.wavfile as wavfile
     from google import genai
@@ -86,7 +86,7 @@ async def generate_content() -> None:
     # >  Hello? Gemini are you there?
     # Received audio answer. Saving to output.wav...
     # Audio saved to gemini_response.wav
-    # [END googlegenaisdk_live_audio_with_txt]
+    # [END googlegenaisdk_live_audiogen_with_txt]
     return None
 
 

@@ -20,7 +20,7 @@ import asyncio
 
 
 async def generate_content() -> list[str]:
-    # [START googlegenaisdk_live_txt_with_audio]
+    # [START googlegenaisdk_live_txtgen_with_audio]
     import io
     import requests
     from google import genai
@@ -48,6 +48,7 @@ async def generate_content() -> list[str]:
         audio_bytes = get_audio(audio_url)
 
         # If you've pre-converted to sample.pcm using ffmpeg, use this instead:
+        # from pathlib import Path
         # audio_bytes = Path("sample.pcm").read_bytes()
 
         print("> Answer to this audio url", audio_url, "\n")
@@ -66,7 +67,7 @@ async def generate_content() -> list[str]:
     # Example output:
     # > Answer to this audio url https://storage.googleapis.com/generativeai-downloads/data/16000.wav
     # Yes, I can hear you. How can I help you today?
-    # [END googlegenaisdk_live_txt_with_audio]
+    # [END googlegenaisdk_live_txtgen_with_audio]
     return response
 
 
