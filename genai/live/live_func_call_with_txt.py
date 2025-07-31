@@ -32,6 +32,7 @@ async def generate_content() -> list[FunctionResponse]:
     client = genai.Client()
     model_id = "gemini-2.0-flash-live-preview-04-09"
 
+    # Simple function definitions
     turn_on_the_lights = FunctionDeclaration(name="turn_on_the_lights")
     turn_off_the_lights = FunctionDeclaration(name="turn_off_the_lights")
 
