@@ -35,8 +35,10 @@ async def generate_content() -> None:
     )
 
     client = genai.Client()
-    voice_name = "Aoede"
     model = "gemini-2.0-flash-live-preview-04-09"
+    
+    # For more Voice options, check https://cloud.google.com/vertex-ai/generative-ai/docs/models/gemini/2-5-flash#live-api-native-audio 
+    voice_name = "Aoede"
 
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
@@ -73,7 +75,7 @@ async def generate_content() -> None:
                         )
 
         if audio_data_chunks:
-            print("Received audio answer. Saving to output.wav...")
+            print("Received audio answer. Saving to local file...")
             full_audio_array = np.concatenate(audio_data_chunks)
 
             output_filename = "gemini_response.wav"
@@ -84,7 +86,7 @@ async def generate_content() -> None:
 
     # Example output:
     # >  Hello? Gemini are you there?
-    # Received audio answer. Saving to output.wav...
+    # Received audio answer. Saving to local file...
     # Audio saved to gemini_response.wav
     # [END googlegenaisdk_live_audiogen_with_txt]
     return None
