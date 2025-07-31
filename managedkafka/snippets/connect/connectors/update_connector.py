@@ -28,7 +28,7 @@ def update_connector(
         region: Cloud region.
         connect_cluster_id: ID of the Kafka Connect cluster.
         connector_id: ID of the connector.
-        config: Dictionary containing the updated configuration.
+        configs: Dictionary containing the updated configuration.
 
     Raises:
         This method will raise the GoogleAPICallError exception if the operation errors.
@@ -49,7 +49,7 @@ def update_connector(
     # connector_id = "my-connector"
     # configs = {
     #     "tasks.max": "2",
-    #     "value.converter.schemas.enable" : "true"
+    #     "value.converter.schemas.enable": "true"
     # }
 
     connect_client = ManagedKafkaConnectClient()

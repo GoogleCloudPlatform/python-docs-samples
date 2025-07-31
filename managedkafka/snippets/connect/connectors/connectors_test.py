@@ -276,7 +276,7 @@ def test_update_connector(
 ) -> None:
     configs = {
         "tasks.max": "2",
-        "value.converter.schemas.enable" : "true"
+        "value.converter.schemas.enable": "true"
     }
     operation = mock.MagicMock(spec=Operation)
     connector = managedkafka_v1.types.Connector()
