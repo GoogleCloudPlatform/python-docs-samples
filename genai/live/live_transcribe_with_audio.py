@@ -40,7 +40,7 @@ async def generate_content() -> list[str]:
 
     async with client.aio.live.connect(model=model, config=config) as session:
         input_txt = "Hello? Gemini are you there?"
-        print("> ", input_txt, "\n")
+        print("> {input_txt}")
 
         await session.send_client_content(
             turns=Content(role="user", parts=[Part(text=input_txt)])
