@@ -15,9 +15,11 @@
 # [START cloudrun_helloworld_gradio]
 import gradio as gr
 
+
 def hello(name, intensity):
     """Return a friendly greeting."""
     return "Hello " + name + "!" * int(intensity)
+
 
 demo = gr.Interface(
     fn=hello,
