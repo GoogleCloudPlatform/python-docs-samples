@@ -31,8 +31,8 @@ def list_managed_folders(bucket_name: str = "your-bucket-name") -> None:
     Example:
         >>> list_managed_folders(bucket_name="my-test-bucket")
         Managed folders in bucket projects/_/buckets/my-test-bucket:
-                projects/_/buckets/my-test-bucket/managedFolders/folder-one
-                projects/_/buckets/my-test-bucket/managedFolders/folder-two
+            projects/_/buckets/my-test-bucket/managedFolders/folder-one
+            projects/_/buckets/my-test-bucket/managedFolders/folder-two
     """
     client = storage_control_v2.StorageControlClient()
 
