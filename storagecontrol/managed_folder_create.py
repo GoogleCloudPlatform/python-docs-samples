@@ -63,7 +63,7 @@ if __name__ == "__main__":
         help="The name of the GCS bucket.",
     )
     parser.add_argument(
-        "folder_name",
+        "managed_folder_name",
         help="The name of the managed folder to create."
     )
 

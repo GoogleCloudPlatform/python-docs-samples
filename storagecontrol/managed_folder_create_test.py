@@ -26,7 +26,7 @@ import managed_folder_delete
 # See an example in snippets_test.py of the whole use case.
 
 
-def test_storage_control_managed_folder_list(
+def test_storage_control_managed_folder_create(
     capsys: pytest.LogCaptureFixture, gcs_bucket: storage.Bucket
 ) -> None:
     bucket_name = gcs_bucket.name
