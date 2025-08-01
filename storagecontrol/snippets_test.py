@@ -87,7 +87,7 @@ def test_managed_folder_create_get_list_delete(
 
     # Test get managed folder
     managed_folder_get.get_managed_folder(
-        bucket_name=bucket_name, managed_folder_name=folder_name
+        bucket_name=bucket_name, managed_folder_id=folder_name
     )
     out, _ = capsys.readouterr()
     assert folder_name in out
