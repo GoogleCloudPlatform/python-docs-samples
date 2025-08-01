@@ -19,6 +19,21 @@ from google.cloud import storage_control_v2
 
 
 def list_managed_folders(bucket_name: str = "your-bucket-name") -> None:
+    """Lists all managed folders in a Google Cloud Storage bucket.
+
+    Args:
+        bucket_name: The name of the Google Cloud Storage bucket.
+
+    Returns:
+        None. The function prints the name of each managed folder to the
+        console.
+
+    Example:
+        >>> list_managed_folders(bucket_name="my-test-bucket")
+        Managed folders in bucket projects/_/buckets/my-test-bucket:
+                projects/_/buckets/my-test-bucket/managedFolders/folder-one
+                projects/_/buckets/my-test-bucket/managedFolders/folder-two
+    """
     client = storage_control_v2.StorageControlClient()
 
     # The storage bucket path uses the global access pattern,
