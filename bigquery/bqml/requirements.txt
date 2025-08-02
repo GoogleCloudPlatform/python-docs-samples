@@ -2,7 +2,7 @@ google-cloud-bigquery[pandas,bqstorage]==3.27.0
 google-cloud-bigquery-storage==2.27.0
 pandas==2.0.3; python_version == '3.8'
 pandas==2.2.3; python_version > '3.8'
-pyarrow==17.0.0; python_version <= '3.8'
-pyarrow==20.0.0; python_version > '3.9'
+pyarrow==21.0.0; python_version <= '3.8'
+pyarrow==21.0.0; python_version > '3.9'
 flaky==3.8.1
 mock==5.1.0
