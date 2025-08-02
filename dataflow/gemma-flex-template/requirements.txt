@@ -1,7 +1,7 @@
 # For reproducible builds, it is better to also include transitive dependencies: 
 # https://github.com/GoogleCloudPlatform/python-docs-samples/blob/c93accadf3bd29e9c3166676abb2c95564579c5e/dataflow/flex-templates/pipeline_with_dependencies/requirements.txt#L22, 
 # but for simplicity of this example, we are only including the top-level dependencies.
-apache_beam[gcp]==2.65.0
+apache_beam[gcp]==2.66.0
 immutabledict==4.2.0
 
 # Also required, please download and install gemma_pytorch.
