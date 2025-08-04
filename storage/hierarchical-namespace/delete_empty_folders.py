@@ -44,7 +44,7 @@ ThreadPoolExecutor = concurrent.futures.ThreadPoolExecutor
 # Usage: See README.md for instructions.
 
 # --- Configuration ---
-BUCKET_NAME = "do-not-delete-mabsaleh-hns-test"
+BUCKET_NAME = "your-gcs-bucket-name"
 
 # e.g. "archive/old_data/" or "" to delete all folders in the bucket.
 # If specified, must end with '/'.
