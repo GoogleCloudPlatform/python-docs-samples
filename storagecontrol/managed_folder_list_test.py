@@ -20,9 +20,9 @@ import managed_folder_list
 
 
 def test_storage_control_managed_folder_list(
-    capsys: pytest.LogCaptureFixture, gcs_bucket: storage.Bucket
+    capsys: pytest.LogCaptureFixture, ubla_enabled_bucket: storage.Bucket
 ) -> None:
-    bucket_name = gcs_bucket.name
+    bucket_name = ubla_enabled_bucket.name
     managed_folder_list.list_managed_folders(bucket_name=bucket_name)
 
     out, _ = capsys.readouterr()
