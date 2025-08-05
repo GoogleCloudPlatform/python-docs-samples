@@ -79,9 +79,7 @@ async def generate_content() -> str:
     model_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
     model_generation_config = {"response_modalities": ["TEXT"]}
 
-    async with connect(
-        WEBSOCKET_SERVICE_URL, additional_headers=headers
-    ) as websocket_session:
+    async with connect(WEBSOCKET_SERVICE_URL, additional_headers=headers) as websocket_session:
         # 1. Send setup configuration
         websocket_config = {
             "setup": {
@@ -138,9 +136,7 @@ async def generate_content() -> str:
             server_content = response_chunk.get("serverContent")
             if not server_content:
                 # This might indicate an error or an unexpected message format
-                print(
-                    f"Received non-serverContent message or empty content: {response_chunk}"
-                )
+                print(f"Received non-serverContent message or empty content: {response_chunk}")
                 break
 
             # Collect text responses

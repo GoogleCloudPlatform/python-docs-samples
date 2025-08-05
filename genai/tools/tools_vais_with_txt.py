@@ -29,6 +29,8 @@ def generate_content(datastore: str) -> str:
     # Load Data Store ID from Vertex AI Search
     # datastore = "projects/111111111111/locations/global/collections/default_collection/dataStores/data-store-id"
 
+
+
     response = client.models.generate_content(
         model="gemini-2.0-flash-001",
         contents="How do I make an appointment to renew my driver's license?",
