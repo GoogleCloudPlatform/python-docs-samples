@@ -20,15 +20,11 @@ def embed_content() -> str:
 
     client = genai.Client()
     response = client.models.embed_content(
-        model="text-embedding-005",
-        contents=[
-            "How do I get a driver's license/learner's permit?",
-            "How do I renew my driver's license?",
-            "How do I change my address on my driver's license?",
-        ],
+        model="gemini-embedding-001",
+        contents="How do I get a driver's license/learner's permit?",
         config=EmbedContentConfig(
             task_type="RETRIEVAL_DOCUMENT",  # Optional
-            output_dimensionality=768,  # Optional
+            output_dimensionality=3072,  # Optional
             title="Driver's License",  # Optional
         ),
     )

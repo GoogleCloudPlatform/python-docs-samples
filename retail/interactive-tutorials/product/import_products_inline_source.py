@@ -14,6 +14,7 @@
 
 # Import products into a catalog from inline source using Retail API
 #
+# [START retail_import_products_from_inline_source]
 import random
 import string
 import time
@@ -143,3 +144,4 @@ def import_products_from_inline_source():
 
 
 import_products_from_inline_source()
+# [END retail_import_products_from_inline_source]

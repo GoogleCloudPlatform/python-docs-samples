@@ -14,6 +14,8 @@
 
 # Updating inventory information using Retail API.
 #
+# [START retail_set_inventory]
+#
 import asyncio
 import random
 import string
@@ -107,3 +109,5 @@ async def set_inventory_and_remove_product(product_name: str):
 
 product = create_product(product_id)
 asyncio.run(set_inventory_and_remove_product(product.name))
+#
+# [END retail_set_inventory]

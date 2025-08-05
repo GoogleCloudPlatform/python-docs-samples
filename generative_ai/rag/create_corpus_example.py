@@ -26,7 +26,7 @@ def create_corpus(
 ) -> RagCorpus:
     # [START generativeaionvertexai_rag_create_corpus]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -37,15 +37,19 @@ def create_corpus(
     # Initialize Vertex AI API once per session
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    # Configure embedding model (Optional)
-    embedding_model_config = rag.EmbeddingModelConfig(
-        publisher_model="publishers/google/models/text-embedding-004"
+    # Configure backend_config
+    backend_config = rag.RagVectorDbConfig(
+        rag_embedding_model_config=rag.RagEmbeddingModelConfig(
+            vertex_prediction_endpoint=rag.VertexPredictionEndpoint(
+                publisher_model="publishers/google/models/text-embedding-005"
+            )
+        )
     )
 
     corpus = rag.create_corpus(
         display_name=display_name,
         description=description,
-        embedding_model_config=embedding_model_config,
+        backend_config=backend_config,
     )
     print(corpus)
     # Example response:

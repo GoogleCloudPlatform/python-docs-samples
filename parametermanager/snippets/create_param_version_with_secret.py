@@ -46,7 +46,7 @@ def create_param_version_with_secret(
             "my-project",
             "my-global-parameter",
             "v1",
-            "projects/my-project/secrets/application-secret/version/latest"
+            "projects/my-project/secrets/application-secret/versions/latest"
         )
     """
     # Import the necessary library for Google Cloud Parameter Manager.

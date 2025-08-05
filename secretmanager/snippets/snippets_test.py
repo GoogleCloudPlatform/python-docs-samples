@@ -12,21 +12,28 @@
 # See the License for the specific language governing permissions and
 
 import base64
+from datetime import timedelta
 import os
 import time
 from typing import Iterator, Optional, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
+from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager
+from google.protobuf.duration_pb2 import Duration
+
 import pytest
 
 from access_secret_version import access_secret_version
 from add_secret_version import add_secret_version
+from bind_tags_to_secret import bind_tags_to_secret
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
+from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_labels import create_secret_with_labels
+from create_secret_with_tags import create_secret_with_tags
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
@@ -36,6 +43,7 @@ from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
 from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
+from disable_secret_with_delayed_destroy import disable_secret_with_delayed_destroy
 from edit_secret_annotations import edit_secret_annotations
 from enable_secret_version import enable_secret_version
 from enable_secret_version_with_etag import enable_secret_version_with_etag
@@ -50,6 +58,7 @@ from list_secrets_with_filter import list_secrets_with_filter
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
+from update_secret_with_delayed_destroy import update_secret_with_delayed_destroy
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
@@ -58,6 +67,16 @@ from view_secret_labels import view_secret_labels
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
     return secretmanager.SecretManagerServiceClient()
+
+
+@pytest.fixture()
+def tag_keys_client() -> resourcemanager_v3.TagKeysClient:
+    return resourcemanager_v3.TagKeysClient()
+
+
+@pytest.fixture()
+def tag_values_client() -> resourcemanager_v3.TagValuesClient:
+    return resourcemanager_v3.TagValuesClient()
 
 
 @pytest.fixture()
@@ -93,6 +112,21 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
+
+@pytest.fixture()
+def version_destroy_ttl() -> str:
+    return 604800  # 7 days in seconds
+
+
+@pytest.fixture()
+def short_key_name() -> str:
+    return f"python-test-key-{uuid.uuid4()}"
+
+
+@pytest.fixture()
+def short_value_name() -> str:
+    return f"python-test-value-{uuid.uuid4()}"
 
 
 @retry.Retry()
@@ -131,6 +165,53 @@ def retry_client_add_secret_version(
     return client.add_secret_version(request=request)
 
 
+@retry.Retry()
+def retry_client_create_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Optional[Union[resourcemanager_v3.CreateTagKeyRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.create_tag_key(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_create_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Optional[Union[resourcemanager_v3.CreateTagValueRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_values_client.create_tag_value(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Optional[Union[resourcemanager_v3.DeleteTagValueRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    time.sleep(15)  # Added a sleep to wait for the tag unbinding
+    operation = tag_values_client.delete_tag_value(request=request)
+    response = operation.result()
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Optional[Union[resourcemanager_v3.DeleteTagKeyRequest, dict]],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.delete_tag_key(request=request)
+    response = operation.result()
+    return response.name
+
+
 @pytest.fixture()
 def secret_id(
     client: secretmanager.SecretManagerServiceClient, project_id: str
@@ -146,6 +227,52 @@ def secret_id(
     except exceptions.NotFound:
         # Secret was already deleted, probably in the test
         print(f"Secret {secret_id} was not found.")
+
+
+@pytest.fixture()
+def tag_key_and_tag_value(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    project_id: str,
+    short_key_name: str,
+    short_value_name: str,
+) -> Iterator[Tuple[str, str]]:
+
+    tag_key = retry_client_create_tag_key(
+        tag_keys_client,
+        request={
+            "tag_key": {
+                "parent": f"projects/{project_id}",
+                "short_name": short_key_name,
+            }
+        },
+    )
+
+    print(f"created tag key {tag_key}")
+
+    tag_value = retry_client_create_tag_value(
+        tag_values_client,
+        request={
+            "tag_value": {
+                "parent": tag_key,
+                "short_name": short_value_name,
+            }
+        },
+    )
+
+    print(f"created tag value {tag_value}")
+
+    yield tag_key, tag_value
+
+    print(f"deleting tag value {tag_value} and tag key {tag_key}")
+
+    try:
+        time.sleep(5)
+        retry_client_delete_tag_value(tag_values_client, request={"name": tag_value})
+        retry_client_delete_tag_key(tag_keys_client, request={"name": tag_key})
+    except exceptions.NotFound:
+        # Tag was already deleted, probably in the test
+        print("Tag value or tag key was not found.")
 
 
 @pytest.fixture()
@@ -178,6 +305,33 @@ def secret(
     )
 
     yield project_id, secret_id, secret.etag
+
+
+@pytest.fixture()
+def secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+    ttl: Optional[str],
+) -> Iterator[Tuple[str, str]]:
+    print("creating secret with given secret id.")
+
+    parent = f"projects/{project_id}"
+    time.sleep(5)
+    retry_client_create_secret(
+        client,
+        request={
+            "parent": parent,
+            "secret_id": secret_id,
+            "secret": {
+                "replication": {"automatic": {}},
+                "version_destroy_ttl": Duration(seconds=version_destroy_ttl),
+            },
+        },
+    )
+
+    yield project_id, secret_id
 
 
 @pytest.fixture()
@@ -242,6 +396,29 @@ def test_create_secret(
     assert secret.expire_time
 
 
+def test_create_secret_with_tags(
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+    secret = create_secret_with_tags(project_id, secret_id, tag_key, tag_value)
+
+    assert secret_id in secret.name
+
+
+def test_bind_tags_to_secret(
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    _, tag_value = tag_key_and_tag_value
+    tag_resp = bind_tags_to_secret(project_id, secret_id, tag_value)
+
+    assert secret_id in tag_resp.parent
+    assert tag_value in tag_resp.tag_value
+
+
 def test_create_secret_without_ttl(
     project_id: str,
     secret_id: str,
@@ -286,6 +463,15 @@ def test_create_secret_with_annotations(
     annotations = {annotation_key: annotation_value}
     secret = create_secret_with_annotations(project_id, secret_id, annotations)
     assert secret_id in secret.name
+
+
+def test_create_secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    project_id: str, secret_id: str, version_destroy_ttl: int
+) -> None:
+    secret = create_secret_with_delayed_destroy(project_id, secret_id, version_destroy_ttl)
+    assert secret_id in secret.name
+    assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
 
 def test_delete_secret(
@@ -339,6 +525,15 @@ def test_destroy_secret_version_with_etag(
     project_id, secret_id, version_id, etag = secret_version
     version = destroy_secret_version_with_etag(project_id, secret_id, version_id, etag)
     assert version.destroy_time
+
+
+def test_disable_secret_with_delayed_destroy(
+    client: secretmanager.SecretManagerServiceClient,
+    secret_with_delayed_destroy: Tuple[str, str],
+) -> None:
+    project_id, secret_id = secret_with_delayed_destroy
+    updated_secret = disable_secret_with_delayed_destroy(project_id, secret_id)
+    assert updated_secret.version_destroy_ttl == timedelta(0)
 
 
 def test_enable_disable_secret_version(
@@ -532,3 +727,10 @@ def test_update_secret_with_alias(secret_version: Tuple[str, str, str, str]) -> 
     project_id, secret_id, version_id, _ = secret_version
     secret = update_secret_with_alias(project_id, secret_id)
     assert secret.version_aliases["test"] == 1
+
+
+def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[str, str], version_destroy_ttl: str) -> None:
+    project_id, secret_id = secret_with_delayed_destroy
+    updated_version_destroy_ttl_value = 118400
+    updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
+    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)

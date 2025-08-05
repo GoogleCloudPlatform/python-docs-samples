@@ -26,7 +26,7 @@ def deploy() -> aiplatform.Endpoint:
     # [START aiplatform_modelgarden_gemma3_deploy]
 
     import vertexai
-    from vertexai.preview import model_garden
+    from vertexai import model_garden
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"

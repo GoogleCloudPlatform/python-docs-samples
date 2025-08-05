@@ -19,13 +19,14 @@ URLS on App Engine.
 import logging
 import urllib
 
-# [START gae_urlfetch_snippets_imports_urllib2]
-import urllib2
-# [END gae_urlfetch_snippets_imports_urllib2]
 
 # [START gae_urlfetch_snippets_imports_urlfetch]
 from google.appengine.api import urlfetch
 # [END gae_urlfetch_snippets_imports_urlfetch]
+
+# [START gae_urlfetch_snippets_imports_urllib2]
+import urllib2
+# [END gae_urlfetch_snippets_imports_urllib2]
 
 import webapp2
 

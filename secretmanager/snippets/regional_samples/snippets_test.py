@@ -11,25 +11,32 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
+from datetime import timedelta
 import os
 import time
 from typing import Iterator, Tuple, Union
 import uuid
 
 from google.api_core import exceptions, retry
+from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager_v1
+from google.protobuf.duration_pb2 import Duration
 import pytest
 
 from regional_samples import access_regional_secret_version
 from regional_samples import add_regional_secret_version
+from regional_samples import bind_tags_to_regional_secret
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_annotations
+from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_labels
+from regional_samples import create_regional_secret_with_tags
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
+from regional_samples import disable_regional_secret_delayed_destroy
 from regional_samples import disable_regional_secret_version
 from regional_samples import disable_regional_secret_version_with_etag
 from regional_samples import edit_regional_secret_annotations
@@ -46,6 +53,7 @@ from regional_samples import list_regional_secrets
 from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
+from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
 from regional_samples import view_regional_secret_labels
@@ -75,6 +83,16 @@ def regional_client(location_id: str) -> secretmanager_v1.SecretManagerServiceCl
 
 
 @pytest.fixture()
+def tag_keys_client() -> resourcemanager_v3.TagKeysClient:
+    return resourcemanager_v3.TagKeysClient()
+
+
+@pytest.fixture()
+def tag_values_client() -> resourcemanager_v3.TagValuesClient:
+    return resourcemanager_v3.TagValuesClient()
+
+
+@pytest.fixture()
 def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
 
@@ -97,6 +115,21 @@ def annotation_key() -> str:
 @pytest.fixture()
 def annotation_value() -> str:
     return "annotationvalue"
+
+
+@pytest.fixture()
+def version_destroy_ttl() -> int:
+    return 604800  # 7 days in seconds
+
+
+@pytest.fixture()
+def short_key_name() -> str:
+    return f"python-test-key-{uuid.uuid4()}"
+
+
+@pytest.fixture()
+def short_value_name() -> str:
+    return f"python-test-value-{uuid.uuid4()}"
 
 
 @retry.Retry()
@@ -124,6 +157,53 @@ def retry_client_access_regional_secret_version(
 ) -> secretmanager_v1.AccessSecretVersionResponse:
     # Retry to avoid 503 error & flaky issues
     return regional_client.access_secret_version(request=request)
+
+
+@retry.Retry()
+def retry_client_create_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Union[resourcemanager_v3.CreateTagKeyRequest, dict],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.create_tag_key(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_create_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Union[resourcemanager_v3.CreateTagValueRequest, dict],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_values_client.create_tag_value(request=request)
+    response = operation.result()
+
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_value(
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    request: Union[resourcemanager_v3.DeleteTagValueRequest, dict],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    time.sleep(15)  # Added a sleep to wait for the tag unbinding
+    operation = tag_values_client.delete_tag_value(request=request)
+    response = operation.result()
+    return response.name
+
+
+@retry.Retry()
+def retry_client_delete_tag_key(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    request: Union[resourcemanager_v3.DeleteTagKeyRequest, dict],
+) -> str:
+    # Retry to avoid 503 error & flaky issues
+    operation = tag_keys_client.delete_tag_key(request=request)
+    response = operation.result()
+    return response.name
 
 
 @pytest.fixture()
@@ -201,6 +281,79 @@ def regional_secret(
     yield secret_id, regional_secret.etag
 
 
+@pytest.fixture()
+def tag_key_and_tag_value(
+    tag_keys_client: resourcemanager_v3.TagKeysClient,
+    tag_values_client: resourcemanager_v3.TagValuesClient,
+    project_id: str,
+    short_key_name: str,
+    short_value_name: str,
+) -> Iterator[Tuple[str, str]]:
+
+    tag_key = retry_client_create_tag_key(
+        tag_keys_client,
+        request={
+            "tag_key": {
+                "parent": f"projects/{project_id}",
+                "short_name": short_key_name,
+            }
+        },
+    )
+
+    print(f"created tag key {tag_key}")
+
+    tag_value = retry_client_create_tag_value(
+        tag_values_client,
+        request={
+            "tag_value": {
+                "parent": tag_key,
+                "short_name": short_value_name,
+            }
+        },
+    )
+
+    print(f"created tag value {tag_value}")
+
+    yield tag_key, tag_value
+
+    print(f"deleting tag value {tag_value} and tag key {tag_key}")
+
+    try:
+        time.sleep(5)
+        retry_client_delete_tag_value(tag_values_client, request={"name": tag_value})
+        retry_client_delete_tag_key(tag_keys_client, request={"name": tag_key})
+    except exceptions.NotFound:
+        # Tag was already deleted, probably in the test
+        print("Tag value or tag key was not found.")
+
+
+@pytest.fixture()
+def regional_secret_with_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+) -> Iterator[str]:
+    print("creating secret with given secret id.")
+
+    parent = f"projects/{project_id}/locations/{location_id}"
+    time.sleep(5)
+    retry_client_create_regional_secret(
+        regional_client,
+        request={
+            "parent": parent,
+            "secret_id": secret_id,
+            "secret": {
+                "version_destroy_ttl": Duration(seconds=version_destroy_ttl),
+            },
+        },
+    )
+    print("debug")
+
+    yield secret_id
+
+
 def test_regional_quickstart(project_id: str, location_id: str, secret_id: str) -> None:
     regional_quickstart.regional_quickstart(project_id, location_id, secret_id)
 
@@ -242,6 +395,35 @@ def test_create_regional_secret(
     assert secret_id in secret.name
 
 
+def test_create_regional_secret_with_tags(
+    project_id: str,
+    location_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    tag_key, tag_value = tag_key_and_tag_value
+    secret = create_regional_secret_with_tags.create_regional_secret_with_tags(
+        project_id, location_id, secret_id, tag_key, tag_value
+    )
+
+    assert secret_id in secret.name
+
+
+def test_bind_tags_to_regional_secret(
+    project_id: str,
+    location_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    _, tag_value = tag_key_and_tag_value
+    tag_resp = bind_tags_to_regional_secret.bind_tags_to_regional_secret(
+        project_id, location_id, secret_id, tag_value
+    )
+
+    assert secret_id in tag_resp.parent
+    assert tag_value in tag_resp.tag_value
+
+
 def test_create_regional_secret_with_annotations(
     regional_client: secretmanager_v1.SecretManagerServiceClient,
     project_id: str,
@@ -257,6 +439,18 @@ def test_create_regional_secret_with_annotations(
         )
     )
     assert secret_id in secret.name
+
+
+def test_create_regional_secret_with_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    project_id: str,
+    location_id: str,
+    secret_id: str,
+    version_destroy_ttl: int,
+) -> None:
+    secret = create_regional_secret_with_delayed_destroy.create_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, version_destroy_ttl)
+    assert secret_id in secret.name
+    assert timedelta(seconds=version_destroy_ttl) == secret.version_destroy_ttl
 
 
 def test_create_regional_secret_with_label(
@@ -334,6 +528,17 @@ def test_destroy_regional_secret_version_with_etag(
         project_id, location_id, secret_id, version_id, etag
     )
     assert version.destroy_time
+
+
+def test_disable_regional_secret_delayed_destroy(
+    regional_client: secretmanager_v1.SecretManagerServiceClient,
+    regional_secret_with_delayed_destroy: str,
+    project_id: str,
+    location_id: str,
+) -> None:
+    secret_id = regional_secret_with_delayed_destroy
+    updated_secret = disable_regional_secret_delayed_destroy.disable_regional_secret_delayed_destroy(project_id, location_id, secret_id)
+    assert updated_secret.version_destroy_ttl == timedelta(0)
 
 
 def test_enable_disable_regional_secret_version(
@@ -610,6 +815,18 @@ def test_update_regional_secret(
         project_id, location_id, secret_id
     )
     assert updated_regional_secret.labels["secretmanager"] == "rocks"
+
+
+def test_update_regional_secret_with_delayed_destroy(
+    regional_secret_with_delayed_destroy: str,
+    project_id: str,
+    location_id: str,
+    version_destroy_ttl: int
+) -> None:
+    secret_id = regional_secret_with_delayed_destroy
+    updated_version_delayed_destroy = 118400
+    updated_secret = update_regional_secret_with_delayed_destroy.update_regional_secret_with_delayed_destroy(project_id, location_id, secret_id, updated_version_delayed_destroy)
+    assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_delayed_destroy)
 
 
 def test_view_regional_secret_labels(

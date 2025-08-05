@@ -92,4 +92,4 @@ def test_blur_image(storage_client, image_mock, os_mock, capsys):
     assert f"Image {filename} was blurred." in out
     assert f"Blurred image uploaded to: gs://{blur_bucket}/{filename}" in out
     assert os_mock.remove.called
-    assert image_mock.resize.called
+    assert image_mock.blur.called

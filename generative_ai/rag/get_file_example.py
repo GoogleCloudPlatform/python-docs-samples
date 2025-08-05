@@ -14,7 +14,7 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1 import RagFile
+from google.cloud.aiplatform_v1 import RagFile
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -22,7 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def get_file(file_name: str) -> RagFile:
     # [START generativeaionvertexai_rag_get_file]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

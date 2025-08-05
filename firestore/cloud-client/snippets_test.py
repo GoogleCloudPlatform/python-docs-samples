@@ -22,6 +22,10 @@ import pytest
 
 import snippets
 
+# TODO(developer): Before running these tests locally,
+# set your FIRESTORE_PROJECT env variable
+# and create a Database named `(default)`
+
 os.environ["GOOGLE_CLOUD_PROJECT"] = os.environ["FIRESTORE_PROJECT"]
 
 UNIQUE_STRING = str(uuid.uuid4()).split("-")[0]
@@ -761,8 +765,12 @@ def test_delete_field(db):
 
 
 def test_delete_full_collection(db):
+    assert list(db.collection("cities").stream()) == []
+
     for i in range(5):
         db.collection("cities").document(f"City{i}").set({"name": f"CityName{i}"})
+    assert len(list(db.collection("cities").stream())) == 5
+
     snippets.delete_full_collection()
     assert list(db.collection("cities").stream()) == []
 

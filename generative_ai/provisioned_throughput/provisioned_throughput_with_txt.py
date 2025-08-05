@@ -33,7 +33,7 @@ def generate_content() -> str:
         request_metadata=[("x-vertex-ai-llm-request-type", "shared")],
     )
 
-    model = GenerativeModel("gemini-1.5-flash-002")
+    model = GenerativeModel("gemini-2.0-flash-001")
 
     response = model.generate_content(
         "What's a good name for a flower shop that specializes in selling bouquets of dried flowers?"

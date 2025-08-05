@@ -73,7 +73,7 @@ def __blur_image(current_blob):
 
     # Blur the image using ImageMagick.
     with Image(filename=temp_local_filename) as image:
-        image.resize(*image.size, blur=16, filter="hamming")
+        image.blur(radius=0, sigma=16)
         image.save(filename=temp_local_filename)
 
     print(f"Image {file_name} was blurred.")

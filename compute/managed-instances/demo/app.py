@@ -50,7 +50,7 @@ def init():
 @app.route("/")
 def index():
     """Returns the demo UI."""
-    global _cpu_burner, _is_healthy
+    global _cpu_burner, _is_healthy  # noqa: F824
     return render_template(
         "index.html",
         hostname=gethostname(),
@@ -68,7 +68,7 @@ def health():
     Returns:
         HTTP status 200 if 'healthy', HTTP status 500 if 'unhealthy'
     """
-    global _is_healthy
+    global _is_healthy  # noqa: F824
     template = render_template("health.html", healthy=_is_healthy)
     return make_response(template, 200 if _is_healthy else 500)
 
@@ -76,7 +76,7 @@ def health():
 @app.route("/makeHealthy")
 def make_healthy():
     """Sets the server to simulate a 'healthy' status."""
-    global _cpu_burner, _is_healthy
+    global _cpu_burner, _is_healthy  # noqa: F824
     _is_healthy = True
 
     template = render_template(
@@ -95,7 +95,7 @@ def make_healthy():
 @app.route("/makeUnhealthy")
 def make_unhealthy():
     """Sets the server to simulate an 'unhealthy' status."""
-    global _cpu_burner, _is_healthy
+    global _cpu_burner, _is_healthy  # noqa: F824
     _is_healthy = False
 
     template = render_template(
@@ -114,7 +114,7 @@ def make_unhealthy():
 @app.route("/startLoad")
 def start_load():
     """Sets the server to simulate high CPU load."""
-    global _cpu_burner, _is_healthy
+    global _cpu_burner, _is_healthy  # noqa: F824
     _cpu_burner.start()
 
     template = render_template(
@@ -133,7 +133,7 @@ def start_load():
 @app.route("/stopLoad")
 def stop_load():
     """Sets the server to stop simulating CPU load."""
-    global _cpu_burner, _is_healthy
+    global _cpu_burner, _is_healthy  # noqa: F824
     _cpu_burner.stop()
 
     template = render_template(

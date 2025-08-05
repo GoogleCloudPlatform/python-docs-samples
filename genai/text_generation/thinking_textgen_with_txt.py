@@ -13,51 +13,63 @@
 # limitations under the License.
 
 
+# TODO: To deprecate this sample. Moving thinking samples to `thinking` folder.
 def generate_content() -> str:
     # [START googlegenaisdk_thinking_textgen_with_txt]
     from google import genai
-    from google.genai.types import HttpOptions
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client()
     response = client.models.generate_content(
-        model="gemini-2.0-flash-thinking-exp-01-21",
+        model="gemini-2.5-pro",
         contents="solve x^2 + 4x + 4 = 0",
     )
     print(response.text)
-    # Example response:
-    #     To solve the equation x^2 + 4x + 4 = 0, we can use several methods.
+    # Example Response:
+    #     Okay, let's solve the quadratic equation x² + 4x + 4 = 0.
+    #
+    #     We can solve this equation by factoring, using the quadratic formula, or by recognizing it as a perfect square trinomial.
     #
     #     **Method 1: Factoring**
     #
-    #     We look for two numbers that multiply to 4 (the constant term) and add to 4 (the coefficient of the x term).
-    #     These two numbers are 2 and 2 because 2 * 2 = 4 and 2 + 2 = 4.
-    #     Therefore, we can factor the quadratic expression as:
-    #     (x + 2)(x + 2) = 0
-    #     This can also be written as:
-    #     (x + 2)^2 = 0
-    #
-    #     To solve for x, we set the factor (x + 2) equal to zero:
-    #     x + 2 = 0
-    #     Subtract 2 from both sides:
-    #     x = -2
+    #     1.  We need two numbers that multiply to the constant term (4) and add up to the coefficient of the x term (4).
+    #     2.  The numbers 2 and 2 satisfy these conditions: 2 * 2 = 4 and 2 + 2 = 4.
+    #     3.  So, we can factor the quadratic as:
+    #         (x + 2)(x + 2) = 0
+    #         or
+    #         (x + 2)² = 0
+    #     4.  For the product to be zero, the factor must be zero:
+    #         x + 2 = 0
+    #     5.  Solve for x:
+    #         x = -2
     #
     #     **Method 2: Quadratic Formula**
     #
-    #     The quadratic formula for an equation of the form ax^2 + bx + c = 0 is given by:
-    #     x = [-b ± sqrt(b^2 - 4ac)] / (2a)
+    #     The quadratic formula for an equation ax² + bx + c = 0 is:
+    #     x = [-b ± sqrt(b² - 4ac)] / (2a)
     #
-    #     ...
+    #     1.  In our equation x² + 4x + 4 = 0, we have a=1, b=4, and c=4.
+    #     2.  Substitute these values into the formula:
+    #         x = [-4 ± sqrt(4² - 4 * 1 * 4)] / (2 * 1)
+    #         x = [-4 ± sqrt(16 - 16)] / 2
+    #         x = [-4 ± sqrt(0)] / 2
+    #         x = [-4 ± 0] / 2
+    #         x = -4 / 2
+    #         x = -2
     #
+    #     **Method 3: Perfect Square Trinomial**
     #
-    #     All three methods yield the same solution, x = -2.
-    #     This is a repeated root, which is expected since the discriminant (b^2 - 4ac) is 0.
+    #     1.  Notice that the expression x² + 4x + 4 fits the pattern of a perfect square trinomial: a² + 2ab + b², where a=x and b=2.
+    #     2.  We can rewrite the equation as:
+    #         (x + 2)² = 0
+    #     3.  Take the square root of both sides:
+    #         x + 2 = 0
+    #     4.  Solve for x:
+    #         x = -2
     #
-    #     To check our solution, we substitute x = -2 back into the original equation:
-    #     (-2)^2 + 4(-2) + 4 = 4 - 8 + 4 = 0
-    #     The equation holds true, so our solution is correct.
-
-    #     Final Answer: The final answer is $\boxed{-2}$
-
+    #     All methods lead to the same solution.
+    #
+    #     **Answer:**
+    #     The solution to the equation x² + 4x + 4 = 0 is x = -2. This is a repeated root (or a root with multiplicity 2).
     # [END googlegenaisdk_thinking_textgen_with_txt]
     return response.text
 

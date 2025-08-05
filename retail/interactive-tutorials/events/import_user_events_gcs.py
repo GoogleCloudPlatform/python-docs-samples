@@ -11,6 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+# [START retail_import_user_events_from_gcs]
 
 import argparse
 import os
@@ -109,3 +110,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.bucket_name)
+
+# [END retail_import_user_events_from_gcs]

@@ -15,6 +15,8 @@
 
 # Starts a user event rejoin operation using Retail API.
 #
+# [START retail_rejoin_user_events]
+
 import google.auth
 from google.cloud.retail import RejoinUserEventsRequest, UserEventServiceClient
 
@@ -54,3 +56,5 @@ def call_rejoin_user_events():
 write_user_event(visitor_id)
 call_rejoin_user_events()
 purge_user_event(visitor_id)
+
+# [END retail_rejoin_user_events]

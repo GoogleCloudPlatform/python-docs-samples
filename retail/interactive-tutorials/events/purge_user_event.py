@@ -15,6 +15,8 @@
 
 # Deleting user event using Retail API.
 #
+# [START retail_purge_user_events]
+
 import google.auth
 from google.cloud.retail import PurgeUserEventsRequest, UserEventServiceClient
 
@@ -47,6 +49,8 @@ def call_purge_user_events():
 
     print("---the purge operation was started:----")
     print(purge_operation.operation.name)
+
+# [END retail_purge_user_events]
 
 
 write_user_event(visitor_id)

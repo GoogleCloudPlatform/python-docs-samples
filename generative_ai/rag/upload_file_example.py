@@ -16,7 +16,7 @@ import os
 
 from typing import Optional
 
-from google.cloud.aiplatform_v1beta1 import RagFile
+from vertexai import rag
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -26,10 +26,10 @@ def upload_file(
     path: str,
     display_name: Optional[str] = None,
     description: Optional[str] = None,
-) -> RagFile:
+) -> rag.RagFile:
     # [START generativeaionvertexai_rag_upload_file]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

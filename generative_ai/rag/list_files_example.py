@@ -14,7 +14,7 @@
 
 import os
 
-from google.cloud.aiplatform_v1beta1.services.vertex_rag_data_service.pagers import (
+from google.cloud.aiplatform_v1.services.vertex_rag_data_service.pagers import (
     ListRagFilesPager,
 )
 
@@ -24,7 +24,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def list_files(corpus_name: str) -> ListRagFilesPager:
     # [START generativeaionvertexai_rag_list_files]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

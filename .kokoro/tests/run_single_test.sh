@@ -90,15 +90,6 @@ if [[ "${INJECT_REGION_TAGS:-}" == "true" ]]; then
 fi
 set -e
 
-# If REPORT_TO_BUILD_COP_BOT is set to "true", send the test log
-# to the FlakyBot.
-# See:
-# https://github.com/googleapis/repo-automation-bots/tree/main/packages/flakybot.
-if [[ "${REPORT_TO_BUILD_COP_BOT:-}" == "true" ]]; then
-    chmod +x $KOKORO_GFILE_DIR/linux_amd64/flakybot
-    $KOKORO_GFILE_DIR/linux_amd64/flakybot
-fi
-
 if [[ "${EXIT}" -ne 0 ]]; then
     echo -e "\n Testing failed: Nox returned a non-zero exit code. \n"
 else

@@ -16,7 +16,7 @@ import os
 
 from typing import List
 
-from google.cloud.aiplatform_v1beta1 import ImportRagFilesResponse
+from google.cloud.aiplatform_v1 import ImportRagFilesResponse
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 
@@ -27,7 +27,7 @@ async def import_files_async(
 ) -> ImportRagFilesResponse:
     # [START generativeaionvertexai_rag_import_files_async]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines
@@ -40,11 +40,12 @@ async def import_files_async(
     # Initialize Vertex AI API once per session
     vertexai.init(project=PROJECT_ID, location="us-central1")
 
-    response = await rag.import_files_async(
+    response = await rag.import_files(
         corpus_name=corpus_name,
         paths=paths,
-        chunk_size=512,  # Optional
-        chunk_overlap=100,  # Optional
+        transformation_config=rag.TransformationConfig(
+            rag.ChunkingConfig(chunk_size=512, chunk_overlap=100)
+        ),
         max_embedding_requests_per_min=900,  # Optional
     )
 

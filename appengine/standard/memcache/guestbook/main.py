@@ -19,10 +19,11 @@ For more information, see README.md.
 """
 
 # [START gae_memcache_guestbook_all]
-import cgi
-import cStringIO
 import logging
 import urllib
+
+import cgi
+import cStringIO
 
 from google.appengine.api import memcache
 from google.appengine.api import users

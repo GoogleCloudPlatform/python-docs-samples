@@ -14,15 +14,13 @@
 
 
 def compute_tokens_example() -> int:
-    # TODO: Remove `count_tokens` region tags after Feb 2025
-    # [START googlegenaisdk_count_tokens_compute_with_txt]
     # [START googlegenaisdk_counttoken_compute_with_txt]
     from google import genai
     from google.genai.types import HttpOptions
 
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
     response = client.models.compute_tokens(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash",
         contents="What's the longest word in the English language?",
     )
 
@@ -34,7 +32,6 @@ def compute_tokens_example() -> int:
     #    tokens=[b'What', b"'", b's', b' the', b' longest', b' word', b' in', b' the', b' English', b' language', b'?']
     #  )]
     # [END googlegenaisdk_counttoken_compute_with_txt]
-    # [END googlegenaisdk_count_tokens_compute_with_txt]
     return response.tokens_info
 
 

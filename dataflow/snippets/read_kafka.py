@@ -19,7 +19,6 @@ import argparse
 import apache_beam as beam
 
 from apache_beam import window
-from apache_beam.io.kafka import ReadFromKafka
 from apache_beam.io.textio import WriteToText
 from apache_beam.options.pipeline_options import PipelineOptions
 
@@ -42,16 +41,18 @@ def read_from_kafka() -> None:
         (
             pipeline
             # Read messages from an Apache Kafka topic.
-            | ReadFromKafka(
-                consumer_config={"bootstrap.servers": options.bootstrap_server},
-                topics=[options.topic],
-                with_metadata=False,
-                max_num_records=5,
-                start_read_time=0,
+            | beam.managed.Read(
+                beam.managed.KAFKA,
+                config={
+                  "bootstrap_servers": options.bootstrap_server,
+                  "topic": options.topic,
+                  "data_format": "RAW",
+                  "auto_offset_reset_config": "earliest",
+                  # The max_read_time_seconds parameter is intended for testing.
+                  # Avoid using this parameter in production.
+                  "max_read_time_seconds": 5
+                }
             )
-            # The previous step creates a key-value collection, keyed by message ID.
-            # The values are the message payloads.
-            | beam.Values()
             # Subdivide the output into fixed 5-second windows.
             | beam.WindowInto(window.FixedWindows(5))
             | WriteToText(

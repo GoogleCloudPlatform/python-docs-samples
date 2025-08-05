@@ -34,7 +34,7 @@ def test_list_deploy_options() -> None:
     assert len(deploy_options) > 0
 
 
-@patch("vertexai.preview.model_garden.OpenModel")
+@patch("vertexai.model_garden.OpenModel")
 def test_gemma3_deploy(mock_open_model: MagicMock) -> None:
     # Mock the deploy response.
     mock_endpoint = aiplatform.Endpoint(endpoint_name="test-endpoint-name")

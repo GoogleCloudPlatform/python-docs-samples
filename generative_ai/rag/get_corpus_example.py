@@ -22,7 +22,7 @@ PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 def get_corpus(corpus_name: str) -> RagCorpus:
     # [START generativeaionvertexai_rag_get_corpus]
 
-    from vertexai.preview import rag
+    from vertexai import rag
     import vertexai
 
     # TODO(developer): Update and un-comment below lines

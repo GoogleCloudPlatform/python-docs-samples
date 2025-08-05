@@ -35,7 +35,7 @@ def delete_prompt() -> None:
             {"movie1": "The Lion King", "movie2": "Frozen"},
             {"movie1": "Inception", "movie2": "Interstellar"},
         ],
-        model_name="gemini-1.5-pro-002",
+        model_name="gemini-2.0-flash-001",
         system_instruction="You are a movie critic. Answer in a short sentence.",
 
     )

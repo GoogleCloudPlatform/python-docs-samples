@@ -10,9 +10,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This uses Ubuntu with Python 3.10 and comes with CUDA drivers for
+# This uses Ubuntu with Python 3.11 and comes with CUDA drivers for
 # GPU use.
-ARG SERVING_BUILD_IMAGE=pytorch/pytorch:2.3.1-cuda11.8-cudnn8-runtime
+ARG SERVING_BUILD_IMAGE=pytorch/pytorch:2.6.0-cuda11.8-cudnn9-runtime
 
 FROM ${SERVING_BUILD_IMAGE}
 
