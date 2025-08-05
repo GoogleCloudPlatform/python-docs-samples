@@ -20,9 +20,7 @@ def get_bearer_token() -> str:
     import google.auth
     from google.auth.transport.requests import Request
 
-    creds, _ = google.auth.default(
-        scopes=["https://www.googleapis.com/auth/cloud-platform"]
-    )
+    creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
     auth_req = Request()
     creds.refresh(auth_req)
     bearer_token = creds.token
