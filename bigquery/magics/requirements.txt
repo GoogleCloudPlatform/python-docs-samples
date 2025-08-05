@@ -1,4 +1,4 @@
-bigquery_magics==0.10.1
+bigquery_magics==0.10.2
 db-dtypes==1.4.3
 google.cloud.bigquery==3.35.1
 google-cloud-bigquery-storage==2.32.0
