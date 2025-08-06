@@ -18,14 +18,8 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_code_exec_with_txt]
     from google import genai
-    from google.genai.types import (
-        LiveConnectConfig,
-        Modality,
-        Tool,
-        ToolCodeExecution,
-        Content,
-        Part,
-    )
+    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
+                                    Tool, ToolCodeExecution)
 
     client = genai.Client()
     model_id = "gemini-2.0-flash-live-preview-04-09"

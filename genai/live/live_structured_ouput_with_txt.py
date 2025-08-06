@@ -26,13 +26,12 @@ class CalendarEvent(BaseModel):
 def generate_content() -> CalendarEvent:
     # [START googlegenaisdk_live_structured_ouput_with_txt]
     import os
+
+    import google.auth.transport.requests
     import openai
     from google.auth import default
-    import google.auth.transport.requests
-    from openai.types.chat import (
-        ChatCompletionSystemMessageParam,
-        ChatCompletionUserMessageParam,
-    )
+    from openai.types.chat import (ChatCompletionSystemMessageParam,
+                                   ChatCompletionUserMessageParam)
 
     project_id = os.environ["GOOGLE_CLOUD_PROJECT"]
     location = "us-central1"

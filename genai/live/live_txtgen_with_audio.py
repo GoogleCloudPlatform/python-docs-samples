@@ -17,34 +17,37 @@
 # Install helpers for converting files: pip install librosa soundfile
 
 import asyncio
+from pathlib import Path
 
 
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_txtgen_with_audio]
-    import io
     import requests
-    from google import genai
-    from google.genai.types import Modality, LiveConnectConfig, Blob
     import soundfile as sf
-    import librosa
+    from google import genai
+    from google.genai.types import Blob, LiveConnectConfig, Modality
 
     client = genai.Client()
     model = "gemini-2.0-flash-live-preview-04-09"
     config = LiveConnectConfig(response_modalities=[Modality.TEXT])
 
-    def get_audio(url: str):
-        resp = requests.get(url)
-        resp.raise_for_status()
-        buffer = io.BytesIO(resp.content)
-        y, sr = librosa.load(buffer, sr=16000)
-        sf.write(buffer, y, sr, format="RAW", subtype="PCM_16")
-        buffer.seek(0)
-        return buffer.read()
+    def get_audio(url: str) -> bytes:
+        input_path = Path("temp_input.wav")
+        output_path = Path("temp_output.pcm")
+
+        input_path.write_bytes(requests.get(url).content)
+
+        y, sr = sf.read(input_path)
+        sf.write(output_path, y, sr, format="RAW", subtype="PCM_16")
+
+        audio = output_path.read_bytes()
+
+        input_path.unlink(missing_ok=True)
+        output_path.unlink(missing_ok=True)
+        return audio
 
     async with client.aio.live.connect(model=model, config=config) as session:
-        audio_url = (
-            "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
-        )
+        audio_url = "https://storage.googleapis.com/generativeai-downloads/data/16000.wav"
         audio_bytes = get_audio(audio_url)
 
         # If you've pre-converted to sample.pcm using ffmpeg, use this instead:

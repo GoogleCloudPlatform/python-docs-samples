@@ -13,21 +13,16 @@
 # limitations under the License.
 
 import asyncio
+
 from google.genai.types import FunctionResponse
 
 
 async def generate_content() -> list[FunctionResponse]:
     # [START googlegenaisdk_live_func_call_with_txt]
     from google import genai
-    from google.genai.types import (
-        LiveConnectConfig,
-        Modality,
-        Tool,
-        FunctionDeclaration,
-        FunctionResponse,
-        Content,
-        Part,
-    )
+    from google.genai.types import (Content, FunctionDeclaration,
+                                    FunctionResponse, LiveConnectConfig,
+                                    Modality, Part, Tool)
 
     client = genai.Client()
     model_id = "gemini-2.0-flash-live-preview-04-09"

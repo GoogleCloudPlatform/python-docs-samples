@@ -22,13 +22,8 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_transcribe_with_audio]
     from google import genai
-    from google.genai.types import (
-        LiveConnectConfig,
-        Modality,
-        AudioTranscriptionConfig,
-        Part,
-        Content,
-    )
+    from google.genai.types import (AudioTranscriptionConfig, Content,
+                                    LiveConnectConfig, Modality, Part)
 
     client = genai.Client()
     model = "gemini-live-2.5-flash-preview-native-audio"

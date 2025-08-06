@@ -20,18 +20,18 @@ import os
 
 import pytest
 
+import live_audiogen_with_txt
+import live_code_exec_with_txt
+import live_func_call_with_txt
+import live_ground_googsearch_with_txt
+import live_structured_ouput_with_txt
+import live_transcribe_with_audio
+import live_txtgen_with_audio
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
-import live_audiogen_with_txt
-import live_code_exec_with_txt
-import live_ground_googsearch_with_txt
-import live_func_call_with_txt
-import live_txtgen_with_audio
-import live_transcribe_with_audio
-import live_structured_ouput_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
