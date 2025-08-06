@@ -31,7 +31,7 @@ async def generate_content() -> list[str]:
     )
 
     client = genai.Client()
-    model = "gemini-2.0-flash-live-preview-04-09"
+    model = "gemini-live-2.5-flash-preview-native-audio"
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
         input_audio_transcription=AudioTranscriptionConfig(),
@@ -56,7 +56,8 @@ async def generate_content() -> list[str]:
                     "Input transcript:", message.server_content.input_transcription.text
                 )
             if message.server_content.output_transcription:
-                response.append(message.server_content.output_transcription.text)
+                if message.server_content.output_transcription.text:
+                    response.append(message.server_content.output_transcription.text)
 
         print("".join(response))
 
