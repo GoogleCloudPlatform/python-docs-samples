@@ -37,6 +37,8 @@ import textgen_with_txt_stream
 import textgen_with_video
 import textgen_with_youtube_video
 import thinking_textgen_with_txt
+import textgen_code_with_pdf
+
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
@@ -137,6 +139,18 @@ def test_textgen_with_youtube_video() -> None:
     assert response
 
 
+def test_model_optimizer_textgen_with_txt() -> None:
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
+    response = model_optimizer_textgen_with_txt.generate_content()
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "global"  # "us-central1"
+    assert response
+
+
+def test_textgen_code_with_pdf() -> None:
+    response = textgen_code_with_pdf.generate_content()
+    assert response
+
+    
 # Migrated to Model Optimser Folder
 # def test_model_optimizer_textgen_with_txt() -> None:
 #     os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
