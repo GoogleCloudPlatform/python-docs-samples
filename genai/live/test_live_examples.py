@@ -20,6 +20,13 @@ import os
 
 import pytest
 
+import live_audiogen_with_txt
+import live_code_exec_with_txt
+import live_func_call_with_txt
+import live_ground_googsearch_with_txt
+import live_structured_ouput_with_txt
+import live_transcribe_with_audio
+import live_txtgen_with_audio
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
@@ -55,3 +62,39 @@ async def test_live_websocket_audiogen_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_websocket_audiotranscript_with_txt() -> None:
     assert await live_websocket_audiotranscript_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_audiogen_with_txt() -> None:
+    result = await live_audiogen_with_txt.generate_content()
+    assert result is None
+
+
+@pytest.mark.asyncio
+async def test_live_code_exec_with_txt() -> None:
+    assert await live_code_exec_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_func_call_with_txt() -> None:
+    assert await live_func_call_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_ground_googsearch_with_txt() -> None:
+    assert await live_ground_googsearch_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_transcribe_with_audio() -> None:
+    assert await live_transcribe_with_audio.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_txtgen_with_audio() -> None:
+    assert await live_txtgen_with_audio.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_structured_ouput_with_txt() -> None:
+    assert live_structured_ouput_with_txt.generate_content()
