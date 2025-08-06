@@ -36,23 +36,13 @@ async def generate_content() -> str:
     Connects to the Gemini API via WebSocket, sends a text prompt,
     and returns the aggregated text response.
     """
-    # [START googlegenaisdk_live_websocket_textgen_with_audio]
+    # [START googlegenaisdk_live_websocket_audiotranscript_with_txt]
     import base64
     import json
+    import numpy as np
 
     from websockets.asyncio.client import connect
     from scipy.io import wavfile
-
-    def read_wavefile(filepath: str) -> tuple[str, str]:
-        # Read the .wav file using scipy.io.wavfile.read
-        rate, data = wavfile.read(filepath)
-        # Convert the NumPy array of audio samples back to raw bytes
-        raw_audio_bytes = data.tobytes()
-        # Encode the raw bytes to a base64 string.
-        # The result needs to be decoded from bytes to a UTF-8 string
-        base64_encoded_data = base64.b64encode(raw_audio_bytes).decode("ascii")
-        mime_type = f"audio/pcm;rate={rate}"
-        return base64_encoded_data, mime_type
 
     # Configuration Constants
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
@@ -79,7 +69,13 @@ async def generate_content() -> str:
     model_path = (
         f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
     )
-    model_generation_config = {"response_modalities": ["TEXT"]}
+    model_generation_config = {
+        "response_modalities": ["AUDIO"],
+        "speech_config": {
+            "voice_config": {"prebuilt_voice_config": {"voice_name": "Aoede"}},
+            "language_code": "es-ES",
+        },
+    }
 
     async with connect(WEBSOCKET_SERVICE_URL, additional_headers=headers) as websocket_session:
         # 1. Send setup configuration
@@ -87,6 +83,9 @@ async def generate_content() -> str:
             "setup": {
                 "model": model_path,
                 "generation_config": model_generation_config,
+                # Audio transcriptions for input and output
+                "input_audio_transcription": {},
+                "output_audio_transcription": {},
             }
         }
         await websocket_session.send(json.dumps(websocket_config))
@@ -99,30 +98,18 @@ async def generate_content() -> str:
             else raw_setup_response
         )
         print(f"Setup Response: {setup_response}")
-        # Example response: {'setupComplete': {}}
+        # Expected response: {'setupComplete': {}}
         if "setupComplete" not in setup_response:
             print(f"Setup failed: {setup_response}")
             return "Error: WebSocket setup failed."
 
-        # 3. Send audio message
-        encoded_audio_message, mime_type = read_wavefile("hello_gemini_are_you_there.wav")
-        # Example audio message:  "Hello? Gemini are you there?"
+        # 3. Send text message
+        text_input = "Hello? Gemini are you there?"
+        print(f"Input: {text_input}")
 
         user_message = {
             "client_content": {
-                "turns": [
-                    {
-                        "role": "user",
-                        "parts": [
-                            {
-                                "inlineData": {
-                                    "mimeType": mime_type,  # Example value: "audio/pcm;rate=24000"
-                                    "data": encoded_audio_message,  # Example value: "AQD//wAAAAAAA....."
-                                }
-                            }
-                        ],
-                    }
-                ],
+                "turns": [{"role": "user", "parts": [{"text": text_input}]}],
                 "turn_complete": True,
             }
         }
@@ -130,6 +117,8 @@ async def generate_content() -> str:
 
         # 4. Receive model response
         aggregated_response_parts = []
+        input_transcriptions_parts = []
+        output_transcriptions_parts = []
         async for raw_response_chunk in websocket_session:
             response_chunk = json.loads(raw_response_chunk.decode("utf-8"))
 
@@ -139,22 +128,39 @@ async def generate_content() -> str:
                 print(f"Received non-serverContent message or empty content: {response_chunk}")
                 break
 
-            # Collect text responses
+            # Transcriptions
+            if server_content.get("inputTranscription"):
+                text = server_content.get("inputTranscription").get("text", "")
+                input_transcriptions_parts.append(text)
+            if server_content.get("outputTranscription"):
+                text = server_content.get("outputTranscription").get("text", "")
+                output_transcriptions_parts.append(text)
+
+            # Collect audio chunks
             model_turn = server_content.get("modelTurn")
             if model_turn and "parts" in model_turn and model_turn["parts"]:
-                aggregated_response_parts.append(model_turn["parts"][0].get("text", ""))
+                for part in model_turn["parts"]:
+                    if part["inlineData"]["mimeType"] == "audio/pcm":
+                        audio_chunk = base64.b64decode(part["inlineData"]["data"])
+                        aggregated_response_parts.append(np.frombuffer(audio_chunk, dtype=np.int16))
 
             # End of response
             if server_content.get("turnComplete"):
                 break
 
-        final_response_text = "".join(aggregated_response_parts)
-        print(f"Response: {final_response_text}")
+        # Save audio to a file
+        final_response_audio = np.concatenate(aggregated_response_parts)
+        wavfile.write("output.wav", 24000, final_response_audio)
+        print(f"Input transcriptions: {''.join(input_transcriptions_parts)}")
+        print(f"Output transcriptions: {''.join(output_transcriptions_parts)}")
         # Example response:
         #     Setup Response: {'setupComplete': {}}
-        #     Response: Hey there. What's on your mind today?
-    # [END googlegenaisdk_live_websocket_textgen_with_audio]
-    return final_response_text
+        #     Input: Hello? Gemini are you there?
+        #     Audio Response(output.wav): Yes, I'm here. How can I help you today?
+        #     Input transcriptions:
+        #     Output transcriptions: Yes, I'm here. How can I help you today?
+    # [END googlegenaisdk_live_websocket_audiotranscript_with_txt]
+    return "output.wav"
 
 
 if __name__ == "__main__":

@@ -68,6 +68,7 @@ async def generate_content() -> str:
     WEBSOCKET_SERVICE_URL = (
         f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
     )
+
     # Websocket Authentication
     headers = {
         "Content-Type": "application/json",
@@ -75,7 +76,9 @@ async def generate_content() -> str:
     }
 
     # Model Configuration
-    model_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
+    model_path = (
+        f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
+    )
     model_generation_config = {"response_modalities": ["TEXT"]}
 
     async with connect(WEBSOCKET_SERVICE_URL, additional_headers=headers) as websocket_session:
