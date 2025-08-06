@@ -28,7 +28,7 @@ def list_deploy_options(model : str) -> List[types.PublisherModel.CallToAction.D
     # [START aiplatform_modelgarden_models_deployables_options_list]
 
     import vertexai
-    from vertexai.preview import model_garden
+    from vertexai import model_garden
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"

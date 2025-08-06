@@ -1,4 +1,4 @@
-google-genai==1.20.0
+google-genai==1.27.0
 scipy==1.15.3
 websockets==15.0.1
 pyaudio==0.2.14

@@ -16,11 +16,11 @@
 Google App Engine Default Service Account."""
 
 import base64
-import httplib
 import json
 import time
 
 from google.appengine.api import app_identity
+import httplib
 import webapp2
 
 DEFAULT_SERVICE_ACCOUNT = "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"

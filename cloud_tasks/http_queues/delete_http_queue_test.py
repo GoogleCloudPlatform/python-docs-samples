@@ -59,7 +59,7 @@ def q():
     try:
         client.delete_queue(name=queue.name)
     except Exception as e:
-        if type(e) == NotFound:  # It's still gone, anyway, so it's fine
+        if type(e) is NotFound:  # It's still gone, anyway, so it's fine
             pass
         else:
             print(f"Tried my best to clean up, but could not: {e}")

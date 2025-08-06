@@ -32,7 +32,7 @@ def generate_content(datastore: str) -> str:
 
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-001",
+        model="gemini-2.5-flash",
         contents="How do I make an appointment to renew my driver's license?",
         config=GenerateContentConfig(
             tools=[
