@@ -39,7 +39,7 @@ def test_create_connect_cluster(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     cpu = 12
-    memory_bytes = 12884901900 # 12 GB
+    memory_bytes = 12884901900  # 12 GB
     primary_subnet = "test-subnet"
     operation = mock.MagicMock(spec=Operation)
     connect_cluster = managedkafka_v1.types.ConnectCluster()
