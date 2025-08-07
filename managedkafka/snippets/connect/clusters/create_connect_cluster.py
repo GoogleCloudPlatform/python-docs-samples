@@ -51,7 +51,7 @@ def create_connect_cluster(
     # kafka_cluster_id = "my-kafka-cluster"
     # primary_subnet = "projects/my-project-id/regions/us-central1/subnetworks/default"
     # cpu = 12
-    # memory_bytes = 12884901888 # 12 GiB
+    # memory_bytes = 12884901888  # 12 GiB
 
     connect_client = ManagedKafkaConnectClient()
     kafka_client = managedkafka_v1.ManagedKafkaClient()
