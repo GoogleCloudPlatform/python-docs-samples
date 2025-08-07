@@ -40,6 +40,7 @@ import imggen_raw_reference_with_txt_img
 import imggen_scribble_ctrl_type_with_txt_img
 import imggen_style_reference_with_txt_img
 import imggen_subj_refer_ctrl_refer_with_txt_imgs
+import imggen_virtual_try_on_with_txt_img
 import imggen_with_txt
 
 
@@ -168,6 +169,14 @@ def test_img_customization_scribble(output_gcs_uri: str) -> None:
 def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
     response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(
         output_gcs_uri=output_gcs_uri
+    )
+    assert response
+
+
+def test_img_virtual_try_on() -> None:
+    OUTPUT_FILE = os.path.join(RESOURCES, "man_in_sweater.png")
+    response = imggen_virtual_try_on_with_txt_img.virtual_try_on(
+        OUTPUT_FILE
     )
     assert response
 
