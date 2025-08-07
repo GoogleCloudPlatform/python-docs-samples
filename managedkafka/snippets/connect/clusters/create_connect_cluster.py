@@ -31,7 +31,7 @@ def create_connect_cluster(
         connect_cluster_id: ID of the Kafka Connect cluster.
         kafka_cluster_id: The ID of the primary Managed Service for Apache Kafka cluster.
         primary_subnet: The primary VPC subnet for the Connect cluster workers. The expected format is projects/{project_id}/regions/{region}/subnetworks/{subnet_id}.
-        cpu: Number of vCPUs to provision for the cluster. The minimum is 3.
+        cpu: Number of vCPUs to provision for the cluster. The minimum is 12.
         memory_bytes: The memory to provision for the cluster in bytes. Must be between 1 GiB * cpu and 8 GiB * cpu.
 
     Raises:
