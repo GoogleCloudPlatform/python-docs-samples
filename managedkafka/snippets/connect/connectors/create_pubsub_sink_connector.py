@@ -53,7 +53,7 @@ def create_pubsub_sink_connector(
     # key_converter = "org.apache.kafka.connect.storage.StringConverter"
     # cps_topic = "CPS_TOPIC_ID"
     # cps_project = "GCP_PROJECT_ID"
-    # tasks_max = "1"
+    # tasks_max = "3"
 
     # [START managedkafka_create_pubsub_sink_connector]
     from google.api_core.exceptions import GoogleAPICallError

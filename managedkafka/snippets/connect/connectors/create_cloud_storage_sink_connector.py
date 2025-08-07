@@ -52,7 +52,7 @@ def create_cloud_storage_sink_connector(
     # connector_id = "GCS_SINK_CONNECTOR_ID"
     # topics = "GMK_TOPIC_ID"
     # gcs_bucket_name = "GCS_BUCKET_NAME"
-    # tasks_max = "1"
+    # tasks_max = "3"
     # format_output_type = "json"
     # value_converter = "org.apache.kafka.connect.json.JsonConverter"
     # value_converter_schemas_enable = "false"

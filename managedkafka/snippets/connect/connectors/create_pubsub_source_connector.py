@@ -51,7 +51,7 @@ def create_pubsub_source_connector(
     # kafka_topic = "GMK_TOPIC_ID"
     # cps_subscription = "CPS_SUBSCRIPTION_ID"
     # cps_project = "GCP_PROJECT_ID"
-    # tasks_max = "1"
+    # tasks_max = "3"
     # value_converter = "org.apache.kafka.connect.converters.ByteArrayConverter"
     # key_converter = "org.apache.kafka.connect.storage.StringConverter"
 
