@@ -24,7 +24,6 @@ required_envvars+=(
 
 pass_down_envvars+=(
     "BUILD_SPECIFIC_GCLOUD_PROJECT"
-    "REPORT_TO_BUILD_COP_BOT"
     "INJECT_REGION_TAGS"
     # Target directories.
     "RUN_TESTS_DIRS"

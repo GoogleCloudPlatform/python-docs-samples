@@ -26,7 +26,7 @@ def list_deployable_models() -> List[str]:
     # [START aiplatform_modelgarden_models_deployables_list]
 
     import vertexai
-    from vertexai.preview import model_garden
+    from vertexai import model_garden
 
     # TODO(developer): Update and un-comment below lines
     # PROJECT_ID = "your-project-id"
