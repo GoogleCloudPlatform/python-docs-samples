@@ -80,7 +80,7 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    annotations = {args.annotation_key, args.annotation_value}
+    annotations = {args.annotation_key: args.annotation_value}
     create_regional_secret_with_annotations(
         args.project_id, args.location_id, args.secret_id, annotations
     )
