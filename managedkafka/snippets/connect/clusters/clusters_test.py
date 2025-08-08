@@ -19,7 +19,7 @@ from google.api_core.operation import Operation
 from google.cloud import managedkafka_v1
 import pytest
 
-import create_connect_cluster
+import create_connect_cluster  # noqa: I100
 import delete_connect_cluster
 import get_connect_cluster
 import list_connect_clusters
