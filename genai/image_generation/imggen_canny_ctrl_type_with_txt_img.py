@@ -38,7 +38,6 @@ def canny_edge_customization(output_gcs_uri: str) -> str:
         config=EditImageConfig(
             edit_mode="EDIT_MODE_CONTROLLED_EDITING",
             number_of_images=1,
-            seed=1,
             safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
             person_generation="ALLOW_ADULT",
             output_gcs_uri=output_gcs_uri,
