@@ -1,3 +1,6 @@
 google-cloud-bigquery-storage==2.32.0
 google-cloud-bigquery===3.30.0; python_version <= '3.8'
 google-cloud-bigquery==3.34.0; python_version >= '3.9'
+pytest===7.4.3; python_version == '3.7'
+pytest===8.3.5; python_version == '3.8'
+pytest==8.4.1; python_version >= '3.9'
