@@ -462,7 +462,7 @@ Example:
 # it is used to make the sample command-line runnable
 import sys
 
-# [START storage_control_create_folder]
+# [START example_storage_control_create_folder]
 # This import is included within the region tag
 # as it is critical to understanding the sample
 from google.cloud import storage_control_v2
@@ -472,7 +472,7 @@ def create_folder(bucket_name: str, folder_name: str) -> None:
     print(f"Created folder: {response.name}")
 
 
-# [END storage_control_create_folder]
+# [END example_storage_control_create_folder]
 ```
 
 ### Exception Handling
