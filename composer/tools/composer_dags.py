@@ -35,6 +35,9 @@ class DAG:
     COMPOSER_AF_VERSION_RE = re.compile(
         "composer-([0-9]+).([0-9]+).([0-9]+).*" "-airflow-([0-9]+).([0-9]+).([0-9]+).*"
     )
+    COMPOSER3_AF_VERSION_RE = re.compile(
+        "composer-([0-9]+).*" "-airflow-([0-9]+).([0-9]+).([0-9]+).*"
+    )
 
     @staticmethod
     def get_list_of_dags(
@@ -162,14 +165,18 @@ def main(
         location=location,
         sdk_endpoint=sdk_endpoint,
     )
-    versions = DAG.COMPOSER_AF_VERSION_RE.match(
-        environment_info["config"]["softwareConfig"]["imageVersion"]
-    ).groups()
+    image_version = environment_info["config"]["softwareConfig"]["imageVersion"]
+    if image_version.startswith("composer-3-"):
+        versions = DAG.COMPOSER3_AF_VERSION_RE.match(image_version).groups()
+        airflow_version = (int(versions[1]), int(versions[2]), int(versions[3]))
+    else:
+        versions = DAG.COMPOSER_AF_VERSION_RE.match(image_version).groups()
+        airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
+
     logger.info(
         "Image version: %s",
-        environment_info["config"]["softwareConfig"]["imageVersion"],
+        image_version,
     )
-    airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
     list_of_dags = DAG.get_list_of_dags(
         project_name=project_name,
         environment=environment,
