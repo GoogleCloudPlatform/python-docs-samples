@@ -33,7 +33,7 @@ class DAG:
     """Provides necessary utils for Composer DAGs."""
 
     COMPOSER_AF_VERSION_RE = re.compile(
-        "composer-([0-9]+).([0-9]+).([0-9]+).*" "-airflow-([0-9]+).([0-9]+).([0-9]+).*"
+        "composer-([0-9]+)(?:.([0-9]+).([0-9]+))?.*-airflow-([0-9]+).([0-9]+).([0-9]+)"
     )
 
     @staticmethod
