@@ -82,10 +82,6 @@ Guidelines](#testing-guidelines) are covered separately below.
 
 ### Folder Location
 
-Samples that primarily show the use of one client library should be placed in
-the client library repository `googleapis/python-{api}`. Other samples should be
-placed in this repository `python-docs-samples`.
-
 **Library repositories:** Each sample should be in a folder under the top-level
 samples folder `samples` in the client library repository. See the
 [Text-to-Speech
@@ -106,12 +102,6 @@ subfolder. For example, App Engine Standard samples are under the
 [appengine/standard](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/standard)
 folder, and App Engine Flex samples are under the
 [appengine/flexible](https://github.com/GoogleCloudPlatform/python-docs-samples/tree/main/appengine/flexible)
-folder.
-
-If your sample is a set of discrete code snippets that each demonstrate a single
-operation, these should be grouped into a `snippets` folder. For example, see
-the snippets in the
-[bigtable/snippets/writes](https://github.com/googleapis/python-bigtable/tree/main/samples/snippets/writes)
 folder.
 
 If your sample is a quickstart — intended to demonstrate how to quickly get
@@ -274,11 +264,12 @@ task_from_dict = {
 
 ### Functions and Classes
 
-Very few samples will require authoring classes. Prefer functions whenever
-possible. See [this video](https://www.youtube.com/watch?v=o9pEzgHorH0) for some
-insight into why classes aren't as necessary as you might think in Python.
-Classes also introduce cognitive load. If you do write a class in a sample, be
-prepared to justify its existence during code review.
+Prefer functions over classes whenever possible. 
+
+See [this video](https://www.youtube.com/watch?v=o9pEzgHorH0) for some
+hints into practical refactoring examples where simpler functions lead to more
+readable and maintainable code. 
+
 
 #### Descriptive function names
 
@@ -456,17 +447,33 @@ git+https://github.com/googleapis/python-firestore.git@ee518b741eb5d7167393c23ba
 
 ### Region Tags
 
-Sample code may be integrated into Google Cloud Documentation through the use of
-region tags, which are comments added to the source code to identify code blocks
-that correspond to specific topics covered in the documentation. For example,
-see [this
-sample](https://github.com/GoogleCloudPlatform/python-docs-samples/blob/main/cloud-sql/mysql/sqlalchemy/main.py)
-— the region tags are the comments that begin with `[START` or `[END`.
+Region tags are comments added to the source code that begin with 
+`[START region_tag]` and end with `[END region_tag]`. They enclose 
+the core sample logic that can be easily copied into a REPL and run.
 
-The use of region tags is beyond the scope of this document, but if you’re using
-region tags they should start after the source code header (license/copyright
-information), but before imports and global configuration such as initializing
-constants.
+This allows us to integrate this copy-paste callable code into 
+documentation directly. Region tags should be placed after the 
+license header but before imports that are crucial to the 
+sample running. 
+
+Example:
+```python
+# This import is not included within the region tag as
+# it is used to make the sample command-line runnable
+import sys
+
+# [START storage_control_create_folder]
+# This import is included within the region tag
+# as it is critical to understanding the sample
+from google.cloud import storage_control_v2
+
+
+def create_folder(bucket_name: str, folder_name: str) -> None:
+    print(f"Created folder: {response.name}")
+
+
+# [END storage_control_create_folder]
+```
 
 ### Exception Handling
 
