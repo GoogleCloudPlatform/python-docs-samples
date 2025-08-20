@@ -83,9 +83,14 @@ def submit_job(project_id, region, cluster_name):
 # [END dataproc_submit_pyspark_job_to_driver_node_group_cluster]
 
 if __name__ == "__main__":
- 
-    my_project_id = "your_project_id"  # <-- REPLACE THIS
-    my_region = "your_region"        # <-- REPLACE THIS
-    my_cluster_name = "your_node_group_cluster" # <-- REPLACE THIS
- 
-    submit_job(my_project_id, my_region, my_cluster_name)
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Submits a Spark job to a Dataproc driver node group cluster."
+    )
+    parser.add_argument("--project_id", help="The Google Cloud project ID.", required=True)
+    parser.add_argument("--region", help="The Dataproc region where the cluster is located.", required=True)
+    parser.add_argument("--cluster_name", help="The name of the Dataproc cluster.", required=True)
+
+    args = parser.parse_args()
+    submit_job(args.project_id, args.region, args.cluster_name)
