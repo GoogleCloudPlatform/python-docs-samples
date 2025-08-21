@@ -14,7 +14,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# This sample walks a user through submitting a Spark job to a 
+# This sample walks a user through submitting a Spark job to a
 # Dataproc driver node group cluster using the Dataproc
 # client library.
 
@@ -26,7 +26,7 @@
 # [START dataproc_submit_pyspark_job_to_driver_node_group_cluster]
 
 import re
- 
+
 from google.cloud import dataproc_v1 as dataproc
 from google.cloud import storage
 
@@ -43,33 +43,35 @@ def submit_job(project_id, region, cluster_name):
     job_client = dataproc.JobControllerClient(
         client_options={"api_endpoint": f"{region}-dataproc.googleapis.com:443"}
     )
- 
+
     driver_scheduling_config = dataproc.DriverSchedulingConfig(
-    memory_mb=2048, # Example memory in MB
-    vcores=2, # Example number of vcores
+        memory_mb=2048,  # Example memory in MB
+        vcores=2,  # Example number of vcores
     )
- 
-   # Create the job config. The main Python file URI points to the script in
-   # a Google Cloud Storage bucket.
+
+    # Create the job config. The main Python file URI points to the script in
+    # a Google Cloud Storage bucket.
     job = {
         "placement": {"cluster_name": cluster_name},
         "pyspark_job": {
             "main_python_file_uri": "gs://dataproc-examples/pyspark/hello-world/hello-world.py"
         },
-        "driver_scheduling_config": driver_scheduling_config
+        "driver_scheduling_config": driver_scheduling_config,
     }
- 
+
     operation = job_client.submit_job_as_operation(
         request={"project_id": project_id, "region": region, "job": job}
     )
     response = operation.result()
- 
+
     # Dataproc job output gets saved to the Google Cloud Storage bucket
     # allocated to the job. Use a regex to obtain the bucket and blob info.
     matches = re.match("gs://(.*?)/(.*)", response.driver_output_resource_uri)
     if not matches:
-        raise ValueError(f"Unexpected driver output URI: {response.driver_output_resource_uri}")
- 
+        raise ValueError(
+            f"Unexpected driver output URI: {response.driver_output_resource_uri}"
+        )
+
     output = (
         storage.Client()
         .get_bucket(matches.group(1))
@@ -77,8 +79,9 @@ def submit_job(project_id, region, cluster_name):
         .download_as_bytes()
         .decode("utf-8")
     )
- 
+
     print(f"Job finished successfully: {output}")
+
 
 # [END dataproc_submit_pyspark_job_to_driver_node_group_cluster]
 
@@ -88,9 +91,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Submits a Spark job to a Dataproc driver node group cluster."
     )
-    parser.add_argument("--project_id", help="The Google Cloud project ID.", required=True)
-    parser.add_argument("--region", help="The Dataproc region where the cluster is located.", required=True)
-    parser.add_argument("--cluster_name", help="The name of the Dataproc cluster.", required=True)
+    parser.add_argument(
+        "--project_id", help="The Google Cloud project ID.", required=True
+    )
+    parser.add_argument(
+        "--region",
+        help="The Dataproc region where the cluster is located.",
+        required=True,
+    )
+    parser.add_argument(
+        "--cluster_name", help="The name of the Dataproc cluster.", required=True
+    )
 
     args = parser.parse_args()
     submit_job(args.project_id, args.region, args.cluster_name)
