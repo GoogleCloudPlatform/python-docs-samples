@@ -3,5 +3,5 @@ pg8000==1.31.2
 SQLAlchemy==2.0.40
 cloud-sql-python-connector==1.18.2
 gunicorn==23.0.0
-functions-framework==3.8.2
+functions-framework==3.9.2
 Werkzeug==2.3.8
