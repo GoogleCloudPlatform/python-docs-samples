@@ -1,4 +1,5 @@
 aggregateChecks: true
 alwaysCreateStatusCheck: true
 ignoreFiles:
-  - README.md
+  - "README.md"
+  - "AUTHORING_GUIDE.md"
