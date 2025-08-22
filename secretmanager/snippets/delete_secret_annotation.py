@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -13,20 +13,18 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-# [START secretmanager_edit_secret_annotations]
-
+# [START secretmanager_delete_secret_annotation]
 import argparse
-from typing import Dict
 
 # Import the Secret Manager client library.
 from google.cloud import secretmanager
 
 
-def edit_secret_annotations(
-    project_id: str, secret_id: str, new_annotations: Dict[str, str]
-) -> secretmanager.UpdateSecretRequest:
+def delete_secret_annotation(
+    project_id: str, secret_id: str, annotation_key: str
+) -> secretmanager.Secret:
     """
-    Create or update a annotation on an existing secret.
+    Delete a annotation on an existing secret.
     """
 
     # Create the Secret Manager client.
@@ -40,9 +38,8 @@ def edit_secret_annotations(
 
     annotations = response.annotations
 
-    # Update the annotations
-    for annotation_key in new_annotations:
-        annotations[annotation_key] = new_annotations[annotation_key]
+    # Delete the annotation
+    annotations.pop(annotation_key, None)
 
     # Update the secret.
     secret = {"name": name, "annotations": annotations}
@@ -57,7 +54,7 @@ def edit_secret_annotations(
     return response
 
 
-# [END secretmanager_edit_secret_annotations]
+# [END secretmanager_delete_secret_annotation]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -65,13 +62,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("project_id", help="id of the GCP project")
     parser.add_argument("secret_id", help="id of the secret to act on")
-    parser.add_argument(
-        "annotation_key", help="key of the annotation to be added/updated"
-    )
-    parser.add_argument(
-        "annotation_value", help="value of the annotation to be added/updated"
-    )
+    parser.add_argument("annotation_key", help="key of the annotation to be deleted")
     args = parser.parse_args()
 
-    annotations = {args.annotation_key: args.annotation_value}
-    edit_secret_annotations(args.project_id, args.secret_id, annotations)
+    delete_secret_annotation(args.project_id, args.secret_id, args.annotation_key)
