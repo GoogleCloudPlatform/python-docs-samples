@@ -29,7 +29,7 @@ import submit_pyspark_job_to_driver_node_group_cluster
 
 PROJECT_ID = os.environ["GOOGLE_CLOUD_PROJECT"]
 REGION = "us-central1"
-CLUSTER_NAME = f"py-ss-test-{str(uuid.uuid4())}"
+CLUSTER_NAME = f"dp-pyspark-test-{str(uuid.uuid4())}"
 
 cluster_client = dataproc.ClusterControllerClient(
     client_options={"api_endpoint": f"{REGION}-dataproc.googleapis.com:443"}
