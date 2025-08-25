@@ -15,14 +15,15 @@
 from unittest import mock
 from unittest.mock import MagicMock
 
-from google.api_core.operation import Operation
-from google.cloud import managedkafka_v1
-
 import create_bigquery_sink_connector
 import create_cloud_storage_sink_connector
 import create_mirrormaker_source_connector
 import create_pubsub_sink_connector
 import create_pubsub_source_connector
+
+from google.api_core.operation import Operation
+from google.cloud import managedkafka_v1
+
 import pytest
 
 PROJECT_ID = "test-project-id"
