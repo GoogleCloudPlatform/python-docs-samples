@@ -26,9 +26,7 @@ from google.cloud import storage
 def generate_signed_url(bucket_name, blob_name):
     """Generates a v2 signed URL for downloading a blob.
 
-    Note that this method requires a service account key file. You can not use
-    this if you are using Application Default Credentials from Google Compute
-    Engine or from the Google Cloud SDK.
+    Note that this method requires a service account key file.
     """
     # bucket_name = 'your-bucket-name'
     # blob_name = 'your-object-name'

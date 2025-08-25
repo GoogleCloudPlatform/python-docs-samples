@@ -27,9 +27,7 @@ from google.cloud import storage
 def generate_upload_signed_url_v4(bucket_name, blob_name):
     """Generates a v4 signed URL for uploading a blob using HTTP PUT.
 
-    Note that this method requires a service account key file. You can not use
-    this if you are using Application Default Credentials from Google Compute
-    Engine or from the Google Cloud SDK.
+    Note that this method requires a service account key file.
     """
     # bucket_name = 'your-bucket-name'
     # blob_name = 'your-object-name'
