@@ -2,4 +2,4 @@ backoff==2.2.1; python_version < "3.7"
 backoff==2.2.1; python_version >= "3.7"
 pytest==8.2.0
 google-cloud-iam==2.17.0
-google-api-python-client==2.131.0
+google-api-python-client==2.179.0
