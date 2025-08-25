@@ -1,0 +1,70 @@
+// Copyright 2021 Google LLC
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+// [START bigquerystorage_append_rows_raw_proto2_definition]
+// The BigQuery Storage API expects protocol buffer data to be encoded in the
+// proto2 wire format. This allows it to disambiguate missing optional fields
+// from default values without the need for wrapper types.
+syntax = "proto2";
+
+// Define a message type representing the rows in your table. The message
+// cannot contain fields which are not present in the table.
+message SampleData {
+  // Use a nested message to encode STRUCT column values.
+  //
+  // References to external messages are not allowed. Any message definitions
+  // must be nested within the root message representing row data.
+  message SampleStruct {
+    optional int64 sub_int_col = 1;
+  }
+
+   message RangeValue {
+    optional int32 start = 1;
+    optional int32 end = 2;
+   }
+
+  // The following types map directly between protocol buffers and their
+  // corresponding BigQuery data types.
+  optional bool bool_col = 1;
+  optional bytes bytes_col = 2;
+  optional double float64_col = 3;
+  optional int64 int64_col = 4;
+  optional string string_col = 5;
+
+  // The following data types require some encoding to use. See the
+  // documentation for the expected data formats:
+  // https://cloud.google.com/bigquery/docs/write-api#data_type_conversion
+  optional int32 date_col = 6;
+  optional string datetime_col = 7;
+  optional string geography_col = 8;
+  optional string numeric_col = 9;
+  optional string bignumeric_col = 10;
+  optional string time_col = 11;
+  optional int64 timestamp_col = 12;
+
+  // Use a repeated field to represent a BigQuery ARRAY value.
+  repeated int64 int64_list = 13;
+
+  // Use a nested message to encode STRUCT and ARRAY<STRUCT> values.
+  optional SampleStruct struct_col = 14;
+  repeated SampleStruct struct_list = 15;
+
+  // Range types, see:
+  // https://cloud.google.com/bigquery/docs/reference/standard-sql/data-types#range_type
+   optional RangeValue range_date = 16;
+
+  // Use the required keyword for client-side validation of required fields.
+  required int64 row_num = 17;
+}
+// [END bigquerystorage_append_rows_raw_proto2_definition]
