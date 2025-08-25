@@ -16,7 +16,12 @@
 def style_customization(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_imggen_style_reference_with_txt_img]
     from google import genai
-    from google.genai.types import EditImageConfig, Image, StyleReferenceConfig, StyleReferenceImage
+    from google.genai.types import (
+        EditImageConfig,
+        Image,
+        StyleReferenceConfig,
+        StyleReferenceImage,
+    )
 
     client = genai.Client()
 

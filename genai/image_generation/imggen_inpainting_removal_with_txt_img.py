@@ -18,7 +18,12 @@ from google.genai.types import Image
 def edit_inpainting_removal(output_file: str) -> Image:
     # [START googlegenaisdk_imggen_inpainting_removal_with_txt_img]
     from google import genai
-    from google.genai.types import RawReferenceImage, MaskReferenceImage, MaskReferenceConfig, EditImageConfig
+    from google.genai.types import (
+        RawReferenceImage,
+        MaskReferenceImage,
+        MaskReferenceConfig,
+        EditImageConfig,
+    )
 
     client = genai.Client()
 
@@ -26,7 +31,9 @@ def edit_inpainting_removal(output_file: str) -> Image:
     # output_file = "output-image.png"
 
     raw_ref = RawReferenceImage(
-        reference_image=Image.from_file(location='test_resources/fruit.png'), reference_id=0)
+        reference_image=Image.from_file(location="test_resources/fruit.png"),
+        reference_id=0,
+    )
     mask_ref = MaskReferenceImage(
         reference_id=1,
         reference_image=None,
@@ -55,4 +62,4 @@ def edit_inpainting_removal(output_file: str) -> Image:
 
 
 if __name__ == "__main__":
-    edit_inpainting_removal(output_file="test_resources/fruit_edit.png")
+    edit_inpainting_removal(output_file="output_folder/fruit_edit.png")

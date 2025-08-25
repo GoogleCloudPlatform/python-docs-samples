@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_imggen_mmflash_edit_img_with_txt_img]
+    # [START googlegenaisdk_imggen_mmflash_mulitple_imgs_with_txt]
     from google import genai
     from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
@@ -22,28 +22,33 @@ def generate_content() -> str:
 
     client = genai.Client()
 
-    # Using an image of Eiffel tower, with fireworks in the background.
-    image = Image.open("test_resources/example-image-eiffel-tower.png")
-
     response = client.models.generate_content(
         model="gemini-2.0-flash-preview-image-generation",
-        contents=[image, "Edit this image to make it look like a cartoon."],
+        contents=("Generate 3 images a cat sitting on a chair."),
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
+    i = 1
     for part in response.candidates[0].content.parts:
         if part.text:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("output_folder/bw-example-image.png")
+            image.save(f"output_folder/example-cats-0{i}.png")
+        i += 1
     # Example response:
-    #  Here's the cartoon-style edit of the image:
-    #  Cartoon-style edit:
-    #  - Simplified the Eiffel Tower with bolder lines and slightly exaggerated proportions.
-    #  - Brightened and saturated the colors of the sky, fireworks, and foliage for a more vibrant, cartoonish look.
-    #  ....
-    # [END googlegenaisdk_imggen_mmflash_edit_img_with_txt_img]
-    return "output_folder/bw-example-image.png"
+    #   Image 1: A fluffy calico cat with striking green eyes is perched elegantly on a vintage wooden
+    #   chair with a woven seat. Sunlight streams through a nearby window, casting soft shadows and
+    #   highlighting the cat's fur.
+    #
+    #   Image 2: A sleek black cat with intense yellow eyes is sitting upright on a modern, minimalist
+    #   white chair. The background is a plain grey wall, putting the focus entirely on the feline's
+    #   graceful posture.
+    #
+    #   Image 3: A ginger tabby cat with playful amber eyes is comfortably curled up asleep on a plush,
+    #   oversized armchair upholstered in a soft, floral fabric. A corner of a cozy living room with a
+    #   warm lamp in the background can be seen.
+    # [END googlegenaisdk_imggen_mmflash_mulitple_imgs_with_txt]
+    return "output_folder/example-image.png"
 
 
 if __name__ == "__main__":

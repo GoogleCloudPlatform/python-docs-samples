@@ -22,7 +22,7 @@ def subject_customization(output_gcs_uri: str) -> str:
         EditImageConfig,
         Image,
         SubjectReferenceConfig,
-        SubjectReferenceImage
+        SubjectReferenceImage,
     )
 
     client = genai.Client()
@@ -36,7 +36,8 @@ def subject_customization(output_gcs_uri: str) -> str:
         reference_id=1,
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/person.png"),
         config=SubjectReferenceConfig(
-            subject_description="a headshot of a woman", subject_type="SUBJECT_TYPE_PERSON"
+            subject_description="a headshot of a woman",
+            subject_type="SUBJECT_TYPE_PERSON",
         ),
     )
     control_reference_image = ControlReferenceImage(

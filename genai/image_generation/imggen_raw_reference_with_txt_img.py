@@ -27,7 +27,7 @@ def style_transfer_customization(output_gcs_uri: str) -> str:
     # using https://storage.googleapis.com/cloud-samples-data/generative-ai/image/teacup-1.png
     raw_ref_image = RawReferenceImage(
         reference_image=Image(gcs_uri="gs://cloud-samples-data/generative-ai/image/teacup-1.png"),
-        reference_id=1
+        reference_id=1,
     )
 
     image = client.models.edit_image(

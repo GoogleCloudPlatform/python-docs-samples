@@ -30,14 +30,14 @@ def generate_content() -> int:
         ),
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
-    with open("paella-recipe.md", "w") as fp:
+    with open("output_folder/paella-recipe.md", "w") as fp:
         for i, part in enumerate(response.candidates[0].content.parts):
             if part.text is not None:
                 fp.write(part.text)
             elif part.inline_data is not None:
                 image = Image.open(BytesIO((part.inline_data.data)))
-                image.save(f"example-image-{i+1}.png")
-                fp.write(f"![image](./example-image-{i+1}.png)")
+                image.save(f"output_folder/example-image-{i+1}.png")
+                fp.write(f"![image](example-image-{i+1}.png)")
     # Example response:
     #  A markdown page for a Paella recipe(`paella-recipe.md`) has been generated.
     #   It includes detailed steps and several images illustrating the cooking process.
