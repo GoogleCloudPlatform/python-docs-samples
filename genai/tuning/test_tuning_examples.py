@@ -45,7 +45,7 @@ def output_gcs_uri() -> str:
         blob.delete()
 
 @patch("google.genai.Client")
-def test_tuning_job_create(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_create(mock_genai_client: MagicMock, output_gcs_uri: str) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -138,7 +138,7 @@ def test_tuning_textgen_with_txt(mock_genai_client: MagicMock) -> None:
 
 
 @patch("google.genai.Client")
-def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock, output_gcs_uri: str) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
