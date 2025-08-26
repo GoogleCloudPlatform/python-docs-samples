@@ -34,7 +34,7 @@ def create_with_checkpoints() -> str:
 
     evaluation_config=EvaluationConfig(
         metrics=[
-           Metric(
+            Metric(
                 name="FLUENCY",
                 prompt_template="""Evaluate this {response}"""
             )
