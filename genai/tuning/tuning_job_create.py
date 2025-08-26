@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_tuning_job() -> str:
+def create_tuning_job(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_tuning_job_create]
     import time
 
@@ -87,4 +87,4 @@ def create_tuning_job() -> str:
 
 
 if __name__ == "__main__":
-    create_tuning_job()
+    create_tuning_job(output_gcs_uri="gs://your-bucket/your-prefix")
