@@ -23,7 +23,7 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-preview-image-generation",
+        model="gemini-2.5-flash-image-preview",
         contents=("Generate a photo of a breakfast meal."),
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )

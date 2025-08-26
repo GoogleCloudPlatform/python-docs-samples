@@ -23,7 +23,7 @@ def generate_content() -> int:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-preview-image-generation",
+        model="gemini-2.5-flash-image-preview",
         contents=(
             "Generate an illustrated recipe for a paella."
             "Create images to go alongside the text as you generate the recipe"
@@ -42,7 +42,7 @@ def generate_content() -> int:
     #  A markdown page for a Paella recipe(`paella-recipe.md`) has been generated.
     #   It includes detailed steps and several images illustrating the cooking process.
     # [END googlegenaisdk_imggen_mmflash_txt_and_img_with_txt]
-    return i
+    return True
 
 
 if __name__ == "__main__":

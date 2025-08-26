@@ -30,11 +30,6 @@ import imggen_inpainting_insert_with_txt_img
 import imggen_inpainting_removal_mask_with_txt_img
 import imggen_inpainting_removal_with_txt_img
 import imggen_mask_free_edit_with_txt_img
-import imggen_mmflash_edit_img_with_txt_img
-import imggen_mmflash_locale_aware_with_txt
-import imggen_mmflash_multiple_imgs_with_txt
-import imggen_mmflash_txt_and_img_with_txt
-import imggen_mmflash_with_txt
 import imggen_outpainting_with_txt_img
 import imggen_product_background_mask_with_txt_img
 import imggen_product_background_with_txt_img
@@ -122,7 +117,9 @@ def test_img_edit_mask_free() -> None:
 
 
 def test_img_customization_subject(output_gcs_uri: str) -> None:
-    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(output_gcs_uri=output_gcs_uri)
+    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(
+        output_gcs_uri=output_gcs_uri
+    )
     assert response
 
 
@@ -150,23 +147,3 @@ def test_img_virtual_try_on() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "man_in_sweater.png")
     response = imggen_virtual_try_on_with_txt_img.virtual_try_on(OUTPUT_FILE)
     assert response
-
-
-def test_imggen_mmflash_with_txt() -> None:
-    assert imggen_mmflash_with_txt.generate_content()
-
-
-def test_imggen_mmflash_edit_img_with_txt_img() -> None:
-    assert imggen_mmflash_edit_img_with_txt_img.generate_content()
-
-
-def test_imggen_mmflash_txt_and_img_with_txt() -> None:
-    assert imggen_mmflash_txt_and_img_with_txt.generate_content()
-
-
-def test_imggen_mmflash_locale_aware_with_txt() -> None:
-    assert imggen_mmflash_locale_aware_with_txt.generate_content()
-
-
-def test_imggen_mmflash_multiple_imgs_with_txt() -> None:
-    assert imggen_mmflash_multiple_imgs_with_txt.generate_content()

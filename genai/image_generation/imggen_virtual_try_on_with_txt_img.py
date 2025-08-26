@@ -29,7 +29,9 @@ def virtual_try_on(output_file: str) -> Image:
         model="virtual-try-on-preview-08-04",
         source=RecontextImageSource(
             person_image=Image.from_file(location="test_resources/man.png"),
-            product_images=[ProductImage(product_image=Image.from_file(location="test_resources/sweater.jpg"))],
+            product_images=[
+                ProductImage(product_image=Image.from_file(location="test_resources/sweater.jpg"))
+            ],
         ),
     )
 

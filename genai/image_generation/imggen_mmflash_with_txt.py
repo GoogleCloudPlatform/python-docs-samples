@@ -23,7 +23,7 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-preview-image-generation",
+        model="gemini-2.5-flash-image-preview",
         contents=("Generate an image of the Eiffel tower with fireworks in the background."),
         config=GenerateContentConfig(
             response_modalities=[Modality.TEXT, Modality.IMAGE],
@@ -32,7 +32,7 @@ def generate_content() -> str:
                 {"method": "PROBABILITY"},
                 {"category": "HARM_CATEGORY_DANGEROUS_CONTENT"},
                 {"threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-            ]
+            ],
         ),
     )
     for part in response.candidates[0].content.parts:
