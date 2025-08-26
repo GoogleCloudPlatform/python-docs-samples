@@ -13,7 +13,9 @@
 # limitations under the License.
 
 from unittest.mock import call, MagicMock, patch
+import pytest
 
+from google.cloud import storage
 from google.genai import types
 
 import tuning_job_create
