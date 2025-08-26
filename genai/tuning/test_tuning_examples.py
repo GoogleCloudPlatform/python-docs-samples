@@ -13,12 +13,12 @@
 # limitations under the License.
 
 from datetime import datetime as dt
-from unittest.mock import call, MagicMock, patch
 
-import pytest
+from unittest.mock import call, MagicMock, patch
 
 from google.cloud import storage
 from google.genai import types
+import pytest
 
 import tuning_job_create
 import tuning_job_get
