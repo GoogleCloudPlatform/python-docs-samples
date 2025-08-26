@@ -26,7 +26,9 @@ def edit_mask_free(output_file: str) -> Image:
     # output_file = "output-image.png"
 
     raw_ref = RawReferenceImage(
-        reference_image=Image.from_file(location='test_resources/latte.jpg'), reference_id=0)
+        reference_image=Image.from_file(location="test_resources/latte.jpg"),
+        reference_id=0,
+    )
 
     image = client.models.edit_image(
         model="imagen-3.0-capability-001",
@@ -48,4 +50,4 @@ def edit_mask_free(output_file: str) -> Image:
 
 
 if __name__ == "__main__":
-    edit_mask_free(output_file="test_resources/latte_edit.png")
+    edit_mask_free(output_file="output_folder/latte_edit.png")

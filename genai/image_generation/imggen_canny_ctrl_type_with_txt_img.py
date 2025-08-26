@@ -16,7 +16,12 @@
 def canny_edge_customization(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_imggen_canny_ctrl_type_with_txt_img]
     from google import genai
-    from google.genai.types import ControlReferenceConfig, ControlReferenceImage, EditImageConfig, Image
+    from google.genai.types import (
+        ControlReferenceConfig,
+        ControlReferenceImage,
+        EditImageConfig,
+        Image,
+    )
 
     client = genai.Client()
 

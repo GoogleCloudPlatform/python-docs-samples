@@ -44,4 +44,4 @@ def generate_images(output_file: str) -> Image:
 
 
 if __name__ == "__main__":
-    generate_images(output_file="test_resources/dog_newspaper.png")
+    generate_images(output_file="output_folder/dog_newspaper.png")

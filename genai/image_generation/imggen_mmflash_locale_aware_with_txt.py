@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_imggen_mmflash_with_txt]
+    # [START googlegenaisdk_imggen_mmflash_locale_aware_with_txt]
     from google import genai
     from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
@@ -24,30 +24,21 @@ def generate_content() -> str:
 
     response = client.models.generate_content(
         model="gemini-2.0-flash-preview-image-generation",
-        contents=("Generate an image of the Eiffel tower with fireworks in the background."),
-        config=GenerateContentConfig(
-            response_modalities=[Modality.TEXT, Modality.IMAGE],
-            candidate_count=1,
-            safety_settings=[
-                {"method": "PROBABILITY"},
-                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT"},
-                {"threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-            ]
-        ),
+        contents=("Generate a photo of a breakfast meal."),
+        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     for part in response.candidates[0].content.parts:
         if part.text:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("output_folder/example-image-eiffel-tower.png")
+            image.save("output_folder/example-breakfast-meal.png")
     # Example response:
-    #   I will generate an image of the Eiffel Tower at night, with a vibrant display of
-    #   colorful fireworks exploding in the dark sky behind it. The tower will be
-    #   illuminated, standing tall as the focal point of the scene, with the bursts of
-    #   light from the fireworks creating a festive atmosphere.
-    # [END googlegenaisdk_imggen_mmflash_with_txt]
-    return True
+    #   Generates a photo of a vibrant and appetizing breakfast meal.
+    #   The scene will feature a white plate with golden-brown pancakes
+    #   stacked neatly, drizzled with rich maple syrup and ...
+    # [END googlegenaisdk_imggen_mmflash_locale_aware_with_txt]
+    return "output_folder/example-breakfast-meal.png"
 
 
 if __name__ == "__main__":

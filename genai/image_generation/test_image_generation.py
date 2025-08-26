@@ -31,6 +31,8 @@ import imggen_inpainting_removal_mask_with_txt_img
 import imggen_inpainting_removal_with_txt_img
 import imggen_mask_free_edit_with_txt_img
 import imggen_mmflash_edit_img_with_txt_img
+import imggen_mmflash_locale_aware_with_txt
+import imggen_mmflash_multiple_imgs_with_txt
 import imggen_mmflash_txt_and_img_with_txt
 import imggen_mmflash_with_txt
 import imggen_outpainting_with_txt_img
@@ -42,7 +44,6 @@ import imggen_style_reference_with_txt_img
 import imggen_subj_refer_ctrl_refer_with_txt_imgs
 import imggen_virtual_try_on_with_txt_img
 import imggen_with_txt
-
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -68,139 +69,104 @@ def output_gcs_uri() -> str:
 
 def test_img_generation() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "dog_newspaper.png")
-    response = imggen_with_txt.generate_images(
-        OUTPUT_FILE
-    )
+    response = imggen_with_txt.generate_images(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_inpainting_insert_with_mask() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
-    response = imggen_inpainting_insert_mask_with_txt_img.edit_inpainting_insert_mask(
-        OUTPUT_FILE
-    )
+    response = imggen_inpainting_insert_mask_with_txt_img.edit_inpainting_insert_mask(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_inpainting_insert() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
-    response = imggen_inpainting_insert_with_txt_img.edit_inpainting_insert(
-        OUTPUT_FILE
-    )
+    response = imggen_inpainting_insert_with_txt_img.edit_inpainting_insert(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_inpainting_removal_mask() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
-    response = imggen_inpainting_removal_mask_with_txt_img.edit_inpainting_removal_mask(
-        OUTPUT_FILE
-    )
+    response = imggen_inpainting_removal_mask_with_txt_img.edit_inpainting_removal_mask(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_inpainting_removal() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "fruit_edit.png")
-    response = imggen_inpainting_removal_with_txt_img.edit_inpainting_removal(
-        OUTPUT_FILE
-    )
+    response = imggen_inpainting_removal_with_txt_img.edit_inpainting_removal(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_product_background_mask() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
-    response = imggen_product_background_mask_with_txt_img.edit_product_background_mask(
-        OUTPUT_FILE
-    )
+    response = imggen_product_background_mask_with_txt_img.edit_product_background_mask(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_product_background() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "suitcase_edit.png")
-    response = imggen_product_background_with_txt_img.edit_product_background(
-        OUTPUT_FILE
-    )
+    response = imggen_product_background_with_txt_img.edit_product_background(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_outpainting() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "living_room_edit.png")
-    response = imggen_outpainting_with_txt_img.edit_outpainting(
-        OUTPUT_FILE
-    )
+    response = imggen_outpainting_with_txt_img.edit_outpainting(OUTPUT_FILE)
     assert response
 
 
 def test_img_edit_mask_free() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "latte_edit.png")
-    response = imggen_mask_free_edit_with_txt_img.edit_mask_free(
-        OUTPUT_FILE
-    )
+    response = imggen_mask_free_edit_with_txt_img.edit_mask_free(OUTPUT_FILE)
     assert response
 
 
 def test_img_customization_subject(output_gcs_uri: str) -> None:
-    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(
-        output_gcs_uri=output_gcs_uri
-    )
+    response = imggen_subj_refer_ctrl_refer_with_txt_imgs.subject_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
 def test_img_customization_style(output_gcs_uri: str) -> None:
-    response = imggen_style_reference_with_txt_img.style_customization(
-        output_gcs_uri=output_gcs_uri
-    )
+    response = imggen_style_reference_with_txt_img.style_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
 def test_img_customization_style_transfer(output_gcs_uri: str) -> None:
-    response = imggen_raw_reference_with_txt_img.style_transfer_customization(
-        output_gcs_uri=output_gcs_uri
-    )
+    response = imggen_raw_reference_with_txt_img.style_transfer_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
 def test_img_customization_scribble(output_gcs_uri: str) -> None:
-    response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(
-        output_gcs_uri=output_gcs_uri
-    )
+    response = imggen_scribble_ctrl_type_with_txt_img.scribble_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
 def test_img_customization_canny_edge(output_gcs_uri: str) -> None:
-    response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(
-        output_gcs_uri=output_gcs_uri
-    )
+    response = imggen_canny_ctrl_type_with_txt_img.canny_edge_customization(output_gcs_uri=output_gcs_uri)
     assert response
 
 
 def test_img_virtual_try_on() -> None:
     OUTPUT_FILE = os.path.join(RESOURCES, "man_in_sweater.png")
-    response = imggen_virtual_try_on_with_txt_img.virtual_try_on(
-        OUTPUT_FILE
-    )
+    response = imggen_virtual_try_on_with_txt_img.virtual_try_on(OUTPUT_FILE)
     assert response
 
 
-def test_imggen_mmflash_examples() -> None:
-    # generate image
-    fname = imggen_mmflash_with_txt.generate_content()
-    assert os.path.isfile(fname)
-    # edit generate image
-    new_fname = imggen_mmflash_edit_img_with_txt_img.generate_content()
-    assert os.path.isfile(new_fname)
+def test_imggen_mmflash_with_txt() -> None:
+    assert imggen_mmflash_with_txt.generate_content()
 
-    # clean-up
-    os.remove(fname)
-    os.remove(new_fname)
+
+def test_imggen_mmflash_edit_img_with_txt_img() -> None:
+    assert imggen_mmflash_edit_img_with_txt_img.generate_content()
 
 
 def test_imggen_mmflash_txt_and_img_with_txt() -> None:
-    last_image_id = imggen_mmflash_txt_and_img_with_txt.generate_content()
-    # clean-up
-    for i in range(last_image_id + 1):
-        img_name = f"example-image-{i+1}.png"
-        if os.path.isfile(img_name):
-            os.remove(img_name)
-    fname = "paella-recipe.md"
-    if os.path.isfile(fname):
-        os.remove(fname)
+    assert imggen_mmflash_txt_and_img_with_txt.generate_content()
+
+
+def test_imggen_mmflash_locale_aware_with_txt() -> None:
+    assert imggen_mmflash_locale_aware_with_txt.generate_content()
+
+
+def test_imggen_mmflash_multiple_imgs_with_txt() -> None:
+    assert imggen_mmflash_multiple_imgs_with_txt.generate_content()
