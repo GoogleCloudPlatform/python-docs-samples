@@ -32,7 +32,7 @@ def create_tuning_job(output_gcs_uri: str) -> str:
         gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_validation_data.jsonl",
     )
 
-    evaluation_config=EvaluationConfig(
+    evaluation_config = EvaluationConfig(
         metrics=[
             Metric(
                 name="FLUENCY",
@@ -45,7 +45,6 @@ def create_tuning_job(output_gcs_uri: str) -> str:
             )
         ),
     )
-
 
     tuning_job = client.tunings.tune(
         base_model="gemini-2.5-flash",
