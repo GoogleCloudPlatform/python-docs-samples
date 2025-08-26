@@ -18,7 +18,7 @@ def create_tuning_job() -> str:
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset, EvaluationConfig, OutputConfig, GcsDestination
+    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset, EvaluationConfig, OutputConfig, GcsDestination, Metric
 
     # TODO(developer): Update and un-comment below line
     # USER_GCS_FOLDER = "your-gcs-folder"
