@@ -21,7 +21,7 @@ def create_tuning_job() -> str:
     from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset, EvaluationConfig, OutputConfig, GcsDestination, Metric
 
     # TODO(developer): Update and un-comment below line
-    # USER_GCS_FOLDER = "your-gcs-folder"
+    # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
@@ -41,7 +41,7 @@ def create_tuning_job() -> str:
         ],
         output_config=OutputConfig(
             gcs_destination=GcsDestination(
-                output_uri_prefix=USER_GCS_FOLDER,
+                output_uri_prefix=output_gcs_uri,
             )
         ),
     )
