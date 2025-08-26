@@ -32,13 +32,13 @@ def generate_content() -> str:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("output_folder/example-meal.png")
+            image.save("output_folder/example-breakfast-meal.png")
     # Example response:
     #   Generates a photo of a vibrant and appetizing breakfast meal.
     #   The scene will feature a white plate with golden-brown pancakes
     #   stacked neatly, drizzled with rich maple syrup and ...
     # [END googlegenaisdk_imggen_mmflash_locale_aware_with_txt]
-    return "output_folder/example-image.png"
+    return "output_folder/example-breakfast-meal.png"
 
 
 if __name__ == "__main__":

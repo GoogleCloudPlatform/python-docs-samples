@@ -14,7 +14,7 @@
 
 
 def generate_content() -> str:
-    # [START googlegenaisdk_imggen_mmflash_mulitple_imgs_with_txt]
+    # [START googlegenaisdk_imggen_mmflash_multiple_imgs_with_txt]
     from google import genai
     from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
@@ -27,14 +27,17 @@ def generate_content() -> str:
         contents=("Generate 3 images a cat sitting on a chair."),
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
-    i = 1
+    saved_files = []
+    image_counter = 1
     for part in response.candidates[0].content.parts:
         if part.text:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save(f"output_folder/example-cats-0{i}.png")
-        i += 1
+            filename = f"output_folder/example-cats-0{image_counter}.png"
+            image.save(filename)
+            saved_files.append(filename)
+            image_counter += 1
     # Example response:
     #   Image 1: A fluffy calico cat with striking green eyes is perched elegantly on a vintage wooden
     #   chair with a woven seat. Sunlight streams through a nearby window, casting soft shadows and
@@ -47,8 +50,8 @@ def generate_content() -> str:
     #   Image 3: A ginger tabby cat with playful amber eyes is comfortably curled up asleep on a plush,
     #   oversized armchair upholstered in a soft, floral fabric. A corner of a cozy living room with a
     #   warm lamp in the background can be seen.
-    # [END googlegenaisdk_imggen_mmflash_mulitple_imgs_with_txt]
-    return "output_folder/example-image.png"
+    # [END googlegenaisdk_imggen_mmflash_multiple_imgs_with_txt]
+    return saved_files
 
 
 if __name__ == "__main__":
