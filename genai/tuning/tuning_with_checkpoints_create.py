@@ -13,7 +13,7 @@
 # limitations under the License.
 
 
-def create_with_checkpoints() -> str:
+def create_with_checkpoints(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_tuning_with_checkpoints_create]
     import time
 
@@ -88,4 +88,4 @@ def create_with_checkpoints() -> str:
 
 
 if __name__ == "__main__":
-    create_with_checkpoints()
+    create_with_checkpoints(output_gcs_uri="gs://your-bucket/your-prefix")
