@@ -33,16 +33,13 @@ def test_tuning_job_create(mock_genai_client: MagicMock) -> None:
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
         experiment="test-experiment",
-        tuned_model=types.TunedModel(
-            model="test-model",
-            endpoint="test-endpoint"
-        )
+        tuned_model=types.TunedModel(model="test-model", endpoint="test-endpoint"),
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
     response = tuning_job_create.create_tuning_job()
 
-    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
     assert response == "test-tuning-job"
 
@@ -53,10 +50,7 @@ def test_tuning_job_get(mock_genai_client: MagicMock) -> None:
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
         experiment="test-experiment",
-        tuned_model=types.TunedModel(
-            model="test-model",
-            endpoint="test-endpoint"
-        )
+        tuned_model=types.TunedModel(model="test-model", endpoint="test-endpoint"),
     )
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
 
@@ -73,10 +67,7 @@ def test_tuning_job_list(mock_genai_client: MagicMock) -> None:
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
         experiment="test-experiment",
-        tuned_model=types.TunedModel(
-            model="test-model",
-            endpoint="test-endpoint"
-        )
+        tuned_model=types.TunedModel(model="test-model", endpoint="test-endpoint"),
     )
     mock_genai_client.return_value.tunings.list.return_value = [mock_tuning_job]
 
@@ -92,21 +83,10 @@ def test_tuning_textgen_with_txt(mock_genai_client: MagicMock) -> None:
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
         experiment="test-experiment",
-        tuned_model=types.TunedModel(
-            model="test-model",
-            endpoint="test-endpoint"
-        )
+        tuned_model=types.TunedModel(model="test-model", endpoint="test-endpoint"),
     )
     mock_response = types.GenerateContentResponse._from_response(  # pylint: disable=protected-access
-        response={
-            "candidates": [
-                {
-                    "content": {
-                        "parts": [{"text": "This is a mocked answer."}]
-                    }
-                }
-            ]
-        },
+        response={"candidates": [{"content": {"parts": [{"text": "This is a mocked answer."}]}}]},
         kwargs={},
     )
 
@@ -130,16 +110,20 @@ def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock) -> Non
             model="test-model",
             endpoint="test-endpoint-2",
             checkpoints=[
-                types.TunedModelCheckpoint(checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"),
-                types.TunedModelCheckpoint(checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"),
-            ]
-        )
+                types.TunedModelCheckpoint(
+                    checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"
+                ),
+                types.TunedModelCheckpoint(
+                    checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"
+                ),
+            ],
+        ),
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
     response = tuning_with_checkpoints_create.create_with_checkpoints()
 
-    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
     assert response == "test-tuning-job"
 
@@ -154,10 +138,14 @@ def test_tuning_with_checkpoints_get_model(mock_genai_client: MagicMock) -> None
             model="test-model",
             endpoint="test-endpoint-2",
             checkpoints=[
-                types.TunedModelCheckpoint(checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"),
-                types.TunedModelCheckpoint(checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"),
-            ]
-        )
+                types.TunedModelCheckpoint(
+                    checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"
+                ),
+                types.TunedModelCheckpoint(
+                    checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"
+                ),
+            ],
+        ),
     )
     mock_model = types.Model(
         name="test-model",
@@ -165,7 +153,7 @@ def test_tuning_with_checkpoints_get_model(mock_genai_client: MagicMock) -> None
         checkpoints=[
             types.Checkpoint(checkpoint_id="1", epoch=1, step=10),
             types.Checkpoint(checkpoint_id="2", epoch=2, step=20),
-        ]
+        ],
     )
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
     mock_genai_client.return_value.models.get.return_value = mock_model
@@ -188,10 +176,14 @@ def test_tuning_with_checkpoints_list_checkpoints(mock_genai_client: MagicMock) 
             model="test-model",
             endpoint="test-endpoint-2",
             checkpoints=[
-                types.TunedModelCheckpoint(checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"),
-                types.TunedModelCheckpoint(checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"),
-            ]
-        )
+                types.TunedModelCheckpoint(
+                    checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"
+                ),
+                types.TunedModelCheckpoint(
+                    checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"
+                ),
+            ],
+        ),
     )
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
 
@@ -203,7 +195,9 @@ def test_tuning_with_checkpoints_list_checkpoints(mock_genai_client: MagicMock) 
 
 
 @patch("google.genai.Client")
-def test_tuning_with_checkpoints_set_default_checkpoint(mock_genai_client: MagicMock) -> None:
+def test_tuning_with_checkpoints_set_default_checkpoint(
+    mock_genai_client: MagicMock,
+) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -212,10 +206,14 @@ def test_tuning_with_checkpoints_set_default_checkpoint(mock_genai_client: Magic
             model="test-model",
             endpoint="test-endpoint-2",
             checkpoints=[
-                types.TunedModelCheckpoint(checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"),
-                types.TunedModelCheckpoint(checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"),
-            ]
-        )
+                types.TunedModelCheckpoint(
+                    checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"
+                ),
+                types.TunedModelCheckpoint(
+                    checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"
+                ),
+            ],
+        ),
     )
     mock_model = types.Model(
         name="test-model",
@@ -223,7 +221,7 @@ def test_tuning_with_checkpoints_set_default_checkpoint(mock_genai_client: Magic
         checkpoints=[
             types.Checkpoint(checkpoint_id="1", epoch=1, step=10),
             types.Checkpoint(checkpoint_id="2", epoch=2, step=20),
-        ]
+        ],
     )
     mock_updated_model = types.Model(
         name="test-model",
@@ -231,13 +229,15 @@ def test_tuning_with_checkpoints_set_default_checkpoint(mock_genai_client: Magic
         checkpoints=[
             types.Checkpoint(checkpoint_id="1", epoch=1, step=10),
             types.Checkpoint(checkpoint_id="2", epoch=2, step=20),
-        ]
+        ],
     )
     mock_genai_client.return_value.tunings.get.return_value = mock_tuning_job
     mock_genai_client.return_value.models.get.return_value = mock_model
     mock_genai_client.return_value.models.update.return_value = mock_updated_model
 
-    response = tuning_with_checkpoints_set_default_checkpoint.set_default_checkpoint("test-tuning-job", "1")
+    response = tuning_with_checkpoints_set_default_checkpoint.set_default_checkpoint(
+        "test-tuning-job", "1"
+    )
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.get.assert_called_once_with(name="test-tuning-job")
@@ -256,21 +256,17 @@ def test_tuning_with_checkpoints_textgen_with_txt(mock_genai_client: MagicMock) 
             model="test-model",
             endpoint="test-endpoint-2",
             checkpoints=[
-                types.TunedModelCheckpoint(checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"),
-                types.TunedModelCheckpoint(checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"),
-            ]
-        )
+                types.TunedModelCheckpoint(
+                    checkpoint_id="1", epoch=1, step=10, endpoint="test-endpoint-1"
+                ),
+                types.TunedModelCheckpoint(
+                    checkpoint_id="2", epoch=2, step=20, endpoint="test-endpoint-2"
+                ),
+            ],
+        ),
     )
     mock_response = types.GenerateContentResponse._from_response(  # pylint: disable=protected-access
-        response={
-            "candidates": [
-                {
-                    "content": {
-                        "parts": [{"text": "This is a mocked answer."}]
-                    }
-                }
-            ]
-        },
+        response={"candidates": [{"content": {"parts": [{"text": "This is a mocked answer."}]}}]},
         kwargs={},
     )
 

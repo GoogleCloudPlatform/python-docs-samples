@@ -18,12 +18,32 @@ def create_with_checkpoints() -> str:
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset
+    from google.genai import types
+    from google.genai.types import (
+        HttpOptions,
+        CreateTuningJobConfig,
+        TuningDataset,
+        EvaluationConfig,
+        OutputConfig,
+        GcsDestination,
+    )
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
     training_dataset = TuningDataset(
         gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data.jsonl",
+    )
+    validation_dataset = TuningDataset(
+        gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_validation_data.jsonl",
+    )
+
+    evaluation_config = EvaluationConfig(
+        metrics=[types.Metric(name="FLUENCY", prompt_template="""Evaluate this {response}""")],
+        output_config=OutputConfig(
+            gcs_destination=GcsDestination(
+                output_uri_prefix="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data_output",
+            )
+        ),
     )
 
     tuning_job = client.tunings.tune(
@@ -33,6 +53,8 @@ def create_with_checkpoints() -> str:
             tuned_model_display_name="Example tuning job",
             # Set to True to disable tuning intermediate checkpoints. Default is False.
             export_last_checkpoint_only=False,
+            validation_dataset=validation_dataset,
+            evaluation_config=evaluation_config,
         ),
     )
 
