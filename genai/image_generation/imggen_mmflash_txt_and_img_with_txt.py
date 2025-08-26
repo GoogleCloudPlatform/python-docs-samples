@@ -42,7 +42,7 @@ def generate_content() -> int:
     #  A markdown page for a Paella recipe(`paella-recipe.md`) has been generated.
     #   It includes detailed steps and several images illustrating the cooking process.
     # [END googlegenaisdk_imggen_mmflash_txt_and_img_with_txt]
-    return i
+    return True
 
 
 if __name__ == "__main__":
