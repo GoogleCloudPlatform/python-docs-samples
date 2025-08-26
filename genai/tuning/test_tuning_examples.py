@@ -45,6 +45,7 @@ def output_gcs_uri() -> str:
     for blob in blobs:
         blob.delete()
 
+
 @patch("google.genai.Client")
 def test_tuning_job_create(mock_genai_client: MagicMock, output_gcs_uri: str) -> None:
     # Mock the API response
