@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 from . import read_query_results
 
 
-def test_read_query_results(capsys):
+def test_read_query_results(capsys: pytest.CaptureFixture) -> None:
     read_query_results.read_query_results()
     out, _ = capsys.readouterr()
     assert "stackoverflow" in out

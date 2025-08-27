@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pandas
 
-def read_query_results():
+
+def read_query_results() -> pandas.DataFrame:
     # [START bigquerystorage_pandas_tutorial_read_query_results]
     from google.cloud import bigquery
 

@@ -15,7 +15,7 @@
 import argparse
 
 
-def main(project_id="your-project-id", snapshot_millis=0):
+def main(project_id: str = "your-project-id", snapshot_millis: int = 0) -> None:
     # [START bigquerystorage_quickstart]
     from google.cloud.bigquery_storage import BigQueryReadClient, types
 

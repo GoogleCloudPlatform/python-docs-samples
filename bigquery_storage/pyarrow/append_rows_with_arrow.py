@@ -13,8 +13,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+from concurrent.futures import Future
 import datetime
 import decimal
+from typing import Iterable
 
 from google.cloud import bigquery
 from google.cloud import bigquery_storage_v1
@@ -158,7 +160,9 @@ def generate_pyarrow_table(num_rows: int = TABLE_LENGTH) -> pa.Table:
     return table
 
 
-def generate_write_requests(pyarrow_table):
+def generate_write_requests(
+    pyarrow_table: pa.Table,
+) -> Iterable[gapic_types.AppendRowsRequest]:
     # Determine max_chunksize of the record batches. Because max size of
     # AppendRowsRequest is 10 MB, we need to split the table if it's too big.
     # See: https://cloud.google.com/bigquery/docs/reference/storage/rpc/google.cloud.bigquery.storage.v1#appendrowsrequest
@@ -173,7 +177,9 @@ def generate_write_requests(pyarrow_table):
         yield request
 
 
-def verify_result(client, table, futures):
+def verify_result(
+    client: bigquery.Client, table: bigquery.Table, futures: "list[Future]"
+) -> None:
     bq_table = client.get_table(table)
 
     # Verify table schema.
@@ -190,7 +196,7 @@ def verify_result(client, table, futures):
     assert len(futures) == 2
 
 
-def main(project_id, dataset):
+def main(project_id: str, dataset: bigquery.Dataset) -> None:
     # Initialize clients.
     write_client = bqstorage_write_client()
     bq_client = bigquery.Client()

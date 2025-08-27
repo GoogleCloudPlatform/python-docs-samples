@@ -13,7 +13,10 @@
 # limitations under the License.
 
 
-def read_table():
+import pandas
+
+
+def read_table() -> pandas.DataFrame:
     # [START bigquerystorage_pandas_tutorial_read_table]
     from google.cloud import bigquery
 

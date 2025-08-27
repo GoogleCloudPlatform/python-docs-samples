@@ -15,9 +15,8 @@
 import pathlib
 import random
 
-import pytest
-
 from google.cloud import bigquery
+import pytest
 
 from . import append_rows_pending
 
@@ -51,7 +50,7 @@ def test_append_rows_pending(
     capsys: pytest.CaptureFixture,
     bigquery_client: bigquery.Client,
     sample_data_table: str,
-):
+) -> None:
     project_id, dataset_id, table_id = sample_data_table.split(".")
     append_rows_pending.append_rows_pending(
         project_id=project_id, dataset_id=dataset_id, table_id=table_id

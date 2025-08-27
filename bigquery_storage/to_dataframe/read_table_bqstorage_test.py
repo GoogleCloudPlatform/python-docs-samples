@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 from . import read_table_bqstorage
 
 
-def test_read_table(capsys, project_id):
+def test_read_table(capsys: pytest.CaptureFixture, project_id: str) -> None:
     read_table_bqstorage.read_table(your_project_id=project_id)
     out, _ = capsys.readouterr()
     assert "species_common_name" in out

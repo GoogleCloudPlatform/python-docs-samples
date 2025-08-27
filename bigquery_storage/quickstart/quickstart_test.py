@@ -14,23 +14,27 @@
 
 import datetime
 
+import pytest
+
 from . import quickstart
 
 
-def now_millis():
+def now_millis() -> int:
     return int(
         (datetime.datetime.utcnow() - datetime.datetime(1970, 1, 1)).total_seconds()
         * 1000
     )
 
 
-def test_quickstart_wo_snapshot(capsys, project_id):
+def test_quickstart_wo_snapshot(capsys: pytest.CaptureFixture, project_id: str) -> None:
     quickstart.main(project_id)
     out, _ = capsys.readouterr()
     assert "unique names in states: WA" in out
 
 
-def test_quickstart_with_snapshot(capsys, project_id):
+def test_quickstart_with_snapshot(
+    capsys: pytest.CaptureFixture, project_id: str
+) -> None:
     quickstart.main(project_id, now_millis() - 5000)
     out, _ = capsys.readouterr()
     assert "unique names in states: WA" in out

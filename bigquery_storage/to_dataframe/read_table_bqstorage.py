@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pandas as pd
 
-def read_table(your_project_id):
+
+def read_table(your_project_id: str) -> pd.DataFrame:
     original_your_project_id = your_project_id
     # [START bigquerystorage_pandas_tutorial_read_session]
     your_project_id = "project-for-read-session"

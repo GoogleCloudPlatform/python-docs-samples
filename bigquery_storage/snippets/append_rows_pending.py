@@ -18,10 +18,9 @@ This code sample demonstrates how to write records in pending mode
 using the low-level generated client for Python.
 """
 
-from google.protobuf import descriptor_pb2
-
 from google.cloud import bigquery_storage_v1
 from google.cloud.bigquery_storage_v1 import types, writer
+from google.protobuf import descriptor_pb2
 
 # If you update the customer_record.proto protocol buffer definition, run:
 #
@@ -31,14 +30,14 @@ from google.cloud.bigquery_storage_v1 import types, writer
 from . import customer_record_pb2
 
 
-def create_row_data(row_num: int, name: str):
+def create_row_data(row_num: int, name: str) -> bytes:
     row = customer_record_pb2.CustomerRecord()
     row.row_num = row_num
     row.customer_name = name
     return row.SerializeToString()
 
 
-def append_rows_pending(project_id: str, dataset_id: str, table_id: str):
+def append_rows_pending(project_id: str, dataset_id: str, table_id: str) -> None:
     """Create a write stream, write some sample data, and commit the stream."""
     write_client = bigquery_storage_v1.BigQueryWriteClient()
     parent = write_client.table_path(project_id, dataset_id, table_id)

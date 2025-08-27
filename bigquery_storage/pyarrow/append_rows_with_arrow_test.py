@@ -12,8 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from google.cloud import bigquery
+
 from . import append_rows_with_arrow
 
 
-def test_append_rows_with_arrow(project_id, dataset):
+def test_append_rows_with_arrow(project_id: str, dataset: bigquery.Dataset) -> None:
     append_rows_with_arrow.main(project_id, dataset)

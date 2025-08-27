@@ -12,10 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import pytest
+
 from . import read_table_bigquery
 
 
-def test_read_table(capsys):
+def test_read_table(capsys: pytest.CaptureFixture) -> None:
     read_table_bigquery.read_table()
     out, _ = capsys.readouterr()
     assert "country_name" in out
