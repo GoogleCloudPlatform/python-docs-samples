@@ -17,3 +17,4 @@ from . import append_rows_with_arrow
 
 def test_append_rows_with_arrow(project_id, dataset):
     append_rows_with_arrow.main(project_id, dataset)
+    assert 0
