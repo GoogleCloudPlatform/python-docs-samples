@@ -15,19 +15,20 @@
 import datetime
 import os
 import random
+from typing import Generator
+
+from google.cloud import bigquery
 
 import pytest
 
 
 @pytest.fixture(scope="session")
-def project_id():
+def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
 
 
 @pytest.fixture(scope="session")
-def dataset(project_id):
-    from google.cloud import bigquery
-
+def dataset(project_id: str) -> Generator[bigquery.Dataset, None, None]:
     client = bigquery.Client()
 
     # Add a random suffix to dataset name to avoid conflict, because we run

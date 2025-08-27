@@ -16,13 +16,14 @@
 import datetime
 import decimal
 
+from google.cloud import bigquery
+from google.cloud import bigquery_storage_v1
 from google.cloud.bigquery import enums
+from google.cloud.bigquery_storage_v1 import types as gapic_types
+from google.cloud.bigquery_storage_v1.writer import AppendRowsStream
 import pandas as pd
 import pyarrow as pa
 
-from google.cloud import bigquery
-from google.cloud.bigquery_storage_v1 import types as gapic_types
-from google.cloud.bigquery_storage_v1.writer import AppendRowsStream
 
 TABLE_LENGTH = 100_000
 
@@ -84,13 +85,11 @@ PYARROW_SCHEMA = pa.schema(
 )
 
 
-def bqstorage_write_client():
-    from google.cloud import bigquery_storage_v1
-
+def bqstorage_write_client() -> bigquery_storage_v1.BigQueryWriteClient:
     return bigquery_storage_v1.BigQueryWriteClient()
 
 
-def make_table(project_id, dataset_id, bq_client):
+def make_table(project_id: str, dataset_id: str, bq_client: bigquery.Client) -> bigquery.Table:
     table_id = "append_rows_w_arrow_test"
     table_id_full = f"{project_id}.{dataset_id}.{table_id}"
     bq_table = bigquery.Table(table_id_full, schema=BQ_SCHEMA)
@@ -99,7 +98,7 @@ def make_table(project_id, dataset_id, bq_client):
     return created_table
 
 
-def create_stream(bqstorage_write_client, table):
+def create_stream(bqstorage_write_client: bigquery_storage_v1.BigQueryWriteClient, table: bigquery.Table) -> AppendRowsStream:
     stream_name = f"projects/{table.project}/datasets/{table.dataset_id}/tables/{table.table_id}/_default"
     request_template = gapic_types.AppendRowsRequest()
     request_template.write_stream = stream_name
@@ -116,7 +115,7 @@ def create_stream(bqstorage_write_client, table):
     return append_rows_stream
 
 
-def generate_pyarrow_table(num_rows=TABLE_LENGTH):
+def generate_pyarrow_table(num_rows: int = TABLE_LENGTH) -> pa.Table:
     date_1 = datetime.date(2020, 10, 1)
     date_2 = datetime.date(2021, 10, 1)
 
