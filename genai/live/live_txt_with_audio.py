@@ -63,7 +63,7 @@ async def generate_content() -> list[str]:
     # Example output:
     # > Answer to this audio url https://storage.googleapis.com/generativeai-downloads/data/16000.wav
     # Yes, I can hear you. How can I help you today?
-    # [STOP googlegenaisdk_live_txt_with_audio]
+    # [END googlegenaisdk_live_txt_with_audio]
     return response
 
 

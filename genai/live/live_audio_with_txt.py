@@ -80,7 +80,7 @@ async def generate_content() -> list[str]:
     # >  Hello? Gemini are you there?
     # Received audio answer:
     # <IPython.lib.display.Audio object>
-    # [STOP googlegenaisdk_live_audio_with_txt]
+    # [END googlegenaisdk_live_audio_with_txt]
     return []
 
 
