@@ -23,10 +23,10 @@ def generate_content() -> str:
     client = genai.Client()
 
     # Using an image of Eiffel tower, with fireworks in the background.
-    image = Image.open("example-image.png")
+    image = Image.open("test_resources/example-image-eiffel-tower.png")
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-preview-image-generation",
+        model="gemini-2.5-flash-image-preview",
         contents=[image, "Edit this image to make it look like a cartoon."],
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
@@ -35,7 +35,7 @@ def generate_content() -> str:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("bw-example-image.png")
+            image.save("output_folder/bw-example-image.png")
     # Example response:
     #  Here's the cartoon-style edit of the image:
     #  Cartoon-style edit:
@@ -43,7 +43,7 @@ def generate_content() -> str:
     #  - Brightened and saturated the colors of the sky, fireworks, and foliage for a more vibrant, cartoonish look.
     #  ....
     # [END googlegenaisdk_imggen_mmflash_edit_img_with_txt_img]
-    return "bw-example-image.png"
+    return "output_folder/bw-example-image.png"
 
 
 if __name__ == "__main__":

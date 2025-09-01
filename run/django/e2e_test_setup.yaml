@@ -139,7 +139,7 @@ substitutions:
   _REGION: us-central1
   _ARTIFACT_REGISTRY: cloud-run-source-deploy
   _IMAGE_NAME: ${_REGION}-docker.pkg.dev/${PROJECT_ID}/${_ARTIFACT_REGISTRY}/django-${_VERSION}
-  _STORAGE_BUCKET: ${PROJECT_ID}-bucket-${_VERSION}
+  _STORAGE_BUCKET: django-static-${PROJECT_ID}-${_VERSION}
   _DB_USER: django-${_VERSION}
   _DB_NAME: django-${_VERSION}
   _DB_INSTANCE: django-instance

@@ -12,35 +12,50 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import sys
+import argparse
 
 # [START storage_control_managed_folder_list]
 from google.cloud import storage_control_v2
 
 
-def list_managed_folders(bucket_name: str) -> None:
-    # The ID of your GCS bucket
-    # bucket_name = "your-unique-bucket-name"
+def list_managed_folders(bucket_name: str = "your-bucket-name") -> None:
+    """Lists all managed folders in a Google Cloud Storage bucket.
 
-    storage_control_client = storage_control_v2.StorageControlClient()
-    # The storage bucket path uses the global access pattern, in which the "_"
-    # denotes this bucket exists in the global namespace.
-    project_path = storage_control_client.common_project_path("_")
-    bucket_path = f"{project_path}/buckets/{bucket_name}"
+    Args:
+        bucket_name: The name of the Google Cloud Storage bucket.
 
-    request = storage_control_v2.ListManagedFoldersRequest(
-        parent=bucket_path,
-    )
+    Returns:
+        None. The function prints the name of each managed folder to the
+        console.
 
-    page_result = storage_control_client.list_managed_folders(request=request)
-    for managed_folder in page_result:
-        print(managed_folder)
+    Example:
+        >>> list_managed_folders(bucket_name="my-test-bucket")
+        Managed folders in bucket projects/_/buckets/my-test-bucket:
+            projects/_/buckets/my-test-bucket/managedFolders/folder-one
+            projects/_/buckets/my-test-bucket/managedFolders/folder-two
+    """
+    client = storage_control_v2.StorageControlClient()
 
-    print(f"Listed managed folders in bucket {bucket_name}")
+    # The storage bucket path uses the global access pattern,
+    # in which the "_" denotes this bucket exists in the global namespace.
+    GLOBAL_NAMESPACE_PATTERN = "_"
+    bucket_resource_name = f"projects/{GLOBAL_NAMESPACE_PATTERN}/buckets/{bucket_name}"
 
+    managed_folders = client.list_managed_folders(parent=bucket_resource_name)
 
+    print(f"Managed folders in bucket {bucket_resource_name}:")
+    for managed_folder in managed_folders:
+        print(f"\t{managed_folder.name}")
 # [END storage_control_managed_folder_list]
 
 
 if __name__ == "__main__":
-    list_managed_folders(bucket_name=sys.argv[1])
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "bucket_name",
+        help="The name of the GCS bucket.",
+    )
+
+    args = parser.parse_args()
+
+    list_managed_folders(args.bucket_name)
