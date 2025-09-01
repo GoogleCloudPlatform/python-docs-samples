@@ -16,7 +16,12 @@
 def style_customization(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_imggen_style_reference_with_txt_img]
     from google import genai
-    from google.genai.types import EditImageConfig, Image, StyleReferenceConfig, StyleReferenceImage
+    from google.genai.types import (
+        EditImageConfig,
+        Image,
+        StyleReferenceConfig,
+        StyleReferenceImage,
+    )
 
     client = genai.Client()
 
@@ -38,7 +43,6 @@ def style_customization(output_gcs_uri: str) -> str:
         config=EditImageConfig(
             edit_mode="EDIT_MODE_DEFAULT",
             number_of_images=1,
-            seed=1,
             safety_filter_level="BLOCK_MEDIUM_AND_ABOVE",
             person_generation="ALLOW_ADULT",
             output_gcs_uri=output_gcs_uri,

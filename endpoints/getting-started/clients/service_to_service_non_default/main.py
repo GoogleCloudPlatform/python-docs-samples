@@ -16,12 +16,12 @@
 Service Account."""
 
 import base64
-import httplib
 import json
 import time
 
 import google.auth.app_engine
 import googleapiclient.discovery
+import httplib
 import webapp2
 
 SERVICE_ACCOUNT_EMAIL = "YOUR-SERVICE-ACCOUNT-EMAIL"

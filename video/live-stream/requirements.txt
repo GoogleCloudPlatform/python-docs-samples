@@ -1,2 +1,2 @@
-grpcio==1.62.1
+grpcio==1.74.0
 google-cloud-video-live-stream==1.9.1

@@ -13,17 +13,37 @@
 # limitations under the License.
 
 
-def create_tuning_job() -> str:
+def create_tuning_job(output_gcs_uri: str) -> str:
     # [START googlegenaisdk_tuning_job_create]
     import time
 
     from google import genai
-    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset
+    from google.genai.types import HttpOptions, CreateTuningJobConfig, TuningDataset, EvaluationConfig, OutputConfig, GcsDestination, Metric
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
+    # TODO(developer): Update and un-comment below line
+    # output_gcs_uri = "gs://your-bucket/your-prefix"
+
+    client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
     training_dataset = TuningDataset(
         gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_train_data.jsonl",
+    )
+    validation_dataset = TuningDataset(
+        gcs_uri="gs://cloud-samples-data/ai-platform/generative_ai/gemini/text/sft_validation_data.jsonl",
+    )
+
+    evaluation_config = EvaluationConfig(
+        metrics=[
+            Metric(
+                name="FLUENCY",
+                prompt_template="""Evaluate this {response}"""
+            )
+        ],
+        output_config=OutputConfig(
+            gcs_destination=GcsDestination(
+                output_uri_prefix=output_gcs_uri,
+            )
+        ),
     )
 
     tuning_job = client.tunings.tune(
@@ -31,6 +51,8 @@ def create_tuning_job() -> str:
         training_dataset=training_dataset,
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
+            validation_dataset=validation_dataset,
+            evaluation_config=evaluation_config,
         ),
     )
 
@@ -64,4 +86,4 @@ def create_tuning_job() -> str:
 
 
 if __name__ == "__main__":
-    create_tuning_job()
+    create_tuning_job(output_gcs_uri="gs://your-bucket/your-prefix")

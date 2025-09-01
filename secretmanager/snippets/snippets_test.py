@@ -37,6 +37,7 @@ from create_secret_with_tags import create_secret_with_tags
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
+from delete_secret_annotation import delete_secret_annotation
 from delete_secret_label import delete_secret_label
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
@@ -483,6 +484,16 @@ def test_delete_secret(
         print(f"{client}")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/latest"
         retry_client_access_secret_version(client, request={"name": name})
+
+
+def test_delete_secret_annotation(
+    secret: Tuple[str, str, str],
+    annotation_key: str,
+) -> None:
+    project_id, secret_id, _ = secret
+    secret = delete_secret_annotation(project_id, secret_id, annotation_key)
+    assert secret_id in secret.name
+    assert annotation_key not in secret.annotations
 
 
 def test_delete_secret_labels(

@@ -1,2 +1,2 @@
-functions-framework==3.8.2
+functions-framework==3.9.2
 python-dateutil==2.9.0.post0

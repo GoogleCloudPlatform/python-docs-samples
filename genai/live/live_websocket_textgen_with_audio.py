@@ -42,8 +42,8 @@ async def generate_content() -> str:
     import base64
     import json
 
-    from websockets.asyncio.client import connect
     from scipy.io import wavfile
+    from websockets.asyncio.client import connect
 
     def read_wavefile(filepath: str) -> tuple[str, str]:
         # Read the .wav file using scipy.io.wavfile.read

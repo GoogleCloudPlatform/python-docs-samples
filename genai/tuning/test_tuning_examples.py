@@ -12,9 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+from datetime import datetime as dt
+
 from unittest.mock import call, MagicMock, patch
 
+from google.cloud import storage
 from google.genai import types
+import pytest
 
 import tuning_job_create
 import tuning_job_get
@@ -27,8 +31,24 @@ import tuning_with_checkpoints_set_default_checkpoint
 import tuning_with_checkpoints_textgen_with_txt
 
 
+GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
+
+
+@pytest.fixture(scope="session")
+def output_gcs_uri() -> str:
+    prefix = f"text_output/{dt.now()}"
+
+    yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
+
+    storage_client = storage.Client()
+    bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
+    blobs = bucket.list_blobs(prefix=prefix)
+    for blob in blobs:
+        blob.delete()
+
+
 @patch("google.genai.Client")
-def test_tuning_job_create(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_create(mock_genai_client: MagicMock, output_gcs_uri: str) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -40,9 +60,9 @@ def test_tuning_job_create(mock_genai_client: MagicMock) -> None:
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
-    response = tuning_job_create.create_tuning_job()
+    response = tuning_job_create.create_tuning_job(output_gcs_uri=output_gcs_uri)
 
-    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
     assert response == "test-tuning-job"
 
@@ -121,7 +141,7 @@ def test_tuning_textgen_with_txt(mock_genai_client: MagicMock) -> None:
 
 
 @patch("google.genai.Client")
-def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock) -> None:
+def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock, output_gcs_uri: str) -> None:
     # Mock the API response
     mock_tuning_job = types.TuningJob(
         name="test-tuning-job",
@@ -137,9 +157,9 @@ def test_tuning_job_create_with_checkpoints(mock_genai_client: MagicMock) -> Non
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
-    response = tuning_with_checkpoints_create.create_with_checkpoints()
+    response = tuning_with_checkpoints_create.create_with_checkpoints(output_gcs_uri=output_gcs_uri)
 
-    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
     assert response == "test-tuning-job"
 

@@ -40,6 +40,7 @@ async def generate_content() -> str:
     """
     # [START googlegenaisdk_live_websocket_with_txt]
     import json
+
     from websockets.asyncio.client import connect
 
     # Configuration Constants

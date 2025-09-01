@@ -1,4 +1,4 @@
-functions-framework==3.8.2
+functions-framework==3.9.2
 flask==3.0.3
 google-cloud-error-reporting==1.11.1
 MarkupSafe==2.1.3

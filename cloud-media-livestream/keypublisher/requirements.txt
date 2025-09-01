@@ -1,5 +1,5 @@
 Flask==2.2.5
-functions-framework==3.8.2
+functions-framework==3.9.2
 google-cloud-secret-manager==2.21.1
 lxml==5.2.1
 pycryptodome==3.21.0

@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,19 +19,14 @@
 import asyncio
 
 
-async def generate_content():
+async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_transcribe_with_audio]
     from google import genai
-    from google.genai.types import (
-        LiveConnectConfig,
-        Modality,
-        AudioTranscriptionConfig,
-        Part,
-        Content,
-    )
+    from google.genai.types import (AudioTranscriptionConfig, Content,
+                                    LiveConnectConfig, Modality, Part)
 
     client = genai.Client()
-    model = "gemini-2.0-flash-live-preview-04-09"
+    model = "gemini-live-2.5-flash-preview-native-audio"
     config = LiveConnectConfig(
         response_modalities=[Modality.AUDIO],
         input_audio_transcription=AudioTranscriptionConfig(),
@@ -40,17 +35,23 @@ async def generate_content():
 
     async with client.aio.live.connect(model=model, config=config) as session:
         input_txt = "Hello? Gemini are you there?"
-        print("> ", input_txt, "\n")
+        print(f"> {input_txt}")
 
         await session.send_client_content(
-            turns=Content(role="user", parts=[Part(text=input_txt)]), turn_complete=True
+            turns=Content(role="user", parts=[Part(text=input_txt)])
         )
 
         response = []
 
         async for message in session.receive():
+            if message.server_content.model_turn:
+                print("Model turn:", message.server_content.model_turn)
+            if message.server_content.input_transcription:
+                print(
+                    "Input transcript:", message.server_content.input_transcription.text
+                )
             if message.server_content.output_transcription:
-                if message.server_content.output_transcription.text is not None:
+                if message.server_content.output_transcription.text:
                     response.append(message.server_content.output_transcription.text)
 
         print("".join(response))
@@ -58,7 +59,7 @@ async def generate_content():
     # Example output:
     # >  Hello? Gemini are you there?
     # Yes, I'm here. What would you like to talk about?
-    # [STOP googlegenaisdk_live_transcribe_with_audio]
+    # [END googlegenaisdk_live_transcribe_with_audio]
     return response
 
 

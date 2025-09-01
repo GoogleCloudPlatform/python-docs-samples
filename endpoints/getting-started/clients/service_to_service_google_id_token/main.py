@@ -16,12 +16,12 @@
 Default Service Account using Google ID token."""
 
 import base64
-import httplib
 import json
 import time
 import urllib
 
 from google.appengine.api import app_identity
+import httplib
 import webapp2
 
 SERVICE_ACCOUNT_EMAIL = "YOUR-CLIENT-PROJECT-ID@appspot.gserviceaccount.com"

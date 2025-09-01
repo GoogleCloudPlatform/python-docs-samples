@@ -41,10 +41,10 @@ async def generate_content() -> str:
     # [START googlegenaisdk_live_audiogen_websocket_with_txt]
     import base64
     import json
-    import numpy as np
 
-    from websockets.asyncio.client import connect
+    import numpy as np
     from scipy.io import wavfile
+    from websockets.asyncio.client import connect
 
     # Configuration Constants
     PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
