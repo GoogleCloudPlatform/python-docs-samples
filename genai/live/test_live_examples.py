@@ -25,8 +25,8 @@ import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
-import live_txt_with_audio
 import live_audio_with_txt
+import live_txt_with_audio
 import live_transcribe_with_audio
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
