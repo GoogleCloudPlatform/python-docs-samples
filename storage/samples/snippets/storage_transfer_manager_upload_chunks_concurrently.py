@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import argparse
+
 
 # [START storage_transfer_manager_upload_chunks_concurrently]
 def upload_chunks_concurrently(
@@ -52,6 +54,42 @@ def upload_chunks_concurrently(
     )
 
     print(f"File {source_filename} uploaded to {destination_blob_name}.")
+
+
+if __name__ == "__main__":
+    argparse = argparse.ArgumentParser(
+        description="Upload a file to GCS in chunks concurrently."
+    )
+    argparse.add_argument(
+        "--bucket_name", help="The name of the GCS bucket to upload to."
+    )
+    argparse.add_argument(
+        "--source_filename", help="The local path to the file to upload."
+    )
+    argparse.add_argument(
+        "--destination_blob_name", help="The name of the object in GCS."
+    )
+    argparse.add_argument(
+        "--chunk_size",
+        type=int,
+        default=32 * 1024 * 1024,
+        help="The size of each chunk in bytes (default: 32 MiB). The remote\
+              service has a minimum of 5 MiB and a maximum of 5 GiB",
+    )
+    argparse.add_argument(
+        "--workers",
+        type=int,
+        default=8,
+        help="The number of worker processes to use (default: 8).",
+    )
+    args = argparse.parse_args()
+    upload_chunks_concurrently(
+        args.bucket_name,
+        args.source_filename,
+        args.destination_blob_name,
+        args.chunk_size,
+        args.workers,
+    )
 
 
 # [END storage_transfer_manager_upload_chunks_concurrently]
