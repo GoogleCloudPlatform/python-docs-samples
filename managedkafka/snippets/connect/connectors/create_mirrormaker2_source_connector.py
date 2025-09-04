@@ -72,7 +72,7 @@ def create_mirrormaker2_source_connector(
         "name": connector_id,
         "tasks.max": tasks_max,
         "source.cluster.alias": source_cluster_alias,
-        "target.cluster.alias": target_cluster_alias, # This is usually the primary cluster.
+        "target.cluster.alias": target_cluster_alias,  # This is usually the primary cluster.
         # Replicate all topics from the source
         "topics": topics,
         # The value for bootstrap.servers is a comma-separated list of hostname:port pairs
