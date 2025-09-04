@@ -131,18 +131,26 @@ export GOOGLE_CLIENT_SECRETS=$(pwd)/testing/client-secrets.json
 # For Datalabeling samples to hit the testing endpoint
 export DATALABELING_ENDPOINT="test-datalabeling.sandbox.googleapis.com:443"
 
-# Run Cloud SQL proxy (background process exit when script does)
-wget --quiet https://dl.google.com/cloudsql/cloud_sql_proxy.linux.amd64 \
-     -O ${HOME}/cloud_sql_proxy && chmod +x ${HOME}/cloud_sql_proxy
-${HOME}/cloud_sql_proxy -instances="${MYSQL_INSTANCE}"=tcp:3306,"${MYSQL_INSTANCE}" -dir "${HOME}" &>> \
-       ${HOME}/cloud_sql_proxy.log &
-echo -e "\Cloud SQL proxy started for MySQL."
-${HOME}/cloud_sql_proxy -instances="${POSTGRES_INSTANCE}"=tcp:5432,"${POSTGRES_INSTANCE}" -dir "${HOME}" &>> \
-       ${HOME}/cloud_sql_proxy-postgres.log &
-echo -e "\Cloud SQL proxy started for Postgres."
-${HOME}/cloud_sql_proxy -instances="${SQLSERVER_INSTANCE}"=tcp:1433 &>> \
-       ${HOME}/cloud_sql_proxy-sqlserver.log &
-echo -e "\Cloud SQL proxy started for SQL Server."
+# Run Cloud SQL Proxy (background process exit when script does)
+wget --quiet https://storage.googleapis.com/cloud-sql-connectors/cloud-sql-proxy/v2.15.1/cloud-sql-proxy.linux.amd64 \
+     -O ${HOME}/cloud-sql-proxy && chmod +x ${HOME}/cloud-sql-proxy
+# Cloud SQL Proxy has two socket listening modes (TCP and Unix)
+${HOME}/cloud-sql-proxy --port 3306 ${MYSQL_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-mysql-tcp.log &
+echo -e "Cloud SQL Proxy (TCP) started for MySQL."
+${HOME}/cloud-sql-proxy --unix-socket ${HOME} ${MYSQL_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-mysql-unix.log &
+echo -e "Cloud SQL Proxy (Unix) started for MySQL."
+${HOME}/cloud-sql-proxy --port 5432 ${POSTGRES_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-postgres-tcp.log &
+echo -e "Cloud SQL Proxy (TCP) started for Postgres."
+${HOME}/cloud-sql-proxy --unix-socket ${HOME} ${POSTGRES_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-postgres-unix.log &
+echo -e "Cloud SQL Proxy (Unix) started for Postgres."
+# SQL Server does not support Unix sockets, so only use TCP
+${HOME}/cloud-sql-proxy --port 1433 ${SQLSERVER_INSTANCE} &>> \
+       ${HOME}/cloud-sql-proxy-sqlserver.log &
+echo -e "Cloud SQL Proxy started for SQL Server."
 
 echo -e "\n******************** TESTING PROJECTS ********************"
 # Switch to 'fail at end' to allow all tests to complete before exiting.
