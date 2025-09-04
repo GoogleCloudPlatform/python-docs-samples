@@ -18,7 +18,7 @@ name = "weather-model"
 version = "1.0.0"
 dependencies = [
     "datasets==4.0.0",
-    "torch==2.4.0",  # make sure this matches the `container_uri` in `notebooks/3-training.ipynb`
+    "torch==2.8.0",  # make sure this matches the `container_uri` in `notebooks/3-training.ipynb`
     "transformers==4.48.0",
 ]
 
