@@ -12,17 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-def create_mirrormaker_source_connector(
+def create_mirrormaker2_source_connector(
     project_id: str,
     region: str,
     connect_cluster_id: str,
-    tasks_max: str,
     connector_id: str,
-    topics: str,
-    source_cluster_alias: str,
-    target_cluster_alias: str,
     source_bootstrap_servers: str,
     target_bootstrap_servers: str,
+    tasks_max: str,
+    source_cluster_alias: str,
+    target_cluster_alias: str,
+    topics: str,
+    topics_exclude: str,
 ) -> None:
     """
     Create a MirrorMaker 2.0 Source connector.
@@ -31,13 +32,14 @@ def create_mirrormaker_source_connector(
         project_id: Google Cloud project ID.
         region: Cloud region.
         connect_cluster_id: ID of the Kafka Connect cluster.
-        tasks_max: Controls the level of parallelism for the connector.
-        connector_name: Name of the connector.
-        topics: Topics to mirror.
-        source_cluster_alias: Alias for the source cluster.
-        target_cluster_alias: Alias for the target cluster.
+        connector_id: Name of the connector.
         source_bootstrap_servers: Source cluster bootstrap servers.
         target_bootstrap_servers: Target cluster bootstrap servers. This is usually the primary cluster.
+        tasks_max: Controls the level of parallelism for the connector.
+        source_cluster_alias: Alias for the source cluster.
+        target_cluster_alias: Alias for the target cluster.
+        topics: Topics to mirror.
+        topics_exclude: Topics to exclude from mirroring.
 
     Raises:
         This method will raise the GoogleAPICallError exception if the operation errors.
@@ -46,13 +48,14 @@ def create_mirrormaker_source_connector(
     # project_id = "my-project-id"
     # region = "us-central1"
     # connect_cluster_id = "my-connect-cluster"
+    # connector_id = "mm2-source-to-target-connector-id"
+    # source_bootstrap_servers = "source_cluster_dns"
+    # target_bootstrap_servers = "target_cluster_dns"
     # tasks_max = "3"
-    # connector_id = "MM2_CONNECTOR_ID"
-    # topics = "GMK_TOPIC_NAME"
     # source_cluster_alias = "source"
     # target_cluster_alias = "target"
-    # source_bootstrap_servers = "GMK_SOURCE_CLUSTER_DNS"
-    # target_bootstrap_servers = "GMK_TARGET_CLUSTER_DNS"
+    # topics = ".*"
+    # topics_exclude = "mm2.*.internal,.*.replica,__.*"
 
     # [START managedkafka_create_mirrormaker2_source_connector]
     from google.api_core.exceptions import GoogleAPICallError
@@ -66,15 +69,23 @@ def create_mirrormaker_source_connector(
 
     configs = {
         "connector.class": "org.apache.kafka.connect.mirror.MirrorSourceConnector",
-        "source.cluster.alias": source_cluster_alias,
-        "target.cluster.alias": target_cluster_alias,
+        "name": connector_id,
         "tasks.max": tasks_max,
+        "source.cluster.alias": source_cluster_alias,
+        "target.cluster.alias": target_cluster_alias, # This is usually the primary cluster.
+        # Replicate all topics from the source
         "topics": topics,
+        # The value for bootstrap.servers is a comma-separated list of hostname:port pairs
+        # for one or more Kafka brokers in the source/target cluster.
         "source.cluster.bootstrap.servers": source_bootstrap_servers,
         "target.cluster.bootstrap.servers": target_bootstrap_servers,
+        # You can define an exclusion policy for topics as follows:
+        # To exclude internal MirrorMaker 2 topics, internal topics and replicated topics.
+        "topics.exclude": topics_exclude,
     }
 
     connector = Connector()
+    # The name of the connector.
     connector.name = connector_id
     connector.configs = configs
 

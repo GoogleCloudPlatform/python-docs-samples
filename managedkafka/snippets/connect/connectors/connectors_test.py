@@ -17,7 +17,7 @@ from unittest.mock import MagicMock
 
 import create_bigquery_sink_connector
 import create_cloud_storage_sink_connector
-import create_mirrormaker_source_connector
+import create_mirrormaker2_source_connector
 import create_pubsub_sink_connector
 import create_pubsub_source_connector
 from google.api_core.operation import Operation
@@ -33,28 +33,29 @@ CONNECT_CLUSTER_ID = "test-connect-cluster-id"
 @mock.patch(
     "google.cloud.managedkafka_v1.services.managed_kafka_connect.ManagedKafkaConnectClient.create_connector"
 )
-def test_create_mirrormaker2_connector(
+def test_create_mirrormaker2_source_connector(
     mock_method: MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    connector_id = "MM2_CONNECTOR_ID"
+    connector_id = "mm2-source-to-target-connector-id"
     operation = mock.MagicMock(spec=Operation)
     connector = managedkafka_v1.types.Connector()
     connector.name = connector_id
     operation.result = mock.MagicMock(return_value=connector)
     mock_method.return_value = operation
 
-    create_mirrormaker_source_connector.create_mirrormaker_source_connector(
+    create_mirrormaker2_source_connector.create_mirrormaker2_source_connector(
         PROJECT_ID,
         REGION,
         CONNECT_CLUSTER_ID,
-        "3",
         connector_id,
-        "GMK_TOPIC_NAME",
+        "source_cluster_dns",
+        "target_cluster_dns",
+        "3",
         "source",
         "target",
-        "GMK_SOURCE_CLUSTER_DNS",
-        "GMK_TARGET_CLUSTER_DNS",
+        ".*",
+        "mm2.*\\.internal,.*\\.replica,__.*",
     )
 
     out, _ = capsys.readouterr()
