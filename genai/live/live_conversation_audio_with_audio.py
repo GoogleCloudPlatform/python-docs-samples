@@ -123,42 +123,7 @@ async def main():
         #     {'output_transcription': {'finished': True}}
         #     Model response saved to example_model_response.wav
 
-
 # [END googlegenaisdk_live_conversation_audio_with_audio]
-
-
-# def get_user_live_input(file_path: str):
-#     """Reads a WAV audio file and yields audio chunks."""
-#     with wave.open(file_path, "rb") as wf:
-#         if (
-#             wf.getnchannels() != CHANNELS
-#             or wf.getsampwidth() != SAMPLE_WIDTH
-#             or wf.getframerate() != INPUT_RATE
-#         ):
-#             print("Audio file properties do not match the required format.")
-#             print(
-#                 f"Required: {CHANNELS} channels, {SAMPLE_WIDTH} sample width, {INPUT_RATE} frame rate."
-#             )
-#             print(
-#                 f"Found: {wf.getnchannels()} channels, {wf.getsampwidth()} sample width, {wf.getframerate()} frame rate."
-#             )
-#             return
-#
-#         while True:
-#             frame = wf.readframes(CHUNK)
-#             if not frame:
-#                 break
-#             yield frame
-
-
-# def write_user_live_output(file_path: str, audio_frames: list[bytes]):
-#     """Writes audio frames to a WAV file."""
-#     with wave.open(file_path, "wb") as wf:
-#         wf.setnchannels(CHANNELS)
-#         wf.setsampwidth(SAMPLE_WIDTH)
-#         wf.setframerate(OUTPUT_RATE)
-#         wf.writeframes(b"".join(audio_frames))
-#     print(f"Model response saved to {file_path}")
 
 
 if __name__ == "__main__":
