@@ -22,7 +22,6 @@ import pytest
 
 import live_audio_with_txt
 import live_txt_with_audio
-import live_transcribe_with_audio
 import live_audiogen_with_txt
 import live_code_exec_with_txt
 import live_func_call_with_txt
