@@ -19,8 +19,14 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_ground_googsearch_with_txt]
     from google import genai
-    from google.genai.types import (Content, GoogleSearch, LiveConnectConfig,
-                                    Modality, Part, Tool)
+    from google.genai.types import (
+        Content,
+        GoogleSearch,
+        LiveConnectConfig,
+        Modality,
+        Part,
+        Tool,
+    )
 
     client = genai.Client()
     model_id = "gemini-2.0-flash-live-preview-04-09"
