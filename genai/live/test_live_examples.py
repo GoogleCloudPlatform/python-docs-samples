@@ -105,16 +105,16 @@ async def test_live_structured_ouput_with_txt() -> None:
 
 @pytest.mark.asyncio
 async def test_live_txt_with_audio() -> None:
-    assert await live_txt_with_audio.generate_content()
+   assert await live_txt_with_audio.generate_content()
 
 
 @pytest.mark.asyncio
 async def test_live_audio_with_txt() -> None:
-    result = await live_audio_with_txt.generate_content()
-    assert result is not None
+   result = await live_audio_with_txt.generate_content()
+   assert result is not None
 
 
 @pytest.mark.asyncio
 async def test_live_transcribe_with_audio() -> None:
-    result = await live_transcribe_with_audio.generate_content()
-    assert result is not None
+   result = await live_transcribe_with_audio.generate_content()
+   assert result is not None
