@@ -1,2 +1,2 @@
-google-cloud-aiplatform==1.82.0
+google-cloud-aiplatform==1.111.0
 google-auth==2.38.0
