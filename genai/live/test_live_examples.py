@@ -33,6 +33,7 @@ import live_websocket_audiotranscript_with_txt
 import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
+import live_conversation_audio_with_audio
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -130,3 +131,8 @@ async def test_live_structured_ouput_with_txt() -> None:
 @pytest.mark.asyncio
 async def test_live_ground_ragengine_with_txt(mock_rag_components) -> None:
    assert await live_ground_ragengine_with_txt.generate_content("test")
+
+
+@pytest.mark.asyncio
+async def test_live_conversation_audio_with_audio() -> None:
+    assert await live_conversation_audio_with_audio.main()
