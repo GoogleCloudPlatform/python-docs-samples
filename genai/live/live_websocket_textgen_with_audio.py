@@ -65,9 +65,7 @@ async def generate_content() -> str:
 
     # Websocket Configuration
     WEBSOCKET_HOST = "us-central1-aiplatform.googleapis.com"
-    WEBSOCKET_SERVICE_URL = (
-        f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
-    )
+    WEBSOCKET_SERVICE_URL = f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
 
     # Websocket Authentication
     headers = {
@@ -76,9 +74,7 @@ async def generate_content() -> str:
     }
 
     # Model Configuration
-    model_path = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
-    )
+    model_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
     model_generation_config = {"response_modalities": ["TEXT"]}
 
     async with connect(WEBSOCKET_SERVICE_URL, additional_headers=headers) as websocket_session:
@@ -105,7 +101,9 @@ async def generate_content() -> str:
             return "Error: WebSocket setup failed."
 
         # 3. Send audio message
-        encoded_audio_message, mime_type = read_wavefile("hello_gemini_are_you_there.wav")
+        encoded_audio_message, mime_type = read_wavefile(
+            "hello_gemini_are_you_there.wav"
+        )
         # Example audio message:  "Hello? Gemini are you there?"
 
         user_message = {

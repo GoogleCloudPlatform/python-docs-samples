@@ -136,7 +136,6 @@ def test_textgen_with_youtube_video() -> None:
     response = textgen_with_youtube_video.generate_content()
     assert response
 
-
 # Migrated to Model Optimser Folder
 # def test_model_optimizer_textgen_with_txt() -> None:
 #     os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
