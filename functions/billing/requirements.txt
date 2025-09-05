@@ -1,4 +1,4 @@
-slackclient==2.9.4
-# [START functions_billing_limit_appengine_deps]
-google-api-python-client==2.131.0
-# [END functions_billing_limit_appengine_deps]
+cloudevents==1.10.1
+functions-framework==3.5.0
+google-cloud-billing==1.18.1
+google-cloud-logging==3.9.0
