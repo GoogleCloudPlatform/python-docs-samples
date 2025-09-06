@@ -1,0 +1,11 @@
+[
+    {
+      "name": "customer_name",
+      "type": "STRING"
+    },
+    {
+      "name": "row_num",
+      "type": "INTEGER",
+      "mode": "REQUIRED"
+    }
+]
