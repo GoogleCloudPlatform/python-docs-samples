@@ -33,7 +33,6 @@ from google.cloud import documentai
 # file_path = "/path/to/local/pdf"
 # mime_type = "application/pdf" # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 
-
 # [END documentai_process_ocr_document]
 # [END documentai_process_form_document]
 # [END documentai_process_specialized_document]
@@ -469,7 +468,10 @@ def process_document_layout_sample(
             chunking_config=documentai.ProcessOptions.LayoutConfig.ChunkingConfig(
                 chunk_size=1000,
                 include_ancestor_headings=True,
-            )
+            ),
+            https://cloud.google.com/document-ai/docs/layout-parse-chunk#layout_parser_features
+            enable_image_annotation=True, # Optional
+            enable_table_annotation=True, # Optional
         )
     )
 
