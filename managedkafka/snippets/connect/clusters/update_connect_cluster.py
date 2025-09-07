@@ -63,6 +63,7 @@ def update_connect_cluster(
     try:
         operation = connect_client.update_connect_cluster(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
+        operation.result()
         response = operation.result()
         print("Updated Connect cluster:", response)
     except GoogleAPICallError as e:

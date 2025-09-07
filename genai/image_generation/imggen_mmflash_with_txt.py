@@ -23,23 +23,31 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.0-flash-preview-image-generation",
-        contents=(
-            "Generate an image of the Eiffel tower with fireworks in the background."
+        model="gemini-2.5-flash-image-preview",
+        contents=("Generate an image of the Eiffel tower with fireworks in the background."),
+        config=GenerateContentConfig(
+            response_modalities=[Modality.TEXT, Modality.IMAGE],
+            candidate_count=1,
+            safety_settings=[
+                {"method": "PROBABILITY"},
+                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT"},
+                {"threshold": "BLOCK_MEDIUM_AND_ABOVE"},
+            ],
         ),
-        config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
     for part in response.candidates[0].content.parts:
         if part.text:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            image.save("example-image.png")
+            image.save("output_folder/example-image-eiffel-tower.png")
     # Example response:
-    #   A beautiful photograph captures the iconic Eiffel Tower in Paris, France,
-    #   against a backdrop of a vibrant and dynamic fireworks display. The tower itself...
+    #   I will generate an image of the Eiffel Tower at night, with a vibrant display of
+    #   colorful fireworks exploding in the dark sky behind it. The tower will be
+    #   illuminated, standing tall as the focal point of the scene, with the bursts of
+    #   light from the fireworks creating a festive atmosphere.
     # [END googlegenaisdk_imggen_mmflash_with_txt]
-    return "example-image.png"
+    return True
 
 
 if __name__ == "__main__":

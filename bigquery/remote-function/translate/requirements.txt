@@ -1,4 +1,4 @@
 Flask==2.2.2
-functions-framework==3.8.2
+functions-framework==3.9.2
 google-cloud-translate==3.18.0
 Werkzeug==2.3.8

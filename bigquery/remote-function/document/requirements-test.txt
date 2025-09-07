@@ -1,4 +1,4 @@
 Flask==2.2.2
-functions-framework==3.8.2
+functions-framework==3.9.2
 google-cloud-documentai==3.0.1
 pytest==8.2.0

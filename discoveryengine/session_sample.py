@@ -37,7 +37,7 @@ def create_session(
         discoveryengine.Session: The newly created Session.
     """
 
-    client = discoveryengine.ConversationalSearchServiceClient()
+    client = discoveryengine.SessionServiceClient()
 
     session = client.create_session(
         # The full resource name of the engine
@@ -71,7 +71,7 @@ def get_session(
         session_id: The ID of the session.
     """
 
-    client = discoveryengine.ConversationalSearchServiceClient()
+    client = discoveryengine.SessionServiceClient()
 
     # The full resource name of the session
     name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
@@ -104,7 +104,7 @@ def delete_session(
         session_id: The ID of the session.
     """
 
-    client = discoveryengine.ConversationalSearchServiceClient()
+    client = discoveryengine.SessionServiceClient()
 
     # The full resource name of the session
     name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
@@ -138,7 +138,7 @@ def update_session(
     Returns:
         discoveryengine.Session: The updated Session.
     """
-    client = discoveryengine.ConversationalSearchServiceClient()
+    client = discoveryengine.SessionServiceClient()
 
     # The full resource name of the session
     name = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}/sessions/{session_id}"
@@ -178,7 +178,7 @@ def list_sessions(
         discoveryengine.ListSessionsResponse: The list of sessions.
     """
 
-    client = discoveryengine.ConversationalSearchServiceClient()
+    client = discoveryengine.SessionServiceClient()
 
     # The full resource name of the engine
     parent = f"projects/{project_id}/locations/{location}/collections/default_collection/engines/{engine_id}"

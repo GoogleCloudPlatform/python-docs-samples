@@ -15,7 +15,7 @@
 # Call Retail API to search for a products in a catalog,
 # enabling the query expansion feature to let the Google Retail Search build an automatic query expansion.
 #
-
+# [START retail_search_for_products_with_query_expansion_specification]
 import google.auth
 from google.cloud.retail import SearchRequest, SearchServiceClient
 
@@ -62,6 +62,7 @@ def search():
     else:
         print(search_response)
     return search_response
+# [END retail_search_for_products_with_query_expansion_specification]
 
 
 search()
