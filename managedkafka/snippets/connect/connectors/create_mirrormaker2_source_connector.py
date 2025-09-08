@@ -75,9 +75,9 @@ def create_mirrormaker2_source_connector(
         "target.cluster.alias": target_cluster_alias,  # This is usually the primary cluster.
         # Replicate all topics from the source
         "topics": topics,
-        # The value for bootstrap.servers is a comma-separated list of hostname:port pairs
-        # for one or more Kafka brokers in the source/target cluster.
-        # For example: "kafka-broker-1:9092,kafka-broker-2:9092,kafka-broker-3:9092"
+        # The value for bootstrap.servers is a hostname:port pair for the Kafka broker in 
+        # the source/target cluster.
+        # For example: "kafka-broker:9092"
         "source.cluster.bootstrap.servers": source_bootstrap_servers,
         "target.cluster.bootstrap.servers": target_bootstrap_servers,
         # You can define an exclusion policy for topics as follows:
