@@ -21,6 +21,8 @@ def restart_connector(
 ) -> None:
     """
     Restart a connector.
+    Note: This operation is used to restart a failed connector. To start
+    a stopped connector, use the `resume_connector` operation instead.
 
     Args:
         project_id: Google Cloud project ID.
