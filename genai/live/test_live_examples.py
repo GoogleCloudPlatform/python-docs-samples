@@ -48,20 +48,68 @@ def mock_rag_components(mocker: Any) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
 
     class AsyncIterator:
-        def __aiter__(self) -> Any:
+        def __init__(self):
+            self.used = False
+
+        def __aiter__(self):
             return self
 
-    async def __anext__(self) -> Any:
-        if not hasattr(self, "used"):
-            self.used = True
-            return mocker.MagicMock(
-                text="Mariusz Pudzianowski won in 2002, 2003, 2005, 2007, and 2008."
-            )
-        raise StopAsyncIteration
+        async def __anext__(self):
+            if not self.used:
+                self.used = True
+                return mocker.MagicMock(
+                    text="Mariusz Pudzianowski won in 2002, 2003, 2005, 2007, and 2008."
+                )
+            raise StopAsyncIteration
 
     mock_session = mocker.AsyncMock()
     mock_session.__aenter__.return_value = mock_session
     mock_session.receive = lambda: AsyncIterator()
+
+    mock_client_cls.return_value.aio.live.connect.return_value = mock_session
+
+
+@pytest.fixture()
+def mock_audio_components(mocker: Any) -> None:
+    mock_client_cls = mocker.patch("google.genai.Client")
+
+    class AsyncIterator:
+        def __init__(self):
+            self.used = 0
+
+        def __aiter__(self):
+            return self
+
+        async def __anext__(self):
+            if self.used == 0:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = {"text": "Hello."}
+                msg.server_content.output_transcription = None
+                msg.server_content.model_turn = None
+                return msg
+            elif self.used == 1:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = None
+                msg.server_content.output_transcription = {"text": "Hi there!"}
+                msg.server_content.model_turn = None
+                return msg
+            elif self.used == 2:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = None
+                msg.server_content.output_transcription = None
+                part = mocker.MagicMock()
+                part.inline_data.data = b"\x00\x01"  # fake audio data
+                msg.server_content.model_turn.parts = [part]
+                return msg
+            raise StopAsyncIteration
+
+    mock_session = mocker.AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
+    mock_session.receive = lambda: AsyncIterator()
+    mock_session.send_realtime_input = mocker.AsyncMock()
 
     mock_client_cls.return_value.aio.live.connect.return_value = mock_session
 
@@ -133,5 +181,5 @@ async def test_live_ground_ragengine_with_txt(mock_rag_components: Any) -> None:
 
 
 @pytest.mark.asyncio
-async def test_live_conversation_audio_with_audio() -> None:
+async def test_live_conversation_audio_with_audio(mock_audio_components) -> None:
     assert await live_conversation_audio_with_audio.main()

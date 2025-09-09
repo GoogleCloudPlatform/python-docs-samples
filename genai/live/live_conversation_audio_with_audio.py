@@ -65,7 +65,8 @@ def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int) -> None:
     print(f"Model response saved to {filepath}")
 
 
-async def main() -> None:
+async def main():
+    print("Starting the code")
     async with client.aio.live.connect(
         model=MODEL,
         config=LiveConnectConfig(
@@ -119,7 +120,7 @@ async def main() -> None:
         #     Model response saved to example_model_response.wav
 
 # [END googlegenaisdk_live_conversation_audio_with_audio]
-
+    return receive_task
 
 if __name__ == "__main__":
     asyncio.run(main())
