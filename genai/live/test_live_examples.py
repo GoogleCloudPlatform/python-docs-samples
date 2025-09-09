@@ -21,12 +21,12 @@ import os
 import pytest
 
 import live_audio_with_txt
-import live_txt_with_audio
 import live_audiogen_with_txt
+import live_txt_with_audio
 import live_code_exec_with_txt
 import live_func_call_with_txt
 import live_ground_googsearch_with_txt
-import live_structured_ouput_with_txt
+import live_structured_output_with_txt
 import live_transcribe_with_audio
 import live_txtgen_with_audio
 import live_websocket_audiogen_with_txt
@@ -99,21 +99,15 @@ async def test_live_txtgen_with_audio() -> None:
 
 @pytest.mark.asyncio
 async def test_live_structured_ouput_with_txt() -> None:
-    assert live_structured_ouput_with_txt.generate_content()
+    assert live_structured_output_with_txt.generate_content()
 
 
 @pytest.mark.asyncio
 async def test_live_txt_with_audio() -> None:
-   assert await live_txt_with_audio.generate_content()
+    assert await live_txt_with_audio.generate_content()
 
 
 @pytest.mark.asyncio
 async def test_live_audio_with_txt() -> None:
-   result = await live_audio_with_txt.generate_content()
-   assert result is not None
-
-
-@pytest.mark.asyncio
-async def test_live_transcribe_with_audio() -> None:
-   result = await live_transcribe_with_audio.generate_content()
-   assert result is not None
+    result = await live_audio_with_txt.generate_content()
+    assert result is not None
