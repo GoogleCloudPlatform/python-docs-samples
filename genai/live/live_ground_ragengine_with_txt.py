@@ -19,16 +19,9 @@ _memory_corpus = "projects/cloud-ai-devrel-softserve/locations/us-central1/ragCo
 async def generate_content(memory_corpus: str) -> list[str]:
     # [START googlegenaisdk_live_ground_ragengine_with_txt]
     from google import genai
-    from google.genai.types import (
-        Content,
-        LiveConnectConfig,
-        Modality,
-        Part,
-        Tool,
-        Retrieval,
-        VertexRagStore,
-        VertexRagStoreRagResource,
-    )
+    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
+                                    Retrieval, Tool, VertexRagStore,
+                                    VertexRagStoreRagResource)
 
     client = genai.Client()
     model_id = "gemini-2.0-flash-live-preview-04-09"

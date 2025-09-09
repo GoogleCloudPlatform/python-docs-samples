@@ -17,10 +17,9 @@
 #
 
 import os
-import pytest_mock
-from typing import Any
 
 import pytest
+import pytest_mock
 
 import live_audiogen_with_txt
 import live_code_exec_with_txt
@@ -37,7 +36,6 @@ import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
 
-
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # The project name is included in the CICD pipeline
@@ -49,13 +47,13 @@ def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
 
     class AsyncIterator:
-        def __init__(self):
+        def __init__(self) -> None:
             self.used = False
 
-        def __aiter__(self):
+        def __aiter__(self) -> "AsyncIterator":
             return self
 
-        async def __anext__(self):
+        async def __anext__(self) -> object:
             if not self.used:
                 self.used = True
                 return mocker.MagicMock(
@@ -75,13 +73,13 @@ def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
 
     class AsyncIterator:
-        def __init__(self):
+        def __init__(self) -> None:
             self.used = 0
 
-        def __aiter__(self):
+        def __aiter__(self) -> "AsyncIterator":
             return self
 
-        async def __anext__(self):
+        async def __anext__(self) -> object:
             if self.used == 0:
                 self.used += 1
                 msg = mocker.MagicMock()
@@ -177,10 +175,10 @@ async def test_live_structured_ouput_with_txt() -> None:
 
 
 @pytest.mark.asyncio
-async def test_live_ground_ragengine_with_txt(mock_rag_components: Any) -> None:
+async def test_live_ground_ragengine_with_txt(mock_rag_components: None) -> None:
     assert await live_ground_ragengine_with_txt.generate_content("test")
 
 
 @pytest.mark.asyncio
-async def test_live_conversation_audio_with_audio(mock_audio_components) -> None:
+async def test_live_conversation_audio_with_audio(mock_audio_components: None) -> None:
     assert await live_conversation_audio_with_audio.main()

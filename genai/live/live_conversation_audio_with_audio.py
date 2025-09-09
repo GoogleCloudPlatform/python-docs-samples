@@ -19,9 +19,10 @@ import base64
 from typing import List
 
 from google import genai
-from google.genai.types import AudioTranscriptionConfig, Blob, LiveConnectConfig, Modality
-
+from google.genai.types import (AudioTranscriptionConfig, Blob,
+                                LiveConnectConfig, Modality)
 import numpy as np
+
 from scipy.io import wavfile
 
 # The number of audio frames to send in each chunk.
