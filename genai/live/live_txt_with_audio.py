@@ -22,11 +22,12 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_txt_with_audio]
     import io
-    import requests
-    from google import genai
-    from google.genai.types import Modality, LiveConnectConfig, Blob
-    import soundfile as sf
+
     import librosa
+    import requests
+    import soundfile as sf
+    from google import genai
+    from google.genai.types import Blob, LiveConnectConfig, Modality
 
     client = genai.Client()
     model = "gemini-2.0-flash-live-preview-04-09"

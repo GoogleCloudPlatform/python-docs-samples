@@ -22,12 +22,12 @@ import pytest
 
 import live_audio_with_txt
 import live_audiogen_with_txt
-import live_txt_with_audio
 import live_code_exec_with_txt
 import live_func_call_with_txt
 import live_ground_googsearch_with_txt
 import live_structured_output_with_txt
 import live_transcribe_with_audio
+import live_txt_with_audio
 import live_txtgen_with_audio
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt

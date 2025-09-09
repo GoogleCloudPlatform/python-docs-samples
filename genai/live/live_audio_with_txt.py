@@ -22,17 +22,11 @@ import asyncio
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_audio_with_txt]
     import numpy as np
-    from IPython.display import Audio, Markdown, display
     from google import genai
-    from google.genai.types import (
-        Content,
-        LiveConnectConfig,
-        Modality,
-        Part,
-        SpeechConfig,
-        VoiceConfig,
-        PrebuiltVoiceConfig,
-    )
+    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
+                                    PrebuiltVoiceConfig, SpeechConfig,
+                                    VoiceConfig)
+    from IPython.display import Audio, Markdown, display
 
     client = genai.Client()
     voice_name = "Aoede"
