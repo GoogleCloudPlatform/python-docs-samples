@@ -12,21 +12,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # [START googlegenaisdk_live_conversation_audio_with_audio]
 
 import asyncio
-import wave
 import base64
+
+from google import genai
+from google.genai.types import AudioTranscriptionConfig, Blob, LiveConnectConfig, Modality
+
 import numpy as np
 from scipy.io import wavfile
-from google import genai
-from google.genai.types import (
-    LiveConnectConfig,
-    Modality,
-    AudioTranscriptionConfig,
-    Blob,
-)
 
 # The number of audio frames to send in each chunk.
 CHUNK = 4200
@@ -56,7 +51,7 @@ def read_wavefile(filepath: str) -> tuple[str, str]:
     return base64_encoded_data, mime_type
 
 
-def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int):
+def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int) -> None:
     """Writes a list of audio byte frames to a WAV file using scipy."""
     # Combine the list of byte frames into a single byte string
     raw_audio_bytes = b"".join(audio_frames)
@@ -70,7 +65,7 @@ def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int):
     print(f"Model response saved to {filepath}")
 
 
-async def main():
+async def main() -> None:
     async with client.aio.live.connect(
         model=MODEL,
         config=LiveConnectConfig(
@@ -83,14 +78,14 @@ async def main():
         ),
     ) as session:
 
-        async def send():
+        async def send() -> None:
             # using local file as an example for live audio input
             wav_file_path = "hello_gemini_are_you_there.wav"
             base64_data, mime_type = read_wavefile(wav_file_path)
             audio_bytes = base64.b64decode(base64_data)
             await session.send_realtime_input(media=Blob(data=audio_bytes, mime_type=mime_type))
 
-        async def receive():
+        async def receive() -> None:
             audio_frames = []
 
             async for message in session.receive():
