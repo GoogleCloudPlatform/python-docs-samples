@@ -17,7 +17,10 @@
 #
 
 import os
+import pytest_mock
 from typing import Any
+
+import pytest
 
 import live_audiogen_with_txt
 import live_code_exec_with_txt
@@ -34,8 +37,6 @@ import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
 
-import pytest
-
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -44,7 +45,7 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 
 
 @pytest.fixture()
-def mock_rag_components(mocker: Any) -> None:
+def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
 
     class AsyncIterator:
@@ -70,7 +71,7 @@ def mock_rag_components(mocker: Any) -> None:
 
 
 @pytest.fixture()
-def mock_audio_components(mocker: Any) -> None:
+def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
 
     class AsyncIterator:

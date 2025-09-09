@@ -16,6 +16,7 @@
 
 import asyncio
 import base64
+from typing import List
 
 from google import genai
 from google.genai.types import AudioTranscriptionConfig, Blob, LiveConnectConfig, Modality
@@ -65,7 +66,7 @@ def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int) -> None:
     print(f"Model response saved to {filepath}")
 
 
-async def main():
+async def main() -> List:
     print("Starting the code")
     async with client.aio.live.connect(
         model=MODEL,
@@ -120,7 +121,7 @@ async def main():
         #     Model response saved to example_model_response.wav
 
 # [END googlegenaisdk_live_conversation_audio_with_audio]
-    return receive_task
+    return list(receive_task)
 
 if __name__ == "__main__":
     asyncio.run(main())
