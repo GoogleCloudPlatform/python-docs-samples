@@ -15,19 +15,29 @@
 from unittest import mock
 from unittest.mock import MagicMock
 
+from google.api_core.operation import Operation
+from google.cloud import managedkafka_v1
+import pytest
+
 import create_bigquery_sink_connector
 import create_cloud_storage_sink_connector
 import create_mirrormaker2_source_connector
 import create_pubsub_sink_connector
 import create_pubsub_source_connector
-from google.api_core.operation import Operation
-from google.cloud import managedkafka_v1
-import pytest
+import delete_connector
+import get_connector
+import list_connectors
+import pause_connector
+import restart_connector
+import resume_connector
+import stop_connector
+import update_connector
 
 
 PROJECT_ID = "test-project-id"
 REGION = "us-central1"
 CONNECT_CLUSTER_ID = "test-connect-cluster-id"
+CONNECTOR_ID = "test-connector-id"
 
 
 @mock.patch(
@@ -195,6 +205,10 @@ def test_create_bigquery_sink_connector(
     assert connector_id in out
     mock_method.assert_called_once()
 
+
+@mock.patch(
+    "google.cloud.managedkafka_v1.services.managed_kafka_connect.ManagedKafkaConnectClient.list_connectors"
+)
 def test_list_connectors(
     mock_method: MagicMock,
     capsys: pytest.CaptureFixture[str],
