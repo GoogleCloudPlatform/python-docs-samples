@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def create_pubsub_source_connector(
     project_id: str,
     region: str,
@@ -94,4 +95,3 @@ def create_pubsub_source_connector(
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e}")
     # [END managedkafka_create_pubsub_source_connector]
-    
