@@ -41,14 +41,14 @@ def delete_connect_cluster(
     # region = "us-central1"
     # connect_cluster_id = "my-connect-cluster"
 
-    client = ManagedKafkaConnectClient()
+    connect_client = ManagedKafkaConnectClient()
 
     request = managedkafka_v1.DeleteConnectClusterRequest(
-        name=client.connect_cluster_path(project_id, region, connect_cluster_id),
+        name=connect_client.connect_cluster_path(project_id, region, connect_cluster_id),
     )
 
     try:
-        operation = client.delete_connect_cluster(request=request)
+        operation = connect_client.delete_connect_cluster(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result()
         print("Deleted Connect cluster")

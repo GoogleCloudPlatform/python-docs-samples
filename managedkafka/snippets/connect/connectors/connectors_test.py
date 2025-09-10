@@ -255,7 +255,7 @@ def test_update_connector(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     configs = {
-        "tasks.max": "2",
+        "tasks.max": "6",
         "value.converter.schemas.enable": "true"
     }
     operation = mock.MagicMock(spec=Operation)

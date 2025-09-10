@@ -46,14 +46,14 @@ def restart_connector(
     # connect_cluster_id = "my-connect-cluster"
     # connector_id = "my-connector"
 
-    client = ManagedKafkaConnectClient()
+    connect_client = ManagedKafkaConnectClient()
 
     request = managedkafka_v1.RestartConnectorRequest(
-        name=client.connector_path(project_id, region, connect_cluster_id, connector_id),
+        name=connect_client.connector_path(project_id, region, connect_cluster_id, connector_id),
     )
 
     try:
-        operation = client.restart_connector(request=request)
+        operation = connect_client.restart_connector(request=request)
         print(f"Waiting for operation {operation.operation.name} to complete...")
         operation.result()
         print(f"Restarted connector {connector_id}")

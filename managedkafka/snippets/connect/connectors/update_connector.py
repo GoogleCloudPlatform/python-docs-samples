@@ -48,7 +48,7 @@ def update_connector(
     # connect_cluster_id = "my-connect-cluster"
     # connector_id = "my-connector"
     # configs = {
-    #     "tasks.max": "2",
+    #     "tasks.max": "6",
     #     "value.converter.schemas.enable": "true"
     # }
 

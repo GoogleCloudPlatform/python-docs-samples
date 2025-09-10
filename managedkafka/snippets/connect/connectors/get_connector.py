@@ -42,9 +42,9 @@ def get_connector(
     # connect_cluster_id = "my-connect-cluster"
     # connector_id = "my-connector"
 
-    client = ManagedKafkaConnectClient()
+    connect_client = ManagedKafkaConnectClient()
 
-    connector_path = client.connector_path(
+    connector_path = connect_client.connector_path(
         project_id, region, connect_cluster_id, connector_id
     )
     request = managedkafka_v1.GetConnectorRequest(
@@ -52,7 +52,7 @@ def get_connector(
     )
 
     try:
-        connector = client.get_connector(request=request)
+        connector = connect_client.get_connector(request=request)
         print("Got connector:", connector)
     except NotFound as e:
         print(f"Failed to get connector {connector_id} with error: {e}")
