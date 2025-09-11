@@ -123,3 +123,183 @@ def rank_sample(
     # [END genappbuilder_rank]
 
     return response
+
+
+def grounded_generation_inline_vais_sample(
+    project_number: str,
+    engine_id: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_inline_vais]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_number = "YOUR_PROJECT_NUMBER"
+    # engine_id = "YOUR_ENGINE_ID"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-1.5-flash",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="How did Google do in 2020? Where can I find BigQuery docs?"
+                    )
+                ],
+            )
+        ],
+        system_instruction=discoveryengine.GroundedGenerationContent(
+            parts=[
+                discoveryengine.GroundedGenerationContent.Part(
+                    text="Add a smiley emoji after the answer."
+                )
+            ],
+        ),
+        # What to ground on.
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    inline_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.InlineSource(
+                        grounding_facts=[
+                            discoveryengine.GroundingFact(
+                                fact_text=(
+                                    "The BigQuery documentation can be found at https://cloud.google.com/bigquery/docs/introduction"
+                                ),
+                                attributes={
+                                    "title": "BigQuery Overview",
+                                    "uri": "https://cloud.google.com/bigquery/docs/introduction",
+                                },
+                            ),
+                        ]
+                    ),
+                ),
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.SearchSource(
+                        # The full resource name of the serving config for a Vertex AI Search App
+                        serving_config=f"projects/{project_number}/locations/global/collections/default_collection/engines/{engine_id}/servingConfigs/default_search",
+                    ),
+                ),
+            ]
+        ),
+    )
+    response = client.generate_grounded_content(request)
+
+    # Handle the response
+    print(response)
+    # [END genappbuilder_grounded_generation_inline_vais]
+
+    return response
+
+
+def grounded_generation_google_search_sample(
+    project_number: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_google_search]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_number = "YOUR_PROJECT_NUMBER"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-1.5-flash",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="How much is Google stock?"
+                    )
+                ],
+            )
+        ],
+        system_instruction=discoveryengine.GroundedGenerationContent(
+            parts=[
+                discoveryengine.GroundedGenerationContent.Part(text="Be comprehensive.")
+            ],
+        ),
+        # What to ground on.
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    google_search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearchSource(
+                        # Optional: For Dynamic Retrieval
+                        dynamic_retrieval_config=discoveryengine.GenerateGroundedContentRequest.DynamicRetrievalConfiguration(
+                            predictor=discoveryengine.GenerateGroundedContentRequest.DynamicRetrievalConfiguration.DynamicRetrievalPredictor(
+                                threshold=0.7
+                            )
+                        )
+                    )
+                ),
+            ]
+        ),
+    )
+    response = client.generate_grounded_content(request)
+
+    # Handle the response
+    print(response)
+    # [END genappbuilder_grounded_generation_google_search]
+
+    return response
+
+
+def grounded_generation_streaming_sample(
+    project_number: str,
+) -> discoveryengine.GenerateGroundedContentResponse:
+    # [START genappbuilder_grounded_generation_streaming]
+    from google.cloud import discoveryengine_v1 as discoveryengine
+
+    # TODO(developer): Uncomment these variables before running the sample.
+    # project_id = "YOUR_PROJECT_ID"
+
+    client = discoveryengine.GroundedGenerationServiceClient()
+
+    request = discoveryengine.GenerateGroundedContentRequest(
+        # The full resource name of the location.
+        # Format: projects/{project_number}/locations/{location}
+        location=client.common_location_path(project=project_number, location="global"),
+        generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
+            model_id="gemini-1.5-flash",
+        ),
+        # Conversation between user and model
+        contents=[
+            discoveryengine.GroundedGenerationContent(
+                role="user",
+                parts=[
+                    discoveryengine.GroundedGenerationContent.Part(
+                        text="Summarize how to delete a data store in Vertex AI Agent Builder?"
+                    )
+                ],
+            )
+        ],
+        grounding_spec=discoveryengine.GenerateGroundedContentRequest.GroundingSpec(
+            grounding_sources=[
+                discoveryengine.GenerateGroundedContentRequest.GroundingSource(
+                    google_search_source=discoveryengine.GenerateGroundedContentRequest.GroundingSource.GoogleSearchSource()
+                ),
+            ]
+        ),
+    )
+    responses = client.stream_generate_grounded_content(iter([request]))
+
+    for response in responses:
+        # Handle the response
+        print(response)
+    # [END genappbuilder_grounded_generation_streaming]
+
+    return response
