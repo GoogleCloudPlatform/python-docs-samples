@@ -96,4 +96,3 @@ def create_bigquery_sink_connector(
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e}")
     # [END managedkafka_create_bigquery_sink_connector]
-    

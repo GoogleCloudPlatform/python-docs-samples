@@ -105,4 +105,3 @@ def create_mirrormaker2_source_connector(
     except GoogleAPICallError as e:
         print(f"The operation failed with error: {e}")
     # [END managedkafka_create_mirrormaker2_source_connector]
-    

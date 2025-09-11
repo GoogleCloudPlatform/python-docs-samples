@@ -214,10 +214,8 @@ def test_list_connectors(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     connector = managedkafka_v1.types.Connector()
-    connector.name = (
-        managedkafka_v1.ManagedKafkaConnectClient.connector_path(
-            PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
-        )
+    connector.name = managedkafka_v1.ManagedKafkaConnectClient.connector_path(
+        PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
     )
     mock_method.return_value = [connector]
 
@@ -241,10 +239,8 @@ def test_get_connector(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     connector = managedkafka_v1.types.Connector()
-    connector.name = (
-        managedkafka_v1.ManagedKafkaConnectClient.connector_path(
-            PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
-        )
+    connector.name = managedkafka_v1.ManagedKafkaConnectClient.connector_path(
+        PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
     )
     mock_method.return_value = connector
 
@@ -268,16 +264,11 @@ def test_update_connector(
     mock_method: MagicMock,
     capsys: pytest.CaptureFixture[str],
 ) -> None:
-    configs = {
-        "tasks.max": "6",
-        "value.converter.schemas.enable": "true"
-    }
+    configs = {"tasks.max": "6", "value.converter.schemas.enable": "true"}
     operation = mock.MagicMock(spec=Operation)
     connector = managedkafka_v1.types.Connector()
-    connector.name = (
-        managedkafka_v1.ManagedKafkaConnectClient.connector_path(
-            PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
-        )
+    connector.name = managedkafka_v1.ManagedKafkaConnectClient.connector_path(
+        PROJECT_ID, REGION, CONNECT_CLUSTER_ID, CONNECTOR_ID
     )
     operation.result = mock.MagicMock(return_value=connector)
     mock_method.return_value = operation
