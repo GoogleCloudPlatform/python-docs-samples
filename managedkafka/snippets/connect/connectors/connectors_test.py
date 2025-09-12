@@ -15,10 +15,6 @@
 from unittest import mock
 from unittest.mock import MagicMock
 
-from google.api_core.operation import Operation
-from google.cloud import managedkafka_v1
-import pytest
-
 import create_bigquery_sink_connector
 import create_cloud_storage_sink_connector
 import create_mirrormaker2_source_connector
@@ -26,8 +22,11 @@ import create_pubsub_sink_connector
 import create_pubsub_source_connector
 import delete_connector
 import get_connector
+from google.api_core.operation import Operation
+from google.cloud import managedkafka_v1
 import list_connectors
 import pause_connector
+import pytest
 import restart_connector
 import resume_connector
 import stop_connector
