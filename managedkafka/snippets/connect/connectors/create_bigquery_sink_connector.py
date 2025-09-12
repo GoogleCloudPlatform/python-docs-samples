@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 def create_bigquery_sink_connector(
     project_id: str,
     region: str,

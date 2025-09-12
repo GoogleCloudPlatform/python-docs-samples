@@ -13,46 +13,48 @@
 # limitations under the License.
 
 
-def delete_connect_cluster(
+def get_connector(
     project_id: str,
     region: str,
     connect_cluster_id: str,
+    connector_id: str,
 ) -> None:
     """
-    Delete a Kafka Connect cluster.
+    Get details of a specific connector.
 
     Args:
         project_id: Google Cloud project ID.
         region: Cloud region.
         connect_cluster_id: ID of the Kafka Connect cluster.
+        connector_id: ID of the connector.
 
     Raises:
-        This method will raise the GoogleAPICallError exception if the operation errors.
+        This method will raise the NotFound exception if the connector is not found.
     """
-    # [START managedkafka_delete_connect_cluster]
-    from google.api_core.exceptions import GoogleAPICallError
-    from google.cloud.managedkafka_v1.services.managed_kafka_connect import (
-        ManagedKafkaConnectClient,
-    )
+    # [START managedkafka_get_connector]
+    from google.api_core.exceptions import NotFound
+    from google.cloud.managedkafka_v1.services.managed_kafka_connect import ManagedKafkaConnectClient
     from google.cloud import managedkafka_v1
 
     # TODO(developer)
     # project_id = "my-project-id"
     # region = "us-central1"
     # connect_cluster_id = "my-connect-cluster"
+    # connector_id = "my-connector"
 
     connect_client = ManagedKafkaConnectClient()
 
-    request = managedkafka_v1.DeleteConnectClusterRequest(
-        name=connect_client.connect_cluster_path(project_id, region, connect_cluster_id),
+    connector_path = connect_client.connector_path(
+        project_id, region, connect_cluster_id, connector_id
+    )
+    request = managedkafka_v1.GetConnectorRequest(
+        name=connector_path,
     )
 
     try:
-        operation = connect_client.delete_connect_cluster(request=request)
-        print(f"Waiting for operation {operation.operation.name} to complete...")
-        operation.result()
-        print("Deleted Connect cluster")
-    except GoogleAPICallError as e:
-        print(f"The operation failed with error: {e}")
+        connector = connect_client.get_connector(request=request)
+        print("Got connector:", connector)
+    except NotFound as e:
+        print(f"Failed to get connector {connector_id} with error: {e}")
 
-    # [END managedkafka_delete_connect_cluster]
+    # [END managedkafka_get_connector]
