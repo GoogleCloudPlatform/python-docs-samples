@@ -27,15 +27,10 @@ def create_note(note_id: str, project_id: str) -> types.grafeas.Note:
     grafeas_client = client.get_grafeas_client()
     project_name = f"projects/{project_id}"
     note = {
-        "vulnerability": {
-            "details": [
-                {
-                    "affected_cpe_uri": "your-uri-here",
-                    "affected_package": "your-package-here",
-                    "affected_version_start": {"kind": Version.VersionKind.MINIMUM},
-                    "fixed_version": {"kind": Version.VersionKind.MAXIMUM},
-                }
-            ]
+        "attestation": {
+            "hint": {
+                "human_readable_name": "my-attestation-authority",
+            }
         }
     }
     response = grafeas_client.create_note(
