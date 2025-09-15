@@ -1,6 +1,6 @@
 attrs==25.3.0
 certifi==2025.8.3
-cffi==1.17.1
+cffi==2.0.0
 charset-normalizer==3.4.3
 click===8.1.8; python_version == '3.9'
 click==8.2.1; python_version >= '3.10'
@@ -13,8 +13,8 @@ geopandas===1.0.1; python_version <= '3.9'
 geopandas==1.1.1; python_version >= '3.10'
 google-api-core==2.25.1
 google-auth==2.40.3
-google-cloud-bigquery==3.36.0
-google-cloud-bigquery-storage==2.32.0
+google-cloud-bigquery==3.37.0
+google-cloud-bigquery-storage==2.33.1
 google-cloud-core==2.4.3
 google-crc32c==1.7.1
 google-resumable-media==2.7.2
@@ -29,8 +29,8 @@ proto-plus==1.26.1
 pyarrow==21.0.0
 pyasn1==0.6.1
 pyasn1-modules==0.4.2
-pycparser==2.22
-pyparsing==3.2.3
+pycparser==2.23
+pyparsing==3.2.4
 python-dateutil==2.9.0.post0
 pytz==2025.2
 PyYAML==6.0.2
