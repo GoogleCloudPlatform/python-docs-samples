@@ -55,9 +55,7 @@ async def generate_content() -> str:
 
     # Websocket Configuration
     WEBSOCKET_HOST = "us-central1-aiplatform.googleapis.com"
-    WEBSOCKET_SERVICE_URL = (
-        f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
-    )
+    WEBSOCKET_SERVICE_URL = f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
 
     # Websocket Authentication
     headers = {
@@ -66,9 +64,7 @@ async def generate_content() -> str:
     }
 
     # Model Configuration
-    model_path = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
-    )
+    model_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
     model_generation_config = {
         "response_modalities": ["AUDIO"],
         "speech_config": {
@@ -142,7 +138,9 @@ async def generate_content() -> str:
                 for part in model_turn["parts"]:
                     if part["inlineData"]["mimeType"] == "audio/pcm":
                         audio_chunk = base64.b64decode(part["inlineData"]["data"])
-                        aggregated_response_parts.append(np.frombuffer(audio_chunk, dtype=np.int16))
+                        aggregated_response_parts.append(
+                            np.frombuffer(audio_chunk, dtype=np.int16)
+                        )
 
             # End of response
             if server_content.get("turnComplete"):
