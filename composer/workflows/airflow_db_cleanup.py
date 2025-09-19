@@ -459,7 +459,7 @@ def cleanup_function(**context):
             dags = session.query(airflow_db_model.dag_id).distinct()
             session.commit()
 
-            list_dags = [str(list(dag)[0]) for dag in dags] + [None]
+            list_dags = [str(list(dag)[0]) for dag in dags]
             for dag_id in list_dags:
                 query = build_query(
                     session=session,
