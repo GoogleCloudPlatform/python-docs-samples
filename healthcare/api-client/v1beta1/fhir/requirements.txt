@@ -2,6 +2,6 @@ google-api-python-client==2.131.0
 google-auth-httplib2==0.2.0
 google-auth==2.38.0
 google-cloud==0.34.0
-google-cloud-storage==2.9.0; python_version < '3.7'
-google-cloud-storage==2.9.0; python_version > '3.6'
+google-cloud-storage==2.19.0; python_version < '3.7'
+google-cloud-storage==2.19.0; python_version > '3.6'
 requests==2.31.0
