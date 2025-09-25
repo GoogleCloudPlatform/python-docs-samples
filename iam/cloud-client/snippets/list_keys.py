@@ -24,7 +24,7 @@ from google.cloud.iam_admin_v1 import types
 
 
 def list_keys(project_id: str, account: str) -> List[iam_admin_v1.ServiceAccountKey]:
-    """Creates a key for a service account.
+    """Lists a key for a service account.
 
     project_id: ID or number of the Google Cloud project you want to use.
     account: ID or email which is unique identifier of the service account.
