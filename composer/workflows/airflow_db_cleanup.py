@@ -360,7 +360,8 @@ def build_query(
 
     logging.info("INITIAL QUERY : " + str(query))
 
-    if dag_id:
+    if hasattr(airflow_db_model, `dag_id`):
+        logging.info("Filtering by dag_id: " + str(dag_id))
         query = query.filter(airflow_db_model.dag_id == dag_id)
 
     if airflow_db_model == DagRun:
