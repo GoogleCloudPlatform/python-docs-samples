@@ -65,6 +65,9 @@ RUN apt-get update \
   uuid-dev \
   wget \
   zlib1g-dev \
+  # Remove `python3-setuptools` since the installed version
+  # does not include a patch for CVE-2025-47273/CVE-2025-47273.
+  && apt-get remove -y python3-setuptools \
   && apt-get clean autoclean \
   && apt-get autoremove -y \
   && rm -rf /var/lib/apt/lists/* \
@@ -116,7 +119,7 @@ RUN set -ex \
   && export GNUPGHOME="$(mktemp -d)" \
   && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
   && /tmp/fetch_gpg_keys.sh \
-  && for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.20 3.10.15 3.11.10 3.12.7 3.13.0; do \
+  && for PYTHON_VERSION in 2.7.18 3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.5; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
@@ -144,7 +147,7 @@ RUN set -ex \
 # Install pip on Python 3.10 only.
 # If the environment variable is called "PIP_VERSION", pip explodes with
 # "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 21.3.1
+ENV PYTHON_PIP_VERSION 23.1.2
 RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.io/pip/3.7/get-pip.py' \
   && wget --no-check-certificate -O /tmp/get-pip-3-8.py 'https://bootstrap.pypa.io/pip/3.8/get-pip.py' \
   && wget --no-check-certificate -O /tmp/get-pip.py 'https://bootstrap.pypa.io/get-pip.py' \
@@ -164,7 +167,7 @@ RUN python3.11 /tmp/get-pip.py
 RUN python3.9 /tmp/get-pip.py
 RUN python3.8 /tmp/get-pip-3-8.py
 RUN python3.7 /tmp/get-pip-3-7.py
-RUN rm /tmp/get-pip.py
+RUN rm /tmp/get-pip.py /tmp/get-pip-3-8.py /tmp/get-pip-3-7.py
 
 # Test Pip
 RUN python3 -m pip
@@ -176,17 +179,37 @@ RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
 
-# Install "setuptools" for Python 3.12+ (see https://docs.python.org/3/whatsnew/3.12.html#distutils)
-RUN python3.12 -m pip install --no-cache-dir setuptools
-RUN python3.13 -m pip install --no-cache-dir setuptools
+# Remove setuptools installations for Python 2.7, 3.7, 3.8
+# since there is no fix for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+RUN for PYTHON_VERSION in 2.7 3.7 3.8; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    uninstall -y \
+    setuptools \
+  ; done
+
+# Install/upgrade setuptools installations for Python 3.9, 3.10 and 3.11
+# for CVE-2025-47273/CVE-2025-47273.
+# See https://github.com/python/cpython/issues/135374#issuecomment-2963361124
+# Also install "setuptools" for Python 3.12+ since it's not included automatically
+# (see https://docs.python.org/3/whatsnew/3.12.html#distutils)
+COPY requirements.txt /requirements.txt
+
+RUN for PYTHON_VERSION in 3.9 3.10 3.11 3.12 3.13; do \
+    /usr/local/bin/python${PYTHON_VERSION} -m pip \
+    install \
+    --no-cache-dir \
+    --require-hashes \
+    -r /requirements.txt \
+  ; done && rm /requirements.txt
 
 # Install "virtualenv", since the vast majority of users of this image will want it.
 RUN pip install --no-cache-dir virtualenv
 
 # Setup Cloud SDK
-ENV CLOUD_SDK_VERSION 502.0.0
-# Use system python for cloud sdk.
-ENV CLOUDSDK_PYTHON python3.10
+ENV CLOUD_SDK_VERSION 528.0.0
+# Use python 3.12 for cloud sdk.
+ENV CLOUDSDK_PYTHON python3.12
 RUN wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN tar xzf google-cloud-sdk-$CLOUD_SDK_VERSION-linux-x86_64.tar.gz
 RUN /google-cloud-sdk/install.sh
