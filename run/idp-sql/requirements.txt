@@ -1,6 +1,6 @@
 Flask==3.0.3
 SQLAlchemy==2.0.40
-pg8000==1.31.2
+pg8000==1.31.5
 gunicorn==23.0.0
 firebase-admin==7.0.0
 structlog==25.1.0
