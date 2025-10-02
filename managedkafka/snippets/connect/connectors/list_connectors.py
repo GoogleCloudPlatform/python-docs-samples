@@ -13,28 +13,25 @@
 # limitations under the License.
 
 
-def delete_connect_cluster(
+def list_connectors(
     project_id: str,
     region: str,
     connect_cluster_id: str,
 ) -> None:
     """
-    Delete a Kafka Connect cluster.
+    List all connectors in a Kafka Connect cluster.
 
     Args:
         project_id: Google Cloud project ID.
         region: Cloud region.
         connect_cluster_id: ID of the Kafka Connect cluster.
-
-    Raises:
-        This method will raise the GoogleAPICallError exception if the operation errors.
     """
-    # [START managedkafka_delete_connect_cluster]
-    from google.api_core.exceptions import GoogleAPICallError
+    # [START managedkafka_list_connectors]
+    from google.cloud import managedkafka_v1
     from google.cloud.managedkafka_v1.services.managed_kafka_connect import (
         ManagedKafkaConnectClient,
     )
-    from google.cloud import managedkafka_v1
+    from google.api_core.exceptions import GoogleAPICallError
 
     # TODO(developer)
     # project_id = "my-project-id"
@@ -43,16 +40,15 @@ def delete_connect_cluster(
 
     connect_client = ManagedKafkaConnectClient()
 
-    request = managedkafka_v1.DeleteConnectClusterRequest(
-        name=connect_client.connect_cluster_path(project_id, region, connect_cluster_id),
+    request = managedkafka_v1.ListConnectorsRequest(
+        parent=connect_client.connect_cluster_path(project_id, region, connect_cluster_id),
     )
 
     try:
-        operation = connect_client.delete_connect_cluster(request=request)
-        print(f"Waiting for operation {operation.operation.name} to complete...")
-        operation.result()
-        print("Deleted Connect cluster")
+        response = connect_client.list_connectors(request=request)
+        for connector in response:
+            print("Got connector:", connector)
     except GoogleAPICallError as e:
-        print(f"The operation failed with error: {e}")
+        print(f"Failed to list connectors with error: {e}")
 
-    # [END managedkafka_delete_connect_cluster]
+    # [END managedkafka_list_connectors]

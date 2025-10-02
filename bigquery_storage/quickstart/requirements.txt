@@ -1,0 +1,3 @@
+fastavro
+google-cloud-bigquery
+google-cloud-bigquery-storage==2.32.0
