@@ -1,4 +1,4 @@
 backoff==2.2.1
 pytest==8.2.0
 google-cloud-logging~=3.11.4
-google-cloud-storage~=2.10.0
+google-cloud-storage~=2.19.0

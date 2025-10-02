@@ -4,4 +4,4 @@ google-auth==2.38.0
 google-cloud-api-keys==0.5.13
 google-cloud-compute==1.11.0
 google-cloud-language==2.15.1
-google-cloud-storage==2.9.0
+google-cloud-storage==2.19.0
