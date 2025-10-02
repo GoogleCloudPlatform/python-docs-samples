@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,21 +12,32 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 # Test file: https://storage.googleapis.com/generativeai-downloads/data/16000.wav
-# Install helpers for converting files: pip install librosa soundfile
+# Install helpers for converting files: pip install librosa soundfile simpleaudio
 
 import asyncio
 
 
+
+
+
+
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_audio_with_txt]
-    import numpy as np
     from google import genai
-    from google.genai.types import (Content, LiveConnectConfig, Modality, Part,
-                                    PrebuiltVoiceConfig, SpeechConfig,
-                                    VoiceConfig)
-    from IPython.display import Audio, Markdown, display
+    from google.genai.types import (
+        Content, LiveConnectConfig, Modality, Part,
+        PrebuiltVoiceConfig, SpeechConfig, VoiceConfig
+    )
+    import numpy as np
+    import soundfile as sf
+    import simpleaudio as sa
+
+    def play_audio(audio_array: np.ndarray, sample_rate: int = 24000):
+        sf.write("output.wav", audio_array, sample_rate)
+        wave_obj = sa.WaveObject.from_wave_file("output.wav")
+        play_obj = wave_obj.play()
+        play_obj.wait_done()
 
     client = genai.Client()
     voice_name = "Aoede"
@@ -68,12 +79,8 @@ async def generate_content() -> list[str]:
 
         if audio_data:
             print("Received audio answer: ")
-            display(Audio(np.concatenate(audio_data), rate=24000, autoplay=True))
+            play_audio(np.concatenate(audio_data), sample_rate=24000)
 
-    # Example output:
-    # >  Hello? Gemini are you there?
-    # Received audio answer:
-    # <IPython.lib.display.Audio object>
     # [END googlegenaisdk_live_audio_with_txt]
     return []
 

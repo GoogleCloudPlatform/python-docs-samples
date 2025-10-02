@@ -6,4 +6,4 @@ soundfile==0.12.1
 openai==1.99.1
 setuptools==80.9.0
 librosa==0.11.0
-IPython==8.26.0
+simpleaudio==1.0.0
