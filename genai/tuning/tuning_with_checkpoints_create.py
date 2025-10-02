@@ -36,7 +36,7 @@ def create_with_checkpoints(output_gcs_uri: str) -> str:
         metrics=[
             Metric(
                 name="FLUENCY",
-                prompt_template="""Evaluate this {response}"""
+                prompt_template="""Evaluate this {prediction}"""
             )
         ],
         output_config=OutputConfig(
