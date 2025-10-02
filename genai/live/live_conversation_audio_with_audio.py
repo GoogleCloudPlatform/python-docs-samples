@@ -27,7 +27,7 @@ from scipy.io import wavfile
 # The number of audio frames to send in each chunk.
 CHUNK = 4200
 CHANNELS = 1
-MODEL = "gemini-2.0-flash-live-preview-04-09"
+MODEL = "gemini-live-2.5-flash-preview-native-audio-09-2025"
 
 # The audio sample rate expected by the model.
 INPUT_RATE = 16000
