@@ -18,10 +18,6 @@
 import asyncio
 
 
-
-
-
-
 async def generate_content() -> list[str]:
     # [START googlegenaisdk_live_audio_with_txt]
     from google import genai
@@ -33,7 +29,7 @@ async def generate_content() -> list[str]:
     import soundfile as sf
     import simpleaudio as sa
 
-    def play_audio(audio_array: np.ndarray, sample_rate: int = 24000):
+    def play_audio(audio_array: np.ndarray, sample_rate: int = 24000) -> None:
         sf.write("output.wav", audio_array, sample_rate)
         wave_obj = sa.WaveObject.from_wave_file("output.wav")
         play_obj = wave_obj.play()
