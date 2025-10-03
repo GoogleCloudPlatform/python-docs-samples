@@ -125,12 +125,6 @@ class DAG:
             f" dags pause -- \"^(?!airflow_monitoring$).*\" --treat-dag-id-as-regex -y"
         )
         command_output = DAG._run_shell_command_locally_once(command=command)
-        if command_output[0] == 1:
-            logger.info(command_output[1])
-            logger.info("Error pausing DAGs, Retrying...")
-            command_output = DAG._run_shell_command_locally_once(command=command)
-            if command_output[0] == 1:
-                logger.info("Unable to pause DAGs")
         logger.info(command_output[1])
 
     @staticmethod
@@ -172,12 +166,6 @@ class DAG:
             f" dags unpause -- \".*\" --treat-dag-id-as-regex -y"
         )
         command_output = DAG._run_shell_command_locally_once(command=command)
-        if command_output[0] == 1:
-            logger.info(command_output[1])
-            logger.info("Error Unpausing DAGs, Retrying...")
-            command_output = DAG._run_shell_command_locally_once(command=command)
-            if command_output[0] == 1:
-                logger.info("Unable to Unpause DAGs")
         logger.info(command_output[1])
 
     @staticmethod
