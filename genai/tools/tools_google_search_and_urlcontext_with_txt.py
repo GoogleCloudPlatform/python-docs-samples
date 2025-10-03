@@ -21,9 +21,10 @@ def generate_content() -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
     model_id = "gemini-2.5-flash"
 
-    tools = []
-    tools.append(Tool(url_context=UrlContext))
-    tools.append(Tool(google_search=GoogleSearch))
+    tools = [
+        Tool(url_context=UrlContext),
+        Tool(google_search=GoogleSearch),
+    ]
 
     #todo(developer) Here put your URLs!
     url = ""
