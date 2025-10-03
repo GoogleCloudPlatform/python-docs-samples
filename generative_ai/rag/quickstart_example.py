@@ -39,7 +39,7 @@ def quickstart(
     # paths = ["https://drive.google.com/file/d/123", "gs://my_bucket/my_files_dir"]  # Supports Google Cloud Storage and Google Drive Links
 
     # Initialize Vertex AI API once per session
-    vertexai.init(project=PROJECT_ID, location="us-central1")
+    vertexai.init(project=PROJECT_ID, location="us-east4")
 
     # Create RagCorpus
     # Configure embedding model, for example "text-embedding-005".
