@@ -117,7 +117,7 @@ class DAG:
         environment: str,
         location: str,
         sdk_endpoint: str,
-    ) -> str:
+    ) -> None:
         """Pause all the DAGs in the given environment."""
         command = (
             f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer environments"
@@ -164,7 +164,7 @@ class DAG:
         environment: str,
         location: str,
         sdk_endpoint: str,
-    ) -> str:
+    ) -> None:
         """UnPause all the DAGs in the given environment."""
         command = (
             f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={sdk_endpoint} gcloud composer environments"
