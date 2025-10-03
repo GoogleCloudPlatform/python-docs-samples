@@ -25,7 +25,7 @@ def generate_content() -> str:
     tools.append(Tool(url_context=UrlContext))
     tools.append(Tool(google_search=GoogleSearch))
 
-    #todo(developer) Here put your URLs
+    #todo(developer) Here put your URLs!
     url = ""
 
     response = client.models.generate_content(
