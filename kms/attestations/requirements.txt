@@ -1,4 +1,4 @@
-cryptography==45.0.1
+cryptography==46.0.1
 pem==21.2.0; python_version < '3.8'
 pem==23.1.0; python_version > '3.7'
 requests==2.31.0
