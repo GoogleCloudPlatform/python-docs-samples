@@ -183,7 +183,7 @@ class DAG:
         logger.info("Environment Info:\n %s", environment_json["name"])
         return environment_json
 
-def legacy_operations(project_name: str, environment: str, location: str, sdk_endpoint: str, airflow_version: list[int], operation: str) -> None:
+def legacy_operations(project_name: str, environment: str, location: str, sdk_endpoint: str, airflow_version: tuple[int, int, int], operation: str) -> None:
     list_of_dags = DAG.get_list_of_dags(
         project_name=project_name,
         environment=environment,
@@ -233,7 +233,7 @@ def modern_operations(project_name: str, environment: str, location: str, sdk_en
         )
 
 def main(
-    project_name: str, environment: str, location: str, operation: str, sdk_endpoint=str
+    project_name: str, environment: str, location: str, operation: str, sdk_endpoint: str
 ) -> int:
     logger.info("DAG Pause/UnPause Script for Cloud Composer")
     environment_info = DAG.describe_environment(
@@ -254,7 +254,6 @@ def main(
         legacy_operations(project_name, environment, location, sdk_endpoint, airflow_version, operation)
     else:
         modern_operations(project_name, environment, location, sdk_endpoint, operation)
-        
     return 0
 
 
