@@ -24,12 +24,12 @@ import tools_code_exec_with_txt_local_img
 import tools_enterprise_web_search_with_txt
 import tools_func_def_with_txt
 import tools_func_desc_with_txt
-import tools_google_maps_with_txt
-import tools_google_search_with_txt
-import tools_vais_with_txt
 import tools_google_maps_coordinates_with_txt
-import tools_urlcontext_with_txt
+import tools_google_maps_with_txt
 import tools_google_search_and_urlcontext_with_txt
+import tools_google_search_with_txt
+import tools_urlcontext_with_txt
+import tools_vais_with_txt
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -81,13 +81,16 @@ def test_tools_vais_with_txt() -> None:
     response = tools_vais_with_txt.generate_content(datastore)
     assert response
 
+
 def test_tools_google_maps_coordinates_with_txt() -> None:
     response = tools_google_maps_coordinates_with_txt.generate_content()
     assert response
 
+
 def test_tools_urlcontext_with_txt() -> None:
     response = tools_urlcontext_with_txt.generate_content()
     assert response
+
 
 def test_tools_google_search_and_urlcontext_with_txt() -> None:
     response = tools_google_search_and_urlcontext_with_txt.generate_content()

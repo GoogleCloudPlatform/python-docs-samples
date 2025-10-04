@@ -25,7 +25,7 @@ def generate_content() -> str:
         url_context=UrlContext
     )
 
-    #todo(developer) Here put your URLs
+    # TODO(developer): Here put your URLs
     url1 = ""
     url2 = ""
 
