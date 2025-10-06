@@ -19,7 +19,7 @@ import base64
 
 from google import genai
 from google.genai.types import (AudioTranscriptionConfig, Blob,
-                                LiveConnectConfig, Modality)
+                                LiveConnectConfig, Modality, HttpOptions)
 import numpy as np
 
 from scipy.io import wavfile
@@ -37,7 +37,7 @@ OUTPUT_RATE = 24000
 # The sample width for 16-bit audio, which is standard for this type of audio data.
 SAMPLE_WIDTH = 2
 
-client = genai.Client()
+client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
 
 
 def read_wavefile(filepath: str) -> tuple[str, str]:
@@ -68,6 +68,7 @@ def write_wavefile(filepath: str, audio_frames: list[bytes], rate: int) -> None:
 
 async def main() -> bool:
     print("Starting the code")
+
     async with client.aio.live.connect(
         model=MODEL,
         config=LiveConnectConfig(
