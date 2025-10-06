@@ -23,7 +23,7 @@ def get_batch_job(batch_job_name: str) -> types.BatchJob:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Get the batch job
-    # Eg. batch_job_name = "projects/123456789012/locations/ABCDEF/batchPredictionJobs/1234567890123456789"
+# Eg. batch_job_name = "projects/123456789012/locations/.../batchPredictionJobs/1234567890123456789"
     batch_job = client.batches.get(name=batch_job_name)
 
     print(f"Job state: {batch_job.state}")
