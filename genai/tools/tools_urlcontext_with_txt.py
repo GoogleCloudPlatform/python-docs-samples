@@ -26,12 +26,12 @@ def generate_content() -> str:
     )
 
     # TODO(developer): Here put your URLs
-    url1 = "https://ai.google.dev/gemini-api/docs/models#gemini-2.5-pro"
-    url2 = "https://ai.google.dev/gemini-api/docs/models#gemini-2.5-flash"
+    url1 = "https://cloud.google.com/vertex-ai/docs/generative-ai/start"
+    url2 = "https://cloud.google.com/docs/overview"
 
     response = client.models.generate_content(
         model=model_id,
-        contents=f"Compare model {url1} and {url2}",
+        contents=f"Compare the content, purpose, and audiences of {url1} and {url2}.",
         config=GenerateContentConfig(
             tools=[url_context_tool],
             response_modalities=["TEXT"],
