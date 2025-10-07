@@ -126,7 +126,7 @@ RUN set -ex \
   3.12.11 \
   3.13.8 \
   3.14.0" \
-&& for PYTHON_VERSION in $PYTHON_VERSIONS; do \
+  && for PYTHON_VERSION in $PYTHON_VERSIONS; do \
   wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
   && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
   && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
