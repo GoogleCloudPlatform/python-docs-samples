@@ -126,15 +126,15 @@ RUN set -ex \
   3.12.11 \
   3.13.8 \
   3.14.0" \
-  && for PYTHON_VERSION in $PYTHON_VERSIONS; do \
-  wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz" \
-  && wget --no-check-certificate -O python-${PYTHON_VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${PYTHON_VERSION%%[a-z]*}/Python-$PYTHON_VERSION.tar.xz.asc" \
-  && gpg --batch --verify python-${PYTHON_VERSION}.tar.xz.asc python-${PYTHON_VERSION}.tar.xz \
-  && rm -r python-${PYTHON_VERSION}.tar.xz.asc \
-  && mkdir -p /usr/src/python-${PYTHON_VERSION} \
-  && tar -xJC /usr/src/python-${PYTHON_VERSION} --strip-components=1 -f python-${PYTHON_VERSION}.tar.xz \
-  && rm python-${PYTHON_VERSION}.tar.xz \
-  && cd /usr/src/python-${PYTHON_VERSION} \
+  && for VERSION in $PYTHON_VERSIONS; do \
+  wget --no-check-certificate -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${VERSION%%[a-z]*}/Python-$VERSION.tar.xz" \
+  && wget --no-check-certificate -O python-${VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${VERSION%%[a-z]*}/Python-$VERSION.tar.xz.asc" \
+  && gpg --batch --verify python-${VERSION}.tar.xz.asc python-${VERSION}.tar.xz \
+  && rm -r python-${VERSION}.tar.xz.asc \
+  && mkdir -p /usr/src/python-${VERSION} \
+  && tar -xJC /usr/src/python-${VERSION} --strip-components=1 -f python-${VERSION}.tar.xz \
+  && rm python-${VERSION}.tar.xz \
+  && cd /usr/src/python-${VERSION} \
   && ./configure \
   --enable-shared \
   # This works only on Python 2.7 and throws a warning on every other
