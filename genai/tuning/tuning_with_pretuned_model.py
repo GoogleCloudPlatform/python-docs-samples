@@ -34,7 +34,7 @@ def create_continuous_tuning_job(tuned_model_name: str, checkpoint_id: str) -> s
     )
 
     tuning_job = client.tunings.tune(
-        base_model=tuned_model_name,
+        base_model=tuned_model_name,  # Note: Using a Tuned Model
         training_dataset=training_dataset,
         config=CreateTuningJobConfig(
             tuned_model_display_name="Example tuning job",
