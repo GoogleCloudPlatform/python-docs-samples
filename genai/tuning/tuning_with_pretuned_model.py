@@ -14,7 +14,7 @@
 
 
 def create_continuous_tuning_job(tuned_model_name: str, checkpoint_id: str) -> str:
-    # [START googlegenaisdk_continuous_tuning_create]
+    # [START googlegenaisdk_tuning_with_pretuned_model]
     import time
 
     from google import genai
@@ -68,7 +68,7 @@ def create_continuous_tuning_job(tuned_model_name: str, checkpoint_id: str) -> s
         # Checkpoint 1:  checkpoint_id='1' epoch=1 step=10 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789000000'
         # Checkpoint 2:  checkpoint_id='2' epoch=2 step=20 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789012345'
 
-    # [END googlegenaisdk_continuous_tuning_create]
+    # [END googlegenaisdk_tuning_with_pretuned_model]
     return tuning_job.name
 
 
