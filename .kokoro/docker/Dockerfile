@@ -110,43 +110,68 @@ RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - \
   && rm -rf /var/lib/apt/lists/* \
   && rm -f /var/cache/apt/archives/*.deb
 
-COPY fetch_gpg_keys.sh /tmp
-# Install the desired versions of Python.
-RUN set -ex \
-  && export GNUPGHOME="$(mktemp -d)" \
-  && echo "disable-ipv6" >> "${GNUPGHOME}/dirmngr.conf" \
-  && /tmp/fetch_gpg_keys.sh \
-  && PYTHON_VERSIONS="\
-  2.7.18 \
-  3.7.17 \
-  3.8.20 \
-  3.9.23 \
-  3.10.18 \
-  3.11.13 \
-  3.12.11 \
-  3.13.8 \
-  3.14.0" \
-  && for VERSION in $PYTHON_VERSIONS; do \
-  wget --no-check-certificate -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${VERSION%%[a-z]*}/Python-$VERSION.tar.xz" \
-  && wget --no-check-certificate -O python-${VERSION}.tar.xz.asc "https://www.python.org/ftp/python/${VERSION%%[a-z]*}/Python-$VERSION.tar.xz.asc" \
-  && gpg --batch --verify python-${VERSION}.tar.xz.asc python-${VERSION}.tar.xz \
-  && rm -r python-${VERSION}.tar.xz.asc \
-  && mkdir -p /usr/src/python-${VERSION} \
-  && tar -xJC /usr/src/python-${VERSION} --strip-components=1 -f python-${VERSION}.tar.xz \
-  && rm python-${VERSION}.tar.xz \
-  && cd /usr/src/python-${VERSION} \
-  && ./configure \
-  --enable-shared \
-  # This works only on Python 2.7 and throws a warning on every other
-  # version, but seems otherwise harmless.
-  --enable-unicode=ucs4 \
-  --with-system-ffi \
-  --without-ensurepip \
-  && make -j$(nproc) \
-  && make install \
-  && ldconfig \
+# From https://www.python.org/downloads/metadata/sigstore/
+# Starting with Python 3.14, Sigstore is the only method of signing and verification of release artifacts. 
+RUN LATEST_VERSION="2.6.1" && \
+    wget "https://github.com/sigstore/cosign/releases/download/v${LATEST_VERSION}/cosign_${LATEST_VERSION}_amd64.deb" && \
+    dpkg -i cosign_${LATEST_VERSION}_amd64.deb && \
+    rm cosign_${LATEST_VERSION}_amd64.deb
+
+ARG PYTHON_VERSIONS="3.7.17 3.8.20 3.9.23 3.10.18 3.11.13 3.12.11 3.13.8 3.14.0"
+
+SHELL ["/bin/bash", "-c"]
+
+RUN set -eux; \
+    # Define the required associative arrays completely.
+    declare -A PYTHON_IDENTITIES; \
+    PYTHON_IDENTITIES=(\
+        [3.7]="nad@python.org" \
+        [3.8]="lukasz@langa.pl" \
+        [3.9]="lukasz@langa.pl" \
+        [3.10]="pablogsal@python.org" \
+        [3.11]="pablogsal@python.org" \
+        [3.12]="thomas@python.org" \
+        [3.13]="thomas@python.org" \
+        [3.14]="hugo@python.org" \
+    ); \
+    declare -A PYTHON_ISSUERS; \
+    PYTHON_ISSUERS=(\
+        [3.7]="https://github.com/login/oauth" \
+        [3.8]="https://github.com/login/oauth" \
+        [3.9]="https://github.com/login/oauth" \
+        [3.10]="https://accounts.google.com" \
+        [3.11]="https://accounts.google.com" \
+        [3.12]="https://accounts.google.com" \
+        [3.13]="https://accounts.google.com" \
+        [3.14]="https://github.com/login/oauth" \
+    ); \
+    \
+    for VERSION in $PYTHON_VERSIONS; do \
+        # 1. Define VERSION_GROUP (e.g., 3.14 from 3.14.0)
+        VERSION_GROUP="$(echo "${VERSION}" | cut -d . -f 1,2)"; \
+        \
+        # 2. Look up IDENTITY and ISSUER using the defined VERSION_GROUP
+        IDENTITY="${PYTHON_IDENTITIES[$VERSION_GROUP]}"; \
+        ISSUER="${PYTHON_ISSUERS[$VERSION_GROUP]}"; \
+        \
+      wget --quiet -O python-${VERSION}.tar.xz "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz" \
+      && wget --quiet -O python-${VERSION}.tar.xz.sigstore "https://www.python.org/ftp/python/${VERSION}/Python-$VERSION.tar.xz.sigstore" \
+      # Verify the Python tarball signature with cosign.
+      && cosign verify-blob python-${VERSION}.tar.xz \
+        --certificate-oidc-issuer "${ISSUER}" \
+        --certificate-identity "${IDENTITY}" \
+        --bundle python-${VERSION}.tar.xz.sigstore \
+      && mkdir -p /usr/src/python-${VERSION} \
+      && tar -xJC /usr/src/python-${VERSION} --strip-components=1 -f python-${VERSION}.tar.xz \
+      && rm python-${VERSION}.tar.xz \
+      && cd /usr/src/python-${VERSION} \
+      && ./configure \
+          --enable-shared \
+          --with-system-ffi \
+      && make -j$(nproc) \
+      && make install \
+      && ldconfig \
   ; done \
-  && rm -rf "${GNUPGHOME}" \
   && rm -rf /usr/src/python* \
   && rm -rf ~/.cache/
 
@@ -168,6 +193,7 @@ RUN wget --no-check-certificate -O /tmp/get-pip-3-7.py 'https://bootstrap.pypa.i
   && [ "$(pip list |tac|tac| awk -F '[ ()]+' '$1 == "pip" { print $2; exit }')" = "$PYTHON_PIP_VERSION" ]
 
 # Ensure Pip for all python3 versions
+RUN python3.14 /tmp/get-pip.py
 RUN python3.13 /tmp/get-pip.py
 RUN python3.12 /tmp/get-pip.py
 RUN python3.11 /tmp/get-pip.py
@@ -185,6 +211,7 @@ RUN python3.10 -m pip
 RUN python3.11 -m pip
 RUN python3.12 -m pip
 RUN python3.13 -m pip
+RUN python3.14 -m pip
 
 # Install "setuptools" for Python 3.12+ (see https://docs.python.org/3/whatsnew/3.12.html#distutils)
 RUN python3.12 -m pip install --no-cache-dir setuptools
