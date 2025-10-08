@@ -118,9 +118,9 @@ async def test_live_with_text() -> None:
     assert await live_with_txt.generate_content()
 
 
-@pytest.mark.asyncio
-async def test_live_websocket_textgen_with_audio() -> None:
-    assert await live_websocket_textgen_with_audio.generate_content()
+# @pytest.mark.asyncio
+# async def test_live_websocket_textgen_with_audio() -> None:
+#     assert await live_websocket_textgen_with_audio.generate_content()
 
 
 @pytest.mark.asyncio

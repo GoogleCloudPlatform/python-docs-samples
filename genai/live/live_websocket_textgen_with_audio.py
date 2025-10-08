@@ -101,9 +101,7 @@ async def generate_content() -> str:
             return "Error: WebSocket setup failed."
 
         # 3. Send audio message
-        encoded_audio_message, mime_type = read_wavefile(
-            "hello_gemini_are_you_there.wav"
-        )
+        encoded_audio_message, mime_type = read_wavefile("hello_gemini_are_you_there.wav")
         # Example audio message:  "Hello? Gemini are you there?"
 
         user_message = {
