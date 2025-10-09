@@ -29,6 +29,7 @@ import tuning_with_checkpoints_get_model
 import tuning_with_checkpoints_list_checkpoints
 import tuning_with_checkpoints_set_default_checkpoint
 import tuning_with_checkpoints_textgen_with_txt
+import tuning_with_pretuned_model
 
 
 GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
@@ -306,3 +307,23 @@ def test_tuning_with_checkpoints_textgen_with_txt(mock_genai_client: MagicMock) 
         call(model="test-endpoint-1", contents="Why is the sky blue?"),
         call(model="test-endpoint-2", contents="Why is the sky blue?"),
     ]
+
+
+@patch("google.genai.Client")
+def test_tuning_with_pretuned_model(mock_genai_client: MagicMock) -> None:
+    # Mock the API response
+    mock_tuning_job = types.TuningJob(
+        name="test-tuning-job",
+        experiment="test-experiment",
+        tuned_model=types.TunedModel(
+            model="test-model-2",
+            endpoint="test-endpoint"
+        )
+    )
+    mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
+
+    response = tuning_with_pretuned_model.create_continuous_tuning_job(tuned_model_name="test-model", checkpoint_id="1")
+
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
+    mock_genai_client.return_value.tunings.tune.assert_called_once()
+    assert response == "test-tuning-job"
