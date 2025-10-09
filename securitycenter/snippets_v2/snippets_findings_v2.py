@@ -55,6 +55,37 @@ def list_all_findings(organization_id, source_name, location_id) -> int:
 # [END securitycenter_list_all_findings_v2]
 
 
+# [START securitycenter_regional_endpoint_list_findings]
+def rep_list_finding(parent, endpoint) -> int:
+    """
+    lists all findings for a parent
+    Args:
+        parent: Parent resource for which findings to be listed. Must be in one of the following formats:
+                "organizations/{organization_id}/sources/{sources}/locations/{location}"
+                "projects/{project_id}/sources/{sources}/locations/{location}"
+                "folders/{folder_id}/sources/{sources}/locations/{location}"
+        endpoint: Endpoint for this request. For example "securitycenter.googleapis.com", "securitycenter.me-central2.rep.googleapis.com"
+    Returns:
+        int: return the count of all findings for a source
+    """
+    from google.cloud import securitycenter_v2 as securitycenter
+    from google.api_core.client_options import ClientOptions
+    # Override endpoint and create a client.
+    options = ClientOptions(api_endpoint=endpoint)
+    client = securitycenter.SecurityCenterClient(client_options=options)
+
+    finding_result_iterator = client.list_findings(request={"parent": parent})
+    for count, finding_result in enumerate(finding_result_iterator):
+        print(
+            "{}: name: {} resource: {}".format(
+                count, finding_result.finding.name, finding_result.finding.resource_name
+            )
+        )
+    return count
+
+# [END securitycenter_regional_endpoint_list_findings]
+
+
 # [START securitycenter_list_filtered_findings_v2]
 def list_filtered_findings(organization_id, source_name, location_id) -> int:
     """
