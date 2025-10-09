@@ -35,7 +35,7 @@ def generate_content(output_uri: str) -> str:
     print(f"Job name: {job.name}")
     print(f"Job state: {job.state}")
     # Example response:
-    # Job name: projects/%PROJECT_ID%/locations/us-central1/batchPredictionJobs/9876453210000000000
+    # Job name: projects/.../locations/.../batchPredictionJobs/9876453210000000000
     # Job state: JOB_STATE_PENDING
 
     # See the documentation: https://googleapis.github.io/python-genai/genai.html#genai.types.BatchJob

@@ -47,7 +47,7 @@ def create_content_cache() -> str:
             contents=contents,
             system_instruction=system_instruction,
             # (Optional) For enhanced security, the content cache can be encrypted using a Cloud KMS key
-            # kms_key_name = "projects/.../locations/us-central1/keyRings/.../cryptoKeys/..."
+            # kms_key_name = "projects/.../locations/.../keyRings/.../cryptoKeys/..."
             display_name="example-cache",
             ttl="86400s",
         ),
@@ -56,7 +56,7 @@ def create_content_cache() -> str:
     print(content_cache.name)
     print(content_cache.usage_metadata)
     # Example response:
-    #   projects/111111111111/locations/us-central1/cachedContents/1111111111111111111
+    #   projects/111111111111/locations/.../cachedContents/1111111111111111111
     #   CachedContentUsageMetadata(audio_duration_seconds=None, image_count=167,
     #       text_count=153, total_token_count=43130, video_duration_seconds=None)
     # [END googlegenaisdk_contentcache_create_with_txt_gcs_pdf]

@@ -29,8 +29,8 @@ def list_context_caches() -> str:
         print(f"Expires at: {content_cache.expire_time}")
 
     # Example response:
-    # * Cache `projects/111111111111/locations/us-central1/cachedContents/1111111111111111111` for
-    #       model `projects/111111111111/locations/us-central1/publishers/google/models/gemini-XXX-pro-XXX`
+    # * Cache `projects/111111111111/locations/.../cachedContents/1111111111111111111` for
+    #       model `projects/111111111111/locations/.../publishers/google/models/gemini-XXX-pro-XXX`
     # * Last updated at: 2025-02-13 14:46:42.620490+00:00
     # * CachedContentUsageMetadata(audio_duration_seconds=None, image_count=167, text_count=153, total_token_count=43130, video_duration_seconds=None)
     # ...

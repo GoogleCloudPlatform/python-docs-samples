@@ -19,11 +19,11 @@ def delete_context_caches(cache_name: str) -> str:
 
     client = genai.Client()
     # Delete content cache using name
-    # E.g cache_name = 'projects/111111111111/locations/us-central1/cachedContents/1111111111111111111'
+    # E.g cache_name = 'projects/111111111111/locations/.../cachedContents/1111111111111111111'
     client.caches.delete(name=cache_name)
     print("Deleted Cache", cache_name)
     # Example response
-    #   Deleted Cache projects/111111111111/locations/us-central1/cachedContents/1111111111111111111
+    #   Deleted Cache projects/111111111111/locations/.../cachedContents/1111111111111111111
     # [END googlegenaisdk_contentcache_delete]
     return cache_name
 
