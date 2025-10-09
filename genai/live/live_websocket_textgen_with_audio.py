@@ -20,7 +20,9 @@ def get_bearer_token() -> str:
     import google.auth
     from google.auth.transport.requests import Request
 
-    creds, _ = google.auth.default(scopes=["https://www.googleapis.com/auth/cloud-platform"])
+    creds, _ = google.auth.default(
+        scopes=["https://www.googleapis.com/auth/cloud-platform"]
+    )
     auth_req = Request()
     creds.refresh(auth_req)
     bearer_token = creds.token
@@ -65,9 +67,7 @@ async def generate_content() -> str:
 
     # Websocket Configuration
     WEBSOCKET_HOST = "us-central1-aiplatform.googleapis.com"
-    WEBSOCKET_SERVICE_URL = (
-        f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
-    )
+    WEBSOCKET_SERVICE_URL = f"wss://{WEBSOCKET_HOST}/ws/google.cloud.aiplatform.v1.LlmBidiService/BidiGenerateContent"
 
     # Websocket Authentication
     headers = {
@@ -76,9 +76,7 @@ async def generate_content() -> str:
     }
 
     # Model Configuration
-    model_path = (
-        f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
-    )
+    model_path = f"projects/{PROJECT_ID}/locations/{LOCATION}/publishers/google/models/{GEMINI_MODEL_NAME}"
     model_generation_config = {"response_modalities": ["TEXT"]}
 
     async with connect(WEBSOCKET_SERVICE_URL, additional_headers=headers) as websocket_session:
