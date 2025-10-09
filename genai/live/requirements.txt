@@ -1,4 +1,4 @@
-google-genai==1.41.0
+google-genai==1.42.0
 scipy==1.16.1
 websockets==15.0.1
 numpy==1.26.4
