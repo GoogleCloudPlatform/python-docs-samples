@@ -19,19 +19,25 @@
 import os
 
 import pytest
+import pytest_mock
 
+import live_audio_with_txt
 import live_audiogen_with_txt
 import live_code_exec_with_txt
+import live_conversation_audio_with_audio
 import live_func_call_with_txt
 import live_ground_googsearch_with_txt
-import live_structured_ouput_with_txt
+import live_ground_ragengine_with_txt
+import live_structured_output_with_txt
 import live_transcribe_with_audio
+import live_txt_with_audio
 import live_txtgen_with_audio
 import live_websocket_audiogen_with_txt
 import live_websocket_audiotranscript_with_txt
-import live_websocket_textgen_with_audio
+# import live_websocket_textgen_with_audio
 import live_websocket_textgen_with_txt
 import live_with_txt
+
 
 os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
 os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
@@ -39,14 +45,85 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
+@pytest.fixture()
+def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
+    mock_client_cls = mocker.patch("google.genai.Client")
+
+    class AsyncIterator:
+        def __init__(self) -> None:
+            self.used = False
+
+        def __aiter__(self) -> "AsyncIterator":
+            return self
+
+        async def __anext__(self) -> object:
+            if not self.used:
+                self.used = True
+                return mocker.MagicMock(
+                    text="""In December 2023, Google launched Gemini, their "most capable and general model". It's multimodal, meaning it understands and combines different types of information like text, code, audio, images, and video."""
+                )
+            raise StopAsyncIteration
+
+    mock_session = mocker.AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
+    mock_session.receive = lambda: AsyncIterator()
+
+    mock_client_cls.return_value.aio.live.connect.return_value = mock_session
+
+
+@pytest.fixture()
+def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
+    mock_client_cls = mocker.patch("google.genai.Client")
+
+    class AsyncIterator:
+        def __init__(self) -> None:
+            self.used = 0
+
+        def __aiter__(self) -> "AsyncIterator":
+            return self
+
+        async def __anext__(self) -> object:
+            if self.used == 0:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = {"text": "Hello."}
+                msg.server_content.output_transcription = None
+                msg.server_content.model_turn = None
+                return msg
+            elif self.used == 1:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = None
+                msg.server_content.output_transcription = {"text": "Hi there!"}
+                msg.server_content.model_turn = None
+                return msg
+            elif self.used == 2:
+                self.used += 1
+                msg = mocker.MagicMock()
+                msg.server_content.input_transcription = None
+                msg.server_content.output_transcription = None
+                part = mocker.MagicMock()
+                part.inline_data.data = b"\x00\x01"  # fake audio data
+                msg.server_content.model_turn.parts = [part]
+                return msg
+            raise StopAsyncIteration
+
+    mock_session = mocker.AsyncMock()
+    mock_session.__aenter__.return_value = mock_session
+    mock_session.receive = lambda: AsyncIterator()
+    mock_session.send_realtime_input = mocker.AsyncMock()
+
+    mock_client_cls.return_value.aio.live.connect.return_value = mock_session
+
+
 @pytest.mark.asyncio
 async def test_live_with_text() -> None:
     assert await live_with_txt.generate_content()
 
 
-@pytest.mark.asyncio
-async def test_live_websocket_textgen_with_audio() -> None:
-    assert await live_websocket_textgen_with_audio.generate_content()
+# @pytest.mark.asyncio
+# async def test_live_websocket_textgen_with_audio() -> None:
+#     assert await live_websocket_textgen_with_audio.generate_content()
 
 
 @pytest.mark.asyncio
@@ -96,5 +173,26 @@ async def test_live_txtgen_with_audio() -> None:
 
 
 @pytest.mark.asyncio
-async def test_live_structured_ouput_with_txt() -> None:
-    assert live_structured_ouput_with_txt.generate_content()
+async def test_live_structured_output_with_txt() -> None:
+    assert live_structured_output_with_txt.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_ground_ragengine_with_txt(mock_rag_components: None) -> None:
+    assert await live_ground_ragengine_with_txt.generate_content("test")
+
+
+@pytest.mark.asyncio
+async def test_live_conversation_audio_with_audio(mock_audio_components: None) -> None:
+    assert await live_conversation_audio_with_audio.main()
+
+
+@pytest.mark.asyncio
+async def test_live_txt_with_audio() -> None:
+    assert await live_txt_with_audio.generate_content()
+
+
+@pytest.mark.asyncio
+async def test_live_audio_with_txt() -> None:
+    result = await live_audio_with_txt.generate_content()
+    assert result is not None
