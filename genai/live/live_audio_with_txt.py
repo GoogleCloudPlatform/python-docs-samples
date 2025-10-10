@@ -18,7 +18,7 @@
 import asyncio
 
 
-async def generate_content() -> list[str]:
+async def generate_content() -> list:
     # [START googlegenaisdk_live_audio_with_txt]
     from google import genai
     from google.genai.types import (

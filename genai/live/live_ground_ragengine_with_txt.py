@@ -52,7 +52,6 @@ async def generate_content(memory_corpus: str) -> list[str]:
         async for message in session.receive():
             if message.text:
                 response.append(message.text)
-                continue
 
     print("".join(response))
     # Example output:

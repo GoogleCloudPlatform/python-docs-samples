@@ -173,7 +173,7 @@ async def test_live_txtgen_with_audio() -> None:
 
 
 @pytest.mark.asyncio
-async def test_live_structured_output_with_txt() -> None:
+def test_live_structured_output_with_txt() -> None:
     assert live_structured_output_with_txt.generate_content()
 
 
