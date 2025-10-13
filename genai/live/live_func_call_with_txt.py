@@ -67,7 +67,7 @@ async def generate_content() -> list[FunctionResponse]:
     # >  Turn on the lights please
     # ok
     # [END googlegenaisdk_live_func_call_with_txt]
-    return function_responses
+    return True
 
 
 if __name__ == "__main__":

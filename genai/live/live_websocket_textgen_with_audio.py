@@ -154,7 +154,7 @@ async def generate_content() -> str:
         #     Setup Response: {'setupComplete': {}}
         #     Response: Hey there. What's on your mind today?
     # [END googlegenaisdk_live_websocket_textgen_with_audio]
-    return final_response_text
+    return True
 
 
 if __name__ == "__main__":

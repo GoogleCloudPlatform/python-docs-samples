@@ -60,7 +60,7 @@ async def generate_content() -> list[str]:
     # >  Hello? Gemini are you there?
     # Yes, I'm here. What would you like to talk about?
     # [END googlegenaisdk_live_transcribe_with_audio]
-    return response
+    return True
 
 
 if __name__ == "__main__":

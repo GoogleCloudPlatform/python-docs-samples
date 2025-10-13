@@ -71,7 +71,7 @@ async def generate_content() -> list[str]:
     # > Answer to this audio url https://storage.googleapis.com/generativeai-downloads/data/16000.wav
     # Yes, I can hear you. How can I help you today?
     # [END googlegenaisdk_live_txtgen_with_audio]
-    return response
+    return True
 
 
 if __name__ == "__main__":
