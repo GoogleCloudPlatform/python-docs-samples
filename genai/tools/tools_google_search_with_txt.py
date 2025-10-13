@@ -31,7 +31,7 @@ def generate_content() -> str:
         config=GenerateContentConfig(
             tools=[
                 # Use Google Search Tool
-                Tool(google_search=GoogleSearch())
+                Tool(google_search=GoogleSearch(exclude_domains = [ "domain.com", "domain2.com" ]))
             ],
         ),
     )
