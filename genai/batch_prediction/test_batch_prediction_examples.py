@@ -11,19 +11,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#
-# Using Google Cloud Vertex AI to test the code samples.
-#
-from datetime import datetime as dt
-import os
-
 from unittest.mock import MagicMock, patch
 
-from google.cloud import bigquery, storage
 from google.genai import types
 from google.genai.types import JobState
-import pytest
 
 import batchpredict_embeddings_with_gcs
 import batchpredict_with_bq
@@ -31,67 +22,113 @@ import batchpredict_with_gcs
 import get_batch_job
 
 
-os.environ["GOOGLE_GENAI_USE_VERTEXAI"] = "True"
-os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
-# The project name is included in the CICD pipeline
-# os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
-BQ_OUTPUT_DATASET = f"{os.environ['GOOGLE_CLOUD_PROJECT']}.gen_ai_batch_prediction"
-GCS_OUTPUT_BUCKET = "python-docs-samples-tests"
-
-
-@pytest.fixture(scope="session")
-def bq_output_uri() -> str:
-    table_name = f"text_output_{dt.now().strftime('%Y_%m_%d_T%H_%M_%S')}"
-    table_uri = f"{BQ_OUTPUT_DATASET}.{table_name}"
-
-    yield f"bq://{table_uri}"
-
-    bq_client = bigquery.Client()
-    bq_client.delete_table(table_uri, not_found_ok=True)
-
-
-@pytest.fixture(scope="session")
-def gcs_output_uri() -> str:
-    prefix = f"text_output/{dt.now()}"
-
-    yield f"gs://{GCS_OUTPUT_BUCKET}/{prefix}"
-
-    storage_client = storage.Client()
-    bucket = storage_client.get_bucket(GCS_OUTPUT_BUCKET)
-    blobs = bucket.list_blobs(prefix=prefix)
-    for blob in blobs:
-        blob.delete()
-
-
-def test_batch_prediction_embeddings_with_gcs(gcs_output_uri: str) -> None:
-    response = batchpredict_embeddings_with_gcs.generate_content(
-        output_uri=gcs_output_uri
+@patch("google.genai.Client")
+@patch("time.sleep", return_value=None)
+def test_batch_prediction_embeddings_with_gcs(
+    mock_sleep: MagicMock, mock_genai_client: MagicMock
+) -> None:
+    # Mock the API response
+    mock_batch_job_running = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_RUNNING"
     )
+    mock_batch_job_succeeded = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_SUCCEEDED"
+    )
+
+    mock_genai_client.return_value.batches.create.return_value = (
+        mock_batch_job_running
+    )
+    mock_genai_client.return_value.batches.get.return_value = (
+        mock_batch_job_succeeded
+    )
+
+    response = batchpredict_embeddings_with_gcs.generate_content(
+        output_uri="gs://test-bucket/test-prefix"
+    )
+
+    mock_genai_client.assert_called_once_with(
+        http_options=types.HttpOptions(api_version="v1")
+    )
+    mock_genai_client.return_value.batches.create.assert_called_once()
+    mock_genai_client.return_value.batches.get.assert_called_once()
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
-def test_batch_prediction_with_bq(bq_output_uri: str) -> None:
-    response = batchpredict_with_bq.generate_content(output_uri=bq_output_uri)
+@patch("google.genai.Client")
+@patch("time.sleep", return_value=None)
+def test_batch_prediction_with_bq(
+    mock_sleep: MagicMock, mock_genai_client: MagicMock
+) -> None:
+    # Mock the API response
+    mock_batch_job_running = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_RUNNING"
+    )
+    mock_batch_job_succeeded = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_SUCCEEDED"
+    )
+
+    mock_genai_client.return_value.batches.create.return_value = (
+        mock_batch_job_running
+    )
+    mock_genai_client.return_value.batches.get.return_value = (
+        mock_batch_job_succeeded
+    )
+
+    response = batchpredict_with_bq.generate_content(
+        output_uri="bq://test-project.test_dataset.test_table"
+    )
+
+    mock_genai_client.assert_called_once_with(
+        http_options=types.HttpOptions(api_version="v1")
+    )
+    mock_genai_client.return_value.batches.create.assert_called_once()
+    mock_genai_client.return_value.batches.get.assert_called_once()
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
-def test_batch_prediction_with_gcs(gcs_output_uri: str) -> None:
-    response = batchpredict_with_gcs.generate_content(output_uri=gcs_output_uri)
+@patch("google.genai.Client")
+@patch("time.sleep", return_value=None)
+def test_batch_prediction_with_gcs(
+    mock_sleep: MagicMock, mock_genai_client: MagicMock
+) -> None:
+    # Mock the API response
+    mock_batch_job_running = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_RUNNING"
+    )
+    mock_batch_job_succeeded = types.BatchJob(
+        name="test-batch-job", state="JOB_STATE_SUCCEEDED"
+    )
+
+    mock_genai_client.return_value.batches.create.return_value = (
+        mock_batch_job_running
+    )
+    mock_genai_client.return_value.batches.get.return_value = (
+        mock_batch_job_succeeded
+    )
+
+    response = batchpredict_with_gcs.generate_content(
+        output_uri="gs://test-bucket/test-prefix"
+    )
+
+    mock_genai_client.assert_called_once_with(
+        http_options=types.HttpOptions(api_version="v1")
+    )
+    mock_genai_client.return_value.batches.create.assert_called_once()
+    mock_genai_client.return_value.batches.get.assert_called_once()
     assert response == JobState.JOB_STATE_SUCCEEDED
 
 
 @patch("google.genai.Client")
 def test_get_batch_job(mock_genai_client: MagicMock) -> None:
     # Mock the API response
-    mock_batch_job = types.BatchJob(
-        name="test-batch-job",
-        state="JOB_STATE_PENDING"
-    )
+    mock_batch_job = types.BatchJob(name="test-batch-job", state="JOB_STATE_PENDING")
 
     mock_genai_client.return_value.batches.get.return_value = mock_batch_job
 
     response = get_batch_job.get_batch_job("test-batch-job")
 
-    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
+    mock_genai_client.assert_called_once_with(
+        http_options=types.HttpOptions(api_version="v1")
+    )
     mock_genai_client.return_value.batches.get.assert_called_once()
     assert response == mock_batch_job
