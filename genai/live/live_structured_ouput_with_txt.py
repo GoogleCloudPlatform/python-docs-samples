@@ -79,7 +79,7 @@ def generate_content() -> CalendarEvent:
     # User message: Alice and Bob are going to a science fair on Friday.
     # Output message: name='science fair' date='Friday' participants=['Alice', 'Bob']
     # [END googlegenaisdk_live_structured_ouput_with_txt]
-    return response
+    return True
 
 
 if __name__ == "__main__":
