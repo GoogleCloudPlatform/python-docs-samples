@@ -82,7 +82,7 @@ async def generate_content() -> None:
     # Received audio answer. Saving to local file...
     # Audio saved to gemini_response.wav
     # [END googlegenaisdk_live_audiogen_with_txt]
-    return None
+    return True
 
 
 if __name__ == "__main__":

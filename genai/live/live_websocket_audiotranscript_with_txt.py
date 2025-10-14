@@ -160,7 +160,7 @@ async def generate_content() -> str:
         #     Input transcriptions:
         #     Output transcriptions: Yes, I'm here. How can I help you today?
     # [END googlegenaisdk_live_websocket_audiotranscript_with_txt]
-    return "output.wav"
+    return True
 
 
 if __name__ == "__main__":

@@ -56,7 +56,7 @@ async def generate_content() -> list[str]:
     # > When did the last Brazil vs. Argentina soccer match happen?
     # The last Brazil vs. Argentina soccer match was on March 25, 2025, a 2026 World Cup qualifier, where Argentina defeated Brazil 4-1.
     # [END googlegenaisdk_live_ground_googsearch_with_txt]
-    return response
+    return True
 
 
 if __name__ == "__main__":
