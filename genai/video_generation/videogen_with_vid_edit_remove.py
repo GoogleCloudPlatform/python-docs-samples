@@ -27,7 +27,7 @@ def edit_videos_remove_from_video(output_gcs_uri: str) -> str:
     operation = client.models.generate_videos(
         model="veo-2.0-generate-preview",
         source=GenerateVideosSource(
-            video=Video(uri="gs://cloud-samples-data/generative-ai/image/truck-inpainting-dynamic-mask.png", mime_type="video/mp4")
+            video=Video(uri="gs://cloud-samples-data/generative-ai/video/truck.mp4", mime_type="video/mp4")
         ),
         config=GenerateVideosConfig(
             mask=VideoGenerationMask(

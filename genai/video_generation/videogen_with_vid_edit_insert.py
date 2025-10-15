@@ -28,7 +28,7 @@ def edit_videos_insert_from_video(output_gcs_uri: str) -> str:
         model="veo-2.0-generate-preview",
         source=GenerateVideosSource(
             prompt="a sheep",
-            video=Video(uri="gs://cloud-samples-data/generative-ai/image/truck-inpainting-dynamic-mask.png", mime_type="video/mp4")
+            video=Video(uri="gs://cloud-samples-data/generative-ai/video/truck.mp4", mime_type="video/mp4")
         ),
         config=GenerateVideosConfig(
             mask=VideoGenerationMask(
