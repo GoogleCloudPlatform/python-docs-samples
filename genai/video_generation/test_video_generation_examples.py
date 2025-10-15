@@ -30,11 +30,11 @@ import videogen_with_img
 
 import videogen_with_no_rewrite
 
+import videogen_with_reference
+
 import videogen_with_txt
 
 import videogen_with_vid
-
-import videogen_with_reference
 
 import videogen_with_vid_edit_insert
 
@@ -86,13 +86,16 @@ def test_videogen_with_no_rewriter(output_gcs_uri: str) -> None:
     response = videogen_with_no_rewrite.generate_videos_no_rewriter(output_gcs_uri=output_gcs_uri)
     assert response
 
+
 def test_videogen_with_reference(output_gcs_uri: str) -> None:
     response = videogen_with_reference.generate_videos_from_reference(output_gcs_uri=output_gcs_uri)
     assert response
 
+
 def test_videogen_with_edit_insert(output_gcs_uri: str) -> None:
     response = videogen_with_vid_edit_insert.edit_videos_insert_from_video(output_gcs_uri=output_gcs_uri)
     assert response
+
 
 def test_videogen_with_edit_remove(output_gcs_uri: str) -> None:
     response = videogen_with_vid_edit_remove.edit_videos_remove_from_video(output_gcs_uri=output_gcs_uri)
