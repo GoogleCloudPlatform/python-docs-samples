@@ -17,6 +17,7 @@
 #
 
 import os
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 import pytest_mock
@@ -45,6 +46,24 @@ os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
 # os.environ['GOOGLE_CLOUD_PROJECT'] = "add-your-project-name"
 
 
+@pytest.fixture
+def mock_live_session() -> tuple[MagicMock, MagicMock]:
+    async def async_gen(items: list) -> AsyncMock:
+        for i in items:
+            yield i
+
+    mock_session = MagicMock()
+    mock_session.__aenter__.return_value = mock_session
+    mock_session.send_client_content = AsyncMock()
+    mock_session.send = AsyncMock()
+    mock_session.receive = lambda: async_gen([])
+
+    mock_client = MagicMock()
+    mock_client.aio.live.connect.return_value = mock_session
+
+    return mock_client, mock_session
+
+
 @pytest.fixture()
 def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_client_cls = mocker.patch("google.genai.Client")
@@ -67,13 +86,12 @@ def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
     mock_session = mocker.AsyncMock()
     mock_session.__aenter__.return_value = mock_session
     mock_session.receive = lambda: AsyncIterator()
-
     mock_client_cls.return_value.aio.live.connect.return_value = mock_session
 
 
 @pytest.fixture()
 def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
-    mock_client_cls = mocker.patch("google.genai.Client")
+    mock_client_cls = mocker.patch("live_conversation_audio_with_audio.genai.Client")
 
     class AsyncIterator:
         def __init__(self) -> None:
@@ -103,17 +121,21 @@ def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
                 msg.server_content.input_transcription = None
                 msg.server_content.output_transcription = None
                 part = mocker.MagicMock()
-                part.inline_data.data = b"\x00\x01"  # fake audio data
+                part.inline_data.data = b"\x00\x01"
                 msg.server_content.model_turn.parts = [part]
                 return msg
             raise StopAsyncIteration
-
     mock_session = mocker.AsyncMock()
     mock_session.__aenter__.return_value = mock_session
     mock_session.receive = lambda: AsyncIterator()
     mock_session.send_realtime_input = mocker.AsyncMock()
 
     mock_client_cls.return_value.aio.live.connect.return_value = mock_session
+
+
+@pytest.mark.asyncio
+async def test_live_conversation_audio_with_audio(mock_audio_components: None) -> None:
+    assert await live_conversation_audio_with_audio.main()
 
 
 @pytest.mark.asyncio
@@ -182,16 +204,19 @@ async def test_live_ground_ragengine_with_txt(mock_rag_components: None) -> None
 
 
 @pytest.mark.asyncio
-async def test_live_conversation_audio_with_audio(mock_audio_components: None) -> None:
-    assert await live_conversation_audio_with_audio.main()
-
-
-@pytest.mark.asyncio
 async def test_live_txt_with_audio() -> None:
     assert await live_txt_with_audio.generate_content()
 
 
 @pytest.mark.asyncio
-async def test_live_audio_with_txt() -> None:
-    result = await live_audio_with_txt.generate_content()
+async def test_live_audio_with_txt(mock_live_session: None) -> None:
+    mock_client, mock_session = mock_live_session
+
+    with patch("google.genai.Client", return_value=mock_client):
+        with patch("simpleaudio.WaveObject.from_wave_file") as mock_wave:
+            with patch("soundfile.write"):
+                mock_wave_obj = mock_wave.return_value
+                mock_wave_obj.play.return_value = MagicMock()
+                result = await live_audio_with_txt.generate_content()
+
     assert result is not None
