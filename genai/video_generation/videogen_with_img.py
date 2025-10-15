@@ -25,7 +25,7 @@ def generate_videos_from_image(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
-        model="veo-3.0-generate-preview",
+        model="veo-3.1-generate-preview",
         prompt="Extreme close-up of a cluster of vibrant wildflowers swaying gently in a sun-drenched meadow.",
         image=Image(
             gcs_uri="gs://cloud-samples-data/generative-ai/image/flowers.png",
