@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
-    # [START googlegenaisdk_videogen_with_first_last_frame]
+def edit_videos_insert_from_video(output_gcs_uri: str) -> str:
+    # [START googlegenaisdk_videogen_with_vid_edit_insert]
     import time
     from google import genai
-    from google.genai.types import GenerateVideosConfig, Image
+    from google.genai.types import GenerateVideosSource, GenerateVideosConfig, Image, Video, VideoGenerationMask, VideoGenerationMaskMode
 
     client = genai.Client()
 
@@ -25,17 +25,18 @@ def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
-        model="veo-3.1-generate-preview",
-        prompt="a hand reaches in and places a glass of milk next to the plate of cookies",
-        image=Image(
-            gcs_uri="gs://cloud-samples-data/generative-ai/image/cookies.png",
-            mime_type="image/png",
+        model="veo-2.0-generate-preview",
+        source=GenerateVideosSource(
+            prompt="a sheep",
+            video=Video(uri="gs://cloud-samples-data/generative-ai/video/truck.mp4", mime_type="video/mp4")
         ),
         config=GenerateVideosConfig(
-            aspect_ratio="16:9",
-            last_frame=Image(
-                gcs_uri="gs://cloud-samples-data/generative-ai/image/cookies-milk.png",
-                mime_type="image/png",
+            mask=VideoGenerationMask(
+                image=Image(
+                    gcs_uri="gs://cloud-samples-data/generative-ai/image/truck-inpainting-dynamic-mask.png",
+                    mime_type="image/png",
+                ),
+                mask_mode=VideoGenerationMaskMode.INSERT,
             ),
             output_gcs_uri=output_gcs_uri,
         ),
@@ -51,9 +52,9 @@ def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
-    # [END googlegenaisdk_videogen_with_first_last_frame]
+    # [END googlegenaisdk_videogen_with_vid_edit_insert]
     return operation.result.generated_videos[0].video.uri
 
 
 if __name__ == "__main__":
-    generate_videos_from_first_last_frame(output_gcs_uri="gs://your-bucket/your-prefix")
+    edit_videos_insert_from_video(output_gcs_uri="gs://your-bucket/your-prefix")

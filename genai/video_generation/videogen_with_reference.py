@@ -13,11 +13,11 @@
 # limitations under the License.
 
 
-def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
-    # [START googlegenaisdk_videogen_with_first_last_frame]
+def generate_videos_from_reference(output_gcs_uri: str) -> str:
+    # [START googlegenaisdk_videogen_with_img_reference]
     import time
     from google import genai
-    from google.genai.types import GenerateVideosConfig, Image
+    from google.genai.types import GenerateVideosConfig, Image, VideoGenerationReferenceImage
 
     client = genai.Client()
 
@@ -26,17 +26,18 @@ def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
 
     operation = client.models.generate_videos(
         model="veo-3.1-generate-preview",
-        prompt="a hand reaches in and places a glass of milk next to the plate of cookies",
-        image=Image(
-            gcs_uri="gs://cloud-samples-data/generative-ai/image/cookies.png",
-            mime_type="image/png",
-        ),
+        prompt="slowly rotate this coffee mug in a 360 degree circle",
         config=GenerateVideosConfig(
+            reference_images=[
+                VideoGenerationReferenceImage(
+                    image=Image(
+                        gcs_uri="gs://cloud-samples-data/generative-ai/image/mug.png",
+                        mime_type="image/png",
+                    ),
+                    reference_type="asset",
+                ),
+            ],
             aspect_ratio="16:9",
-            last_frame=Image(
-                gcs_uri="gs://cloud-samples-data/generative-ai/image/cookies-milk.png",
-                mime_type="image/png",
-            ),
             output_gcs_uri=output_gcs_uri,
         ),
     )
@@ -51,9 +52,9 @@ def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
 
     # Example response:
     # gs://your-bucket/your-prefix
-    # [END googlegenaisdk_videogen_with_first_last_frame]
+    # [END googlegenaisdk_videogen_with_img_reference]
     return operation.result.generated_videos[0].video.uri
 
 
 if __name__ == "__main__":
-    generate_videos_from_first_last_frame(output_gcs_uri="gs://your-bucket/your-prefix")
+    generate_videos_from_reference(output_gcs_uri="gs://your-bucket/your-prefix")
