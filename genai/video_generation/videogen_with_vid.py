@@ -29,6 +29,7 @@ def generate_videos_from_video(output_gcs_uri: str) -> str:
         prompt="a butterfly flies in and lands on the flower",
         video=Video(
             uri="gs://cloud-samples-data/generative-ai/video/flower.mp4",
+            mime_type="video/mp4",
         ),
         config=GenerateVideosConfig(
             aspect_ratio="16:9",
