@@ -1007,7 +1007,7 @@ def create_and_build_bundle():
 
 def regional_endpoint():
     # [START firestore_regional_endpoint]
-    ENDPOINT = "nam5-firestore.googleapis.com"
+    ENDPOINT = "firestore.africa-south1.rep.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     db = firestore.Client(client_options=client_options)
 
