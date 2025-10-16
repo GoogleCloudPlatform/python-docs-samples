@@ -13,23 +13,18 @@
 # limitations under the License.
 
 
-def count_tokens() -> int:
-    # [START googlegenaisdk_counttoken_with_txt]
-    from google import genai
-    from google.genai.types import HttpOptions
+def counttoken_localtokenizer_with_txt() -> int:
+    # [START googlegenaisdk_counttoken_localtokenizer_with_txt]
+    from google.genai.local_tokenizer import LocalTokenizer
 
-    client = genai.Client(http_options=HttpOptions(api_version="v1"))
-    response = client.models.count_tokens(
-        model="gemini-2.5-flash",
-        contents="What's the highest mountain in Africa?",
-    )
+    tokenizer = LocalTokenizer(model_name="gemini-2.5-flash")
+    response = tokenizer.count_tokens("What's the highest mountain in Africa?")
     print(response)
     # Example output:
-    # total_tokens=9
-    # cached_content_token_count=None
-    # [END googlegenaisdk_counttoken_with_txt]
+    #   total_tokens=10
+    # [END googlegenaisdk_counttoken_localtokenizer_with_txt]
     return response.total_tokens
 
 
 if __name__ == "__main__":
-    count_tokens()
+    counttoken_localtokenizer_with_txt()
