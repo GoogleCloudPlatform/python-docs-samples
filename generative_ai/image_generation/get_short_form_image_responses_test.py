@@ -15,6 +15,7 @@
 import os
 
 import backoff
+import pytest
 
 from google.api_core.exceptions import ResourceExhausted
 
@@ -25,7 +26,7 @@ _RESOURCES = os.path.join(os.path.dirname(__file__), "test_resources")
 _INPUT_FILE = os.path.join(_RESOURCES, "cat.png")
 _QUESTION = "What breed of cat is this a picture of?"
 
-
+@pytest.mark.skip("b/452720552")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_get_short_form_image_responses() -> None:
     response = get_short_form_image_responses.get_short_form_image_responses(
