@@ -916,7 +916,7 @@ def regional_endpoint():
     from google.cloud import datastore
     from google.api_core.client_options import ClientOptions
 
-    ENDPOINT = "https://nam5-datastore.googleapis.com"
+    ENDPOINT = "https://datastore.africa-south1.rep.googleapis.com"
     client_options = ClientOptions(api_endpoint=ENDPOINT)
     client = datastore.Client(client_options=client_options)
 
