@@ -22,6 +22,7 @@ import os
 import textgen_async_with_txt
 import textgen_chat_stream_with_txt
 import textgen_chat_with_txt
+import textgen_code_with_pdf
 import textgen_config_with_txt
 import textgen_sys_instr_with_txt
 import textgen_transcript_with_gcs_audio
@@ -136,6 +137,10 @@ def test_textgen_with_youtube_video() -> None:
     response = textgen_with_youtube_video.generate_content()
     assert response
 
+
+def test_textgen_code_with_pdf() -> None:
+    response = textgen_code_with_pdf.generate_content()
+    assert response
 
 # Migrated to Model Optimser Folder
 # def test_model_optimizer_textgen_with_txt() -> None:
