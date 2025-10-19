@@ -14,7 +14,7 @@
 
 # [START gae_python38_cloudsql_config]
 # [START gae_python3_cloudsql_config]
-runtime: python39
+runtime: python313
 
 env_variables:
   CLOUD_SQL_USERNAME: YOUR-USERNAME
