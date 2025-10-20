@@ -28,6 +28,7 @@ _MASK_MODE = "foreground"
 _OUTPUT_FILE = os.path.join(_RESOURCES, "sports_car.png")
 _PROMPT = "sports car"
 
+
 @pytest.mark.skip("imagegeneration@006 samples pending deprecation")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_inpainting_remove_mask_mode() -> None:

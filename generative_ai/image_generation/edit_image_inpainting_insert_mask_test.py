@@ -27,6 +27,7 @@ _MASK_FILE = os.path.join(_RESOURCES, "woman_inpainting_insert_mask.png")
 _OUTPUT_FILE = os.path.join(_RESOURCES, "woman_with_hat.png")
 _PROMPT = "hat"
 
+
 @pytest.mark.skip("imagegeneration@006 samples pending deprecation")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_inpainting_insert_mask() -> None:
