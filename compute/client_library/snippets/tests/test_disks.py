@@ -447,6 +447,7 @@ def test_create_secondary_region(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     assert disk.async_primary_disk.disk == autodelete_regional_blank_disk.self_link
 
@@ -651,6 +652,7 @@ def test_stop_replications_in_consistency_group(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
     start_disk_replication(
         project_id=PROJECT,
