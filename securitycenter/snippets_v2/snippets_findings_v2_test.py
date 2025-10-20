@@ -85,6 +85,15 @@ def finding_name(source_name):
     return finding.name
 
 
+@pytest.fixture(scope="module")
+def rep_parent():
+    return f"{(os.environ['DRZ_SA_ORGANIZATION'])}/sources/-/locations/sa"
+
+
+def endpoint():
+    return "securitycenter.me-central2.rep.googleapis.com"
+
+
 def test_list_all_findings(organization_id, finding_name, source_name):
     finding_result_iterator = snippets_findings_v2.list_all_findings(
         organization_id, source_name.split("/")[-1], "global"
@@ -94,6 +103,11 @@ def test_list_all_findings(organization_id, finding_name, source_name):
     for finding_result in finding_result_iterator:
         names.append(finding_result.finding.name)
     assert finding_name in names
+
+
+def test_rep_list_finding():
+    count = snippets_findings_v2.rep_list_finding(rep_parent, endpoint)
+    assert count > 0
 
 
 def test_list_filtered_findings(organization_id):
