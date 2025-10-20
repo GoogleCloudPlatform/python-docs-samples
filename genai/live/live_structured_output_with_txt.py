@@ -24,7 +24,7 @@ class CalendarEvent(BaseModel):
 
 
 def generate_content() -> CalendarEvent:
-    # [START googlegenaisdk_live_structured_ouput_with_txt]
+    # [START googlegenaisdk_live_structured_output_with_txt]
     import os
 
     import google.auth.transport.requests
@@ -78,8 +78,8 @@ def generate_content() -> CalendarEvent:
     # System message: Extract the event information.
     # User message: Alice and Bob are going to a science fair on Friday.
     # Output message: name='science fair' date='Friday' participants=['Alice', 'Bob']
-    # [END googlegenaisdk_live_structured_ouput_with_txt]
-    return True
+    # [END googlegenaisdk_live_structured_output_with_txt]
+    return response
 
 
 if __name__ == "__main__":
