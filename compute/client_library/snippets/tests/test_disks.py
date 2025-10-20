@@ -504,7 +504,7 @@ def test_start_stop_region_replication(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
-        disk_type="pb-balanced"
+        disk_type="pd-balanced"
     )
     assert start_disk_replication(
         project_id=PROJECT,
@@ -531,7 +531,7 @@ def test_start_stop_zone_replication(test_empty_pd_balanced_disk, autodelete_dis
         PROJECT,
         ZONE,
         DISK_SIZE,
-        disk_type="pb-balanced"
+        disk_type="pd-balanced"
     )
     assert start_disk_replication(
         project_id=PROJECT,
