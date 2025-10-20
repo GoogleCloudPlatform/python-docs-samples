@@ -17,6 +17,7 @@ import os
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
+import pytest
 
 import edit_image_mask
 
@@ -28,6 +29,7 @@ _OUTPUT_FILE = os.path.join(_RESOURCES, "dog_book.png")
 _PROMPT = "a big book"
 
 
+@pytest.mark.skip("imagegeneration@002 samples pending deprecation")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_mask() -> None:
     response = edit_image_mask.edit_image_mask(
