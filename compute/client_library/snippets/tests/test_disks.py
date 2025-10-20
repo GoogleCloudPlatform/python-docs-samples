@@ -590,6 +590,7 @@ def test_clone_disks_in_consistency_group(
         PROJECT,
         REGION_SECONDARY,
         DISK_SIZE,
+        disk_type="pd-balanced"
     )
 
     add_disk_consistency_group(
