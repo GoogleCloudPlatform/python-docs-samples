@@ -183,54 +183,71 @@ class DAG:
         logger.info("Environment Info:\n %s", environment_json["name"])
         return environment_json
 
-def legacy_operations(project_name: str, environment: str, location: str, sdk_endpoint: str, airflow_version: tuple[int, int, int], operation: str) -> None:
-    list_of_dags = DAG.get_list_of_dags(
-        project_name=project_name,
-        environment=environment,
-        location=location,
-        sdk_endpoint=sdk_endpoint,
-        airflow_version=airflow_version,
-    )
-    logger.info("List of dags : %s", list_of_dags)
-
-    if operation == "pause":
-        for dag in list_of_dags:
-            if dag == "airflow_monitoring":
-                continue
-            DAG.pause_dag(
-                project_name=project_name,
-                environment=environment,
-                location=location,
-                sdk_endpoint=sdk_endpoint,
-                dag_id=dag,
-                airflow_version=airflow_version,
-            )
-    else:
-        for dag in list_of_dags:
-            DAG.unpause_dag(
-                project_name=project_name,
-                environment=environment,
-                location=location,
-                sdk_endpoint=sdk_endpoint,
-                dag_id=dag,
-                airflow_version=airflow_version,
-            )
-
-def modern_operations(project_name: str, environment: str, location: str, sdk_endpoint: str, operation: str) -> None:
-    if operation == "pause":
-        DAG.pause_all_dags(
+    @staticmethod
+    def pause_unpause_dags_individually(
+        project_name: str,
+        environment: str,
+        location: str,
+        sdk_endpoint: str,
+        airflow_version: tuple[int, int, int],
+        operation: str,
+    ) -> None:
+        """Pause or unpause DAGs individually."""
+        list_of_dags = DAG.get_list_of_dags(
             project_name=project_name,
             environment=environment,
             location=location,
             sdk_endpoint=sdk_endpoint,
+            airflow_version=airflow_version,
         )
-    else:
-        DAG.unpause_all_dags(
-            project_name=project_name,
-            environment=environment,
-            location=location,
-            sdk_endpoint=sdk_endpoint,
-        )
+        logger.info("List of dags : %s", list_of_dags)
+
+        if operation == "pause":
+            for dag in list_of_dags:
+                if dag == "airflow_monitoring":
+                    continue
+                DAG.pause_dag(
+                    project_name=project_name,
+                    environment=environment,
+                    location=location,
+                    sdk_endpoint=sdk_endpoint,
+                    dag_id=dag,
+                    airflow_version=airflow_version,
+                )
+        else:
+            for dag in list_of_dags:
+                DAG.unpause_dag(
+                    project_name=project_name,
+                    environment=environment,
+                    location=location,
+                    sdk_endpoint=sdk_endpoint,
+                    dag_id=dag,
+                    airflow_version=airflow_version,
+                )
+
+    @staticmethod
+    def pause_unpause_all_dags_at_once(
+        project_name: str,
+        environment: str,
+        location: str,
+        sdk_endpoint: str,
+        operation: str,
+    ) -> None:
+        """Pause or unpause all DAGs at once."""
+        if operation == "pause":
+            DAG.pause_all_dags(
+                project_name=project_name,
+                environment=environment,
+                location=location,
+                sdk_endpoint=sdk_endpoint,
+            )
+        else:
+            DAG.unpause_all_dags(
+                project_name=project_name,
+                environment=environment,
+                location=location,
+                sdk_endpoint=sdk_endpoint,
+            )
 
 def main(
     project_name: str, environment: str, location: str, operation: str, sdk_endpoint: str
@@ -251,9 +268,9 @@ def main(
     )
     airflow_version = (int(versions[3]), int(versions[4]), int(versions[5]))
     if airflow_version < (2, 9, 0):
-        legacy_operations(project_name, environment, location, sdk_endpoint, airflow_version, operation)
+        DAG.pause_unpause_dags_individually(project_name, environment, location, sdk_endpoint, airflow_version, operation)
     else:
-        modern_operations(project_name, environment, location, sdk_endpoint, operation)
+        DAG.pause_unpause_all_dags_at_once(project_name, environment, location, sdk_endpoint, operation)
     return 0
 
 
