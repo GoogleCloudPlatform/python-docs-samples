@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python39
+runtime: python313
 app_engine_apis: true
 env_variables:
   NDB_USE_CROSS_COMPATIBLE_PICKLE_PROTOCOL: "True"
