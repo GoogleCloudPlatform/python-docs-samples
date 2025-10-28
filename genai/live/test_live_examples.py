@@ -135,6 +135,7 @@ def mock_audio_components(mocker: pytest_mock.MockerFixture) -> None:
 
 @pytest.mark.asyncio
 async def test_live_conversation_audio_with_audio(mock_audio_components: None) -> None:
+    os.environ["GOOGLE_CLOUD_LOCATION"] = "us-central1"
     assert await live_conversation_audio_with_audio.main()
 
 
