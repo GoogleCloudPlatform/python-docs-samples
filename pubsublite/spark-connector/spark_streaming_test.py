@@ -176,6 +176,7 @@ def pyfile(source_file: str) -> str:
     return "gs://" + blob.bucket.name + "/" + blob.name
 
 
+@pytest.mark.skip("PubSubLite is deprecated, and will be turned down March 18, 2026.")
 def test_spark_streaming_to_pubsublite(
     topic: Topic, dataproc_cluster: dataproc_v1.Cluster
 ) -> None:
@@ -229,6 +230,7 @@ def test_spark_streaming_to_pubsublite(
     assert "Committed 1 messages for epochId" in output
 
 
+@pytest.mark.skip("PubSubLite is deprecated, and will be turned down March 18, 2026.")
 def test_spark_streaming_from_pubsublite(
     subscription: Subscription, dataproc_cluster: dataproc_v1.Cluster
 ) -> None:
