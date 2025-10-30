@@ -193,7 +193,7 @@ Here is an example output: <!--TODO: update attributes field output with the nex
 [Install Python and virtualenv]: https://cloud.google.com/python/setup/
 [Cloud Console for Dataproc]: https://console.cloud.google.com/dataproc/
 
-[Create Cluster]: https://pantheon.corp.google.com/dataproc/clustersAdd
+[Create Cluster]: https://console.cloud.google.com/dataproc/clustersAdd
 [Dataproc Image Version 1.5]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-1.5
 [Dataproc Image Version 2.0]: https://cloud.google.com/dataproc/docs/concepts/versioning/dataproc-release-2.0
 [compatibility]: gs://spark-lib/pubsublite/pubsublite-spark-sql-streaming-LATEST-with-dependencies.jar
