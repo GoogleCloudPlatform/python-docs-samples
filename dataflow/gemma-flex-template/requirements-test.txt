@@ -1,4 +1,4 @@
-google-cloud-aiplatform==1.62.0
+google-cloud-aiplatform==1.111.0
 google-cloud-dataflow-client==0.8.14
 google-cloud-pubsub==2.28.0
 google-cloud-storage==2.18.2
