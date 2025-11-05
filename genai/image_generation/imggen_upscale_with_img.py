@@ -27,7 +27,7 @@ def upscale_images(output_file: str) -> Image:
 
     image = client.models.upscale_image(
         model="imagen-4.0-upscale-preview",
-        image=Image.from_file("test_resources/dog_newspaper.png"),
+        image=Image.from_file(location="test_resources/dog_newspaper.png"),
         upscale_factor="x2",
     )
 
