@@ -42,7 +42,7 @@ OUTPUT_RATE = 24000
 # The sample width for 16-bit audio, which is standard for this type of audio data.
 SAMPLE_WIDTH = 2
 
-client = genai.Client(http_options=HttpOptions(api_version="v1beta1"))
+client = genai.Client(http_options=HttpOptions(api_version="v1beta1"), location="us-central1")
 
 
 def read_wavefile(filepath: str) -> tuple[str, str]:
