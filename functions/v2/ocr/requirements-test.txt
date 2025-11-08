@@ -1,2 +1,2 @@
 cloudevents==1.11.0
-pytest==8.2.0
+pytest==9.0.0
