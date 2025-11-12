@@ -92,7 +92,7 @@ def mock_rag_components(mocker: pytest_mock.MockerFixture) -> None:
 
 
 @pytest.fixture()
-def live_conversation() -> types.ModuleType:
+def live_conversation() -> None:
     google_mod = types.ModuleType("google")
     genai_mod = types.ModuleType("google.genai")
     genai_types_mod = types.ModuleType("google.genai.types")
@@ -157,6 +157,8 @@ def live_conversation() -> types.ModuleType:
     genai_mod.Client = fake_client_constructor
     genai_mod.types = genai_types_mod
 
+    old_modules = sys.modules.copy()
+
     sys.modules["google"] = google_mod
     sys.modules["google.genai"] = genai_mod
     sys.modules["google.genai.types"] = genai_types_mod
@@ -174,13 +176,10 @@ def live_conversation() -> types.ModuleType:
     live.read_wavefile = fake_read_wavefile
     live.write_wavefile = fake_write_wavefile
 
-    return live
+    yield live
 
-
-@pytest.mark.asyncio
-async def test_live_conversation_audio_with_audio(live_conversation: types.ModuleType) -> None:
-    result = await live_conversation.main()
-    assert result is True or result is None
+    sys.modules.clear()
+    sys.modules.update(old_modules)
 
 
 @pytest.mark.asyncio
@@ -265,3 +264,9 @@ async def test_live_audio_with_txt(mock_live_session: None) -> None:
                 result = await live_audio_with_txt.generate_content()
 
     assert result is not None
+
+
+@pytest.mark.asyncio
+async def test_live_conversation_audio_with_audio(live_conversation: types.ModuleType) -> None:
+    result = await live_conversation.main()
+    assert result is True or result is None
