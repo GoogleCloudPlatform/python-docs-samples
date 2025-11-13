@@ -1,6 +1,6 @@
 selenium==4.10.0
 Flask==2.2.2
 Werkzeug==2.3.8
-pytest==8.2.0
+pytest==9.0.0
 pytest-flask==1.2.0
 webdriver-manager==4.0.2
