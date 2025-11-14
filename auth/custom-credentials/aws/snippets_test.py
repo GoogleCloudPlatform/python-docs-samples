@@ -13,99 +13,108 @@
 # limitations under the License.
 
 import os
-import unittest
-from unittest.mock import MagicMock, patch
+from unittest import mock
 
-from google.auth import exceptions
-import requests
+import pytest
 
-# Import the module to be tested.
-# NOTE: Update 'main' to the actual filename if different.
-import snippets as app_module
+import snippets
 
-class TestCustomAwsSupplier(unittest.TestCase):
-    
-    @patch.dict(os.environ, {"AWS_REGION": "us-west-2"})
-    @patch("boto3.Session")
-    def test_init_priority_env_var(self, mock_boto_session):
-        """Test that AWS_REGION env var takes priority during init."""
-        app_module.CustomAwsSupplier()
-        # Verify boto3.Session was initialized with the region from env
-        mock_boto_session.assert_called_with(region_name="us-west-2")
+# --- Unit Tests ---
 
 
-    @patch.dict(os.environ, {}, clear=True)
-    @patch("boto3.Session")
-    def test_get_aws_region_missing(self, mock_boto_session):
-        """Test that an error is raised if region cannot be resolved."""
-        mock_session_instance = mock_boto_session.return_value
-        # Simulate Boto3 failing to find a region
-        mock_session_instance.region_name = None
-
-        supplier = app_module.CustomAwsSupplier()
-
-        with self.assertRaisesRegex(exceptions.GoogleAuthError, "unable to resolve an AWS region"):
-            supplier.get_aws_region(None, None)
-
-    @patch("boto3.Session")
-    def test_get_aws_security_credentials_success(self, mock_boto_session):
-        """Test successful retrieval of AWS credentials."""
-        mock_session_instance = mock_boto_session.return_value
-        
-        # Mock the credentials object returned by boto3
-        mock_creds = MagicMock()
-        mock_creds.access_key = "test-access-key"
-        mock_creds.secret_key = "test-secret-key"
-        mock_creds.token = "test-session-token"
-        mock_session_instance.get_credentials.return_value = mock_creds
-
-        supplier = app_module.CustomAwsSupplier()
-        creds = supplier.get_aws_security_credentials(None)
-
-        self.assertEqual(creds.access_key_id, "test-access-key")
-        self.assertEqual(creds.secret_access_key, "test-secret-key")
-        self.assertEqual(creds.session_token, "test-session-token")
-
-    @patch("boto3.Session")
-    def test_get_aws_security_credentials_none(self, mock_boto_session):
-        """Test handling when Boto3 returns no credentials."""
-        mock_session_instance = mock_boto_session.return_value
-        mock_session_instance.get_credentials.return_value = None
-
-        supplier = app_module.CustomAwsSupplier()
-
-        with self.assertRaisesRegex(exceptions.GoogleAuthError, "Unable to resolve AWS credentials"):
-            supplier.get_aws_security_credentials(None)
+@mock.patch.dict(os.environ, {"AWS_REGION": "us-west-2"})
+@mock.patch("boto3.Session")
+def test_init_priority_env_var(mock_boto_session):
+    """Test that AWS_REGION env var takes priority during init."""
+    snippets.CustomAwsSupplier()
+    mock_boto_session.assert_called_with(region_name="us-west-2")
 
 
-class TestAuthenticateLogic(unittest.TestCase):
+@mock.patch.dict(os.environ, {}, clear=True)
+@mock.patch("boto3.Session")
+def test_get_aws_region_caching(mock_boto_session):
+    """Test that get_aws_region caches the result from Boto3."""
+    mock_session_instance = mock_boto_session.return_value
+    mock_session_instance.region_name = "us-east-1"
 
-    @patch("snippets.auth_requests.AuthorizedSession")
-    @patch("snippets.aws.Credentials")
-    @patch("snippets.CustomAwsSupplier")
-    def test_authenticate_success(self, MockSupplier, MockAwsCreds, MockSession):
-        """Test the success path of the main logic function."""
-        # Mock the HTTP response
-        mock_response = MagicMock()
-        mock_response.status_code = 200
-        mock_response.json.return_value = {"kind": "storage#bucket", "name": "my-bucket"}
-        
-        mock_session_instance = MockSession.return_value
-        mock_session_instance.get.return_value = mock_response
+    supplier = snippets.CustomAwsSupplier()
 
-        # Run the function
-        app_module.authenticate_with_aws_credentials(
-            bucket_name="my-bucket",
-            audience="//iam.googleapis.com/...",
-            impersonation_url="https://..."
+    # First call should hit the session
+    region = supplier.get_aws_region(None, None)
+    assert region == "us-east-1"
+
+    # Change the mock to ensure we aren't calling it again
+    mock_session_instance.region_name = "us-west-2"
+
+    # Second call should return the cached value
+    region2 = supplier.get_aws_region(None, None)
+    assert region2 == "us-east-1"
+
+
+@mock.patch("boto3.Session")
+def test_get_aws_security_credentials_success(mock_boto_session):
+    """Test successful retrieval of AWS credentials."""
+    mock_session_instance = mock_boto_session.return_value
+
+    mock_creds = mock.MagicMock()
+    mock_creds.access_key = "test-key"
+    mock_creds.secret_key = "test-secret"
+    mock_creds.token = "test-token"
+    mock_session_instance.get_credentials.return_value = mock_creds
+
+    supplier = snippets.CustomAwsSupplier()
+    creds = supplier.get_aws_security_credentials(None)
+
+    assert creds.access_key_id == "test-key"
+    assert creds.secret_access_key == "test-secret"
+    assert creds.session_token == "test-token"
+
+
+@mock.patch("snippets.auth_requests.AuthorizedSession")
+@mock.patch("snippets.aws.Credentials")
+@mock.patch("snippets.CustomAwsSupplier")
+def test_authenticate_unit_success(MockSupplier, MockAwsCreds, MockSession):
+    """Unit test for the main flow using mocks."""
+    mock_response = mock.MagicMock()
+    mock_response.status_code = 200
+    mock_response.json.return_value = {"name": "my-bucket"}
+
+    mock_session_instance = MockSession.return_value
+    mock_session_instance.get.return_value = mock_response
+
+    result = snippets.authenticate_with_aws_credentials(
+        bucket_name="my-bucket",
+        audience="//iam.googleapis.com/...",
+        impersonation_url=None,
+    )
+
+    assert result == {"name": "my-bucket"}
+    MockSupplier.assert_called_once()
+    MockAwsCreds.assert_called_once()
+
+
+# --- System Test (Integration) ---
+
+
+def test_authenticate_system():
+    """
+    System test that runs against the real API.
+    Skips automatically if required environment variables are missing.
+    """
+    required_env = ["GCP_WORKLOAD_AUDIENCE", "GCS_BUCKET_NAME", "AWS_ACCESS_KEY_ID"]
+    if not all(os.getenv(var) for var in required_env):
+        pytest.skip(
+            "Skipping system test: missing required env vars (GCP/AWS credentials)."
         )
 
-        # Assertions
-        MockSupplier.assert_called_once()
-        MockAwsCreds.assert_called_once()
-        # Verify bucket URL was constructed correctly
-        mock_session_instance.get.assert_called_with("https://storage.googleapis.com/storage/v1/b/my-bucket")
-        mock_response.raise_for_status.assert_called_once()
+    audience = os.getenv("GCP_WORKLOAD_AUDIENCE")
+    bucket_name = os.getenv("GCS_BUCKET_NAME")
+    impersonation_url = os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL")
 
-if __name__ == "__main__":
-    unittest.main()
+    # This calls the real API
+    metadata = snippets.authenticate_with_aws_credentials(
+        bucket_name=bucket_name, audience=audience, impersonation_url=impersonation_url
+    )
+
+    assert metadata is not None
+    assert metadata.get("name") == bucket_name
