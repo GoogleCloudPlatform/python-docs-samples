@@ -25,7 +25,7 @@ def generate_videos_from_first_last_frame(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
-        model="veo-3.1-generate-preview",
+        model="veo-3.1-generate-001",
         prompt="a hand reaches in and places a glass of milk next to the plate of cookies",
         image=Image(
             gcs_uri="gs://cloud-samples-data/generative-ai/image/cookies.png",
