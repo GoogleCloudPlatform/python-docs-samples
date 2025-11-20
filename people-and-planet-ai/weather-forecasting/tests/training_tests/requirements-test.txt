@@ -2,4 +2,4 @@
 ipykernel==6.23.3
 nbclient==0.8.0
 pytest-xdist==3.3.0
-pytest==8.2.0
+pytest==9.0.0
