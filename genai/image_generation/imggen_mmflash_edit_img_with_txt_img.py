@@ -26,7 +26,7 @@ def generate_content() -> str:
     image = Image.open("test_resources/example-image-eiffel-tower.png")
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-image",
+        model="gemini-3-pro-image-preview",
         contents=[image, "Edit this image to make it look like a cartoon."],
         config=GenerateContentConfig(response_modalities=[Modality.TEXT, Modality.IMAGE]),
     )
@@ -36,12 +36,7 @@ def generate_content() -> str:
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
             image.save("output_folder/bw-example-image.png")
-    # Example response:
-    #  Here's the cartoon-style edit of the image:
-    #  Cartoon-style edit:
-    #  - Simplified the Eiffel Tower with bolder lines and slightly exaggerated proportions.
-    #  - Brightened and saturated the colors of the sky, fireworks, and foliage for a more vibrant, cartoonish look.
-    #  ....
+
     # [END googlegenaisdk_imggen_mmflash_edit_img_with_txt_img]
     return "output_folder/bw-example-image.png"
 
