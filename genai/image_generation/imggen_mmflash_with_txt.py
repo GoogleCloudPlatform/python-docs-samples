@@ -23,16 +23,10 @@ def generate_content() -> str:
     client = genai.Client()
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash-image",
+        model="gemini-3-pro-image-preview",
         contents=("Generate an image of the Eiffel tower with fireworks in the background."),
         config=GenerateContentConfig(
             response_modalities=[Modality.TEXT, Modality.IMAGE],
-            candidate_count=1,
-            safety_settings=[
-                {"method": "PROBABILITY"},
-                {"category": "HARM_CATEGORY_DANGEROUS_CONTENT"},
-                {"threshold": "BLOCK_MEDIUM_AND_ABOVE"},
-            ],
         ),
     )
     for part in response.candidates[0].content.parts:
@@ -41,11 +35,7 @@ def generate_content() -> str:
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
             image.save("output_folder/example-image-eiffel-tower.png")
-    # Example response:
-    #   I will generate an image of the Eiffel Tower at night, with a vibrant display of
-    #   colorful fireworks exploding in the dark sky behind it. The tower will be
-    #   illuminated, standing tall as the focal point of the scene, with the bursts of
-    #   light from the fireworks creating a festive atmosphere.
+
     # [END googlegenaisdk_imggen_mmflash_with_txt]
     return True
 
