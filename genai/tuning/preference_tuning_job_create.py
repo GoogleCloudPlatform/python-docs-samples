@@ -14,7 +14,7 @@
 
 
 def create_tuning_job() -> str:
-    # [START googlegenaisdk_tuning_job_create]
+    # [START googlegenaisdk_preference_tuning_job_create]
     import time
 
     from google import genai
@@ -66,7 +66,7 @@ def create_tuning_job() -> str:
         # Checkpoint 1:  checkpoint_id='1' epoch=1 step=10 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789000000'
         # Checkpoint 2:  checkpoint_id='2' epoch=2 step=20 endpoint='projects/123456789012/locations/us-central1/endpoints/123456789012345'
 
-    # [END googlegenaisdk_tuning_job_create]
+    # [END googlegenaisdk_preference_tuning_job_create]
     return tuning_job.name
 
 
