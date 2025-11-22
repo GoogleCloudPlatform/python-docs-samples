@@ -13,7 +13,6 @@
 
 # [START auth_custom_credential_supplier_okta]
 import json
-import os
 import time
 import urllib.parse
 
@@ -106,18 +105,27 @@ def authenticate_with_okta_credentials(
 
 
 def main():
-    gcp_audience = os.getenv("GCP_WORKLOAD_AUDIENCE")
-    gcs_bucket_name = os.getenv("GCS_BUCKET_NAME")
-    sa_impersonation_url = os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL")
+    try:
+        with open("custom-credentials-okta-secrets.json") as f:
+            secrets = json.load(f)
+    except FileNotFoundError:
+        print(
+            "Could not find custom-credentials-okta-secrets.json."
+        )
+        return
 
-    okta_domain = os.getenv("OKTA_DOMAIN")
-    okta_client_id = os.getenv("OKTA_CLIENT_ID")
-    okta_client_secret = os.getenv("OKTA_CLIENT_SECRET")
+    gcp_audience = secrets.get("gcp_workload_audience")
+    gcs_bucket_name = secrets.get("gcs_bucket_name")
+    sa_impersonation_url = secrets.get("gcp_service_account_impersonation_url")
+
+    okta_domain = secrets.get("okta_domain")
+    okta_client_id = secrets.get("okta_client_id")
+    okta_client_secret = secrets.get("okta_client_secret")
 
     if not all(
         [gcp_audience, gcs_bucket_name, okta_domain, okta_client_id, okta_client_secret]
     ):
-        print("Missing required environment variables.")
+        print("Missing required values in secrets.json.")
         return
 
     try:

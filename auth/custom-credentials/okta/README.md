@@ -47,7 +47,7 @@ Ensure you have a GCS bucket that the authenticated user will have access to. Yo
 
 ## 3. Running the Script
 
-To run the sample on your local system, you need to install the dependencies and configure the environment variables.
+To run the sample on your local system, you need to install the dependencies and configure your credentials.
 
 ### Install Dependencies
 
@@ -55,25 +55,20 @@ To run the sample on your local system, you need to install the dependencies and
 pip install -r requirements.txt
 ```
 
-### Set Environment Variables
+### Configure Credentials
 
-The script relies on the `GCP_WORKLOAD_AUDIENCE` variable, which typically follows this format:
-`//iam.googleapis.com/projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/YOUR_POOL_ID/providers/YOUR_PROVIDER_ID`
+1.  Copy the example secrets file to a new file named `custom-credentials-okta-secrets.json`:
+    ```bash
+    cp custom-credentials-okta-secrets.json.example custom-credentials-okta-secrets.json
+    ```
+2.  Open `custom-credentials-okta-secrets.json` and fill in the following values:
 
-```bash
-# Okta Configuration
-export OKTA_DOMAIN="https://your-okta-domain.okta.com"
-export OKTA_CLIENT_ID="your-okta-client-id"
-export OKTA_CLIENT_SECRET="your-okta-client-secret"
-
-# GCP Configuration
-export GCP_WORKLOAD_AUDIENCE="//iam.googleapis.com/projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider"
-export GCS_BUCKET_NAME="your-gcs-bucket-name"
-
-# Optional: Service Account Impersonation
-# If set, the script will exchange the federated token for a Google Service Account token.
-export GCP_SERVICE_ACCOUNT_IMPERSONATION_URL="https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/my-service-account@my-project.iam.gserviceaccount.com:generateAccessToken"
-```
+    *   `okta_domain`: Your Okta developer domain (e.g., `https://dev-123456.okta.com`).
+    *   `okta_client_id`: The client ID for your application.
+    *   `okta_client_secret`: The client secret for your application.
+    *   `gcp_workload_audience`: The audience for the GCP Workload Identity Pool. This typically follows the format: `//iam.googleapis.com/projects/YOUR_PROJECT_NUMBER/locations/global/workloadIdentityPools/YOUR_POOL_ID/providers/YOUR_PROVIDER_ID`.
+    *   `gcs_bucket_name`: The name of the GCS bucket to access.
+    *   `gcp_service_account_impersonation_url`: (Optional) The URL for service account impersonation. If set, the script will exchange the federated token for a Google Service Account token. Example: `https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/my-service-account@my-project.iam.gserviceaccount.com:generateAccessToken`.
 
 ### Run the Application
 

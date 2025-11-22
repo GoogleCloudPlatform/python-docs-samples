@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import os
 import time
 from unittest import mock
@@ -97,30 +98,36 @@ def test_authenticate_unit_success(MockSupplier, MockCreds, MockSession):
 
 # --- System Test ---
 
-
 def test_authenticate_system():
     """
     System test that runs against the real API.
-    Skips automatically if required Okta/GCP env vars are missing.
+    Skips automatically if custom-credentials-okta-secrets.json is missing or incomplete.
     """
-    required_env = [
-        "GCP_WORKLOAD_AUDIENCE",
-        "OKTA_CLIENT_ID",
-        "OKTA_CLIENT_SECRET",
-        "OKTA_DOMAIN",
-        "GCS_BUCKET_NAME",
+    if not os.path.exists("custom-credentials-okta-secrets.json"):
+        pytest.skip(
+            "Skipping system test: custom-credentials-okta-secrets.json not found."
+        )
+
+    with open("custom-credentials-okta-secrets.json", "r") as f:
+        secrets = json.load(f)
+
+    required_keys = [
+        "gcp_workload_audience",
+        "gcs_bucket_name",
+        "okta_domain",
+        "okta_client_id",
+        "okta_client_secret",
     ]
-    if not all(os.getenv(var) for var in required_env):
-        pytest.skip("Skipping system test: missing required env vars.")
+    if not all(key in secrets for key in required_keys):
+        pytest.skip(
+            "Skipping system test: custom-credentials-okta-secrets.json is missing required keys."
+        )
 
-    metadata = snippets.authenticate_with_okta_credentials(
-        bucket_name=os.getenv("GCS_BUCKET_NAME"),
-        audience=os.getenv("GCP_WORKLOAD_AUDIENCE"),
-        domain=os.getenv("OKTA_DOMAIN"),
-        client_id=os.getenv("OKTA_CLIENT_ID"),
-        client_secret=os.getenv("OKTA_CLIENT_SECRET"),
-        impersonation_url=os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL"),
-    )
+    # The main() function handles the auth flow and printing.
+    # We mock the print function to verify the output.
+    with mock.patch("builtins.print") as mock_print:
+        snippets.main()
 
-    assert metadata is not None
-    assert metadata.get("name") == os.getenv("GCS_BUCKET_NAME")
+        # Check for the success message in the print output.
+        output = "\n".join([call.args[0] for call in mock_print.call_args_list])
+        assert "--- SUCCESS! ---" in output

@@ -15,12 +15,4 @@
 TEST_CONFIG_OVERRIDE = {
     # Ignore all versions except 3.9, which is the version available.
     "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.10", "3.11", "3.12", "3.13"],
-    "envs": {
-        "AWS_ACCESS_KEY_ID": "",
-        "AWS_SECRET_ACCESS_KEY": "",
-        "AWS_REGION": "",
-        "GCP_WORKLOAD_AUDIENCE": "",
-        "GCS_BUCKET_NAME": "",
-        "GCP_SERVICE_ACCOUNT_IMPERSONATION_URL": "",
-    },
 }

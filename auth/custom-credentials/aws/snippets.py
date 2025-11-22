@@ -98,15 +98,44 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
 # [END auth_custom_credential_supplier_aws]
 
 
+def _load_config_from_file():
+    """
+    If a local secrets file is present, load it into the environment.
+    This is a "just-in-time" configuration for local development. These
+    variables are only set for the current process and are not exposed to the
+    shell.
+    """
+    if os.path.exists("custom-credentials-aws-secrets.json"):
+        with open("custom-credentials-aws-secrets.json", "r") as f:
+            secrets = json.load(f)
+
+        os.environ["AWS_ACCESS_KEY_ID"] = secrets.get("aws_access_key_id", "")
+        os.environ["AWS_SECRET_ACCESS_KEY"] = secrets.get("aws_secret_access_key", "")
+        os.environ["AWS_REGION"] = secrets.get("aws_region", "")
+        os.environ["GCP_WORKLOAD_AUDIENCE"] = secrets.get("gcp_workload_audience", "")
+        os.environ["GCS_BUCKET_NAME"] = secrets.get("gcs_bucket_name", "")
+        os.environ["GCP_SERVICE_ACCOUNT_IMPERSONATION_URL"] = secrets.get(
+            "gcp_service_account_impersonation_url", ""
+        )
+
+
 def main():
-    """Main function to parse env vars and call the authenticator."""
+
+    # Reads the custom-credentials-aws-secrets.json if running locally.
+    _load_config_from_file()
+
+    # Now, read the configuration from the environment. In a local run, these
+    # will be the values we just set. In a containerized run, they will be
+    # the values provided by the environment.
     gcp_audience = os.getenv("GCP_WORKLOAD_AUDIENCE")
     sa_impersonation_url = os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL")
     gcs_bucket_name = os.getenv("GCS_BUCKET_NAME")
 
     if not all([gcp_audience, gcs_bucket_name]):
         print(
-            "Required environment variables missing: GCP_WORKLOAD_AUDIENCE, GCS_BUCKET_NAME"
+            "Required configuration missing. Please provide it in a "
+            "custom-credentials-aws-secrets.json file or as environment variables: "
+            "GCP_WORKLOAD_AUDIENCE, GCS_BUCKET_NAME"
         )
         return
 

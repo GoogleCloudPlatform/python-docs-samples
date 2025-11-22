@@ -30,4 +30,5 @@ env/
 .idea
 .env*
 **/venv
-**/noxfile.py
+**/noxfile.py\n# Local secrets file\nauth/custom-credentials/okta/custom-credentials-okta-secrets.json
+auth/custom-credentials/aws/custom-credentials-aws-secrets.json

@@ -12,6 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import json
 import os
 from unittest import mock
 
@@ -95,26 +96,36 @@ def test_authenticate_unit_success(MockSupplier, MockAwsCreds, MockSession):
 
 # --- System Test (Integration) ---
 
-
 def test_authenticate_system():
     """
     System test that runs against the real API.
-    Skips automatically if required environment variables are missing.
+    Skips automatically if custom-credentials-aws-secrets.json is missing or incomplete.
     """
-    required_env = ["GCP_WORKLOAD_AUDIENCE", "GCS_BUCKET_NAME", "AWS_ACCESS_KEY_ID"]
-    if not all(os.getenv(var) for var in required_env):
+    if not os.path.exists("custom-credentials-aws-secrets.json"):
         pytest.skip(
-            "Skipping system test: missing required env vars (GCP/AWS credentials)."
+            "Skipping system test: custom-credentials-aws-secrets.json not found."
         )
 
-    audience = os.getenv("GCP_WORKLOAD_AUDIENCE")
-    bucket_name = os.getenv("GCS_BUCKET_NAME")
-    impersonation_url = os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL")
+    with open("custom-credentials-aws-secrets.json", "r") as f:
+        secrets = json.load(f)
 
-    # This calls the real API
-    metadata = snippets.authenticate_with_aws_credentials(
-        bucket_name=bucket_name, audience=audience, impersonation_url=impersonation_url
-    )
+    required_keys = [
+        "gcp_workload_audience",
+        "gcs_bucket_name",
+        "aws_access_key_id",
+        "aws_secret_access_key",
+        "aws_region",
+    ]
+    if not all(key in secrets for key in required_keys):
+        pytest.skip(
+            "Skipping system test: custom-credentials-aws-secrets.json is missing required keys."
+        )
 
-    assert metadata is not None
-    assert metadata.get("name") == bucket_name
+    # The main() function handles the auth flow and printing.
+    # We mock the print function to verify the output.
+    with mock.patch("builtins.print") as mock_print:
+        snippets.main()
+
+        # Check for the success message in the print output.
+        output = "\n".join([call.args[0] for call in mock_print.call_args_list])
+        assert "--- SUCCESS! ---" in output
