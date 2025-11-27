@@ -1,12 +1,12 @@
 # 🚀 Composer DAG Linter & Parsing Profiler
 
 ## Overview
-This Airflow DAG is a specialized **parsing performance profiler** designed to safeguard and optimize your Google Cloud Composer environment.
+This Airflow DAG provides an **on-demand performance profiling** tool for your DAG parsing logic, designed to help you optimize your Google Cloud Composer environment.
 
-When triggered, it offloads the resource-intensive DAG parsing process to a temporary, isolated Kubernetes Pod. Its primary goal is to detect **parsing latency issues** and identify heavy top-level code execution without impacting your environment's workload resources. As a byproduct of this analysis, it also validates DAG integrity and catches syntax errors.
+When triggered, it executes a **one-off** analysis inside an isolated Kubernetes Pod. This mimics the standard parsing process but runs independently, ensuring that **parsing latency** and resource-heavy **top-level code** can be identified without interrupting your environment's normal operations. Additionally, it validates DAG integrity and detects syntax errors.
 
 ## 🌟 Key Features
-* **Isolated Execution:** Offloads parsing logic to a separate Pod, protecting the Scheduler from resource contention and crashes.
+* **Isolated Execution:** Executes the diagnostic parsing logic in a dedicated Pod to ensure no resource contention with your live environment.
 * **Top-Level Code Profiling:** Detects DAGs that exceed a configurable parse-time threshold and generates a `cProfile` report to identify the specific calls causing delays (e.g., database connections, heavy imports).
 * **Smart Image Detection:** Automatically detects the correct worker image for environments with **extra PyPI packages**, ensuring accurate replication of dependencies and **Airflow overrides**.
     * *Note:* If a "Vanilla" (Default) environment is detected, the task will **Skip** gracefully and request manual configuration.

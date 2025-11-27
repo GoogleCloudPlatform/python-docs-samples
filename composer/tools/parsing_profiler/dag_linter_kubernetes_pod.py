@@ -15,12 +15,13 @@
 
 # [START composer_dag_parsing_profiler_dag]
 """
-Composer DAG Linter & Parsing Profiler.
+Orchestration DAG for the Composer Parsing Profiler.
 
-This Airflow DAG is a specialized parsing performance profiler. When triggered,
-it offloads the resource-intensive DAG parsing process to a temporary, isolated
-Kubernetes Pod. Its primary goal is to detect parsing latency issues and identify
-heavy top-level code execution without impacting your environment's workload resources.
+This script defines the Airflow DAG that provisions and launches the isolated
+profiling environment. It handles:
+1. Configuration resolution (auto-detecting buckets and worker images).
+2. Resource provisioning (ephemeral storage volumes).
+3. Execution of the core analysis logic within a KubernetesPodOperator.
 """
 
 from __future__ import annotations
