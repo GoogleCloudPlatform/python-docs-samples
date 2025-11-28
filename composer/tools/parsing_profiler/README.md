@@ -8,7 +8,7 @@ When triggered, it executes a **one-off** analysis inside an isolated Kubernetes
 ## 🌟 Key Features
 * **Isolated Execution:** Executes the diagnostic parsing logic in a dedicated Pod to ensure no resource contention with your live environment.
 * **Top-Level Code Profiling:** Detects DAGs that exceed a configurable parse-time threshold and generates a `cProfile` report to identify the specific calls causing delays (e.g., database connections, heavy imports).
-* **Smart Image Detection:** Automatically detects the correct worker image for environments with **extra PyPI packages**, ensuring accurate replication of dependencies and **Airflow overrides**.
+* **Smart Image Detection:** Automatically detects the correct worker image for environments with **extra PyPI packages**, ensuring accurate replication of dependencies.
     * *Note:* If a "Vanilla" (Default) environment is detected, the task will **Skip** gracefully and request manual configuration.
 * **Parallel Processing:** Leverages multiprocessing to analyze the entire DAG repository efficiently.
 * **Cross-Environment Diagnostics:** Capable of scanning unstable or crashing environments by running this tool from a separate, stable Composer instance.
