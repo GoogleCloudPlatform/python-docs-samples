@@ -222,7 +222,7 @@ def main(config_json: str):
                 # to prevent recursion loops or self-parsing errors.
                 if file in ['dag_linter_kubernetes_pod.py', 'linter_core.py']:
                     continue
-                    
+
                 files_to_process.append(os.path.join(root, file))
 
     if not files_to_process:

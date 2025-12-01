@@ -22,15 +22,25 @@ Upload both files to your Composer environment's `dags/` folder:
 * `dag_linter_kubernetes_pod.py` (The Orchestrator)
 * `linter_core.py` (The Logic Script)
 
+> **Note:** The orchestrator expects `linter_core.py` to be in the **same directory** as the DAG file.
+
 ### 2. Configuration
 Open `dag_linter_kubernetes_pod.py`. The tool automatically detects your bucket and image, but you can configure limits:
 
 | Variable | Description |
 | :--- | :--- |
 | `_CONFIG_GCS_BUCKET_NAME` | The bucket containing your DAGs/Plugins. Set to `None` for auto-detection. |
-| `_CONFIG_POD_IMAGE` | **CRITICAL:** Path to your Composer Worker image. Set to `None` for auto-detection.<br><br>**Manual Retrieval (for Vanilla envs or troubleshooting):**<br>1. Check Cloud Build logs.<br>2. Inspect `airflow-worker` YAML in GKE (`image:` field).<br>3. **Support:** Customers with a valid package can contact Google Cloud Support for assistance. |
+| `_CONFIG_POD_IMAGE` | **CRITICAL:** Path to your Composer Worker image. Set to `None` for auto-detection.<br><br>**Manual Retrieval Options (for Vanilla or Cross Environment):**<br>**Option 1: Cloud Build Logs (Composer 2 & 3)**<br>Check the logs of the most recent successful build in Cloud Build.<br>**Option 2: GKE Workloads (Composer 2 Only)**<br>Navigate to Environment's GKE > Workloads > airflow-worker > YAML tab and look for `image:` under the 'spec.containers' section.<br>**Option 3: Customer Support**<br>Customers with a valid support package can contact Google Cloud Support for assistance. |
 | `_CONFIG_POD_DISK_SIZE` | Ephemeral storage size for the Pod (ensure this fits your repo size). |
 | `_CONFIG_PARSE_TIME_THRESHOLD_SECONDS` | Time limit before a DAG is flagged as "slow". |
+
+#### ⚠️ Cross-Environment Diagnostics (Advanced)
+If you are using this tool in a **Stable** environment to debug a **different** environment, you must set `_CONFIG_GCS_BUCKET_NAME` and `_CONFIG_POD_IMAGE` manually.
+
+**Strict Prerequisites:**
+1.  **Same Service Project:** Both environments must reside in the same Service Project.
+2.  **Same Service Account:** The Stable environment must run as the **same Service Account** as the target environment to ensure correct IAM permissions for GCP resources.
+3.  **Same Major Version:** You must troubleshoot Composer 2 with Composer 2, or Composer 3 with Composer 3.
 
 ### 3. Execution
 Trigger the DAG **`composer_dag_parser_profile`** manually from the Airflow UI.

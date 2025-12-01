@@ -115,17 +115,32 @@ _CONFIG_POD_RESOURCES = k8s.V1ResourceRequirements(
 # 🧰 CROSS-ENVIRONMENT TROUBLESHOOTING GUIDE
 # ==============================================================================
 # For unstable environments (e.g., crashing schedulers), run this DAG from a
-# stable Composer environment. Ensure the stable environment's service account
-# has read access to the target environment's GCS bucket, and set POD_IMAGE
-# manually to the exact image path in Artifact Registry of the unstable
-# environment to have a valid replication scenario for the parsing analysis.
+# stable Composer environment that meets the following criteria:
 #
-# Manual Image Retrieval:
-# 1. Cloud Build Logs: Check the logs of the most recent successful build.
-# 2. GKE (Composer 2): Go to Workloads > airflow-worker > YAML tab. Look for
-#    the 'image:' field under the 'spec.containers' section.
-# 3. Support: Customers with a valid support package can contact Google Cloud
-#    Support for assistance in locating the correct worker image path.
+# REQUIREMENTS:
+# 1. Location: Must be in the SAME Service Project as the target environment.
+# 2. Identity: Must use the SAME Service Account as the target environment.
+#    (This ensures identical IAM permissions for accessing GCP resources).
+# 3. Version: Must match the major Composer version of the target environment
+#    (e.g., troubleshoot a Composer 3 environment using another Composer 3
+#    environment). This ensures infrastructure and image compatibility.
+#
+# CONFIGURATION:
+# - Set _CONFIG_GCS_BUCKET_NAME to the target environment's bucket.
+# - Set _CONFIG_POD_IMAGE manually to the exact image path of the target environment.
+#
+# Manual Image Retrieval Options:
+# Option 1: Cloud Build Logs (Composer 2 & 3)
+#    Check the logs of the most recent successful build in Cloud Build.
+#    The image URI is typically listed in the build steps or artifacts.
+#
+# Option 2: GKE Workloads (Composer 2 Only)
+#    Go to GKE > Workloads > airflow-worker > YAML tab.
+#    Look for the 'image:' field under the 'spec.containers' section.
+#
+# Option 3: Google Cloud Support
+#    Customers with a valid support package can contact Google Cloud Support
+#    for assistance in locating the correct worker image path.
 
 
 # ==============================================================================
