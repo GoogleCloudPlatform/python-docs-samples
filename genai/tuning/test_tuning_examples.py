@@ -343,7 +343,7 @@ def test_preference_tuning_job_create(mock_genai_client: MagicMock) -> None:
     )
     mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
 
-    response = tuning_with_pretuned_model.create_tuning_job()
+    response = preference_tuning_job_create.create_tuning_job()
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
