@@ -1,4 +1,4 @@
 Flask==3.0.3
 opentelemetry-exporter-gcp-trace==1.7.0
 opentelemetry-propagator-gcp==1.7.0
-Werkzeug==3.0.3
+Werkzeug==3.1.4

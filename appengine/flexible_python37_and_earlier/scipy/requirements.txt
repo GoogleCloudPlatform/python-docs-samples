@@ -8,4 +8,4 @@ numpy==2.2.4; python_version == '3.8'
 numpy==2.2.4; python_version == '3.7'
 pillow==10.4.0
 scipy==1.14.1
-Werkzeug==3.0.3
+Werkzeug==3.1.4
