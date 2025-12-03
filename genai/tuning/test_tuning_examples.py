@@ -20,6 +20,7 @@ from google.cloud import storage
 from google.genai import types
 import pytest
 
+import preference_tuning_job_create
 import tuning_job_create
 import tuning_job_get
 import tuning_job_list
@@ -325,5 +326,25 @@ def test_tuning_with_pretuned_model(mock_genai_client: MagicMock) -> None:
     response = tuning_with_pretuned_model.create_continuous_tuning_job(tuned_model_name="test-model", checkpoint_id="1")
 
     mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1beta1"))
+    mock_genai_client.return_value.tunings.tune.assert_called_once()
+    assert response == "test-tuning-job"
+
+
+@patch("google.genai.Client")
+def test_preference_tuning_job_create(mock_genai_client: MagicMock) -> None:
+    # Mock the API response
+    mock_tuning_job = types.TuningJob(
+        name="test-tuning-job",
+        experiment="test-experiment",
+        tuned_model=types.TunedModel(
+            model="test-model",
+            endpoint="test-endpoint"
+        )
+    )
+    mock_genai_client.return_value.tunings.tune.return_value = mock_tuning_job
+
+    response = preference_tuning_job_create.create_tuning_job()
+
+    mock_genai_client.assert_called_once_with(http_options=types.HttpOptions(api_version="v1"))
     mock_genai_client.return_value.tunings.tune.assert_called_once()
     assert response == "test-tuning-job"
