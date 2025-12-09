@@ -244,3 +244,59 @@ def analyze_content_audio_stream(
 
 
 # [END dialogflow_analyze_content_audio_stream]
+
+
+# [START dialogflow_bidi_analyze_content_audio_stream]
+def bidi_analyze_content_audio_stream(
+    conversation_id: str,
+    participant_id: str,
+    sample_rate_herz: int,
+    stream,
+    timeout: int,
+):
+    import google.auth
+    from google.cloud import dialogflow_v2beta1 as dialogflow
+
+    """Stream audio streams to Dialogflow and receive transcripts and
+    suggestions.
+
+    Args:
+        conversation_id: Id of the conversation.
+        participant_id: Id of the participant.
+        sample_rate_herz: herz rate of the sample.
+        stream: the stream to process. It should have generator() method to
+          yield input_audio.
+        timeout: the timeout of one stream.
+    """
+    credentials, project_id = google.auth.default()
+    client = dialogflow.ParticipantsClient(credentials=credentials)
+
+    participant_name = client.participant_path(
+        project_id, conversation_id, participant_id
+    )
+
+    def gen_requests(participant_name, stream):
+        """Generates requests for streaming."""
+        audio_generator = stream.generator()
+        yield dialogflow.BidiStreamingAnalyzeContentRequest(
+            config={
+                "participant": participant_name,
+                "voice_session_config": {
+                    "input_audio_encoding": dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16,
+                    "input_audio_sample_rate_hertz": sample_rate_herz,
+                },
+            }
+        )
+        for content in audio_generator:
+            yield dialogflow.BidiStreamingAnalyzeContentRequest(
+                input={
+                    "audio":content
+                },
+            )
+
+    return client.bidi_streaming_analyze_content(
+        gen_requests(participant_name, stream), timeout=timeout
+    )
+
+
+# [END dialogflow_bidi_analyze_content_audio_stream]
