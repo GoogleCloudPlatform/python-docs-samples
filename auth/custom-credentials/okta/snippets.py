@@ -15,11 +15,10 @@
 
 import json
 import os
-import sys
 import time
 import urllib.parse
 
-from google.auth import exceptions, identity_pool
+from google.auth import identity_pool
 from google.auth.transport import requests as auth_requests
 import requests
 
