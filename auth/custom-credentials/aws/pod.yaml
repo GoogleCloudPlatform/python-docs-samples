@@ -16,17 +16,24 @@ kind: Pod
 metadata:
   name: custom-credential-pod
 spec:
-  serviceAccountName: your-k8s-service-account # The service account associated with the AWS IAM role
+  # The Kubernetes Service Account that is annotated with the corresponding
+  # AWS IAM role ARN. See the README for instructions on setting up IAM
+  # Roles for Service Accounts (IRSA).
+  serviceAccountName: your-k8s-service-account
   containers:
   - name: gcp-auth-sample
-    image: your-container-image:latest # Your image from ECR
+    # The container image pushed to the container registry
+    # For example, Amazon Elastic Container Registry
+    image: your-container-image:latest
     env:
-    # AWS_REGION is often required for Boto3 to initialize correctly in containers
+    # REQUIRED: The AWS region. Boto3 requires this to be set explicitly
+    # in containers.
     - name: AWS_REGION
       value: "your-aws-region"
+    # REQUIRED: The full identifier of the Workload Identity Pool provider
     - name: GCP_WORKLOAD_AUDIENCE
       value: "your-gcp-workload-audience"
-    # Optional: If you want to use service account impersonation
+    # OPTIONAL: Enable Google Cloud service account impersonation
     # - name: GCP_SERVICE_ACCOUNT_IMPERSONATION_URL
     #   value: "your-gcp-service-account-impersonation-url"
     - name: GCS_BUCKET_NAME
