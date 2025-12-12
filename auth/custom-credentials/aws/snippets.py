@@ -16,8 +16,9 @@ import json
 import os
 import sys
 
-import boto3
 from google.auth import aws
+
+import boto3
 from google.auth import exceptions
 from google.auth.transport import requests as auth_requests
 
