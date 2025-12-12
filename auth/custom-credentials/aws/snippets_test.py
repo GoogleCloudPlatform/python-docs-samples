@@ -116,16 +116,14 @@ def test_authenticate_system():
         "aws_secret_access_key",
         "aws_region",
     ]
-    if not all(key in secrets for key in required_keys):
+    if not all(key in secrets and secrets[key] for key in required_keys):
         pytest.skip(
-            "Skipping system test: custom-credentials-aws-secrets.json is missing required keys."
+            "Skipping system test: custom-credentials-aws-secrets.json is missing or has empty required keys."
         )
 
-    # The main() function handles the auth flow and printing.
-    # We mock the print function to verify the output.
-    with mock.patch("builtins.print") as mock_print:
-        snippets.main()
+    metadata = snippets.main()
 
-        # Check for the success message in the print output.
-        output = "\n".join([call.args[0] for call in mock_print.call_args_list])
-        assert "--- SUCCESS! ---" in output
+    # Verify that the returned metadata is a dictionary with expected keys.
+    assert isinstance(metadata, dict)
+    assert "name" in metadata
+    assert metadata["name"] == secrets["gcs_bucket_name"]
