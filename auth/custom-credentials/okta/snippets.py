@@ -12,14 +12,12 @@
 # limitations under the License.
 
 # [START auth_custom_credential_supplier_okta]
-
 import json
-import os
 import time
 import urllib.parse
 
 from google.auth import identity_pool
-from google.auth.transport import requests as auth_requests
+from google.cloud import storage
 import requests
 
 
@@ -41,7 +39,6 @@ class OktaClientCredentialsSupplier:
         """Fetches a new token if the current one is expired or missing."""
         if self.access_token and time.time() < self.expiry_time - 60:
             return self.access_token
-
         self._fetch_okta_access_token()
         return self.access_token
 
@@ -78,11 +75,9 @@ def authenticate_with_okta_credentials(
         dict: The bucket metadata response from the Google Cloud Storage API.
     """
 
-    # 1. Instantiate the custom supplier.
     okta_supplier = OktaClientCredentialsSupplier(domain, client_id, client_secret)
 
-    # 2. Instantiate the IdentityPoolClient.
-    client = identity_pool.Credentials(
+    credentials = identity_pool.Credentials(
         audience=audience,
         subject_token_type="urn:ietf:params:oauth:token-type:jwt",
         token_url="https://sts.googleapis.com/v1/token",
@@ -91,16 +86,11 @@ def authenticate_with_okta_credentials(
         service_account_impersonation_url=impersonation_url,
     )
 
-    # 3. Create an authenticated session.
-    authed_session = auth_requests.AuthorizedSession(client)
+    storage_client = storage.Client(credentials=credentials)
 
-    # 4. Make the API Request.
-    bucket_url = f"https://storage.googleapis.com/storage/v1/b/{bucket_name}"
+    bucket = storage_client.get_bucket(bucket_name)
 
-    response = authed_session.get(bucket_url)
-    response.raise_for_status()
-
-    return response.json()
+    return bucket._properties
 
 
 # [END auth_custom_credential_supplier_okta]

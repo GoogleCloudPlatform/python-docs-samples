@@ -14,12 +14,11 @@
 # [START auth_custom_credential_supplier_aws]
 import json
 import os
-import sys
 
 import boto3
 from google.auth import aws
 from google.auth import exceptions
-from google.auth.transport import requests as auth_requests
+from google.cloud import storage
 
 
 class CustomAwsSupplier(aws.AwsSecurityCredentialsSupplier):
@@ -44,7 +43,6 @@ class CustomAwsSupplier(aws.AwsSecurityCredentialsSupplier):
         if not self._cached_region:
             raise exceptions.GoogleAuthError(
                 "Boto3 was unable to resolve an AWS region."
-                "Please set the AWS_REGION environment variable."
             )
 
         return self._cached_region
@@ -73,8 +71,10 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
         dict: The bucket metadata response from the Google Cloud Storage API.
     """
 
+    # 1. Instantiate the custom supplier.
     custom_supplier = CustomAwsSupplier()
 
+    # 2. Instantiate the AWS Credentials object.
     credentials = aws.Credentials(
         audience=audience,
         subject_token_type="urn:ietf:params:aws:token-type:aws4_request",
@@ -83,13 +83,13 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
         scopes=["https://www.googleapis.com/auth/devstorage.read_write"],
     )
 
-    authed_session = auth_requests.AuthorizedSession(credentials)
-    bucket_url = f"https://storage.googleapis.com/storage/v1/b/{bucket_name}"
+    # 3. Create a storage client.
+    storage_client = storage.Client(credentials=credentials)
 
-    response = authed_session.get(bucket_url)
-    response.raise_for_status()
+    # 4. Get bucket metadata.
+    bucket = storage_client.get_bucket(bucket_name)
 
-    return response.json()
+    return bucket._properties
 
 
 # [END auth_custom_credential_supplier_aws]
@@ -98,7 +98,9 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
 def _load_config_from_file():
     """
     If a local secrets file is present, load it into the environment.
-    This is a "just-in-time" configuration for local development.
+    This is a "just-in-time" configuration for local development. These
+    variables are only set for the current process and are not exposed to the
+    shell.
     """
     secrets_file = "custom-credentials-aws-secrets.json"
     if os.path.exists(secrets_file):
@@ -119,42 +121,36 @@ def _load_config_from_file():
         )
 
 
-def main() -> dict | None:
-    """
-    Loads configuration, authenticates, and retrieves GCS bucket metadata.
+def main():
 
-    Raises:
-        ValueError: If required configuration is missing.
-
-    Returns:
-        A dictionary containing the bucket metadata on success.
-    """
-
+    # Reads the custom-credentials-aws-secrets.json if running locally.
     _load_config_from_file()
 
+    # Now, read the configuration from the environment. In a local run, these
+    # will be the values we just set. In a containerized run, they will be
+    # the values provided by the environment.
     gcp_audience = os.getenv("GCP_WORKLOAD_AUDIENCE")
     sa_impersonation_url = os.getenv("GCP_SERVICE_ACCOUNT_IMPERSONATION_URL")
     gcs_bucket_name = os.getenv("GCS_BUCKET_NAME")
 
     if not all([gcp_audience, gcs_bucket_name]):
-        raise ValueError(
+        print(
             "Required configuration missing. Please provide it in a "
             "custom-credentials-aws-secrets.json file or as environment variables: "
             "GCP_WORKLOAD_AUDIENCE, GCS_BUCKET_NAME"
         )
-    print(f"Retrieving metadata for bucket: {gcs_bucket_name}...")
-    metadata = authenticate_with_aws_credentials(
-        gcs_bucket_name, gcp_audience, sa_impersonation_url
-    )
-    return metadata
+        return
+
+    try:
+        print(f"Retrieving metadata for bucket: {gcs_bucket_name}...")
+        metadata = authenticate_with_aws_credentials(
+            gcs_bucket_name, gcp_audience, sa_impersonation_url
+        )
+        print("--- SUCCESS! ---")
+        print(json.dumps(metadata, indent=2))
+    except Exception as e:
+        print(f"Authentication or Request failed: {e}")
 
 
 if __name__ == "__main__":
-    try:
-        metadata = main()
-        if metadata:
-            print("--- SUCCESS! ---")
-            print(json.dumps(metadata, indent=2))
-    except Exception as e:
-        print(f"An error occurred: {e}", file=sys.stderr)
-        sys.exit(1)
+    main()
