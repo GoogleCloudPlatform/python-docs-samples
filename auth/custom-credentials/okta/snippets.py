@@ -11,12 +11,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START auth_custom_credential_supplier_okta]
 import json
+import os
+import sys
 import time
 import urllib.parse
 
-from google.auth import identity_pool
+from google.auth import exceptions, identity_pool
 from google.auth.transport import requests as auth_requests
 import requests
 
