@@ -8,7 +8,7 @@ This sample demonstrates how to use a custom AWS security credential supplier to
 *   A Google Cloud project with the IAM API enabled.
 *   A GCS bucket.
 *   Python 3.10 or later installed.
-*   
+
 If you want to use AWS security credentials that cannot be retrieved using methods supported natively by the [google-auth](https://github.com/googleapis/google-auth-library-python) library, a custom `AwsSecurityCredentialsSupplier` implementation may be specified. The supplier must return valid, unexpired AWS security credentials when called by the Google Cloud Auth library.
 
 

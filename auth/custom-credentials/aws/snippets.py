@@ -71,10 +71,8 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
         dict: The bucket metadata response from the Google Cloud Storage API.
     """
 
-    # 1. Instantiate the custom supplier.
     custom_supplier = CustomAwsSupplier()
-
-    # 2. Instantiate the AWS Credentials object.
+    
     credentials = aws.Credentials(
         audience=audience,
         subject_token_type="urn:ietf:params:aws:token-type:aws4_request",
@@ -83,10 +81,8 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
         scopes=["https://www.googleapis.com/auth/devstorage.read_write"],
     )
 
-    # 3. Create a storage client.
     storage_client = storage.Client(credentials=credentials)
 
-    # 4. Get bucket metadata.
     bucket = storage_client.get_bucket(bucket_name)
 
     return bucket._properties
