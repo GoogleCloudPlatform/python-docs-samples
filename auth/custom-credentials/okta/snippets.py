@@ -101,9 +101,7 @@ def main():
         with open("custom-credentials-okta-secrets.json") as f:
             secrets = json.load(f)
     except FileNotFoundError:
-        print(
-            "Could not find custom-credentials-okta-secrets.json."
-        )
+        print("Could not find custom-credentials-okta-secrets.json.")
         return
 
     gcp_audience = secrets.get("gcp_workload_audience")

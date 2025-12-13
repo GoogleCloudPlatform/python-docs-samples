@@ -98,6 +98,7 @@ def test_authenticate_unit_success(MockSupplier, MockCreds, MockSession):
 
 # --- System Test ---
 
+
 def test_authenticate_system():
     """
     System test that runs against the real API.

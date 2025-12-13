@@ -72,7 +72,7 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
     """
 
     custom_supplier = CustomAwsSupplier()
-    
+
     credentials = aws.Credentials(
         audience=audience,
         subject_token_type="urn:ietf:params:aws:token-type:aws4_request",

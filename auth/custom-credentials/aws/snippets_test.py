@@ -96,6 +96,7 @@ def test_authenticate_unit_success(MockSupplier, MockAwsCreds, MockSession):
 
 # --- System Test (Integration) ---
 
+
 def test_authenticate_system():
     """
     System test that runs against the real API.
