@@ -14,6 +14,7 @@
 # [START auth_custom_credential_supplier_aws]
 import json
 import os
+import sys
 
 import boto3
 from google.auth import aws
