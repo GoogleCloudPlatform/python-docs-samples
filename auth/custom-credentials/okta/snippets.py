@@ -82,7 +82,7 @@ def authenticate_with_okta_credentials(
         subject_token_type="urn:ietf:params:oauth:token-type:jwt",
         token_url="https://sts.googleapis.com/v1/token",
         subject_token_supplier=okta_supplier,
-        default_scopes=["https://www.googleapis.com/auth/devstorage.read_write"],
+        default_scopes=["https://www.googleapis.com/auth/devstorage.read_only"],
         service_account_impersonation_url=impersonation_url,
     )
 

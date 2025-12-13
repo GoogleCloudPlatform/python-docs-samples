@@ -78,7 +78,7 @@ def authenticate_with_aws_credentials(bucket_name, audience, impersonation_url=N
         subject_token_type="urn:ietf:params:aws:token-type:aws4_request",
         service_account_impersonation_url=impersonation_url,
         aws_security_credentials_supplier=custom_supplier,
-        scopes=["https://www.googleapis.com/auth/devstorage.read_write"],
+        scopes=["https://www.googleapis.com/auth/devstorage.read_only"],
     )
 
     storage_client = storage.Client(credentials=credentials)
