@@ -43,6 +43,10 @@ from six.moves import queue
 import conversation_management
 import participant_management
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 CONVERSATION_PROFILE_ID = os.getenv("CONVERSATION_PROFILE")
 
@@ -212,17 +216,19 @@ def main():
                         stream=stream,
                         timeout=RESTART_TIMEOUT,
                     )
-
-                    # Now, print the final transcription responses to user.
                     for response in responses:
                         for response in responses:
                             if response.analyze_content_response:     
                                 if response.analyze_content_response.reply_text:
                                     print(f"[{datetime.now()}] Received analyze content reply text: {response.analyze_content_response.reply_text}")
+                                # For playbook agent, the audio reply is in the automated agent reply
                                 for response_message in response.analyze_content_response.automated_agent_reply.response_messages:
                                     for segment in response_message.mixed_audio.segments:
                                         if segment.audio:
                                             stream.play_audio(segment.audio)
+                                # For PS Bot, the audio is in reply audio
+                                if response.analyze_content_response.reply_audio.audio:
+                                    stream.play_audio(response.analyze_content_response.reply_audio.audio)
                         if response.recognition_result.is_final:
                             print(f"[{datetime.now()}] Received final transcript result: {response}")
                             # offset return from recognition_result is relative
