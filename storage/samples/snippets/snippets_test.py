@@ -399,6 +399,7 @@ def test_delete_blob(test_blob):
     storage_delete_file.delete_blob(test_blob.bucket.name, test_blob.name)
 
 
+@pytest.mark.xfail(reason="wait until b/469643064 is fixed")
 def test_make_blob_public(test_public_blob):
     storage_make_public.make_blob_public(
         test_public_blob.bucket.name, test_public_blob.name
@@ -620,6 +621,7 @@ def test_get_service_account(capsys):
     assert "@gs-project-accounts.iam.gserviceaccount.com" in out
 
 
+@pytest.mark.xfail(reason="wait until b/469643064 is fixed")
 def test_download_public_file(test_public_blob):
     storage_make_public.make_blob_public(
         test_public_blob.bucket.name, test_public_blob.name
