@@ -1,1 +1,2 @@
-pytest==7.0.1
+pytest==7.0.1; python_version == '3.9'
+pytest==9.0.2; python_version >= '3.10'
