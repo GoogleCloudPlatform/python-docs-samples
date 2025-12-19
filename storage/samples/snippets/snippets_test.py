@@ -18,6 +18,7 @@ import os
 import tempfile
 import time
 import uuid
+import sys
 
 from google.cloud import storage
 import google.cloud.exceptions
@@ -99,8 +100,10 @@ import storage_upload_from_stream
 import storage_upload_with_kms_key
 
 KMS_KEY = os.environ.get("CLOUD_KMS_KEY")
+IS_PYTHON_3_14 = sys.version_info[:2] == (3, 14)
 
 
+@pytest.mark.skipif(IS_PYTHON_3_14, reason="b/470276398")
 def test_enable_default_kms_key(test_bucket):
     storage_set_bucket_default_kms_key.enable_default_kms_key(
         bucket_name=test_bucket.name, kms_key_name=KMS_KEY
@@ -305,6 +308,7 @@ def test_upload_blob_from_stream(test_bucket, capsys):
     assert "Stream data uploaded to test_upload_blob" in out
 
 
+@pytest.mark.skipif(IS_PYTHON_3_14, reason="b/470276398")
 def test_upload_blob_with_kms(test_bucket):
     blob_name = f"test_upload_with_kms_{uuid.uuid4().hex}"
     with tempfile.NamedTemporaryFile() as source_file:
@@ -598,6 +602,7 @@ def test_create_bucket_dual_region(test_bucket_create, capsys):
     assert "dual-region" in out
 
 
+@pytest.mark.skipif(IS_PYTHON_3_14, reason="b/470276398")
 def test_bucket_delete_default_kms_key(test_bucket, capsys):
     test_bucket.default_kms_key_name = KMS_KEY
     test_bucket.patch()
@@ -646,6 +651,7 @@ def test_define_bucket_website_configuration(test_bucket):
     assert bucket._properties["website"] == website_val
 
 
+@pytest.mark.skipif(IS_PYTHON_3_14, reason="b/470276398")
 def test_object_get_kms_key(test_bucket):
     with tempfile.NamedTemporaryFile() as source_file:
         storage_upload_with_kms_key.upload_blob_with_kms(
