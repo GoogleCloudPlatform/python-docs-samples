@@ -5,3 +5,4 @@ termcolor==3.0.0
 functions-framework==3.9.2
 Werkzeug==3.0.6
 six==1.17.0
+python-dotenv==1.0.1
