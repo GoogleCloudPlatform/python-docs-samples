@@ -1,5 +1,5 @@
 protobuf==5.29.4
-pytest==8.2.2
+pytest==9.0.0
 google-api-core==2.23.0
 google-auth==2.38.0
 google-cloud-managedkafka==0.1.12
