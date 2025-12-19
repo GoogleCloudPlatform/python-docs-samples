@@ -30,7 +30,7 @@ RUN pip install --no-cache-dir --upgrade pip \
 # Copy SDK entrypoint binary from Apache Beam image, which makes it possible to
 # use the image as SDK container image.
 # The Beam version should match the version specified in requirements.txt
-COPY --from=apache/beam_python3.10_sdk:2.62.0 /opt/apache/beam /opt/apache/beam
+COPY --from=apache/beam_python3.10_sdk:2.69.0 /opt/apache/beam /opt/apache/beam
 
 # Copy Flex Template launcher binary from the launcher image, which makes it
 # possible to use the image as a Flex Template base image.
