@@ -3,4 +3,4 @@ pytest==8.2.0; python_version > "3.0"
 # pin pytest to 4.6.11 for Python2.
 pytest==4.6.11; python_version < "3.0"
 gunicorn==23.0.0
-Werkzeug==3.0.3
+Werkzeug==3.1.4
