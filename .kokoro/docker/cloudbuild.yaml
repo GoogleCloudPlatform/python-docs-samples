@@ -20,8 +20,11 @@ steps:
       dir: '.kokoro/docker'
     - name: gcr.io/cloud-builders/docker
       args: ['tag', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', 'gcr.io/$PROJECT_ID/python-samples-testing-docker:$SHORT_SHA']
+    - name: gcr.io/cloud-builders/docker
+      args: ['tag', 'gcr.io/$PROJECT_ID/python-samples-testing-docker', 'gcr.io/$PROJECT_ID/python-samples-testing-docker:infrastructure-public-image-$SHORT_SHA']
 images:
      - 'gcr.io/$PROJECT_ID/python-samples-testing-docker'
+     - 'gcr.io/$PROJECT_ID/python-samples-testing-docker:infrastructure-public-image-$SHORT_SHA'
 
 options:
   logging: CLOUD_LOGGING_ONLY
