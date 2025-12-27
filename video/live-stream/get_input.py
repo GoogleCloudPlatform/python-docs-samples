@@ -43,8 +43,8 @@ def get_input(
     name = f"projects/{project_id}/locations/{location}/inputs/{input_id}"
     response = client.get_input(name=name)
     print(f"Name: {response.name}")
-    print(f"Type: {live_stream_v1.types.Input.Type(response.type_).name}")
-    print(f"Tier: {live_stream_v1.types.Input.Tier(response.tier).name}")
+    print(f"Type: {response.type_.name}")
+    print(f"Tier: {response.tier.name}")
     if response.uri:
         print(f"URI: {response.uri}")
 
