@@ -52,7 +52,7 @@ def create_channel(
         name=name,
         input_attachments=[
             live_stream_v1.types.InputAttachment(
-                key="input_id",
+                key=input_id,
                 input=input,
             ),
         ],
