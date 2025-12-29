@@ -87,9 +87,15 @@ class AudioPlayer(threading.Thread):
         while not self._closed.is_set():
             try:
                 chunk = self._buff.get(timeout=0.1)
-                if not self._stream.is_active():
+                try:
+                    if not self._stream.is_active():
+                        self._stream.start_stream()
+                    self._stream.write(chunk)
+                except Exception as e:
+                    print(f"[{datetime.now()}] AudioPlayer error: {e}")
+                    # Attempt to recover by restarting the stream if needed
+                    self._stream.stop_stream()
                     self._stream.start_stream()
-                self._stream.write(chunk)
             except queue.Empty:
                 continue
 
@@ -98,12 +104,14 @@ class AudioPlayer(threading.Thread):
         self._buff.put(audio_chunk)
 
     def stop_playback(self):
-        """Clears the audio queue and stops the stream to interrupt playback."""
-        # Note: For even faster barge-in, consider breaking audio segments into smaller chunks (e.g. 100ms)
+        """Clears the audio queue to stop playback (for barge-in)."""
+        # Note: For even faster barge-in, consider breaking audio segments into smaller chunks
         # before enqueuing, so playback interruption opportunities are more frequent.
         with self._buff.mutex:
+            queue_size = self._buff.qsize()
             self._buff.queue.clear()
-        self._stream.stop_stream()
+        if queue_size > 0:
+            print(f"[{datetime.now()}] Barge-in: stopping playback of {queue_size} queued audio chunks.")
 
     def close(self):
         """Closes the audio stream and terminates PyAudio."""
@@ -263,14 +271,13 @@ def main():
                             timeout=RESTART_TIMEOUT,
                         )
                         for response in responses:          
-                            # Handle Interruption (Barge-In)
+                            # Handle Barge-In
                             if getattr(response, "recognition_result", None):
                                 rr = response.recognition_result
                                 # If there's a transcript or speech activity begin, stop playback
                                 if (getattr(rr, "transcript", None)
                                     or getattr(rr, "message_type", None)
                                     == dialogflow_v2beta1.StreamingRecognitionResult.MessageType.SPEECH_ACTIVITY_BEGIN):
-                                    print(f"[{datetime.now()}] Barge-in detected, stopping playback.")
                                     player.stop_playback()
 
                             if response.analyze_content_response:     
