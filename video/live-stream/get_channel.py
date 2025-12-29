@@ -43,6 +43,32 @@ def get_channel(
     name = f"projects/{project_id}/locations/{location}/channels/{channel_id}"
     response = client.get_channel(name=name)
     print(f"Channel: {response.name}")
+    print(f"Creation time: {response.create_time}")
+    if response.labels:
+        print("Labels:")
+        for key, value in response.labels.items():
+            print(f"  {key}: {value}")
+    print(f"Update time: {response.update_time}")
+    print(f"Streaming state: {response.streaming_state.name}")
+    if response.streaming_error:
+        print(f"Streaming error: {response.streaming_error.message}")
+    print(f"Active input: {response.active_input}")
+    for attachment in response.input_attachments:
+        print(f"Input attachment: {attachment.key}")
+    print(f"Output URI: {response.output.uri}")
+    print(f"Log config: {response.log_config.log_severity.name}")
+    if response.elementary_streams:
+        print("Elementary streams:")
+        for stream in response.elementary_streams:
+            print(f"  {stream.key}")
+    if response.mux_streams:
+        print("Mux streams:")
+        for stream in response.mux_streams:
+            print(f"  {stream.key}")
+    if response.manifests:
+        print("Manifests:")
+        for manifest in response.manifests:
+            print(f"  {manifest.file_name} ({manifest.type_.name})")
 
     return response
 
