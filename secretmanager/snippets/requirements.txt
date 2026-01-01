@@ -1,4 +1,4 @@
 google-cloud-resource-manager==1.14.2
 google-cloud-secret-manager==2.24.0
 google-crc32c==1.6.0
-protobuf==5.29.4
+protobuf==5.29.5
