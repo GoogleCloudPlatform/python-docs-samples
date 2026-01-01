@@ -9,4 +9,4 @@ google-auth==2.29.0
 anthropic[vertex]==0.28.0
 numpy<3
 openai==1.68.2
-immutabledict==4.2.0
+immutabledict==4.2.2
