@@ -65,7 +65,7 @@ YELLOW = "\033[0;33m"
 class AudioPlayer(threading.Thread):
     """A class to play audio from a queue in a separate thread."""
 
-    def __init__(self, rate, chunk_size):
+    def __init__(self, rate, chunk_size, pyaudio_instance):
         super(AudioPlayer, self).__init__()
         self.daemon = True
         self._rate = rate
@@ -73,7 +73,7 @@ class AudioPlayer(threading.Thread):
         self._num_channels = 1
         self._buff = queue.Queue()
         self._closed = threading.Event()
-        self._pyaudio = pyaudio.PyAudio()
+        self._pyaudio = pyaudio_instance
         self._stream = self._pyaudio.open(
             format=pyaudio.paInt16,
             channels=self._num_channels,
@@ -107,11 +107,17 @@ class AudioPlayer(threading.Thread):
         """Clears the audio queue to stop playback (for barge-in)."""
         # Note: For even faster barge-in, consider breaking audio segments into smaller chunks
         # before enqueuing, so playback interruption opportunities are more frequent.
-        with self._buff.mutex:
-            queue_size = self._buff.qsize()
-            self._buff.queue.clear()
+        queue_size = self._buff.qsize()
+        
+        # Clear the queue using standard thread-safe methods
+        while not self._buff.empty():
+            try:
+                self._buff.get_nowait()
+            except queue.Empty:
+                break
+                
         if queue_size > 0:
-            print(f"[{datetime.now()}] Barge-in: stopping playback of {queue_size} queued audio chunks.")
+            print(f"[{datetime.now()}] Barge-in: cleared {queue_size} queued audio chunks.")
 
     def close(self):
         """Closes the audio stream and terminates PyAudio."""
@@ -119,13 +125,13 @@ class AudioPlayer(threading.Thread):
         self.join()
         self._stream.stop_stream()
         self._stream.close()
-        self._pyaudio.terminate()
+        # Note: Do not terminate PyAudio here as it's shared
 
 
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
-    def __init__(self, rate, chunk_size):
+    def __init__(self, rate, chunk_size, pyaudio_instance):
         self._rate = rate
         self.chunk_size = chunk_size
         self._num_channels = 1
@@ -141,7 +147,7 @@ class ResumableMicrophoneStream:
         # replay after restart.
         self.audio_input_chunks = []
         self.new_stream = True
-        self._audio_interface = pyaudio.PyAudio()
+        self._audio_interface = pyaudio_instance
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             channels=self._num_channels,
@@ -165,7 +171,7 @@ class ResumableMicrophoneStream:
         # Signal the generator to terminate so that the client's
         # streaming_recognize method will not block the process termination.
         self._buff.put(None)
-        self._audio_interface.terminate()
+        # Note: Do not terminate PyAudio here as it's shared
 
     def _fill_buffer(self, in_data, *args, **kwargs):
         """Continuously collect data from the audio stream, into the buffer in
@@ -230,6 +236,9 @@ class ResumableMicrophoneStream:
 
 def main():
     """start bidirectional streaming from microphone input to Dialogflow API"""
+    # Create a single PyAudio instance to avoid resource conflicts
+    pyaudio_instance = pyaudio.PyAudio()
+    
     # Create conversation.
     conversation = conversation_management.create_conversation(
         project_id=PROJECT_ID, conversation_profile_id=CONVERSATION_PROFILE_ID
@@ -243,9 +252,9 @@ def main():
     )
     participant_id = end_user.name.split("participants/")[1].rstrip()
 
-    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
+    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE, pyaudio_instance)
     # Create separate audio player for async playback and barge-in control
-    player = AudioPlayer(SAMPLE_RATE, CHUNK_SIZE)
+    player = AudioPlayer(SAMPLE_RATE, CHUNK_SIZE, pyaudio_instance)
     player.start()
     print(mic_manager.chunk_size)
     sys.stdout.write(YELLOW)
@@ -323,6 +332,7 @@ def main():
                     break
     finally:
         player.close()
+        pyaudio_instance.terminate()
 
 
 if __name__ == "__main__":
