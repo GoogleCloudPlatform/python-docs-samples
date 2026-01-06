@@ -174,9 +174,23 @@ STATIC_URL = "/static/"
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "options": {
+            "bucket_name": GS_BUCKET_NAME,
+            "querystring_auth": True,  # generate signed URLs
+            "default_acl": None,  # don't make files public by default
+            "expiration": 300,  # seconds
+        },
     },
     "staticfiles": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "options": {
+            "bucket_name": GS_BUCKET_NAME,
+            # You would normally have your static assets public.
+            # In this example, we re-use the same bucket with the same ACL settings.
+            "querystring_auth": True,  # generate signed URLs
+            "default_acl": None,  # don't make files public by default
+            "expiration": 300,  # seconds
+        },
     },
 }
 GS_DEFAULT_ACL = "publicRead"
