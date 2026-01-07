@@ -2,8 +2,6 @@
 
 Python samples for [Google Cloud Platform products][cloud].
 
-[![Build Status][py-2.7-shield]][py-2.7-link] [![Build Status][py-3.9-shield]][py-3.9-link] [![Build Status][py-3.10-shield]][py-3.10-link] [![Build Status][py-3.11-shield]][py-3.11-link] [![Build Status][py-3.12-shield]][py-3.12-link] [![Build Status][py-3.13-shield]][py-3.13-link]
-
 ## Google Cloud Samples
 
 Check out some of the samples found on this repository on the [Google Cloud Samples](https://cloud.google.com/docs/samples?l=python) page.
@@ -66,16 +64,3 @@ Contributions welcome! See the [Contributing Guide](CONTRIBUTING.md).
 [cloud_python_setup]: https://cloud.google.com/python/setup
 [auth_command]: https://cloud.google.com/sdk/gcloud/reference/beta/auth/application-default/login
 [gcp_auth]: https://cloud.google.com/docs/authentication#projects_and_resources
-
-[py-2.7-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-2.7.svg
-[py-2.7-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-2.7.html
-[py-3.9-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.9.svg
-[py-3.9-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.9.html
-[py-3.10-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-310.svg
-[py-3.10-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.10.html
-[py-3.11-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-311.svg
-[py-3.11-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.11.html
-[py-3.12-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.12.svg
-[py-3.12-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.12.html
-[py-3.13-shield]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.13.svg
-[py-3.13-link]: https://storage.googleapis.com/cloud-devrel-public/python-docs-samples/badges/py-3.13.html
