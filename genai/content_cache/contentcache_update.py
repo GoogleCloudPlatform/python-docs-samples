@@ -25,7 +25,7 @@ def update_content_cache(cache_name: str) -> str:
     client = genai.Client(http_options=HttpOptions(api_version="v1"))
 
     # Get content cache by name
-    # cache_name = "projects/111111111111/locations/us-central1/cachedContents/1111111111111111111"
+    # cache_name = "projects/.../locations/.../cachedContents/1111111111111111111"
     content_cache = client.caches.get(name=cache_name)
     print("Expire time", content_cache.expire_time)
     # Example response

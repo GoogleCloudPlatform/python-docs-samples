@@ -19,6 +19,8 @@
 import os
 
 import counttoken_compute_with_txt
+import counttoken_localtokenizer_compute_with_txt
+import counttoken_localtokenizer_with_txt
 import counttoken_resp_with_txt
 import counttoken_with_txt
 import counttoken_with_txt_vid
@@ -43,3 +45,11 @@ def test_counttoken_with_txt() -> None:
 
 def test_counttoken_with_txt_vid() -> None:
     assert counttoken_with_txt_vid.count_tokens()
+
+
+def test_counttoken_localtokenizer_with_txt() -> None:
+    assert counttoken_localtokenizer_with_txt.counttoken_localtokenizer_with_txt()
+
+
+def test_counttoken_localtokenizer_compute_with_txt() -> None:
+    assert counttoken_localtokenizer_compute_with_txt.counttoken_localtokenizer_compute_with_txt()

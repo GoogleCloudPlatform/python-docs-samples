@@ -14,7 +14,7 @@
 
 # [START gae_python38_custom_runtime]
 # [START gae_python3_custom_runtime]
-runtime: python39
+runtime: python313
 entrypoint: uwsgi --http-socket :$PORT --wsgi-file main.py --callable app --master --processes 1 --threads 2
 # [END gae_python3_custom_runtime]
 # [END gae_python38_custom_runtime]

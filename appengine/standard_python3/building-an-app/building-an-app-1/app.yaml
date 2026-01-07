@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-runtime: python313
+runtime: python314
 
 handlers:
   # This configures Google App Engine to serve the files in the app's static

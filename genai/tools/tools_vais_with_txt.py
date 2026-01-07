@@ -50,7 +50,7 @@ def generate_content(datastore: str) -> str:
     # Example response:
     # 'The process for making an appointment to renew your driver's license varies depending on your location. To provide you with the most accurate instructions...'
     # [END googlegenaisdk_tools_vais_with_txt]
-    return response.text
+    return True
 
 
 if __name__ == "__main__":

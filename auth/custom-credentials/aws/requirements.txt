@@ -1,0 +1,5 @@
+boto3==1.40.53
+google-auth==2.43.0
+google-cloud-storage==2.19.0
+python-dotenv==1.1.1
+requests==2.32.3

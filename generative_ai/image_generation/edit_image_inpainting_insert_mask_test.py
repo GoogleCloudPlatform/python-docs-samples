@@ -16,6 +16,7 @@ import os
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
+import pytest
 
 import edit_image_inpainting_insert_mask
 
@@ -27,6 +28,7 @@ _OUTPUT_FILE = os.path.join(_RESOURCES, "woman_with_hat.png")
 _PROMPT = "hat"
 
 
+@pytest.mark.skip("imagegeneration@006 samples pending deprecation")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_inpainting_insert_mask() -> None:
     response = edit_image_inpainting_insert_mask.edit_image_inpainting_insert_mask(

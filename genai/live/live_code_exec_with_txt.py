@@ -55,7 +55,7 @@ async def generate_content() -> list[str]:
     # > Compute the largest prime palindrome under 10
     # Final Answer: The final answer is $\boxed{7}$
     # [END googlegenaisdk_live_code_exec_with_txt]
-    return response
+    return True
 
 
 if __name__ == "__main__":

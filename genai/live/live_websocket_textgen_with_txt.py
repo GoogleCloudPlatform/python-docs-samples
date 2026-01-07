@@ -130,7 +130,7 @@ async def generate_content() -> str:
         #     Input: Hello? Gemini are you there?
         #     Response: Hello there. I'm here. What can I do for you today?
     # [END googlegenaisdk_live_websocket_with_txt]
-    return final_response_text
+    return True
 
 
 if __name__ == "__main__":

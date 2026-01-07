@@ -143,7 +143,7 @@ def grounded_generation_inline_vais_sample(
         # Format: projects/{project_number}/locations/{location}
         location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
-            model_id="default",
+            model_id="gemini-2.5-flash",
         ),
         # Conversation between user and model
         contents=[
@@ -215,7 +215,7 @@ def grounded_generation_google_search_sample(
         # Format: projects/{project_number}/locations/{location}
         location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
-            model_id="default",
+            model_id="gemini-2.5-flash",
         ),
         # Conversation between user and model
         contents=[
@@ -274,7 +274,7 @@ def grounded_generation_streaming_sample(
         # Format: projects/{project_number}/locations/{location}
         location=client.common_location_path(project=project_number, location="global"),
         generation_spec=discoveryengine.GenerateGroundedContentRequest.GenerationSpec(
-            model_id="default",
+            model_id="gemini-2.5-flash",
         ),
         # Conversation between user and model
         contents=[

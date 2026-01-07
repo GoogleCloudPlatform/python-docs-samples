@@ -17,6 +17,7 @@ import os
 import backoff
 
 from google.api_core.exceptions import ResourceExhausted
+import pytest
 
 import edit_image_product_image
 
@@ -27,6 +28,7 @@ _OUTPUT_FILE = os.path.join(_RESOURCES, "pillow_on_beach.png")
 _PROMPT = "beach"
 
 
+@pytest.mark.skip("imagegeneration@006 samples pending deprecation")
 @backoff.on_exception(backoff.expo, ResourceExhausted, max_time=60)
 def test_edit_image_product_image() -> None:
     response = edit_image_product_image.edit_image_product_image(

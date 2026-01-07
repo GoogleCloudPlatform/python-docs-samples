@@ -143,7 +143,7 @@ async def generate_content() -> str:
         #     Input: Hello? Gemini are you there?
         #     Audio Response: Hello there. I'm here. What can I do for you today?
     # [END googlegenaisdk_live_audiogen_websocket_with_txt]
-    return "output.wav"
+    return True
 
 
 if __name__ == "__main__":

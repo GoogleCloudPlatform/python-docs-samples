@@ -1,0 +1,40 @@
+# Copyright 2025 Google LLC
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: custom-credential-pod
+spec:
+  # The Kubernetes Service Account that is annotated with the corresponding
+  # AWS IAM role ARN. See the README for instructions on setting up IAM
+  # Roles for Service Accounts (IRSA).
+  serviceAccountName: your-k8s-service-account
+  containers:
+  - name: gcp-auth-sample
+    # The container image pushed to the container registry
+    # For example, Amazon Elastic Container Registry
+    image: your-container-image:latest
+    env:
+    # REQUIRED: The AWS region. Boto3 requires this to be set explicitly
+    # in containers.
+    - name: AWS_REGION
+      value: "your-aws-region"
+    # REQUIRED: The full identifier of the Workload Identity Pool provider
+    - name: GCP_WORKLOAD_AUDIENCE
+      value: "your-gcp-workload-audience"
+    # OPTIONAL: Enable Google Cloud service account impersonation
+    # - name: GCP_SERVICE_ACCOUNT_IMPERSONATION_URL
+    #   value: "your-gcp-service-account-impersonation-url"
+    - name: GCS_BUCKET_NAME
+      value: "your-gcs-bucket-name"

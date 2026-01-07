@@ -26,7 +26,7 @@ def generate_content(output_uri: str) -> str:
     # output_uri = f"bq://your-project.your_dataset.your_table"
 
     job = client.batches.create(
-        # Check Anthropic Claude region availability in https://cloud.devsite.corp.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#regions
+        # Check Anthropic Claude region availability in https://cloud.google.com/vertex-ai/generative-ai/docs/partner-models/use-claude#regions
         # More about Anthropic model: https://console.cloud.google.com/vertex-ai/publishers/anthropic/model-garden/claude-3-5-haiku
         model="publishers/anthropic/models/claude-3-5-haiku",
         # The source dataset needs to be created specifically in us-east5
