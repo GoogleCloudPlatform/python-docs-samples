@@ -1,4 +1,4 @@
 uuid==1.30
-pytest==8.2.0; python_version > "3.0"
+pytest==9.0.0; python_version > "3.0"
 # pin pytest to 4.6.11 or lower for Python2.
-pytest==4.6.11; python_version < "3.0"
+pytest==9.0.0; python_version < "3.0"

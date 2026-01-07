@@ -6,4 +6,4 @@ google-cloud-pubsub==2.28.0
 google-cloud-storage==2.9.0; python_version < '3.7'
 google-cloud-storage==2.9.0; python_version > '3.6'
 google-cloud-secret-manager==2.16.1
-pytest==8.2.0
+pytest==9.0.0
