@@ -33,9 +33,11 @@ Say "Quit" or "Exit" to stop.
 import os
 import re
 import sys
+import threading
 from datetime import datetime
 
 from google.api_core.exceptions import DeadlineExceeded
+from google.cloud import dialogflow_v2beta1
 
 import pyaudio
 
@@ -60,10 +62,76 @@ MAX_LOOKBACK = 3  # seconds
 YELLOW = "\033[0;33m"
 
 
+class AudioPlayer(threading.Thread):
+    """A class to play audio from a queue in a separate thread."""
+
+    def __init__(self, rate, chunk_size, pyaudio_instance):
+        super(AudioPlayer, self).__init__()
+        self.daemon = True
+        self._rate = rate
+        self._chunk_size = chunk_size
+        self._num_channels = 1
+        self._buff = queue.Queue()
+        self._closed = threading.Event()
+        self._pyaudio = pyaudio_instance
+        self._stream = self._pyaudio.open(
+            format=pyaudio.paInt16,
+            channels=self._num_channels,
+            rate=self._rate,
+            output=True,
+            frames_per_buffer=self._chunk_size,
+        )
+
+    def run(self):
+        """Plays audio chunks from the queue."""
+        while not self._closed.is_set():
+            try:
+                chunk = self._buff.get(timeout=0.1)
+                try:
+                    if not self._stream.is_active():
+                        self._stream.start_stream()
+                    self._stream.write(chunk)
+                except Exception as e:
+                    print(f"[{datetime.now()}] AudioPlayer error: {e}")
+                    # Attempt to recover by restarting the stream if needed
+                    self._stream.stop_stream()
+                    self._stream.start_stream()
+            except queue.Empty:
+                continue
+
+    def add_audio(self, audio_chunk):
+        """Adds an audio chunk to the playback queue."""
+        self._buff.put(audio_chunk)
+
+    def stop_playback(self):
+        """Clears the audio queue to stop playback (for barge-in)."""
+        # Note: For even faster barge-in, consider breaking audio segments into smaller chunks
+        # before enqueuing, so playback interruption opportunities are more frequent.
+        queue_size = self._buff.qsize()
+        
+        # Clear the queue using standard thread-safe methods
+        while not self._buff.empty():
+            try:
+                self._buff.get_nowait()
+            except queue.Empty:
+                break
+                
+        if queue_size > 0:
+            print(f"[{datetime.now()}] Barge-in: cleared {queue_size} queued audio chunks.")
+
+    def close(self):
+        """Closes the audio stream and terminates PyAudio."""
+        self._closed.set()
+        self.join()
+        self._stream.stop_stream()
+        self._stream.close()
+        # Note: Do not terminate PyAudio here as it's shared
+
+
 class ResumableMicrophoneStream:
     """Opens a recording stream as a generator yielding the audio chunks."""
 
-    def __init__(self, rate, chunk_size):
+    def __init__(self, rate, chunk_size, pyaudio_instance):
         self._rate = rate
         self.chunk_size = chunk_size
         self._num_channels = 1
@@ -79,7 +147,7 @@ class ResumableMicrophoneStream:
         # replay after restart.
         self.audio_input_chunks = []
         self.new_stream = True
-        self._audio_interface = pyaudio.PyAudio()
+        self._audio_interface = pyaudio_instance
         self._audio_stream = self._audio_interface.open(
             format=pyaudio.paInt16,
             channels=self._num_channels,
@@ -90,13 +158,6 @@ class ResumableMicrophoneStream:
             # This is necessary so that the input device's buffer doesn't
             # overflow while the calling thread makes network requests, etc.
             stream_callback=self._fill_buffer,
-        )
-        # For audios playback to the speaker
-        self._reply_audio_stream = self._audio_interface.open(
-            format=pyaudio.paInt16,
-            channels=self._num_channels,
-            rate=self._rate,
-            output=True,
         )
 
     def __enter__(self):
@@ -110,7 +171,7 @@ class ResumableMicrophoneStream:
         # Signal the generator to terminate so that the client's
         # streaming_recognize method will not block the process termination.
         self._buff.put(None)
-        self._audio_interface.terminate()
+        # Note: Do not terminate PyAudio here as it's shared
 
     def _fill_buffer(self, in_data, *args, **kwargs):
         """Continuously collect data from the audio stream, into the buffer in
@@ -118,11 +179,6 @@ class ResumableMicrophoneStream:
 
         self._buff.put(in_data)
         return None, pyaudio.paContinue
-    
-    def play_audio(self, audio_data):
-        """Writes audio data directly to the speaker"""
-        if not self.closed and audio_data:
-            self._reply_audio_stream.write(audio_data)
 
     def generator(self):
         """Stream Audio from microphone to API and to local buffer"""
@@ -180,6 +236,9 @@ class ResumableMicrophoneStream:
 
 def main():
     """start bidirectional streaming from microphone input to Dialogflow API"""
+    # Create a single PyAudio instance to avoid resource conflicts
+    pyaudio_instance = pyaudio.PyAudio()
+    
     # Create conversation.
     conversation = conversation_management.create_conversation(
         project_id=PROJECT_ID, conversation_profile_id=CONVERSATION_PROFILE_ID
@@ -193,70 +252,87 @@ def main():
     )
     participant_id = end_user.name.split("participants/")[1].rstrip()
 
-    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE)
+    mic_manager = ResumableMicrophoneStream(SAMPLE_RATE, CHUNK_SIZE, pyaudio_instance)
+    # Create separate audio player for async playback and barge-in control
+    player = AudioPlayer(SAMPLE_RATE, CHUNK_SIZE, pyaudio_instance)
+    player.start()
     print(mic_manager.chunk_size)
     sys.stdout.write(YELLOW)
     sys.stdout.write('\nListening, say "Quit" or "Exit" to stop.\n\n')
     sys.stdout.write("End (ms)       Transcript Results/Status\n")
     sys.stdout.write("=====================================================\n")
 
-    with mic_manager as stream:
-        while not stream.closed:
-            terminate = False
-            while not terminate:
-                try:
-                    stream_start_time = datetime.now()
-                    print(f"{stream_start_time}: New Streaming Analyze Request: {stream.restart_counter}")
-                    stream.restart_counter += 1
-                    # Send request to streaming and get response.
-                    responses = participant_management.bidi_analyze_content_audio_stream(
-                        conversation_id=conversation_id,
-                        participant_id=participant_id,
-                        sample_rate_herz=SAMPLE_RATE,
-                        stream=stream,
-                        timeout=RESTART_TIMEOUT,
-                    )
-                    for response in responses:           
-                        if response.analyze_content_response:     
-                            if response.analyze_content_response.reply_text:
-                                print(f"[{datetime.now()}] Received analyze content reply text: {response.analyze_content_response.reply_text}")
-                            # For playbook agent, the audio reply is in the automated agent reply segments
-                            for response_message in response.analyze_content_response.automated_agent_reply.response_messages:
-                                for segment in response_message.mixed_audio.segments:
-                                    if segment.audio:
-                                        stream.play_audio(segment.audio)
-                            # For PS Bot, the audio is in reply audio
-                            if response.analyze_content_response.reply_audio.audio:
-                                stream.play_audio(response.analyze_content_response.reply_audio.audio)
-                        if response.recognition_result.is_final:
-                            print(f"[{datetime.now()}] Received final transcript result: {response}")
-                            # offset return from recognition_result is relative
-                            # to the beginning of audio stream.
-                            offset = response.recognition_result.speech_end_offset
-                            stream.is_final_offset = int(
-                                offset.seconds * 1000 + offset.microseconds / 1000
-                            )
-                            transcript = response.recognition_result.transcript
-                            # Half-close the stream with gRPC (in Python just stop yielding requests) when approaching API time limit.
-                            if (datetime.now() - stream_start_time).seconds > HALF_CLOSE_TIMEOUT:
-                                print(f"[{datetime.now()}] Prepare stream restart on first final result after {HALF_CLOSE_TIMEOUT} seconds")
-                                stream.is_final = True 
-                            # Exit recognition if any of the transcribed phrase could be
-                            # one of our keywords.
-                            if re.search(r"\b(exit|quit|stop)\b", transcript, re.I):
-                                sys.stdout.write(YELLOW)
-                                sys.stdout.write("Exiting...\n")
-                                terminate = True
-                                stream.closed = True
-                                break
-                except (DeadlineExceeded) as e:
-                    print(f"[{datetime.now()}] Deadline Exceeded, restarting.")
+    try:
+        with mic_manager as stream:
+            while not stream.closed:
+                terminate = False
+                while not terminate:
+                    try:
+                        stream_start_time = datetime.now()
+                        print(f"{stream_start_time}: New Streaming Analyze Request: {stream.restart_counter}")
+                        stream.restart_counter += 1
+                        # Send request to streaming and get response.
+                        responses = participant_management.bidi_analyze_content_audio_stream(
+                            conversation_id=conversation_id,
+                            participant_id=participant_id,
+                            sample_rate_herz=SAMPLE_RATE,
+                            stream=stream,
+                            timeout=RESTART_TIMEOUT,
+                        )
+                        for response in responses:          
+                            # Handle Barge-In
+                            if getattr(response, "recognition_result", None):
+                                rr = response.recognition_result
+                                # If there's a transcript or speech activity begin, stop playback
+                                if (getattr(rr, "transcript", None)
+                                    or getattr(rr, "message_type", None)
+                                    == dialogflow_v2beta1.StreamingRecognitionResult.MessageType.SPEECH_ACTIVITY_BEGIN):
+                                    player.stop_playback()
 
-            if terminate:
-                conversation_management.complete_conversation(
-                    project_id=PROJECT_ID, conversation_id=conversation_id
-                )
-                break
+                            if response.analyze_content_response:     
+                                if response.analyze_content_response.reply_text:
+                                    print(f"[{datetime.now()}] Received analyze content reply text: {response.analyze_content_response.reply_text}")
+                                # For playbook agent, the audio reply is in the automated agent reply segments
+                                for response_message in response.analyze_content_response.automated_agent_reply.response_messages:
+                                    for segment in response_message.mixed_audio.segments:
+                                        if segment.audio:
+                                            # enqueue to async player (or fallback)
+                                            player.add_audio(segment.audio)
+                                # For PS Bot, the audio is in reply audio
+                                if getattr(response.analyze_content_response, 'reply_audio', None) and response.analyze_content_response.reply_audio.audio:
+                                    player.add_audio(response.analyze_content_response.reply_audio.audio)
+                            if getattr(response, "recognition_result", None) and response.recognition_result.is_final:
+                                print(f"[{datetime.now()}] Received final transcript result: {response}")
+                                # offset return from recognition_result is relative
+                                # to the beginning of audio stream.
+                                offset = response.recognition_result.speech_end_offset
+                                stream.is_final_offset = int(
+                                    offset.seconds * 1000 + offset.microseconds / 1000
+                                )
+                                transcript = response.recognition_result.transcript
+                                # Half-close the stream with gRPC (in Python just stop yielding requests) when approaching API time limit.
+                                if (datetime.now() - stream_start_time).seconds > HALF_CLOSE_TIMEOUT:
+                                    print(f"[{datetime.now()}] Prepare stream restart on first final result after {HALF_CLOSE_TIMEOUT} seconds")
+                                    stream.is_final = True 
+                                # Exit recognition if any of the transcribed phrase could be
+                                # one of our keywords.
+                                if re.search(r"\b(exit|quit|stop)\b", transcript, re.I):
+                                    sys.stdout.write(YELLOW)
+                                    sys.stdout.write("Exiting...\n")
+                                    terminate = True
+                                    stream.closed = True
+                                    break
+                    except (DeadlineExceeded) as e:
+                        print(f"[{datetime.now()}] Deadline Exceeded, restarting.")
+
+                if terminate:
+                    conversation_management.complete_conversation(
+                        project_id=PROJECT_ID, conversation_id=conversation_id
+                    )
+                    break
+    finally:
+        player.close()
+        pyaudio_instance.terminate()
 
 
 if __name__ == "__main__":
