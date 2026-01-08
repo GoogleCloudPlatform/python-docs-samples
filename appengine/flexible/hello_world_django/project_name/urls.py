@@ -19,6 +19,6 @@ import helloworld.views
 
 
 urlpatterns = [
-    path("admin/", include(admin.site.urls)),
+    path("admin/", admin.site.urls),
     path("", helloworld.views.index),
 ]
