@@ -42,10 +42,9 @@ steps:
     args:
       - "-c"
       - |
-        ./retry.sh "gsutil mb \
-          -l ${_REGION} \
-          -p ${PROJECT_ID} \
-          gs://${_STORAGE_BUCKET}"
+        ./retry.sh "gcloud storage buckets create gs://${_STORAGE_BUCKET} \
+          --location ${_REGION} \
+          --project ${PROJECT_ID}"
 
   - id: "IAM and Secrets"
     name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -148,4 +147,3 @@ substitutions:
   _DB_PASS: password1234
   _ADMIN_PASSWORD: superpass
   _ADMIN_EMAIL: example@noop.com
-
