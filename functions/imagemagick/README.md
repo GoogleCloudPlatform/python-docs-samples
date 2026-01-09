@@ -21,13 +21,13 @@ Functions for your project.
 
 1. Create a Cloud Storage Bucket:
 
-        gsutil mb gs://YOUR_INPUT_BUCKET_NAME
+        gcloud storage buckets create gs://YOUR_INPUT_BUCKET_NAME
 
     This storage bucket is used to upload images for the function to check.
 
 1. Create a second Cloud Storage Bucket:
 
-         gsutil mb gs://YOUR_OUTPUT_BUCKET_NAME
+         gcloud storage buckets create gs://YOUR_OUTPUT_BUCKET_NAME
 
      This second storage bucket is used to store blurred images. (Un-blurred images will not be saved to this bucket.)
 
