@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2021 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -20,19 +20,26 @@ ROLES = ["HUMAN_AGENT", "AUTOMATED_AGENT", "END_USER"]
 
 
 # [START dialogflow_create_participant]
-def create_participant(project_id: str, conversation_id: str, role: str):
+def create_participant(project_id: str, conversation_id: str, role: str, location_id: str = "global"):
     from google.cloud import dialogflow_v2beta1 as dialogflow
+    from google.api_core.client_options import ClientOptions
 
     """Creates a participant in a given conversation.
 
     Args:
         project_id: The GCP project linked with the conversation profile.
         conversation_id: Id of the conversation.
-        participant: participant to be created."""
+        participant: participant to be created.
+        location_id: Id of the location."""
 
-    client = dialogflow.ParticipantsClient()
-    conversation_path = dialogflow.ConversationsClient.conversation_path(
-        project_id, conversation_id
+    client_options = ClientOptions(
+        api_endpoint=f"{location_id}-dialogflow.googleapis.com"
+    )
+    client = dialogflow.ParticipantsClient(client_options=client_options)
+    conversation_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}"
     )
     if role in ROLES:
         response = client.create_participant(
@@ -50,8 +57,9 @@ def create_participant(project_id: str, conversation_id: str, role: str):
 
 # [START dialogflow_analyze_content_text]
 def analyze_content_text(
-    project_id: str, conversation_id: str, participant_id: str, text: str
+    project_id: str, conversation_id: str, participant_id: str, text: str, location_id: str = "global"
 ):
+    from google.api_core.client_options import ClientOptions
     from google.cloud import dialogflow_v2beta1 as dialogflow
 
     """Analyze text message content from a participant.
@@ -60,11 +68,18 @@ def analyze_content_text(
         project_id: The GCP project linked with the conversation profile.
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
-        text: the text message that participant typed."""
+        text: the text message that participant typed.
+        location_id: Id of the location."""
 
-    client = dialogflow.ParticipantsClient()
-    participant_path = client.participant_path(
-        project_id, conversation_id, participant_id
+    client_options = ClientOptions(
+        api_endpoint=f"{location_id}-dialogflow.googleapis.com"
+    )
+    client = dialogflow.ParticipantsClient(client_options=client_options)
+    participant_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}/"
+        f"participants/{participant_id}"
     )
     text_input = {"text": text, "language_code": "en-US"}
     response = client.analyze_content(
@@ -117,9 +132,10 @@ def analyze_content_text(
 
 # [START dialogflow_analyze_content_audio]
 def analyze_content_audio(
-    conversation_id: str, participant_id: str, audio_file_path: str
+    conversation_id: str, participant_id: str, audio_file_path: str, location_id: str = "global"
 ):
     import google.auth
+    from google.api_core.client_options import ClientOptions
     from google.cloud import dialogflow_v2beta1 as dialogflow
 
     """Analyze audio content for END_USER with audio files.
@@ -128,6 +144,7 @@ def analyze_content_audio(
         conversation_id: Id of the conversation.
         participant_id: Id of the participant.
         audio_file_path: audio file in wav/mp3 format contains utterances of END_USER.
+        location_id: Id of the location.
     """
 
     # Initialize client that will be used to send requests across threads. This
@@ -136,10 +153,16 @@ def analyze_content_audio(
     # clean up any remaining background resources. Alternatively, use the client as
     # a context manager.
     credentials, project_id = google.auth.default()
-    client = dialogflow.ParticipantsClient(credentials=credentials)
+    client_options = ClientOptions(
+        api_endpoint=f"{location_id}-dialogflow.googleapis.com"
+    )
+    client = dialogflow.ParticipantsClient(credentials=credentials, client_options=client_options)
 
-    participant_path = client.participant_path(
-        project_id, conversation_id, participant_id
+    participant_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}/"
+        f"participants/{participant_id}"
     )
     # Note: hard coding audio_encoding and sample_rate_hertz for simplicity.
     audio_encoding = dialogflow.AudioEncoding.AUDIO_ENCODING_LINEAR_16
@@ -196,8 +219,10 @@ def analyze_content_audio_stream(
     timeout: int,
     language_code: str,
     single_utterance=False,
+    location_id: str = "global",
 ):
     import google.auth
+    from google.api_core.client_options import ClientOptions
     from google.cloud import dialogflow_v2beta1 as dialogflow
 
     """Stream audio streams to Dialogflow and receive transcripts and
@@ -212,12 +237,19 @@ def analyze_content_audio_stream(
         timeout: the timeout of one stream.
         language_code: the language code of the audio. Example: en-US
         single_utterance: whether to use single_utterance.
+        location_id: Id of the location.
     """
     credentials, project_id = google.auth.default()
-    client = dialogflow.ParticipantsClient(credentials=credentials)
+    client_options = ClientOptions(
+        api_endpoint=f"{location_id}-dialogflow.googleapis.com"
+    )
+    client = dialogflow.ParticipantsClient(credentials=credentials, client_options=client_options)
 
-    participant_name = client.participant_path(
-        project_id, conversation_id, participant_id
+    participant_name = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}/"
+        f"participants/{participant_id}"
     )
 
     audio_config = dialogflow.types.audio_config.InputAudioConfig(
@@ -253,8 +285,10 @@ def bidi_analyze_content_audio_stream(
     sample_rate_herz: int,
     stream,
     timeout: int,
+    location_id: str = "global",
 ):
     import google.auth
+    from google.api_core.client_options import ClientOptions
     from google.cloud import dialogflow_v2beta1 as dialogflow
 
     """Stream audio streams to Dialogflow and receive transcripts and
@@ -269,10 +303,16 @@ def bidi_analyze_content_audio_stream(
         timeout: the timeout of one stream.
     """
     credentials, project_id = google.auth.default()
-    client = dialogflow.ParticipantsClient(credentials=credentials)
+    client_options = ClientOptions(
+        api_endpoint=f"{location_id}-dialogflow.googleapis.com"
+    )
+    client = dialogflow.ParticipantsClient(credentials=credentials, client_options=client_options)
 
-    participant_name = client.participant_path(
-        project_id, conversation_id, participant_id
+    participant_name = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}/"
+        f"participants/{participant_id}"
     )
 
     def gen_requests(participant_name, stream):

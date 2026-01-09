@@ -1,4 +1,4 @@
-# Copyright 2023 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ export GOOGLE_APPLICATION_CREDENTIALS=<cred_json_file_location>
 Example usage:
     export GOOGLE_CLOUD_PROJECT='cloud-contact-center-ext-demo'
     export CONVERSATION_PROFILE='FnuBYO8eTBWM8ep1i-eOng'
+    export LOCATION_ID='global'
     export GOOGLE_APPLICATION_CREDENTIALS='/Users/ruogu/Desktop/keys/cloud-contact-center-ext-demo-78798f9f9254.json'
     python bidisac_talk_to_bot.py
 
@@ -51,6 +52,7 @@ load_dotenv()
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 CONVERSATION_PROFILE_ID = os.getenv("CONVERSATION_PROFILE")
+LOCATION_ID = os.getenv("LOCATION_ID", "global")
 
 # Audio recording parameters
 SAMPLE_RATE = 16000
@@ -241,14 +243,19 @@ def main():
     
     # Create conversation.
     conversation = conversation_management.create_conversation(
-        project_id=PROJECT_ID, conversation_profile_id=CONVERSATION_PROFILE_ID
+        project_id=PROJECT_ID,
+        conversation_profile_id=CONVERSATION_PROFILE_ID,
+        location_id=LOCATION_ID
     )
 
     conversation_id = conversation.name.split("conversations/")[1].rstrip()
 
     # Create end user participant.
     end_user = participant_management.create_participant(
-        project_id=PROJECT_ID, conversation_id=conversation_id, role="END_USER"
+        project_id=PROJECT_ID,
+        conversation_id=conversation_id,
+        role="END_USER",
+        location_id=LOCATION_ID
     )
     participant_id = end_user.name.split("participants/")[1].rstrip()
 
@@ -278,8 +285,9 @@ def main():
                             sample_rate_herz=SAMPLE_RATE,
                             stream=stream,
                             timeout=RESTART_TIMEOUT,
+                            location_id=LOCATION_ID,
                         )
-                        for response in responses:          
+                        for response in responses:
                             # Handle Barge-In
                             if getattr(response, "recognition_result", None):
                                 rr = response.recognition_result
@@ -327,7 +335,9 @@ def main():
 
                 if terminate:
                     conversation_management.complete_conversation(
-                        project_id=PROJECT_ID, conversation_id=conversation_id
+                        project_id=PROJECT_ID,
+                        conversation_id=conversation_id,
+                        location_id=LOCATION_ID,
                     )
                     break
     finally:

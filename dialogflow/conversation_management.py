@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2021 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,23 +16,26 @@
 """Dialogflow API Python sample showing how to manage Conversations.
 """
 
+from google.api_core.client_options import ClientOptions
 from google.cloud import dialogflow_v2beta1 as dialogflow
 
 
 # [START dialogflow_create_conversation]
-def create_conversation(project_id, conversation_profile_id):
+def create_conversation(project_id, conversation_profile_id, location_id="global"):
     """Creates a conversation with given values
 
     Args:
         project_id:  The GCP project linked with the conversation.
         conversation_profile_id: The conversation profile id used to create
-        conversation."""
-
-    client = dialogflow.ConversationsClient()
-    conversation_profile_client = dialogflow.ConversationProfilesClient()
-    project_path = client.common_project_path(project_id)
-    conversation_profile_path = conversation_profile_client.conversation_profile_path(
-        project_id, conversation_profile_id
+        conversation.
+        location_id: The location id of the conversation profile."""
+    client_options = ClientOptions(api_endpoint=f"{location_id}-dialogflow.googleapis.com")
+    client = dialogflow.ConversationsClient(client_options=client_options)
+    project_path = client.common_location_path(project_id, location_id)
+    conversation_profile_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversationProfiles/{conversation_profile_id}"
     )
     conversation = {"conversation_profile": conversation_profile_path}
     response = client.create_conversation(
@@ -49,15 +52,20 @@ def create_conversation(project_id, conversation_profile_id):
 
 
 # [START dialogflow_get_conversation]
-def get_conversation(project_id, conversation_id):
+def get_conversation(project_id, conversation_id, location_id ="global"):
     """Gets a specific conversation profile.
 
     Args:
         project_id: The GCP project linked with the conversation.
         conversation_id: Id of the conversation."""
 
-    client = dialogflow.ConversationsClient()
-    conversation_path = client.conversation_path(project_id, conversation_id)
+    client_options = ClientOptions(api_endpoint=f"{location_id}-dialogflow.googleapis.com")
+    client = dialogflow.ConversationsClient(client_options=client_options)
+    conversation_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}"
+    )
 
     response = client.get_conversation(name=conversation_path)
 
@@ -71,15 +79,20 @@ def get_conversation(project_id, conversation_id):
 
 
 # [START dialogflow_complete_conversation]
-def complete_conversation(project_id, conversation_id):
+def complete_conversation(project_id, conversation_id, location_id="global"):
     """Completes the specified conversation. Finished conversations are purged from the database after 30 days.
 
     Args:
         project_id: The GCP project linked with the conversation.
         conversation_id: Id of the conversation."""
 
-    client = dialogflow.ConversationsClient()
-    conversation_path = client.conversation_path(project_id, conversation_id)
+    client_options = ClientOptions(api_endpoint=f"{location_id}-dialogflow.googleapis.com")
+    client = dialogflow.ConversationsClient(client_options=client_options)
+    conversation_path = (
+        f"projects/{project_id}/"
+        f"locations/{location_id}/"
+        f"conversations/{conversation_id}"
+    )
     conversation = client.complete_conversation(name=conversation_path)
     print("Completed Conversation.")
     print("Life Cycle State: {}".format(conversation.lifecycle_state))
