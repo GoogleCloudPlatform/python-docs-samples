@@ -21,8 +21,8 @@ GCLOUD_PROJECT=$(gcloud config list project --format="value(core.project)" 2>/de
 echo "Configuring project $GCLOUD_PROJECT for system tests."
 
 echo "Creating cloud storage bucket."
-gsutil mb gs://$GCLOUD_PROJECT
-gsutil defacl set public-read gs://$GCLOUD_PROJECT
+gcloud storage buckets create gs://$GCLOUD_PROJECT
+gcloud storage buckets update gs://$GCLOUD_PROJECT --predefined-default-object-acl=public-read
 
 echo "Creating bigtable resources."
 gcloud alpha bigtable clusters create bigtable-test \
@@ -34,7 +34,7 @@ echo "Creating bigquery resources."
 bq mk test_dataset
 bq mk --schema bigquery/api/resources/schema.json test_dataset.test_import_table
 bq mk ephemeral_test_dataset
-gsutil cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
+gcloud storage cp bigquery/api/resources/data.csv gs://$GCLOUD_PROJECT/data.csv
 bq load \
     test_dataset.test_table \
     gs://$GCLOUD_PROJECT/data.csv \
@@ -47,7 +47,7 @@ echo "Creating pubsub resources."
 gcloud alpha pubsub topics create gae-mvm-pubsub-topic
 
 echo "Creating speech resources."
-gsutil cp speech/api-client/resources/audio.raw gs://$GCLOUD_PROJECT/speech/
+gcloud storage cp speech/api-client/resources/audio.raw gs://$GCLOUD_PROJECT/speech/
 
 echo "To finish setup, follow this link to enable APIs."
 echo "https://console.cloud.google.com/flows/enableapi?project=${GCLOUD_PROJECT}&apiid=bigtable.googleapis.com,bigtableadmin.googleapis.com,bigquery,bigquerydatatransfer.googleapis.com,cloudmonitoring,compute_component,datastore,datastore.googleapis.com,dataproc,dns,plus,pubsub,logging,storage_api,texttospeech.googleapis.com,vision.googleapis.com"
