@@ -22,8 +22,8 @@ steps:
         ./retry.sh "gcloud secrets describe ${_SECRET_SETTINGS_NAME}" \
           "gcloud secrets delete ${_SECRET_SETTINGS_NAME} --quiet --project $PROJECT_ID"
 
-        ./retry.sh "gsutil ls gs://${_STORAGE_BUCKET}" \
-          "gsutil -m rm -r gs://${_STORAGE_BUCKET}"
+        ./retry.sh "gcloud storage ls gs://${_STORAGE_BUCKET}" \
+          "gcloud storage rm --recursive gs://${_STORAGE_BUCKET}"
 
         ./retry.sh "gcloud artifacts docker images describe ${_IMAGE_NAME}" \
           "gcloud artifacts docker images delete ${_IMAGE_NAME} --quiet"
