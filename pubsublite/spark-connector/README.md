@@ -54,7 +54,7 @@ Get the connector's uber jar from this [public Cloud Storage location]. Alternat
    ```bash
    export BUCKET_ID=your-gcs-bucket-id
 
-   gsutil mb gs://$BUCKET_ID
+   gcloud storage buckets create gs://$BUCKET_ID
    ```
 
 ## Python setup
