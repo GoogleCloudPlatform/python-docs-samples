@@ -60,7 +60,7 @@ def test_name() -> str:
 @pytest.fixture(scope="session")
 def container_image(utils: Utils) -> str:
     # Copy Gemma onto the local environment
-    conftest.run_cmd("gsutil", "cp", "-r", GEMMA_GCS, ".")
+    conftest.run_cmd("gcloud", "storage", "cp", "--recursive", GEMMA_GCS, ".")
     yield from utils.cloud_build_submit(NAME)
 
 
