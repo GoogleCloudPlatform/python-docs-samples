@@ -4,6 +4,6 @@ google-auth==2.38.0
 gunicorn==23.0.0
 requests==2.32.4
 requests-toolbelt==1.0.0
-Werkzeug==3.1.4
+Werkzeug==3.1.5
 google-cloud-iam~=2.17.0
 PyJWT~=2.10.1
