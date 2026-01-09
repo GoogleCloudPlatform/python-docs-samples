@@ -85,7 +85,7 @@ def bucket_name(test_name: str, location: str, unique_id: str) -> Iterator[str]:
     # Try to remove all files before deleting the bucket.
     # Deleting a bucket with too many files results in an error.
     try:
-        run_cmd("gsutil", "-m", "rm", "-rf", f"gs://{bucket_name}/*")
+        run_cmd("gcloud", "storage", "rm", "--recursive", "--continue-on-error", f"gs://{bucket_name}/*")
     except RuntimeError:
         # If no files were found and it fails, ignore the error.
         pass

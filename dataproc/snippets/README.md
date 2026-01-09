@@ -64,7 +64,7 @@ To run list_clusters.py:
 
 To run submit_job_to_cluster.py, first create a GCS bucket (used by Cloud Dataproc to stage files) from the Cloud Console or with gsutil:
 
-    gsutil mb gs://<your-staging-bucket-name>
+    gcloud storage buckets create gs://<your-staging-bucket-name>
 
 Next, set the following environment variables:
 

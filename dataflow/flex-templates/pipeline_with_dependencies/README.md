@@ -73,7 +73,7 @@ rules. It is optional.
 export PROJECT="project-id"
 export BUCKET="your-bucket"
 export REGION="us-central1"
-gsutil mb -p $PROJECT gs://$BUCKET
+gcloud storage buckets create gs://$BUCKET --project=$PROJECT
 ```
 
 ## Create an Artifact Registry repository
@@ -165,7 +165,7 @@ gcloud dataflow flex-template run "flex-`date +%Y%m%d-%H%M%S`" \
 After the pipeline finishes, use the following command to inspect the output:
 
 ```bash
-gsutil cat gs://$BUCKET/output*
+gcloud storage cat gs://$BUCKET/output*
 ```
 
 ## Optional: Update the dependencies in the requirements file and rebuild the Docker images
