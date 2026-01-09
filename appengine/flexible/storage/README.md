@@ -15,11 +15,11 @@ Before you can run or deploy the sample, you will need to do the following:
 
 2. Create a Cloud Storage Bucket. You can do this with the [Google Cloud SDK](https://cloud.google.com/sdk) with the following command:
 
-        $ gsutil mb gs://[your-bucket-name]
+        $ gcloud storage buckets create gs://[your-bucket-name]
 
 3. Set the default ACL on your bucket to public read in order to serve files directly from Cloud Storage. You can do this with the [Google Cloud SDK](https://cloud.google.com/sdk) with the following command:
 
-        $ gsutil defacl set public-read gs://[your-bucket-name]
+        $ gcloud storage buckets update gs://[your-bucket-name] --predefined-default-object-acl=public-read
 
 4. Update the environment variables in ``app.yaml``.
 
