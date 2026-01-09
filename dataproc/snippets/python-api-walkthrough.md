@@ -65,7 +65,7 @@ an explanation of how the code works.
 
    * To create a new bucket, run the following command. Your bucket name must be unique.
 
-         gsutil mb -p {{project-id}} gs://your-bucket-name
+         gcloud storage buckets create --project={{project-id}} gs://your-bucket-name
     
 
 2. Set environment variables.
@@ -145,12 +145,12 @@ Cluster cluster-name successfully deleted.
    If you created a Cloud Storage bucket to use for this walkthrough,
    you can run the following command to delete the bucket (the bucket must be empty).
 
-         gsutil rb gs://$BUCKET
+         gcloud storage buckets delete gs://$BUCKET
 
    * You can run the following command to **delete the bucket and all
      objects within it. Note: the deleted objects cannot be recovered.**
 
-         gsutil rm -r gs://$BUCKET
+         gcloud storage rm --recursive gs://$BUCKET
   
 
 * **For more information.** See the [Dataproc documentation](https://cloud.google.com/dataproc/docs/)
