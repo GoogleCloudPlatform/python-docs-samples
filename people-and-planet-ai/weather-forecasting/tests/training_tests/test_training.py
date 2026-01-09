@@ -51,7 +51,7 @@ def data_path_gcs(bucket_name: str) -> str:
         inputs_batch = [inputs] * batch_size
         labels_batch = [labels] * batch_size
         np.savez_compressed(f, inputs=inputs_batch, labels=labels_batch)
-        conftest.run_cmd("gsutil", "cp", f.name, f"{path_gcs}/example.npz")
+        conftest.run_cmd("gcloud", "storage", "cp", f.name, f"{path_gcs}/example.npz")
     return path_gcs
 
 

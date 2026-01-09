@@ -37,7 +37,7 @@ def test_name() -> str:
 @pytest.fixture(scope="session")
 def model_path_gcs(bucket_name: str) -> str:
     path_gcs = f"gs://{bucket_name}/model"
-    conftest.run_cmd("gsutil", "cp", "serving/model/*", path_gcs)
+    conftest.run_cmd("gcloud", "storage", "cp", "serving/model/*", path_gcs)
     return path_gcs
 
 
