@@ -4,4 +4,4 @@ google-cloud-aiplatform==1.47.0
 gunicorn==23.0.0
 pandas==2.2.3
 tensorflow==2.12.1
-Werkzeug==3.0.3
+Werkzeug==3.1.4
