@@ -5,5 +5,5 @@ pandas==2.2.3; python_version > '3.8'
 pandas-gbq==0.24.0
 grpcio==1.70.0; python_version == '3.8'
 grpcio==1.74.0; python_version > '3.8'
-pyarrow==17.0.0; python_version <= '3.8'
-pyarrow==20.0.0; python_version > '3.9'
+pyarrow==22.0.0; python_version <= '3.8'
+pyarrow==22.0.0; python_version > '3.9'
