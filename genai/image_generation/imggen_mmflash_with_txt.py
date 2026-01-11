@@ -15,11 +15,12 @@
 
 def generate_content() -> str:
     # [START googlegenaisdk_imggen_mmflash_with_txt]
+    import os
+    from io import BytesIO
+
     from google import genai
     from google.genai.types import GenerateContentConfig, Modality
     from PIL import Image
-    from io import BytesIO
-    import os
 
     client = genai.Client()
 
@@ -35,8 +36,10 @@ def generate_content() -> str:
             print(part.text)
         elif part.inline_data:
             image = Image.open(BytesIO((part.inline_data.data)))
-            os.makedirs("output_folder", exist_ok=True)
-            image.save("output_folder/example-image-eiffel-tower.png")
+            # Ensure the output directory exists
+            output_dir = "output_folder"
+            os.makedirs(output_dir, exist_ok=True)
+            image.save(os.path.join(output_dir, "example-image-eiffel-tower.png"))
 
     # [END googlegenaisdk_imggen_mmflash_with_txt]
     return True
