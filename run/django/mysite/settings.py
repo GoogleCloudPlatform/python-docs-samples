@@ -174,12 +174,24 @@ STATIC_URL = "/static/"
 STORAGES = {
     "default": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "options": {
+            "bucket_name": GS_BUCKET_NAME,
+            "querystring_auth": False,
+            "default_acl": None,
+            "expiration": 300,
+        },
     },
     "staticfiles": {
         "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "options": {
+            "bucket_name": GS_BUCKET_NAME,
+            "querystring_auth": False,
+            "default_acl": None,
+            "expiration": 300,
+        },
     },
 }
-GS_DEFAULT_ACL = "publicRead"
+GS_DEFAULT_ACL = None
 # [END cloudrun_django_static_config]
 
 # Default primary key field type
