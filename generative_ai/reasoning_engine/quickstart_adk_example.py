@@ -64,6 +64,9 @@ async def quickstart_adk_example(staging_bucket: str) -> list:
         print(event)
         events.append(event)
     # [END agentengine_quickstart_adk_testremotely]
-    
+
+    # [START agentengine_quickstart_adk_cleanup]
     remote_agent.delete(force=True)
+    # [END agentengine_quickstart_adk_cleanup]
+
     return events
