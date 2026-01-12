@@ -17,4 +17,4 @@ env: flex
 entrypoint: gunicorn -b :$PORT project_name.wsgi
 
 runtime_config:
-  python_version: 3
+  operating_system: "ubuntu24"
