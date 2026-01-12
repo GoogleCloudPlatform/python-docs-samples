@@ -1,4 +1,4 @@
-# Copyright 2024 Google LLC
+# Copyright 2026 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import vertexai
 def create_agent_engine_with_memorybank_config(
     project_id: str,
     location: str,
-    model: str = "gemini-1.5-flash",
+    model: str = "gemini-3-flash",
 ) -> object:
     """Creates an Agent Engine instance with Memory Bank configuration."""
     vertexai.init(project=project_id, location=location)
