@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START agent_builder_create_agent_engine]
+# [START generativeaionvertexai_create_agent_engine]
 import vertexai
 
 def create_agent_engine(project_id: str, location: str):
@@ -34,4 +34,4 @@ def create_agent_engine(project_id: str, location: str):
     )
     print(f"Created Agent Engine: {agent_engine.api_resource.name}")
     return agent_engine
-# [END agent_builder_create_agent_engine]
+# [END generativeaionvertexai_create_agent_engine]

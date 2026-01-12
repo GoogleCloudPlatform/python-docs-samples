@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START agent_builder_delete_agent_engine]
+# [START generativeaionvertexai_delete_agent_engine]
 import vertexai
 
 def delete_agent_engine(project_id: str, location: str, agent_engine_id: str):
@@ -22,4 +22,4 @@ def delete_agent_engine(project_id: str, location: str, agent_engine_id: str):
     
     client.agent_engines.delete(name=agent_engine_id)
     print(f"Deleted Agent Engine: {agent_engine_id}")
-# [END agent_builder_delete_agent_engine]
+# [END generativeaionvertexai_delete_agent_engine]

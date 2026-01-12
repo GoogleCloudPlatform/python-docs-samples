@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# [START agent_builder_generate_memories]
+# [START generativeaionvertexai_generate_memories]
 import vertexai
 
 def generate_memories(project_id: str, location: str, agent_engine_name: str):
@@ -26,4 +26,4 @@ def generate_memories(project_id: str, location: str, agent_engine_name: str):
     )
     print("Memories generated successfully.")
     return response
-# [END agent_builder_generate_memories]
+# [END generativeaionvertexai_generate_memories]
