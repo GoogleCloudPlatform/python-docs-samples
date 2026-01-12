@@ -15,6 +15,7 @@
 # [START generativeaionvertexai_generate_memories]
 import vertexai
 
+
 def generate_memories(project_id: str, location: str, agent_engine_name: str) -> object:
     """Generates memories for a specific Agent Engine instance."""
     vertexai.init(project=project_id, location=location)

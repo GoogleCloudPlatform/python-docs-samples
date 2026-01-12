@@ -33,7 +33,7 @@ def agent_engine_id():
     print("Creating Agent Engine...")
     engine_name = None
     try:
-        engine = create_agent_engine.create_agent_engine(PROJECT_ID, LOCATION)
+        engine = create_agent_engine.create_agent_engine_with_memorybank_config(PROJECT_ID, LOCATION)
         engine_name = engine.api_resource.name
         yield engine_name
     except Exception as e:
@@ -62,7 +62,7 @@ def test_generate_memories(agent_engine_id):
 def test_delete_agent_engine():
     """Tests that an agent engine can be deleted."""
     # Create a fresh one just to test the delete function
-    engine = create_agent_engine.create_agent_engine(PROJECT_ID, LOCATION)
+    engine = create_agent_engine.create_agent_engine_with_memorybank_config(PROJECT_ID, LOCATION)
     assert engine, "Failed to create engine for deletion test"
     
     # Call your delete function and ensure it doesn't crash
@@ -72,6 +72,6 @@ def test_delete_agent_engine():
 
 # Simplified test that just checks imports and structural correctness without calling API
 def test_imports():
-    assert create_agent_engine.create_agent_engine
+    assert create_agent_engine.create_agent_engine_with_memorybank_config
     assert generate_memories.generate_memories
     assert delete_agent_engine.delete_agent_engine

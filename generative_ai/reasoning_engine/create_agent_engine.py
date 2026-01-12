@@ -15,18 +15,22 @@
 # [START generativeaionvertexai_create_agent_engine]
 import vertexai
 
-def create_agent_engine(project_id: str, location: str) -> object:
+
+def create_agent_engine_with_memorybank_config(
+    project_id: str,
+    location: str,
+    model: str = "gemini-1.5-flash",
+) -> object:
     """Creates an Agent Engine instance with Memory Bank configuration."""
     vertexai.init(project=project_id, location=location)
     client = vertexai.Client()
-    
-    # Create an engine with a specific model for memory generation
+
     agent_engine = client.agent_engines.create(
         config={
             "context_spec": {
                 "memory_bank_config": {
                     "generation_config": {
-                        "model": f"projects/{project_id}/locations/{location}/publishers/google/models/gemini-1.5-flash"
+                        "model": f"projects/{project_id}/locations/{location}/publishers/google/models/{model}"
                     }
                 }
             }
