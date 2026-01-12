@@ -11,7 +11,7 @@ def get_exchange_rate(
     currency_from: str = "USD",
     currency_to: str = "EUR",
     currency_date: str = "latest",
-):
+) -> dict:
     """Retrieves the exchange rate between two currencies on a specified date."""
     import requests
 
@@ -22,7 +22,7 @@ def get_exchange_rate(
     return response.json()
 # [END agentengine_quickstart_adk_tool]
 
-def quickstart_adk_example(staging_bucket: str) -> reasoning_engines.ReasoningEngine:
+async def quickstart_adk_example(staging_bucket: str) -> list:
 
     # [START agentengine_quickstart_adk_agent_init]
     from google.adk.agents import Agent
@@ -30,7 +30,7 @@ def quickstart_adk_example(staging_bucket: str) -> reasoning_engines.ReasoningEn
     
     agent = Agent(
         model="gemini-2.0-flash",
-        name='currency_exchange_agent',
+        name="currency_exchange_agent",
         tools=[get_exchange_rate],
     )
     
@@ -62,8 +62,8 @@ def quickstart_adk_example(staging_bucket: str) -> reasoning_engines.ReasoningEn
         message="What is the exchange rate from US dollars to SEK today?",
     ):
         print(event)
-    # [END agentengine_quickstart_adk_testremotely]
         events.append(event)
+    # [END agentengine_quickstart_adk_testremotely]
     
     remote_agent.delete(force=True)
     return events
