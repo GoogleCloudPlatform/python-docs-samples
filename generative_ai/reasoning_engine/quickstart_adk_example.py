@@ -55,8 +55,8 @@ async def quickstart_adk_example(staging_bucket: str) -> list:
     )
     # [END agentengine_quickstart_adk_deploy]
 
-    events = []
     # [START agentengine_quickstart_adk_testremotely]
+    events = []
     async for event in remote_agent.async_stream_query(
         user_id="USER_ID",
         message="What is the exchange rate from US dollars to SEK today?",
