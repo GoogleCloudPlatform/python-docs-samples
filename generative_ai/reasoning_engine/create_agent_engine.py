@@ -15,10 +15,10 @@
 # [START generativeaionvertexai_create_agent_engine]
 import vertexai
 
-def create_agent_engine(project_id: str, location: str):
+def create_agent_engine(project_id: str, location: str) -> object:
     """Creates an Agent Engine instance with Memory Bank configuration."""
     vertexai.init(project=project_id, location=location)
-    client = vertexai.Client(project=project_id, location=location)
+    client = vertexai.Client()
     
     # Create an engine with a specific model for memory generation
     agent_engine = client.agent_engines.create(

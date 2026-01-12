@@ -15,10 +15,10 @@
 # [START generativeaionvertexai_delete_agent_engine]
 import vertexai
 
-def delete_agent_engine(project_id: str, location: str, agent_engine_id: str):
+def delete_agent_engine(project_id: str, location: str, agent_engine_id: str) -> None:
     """Deletes an Agent Engine instance."""
     vertexai.init(project=project_id, location=location)
-    client = vertexai.Client(project=project_id, location=location)
+    client = vertexai.Client()
     
     client.agent_engines.delete(name=agent_engine_id)
     print(f"Deleted Agent Engine: {agent_engine_id}")
