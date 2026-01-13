@@ -12,20 +12,22 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import pytest
 import os
 
-from google.cloud import aiplatform
+from typing import Generator
+
+import pytest
 
 import create_agent_engine
-import generate_memories
 import delete_agent_engine
+import generate_memories
 
 PROJECT_ID = os.getenv("GOOGLE_CLOUD_PROJECT")
 LOCATION = "us-central1"
 
+
 @pytest.fixture(scope="module")
-def agent_engine_id():
+def agent_engine_id() -> Generator[str, None, None]:
     """Creates a test Agent Engine and yields its ID, ensuring cleanup."""
     if not PROJECT_ID:
         pytest.skip("GOOGLE_CLOUD_PROJECT not set")
@@ -47,31 +49,35 @@ def agent_engine_id():
             except Exception:
                 pass
 
-@pytest.mark.skipif(not PROJECT_ID, reason="GOOGLE_CLOUD_PROJECT not set")
-def test_create_agent_engine(agent_engine_id):
-    assert agent_engine_id
 
 @pytest.mark.skipif(not PROJECT_ID, reason="GOOGLE_CLOUD_PROJECT not set")
-def test_generate_memories(agent_engine_id):
+def test_create_agent_engine(agent_engine_id: str) -> None:
+    assert agent_engine_id
+
+
+@pytest.mark.skipif(not PROJECT_ID, reason="GOOGLE_CLOUD_PROJECT not set")
+def test_generate_memories(agent_engine_id: str) -> None:
     if not agent_engine_id:
         pytest.skip("Agent Engine not created")
     response = generate_memories.generate_memories(PROJECT_ID, LOCATION, agent_engine_id)
     assert response
 
+
 @pytest.mark.skipif(not PROJECT_ID, reason="GOOGLE_CLOUD_PROJECT not set")
-def test_delete_agent_engine():
+def test_delete_agent_engine() -> None:
     """Tests that an agent engine can be deleted."""
     # Create a fresh one just to test the delete function
     engine = create_agent_engine.create_agent_engine_with_memorybank_config(PROJECT_ID, LOCATION)
     assert engine, "Failed to create engine for deletion test"
-    
+
     # Call your delete function and ensure it doesn't crash
     delete_agent_engine.delete_agent_engine(
         PROJECT_ID, LOCATION, engine.api_resource.name
     )
 
+
 # Simplified test that just checks imports and structural correctness without calling API
-def test_imports():
+def test_imports() -> None:
     assert create_agent_engine.create_agent_engine_with_memorybank_config
     assert generate_memories.generate_memories
     assert delete_agent_engine.delete_agent_engine
