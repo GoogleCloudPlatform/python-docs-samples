@@ -25,14 +25,13 @@ def generate_videos_from_video(output_gcs_uri: str) -> str:
     # output_gcs_uri = "gs://your-bucket/your-prefix"
 
     operation = client.models.generate_videos(
-        model="veo-2.0-generate-001",
+        model="veo-3.1-generate-preview",
         prompt="a butterfly flies in and lands on the flower",
         video=Video(
             uri="gs://cloud-samples-data/generative-ai/video/flower.mp4",
             mime_type="video/mp4",
         ),
         config=GenerateVideosConfig(
-            aspect_ratio="16:9",
             output_gcs_uri=output_gcs_uri,
         ),
     )
