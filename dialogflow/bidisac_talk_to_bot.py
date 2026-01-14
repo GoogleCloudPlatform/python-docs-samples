@@ -234,6 +234,20 @@ class ResumableMicrophoneStream:
                     yield b"".join(data)
         finally:
             print(f"[{datetime.now()}] Stop audio generator")
+    
+    @staticmethod
+    def _remove_wav_header(audio_data):
+        """Strips the WAV header from audio data if present."""
+        if len(audio_data) > 44 and audio_data[:4] == b'RIFF':
+            try:
+                data_index = audio_data.find(b'data')
+                if data_index != -1:
+                    # data marker (4 bytes) + size (4 bytes) = 8 bytes to skip
+                    return audio_data[data_index + 8:]
+            except Exception:
+                pass
+        return audio_data
+
 
 
 def main():
@@ -308,7 +322,7 @@ def main():
                                             player.add_audio(segment.audio)
                                 # For PS Bot, the audio is in reply audio
                                 if getattr(response.analyze_content_response, 'reply_audio', None) and response.analyze_content_response.reply_audio.audio:
-                                    player.add_audio(response.analyze_content_response.reply_audio.audio)
+                                    player.add_audio(ResumableMicrophoneStream._remove_wav_header(response.analyze_content_response.reply_audio.audio))
                             if getattr(response, "recognition_result", None) and response.recognition_result.is_final:
                                 print(f"[{datetime.now()}] Received final transcript result: {response}")
                                 # offset return from recognition_result is relative
