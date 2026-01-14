@@ -31,4 +31,7 @@ env/
 .env*
 **/venv
 **/noxfile.py
-dialogflow/demos-ces-b86c5875a01c.json
+
+# Auth Local secrets file
+auth/custom-credentials/okta/custom-credentials-okta-secrets.json
+auth/custom-credentials/aws/custom-credentials-aws-secrets.json

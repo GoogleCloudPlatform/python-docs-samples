@@ -1,4 +1,4 @@
-# Copyright 2020 Google LLC
+# Copyright 2025 Google LLC
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# Format: //devtools/kokoro/config/proto/build.proto
-
-# Tell the trampoline which build file to use.
-env_vars: {
-    key: "TRAMPOLINE_BUILD_FILE"
-    value: ".kokoro/tests/run_tests_diff_head.sh"
+TEST_CONFIG_OVERRIDE = {
+    "ignored_versions": ["2.7", "3.6", "3.7", "3.8", "3.9", "3.10", "3.11", "3.12"],
 }

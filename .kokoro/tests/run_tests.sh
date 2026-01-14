@@ -58,7 +58,7 @@ if [[ $* == *--only-diff-head* ]]; then
     fi
 fi
 
-# Because Kokoro runs presubmit builds simalteneously, we often see
+# Because Kokoro runs presubmit builds simultaneously, we often see
 # quota related errors. I think we can avoid this by changing the
 # order of tests to execute (e.g. reverse order for py-3.8
 # build). Currently there's no easy way to do that with btlr, so we

@@ -266,7 +266,12 @@ def detect_logos(path):
 
     image = vision.Image(content=content)
 
-    response = client.logo_detection(image=image)
+    request = {
+        "image": image,
+        "features": [{"type_": vision.Feature.Type.LOGO_DETECTION}],
+    }
+
+    response = client.annotate_image(request=request)
     logos = response.logo_annotations
     print("Logos:")
 
@@ -293,7 +298,13 @@ def detect_logos_uri(uri):
     image = vision.Image()
     image.source.image_uri = uri
 
-    response = client.logo_detection(image=image)
+    request = {
+        "image": image,
+        "features": [{"type_": vision.Feature.Type.LOGO_DETECTION}],
+    }
+
+    response = client.annotate_image(request=request)
+
     logos = response.logo_annotations
     print("Logos:")
 

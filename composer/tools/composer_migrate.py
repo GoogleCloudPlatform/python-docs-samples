@@ -108,7 +108,7 @@ class ComposerClient:
         dag_id: str,
         environment_name: str,
     ) -> Any:
-        """Unpauses all DAGs in a Composer environment."""
+        """Unpauses a DAG in a Composer environment."""
         command = (
             f"CLOUDSDK_API_ENDPOINT_OVERRIDES_COMPOSER={self.sdk_endpoint} gcloud"
             " composer environments run"
@@ -363,7 +363,7 @@ def main(
         pprint.pformat(target_environment),
     )
     logger.warning(
-        "Composer 3 environnment workloads config may be different from the"
+        "Composer 3 environment workloads config may be different from the"
         " source environment."
     )
     logger.warning(
@@ -413,7 +413,7 @@ def main(
     client.load_snapshot(target_environment_name, snapshot_path)
     logger.info("Snapshot loaded.")
 
-    # 6. Unpase DAGs in the new environment
+    # 6. Unpause DAGs in the new environment
     logger.info("STEP 6: Unpausing DAGs in the new environment...")
     all_dags_present = False
     # Wait until all DAGs from source environment are visible.
