@@ -71,9 +71,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "secret_id", help="id of the secret to list tag bindings for"
-    )
+    parser.add_argument("secret_id", help="id of the secret to list tag bindings for")
     args = parser.parse_args()
 
     list_tag_bindings(args.project_id, args.secret_id)

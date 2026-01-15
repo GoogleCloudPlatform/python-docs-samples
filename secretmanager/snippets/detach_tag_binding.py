@@ -73,9 +73,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument("project_id", help="id of the GCP project")
-    parser.add_argument(
-        "secret_id", help="id of the secret to detach tag from"
-    )
+    parser.add_argument("secret_id", help="id of the secret to detach tag from")
     parser.add_argument(
         "tag_value",
         help="tag value to detach (e.g., 'tagValues/123456789012')",
