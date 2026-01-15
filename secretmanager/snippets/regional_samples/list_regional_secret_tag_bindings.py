@@ -15,8 +15,8 @@
 # limitations under the License.
 
 # [START secretmanager_list_regional_secret_tag_bindings]
-from google.cloud import resourcemanager_v3
 from google.api_core import client_options
+from google.cloud import resourcemanager_v3
 
 
 def list_regional_secret_tag_bindings(

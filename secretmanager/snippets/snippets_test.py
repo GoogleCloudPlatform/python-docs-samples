@@ -42,6 +42,7 @@ from delete_secret_label import delete_secret_label
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
+from detach_tag_binding import detach_tag
 from disable_secret_version import disable_secret_version
 from disable_secret_version_with_etag import disable_secret_version_with_etag
 from disable_secret_with_delayed_destroy import disable_secret_with_delayed_destroy
@@ -56,6 +57,7 @@ from list_secret_versions import list_secret_versions
 from list_secret_versions_with_filter import list_secret_versions_with_filter
 from list_secrets import list_secrets
 from list_secrets_with_filter import list_secrets_with_filter
+from list_tag_bindings import list_tag_bindings
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_with_alias import update_secret_with_alias
@@ -63,8 +65,7 @@ from update_secret_with_delayed_destroy import update_secret_with_delayed_destro
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
-from list_tag_bindings import list_tag_bindings
-from detach_tag_binding import detach_tag
+
 
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
@@ -747,6 +748,7 @@ def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[s
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
     assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)
 
+
 def test_list_tag_bindings(
     capsys: pytest.LogCaptureFixture,
     project_id: str,
@@ -754,18 +756,23 @@ def test_list_tag_bindings(
     secret_id: str,
 ) -> None:
     # Get the tag value from the fixture
+
     _, tag_value = tag_key_and_tag_value
-    
+
     # Create the secret and bind tag (using existing fixtures)
+
     bind_tags_to_secret(project_id, secret_id, tag_value)
-    
+
     # Call the function being tested
+
     list_tag_bindings(project_id, secret_id)
-    
+
     # Verify the tag value is in the returned bindings
+
     out, _ = capsys.readouterr()
     assert secret_id in out
     assert tag_value in out
+
 
 def test_detach_tag(
     project_id: str,
@@ -774,24 +781,29 @@ def test_detach_tag(
 ) -> None:
     """Test detaching a tag from a secret."""
     # Get the tag value from the fixture
+
     _, tag_value = tag_key_and_tag_value
-    
+
     # First bind the tag to the secret
+
     bind_tags_to_secret(project_id, secret_id, tag_value)
     secret_name = f"projects/{project_id}/secrets/{secret_id}"
-    
+
     # Now detach the tag
+
     detach_tag(project_id, secret_id, tag_value)
-    
+
     client = resourcemanager_v3.TagBindingsClient()
     parent = f"//secretmanager.googleapis.com/{secret_name}"
     request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
-    
+
     # Check that none of the bindings contain our tag value
+
     tag_found = False
     for binding in client.list_tag_bindings(request=request):
         if binding.tag_value == tag_value:
             tag_found = True
             break
-    
-    assert not tag_found, f"Tag value {tag_value} should have been detached but was found"
+    assert (
+        not tag_found
+    ), f"Tag value {tag_value} should have been detached but was found"

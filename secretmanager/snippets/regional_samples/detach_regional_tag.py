@@ -15,8 +15,8 @@
 # limitations under the License.
 
 # [START secretmanager_detach_regional_tag_binding]
-from google.cloud import resourcemanager_v3
 from google.api_core import client_options
+from google.cloud import resourcemanager_v3
 
 
 def detach_regional_tag(
