@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 
 # [START secretmanager_detach_tag_binding]
 from google.cloud import resourcemanager_v3
@@ -67,6 +66,7 @@ def detach_tag(project_id: str, secret_id: str, tag_value: str) -> None:
 
 
 if __name__ == "__main__":
+    import argparse
 
     parser = argparse.ArgumentParser(
         description=__doc__,
