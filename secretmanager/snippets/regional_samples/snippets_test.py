@@ -11,7 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 
-from datetime import timedelta
+from datetime import datetime, timedelta
 import os
 import time
 from typing import Iterator, Tuple, Union
@@ -29,10 +29,12 @@ from regional_samples import bind_tags_to_regional_secret
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_annotations
 from regional_samples import create_regional_secret_with_delayed_destroy
+from regional_samples import create_regional_secret_with_expire_time
 from regional_samples import create_regional_secret_with_labels
 from regional_samples import create_regional_secret_with_tags
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_annotation
+from regional_samples import delete_regional_secret_expiration
 from regional_samples import delete_regional_secret_label
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
@@ -56,6 +58,7 @@ from regional_samples import list_regional_secrets
 from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
+from regional_samples import update_regional_secret_expiration
 from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
@@ -923,3 +926,89 @@ def test_detach_regional_tag(
 
     out, _ = capsys.readouterr()
     assert tag_value not in out
+
+
+def test_create_regional_secret_with_expire_time(
+    project_id: str, secret_id: str, location_id: str
+) -> None:
+    # Set expire time to 1 hour from now
+
+    expire_time = datetime.now() + timedelta(hours=1)
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(
+        project_id, secret_id, location_id
+    )
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+    # Verify the secret has an expiration time
+
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+
+    # Convert expected datetime to seconds
+
+    expire_time = int(expire_time.timestamp())
+
+    time_diff = abs(retrieved_expire_time - expire_time)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+
+
+def test_update_regional_secret_expiration(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, location_id: str
+) -> None:
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(
+        project_id, secret_id, location_id
+    )
+
+    # Update expire time to 2 hours
+
+    new_expire = datetime.now() + timedelta(hours=2)
+    update_regional_secret_expiration.update_regional_secret_expiration(
+        project_id, secret_id, location_id
+    )
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Updated secret" in out
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+
+    new_expire = int(new_expire.timestamp())
+    time_diff = abs(retrieved_expire_time - new_expire)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+
+
+def test_delete_regional_secret_expiration(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, location_id: str
+) -> None:
+
+    create_regional_secret_with_expire_time.create_regional_secret_with_expire_time(
+        project_id, secret_id, location_id
+    )
+
+    delete_regional_secret_expiration.delete_regional_secret_expiration(
+        project_id, secret_id, location_id
+    )
+    out, _ = capsys.readouterr()
+    assert "Removed expiration" in out
+
+    # Verify expire time is removed with GetSecret
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+    assert (
+        retrieved_secret.expire_time is None
+    ), f"ExpireTime is {retrieved_secret.expire_time}, expected None"

@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import timedelta
+from datetime import datetime, timedelta
 import os
 import time
 from typing import Iterator, Optional, Tuple, Union
@@ -32,12 +32,14 @@ from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
+from create_secret_with_expiration import create_secret_with_expiration
 from create_secret_with_labels import create_secret_with_labels
 from create_secret_with_tags import create_secret_with_tags
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
 from delete_secret_annotation import delete_secret_annotation
+from delete_secret_expiration import delete_secret_expiration
 from delete_secret_label import delete_secret_label
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
@@ -60,6 +62,7 @@ from list_secrets_with_filter import list_secrets_with_filter
 from list_tag_bindings import list_tag_bindings
 from quickstart import quickstart
 from update_secret import update_secret
+from update_secret_expiration import update_secret_expiration
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_delayed_destroy import update_secret_with_delayed_destroy
 from update_secret_with_etag import update_secret_with_etag
@@ -802,3 +805,75 @@ def test_detach_tag(
 
     out, _ = capsys.readouterr()
     assert tag_value not in out
+
+
+def test_create_secret_with_expiration(project_id: str, secret_id: str) -> None:
+    """Test creating a secret with an expiration time."""
+
+    # Set expire time to 1 hour from now
+
+    expire_time = datetime.now() + timedelta(hours=1)
+    create_secret_with_expiration(project_id, secret_id)
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    # Verify the secret has an expiration time
+
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+
+    # Convert expected datetime to seconds
+
+    expire_time = int(expire_time.timestamp())
+
+    time_diff = abs(retrieved_expire_time - expire_time)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+
+
+def test_update_secret_expiration(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+) -> None:
+    create_secret_with_expiration(project_id, secret_id)
+
+    # Update expire time to 2 hours
+
+    new_expire = datetime.now() + timedelta(hours=2)  # 2 hours from now in seconds
+    update_secret_expiration(project_id, secret_id)
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Updated secret" in out
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.expire_time is not None
+    ), "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+
+    new_expire = int(new_expire.timestamp())
+    time_diff = abs(retrieved_expire_time - new_expire)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+
+
+def test_delete_expiration(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str
+) -> None:
+
+    create_secret_with_expiration(project_id, secret_id)
+
+    delete_secret_expiration(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert "Removed expiration" in out
+
+    # Verify expire time is removed with GetSecret
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.expire_time is None
+    ), f"ExpireTime is {retrieved_secret.expire_time}, expected None"
