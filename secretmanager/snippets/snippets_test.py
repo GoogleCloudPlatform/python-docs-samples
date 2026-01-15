@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import timedelta
+from datetime import timedelta, datetime
 import os
 import time
 from typing import Iterator, Optional, Tuple, Union
@@ -63,7 +63,16 @@ from update_secret_with_delayed_destroy import update_secret_with_delayed_destro
 from update_secret_with_etag import update_secret_with_etag
 from view_secret_annotations import view_secret_annotations
 from view_secret_labels import view_secret_labels
-
+from list_tag_bindings import list_tag_bindings
+from detach_tag_binding import detach_tag
+from create_secret_with_expiration import create_secret_with_expiration
+from update_secret_expiration import update_secret_expiration
+from delete_secret_expiration import delete_secret_expiration
+from create_secret_with_rotation import create_secret_with_rotation
+from update_secret_rotation import update_secret_rotation
+from delete_secret_rotation import delete_secret_rotation
+from create_secret_with_topic import create_secret_with_topic
+from create_secret_with_cmek import create_secret_with_cmek
 
 @pytest.fixture()
 def client() -> secretmanager.SecretManagerServiceClient:
@@ -84,6 +93,17 @@ def tag_values_client() -> resourcemanager_v3.TagValuesClient:
 def project_id() -> str:
     return os.environ["GOOGLE_CLOUD_PROJECT"]
 
+@pytest.fixture()
+def topic_name() -> str:
+    return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+@pytest.fixture()
+def rotation_period_hours() -> int:
+    return 24
+
+@pytest.fixture()
+def kms_key_name() -> str:
+    return os.environ["GOOGLE_CLOUD_KMS_KEY_NAME"]
 
 @pytest.fixture()
 def iam_user() -> str:
@@ -419,6 +439,54 @@ def test_bind_tags_to_secret(
     assert secret_id in tag_resp.parent
     assert tag_value in tag_resp.tag_value
 
+def test_list_tag_bindings(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    # Get the tag value from the fixture
+    _, tag_value = tag_key_and_tag_value
+    
+    # Create the secret and bind tag (using existing fixtures)
+    bind_tags_to_secret(project_id, secret_id, tag_value)
+    
+    # Call the function being tested
+    list_tag_bindings(project_id, secret_id)
+    
+    # Verify the tag value is in the returned bindings
+    out, _ = capsys.readouterr()
+    assert secret_id in out
+    assert tag_value in out
+
+def test_detach_tag(
+    project_id: str,
+    tag_key_and_tag_value: Tuple[str, str],
+    secret_id: str,
+) -> None:
+    """Test detaching a tag from a secret."""
+    # Get the tag value from the fixture
+    _, tag_value = tag_key_and_tag_value
+    
+    # First bind the tag to the secret
+    bind_tags_to_secret(project_id, secret_id, tag_value)
+    secret_name = f"projects/{project_id}/secrets/{secret_id}"
+    
+    # Now detach the tag
+    detach_tag(project_id, secret_id, tag_value)
+    
+    client = resourcemanager_v3.TagBindingsClient()
+    parent = f"//secretmanager.googleapis.com/{secret_name}"
+    request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
+    
+    # Check that none of the bindings contain our tag value
+    tag_found = False
+    for binding in client.list_tag_bindings(request=request):
+        if binding.tag_value == tag_value:
+            tag_found = True
+            break
+    
+    assert not tag_found, f"Tag value {tag_value} should have been detached but was found"
 
 def test_create_secret_without_ttl(
     project_id: str,
@@ -745,3 +813,153 @@ def test_update_secret_with_delayed_destroy(secret_with_delayed_destroy: Tuple[s
     updated_version_destroy_ttl_value = 118400
     updated_secret = update_secret_with_delayed_destroy(project_id, secret_id, updated_version_destroy_ttl_value)
     assert updated_secret.version_destroy_ttl == timedelta(seconds=updated_version_destroy_ttl_value)
+
+def test_create_secret_with_expiration(project_id: str, secret_id: str) -> None:
+    """Test creating a secret with an expiration time."""
+    
+    # Set expire time to 1 hour from now
+    expire_time = datetime.now() + timedelta(hours=1)
+    create_secret_with_expiration(project_id, secret_id)
+    
+    retrieved_secret = get_secret(project_id, secret_id)
+    # Verify the secret has an expiration time
+    assert retrieved_secret.expire_time is not None, "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+        
+    # Convert expected datetime to seconds
+    expire_time = int(expire_time.timestamp())
+    
+    time_diff = abs(retrieved_expire_time - expire_time)
+    assert time_diff <= 1, (
+        f"ExpireTime difference too large: {time_diff} seconds. "
+    )
+
+def test_update_secret_expiration(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+) -> None:
+    create_secret_with_expiration(project_id, secret_id)
+    
+    # Update expire time to 2 hours
+    new_expire = datetime.now() + timedelta(hours=2)  # 2 hours from now in seconds
+    update_secret_expiration(project_id, secret_id)
+    
+    # Verify output contains expected message
+    out, _ = capsys.readouterr()
+    assert "Updated secret" in out
+    
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert retrieved_secret.expire_time is not None, "ExpireTime is None, expected non-None"
+    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
+    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+        
+    new_expire = int(new_expire.timestamp())    
+    time_diff = abs(retrieved_expire_time - new_expire)
+    assert time_diff <= 1, (
+        f"ExpireTime difference too large: {time_diff} seconds. "
+    )
+    
+def test_delete_expiration(capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str) -> None:
+    
+    create_secret_with_expiration(project_id, secret_id)
+
+    delete_secret_expiration(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert "Removed expiration" in out
+    
+    # Verify expire time is removed with GetSecret
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert retrieved_secret.expire_time is None, f"ExpireTime is {retrieved_secret.expire_time}, expected None"
+
+def test_create_secret_with_rotation(capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str, rotation_period_hours: int) -> None:
+    """Test creating a secret with rotation configuration."""
+        
+    # Create the secret with rotation
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+    
+    # Verify output contains expected message
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out, f"Expected 'Created secret' in output, got: {out}"
+    
+    retrieved_secret = get_secret(project_id, secret_id)
+    
+    # Verify rotation is configured
+    assert retrieved_secret.rotation is not None, "Rotation is None, expected non-None"
+    
+    # Verify rotation period is set correctly (24 hours = 86400 seconds)
+    expected_seconds = rotation_period_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert actual_seconds == expected_seconds, f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+    
+    # Verify next rotation time is set
+    assert retrieved_secret.rotation.next_rotation_time is not None, "NextRotationTime is None, expected non-None"
+
+
+def test_update_secret_rotation_period(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    topic_name: str
+) -> None:
+    
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+    capsys.readouterr()
+    
+    updated_rotation_hours = 48
+    update_secret_rotation(project_id, secret_id)
+    
+    # Verify output contains the secret ID
+    out, _ = capsys.readouterr()
+    assert secret_id in out, f"Expected '{secret_id}' in output, got: {out}"
+    
+    retrieved_secret = get_secret(project_id, secret_id)    
+    assert retrieved_secret.rotation is not None, "GetSecret: Rotation is nil, expected non-nil"
+    expected_seconds = updated_rotation_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert actual_seconds == expected_seconds, f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+def test_delete_secret_rotation(capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str) -> None:
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+    
+    # Delete the rotation
+    delete_secret_rotation(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert f"Removed rotation from secret" in out
+    assert secret_id in out
+    
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert not retrieved_secret.rotation, f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
+
+def test_create_secret_with_topic(capsys, project_id: str, secret_id: str, topic_name: str):
+    
+    # Call the function being tested
+    create_secret_with_topic(project_id, secret_id, topic_name)
+
+    # Check the output contains expected text
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+        
+    retrived_secret = get_secret(project_id, secret_id)
+        
+    assert len(retrived_secret.topics) == 1, f"Expected 1 topic, got {len(retrived_secret.topics)}"
+    assert retrived_secret.topics[0].name == topic_name, f"Topic mismatch: got {retrived_secret.topics[0].name}, want {topic_name}"
+
+def test_create_secret_with_cmek(capsys, project_id: str, secret_id: str, kms_key_name: str):
+    
+    create_secret_with_cmek(project_id, secret_id, kms_key_name)
+    
+    # Check the output contains expected text
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+    assert secret_id in out
+    assert kms_key_name in out
+    
+    # Verify CMEK key with GetSecret
+    retrieved_secret = get_secret(project_id, secret_id)
+    
+    # Check that the CMEK key name matches what we specified
+    actual_key_name = retrieved_secret.replication.automatic.customer_managed_encryption.kms_key_name
+    assert actual_key_name == kms_key_name, f"CMEK key name mismatch: got {actual_key_name}, want {kms_key_name}"
