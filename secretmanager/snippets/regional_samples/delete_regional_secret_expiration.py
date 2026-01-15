@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 
 # [START secretmanager_delete_regional_secret_expiration]
 from google.api_core import client_options
@@ -75,6 +74,7 @@ def delete_regional_secret_expiration(
 
 
 if __name__ == "__main__":
+    import argparse
 
     parser = argparse.ArgumentParser(
         description=__doc__,
