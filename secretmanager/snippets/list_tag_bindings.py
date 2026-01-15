@@ -47,7 +47,6 @@ def list_tag_bindings(project_id: str, secret_id: str) -> None:
     parent = f"//secretmanager.googleapis.com/{secret_name}"
 
     # List all tag bindings.
-    tag_bindings = []
     request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
 
     # Retrieve and process tag bindings
@@ -57,7 +56,6 @@ def list_tag_bindings(project_id: str, secret_id: str) -> None:
     print(f"Tag bindings for {secret_name}:")
     for binding in bindings:
         print(f"- Tag Value: {binding.tag_value}")
-        tag_bindings.append(binding)
         count += 1
 
     if count == 0:

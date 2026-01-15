@@ -27,15 +27,14 @@ def list_regional_secret_tag_bindings(
 
     Args:
         project_id (str): ID of the Google Cloud project
-        location_id (str): Region where the secret should be stored (e.g., "us-central1")
-        secret_id (str): ID of the secret to create
+        location_id (str): Region where the secret is stored (e.g., "us-central1")
+        secret_id (str): The ID of the secret to list tag bindings for.
 
     Example:
-        # Create a regional secret with a customer-managed encryption key
         list_regional_secret_tag_bindings(
             "my-project",
-            "my-regional-secret-with-cmek",
             "us-central1",
+            "my-regional-secret-with-cmek",
         )
     """
     # Set up the endpoint for the regional resource manager

@@ -775,6 +775,7 @@ def test_list_tag_bindings(
 
 
 def test_detach_tag(
+    capsys: pytest.LogCaptureFixture,
     project_id: str,
     tag_key_and_tag_value: Tuple[str, str],
     secret_id: str,
@@ -787,23 +788,17 @@ def test_detach_tag(
     # First bind the tag to the secret
 
     bind_tags_to_secret(project_id, secret_id, tag_value)
-    secret_name = f"projects/{project_id}/secrets/{secret_id}"
 
     # Now detach the tag
 
     detach_tag(project_id, secret_id, tag_value)
 
-    client = resourcemanager_v3.TagBindingsClient()
-    parent = f"//secretmanager.googleapis.com/{secret_name}"
-    request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
+    out, _ = capsys.readouterr()
+    assert "Detached tag value" in out
 
-    # Check that none of the bindings contain our tag value
+    list_tag_bindings(project_id, secret_id)
 
-    tag_found = False
-    for binding in client.list_tag_bindings(request=request):
-        if binding.tag_value == tag_value:
-            tag_found = True
-            break
-    assert (
-        not tag_found
-    ), f"Tag value {tag_value} should have been detached but was found"
+    # Verify the tag value is no longer in the returned bindings
+
+    out, _ = capsys.readouterr()
+    assert tag_value not in out
