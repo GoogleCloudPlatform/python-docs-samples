@@ -16,7 +16,6 @@
 command line application and sample code for listing tag bindings attached to a secret.
 """
 
-import argparse
 
 # [START secretmanager_list_tag_bindings]
 # Import the Resource Manager client library.
@@ -66,6 +65,8 @@ def list_tag_bindings(project_id: str, secret_id: str) -> None:
 
 
 if __name__ == "__main__":
+    import argparse
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,
