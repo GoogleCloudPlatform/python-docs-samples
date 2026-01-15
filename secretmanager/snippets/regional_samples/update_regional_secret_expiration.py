@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_update_regional_secret_expiration]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.api_core import client_options
 from google.cloud import secretmanager
@@ -47,7 +47,7 @@ def update_regional_secret_expiration(
     )
 
     # Set new expiration time to 2 hours from now
-    new_expire = datetime.now() + timedelta(hours=2)
+    new_expire = datetime.now(timezone.utc) + timedelta(hours=2)
 
     # Set up the endpoint for the specific region
     endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

@@ -14,10 +14,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 
 # [START secretmanager_update_secret_expiration]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.cloud import secretmanager
 from google.protobuf import timestamp_pb2
@@ -32,13 +31,13 @@ def update_secret_expiration(project_id: str, secret_id: str) -> None:
         secret_id: ID of the secret to update.
 
     Example:
-        # Update the expiration time of a secret to 48 hours from now
+        # Update the expiration time of a secret to 2 hours from now
         update_secret_expiration(
             "my-project",
             "my-secret-with-expiration"
         )
     """
-    new_expire_time = datetime.now() + timedelta(hours=2)
+    new_expire_time = datetime.now(timezone.utc) + timedelta(hours=2)
 
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
@@ -63,6 +62,8 @@ def update_secret_expiration(project_id: str, secret_id: str) -> None:
 
 
 if __name__ == "__main__":
+    import argparse
+
     parser = argparse.ArgumentParser(
         description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter,

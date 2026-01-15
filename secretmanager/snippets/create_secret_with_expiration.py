@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_secret_with_expiration]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.cloud import secretmanager
 from google.protobuf import timestamp_pb2
@@ -30,10 +30,10 @@ def create_secret_with_expiration(project_id: str, secret_id: str) -> None:
         secret_id (str): The ID for the secret to create.
 
     Example:
-        # Create a secret that expires in 24 hours
+        # Create a secret that expires in 1 hour
         create_secret_with_expiration("my-project", "my-secret-with-expiry")
     """
-    expire_time = datetime.now() + timedelta(hours=1)
+    expire_time = datetime.now(timezone.utc) + timedelta(hours=1)
     # Create the Secret Manager client.
     client = secretmanager.SecretManagerServiceClient()
 

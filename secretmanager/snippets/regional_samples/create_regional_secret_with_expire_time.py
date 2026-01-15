@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_regional_secret_with_expire_time]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.api_core import client_options
 from google.cloud import secretmanager
@@ -38,7 +38,7 @@ def create_regional_secret_with_expire_time(
         create_regional_secret_with_expire_time("my-project", "my-secret-with-expiry", "us-central1")
     """
     # Set expiration time to 1 hour from now
-    expire_time = datetime.now() + timedelta(hours=1)
+    expire_time = datetime.now(timezone.utc) + timedelta(hours=1)
 
     # Set up the endpoint for the specific region
     endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

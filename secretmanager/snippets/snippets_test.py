@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 
 import base64
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import os
 import time
 from typing import Iterator, Optional, Tuple, Union
@@ -812,7 +812,7 @@ def test_create_secret_with_expiration(project_id: str, secret_id: str) -> None:
 
     # Set expire time to 1 hour from now
 
-    expire_time = datetime.now() + timedelta(hours=1)
+    expire_time = datetime.now(timezone.utc) + timedelta(hours=1)
     create_secret_with_expiration(project_id, secret_id)
 
     retrieved_secret = get_secret(project_id, secret_id)
@@ -821,15 +821,14 @@ def test_create_secret_with_expiration(project_id: str, secret_id: str) -> None:
     assert (
         retrieved_secret.expire_time is not None
     ), "ExpireTime is None, expected non-None"
-    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
-    retrieved_expire_time = int(retrieved_expire_time.timestamp())
 
-    # Convert expected datetime to seconds
+    retrieved_expire_time = retrieved_secret.expire_time.astimezone(timezone.utc)
 
-    expire_time = int(expire_time.timestamp())
+    retrieved_timestamp = int(retrieved_expire_time.timestamp())
+    expected_timestamp = int(expire_time.timestamp())
 
-    time_diff = abs(retrieved_expire_time - expire_time)
-    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
+    time_diff = abs(retrieved_timestamp - expected_timestamp)
+    assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds."
 
 
 def test_update_secret_expiration(
@@ -841,7 +840,7 @@ def test_update_secret_expiration(
 
     # Update expire time to 2 hours
 
-    new_expire = datetime.now() + timedelta(hours=2)  # 2 hours from now in seconds
+    new_expire = datetime.now(timezone.utc) + timedelta(hours=2)  # 2 hours from now in seconds
     update_secret_expiration(project_id, secret_id)
 
     # Verify output contains expected message
@@ -853,11 +852,11 @@ def test_update_secret_expiration(
     assert (
         retrieved_secret.expire_time is not None
     ), "ExpireTime is None, expected non-None"
-    retrieved_expire_time = retrieved_secret.expire_time.replace(tzinfo=None)
-    retrieved_expire_time = int(retrieved_expire_time.timestamp())
+    retrieved_expire_time = retrieved_secret.expire_time.astimezone(timezone.utc)
+    retrieved_timestamp = int(retrieved_expire_time.timestamp())
 
     new_expire = int(new_expire.timestamp())
-    time_diff = abs(retrieved_expire_time - new_expire)
+    time_diff = abs(retrieved_timestamp - new_expire)
     assert time_diff <= 1, f"ExpireTime difference too large: {time_diff} seconds. "
 
 
