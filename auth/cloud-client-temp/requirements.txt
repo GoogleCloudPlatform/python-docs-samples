@@ -1,4 +1,4 @@
-google-cloud-compute==1.41.0
+google-cloud-compute==1.42.0
 google-cloud-storage==3.8.0
 google-auth==2.47.0
 pytest===8.4.2; python_version == '3.9'
