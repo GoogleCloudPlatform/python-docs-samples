@@ -31,6 +31,7 @@ from bind_tags_to_secret import bind_tags_to_secret
 from consume_event_notification import consume_event_notification
 from create_secret import create_secret
 from create_secret_with_annotations import create_secret_with_annotations
+from create_secret_with_cmek import create_secret_with_cmek
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_expiration import create_secret_with_expiration
 from create_secret_with_labels import create_secret_with_labels
@@ -107,6 +108,11 @@ def topic_name() -> str:
 @pytest.fixture()
 def rotation_period_hours() -> int:
     return 24
+
+
+@pytest.fixture()
+def kms_key_name() -> str:
+    return os.environ["GOOGLE_CLOUD_KMS_KEY_NAME"]
 
 
 @pytest.fixture()
@@ -999,3 +1005,30 @@ def test_create_secret_with_topic(
     assert (
         retrieved_secret.topics[0].name == topic_name
     ), f"Topic mismatch: got {retrieved_secret.topics[0].name}, want {topic_name}"
+
+
+def test_create_secret_with_cmek(
+    capsys, project_id: str, secret_id: str, kms_key_name: str
+):
+
+    create_secret_with_cmek(project_id, secret_id, kms_key_name)
+
+    # Check the output contains expected text
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+    assert secret_id in out
+    assert kms_key_name in out
+
+    # Verify CMEK key with GetSecret
+
+    retrieved_secret = get_secret(project_id, secret_id)
+
+    # Check that the CMEK key name matches what we specified
+
+    actual_key_name = (
+        retrieved_secret.replication.automatic.customer_managed_encryption.kms_key_name
+    )
+    assert (
+        actual_key_name == kms_key_name
+    ), f"CMEK key name mismatch: got {actual_key_name}, want {kms_key_name}"

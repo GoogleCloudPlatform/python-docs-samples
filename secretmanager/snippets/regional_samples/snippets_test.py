@@ -28,6 +28,7 @@ from regional_samples import add_regional_secret_version
 from regional_samples import bind_tags_to_regional_secret
 from regional_samples import create_regional_secret
 from regional_samples import create_regional_secret_with_annotations
+from regional_samples import create_regional_secret_with_cmek
 from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_expire_time
 from regional_samples import create_regional_secret_with_labels
@@ -63,6 +64,7 @@ from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_expiration
 from regional_samples import update_regional_secret_rotation
+from regional_samples import update_regional_secret_with_alias
 from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
@@ -115,6 +117,11 @@ def iam_user() -> str:
 @pytest.fixture()
 def topic_name() -> str:
     return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+
+@pytest.fixture()
+def kms_key_name() -> str:
+    return os.environ["GOOGLE_CLOUD_REGIONAL_KMS_KEY_NAME"]
 
 
 @pytest.fixture()
@@ -1170,3 +1177,43 @@ def test_create_regional_secret_with_topic(
     assert (
         retrieved_secret.topics[0].name == topic_name
     ), f"Topic mismatch: got {retrieved_secret.topics[0].name}, want {topic_name}"
+
+
+def test_create_regional_secret_with_cmek(
+    capsys, project_id: str, secret_id: str, location_id: str, kms_key_name: str
+):
+
+    create_regional_secret_with_cmek.create_regional_secret_with_cmek(
+        project_id, secret_id, location_id, kms_key_name
+    )
+
+    # Check the output contains expected text
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+    assert secret_id in out
+    assert kms_key_name in out
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+
+    # Check that the CMEK key name matches what we specified
+
+    actual_key_name = retrieved_secret.customer_managed_encryption.kms_key_name
+    assert (
+        actual_key_name == kms_key_name
+    ), f"CMEK key name mismatch: got {actual_key_name}, want {kms_key_name}"
+
+
+def test_update_regional_secret_with_alias(
+    project_id: str, location_id: str, regional_secret_version: Tuple[str, str, str]
+) -> None:
+    secret_id, _, _ = regional_secret_version
+    update_regional_secret_with_alias.update_regional_secret_with_alias(
+        project_id, secret_id, location_id
+    )
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+    assert retrieved_secret.version_aliases["test"] == 1
