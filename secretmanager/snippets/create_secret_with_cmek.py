@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_secret_with_cmek]
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 
 
 def create_secret_with_cmek(
@@ -39,7 +39,7 @@ def create_secret_with_cmek(
             )
     """
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the parent project.
     parent = f"projects/{project_id}"
