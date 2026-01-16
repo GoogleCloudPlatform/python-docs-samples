@@ -50,7 +50,7 @@ def create_regional_secret_with_expire_time(
     )
 
     # Build the resource name of the parent project with location
-    parent = f"projects/{project_id}/locations/{location_id}"
+    parent = client.common_location_path(project_id, location_id)
 
     # Convert the Python datetime to a Protobuf Timestamp
     timestamp = timestamp_pb2.Timestamp()
