@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_secret_with_topic]
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 
 
 def create_secret_with_topic(project_id: str, secret_id: str, topic_name: str) -> None:
@@ -35,7 +35,7 @@ def create_secret_with_topic(project_id: str, secret_id: str, topic_name: str) -
         )
     """
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the parent name.
     parent = f"projects/{project_id}"

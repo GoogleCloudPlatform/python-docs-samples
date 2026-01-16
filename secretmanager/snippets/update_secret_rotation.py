@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_update_secret_rotation]
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf import duration_pb2
 from google.protobuf.field_mask_pb2 import FieldMask
 
@@ -36,7 +36,7 @@ def update_secret_rotation(project_id: str, secret_id: str) -> None:
     """
     new_rotation_period_hours = 48
     # Create the Secret Manager client
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the secret
     name = client.secret_path(project_id, secret_id)

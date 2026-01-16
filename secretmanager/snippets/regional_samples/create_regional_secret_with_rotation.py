@@ -18,7 +18,7 @@
 from datetime import datetime, timedelta, timezone
 
 from google.api_core import client_options
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf import duration_pb2, timestamp_pb2
 
 
@@ -55,7 +55,7 @@ def create_regional_secret_with_rotation(
     client_option = client_options.ClientOptions(api_endpoint=endpoint)
 
     # Create the Secret Manager client with the regional endpoint
-    client = secretmanager.SecretManagerServiceClient(
+    client = secretmanager_v1.SecretManagerServiceClient(
         client_options=client_option
     )
 
