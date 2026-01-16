@@ -52,7 +52,7 @@ def create_regional_secret_with_cmek(
     )
 
     # Build the resource name of the parent project with location
-    parent = f"projects/{project_id}/locations/{location_id}"
+    parent = client.common_location_path(project_id, location_id)
 
     # Create the secret with CMEK
     secret = client.create_secret(
