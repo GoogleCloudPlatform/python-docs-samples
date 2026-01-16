@@ -34,13 +34,16 @@ from create_secret_with_annotations import create_secret_with_annotations
 from create_secret_with_delayed_destroy import create_secret_with_delayed_destroy
 from create_secret_with_expiration import create_secret_with_expiration
 from create_secret_with_labels import create_secret_with_labels
+from create_secret_with_rotation import create_secret_with_rotation
 from create_secret_with_tags import create_secret_with_tags
+from create_secret_with_topic import create_secret_with_topic
 from create_secret_with_user_managed_replication import create_ummr_secret
 from create_update_secret_label import create_update_secret_label
 from delete_secret import delete_secret
 from delete_secret_annotation import delete_secret_annotation
 from delete_secret_expiration import delete_secret_expiration
 from delete_secret_label import delete_secret_label
+from delete_secret_rotation import delete_secret_rotation
 from delete_secret_with_etag import delete_secret_with_etag
 from destroy_secret_version import destroy_secret_version
 from destroy_secret_version_with_etag import destroy_secret_version_with_etag
@@ -63,6 +66,7 @@ from list_tag_bindings import list_tag_bindings
 from quickstart import quickstart
 from update_secret import update_secret
 from update_secret_expiration import update_secret_expiration
+from update_secret_rotation import update_secret_rotation
 from update_secret_with_alias import update_secret_with_alias
 from update_secret_with_delayed_destroy import update_secret_with_delayed_destroy
 from update_secret_with_etag import update_secret_with_etag
@@ -93,6 +97,16 @@ def project_id() -> str:
 @pytest.fixture()
 def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
+
+
+@pytest.fixture()
+def topic_name() -> str:
+    return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+
+@pytest.fixture()
+def rotation_period_hours() -> int:
+    return 24
 
 
 @pytest.fixture()
@@ -840,7 +854,9 @@ def test_update_secret_expiration(
 
     # Update expire time to 2 hours
 
-    new_expire = datetime.now(timezone.utc) + timedelta(hours=2)  # 2 hours from now in seconds
+    new_expire = datetime.now(timezone.utc) + timedelta(
+        hours=2
+    )  # 2 hours from now in seconds
     update_secret_expiration(project_id, secret_id)
 
     # Verify output contains expected message
@@ -876,3 +892,110 @@ def test_delete_expiration(
     assert (
         retrieved_secret.expire_time is None
     ), f"ExpireTime is {retrieved_secret.expire_time}, expected None"
+
+
+def test_create_secret_with_rotation(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    topic_name: str,
+    rotation_period_hours: int,
+) -> None:
+    """Test creating a secret with rotation configuration."""
+
+    # Create the secret with rotation
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out, f"Expected 'Created secret' in output, got: {out}"
+
+    retrieved_secret = get_secret(project_id, secret_id)
+
+    # Verify rotation is configured
+
+    assert retrieved_secret.rotation is not None, "Rotation is None, expected non-None"
+
+    # Verify rotation period is set correctly (24 hours = 86400 seconds)
+
+    expected_seconds = rotation_period_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+    # Verify next rotation time is set
+
+    assert (
+        retrieved_secret.rotation.next_rotation_time is not None
+    ), "NextRotationTime is None, expected non-None"
+
+
+def test_update_secret_rotation_period(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str
+) -> None:
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+    capsys.readouterr()
+
+    updated_rotation_hours = 48
+    update_secret_rotation(project_id, secret_id)
+
+    # Verify output contains the secret ID
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out, f"Expected '{secret_id}' in output, got: {out}"
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        retrieved_secret.rotation is not None
+    ), "GetSecret: Rotation is nil, expected non-nil"
+    expected_seconds = updated_rotation_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+
+def test_delete_secret_rotation(
+    capsys: pytest.LogCaptureFixture, project_id: str, secret_id: str, topic_name: str
+) -> None:
+
+    create_secret_with_rotation(project_id, secret_id, topic_name)
+
+    # Delete the rotation
+
+    delete_secret_rotation(project_id, secret_id)
+    out, _ = capsys.readouterr()
+    assert "Removed rotation from secret" in out
+    assert secret_id in out
+
+    retrieved_secret = get_secret(project_id, secret_id)
+    assert (
+        not retrieved_secret.rotation
+    ), f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
+
+
+def test_create_secret_with_topic(
+    capsys, project_id: str, secret_id: str, topic_name: str
+):
+
+    # Call the function being tested
+
+    create_secret_with_topic(project_id, secret_id, topic_name)
+
+    # Check the output contains expected text
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+
+    retrived_secret = get_secret(project_id, secret_id)
+
+    assert (
+        len(retrived_secret.topics) == 1
+    ), f"Expected 1 topic, got {len(retrived_secret.topics)}"
+    assert (
+        retrived_secret.topics[0].name == topic_name
+    ), f"Topic mismatch: got {retrived_secret.topics[0].name}, want {topic_name}"

@@ -31,11 +31,14 @@ from regional_samples import create_regional_secret_with_annotations
 from regional_samples import create_regional_secret_with_delayed_destroy
 from regional_samples import create_regional_secret_with_expire_time
 from regional_samples import create_regional_secret_with_labels
+from regional_samples import create_regional_secret_with_rotation
 from regional_samples import create_regional_secret_with_tags
+from regional_samples import create_regional_secret_with_topic
 from regional_samples import delete_regional_secret
 from regional_samples import delete_regional_secret_annotation
 from regional_samples import delete_regional_secret_expiration
 from regional_samples import delete_regional_secret_label
+from regional_samples import delete_regional_secret_rotation
 from regional_samples import delete_regional_secret_with_etag
 from regional_samples import destroy_regional_secret_version
 from regional_samples import destroy_regional_secret_version_with_etag
@@ -59,6 +62,7 @@ from regional_samples import list_regional_secrets_with_filter
 from regional_samples import regional_quickstart
 from regional_samples import update_regional_secret
 from regional_samples import update_regional_secret_expiration
+from regional_samples import update_regional_secret_rotation
 from regional_samples import update_regional_secret_with_delayed_destroy
 from regional_samples import update_regional_secret_with_etag
 from regional_samples import view_regional_secret_annotations
@@ -106,6 +110,16 @@ def project_id() -> str:
 @pytest.fixture()
 def iam_user() -> str:
     return "serviceAccount:" + os.environ["GCLOUD_SECRETS_SERVICE_ACCOUNT"]
+
+
+@pytest.fixture()
+def topic_name() -> str:
+    return os.environ["GOOGLE_CLOUD_TOPIC_NAME"]
+
+
+@pytest.fixture()
+def rotation_period_hours() -> int:
+    return 24
 
 
 @pytest.fixture()
@@ -1012,3 +1026,147 @@ def test_delete_regional_secret_expiration(
     assert (
         retrieved_secret.expire_time is None
     ), f"ExpireTime is {retrieved_secret.expire_time}, expected None"
+
+
+def test_create_regional_secret_with_rotation(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    location_id: str,
+    topic_name: str,
+    rotation_period_hours: int,
+) -> None:
+
+    # Create the secret with rotation
+
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(
+        project_id, secret_id, location_id, topic_name
+    )
+
+    # Verify output contains expected message
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out, f"Expected 'Created secret' in output, got: {out}"
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+
+    # Verify rotation is configured
+
+    assert retrieved_secret.rotation is not None, "Rotation is None, expected non-None"
+
+    # Verify rotation period is set correctly (24 hours = 86400 seconds)
+
+    expected_seconds = rotation_period_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+    # Verify next rotation time is set
+
+    assert (
+        retrieved_secret.rotation.next_rotation_time is not None
+    ), "NextRotationTime is None, expected non-None"
+
+
+def test_update_regional_secret_rotation_period(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    location_id: str,
+    topic_name: str,
+) -> None:
+
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(
+        project_id, secret_id, location_id, topic_name
+    )
+    capsys.readouterr()
+
+    updated_rotation_hours = 48
+    update_regional_secret_rotation.update_regional_secret_rotation_period(
+        project_id, secret_id, location_id
+    )
+
+    # Verify output contains the secret ID
+
+    out, _ = capsys.readouterr()
+    assert secret_id in out, f"Expected '{secret_id}' in output, got: {out}"
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+    assert (
+        retrieved_secret.rotation is not None
+    ), "GetSecret: Rotation is nil, expected non-nil"
+    expected_seconds = updated_rotation_hours * 3600
+    actual_seconds = retrieved_secret.rotation.rotation_period.total_seconds()
+    assert (
+        actual_seconds == expected_seconds
+    ), f"RotationPeriod mismatch: got {actual_seconds}, want {expected_seconds}"
+
+
+def test_delete_regional_secret_rotation(
+    capsys: pytest.LogCaptureFixture,
+    project_id: str,
+    secret_id: str,
+    location_id: str,
+    topic_name: str,
+) -> None:
+    # First create a secret with rotation configuration
+
+    create_regional_secret_with_rotation.create_regional_secret_with_rotation(
+        project_id, secret_id, location_id, topic_name
+    )
+
+    # Call the function to delete the rotation configuration
+
+    delete_regional_secret_rotation.delete_regional_secret_rotation(
+        project_id, secret_id, location_id
+    )
+
+    # Check the output contains the expected message
+
+    out, _ = capsys.readouterr()
+    assert "Removed rotation" in out
+    assert secret_id in out
+
+    # Verify rotation is removed with GetSecret
+
+    retrieved_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+
+    # Check that rotation configuration is removed
+
+    assert (
+        not retrieved_secret.rotation
+    ), f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
+
+
+def test_create_regional_secret_with_topic(
+    capsys, project_id: str, secret_id: str, location_id: str, topic_name: str
+):
+
+    # Call the function being tested
+
+    create_regional_secret_with_topic.create_regional_secret_with_topic(
+        project_id, secret_id, location_id, topic_name
+    )
+
+    # Check the output contains expected text
+
+    out, _ = capsys.readouterr()
+    assert "Created secret" in out
+
+    retrived_secret = get_regional_secret.get_regional_secret(
+        project_id, location_id, secret_id
+    )
+
+    assert (
+        len(retrived_secret.topics) == 1
+    ), f"Expected 1 topic, got {len(retrived_secret.topics)}"
+    assert (
+        retrived_secret.topics[0].name == topic_name
+    ), f"Topic mismatch: got {retrived_secret.topics[0].name}, want {topic_name}"
