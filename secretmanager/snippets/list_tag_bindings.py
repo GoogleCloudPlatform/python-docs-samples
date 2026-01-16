@@ -50,14 +50,14 @@ def list_tag_bindings(project_id: str, secret_id: str) -> None:
 
     # Retrieve and process tag bindings
     bindings = client.list_tag_bindings(request=request)
-    count = 0
+    found_bindings = False
 
     print(f"Tag bindings for {secret_name}:")
     for binding in bindings:
         print(f"- Tag Value: {binding.tag_value}")
-        count += 1
+        found_bindings = True
 
-    if count == 0:
+    if not found_bindings:
         print(f"No tag bindings found for {secret_name}.")
 
 
