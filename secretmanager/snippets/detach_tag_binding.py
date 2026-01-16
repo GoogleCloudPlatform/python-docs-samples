@@ -17,7 +17,7 @@
 
 # [START secretmanager_detach_tag_binding]
 from google.cloud import resourcemanager_v3
-
+from google.cloud import secretmanager_v1
 
 def detach_tag(project_id: str, secret_id: str, tag_value: str) -> None:
     """
@@ -33,17 +33,18 @@ def detach_tag(project_id: str, secret_id: str, tag_value: str) -> None:
         detach_tag("my-project", "my-secret", "tagValues/123456789012")
     """
     # Create the Resource Manager client.
-    client = resourcemanager_v3.TagBindingsClient()
+    rm_client = resourcemanager_v3.TagBindingsClient()
 
     # Build the resource name of the parent secret.
-    secret_name = f"projects/{project_id}/secrets/{secret_id}"
+    client = secretmanager_v1.SecretManagerServiceClient()
+    secret_name = client.secret_path(project_id, secret_id)
     parent = f"//secretmanager.googleapis.com/{secret_name}"
 
     # Find the binding name for the given tag value
     binding_name = None
     request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
 
-    for binding in client.list_tag_bindings(request=request):
+    for binding in rm_client.list_tag_bindings(request=request):
         if binding.tag_value == tag_value:
             binding_name = binding.name
             break
@@ -54,7 +55,7 @@ def detach_tag(project_id: str, secret_id: str, tag_value: str) -> None:
 
     # Delete the tag binding
     request = resourcemanager_v3.DeleteTagBindingRequest(name=binding_name)
-    operation = client.delete_tag_binding(request=request)
+    operation = rm_client.delete_tag_binding(request=request)
 
     # Wait for the operation to complete
     operation.result()
