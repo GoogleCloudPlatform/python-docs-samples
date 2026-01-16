@@ -22,7 +22,7 @@ def create_secret_with_cmek(
     project_id: str, secret_id: str, kms_key_name: str
 ) -> None:
     """
-        Creates a new secret with a customer-managed encryption key (CMEK).
+    Creates a new secret with a customer-managed encryption key (CMEK).
 
         Args:
             project_id (str): ID of the Google Cloud project
