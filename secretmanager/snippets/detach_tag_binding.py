@@ -19,6 +19,7 @@
 from google.cloud import resourcemanager_v3
 from google.cloud import secretmanager_v1
 
+
 def detach_tag(project_id: str, secret_id: str, tag_value: str) -> None:
     """
     Detaches a tag value from a secret.
