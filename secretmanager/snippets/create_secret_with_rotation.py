@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_secret_with_rotation]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.cloud import secretmanager
 from google.protobuf import duration_pb2
@@ -33,7 +33,7 @@ def create_secret_with_rotation(
         secret_id (str): ID of the secret to create
         topic_name (str): Resource name of the Pub/Sub topic for rotation notifications
     Example:
-        # Create a secret with automatic rotation every 30 days
+        # Create a secret with automatic rotation every 24 hours
         create_secret_with_rotation(
             "my-project",
             "my-rotating-secret",
@@ -41,6 +41,7 @@ def create_secret_with_rotation(
         )
     """
     rotation_period_hours = 24
+    next_rotation_time = datetime.now(timezone.utc) + timedelta(hours=24)
     # Create the Secret Manager client
     client = secretmanager.SecretManagerServiceClient()
 
@@ -52,8 +53,8 @@ def create_secret_with_rotation(
     rotation_period.seconds = rotation_period_hours * 3600  # Convert hours to seconds
 
     # Set next rotation time to 24 hours from now
-    next_rotation_time = timestamp_pb2.Timestamp()
-    next_rotation_time.FromDatetime(datetime.now() + timedelta(hours=24))
+    next_rotation_timestamp = timestamp_pb2.Timestamp()
+    next_rotation_timestamp.FromDatetime(next_rotation_time)
 
     # Create the secret with rotation configuration
     secret = client.create_secret(
@@ -64,7 +65,7 @@ def create_secret_with_rotation(
                 "replication": {"automatic": {}},
                 "topics": [{"name": topic_name}],
                 "rotation": {
-                    "next_rotation_time": next_rotation_time,
+                    "next_rotation_time": next_rotation_timestamp,
                     "rotation_period": rotation_period,
                 },
             },

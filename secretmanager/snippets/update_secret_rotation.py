@@ -27,13 +27,11 @@ def update_secret_rotation(project_id: str, secret_id: str) -> None:
     Args:
         project_id (str): ID of the Google Cloud project
         secret_id (str): ID of the secret to update
-        rotation_period_hours (int): New rotation period in hours
     Example:
         # Update the rotation period of a secret to 60 days
         update_secret_rotation(
             "my-project",
             "my-secret-with-rotation",
-            "projects/my-project/topics/my-rotation-topic"
         )
     """
     new_rotation_period_hours = 48

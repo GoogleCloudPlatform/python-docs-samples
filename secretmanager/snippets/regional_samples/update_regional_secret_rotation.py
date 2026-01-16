@@ -14,7 +14,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import argparse
 
 # [START secretmanager_update_regional_secret_rotation_period]
 from google.api_core import client_options
@@ -90,6 +89,7 @@ def update_regional_secret_rotation_period(
 
 
 if __name__ == "__main__":
+    import argparse
 
     parser = argparse.ArgumentParser(
         description=__doc__,

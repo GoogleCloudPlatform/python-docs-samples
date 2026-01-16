@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_create_regional_secret_with_rotation]
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from google.api_core import client_options
 from google.cloud import secretmanager
@@ -48,7 +48,7 @@ def create_regional_secret_with_rotation(
     rotation_period = timedelta(hours=24)
 
     # Set next rotation time to 24 hours from now
-    next_rotation_time = datetime.now() + timedelta(hours=24)
+    next_rotation_time = datetime.now(timezone.utc) + timedelta(hours=24)
 
     # Set up the endpoint for the specific region
     endpoint = f"secretmanager.{location_id}.rep.googleapis.com"

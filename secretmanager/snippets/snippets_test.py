@@ -991,11 +991,11 @@ def test_create_secret_with_topic(
     out, _ = capsys.readouterr()
     assert "Created secret" in out
 
-    retrived_secret = get_secret(project_id, secret_id)
+    retrieved_secret = get_secret(project_id, secret_id)
 
     assert (
-        len(retrived_secret.topics) == 1
-    ), f"Expected 1 topic, got {len(retrived_secret.topics)}"
+        len(retrieved_secret.topics) == 1
+    ), f"Expected 1 topic, got {len(retrieved_secret.topics)}"
     assert (
-        retrived_secret.topics[0].name == topic_name
-    ), f"Topic mismatch: got {retrived_secret.topics[0].name}, want {topic_name}"
+        retrieved_secret.topics[0].name == topic_name
+    ), f"Topic mismatch: got {retrieved_secret.topics[0].name}, want {topic_name}"
