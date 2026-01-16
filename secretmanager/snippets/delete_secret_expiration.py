@@ -15,7 +15,7 @@
 # limitations under the License.
 
 # [START secretmanager_delete_secret_expiration]
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf.field_mask_pb2 import FieldMask
 
 
@@ -34,7 +34,7 @@ def delete_secret_expiration(project_id: str, secret_id: str) -> None:
         )
     """
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the secret
     name = client.secret_path(project_id, secret_id)
