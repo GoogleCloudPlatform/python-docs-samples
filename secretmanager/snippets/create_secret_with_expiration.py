@@ -17,7 +17,7 @@
 # [START secretmanager_create_secret_with_expiration]
 from datetime import datetime, timedelta, timezone
 
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf import timestamp_pb2
 
 
@@ -35,7 +35,7 @@ def create_secret_with_expiration(project_id: str, secret_id: str) -> None:
     """
     expire_time = datetime.now(timezone.utc) + timedelta(hours=1)
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the parent project.
     parent = f"projects/{project_id}"

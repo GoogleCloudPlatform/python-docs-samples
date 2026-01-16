@@ -18,7 +18,7 @@
 # [START secretmanager_update_secret_expiration]
 from datetime import datetime, timedelta, timezone
 
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf import timestamp_pb2
 
 
@@ -40,7 +40,7 @@ def update_secret_expiration(project_id: str, secret_id: str) -> None:
     new_expire_time = datetime.now(timezone.utc) + timedelta(hours=2)
 
     # Create the Secret Manager client.
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the secret.
     name = client.secret_path(project_id, secret_id)

@@ -17,7 +17,7 @@
 # [START secretmanager_create_secret_with_rotation]
 from datetime import datetime, timedelta, timezone
 
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 from google.protobuf import duration_pb2
 from google.protobuf import timestamp_pb2
 
@@ -43,7 +43,7 @@ def create_secret_with_rotation(
     rotation_period_hours = 24
     next_rotation_time = datetime.now(timezone.utc) + timedelta(hours=24)
     # Create the Secret Manager client
-    client = secretmanager.SecretManagerServiceClient()
+    client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the parent project
     parent = f"projects/{project_id}"
