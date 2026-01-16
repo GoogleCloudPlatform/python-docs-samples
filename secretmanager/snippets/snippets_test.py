@@ -20,7 +20,7 @@ import uuid
 
 from google.api_core import exceptions, retry
 from google.cloud import resourcemanager_v3
-from google.cloud import secretmanager
+from google.cloud import secretmanager, secretmanager_v1
 from google.protobuf.duration_pb2 import Duration
 
 import pytest
@@ -980,7 +980,7 @@ def test_delete_secret_rotation(
 
     retrieved_secret = get_secret(project_id, secret_id)
     assert (
-        not retrieved_secret.rotation
+        retrieved_secret.rotation == secretmanager_v1.types.Rotation()
     ), f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
 
 

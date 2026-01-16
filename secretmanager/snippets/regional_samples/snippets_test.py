@@ -1148,7 +1148,7 @@ def test_delete_regional_secret_rotation(
     # Check that rotation configuration is removed
 
     assert (
-        not retrieved_secret.rotation
+        retrieved_secret.rotation == secretmanager_v1.types.Rotation()
     ), f"Rotation is {repr(retrieved_secret.rotation)}, expected None or empty"
 
 
