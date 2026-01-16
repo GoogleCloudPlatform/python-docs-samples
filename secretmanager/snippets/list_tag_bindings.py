@@ -20,7 +20,7 @@ command line application and sample code for listing tag bindings attached to a 
 # [START secretmanager_list_tag_bindings]
 # Import the Resource Manager client library.
 from google.cloud import resourcemanager_v3
-from google.cloud import secretmanager
+from google.cloud import secretmanager_v1
 
 
 def list_tag_bindings(project_id: str, secret_id: str) -> None:
@@ -38,7 +38,7 @@ def list_tag_bindings(project_id: str, secret_id: str) -> None:
 
     # Create the Resource Manager client.
     client = resourcemanager_v3.TagBindingsClient()
-    sm_client = secretmanager.SecretManagerServiceClient()
+    sm_client = secretmanager_v1.SecretManagerServiceClient()
 
     # Build the resource name of the parent secret.
     secret_name = sm_client.secret_path(project_id, secret_id)
