@@ -53,7 +53,7 @@ def list_regional_secret_tag_bindings(
 
     # List the tag bindings
     print(f"Tag bindings for {name}:")
-    count = 0
+    found_bindings = False
 
     # Use the list_tag_bindings method to get all tag bindings
     request = resourcemanager_v3.ListTagBindingsRequest(parent=parent)
@@ -62,9 +62,9 @@ def list_regional_secret_tag_bindings(
     # Iterate through the results
     for binding in tag_bindings:
         print(f"- Tag Value: {binding.tag_value}")
-        count += 1
+        found_bindings = True
 
-    if count == 0:
+    if not found_bindings:
         print(f"No tag bindings found for {name}.")
 
 
