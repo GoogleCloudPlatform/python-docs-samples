@@ -17,7 +17,7 @@
 import datetime
 
 from airflow import models
-from airflow.kubernetes.secret import Secret
+from airflow.providers.cncf.kubernetes.secret import Secret
 from airflow.providers.cncf.kubernetes.operators.pod import (
     KubernetesPodOperator,
 )
@@ -60,7 +60,7 @@ YESTERDAY = datetime.datetime.now() - datetime.timedelta(days=1)
 # required to debug.
 with models.DAG(
     dag_id="composer_sample_kubernetes_pod",
-    schedule_interval=datetime.timedelta(days=1),
+    schedule=datetime.timedelta(days=1),
     start_date=YESTERDAY,
 ) as dag:
     # Only name, image, and task_id are required to create a

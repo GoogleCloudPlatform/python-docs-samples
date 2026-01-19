@@ -29,7 +29,7 @@ from kubernetes.client import models as k8s_models
 
 with models.DAG(
     "example_gcp_gke",
-    schedule_interval=None,  # Override to match your needs
+    schedule=None,  # Override to match your needs
     start_date=days_ago(1),
     tags=["example"],
 ) as dag:
