@@ -35,7 +35,6 @@ def list_configs(override_values={}):
 
 
 def update_config(override_values={}):
-    # [START bigquerydatatransfer_update_config]
     from google.cloud import bigquery_datatransfer
     from google.protobuf import field_mask_pb2
 
@@ -43,14 +42,12 @@ def update_config(override_values={}):
 
     transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
     new_display_name = "My Transfer Config"
-    # [END bigquerydatatransfer_update_config]
     # To facilitate testing, we replace values with alternatives
     # provided by the testing harness.
     new_display_name = override_values.get("new_display_name", new_display_name)
     transfer_config_name = override_values.get(
         "transfer_config_name", transfer_config_name
     )
-    # [START bigquerydatatransfer_update_config]
 
     transfer_config = bigquery_datatransfer.TransferConfig(name=transfer_config_name)
     transfer_config.display_name = new_display_name
@@ -64,7 +61,6 @@ def update_config(override_values={}):
 
     print(f"Updated config: '{transfer_config.name}'")
     print(f"New display name: '{transfer_config.display_name}'")
-    # [END bigquerydatatransfer_update_config]
     # Return the config name for testing purposes, so that it can be deleted.
     return transfer_config
 
