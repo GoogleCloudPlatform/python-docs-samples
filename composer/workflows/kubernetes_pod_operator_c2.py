@@ -88,7 +88,7 @@ with models.DAG(
         # project-id as the gcr.io images and the service account that Composer
         # uses has permission to access the Google Container Registry
         # (the default service account has permission)
-        image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
+        image="marketplace.gcr.io/google/ubuntu2204",
         # Specifies path to kubernetes config. The config_file is templated.
         config_file="/home/airflow/composer_kube_config",
         # Identifier of connection that should be used
@@ -130,7 +130,7 @@ with models.DAG(
         task_id="ex-kube-secrets",
         name="ex-kube-secrets",
         namespace="composer-user-workloads",
-        image="gcr.io/gcp-runtimes/ubuntu_20_0_4",
+        image="marketplace.gcr.io/google/ubuntu2204",
         startup_timeout_seconds=300,
         # The secrets to pass to Pod, the Pod will fail to create if the
         # secrets you specify in a Secret object do not exist in Kubernetes.
