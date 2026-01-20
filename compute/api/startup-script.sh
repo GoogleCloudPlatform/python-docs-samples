@@ -34,4 +34,4 @@ gcloud storage buckets create gs://$CS_BUCKET
 
 # Store the image in the Google Cloud Storage bucket and allow all users
 # to read it.
-gcloud storage cp --predefined-acl=public-read output.png gs://$CS_BUCKET/output.png
+gcloud storage cp --predefined-acl=publicRead output.png gs://$CS_BUCKET/output.png
