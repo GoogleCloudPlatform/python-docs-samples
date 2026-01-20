@@ -22,7 +22,7 @@ echo "Configuring project $GCLOUD_PROJECT for system tests."
 
 echo "Creating cloud storage bucket."
 gcloud storage buckets create gs://$GCLOUD_PROJECT
-gcloud storage buckets update gs://$GCLOUD_PROJECT --predefined-default-object-acl=public-read
+gcloud storage buckets update gs://$GCLOUD_PROJECT --predefined-default-object-acl=publicRead
 
 echo "Creating bigtable resources."
 gcloud alpha bigtable clusters create bigtable-test \
