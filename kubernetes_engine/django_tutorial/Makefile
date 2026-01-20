@@ -11,7 +11,7 @@ create-cluster:
 .PHONY: create-bucket
 create-bucket:
 	gcloud storage buckets create gs://$(GCLOUD_PROJECT)
-	gcloud storage buckets update gs://$(GCLOUD_PROJECT) --predefined-default-object-acl=public-read
+	gcloud storage buckets update gs://$(GCLOUD_PROJECT) --predefined-default-object-acl=publicRead
 
 .PHONY: build
 build:
