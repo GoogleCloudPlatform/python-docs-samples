@@ -17,10 +17,11 @@
 import datetime
 
 from airflow import models
-from airflow.providers.cncf.kubernetes.secret import Secret
+
 from airflow.providers.cncf.kubernetes.operators.pod import (
     KubernetesPodOperator,
 )
+from airflow.providers.cncf.kubernetes.secret import Secret
 from kubernetes.client import models as k8s_models
 
 # A Secret is an object that contains a small amount of sensitive data such as
