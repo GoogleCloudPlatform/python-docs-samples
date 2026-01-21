@@ -41,4 +41,4 @@ Shapely==2.1.2; python_version >= '3.10'
 six==1.17.0
 typing-extensions==4.15.0
 typing-inspect==0.9.0
-urllib3==2.6.0
+urllib3==2.6.3
