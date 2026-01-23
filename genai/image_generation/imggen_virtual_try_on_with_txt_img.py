@@ -26,7 +26,7 @@ def virtual_try_on(output_file: str) -> Image:
     # output_file = "output-image.png"
 
     image = client.models.recontext_image(
-        model="virtual-try-on-preview-08-04",
+        model="virtual-try-on-001",
         source=RecontextImageSource(
             person_image=Image.from_file(location="test_resources/man.png"),
             product_images=[
