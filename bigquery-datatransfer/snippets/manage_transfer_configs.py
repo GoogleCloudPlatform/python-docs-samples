@@ -13,23 +13,6 @@
 # limitations under the License.
 
 
-def list_configs(override_values={}):
-    from google.cloud import bigquery_datatransfer
-
-    transfer_client = bigquery_datatransfer.DataTransferServiceClient()
-
-    project_id = "my-project"
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    project_id = override_values.get("project_id", project_id)
-    parent = transfer_client.common_project_path(project_id)
-
-    configs = transfer_client.list_transfer_configs(parent=parent)
-    print("Got the following configs:")
-    for config in configs:
-        print(f"\tID: {config.name}, Schedule: {config.schedule}")
-
-
 def update_config(override_values={}):
     # [START bigquerydatatransfer_update_config]
     from google.cloud import bigquery_datatransfer
