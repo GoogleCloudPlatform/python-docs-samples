@@ -1,6 +1,6 @@
 # Requirements for the prediction web service.
 Flask==3.0.3
 earthengine-api==1.5.9
-gunicorn==23.0.0
+gunicorn==24.0.0
 tensorflow==2.12.0
 Werkzeug==3.0.3

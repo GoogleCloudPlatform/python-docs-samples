@@ -1,6 +1,6 @@
 Flask==3.0.3; python_version > '3.6'
 Flask==2.0.3; python_version < '3.7'
-gunicorn==23.0.0
+gunicorn==24.0.0
 twilio==9.0.3
 Werkzeug==3.0.3; python_version >= '3.7'
 Werkzeug==2.3.8; python_version < '3.7'

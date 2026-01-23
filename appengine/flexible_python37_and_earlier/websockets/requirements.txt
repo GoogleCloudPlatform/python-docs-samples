@@ -1,6 +1,6 @@
 Flask==1.1.4 # it seems like Flask-sockets doesn't play well with 2.0+
 Flask-Sockets==0.2.1
-gunicorn==23.0.0
+gunicorn==24.0.0
 requests==2.31.0
 markupsafe==2.0.1
 Werkzeug==1.0.1;

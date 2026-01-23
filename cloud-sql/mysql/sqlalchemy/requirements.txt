@@ -1,7 +1,7 @@
 Flask==2.2.2
 SQLAlchemy==2.0.40
 PyMySQL==1.1.1
-gunicorn==23.0.0
+gunicorn==24.0.0
 cloud-sql-python-connector==1.18.4
 functions-framework==3.9.2
 Werkzeug==2.3.8

@@ -1,6 +1,6 @@
 Flask==3.0.3
 google-cloud-storage==2.12.0
 google-cloud-vision==3.8.1
-gunicorn==23.0.0
+gunicorn==24.0.0
 Wand==0.6.13
 Werkzeug==3.0.3
