@@ -34,37 +34,6 @@ def list_configs(override_values={}):
     # [END bigquerydatatransfer_list_configs]
 
 
-def update_config(override_values={}):
-    from google.cloud import bigquery_datatransfer
-    from google.protobuf import field_mask_pb2
-
-    transfer_client = bigquery_datatransfer.DataTransferServiceClient()
-
-    transfer_config_name = "projects/1234/locations/us/transferConfigs/abcd"
-    new_display_name = "My Transfer Config"
-    # To facilitate testing, we replace values with alternatives
-    # provided by the testing harness.
-    new_display_name = override_values.get("new_display_name", new_display_name)
-    transfer_config_name = override_values.get(
-        "transfer_config_name", transfer_config_name
-    )
-
-    transfer_config = bigquery_datatransfer.TransferConfig(name=transfer_config_name)
-    transfer_config.display_name = new_display_name
-
-    transfer_config = transfer_client.update_transfer_config(
-        {
-            "transfer_config": transfer_config,
-            "update_mask": field_mask_pb2.FieldMask(paths=["display_name"]),
-        }
-    )
-
-    print(f"Updated config: '{transfer_config.name}'")
-    print(f"New display name: '{transfer_config.display_name}'")
-    # Return the config name for testing purposes, so that it can be deleted.
-    return transfer_config
-
-
 def update_credentials_with_service_account(override_values={}):
     # [START bigquerydatatransfer_update_credentials]
     from google.cloud import bigquery_datatransfer
